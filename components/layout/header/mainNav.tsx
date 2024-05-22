@@ -2,9 +2,8 @@
 
 import * as React from "react";
 import Link from "next/link";
-import pegonTower from "@/public/pigeon-tower.svg";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-// import { Icons } from "@/components/icons"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -14,7 +13,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import Image from "next/image";
+
+import PigeonTower from "@/public/pigeonTower.svg";
 
 const components: { title: string; href: string; description: string }[] = [
   {
@@ -37,7 +37,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
 ];
 
-export function Nav() {
+export function MainNav() {
   return (
     <nav>
       <NavigationMenu className="[&>.absolute>.relative]:mt-0 [&>.absolute>.relative]:rounded-t-none [&>.absolute>.relative]:border-t-0 [&>.absolute]:-right-3 [&>.absolute]:left-auto [&>.absolute]:mt-5">
@@ -50,14 +50,9 @@ export function Nav() {
                   <NavigationMenuLink asChild>
                     <a
                       className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-                      href="/Bridge"
+                      href="/courses"
                     >
-                      {/* <Icons.logo className="h-6 w-6" /> */}
-                      <Image
-                        src={pegonTower}
-                        alt="Cairo Institute of Liberal Arts and Sciences"
-                        height={40}
-                      />
+                      <Image src={PigeonTower} alt="bridge programme" />
                       <div className="mb-2 mt-4 text-lg font-medium">
                         Bridge programme
                       </div>
@@ -68,14 +63,14 @@ export function Nav() {
                     </a>
                   </NavigationMenuLink>
                 </li>
-                <ListItem href="/docs" title="Seasonal Course">
+                <ListItem href="/courses" title="Seasonal Course">
                   standalone courses open to the public/visiting students.
                 </ListItem>
-                <ListItem href="/docs/installation" title="Thematic Courses">
+                <ListItem href="/courses" title="Thematic Courses">
                   part of the second semester of bridge program and is open to
                   the public/visiting students.
                 </ListItem>
-                <ListItem href="/docs/primitives/typography" title="Labs">
+                <ListItem href="/courses" title="Labs">
                   Styles for headings, paragraphs, lists...etc
                 </ListItem>
               </ul>
@@ -119,7 +114,7 @@ const ListItem = React.forwardRef<
           ref={ref}
           className={cn(
             "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
+            className,
           )}
           {...props}
         >

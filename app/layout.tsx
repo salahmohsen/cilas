@@ -1,9 +1,21 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Nav } from "@/components/ui/header/navigation";
+import { MainNav } from "@/components/layout/header/mainNav";
 import logo from "@/public/logo.png";
+import PigeonTower from "@/public/pigeon-tower.svg";
 import Image from "next/image";
+import { FloatingNav } from "@/components/layout/header/floatingNav";
+import {
+  Bird,
+  Brain,
+  HomeIcon,
+  LandPlot,
+  Map,
+  Rss,
+  UsersRound,
+} from "lucide-react";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,19 +31,51 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <header className="flex justify-between gap-5 md:gap-10 items-center mt-5 mx-10 min-w-screen flex-col md:flex-row">
-          <div className="flex items-center gap-5 flex-col md:flex-row">
+      <body className={`${inter.className} min-w-screen mx-10 mt-10`}>
+        <header className="mb-10 flex flex-col items-center justify-between gap-5 md:flex-row md:gap-10">
+          <Link
+            href="/"
+            className="flex flex-col items-center gap-5 md:flex-row"
+          >
             <Image
               src={logo}
               width={25}
               alt="Cairo Institute of Liberal Arts and Sciences"
             />
-            <h1 className="font-bold text-center md:text-left">
+            <h1 className="text-center font-bold md:text-left">
               Cairo Institute of Liberal Arts and Sciences
             </h1>
-          </div>
-          <Nav />
+          </Link>
+          <MainNav />
+          <FloatingNav
+            navItems={[
+              {
+                name: "Home",
+                link: "/",
+                icon: <HomeIcon size={16} strokeWidth={1} />,
+              },
+              {
+                name: "Courses",
+                link: "/",
+                icon: <Brain size={16} strokeWidth={1} />,
+              },
+              {
+                name: "People",
+                link: "/",
+                icon: <Bird size={16} strokeWidth={1} />,
+              },
+              {
+                name: "Space",
+                link: "/",
+                icon: <Map size={16} strokeWidth={1} />,
+              },
+              {
+                name: "Blog",
+                link: "/",
+                icon: <Rss size={16} strokeWidth={1} />,
+              },
+            ]}
+          />
         </header>
 
         {children}
