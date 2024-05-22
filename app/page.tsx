@@ -1,23 +1,17 @@
-import { Nav } from "@/components/ui/header/navigation";
-import logo from "@/public/logo.png";
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <main className="mx-10 min-w-screen">
-      <header className="flex justify-between gap-10 items-center mt-5">
-        <div className="flex items-center gap-5">
-          <Image
-            src={logo}
-            width={25}
-            alt="Cairo Institute of Liberal Arts and Sciences"
-          />
-          <h1 className=" font-bold">
-            Cairo Institute of Liberal Arts and Sciences
-          </h1>
-        </div>
-        <Nav />
-      </header>
+    <main className="mt-10 text-center mx-20">
+      <p>
+        Think of CILAS as an autonomous scholarly collective rather than a
+        corporate academic institution or a modern/colonial university. It does
+        not issue credit points or an accredited degree. As a member of the
+        learning community you will be supported and challenged in your
+        inquiries. Opposed to a pedagogy of consumption, CILAS operates under a
+        pedagogy of attunement and discovery. This is to say that what we cover
+        at CILAS matters less than what we discover together. Discussion Based
+        Learning is the main teaching/learning methodology at CILAS and relies
+        heavily on the participation and solidarity of everyone.
+      </p>
     </main>
   );
 }

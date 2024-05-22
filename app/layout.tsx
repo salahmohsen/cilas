@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Nav } from "@/components/ui/header/navigation";
+import logo from "@/public/logo.png";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,7 +19,23 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <header className="flex justify-between gap-5 md:gap-10 items-center mt-5 mx-10 min-w-screen flex-col md:flex-row">
+          <div className="flex items-center gap-5 flex-col md:flex-row">
+            <Image
+              src={logo}
+              width={25}
+              alt="Cairo Institute of Liberal Arts and Sciences"
+            />
+            <h1 className="font-bold text-center md:text-left">
+              Cairo Institute of Liberal Arts and Sciences
+            </h1>
+          </div>
+          <Nav />
+        </header>
+
+        {children}
+      </body>
     </html>
   );
 }
