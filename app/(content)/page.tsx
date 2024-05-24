@@ -1,6 +1,6 @@
-export default function Home() {
+export default async function Home() {
   return (
-    <main className="mt-10 text-center mx-20">
+    <main className="mx-20 mt-10 text-center">
       <p>
         Think of CILAS as an autonomous scholarly collective rather than a
         corporate academic institution or a modern/colonial university. It does

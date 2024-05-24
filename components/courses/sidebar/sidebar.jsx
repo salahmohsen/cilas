@@ -14,7 +14,7 @@ import { Type } from "./type";
 const Sidebar = () => {
   return (
     <aside>
-      <Card className="fixed ">
+      <Card className="">
         <CardHeader>
           <CardDescription>Filters</CardDescription>
         </CardHeader>
