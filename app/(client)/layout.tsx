@@ -1,14 +1,28 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Amiri } from "next/font/google";
 import "@/app/globals.css";
-import { MainNav } from "@/components/layout/header/mainNav";
+import { MainNav } from "@/components/client/header/mainNav";
 import logo from "@/public/logo.png";
 import Image from "next/image";
-import { FloatingNav } from "@/components/layout/header/floatingNav";
+import { FloatingNav } from "@/components/client/header/floatingNav";
 import { Bird, Brain, HomeIcon, Map, Rss } from "lucide-react";
 import Link from "next/link";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  adjustFontFallback: false,
+  display: "swap",
+});
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
+  display: "swap",
+});
+
+console.log("inter", inter);
 
 export const metadata: Metadata = {
   title: "Cairo Institute of Liberal Arts and Sciences",
@@ -22,11 +36,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${inter.className}  min-w-screen mx-10 mt-10`}>
+      <body
+        className={`${inter.variable} ${amiri.variable} min-w-screen mx-10 mt-10`}
+      >
         <header className="mb-20 flex flex-col items-center justify-between gap-5 md:flex-row md:gap-10">
           <Link
             href="/"
-            className="flex flex-col items-center gap-5 md:flex-row"
+            className="flex h-auto flex-col items-center gap-5 md:flex-row"
           >
             <Image
               src={logo}

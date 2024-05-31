@@ -17,13 +17,13 @@ const CourseMetaDataIcon = ({ metadata, ...props }) => {
   if (metadata === false) return <CircleOff {...props} />;
 
   switch (String(metadata).toLowerCase()) {
-    case "spring cycle":
+    case "spring":
       return <Flower {...props} />;
-    case "summer cycle":
+    case "summer":
       return <Sun {...props} />;
-    case "autumn cycle":
+    case "autumn":
       return <Leaf {...props} />;
-    case "winter cycle":
+    case "winter":
       return <Snowflake {...props} />;
     case "online":
       return <Wifi {...props} />;

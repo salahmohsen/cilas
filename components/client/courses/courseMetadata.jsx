@@ -1,16 +1,21 @@
 import { cn } from "@/lib/utils";
 import CourseMetaDataIcon from "./courseMetaDataIcon";
+import { format } from "date-fns";
 
 const CourseMetadata = ({
-  year,
+  startDate,
   cycle,
   attendance_type,
   registration_status,
   className,
 }) => {
+  const year = Number(format(startDate, "yyyy"));
   return (
     <div
-      className={`${cn(className)} flex gap-4  text-xs leading-none text-muted-foreground`}
+      className={cn(
+        "flex gap-4  text-xs leading-none text-muted-foreground",
+        className,
+      )}
     >
       <Meta meta={year} />
       <Meta meta={cycle} />

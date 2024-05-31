@@ -12,6 +12,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "noImplicitAny": false,
     "plugins": [
       {
         "name": "next"
@@ -26,7 +27,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/layout/header/mainNav.tsx"
+    "components/client/header/mainNav.tsx",
+    "actions/dashboardActions.ts",
+    "app/(dashboard)/dashboard/page.jsx"
   ],
   "exclude": ["node_modules"]
 }

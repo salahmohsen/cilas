@@ -1,4 +1,4 @@
-export default async function Home() {
+export default async function HomePage() {
   return (
     <main className="mx-20 mt-10 text-center">
       <p>
