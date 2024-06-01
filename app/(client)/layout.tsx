@@ -22,7 +22,6 @@ const amiri = Amiri({
   display: "swap",
 });
 
-console.log("inter", inter);
 
 export const metadata: Metadata = {
   title: "Cairo Institute of Liberal Arts and Sciences",

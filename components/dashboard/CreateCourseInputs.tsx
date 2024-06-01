@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import DOMPurify from "dompurify";
+import sanitizeHtml from "sanitize-html";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -565,17 +565,59 @@ export const CCFtipTapInput: React.FC<propTypes> = ({
   placeholder,
   className,
 }) => {
+  const clean = (dirty) =>
+    sanitizeHtml(dirty, {
+      // Define allowed tags
+      allowedTags: [
+        "p",
+        "h4",
+        "hr",
+        "li",
+        "ol",
+        "ul",
+        "em",
+        "i",
+        "strong",
+        "blockquote",
+        "s",
+        "a",
+        "br",
+      ],
+      // Transform 'a' tags to add target and rel attributes
+      transformTags: {
+        a: sanitizeHtml.simpleTransform("a", {
+          target: "_blank",
+          rel: "noopener noreferrer",
+        }),
+      },
+      // Define allowed attributes
+      allowedAttributes: {
+        a: ["href", "target", "rel"],
+        iframe: [
+          {
+            name: "sandbox",
+            multiple: true,
+            values: ["allow-popups", "allow-same-origin", "allow-scripts"],
+          },
+        ],
+      },
+      // Define allowed iframe hostnames
+      allowedIframeHostnames: ["www.youtube.com"],
+    });
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem>
+          {("go to the server", console.log(field.value))}
+
           <FormLabel>{formLabel}</FormLabel>
           <FormControl>
             <TipTap
               description={field.value}
-              onChange={(change) => field.onChange(DOMPurify.sanitize(change))}
+              onChange={(change) => field.onChange(clean(change))}
               placeholder={placeholder}
             />
           </FormControl>

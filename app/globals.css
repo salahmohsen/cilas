@@ -71,9 +71,19 @@
     font-family: var(--font-inter), var(--font-amiri);
     @apply bg-background text-foreground;
   }
+
+  h2 {
+    @apply prose-lg scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
+  }
+
   h3 {
     font-family: var(--font-yeseva), var(--font-inter), var(--font-amiri);
   }
+
+  #article-body > blockquote {
+    @apply mx-6 my-6 border-l-2 pl-6 italic;
+  }
+
   * {
     @apply border-border;
   }
