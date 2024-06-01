@@ -23,9 +23,10 @@ import {
   CCFtimeSInput,
   CCFmultiSelectorInput,
   CCFdateRange,
-} from "@/components/dashboard/ccInputsComponents";
+  CCFtipTapInput,
+} from "@/components/dashboard/CreateCourseInputs";
 
-import SubmitButton from "@/components/dashboard/submitCourseBT";
+import SubmitButton from "@/components/dashboard/SubmitButton";
 
 const CreateCoursePage = () => {
   const startMinuteRef = useRef(null);
@@ -85,12 +86,17 @@ const CreateCoursePage = () => {
                       formLabel="Title"
                       placeholder="English Title"
                     />
-                    <CCFtextAreaInput
+                    <CCFtipTapInput
+                      control={form.control}
+                      name="enContent"
+                      placeholder="Write English course description here..."
+                    />
+                    {/* <CCFtextAreaInput
                       control={form.control}
                       name="enContent"
                       formLabel="Content"
-                      placeholder="Write English course details here..."
-                    />
+                      placeholder="Write English course description here..." 
+                    /> */}
                   </div>
                 </TabsContent>
                 <TabsContent value="ArVersion">
@@ -101,12 +107,18 @@ const CreateCoursePage = () => {
                       formLabel="Title"
                       placeholder="Arabic Title"
                     />
-                    <CCFtextAreaInput
+                    <CCFtipTapInput
+                      control={form.control}
+                      name="arContent"
+                      placeholder="Write Arabic course description here..."
+                    />
+
+                    {/* <CCFtextAreaInput
                       control={form.control}
                       name="arContent"
                       formLabel="Content"
                       placeholder="Write Arabic course details here..."
-                    />
+                    /> */}
                   </div>
                 </TabsContent>
               </Tabs>

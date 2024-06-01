@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import CourseMetaDataIcon from "./courseMetaDataIcon";
+import CourseMetaDataIcon from "./CourseMetaDataIcon";
 import { format } from "date-fns";
 
 const CourseMetadata = ({

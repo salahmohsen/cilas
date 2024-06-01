@@ -5,7 +5,6 @@ import {
   ArrowUpCircle,
   CheckCircle2,
   Circle,
-  HelpCircle,
   LucideIcon,
   XCircle,
 } from "lucide-react";
@@ -58,7 +57,7 @@ const statuses: Status[] = [
 export function Available() {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-    null
+    null,
   );
 
   return (
@@ -93,7 +92,7 @@ export function Available() {
                     onSelect={(value) => {
                       setSelectedStatus(
                         statuses.find((priority) => priority.value === value) ||
-                          null
+                          null,
                       );
                       setOpen(false);
                     }}
@@ -103,7 +102,7 @@ export function Available() {
                         "mr-2 h-4 w-4",
                         status.value === selectedStatus?.value
                           ? "opacity-100"
-                          : "opacity-40"
+                          : "opacity-40",
                       )}
                     />
                     <span>{status.label}</span>

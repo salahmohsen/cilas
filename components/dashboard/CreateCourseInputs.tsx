@@ -1,7 +1,8 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import DOMPurify from "dompurify";
 
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -51,11 +52,12 @@ import {
 } from "../ui/form";
 import { z } from "zod";
 import { toast } from "sonner";
+import TipTap from "../ui/TipTap";
 
 const CCFinputPropsSchema = z.object({
   control: z.any(),
   name: z.string(),
-  formLabel: z.string(),
+  formLabel: z.string().optional(),
   placeholder: z.string().optional(),
   className: z.string().optional(),
   emptyMsg: z.string().optional(),
@@ -553,5 +555,33 @@ export const CCFdateRange: React.FC<propTypes> = ({
         )}
       />
     </div>
+  );
+};
+
+export const CCFtipTapInput: React.FC<propTypes> = ({
+  control,
+  name,
+  formLabel,
+  placeholder,
+  className,
+}) => {
+  return (
+    <FormField
+      control={control}
+      name={name}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel>{formLabel}</FormLabel>
+          <FormControl>
+            <TipTap
+              description={field.value}
+              onChange={(change) => field.onChange(DOMPurify.sanitize(change))}
+              placeholder={placeholder}
+            />
+          </FormControl>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
   );
 };

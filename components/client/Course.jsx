@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import CourseMetadata from "./courseMetadata";
-import FacilitatorHoverCard from "./facilitatorHoverCard";
+import CourseMetadata from "./CourseMetadata";
+import FacilitatorHoverCard from "./CourseFacilitatorHoverCard";
 import { Yeseva_One } from "next/font/google";
 import { getAuthor } from "@/actions/clientActions";
 
@@ -37,13 +37,10 @@ const Course = async ({
   updatedAt,
   isOpen = false,
   className,
-  ...props
 }) => {
   const authorData = await getAuthor(authorId);
   const authorName =
     authorData[0]["firstName"] + " " + authorData[0]["lastName"];
-  const firstPostLetter = enContent.charAt(0);
-  const postWithoutFirstLetter = enContent.substr(1);
 
   return (
     <article
@@ -91,14 +88,11 @@ const Course = async ({
         </div>
       </div>
       {isOpen && (
-        <div id="article-body" className="prose mx-auto ">
-          <p>
-            <span className="className={`${yesevaOne.className}   text-slate-900`} float-left mb-0  mr-3 mt-5 h-min text-7xl uppercase tracking-widest">
-              {firstPostLetter}
-            </span>
-            {postWithoutFirstLetter}
-          </p>
-        </div>
+        <div
+          id="article-body"
+          className="prose mx-auto"
+          dangerouslySetInnerHTML={{ __html: enContent }}
+        ></div>
       )}
     </article>
   );

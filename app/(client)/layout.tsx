@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Amiri } from "next/font/google";
 import "@/app/globals.css";
-import { MainNav } from "@/components/client/header/mainNav";
+import { MainNav } from "@/components/client/HeaderMainNav";
 import logo from "@/public/logo.png";
 import Image from "next/image";
-import { FloatingNav } from "@/components/client/header/floatingNav";
+import { FloatingNav } from "@/components/client/HeaderFloatingNav";
 import { Bird, Brain, HomeIcon, Map, Rss } from "lucide-react";
 import Link from "next/link";
 

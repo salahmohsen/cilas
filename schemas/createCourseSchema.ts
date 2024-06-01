@@ -4,10 +4,10 @@ import { toast } from "sonner";
 export type FormInputs = z.infer<typeof createCourseSchema>;
 export const createCourseSchema = z
   .object({
-    enTitle: z.string().optional(),
-    arTitle: z.string().optional(),
-    enContent: z.string().optional(),
-    arContent: z.string().optional(),
+    enTitle: z.string().trim().optional(),
+    arTitle: z.string().trim().optional(),
+    enContent: z.string().trim().optional(),
+    arContent: z.string().trim().optional(),
     authorId: z.string().regex(/^\d+$/),
     imageUrl: z.string().url().optional(),
     seasonCycle: z.enum(["winter", "spring", "summer", "autumn"]),

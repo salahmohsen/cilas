@@ -6,10 +6,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 import { Label } from "@/components/ui/label";
 
-import { Available } from "./available";
-import { Type } from "./type";
+import { Available } from "./SidebarAvailable";
+import { Type } from "./SidebarType";
 
 const Sidebar = () => {
   return (
