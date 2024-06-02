@@ -15,20 +15,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRightFromLine } from "lucide-react";
 
 import {
-  CCFtextInput,
-  CCFtextAreaInput,
-  CCFFileInput,
-  CCFSelectInput,
-  CCFcomboBoxInput,
-  CCFtimeSInput,
-  CCFmultiSelectorInput,
-  CCFdateRange,
-  CCFtipTapInput,
-} from "@/components/dashboard/CreateCourseInputs";
+  TextInput,
+  FileInput,
+  SelectInput,
+  ComboBoxInput,
+  TimeInput,
+  MultiSelectorInput,
+  DateRangeInput,
+  TipTapInput,
+} from "@/components/dashboard/FormInputs";
 
 import SubmitButton from "@/components/dashboard/SubmitButton";
 
-const CreateCoursePage = () => {
+export default function CreateCoursePage() {
   const startMinuteRef = useRef(null);
   const endHourRef = useRef(null);
   const endMinuteRef = useRef(null);
@@ -47,7 +46,7 @@ const CreateCoursePage = () => {
     { success: "", error: undefined },
   );
 
-  function action({ formData }) {
+  function action({ formData }: { formData: FormData }) {
     form.handleSubmit(() => formAction(formData))();
   }
 
@@ -80,50 +79,37 @@ const CreateCoursePage = () => {
                 </TabsList>
                 <TabsContent value="EnVersion">
                   <div className="flex flex-col gap-6">
-                    <CCFtextInput
+                    <TextInput
                       control={form.control}
                       name="enTitle"
                       formLabel="Title"
                       placeholder="English Title"
                     />
-                    <CCFtipTapInput
+                    <TipTapInput
                       control={form.control}
                       name="enContent"
                       placeholder="Write English course description here..."
                     />
-                    {/* <CCFtextAreaInput
-                      control={form.control}
-                      name="enContent"
-                      formLabel="Content"
-                      placeholder="Write English course description here..." 
-                    /> */}
                   </div>
                 </TabsContent>
                 <TabsContent value="ArVersion">
                   <div className="flex flex-col gap-6">
-                    <CCFtextInput
+                    <TextInput
                       control={form.control}
                       name="arTitle"
                       formLabel="Title"
                       placeholder="Arabic Title"
                     />
-                    <CCFtipTapInput
+                    <TipTapInput
                       control={form.control}
                       name="arContent"
                       placeholder="Write Arabic course description here..."
                     />
-
-                    {/* <CCFtextAreaInput
-                      control={form.control}
-                      name="arContent"
-                      formLabel="Content"
-                      placeholder="Write Arabic course details here..."
-                    /> */}
                   </div>
                 </TabsContent>
               </Tabs>
               <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <CCFcomboBoxInput
+                <ComboBoxInput
                   control={form.control}
                   name="authorId"
                   formLabel="Facilitator"
@@ -132,14 +118,14 @@ const CreateCoursePage = () => {
                   action={getUsers}
                   searchPlaceholder="Search facilitators..."
                 />
-                <CCFtextInput
+                <TextInput
                   control={form.control}
                   name="courseFlowUrl"
                   formLabel="Course Flow"
                   placeholder="Course Flow Url"
                 />
 
-                <CCFFileInput
+                <FileInput
                   control={form.control}
                   name="imageUrl"
                   formLabel="Course Poster"
@@ -151,62 +137,53 @@ const CreateCoursePage = () => {
               <legend className="-ml-1 px-1 text-sm font-medium">
                 Course Metadata
               </legend>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <CCFdateRange
+              <div className="flex flex-col gap-6">
+                <DateRangeInput
                   control={form.control}
                   name="dateRange"
                   formLabel="Start and End Date"
                 />
-                <CCFSelectInput
+                <SelectInput
                   control={form.control}
                   name="registrationStatus"
                   formLabel="Registration Status"
                   placeholder="Select status"
-                  options={["Open", "Closed"]}
+                  selects={[{ selectItems: ["Open", "Closed"] }]}
                 />
-                <CCFtextInput
+                <TextInput
                   control={form.control}
                   name="applyUrl"
                   formLabel="Registration Form"
                   placeholder="Registration Form Url"
                 />
-                <CCFSelectInput
+                <SelectInput
                   control={form.control}
                   name="attendance"
                   formLabel="Attendance"
                   placeholder="Select mode"
-                  options={["Online", "Offline", "Hybrid"]}
+                  selects={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
                 />
-                <CCFtextInput
+                <TextInput
                   control={form.control}
                   name="price"
                   formLabel="Price"
                   placeholder="Enter price"
                 />
-                <CCFSelectInput
+                <SelectInput
                   control={form.control}
                   name="category"
                   formLabel="Category"
                   placeholder="Select category"
-                  options={["Thematic", "Lab"]}
+                  selects={[
+                    { selectItems: ["Seasonal Course", "Workshop"] },
+                    {
+                      groupLabel: "Seasonal Semester",
+                      selectItems: ["Thematic Course", "Lab"],
+                    },
+                  ]}
                 />
 
-                <CCFSelectInput
-                  control={form.control}
-                  name="seasonCycle"
-                  formLabel="Season Cycle"
-                  placeholder="Select cycle"
-                  options={["Winter", "Spring", "Summer", "Autumn"]}
-                />
-
-                <CCFSelectInput
-                  control={form.control}
-                  name="weekDuration"
-                  placeholder="Select Weeks number"
-                  formLabel="Week Duration"
-                  options={Array.from({ length: 15 }, (_, i) => String(1 + i))}
-                />
-                <CCFmultiSelectorInput
+                <MultiSelectorInput
                   control={form.control}
                   name="days"
                   formLabel={"Days"}
@@ -223,7 +200,7 @@ const CreateCoursePage = () => {
                   ]}
                 />
                 <div className=" -ml-4 flex w-full scale-90 items-center gap-2  md:ml-0 md:scale-100  ">
-                  <CCFtimeSInput
+                  <TimeInput
                     control={form.control}
                     name="sessionStartTime"
                     formLabel="Time Slot"
@@ -237,7 +214,7 @@ const CreateCoursePage = () => {
                     strokeWidth={0.8}
                     className="mt-[53px] hidden md:block"
                   />
-                  <CCFtimeSInput
+                  <TimeInput
                     control={form.control}
                     name="sessionEndTime"
                     formLabel={"‎"}
@@ -255,6 +232,4 @@ const CreateCoursePage = () => {
       </div>
     </main>
   );
-};
-
-export default CreateCoursePage;
+}

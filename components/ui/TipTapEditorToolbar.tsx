@@ -1,5 +1,6 @@
 "use client";
 import { type Editor } from "@tiptap/react";
+
 import {
   Bold,
   Strikethrough,
@@ -12,6 +13,14 @@ import {
   Link2,
   Link2Off,
   Pilcrow,
+  Youtube,
+  Undo,
+  Redo,
+  AlignJustify,
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  RemoveFormatting,
 } from "lucide-react";
 
 import { Toggle } from "./toggle";
@@ -47,10 +56,20 @@ const EditorToolbar = ({ editor }: Props) => {
       .run();
   }, [editor]);
 
+  const addYoutubeVideo = () => {
+    const url = prompt("Enter YouTube URL");
+
+    if (url) {
+      editor?.commands.setYoutubeVideo({
+        src: url,
+      });
+    }
+  };
+
   if (!editor) return null;
 
   return (
-    <div className="rounded-md border border-input bg-transparent ">
+    <div className="flex flex-wrap justify-center rounded-md border border-input bg-transparent">
       <Toggle
         size="sm"
         pressed={editor.isActive("paragraph")}
@@ -99,6 +118,7 @@ const EditorToolbar = ({ editor }: Props) => {
       <Toggle
         size="sm"
         pressed={editor.isActive("bulletList")}
+        className="hidden md:block"
         onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
       >
         <ToolbarIcon icon={<List className="h-4 w-4" />} name="Bullet List" />
@@ -106,6 +126,7 @@ const EditorToolbar = ({ editor }: Props) => {
 
       <Toggle
         size="sm"
+        className="hidden md:block"
         pressed={editor.isActive("orderedList")}
         onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
       >
@@ -151,6 +172,96 @@ const EditorToolbar = ({ editor }: Props) => {
         disabled={!editor.isActive("link")}
       >
         <ToolbarIcon icon={<Link2Off className="h-4 w-4" />} name="Link" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        className="hidden md:block"
+        pressed={editor.isActive({ textAlign: "left" })}
+        onPressedChange={() => {
+          editor.chain().focus().setTextAlign("left").run();
+        }}
+      >
+        <ToolbarIcon icon={<AlignLeft className="h-4 w-4" />} name="Left" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        className="hidden md:block"
+        pressed={editor.isActive({ textAlign: "center" })}
+        className={editor.isActive({ textAlign: "center" }) ? "is-active" : ""}
+        onPressedChange={() => {
+          editor.chain().focus().setTextAlign("center").run();
+        }}
+      >
+        <ToolbarIcon icon={<AlignCenter className="h-4 w-4" />} name="Center" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        className="hidden md:block"
+        pressed={editor.isActive({ textAlign: "right" })}
+        onPressedChange={() => {
+          editor.chain().focus().setTextAlign("right").run();
+        }}
+      >
+        <ToolbarIcon icon={<AlignRight className="h-4 w-4" />} name="Right" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        className="hidden md:block"
+        pressed={editor.isActive({ textAlign: "justify" })}
+        onPressedChange={() => {
+          editor.chain().focus().setTextAlign("justify").run();
+        }}
+      >
+        <ToolbarIcon
+          icon={<AlignJustify className="h-4 w-4" />}
+          name="Justify"
+        />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        className="hidden md:block"
+        pressed={editor.isActive("undo")}
+        onPressedChange={() => editor.chain().focus().undo().run()}
+      >
+        <ToolbarIcon icon={<Undo className="h-4 w-4" />} name="Undo" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        className="hidden md:block"
+        pressed={editor.isActive("redo")}
+        onPressedChange={() => editor.chain().focus().redo().run()}
+      >
+        <ToolbarIcon icon={<Redo className="h-4 w-4" />} name="Redo" />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("youtube")}
+        onPressedChange={addYoutubeVideo}
+      >
+        <ToolbarIcon
+          icon={<Youtube className="h-4 w-4" />}
+          name="Youtube video"
+        />
+      </Toggle>
+
+      <Toggle
+        size="sm"
+        pressed={editor.isActive("clearFormatting")}
+        onPressedChange={() =>
+          editor.chain().focus().clearNodes().unsetAllMarks().run()
+        }
+      >
+        <ToolbarIcon
+          icon={<RemoveFormatting className="h-4 w-4" />}
+          name="Clear formatting"
+        />
       </Toggle>
     </div>
   );

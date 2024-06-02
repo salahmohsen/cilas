@@ -5,6 +5,10 @@ import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
 import Typography from "@tiptap/extension-typography";
 import Link from "@tiptap/extension-link";
+import Youtube from "@tiptap/extension-youtube";
+import TextAlign from "@tiptap/extension-text-align";
+import TextDirection from "tiptap-text-direction";
+
 import EditorToolbar from "./TipTapEditorToolbar";
 
 const TipTap = ({
@@ -19,16 +23,19 @@ const TipTap = ({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        paragraph: { HTMLAttributes: { class: "prose-base" } },
+        paragraph: {
+          HTMLAttributes: { class: "prose-base " },
+        },
         heading: {
           HTMLAttributes: {
             levels: [4],
-            class: "prose-lg scroll-m-20 font-semibold tracking-tight",
+            class: "prose-lg scroll-m-20 font-semibold tracking-tight ",
           },
         },
         blockquote: {
           HTMLAttributes: {
-            class: "mx-6 my-6 border-l-2 pl-6 italic",
+            class:
+              "mx-6 my-6 rounded-2xl border-l-2 bg-gray-100 p-5 pl-6 text-justify font-semibold italic leading-8 text-gray-700 shadow-sm",
           },
         },
         bulletList: {
@@ -55,22 +62,38 @@ const TipTap = ({
         },
         autolink: false,
       }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"],
+      }),
+      Youtube.configure({
+        inline: false,
+        width: 480,
+        height: 320,
+        nocookie: true,
+        ccLanguage: "en",
+        HTMLAttributes: {
+          class:
+            "float-right ml-6 rounded-md border border-input float bg-background px-3 py-3 ring-offset-2",
+        },
+      }),
+      TextDirection.configure({
+        types: ["heading", "paragraph", "blockquote"],
+      }),
     ],
     content: description,
     editorProps: {
       attributes: {
         class:
-          "overflow-y-auto scrollbar-thin min-h-[150px] max-h-[300px] rounded-md border border-input bg-background px-3 py-3 ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "overflow-y-auto scrollbar-thin min-h-[150px] rounded-md border border-input bg-background px-3 py-3 ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
       },
     },
     onUpdate({ editor }) {
       onChange(editor.getHTML());
-      console.log(editor.getHTML());
     },
   });
 
   return (
-    <div className="flex min-h-[250px] flex-col justify-stretch gap-1">
+    <div className="flex flex-col gap-1">
       <EditorToolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>

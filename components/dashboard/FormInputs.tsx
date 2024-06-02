@@ -13,11 +13,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
 import {
-  SelectValue,
-  SelectTrigger,
-  SelectItem,
-  SelectContent,
   Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 
 import {
@@ -54,31 +56,19 @@ import { z } from "zod";
 import { toast } from "sonner";
 import TipTap from "../ui/TipTap";
 
-const CCFinputPropsSchema = z.object({
+const CommonInputPropsSchema = z.object({
   control: z.any(),
   name: z.string(),
   formLabel: z.string().optional(),
   placeholder: z.string().optional(),
   className: z.string().optional(),
   emptyMsg: z.string().optional(),
-  options: z
-    .union([
-      z.array(
-        z.object({
-          label: z.string(),
-          value: z.string(),
-          disable: z.boolean().optional(),
-        }),
-      ),
-      z.array(z.union([z.string(), z.number()])),
-    ])
-    .optional(),
   onchange: z.function().optional(),
 });
 
-type propTypes = z.infer<typeof CCFinputPropsSchema>;
+type commonPropTypes = z.infer<typeof CommonInputPropsSchema>;
 
-export const CCFtextInput: React.FC<propTypes> = ({
+export const TextInput: React.FC<commonPropTypes> = ({
   control,
   name,
   formLabel,
@@ -109,7 +99,7 @@ export const CCFtextInput: React.FC<propTypes> = ({
   );
 };
 
-export const CCFtextAreaInput: React.FC<propTypes> = ({
+export const TextAreaInput: React.FC<commonPropTypes> = ({
   control,
   name,
   formLabel,
@@ -139,7 +129,7 @@ export const CCFtextAreaInput: React.FC<propTypes> = ({
   );
 };
 
-export const CCFFileInput: React.FC<propTypes> = ({
+export const FileInput: React.FC<commonPropTypes> = ({
   control,
   name,
   formLabel,
@@ -166,12 +156,27 @@ export const CCFFileInput: React.FC<propTypes> = ({
   );
 };
 
-export const CCFSelectInput: React.FC<propTypes> = ({
+const SelectPropsSchema = CommonInputPropsSchema.merge(
+  z.object({
+    selects: z
+      .array(
+        z.object({
+          groupLabel: z.string().optional(),
+          selectItems: z.array(z.string()),
+        }),
+      )
+      .optional(),
+  }),
+);
+
+type selectType = z.infer<typeof SelectPropsSchema>;
+
+export const SelectInput: React.FC<selectType> = ({
   control,
   name,
   formLabel,
   placeholder,
-  options,
+  selects,
 }) => {
   return (
     <FormField
@@ -190,11 +195,26 @@ export const CCFSelectInput: React.FC<propTypes> = ({
                 <SelectValue placeholder={placeholder} />
               </SelectTrigger>
               <SelectContent>
-                {options?.map((option) => (
-                  <SelectItem key={option} value={option}>
-                    {option}
-                  </SelectItem>
-                ))}
+                {selects?.map((selectOption) => {
+                  if (selectOption.groupLabel) {
+                    return (
+                      <SelectGroup key={selectOption.groupLabel}>
+                        <SelectLabel>{selectOption.groupLabel}</SelectLabel>
+                        {selectOption.selectItems.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    );
+                  } else {
+                    return selectOption.selectItems.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ));
+                  }
+                })}
               </SelectContent>
             </Select>
           </FormControl>
@@ -207,7 +227,7 @@ export const CCFSelectInput: React.FC<propTypes> = ({
 
 /// Data Types ///
 
-const CCFcomboBoxInputPropsSchema = CCFinputPropsSchema.merge(
+const ComboBoxInputPropsSchema = CommonInputPropsSchema.merge(
   z.object({
     commandEmptyMsg: z.string(),
     action: z.function().optional(),
@@ -215,21 +235,20 @@ const CCFcomboBoxInputPropsSchema = CCFinputPropsSchema.merge(
   }),
 );
 
-type comboBoxType = z.infer<typeof CCFcomboBoxInputPropsSchema>;
+type comboBoxType = z.infer<typeof ComboBoxInputPropsSchema>;
 
 interface FetchData {
   value: string;
   label: string;
 }
 
-export const CCFcomboBoxInput: React.FC<comboBoxType> = ({
+export const ComboBoxInput: React.FC<comboBoxType> = ({
   control,
   name,
   formLabel,
   placeholder = "",
   searchPlaceholder = "",
   className,
-  options,
   action,
   commandEmptyMsg,
 }) => {
@@ -243,7 +262,7 @@ export const CCFcomboBoxInput: React.FC<comboBoxType> = ({
           setLoading(true);
           const fetchDataResult: unknown = await action?.();
           if (fetchDataResult !== undefined) {
-            const fetchData: FetchData = fetchDataResult as FetchData;
+            const fetchData: FetchData[] = fetchDataResult as FetchData[];
             setLoading(false);
             setData(fetchData);
           }
@@ -341,7 +360,7 @@ export const CCFcomboBoxInput: React.FC<comboBoxType> = ({
   );
 };
 
-export const CCFDateInput: React.FC<propTypes> = ({
+export const DateInput: React.FC<commonPropTypes> = ({
   control,
   name,
   formLabel,
@@ -394,10 +413,9 @@ interface TimeInputRefs {
   minuteRef?: React.RefObject<HTMLInputElement>;
   transitionRef?: React.RefObject<HTMLInputElement>;
 }
-type timeInputTypeZod = z.infer<typeof CCFinputPropsSchema>;
-type timeType = timeInputTypeZod & TimeInputRefs;
+type timeType = z.infer<typeof CommonInputPropsSchema> & TimeInputRefs;
 
-export const CCFtimeSInput: React.FC<timeType> = ({
+export const TimeInput: React.FC<timeType> = ({
   control,
   name,
   formLabel,
@@ -453,7 +471,23 @@ export const CCFtimeSInput: React.FC<timeType> = ({
   );
 };
 
-export const CCFmultiSelectorInput: React.FC<propTypes> = ({
+const MultiSelectorProps = CommonInputPropsSchema.merge(
+  z.object({
+    options: z
+      .array(
+        z.object({
+          label: z.string(),
+          value: z.string(),
+          disable: z.boolean().optional(),
+        }),
+      )
+      .optional(),
+  }),
+);
+
+type MultiSelectorType = z.infer<typeof MultiSelectorProps>;
+
+export const MultiSelectorInput: React.FC<MultiSelectorType> = ({
   control,
   name,
   formLabel,
@@ -484,8 +518,8 @@ export const CCFmultiSelectorInput: React.FC<propTypes> = ({
                   "py-1 mx-1 text-zinc-800 bg-gray-100 hover:bg-gray-300 rounded-sm"
                 }
                 hidePlaceholderWhenSelected={true}
-                selected={field.value}
-                setSelected={(values: any[]) => field.onChange(values)}
+                value={field.value}
+                onChange={(value) => field.onChange(value)}
               />
             </FormControl>
             <FormMessage />
@@ -496,7 +530,7 @@ export const CCFmultiSelectorInput: React.FC<propTypes> = ({
   );
 };
 
-export const CCFdateRange: React.FC<propTypes> = ({
+export const DateRangeInput: React.FC<commonPropTypes> = ({
   control,
   name,
   formLabel,
@@ -558,16 +592,15 @@ export const CCFdateRange: React.FC<propTypes> = ({
   );
 };
 
-export const CCFtipTapInput: React.FC<propTypes> = ({
+export const TipTapInput: React.FC<commonPropTypes> = ({
   control,
   name,
   formLabel,
   placeholder,
   className,
 }) => {
-  const clean = (dirty) =>
-    sanitizeHtml(dirty, {
-      // Define allowed tags
+  const clean = (dirty: string) => {
+    const options = {
       allowedTags: [
         "p",
         "h4",
@@ -582,6 +615,7 @@ export const CCFtipTapInput: React.FC<propTypes> = ({
         "s",
         "a",
         "br",
+        "iframe",
       ],
       // Transform 'a' tags to add target and rel attributes
       transformTags: {
@@ -593,17 +627,30 @@ export const CCFtipTapInput: React.FC<propTypes> = ({
       // Define allowed attributes
       allowedAttributes: {
         a: ["href", "target", "rel"],
+        p: ["dir"],
+        h4: ["dir"],
         iframe: [
-          {
-            name: "sandbox",
-            multiple: true,
-            values: ["allow-popups", "allow-same-origin", "allow-scripts"],
-          },
+          "src",
+          "width",
+          "height",
+          "allowfullscreen",
+          "autoplay",
+          "cclanguage",
+          "disablekbcontrols",
+          "enableiframeapi",
+          "endtime",
+          "ivloadpolicy",
+          "loop",
+          "modestbranding",
+          "start",
         ],
       },
       // Define allowed iframe hostnames
-      allowedIframeHostnames: ["www.youtube.com"],
-    });
+      allowedIframeHostnames: ["www.youtube.com", "www.youtube-nocookie.com"],
+    };
+
+    return sanitizeHtml(dirty, options);
+  };
 
   return (
     <FormField
@@ -611,9 +658,8 @@ export const CCFtipTapInput: React.FC<propTypes> = ({
       name={name}
       render={({ field }) => (
         <FormItem>
-          {("go to the server", console.log(field.value))}
-
           <FormLabel>{formLabel}</FormLabel>
+
           <FormControl>
             <TipTap
               description={field.value}

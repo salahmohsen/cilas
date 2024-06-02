@@ -50,6 +50,7 @@ export const createCourseAction = async (
 
     return { success: "Course created successfully!" };
   } catch (error) {
+    console.log(error);
     return { error: "Oops! Course addition failed. Please try again later." };
   }
 };

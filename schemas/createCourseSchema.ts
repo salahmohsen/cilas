@@ -10,14 +10,12 @@ export const createCourseSchema = z
     arContent: z.string().trim().optional(),
     authorId: z.string().regex(/^\d+$/),
     imageUrl: z.string().url().optional(),
-    seasonCycle: z.enum(["winter", "spring", "summer", "autumn"]),
     category: z.string(),
     attendance: z.enum(["offline", "online", "hybrid"]),
     registrationStatus: z.enum(["open", "closed"]),
     price: z.string().regex(/^\d+$/).optional(),
     sessionStartTime: z.date(),
     sessionEndTime: z.date(),
-    weekDuration: z.string().regex(/^\d+$/),
     days: z.array(
       z.object({
         label: z.string(),
