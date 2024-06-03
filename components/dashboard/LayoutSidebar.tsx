@@ -19,9 +19,9 @@ import {
   SquareUserIcon,
 } from "lucide-react";
 
-export default function LayoutAside() {
+export default function LayoutSidebar() {
   return (
-    <aside className="inset-y fixed  left-0 z-20 flex h-full flex-col border-r">
+    <aside className="inset-y fixed  left-0 z-20 hidden h-full flex-col border-r sm:flex">
       <div className="border-b p-2">
         <Button aria-label="Home" size="icon" variant="outline">
           <Image src={logo} alt="Cilas" width={16} className="h-auto" />

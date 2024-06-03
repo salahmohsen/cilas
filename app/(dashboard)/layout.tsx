@@ -4,8 +4,9 @@ import { Amiri } from "next/font/google";
 
 import "@/app/globals.css";
 
-import LayoutAside from "@/components/dashboard/LayoutAside";
+import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
 import LayoutHeader from "@/components/dashboard/LayoutHeader";
+import LayoutBreadcrumb from "@/components/dashboard/LayoutBreadcrumb";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,11 +33,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${amiri.variable}`}>
-        <div className="grid h-screen w-full ">
-          <LayoutAside />
+      <body className={`${inter.variable} ${amiri.variable} `}>
+        <main>
+          <LayoutSidebar />
           <LayoutHeader>{children}</LayoutHeader>
-        </div>
+        </main>
       </body>
     </html>
   );

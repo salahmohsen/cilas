@@ -95,5 +95,6 @@
 
   * {
     @apply border-border;
+    /* @apply outline-dashed outline-1 outline-blue-400; */
   }
 }

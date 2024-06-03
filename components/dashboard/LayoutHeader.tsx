@@ -15,13 +15,18 @@ import {
 import placeholderUser from "@/public/placeholder-user.svg";
 
 import { Search } from "lucide-react";
+import LayoutMobileSidebar from "./LayoutMobileSidebar";
+import LayoutBreadcrumb from "./LayoutBreadcrumb";
 
 export default function LayoutHeader({ children }) {
   return (
-    <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-      <header className="sticky top-0 z-10  flex h-[57px] items-center justify-between gap-1 border-b bg-background px-4 ">
-        <h1 className="text-xl font-semibold">Dashboard</h1>
-        <div className="flex gap-5">
+    <div className="flex flex-col sm:gap-4 sm:pl-14 md:py-0">
+      <header className="sticky top-0 z-10 flex h-[57px] w-full items-center justify-between gap-1 border-b bg-background px-4">
+        <div className="flex items-center gap-2">
+          <LayoutMobileSidebar />
+          <LayoutBreadcrumb />
+        </div>
+        <div className="flex gap-3">
           <div className="relative ml-auto flex-1 md:grow-0">
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input

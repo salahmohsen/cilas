@@ -21,6 +21,11 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+export const courseCategory = pgTable("course_category", {
+  id: serial("id").primaryKey(),
+  category: text("category"),
+});
+
 export const courses = pgTable("course", {
   id: serial("id").primaryKey(),
   enTitle: text("en_title").notNull(),
