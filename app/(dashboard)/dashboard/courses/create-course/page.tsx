@@ -1,18 +1,19 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { useEffect, useRef } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useRef, useState } from "react";
+import { useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { FormInputs, createCourseSchema } from "@/schemas/createCourseSchema";
+import { FormInputs, createCourseSchema } from "@/schemas/newCourseSchema";
 
-import { createCourseAction, getUsers } from "@/actions/dashboardActions";
+import { createCourseAction, getCourseById } from "@/actions/CoursesActions";
+import { getUsers } from "@/actions/usersActions";
 
 import { Toaster, toast } from "sonner";
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowRightFromLine } from "lucide-react";
+import { ArrowRightFromLine, Squirrel } from "lucide-react";
 
 import {
   TextInput,
@@ -27,11 +28,17 @@ import {
 
 import SubmitButton from "@/components/dashboard/SubmitButton";
 
-export default function CreateCoursePage() {
+export default function CreateCoursePage({
+  isEditForm = false,
+  courseId = null,
+}) {
+  // Time Refs passed to start and end session input to change focus between them automatically
   const startMinuteRef = useRef(null);
   const endHourRef = useRef(null);
   const endMinuteRef = useRef(null);
   const startHourRef = useRef(null);
+
+
   const form = useForm<FormInputs>({
     resolver: zodResolver(createCourseSchema),
     defaultValues: {
@@ -41,30 +48,88 @@ export default function CreateCoursePage() {
       },
     },
   });
-  const [formState, formAction] = useFormState(
+
+  const {  reset, getValues, formState } = form;
+
+
+/* This `useEffect` checking if the component is in edit mode (`isEditForm`). 
+If yes it calls the `getCourseById` function to fetch course data based on the `courseId` provided from edit page */
+
+  useEffect(() => {
+    if (isEditForm && courseId) {
+      try {
+        getCourseById(courseId).then((course) => {
+          const startTimeParts = course.sessionStartTime.split(":");
+          const endTimeParts = course.sessionEndTime.split(":");
+          const courseValues: FormInputs = {
+            enTitle: course.enTitle || '',
+            arTitle: course.arTitle || '',
+            enContent: course.enContent || '',
+            arContent: course.arContent || '',
+            authorId: String(course.authorId),
+            imageUrl: course.imageUrl || '',
+            category: course.category,
+            attendance: course.attendance as "offline" | "online" | "hybrid",
+            registrationStatus: course.registrationStatus ? "open" : "closed" as "open" | "closed",
+            price:  String(course.price) || '',
+            sessionStartTime: new Date(
+              0,
+              0,
+              0,
+              Number(startTimeParts[0]),
+              Number(startTimeParts[1]),
+            ),
+            sessionEndTime: new Date(
+              0,
+              0,
+              0,
+              Number(endTimeParts[0]),
+              Number(endTimeParts[1]),
+            ),
+            days: course.days as { value: string; label: string; disable?: boolean }[],
+            courseFlowUrl: course.courseFlowUrl || '',
+            applyUrl: course.applyUrl || '',
+            dateRange: {
+              from: new Date(course.startDate),
+              to: new Date(course.endDate),
+            },
+          };
+          reset(courseValues);
+        });
+      } catch (error) {
+        toast.error(
+          <div className="flex gap-2">
+            <Squirrel />
+            <span>Failed fetching course data, Please try again later!</span>
+          </div>,
+        );
+      }
+    }
+  }, [courseId, isEditForm, reset]);
+
+  const [formStatus, formAction] = useFormState(
     createCourseAction.bind(null, form.getValues()),
     { success: "", error: undefined },
   );
 
-  function action({ formData }: { formData: FormData }) {
-    form.handleSubmit(() => formAction(formData))();
+  function action() {
+    form.handleSubmit(() => formAction())();
   }
 
   useEffect(() => {
-    if (formState.success) {
-      toast.success(formState.success);
+    if (formStatus.success) {
+      toast.success(formStatus.success);
     }
-    if (formState.error) {
-      toast.error(formState.error);
+    if (formStatus.error) {
+      toast.error(formStatus.error);
     }
-  }, [formState]);
+  }, [formStatus]);
 
   return (
-    <main className=" mx-auto max-w-6xl overflow-auto p-4 ">
-      <Toaster richColors />
+    <main className="mx-auto max-w-6xl overflow-auto p-4">
       <div className="grid w-full items-start gap-6">
         <Form {...form}>
-          <form action={action} className="space-y-8">
+          <form action={action} className="group/inputs space-y-8">
             <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm">
               <legend className="-ml-1 px-1 text-sm font-medium">
                 Course Content
@@ -74,7 +139,7 @@ export default function CreateCoursePage() {
                   <TabsTrigger value="EnVersion">English</TabsTrigger>
                   <TabsTrigger value="ArVersion">
                     Arabic
-                    <span className=" pl-2 text-xs opacity-50">optional</span>
+                    <span className="pl-2 text-xs opacity-50">optional</span>
                   </TabsTrigger>
                 </TabsList>
                 <TabsContent value="EnVersion">
@@ -84,11 +149,13 @@ export default function CreateCoursePage() {
                       name="enTitle"
                       formLabel="Title"
                       placeholder="English Title"
+                      
                     />
                     <TipTapInput
                       control={form.control}
                       name="enContent"
                       placeholder="Write English course description here..."
+                      
                     />
                   </div>
                 </TabsContent>
@@ -99,11 +166,13 @@ export default function CreateCoursePage() {
                       name="arTitle"
                       formLabel="Title"
                       placeholder="Arabic Title"
+                      
                     />
                     <TipTapInput
                       control={form.control}
                       name="arContent"
                       placeholder="Write Arabic course description here..."
+                      
                     />
                   </div>
                 </TabsContent>
@@ -117,18 +186,23 @@ export default function CreateCoursePage() {
                   placeholder="Select facilitator..."
                   action={getUsers}
                   searchPlaceholder="Search facilitators..."
+                  
+                  isEditForm={isEditForm}
+                  preValue={getValues('authorId')}
                 />
                 <TextInput
                   control={form.control}
                   name="courseFlowUrl"
                   formLabel="Course Flow"
                   placeholder="Course Flow Url"
+                  
                 />
 
                 <FileInput
                   control={form.control}
                   name="imageUrl"
                   formLabel="Course Poster"
+                  
                 />
               </div>
             </fieldset>
@@ -142,6 +216,7 @@ export default function CreateCoursePage() {
                   control={form.control}
                   name="dateRange"
                   formLabel="Start and End Date"
+                  
                 />
                 <SelectInput
                   control={form.control}
@@ -149,12 +224,14 @@ export default function CreateCoursePage() {
                   formLabel="Registration Status"
                   placeholder="Select status"
                   selects={[{ selectItems: ["Open", "Closed"] }]}
+                  
                 />
                 <TextInput
                   control={form.control}
                   name="applyUrl"
                   formLabel="Registration Form"
                   placeholder="Registration Form Url"
+                  
                 />
                 <SelectInput
                   control={form.control}
@@ -162,12 +239,14 @@ export default function CreateCoursePage() {
                   formLabel="Attendance"
                   placeholder="Select mode"
                   selects={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
+                  
                 />
                 <TextInput
                   control={form.control}
                   name="price"
                   formLabel="Price"
                   placeholder="Enter price"
+                  
                 />
                 <SelectInput
                   control={form.control}
@@ -181,6 +260,7 @@ export default function CreateCoursePage() {
                       selectItems: ["Thematic Course", "Lab"],
                     },
                   ]}
+                  
                 />
 
                 <MultiSelectorInput
@@ -198,8 +278,9 @@ export default function CreateCoursePage() {
                     { label: "Thursday", value: "thursday" },
                     { label: "Friday", value: "friday" },
                   ]}
+                  
                 />
-                <div className=" -ml-4 flex w-full scale-90 items-center gap-2  md:ml-0 md:scale-100  ">
+                <div className="-ml-4 flex w-full scale-90 items-center gap-2 md:ml-0 md:scale-100">
                   <TimeInput
                     control={form.control}
                     name="sessionStartTime"
@@ -208,6 +289,7 @@ export default function CreateCoursePage() {
                     hourRef={startHourRef}
                     minuteRef={startMinuteRef}
                     transitionRef={endHourRef}
+                    
                   />
                   <span className="mt-[53px] md:hidden">:</span>
                   <ArrowRightFromLine
@@ -222,6 +304,7 @@ export default function CreateCoursePage() {
                     hourRef={endHourRef}
                     minuteRef={endMinuteRef}
                     transitionRef={startMinuteRef}
+                    
                   />
                 </div>
               </div>

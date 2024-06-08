@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { toast } from "sonner";
 
 export type FormInputs = z.infer<typeof createCourseSchema>;
 export const createCourseSchema = z

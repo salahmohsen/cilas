@@ -55,23 +55,6 @@ export default function CourseDetailsPanel() {
           </CardTitle>
           <CardDescription>Date: November 23, 2023</CardDescription>
         </div>
-        <div className="ml-auto ">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="icon" variant="outline" className="h-8 w-8">
-                <MoreVertical className="h-3.5 w-3.5" />
-                <span className="sr-only">More</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>Edit</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className=" bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
       </CardHeader>
       <CardContent className="p-6 text-sm">
         <div className="grid gap-3">
@@ -79,7 +62,9 @@ export default function CourseDetailsPanel() {
           <ul className="grid gap-3">
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Facilitator</span>
-              <span>Karim-Yassin GOESSINGER</span>
+              <span className="ml-auto w-1/2 text-right">
+                Karim-Yassin GOESSINGER
+              </span>
             </li>
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Category</span>
@@ -140,8 +125,8 @@ export default function CourseDetailsPanel() {
         <Separator className="my-4" />
         <div className="grid auto-rows-max gap-3">
           <div className="font-semibold">Pegons</div>
-          <ScrollArea className="w-full rounded-md  p-4">
-            <div className="flex gap-1  text-muted-foreground">
+          <ScrollArea className="w-full rounded-md p-4">
+            <div className="flex gap-1 text-muted-foreground">
               <PegonsAvatar />
               <PegonsAvatar />
               <PegonsAvatar />

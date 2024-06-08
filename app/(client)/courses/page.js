@@ -1,14 +1,14 @@
 import Course from "@/components/client/Course.jsx";
 import CoursePagination from "@/components/client/CoursePagination.jsx";
 import Sidebar from "@/components/client/Sidebar.jsx";
-import { getCourses } from "@/actions/clientActions";
+import { getCourses } from "@/actions/CoursesActions";
 import slug from "slug";
 
 const CoursesPage = async () => {
   const coursesData = await getCourses();
   return (
-    <section className="grid h-screen grid-cols-10  gap-5 ">
-      <div className=" relative col-span-10 mb-10 md:col-span-8">
+    <section className="grid h-screen grid-cols-10 gap-5">
+      <div className="relative col-span-10 mb-10 md:col-span-8">
         {coursesData.map((course) => (
           <Course
             key={course.id}

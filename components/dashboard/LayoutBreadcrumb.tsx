@@ -21,7 +21,10 @@ export default function LayoutBreadcrumb() {
   paths.map((p, i) => {
     if (i !== paths.length - 1)
       items.push({
-        name: p,
+        name: p
+          .replace(/-/g, " ")
+          .replace(/([A-Z])/g, " ")
+          .trim(),
         href: `/${paths.slice(0, i + 1).join("/")}`,
       });
   });
@@ -33,7 +36,12 @@ export default function LayoutBreadcrumb() {
           <Item item={item} key={item.name} />
         ))}
         <BreadcrumbItem className=" capitalize">
-          <BreadcrumbPage>{paths[paths.length - 1]}</BreadcrumbPage>
+          <BreadcrumbPage>
+            {paths[paths.length - 1]
+              .replace(/-/g, " ")
+              .replace(/([A-Z])/g, " ")
+              .trim()}
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

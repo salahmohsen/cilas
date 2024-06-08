@@ -7,6 +7,7 @@ import "@/app/globals.css";
 import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
 import LayoutHeader from "@/components/dashboard/LayoutHeader";
 import LayoutBreadcrumb from "@/components/dashboard/LayoutBreadcrumb";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -34,6 +35,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${amiri.variable} `}>
+        <Toaster richColors />
         <main>
           <LayoutSidebar />
           <LayoutHeader>{children}</LayoutHeader>

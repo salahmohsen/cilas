@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import CourseMetadata from "./CourseMetadata";
 import FacilitatorHoverCard from "./CourseFacilitatorHoverCard";
 import { Yeseva_One } from "next/font/google";
-import { getAuthor } from "@/actions/clientActions";
+import { getUserById } from "@/actions/usersActions";
 
 const yesevaOne = Yeseva_One({
   subsets: ["latin"],
@@ -12,35 +12,34 @@ const yesevaOne = Yeseva_One({
   adjustFontFallback: false,
 });
 
-const Course = async ({
-  id,
-  enTitle,
-  arTitle,
-  titleSlug,
-  image,
-  authorId,
-  enContent,
-  arContent,
-  startDate,
-  seasonCycle,
-  category,
-  attendance,
-  registrationStatus,
-  price,
-  weekDuration,
-  days,
-  sessionStartTime,
-  sessionEndTime,
-  courseFlowUrl,
-  applyUrl,
-  createdAt,
-  updatedAt,
-  isOpen = false,
-  className,
-}) => {
-  const authorData = await getAuthor(authorId);
-  const authorName =
-    authorData[0]["firstName"] + " " + authorData[0]["lastName"];
+const Course = async ({ isOpen = false, className, ...props }) => {
+  const {
+    id,
+    enTitle,
+    arTitle,
+    titleSlug,
+    image,
+    authorId,
+    enContent,
+    arContent,
+    startDate,
+    seasonCycle,
+    category,
+    attendance,
+    registrationStatus,
+    price,
+    weekDuration,
+    days,
+    sessionStartTime,
+    sessionEndTime,
+    courseFlowUrl,
+    applyUrl,
+    createdAt,
+    updatedAt,
+  } = props;
+
+  const authorData = await getUserById(authorId);
+  const authorName = authorData["firstName"] + " " + authorData["lastName"];
 
   return (
     <article
@@ -51,7 +50,7 @@ const Course = async ({
     >
       <div
         id="article-header"
-        className={`flex w-full flex-col justify-center border-b pb-9 ${isOpen ? "items-center " : "items-start"}`}
+        className={`flex w-full flex-col justify-center border-b pb-9 ${isOpen ? "items-center" : "items-start"}`}
       >
         <div className="flex flex-col gap-3">
           <CourseMetadata
@@ -83,7 +82,7 @@ const Course = async ({
           <FacilitatorHoverCard
             authorSlug={`courses/author/${authorId}`}
             authorName={authorName}
-            authorBio={authorData[0]["bio"]}
+            authorBio={authorData["bio"]}
           />
         </div>
       </div>

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -18,133 +19,90 @@ import {
   SquareLibrary,
   SquareUserIcon,
 } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { ReactElement } from "react";
+import { cn } from "@/lib/utils";
 
 export default function LayoutSidebar() {
   return (
-    <aside className="inset-y fixed  left-0 z-20 hidden h-full flex-col border-r sm:flex">
+    <aside className="inset-y fixed left-0 z-20 hidden h-full flex-col border-r sm:flex">
       <div className="border-b p-2">
-        <Button aria-label="Home" size="icon" variant="outline">
+        <Button aria-label="Home" size="icon" variant="ghost">
           <Image src={logo} alt="Cilas" width={16} className="h-auto" />
         </Button>
       </div>
-      <nav className="grid gap-1 p-2 ">
+      <nav className="grid gap-1 p-2">
         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href={"/dashboard"}>
-                <Button
-                  aria-label="Home"
-                  className="rounded-lg"
-                  size="icon"
-                  variant="ghost"
-                >
-                  <Home className="size-5" />
-                </Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Home
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link href={"/dashboard/courses"}>
-                <Button
-                  aria-label="Courses"
-                  className="rounded-lg bg-muted"
-                  size="icon"
-                  variant="ghost"
-                >
-                  <SquareLibrary className="size-5" />
-                </Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Courses
-            </TooltipContent>
-          </Tooltip>
-
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                aria-label="API"
-                className="rounded-lg"
-                size="icon"
-                variant="ghost"
-              >
-                <FileCode2Icon className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              API
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                aria-label="Documentation"
-                className="rounded-lg"
-                size="icon"
-                variant="ghost"
-              >
-                <BookIcon className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Documentation
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                aria-label="Settings"
-                className="rounded-lg"
-                size="icon"
-                variant="ghost"
-              >
-                <Settings2Icon className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Settings
-            </TooltipContent>
-          </Tooltip>
+          <SidebarItem
+            name="Home"
+            href="/dashboard"
+            icon={<Home className="size-5" />}
+          />
+          <SidebarItem
+            name="Courses"
+            href="/dashboard/courses"
+            icon={<SquareLibrary className="size-5" />}
+          />
+          <SidebarItem
+            name="Settings"
+            href="/dashboard/settings"
+            icon={<Settings2Icon className="size-5" />}
+          />
         </TooltipProvider>
       </nav>
       <nav className="mt-auto grid gap-1 p-2">
         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                aria-label="Help"
-                className="mt-auto rounded-lg"
-                size="icon"
-                variant="ghost"
-              >
-                <LifeBuoyIcon className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Help
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                aria-label="Account"
-                className="mt-auto rounded-lg"
-                size="icon"
-                variant="ghost"
-              >
-                <SquareUserIcon className="size-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Account
-            </TooltipContent>
-          </Tooltip>
+          <SidebarItem
+            name="Help"
+            href="/dashboard/help"
+            icon={<LifeBuoyIcon className="size-5" />}
+            className="mt-auto"
+          />
+          <SidebarItem
+            name="Account"
+            href="/dashboard/account"
+            icon={<SquareUserIcon className="size-5" />}
+            className="mt-auto"
+          />
         </TooltipProvider>
       </nav>
     </aside>
+  );
+}
+
+function SidebarItem({
+  name,
+  href,
+  icon,
+  className,
+}: {
+  name: string;
+  href: string;
+  icon: ReactElement;
+  className?: string;
+}) {
+  const path = usePathname();
+
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Link href={href}>
+          <Button
+            aria-label={name}
+            className={cn(
+              `rounded-lg ${path === href ? "bg-muted" : null}`,
+              className,
+            )}
+            size="icon"
+            variant="ghost"
+          >
+            {icon}
+          </Button>
+        </Link>
+      </TooltipTrigger>
+      <TooltipContent side="right" sideOffset={5}>
+        {name}
+      </TooltipContent>
+    </Tooltip>
   );
 }
