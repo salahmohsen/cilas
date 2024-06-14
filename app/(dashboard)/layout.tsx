@@ -3,10 +3,11 @@ import { Cairo, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
-import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
-import LayoutHeader from "@/components/dashboard/LayoutHeader";
+import LayoutSidebar from "@/app/_components/dashboard/LayoutSidebar";
+import LayoutHeader from "@/app/_components/dashboard/LayoutHeader";
+import { ThemeProvider } from "@/app/_components/dashboard/ThemeProvider";
+
 import { Toaster } from "sonner";
-import { ThemeProvider } from "@/components/client/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],

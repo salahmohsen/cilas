@@ -1,13 +1,15 @@
+import "@/app/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Cairo } from "next/font/google";
-import "@/app/globals.css";
-import { MainNav } from "@/components/client/HeaderMainNav";
-import logo from "@/public/logo.png";
 import Image from "next/image";
-import { FloatingNav } from "@/components/client/HeaderFloatingNav";
-import { Bird, Brain, HomeIcon, Map, Rss } from "lucide-react";
 import Link from "next/link";
+import logo from "@/public/logo.png";
+
+import { MainNav } from "@/app/_components/client/HeaderMainNav";
+import { FloatingNav } from "@/app/_components/client/HeaderFloatingNav";
+
+import { Bird, Brain, HomeIcon, Map, Rss } from "lucide-react";
 
 const inter = Inter({
   subsets: ["latin"],

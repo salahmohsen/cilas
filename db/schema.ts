@@ -1,5 +1,3 @@
-import { InferSelectModel } from "drizzle-orm";
-
 import {
   integer,
   text,
@@ -10,10 +8,13 @@ import {
   time,
   json,
   timestamp,
+  varchar,
 } from "drizzle-orm/pg-core";
 
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+export const userTable = pgTable("users", {
+  id: varchar("id", {
+    length: 255,
+  }).primaryKey(),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
   bio: text("bio"),
@@ -23,12 +24,12 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const courseCategories = pgTable("course_category", {
+export const categoryTable = pgTable("course_category", {
   id: serial("id").primaryKey(),
   category: text("category"),
 });
 
-export const courses = pgTable("course", {
+export const courseTable = pgTable("course", {
   id: serial("id").primaryKey(),
   enTitle: text("en_title"),
   enContent: text("en_content"),
@@ -52,6 +53,3 @@ export const courses = pgTable("course", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
-
-export type UserType = InferSelectModel<typeof users>;
-export type CourseType = InferSelectModel<typeof courses>;

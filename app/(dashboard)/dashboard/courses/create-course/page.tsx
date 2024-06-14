@@ -1,4 +1,4 @@
-import CourseForm from "@/components/dashboard/courseForm/CourseForm";
+import CourseForm from "@/app/_components/dashboard/courseForm/CourseForm";
 
 export default function CreateCoursePage() {
   // const { reset, getValues, formState } = form;

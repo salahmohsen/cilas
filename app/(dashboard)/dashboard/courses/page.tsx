@@ -1,7 +1,9 @@
-import { getArchived } from "@/actions/CoursesActions";
+import { getArchived } from "@/actions/courses.actions";
 
-import CourseItem from "@/components/dashboard/coursesListPage/CourseItem";
+import Link from "next/link";
+import CourseItem from "@/app/_components/dashboard/coursesListPage/CourseItem";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,12 +12,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CourseDetailsPanel from "@/components/dashboard/coursesListPage/CourseDetailsPanel";
-import FilterButton from "@/components/dashboard/coursesListPage/FilterButton";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
+import CourseDetailsPanel from "@/app/_components/dashboard/coursesListPage/CourseDetailsPanel";
+import FilterButton from "@/app/_components/dashboard/coursesListPage/FilterButton";
 
 export default async function AdminCourseListPage() {
   const archivedCourses = await getArchived();

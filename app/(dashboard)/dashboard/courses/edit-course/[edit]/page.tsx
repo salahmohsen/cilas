@@ -1,10 +1,7 @@
 "use client";
 
-import { toast } from "sonner";
 import CreateCoursePage from "../../create-course/page";
 import { Squirrel } from "lucide-react";
-import { Toaster } from "@/components/ui/toaster";
-import { useEffect } from "react";
 
 export default function EditCoursePage({ params }) {
   const parts = params.edit?.split("-");
