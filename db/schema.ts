@@ -1,3 +1,5 @@
+import { InferSelectModel } from "drizzle-orm";
+
 import {
   integer,
   text,
@@ -28,16 +30,15 @@ export const courseCategories = pgTable("course_category", {
 
 export const courses = pgTable("course", {
   id: serial("id").primaryKey(),
-  draft: boolean("draft").notNull().default(false),
   enTitle: text("en_title"),
-  arTitle: text("ar_title"),
   enContent: text("en_content"),
+  arTitle: text("ar_title"),
   arContent: text("ar_content"),
+  image: text("image_url"),
   authorId: integer("author_id")
     .notNull()
     .references(() => users.id),
   category: text("category").notNull(),
-  imageUrl: text("image_url"),
   registrationStatus: boolean("registration_status").notNull(),
   attendance: text("attendance").notNull(),
   price: integer("price"),
@@ -51,3 +52,6 @@ export const courses = pgTable("course", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export type UserType = InferSelectModel<typeof users>;
+export type CourseType = InferSelectModel<typeof courses>;

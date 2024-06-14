@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Amiri } from "next/font/google";
+import { Cairo, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
 import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
 import LayoutHeader from "@/components/dashboard/LayoutHeader";
-import LayoutBreadcrumb from "@/components/dashboard/LayoutBreadcrumb";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/components/client/ThemeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -15,10 +14,10 @@ const inter = Inter({
   adjustFontFallback: false,
   display: "swap",
 });
-const amiri = Amiri({
+const cairo = Cairo({
   subsets: ["arabic"],
-  weight: ["400", "700"],
-  variable: "--font-amiri",
+  weight: ["400", "800"],
+  variable: "--font-cairo",
   display: "swap",
 });
 
@@ -33,13 +32,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.variable} ${amiri.variable} `}>
-        <Toaster richColors />
-        <main>
-          <LayoutSidebar />
-          <LayoutHeader>{children}</LayoutHeader>
-        </main>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${cairo.variable} `}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Toaster richColors />
+          <main>
+            <LayoutSidebar />
+            <LayoutHeader>{children}</LayoutHeader>
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

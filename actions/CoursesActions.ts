@@ -1,60 +1,139 @@
 "use server";
 
 import db from "@/db/drizzle";
-import { courses, users } from "@/db/schema";
-import { FormInputs, createCourseSchema } from "@/schemas/newCourseSchema";
+import { CourseType, courses, users } from "@/db/schema";
+import {
+  CourseFormSchema,
+  courseFormSchema,
+} from "@/components/dashboard/courseForm/courseFormSchema";
+
 import { format } from "date-fns";
 import { gte, lte, eq, asc, desc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { cloudinaryUploader } from "@/lib/cloudinary";
 
-export const createCourseAction = async (data: FormInputs, prevState) => {
-  const parsed = createCourseSchema.safeParse(data);
-  if (!parsed.success) {
-    return { error: parsed.error.issues[0].message };
-  } else {
+export type FormState = {
+  success?: string;
+  error?: string;
+  fields?: unknown;
+};
+
+export async function courseAction(
+  prevState: FormState,
+  data: CourseFormSchema,
+): Promise<FormState> {
+  const formData = Object.fromEntries(data);
+
+  // Helper conversion function
+  const convert = (
+    value: string,
+    state?: "from" | "to",
+    type?: "date" | "time",
+  ) => {
+    if (value && !state && !type) return JSON.parse(value);
+    if (value && state) {
+      if (!type) return JSON.parse(value)[state];
+      if (type === "date") return new Date(JSON.parse(value)[state]);
+      if (type === "time") return format(JSON.parse(value)[state], "HH:mm");
+    }
+  };
+  // The object that we will send it back to user in case of errors
+  const formObject = {
+    enTitle: formData["enTitle"],
+    arTitle: formData["arTitle"],
+    enContent: formData["enContent"],
+    arContent: formData["arContent"],
+    authorId: +formData["authorId"],
+    category: formData["category"],
+    image: formData["image"],
+    attendance: formData["attendance"],
+    isRegistrationOpen: formData["isRegistrationOpen"] === "Open",
+    price: +formData["price"],
+    timeSlot: {
+      from: convert(formData["timeSlot"], "from", "date"),
+      to: convert(formData["timeSlot"], "to", "date"),
+    },
+    days: convert(formData["days"]),
+    courseFlowUrl: formData["courseFlowUrl"],
+    applyUrl: formData["applyUrl"],
+    dateRange: {
+      from: convert(formData["dateRange"], "from", "date"),
+      to: convert(formData["dateRange"], "to", "date"),
+    },
+  };
+
+  // validating the data
+  try {
+    const parse = courseFormSchema.safeParse(formObject);
+    if (!parse.success) {
+      throw new TypeError(
+        `An error occurred while processing the form values: ${parse.error.errors[0].message}`,
+      );
+    }
+  } catch (error) {
+    if (error instanceof Error)
+      return {
+        error: error.message,
+      };
   }
-  const formatedData = {
-    enTitle: data.enTitle,
-    arTitle: data.arTitle,
-    image: data.imageUrl,
-    authorId: Number(data.authorId),
-    enContent: data.enContent,
-    arContent: data.arContent,
-    category: data.category,
-    attendance: data.attendance,
-    registrationStatus: data.registrationStatus === "open" ? true : false,
-    price: data.price,
-    startDate: format(data.dateRange.from, "yyyy-MM-dd"),
-    endDate: format(data.dateRange.to, "yyyy-MM-dd"),
-    days: data.days,
-    sessionStartTime: format(data.sessionStartTime, "HH:mm"),
-    sessionEndTime: format(data.sessionEndTime, "HH:mm"),
-    courseFlowUrl: data.courseFlowUrl,
-    applyUrl: data.applyUrl,
+  // uploading the image in case of data is succeed
+  const uploadImage = async () => {
+    const image = formData["image"];
+
+    const imageData = new FormData();
+    imageData.append("image", image as Blob);
+    imageData.append("folder", "courses");
+    let imageUrl;
+
+    try {
+      imageUrl = await cloudinaryUploader(imageData);
+    } catch (e) {
+      return {
+        error: "Image Uploading Failed, please try again later!",
+        fields: formObject,
+      };
+    }
+    return imageUrl;
+  };
+
+  // Initialize the values for the database
+  const dbObject = {
+    enTitle: formData["enTitle"],
+    enContent: formData["enContent"],
+    arTitle: formData["arTitle"],
+    arContent: formData["arContent"],
+    image: await uploadImage(),
+    authorId: Number(formData["authorId"]),
+    category: formData["category"],
+    registrationStatus: formData["isRegistrationOpen"] === "Open",
+    attendance: formData["attendance"],
+    price: +formData["price"],
+    days: convert(formData["days"]),
+    startDate: convert(formData["dateRange"]).from,
+    endDate: convert(formData["dateRange"]).to,
+    sessionStartTime: convert(formData["timeSlot"], "from", "time"),
+    sessionEndTime: convert(formData["timeSlot"], "to", "time"),
+    courseFlowUrl: formData["courseFlowUrl"],
+    applyUrl: formData["applyUrl"],
   };
 
   try {
     const statement = db
       .insert(courses)
-      .values(formatedData)
+      .values(dbObject)
       .returning({ insertedId: courses.id });
-
     await db.execute(statement);
-    revalidatePath("/courses");
-
-    return { success: "Course created successfully!" };
+    revalidatePath("/");
+    return { success: "Course created successfully" };
   } catch (error) {
-    console.log(error);
-    return { error: "Oops! Course addition failed. Please try again later." };
+    return {
+      error: "Oops! Course addition failed. Please try again.",
+      fields: formObject,
+    };
   }
-};
+}
 
 export const getArchived = async () => {
-  // const data = await db
-  //   .select()
-  //   .from(courses)
-  //   .where(lte(courses.endDate, new Date().toDateString()));
-
   const data = await db
     .select()
     .from(courses)

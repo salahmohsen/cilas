@@ -1,5 +1,4 @@
 "use client";
-import { type Editor } from "@tiptap/react";
 
 import {
   Bold,
@@ -23,14 +22,16 @@ import {
   RemoveFormatting,
 } from "lucide-react";
 
-import { Toggle } from "./toggle";
+import { Toggle } from "../../ui/toggle";
 
-import { HoverCard, HoverCardContent, HoverCardTrigger } from "./hover-card";
-import { useCallback } from "react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "../../ui/hover-card";
+import { memo, useCallback } from "react";
 
-type Props = { editor: Editor | null };
-
-const EditorToolbar = ({ editor }: Props) => {
+const EditorToolbar = memo(function ({ editor }: { editor: any }) {
   const setLink = useCallback(() => {
     const previousUrl = editor?.getAttributes("link").href;
     const url = window.prompt("URL", previousUrl);
@@ -55,16 +56,6 @@ const EditorToolbar = ({ editor }: Props) => {
       .setLink({ href: url })
       .run();
   }, [editor]);
-
-  const addYoutubeVideo = () => {
-    const url = prompt("Enter YouTube URL");
-
-    if (url) {
-      editor?.commands.setYoutubeVideo({
-        src: url,
-      });
-    }
-  };
 
   if (!editor) return null;
 
@@ -187,9 +178,8 @@ const EditorToolbar = ({ editor }: Props) => {
 
       <Toggle
         size="sm"
-        className="hidden md:block"
         pressed={editor.isActive({ textAlign: "center" })}
-        className={editor.isActive({ textAlign: "center" }) ? "is-active" : ""}
+        className={`${editor.isActive({ textAlign: "center" }) ? "is-active" : ""} hidden md:block`}
         onPressedChange={() => {
           editor.chain().focus().setTextAlign("center").run();
         }}
@@ -242,17 +232,6 @@ const EditorToolbar = ({ editor }: Props) => {
 
       <Toggle
         size="sm"
-        pressed={editor.isActive("youtube")}
-        onPressedChange={addYoutubeVideo}
-      >
-        <ToolbarIcon
-          icon={<Youtube className="h-4 w-4" />}
-          name="Youtube video"
-        />
-      </Toggle>
-
-      <Toggle
-        size="sm"
         pressed={editor.isActive("clearFormatting")}
         onPressedChange={() =>
           editor.chain().focus().clearNodes().unsetAllMarks().run()
@@ -265,7 +244,7 @@ const EditorToolbar = ({ editor }: Props) => {
       </Toggle>
     </div>
   );
-};
+});
 
 const ToolbarIcon = ({
   icon,
@@ -280,7 +259,7 @@ const ToolbarIcon = ({
       <HoverCardContent
         side="top"
         align="center"
-        className=" w-fit p-2 text-xs text-muted-foreground"
+        className="w-fit p-2 text-xs text-muted-foreground"
       >
         {name}
       </HoverCardContent>

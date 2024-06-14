@@ -2,14 +2,20 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import CourseMetadata from "./CourseMetadata";
 import FacilitatorHoverCard from "./CourseFacilitatorHoverCard";
-import { Yeseva_One } from "next/font/google";
+import { Amiri, Yeseva_One } from "next/font/google";
 import { getUserById } from "@/actions/usersActions";
 
 const yesevaOne = Yeseva_One({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-yeseva",
+  display: "swap",
   adjustFontFallback: false,
+});
+
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: "700",
+  display: "swap",
 });
 
 const Course = async ({ isOpen = false, className, ...props }) => {
@@ -61,7 +67,7 @@ const Course = async ({ isOpen = false, className, ...props }) => {
           />
           {isOpen && (
             <h3
-              className={`${yesevaOne.variable} prose flex text-3xl capitalize`}
+              className={`${yesevaOne.className} ${amiri.className} prose flex text-3xl capitalize`}
             >
               {enTitle ? enTitle : arTitle}
             </h3>
@@ -72,7 +78,7 @@ const Course = async ({ isOpen = false, className, ...props }) => {
               className="decoration-1 hover:underline"
             >
               <h3
-                className={`${yesevaOne.variable} prose flex text-3xl capitalize`}
+                className={`${yesevaOne.className} ${amiri.className} prose flex text-3xl capitalize`}
               >
                 {enTitle ? enTitle : arTitle}
               </h3>

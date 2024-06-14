@@ -1,3 +1,5 @@
+import { Input } from "@/components/ui/input";
+
 export default async function HomePage() {
   return (
     <main className="mx-20 mt-10 text-center">

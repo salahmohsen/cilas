@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Amiri } from "next/font/google";
+import { Cairo } from "next/font/google";
 import "@/app/globals.css";
 import { MainNav } from "@/components/client/HeaderMainNav";
 import logo from "@/public/logo.png";
@@ -13,15 +13,15 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   adjustFontFallback: false,
-  display: "swap",
-});
-const amiri = Amiri({
-  subsets: ["arabic"],
-  weight: ["400", "700"],
-  variable: "--font-amiri",
-  display: "swap",
-});
 
+  display: "swap",
+});
+const cairo = Cairo({
+  subsets: ["arabic"],
+  weight: ["400", "800"],
+  variable: "--font-cairo",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "Cairo Institute of Liberal Arts and Sciences",
@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${amiri.variable} min-w-screen mx-10 mt-10`}
+        className={`${inter.variable} ${cairo.variable} min-w-screen mx-10 mt-10`}
       >
         <header className="mb-20 flex flex-col items-center justify-between gap-5 md:flex-row md:gap-10">
           <Link

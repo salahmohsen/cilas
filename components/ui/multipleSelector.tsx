@@ -396,7 +396,7 @@ const MultipleSelector = React.forwardRef<
             inputRef.current?.focus();
           }}
         >
-          <div className="mr-2 flex flex-wrap gap-1 ">
+          <div className="mr-2 flex flex-wrap gap-1">
             {selected.map((option) => {
               return (
                 <Badge
@@ -413,7 +413,7 @@ const MultipleSelector = React.forwardRef<
                   {option.label}
                   <button
                     className={cn(
-                      " ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                      "ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
                       (disabled || option.fixed) && "hidden",
                     )}
                     onKeyDown={(e) => {

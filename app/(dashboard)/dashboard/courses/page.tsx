@@ -1,6 +1,6 @@
 import { getArchived } from "@/actions/CoursesActions";
 
-import CourseItem from "@/components/dashboard/CoursesListPage/CourseItem";
+import CourseItem from "@/components/dashboard/coursesListPage/CourseItem";
 
 import {
   Card,
@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/card";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import CourseDetailsPanel from "@/components/dashboard/CoursesListPage/CourseDetailsPanel";
-import FilterButton from "@/components/dashboard/CoursesListPage/FilterButton";
+import CourseDetailsPanel from "@/components/dashboard/coursesListPage/CourseDetailsPanel";
+import FilterButton from "@/components/dashboard/coursesListPage/FilterButton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
@@ -32,7 +32,7 @@ export default async function AdminCourseListPage() {
             </CardDescription>
           </CardHeader>
           <CardFooter>
-            <Link href="/dashboard/courses/new-course">
+            <Link href="/dashboard/courses/create-course">
               <Button>Create New Order</Button>
             </Link>
           </CardFooter>

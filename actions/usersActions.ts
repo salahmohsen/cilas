@@ -4,12 +4,13 @@ import db from "@/db/drizzle";
 import { courses, users } from "@/db/schema";
 import { asc, desc, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { number } from "zod";
 
-export const getUsers = async () => {
+export const getUsersNames = async () => {
   const result = await db
     .select({
       id: users.id,
-      name: sql`${users.firstName} || ' ' || ${users.lastName}`,
+      name: sql<string>`${users.firstName} || ' ' || ${users.lastName}`,
     })
     .from(users);
 
