@@ -15,13 +15,13 @@ import {
 } from "lucide-react";
 
 const CourseMetadata = ({
-  startDate,
+  dateRange,
   cycle,
   attendance_type,
   registration_status,
   className,
 }) => {
-  const year = Number(format(startDate, "yyyy"));
+  const year = Number(format(dateRange.from, "yyyy"));
   return (
     <div
       className={cn(

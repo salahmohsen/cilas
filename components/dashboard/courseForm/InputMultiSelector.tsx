@@ -6,10 +6,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../../components/ui/form";
+} from "../../ui/form";
 import MultipleSelector from "@/components/ui/multipleSelector";
 
-import { MultiSelectorProps } from "../../../../types/form.inputs";
+import { MultiSelectorProps } from "../../../types/form.inputs";
 import { memo } from "react";
 
 export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(

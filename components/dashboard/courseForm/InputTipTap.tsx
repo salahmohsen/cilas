@@ -21,7 +21,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-import { StandardProps } from "../../../../types/form.inputs";
+import { StandardProps } from "../../../types/form.inputs";
 import React, { memo } from "react";
 import EditorToolbar from "./TipTapEditorToolbar";
 
@@ -45,7 +45,7 @@ export const TipTapInput = memo(function TipTapInput({
               <input
                 hidden
                 name={name}
-                value={JSON.stringify(field.value)}
+                value={field.value}
                 onChange={field.onChange}
               />
               <Editor

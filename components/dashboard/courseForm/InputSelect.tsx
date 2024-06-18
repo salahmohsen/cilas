@@ -4,7 +4,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../../components/ui/form";
+} from "../../ui/form";
 import {
   Select,
   SelectContent,
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
 
-import { SelectProps } from "../../../../types/form.inputs";
+import { SelectProps } from "../../../types/form.inputs";
 import { memo } from "react";
 
 export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({

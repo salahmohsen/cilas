@@ -28,7 +28,7 @@ const Course = async ({ isOpen = false, className, ...props }) => {
     authorId,
     enContent,
     arContent,
-    startDate,
+    dateRange,
     seasonCycle,
     category,
     attendance,
@@ -36,8 +36,7 @@ const Course = async ({ isOpen = false, className, ...props }) => {
     price,
     weekDuration,
     days,
-    sessionStartTime,
-    sessionEndTime,
+    timeSlot,
     courseFlowUrl,
     applyUrl,
     createdAt,
@@ -60,7 +59,7 @@ const Course = async ({ isOpen = false, className, ...props }) => {
       >
         <div className="flex flex-col gap-3">
           <CourseMetadata
-            startDate={startDate}
+            dateRange={dateRange}
             cycle={seasonCycle}
             attendance_type={attendance}
             registration_status={registrationStatus}

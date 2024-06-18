@@ -24,7 +24,7 @@ import {
 import { Check, ChevronsUpDown, Ellipsis, LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { ComboBoxProps } from "../../../../types/form.inputs";
+import { ComboBoxProps } from "../../../types/form.inputs";
 import { useFormContext } from "react-hook-form";
 
 export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
@@ -41,7 +41,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
     fetchItemByIdAction,
   }) {
     const { control } = useFormContext();
-    const [data, setData] = useState<{ id: number; name: string }[]>([]);
+    const [data, setData] = useState<{ id: string; name: string }[]>([]);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [loadingUser, setLoadingUser] = useState(false);
@@ -91,7 +91,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                 <input
                   hidden
                   name={name}
-                  value={JSON.stringify(field.value)}
+                  value={field.value}
                   onChange={field.onChange}
                 />
                 <Popover open={open} onOpenChange={setOpen}>
@@ -108,8 +108,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                       )}
                     >
                       {field.value
-                        ? data?.find((item) => item?.id === Number(field.value))
-                            ?.name
+                        ? data?.find((item) => item?.id === field.value)?.name
                         : placeholder}
                       {loadingUser && <Ellipsis className="animate-pulse" />}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -136,13 +135,13 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                             <CommandItem
                               keywords={[item?.name]}
                               key={item.id}
-                              value={String(item.id)}
+                              value={item.id}
                               id={name}
                               onSelect={(currentValue) => {
                                 field.onChange(
                                   currentValue === field.value
                                     ? ""
-                                    : Number(currentValue),
+                                    : currentValue,
                                 );
                                 setOpen(false);
                               }}

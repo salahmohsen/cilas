@@ -22,13 +22,13 @@ import {
   RemoveFormatting,
 } from "lucide-react";
 
-import { Toggle } from "../../../../components/ui/toggle";
+import { Toggle } from "../../ui/toggle";
 
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "../../../../components/ui/hover-card";
+} from "../../ui/hover-card";
 import { memo, useCallback } from "react";
 
 const EditorToolbar = memo(function ({ editor }: { editor: any }) {

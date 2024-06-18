@@ -46,7 +46,7 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
           <FormControl>
             <div className="flex gap-2">
               <Input
-                type={type}
+                type={type === "number" ? "text" : type}
                 {...field}
                 placeholder={placeholder}
                 accept={type === "file" ? ".jpg, .jpeg, .png" : undefined}
@@ -55,7 +55,11 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
                   if (type === "text" || type === "url") {
                     field.onChange(e.target.value);
                   } else if (type === "number") {
-                    field.onChange(Number(e.target.value));
+                    field.onChange(
+                      Number(e.target.value)
+                        ? Number(e.target.value)
+                        : e.target.value,
+                    );
                   } else if (type === "file") {
                     handleImageInput(e);
                     field.onChange(e.target.files?.[0]);

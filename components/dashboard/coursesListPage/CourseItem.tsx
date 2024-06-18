@@ -22,38 +22,36 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Calendar, Ellipsis, User } from "lucide-react";
+import { format } from "date-fns";
 
 export default function CourseItem({ item }) {
-  const { course, users } = item;
+  const { course, user } = item;
 
   const [formState, formAction] = useFormState(
     deleteCourse.bind(null, Number(course?.id)),
-    null,
+    {},
   );
 
   const deleteButtonRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (formState?.success) {
-      revalidatePath("/dashboard/courses", "page");
-      toast.success(formState.success);
-    }
-    if (formState?.error) {
-      toast.error(formState.error);
-    }
-  }, [formState]);
+  if (formState?.success) {
+    revalidatePath("/dashboard/courses", "page");
+    toast.success(formState.success);
+  }
+  if (formState?.error) {
+    toast.error(formState.error);
+  }
 
   return (
-    <li className="flex cursor-pointer justify-between gap-2 rounded-md px-5 py-6 text-sm font-medium transition-all duration-300 hover:bg-gray-100 lg:group-hover/list:opacity-50 lg:hover:!opacity-100">
+    <li className="flex cursor-pointer justify-between gap-2  px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:opacity-50 lg:hover:!opacity-100">
       <div className="flex flex-col gap-2">
         <span className="flex gap-1 text-xs font-light">
           <User size={16} strokeWidth={1.5} />
-          {`${users.firstName} ${users.lastName}`}
+          {`${user.firstName} ${user.lastName}`}
         </span>
         <p>{course.enTitle || course.arTitle}</p>
         <span className="flex gap-1 text-xs font-light">
           <Calendar size={16} strokeWidth={1.5} />
-          {course.endDate}
+          {format(course.dateRange.from, "MMMM dd yyyy")}
         </span>
       </div>
       <div>

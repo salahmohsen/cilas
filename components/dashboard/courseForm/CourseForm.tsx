@@ -12,7 +12,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { courseFormSchema } from "@/types/courseForm.schema";
+import {
+  courseFormDefaultValues,
+  courseSchema,
+} from "@/types/courseForm.schema";
 
 import { BasicInput } from "./InputBasic";
 import { TipTapInput } from "./InputTipTap";
@@ -28,30 +31,6 @@ import { redirect } from "next/navigation";
 
 type CourseFormPropTypes = { editMode?: boolean; courseId: number };
 
-const courseFormDefaultValues: z.infer<typeof courseFormSchema> = {
-  enTitle: "",
-  enContent: "",
-  arTitle: "",
-  arContent: "",
-  authorId: 0,
-  category: "",
-  image: "",
-  attendance: "",
-  registrationStatus: "",
-  price: 0,
-  timeSlot: {
-    from: new Date(),
-    to: new Date(),
-  },
-  days: [],
-  courseFlowUrl: "",
-  applyUrl: "",
-  dateRange: {
-    from: new Date(),
-    to: new Date(),
-  },
-};
-
 export default function CourseForm({
   editMode = false,
   courseId,
@@ -59,18 +38,16 @@ export default function CourseForm({
   const [formState, formAction] = useFormState(courseAction, {
     isPending: true, // initial state of isPending
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const formMethods = useForm({
-    resolver: zodResolver(courseFormSchema),
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const formMethods = useForm<z.infer<typeof courseSchema>>({
+    resolver: zodResolver(courseSchema),
     progressive: false,
     mode: "onChange",
     defaultValues: {
       ...courseFormDefaultValues,
-      ...(formState.fields ?? {}),
     },
   });
-  console.log("isLoading from main component", isLoading);
   useEffect(() => {
     if (!formState.isPending) setIsLoading(false);
     if (formState.success) toast.success(formState.success);
@@ -94,8 +71,6 @@ export default function CourseForm({
                 onSubmit={(e) => {
                   e.preventDefault();
                   formMethods.handleSubmit(() => {
-                    console.log("isPending", formState.isPending);
-                    console.log("isLoading", isLoading);
                     if (Object.keys(formMethods.formState.errors).length === 0)
                       setIsLoading(true);
 
