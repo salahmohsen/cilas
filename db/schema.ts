@@ -9,19 +9,34 @@ import {
   json,
   timestamp,
   varchar,
+  pgEnum,
 } from "drizzle-orm/pg-core";
 
-export const userTable = pgTable("users", {
-  id: varchar("id", {
-    length: 255,
-  }).primaryKey(),
-  firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
+export const userTable = pgTable("user", {
+  id: text("id").primaryKey(),
+  googleId: text("google_id").unique(),
+  email: text("email").unique(),
+  userName: text("user_name").unique(),
+  password_hash: text("password_hash"),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  tel: text("tel"),
+  avatar: text("avatar"),
   bio: text("bio"),
-  email: text("email"),
-  role: text("role").notNull(),
+  role: text("role").notNull().default("user"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const sessionTable = pgTable("session", {
+  id: text("id").primaryKey(),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  expiresAt: timestamp("expires_at", {
+    withTimezone: true,
+    mode: "date",
+  }).notNull(),
 });
 
 export const categoryTable = pgTable("course_category", {
@@ -36,18 +51,17 @@ export const courseTable = pgTable("course", {
   arTitle: text("ar_title"),
   arContent: text("ar_content"),
   image: text("image_url"),
-  authorId: integer("author_id")
+  authorId: text("author_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => userTable.id),
   category: text("category").notNull(),
-  registrationStatus: boolean("registration_status").notNull(),
+  isRegistrationOpen: boolean("registration_status").notNull(),
   attendance: text("attendance").notNull(),
   price: integer("price"),
   days: json("days"),
-  startDate: date("start_date").notNull(),
-  endDate: date("end_Date").notNull(),
-  sessionStartTime: time("session_start_at").notNull(),
-  sessionEndTime: time("session_end_at").notNull(),
+  dateRange: json("date_range").notNull(),
+  timeSlot: json("time_slot").notNull(),
+  students: json("students"),
   courseFlowUrl: text("course_flow_url"),
   applyUrl: text("apply_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

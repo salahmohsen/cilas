@@ -2,29 +2,30 @@ import {
   number,
   optional_days,
   optional_file,
+  required_boolean,
   required_dateRange,
   required_timeSlot,
   string,
-} from "@/lib/form-utils";
+} from "@/lib/form.utils";
 
 import { z } from "zod";
 
-export const courseFormSchema = z
+export const courseSchema = z
   .object({
-    enTitle: string("optional")!,
-    arTitle: string("optional")!,
-    enContent: string("optional")!,
-    arContent: string("optional")!,
-    authorId: number("required"),
-    category: string("required")!,
+    enTitle: string("optional", "text") as z.ZodString,
+    arTitle: string("optional", "text") as z.ZodString,
+    enContent: string("optional", "text") as z.ZodString,
+    arContent: string("optional", "text") as z.ZodString,
+    authorId: string("required", "text") as z.ZodString,
+    category: string("required", "text") as z.ZodString,
     image: optional_file,
-    attendance: string("required")!,
-    isRegistrationOpen: z.boolean(),
-    price: number("optional").refine((data) => data, { message: "Required" }),
+    attendance: string("required", "text") as z.ZodString,
+    isRegistrationOpen: required_boolean,
+    price: number("optional"),
     timeSlot: required_timeSlot,
     days: optional_days,
-    courseFlowUrl: string("required", "url")!,
-    applyUrl: string("optional", "url")!,
+    courseFlowUrl: string("required", "url") as z.ZodString,
+    applyUrl: string("optional", "url") as z.ZodString,
     dateRange: required_dateRange,
   })
 
@@ -47,20 +48,20 @@ export const courseFormSchema = z
     message: "At least one English or Arabic content is required",
   });
 
-export const courseFormDefaultValues: z.infer<typeof courseFormSchema> = {
+export const courseFormDefaultValues: z.infer<typeof courseSchema> | {} = {
   enTitle: "",
   enContent: "",
   arTitle: "",
   arContent: "",
-  authorId: 0,
+  authorId: "",
   category: "",
   image: "",
   attendance: "",
-  registrationStatus: "",
-  price: 0,
+  isRegistrationOpen: "",
+  price: "",
   timeSlot: {
-    from: new Date(),
-    to: new Date(),
+    from: new Date(new Date().setHours(0, 0, 0, 0)),
+    to: new Date(new Date().setHours(0, 0, 0, 0)),
   },
   days: [],
   courseFlowUrl: "",

@@ -1,12 +1,12 @@
 import { FieldPath, FieldValues } from "react-hook-form";
-import { courseFormSchema } from "./courseForm.schema";
+import { courseSchema } from "./courseForm.schema";
 import { userTable } from "@/db/schema";
 import { InferSelectModel } from "drizzle-orm";
 import { z } from "zod";
 
 export type StandardProps<
   TName extends FieldPath<FieldValues> = FieldPath<
-    z.infer<typeof courseFormSchema>
+    z.infer<typeof courseSchema>
   >,
 > = {
   name: TName;
@@ -36,11 +36,11 @@ export interface ComboBoxProps extends StandardProps {
   searchPlaceholder: string;
   fetchItemsAction: () => Promise<
     {
-      id: number;
+      id: string;
       name: string;
     }[]
   >;
   editMode: boolean;
-  id?: number;
-  fetchItemByIdAction: (id: number) => InferSelectModel<typeof userTable>;
+  id?: string;
+  fetchItemByIdAction: (id: string) => InferSelectModel<typeof userTable>;
 }

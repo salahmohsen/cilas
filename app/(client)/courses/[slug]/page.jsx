@@ -1,5 +1,5 @@
 import { getCourseById } from "@/actions/courses.actions";
-import Course from "@/app/_components/client/Course";
+import Course from "@/components/client/Course";
 
 const page = async ({ params }) => {
   const { slug } = params;

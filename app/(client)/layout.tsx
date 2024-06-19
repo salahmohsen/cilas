@@ -6,8 +6,8 @@ import Image from "next/image";
 import Link from "next/link";
 import logo from "@/public/logo.png";
 
-import { MainNav } from "@/app/_components/client/HeaderMainNav";
-import { FloatingNav } from "@/app/_components/client/HeaderFloatingNav";
+import { MainNav } from "@/components/client/HeaderMainNav";
+import { FloatingNav } from "@/components/client/HeaderFloatingNav";
 
 import { Bird, Brain, HomeIcon, Map, Rss } from "lucide-react";
 

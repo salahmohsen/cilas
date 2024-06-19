@@ -1,6 +1,6 @@
-import Course from "@/app/_components/client/Course.jsx";
-import CoursePagination from "@/app/_components/client/CoursePagination.jsx";
-import Sidebar from "@/app/_components/client/Sidebar.jsx";
+import Course from "@/components/client/Course.jsx";
+import CoursePagination from "@/components/client/CoursePagination.jsx";
+import Sidebar from "@/components/client/Sidebar.jsx";
 import { getCourses } from "@/actions/courses.actions";
 import slug from "slug";
 

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,7 @@ import placeholderUser from "@/public/placeholder-user.svg";
 import { Search } from "lucide-react";
 import LayoutMobileSidebar from "./LayoutMobileSidebar";
 import LayoutBreadcrumb from "./LayoutBreadcrumb";
+import { logout } from "@/actions/auth.actions";
 
 export default function LayoutHeader({ children }) {
   return (
@@ -57,7 +59,9 @@ export default function LayoutHeader({ children }) {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => logout()}>
+                Logout
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

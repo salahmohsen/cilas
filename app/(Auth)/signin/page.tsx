@@ -14,7 +14,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Github } from "lucide-react";
 import { useFormState } from "react-dom";
-import { signupAction } from "@/actions/auth.actions";
+import {
+  signInAction,
+  signUpAction,
+  signinAction,
+} from "@/actions/auth.actions";
 import { FormProvider, useForm } from "react-hook-form";
 import {
   Form,
@@ -25,33 +29,29 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { signupSchema } from "@/types/auth.schema";
+import { signinSchema } from "@/types/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { SiGoogle } from "@icons-pack/react-simple-icons";
 import { useEffect, useRef } from "react";
+import { redirect } from "next/navigation";
 
-export default function Signup() {
-  const [formState, formAction] = useFormState(signupAction, {
-    error: undefined,
-    success: undefined,
-  });
+export default function Signin() {
+  const [formState, formAction] = useFormState(signinAction, {});
 
-  const formMethods = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
+  const formMethods = useForm<z.infer<typeof signinSchema>>({
+    resolver: zodResolver(signinSchema),
     progressive: false,
-    mode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       email: "",
       password: "",
-      passwordConfirmation: "",
     },
   });
-  console.log(formMethods.watch());
 
   useEffect(() => {
     if (formState.error) toast.error(formState.error);
-    if (formState.success) toast.success(formState.success);
+    if (formState.success) redirect("/dashboard");
   }, [formState]);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -71,7 +71,7 @@ export default function Signup() {
       <form
         ref={formRef}
         action={formAction}
-        className="flex items-center justify-center"
+        className="flex h-screen w-full items-center justify-center overflow-x-hidden"
         onSubmit={(e) => {
           e.preventDefault();
 
@@ -80,15 +80,15 @@ export default function Signup() {
           })(e);
         }}
       >
-        <Card className="w-1/5" ref={mainCardRef}>
+        <Card className="h-max max-h-screen w-1/4 scale-90" ref={mainCardRef}>
           <CardHeader>
-            <CardTitle className="text-2xl">Signup</CardTitle>
+            <CardTitle className="text-2xl">Signin</CardTitle>
             <CardDescription>
-              Enter your email and password below to create new account
+              Enter your email and password below to login to your account
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="mb-4 flex flex-col gap-1">
+            <div className="mb-8 flex flex-col gap-2">
               <FormField
                 control={formMethods.control}
                 name="email"
@@ -117,20 +117,6 @@ export default function Signup() {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={formMethods.control}
-                name="passwordConfirmation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
-                    <FormControl>
-                      <Input type="password" {...field} />
-                    </FormControl>
-                    <FormDescription />
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
             <div className="flex flex-col gap-4">
               <Button
@@ -138,7 +124,7 @@ export default function Signup() {
                 className="w-full"
                 onClick={handleSignUpClick}
               >
-                Signup
+                signin
               </Button>
               <Link href="/login/google">
                 <Button
@@ -149,11 +135,11 @@ export default function Signup() {
                   <SiGoogle size={15} /> Continue with Google
                 </Button>
               </Link>
-              <div className="mt-2 text-center text-sm">
+              <div className="mt-4 text-center text-sm">
                 <div>
-                  Already have an account{" "}
-                  <Link href="/signin" className="underline">
-                    Sign in
+                  Don't have an account{" "}
+                  <Link href="/signup" className="underline">
+                    Signup
                   </Link>
                 </div>
               </div>

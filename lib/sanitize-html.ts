@@ -1,6 +1,6 @@
 import sanitizeHtml from "sanitize-html";
 
-export const cleanHtml = (dirty: string) => {
+export const cleanHtml = (dirty: string): string => {
   const options = {
     allowedTags: [
       "p",

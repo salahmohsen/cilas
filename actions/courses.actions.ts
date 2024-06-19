@@ -4,29 +4,26 @@ import db from "@/db/drizzle";
 import { courseTable, userTable } from "@/db/schema";
 
 import { z } from "zod";
-import { courseFormSchema } from "@/types/courseForm.schema";
+import { courseSchema } from "@/types/courseForm.schema";
 
 import { format } from "date-fns";
-import { eq, desc, InferInsertModel, lt } from "drizzle-orm";
+import { eq, desc, InferInsertModel, lt, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cloudinaryUploader } from "@/lib/cloudinary";
 import { cleanHtml } from "@/lib/sanitize-html";
 import { redirect } from "next/navigation";
 
-export type FormState = {
+type CourseFormState = {
   success?: string;
   error?: string;
-  fields?: z.infer<typeof courseFormSchema>;
   isPending: boolean;
 };
 
 export async function courseAction(
-  prevState: FormState,
+  prevState: CourseFormState,
   data: FormData,
-): Promise<FormState> {
-  let formState: FormState;
-  const formData: {} = Object.fromEntries(data);
-
+): Promise<CourseFormState> {
+  console.log("authorId", data.get("authorId"));
   // Helper conversion function
   const convert = (
     value: string,
@@ -40,49 +37,60 @@ export async function courseAction(
       if (type === "time") return format(JSON.parse(value)[state], "HH:mm");
     }
   };
+
   // The object that we will send it back to user in case of errors
-  const formObject: z.infer<typeof courseFormSchema> = {
-    enTitle: formData["enTitle"],
-    arTitle: formData["arTitle"],
-    enContent: formData["enContent"],
-    arContent: formData["arContent"],
-    authorId: +formData["authorId"],
-    category: formData["category"],
-    image: formData["image"] as File,
-    attendance: formData["attendance"],
-    isRegistrationOpen: formData["isRegistrationOpen"] === "Open",
-    price: +formData["price"],
+  let formObject: z.infer<typeof courseSchema> = {
+    enTitle: data.get("enTitle"),
+    arTitle: data.get("arTitle"),
+    enContent: cleanHtml(data.get("enContent") as string),
+    arContent: cleanHtml(data.get("arContent") as string),
+    authorId: data.get("authorId") as string,
+    category: data.get("category") as string,
+    image: data.get("image") as File,
+    attendance: data.get("attendance") as string,
+    isRegistrationOpen: data.get("isRegistrationOpen") === "Open",
+    price: data.get("price") ? Number(data.get("price")) : undefined,
     timeSlot: {
-      from: convert(formData["timeSlot"], "from", "date") as Date,
-      to: convert(formData["timeSlot"], "to", "date") as Date,
+      from: convert(data.get("timeSlot") as string, "from", "date") as Date,
+      to: convert(data.get("timeSlot") as string, "to", "date") as Date,
     },
-    days: convert(formData["days"]) as { value: string; label: string }[],
-    courseFlowUrl: formData["courseFlowUrl"],
-    applyUrl: formData["applyUrl"],
+    days: convert(data.get("days") as string) as {
+      value: string;
+      label: string;
+    }[],
+    courseFlowUrl: data.get("courseFlowUrl"),
+    applyUrl: data.get("applyUrl"),
     dateRange: {
-      from: convert(formData["dateRange"], "from", "date") as Date,
-      to: convert(formData["dateRange"], "to", "date") as Date,
+      from: convert(data.get("dateRange") as string, "from", "date") as Date,
+      to: convert(data.get("dateRange") as string, "to", "date") as Date,
     },
   };
 
   // validating the data
+  let formState: {
+    error?: string;
+    success?: string;
+    fields?: z.infer<typeof courseSchema>;
+    isPending: boolean;
+  };
   try {
-    const parse = courseFormSchema.safeParse(formObject);
+    const parse = courseSchema.safeParse(formObject);
     if (!parse.success) {
-      throw new TypeError(
-        `An error occurred while processing the form values: ${parse.error.errors[0].message}`,
-      );
+      return {
+        error: `An error occurred while processing the form values: ${parse.error.errors[0].message}`,
+        isPending: false,
+      };
     }
   } catch (error) {
     if (error instanceof Error)
-      formState = {
-        error: error.message,
+      return {
+        error: `${error.message}`,
         isPending: false,
       };
   }
   // uploading the image in case of data is succeed
   const uploadImage = async (): Promise<string> => {
-    const image = formData["image"] as File;
+    const image = formObject.image as File;
     if (image.size === 0) return "";
 
     const imageData = new FormData();
@@ -90,56 +98,42 @@ export async function courseAction(
     imageData.append("folder", "courses");
 
     try {
-      return await cloudinaryUploader(imageData);
+      const imageUrl = await cloudinaryUploader(imageData);
+      return imageUrl;
     } catch (e) {
-      formState = {
+      return {
         error: "Image Uploading Failed, please try again later!",
         isPending: false,
-        fields: formObject,
       };
-      return "";
     }
   };
   // Initialize the values for the database
   const dbObject: InferInsertModel<typeof courseTable> = {
-    enTitle: formData["enTitle"],
-    enContent: cleanHtml(formData["enContent"]),
-    arTitle: formData["arTitle"],
-    arContent: cleanHtml(formData["arContent"]),
+    ...formObject,
     image: await uploadImage(),
-    authorId: +formData["authorId"],
-    category: formData["category"],
-    registrationStatus: formData["isRegistrationOpen"] === "Open",
-    attendance: formData["attendance"],
-    price: +formData["price"],
-    days: convert(formData["days"]),
-    startDate: convert(formData["dateRange"], "from") as string,
-    endDate: convert(formData["dateRange"], "from") as string,
-    sessionStartTime: convert(formData["timeSlot"], "from", "time") as string,
-    sessionEndTime: convert(formData["timeSlot"], "to", "time") as string,
-    courseFlowUrl: formData["courseFlowUrl"],
-    applyUrl: formData["applyUrl"],
   };
+  console.log("dbObject", dbObject);
 
   try {
     const statement = db
       .insert(courseTable)
       .values(dbObject)
       .returning({ insertedId: courseTable.id });
-    await db.execute(statement);
-  } catch (error) {
-    formState = {
-      error: "Oops! Course addition failed. Please try again.",
-      fields: formObject,
+    const result = await db.execute(statement);
+    console.log("DB Result", result);
+    revalidatePath("/");
+    return {
+      success: "Course created successfully",
       isPending: false,
     };
+  } catch (error) {
+    if (error instanceof Error)
+      return {
+        error: `Oops! Course addition failed. Please try again. ${error.message}`,
+        // fields: formObject,
+        isPending: false,
+      };
   }
-
-  formState = { success: "Course created successfully", isPending: false };
-
-  revalidatePath("/");
-
-  return formState;
 }
 
 export const getArchived = async () => {
@@ -147,7 +141,7 @@ export const getArchived = async () => {
     .select()
     .from(courseTable)
     .leftJoin(userTable, eq(courseTable.authorId, userTable.id))
-    .where(lt(courseTable.endDate, new Date().toISOString()))
+    .where(lt(sql`${courseTable}.date_range->>'to'`, new Date().toISOString()))
     .orderBy(desc(courseTable.createdAt));
 
   return data;
@@ -171,7 +165,11 @@ export const getCourseById = async (courseId) => {
   return course[0];
 };
 
-export const deleteCourse = async (courseId: number, prevState) => {
+type DeleteFormState = { success?: "string"; error?: "string" };
+export const deleteCourse = async (
+  courseId: number,
+  prevState: DeleteFormState,
+): Promise<DeleteFormState> => {
   let state = {};
   try {
     const statement = db
