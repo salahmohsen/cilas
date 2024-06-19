@@ -12,6 +12,7 @@ export const cleanHtml = (dirty: string): string => {
       "em",
       "i",
       "strong",
+      "b",
       "blockquote",
       "s",
       "a",

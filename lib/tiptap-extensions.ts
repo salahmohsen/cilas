@@ -11,11 +11,15 @@ export const starterKit = StarterKit.configure({
   paragraph: {
     HTMLAttributes: { class: "prose-base" },
   },
-
+  hardBreak: {
+    HTMLAttributes: {
+      keepMarks: false,
+    },
+  },
   heading: {
     HTMLAttributes: {
       levels: [4],
-      class: "prose-lg scroll-m-20 font-semibold tracking-tight",
+      class: "prose-lg scroll-m-20 text-lg font-semibold tracking-tight",
     },
   },
 

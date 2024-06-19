@@ -1,6 +1,6 @@
 import { useFormContext } from "react-hook-form";
 
-import { useEditor, EditorContent } from "@tiptap/react";
+import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import {
   editorProps,
   starterKit,
@@ -23,7 +23,12 @@ import { cn } from "@/lib/utils";
 
 import { StandardProps } from "../../../types/form.inputs";
 import React, { memo } from "react";
-import EditorToolbar from "./TipTapEditorToolbar";
+import EditorToolbar, {
+  Bold,
+  Heading,
+  Italic,
+  Paragraph,
+} from "./TipTapEditorToolbar";
 
 export const TipTapInput = memo(function TipTapInput({
   name,
@@ -113,6 +118,18 @@ const Editor: React.FC<EditorProps> = ({
         disabled={disabled}
         className="max-w-6xl"
       />
+      {editor && (
+        <BubbleMenu
+          editor={editor}
+          tippyOptions={{ duration: 100 }}
+          className="scale-75 rounded-lg border opacity-90"
+        >
+          <Paragraph editor={editor} />
+          <Heading editor={editor} />
+          <Bold editor={editor} />
+          <Italic editor={editor} />
+        </BubbleMenu>
+      )}
     </div>
   );
 };
