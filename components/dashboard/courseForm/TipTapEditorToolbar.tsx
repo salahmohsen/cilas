@@ -31,31 +31,6 @@ import {
 import { memo, useCallback } from "react";
 
 export default function EditorToolbar({ editor }: { editor: any }) {
-  const setLink = useCallback(() => {
-    const previousUrl = editor?.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
-
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === "") {
-      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
-
-      return;
-    }
-
-    // update link
-    editor
-      ?.chain()
-      .focus()
-      .extendMarkRange("link")
-      .setLink({ href: url })
-      .run();
-  }, [editor]);
-
   if (!editor) return null;
 
   return (
@@ -104,11 +79,15 @@ const ToolbarIcon = ({
 };
 
 function StrikeThrough({ editor }) {
+  const handleStrike = useCallback(
+    () => editor.chain().focus().toggleStrike().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("strike")}
-      onPressedChange={() => editor.chain().focus().toggleStrike().run()}
+      onPressedChange={handleStrike}
     >
       <ToolbarIcon
         icon={<Strikethrough className="h-4 w-4" />}
@@ -119,12 +98,16 @@ function StrikeThrough({ editor }) {
 }
 
 function BulletList({ editor }) {
+  const handleBulletList = useCallback(
+    () => editor.chain().focus().toggleBulletList().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("bulletList")}
       className="hidden md:block"
-      onPressedChange={() => editor.chain().focus().toggleBulletList().run()}
+      onPressedChange={handleBulletList}
     >
       <ToolbarIcon icon={<ListIcon className="h-4 w-4" />} name="Bullet List" />
     </Toggle>
@@ -132,12 +115,16 @@ function BulletList({ editor }) {
 }
 
 function OrderedList({ editor }) {
+  const handleOrederedList = useCallback(
+    () => editor.chain().focus().toggleOrderedList().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       className="hidden md:block"
       pressed={editor.isActive("orderedList")}
-      onPressedChange={() => editor.chain().focus().toggleOrderedList().run()}
+      onPressedChange={handleOrederedList}
     >
       <ToolbarIcon
         icon={<ListOrderedIcon className="h-4 w-4" />}
@@ -148,11 +135,15 @@ function OrderedList({ editor }) {
 }
 
 function BlockQuote({ editor }) {
+  const handleBlockQuote = useCallback(
+    () => editor.chain().focus().toggleBlockquote().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("blockquote")}
-      onPressedChange={() => editor.chain().focus().toggleBlockquote().run()}
+      onPressedChange={handleBlockQuote}
     >
       <ToolbarIcon
         icon={<TextQuoteIcon className="h-4 w-4" />}
@@ -163,11 +154,15 @@ function BlockQuote({ editor }) {
 }
 
 function HorizontalLine({ editor }) {
+  const handleHorizontalLine = useCallback(
+    () => editor.chain().focus().setHorizontalRule().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("horizontalRule")}
-      onPressedChange={() => editor.chain().focus().setHorizontalRule().run()}
+      onPressedChange={handleHorizontalLine}
     >
       <ToolbarIcon
         icon={<MinusIcon className="h-4 w-4" />}
@@ -177,12 +172,37 @@ function HorizontalLine({ editor }) {
   );
 }
 
-function SetLink({ editor }, setLink: () => void) {
+function SetLink({ editor }) {
+  const handleSetLink = useCallback(() => {
+    const previousUrl = editor?.getAttributes("link").href;
+    const url = window.prompt("URL", previousUrl);
+
+    // cancelled
+    if (url === null) {
+      return;
+    }
+
+    // empty
+    if (url === "") {
+      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+
+      return;
+    }
+
+    // update link
+    editor
+      ?.chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({ href: url })
+      .run();
+  }, [editor]);
+
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("link")}
-      onPressedChange={setLink}
+      onPressedChange={handleSetLink}
     >
       <ToolbarIcon icon={<Link2Icon className="h-4 w-4" />} name="Link" />
     </Toggle>
@@ -190,11 +210,16 @@ function SetLink({ editor }, setLink: () => void) {
 }
 
 function UnsetLink({ editor }) {
+  const handleUnsetLink = useCallback(
+    () => editor.chain().focus().unsetLink().run(),
+    [editor],
+  );
+
   return (
     <Toggle
       size="sm"
       pressed={!editor.isActive("link")}
-      onPressedChange={() => editor.chain().focus().unsetLink().run()}
+      onPressedChange={handleUnsetLink}
       disabled={!editor.isActive("link")}
     >
       <ToolbarIcon icon={<Link2OffIcon className="h-4 w-4" />} name="Link" />
@@ -203,14 +228,16 @@ function UnsetLink({ editor }) {
 }
 
 function Left({ editor }) {
+  const handleLeft = useCallback(
+    () => editor.chain().focus().setTextAlign("left").run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       className={`${editor.isActive({ textAlign: "left" }) ? "data-[state=on]" : ""} hidden md:block`}
       pressed={editor.isActive({ textAlign: "left" })}
-      onPressedChange={() => {
-        editor.chain().focus().setTextAlign("left").run();
-      }}
+      onPressedChange={handleLeft}
     >
       <ToolbarIcon icon={<AlignLeftIcon className="h-4 w-4" />} name="Left" />
     </Toggle>
@@ -218,14 +245,16 @@ function Left({ editor }) {
 }
 
 function Center({ editor }) {
+  const handleCenter = useCallback(
+    () => editor.chain().focus().setTextAlign("center").run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       className={`${editor.isActive({ textAlign: "center" }) ? "data-[state=on]" : ""} hidden md:block`}
       pressed={editor.isActive({ textAlign: "center" })}
-      onPressedChange={() => {
-        editor.chain().focus().setTextAlign("center").run();
-      }}
+      onPressedChange={handleCenter}
     >
       <ToolbarIcon
         icon={<AlignCenterIcon className="h-4 w-4" />}
@@ -236,14 +265,16 @@ function Center({ editor }) {
 }
 
 function Right({ editor }) {
+  const handleRight = useCallback(
+    () => editor.chain().focus().setTextAlign("right").run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       className={`${editor.isActive({ textAlign: "right" }) ? "data-[state=on]" : ""}} hidden md:block`}
       pressed={editor.isActive({ textAlign: "right" })}
-      onPressedChange={() => {
-        editor.chain().focus().setTextAlign("right").run();
-      }}
+      onPressedChange={handleRight}
     >
       <ToolbarIcon icon={<AlignRightIcon className="h-4 w-4" />} name="Right" />
     </Toggle>
@@ -251,14 +282,16 @@ function Right({ editor }) {
 }
 
 function Justify({ editor }) {
+  const handleJustify = useCallback(
+    () => editor.chain().focus().setTextAlign("justify").run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       className="hidden md:block"
       pressed={editor.isActive({ textAlign: "justify" })}
-      onPressedChange={() => {
-        editor.chain().focus().setTextAlign("justify").run();
-      }}
+      onPressedChange={handleJustify}
     >
       <ToolbarIcon
         icon={<AlignJustifyIcon className="h-4 w-4" />}
@@ -269,12 +302,16 @@ function Justify({ editor }) {
 }
 
 function Undo({ editor }) {
+  const handleUndo = useCallback(
+    () => editor.chain().focus().undo().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       className="hidden md:block"
       pressed={editor.isActive("undo")}
-      onPressedChange={() => editor.chain().focus().undo().run()}
+      onPressedChange={handleUndo}
     >
       <ToolbarIcon icon={<UndoIcon className="h-4 w-4" />} name="Undo" />
     </Toggle>
@@ -282,12 +319,16 @@ function Undo({ editor }) {
 }
 
 function Redo({ editor }) {
+  const handleRedo = useCallback(
+    () => editor.chain().focus().redo().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       className="hidden md:block"
       pressed={editor.isActive("redo")}
-      onPressedChange={() => editor.chain().focus().redo().run()}
+      onPressedChange={handleRedo}
     >
       <ToolbarIcon icon={<RedoIcon className="h-4 w-4" />} name="Redo" />
     </Toggle>
@@ -295,13 +336,15 @@ function Redo({ editor }) {
 }
 
 function ClearFormatting({ editor }) {
+  const handleClearFormatting = useCallback(
+    () => editor.chain().focus().clearNodes().unsetAllMarks().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("clearFormatting")}
-      onPressedChange={() =>
-        editor.chain().focus().clearNodes().unsetAllMarks().run()
-      }
+      onPressedChange={handleClearFormatting}
     >
       <ToolbarIcon
         icon={<RemoveFormattingIcon className="h-4 w-4" />}
@@ -312,11 +355,15 @@ function ClearFormatting({ editor }) {
 }
 
 export function Italic({ editor }) {
+  const handleItalic = useCallback(
+    () => editor.chain().focus().toggleItalic().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("italic")}
-      onPressedChange={() => editor.chain().focus().toggleItalic().run()}
+      onPressedChange={handleItalic}
     >
       <ToolbarIcon icon={<ItalicIcon className="h-4 w-4" />} name="Italic" />
     </Toggle>
@@ -324,11 +371,15 @@ export function Italic({ editor }) {
 }
 
 export function Bold({ editor }) {
+  const handleBold = useCallback(
+    () => editor.chain().focus().toggleBold().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("bold")}
-      onPressedChange={() => editor.chain().focus().toggleBold().run()}
+      onPressedChange={handleBold}
     >
       <ToolbarIcon icon={<BoldIcon className="h-4 w-4" />} name="Bold" />
     </Toggle>
@@ -336,13 +387,15 @@ export function Bold({ editor }) {
 }
 
 export function Heading({ editor }) {
+  const handleHeading = useCallback(
+    () => editor.chain().focus().toggleHeading({ level: 4 }).run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("heading")}
-      onPressedChange={() =>
-        editor.chain().focus().toggleHeading({ level: 4 }).run()
-      }
+      onPressedChange={handleHeading}
     >
       <ToolbarIcon
         icon={<Heading4Icon className="h-4 w-4" />}
@@ -353,11 +406,12 @@ export function Heading({ editor }) {
 }
 
 export function Paragraph({ editor }) {
+  const handleParagraph = useCallback(() => editor.chain().focus().setParagraph().run(),[editor])
   return (
     <Toggle
       size="sm"
       pressed={editor.isActive("paragraph")}
-      onPressedChange={() => editor.chain().focus().setParagraph().run()}
+      onPressedChange={handleParagraph}
     >
       <ToolbarIcon
         icon={<PilcrowIcon className="h-4 w-4" />}

@@ -18,8 +18,9 @@ export const starterKit = StarterKit.configure({
   },
   heading: {
     HTMLAttributes: {
-      levels: [4],
-      class: "prose-lg scroll-m-20 text-lg font-semibold tracking-tight",
+      levels: [3],
+      class:
+        " prose-h3:mt-10 scroll-m-20 text-lg font-semibold tracking-tight ",
     },
   },
 

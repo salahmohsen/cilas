@@ -122,7 +122,7 @@ const Editor: React.FC<EditorProps> = ({
         <BubbleMenu
           editor={editor}
           tippyOptions={{ duration: 100 }}
-          className="scale-75 rounded-lg border opacity-90"
+          className="scale-80 rounded-lg border bg-background opacity-90"
         >
           <Paragraph editor={editor} />
           <Heading editor={editor} />

@@ -4,7 +4,7 @@ export const cleanHtml = (dirty: string): string => {
   const options = {
     allowedTags: [
       "p",
-      "h4",
+      "h3",
       "hr",
       "li",
       "ol",
