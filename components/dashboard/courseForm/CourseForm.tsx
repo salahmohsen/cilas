@@ -5,7 +5,7 @@ import { useFormState } from "react-dom";
 import { useForm, FormProvider } from "react-hook-form";
 
 import { courseAction } from "@/actions/courses.actions";
-import { getUserById, getUsersNames } from "@/actions/users.actions";
+import { getUserById, getUsersNamesByRole } from "@/actions/users.actions";
 
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -142,7 +142,7 @@ export default function CourseForm({
                       placeholder="Select facilitator..."
                       emptyMsg="Facilitator Not Found"
                       searchPlaceholder="Search facilitators..."
-                      fetchItemsAction={getUsersNames}
+                      fetchItemsAction={() => getUsersNamesByRole("author")}
                       editMode={editMode}
                       id={courseId}
                       fetchItemByIdAction={getUserById}

@@ -1,18 +1,36 @@
 "use server";
 
 import db from "@/db/drizzle";
-import { courses, userTable } from "@/db/schema";
-import { asc, desc, eq, sql } from "drizzle-orm";
+import { userTable } from "@/db/schema";
+import { eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { number } from "zod";
 
-export const getUsersNames = async () => {
+export const createUser = async (
+  id: string,
+  email: string,
+  password_hash: string,
+) => {
+  try {
+    const stmt = db
+      .insert(userTable)
+      .values({ id, email, password_hash, role: "user" });
+    await db.execute(stmt);
+    return { success: "user made!" };
+  } catch (error) {
+    if (error instanceof Error) return { error: error.message };
+  }
+};
+
+export const getUsersNamesByRole = async (
+  role: "user" | "author" | "admin",
+) => {
   const result = await db
     .select({
       id: userTable.id,
       name: sql<string>`${userTable.firstName} || ' ' || ${userTable.lastName}`,
     })
-    .from(userTable);
+    .from(userTable)
+    .where(eq(userTable.role, role));
 
   return result;
 };
@@ -33,20 +51,4 @@ export const getUserByEmail = async (email: string) => {
     .where(eq(userTable.email, email));
 
   return data[0];
-};
-
-export const createUser = async (
-  id: string,
-  email: string,
-  password_hash: string,
-) => {
-  try {
-    const stmt = db
-      .insert(userTable)
-      .values({ id, email, password_hash, role: "user" });
-    await db.execute(stmt);
-    return { success: "user made!" };
-  } catch (error) {
-    if (error instanceof Error) return { error: error.message };
-  }
 };
