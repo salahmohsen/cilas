@@ -4,10 +4,15 @@ import db from "@/db/drizzle";
 import { userTable } from "@/db/schema";
 import { signupSchema } from "@/types/auth.schema";
 import { generateIdFromEntropySize } from "lucia";
-import * as argon2 from "argon2";
-import { createAuthSession, destroySession } from "@/lib/auth";
+import { hash, verify } from "@node-rs/argon2";
+import {
+  createAuthSession,
+  lucia,
+  validateRequest,
+} from "@/lib/auth";
 import { createUser, getUserByEmail } from "./users.actions";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export async function signupAction(prevState, formData: FormData) {
   const email = formData.get("email") as string;
@@ -29,7 +34,7 @@ export async function signupAction(prevState, formData: FormData) {
       };
   }
 
-  const password_hash = await argon2.hash(password, {
+  const password_hash = await hash(password, {
     memoryCost: 19456,
     timeCost: 2,
     outputLen: 32,
@@ -65,10 +70,7 @@ export async function signinAction(prevState, formData: FormData) {
     };
   }
 
-  const isValidPassword = await argon2.verify(
-    existingUser.password_hash,
-    password,
-  );
+  const isValidPassword = await verify(existingUser.password_hash, password);
   if (!isValidPassword)
     return {
       error: "You have entered an invalid username or password",
@@ -78,6 +80,20 @@ export async function signinAction(prevState, formData: FormData) {
 }
 
 export const logout = async () => {
-  await destroySession();
-  redirect("/");
+  const { session } = await validateRequest();
+  if (!session) {
+    return {
+      error: "Unauthorized",
+    };
+  }
+
+  await lucia.invalidateSession(session.id);
+
+  const sessionCookie = lucia.createBlankSessionCookie();
+  cookies().set(
+    sessionCookie.name,
+    sessionCookie.value,
+    sessionCookie.attributes,
+  );
+  return redirect("/login");
 };

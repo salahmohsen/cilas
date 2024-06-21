@@ -42,7 +42,7 @@ export default function CourseItem({ item }) {
   }
 
   return (
-    <li className="flex cursor-pointer justify-between gap-2  px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:opacity-50 lg:hover:!opacity-100">
+    <li className="flex cursor-pointer justify-between gap-2 px-5 items-center py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:opacity-50 lg:hover:!opacity-100">
       <div className="flex flex-col gap-2">
         <span className="flex gap-1 text-xs font-light">
           <User size={16} strokeWidth={1.5} />

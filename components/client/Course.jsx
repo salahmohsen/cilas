@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import CourseMetadata from "./CourseMetadata";
-import FacilitatorHoverCard from "./CourseFacilitatorHoverCard";
+import UserHoverCard from "./UserHoverCard";
 import { Amiri, Yeseva_One } from "next/font/google";
 import { getUserById } from "@/actions/users.actions";
 
@@ -84,10 +84,10 @@ const Course = async ({ isOpen = false, className, ...props }) => {
             </Link>
           )}
 
-          <FacilitatorHoverCard
-            authorSlug={`courses/author/${authorId}`}
-            authorName={authorName}
-            authorBio={authorData["bio"]}
+          <UserHoverCard
+            userName={authorName}
+            userBio={authorData["bio"]}
+            userSlug={`courses/author/${authorId}`}
           />
         </div>
       </div>

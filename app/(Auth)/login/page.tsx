@@ -9,17 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Github } from "lucide-react";
 import { useFormState } from "react-dom";
-import {
-  signInAction,
-  signUpAction,
-  signinAction,
-} from "@/actions/auth.actions";
-import { FormProvider, useForm } from "react-hook-form";
+import { signinAction } from "@/actions/auth.actions";
+import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,

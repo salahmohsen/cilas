@@ -2,8 +2,11 @@ import db from "@/db/drizzle";
 import { sessionTable, userTable } from "@/db/schema";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 
-import { Lucia } from "lucia";
+import { Lucia, User } from "lucia";
 import { cookies } from "next/headers";
+import { Google } from "arctic";
+import { cache } from "react";
+import { Session } from "lucia";
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
 
@@ -20,8 +23,8 @@ export const lucia = new Lucia(adapter, {
   getUserAttributes: (attributes) => {
     return {
       email: attributes.email,
-      googleId: attributes.google_id,
-      username: attributes.username,
+      googleId: attributes.googleId,
+      userName: attributes.userName,
     };
   },
 });
@@ -32,8 +35,8 @@ declare module "lucia" {
     Lucia: typeof lucia;
     DatabaseUserAttributes: {
       email: string;
-      google_id: string;
-      username: string;
+      googleId: string;
+      userName: string;
     };
   }
 }
@@ -49,43 +52,45 @@ export async function createAuthSession(user_id) {
   cookies().set("user_id", user_id);
 }
 
-export async function verifyAuth() {
-  const sessionCookie = cookies().get(lucia.sessionCookieName);
-  if (!sessionCookie) return { user: null, session: null };
-  const sessionId = sessionCookie.value;
-  if (!sessionId) return { user: null, session: null };
-  const result = await lucia.validateSession(sessionId);
-  try {
-    if (result.session && result.session.fresh) {
-      const sessionCookie = lucia.createSessionCookie(result.session.id);
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      );
-      cookies().set("user_id", user_id);
+export const validateRequest = cache(
+  async (): Promise<
+    { user: User; session: Session } | { user: null; session: null }
+  > => {
+    const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
+    if (!sessionId) {
+      return {
+        user: null,
+        session: null,
+      };
     }
-    if (!result.session) {
-      const sessionCoockie = lucia.createBlankSessionCookie();
-      cookies().set(
-        sessionCoockie.name,
-        sessionCoockie.value,
-        sessionCoockie.attributes,
-      );
-    }
-  } catch {}
-  return result;
-}
 
-export async function destroySession() {
-  const { session } = await verifyAuth();
-  if (!session) return { error: "Unauthorized" };
-  await lucia.invalidateSession(session.id);
-  const sessionCoockie = lucia.createBlankSessionCookie();
-  cookies().set(
-    sessionCoockie.name,
-    sessionCoockie.value,
-    sessionCoockie.attributes,
-  );
-  cookies().delete("user_id");
-}
+    const result = await lucia.validateSession(sessionId);
+    // next.js throws when you attempt to set cookie when rendering page
+    try {
+      if (result.session && result.session.fresh) {
+        const sessionCookie = lucia.createSessionCookie(result.session.id);
+        cookies().set(
+          sessionCookie.name,
+          sessionCookie.value,
+          sessionCookie.attributes,
+        );
+      }
+      if (!result.session) {
+        const sessionCookie = lucia.createBlankSessionCookie();
+        cookies().set(
+          sessionCookie.name,
+          sessionCookie.value,
+          sessionCookie.attributes,
+        );
+        cookies().delete("user_id");
+      }
+    } catch {}
+    return result;
+  },
+);
+
+export const google = new Google(
+  process.env.GOOGLE_CLIENT_ID!,
+  process.env.GOOGLE_CLIENT_SECRET!,
+  process.env.NEXT_PUBLIC_BASE_URL + "/login/google/callback",
+);
