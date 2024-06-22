@@ -115,7 +115,12 @@ export default function CourseDetailsPanel({
               <span>
                 {course.days.length === 0
                   ? "-"
-                  : "Every" + course.days.join(" - ")}
+                  : "Every " +
+                    course.days.map((day, index) =>
+                      course.days.length === index + 1
+                        ? ` and ${day.label}`
+                        : `${day.label}`,
+                    )}
               </span>
             </li>
           </ul>
