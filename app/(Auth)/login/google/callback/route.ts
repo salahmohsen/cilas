@@ -1,10 +1,12 @@
 import { google, lucia } from "@/lib/auth";
-import { cookies } from "next/headers";
-import { GoogleTokens, OAuth2RequestError } from "arctic";
+import { GoogleUser } from "@/types/auth.types";
 import { generateIdFromEntropySize } from "lucia";
+import { GoogleTokens, OAuth2RequestError } from "arctic";
+import { cookies } from "next/headers";
 import db from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { userTable } from "@/db/schema";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
@@ -14,17 +16,6 @@ export async function GET(request: Request): Promise<Response> {
   const storedCodeVerifier =
     cookies().get("google_code_verifier")?.value ?? null;
 
-  console.log(
-    "code",
-    code,
-    "state",
-    state,
-    "storedState",
-    storedState,
-    "storedCodeVerifier",
-    storedCodeVerifier,
-  );
-
   if (
     !code ||
     !state ||
@@ -32,26 +23,15 @@ export async function GET(request: Request): Promise<Response> {
     !storedCodeVerifier ||
     state !== storedState
   ) {
-    return new Response(null, {
+    return new NextResponse(null, {
       status: 400,
     });
   }
 
-  let tokens;
   try {
-    tokens = await google.validateAuthorizationCode(code, storedCodeVerifier);
-  } catch (e) {
-    if (e instanceof OAuth2RequestError) {
-      const { request, message, description } = e;
-      console.log(message);
-    }
-  }
-
-  try {
-    const url: URL = await google.createAuthorizationURL(
-      state,
+    const tokens: GoogleTokens = await google.validateAuthorizationCode(
+      code,
       storedCodeVerifier,
-      { scopes: ["profile", "email"] },
     );
 
     const googleUserResponse = await fetch(
@@ -63,7 +43,6 @@ export async function GET(request: Request): Promise<Response> {
       },
     );
     const googleUser: GoogleUser = await googleUserResponse.json();
-
     const existingUser = await db
       .select()
       .from(userTable)
@@ -78,29 +57,28 @@ export async function GET(request: Request): Promise<Response> {
         sessionCookie.attributes,
       );
 
-      return new Response(null, {
-        status: 302,
-        headers: {
-          Location: "/dashboard",
+      return NextResponse.redirect(
+        new URL("/dashboard", process.env.NEXT_PUBLIC_BASE_URL),
+        {
+          status: 302,
         },
-      });
-    }
-    const userId = generateIdFromEntropySize(10); // 16 characters long
-    try {
-      console.log("inserting to database ran");
-      await db.insert(userTable).values({
-        id: userId,
-        googleId: googleUser.sub,
-        userName: googleUser.name.replace(/\s/g, ""),
-        firstName: googleUser.given_name,
-        lastName: googleUser.family_name,
-        email: googleUser.email,
-        avatar: googleUser.picture,
-      });
-    } catch (error) {
-      if (error instanceof Error) console.log(error.message);
-    }
-    try {
+      );
+    } else {
+      const userId = generateIdFromEntropySize(10); // 16 characters long
+      try {
+        await db.insert(userTable).values({
+          id: userId,
+          googleId: googleUser.sub,
+          userName: googleUser.name.replace(/\s/g, ""),
+          firstName: googleUser.given_name,
+          lastName: googleUser.family_name,
+          email: googleUser.email,
+          avatar: googleUser.picture,
+        });
+      } catch (error) {
+        if (error instanceof Error) console.log(error.message);
+      }
+
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
       cookies().set(
@@ -108,36 +86,25 @@ export async function GET(request: Request): Promise<Response> {
         sessionCookie.value,
         sessionCookie.attributes,
       );
-    } catch (error) {
-      if (error instanceof Error) console.log(error.message);
+
+      return new NextResponse(null, {
+        status: 302,
+        headers: {
+          Location: "/dashboard",
+        },
+      });
     }
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/dashboard",
-      },
-    });
   } catch (e) {
-    // the specific error message depends on the provider
     if (e instanceof OAuth2RequestError) {
-      // invalid code
-      console.log(e.message);
-      return new Response(null, {
+      const { request, message, description } = e;
+      console.log(message);
+
+      return new NextResponse(null, {
         status: 400,
       });
     }
-    return new Response(null, {
+    return new NextResponse(null, {
       status: 500,
     });
   }
-}
-
-interface GoogleUser {
-  sub: string;
-  name: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-  email: string;
-  email_verified: boolean;
 }
