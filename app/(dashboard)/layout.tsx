@@ -5,7 +5,7 @@ import "@/app/globals.css";
 
 import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
 import LayoutHeader from "@/components/dashboard/LayoutHeader";
-import { ThemeProvider } from "@/components/dashboard/ThemeProvider";
+import { ThemeProvider } from "@/providers/Theme.provider";
 
 import { Toaster } from "sonner";
 

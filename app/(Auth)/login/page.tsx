@@ -29,6 +29,8 @@ import { z } from "zod";
 import { SiGoogle } from "@icons-pack/react-simple-icons";
 import { useEffect, useRef } from "react";
 import { redirect } from "next/navigation";
+import { validateRequest } from "@/lib/auth";
+import { useSession } from "@/providers/Session.provider";
 
 export default function Signin() {
   const [formState, formAction] = useFormState(signinAction, {});
@@ -42,6 +44,8 @@ export default function Signin() {
       password: "",
     },
   });
+  const { user } = useSession();
+  if (user) redirect("/dashboard");
 
   useEffect(() => {
     if (formState.error) toast.error(formState.error);
