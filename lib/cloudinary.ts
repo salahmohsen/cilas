@@ -27,15 +27,6 @@ export async function cloudinaryUploader(imageData) {
     throw new Error("No file or folder provided");
   }
   let imageBlob = image as Blob;
-  // if (!(image instanceof Blob || image instanceof File)) {
-  //   try {
-  //     imageBlob = await fetch(image).then((res) => res.blob());
-  //   } catch (error) {
-  //     throw new Error("Invalid image type");
-  //   }
-  // } else {
-  //   imageBlob = image;
-  // }
 
   let imageBuffer;
   try {

@@ -8,7 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../../ui/form";
-import { StandardProps } from "../../../types/form.inputs";
+import { StandardProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
 
 export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({

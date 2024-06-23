@@ -57,7 +57,7 @@ export const courseTable = pgTable("course", {
   category: text("category").notNull(),
   isRegistrationOpen: boolean("registration_status").notNull(),
   attendance: text("attendance").notNull(),
-  price: integer("price"),
+  price: text("price"),
   days: json("days"),
   dateRange: json("date_range").notNull(),
   timeSlot: json("time_slot").notNull(),

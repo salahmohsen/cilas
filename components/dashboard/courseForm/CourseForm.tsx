@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { courseAction } from "@/actions/courses.actions";
+import { createCourse } from "@/actions/courses.actions";
 import { getUserById, getUsersNamesByRole } from "@/actions/users.actions";
 
 import { Form } from "@/components/ui/form";
@@ -18,7 +18,6 @@ import {
 } from "@/types/courseForm.schema";
 
 import { BasicInput } from "./InputBasic";
-import { TipTapInput } from "./InputTipTap";
 import { ComboBoxInput } from "./InputComboBox";
 import { MultiSelectorInput } from "./InputMultiSelector";
 import { SelectInput } from "./InputSelect";
@@ -28,35 +27,50 @@ import { SubmitButton } from "./SubmitButton";
 
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
+import EnglishTab from "./EnglishTab";
+import ArabicTab from "./ArabicTab";
 
-type CourseFormPropTypes = { editMode?: boolean; courseId: number };
+type CourseFormPropTypes = {
+  editMode?: boolean;
+  courseData?: z.infer<typeof courseSchema>;
+  courseId?: number;
+};
 
 export default function CourseForm({
   editMode = false,
+  courseData,
   courseId,
 }: CourseFormPropTypes) {
-  const [formState, formAction] = useFormState(courseAction, {
-    isPending: true, // initial state of isPending
-  });
+  if ((editMode && !courseData) || !courseId)
+    throw new Error("course data or course id not provided");
+  const formRef = useRef<HTMLFormElement>(null);
+
+  const [createCourseState, createCourseAction] = useFormState(
+    createCourse.bind(null, editMode, courseId),
+    {
+      isPending: true, // initial state of isPending
+    },
+  );
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const formMethods = useForm<z.infer<typeof courseSchema>>({
     resolver: zodResolver(courseSchema),
     progressive: false,
     mode: "onChange",
     defaultValues: {
       ...courseFormDefaultValues,
+      ...(courseData ?? {}),
     },
   });
-  useEffect(() => {
-    if (!formState.isPending) setIsLoading(false);
-    if (formState.success) toast.success(formState.success);
-    if (formState.error) toast.error(formState.error);
-    if (!formState.isPending && formState.success)
-      redirect("/dashboard/courses");
-  }, [formState]);
 
-  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (!createCourseState.isPending) setIsLoading(false);
+    if (createCourseState.success) toast.success(createCourseState.success);
+    if (createCourseState.error) toast.error(createCourseState.error);
+    if (!createCourseState.isPending && createCourseState.success)
+      redirect("/dashboard/courses");
+  }, [createCourseState]);
 
   return (
     <>
@@ -67,14 +81,13 @@ export default function CourseForm({
               <form
                 ref={formRef}
                 className="space-y-8"
-                action={formAction}
+                action={createCourseAction}
                 onSubmit={(e) => {
                   e.preventDefault();
                   formMethods.handleSubmit(() => {
                     if (Object.keys(formMethods.formState.errors).length === 0)
                       setIsLoading(true);
-
-                    formAction(new FormData(formRef.current!));
+                    createCourseAction(new FormData(formRef.current!));
                   })(e);
                 }}
               >
@@ -92,42 +105,8 @@ export default function CourseForm({
                         </span>
                       </TabsTrigger>
                     </TabsList>
-                    <TabsContent
-                      value="EnVersion"
-                      forceMount
-                      className="data-[state=inactive]:hidden"
-                    >
-                      <div className={`flex flex-col gap-6`}>
-                        <BasicInput
-                          type="text"
-                          label="Title"
-                          placeholder="English Title"
-                          name={"enTitle"}
-                        />
-                        <TipTapInput
-                          name="enContent"
-                          placeholder="Write English course description here..."
-                        />
-                      </div>
-                    </TabsContent>
-                    <TabsContent
-                      value="ArVersion"
-                      forceMount
-                      className="data-[state=inactive]:hidden"
-                    >
-                      <div className="flex flex-col gap-6">
-                        <BasicInput
-                          type="text"
-                          name="arTitle"
-                          label="Title"
-                          placeholder="Arabic Title"
-                        />
-                        <TipTapInput
-                          name="arContent"
-                          placeholder="Write Arabic course description here..."
-                        />
-                      </div>
-                    </TabsContent>
+                    <EnglishTab />
+                    <ArabicTab />
                   </Tabs>
                 </fieldset>
 
@@ -144,8 +123,9 @@ export default function CourseForm({
                       searchPlaceholder="Search facilitators..."
                       fetchItemsAction={() => getUsersNamesByRole("author")}
                       editMode={editMode}
-                      id={courseId}
-                      fetchItemByIdAction={getUserById}
+                      fetchItemByIdAction={() =>
+                        getUserById(courseData.authorId)
+                      }
                     />
                     <BasicInput
                       type="url"
@@ -228,7 +208,7 @@ export default function CourseForm({
                     </div>
                   </div>
                 </fieldset>
-                <SubmitButton isLoading={isLoading} />
+                <SubmitButton isLoading={isLoading} editMode={editMode} />
               </form>
             </Form>
           </div>

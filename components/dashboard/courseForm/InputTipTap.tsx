@@ -21,7 +21,7 @@ import {
 
 import { cn } from "@/lib/utils";
 
-import { StandardProps } from "../../../types/form.inputs";
+import { StandardProps } from "@/types/formInputs.types";
 import React, { memo } from "react";
 import EditorToolbar, {
   Bold,

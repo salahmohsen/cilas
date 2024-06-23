@@ -24,7 +24,7 @@ import {
 import { Check, ChevronsUpDown, Ellipsis, LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { ComboBoxProps } from "../../../types/form.inputs";
+import { ComboBoxProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
 
 export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
@@ -37,7 +37,6 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
     searchPlaceholder,
     fetchItemsAction,
     editMode,
-    id,
     fetchItemByIdAction,
   }) {
     const { control } = useFormContext();
@@ -49,15 +48,15 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
     /* This useEffect used to fetch specific user in Edit Mode */
     useEffect(() => {
       const fetchData = async () => {
-        if (editMode && id && open) {
+        if (editMode) {
           try {
             setLoadingUser(true);
-            if (id) {
-              const res = await fetchItemByIdAction(id);
-              setData([
-                { id: res?.id, name: `${res?.firstName} ${res?.lastName}` },
-              ]);
-            }
+
+            const res = await fetchItemByIdAction();
+            setData([
+              { id: res?.id, name: `${res?.firstName} ${res?.lastName}` },
+            ]);
+            setLoadingUser(false);
           } catch (error) {
             toast.error(`Error fetching ${label} data`);
           }

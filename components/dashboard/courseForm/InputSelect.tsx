@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
 
-import { SelectProps } from "../../../types/form.inputs";
+import { SelectProps } from "@/types/formInputs.types";
 import { memo } from "react";
 
 export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
@@ -49,6 +49,9 @@ export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
             <div onBlur={field.onBlur} ref={field.ref}>
               <Select
                 name={field.name}
+                defaultValue={
+                  typeof field.value !== "boolean" ? field.value : undefined
+                }
                 disabled={field.disabled}
                 onValueChange={(selectOption) =>
                   handleChange(selectOption, field.onChange)
@@ -59,7 +62,11 @@ export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
                     placeholder={
                       field.value && typeof field.value === "string"
                         ? field.value?.toLowerCase()
-                        : placeholder
+                        : field.value === true
+                          ? "open"
+                          : field.value === false
+                            ? "closed"
+                            : placeholder
                     }
                   />
                 </SelectTrigger>

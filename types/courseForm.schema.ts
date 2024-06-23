@@ -1,39 +1,39 @@
 import {
-  number,
-  optional_days,
-  optional_file,
+  required_string,
+  optional_string,
   required_boolean,
-  required_dateRange,
+  optional_url,
+  optional_days,
   required_timeSlot,
-  string,
+  required_dateRange,
+  optional_file,
+  optional_number,
 } from "@/lib/form.utils";
 
 import { z } from "zod";
 
 export const courseSchema = z
   .object({
-    enTitle: string("optional", "text") as z.ZodString,
-    arTitle: string("optional", "text") as z.ZodString,
-    enContent: string("optional", "text") as z.ZodString,
-    arContent: string("optional", "text") as z.ZodString,
-    authorId: string("required", "text") as z.ZodString,
-    category: string("required", "text") as z.ZodString,
+    enTitle: optional_string,
+    arTitle: optional_string,
+    enContent: optional_string,
+    arContent: optional_string,
+    authorId: required_string,
+    category: required_string,
     image: optional_file,
-    attendance: string("required", "text") as z.ZodString,
+    attendance: required_string,
     isRegistrationOpen: required_boolean,
-    price: number("optional"),
+    price: optional_number,
     timeSlot: required_timeSlot,
     days: optional_days,
-    courseFlowUrl: string("required", "url") as z.ZodString,
-    applyUrl: string("optional", "url") as z.ZodString,
+    courseFlowUrl: optional_url,
+    applyUrl: optional_url,
     dateRange: required_dateRange,
   })
-
   .refine((data) => data.arTitle || data.enTitle, {
     path: ["enTitle"],
     message: "At least one English or Arabic title is required.",
   })
-
   .refine((data) => data.enContent || data.arContent, {
     path: ["enContent"],
     message: "At least one English or Arabic content is required",
@@ -42,12 +42,12 @@ export const courseSchema = z
     path: ["arTitle"],
     message: "At least one English or Arabic title is required.",
   })
-
   .refine((data) => data.enContent || data.arContent, {
     path: ["arContent"],
     message: "At least one English or Arabic content is required",
   });
 
+// Default Values for Course Form
 export const courseFormDefaultValues: z.infer<typeof courseSchema> | {} = {
   enTitle: "",
   enContent: "",

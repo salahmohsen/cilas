@@ -17,7 +17,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { StandardProps } from "../../../types/form.inputs";
+import { StandardProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
 import { memo } from "react";
 

@@ -9,7 +9,7 @@ import {
 } from "../../ui/form";
 import MultipleSelector from "@/components/ui/multipleSelector";
 
-import { MultiSelectorProps } from "../../../types/form.inputs";
+import { MultiSelectorProps } from "@/types/formInputs.types";
 import { memo } from "react";
 
 export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
