@@ -41,7 +41,7 @@ export default function CourseForm({
   courseData,
   courseId,
 }: CourseFormPropTypes) {
-  if ((editMode && !courseData) || !courseId)
+  if (editMode && (!courseData || !courseId))
     throw new Error("course data or course id not provided");
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -124,7 +124,7 @@ export default function CourseForm({
                       fetchItemsAction={() => getUsersNamesByRole("author")}
                       editMode={editMode}
                       fetchItemByIdAction={() =>
-                        getUserById(courseData.authorId)
+                        getUserById(courseData?.authorId!)
                       }
                     />
                     <BasicInput
