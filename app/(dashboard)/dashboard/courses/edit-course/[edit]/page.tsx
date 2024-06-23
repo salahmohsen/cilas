@@ -1,13 +1,34 @@
-"use client";
-
-import CreateCoursePage from "../../create-course/page";
+import { getCourseById } from "@/actions/courses.actions";
+import CourseForm from "@/components/dashboard/courseForm/CourseForm";
+import { courseSchema } from "@/types/courseForm.schema";
 import { Squirrel } from "lucide-react";
+import { z } from "zod";
 
-export default function EditCoursePage({ params }) {
+export default async function EditCoursePage({ params }) {
   const parts = params.edit?.split("-");
-  const id = parts[parts.length - 1];
+  const courseId = Number(parts[parts.length - 1]);
+  const courseData = await getCourseById(courseId);
+  const dateRange = courseData.dateRange as { from: string; to: string };
+  const timeSlot = courseData.timeSlot as { from: string; to: string };
+  const days = courseData.days as {
+    value: string;
+    label: string;
+    disable?: boolean;
+  }[];
 
-  if (!id)
+  const formattedData: z.infer<typeof courseSchema> = {
+    ...courseData,
+    dateRange: {
+      from: new Date(dateRange.from),
+      to: new Date(dateRange.to),
+    },
+    timeSlot: {
+      from: new Date(timeSlot.from),
+      to: new Date(timeSlot.to),
+    },
+    days: days,
+  };
+  if (!courseId || !courseData)
     return (
       <div className="flex h-[calc(100vh-73px)] flex-col items-center justify-center space-y-10">
         <Squirrel size={200} strokeWidth={0.6} />
@@ -15,5 +36,11 @@ export default function EditCoursePage({ params }) {
       </div>
     );
 
-  return <CreateCoursePage isEditForm={true} courseId={id} />;
+  return (
+    <CourseForm
+      editMode={true}
+      courseData={formattedData}
+      courseId={courseId}
+    />
+  );
 }
