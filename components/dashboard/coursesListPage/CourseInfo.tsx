@@ -1,3 +1,6 @@
+import { useCourseState } from "@/providers/CourseState.provider";
+import { differenceInWeeks, format } from "date-fns";
+import { getSeason } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -8,60 +11,68 @@ import {
 } from "@/components/ui/card";
 
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
-import {
   Pagination,
   PaginationContent,
   PaginationItem,
 } from "@/components/ui/pagination";
 
-import { Button } from "../../ui/button";
-
-import {
-  ChevronLeft,
-  ChevronRight,
-  Copy,
-  CreditCard,
-  MoreVertical,
-  Truck,
-} from "lucide-react";
-import { Separator } from "../../ui/separator";
-import PegonsAvatar from "./PegonAvatar";
+import { ChevronLeft, ChevronRight, Copy } from "lucide-react";
+import { PegonsAvatar } from "./PegonAvatar";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn, getSeason } from "@/lib/utils";
-import { courseSchema } from "@/types/courseForm.schema";
-import { z } from "zod";
-import { differenceInWeeks, format } from "date-fns";
-import { InferSelectModel } from "drizzle-orm";
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { useCourses } from "@/providers/Courses.provider";
 
-export default function CourseDetailsPanel({
-  className,
-  data,
-}: {
-  className?: string;
-  data: z.infer<typeof courseSchema>;
-}) {
-  const { course, user } = data;
+export default function CourseInfo() {
+  const { archivedCourses } = useCourses();
+  const { courseInfo, isSelected, setIsSelected, setCourseInfo } =
+    useCourseState();
+
+  if (!courseInfo) return;
+
+  const { course, user } = courseInfo;
+
+  const idArr: number[] = archivedCourses.map((item) => item.course.id);
+  const currentId = courseInfo.course.id;
+  const currIndex = idArr.indexOf(currentId);
+
+  const handleNext = () => {
+    if (currIndex < idArr.length - 1) {
+      const nextId = idArr[currIndex + 1];
+      setIsSelected({ [nextId]: true });
+      setCourseInfo(archivedCourses.find((item) => item.course.id === nextId));
+    } else {
+      setIsSelected({ [idArr[0]]: true });
+      setCourseInfo(archivedCourses[0]);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currIndex > 0) {
+      const prevId = idArr[currIndex - 1];
+      setIsSelected({ [prevId]: true });
+      setCourseInfo(archivedCourses.find((item) => item.course.id === prevId));
+    } else {
+      setIsSelected({ [idArr.at(-1) as number]: true });
+      setCourseInfo(archivedCourses.at(-1));
+    }
+  };
+
   return (
-    <Card className={cn("overflow-y-auto overflow-x-hidden", className)}>
+    <Card
+      className={`translate-x-96 overflow-y-auto overflow-x-hidden scroll-smooth opacity-0 transition-all duration-300 ease-in-out scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full ${
+        isSelected ? "translate-x-0 opacity-100" : ""
+      }`}
+    >
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
-            {course.enTitle || course.arTitle}
+            <span
+              className="line-clamp-2 lg:line-clamp-1"
+              dir={course.enTitle ? "ltr" : "rtl"}
+            >
+              {course?.enTitle || course?.arTitle}
+            </span>
             <Button
               size="icon"
               variant="outline"
@@ -86,27 +97,30 @@ export default function CourseDetailsPanel({
             </li>
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Season Cycle</span>
-              <span>{getSeason(course.dateRange.from)}</span>
+              <span>{getSeason(course?.dateRange.from)}</span>
             </li>
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Registration</span>
-              <span>{course.isRegistrationOpen ? "Open" : "Closed"}</span>
+              <span>{course?.isRegistrationOpen ? "Open" : "Closed"}</span>
             </li>
           </ul>
           <Separator className="my-2" />
           <ul className="grid gap-3">
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Start Date</span>
-              <span>{format(course.dateRange.from, "dd MMMM yyyy")}</span>
+              <span>{format(course?.dateRange.from, "dd MMMM yyyy")}</span>
             </li>
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">End Date</span>
-              <span>{format(course.dateRange.to, "dd MMMM yyyy")}</span>
+              <span>{format(course?.dateRange.to, "dd MMMM yyyy")}</span>
             </li>
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Duration</span>
               <span>
-                {differenceInWeeks(course.dateRange.to, course.dateRange.from)}{" "}
+                {differenceInWeeks(
+                  course?.dateRange.to,
+                  course?.dateRange.from,
+                )}{" "}
                 Weeks
               </span>
             </li>
@@ -116,8 +130,8 @@ export default function CourseDetailsPanel({
                 {course.days.length === 0
                   ? "-"
                   : "Every " +
-                    course.days.map((day, index) =>
-                      course.days.length === index + 1
+                    course?.days.map((day, index) =>
+                      course?.days.length === index + 1
                         ? ` and ${day.label}`
                         : `${day.label}`,
                     )}
@@ -131,18 +145,18 @@ export default function CourseDetailsPanel({
           <dl className="grid gap-3">
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Name</dt>
-              <dd>{user.firstName + " " + user.lastName}</dd>
+              <dd>{user?.firstName + " " + user?.lastName}</dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Email</dt>
               <dd>
-                <a href="mailto:">{user.email}</a>
+                <a href="mailto:">{user?.email}</a>
               </dd>
             </div>
             <div className="flex items-center justify-between">
               <dt className="text-muted-foreground">Phone</dt>
               <dd>
-                <a href="tel:">{user.tel}</a>
+                <a href="tel:">{user?.tel}</a>
               </dd>
             </div>
           </dl>
@@ -179,13 +193,23 @@ export default function CourseDetailsPanel({
         <Pagination className="ml-auto mr-0 w-auto">
           <PaginationContent>
             <PaginationItem>
-              <Button size="icon" variant="outline" className="h-6 w-6">
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-6 w-6"
+                onClick={handlePrev}
+              >
                 <ChevronLeft className="h-3.5 w-3.5" />
                 <span className="sr-only">Previous Order</span>
               </Button>
             </PaginationItem>
             <PaginationItem>
-              <Button size="icon" variant="outline" className="h-6 w-6">
+              <Button
+                size="icon"
+                variant="outline"
+                className="h-6 w-6"
+                onClick={handleNext}
+              >
                 <ChevronRight className="h-3.5 w-3.5" />
                 <span className="sr-only">Next Order</span>
               </Button>

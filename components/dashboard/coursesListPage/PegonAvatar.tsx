@@ -1,6 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export default function PegonsAvatar() {
+export function PegonsAvatar() {
   return (
     <Avatar>
       <AvatarImage

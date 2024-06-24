@@ -6,6 +6,8 @@ import "@/app/globals.css";
 import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
 import LayoutHeader from "@/components/dashboard/LayoutHeader";
 import { ThemeProvider } from "@/providers/Theme.provider";
+import { CourseProvider } from "@/providers/Courses.provider";
+import { getArchivedCourses } from "@/actions/courses.actions";
 
 import { Toaster } from "sonner";
 
@@ -40,6 +42,8 @@ export default async function RootLayout({
     return redirect("/login");
   }
 
+  const archivedCourses = await getArchivedCourses();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${cairo.variable} `}>
@@ -49,11 +53,17 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Toaster richColors />
-          <main>
-            <LayoutSidebar />
-            <LayoutHeader>{children}</LayoutHeader>
-          </main>
+          <CourseProvider
+            currentCourses={[]}
+            draftCourses={[]}
+            archivedCourses={archivedCourses}
+          >
+            <Toaster richColors />
+            <main>
+              <LayoutSidebar />
+              <LayoutHeader>{children}</LayoutHeader>
+            </main>
+          </CourseProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -124,7 +124,7 @@ export async function createCourse(
   };
 }
 
-export const getArchived = async () => {
+export const getArchivedCourses = async () => {
   const data = await db
     .select()
     .from(courseTable)

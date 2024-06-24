@@ -48,3 +48,8 @@ export const isURL = (str: string) => {
   );
   return pattern.test(str);
 };
+
+export const isArabic = (string: string) => {
+  const pattern = new RegExp("^[p{Arabic}sp{N}]+$");
+  return pattern.test(string);
+};
