@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { nullable, z } from "zod";
 import { cloudinaryUploader } from "./cloudinary";
 import { isURL } from "./utils";
 
@@ -51,8 +51,8 @@ export const optional_file = z
   .refine((val: any) => isImageFile(val), {
     message: "Please select a valid image type",
   })
-  .or(emptyStringToNull)
-  .or(z.string().url().optional());
+  .or(z.string().url().nullable().optional())
+  .or(emptyStringToNull);
 
 export const optional_days = z
   .array(

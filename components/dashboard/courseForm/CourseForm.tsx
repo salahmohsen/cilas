@@ -35,7 +35,6 @@ type CourseFormPropTypes = {
   courseData?: z.infer<typeof courseSchema>;
   courseId?: number;
 };
-
 export default function CourseForm({
   editMode = false,
   courseData,
@@ -63,6 +62,8 @@ export default function CourseForm({
       ...(courseData ?? {}),
     },
   });
+
+  console.log(formMethods.watch("image"));
 
   useEffect(() => {
     if (!createCourseState.isPending) setIsLoading(false);
