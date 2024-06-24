@@ -76,7 +76,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
         }
       };
       fetchData();
-    }, [open]);
+    }, [open, editMode, fetchItemByIdAction, fetchItemsAction, label]);
 
     return (
       <FormField
