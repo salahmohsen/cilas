@@ -44,11 +44,13 @@ export const starterKit = StarterKit.configure({
   },
 });
 
-export const placeholderExtension = Placeholder.configure({
-  placeholder: "Change this text later",
-  emptyNodeClass:
-    "first:before:h-0 first:before:text-gray-400 first:before:float-left first:before:content-[attr(data-placeholder)] first:before:pointer-events-none text-sm",
-});
+export const placeholderExtension = (placeholder: string) => {
+  return Placeholder.configure({
+    placeholder: placeholder,
+    emptyNodeClass:
+      "first:before:h-0 first:before:text-gray-400 first:before:float-left first:before:content-[attr(data-placeholder)] first:before:pointer-events-none text-sm",
+  });
+};
 
 export const typography = Typography;
 

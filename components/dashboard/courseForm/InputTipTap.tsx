@@ -2,7 +2,6 @@ import { useFormContext } from "react-hook-form";
 
 import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import {
-  editorProps,
   starterKit,
   placeholderExtension,
   typography,
@@ -60,6 +59,7 @@ export const TipTapInput = memo(function TipTapInput({
                 onChange={field.onChange}
                 onBlur={field.onBlur}
                 disabled={field.disabled}
+                placeholder={placeholder}
               />
             </>
           </FormControl>
@@ -77,6 +77,7 @@ type EditorProps = {
   onChange: (value: string) => void;
   onBlur: any;
   disabled: boolean | undefined;
+  placeholder: string;
 };
 
 const Editor: React.FC<EditorProps> = ({
@@ -86,11 +87,12 @@ const Editor: React.FC<EditorProps> = ({
   onChange,
   onBlur,
   disabled,
+  placeholder,
 }) => {
   const editor = useEditor({
     extensions: [
       starterKit,
-      placeholderExtension,
+      placeholderExtension(placeholder),
       typography,
       link,
       textAlign,
