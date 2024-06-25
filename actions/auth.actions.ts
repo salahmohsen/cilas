@@ -117,13 +117,14 @@ export async function signup(prevState, formData: FormData) {
   const existingUser = await getUserByEmail(email);
   try {
     if (existingUser) return { error: "This Email is already signed up" };
-    createUser(userId, email, password_hash);
+    await createUser(userId, email, password_hash);
   } catch (error) {
     if (error instanceof Error)
       console.log(`creating user error: ${error.message}`);
   }
   try {
     await createAuthSession(userId);
+    redirect("/dashboard");
   } catch (error) {
     if (error instanceof Error)
       console.log(`creating session error ${error.message}`);
