@@ -1,11 +1,15 @@
 import { z } from "zod";
-import { required_email, required_password } from "@/lib/zodValidation.utils";
+import {
+  optional_string,
+  required_email,
+  required_password,
+} from "@/lib/zodValidation.utils";
 
 export const signupSchema = z
   .object({
     email: required_email,
     password: required_password,
-    passwordConfirmation: required_password,
+    passwordConfirmation: optional_string,
   })
   .refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords do not match!",
