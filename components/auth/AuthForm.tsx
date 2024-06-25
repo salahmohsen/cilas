@@ -21,7 +21,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { SiGoogle } from "@icons-pack/react-simple-icons";
-import { FieldValues, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { SigninState, SignupState } from "@/actions/auth.actions";
 import { toast } from "sonner";
 import { shake } from "@/lib/utils";

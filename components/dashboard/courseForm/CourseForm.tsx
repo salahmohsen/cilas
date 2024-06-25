@@ -73,7 +73,7 @@ export default function CourseForm({
 
   const fetchUserById = useCallback(() => {
     return getUserById(courseData?.authorId!);
-  }, []);
+  }, [courseData?.authorId]);
 
   const fetchUsersNamesByRole = useCallback(() => {
     return getUsersNamesByRole("author");
