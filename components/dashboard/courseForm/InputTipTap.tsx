@@ -116,7 +116,7 @@ const Editor: React.FC<EditorProps> = ({
         ref={editorRef}
         onBlur={onBlur}
         disabled={disabled}
-        className="max-w-6xl"
+        className="max-w-full break-all"
       />
       {editor && (
         <BubbleMenu

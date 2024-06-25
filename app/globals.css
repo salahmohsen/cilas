@@ -72,6 +72,7 @@
     @apply bg-background text-foreground;
   }
 
+
   h2 {
     @apply prose-lg scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
   }
@@ -89,8 +90,5 @@
     @apply inter.variable amiri.variable;
   }
 
-  * {
-    @apply border-border;
-    /* @apply outline-dashed outline-1 outline-blue-400; */
-  }
+
 }

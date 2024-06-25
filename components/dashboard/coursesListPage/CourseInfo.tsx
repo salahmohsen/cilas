@@ -60,7 +60,7 @@ export default function CourseInfo() {
 
   return (
     <Card
-      className={`translate-x-96 overflow-y-auto overflow-x-hidden scroll-smooth opacity-0 transition-all duration-300 ease-in-out scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full ${
+      className={`translate-x-96 overflow-y-auto overflow-x-hidden opacity-0 transition-all duration-300 ease-in-out scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full ${
         isSelected ? "translate-x-0 opacity-100" : ""
       }`}
     >

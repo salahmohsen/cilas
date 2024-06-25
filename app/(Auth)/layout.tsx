@@ -35,7 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <SessionProvider value={sessionData}>
-        <body className={`${inter.variable} ${cairo.variable} `}>
+        <body className={`${inter.variable} ${cairo.variable} scroll-smooth`}>
           <Toaster richColors />
           <main>{children}</main>
         </body>

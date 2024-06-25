@@ -82,7 +82,7 @@ export default function CourseForm({
   return (
     <>
       <FormProvider {...formMethods}>
-        <main className="mx-auto max-w-6xl overflow-auto scroll-smooth p-4 lg:w-5/6">
+        <main className="mx-0 xl:mx-32">
           <div className="grid w-full items-start gap-10">
             <Form {...formMethods}>
               <form

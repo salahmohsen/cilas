@@ -106,7 +106,7 @@ function BulletList({ editor }) {
     <Toggle
       size="sm"
       pressed={editor.isActive("bulletList")}
-      className="hidden md:block"
+      className="hidden md:flex"
       onPressedChange={handleBulletList}
     >
       <ToolbarIcon icon={<ListIcon className="h-4 w-4" />} name="Bullet List" />
@@ -122,7 +122,7 @@ function OrderedList({ editor }) {
   return (
     <Toggle
       size="sm"
-      className="hidden md:block"
+      className="hidden md:flex"
       pressed={editor.isActive("orderedList")}
       onPressedChange={handleOrederedList}
     >
@@ -235,7 +235,7 @@ function Left({ editor }) {
   return (
     <Toggle
       size="sm"
-      className={`${editor.isActive({ textAlign: "left" }) ? "data-[state=on]" : ""} hidden md:block`}
+      className={`${editor.isActive({ textAlign: "left" }) ? "data-[state=on]" : ""} hidden md:flex`}
       pressed={editor.isActive({ textAlign: "left" })}
       onPressedChange={handleLeft}
     >
@@ -252,7 +252,7 @@ function Center({ editor }) {
   return (
     <Toggle
       size="sm"
-      className={`${editor.isActive({ textAlign: "center" }) ? "data-[state=on]" : ""} hidden md:block`}
+      className={`${editor.isActive({ textAlign: "center" }) ? "data-[state=on]" : ""} hidden md:flex`}
       pressed={editor.isActive({ textAlign: "center" })}
       onPressedChange={handleCenter}
     >
@@ -272,7 +272,7 @@ function Right({ editor }) {
   return (
     <Toggle
       size="sm"
-      className={`${editor.isActive({ textAlign: "right" }) ? "data-[state=on]" : ""}} hidden md:block`}
+      className={`${editor.isActive({ textAlign: "right" }) ? "data-[state=on]" : ""}} hidden md:flex`}
       pressed={editor.isActive({ textAlign: "right" })}
       onPressedChange={handleRight}
     >
@@ -289,7 +289,7 @@ function Justify({ editor }) {
   return (
     <Toggle
       size="sm"
-      className="hidden md:block"
+      className="hidden md:flex"
       pressed={editor.isActive({ textAlign: "justify" })}
       onPressedChange={handleJustify}
     >
@@ -309,7 +309,7 @@ function Undo({ editor }) {
   return (
     <Toggle
       size="sm"
-      className="hidden md:block"
+      className="hidden md:flex"
       pressed={editor.isActive("undo")}
       onPressedChange={handleUndo}
     >
@@ -326,7 +326,7 @@ function Redo({ editor }) {
   return (
     <Toggle
       size="sm"
-      className="hidden md:block"
+      className="hidden md:flex"
       pressed={editor.isActive("redo")}
       onPressedChange={handleRedo}
     >
@@ -406,7 +406,10 @@ export function Heading({ editor }) {
 }
 
 export function Paragraph({ editor }) {
-  const handleParagraph = useCallback(() => editor.chain().focus().setParagraph().run(),[editor])
+  const handleParagraph = useCallback(
+    () => editor.chain().focus().setParagraph().run(),
+    [editor],
+  );
   return (
     <Toggle
       size="sm"
