@@ -89,7 +89,7 @@ const config = {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        shake: "shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97)",
+        shake: "shake 0.82s cubic-bezier(.36,.07,.19,.97) both",
       },
     },
   },

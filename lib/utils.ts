@@ -7,10 +7,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const shake = (divRef: RefObject<HTMLDivElement>) => {
-  divRef.current?.classList.add("animate-shake");
-  setTimeout(() => {
-    divRef.current?.classList.remove("animate-shake");
-  }, 1000);
+  if (divRef.current) {
+    divRef.current?.classList.add("animate-shake");
+
+    const timeoutId = setTimeout(() => {
+      divRef.current?.classList.remove("animate-shake");
+    }, 1000);
+
+    return () => clearTimeout(timeoutId);
+  }
 };
 
 export const isObjectEmpty = (obj: object) => Object.keys(obj).length === 0;

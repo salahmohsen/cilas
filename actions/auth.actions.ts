@@ -1,6 +1,5 @@
 "use server";
 
-import { userTable } from "@/db/schema";
 import { signinSchema, signupSchema } from "@/types/auth.schema";
 import { generateIdFromEntropySize } from "lucia";
 import { hash, verify } from "@node-rs/argon2";

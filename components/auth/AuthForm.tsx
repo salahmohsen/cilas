@@ -24,7 +24,7 @@ import { SiGoogle } from "@icons-pack/react-simple-icons";
 import { UseFormReturn } from "react-hook-form";
 import { SigninState, SignupState } from "@/actions/auth.actions";
 import { toast } from "sonner";
-import { shake } from "@/lib/utils";
+import { isObjectEmpty, shake } from "@/lib/utils";
 
 type SigninValues = {
   email: string;
@@ -71,9 +71,7 @@ export default function AuthForm({
   }, [formState]);
 
   function handleSubmitClick() {
-    if (Object.keys(formMethods.formState.errors).length !== 0) {
-      shake(mainCardRef);
-    }
+    if (!isObjectEmpty(formMethods.formState.errors)) shake(mainCardRef);
   }
 
   return (
@@ -85,7 +83,7 @@ export default function AuthForm({
           action={formAction}
           onSubmit={(e) => {
             e.preventDefault();
-
+            console.log(formMethods.formState.errors);
             formMethods.handleSubmit(() => {
               formAction(new FormData(formRef.current!));
             })(e);
