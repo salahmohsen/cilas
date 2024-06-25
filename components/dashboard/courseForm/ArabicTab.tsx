@@ -26,4 +26,6 @@ const ArabicTab = memo(() => {
   );
 });
 
+ArabicTab.displayName = "ArabicTab";
+
 export default ArabicTab;

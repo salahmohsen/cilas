@@ -26,4 +26,6 @@ const EnglishTab = memo(() => {
   );
 });
 
+EnglishTab.displayName = "EnglishTab";
+
 export default EnglishTab;
