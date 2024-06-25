@@ -22,9 +22,9 @@ export const optional_email = z.string().min(1).or(emptyStringToNull);
 
 export const required_password = z
   .string()
-  .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/, {
+  .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$/, {
     message:
-      "Password must be Minimum eight characters, at least one letter and one number and one special character required.",
+      "Password must be Minimum 8 characters, with at least one uppercase letter, one lowercase letter, and one number.",
   })
   .min(8, {
     message:
