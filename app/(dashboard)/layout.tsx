@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { CourseType } from "@/providers/CourseState.provider";
 
 export default async function RootLayout({
   children,
@@ -39,10 +40,10 @@ export default async function RootLayout({
 }>) {
   const { user } = await validateRequest();
   if (!user) {
-    return redirect("/login");
+    return redirect("/signin");
   }
 
-  const archivedCourses = await getArchivedCourses();
+  const archivedCourses = (await getArchivedCourses()) as CourseType[];
 
   return (
     <html lang="en" suppressHydrationWarning>

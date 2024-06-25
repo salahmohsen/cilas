@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { required_email, required_password } from "@/lib/form.utils";
+import { required_email, required_password } from "@/lib/zodValidation.utils";
 
 export const signupSchema = z
   .object({

@@ -8,8 +8,9 @@ import { courseSchema } from "@/types/courseForm.schema";
 
 import { eq, desc, InferInsertModel, lt, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { cleanHtml } from "@/lib/sanitize-html";
-import { convertToDate, convertToJson, uploadImage } from "@/lib/form.utils";
+import { cleanHtml } from "@/lib/sanitize-html.utils";
+import { convertToDate, convertToJson } from "@/lib/zodValidation.utils";
+import { uploadImage } from "@/lib/cloudinary.utils";
 
 export type CourseFormState = {
   success?: string;

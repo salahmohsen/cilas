@@ -1,9 +1,17 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { RefObject } from "react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+export const shake = (divRef: RefObject<HTMLDivElement>) => {
+  divRef.current?.classList.add("animate-shake");
+  setTimeout(() => {
+    divRef.current?.classList.remove("animate-shake");
+  }, 1000);
+};
 
 export const isObjectEmpty = (obj: object) => Object.keys(obj).length === 0;
 

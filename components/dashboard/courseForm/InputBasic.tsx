@@ -12,7 +12,7 @@ import {
 import Image from "next/image";
 
 import { BasicInputProps } from "@/types/formInputs.types";
-import { cloudinary_quality } from "@/lib/form.utils";
+import { cloudinary_quality } from "@/lib/cloudinary.utils";
 
 export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
   name,
