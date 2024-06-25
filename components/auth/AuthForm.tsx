@@ -83,7 +83,6 @@ export default function AuthForm({
           action={formAction}
           onSubmit={(e) => {
             e.preventDefault();
-            console.log(formMethods.formState.errors);
             formMethods.handleSubmit(() => {
               formAction(new FormData(formRef.current!));
             })(e);

@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export const shake = (divRef: RefObject<HTMLDivElement>) => {
   if (divRef.current) {
-    divRef.current?.classList.add("animate-shake");
+    divRef.current.classList.add("animate-shake");
 
     const timeoutId = setTimeout(() => {
       divRef.current?.classList.remove("animate-shake");
