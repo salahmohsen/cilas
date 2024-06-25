@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormState } from "react-dom";
 import { useForm, FormProvider } from "react-hook-form";
 
@@ -63,8 +63,6 @@ export default function CourseForm({
     },
   });
 
-  console.log(formMethods.watch("image"));
-
   useEffect(() => {
     if (!createCourseState.isPending) setIsLoading(false);
     if (createCourseState.success) toast.success(createCourseState.success);
@@ -72,6 +70,14 @@ export default function CourseForm({
     if (!createCourseState.isPending && createCourseState.success)
       redirect("/dashboard/courses");
   }, [createCourseState]);
+
+  const fetchUserById = useCallback(() => {
+    return getUserById(courseData?.authorId!);
+  }, []);
+
+  const fetchUsersNamesByRole = useCallback(() => {
+    return getUsersNamesByRole("author");
+  }, []);
 
   return (
     <>
@@ -122,11 +128,9 @@ export default function CourseForm({
                       placeholder="Select facilitator..."
                       emptyMsg="Facilitator Not Found"
                       searchPlaceholder="Search facilitators..."
-                      fetchItemsAction={() => getUsersNamesByRole("author")}
+                      fetchItemsAction={fetchUsersNamesByRole}
                       editMode={editMode}
-                      fetchItemByIdAction={() =>
-                        getUserById(courseData?.authorId!)
-                      }
+                      fetchItemByIdAction={fetchUserById}
                     />
                     <BasicInput
                       type="url"
