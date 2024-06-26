@@ -5,12 +5,12 @@ import { courseTable, userTable } from "@/db/schema";
 
 import { z } from "zod";
 import { courseSchema } from "@/types/courseForm.schema";
-
 import { eq, desc, InferInsertModel, lt, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { cleanHtml } from "@/lib/sanitize-html.utils";
 import { convertToDate, convertToJson } from "@/lib/zodValidation.utils";
 import { uploadImage } from "@/lib/cloudinary.utils";
+import slug from "slug";
 
 export type CourseFormState = {
   success?: string;
@@ -171,11 +171,11 @@ export const getCourseById = async (courseId) => {
   return course[0];
 };
 
-type DeleteFormState = { success?: "string"; error?: "string" };
+type DeleteCourseState = { success?: "string"; error?: "string" };
 export const deleteCourse = async (
   courseId: number,
-  prevState: DeleteFormState,
-): Promise<DeleteFormState> => {
+  prevState: DeleteCourseState,
+): Promise<DeleteCourseState> => {
   let state = {};
   try {
     const statement = db
@@ -190,4 +190,52 @@ export const deleteCourse = async (
   }
   revalidatePath("/");
   return state;
+};
+
+export type DuplicateCourseState =
+  | {
+      success?: string;
+      error?: string;
+      editLink?: string;
+    }
+  | undefined;
+export const duplicateCourse = async (
+  courseId: number,
+  prevState: DuplicateCourseState,
+): Promise<DuplicateCourseState> => {
+  let selectedCourse;
+  try {
+    // get course values
+    selectedCourse = await db
+      .select()
+      .from(courseTable)
+      .where(eq(courseTable.id, courseId))
+      .execute();
+
+    // edit course values
+    delete (selectedCourse[0] as any).id;
+    selectedCourse[0].enTitle += " Duplicate";
+    selectedCourse[0].arTitle += " نسخة";
+    selectedCourse[0].draftMode = true;
+  } catch (error) {
+    if (error instanceof Error)
+      return { error: `Oops! Course duplication failed: ${error.message}` };
+  }
+  try {
+    // insert course values
+    let duplicatedCourse = await db
+      .insert(courseTable)
+      .values(selectedCourse)
+      .returning()
+      .execute();
+
+    // validate path
+    revalidatePath("/dashboard");
+    // create edit link
+    const editLink = `/dashboard/courses/edit-course/${slug(duplicatedCourse[0].enTitle || duplicatedCourse[0].arTitle)}-${duplicatedCourse[0].id}`;
+    return { success: "Course duplicated successfully!", editLink };
+  } catch (error) {
+    if (error instanceof Error)
+      return { error: `Oops! Course duplication failed: ${error.message}` };
+  }
 };

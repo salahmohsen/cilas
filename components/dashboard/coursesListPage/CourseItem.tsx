@@ -1,8 +1,12 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFormState } from "react-dom";
-import { deleteCourse } from "@/actions/courses.actions";
+import {
+  DuplicateCourseState,
+  deleteCourse,
+  duplicateCourse,
+} from "@/actions/courses.actions";
 import { CourseType, useCourseState } from "@/providers/CourseState.provider";
 
 import Link from "next/link";
@@ -20,28 +24,35 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Calendar, Ellipsis, User } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default function CourseItem({ item }: { item: CourseType }) {
   const { course, user } = item;
-
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
+  const duplicateButtonRef = useRef<HTMLButtonElement>(null);
   const {
     isSelected: isSelected,
     setIsSelected: setIsSelected,
     setCourseInfo,
   } = useCourseState();
 
-  const [formState, formAction] = useFormState(
+  const [deleteState, deleteAction] = useFormState(
     deleteCourse.bind(null, Number(course?.id)),
     {},
   );
 
-  const deleteButtonRef = useRef<HTMLButtonElement>(null);
-  if (formState?.success) {
-    toast.success(formState.success);
-  }
-  if (formState?.error) {
-    toast.error(formState.error);
-  }
+  const [duplicateState, duplicateAction] = useFormState(
+    duplicateCourse.bind(null, Number(course?.id)),
+    {} as DuplicateCourseState,
+  );
+
+  useEffect(() => {
+    if (deleteState?.success) toast.success(deleteState.success);
+    if (deleteState?.error) toast.error(deleteState.error);
+    if (duplicateState?.success) toast.success(duplicateState.success);
+    if (duplicateState?.editLink) redirect(duplicateState.editLink);
+    if (duplicateState?.error) toast.error(duplicateState.error);
+  }, [deleteState, duplicateState]);
 
   const handleSelect = (id) => {
     setIsSelected((prev) => ({ [id]: !prev[id] }));
@@ -82,9 +93,16 @@ export default function CourseItem({ item }: { item: CourseType }) {
             >
               <DropdownMenuItem>Edit</DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>Duplicate</DropdownMenuItem>
+            <form action={duplicateAction}>
+              <DropdownMenuItem
+                onSelect={() => duplicateButtonRef.current?.click()}
+              >
+                Duplicate
+              </DropdownMenuItem>
+              <button type="submit" hidden ref={duplicateButtonRef} />
+            </form>
             <DropdownMenuSeparator />
-            <form action={formAction}>
+            <form action={deleteAction}>
               <DropdownMenuItem
                 className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                 onSelect={() => deleteButtonRef.current?.click()}
