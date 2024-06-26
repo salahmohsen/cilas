@@ -25,7 +25,7 @@ import CourseInfoModal from "@/components/dashboard/coursesListPage/CourseInfoMo
 
 export default function AdminCourseListPage() {
   const { width } = useWindowSize();
-  const { archivedCourses } = useCourses();
+  const { draftCourses, archivedCourses } = useCourses();
 
   return (
     <CourseStateProvider>
@@ -53,7 +53,7 @@ export default function AdminCourseListPage() {
               <TabsList>
                 <TabsTrigger value="current">Current</TabsTrigger>
                 <TabsTrigger value="archive">Archived</TabsTrigger>
-                <TabsTrigger value="unpublished">Unpublished</TabsTrigger>
+                <TabsTrigger value="draft">Draft</TabsTrigger>
               </TabsList>
               <FilterButton />
             </div>
@@ -72,15 +72,20 @@ export default function AdminCourseListPage() {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="unpublished">
+            <TabsContent value="draft">
               <Card>
                 <CardHeader className="px-7">
-                  <CardTitle>Unpublished Courses</CardTitle>
-                  <CardDescription>Upcoming sessions at Cilas.</CardDescription>
+                  <CardTitle>Draft Courses</CardTitle>
+                  <CardDescription>
+                    Manage and refine courses before publishing. Track your
+                    progress and make adjustments here.
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <ul className="group/list space-y-3">
-                    <li>test</li>
+                    {draftCourses.map((item) => (
+                      <CourseItem item={item} key={item.course.id} />
+                    ))}
                   </ul>
                 </CardContent>
               </Card>

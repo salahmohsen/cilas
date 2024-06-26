@@ -1,33 +1,36 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { LoaderPinwheel } from "lucide-react";
 import { cn } from "@/lib/utils";
+import React from "react";
+
+type SubmitButtonProps = {
+  className?: string;
+  isLoading: boolean;
+  value: string;
+  variant?: "default" | "secondary";
+  handleOnClick: () => void;
+};
 
 export const SubmitButton = ({
   className,
   isLoading,
-  editMode,
-}: {
-  className?: string;
-  isLoading: boolean;
-  editMode: boolean;
-}) => {
-  const { pending } = useFormStatus(); // Unknown issue make useFormStatus doesn't work
+  value,
+  variant,
+  handleOnClick,
+}: SubmitButtonProps) => {
+  // const { pending, action, data, method } = useFormStatus(); Will not work as i make my way around action prop
+
   return (
     <Button
       type="submit"
-      disabled={pending || isLoading}
+      disabled={isLoading}
       className={cn("w-full", className)}
+      variant={variant}
+      onClick={handleOnClick}
     >
-      {pending || isLoading ? (
-        <LoaderPinwheel className="animate-spin" />
-      ) : editMode ? (
-        "Edit Course"
-      ) : (
-        "Create Course"
-      )}
+      {isLoading ? <LoaderPinwheel className="animate-spin" /> : value}
     </Button>
   );
 };

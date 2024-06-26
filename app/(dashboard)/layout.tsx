@@ -7,7 +7,7 @@ import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
 import LayoutHeader from "@/components/dashboard/LayoutHeader";
 import { ThemeProvider } from "@/providers/Theme.provider";
 import { CourseProvider } from "@/providers/Courses.provider";
-import { getArchivedCourses } from "@/actions/courses.actions";
+import { getArchivedCourses, getDraftCourses } from "@/actions/courses.actions";
 
 import { Toaster } from "sonner";
 
@@ -44,6 +44,7 @@ export default async function RootLayout({
   }
 
   const archivedCourses = (await getArchivedCourses()) as CourseType[];
+  const draftCourses = (await getDraftCourses()) as CourseType[];
 
   return (
     <html lang="en" suppressHydrationWarning>
@@ -58,7 +59,7 @@ export default async function RootLayout({
         >
           <CourseProvider
             currentCourses={[]}
-            draftCourses={[]}
+            draftCourses={draftCourses}
             archivedCourses={archivedCourses}
           >
             <Toaster richColors />

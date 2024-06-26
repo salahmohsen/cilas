@@ -46,6 +46,7 @@ export const categoryTable = pgTable("course_category", {
 
 export const courseTable = pgTable("course", {
   id: serial("id").primaryKey(),
+  draftMode: boolean("draft_mode").notNull(),
   enTitle: text("en_title"),
   enContent: text("en_content"),
   arTitle: text("ar_title"),

@@ -18,14 +18,24 @@ export type CourseFormState = {
   isPending: boolean;
 };
 
+export const getPublishedCourses = async () => {
+  const data = await db
+    .select()
+    .from(courseTable)
+    .where(eq(courseTable.draftMode, false))
+    .orderBy(desc(courseTable.createdAt));
+
+  return data;
+};
+
 export async function createCourse(
+  draftMode: boolean,
   editMode: boolean,
   courseId: number | undefined,
   prevState: CourseFormState,
   data: FormData,
 ): Promise<CourseFormState> {
   const formData = Object.fromEntries(data);
-
   let formObject: z.infer<typeof courseSchema> = {
     enTitle: formData["enTitle"] as string,
     arTitle: formData["arTitle"] as string,
@@ -76,9 +86,10 @@ export async function createCourse(
   // Initialize the values for the database
   const dbObject: InferInsertModel<typeof courseTable> = {
     ...formObject,
+    draftMode,
     image: imageUrl,
   };
-
+  // Create new course
   if (!editMode) {
     try {
       const statement = db
@@ -86,10 +97,10 @@ export async function createCourse(
         .values(dbObject)
         .returning({ insertedId: courseTable.id });
       const result = await db.execute(statement);
-      console.log("DB Result", result);
+
       revalidatePath("/");
       return {
-        success: "Course created successfully",
+        success: "Course published successfully",
         isPending: false,
       };
     } catch (error) {
@@ -99,6 +110,7 @@ export async function createCourse(
           isPending: false,
         };
     }
+    // Edit existing course
   } else if (editMode && courseId) {
     try {
       const statement = db
@@ -118,6 +130,7 @@ export async function createCourse(
           isPending: false,
         };
     }
+    // Edit Course Mode & Save as a draft => new copy of the course as draft
   }
   return {
     error: "Something went wrong, please try again later",
@@ -130,18 +143,23 @@ export const getArchivedCourses = async () => {
     .select()
     .from(courseTable)
     .leftJoin(userTable, eq(courseTable.authorId, userTable.id))
-    .where(lt(sql`${courseTable}.date_range->>'to'`, new Date().toISOString()))
+    .where(
+      lt(sql`${courseTable}.date_range->>'to'`, new Date().toISOString()) &&
+        eq(courseTable.draftMode, false),
+    )
     .orderBy(desc(courseTable.createdAt));
 
   return data;
 };
 
-export const getCourses = async () => {
+export const getDraftCourses = async () => {
   const data = await db
     .select()
     .from(courseTable)
+    .leftJoin(userTable, eq(courseTable.authorId, userTable.id))
+    .where(eq(courseTable.draftMode, true))
     .orderBy(desc(courseTable.createdAt));
-  revalidatePath("/courses");
+
   return data;
 };
 

@@ -29,10 +29,11 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import EnglishTab from "./EnglishTab";
 import ArabicTab from "./ArabicTab";
+import { isObjectEmpty } from "@/lib/utils";
 
 type CourseFormPropTypes = {
   editMode?: boolean;
-  courseData?: z.infer<typeof courseSchema>;
+  courseData?: z.infer<typeof courseSchema> & { draftMode: boolean };
   courseId?: number;
 };
 export default function CourseForm({
@@ -44,14 +45,20 @@ export default function CourseForm({
     throw new Error("course data or course id not provided");
   const formRef = useRef<HTMLFormElement>(null);
 
+  const [draftMode, setDraftMode] = useState<boolean>(
+    courseData?.draftMode ?? false,
+  );
+  const [isLoading, setIsLoading] = useState<{
+    primaryButton: boolean;
+    secondaryButton: boolean;
+  }>({ primaryButton: false, secondaryButton: false });
+
   const [createCourseState, createCourseAction] = useFormState(
-    createCourse.bind(null, editMode, courseId),
+    createCourse.bind(null, draftMode, editMode, courseId),
     {
       isPending: true, // initial state of isPending
     },
   );
-
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const formMethods = useForm<z.infer<typeof courseSchema>>({
     resolver: zodResolver(courseSchema),
@@ -64,7 +71,8 @@ export default function CourseForm({
   });
 
   useEffect(() => {
-    if (!createCourseState.isPending) setIsLoading(false);
+    if (!createCourseState.isPending)
+      setIsLoading({ primaryButton: false, secondaryButton: false });
     if (createCourseState.success) toast.success(createCourseState.success);
     if (createCourseState.error) toast.error(createCourseState.error);
     if (!createCourseState.isPending && createCourseState.success)
@@ -77,6 +85,18 @@ export default function CourseForm({
 
   const fetchUsersNamesByRole = useCallback(() => {
     return getUsersNamesByRole("author");
+  }, []);
+
+  const handleSubmit = useCallback((isDraft: boolean) => {
+    if (isObjectEmpty(formMethods.formState.errors))
+      setIsLoading((prev) => ({
+        ...prev,
+        [isDraft ? "secondaryButton" : "primaryButton"]: true,
+      }));
+
+    const formData = new FormData(formRef.current!);
+
+    createCourseAction(formData);
   }, []);
 
   return (
@@ -92,9 +112,7 @@ export default function CourseForm({
                 onSubmit={(e) => {
                   e.preventDefault();
                   formMethods.handleSubmit(() => {
-                    if (Object.keys(formMethods.formState.errors).length === 0)
-                      setIsLoading(true);
-                    createCourseAction(new FormData(formRef.current!));
+                    handleSubmit(draftMode);
                   })(e);
                 }}
               >
@@ -213,7 +231,27 @@ export default function CourseForm({
                     </div>
                   </div>
                 </fieldset>
-                <SubmitButton isLoading={isLoading} editMode={editMode} />
+                <div className="flex gap-5">
+                  <SubmitButton
+                    isLoading={isLoading.secondaryButton}
+                    value={
+                      editMode && !draftMode ? "convert to Draft" : "Save Draft"
+                    }
+                    className="!mb-5"
+                    variant="secondary"
+                    handleOnClick={() => setDraftMode(true)}
+                  />
+
+                  <SubmitButton
+                    variant="default"
+                    isLoading={isLoading.primaryButton}
+                    value={
+                      editMode && !draftMode ? "Save Changes" : "Publish Course"
+                    }
+                    className="!mb-5"
+                    handleOnClick={() => setDraftMode(false)}
+                  />
+                </div>
               </form>
             </Form>
           </div>

@@ -1,13 +1,16 @@
 import { getCourseById } from "@/actions/courses.actions";
 import CourseForm from "@/components/dashboard/courseForm/CourseForm";
 import { courseSchema } from "@/types/courseForm.schema";
+import { InferSelectModel } from "drizzle-orm";
+import { courseTable } from "@/db/schema";
 import { Squirrel } from "lucide-react";
 import { z } from "zod";
 
 export default async function EditCoursePage({ params }) {
   const parts = params.edit?.split("-");
   const courseId = Number(parts[parts.length - 1]);
-  const courseData = await getCourseById(courseId);
+  const courseData: InferSelectModel<typeof courseTable> =
+    await getCourseById(courseId);
   const dateRange = courseData.dateRange as { from: string; to: string };
   const timeSlot = courseData.timeSlot as { from: string; to: string };
   const days = courseData.days as {
@@ -16,7 +19,7 @@ export default async function EditCoursePage({ params }) {
     disable?: boolean;
   }[];
 
-  const formattedData: z.infer<typeof courseSchema> = {
+  const formattedData: z.infer<typeof courseSchema> & { draftMode: boolean } = {
     ...courseData,
     dateRange: {
       from: new Date(dateRange.from),
