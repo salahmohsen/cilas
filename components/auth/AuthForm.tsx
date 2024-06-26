@@ -139,6 +139,7 @@ export default function AuthForm({
                       <FormItem>
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
+                          {/*  @ts-expect-error */}
                           <Input type="password" {...field} />
                         </FormControl>
                         <FormDescription />
