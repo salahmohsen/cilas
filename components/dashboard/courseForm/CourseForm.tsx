@@ -69,17 +69,20 @@ export default function CourseForm({
       redirect("/dashboard/courses");
   }, [createCourseState]);
 
-  const handleSubmit = useCallback((isDraft: boolean) => {
-    if (isObjectEmpty(formMethods.formState.errors))
-      setIsLoading((prev) => ({
-        ...prev,
-        [isDraft ? "secondaryButton" : "primaryButton"]: true,
-      }));
+  const handleSubmit = useCallback(
+    (isDraft: boolean) => {
+      if (isObjectEmpty(formMethods.formState.errors))
+        setIsLoading((prev) => ({
+          ...prev,
+          [isDraft ? "secondaryButton" : "primaryButton"]: true,
+        }));
 
-    const formData = new FormData(formRef.current!);
+      const formData = new FormData(formRef.current!);
 
-    createCourseAction(formData);
-  }, []);
+      createCourseAction(formData);
+    },
+    [createCourseAction, formMethods.formState.errors],
+  );
 
   return (
     <>

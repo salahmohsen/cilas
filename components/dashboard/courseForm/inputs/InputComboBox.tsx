@@ -53,8 +53,9 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
             setLoadingUser(true);
 
             const res = await fetchItemByIdAction();
+
             setData([
-              { id: res?.id, name: `${res?.firstName} ${res?.lastName}` },
+              { id: `${res?.id}`, name: `${res?.firstName} ${res?.lastName}` },
             ]);
             setLoadingUser(false);
           } catch (error) {

@@ -41,5 +41,7 @@ export interface ComboBoxProps extends StandardProps {
     }[]
   >;
   editMode: boolean;
-  fetchItemByIdAction: () => Promise<InferSelectModel<typeof userTable>>;
+  fetchItemByIdAction: () =>
+    | Promise<InferSelectModel<typeof userTable>>
+    | undefined;
 }
