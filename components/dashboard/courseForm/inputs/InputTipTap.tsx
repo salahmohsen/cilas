@@ -27,7 +27,7 @@ import EditorToolbar, {
   Heading,
   Italic,
   Paragraph,
-} from "./TipTapEditorToolbar";
+} from "../TipTapEditorToolbar";
 
 export const TipTapInput = memo(function TipTapInput({
   name,
