@@ -50,6 +50,7 @@ export default async function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${cairo.variable} max-w-screen scroll-smooth`}
+        id="dashboard"
       >
         <ThemeProvider
           attribute="class"

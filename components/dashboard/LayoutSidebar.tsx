@@ -38,13 +38,17 @@ import {
 
 import { ReactElement } from "react";
 
-
 export default function LayoutSidebar() {
   return (
     <aside className="inset-y fixed left-0 z-20 hidden h-full flex-col border-r sm:flex">
       <div className="border-b p-2">
         <Button aria-label="Home" size="icon" variant="ghost">
-          <Image src={logo} alt="Cilas" width={16} className="h-auto" />
+          <Image
+            src={logo}
+            alt="Cilas"
+            width={16}
+            className="h-auto dark:invert"
+          />
         </Button>
       </div>
       <nav className="grid gap-1 p-2">

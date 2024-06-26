@@ -72,7 +72,9 @@
     @apply bg-background text-foreground;
   }
 
-
+  #dashboard * {
+    @apply dark:border-muted-foreground/50;
+  }
   h2 {
     @apply prose-lg scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
   }
@@ -89,6 +91,4 @@
     font-family: var(--font-inter), var(--font-cairo);
     @apply inter.variable amiri.variable;
   }
-
-
 }
