@@ -34,7 +34,7 @@ type SigninValues = {
 type SignupValues = {
   email: string;
   password: string;
-  passwordConfirmation: string;
+  passwordConfirmation: string | null;
 };
 
 type AuthFormProps =
