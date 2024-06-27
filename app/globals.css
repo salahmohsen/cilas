@@ -73,7 +73,7 @@
   }
 
   #dashboard * {
-    @apply dark:border-muted-foreground/50;
+    @apply dark:border-muted-foreground;
   }
   h2 {
     @apply prose-lg scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
