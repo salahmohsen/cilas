@@ -69,8 +69,8 @@ export default function CourseInfo({ className }: { className?: string }) {
         width && width < 1024
           ? "w-full transition-none"
           : Object.values(isSelected)[0]
-            ? "w-2/6 translate-x-0 opacity-100"
-            : "w-0 translate-x-96 opacity-0",
+            ? "ml-8 mt-12 w-2/6 translate-x-0 opacity-100"
+            : "mt-12 w-0 translate-x-96 opacity-0",
         className,
       )}
     >

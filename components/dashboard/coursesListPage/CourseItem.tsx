@@ -77,7 +77,7 @@ export default function CourseItem({ item }: { item: DbCourse }) {
 
   return (
     <li
-      className={`flex cursor-pointer items-center justify-between gap-2 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isSelected[course.id] ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
+      className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isSelected[course.id] ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
       onClick={() => handleSelect(course.id)}
     >
       <div className="flex flex-col gap-4">
@@ -85,11 +85,14 @@ export default function CourseItem({ item }: { item: DbCourse }) {
           <User size={16} strokeWidth={1.5} />
           {`${user?.firstName} ${user?.lastName}`}
         </span>
-        <div className="flex flex-col gap-2 md:flex-row md:gap-2">
-          <Badge variant="default" className="max-w-max rounded-md">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
+          <Badge
+            variant="default"
+            className="h-5 min-w-max max-w-max rounded-sm"
+          >
             {courseStatues()}
           </Badge>
-          <p>{course.enTitle || course.arTitle}</p>
+          <p className="leading-relaxed">{course.enTitle || course.arTitle}</p>
         </div>
         <span className="flex gap-1 text-xs font-light">
           <Calendar size={16} strokeWidth={1.5} />

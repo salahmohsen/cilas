@@ -42,7 +42,7 @@ export default function CoursesPage() {
     <main
       className={`grid w-full auto-rows-max items-start gap-4 overflow-x-hidden px-4 md:gap-8 md:px-8`}
     >
-      <Card className={`col-span-3 lg:col-span-3`}>
+      <Card className="col-span-3">
         <CardHeader className="pb-3">
           <CardTitle>Cilas Courses</CardTitle>
           <CardDescription className="max-w-lg text-balance leading-relaxed">
@@ -55,7 +55,7 @@ export default function CoursesPage() {
           </Link>
         </CardFooter>
       </Card>
-      <div className="col-span-3 flex w-full gap-8">
+      <div className="col-span-3 flex w-full">
         <Tabs
           defaultValue="published"
           className={cn(

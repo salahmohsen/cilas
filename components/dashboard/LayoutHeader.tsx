@@ -22,7 +22,7 @@ import { logout } from "@/actions/auth.actions";
 
 export default function LayoutHeader({ children }) {
   return (
-    <div className="flex flex-col sm:gap-4 sm:pl-14 md:py-0">
+    <div className="flex flex-col gap-4 sm:pl-14 md:py-0">
       <header className="sticky top-0 z-10 flex h-[57px] w-full items-center justify-between gap-1 border-b bg-background px-4">
         <div className="flex items-center gap-2">
           <LayoutMobileSidebar />
