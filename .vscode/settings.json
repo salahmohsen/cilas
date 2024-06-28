@@ -5,6 +5,7 @@
     "dashboard",
     "dashboard/darkmode",
     "global",
-    "Auth"
+    "Auth",
+    "dashboard/courses"
   ]
 }
