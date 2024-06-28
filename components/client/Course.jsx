@@ -18,12 +18,17 @@ const amiri = Amiri({
   display: "swap",
 });
 
-const Course = async ({ isOpen = false, className, ...props }) => {
+const Course = async ({
+  isOpen = false,
+  className,
+  titleSlug,
+  course,
+  user,
+}) => {
   const {
     id,
     enTitle,
     arTitle,
-    titleSlug,
     image,
     authorId,
     enContent,
@@ -41,10 +46,9 @@ const Course = async ({ isOpen = false, className, ...props }) => {
     applyUrl,
     createdAt,
     updatedAt,
-  } = props;
+  } = course;
 
-  const authorData = await getUserById(authorId);
-  const authorName = authorData["firstName"] + " " + authorData["lastName"];
+  const authorName = user["firstName"] + " " + user["lastName"];
 
   return (
     <article
@@ -86,7 +90,7 @@ const Course = async ({ isOpen = false, className, ...props }) => {
 
           <UserHoverCard
             userName={authorName}
-            userBio={authorData["bio"]}
+            userBio={user["bio"]}
             userSlug={`courses/author/${authorId}`}
           />
         </div>

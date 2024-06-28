@@ -2,16 +2,27 @@ import { Button } from "@/components/ui/button";
 
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
+  DropdownMenuRadioItem,
   DropdownMenuContent,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useCourseState } from "@/providers/CourseState.provider";
+import { CoursesFilter } from "@/types/drizzle.types";
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 
 import { ListFilter } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 export default function FilterButton() {
+  const [position, setPosition] = useState<CoursesFilter>("all published");
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams.toString());
+
+  const { setCourseFilter } = useCourseState();
   return (
     <div className="ml-auto">
       <DropdownMenu>
@@ -24,9 +35,28 @@ export default function FilterButton() {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Filter by</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <DropdownMenuCheckboxItem checked>Fulfilled</DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem>Declined</DropdownMenuCheckboxItem>
-          <DropdownMenuCheckboxItem>Refunded</DropdownMenuCheckboxItem>
+          <DropdownMenuRadioGroup
+            value={position}
+            onValueChange={(value) => {
+              setPosition(value as CoursesFilter);
+              setCourseFilter(value as CoursesFilter);
+              params.set("publishedFilter", value); // This will save the filter in the url while shifting to draft courses
+              window.history.pushState(null, "", `?${params.toString()}`);
+            }}
+          >
+            <DropdownMenuRadioItem value="all published">
+              <span>All</span>
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="ongoing">
+              Ongoing
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="archived">
+              Archived
+            </DropdownMenuRadioItem>
+            <DropdownMenuRadioItem value="starting soon">
+              Starting Soon
+            </DropdownMenuRadioItem>
+          </DropdownMenuRadioGroup>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>

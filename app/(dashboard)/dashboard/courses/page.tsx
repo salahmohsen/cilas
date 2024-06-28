@@ -19,97 +19,110 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CourseInfo from "@/components/dashboard/coursesListPage/CourseInfo";
 import FilterButton from "@/components/dashboard/coursesListPage/FilterButton";
 
-import { useCourses } from "@/providers/Courses.provider";
-import { CourseStateProvider } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/providers/CourseState.provider";
 import CourseInfoModal from "@/components/dashboard/coursesListPage/CourseInfoModal";
+import { CourseSkeleton } from "@/components/dashboard/coursesListPage/CourseSkeleton";
+import { useSearchParams } from "next/navigation";
+import { CoursesFilter } from "@/types/drizzle.types";
+import { useState } from "react";
 
-export default function AdminCourseListPage() {
+export default function CoursesPage() {
+  const [activeTab, setActiveTab] = useState<"published" | "draft">(
+    "published",
+  );
   const { width } = useWindowSize();
-  const { draftCourses, archivedCourses } = useCourses();
+
+  const { isLoading, courses, setCourseFilter } = useCourseState();
+  const searchParams = useSearchParams();
+  const storedFilter = searchParams.get("publishedFilter") as CoursesFilter;
 
   return (
-    <CourseStateProvider>
-      <main className="grid flex-1 items-start gap-4 overflow-x-hidden p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3">
-        <div
-          className={`grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2`}
-        >
-          <Card className="sm:col-span-2">
-            <CardHeader className="pb-3">
-              <CardTitle>Cilas Courses</CardTitle>
-              <CardDescription className="max-w-lg text-balance leading-relaxed">
-                Introducing Our Dynamic Orders Dashboard for Seamless Management
-                and Insightful Analysis.
-              </CardDescription>
-            </CardHeader>
-            <CardFooter>
-              <Link href="/dashboard/courses/create-course">
-                <Button>Create New Course</Button>
-              </Link>
-            </CardFooter>
-          </Card>
+    <main className="grid flex-1 items-start gap-4 overflow-x-hidden p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3">
+      <div
+        className={`grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2`}
+      >
+        <Card className="sm:col-span-2">
+          <CardHeader className="pb-3">
+            <CardTitle>Cilas Courses</CardTitle>
+            <CardDescription className="max-w-lg text-balance leading-relaxed">
+              Introducing Our Dynamic Orders Dashboard for Seamless Management
+              and Insightful Analysis.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <Link href="/dashboard/courses/create-course">
+              <Button>Create New Course</Button>
+            </Link>
+          </CardFooter>
+        </Card>
 
-          <Tabs defaultValue="current" className="col-span-3 lg:col-span-2">
-            <div className="flex items-center">
-              <TabsList>
-                <TabsTrigger value="current">Current</TabsTrigger>
-                <TabsTrigger value="archive">Archived</TabsTrigger>
-                <TabsTrigger value="draft">Draft</TabsTrigger>
-              </TabsList>
-              <FilterButton />
-            </div>
-            <TabsContent value="current">
-              <Card>
-                <CardHeader className="px-7">
-                  <CardTitle>Courses</CardTitle>
-                  <CardDescription>Current courses at Cilas.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="group/list space-y-3">
-                    {/* <CourseItem />
-                  <CourseItem /> <CourseItem /> <CourseItem /> <CourseItem />{" "}
-                  <CourseItem /> <CourseItem /> */}
-                  </ul>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="draft">
-              <Card>
-                <CardHeader className="px-7">
-                  <CardTitle>Draft Courses</CardTitle>
-                  <CardDescription>
-                    Manage and refine courses before publishing. Track your
-                    progress and make adjustments here.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="group/list space-y-3">
-                    {draftCourses.map((item) => (
+        <Tabs defaultValue="published" className="col-span-3 lg:col-span-2">
+          <div className="flex items-center">
+            <TabsList>
+              <TabsTrigger
+                value="published"
+                id="published"
+                onClick={() => {
+                  setCourseFilter(storedFilter || "all published");
+                  setActiveTab("published");
+                }}
+              >
+                Published Courses
+              </TabsTrigger>
+              <TabsTrigger
+                value="draft"
+                id="draft"
+                onClick={() => {
+                  setCourseFilter("draft");
+                  setActiveTab("draft");
+                }}
+              >
+                Draft Courses
+              </TabsTrigger>
+            </TabsList>
+            {activeTab === "published" && <FilterButton />}
+          </div>
+          <TabsContent value="published">
+            <Card>
+              <CardHeader className="px-7">
+                <CardTitle>Published Courses</CardTitle>
+                <CardDescription>
+                  Monitor and manage published courses.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="group/list space-y-3">
+                  {isLoading && <CourseSkeleton itemsNumber={10} />}
+                  {!isLoading &&
+                    courses.map((item) => (
                       <CourseItem item={item} key={item.course.id} />
                     ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            <TabsContent value="archive">
-              <Card>
-                <CardHeader className="px-7">
-                  <CardTitle>Courses</CardTitle>
-                  <CardDescription>Archived courses.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="group/list space-y-3">
-                    {archivedCourses.map((item) => (
+                </ul>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          <TabsContent value="draft">
+            <Card>
+              <CardHeader className="px-7">
+                <CardTitle>Draft Courses</CardTitle>
+                <CardDescription>
+                  Manage and refine courses before publishing.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="group/list space-y-3">
+                  {!isLoading &&
+                    courses.map((item) => (
                       <CourseItem item={item} key={item.course.id} />
                     ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </div>
-        {width && width >= 1024 && <CourseInfo />}
-        {width && width < 1024 && <CourseInfoModal />}
-      </main>
-    </CourseStateProvider>
+                </ul>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
+      {width && width >= 1024 && <CourseInfo />}
+      {width && width < 1024 && <CourseInfoModal />}
+    </main>
   );
 }

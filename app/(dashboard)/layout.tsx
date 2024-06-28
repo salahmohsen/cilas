@@ -6,8 +6,6 @@ import "@/app/globals.css";
 import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
 import LayoutHeader from "@/components/dashboard/LayoutHeader";
 import { ThemeProvider } from "@/providers/Theme.provider";
-import { CourseProvider } from "@/providers/Courses.provider";
-import { getArchivedCourses, getDraftCourses } from "@/actions/courses.actions";
 
 import { Toaster } from "sonner";
 
@@ -31,7 +29,7 @@ export const metadata: Metadata = {
 
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { CourseType } from "@/providers/CourseState.provider";
+import { CourseStateProvider } from "@/providers/CourseState.provider";
 
 export default async function RootLayout({
   children,
@@ -43,33 +41,26 @@ export default async function RootLayout({
     return redirect("/signin");
   }
 
-  const archivedCourses = (await getArchivedCourses()) as CourseType[];
-  const draftCourses = (await getDraftCourses()) as CourseType[];
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${cairo.variable} max-w-screen scroll-smooth`}
         id="dashboard"
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <CourseProvider
-            currentCourses={[]}
-            draftCourses={draftCourses}
-            archivedCourses={archivedCourses}
+        <CourseStateProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
             <Toaster richColors />
             <main>
               <LayoutSidebar />
               <LayoutHeader>{children}</LayoutHeader>
             </main>
-          </CourseProvider>
-        </ThemeProvider>
+          </ThemeProvider>
+        </CourseStateProvider>
       </body>
     </html>
   );

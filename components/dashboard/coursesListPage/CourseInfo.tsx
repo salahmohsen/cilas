@@ -21,29 +21,30 @@ import { PegonsAvatar } from "./PegonAvatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useCourses } from "@/providers/Courses.provider";
+import { DbCourse } from "@/types/drizzle.types";
 
 export default function CourseInfo() {
-  const { archivedCourses } = useCourses();
-  const { courseInfo, isSelected, setIsSelected, setCourseInfo } =
+  const { courseInfo, isSelected, setIsSelected, setCourseInfo, courses } =
     useCourseState();
 
   if (!courseInfo) return;
-
+  console.log("courses", courses);
   const { course, user } = courseInfo;
 
-  const idArr: number[] = archivedCourses.map((item) => item.course.id);
-  const currentId = courseInfo.course.id;
+  const idArr: number[] = courses.map((item) => item.course.id);
+  const currentId = courseInfo?.course.id;
   const currIndex = idArr.indexOf(currentId);
 
   const handleNext = () => {
     if (currIndex < idArr.length - 1) {
       const nextId = idArr[currIndex + 1];
       setIsSelected({ [nextId]: true });
-      setCourseInfo(archivedCourses.find((item) => item.course.id === nextId));
+      setCourseInfo(
+        courses.find((item) => item?.course.id === nextId) as DbCourse,
+      );
     } else {
       setIsSelected({ [idArr[0]]: true });
-      setCourseInfo(archivedCourses[0]);
+      setCourseInfo(courses[0]);
     }
   };
 
@@ -51,10 +52,12 @@ export default function CourseInfo() {
     if (currIndex > 0) {
       const prevId = idArr[currIndex - 1];
       setIsSelected({ [prevId]: true });
-      setCourseInfo(archivedCourses.find((item) => item.course.id === prevId));
+      setCourseInfo(
+        courses.find((item) => item?.course.id === prevId) as DbCourse,
+      );
     } else {
       setIsSelected({ [idArr.at(-1) as number]: true });
-      setCourseInfo(archivedCourses.at(-1));
+      setCourseInfo(courses.at(-1) as DbCourse);
     }
   };
 
@@ -127,11 +130,11 @@ export default function CourseInfo() {
             <li className="flex items-center justify-between">
               <span className="text-muted-foreground">Days</span>
               <span>
-                {course.days.length === 0
+                {course.days?.length === 0
                   ? "-"
                   : "Every " +
-                    course?.days.map((day, index) =>
-                      course?.days.length === index + 1
+                    course.days?.map((day, index) =>
+                      course.days?.length === index + 1
                         ? ` and ${day.label}`
                         : `${day.label}`,
                     )}

@@ -2,15 +2,17 @@
 
 import db from "@/db/drizzle";
 import { courseTable, userTable } from "@/db/schema";
-
-import { z } from "zod";
 import { courseSchema } from "@/types/courseForm.schema";
-import { eq, desc, InferInsertModel, lt, sql } from "drizzle-orm";
+import { eq, desc, sql, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { cleanHtml } from "@/lib/sanitize-html.utils";
-import { convertToDate, convertToJson } from "@/lib/zodValidation.utils";
 import { uploadImage } from "@/lib/cloudinary.utils";
+import {
+  courseSchemaToDbSchema,
+  formDataToCourseSchema,
+} from "@/lib/actions.utils";
 import slug from "slug";
+import { coursesFilter } from "@/lib/drizzle.utils";
+import { CoursesFilter } from "@/types/drizzle.types";
 
 export type CourseFormState = {
   success?: string;
@@ -18,50 +20,17 @@ export type CourseFormState = {
   isPending: boolean;
 };
 
-export const getPublishedCourses = async () => {
-  const data = await db
-    .select()
-    .from(courseTable)
-    .where(eq(courseTable.draftMode, false))
-    .orderBy(desc(courseTable.createdAt));
-
-  return data;
-};
-
 export async function createCourse(
   draftMode: boolean,
   editMode: boolean,
   courseId: number | undefined,
   prevState: CourseFormState,
-  data: FormData,
+  formData: FormData,
 ): Promise<CourseFormState> {
-  const formData = Object.fromEntries(data);
-  let formObject: z.infer<typeof courseSchema> = {
-    enTitle: formData["enTitle"] as string,
-    arTitle: formData["arTitle"] as string,
-    enContent: cleanHtml(formData["enContent"] as string),
-    arContent: cleanHtml(formData["arContent"] as string),
-    authorId: formData["authorId"] as string,
-    category: formData["category"] as string,
-    image: formData["image"] as File | string,
-    attendance: formData["attendance"] as string,
-    isRegistrationOpen: formData["isRegistrationOpen"] === "Open",
-    price: formData["price"] as string,
-    timeSlot: {
-      from: convertToDate(formData["timeSlot"] as string, "from"),
-      to: convertToDate(formData["timeSlot"] as string, "to"),
-    },
-    days: convertToJson(formData["days"] as string),
-    courseFlowUrl: formData["courseFlowUrl"] as string,
-    applyUrl: formData["applyUrl"] as string,
-    dateRange: {
-      from: convertToDate(formData["dateRange"] as string, "from"),
-      to: convertToDate(formData["dateRange"] as string, "to"),
-    },
-  };
-
+  let formObj = formDataToCourseSchema(formData);
+  // parse the data
   try {
-    const parse = courseSchema.safeParse(formObject);
+    const parse = courseSchema.safeParse(formObj);
     if (!parse.success) {
       return {
         error: `An error occurred while processing the form values: ${parse.error.errors.map((e) => `${e.path[0]} `)}`,
@@ -75,8 +44,9 @@ export async function createCourse(
         isPending: false,
       };
   }
-  // uploading the image in case of data parsing is succeed
-  const imageUrl = await uploadImage(formObject.image);
+
+  // uploading the image if data parsing is succeed
+  const imageUrl = await uploadImage(formObj.image);
   if (imageUrl instanceof Error)
     return {
       error: "Image Uploading Failed, please try again later!",
@@ -84,17 +54,14 @@ export async function createCourse(
     };
 
   // Initialize the values for the database
-  const dbObject: InferInsertModel<typeof courseTable> = {
-    ...formObject,
-    draftMode,
-    image: imageUrl,
-  };
-  // Create new course
+  const dbObj = courseSchemaToDbSchema(formObj, draftMode, imageUrl as string);
+
+  // Publish new course
   if (!editMode) {
     try {
       const statement = db
         .insert(courseTable)
-        .values(dbObject)
+        .values(dbObj)
         .returning({ insertedId: courseTable.id });
       const result = await db.execute(statement);
 
@@ -115,7 +82,7 @@ export async function createCourse(
     try {
       const statement = db
         .update(courseTable)
-        .set(dbObject)
+        .set(dbObj)
         .where(eq(courseTable.id, courseId));
       const result = await statement.execute();
       revalidatePath("/");
@@ -130,7 +97,6 @@ export async function createCourse(
           isPending: false,
         };
     }
-    // Edit Course Mode & Save as a draft => new copy of the course as draft
   }
   return {
     error: "Something went wrong, please try again later",
@@ -138,27 +104,22 @@ export async function createCourse(
   };
 }
 
-export const getArchivedCourses = async () => {
+export const getCourses = async (
+  filter: CoursesFilter,
+  page: number = 1,
+  pageSize: number = 10,
+) => {
   const data = await db
     .select()
     .from(courseTable)
-    .leftJoin(userTable, eq(courseTable.authorId, userTable.id))
-    .where(
-      lt(sql`${courseTable}.date_range->>'to'`, new Date().toISOString()) &&
-        eq(courseTable.draftMode, false),
+    .innerJoin(userTable, eq(courseTable.authorId, userTable.id))
+    .where(coursesFilter(filter))
+    .orderBy(
+      desc(sql`(${courseTable.dateRange}->>'to')::timestamp`),
+      asc(courseTable.id),
     )
-    .orderBy(desc(courseTable.createdAt));
-
-  return data;
-};
-
-export const getDraftCourses = async () => {
-  const data = await db
-    .select()
-    .from(courseTable)
-    .leftJoin(userTable, eq(courseTable.authorId, userTable.id))
-    .where(eq(courseTable.draftMode, true))
-    .orderBy(desc(courseTable.createdAt));
+    .limit(pageSize)
+    .offset((page - 1) * pageSize);
 
   return data;
 };
@@ -167,7 +128,10 @@ export const getCourseById = async (courseId) => {
   const course = await db
     .select()
     .from(courseTable)
-    .where(eq(courseTable.id, Number(courseId)));
+    .where(eq(courseTable.id, Number(courseId)))
+    .innerJoin(userTable, eq(courseTable.authorId, userTable.id))
+    .limit(0);
+
   return course[0];
 };
 

@@ -9,29 +9,21 @@ import { z } from "zod";
 export default async function EditCoursePage({ params }) {
   const parts = params.edit?.split("-");
   const courseId = Number(parts[parts.length - 1]);
-  const courseData: InferSelectModel<typeof courseTable> =
-    await getCourseById(courseId);
-  const dateRange = courseData.dateRange as { from: string; to: string };
-  const timeSlot = courseData.timeSlot as { from: string; to: string };
-  const days = courseData.days as {
-    value: string;
-    label: string;
-    disable?: boolean;
-  }[];
+  const { course } = await getCourseById(courseId);
 
   const formattedData: z.infer<typeof courseSchema> & { draftMode: boolean } = {
-    ...courseData,
+    ...course,
     dateRange: {
-      from: new Date(dateRange.from),
-      to: new Date(dateRange.to),
+      from: new Date(course.dateRange.from),
+      to: new Date(course.dateRange.to),
     },
     timeSlot: {
-      from: new Date(timeSlot.from),
-      to: new Date(timeSlot.to),
+      from: new Date(course.timeSlot.from),
+      to: new Date(course.timeSlot.to),
     },
-    days: days,
+    days: course.days === null ? undefined : course.days,
   };
-  if (!courseId || !courseData)
+  if (!courseId || !course)
     return (
       <div className="flex h-[calc(100vh-73px)] flex-col items-center justify-center space-y-10">
         <Squirrel size={200} strokeWidth={0.6} />

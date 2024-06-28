@@ -4,9 +4,9 @@ import { isURL } from "./utils";
 export const uploadImage = async (
   image: unknown,
 ): Promise<string | undefined | Error> => {
-  if (image === "") return undefined;
-  if (typeof image === "string" && isURL(image)) return image;
-  if (image instanceof File && image.size === 0) return undefined;
+  if (image === "") return;
+  if (typeof image === "string" && isURL(image)) return image as string;
+  if (image instanceof File && image.size === 0) return;
 
   const imageData = new FormData();
   imageData.append("image", image as Blob);
@@ -18,7 +18,6 @@ export const uploadImage = async (
   } catch (error) {
     if (error instanceof Error) return error;
   }
-  return undefined;
 };
 
 export const cloudinary_quality = (

@@ -1,15 +1,10 @@
 import {
-  integer,
   text,
   boolean,
   pgTable,
   serial,
-  date,
-  time,
   json,
   timestamp,
-  varchar,
-  pgEnum,
 } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
@@ -59,10 +54,16 @@ export const courseTable = pgTable("course", {
   isRegistrationOpen: boolean("registration_status").notNull(),
   attendance: text("attendance").notNull(),
   price: text("price"),
-  days: json("days"),
-  dateRange: json("date_range").notNull(),
-  timeSlot: json("time_slot").notNull(),
-  students: json("students"),
+  days: json("days").$type<
+    {
+      label: string;
+      value: string;
+      disable?: boolean;
+    }[]
+  >(),
+  dateRange: json("date_range").notNull().$type<{ from: string; to: string }>(),
+  timeSlot: json("time_slot").notNull().$type<{ from: string; to: string }>(),
+  students: json("students"), // ToDo one-to-many course -> users
   courseFlowUrl: text("course_flow_url"),
   applyUrl: text("apply_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
