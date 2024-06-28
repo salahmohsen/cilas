@@ -25,6 +25,7 @@ import { CourseSkeleton } from "@/components/dashboard/coursesListPage/CourseSke
 import { useSearchParams } from "next/navigation";
 import { CoursesFilter } from "@/types/drizzle.types";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function CoursesPage() {
   const [activeTab, setActiveTab] = useState<"published" | "draft">(
@@ -32,31 +33,40 @@ export default function CoursesPage() {
   );
   const { width } = useWindowSize();
 
-  const { isLoading, courses, setCourseFilter } = useCourseState();
+  const { isLoading, courses, setCourseFilter, isSelected } = useCourseState();
+
   const searchParams = useSearchParams();
   const storedFilter = searchParams.get("publishedFilter") as CoursesFilter;
 
   return (
-    <main className="grid flex-1 items-start gap-4 overflow-x-hidden p-4 sm:px-6 sm:py-0 md:gap-8 lg:grid-cols-3">
-      <div
-        className={`grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2`}
-      >
-        <Card className="sm:col-span-2">
-          <CardHeader className="pb-3">
-            <CardTitle>Cilas Courses</CardTitle>
-            <CardDescription className="max-w-lg text-balance leading-relaxed">
-              Introducing Our Dynamic Orders Dashboard for Seamless Management
-              and Insightful Analysis.
-            </CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Link href="/dashboard/courses/create-course">
-              <Button>Create New Course</Button>
-            </Link>
-          </CardFooter>
-        </Card>
-
-        <Tabs defaultValue="published" className="col-span-3 lg:col-span-2">
+    <main
+      className={`grid w-full auto-rows-max items-start gap-4 overflow-x-hidden px-4 md:gap-8 md:px-8`}
+    >
+      <Card className={`col-span-3 lg:col-span-3`}>
+        <CardHeader className="pb-3">
+          <CardTitle>Cilas Courses</CardTitle>
+          <CardDescription className="max-w-lg text-balance leading-relaxed">
+            Manage Cilas courses: create, update, delete, and filter with ease.
+          </CardDescription>
+        </CardHeader>
+        <CardFooter>
+          <Link href="/dashboard/courses/create-course">
+            <Button>Create New Course</Button>
+          </Link>
+        </CardFooter>
+      </Card>
+      <div className="col-span-3 flex w-full gap-8">
+        <Tabs
+          defaultValue="published"
+          className={cn(
+            `ease-in-out, transition-all duration-300`,
+            width && width <= 768
+              ? "w-full transition-none"
+              : Object.values(isSelected)[0]
+                ? "w-[70%]"
+                : "w-full",
+          )}
+        >
           <div className="flex items-center">
             <TabsList>
               <TabsTrigger
@@ -67,7 +77,7 @@ export default function CoursesPage() {
                   setActiveTab("published");
                 }}
               >
-                Published Courses
+                Published
               </TabsTrigger>
               <TabsTrigger
                 value="draft"
@@ -77,7 +87,7 @@ export default function CoursesPage() {
                   setActiveTab("draft");
                 }}
               >
-                Draft Courses
+                Draft
               </TabsTrigger>
             </TabsList>
             {activeTab === "published" && <FilterButton />}
@@ -111,6 +121,7 @@ export default function CoursesPage() {
               </CardHeader>
               <CardContent>
                 <ul className="group/list space-y-3">
+                  {isLoading && <CourseSkeleton itemsNumber={10} />}
                   {!isLoading &&
                     courses.map((item) => (
                       <CourseItem item={item} key={item.course.id} />
@@ -120,9 +131,9 @@ export default function CoursesPage() {
             </Card>
           </TabsContent>
         </Tabs>
+        {width && width >= 1024 && <CourseInfo />}
+        {width && width < 1024 && <CourseInfoModal />}
       </div>
-      {width && width >= 1024 && <CourseInfo />}
-      {width && width < 1024 && <CourseInfoModal />}
     </main>
   );
 }

@@ -12,7 +12,7 @@ import { getCourses } from "@/actions/courses.actions";
 import { CoursesFilter, DbCourse, DbCourses } from "@/types/drizzle.types";
 import { toast } from "sonner";
 
-type IsSelected = { [key: number]: boolean };
+type IsSelected = { [key: number]: boolean | undefined };
 
 type CourseStateContext = {
   isSelected: IsSelected;

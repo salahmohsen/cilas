@@ -32,11 +32,7 @@ export default function CourseItem({ item }: { item: DbCourse }) {
   const { course, user } = item;
   const deleteButtonRef = useRef<HTMLButtonElement>(null);
   const duplicateButtonRef = useRef<HTMLButtonElement>(null);
-  const {
-    isSelected: isSelected,
-    setIsSelected: setIsSelected,
-    setCourseInfo,
-  } = useCourseState();
+  const { isSelected, setIsSelected, setCourseInfo } = useCourseState();
 
   const [deleteState, deleteAction] = useFormState(
     deleteCourse.bind(null, Number(course?.id)),
@@ -55,9 +51,10 @@ export default function CourseItem({ item }: { item: DbCourse }) {
     if (duplicateState?.editLink) redirect(duplicateState.editLink);
     if (duplicateState?.error) toast.error(duplicateState.error);
   }, [deleteState, duplicateState]);
-
   const handleSelect = (id) => {
-    setIsSelected((prev) => ({ [id]: !prev[id] }));
+    setIsSelected((prev) => ({
+      [id]: prev[id] === id ? undefined : !prev[id],
+    }));
     setCourseInfo(item);
   };
   const courseStatues = ():
@@ -80,16 +77,16 @@ export default function CourseItem({ item }: { item: DbCourse }) {
 
   return (
     <li
-      className={`flex cursor-pointer items-center justify-between gap-2 rounded-md px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isSelected[course.id] ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
+      className={`flex cursor-pointer items-center justify-between gap-2 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isSelected[course.id] ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
       onClick={() => handleSelect(course.id)}
     >
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-4">
         <span className="flex gap-1 text-xs font-light">
           <User size={16} strokeWidth={1.5} />
           {`${user?.firstName} ${user?.lastName}`}
         </span>
-        <div className="flex gap-2">
-          <Badge variant="secondary" className="rounded-sm">
+        <div className="flex flex-col gap-2 md:flex-row md:gap-2">
+          <Badge variant="default" className="max-w-max rounded-md">
             {courseStatues()}
           </Badge>
           <p>{course.enTitle || course.arTitle}</p>

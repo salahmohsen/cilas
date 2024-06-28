@@ -1,6 +1,6 @@
 import { useCourseState } from "@/providers/CourseState.provider";
 import { differenceInWeeks, format } from "date-fns";
-import { getSeason } from "@/lib/utils";
+import { cn, getSeason } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -22,13 +22,15 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { DbCourse } from "@/types/drizzle.types";
+import { useWindowSize } from "@uidotdev/usehooks";
 
-export default function CourseInfo() {
+export default function CourseInfo({ className }: { className?: string }) {
   const { courseInfo, isSelected, setIsSelected, setCourseInfo, courses } =
     useCourseState();
 
+  const { width } = useWindowSize();
   if (!courseInfo) return;
-  console.log("courses", courses);
+
   const { course, user } = courseInfo;
 
   const idArr: number[] = courses.map((item) => item.course.id);
@@ -60,20 +62,22 @@ export default function CourseInfo() {
       setCourseInfo(courses.at(-1) as DbCourse);
     }
   };
-
   return (
     <Card
-      className={`translate-x-96 overflow-y-auto overflow-x-hidden opacity-0 transition-all duration-300 ease-in-out scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full ${
-        isSelected ? "translate-x-0 opacity-100" : ""
-      }`}
+      className={cn(
+        `overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full`,
+        width && width < 1024
+          ? "w-full transition-none"
+          : Object.values(isSelected)[0]
+            ? "w-2/6 translate-x-0 opacity-100"
+            : "w-0 translate-x-96 opacity-0",
+        className,
+      )}
     >
       <CardHeader className="flex flex-row items-start bg-muted/50">
         <div className="grid gap-0.5">
           <CardTitle className="group flex items-center gap-2 text-lg">
-            <span
-              className="line-clamp-2 lg:line-clamp-1"
-              dir={course.enTitle ? "ltr" : "rtl"}
-            >
+            <span className="line-clamp-2" dir={course.enTitle ? "ltr" : "rtl"}>
               {course?.enTitle || course?.arTitle}
             </span>
             <Button
@@ -94,30 +98,30 @@ export default function CourseInfo() {
         <div className="grid gap-3">
           <div className="font-semibold">Course Details</div>
           <ul className="grid gap-3">
-            <li className="flex items-center justify-between">
+            <li className="flex items-center justify-between gap-5">
               <span className="text-muted-foreground">Category</span>
               <span>{course.category}</span>
             </li>
-            <li className="flex items-center justify-between">
+            <li className="flex items-center justify-between gap-5">
               <span className="text-muted-foreground">Season Cycle</span>
               <span>{getSeason(course?.dateRange.from)}</span>
             </li>
-            <li className="flex items-center justify-between">
+            <li className="flex items-center justify-between gap-5">
               <span className="text-muted-foreground">Registration</span>
               <span>{course?.isRegistrationOpen ? "Open" : "Closed"}</span>
             </li>
           </ul>
           <Separator className="my-2" />
           <ul className="grid gap-3">
-            <li className="flex items-center justify-between">
+            <li className="flex items-center justify-between gap-5">
               <span className="text-muted-foreground">Start Date</span>
               <span>{format(course?.dateRange.from, "dd MMMM yyyy")}</span>
             </li>
-            <li className="flex items-center justify-between">
+            <li className="flex items-center justify-between gap-5">
               <span className="text-muted-foreground">End Date</span>
               <span>{format(course?.dateRange.to, "dd MMMM yyyy")}</span>
             </li>
-            <li className="flex items-center justify-between">
+            <li className="flex items-center justify-between gap-5">
               <span className="text-muted-foreground">Duration</span>
               <span>
                 {differenceInWeeks(
@@ -127,7 +131,7 @@ export default function CourseInfo() {
                 Weeks
               </span>
             </li>
-            <li className="flex items-center justify-between">
+            <li className="flex items-center justify-between gap-5">
               <span className="text-muted-foreground">Days</span>
               <span>
                 {course.days?.length === 0
@@ -146,17 +150,17 @@ export default function CourseInfo() {
         <div className="grid gap-3">
           <div className="font-semibold">Facilitator Information</div>
           <dl className="grid gap-3">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-5">
               <dt className="text-muted-foreground">Name</dt>
               <dd>{user?.firstName + " " + user?.lastName}</dd>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-5">
               <dt className="text-muted-foreground">Email</dt>
               <dd>
                 <a href="mailto:">{user?.email}</a>
               </dd>
             </div>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-5">
               <dt className="text-muted-foreground">Phone</dt>
               <dd>
                 <a href="tel:">{user?.tel}</a>

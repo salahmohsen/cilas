@@ -11,16 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { CoursesFilter } from "@/types/drizzle.types";
-import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
-
 import { ListFilter } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 export default function FilterButton() {
   const [position, setPosition] = useState<CoursesFilter>("all published");
   const searchParams = useSearchParams();
   const params = new URLSearchParams(searchParams.toString());
+  const storedFilter = searchParams.get("publishedFilter") as CoursesFilter;
 
   const { setCourseFilter } = useCourseState();
   return (
@@ -36,7 +35,7 @@ export default function FilterButton() {
           <DropdownMenuLabel>Filter by</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuRadioGroup
-            value={position}
+            value={storedFilter || position}
             onValueChange={(value) => {
               setPosition(value as CoursesFilter);
               setCourseFilter(value as CoursesFilter);
