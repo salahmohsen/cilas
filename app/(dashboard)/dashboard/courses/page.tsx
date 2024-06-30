@@ -26,6 +26,7 @@ import { useSearchParams } from "next/navigation";
 import { CoursesFilter } from "@/types/drizzle.types";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Sailboat, Waves } from "lucide-react";
 
 export default function CoursesPage() {
   const [activeTab, setActiveTab] = useState<"published" | "draft">(
@@ -48,10 +49,16 @@ export default function CoursesPage() {
         </CardHeader>
         <CardFooter className="flex items-center gap-2 p-0">
           <Link href="/dashboard/courses/create-course">
-            <Button>New Course</Button>
+            <Button>
+              <Sailboat className="mr-2 h-4 w-4" />
+              New Course
+            </Button>
           </Link>
           <Link href="/dashboard/courses/create-courses-bundle">
-            <Button>New Bundle</Button>
+            <Button>
+              <Waves className="mr-2 h-4 w-4" />
+              New Bundle
+            </Button>
           </Link>
         </CardFooter>
       </Card>
