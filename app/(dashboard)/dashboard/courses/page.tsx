@@ -34,10 +34,9 @@ export default function CoursesPage() {
   const { width } = useWindowSize();
 
   const { isLoading, courses, setCourseFilter, isSelected } = useCourseState();
-
   const searchParams = useSearchParams();
   const storedFilter = searchParams.get("publishedFilter") as CoursesFilter;
-
+  const courseMode = searchParams.get("course_mode");
   return (
     <main
       className={`grid w-full auto-rows-max items-start gap-4 overflow-x-hidden px-4 md:gap-8 md:px-8`}
@@ -49,15 +48,18 @@ export default function CoursesPage() {
             Manage Cilas courses: create, update, delete, and filter with ease.
           </CardDescription>
         </CardHeader>
-        <CardFooter>
+        <CardFooter className="flex gap-5">
           <Link href="/dashboard/courses/create-course">
             <Button>Create New Course</Button>
+          </Link>
+          <Link href="/dashboard/courses/create-courses-bundle">
+            <Button variant="outline">Create New Course Bundle</Button>
           </Link>
         </CardFooter>
       </Card>
       <div className="col-span-3 flex w-full">
         <Tabs
-          defaultValue="published"
+          defaultValue={courseMode || "published"}
           className={cn(
             `ease-in-out, transition-all duration-300`,
             width && width <= 768
@@ -69,26 +71,29 @@ export default function CoursesPage() {
         >
           <div className="flex items-center">
             <TabsList>
-              <TabsTrigger
-                value="published"
-                id="published"
-                onClick={() => {
-                  setCourseFilter(storedFilter || "all published");
-                  setActiveTab("published");
-                }}
-              >
-                Published
-              </TabsTrigger>
-              <TabsTrigger
-                value="draft"
-                id="draft"
-                onClick={() => {
-                  setCourseFilter("draft");
-                  setActiveTab("draft");
-                }}
-              >
-                Draft
-              </TabsTrigger>
+              <Link href="/dashboard/courses?course_mode=published">
+                <TabsTrigger
+                  value="published"
+                  onClick={() => {
+                    setCourseFilter(storedFilter || "all published");
+                    setActiveTab("published");
+                  }}
+                >
+                  Published
+                </TabsTrigger>
+              </Link>
+
+              <Link href="/dashboard/courses?course_mode=draft">
+                <TabsTrigger
+                  value="draft"
+                  onClick={() => {
+                    setCourseFilter("draft");
+                    setActiveTab("draft");
+                  }}
+                >
+                  Draft
+                </TabsTrigger>
+              </Link>
             </TabsList>
             {activeTab === "published" && <FilterButton />}
           </div>
@@ -104,8 +109,8 @@ export default function CoursesPage() {
                 <ul className="group/list space-y-3">
                   {isLoading && <CourseSkeleton itemsNumber={10} />}
                   {!isLoading &&
-                    courses.map((item) => (
-                      <CourseItem item={item} key={item.course.id} />
+                    courses.map((course) => (
+                      <CourseItem course={course} key={course.id} />
                     ))}
                 </ul>
               </CardContent>
@@ -123,8 +128,8 @@ export default function CoursesPage() {
                 <ul className="group/list space-y-3">
                   {isLoading && <CourseSkeleton itemsNumber={10} />}
                   {!isLoading &&
-                    courses.map((item) => (
-                      <CourseItem item={item} key={item.course.id} />
+                    courses.map((course) => (
+                      <CourseItem course={course} key={course.id} />
                     ))}
                 </ul>
               </CardContent>

@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { LoaderPinwheel } from "lucide-react";
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { forwardRef } from "react";
 
 type SubmitButtonProps = {
   className?: string;
@@ -20,8 +20,6 @@ export const SubmitButton = ({
   variant,
   handleOnClick,
 }: SubmitButtonProps) => {
-  // const { pending, action, data, method } = useFormStatus(); Will not work as i make my way around action prop
-
   return (
     <Button
       type="submit"

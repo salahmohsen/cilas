@@ -21,7 +21,7 @@ import {
 import { cn } from "@/lib/utils";
 
 import { StandardProps } from "@/types/formInputs.types";
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import EditorToolbar, {
   Bold,
   Heading,
@@ -109,6 +109,13 @@ const Editor: React.FC<EditorProps> = ({
       onChange(editor.getHTML());
     },
   });
+
+  // This will render the default values which is coming from db
+  useEffect(() => {
+    if (editor && value) {
+      editor.commands.setContent(value);
+    }
+  }, [editor, value]);
 
   return (
     <div className={cn("flex w-full flex-col gap-1", className)}>

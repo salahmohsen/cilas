@@ -37,32 +37,17 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
     searchPlaceholder,
     fetchItemsAction,
     editMode,
-    fetchItemByIdAction,
+    preData,
   }) {
     const { control } = useFormContext();
     const [data, setData] = useState<{ id: string; name: string }[]>([]);
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [loadingUser, setLoadingUser] = useState(false);
 
     /* This useEffect used to fetch specific user in Edit Mode */
     useEffect(() => {
       const fetchData = async () => {
-        if (editMode) {
-          try {
-            setLoadingUser(true);
-
-            const res = await fetchItemByIdAction();
-
-            setData([
-              { id: `${res?.id}`, name: `${res?.firstName} ${res?.lastName}` },
-            ]);
-            setLoadingUser(false);
-          } catch (error) {
-            toast.error(`Error fetching ${label} data`);
-          }
-        }
-        if (!editMode && open) {
+        if (open) {
           try {
             setLoading(true);
             const result = await fetchItemsAction();
@@ -77,7 +62,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
         }
       };
       fetchData();
-    }, [open, editMode, fetchItemByIdAction, fetchItemsAction, label]);
+    }, [open, editMode, fetchItemsAction, label]);
 
     return (
       <FormField
@@ -108,9 +93,9 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                       )}
                     >
                       {field.value
-                        ? data?.find((item) => item?.id === field.value)?.name
+                        ? `${preData?.firstName}  ${preData?.lastName}` ||
+                          data?.find((item) => item?.id === field.value)?.name
                         : placeholder}
-                      {loadingUser && <Ellipsis className="animate-pulse" />}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                   </PopoverTrigger>
@@ -134,8 +119,8 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                           {data?.map((item) => (
                             <CommandItem
                               keywords={[item?.name]}
-                              key={item.id}
-                              value={item.id}
+                              key={preData?.id || item.id}
+                              value={preData?.id || item.id}
                               id={name}
                               onSelect={(currentValue) => {
                                 field.onChange(

@@ -8,20 +8,20 @@ export const coursesFilter = (filter: CoursesFilter) => {
   }
   if (filter === "ongoing") {
     return and(
-      gte(sql`(${courseTable.dateRange}->>'to')::timestamp`, new Date()),
-      lte(sql`(${courseTable.dateRange}->>'from')::timestamp`, new Date()),
+      gte(sql`(${courseTable.dateRange}->>'to')::date`, new Date()),
+      lte(sql`(${courseTable.dateRange}->>'from')::date`, new Date()),
       eq(courseTable.draftMode, false),
     );
   }
   if (filter === "archived") {
     return and(
-      lt(sql`(${courseTable.dateRange}->>'to')::timestamp`, new Date()),
+      lt(sql`(${courseTable.dateRange}->>'to')::date`, new Date()),
       eq(courseTable.draftMode, false),
     );
   }
   if (filter === "starting soon") {
     return and(
-      gt(sql`(${courseTable.dateRange}->>'from')::timestamp`, new Date()),
+      gt(sql`(${courseTable.dateRange}->>'from')::date`, new Date()),
       eq(courseTable.draftMode, false),
     );
   }

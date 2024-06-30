@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import CourseMetadata from "./CourseMetadata";
 import UserHoverCard from "./UserHoverCard";
 import { Amiri, Yeseva_One } from "next/font/google";
-import { getUserById } from "@/actions/users.actions";
+import { CourseWithAuthor } from "@/types/drizzle.types";
 
 const yesevaOne = Yeseva_One({
   subsets: ["latin"],
@@ -18,13 +18,18 @@ const amiri = Amiri({
   display: "swap",
 });
 
+type CourseProps = {
+  isOpen?: boolean;
+  className?: string;
+  titleSlug?: string;
+} & CourseWithAuthor;
+
 const Course = async ({
   isOpen = false,
   className,
   titleSlug,
-  course,
-  user,
-}) => {
+  ...props
+}: CourseProps) => {
   const {
     id,
     enTitle,
@@ -34,21 +39,20 @@ const Course = async ({
     enContent,
     arContent,
     dateRange,
-    seasonCycle,
     category,
     attendance,
-    registrationStatus,
+    isRegistrationOpen,
     price,
-    weekDuration,
     days,
     timeSlot,
     courseFlowUrl,
     applyUrl,
     createdAt,
     updatedAt,
-  } = course;
+    author,
+  } = props;
 
-  const authorName = user["firstName"] + " " + user["lastName"];
+  const authorName = author["firstName"] + " " + author["lastName"];
 
   return (
     <article
@@ -64,9 +68,8 @@ const Course = async ({
         <div className="flex flex-col gap-3">
           <CourseMetadata
             dateRange={dateRange}
-            cycle={seasonCycle}
-            attendance_type={attendance}
-            registration_status={registrationStatus}
+            attendance={attendance}
+            isRegistrationOpen={isRegistrationOpen}
           />
           {isOpen && (
             <h3
@@ -90,7 +93,7 @@ const Course = async ({
 
           <UserHoverCard
             userName={authorName}
-            userBio={user["bio"]}
+            userBio={author["bio"]}
             userSlug={`courses/author/${authorId}`}
           />
         </div>
@@ -99,7 +102,7 @@ const Course = async ({
         <div
           id="article-body"
           className="prose mx-auto"
-          dangerouslySetInnerHTML={{ __html: enContent }}
+          dangerouslySetInnerHTML={{ __html: enContent as string }}
         ></div>
       )}
     </article>

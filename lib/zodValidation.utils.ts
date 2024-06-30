@@ -56,7 +56,7 @@ export const optional_days = z
       disable: z.boolean().optional(),
     }),
   )
-  .optional();
+  .nullable();
 
 export const required_timeSlot = z
   .object({ from: z.date(), to: z.date() })

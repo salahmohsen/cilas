@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/db/drizzle";
-import { courseTable, userTable } from "@/db/schema";
+import { courseTable } from "@/db/schema";
 import { courseSchema } from "@/types/courseForm.schema";
 import { eq, desc, sql, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -10,38 +10,41 @@ import {
   courseSchemaToDbSchema,
   formDataToCourseSchema,
 } from "@/lib/actions.utils";
-import slug from "slug";
 import { coursesFilter } from "@/lib/drizzle.utils";
 import { CoursesFilter } from "@/types/drizzle.types";
 
 export type CourseFormState = {
-  success?: string;
-  error?: string;
-  isPending: boolean;
+  success?: boolean;
+  error?: boolean;
+  message: string;
 };
 
-export async function createCourse(
-  draftMode: boolean,
-  editMode: boolean,
-  courseId: number | undefined,
+export async function createEditCourse(
   prevState: CourseFormState,
   formData: FormData,
 ): Promise<CourseFormState> {
   let formObj = formDataToCourseSchema(formData);
+  const draftMode: boolean = JSON.parse(formData.get("draftMode") as string);
+  const editMode: boolean = JSON.parse(formData.get("editMode") as string);
+  let courseId: string | number = formData.get("courseId") as string;
+  if (courseId && typeof courseId === "string") {
+    courseId = Number(courseId) as number;
+  }
+
   // parse the data
   try {
     const parse = courseSchema.safeParse(formObj);
     if (!parse.success) {
       return {
-        error: `An error occurred while processing the form values: ${parse.error.errors.map((e) => `${e.path[0]} `)}`,
-        isPending: false,
+        error: true,
+        message: `An error occurred while processing the form values: ${parse.error.errors.map((e) => `${e.path[0]} `)}`,
       };
     }
   } catch (error) {
     if (error instanceof Error)
       return {
-        error: `${error.message}`,
-        isPending: false,
+        error: true,
+        message: `${error.message}`,
       };
   }
 
@@ -49,8 +52,8 @@ export async function createCourse(
   const imageUrl = await uploadImage(formObj.image);
   if (imageUrl instanceof Error)
     return {
-      error: "Image Uploading Failed, please try again later!",
-      isPending: false,
+      error: true,
+      message: "Image Uploading Failed, please try again later!",
     };
 
   // Initialize the values for the database
@@ -65,42 +68,43 @@ export async function createCourse(
         .returning({ insertedId: courseTable.id });
       const result = await db.execute(statement);
 
-      revalidatePath("/");
+      revalidatePath("/", "layout");
       return {
-        success: "Course published successfully",
-        isPending: false,
+        success: true,
+        message: "Course published successfully",
       };
     } catch (error) {
       if (error instanceof Error)
         return {
-          error: `Oops! Course addition failed. Please try again. ${error.message}`,
-          isPending: false,
+          error: true,
+          message: `Oops! Course addition failed. Please try again. ${error.message}`,
         };
     }
+
     // Edit existing course
-  } else if (editMode && courseId) {
+  } else if (editMode && typeof courseId === "number") {
     try {
-      const statement = db
+      const statement = await db
         .update(courseTable)
         .set(dbObj)
         .where(eq(courseTable.id, courseId));
-      const result = await statement.execute();
-      revalidatePath("/");
+
+      revalidatePath("/", "layout");
       return {
-        success: "Course edited successfully",
-        isPending: false,
+        success: true,
+        message: "Course edited successfully",
       };
     } catch (error) {
       if (error instanceof Error)
         return {
-          error: `Oops! Course edit failed. Please try again. ${error.message}`,
-          isPending: false,
+          error: true,
+          message: `Oops! Course edit failed. Please try again. ${error.message}`,
         };
     }
   }
   return {
-    error: "Something went wrong, please try again later",
-    isPending: false,
+    error: true,
+    message: "Something went wrong, please try again later",
   };
 }
 
@@ -109,97 +113,71 @@ export const getCourses = async (
   page: number = 1,
   pageSize: number = 10,
 ) => {
-  const data = await db
-    .select()
-    .from(courseTable)
-    .innerJoin(userTable, eq(courseTable.authorId, userTable.id))
-    .where(coursesFilter(filter))
-    .orderBy(
+  const courses = await db.query.courseTable.findMany({
+    where: coursesFilter(filter),
+    with: { author: true },
+    limit: pageSize,
+    offset: (page - 1) * pageSize,
+    orderBy: [
       desc(sql`(${courseTable.dateRange}->>'to')::timestamp`),
       asc(courseTable.id),
-    )
-    .limit(pageSize)
-    .offset((page - 1) * pageSize);
+    ],
+  });
 
-  return data;
+  return courses;
 };
 
-export const getCourseById = async (courseId) => {
-  const course = await db
-    .select()
-    .from(courseTable)
-    .where(eq(courseTable.id, Number(courseId)))
-    .innerJoin(userTable, eq(courseTable.authorId, userTable.id))
-    .limit(0);
-
-  return course[0];
+export const getCourseById = async (courseId: number) => {
+  let course = await db.query.courseTable.findFirst({
+    where: eq(courseTable.id, courseId),
+    with: {
+      author: true,
+    },
+  });
+  if (course)
+    return {
+      ...course,
+      dateRange: {
+        from: new Date(course.dateRange.from),
+        to: new Date(course?.dateRange.to),
+      },
+      timeSlot: {
+        from: new Date(course.timeSlot.from),
+        to: new Date(course.timeSlot.to),
+      },
+    };
 };
 
-type DeleteCourseState = { success?: "string"; error?: "string" };
+type DeleteCourseState = {
+  success?: boolean;
+  error?: boolean;
+  deletedId?: number;
+  message?: string;
+};
 export const deleteCourse = async (
-  courseId: number,
   prevState: DeleteCourseState,
+  formData: FormData,
 ): Promise<DeleteCourseState> => {
-  let state = {};
-  try {
-    const statement = db
-      .delete(courseTable)
-      .where(eq(courseTable.id, courseId));
-    await db.execute(statement);
+  const courseId = formData.get("courseId");
+  if (typeof courseId !== "string")
+    return { error: true, message: "invalid course id!" };
 
-    state = { success: "Course deleted successfully!" };
+  try {
+    const statement = await db
+      .delete(courseTable)
+      .where(eq(courseTable.id, Number(courseId)));
+
+    revalidatePath("/", "layout");
+    return {
+      success: true,
+      deletedId: Number(courseId),
+      message: "Course deleted successfully!",
+    };
   } catch (e) {
     console.error(e);
-    state = { error: "Oops! Course deletion failed. Please try again later." };
-  }
-  revalidatePath("/");
-  return state;
-};
-
-export type DuplicateCourseState =
-  | {
-      success?: string;
-      error?: string;
-      editLink?: string;
-    }
-  | undefined;
-export const duplicateCourse = async (
-  courseId: number,
-  prevState: DuplicateCourseState,
-): Promise<DuplicateCourseState> => {
-  let selectedCourse;
-  try {
-    // get course values
-    selectedCourse = await db
-      .select()
-      .from(courseTable)
-      .where(eq(courseTable.id, courseId))
-      .execute();
-
-    // edit course values
-    delete (selectedCourse[0] as any).id;
-    selectedCourse[0].enTitle += " Duplicate";
-    selectedCourse[0].arTitle += " نسخة";
-    selectedCourse[0].draftMode = true;
-  } catch (error) {
-    if (error instanceof Error)
-      return { error: `Oops! Course duplication failed: ${error.message}` };
-  }
-  try {
-    // insert course values
-    let duplicatedCourse = await db
-      .insert(courseTable)
-      .values(selectedCourse)
-      .returning()
-      .execute();
-
-    // validate path
-    revalidatePath("/dashboard");
-    // create edit link
-    const editLink = `/dashboard/courses/edit-course/${slug(duplicatedCourse[0].enTitle || duplicatedCourse[0].arTitle)}-${duplicatedCourse[0].id}`;
-    return { success: "Course duplicated successfully!", editLink };
-  } catch (error) {
-    if (error instanceof Error)
-      return { error: `Oops! Course duplication failed: ${error.message}` };
+    return {
+      error: false,
+      message: "Oops! Course deletion failed. Please try again later.",
+    };
   }
 };

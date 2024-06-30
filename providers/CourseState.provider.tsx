@@ -7,9 +7,14 @@ import {
   useContext,
   useEffect,
   useState,
+  useOptimistic,
+  useTransition,
+  useCallback,
 } from "react";
+import { useFormState } from "react-dom";
 import { getCourses } from "@/actions/courses.actions";
-import { CoursesFilter, DbCourse, DbCourses } from "@/types/drizzle.types";
+import { deleteCourse } from "@/actions/courses.actions";
+import { CoursesFilter, CourseWithAuthor } from "@/types/drizzle.types";
 import { toast } from "sonner";
 
 type IsSelected = { [key: number]: boolean | undefined };
@@ -17,12 +22,13 @@ type IsSelected = { [key: number]: boolean | undefined };
 type CourseStateContext = {
   isSelected: IsSelected;
   setIsSelected: Dispatch<SetStateAction<IsSelected>>;
-  courseInfo: DbCourse | null;
-  setCourseInfo: Dispatch<SetStateAction<DbCourse | null>>;
+  course: CourseWithAuthor | null;
+  setCourse: Dispatch<SetStateAction<CourseWithAuthor | null>>;
   courseFilter: CoursesFilter;
   setCourseFilter: Dispatch<SetStateAction<CoursesFilter>>;
-  courses: DbCourses;
+  courses: CourseWithAuthor[];
   isLoading: boolean;
+  handleDelete: (courseId: number) => void;
 };
 
 const CourseStateContext = createContext<CourseStateContext>(
@@ -30,37 +36,72 @@ const CourseStateContext = createContext<CourseStateContext>(
 );
 
 export const CourseStateProvider = ({ children }) => {
+  const [isPending, startTransition] = useTransition();
   const [isSelected, setIsSelected] = useState<IsSelected>({});
-  const [courseInfo, setCourseInfo] = useState<DbCourse | null>(null);
+  const [course, setCourse] = useState<CourseWithAuthor | null>(null);
   const [courseFilter, setCourseFilter] =
     useState<CoursesFilter>("all published");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [courses, setCourses] = useState<DbCourses>([]);
+  const [courses, setCourses] = useState<CourseWithAuthor[]>([]);
+
+  // fetch courses data
+  const fetchCourses = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const coursesData = await getCourses(courseFilter);
+      setCourses(coursesData);
+    } catch (error) {
+      toast.error("Error fetching courses");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [courseFilter]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const coursesData = await getCourses(courseFilter);
-        setCourses(coursesData);
-      } catch (error) {
-        toast.error("Error fetching courses");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchData();
-  }, [courseFilter]);
+    fetchCourses();
+  }, [fetchCourses]);
+
+  // Delete Course
+  const [deleteState, deleteAction] = useFormState(deleteCourse, {});
+
+  const [optimisticCourses, addOptimisticCourse] = useOptimistic(
+    courses,
+    (currentState, courseIdToRemove: number) => {
+      return currentState.filter((course) => course.id !== courseIdToRemove);
+    },
+  );
+
+  const handleDelete = (courseId: number) => {
+    startTransition(() => {
+      addOptimisticCourse(courseId);
+      const formData = new FormData();
+      formData.append("courseId", courseId.toString());
+      deleteAction(formData);
+    });
+  };
+
+  useEffect(() => {
+    if (deleteState?.success) {
+      toast.success(deleteState.message);
+      setCourses((current) =>
+        current.filter(
+          (course) => course.id !== Number(deleteState?.deletedId),
+        ),
+      );
+    }
+    if (deleteState?.error) toast.error(deleteState.message);
+  }, [deleteState]);
 
   const contextValue: CourseStateContext = {
     isSelected: isSelected,
     setIsSelected: setIsSelected,
-    courseInfo,
-    setCourseInfo,
+    course,
+    setCourse,
     courseFilter,
     setCourseFilter,
-    courses,
+    courses: optimisticCourses,
     isLoading,
+    handleDelete,
   };
 
   return (

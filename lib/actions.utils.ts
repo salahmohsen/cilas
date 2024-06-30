@@ -40,14 +40,6 @@ export const courseSchemaToDbSchema = (
 ): InferInsertModel<typeof courseTable> => {
   return {
     ...formObj,
-    dateRange: {
-      from: formObj.dateRange.from.toISOString(),
-      to: formObj.dateRange.to.toISOString(),
-    },
-    timeSlot: {
-      from: formObj.timeSlot.from.toISOString(),
-      to: formObj.timeSlot.to.toISOString(),
-    },
     draftMode,
     image,
   };

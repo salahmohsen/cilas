@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   text,
   boolean,
@@ -61,11 +62,24 @@ export const courseTable = pgTable("course", {
       disable?: boolean;
     }[]
   >(),
-  dateRange: json("date_range").notNull().$type<{ from: string; to: string }>(),
-  timeSlot: json("time_slot").notNull().$type<{ from: string; to: string }>(),
+  dateRange: json("date_range").notNull().$type<{ from: Date; to: Date }>(),
+  timeSlot: json("time_slot").notNull().$type<{ from: Date; to: Date }>(),
   students: json("students"), // ToDo one-to-many course -> users
   courseFlowUrl: text("course_flow_url"),
   applyUrl: text("apply_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export const coursesBundleTable = pgTable("course_bundle", {
+  id: serial("id").primaryKey(),
+  name: text("bundle_name"),
+  bundleDescription: text("bundle_description").notNull(),
+});
+
+export const courseRelations = relations(courseTable, ({ one }) => ({
+  author: one(userTable, {
+    fields: [courseTable.authorId],
+    references: [userTable.id],
+  }),
+}));

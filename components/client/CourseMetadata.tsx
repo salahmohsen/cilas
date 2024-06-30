@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, getSeason } from "@/lib/utils";
 import { format } from "date-fns";
 
 import {
@@ -14,14 +14,21 @@ import {
   WifiOff,
 } from "lucide-react";
 
+type CourseMetadataProps = {
+  dateRange: { from: Date; to: Date };
+  attendance: string;
+  isRegistrationOpen: boolean;
+  className?: string;
+};
+
 const CourseMetadata = ({
   dateRange,
-  cycle,
-  attendance_type,
-  registration_status,
+  attendance,
+  isRegistrationOpen,
   className,
-}) => {
+}: CourseMetadataProps) => {
   const year = Number(format(dateRange.from, "yyyy"));
+  const season = getSeason(dateRange.from);
   return (
     <div
       className={cn(
@@ -30,9 +37,9 @@ const CourseMetadata = ({
       )}
     >
       <Meta meta={year} />
-      <Meta meta={cycle} />
-      <Meta meta={attendance_type} />
-      <Meta meta={registration_status} />
+      <Meta meta={attendance} />
+      <Meta meta={isRegistrationOpen} />
+      <Meta meta={season} />
     </div>
   );
 };
@@ -58,7 +65,7 @@ const CourseMetaDataIcon = ({ metadata, ...props }) => {
       return <Flower {...props} />;
     case "summer":
       return <Sun {...props} />;
-    case "autumn":
+    case "fall":
       return <Leaf {...props} />;
     case "winter":
       return <Snowflake {...props} />;

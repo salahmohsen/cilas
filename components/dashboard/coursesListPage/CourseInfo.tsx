@@ -21,32 +21,30 @@ import { PegonsAvatar } from "./PegonAvatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { DbCourse } from "@/types/drizzle.types";
+import { CourseWithAuthor } from "@/types/drizzle.types";
 import { useWindowSize } from "@uidotdev/usehooks";
 
 export default function CourseInfo({ className }: { className?: string }) {
-  const { courseInfo, isSelected, setIsSelected, setCourseInfo, courses } =
+  const { course, isSelected, setIsSelected, setCourse, courses } =
     useCourseState();
 
   const { width } = useWindowSize();
-  if (!courseInfo) return;
+  if (!course) return;
 
-  const { course, user } = courseInfo;
-
-  const idArr: number[] = courses.map((item) => item.course.id);
-  const currentId = courseInfo?.course.id;
+  const idArr: number[] = courses.map((item) => item.id);
+  const currentId = course?.id;
   const currIndex = idArr.indexOf(currentId);
 
   const handleNext = () => {
     if (currIndex < idArr.length - 1) {
       const nextId = idArr[currIndex + 1];
       setIsSelected({ [nextId]: true });
-      setCourseInfo(
-        courses.find((item) => item?.course.id === nextId) as DbCourse,
+      setCourse(
+        courses.find((item) => item?.id === nextId) as CourseWithAuthor,
       );
     } else {
       setIsSelected({ [idArr[0]]: true });
-      setCourseInfo(courses[0]);
+      setCourse(courses[0]);
     }
   };
 
@@ -54,22 +52,22 @@ export default function CourseInfo({ className }: { className?: string }) {
     if (currIndex > 0) {
       const prevId = idArr[currIndex - 1];
       setIsSelected({ [prevId]: true });
-      setCourseInfo(
-        courses.find((item) => item?.course.id === prevId) as DbCourse,
+      setCourse(
+        courses.find((item) => item?.id === prevId) as CourseWithAuthor,
       );
     } else {
       setIsSelected({ [idArr.at(-1) as number]: true });
-      setCourseInfo(courses.at(-1) as DbCourse);
+      setCourse(courses.at(-1) as CourseWithAuthor);
     }
   };
   return (
     <Card
       className={cn(
-        `overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full`,
+        `h-full overflow-y-auto overflow-x-hidden transition-all duration-300 ease-in-out scrollbar-thin scrollbar-track-rounded-full scrollbar-thumb-rounded-full`,
         width && width < 1024
           ? "w-full transition-none"
           : Object.values(isSelected)[0]
-            ? "ml-8 mt-12 w-2/6 translate-x-0 opacity-100"
+            ? "ml-8 mt-12 max-h-max w-2/6 translate-x-0 opacity-100"
             : "mt-12 w-0 translate-x-96 opacity-0",
         className,
       )}
@@ -152,18 +150,20 @@ export default function CourseInfo({ className }: { className?: string }) {
           <dl className="grid gap-3">
             <div className="flex items-center justify-between gap-5">
               <dt className="text-muted-foreground">Name</dt>
-              <dd>{user?.firstName + " " + user?.lastName}</dd>
+              <dd>
+                {course.author?.firstName + " " + course.author?.lastName}
+              </dd>
             </div>
             <div className="flex items-center justify-between gap-5">
               <dt className="text-muted-foreground">Email</dt>
               <dd>
-                <a href="mailto:">{user?.email}</a>
+                <a href="mailto:">{course.author?.email}</a>
               </dd>
             </div>
             <div className="flex items-center justify-between gap-5">
               <dt className="text-muted-foreground">Phone</dt>
               <dd>
-                <a href="tel:">{user?.tel}</a>
+                <a href="tel:">{course.author?.tel}</a>
               </dd>
             </div>
           </dl>

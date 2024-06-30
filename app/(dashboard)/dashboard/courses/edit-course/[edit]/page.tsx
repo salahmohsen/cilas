@@ -1,41 +1,30 @@
 import { getCourseById } from "@/actions/courses.actions";
 import CourseForm from "@/components/dashboard/courseForm/CourseForm";
 import { courseSchema } from "@/types/courseForm.schema";
-import { InferSelectModel } from "drizzle-orm";
-import { courseTable } from "@/db/schema";
-import { Squirrel } from "lucide-react";
 import { z } from "zod";
+import { ErrorPage } from "@/components/ui/error";
+import { User } from "@/types/drizzle.types";
 
 export default async function EditCoursePage({ params }) {
-  const parts = params.edit?.split("-");
-  const courseId = Number(parts[parts.length - 1]);
-  const { course } = await getCourseById(courseId);
+  let courseId: number;
+  let course:
+    | ((z.infer<typeof courseSchema> & { draftMode: boolean }) & {
+        author: User;
+      })
+    | undefined;
 
-  const formattedData: z.infer<typeof courseSchema> & { draftMode: boolean } = {
-    ...course,
-    dateRange: {
-      from: new Date(course.dateRange.from),
-      to: new Date(course.dateRange.to),
-    },
-    timeSlot: {
-      from: new Date(course.timeSlot.from),
-      to: new Date(course.timeSlot.to),
-    },
-    days: course.days === null ? undefined : course.days,
-  };
-  if (!courseId || !course)
-    return (
-      <div className="flex h-[calc(100vh-73px)] flex-col items-center justify-center space-y-10">
-        <Squirrel size={200} strokeWidth={0.6} />
-        <p className="text-2xl font-medium tracking-widest">No courses found</p>
-      </div>
-    );
+  try {
+    const parts = params.edit?.split("-");
+    courseId = Number(parts[parts.length - 1]);
+    if (!courseId || isNaN(courseId)) throw new Error("course id is wrong!");
+    course = await getCourseById(courseId);
 
-  return (
-    <CourseForm
-      editMode={true}
-      courseData={formattedData}
-      courseId={courseId}
-    />
-  );
+    if (!course) throw new Error("Course not found!");
+  } catch (error) {
+    if (error instanceof Error) {
+      return <ErrorPage message={error.message} />;
+    } else return;
+  }
+
+  return <CourseForm editMode={true} courseData={course} courseId={courseId} />;
 }

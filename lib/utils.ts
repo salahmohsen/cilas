@@ -20,13 +20,12 @@ export const shake = (divRef: RefObject<HTMLDivElement>) => {
 
 export const isObjectEmpty = (obj: object) => Object.keys(obj).length === 0;
 
-export function getSeason(dateString) {
-  // Convert the input string to a Date object
-  const date = new Date(dateString);
+export function getSeason(date: string | Date) {
+  let seasonDate = new Date(date);
 
   // Extract the month and day
-  const month = date.getMonth() + 1; // getMonth() is zero-based
-  const day = date.getDate();
+  const month = seasonDate.getMonth() + 1; // getMonth() is zero-based
+  const day = seasonDate.getDate();
 
   // Determine the season based on month and day
   if ((month === 12 && day >= 21) || (month <= 3 && (month < 3 || day <= 20))) {

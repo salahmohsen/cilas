@@ -50,14 +50,14 @@ const statuses: Status[] = [
   },
 ];
 
-export function SideBarTypeFilter() {
+export function SideBarTypeFilter({ className }) {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null,
   );
 
   return (
-    <div className="flex items-center space-x-4">
+    <div className={`flex items-center space-x-4 ${className}`}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button

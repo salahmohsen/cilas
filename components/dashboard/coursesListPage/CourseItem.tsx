@@ -1,16 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useFormState } from "react-dom";
-import {
-  DuplicateCourseState,
-  deleteCourse,
-  duplicateCourse,
-} from "@/actions/courses.actions";
+import { useState } from "react";
 import { useCourseState } from "@/providers/CourseState.provider";
 
 import Link from "next/link";
-import { toast } from "sonner";
 import slug from "slug";
 import { format } from "date-fns";
 
@@ -24,38 +17,19 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Calendar, Ellipsis, User } from "lucide-react";
-import { redirect } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { DbCourse } from "@/types/drizzle.types";
+import { CourseWithAuthor } from "@/types/drizzle.types";
 
-export default function CourseItem({ item }: { item: DbCourse }) {
-  const { course, user } = item;
-  const deleteButtonRef = useRef<HTMLButtonElement>(null);
-  const duplicateButtonRef = useRef<HTMLButtonElement>(null);
-  const { isSelected, setIsSelected, setCourseInfo } = useCourseState();
+export default function CourseItem({ course }: { course: CourseWithAuthor }) {
+  const { isSelected, setIsSelected, setCourse, handleDelete } =
+    useCourseState();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const [deleteState, deleteAction] = useFormState(
-    deleteCourse.bind(null, Number(course?.id)),
-    {},
-  );
-
-  const [duplicateState, duplicateAction] = useFormState(
-    duplicateCourse.bind(null, Number(course?.id)),
-    {} as DuplicateCourseState,
-  );
-
-  useEffect(() => {
-    if (deleteState?.success) toast.success(deleteState.success);
-    if (deleteState?.error) toast.error(deleteState.error);
-    if (duplicateState?.success) toast.success(duplicateState.success);
-    if (duplicateState?.editLink) redirect(duplicateState.editLink);
-    if (duplicateState?.error) toast.error(duplicateState.error);
-  }, [deleteState, duplicateState]);
   const handleSelect = (id) => {
     setIsSelected((prev) => ({
       [id]: prev[id] === id ? undefined : !prev[id],
     }));
-    setCourseInfo(item);
+    setCourse(course);
   };
   const courseStatues = ():
     | "ongoing"
@@ -64,9 +38,9 @@ export default function CourseItem({ item }: { item: DbCourse }) {
     | "draft"
     | "unknown status" => {
     const currentDate = new Date();
-    const from = new Date(item.course.dateRange.from);
-    const to = new Date(item.course.dateRange.to);
-    const isDraft = item.course.draftMode;
+    const from = new Date(course.dateRange.from);
+    const to = new Date(course.dateRange.to);
+    const isDraft = course.draftMode;
     if (isDraft) return "draft";
     if (from <= currentDate && to >= currentDate && !isDraft) return "ongoing";
     if (from > currentDate && !isDraft) return "starting soon";
@@ -77,13 +51,13 @@ export default function CourseItem({ item }: { item: DbCourse }) {
 
   return (
     <li
-      className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isSelected[course.id] ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
+      className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isSelected[course.id] || isMenuOpen ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
       onClick={() => handleSelect(course.id)}
     >
       <div className="flex flex-col gap-4">
         <span className="flex gap-1 text-xs font-light">
           <User size={16} strokeWidth={1.5} />
-          {`${user?.firstName} ${user?.lastName}`}
+          {`${course.author?.firstName} ${course.author?.lastName}`}
         </span>
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
           <Badge
@@ -100,7 +74,7 @@ export default function CourseItem({ item }: { item: DbCourse }) {
         </span>
       </div>
       <div>
-        <DropdownMenu>
+        <DropdownMenu onOpenChange={setIsMenuOpen}>
           <DropdownMenuTrigger asChild>
             <Button
               size="icon"
@@ -117,24 +91,22 @@ export default function CourseItem({ item }: { item: DbCourse }) {
             >
               <DropdownMenuItem>Edit</DropdownMenuItem>
             </Link>
-            <form action={duplicateAction}>
-              <DropdownMenuItem
-                onSelect={() => duplicateButtonRef.current?.click()}
-              >
+            <Link
+              href={`/dashboard/courses/create-course?duplicate=${course.id}`}
+            >
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Duplicate
               </DropdownMenuItem>
-              <button type="submit" hidden ref={duplicateButtonRef} />
-            </form>
+            </Link>
             <DropdownMenuSeparator />
-            <form action={deleteAction}>
-              <DropdownMenuItem
-                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                onSelect={() => deleteButtonRef.current?.click()}
-              >
-                Delete
-              </DropdownMenuItem>
-              <button type="submit" hidden ref={deleteButtonRef} />
-            </form>
+
+            <DropdownMenuItem
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onSelect={() => handleDelete(course.id)}
+              onClick={(e) => e.stopPropagation()}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

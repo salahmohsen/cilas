@@ -6,19 +6,15 @@ import { MultiSelectorInput } from "./inputs/InputMultiSelector";
 import { SelectInput } from "./inputs/InputSelect";
 import { TimeInput } from "./inputs/InputTimeSlot";
 import { getUserById, getUsersNamesByRole } from "@/actions/users.actions";
+import { User } from "@/types/drizzle.types";
 
 export default function CourseMetadata({
   editMode,
-  authorId,
+  author,
 }: {
   editMode: boolean;
-  authorId: string | undefined;
+  author: User | undefined;
 }) {
-  const fetchUserById = useCallback(() => {
-    if (!authorId) return;
-    return getUserById(authorId);
-  }, [authorId]);
-
   const fetchUsersNamesByRole = useCallback(() => {
     return getUsersNamesByRole("author");
   }, []);
@@ -36,7 +32,7 @@ export default function CourseMetadata({
           searchPlaceholder="Search facilitators..."
           fetchItemsAction={fetchUsersNamesByRole}
           editMode={editMode}
-          fetchItemByIdAction={fetchUserById}
+          preData={author}
         />
         <BasicInput
           type="url"

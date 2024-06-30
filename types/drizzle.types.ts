@@ -1,6 +1,8 @@
 import { courseTable, userTable } from "@/db/schema";
 import { InferSelectModel } from "drizzle-orm";
 
+export type User = InferSelectModel<typeof userTable>;
+
 export type CoursesFilter =
   | "all published"
   | "ongoing"
@@ -8,12 +10,6 @@ export type CoursesFilter =
   | "starting soon"
   | "draft";
 
-export type DbCourse = {
-  course: InferSelectModel<typeof courseTable>;
-  user: InferSelectModel<typeof userTable>;
+export type CourseWithAuthor = InferSelectModel<typeof courseTable> & {
+  author: InferSelectModel<typeof userTable>;
 };
-
-export type DbCourses = {
-  course: InferSelectModel<typeof courseTable>;
-  user: InferSelectModel<typeof userTable>;
-}[];

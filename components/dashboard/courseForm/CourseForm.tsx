@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
-import { createCourse } from "@/actions/courses.actions";
+import { CourseFormState, createEditCourse } from "@/actions/courses.actions";
 
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
@@ -21,9 +21,16 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { isObjectEmpty } from "@/lib/utils";
 
+import { User } from "@/types/drizzle.types";
+import { useCourseState } from "@/providers/CourseState.provider";
+
 type CourseFormPropTypes = {
   editMode?: boolean;
-  courseData?: z.infer<typeof courseSchema> & { draftMode: boolean };
+  courseData?:
+    | (z.infer<typeof courseSchema> & { draftMode: boolean } & {
+        author: User;
+      })
+    | undefined;
   courseId?: number;
 };
 export default function CourseForm({
@@ -33,55 +40,92 @@ export default function CourseForm({
 }: CourseFormPropTypes) {
   if (editMode && (!courseData || !courseId))
     throw new Error("course data or course id not provided");
+
+  // Form Refs
   const formRef = useRef<HTMLFormElement>(null);
 
+  const { setCourseFilter } = useCourseState();
+
+  // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(
     courseData?.draftMode ?? false,
   );
+
+  // set separate loading for each button: Publish | Draft
   const [isLoading, setIsLoading] = useState<{
     primaryButton: boolean;
     secondaryButton: boolean;
   }>({ primaryButton: false, secondaryButton: false });
 
-  const [createCourseState, createCourseAction] = useFormState(
-    createCourse.bind(null, draftMode, editMode, courseId),
-    {
-      isPending: true, // initial state of isPending
-    },
+  // using transition to use isPending. @note: useFormStatus will not work.
+  const [isPending, startTransition] = useTransition();
+
+  // Setup useFormState for creating/editing course
+  const [courseState, courseAction] = useFormState(
+    createEditCourse,
+    {} as CourseFormState,
   );
 
+  // Setup Zod Validation
   const formMethods = useForm<z.infer<typeof courseSchema>>({
     resolver: zodResolver(courseSchema),
-    progressive: false,
     mode: "onChange",
+    values: courseData, // fill inputs with courseData passed from the parent component
+    resetOptions: {
+      keepDirtyValues: true, // user-interacted input will be retained
+      keepErrors: true, // input errors will be retained with value update
+    },
     defaultValues: {
       ...courseFormDefaultValues,
-      ...(courseData ?? {}),
     },
   });
 
+  // Handle course state
   useEffect(() => {
-    if (!createCourseState.isPending)
+    // @success
+    if (courseState.success) {
+      toast.success(courseState.message);
+
+      // Redirect based on course submit mode: published | draft
+      redirect(
+        "/dashboard/courses?course_mode=" + (draftMode ? "draft" : "published"),
+      );
+    }
+    // @error
+    if (courseState.error) toast.error(courseState.message);
+
+    // stop loading
+    if (!isPending && (courseState.success || courseState.error))
       setIsLoading({ primaryButton: false, secondaryButton: false });
-    if (createCourseState.success) toast.success(createCourseState.success);
-    if (createCourseState.error) toast.error(createCourseState.error);
-    if (!createCourseState.isPending && createCourseState.success)
-      redirect("/dashboard/courses");
-  }, [createCourseState]);
+  }, [courseState, isPending, draftMode, setCourseFilter]);
 
   const handleSubmit = useCallback(
-    (isDraft: boolean) => {
+    (draftMode: boolean) => {
+      // Start loading if there is no errors
       if (isObjectEmpty(formMethods.formState.errors))
         setIsLoading((prev) => ({
           ...prev,
-          [isDraft ? "secondaryButton" : "primaryButton"]: true,
+          [draftMode ? "secondaryButton" : "primaryButton"]: true,
         }));
-
-      const formData = new FormData(formRef.current!);
-
-      createCourseAction(formData);
+      // establish courseAction
+      startTransition(() => {
+        // set course filter which will determine which tab content will load after redirect
+        draftMode ? setCourseFilter("draft") : setCourseFilter("all published");
+        // create formData object and append draftMode, editMode, and courseId
+        const formData = new FormData(formRef.current!);
+        formData.append("draftMode", draftMode.toString());
+        formData.append("editMode", editMode.toString());
+        if (courseId) formData.append("courseId", courseId.toString());
+        courseAction(formData);
+      });
     },
-    [createCourseAction, formMethods.formState.errors],
+    [
+      formMethods.formState.errors,
+      setCourseFilter,
+      editMode,
+      courseId,
+      courseAction,
+    ],
   );
 
   return (
@@ -93,25 +137,23 @@ export default function CourseForm({
               <form
                 ref={formRef}
                 className="space-y-8"
-                action={createCourseAction}
+                action={courseAction}
                 onSubmit={(e) => {
                   e.preventDefault();
                   formMethods.handleSubmit(() => {
                     handleSubmit(draftMode);
-                  })(e);
+                  })(e); // immediately invokes the handleSubmit with the original event object.
                 }}
               >
                 <CourseContent />
                 <CourseMetadata
                   editMode={editMode}
-                  authorId={courseData?.authorId}
+                  author={courseData?.author}
                 />
                 <div className="flex gap-5">
                   <SubmitButton
                     isLoading={isLoading.secondaryButton}
-                    value={
-                      editMode && !draftMode ? "convert to Draft" : "Save Draft"
-                    }
+                    value="Save Draft"
                     className="!mb-5"
                     variant="secondary"
                     handleOnClick={() => setDraftMode(true)}
