@@ -59,14 +59,16 @@ export default function CourseItem({ course }: { course: CourseWithAuthor }) {
           <User size={16} strokeWidth={1.5} />
           {`${course.author?.firstName} ${course.author?.lastName}`}
         </span>
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
+        <div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-2">
           <Badge
             variant="default"
-            className="h-5 min-w-max max-w-max rounded-sm"
+            className="h-6 min-w-max max-w-max rounded-sm"
           >
             {courseStatues()}
           </Badge>
-          <p className="leading-relaxed">{course.enTitle || course.arTitle}</p>
+          <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">
+            {course.enTitle || course.arTitle}
+          </p>
         </div>
         <span className="flex gap-1 text-xs font-light">
           <Calendar size={16} strokeWidth={1.5} />

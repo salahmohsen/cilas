@@ -15,7 +15,7 @@ const CourseInfoModal = () => {
       onOpenChange={() => setIsSelected((prev) => ({ [id]: !prev[id] }))}
     >
       <DialogContent
-        className={`h-[calc(100vh-20px)] scale-90 rounded-md border-none p-0`}
+        className={`h-[calc(100vh-20px)] scale-90 overflow-y-auto rounded-md border-none p-0`}
       >
         <CourseInfo className={"border-0"} />
       </DialogContent>

@@ -27,7 +27,7 @@ export default function LayoutBreadcrumb() {
   });
 
   return (
-    <Breadcrumb className="mx-4 my-4 hidden md:flex">
+    <Breadcrumb className="my-4 hidden md:flex">
       <BreadcrumbList>
         {items.map((item) => (
           <Item item={item} key={item.name} />
