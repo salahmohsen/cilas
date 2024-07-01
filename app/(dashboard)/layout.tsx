@@ -44,7 +44,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${cairo.variable} max-w-screen scroll-smooth`}
+        className={`${inter.variable} ${cairo.variable} max-w-screen scroll-smooth text-pretty leading-relaxed antialiased`}
         id="dashboard"
       >
         <CourseStateProvider>

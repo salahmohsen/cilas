@@ -1,63 +1,93 @@
-import { Button } from "@/components/ui/button";
-
-import {
-  DropdownMenu,
-  DropdownMenuRadioItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { CoursesFilter } from "@/types/drizzle.types";
-import { ListFilter } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, Filter } from "lucide-react";
+
+const coursesFilter = [
+  {
+    value: "ongoing",
+    label: "Ongoing",
+  },
+  {
+    value: "archived",
+    label: "Archived",
+  },
+  {
+    value: "starting soon",
+    label: "Starting soon",
+  },
+];
 
 export default function FilterButton() {
-  const [position, setPosition] = useState<CoursesFilter>("all published");
-  const searchParams = useSearchParams();
-  const params = new URLSearchParams(searchParams.toString());
-  const storedFilter = searchParams.get("publishedFilter") as CoursesFilter;
-
   const { setCourseFilter } = useCourseState();
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("");
+
   return (
-    <div className="ml-auto">
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="sm" className="h-7 gap-1 text-sm">
-            <ListFilter className="h-3.5 w-3.5" />
-            <span className="sr-only sm:not-sr-only">Filter</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-          <DropdownMenuSeparator />
-          <DropdownMenuRadioGroup
-            value={storedFilter || position}
-            onValueChange={(value) => {
-              setPosition(value as CoursesFilter);
-              setCourseFilter(value as CoursesFilter);
-              params.set("publishedFilter", value); // This will save the filter in the url while shifting to draft courses
-              window.history.pushState(null, "", `?${params.toString()}`);
-            }}
-          >
-            <DropdownMenuRadioItem value="all published">
-              <span>All</span>
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="ongoing">
-              Ongoing
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="archived">
-              Archived
-            </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="starting soon">
-              Starting Soon
-            </DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          role="combobox"
+          aria-expanded={open}
+          className="flex w-[160px] justify-between"
+        >
+          <Filter className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+          {value
+            ? coursesFilter.find((filter) => filter.value === value)?.label
+            : "Filter Courses..."}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[200px] p-0">
+        <Command>
+          <CommandInput placeholder="Search filters..." className="h-9" />
+          <CommandList>
+            <CommandEmpty>No filter found.</CommandEmpty>
+            <CommandGroup>
+              {coursesFilter.map((filter) => (
+                <CommandItem
+                  key={filter.value}
+                  value={filter.value}
+                  onSelect={(currentValue) => {
+                    setValue(currentValue === value ? "" : currentValue);
+                    setOpen(false);
+                    setCourseFilter(
+                      currentValue === value
+                        ? "all published"
+                        : (currentValue as CoursesFilter),
+                    );
+                  }}
+                >
+                  {filter.label}
+                  <Check
+                    className={cn(
+                      "ml-auto h-4 w-4",
+                      value === filter.value ? "opacity-100" : "opacity-0",
+                    )}
+                  />
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 }
