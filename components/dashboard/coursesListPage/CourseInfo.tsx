@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { CourseWithAuthor } from "@/types/drizzle.types";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { toast } from "sonner";
 
 export default function CourseInfo({ className }: { className?: string }) {
   const { course, isSelected, setIsSelected, setCourse, courses } =
@@ -83,6 +84,15 @@ export default function CourseInfo({ className }: { className?: string }) {
                 size="icon"
                 variant="outline"
                 className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+                onClick={() => {
+                  navigator.clipboard
+                    .writeText((course?.enTitle || course?.arTitle) as string)
+                    .then(() => {
+                      toast.success(
+                        `${course?.enTitle || course?.arTitle} copied!`,
+                      );
+                    });
+                }}
               >
                 <Copy className="h-3 w-3" />
                 <span className="sr-only">Copy Course Name</span>
