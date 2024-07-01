@@ -96,7 +96,7 @@ export default function CourseItem({ course }: { course: CourseWithAuthor }) {
               </DropdownMenuItem>
             </Link>
             <Link
-              href={`/dashboard/courses/create-course?duplicate=${course.id}`}
+              href={`/dashboard/courses/create-course?copy_values=${course.id}`}
             >
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Duplicate

@@ -110,13 +110,6 @@ const Editor: React.FC<EditorProps> = ({
     },
   });
 
-  // This will render the default values which is coming from db
-  useEffect(() => {
-    if (editor && value) {
-      editor.commands.setContent(value);
-    }
-  }, [editor, value]);
-
   return (
     <div className={cn("flex w-full flex-col gap-1", className)}>
       <EditorToolbar editor={editor} />

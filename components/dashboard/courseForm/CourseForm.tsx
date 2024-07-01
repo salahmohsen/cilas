@@ -70,13 +70,10 @@ export default function CourseForm({
   const formMethods = useForm<z.infer<typeof courseSchema>>({
     resolver: zodResolver(courseSchema),
     mode: "onChange",
-    values: courseData, // fill inputs with courseData passed from the parent component
-    resetOptions: {
-      keepDirtyValues: true, // user-interacted input will be retained
-      keepErrors: true, // input errors will be retained with value update
-    },
+
     defaultValues: {
       ...courseFormDefaultValues,
+      ...(courseData ?? {}),
     },
   });
 

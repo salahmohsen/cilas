@@ -28,13 +28,15 @@ export function ErrorPage({ message }: { message: string }) {
     <div className="flex h-[calc(100vh-73px)] flex-col items-center justify-center space-y-10">
       <Squirrel
         size={200}
-        strokeWidth={1}
+        strokeWidth={0.8}
         strokeLinejoin="round"
         strokeLinecap="round"
         ref={squirrelRef}
-        className={angle === 180 ? "scale-x-[-1]" : ""}
+        className={`transition-all duration-75 ease-linear ${angle === 180 ? "scale-x-[-1]" : ""}`}
       />
-      <p className="text-2xl font-medium tracking-widest">{message}</p>
+      <p className="max-w-xl text-center text-2xl font-light tracking-widest">
+        {message}
+      </p>
     </div>
   );
 }
