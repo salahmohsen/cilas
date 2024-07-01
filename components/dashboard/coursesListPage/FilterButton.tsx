@@ -47,12 +47,12 @@ export default function FilterButton() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="flex w-[160px] justify-between"
+          className="flex justify-between gap-2"
         >
-          <Filter className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+          <Filter className="h-4 w-4 shrink-0 opacity-50" />
           {value
             ? coursesFilter.find((filter) => filter.value === value)?.label
-            : "Filter Courses..."}
+            : ""}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">

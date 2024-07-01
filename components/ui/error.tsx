@@ -1,6 +1,6 @@
 "use client";
 
-import { Squirrel } from "lucide-react";
+import { Bird } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export function ErrorPage({ message }: { message: string }) {
@@ -26,7 +26,7 @@ export function ErrorPage({ message }: { message: string }) {
 
   return (
     <div className="flex h-[calc(100vh-73px)] flex-col items-center justify-center space-y-10">
-      <Squirrel
+      <Bird
         size={200}
         strokeWidth={0.8}
         strokeLinejoin="round"

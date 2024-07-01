@@ -40,14 +40,14 @@ export default function CoursesPage() {
   const courseMode = searchParams.get("course_mode");
   return (
     <main className={`mx-4 flex flex-col gap-5`}>
-      <Card className="col-span-9 flex flex-wrap items-center justify-between gap-5 p-6">
+      <Card className="flex flex-wrap items-end justify-between gap-5 p-6">
         <CardHeader className="p-0">
           <CardTitle>Cilas Courses</CardTitle>
           <CardDescription className="max-w-lg text-balance leading-relaxed">
             Manage Cilas courses: create, update, delete, and filter with ease.
           </CardDescription>
         </CardHeader>
-        <CardFooter className="flex items-center gap-2 p-0">
+        <CardFooter className="flex flex-wrap items-center gap-2 p-0">
           <Link href="/dashboard/courses/create-course">
             <Button>
               <Sailboat className="mr-2 h-4 w-4" />
@@ -76,7 +76,7 @@ export default function CoursesPage() {
             defaultValue={courseMode || "published"}
             className={cn(`flex flex-col gap-2`)}
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-wrap items-center justify-between gap-2">
               <TabsList>
                 <Link href="/dashboard/courses?course_mode=published">
                   <TabsTrigger
