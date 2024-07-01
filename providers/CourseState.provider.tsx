@@ -22,6 +22,7 @@ type IsSelected = { [key: number]: boolean | undefined };
 type CourseStateContext = {
   isSelected: IsSelected;
   setIsSelected: Dispatch<SetStateAction<IsSelected>>;
+  fetchCourses: (insertedId?: number) => Promise<void>;
   course: CourseWithAuthor | null;
   setCourse: Dispatch<SetStateAction<CourseWithAuthor | null>>;
   courseFilter: CoursesFilter;
@@ -45,17 +46,27 @@ export const CourseStateProvider = ({ children }) => {
   const [courses, setCourses] = useState<CourseWithAuthor[]>([]);
 
   // fetch courses data
-  const fetchCourses = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      const coursesData = await getCourses(courseFilter);
-      setCourses(coursesData);
-    } catch (error) {
-      toast.error("Error fetching courses");
-    } finally {
-      setIsLoading(false);
-    }
-  }, [courseFilter]);
+  const fetchCourses = useCallback(
+    async (insertedId?: number) => {
+      try {
+        setIsLoading(true);
+        const coursesData = await getCourses(courseFilter);
+        setCourses(coursesData);
+        if (insertedId) {
+          const newCourse = coursesData.find((c) => c.id === insertedId);
+          if (newCourse) {
+            setCourse(newCourse);
+            setIsSelected({ [insertedId]: true });
+          }
+        }
+      } catch (error) {
+        toast.error("Error fetching courses");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [courseFilter],
+  );
 
   useEffect(() => {
     fetchCourses();
@@ -95,6 +106,7 @@ export const CourseStateProvider = ({ children }) => {
   const contextValue: CourseStateContext = {
     isSelected: isSelected,
     setIsSelected: setIsSelected,
+    fetchCourses,
     course,
     setCourse,
     courseFilter,

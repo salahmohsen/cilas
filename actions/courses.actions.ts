@@ -16,6 +16,7 @@ import { CoursesFilter } from "@/types/drizzle.types";
 export type CourseFormState = {
   success?: boolean;
   error?: boolean;
+  courseId?: number;
   message: string;
 };
 
@@ -62,16 +63,16 @@ export async function createEditCourse(
   // Publish new course
   if (!editMode) {
     try {
-      const statement = db
+      const result = await db
         .insert(courseTable)
         .values(dbObj)
-        .returning({ insertedId: courseTable.id });
-      const result = await db.execute(statement);
+        .returning({ Id: courseTable.id });
 
       revalidatePath("/", "layout");
       return {
         success: true,
         message: "Course published successfully",
+        courseId: result[0].Id,
       };
     } catch (error) {
       if (error instanceof Error)
@@ -84,15 +85,17 @@ export async function createEditCourse(
     // Edit existing course
   } else if (editMode && typeof courseId === "number") {
     try {
-      const statement = await db
+      const result = await db
         .update(courseTable)
         .set(dbObj)
-        .where(eq(courseTable.id, courseId));
+        .where(eq(courseTable.id, courseId))
+        .returning({ Id: courseTable.id });
 
       revalidatePath("/", "layout");
       return {
         success: true,
         message: "Course edited successfully",
+        courseId: result[0].Id,
       };
     } catch (error) {
       if (error instanceof Error)

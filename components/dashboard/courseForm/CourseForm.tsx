@@ -44,7 +44,7 @@ export default function CourseForm({
   // Form Refs
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { setCourseFilter } = useCourseState();
+  const { setCourseFilter, fetchCourses, setIsSelected } = useCourseState();
 
   // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(
@@ -85,6 +85,7 @@ export default function CourseForm({
     // @success
     if (courseState.success) {
       toast.success(courseState.message);
+      fetchCourses(courseState.courseId); // trigger refetching
 
       // Redirect based on course submit mode: published | draft
       redirect(
@@ -97,7 +98,14 @@ export default function CourseForm({
     // stop loading
     if (!isPending && (courseState.success || courseState.error))
       setIsLoading({ primaryButton: false, secondaryButton: false });
-  }, [courseState, isPending, draftMode, setCourseFilter]);
+  }, [
+    courseState,
+    isPending,
+    draftMode,
+    setCourseFilter,
+    fetchCourses,
+    setIsSelected,
+  ]);
 
   const handleSubmit = useCallback(
     (draftMode: boolean) => {
@@ -109,6 +117,7 @@ export default function CourseForm({
         }));
       // establish courseAction
       startTransition(() => {
+        console.log(draftMode);
         // set course filter which will determine which tab content will load after redirect
         draftMode ? setCourseFilter("draft") : setCourseFilter("all published");
         // create formData object and append draftMode, editMode, and courseId
