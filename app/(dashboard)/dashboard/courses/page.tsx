@@ -54,7 +54,7 @@ export default function CoursesPage() {
               New Course
             </Button>
           </Link>
-          <Link href="/dashboard/courses/create-courses-bundle">
+          <Link href="/dashboard/courses/create-bundle">
             <Button>
               <Waves className="mr-2 h-4 w-4" />
               New Bundle
@@ -101,6 +101,12 @@ export default function CoursesPage() {
                     Draft
                   </TabsTrigger>
                 </Link>
+
+                <Link href="/dashboard/courses?course_mode=bundles">
+                  <TabsTrigger value="bundles" onClick={() => {}}>
+                    Bundles
+                  </TabsTrigger>
+                </Link>
               </TabsList>
               {activeTab === "published" && <FilterButton />}
             </div>
@@ -140,6 +146,7 @@ export default function CoursesPage() {
                       ))}
                   </ul>
                 </CardContent>
+                <TabsContent value="bundles"></TabsContent>
               </Card>
             </TabsContent>
           </Tabs>

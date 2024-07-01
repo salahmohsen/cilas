@@ -16,12 +16,12 @@ The ethos of CILAS—to create an inclusive space where people from diverse soci
 
 - [ ] **Course Management**:
 
-  - [x] Add course.
-    - [x] Setup tiptap for the course content.
-    - [x] Add course metadata fields.
-    - [x] Add zod validation to the form.
-    - [x] Add draft option when adding a course.
+  - [x] Create course.
+
+    - [x] Setup create course form with ReactHookForm and Zod Validation.
+    - [x] Add draft option.
     - [x] Attach to database
+
   - [x] Update, and delete courses.
   - [x] Add filter option for courses page: all/ongoing/archived/starting soon.
   - [ ] Add courses sets feature.
