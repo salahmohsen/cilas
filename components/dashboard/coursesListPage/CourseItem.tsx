@@ -91,7 +91,9 @@ export default function CourseItem({ course }: { course: CourseWithAuthor }) {
             <Link
               href={`/dashboard/courses/edit-course/${slug(course.enTitle)}-${course.id}`}
             >
-              <DropdownMenuItem>Edit</DropdownMenuItem>
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                Edit
+              </DropdownMenuItem>
             </Link>
             <Link
               href={`/dashboard/courses/create-course?duplicate=${course.id}`}
