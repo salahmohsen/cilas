@@ -6,6 +6,7 @@ import {
   serial,
   json,
   timestamp,
+  integer,
 } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
@@ -33,11 +34,6 @@ export const sessionTable = pgTable("session", {
     withTimezone: true,
     mode: "date",
   }).notNull(),
-});
-
-export const categoryTable = pgTable("course_category", {
-  id: serial("id").primaryKey(),
-  category: text("category"),
 });
 
 export const courseTable = pgTable("course", {
@@ -71,15 +67,57 @@ export const courseTable = pgTable("course", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+export const courseEnrollmentTable = pgTable("course_enrollment", {
+  id: serial("id").primaryKey(),
+  courseId: integer("course_id")
+    .notNull()
+    .references(() => courseTable.id),
+  userId: text("user_id")
+    .notNull()
+    .references(() => userTable.id),
+  enrollmentDate: timestamp("enrollment_date").notNull().defaultNow(),
+});
+
 export const coursesBundleTable = pgTable("course_bundle", {
   id: serial("id").primaryKey(),
-  name: text("bundle_name"),
+  name: text("bundle_name").notNull(),
   bundleDescription: text("bundle_description").notNull(),
 });
 
-export const courseRelations = relations(courseTable, ({ one }) => ({
+export const courseBundleAssociationTable = pgTable(
+  "course_bundle_association",
+  {
+    id: serial("id").primaryKey(),
+    courseId: integer("course_id")
+      .notNull()
+      .references(() => courseTable.id),
+    bundleId: integer("bundle_id")
+      .notNull()
+      .references(() => coursesBundleTable.id),
+  },
+);
+
+// Relations
+
+export const courseRelations = relations(courseTable, ({ one, many }) => ({
   author: one(userTable, {
     fields: [courseTable.authorId],
     references: [userTable.id],
   }),
+  enrollments: many(courseEnrollmentTable),
+  bundleAssociations: one(courseBundleAssociationTable),
 }));
+
+export const courseEnrollmentRelations = relations(
+  courseEnrollmentTable,
+  ({ one }) => ({
+    course: one(courseTable, {
+      fields: [courseEnrollmentTable.courseId],
+      references: [courseTable.id],
+    }),
+    user: one(userTable, {
+      fields: [courseEnrollmentTable.userId],
+      references: [userTable.id],
+    }),
+  }),
+);
