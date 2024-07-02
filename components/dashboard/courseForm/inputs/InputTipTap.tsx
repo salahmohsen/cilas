@@ -21,20 +21,27 @@ import {
 import { cn } from "@/lib/utils";
 
 import { StandardProps } from "@/types/formInputs.types";
-import React, { memo, useEffect } from "react";
+import React, { memo } from "react";
 import EditorToolbar, {
   Bold,
   Heading,
   Italic,
   Paragraph,
+  SetLink,
+  UnsetLink,
 } from "../TipTapEditorToolbar";
+
+interface TipTapInputProps extends StandardProps {
+  editorToolbar?: boolean;
+}
 
 export const TipTapInput = memo(function TipTapInput({
   name,
   label,
   placeholder,
   className,
-}: StandardProps): React.ReactElement {
+  editorToolbar = true,
+}: TipTapInputProps) {
   const { control } = useFormContext();
 
   return (
@@ -60,6 +67,7 @@ export const TipTapInput = memo(function TipTapInput({
                 onBlur={field.onBlur}
                 disabled={field.disabled}
                 placeholder={placeholder}
+                editorToolbar={editorToolbar}
               />
             </>
           </FormControl>
@@ -78,6 +86,7 @@ type EditorProps = {
   onBlur: any;
   disabled: boolean | undefined;
   placeholder: string;
+  editorToolbar: boolean;
 };
 
 const Editor: React.FC<EditorProps> = ({
@@ -88,6 +97,7 @@ const Editor: React.FC<EditorProps> = ({
   onBlur,
   disabled,
   placeholder,
+  editorToolbar,
 }) => {
   const editor = useEditor({
     extensions: [
@@ -112,7 +122,7 @@ const Editor: React.FC<EditorProps> = ({
 
   return (
     <div className={cn("flex w-full flex-col gap-1", className)}>
-      <EditorToolbar editor={editor} />
+      {editorToolbar && <EditorToolbar editor={editor} />}
       <EditorContent
         editor={editor}
         ref={editorRef}
@@ -126,10 +136,10 @@ const Editor: React.FC<EditorProps> = ({
           tippyOptions={{ duration: 100 }}
           className="scale-80 rounded-lg border bg-background opacity-90"
         >
-          <Paragraph editor={editor} />
-          <Heading editor={editor} />
           <Bold editor={editor} />
           <Italic editor={editor} />
+          <SetLink editor={editor} />
+          <UnsetLink editor={editor} />
         </BubbleMenu>
       )}
     </div>
