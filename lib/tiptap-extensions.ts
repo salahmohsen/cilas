@@ -59,6 +59,7 @@ export const link = Link.configure({
     class: "text-gray-600 hover:text-gray-500 underline underline-offset-4",
   },
   autolink: false,
+  openOnClick: false,
 });
 
 export const textAlign = TextAlign.configure({
