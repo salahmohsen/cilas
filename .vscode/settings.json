@@ -6,6 +6,7 @@
     "dashboard/darkmode",
     "global",
     "Auth",
-    "dashboard/courses"
+    "dashboard/courses",
+    "Drizzle Schema"
   ]
 }

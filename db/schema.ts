@@ -21,7 +21,9 @@ export const userTable = pgTable("user", {
   tel: text("tel"),
   avatar: text("avatar"),
   bio: text("bio"),
-  role: text("role").notNull().default("user"),
+  role: text("role", { enum: ["user", "fellow", "admin"] })
+    .notNull()
+    .default("user"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
