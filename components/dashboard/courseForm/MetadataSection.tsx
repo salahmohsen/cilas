@@ -76,10 +76,10 @@ export default function CourseMetadata({
 
         <ComboBoxInput
           name="authorId"
-          label="Facilitator"
-          placeholder="Select facilitator..."
-          emptyMsg="Facilitator Not Found"
-          searchPlaceholder="Search facilitators..."
+          label="Fellow"
+          placeholder="Select fellow..."
+          emptyMsg="Fellow Not Found"
+          searchPlaceholder="Search fellows..."
           fetchItemsAction={fetchUsersNamesByRole}
           editMode={editMode}
           preData={author}
