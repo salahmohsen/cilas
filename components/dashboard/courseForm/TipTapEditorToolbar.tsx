@@ -28,7 +28,17 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../../ui/hover-card";
-import { memo, useCallback } from "react";
+import { memo, useCallback, useState } from "react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function EditorToolbar({ editor }: { editor: any }) {
   if (!editor) return null;
@@ -172,44 +182,62 @@ function HorizontalLine({ editor }) {
   );
 }
 
-function SetLink({ editor }) {
-  const handleSetLink = useCallback(() => {
-    const previousUrl = editor?.getAttributes("link").href;
-    const url = window.prompt("URL", previousUrl);
+export function SetLink({ editor }) {
+  const previousUrl = editor?.getAttributes("link").href;
+  const [url, setUrl] = useState<string>("");
 
-    // cancelled
-    if (url === null) {
-      return;
-    }
-
-    // empty
-    if (url === "") {
-      editor?.chain().focus().extendMarkRange("link").unsetLink().run();
-
-      return;
-    }
-
-    // update link
-    editor
-      ?.chain()
-      .focus()
-      .extendMarkRange("link")
-      .setLink({ href: url })
-      .run();
-  }, [editor]);
+  const handleSetLink = useCallback(
+    (url: string) => {
+      // cancelled
+      if (url === null) {
+        return;
+      }
+      // empty
+      if (url === "") {
+        editor?.chain().focus().extendMarkRange("link").unsetLink().run();
+        return;
+      }
+      // update link
+      editor
+        ?.chain()
+        .focus()
+        .extendMarkRange("link")
+        .setLink({ href: url })
+        .run();
+    },
+    [editor],
+  );
 
   return (
-    <Toggle
-      size="sm"
-      pressed={editor.isActive("link")}
-      onPressedChange={handleSetLink}
-    >
-      <ToolbarIcon icon={<Link2Icon className="h-4 w-4" />} name="Link" />
-    </Toggle>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Toggle size="sm" pressed={editor.isActive("link")}>
+          <ToolbarIcon icon={<Link2Icon className="h-4 w-4" />} name="Link" />
+        </Toggle>
+      </DialogTrigger>
+      <DialogContent className="p-2">
+        <div className="flex gap-2">
+          <Input
+            type="url"
+            placeholder="Enter a link"
+            defaultValue={previousUrl}
+            onChange={(e) => setUrl(e.target.value)}
+          />
+          <DialogClose asChild>
+            <Button
+              className="bg-foreground hover:bg-foreground"
+              onClick={() => handleSetLink(url)}
+            >
+              <Link2Icon size={16} />
+            </Button>
+          </DialogClose>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
-function UnsetLink({ editor }) {
+export function UnsetLink({ editor }) {
   const handleUnsetLink = useCallback(
     () => editor.chain().focus().unsetLink().run(),
     [editor],
