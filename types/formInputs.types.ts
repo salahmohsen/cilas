@@ -3,16 +3,16 @@ import { courseSchema } from "./courseForm.schema";
 import { z } from "zod";
 import { User } from "./drizzle.types";
 
-export type StandardProps<
+export interface StandardProps<
   TName extends FieldPath<FieldValues> = FieldPath<
     z.infer<typeof courseSchema>
   >,
-> = {
+> {
   name: TName;
   label?: string;
   placeholder: string;
   className?: string;
-};
+}
 
 export interface BasicInputProps extends StandardProps {
   type: "text" | "number" | "url" | "file";
