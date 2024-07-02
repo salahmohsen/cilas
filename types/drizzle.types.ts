@@ -10,6 +10,8 @@ export type CoursesFilter =
   | "starting soon"
   | "draft";
 
-export type CourseWithAuthor = InferSelectModel<typeof courseTable> & {
+export interface Course extends InferSelectModel<typeof courseTable> {}
+
+export interface CourseWithAuthor extends Course {
   author: InferSelectModel<typeof userTable>;
-};
+}

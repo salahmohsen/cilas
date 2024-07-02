@@ -8,28 +8,43 @@ import { courseTable } from "@/db/schema";
 export const formDataToCourseSchema = (
   formData: FormData,
 ): z.infer<typeof courseSchema> => {
+  const enTitle = formData.get("enTitle") as string;
+  const arTitle = formData.get("arTitle") as string;
+  const enContent = formData.get("enContent") as string;
+  const arContent = formData.get("arContent") as string;
+  const authorId = formData.get("authorId") as string;
+  const category = formData.get("category") as string;
+  const image = formData.get("image") as string | File;
+  const attendance = formData.get("attendance") as string;
+  const isRegistrationOpen = formData.get("isRegistrationOpen") === "Open";
+  const price = formData.get("price") as string;
+  const timeSlot = formData.get("timeSlot") as string;
+  const days = formData.get("days") as string;
+  const courseFlowUrl = formData.get("courseFlowUrl") as string;
+  const applyUrl = formData.get("applyUrl") as string;
+  const startDate = formData.get("startDate") as string;
+  const endDate = formData.get("endDate") as string;
+
   return {
-    enTitle: formData.get("enTitle") as string,
-    arTitle: formData.get("arTitle") as string,
-    enContent: cleanHtml(formData.get("enContent") as string),
-    arContent: cleanHtml(formData.get("arContent") as string),
-    authorId: formData.get("authorId") as string,
-    category: formData.get("category") as string,
-    image: formData.get("image") as File | string,
-    attendance: formData.get("attendance") as string,
-    isRegistrationOpen: formData.get("isRegistrationOpen") === "Open",
-    price: formData.get("price") as string,
+    enTitle,
+    arTitle,
+    enContent: cleanHtml(enContent),
+    arContent: cleanHtml(arContent),
+    authorId,
+    category,
+    image,
+    attendance,
+    isRegistrationOpen,
+    price,
     timeSlot: {
-      from: convertToDate(formData.get("timeSlot") as string, "from"),
-      to: convertToDate(formData.get("timeSlot") as string, "to"),
+      from: convertToDate(timeSlot, "from"),
+      to: convertToDate(timeSlot, "to"),
     },
-    days: convertToJson(formData.get("days") as string),
-    courseFlowUrl: formData.get("courseFlowUrl") as string,
-    applyUrl: formData.get("applyUrl") as string,
-    dateRange: {
-      from: convertToDate(formData.get("dateRange") as string, "from"),
-      to: convertToDate(formData.get("dateRange") as string, "to"),
-    },
+    days: convertToJson(days),
+    courseFlowUrl,
+    applyUrl,
+    startDate: new Date(startDate),
+    endDate: new Date(endDate),
   };
 };
 

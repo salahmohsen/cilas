@@ -15,20 +15,20 @@ import {
 } from "lucide-react";
 
 type CourseMetadataProps = {
-  dateRange: { from: Date; to: Date };
+  startDate: Date;
   attendance: string;
   isRegistrationOpen: boolean;
   className?: string;
 };
 
 const CourseMetadata = ({
-  dateRange,
+  startDate,
   attendance,
   isRegistrationOpen,
   className,
 }: CourseMetadataProps) => {
-  const year = Number(format(dateRange.from, "yyyy"));
-  const season = getSeason(dateRange.from);
+  const year = Number(format(startDate, "yyyy"));
+  const season = getSeason(startDate);
   return (
     <div
       className={cn(

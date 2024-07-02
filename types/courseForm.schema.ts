@@ -5,9 +5,9 @@ import {
   optional_url,
   optional_days,
   required_timeSlot,
-  required_dateRange,
   optional_file,
   optional_number,
+  required_date,
 } from "@/lib/zodValidation.utils";
 
 import { z } from "zod";
@@ -28,11 +28,12 @@ export const courseSchema = z
     days: optional_days,
     courseFlowUrl: optional_url,
     applyUrl: optional_url,
-    dateRange: required_dateRange,
+    startDate: required_date,
+    endDate: required_date,
   })
   .refine((data) => data.arTitle || data.enTitle, {
     path: ["enTitle"],
-    message: "At least one English or Arabic title is required.",
+    message: "At least one English or Arabic title is required",
   })
   .refine((data) => data.enContent || data.arContent, {
     path: ["enContent"],
@@ -45,6 +46,14 @@ export const courseSchema = z
   .refine((data) => data.enContent || data.arContent, {
     path: ["arContent"],
     message: "At least one English or Arabic content is required",
+  })
+  .refine((data) => data.endDate > data.startDate, {
+    path: ["startDate"],
+    message: "End date must be later than the start date",
+  })
+  .refine((data) => data.endDate > data.startDate, {
+    path: ["endDate"],
+    message: "End date must be later than the start date",
   });
 
 // Default Values for Course Form
@@ -66,8 +75,6 @@ export const courseFormDefaultValues: z.infer<typeof courseSchema> | {} = {
   days: [],
   courseFlowUrl: "",
   applyUrl: "",
-  dateRange: {
-    from: new Date(),
-    to: new Date(),
-  },
+  startDate: "",
+  endDate: "",
 };

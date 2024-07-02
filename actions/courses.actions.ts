@@ -3,7 +3,7 @@
 import db from "@/db/drizzle";
 import { courseTable } from "@/db/schema";
 import { courseSchema } from "@/types/courseForm.schema";
-import { eq, desc, sql, asc } from "drizzle-orm";
+import { eq, desc, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { uploadImage } from "@/lib/cloudinary.utils";
 import {
@@ -121,10 +121,7 @@ export const getCourses = async (
     with: { author: true },
     limit: pageSize,
     offset: (page - 1) * pageSize,
-    orderBy: [
-      desc(sql`(${courseTable.dateRange}->>'to')::timestamp`),
-      asc(courseTable.id),
-    ],
+    orderBy: [desc(courseTable.startDate), desc(courseTable.createdAt)],
   });
 
   return courses;
@@ -140,10 +137,6 @@ export const getCourseById = async (courseId: number) => {
   if (course)
     return {
       ...course,
-      dateRange: {
-        from: new Date(course.dateRange.from),
-        to: new Date(course?.dateRange.to),
-      },
       timeSlot: {
         from: new Date(course.timeSlot.from),
         to: new Date(course.timeSlot.to),

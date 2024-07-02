@@ -4,7 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import CourseForm from "@/components/dashboard/courseForm/CourseForm";
 import { getCourseById } from "@/actions/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CourseWithAuthor } from "@/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 
@@ -29,6 +28,7 @@ export default function CreateCoursePage() {
       if (!courseData) {
         throw new Error(errorMessage);
       }
+
       setCourse(courseData);
     } catch (error) {
       setError(
@@ -55,7 +55,15 @@ export default function CreateCoursePage() {
       return <ErrorPage message={error} />;
     }
     if (course) {
-      return <CourseForm courseData={course} />;
+      return (
+        <CourseForm
+          courseData={{
+            ...course,
+            startDate: new Date(course?.startDate),
+            endDate: new Date(course?.endDate),
+          }}
+        />
+      );
     }
     // This case handles when courseId exists but course data is not yet loaded
     return (

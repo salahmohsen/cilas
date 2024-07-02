@@ -99,7 +99,7 @@ export default function CourseInfo({ className }: { className?: string }) {
               </Button>
             </CardTitle>
             <CardDescription>
-              Date: {format(course.dateRange.from, "dd MMMM yyyy")}
+              Date: {format(course.startDate, "dd MMMM yyyy")}
             </CardDescription>
           </div>
         </CardHeader>
@@ -114,7 +114,7 @@ export default function CourseInfo({ className }: { className?: string }) {
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Season Cycle</span>
-                <span>{getSeason(course?.dateRange.from)}</span>
+                <span>{getSeason(course?.startDate)}</span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Registration</span>
@@ -125,20 +125,16 @@ export default function CourseInfo({ className }: { className?: string }) {
             <ul className="grid gap-3">
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Start Date</span>
-                <span>{format(course?.dateRange.from, "dd MMMM yyyy")}</span>
+                <span>{format(course?.startDate, "dd MMMM yyyy")}</span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">End Date</span>
-                <span>{format(course?.dateRange.to, "dd MMMM yyyy")}</span>
+                <span>{format(course?.endDate, "dd MMMM yyyy")}</span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Duration</span>
                 <span>
-                  {differenceInWeeks(
-                    course?.dateRange.to,
-                    course?.dateRange.from,
-                  )}{" "}
-                  Weeks
+                  {differenceInWeeks(course?.endDate, course?.startDate)} Weeks
                 </span>
               </li>
               <li className="flex items-center justify-between gap-5">

@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import { BasicInput } from "./inputs/InputBasic";
 import { ComboBoxInput } from "./inputs/InputComboBox";
-import { DateRangeInput } from "./inputs/InputDateRange";
 import { MultiSelectorInput } from "./inputs/InputMultiSelector";
 import { SelectInput } from "./inputs/InputSelect";
 import { TimeInput } from "./inputs/InputTimeSlot";
-import { getUserById, getUsersNamesByRole } from "@/actions/users.actions";
+import { getUsersNamesByRole } from "@/actions/users.actions";
 import { User } from "@/types/drizzle.types";
+import { DateInput } from "./inputs/InputDate";
 
 export default function CourseMetadata({
   editMode,
@@ -24,34 +24,14 @@ export default function CourseMetadata({
         Course Metadata
       </legend>
       <div className="grid justify-center gap-10 lg:grid-cols-2">
-        <ComboBoxInput
-          name="authorId"
-          label="Facilitator"
-          placeholder="Select facilitator..."
-          emptyMsg="Facilitator Not Found"
-          searchPlaceholder="Search facilitators..."
-          fetchItemsAction={fetchUsersNamesByRole}
-          editMode={editMode}
-          preData={author}
-        />
-        <BasicInput
-          type="url"
-          name="courseFlowUrl"
-          label="Course Flow"
-          placeholder="Course Flow Url"
+        <DateInput
+          name="startDate"
+          label="Start Date"
+          placeholder="Pick a date"
         />
 
-        <BasicInput
-          type="file"
-          placeholder="Choose Poster"
-          name="image"
-          label="Course Poster"
-        />
-        <DateRangeInput
-          name="dateRange"
-          label="Start and End Date"
-          placeholder=""
-        />
+        <DateInput name="endDate" label="End Date" placeholder="Pick a date" />
+
         <SelectInput
           name="isRegistrationOpen"
           label="Registration Status"
@@ -64,18 +44,7 @@ export default function CourseMetadata({
           placeholder="Registration Form Url"
           type="url"
         />
-        <SelectInput
-          name="attendance"
-          label="Attendance"
-          placeholder="Select mode"
-          options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
-        />
-        <BasicInput
-          name="price"
-          label="Price"
-          placeholder="Enter price"
-          type="number"
-        />
+
         <SelectInput
           name="category"
           label="Category"
@@ -104,6 +73,44 @@ export default function CourseMetadata({
             { label: "Friday", value: "friday" },
           ]}
         />
+
+        <ComboBoxInput
+          name="authorId"
+          label="Facilitator"
+          placeholder="Select facilitator..."
+          emptyMsg="Facilitator Not Found"
+          searchPlaceholder="Search facilitators..."
+          fetchItemsAction={fetchUsersNamesByRole}
+          editMode={editMode}
+          preData={author}
+        />
+
+        <BasicInput
+          type="url"
+          name="courseFlowUrl"
+          label="Course Flow"
+          placeholder="Course Flow Url"
+        />
+        <BasicInput
+          type="file"
+          placeholder="Choose Poster"
+          name="image"
+          label="Course Poster"
+        />
+        <BasicInput
+          name="price"
+          label="Price"
+          placeholder="Enter price"
+          type="number"
+        />
+
+        <SelectInput
+          name="attendance"
+          label="Attendance"
+          placeholder="Select mode"
+          options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
+        />
+
         <div className="-ml-4 flex w-full scale-90 items-center gap-2 md:ml-0 md:scale-100">
           <TimeInput
             name="timeSlot"

@@ -114,7 +114,6 @@ export default function CourseForm({
         }));
       // establish courseAction
       startTransition(() => {
-        console.log(draftMode);
         // set course filter which will determine which tab content will load after redirect
         draftMode ? setCourseFilter("draft") : setCourseFilter("all published");
         // create formData object and append draftMode, editMode, and courseId
@@ -133,7 +132,7 @@ export default function CourseForm({
       courseAction,
     ],
   );
-
+  console.log(typeof formMethods.watch("startDate"));
   return (
     <>
       <FormProvider {...formMethods}>

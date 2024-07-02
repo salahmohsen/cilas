@@ -38,13 +38,14 @@ export default function CourseItem({ course }: { course: CourseWithAuthor }) {
     | "draft"
     | "unknown status" => {
     const currentDate = new Date();
-    const from = new Date(course.dateRange.from);
-    const to = new Date(course.dateRange.to);
+    const startDate = new Date(course.startDate);
+    const endDate = new Date(course.endDate);
     const isDraft = course.draftMode;
     if (isDraft) return "draft";
-    if (from <= currentDate && to >= currentDate && !isDraft) return "ongoing";
-    if (from > currentDate && !isDraft) return "starting soon";
-    if (to < currentDate && !isDraft) return "archived";
+    if (startDate <= currentDate && endDate >= currentDate && !isDraft)
+      return "ongoing";
+    if (startDate > currentDate && !isDraft) return "starting soon";
+    if (endDate < currentDate && !isDraft) return "archived";
 
     return "unknown status";
   };
@@ -72,7 +73,7 @@ export default function CourseItem({ course }: { course: CourseWithAuthor }) {
         </div>
         <span className="flex gap-1 text-xs font-light">
           <Calendar size={16} strokeWidth={1.5} />
-          {format(course.dateRange.from, "MMMM dd yyyy")}
+          {format(course.startDate, "MMMM dd yyyy")}
         </span>
       </div>
       <div>

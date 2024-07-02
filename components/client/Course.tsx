@@ -18,11 +18,11 @@ const amiri = Amiri({
   display: "swap",
 });
 
-type CourseProps = {
+interface CourseProps extends CourseWithAuthor {
   isOpen?: boolean;
   className?: string;
   titleSlug?: string;
-} & CourseWithAuthor;
+}
 
 const Course = async ({
   isOpen = false,
@@ -38,7 +38,8 @@ const Course = async ({
     authorId,
     enContent,
     arContent,
-    dateRange,
+    startDate,
+    endDate,
     category,
     attendance,
     isRegistrationOpen,
@@ -67,7 +68,7 @@ const Course = async ({
       >
         <div className="flex flex-col gap-3">
           <CourseMetadata
-            dateRange={dateRange}
+            startDate={startDate}
             attendance={attendance}
             isRegistrationOpen={isRegistrationOpen}
           />

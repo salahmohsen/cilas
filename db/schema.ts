@@ -7,6 +7,7 @@ import {
   json,
   timestamp,
   integer,
+  date,
 } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
@@ -58,9 +59,10 @@ export const courseTable = pgTable("course", {
       disable?: boolean;
     }[]
   >(),
-  dateRange: json("date_range").notNull().$type<{ from: Date; to: Date }>(),
+  startDate: date("starting_date", { mode: "date" }).notNull(),
+  endDate: date("ending_date", { mode: "date" }).notNull(),
   timeSlot: json("time_slot").notNull().$type<{ from: Date; to: Date }>(),
-  students: json("students"), // ToDo one-to-many course -> users
+  students: json("students"),
   courseFlowUrl: text("course_flow_url"),
   applyUrl: text("apply_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

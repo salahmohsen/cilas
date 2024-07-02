@@ -1,17 +1,11 @@
 import { getCourseById } from "@/actions/courses.actions";
 import CourseForm from "@/components/dashboard/courseForm/CourseForm";
-import { courseSchema } from "@/types/courseForm.schema";
-import { z } from "zod";
 import { ErrorPage } from "@/components/ui/error";
-import { User } from "@/types/drizzle.types";
+import { CourseWithAuthor } from "@/types/drizzle.types";
 
 export default async function EditCoursePage({ params }) {
   let courseId: number;
-  let course:
-    | ((z.infer<typeof courseSchema> & { draftMode: boolean }) & {
-        author: User;
-      })
-    | undefined;
+  let course: CourseWithAuthor | undefined;
 
   try {
     const parts = params.edit?.split("-");

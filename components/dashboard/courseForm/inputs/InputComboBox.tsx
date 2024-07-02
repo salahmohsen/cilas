@@ -93,8 +93,9 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                       )}
                     >
                       {field.value
-                        ? `${preData?.firstName}  ${preData?.lastName}` ||
-                          data?.find((item) => item?.id === field.value)?.name
+                        ? preData
+                          ? `${preData?.firstName}  ${preData?.lastName}`
+                          : data?.find((item) => item?.id === field.value)?.name
                         : placeholder}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>

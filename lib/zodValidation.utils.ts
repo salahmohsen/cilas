@@ -73,6 +73,11 @@ export const required_dateRange = z
     message: "Required",
   });
 
+export const required_date = z.date({
+  required_error: "Required",
+  invalid_type_error: "Required",
+});
+
 export const required_boolean = z.boolean({
   required_error: "Required",
   invalid_type_error: "Required",
