@@ -28,15 +28,13 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../../ui/hover-card";
-import { memo, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
@@ -209,13 +207,13 @@ export function SetLink({ editor }) {
   );
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Popover>
+      <PopoverTrigger asChild>
         <Toggle size="sm" pressed={editor.isActive("link")}>
           <ToolbarIcon icon={<Link2Icon className="h-4 w-4" />} name="Link" />
         </Toggle>
-      </DialogTrigger>
-      <DialogContent className="p-2">
+      </PopoverTrigger>
+      <PopoverContent className="p-1">
         <div className="flex gap-2">
           <Input
             type="url"
@@ -223,17 +221,12 @@ export function SetLink({ editor }) {
             defaultValue={previousUrl}
             onChange={(e) => setUrl(e.target.value)}
           />
-          <DialogClose asChild>
-            <Button
-              className="bg-foreground hover:bg-foreground"
-              onClick={() => handleSetLink(url)}
-            >
-              <Link2Icon size={16} />
-            </Button>
-          </DialogClose>
+          <Button onClick={() => handleSetLink(url)}>
+            <Link2Icon size={16} />
+          </Button>
         </div>
-      </DialogContent>
-    </Dialog>
+      </PopoverContent>
+    </Popover>
   );
 }
 
