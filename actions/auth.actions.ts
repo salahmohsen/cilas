@@ -4,7 +4,7 @@ import { signinSchema, signupSchema } from "@/types/auth.schema";
 import { generateIdFromEntropySize } from "lucia";
 import { hash, verify } from "@node-rs/argon2";
 import { createAuthSession, lucia, validateRequest } from "@/lib/auth";
-import { createUser, getUserByEmail } from "./users.actions";
+import { _getUserByEmail, addUser } from "./users.actions";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
@@ -34,14 +34,14 @@ export async function signin(prevState, formData) {
     if (error instanceof Error) return { error: `${error.message}` };
   }
 
-  const existingUser = await getUserByEmail(email);
-  if (!existingUser || !existingUser.password_hash) {
+  const existingUser = await _getUserByEmail(email);
+  if (!existingUser || !existingUser.passwordHash) {
     return {
       error: "You have entered an invalid username or password",
     };
   }
 
-  const isValidPassword = await verify(existingUser.password_hash, password);
+  const isValidPassword = await verify(existingUser.passwordHash, password);
   if (!isValidPassword)
     return { error: "You have entered an invalid username or password" };
 
@@ -106,7 +106,7 @@ export async function signup(prevState, formData: FormData) {
       };
   }
 
-  const password_hash = await hash(password, {
+  const passwordHash = await hash(password, {
     memoryCost: 19456,
     timeCost: 2,
     outputLen: 32,
@@ -114,10 +114,10 @@ export async function signup(prevState, formData: FormData) {
   });
 
   const userId = generateIdFromEntropySize(10); // 16 characters long
-  const existingUser = await getUserByEmail(email);
+  const existingUser = await _getUserByEmail(email);
   try {
     if (existingUser) return { error: "This Email is already signed up" };
-    await createUser(userId, email, password_hash);
+    await addUser(userId, email, passwordHash);
   } catch (error) {
     if (error instanceof Error)
       console.log(`creating user error: ${error.message}`);

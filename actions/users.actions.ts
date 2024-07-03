@@ -1,19 +1,23 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import db from "@/db/drizzle";
 import { userTable } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { FellowSchema } from "@/types/fellow.schema";
+import { eq } from "drizzle-orm";
+import { generateIdFromEntropySize } from "lucia";
+import { z } from "zod";
+import { SafeUser } from "@/types/drizzle.types";
 
-export const createUser = async (
+export const addUser = async (
   id: string,
   email: string,
-  password_hash: string,
+  passwordHash: string,
 ) => {
   try {
     const stmt = db
       .insert(userTable)
-      .values({ id, email, password_hash, role: "user" });
+      .values({ id, email, passwordHash, role: "user" });
     await db.execute(stmt);
     return { success: "user made!" };
   } catch (error) {
@@ -21,34 +25,48 @@ export const createUser = async (
   }
 };
 
-export const getUsersNamesByRole = async (
-  role: "user" | "author" | "admin",
-) => {
-  const result = await db
-    .select({
-      id: userTable.id,
-      name: sql<string>`${userTable.firstName} || ' ' || ${userTable.lastName}`,
-    })
-    .from(userTable)
-    .where(eq(userTable.role, role));
+export const getUsersByRole = async (role: "user" | "fellow" | "admin") => {
+  const users = await db.query.userTable.findMany({
+    where: eq(userTable.role, role),
+    columns: {
+      passwordHash: false,
+      googleId: false,
+    },
+  });
 
-  return result;
+  return users;
 };
 
-export const getUserById = async (authorId: string) => {
-  const data = await db
-    .select()
-    .from(userTable)
-    .where(eq(userTable.id, authorId));
+export const getUserById = async (userId: string) => {
+  const user = db.query.userTable.findFirst({
+    where: eq(userTable.id, userId),
+    columns: {
+      passwordHash: false,
+      googleId: false,
+    },
+  });
+
   revalidatePath("/courses");
-  return data[0];
+  return user;
 };
 
 export const getUserByEmail = async (email: string) => {
-  const data = await db
-    .select()
-    .from(userTable)
-    .where(eq(userTable.email, email));
+  const user = db.query.userTable.findFirst({
+    where: eq(userTable.email, email),
+    columns: {
+      passwordHash: false,
+      googleId: false,
+    },
+  });
 
-  return data[0];
+  return user;
+};
+
+// @important This will return password included
+export const _getUserByEmail = async (email: string) => {
+  const user = db.query.userTable.findFirst({
+    where: eq(userTable.email, email),
+  });
+
+  return user;
 };

@@ -2,7 +2,7 @@
 
 import db from "@/db/drizzle";
 import { courseTable } from "@/db/schema";
-import { courseSchema } from "@/types/courseForm.schema";
+import { courseSchema } from "@/types/course.schema";
 import { eq, desc, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { uploadImage } from "@/lib/cloudinary.utils";
@@ -35,17 +35,15 @@ export async function createEditCourse(
   // parse the data
   try {
     const parse = courseSchema.safeParse(formObj);
-    if (!parse.success) {
-      return {
-        error: true,
-        message: `An error occurred while processing the form values: ${parse.error.errors.map((e) => `${e.path[0]} `)}`,
-      };
-    }
+    if (!parse.success)
+      throw new Error(
+        `An error occurred while processing the form values: ${parse.error.errors.map((e) => e.path[0])}`,
+      );
   } catch (error) {
     if (error instanceof Error)
       return {
         error: true,
-        message: `${error.message}`,
+        message: error.message,
       };
   }
 
@@ -118,25 +116,34 @@ export const getCourses = async (
 ) => {
   const courses = await db.query.courseTable.findMany({
     where: coursesFilter(filter),
-    with: { author: true },
+    with: { fellow: true },
     limit: pageSize,
     offset: (page - 1) * pageSize,
     orderBy: [desc(courseTable.startDate), desc(courseTable.createdAt)],
   });
 
-  return courses;
+  const safeCourses = courses.map((course) => {
+    const { googleId, passwordHash, ...safeFellow } = course.fellow;
+    return { ...course, fellow: safeFellow };
+  });
+
+  return safeCourses;
 };
 
 export const getCourseById = async (courseId: number) => {
   let course = await db.query.courseTable.findFirst({
     where: eq(courseTable.id, courseId),
     with: {
-      author: true,
+      fellow: true,
     },
   });
+
+  const { passwordHash, googleId, ...safeFellow } = course?.fellow || {};
+
   if (course)
     return {
       ...course,
+      fellow: safeFellow,
       timeSlot: {
         from: new Date(course.timeSlot.from),
         to: new Date(course.timeSlot.to),
@@ -164,6 +171,7 @@ export const deleteCourse = async (
       .where(eq(courseTable.id, Number(courseId)));
 
     revalidatePath("/", "layout");
+
     return {
       success: true,
       deletedId: Number(courseId),

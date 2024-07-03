@@ -15,7 +15,7 @@ export const userTable = pgTable("user", {
   googleId: text("google_id").unique(),
   email: text("email").unique(),
   userName: text("user_name").unique(),
-  password_hash: text("password_hash"),
+  passwordHash: text("password_hash"),
   firstName: text("first_name"),
   lastName: text("last_name"),
   tel: text("tel"),
@@ -47,7 +47,7 @@ export const courseTable = pgTable("course", {
   arTitle: text("ar_title"),
   arContent: text("ar_content"),
   image: text("image_url"),
-  authorId: text("author_id")
+  fellowId: text("fellow_id")
     .notNull()
     .references(() => userTable.id),
   category: text("category").notNull(),
@@ -104,9 +104,10 @@ export const courseBundleAssociationTable = pgTable(
 // Relations
 
 export const courseRelations = relations(courseTable, ({ one, many }) => ({
-  author: one(userTable, {
-    fields: [courseTable.authorId],
+  fellow: one(userTable, {
+    fields: [courseTable.fellowId],
     references: [userTable.id],
+    
   }),
   enrollments: many(courseEnrollmentTable),
   bundleAssociations: one(courseBundleAssociationTable),
