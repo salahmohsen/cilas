@@ -26,6 +26,7 @@ import { cn } from "@/lib/utils";
 
 import { ComboBoxProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
+import { FellowForm } from "../FellowForm";
 
 export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
   function ComboBoxInput({
@@ -35,34 +36,17 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
     className,
     emptyMsg,
     searchPlaceholder,
-    fetchItemsAction,
-    editMode,
-    preData,
+    action,
+    loading,
+    options,
+    defaultOption,
   }) {
     const { control } = useFormContext();
-    const [data, setData] = useState<{ id: string; name: string }[]>([]);
     const [open, setOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
 
-    /* This useEffect used to fetch specific user in Edit Mode */
     useEffect(() => {
-      const fetchData = async () => {
-        if (open) {
-          try {
-            setLoading(true);
-            const result = await fetchItemsAction();
-            setLoading(false);
-            if (result !== undefined) {
-              setData(result);
-            }
-          } catch (error) {
-            toast.error(`Failed to fetch ${label} data`);
-            setData([]);
-          }
-        }
-      };
-      fetchData();
-    }, [open, editMode, fetchItemsAction, label]);
+      if (open) action();
+    }, [open, action]);
 
     return (
       <FormField
@@ -93,9 +77,10 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                       )}
                     >
                       {field.value
-                        ? preData
-                          ? `${preData?.firstName}  ${preData?.lastName}`
-                          : data?.find((item) => item?.id === field.value)?.name
+                        ? defaultOption
+                          ? defaultOption.name
+                          : options?.find((item) => item?.id === field.value)
+                              ?.name
                         : placeholder}
                       <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
@@ -115,13 +100,21 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                     >
                       <CommandList>
                         <CommandInput placeholder={searchPlaceholder} />
-                        <CommandEmpty>{emptyMsg}</CommandEmpty>
+                        <CommandEmpty>
+                          <div
+                            className="space-y-2"
+                            onClick={() => setOpen(false)}
+                          >
+                            <p>{emptyMsg}</p>
+                            <FellowForm mode="button" />
+                          </div>
+                        </CommandEmpty>
                         <CommandGroup>
-                          {data?.map((item) => (
+                          {options?.map((option) => (
                             <CommandItem
-                              keywords={[item?.name]}
-                              key={preData?.id || item.id}
-                              value={preData?.id || item.id}
+                              keywords={[option?.name]}
+                              key={option.id}
+                              value={option.id}
                               id={name}
                               onSelect={(currentValue) => {
                                 field.onChange(
@@ -135,14 +128,17 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  field.value === item.id
+                                  field.value === option.id
                                     ? "opacity-100"
                                     : "opacity-0",
                                 )}
                               />
-                              {item.name || ""}
+                              {option.name || ""}
                             </CommandItem>
                           ))}
+                          {!loading && options.length !== 0 && (
+                            <FellowForm mode="commandItem" />
+                          )}
                           {loading && (
                             <CommandItem
                               disabled

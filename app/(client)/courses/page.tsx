@@ -14,7 +14,7 @@ const CoursesPage = async () => {
             <Course
               key={course.id}
               titleSlug={`${slug(course.enTitle)}-${course.id}`}
-              {...course}
+              course={course}
             />
           );
         })}

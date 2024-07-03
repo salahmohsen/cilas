@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { LoaderPinwheel } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { forwardRef } from "react";
+import { useFormStatus } from "react-dom";
 
 type SubmitButtonProps = {
   className?: string;
-  isLoading: boolean;
+  isLoading?: boolean;
   value: string;
   variant?: "default" | "secondary";
-  handleOnClick: () => void;
+  handleOnClick?: () => void;
 };
 
 export const SubmitButton = ({
@@ -28,7 +29,13 @@ export const SubmitButton = ({
       variant={variant}
       onClick={handleOnClick}
     >
-      {isLoading ? <LoaderPinwheel className="animate-spin" /> : value}
+      {isLoading ? (
+        <span className="flex gap-2">
+          <LoaderPinwheel className="animate-spin" /> {value}
+        </span>
+      ) : (
+        value
+      )}
     </Button>
   );
 };

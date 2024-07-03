@@ -11,7 +11,7 @@ import {
   formDataToCourseSchema,
 } from "@/lib/actions.utils";
 import { coursesFilter } from "@/lib/drizzle.utils";
-import { CoursesFilter } from "@/types/drizzle.types";
+import { CoursesFilter, UserWithSensitiveCols } from "@/types/drizzle.types";
 
 export type CourseFormState = {
   success?: boolean;
@@ -31,14 +31,15 @@ export async function createEditCourse(
   if (courseId && typeof courseId === "string") {
     courseId = Number(courseId) as number;
   }
-
   // parse the data
   try {
     const parse = courseSchema.safeParse(formObj);
-    if (!parse.success)
+    if (!parse.success) {
+      console.log(parse.error.errors);
       throw new Error(
-        `An error occurred while processing the form values: ${parse.error.errors.map((e) => e.path[0])}`,
+        `An error occurred while processing the form values: ${parse.error?.errors.map((e) => e.path[0])}`,
       );
+    }
   } catch (error) {
     if (error instanceof Error)
       return {
@@ -138,7 +139,8 @@ export const getCourseById = async (courseId: number) => {
     },
   });
 
-  const { passwordHash, googleId, ...safeFellow } = course?.fellow || {};
+  const { passwordHash, googleId, ...safeFellow } =
+    course?.fellow as UserWithSensitiveCols;
 
   if (course)
     return {

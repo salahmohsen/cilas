@@ -25,12 +25,103 @@ export const addUser = async (
   }
 };
 
+export type FellowState = {
+  success?: boolean;
+  error?: boolean;
+  message: string;
+  fellow?: SafeUser;
+};
+
+export const addFellow = async (
+  prevState: FellowState,
+  formData: FormData,
+): Promise<FellowState> => {
+  const formEntries: z.infer<typeof FellowSchema> = Object.fromEntries(
+    formData,
+  ) as z.infer<typeof FellowSchema>;
+
+  try {
+    const parse = FellowSchema.safeParse(formEntries);
+    if (!parse.success)
+      throw new Error(
+        `An error occurred while processing the form values: ${parse.error.errors.map((e) => e.path[0])}`,
+      );
+  } catch (error) {
+    if (error instanceof Error)
+      return {
+        error: true,
+        message: error.message,
+      };
+  }
+
+  try {
+    const id = generateIdFromEntropySize(10); // 16 characters long
+    const fellow = await db
+      .insert(userTable)
+      .values({ id, ...formEntries, role: "fellow" })
+      .returning();
+
+    const { passwordHash, googleId, ...safeFellow } = fellow[0];
+
+    return {
+      success: true,
+      message: "Fellow added successfully",
+      fellow: safeFellow,
+    };
+  } catch (error) {
+    if (error instanceof Error)
+      if (
+        error.message ===
+        'duplicate key value violates unique constraint "user_email_unique"'
+      ) {
+        try {
+          const fellow = await db
+            .update(userTable)
+            .set({ role: "fellow" })
+            .where(eq(userTable.email, formEntries.email))
+            .returning();
+
+          const { googleId, passwordHash, ...safeFellow } = fellow[0];
+
+          return {
+            success: true,
+            message:
+              "This user was already in the database and converted to fellow successfully",
+            fellow: safeFellow,
+          };
+        } catch (error) {
+          if (error instanceof Error)
+            return { error: true, message: error.message };
+        }
+      } else {
+        return { error: true, message: error.message };
+      }
+  }
+
+  return { error: true, message: "An unexpected error occurred" };
+};
+
 export const getUsersByRole = async (role: "user" | "fellow" | "admin") => {
   const users = await db.query.userTable.findMany({
     where: eq(userTable.role, role),
     columns: {
       passwordHash: false,
       googleId: false,
+    },
+  });
+
+  return users;
+};
+
+export const getUsersNamesByRole = async (
+  role: "user" | "fellow" | "admin",
+) => {
+  const users = await db.query.userTable.findMany({
+    where: eq(userTable.role, role),
+    columns: {
+      id: true,
+      firstName: true,
+      lastName: true,
     },
   });
 

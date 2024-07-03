@@ -1,23 +1,61 @@
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { BasicInput } from "./inputs/InputBasic";
 import { ComboBoxInput } from "./inputs/InputComboBox";
 import { MultiSelectorInput } from "./inputs/InputMultiSelector";
 import { SelectInput } from "./inputs/InputSelect";
 import { TimeInput } from "./inputs/InputTimeSlot";
 import { getUsersNamesByRole } from "@/actions/users.actions";
-import { User } from "@/types/drizzle.types";
+import { SafeUser } from "@/types/drizzle.types";
 import { DateInput } from "./inputs/InputDate";
+import { useCourseState } from "@/providers/CourseState.provider";
+import { ComboBoxOption } from "@/types/formInputs.types";
 
 export default function CourseMetadata({
   editMode,
-  author,
+  fellow,
 }: {
   editMode: boolean;
-  author: User | undefined;
+  fellow: SafeUser | undefined;
 }) {
-  const fetchUsersNamesByRole = useCallback(() => {
-    return getUsersNamesByRole("author");
+  const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
+  const { fellow: fellowState } = useCourseState();
+  const [defaultOption, setDefaultOption] = useState<
+    ComboBoxOption | undefined
+  >(undefined);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (editMode)
+      setDefaultOption({
+        id: fellow?.id as string,
+        name: `${fellow?.firstName} ${fellow?.lastName}`,
+      });
+    if (fellowState) {
+      setDefaultOption({
+        id: fellowState.id,
+        name: `${fellowState.firstName} ${fellowState.lastName}`,
+      });
+    }
+  }, [editMode, fellow, fellowState]);
+
+  const getFellowsNames = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await getUsersNamesByRole("fellow");
+      const dataFormatted = data.map((fellow) => {
+        return {
+          id: fellow.id,
+          name: `${fellow.firstName} ${fellow.lastName}`,
+        };
+      });
+      setFellowsNames(dataFormatted);
+      setLoading(false);
+    } catch (error) {
+      if (error instanceof Error)
+        console.log(`Getting Fellows Names Failed! ${error.message}`);
+    }
   }, []);
+
   return (
     <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm">
       <legend className="-ml-1 px-1 text-sm font-medium">
@@ -75,14 +113,15 @@ export default function CourseMetadata({
         />
 
         <ComboBoxInput
-          name="authorId"
+          name="fellowId"
           label="Fellow"
           placeholder="Select fellow..."
           emptyMsg="Fellow Not Found"
           searchPlaceholder="Search fellows..."
-          fetchItemsAction={fetchUsersNamesByRole}
-          editMode={editMode}
-          preData={author}
+          action={getFellowsNames}
+          options={fellowsNames}
+          defaultOption={defaultOption}
+          loading={loading}
         />
 
         <BasicInput

@@ -1,11 +1,11 @@
 import { getCourseById } from "@/actions/courses.actions";
 import CourseForm from "@/components/dashboard/courseForm/CourseForm";
 import { ErrorPage } from "@/components/ui/error";
-import { CourseWithAuthor } from "@/types/drizzle.types";
+import { CourseWithFellow } from "@/types/drizzle.types";
 
 export default async function EditCoursePage({ params }) {
   let courseId: number;
-  let course: CourseWithAuthor | undefined;
+  let course: CourseWithFellow | undefined;
 
   try {
     const parts = params.edit?.split("-");

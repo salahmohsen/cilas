@@ -1,4 +1,4 @@
-import { courseSchema } from "@/types/courseForm.schema";
+import { courseSchema } from "@/types/course.schema";
 import { z } from "zod";
 import { cleanHtml } from "./sanitize-html.utils";
 import { convertToDate, convertToJson } from "./zodValidation.utils";
@@ -12,7 +12,7 @@ export const formDataToCourseSchema = (
   const arTitle = formData.get("arTitle") as string;
   const enContent = formData.get("enContent") as string;
   const arContent = formData.get("arContent") as string;
-  const authorId = formData.get("authorId") as string;
+  const fellowId = formData.get("fellowId") as string;
   const category = formData.get("category") as string;
   const image = formData.get("image") as string | File;
   const attendance = formData.get("attendance") as string;
@@ -30,7 +30,7 @@ export const formDataToCourseSchema = (
     arTitle,
     enContent: cleanHtml(enContent),
     arContent: cleanHtml(arContent),
-    authorId,
+    fellowId,
     category,
     image,
     attendance,

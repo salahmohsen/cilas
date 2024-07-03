@@ -14,7 +14,11 @@ import {
 import { useFormState } from "react-dom";
 import { getCourses } from "@/actions/courses.actions";
 import { deleteCourse } from "@/actions/courses.actions";
-import { CoursesFilter, CourseWithAuthor } from "@/types/drizzle.types";
+import {
+  CoursesFilter,
+  CourseWithFellow,
+  SafeUser,
+} from "@/types/drizzle.types";
 import { toast } from "sonner";
 
 type IsSelected = { [key: number]: boolean | undefined };
@@ -23,13 +27,15 @@ type CourseStateContext = {
   isSelected: IsSelected;
   setIsSelected: Dispatch<SetStateAction<IsSelected>>;
   fetchCourses: (insertedId?: number) => Promise<void>;
-  course: CourseWithAuthor | null;
-  setCourse: Dispatch<SetStateAction<CourseWithAuthor | null>>;
+  course: CourseWithFellow | null;
+  setCourse: Dispatch<SetStateAction<CourseWithFellow | null>>;
   courseFilter: CoursesFilter;
   setCourseFilter: Dispatch<SetStateAction<CoursesFilter>>;
-  courses: CourseWithAuthor[];
+  courses: CourseWithFellow[];
   isLoading: boolean;
   handleDelete: (courseId: number) => void;
+  fellow: SafeUser | undefined;
+  setFellow: Dispatch<SetStateAction<SafeUser | undefined>>;
 };
 
 const CourseStateContext = createContext<CourseStateContext>(
@@ -39,11 +45,12 @@ const CourseStateContext = createContext<CourseStateContext>(
 export const CourseStateProvider = ({ children }) => {
   const [isPending, startTransition] = useTransition();
   const [isSelected, setIsSelected] = useState<IsSelected>({});
-  const [course, setCourse] = useState<CourseWithAuthor | null>(null);
+  const [course, setCourse] = useState<CourseWithFellow | null>(null);
+  const [fellow, setFellow] = useState<SafeUser | undefined>(undefined);
   const [courseFilter, setCourseFilter] =
     useState<CoursesFilter>("all published");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [courses, setCourses] = useState<CourseWithAuthor[]>([]);
+  const [courses, setCourses] = useState<CourseWithFellow[]>([]);
 
   // fetch courses data
   const fetchCourses = useCallback(
@@ -114,6 +121,8 @@ export const CourseStateProvider = ({ children }) => {
     courses: optimisticCourses,
     isLoading,
     handleDelete,
+    fellow,
+    setFellow,
   };
 
   return (

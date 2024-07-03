@@ -18,9 +18,9 @@ import {
 
 import { Calendar, Ellipsis, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { CourseWithAuthor } from "@/types/drizzle.types";
+import { CourseWithFellow } from "@/types/drizzle.types";
 
-export default function CourseItem({ course }: { course: CourseWithAuthor }) {
+export default function CourseItem({ course }: { course: CourseWithFellow }) {
   const { isSelected, setIsSelected, setCourse, handleDelete } =
     useCourseState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -58,7 +58,7 @@ export default function CourseItem({ course }: { course: CourseWithAuthor }) {
       <div className="flex flex-col gap-4">
         <span className="flex gap-1 text-xs font-light">
           <User size={16} strokeWidth={1.5} />
-          {`${course.author?.firstName} ${course.author?.lastName}`}
+          {`${course.fellow?.firstName} ${course.fellow?.lastName}`}
         </span>
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-2">
           <Badge

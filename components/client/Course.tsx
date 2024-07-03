@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import CourseMetadata from "./CourseMetadata";
 import UserHoverCard from "./UserHoverCard";
 import { Amiri, Yeseva_One } from "next/font/google";
-import { CourseWithAuthor } from "@/types/drizzle.types";
+import { CourseWithFellow } from "@/types/drizzle.types";
 
 const yesevaOne = Yeseva_One({
   subsets: ["latin"],
@@ -18,24 +18,24 @@ const amiri = Amiri({
   display: "swap",
 });
 
-interface CourseProps extends CourseWithAuthor {
+type CourseProps = {
   isOpen?: boolean;
   className?: string;
   titleSlug?: string;
-}
+  course: CourseWithFellow;
+};
 
 const Course = async ({
   isOpen = false,
   className,
   titleSlug,
-  ...props
+  course,
 }: CourseProps) => {
   const {
     id,
     enTitle,
     arTitle,
     image,
-    authorId,
     enContent,
     arContent,
     startDate,
@@ -50,10 +50,10 @@ const Course = async ({
     applyUrl,
     createdAt,
     updatedAt,
-    author,
-  } = props;
+    fellow,
+  } = course;
 
-  const authorName = author["firstName"] + " " + author["lastName"];
+  const authorName = fellow["firstName"] + " " + fellow["lastName"];
 
   return (
     <article
@@ -94,8 +94,8 @@ const Course = async ({
 
           <UserHoverCard
             userName={authorName}
-            userBio={author["bio"]}
-            userSlug={`courses/author/${authorId}`}
+            userBio={fellow?.bio}
+            userSlug={`courses/author/${fellow.id}`}
           />
         </div>
       </div>

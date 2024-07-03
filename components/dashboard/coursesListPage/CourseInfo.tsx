@@ -21,7 +21,7 @@ import { PegonsAvatar } from "./PegonAvatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { CourseWithAuthor } from "@/types/drizzle.types";
+import { CourseWithFellow } from "@/types/drizzle.types";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 
@@ -41,7 +41,7 @@ export default function CourseInfo({ className }: { className?: string }) {
       const nextId = idArr[currIndex + 1];
       setIsSelected({ [nextId]: true });
       setCourse(
-        courses.find((item) => item?.id === nextId) as CourseWithAuthor,
+        courses.find((item) => item?.id === nextId) as CourseWithFellow,
       );
     } else {
       setIsSelected({ [idArr[0]]: true });
@@ -54,11 +54,11 @@ export default function CourseInfo({ className }: { className?: string }) {
       const prevId = idArr[currIndex - 1];
       setIsSelected({ [prevId]: true });
       setCourse(
-        courses.find((item) => item?.id === prevId) as CourseWithAuthor,
+        courses.find((item) => item?.id === prevId) as CourseWithFellow,
       );
     } else {
       setIsSelected({ [idArr.at(-1) as number]: true });
-      setCourse(courses.at(-1) as CourseWithAuthor);
+      setCourse(courses.at(-1) as CourseWithFellow);
     }
   };
   return (
@@ -159,19 +159,19 @@ export default function CourseInfo({ className }: { className?: string }) {
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Name</dt>
                 <dd>
-                  {course.author?.firstName + " " + course.author?.lastName}
+                  {course.fellow?.firstName + " " + course.fellow?.lastName}
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Email</dt>
                 <dd>
-                  <a href="mailto:">{course.author?.email}</a>
+                  <a href="mailto:">{course.fellow?.email}</a>
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Phone</dt>
                 <dd>
-                  <a href="tel:">{course.author?.tel}</a>
+                  <a href="tel:">{course.fellow?.tel}</a>
                 </dd>
               </div>
             </dl>

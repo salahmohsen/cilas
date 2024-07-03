@@ -1,7 +1,12 @@
 import { courseTable, userTable } from "@/db/schema";
 import { InferSelectModel } from "drizzle-orm";
 
-export type User = InferSelectModel<typeof userTable>;
+export type SafeUser = Omit<
+  InferSelectModel<typeof userTable>,
+  "passwordHash" | "googleId"
+>;
+
+export type UserWithSensitiveCols = InferSelectModel<typeof userTable>;
 
 export type CoursesFilter =
   | "all published"
@@ -12,6 +17,6 @@ export type CoursesFilter =
 
 export interface Course extends InferSelectModel<typeof courseTable> {}
 
-export interface CourseWithAuthor extends Course {
-  author: InferSelectModel<typeof userTable>;
+export interface CourseWithFellow extends Course {
+  fellow: SafeUser;
 }

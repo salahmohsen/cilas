@@ -7,10 +7,7 @@ import { CourseFormState, createEditCourse } from "@/actions/courses.actions";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  courseFormDefaultValues,
-  courseSchema,
-} from "@/types/courseForm.schema";
+import { courseFormDefaultValues, courseSchema } from "@/types/course.schema";
 
 import { Form } from "@/components/ui/form";
 import CourseContent from "./ContentSection";
@@ -21,14 +18,14 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { isObjectEmpty } from "@/lib/utils";
 
-import { User } from "@/types/drizzle.types";
+import { SafeUser } from "@/types/drizzle.types";
 import { useCourseState } from "@/providers/CourseState.provider";
 
 type CourseFormPropTypes = {
   editMode?: boolean;
   courseData?:
     | (z.infer<typeof courseSchema> & { draftMode: boolean } & {
-        author: User;
+        fellow: SafeUser;
       })
     | undefined;
   courseId?: number;
@@ -132,7 +129,7 @@ export default function CourseForm({
       courseAction,
     ],
   );
-  console.log(typeof formMethods.watch("startDate"));
+
   return (
     <>
       <FormProvider {...formMethods}>
@@ -153,7 +150,7 @@ export default function CourseForm({
                 <CourseContent />
                 <CourseMetadata
                   editMode={editMode}
-                  author={courseData?.author}
+                  fellow={courseData?.fellow}
                 />
                 <div className="flex gap-5">
                   <SubmitButton

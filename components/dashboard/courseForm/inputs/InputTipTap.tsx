@@ -24,9 +24,7 @@ import { StandardProps } from "@/types/formInputs.types";
 import React, { memo } from "react";
 import EditorToolbar, {
   Bold,
-  Heading,
   Italic,
-  Paragraph,
   SetLink,
   UnsetLink,
 } from "../TipTapEditorToolbar";
@@ -60,7 +58,6 @@ export const TipTapInput = memo(function TipTapInput({
                 onChange={field.onChange}
               />
               <Editor
-                className={className}
                 editorRef={field.ref}
                 value={field.value}
                 onChange={field.onChange}
@@ -79,12 +76,12 @@ export const TipTapInput = memo(function TipTapInput({
 });
 
 type EditorProps = {
-  className: string | undefined;
+  className?: string;
   editorRef: any;
   value: any;
   onChange: (value: string) => void;
   onBlur: any;
-  disabled: boolean | undefined;
+  disabled?: boolean;
   placeholder: string;
   editorToolbar: boolean;
 };

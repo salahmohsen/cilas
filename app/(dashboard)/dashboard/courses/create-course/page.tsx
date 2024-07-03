@@ -4,11 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import CourseForm from "@/components/dashboard/courseForm/CourseForm";
 import { getCourseById } from "@/actions/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
-import { CourseWithAuthor } from "@/types/drizzle.types";
+import { CourseWithFellow } from "@/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 
 export default function CreateCoursePage() {
-  const [course, setCourse] = useState<CourseWithAuthor | undefined>(undefined);
+  const [course, setCourse] = useState<CourseWithFellow | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
 

@@ -13,6 +13,7 @@ import Image from "next/image";
 
 import { BasicInputProps } from "@/types/formInputs.types";
 import { cloudinary_quality } from "@/lib/cloudinary.utils";
+import { cn } from "@/lib/utils";
 
 export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
   name,
@@ -20,6 +21,7 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
   type,
   placeholder,
   className,
+  direction = "vertical",
 }) {
   const { control } = useFormContext();
 
@@ -42,10 +44,25 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <div className="flex gap-2">
+        <FormItem
+          className={cn(
+            direction === "horizontal"
+              ? "grid grid-cols-7 items-center gap-2"
+              : "grid grid-cols-1 gap-2",
+            className,
+          )}
+        >
+          <FormLabel
+            className={direction === "horizontal" ? "col-span-2" : "col-span-1"}
+          >
+            {label}
+          </FormLabel>
+          <FormControl className="space-y-2">
+            <div
+              className={
+                direction === "horizontal" ? "col-span-5" : "col-span-1"
+              }
+            >
               <Input
                 type={type === "number" ? "text" : type}
                 {...field}
@@ -53,7 +70,7 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
                 accept={type === "file" ? ".jpg, .jpeg, .png" : undefined}
                 value={type === "file" ? undefined : field.value}
                 onChange={(e) => {
-                  if (type === "text" || type === "url" || type === "number") {
+                  if (type !== "file") {
                     field.onChange(e.target.value);
                   } else if (type === "file") {
                     handleImageInput(e);
@@ -76,9 +93,10 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
                   />
                 </>
               )}
+              {direction === "horizontal" && <FormMessage />}
             </div>
           </FormControl>
-          <FormMessage />
+          {direction === "vertical" && <FormMessage />}
         </FormItem>
       )}
     />

@@ -1,11 +1,12 @@
 import { FieldPath, FieldValues } from "react-hook-form";
-import { courseSchema } from "./courseForm.schema";
+import { courseSchema } from "./course.schema";
 import { z } from "zod";
-import { User } from "./drizzle.types";
+import { SafeUser } from "./drizzle.types";
+import { FellowSchema } from "./fellow.schema";
 
 export interface StandardProps<
   TName extends FieldPath<FieldValues> = FieldPath<
-    z.infer<typeof courseSchema>
+    z.infer<typeof courseSchema> | z.infer<typeof FellowSchema>
   >,
 > {
   name: TName;
@@ -15,7 +16,8 @@ export interface StandardProps<
 }
 
 export interface BasicInputProps extends StandardProps {
-  type: "text" | "number" | "url" | "file";
+  type: "text" | "number" | "url" | "file" | "tel" | "email";
+  direction?: "vertical" | "horizontal";
 }
 
 export interface SelectProps extends StandardProps {
@@ -29,16 +31,15 @@ export interface MultiSelectorProps extends StandardProps {
   options: { label: string; value: string }[];
   emptyMsg?: string;
 }
-
+export type ComboBoxOption = {
+  id: string;
+  name: string;
+};
 export interface ComboBoxProps extends StandardProps {
   emptyMsg: string;
   searchPlaceholder: string;
-  fetchItemsAction: () => Promise<
-    {
-      id: string;
-      name: string;
-    }[]
-  >;
-  editMode: boolean;
-  preData: User | undefined;
+  action: () => Promise<void>;
+  loading: boolean;
+  options: ComboBoxOption[];
+  defaultOption: ComboBoxOption | undefined;
 }

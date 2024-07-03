@@ -7,32 +7,45 @@ export const required_string = z
   .string()
   .trim()
   .min(1, { message: "Required" });
+
 export const optional_string = z.string().min(1).or(emptyStringToNull);
+
 export const required_url = z
   .string()
   .url()
   .trim()
   .min(1, { message: "Required" });
+
 export const optional_url = z.string().url().min(1).or(emptyStringToNull);
+
 export const required_email = z
   .string()
   .email()
-  .min(1, { message: "Please provide a valid email." });
+  .min(1, { message: "Please provide a valid email" });
+
 export const optional_email = z.string().min(1).or(emptyStringToNull);
+
+export const optional_tel = z
+  .string()
+  .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/, {
+    message: "Please provide a valid number",
+  })
+  .optional();
 
 export const required_password = z
   .string()
   .regex(/^(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/, {
-    message: "Password must be Minimum 8 characters, with at least one number.",
+    message: "Password must be Minimum 8 characters, with at least one number",
   })
   .min(8, {
-    message: "Password must be Minimum 8 characters, with at least one number.",
+    message: "Password must be Minimum 8 characters, with at least one number",
   });
 
 // validating numbers
 export const required_number = z
   .string()
   .regex(/^\d+$/, { message: "Required" });
+
 export const optional_number = z
   .string()
   .regex(/^\d+$/, { message: "Required" })
