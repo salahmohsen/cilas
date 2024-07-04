@@ -13,7 +13,7 @@ import {
   Users2,
 } from "lucide-react";
 
-export default function LayoutMobileSidebar() {
+export function LayoutMobileSidebar() {
   return (
     <Sheet>
       <SheetTrigger asChild>

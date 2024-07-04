@@ -3,7 +3,7 @@ import { memo } from "react";
 import { BasicInput } from "@/components/dashboard/form/form.input.basic";
 import { TipTapInput } from "@/components/dashboard/form/form.input.tipTap";
 
-const EnglishTab = memo(() => {
+export const EnglishTab = memo(() => {
   return (
     <TabsContent
       value="EnVersion"
@@ -27,5 +27,3 @@ const EnglishTab = memo(() => {
 });
 
 EnglishTab.displayName = "EnglishTab";
-
-export default EnglishTab;

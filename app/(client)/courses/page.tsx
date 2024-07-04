@@ -1,6 +1,6 @@
-import Course from "@/components/client/page.courses/page.courses";
-import CoursePagination from "@/components/client/page.courses/page.courses.pagination";
-import Sidebar from "@/components/client/page.courses/pages.courses.sidebar";
+import { Course } from "@/components/client/page.courses/page.courses";
+import { CoursePagination } from "@/components/client/page.courses/page.courses.pagination";
+import { Sidebar } from "@/components/client/page.courses/pages.courses.sidebar";
 import { getCourses } from "@/actions/courses.actions";
 import slug from "slug";
 

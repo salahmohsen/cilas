@@ -18,11 +18,8 @@ import {
 } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -38,7 +35,7 @@ import {
 
 import { ReactElement } from "react";
 
-export default function LayoutSidebar() {
+export function LayoutSidebar() {
   return (
     <aside className="inset-y fixed left-0 z-20 hidden h-full flex-col border-r sm:flex">
       <div className="border-b p-2">

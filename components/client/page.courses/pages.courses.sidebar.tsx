@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { SideBarAvailableFilter } from "./pages.courses.sidebar.filter.available";
 import { SideBarTypeFilter } from "./pages.courses.sidebar.filter.type";
 
-const Sidebar = () => {
+export const Sidebar = () => {
   return (
     <aside>
       <Card className="">
@@ -36,5 +36,3 @@ const Sidebar = () => {
     </aside>
   );
 };
-
-export default Sidebar;

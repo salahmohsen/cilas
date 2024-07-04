@@ -10,7 +10,7 @@ import { SafeUser } from "@/types/drizzle.types";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { ComboBoxOption } from "@/types/formInputs.types";
 
-export default function CourseMetadata({
+export function CourseMetadata({
   editMode,
   fellow,
 }: {

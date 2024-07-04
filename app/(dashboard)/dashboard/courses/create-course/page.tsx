@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import CourseForm from "@/components/dashboard/form/form.course";
+import { CourseForm } from "@/components/dashboard/form/form.course";
 import { getCourseById } from "@/actions/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
 import { CourseWithFellow } from "@/types/drizzle.types";

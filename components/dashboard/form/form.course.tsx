@@ -10,8 +10,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { courseFormDefaultValues, courseSchema } from "@/types/course.schema";
 
 import { Form } from "@/components/ui/form";
-import CourseContent from "./form.course.section.content";
-import CourseMetadata from "./form.course.section.meta";
+import { CourseContent } from "./form.course.section.content";
+import { CourseMetadata } from "./form.course.section.meta";
 import { SubmitButton } from "@/components/dashboard/form/form.input.submit";
 
 import { toast } from "sonner";
@@ -30,7 +30,7 @@ type CourseFormPropTypes = {
     | undefined;
   courseId?: number;
 };
-export default function CourseForm({
+export function CourseForm({
   editMode = false,
   courseData,
   courseId,

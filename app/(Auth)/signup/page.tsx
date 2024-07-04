@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/types/auth.schema";
-import AuthForm from "@/components/auth/form.auth";
+import { AuthForm } from "@/components/auth/form.auth";
 import { useSession } from "@/providers/Session.provider";
 import { redirect } from "next/navigation";
 

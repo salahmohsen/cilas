@@ -22,11 +22,12 @@ import { cn } from "@/lib/utils";
 
 import { StandardProps } from "@/types/formInputs.types";
 import React, { memo } from "react";
-import EditorToolbar, {
+import {
   Bold,
   Italic,
   SetLink,
   UnsetLink,
+  EditorToolbar,
 } from "./form.input.tipTap.toolBar";
 
 interface TipTapInputProps extends StandardProps {

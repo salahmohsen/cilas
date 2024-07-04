@@ -20,7 +20,7 @@ import { Calendar, Ellipsis, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CourseWithFellow } from "@/types/drizzle.types";
 
-export default function CourseItem({ course }: { course: CourseWithFellow }) {
+export function CourseItem({ course }: { course: CourseWithFellow }) {
   const { isSelected, setIsSelected, setCourse, handleDelete } =
     useCourseState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);

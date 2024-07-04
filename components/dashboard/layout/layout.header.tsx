@@ -16,11 +16,11 @@ import {
 import placeholderUser from "@/public/placeholder-user.svg";
 
 import { Search } from "lucide-react";
-import LayoutMobileSidebar from "./layout.sidebar.mobile";
-import LayoutBreadcrumb from "./layout.breadcrumb";
+import { LayoutMobileSidebar } from "./layout.sidebar.mobile";
+import { LayoutBreadcrumb } from "./layout.breadcrumb";
 import { logout } from "@/actions/auth.actions";
 
-export default function LayoutHeader({ children }) {
+export function LayoutHeader({ children }) {
   return (
     <div className="flex flex-col gap-4 sm:pl-14 md:py-0">
       <header className="sticky top-0 z-10 flex h-[57px] w-full items-center justify-between gap-1 border-b bg-background px-4">

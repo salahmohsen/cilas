@@ -38,7 +38,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-export default function EditorToolbar({ editor }: { editor: any }) {
+export function EditorToolbar({ editor }: { editor: any }) {
   if (!editor) return null;
 
   return (

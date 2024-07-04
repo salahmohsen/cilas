@@ -13,7 +13,7 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function LayoutBreadcrumb() {
+export function LayoutBreadcrumb() {
   const path = usePathname();
 
   let items: { name: string; href: string }[] = [];

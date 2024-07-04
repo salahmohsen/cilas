@@ -3,7 +3,7 @@ import { TabsContent } from "@/components/ui/tabs";
 import { BasicInput } from "@/components/dashboard/form/form.input.basic";
 import { TipTapInput } from "@/components/dashboard/form/form.input.tipTap";
 
-const ArabicTab = memo(() => {
+export const ArabicTab = memo(() => {
   return (
     <TabsContent
       value="ArVersion"
@@ -27,5 +27,3 @@ const ArabicTab = memo(() => {
 });
 
 ArabicTab.displayName = "ArabicTab";
-
-export default ArabicTab;

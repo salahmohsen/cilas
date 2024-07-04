@@ -52,7 +52,7 @@ type AuthFormProps =
       formState: SignupState;
     };
 
-export default function AuthForm({
+export function AuthForm({
   authMode,
   formMethods,
   formAction,

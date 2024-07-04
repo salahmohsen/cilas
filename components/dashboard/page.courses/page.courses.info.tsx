@@ -25,7 +25,7 @@ import { CourseWithFellow } from "@/types/drizzle.types";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 
-export default function CourseInfo({ className }: { className?: string }) {
+export function CourseInfo({ className }: { className?: string }) {
   const { course, isSelected, setIsSelected, setCourse, courses } =
     useCourseState();
 

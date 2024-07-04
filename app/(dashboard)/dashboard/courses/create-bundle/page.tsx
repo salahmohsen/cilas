@@ -1,5 +1,5 @@
 "use client";
 
-export default function CreateBundlePage() {
+export default function BundleForm() {
   return <></>;
 }

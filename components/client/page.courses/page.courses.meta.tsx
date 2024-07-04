@@ -21,7 +21,7 @@ type CourseMetadataProps = {
   className?: string;
 };
 
-const CourseMetadata = ({
+export const CourseMetadata = ({
   startDate,
   attendance,
   isRegistrationOpen,
@@ -79,5 +79,3 @@ const CourseMetaDataIcon = ({ metadata, ...props }) => {
       return null;
   }
 };
-
-export default CourseMetadata;

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { CoursesFilter } from "@/types/drizzle.types";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -35,7 +34,7 @@ const coursesFilter = [
   },
 ];
 
-export default function FilterButton() {
+export function FilterButton() {
   const { setCourseFilter } = useCourseState();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");

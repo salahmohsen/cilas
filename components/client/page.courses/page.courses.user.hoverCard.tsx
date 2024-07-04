@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AtSign } from "lucide-react";
 import Link from "next/link";
 
-const UserHoverCard = ({ userName, userBio, userSlug }) => {
+export const UserHoverCard = ({ userName, userBio, userSlug }) => {
   return (
     <div className="flex justify-start">
       <HoverCard>
@@ -46,5 +46,3 @@ const UserHoverCard = ({ userName, userBio, userSlug }) => {
     </div>
   );
 };
-
-export default UserHoverCard;

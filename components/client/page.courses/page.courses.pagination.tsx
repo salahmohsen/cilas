@@ -9,7 +9,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-const CoursePagination = () => {
+export const CoursePagination = () => {
   return (
     <Pagination>
       <PaginationContent>
@@ -36,5 +36,3 @@ const CoursePagination = () => {
     </Pagination>
   );
 };
-
-export default CoursePagination;
