@@ -29,11 +29,13 @@ export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={cn("flex items-start gap-5 space-y-0", className)}>
-          <FormLabel>{label}</FormLabel>
+        <FormItem
+          className={cn("flex items-center gap-5 space-y-0", className)}
+        >
+          <FormLabel className="mt-5 min-w-max">{label}</FormLabel>
           <FormControl>
             <div
-              className="jus flex gap-5"
+              className="flex w-full justify-center gap-5"
               ref={field.ref}
               onBlur={field.onBlur}
             >
