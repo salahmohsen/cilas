@@ -3,7 +3,7 @@
 import { useWindowSize } from "@uidotdev/usehooks";
 
 import Link from "next/link";
-import CourseItem from "@/components/dashboard/page.courses/courses.item";
+import CourseItem from "@/components/dashboard/page.courses/page.courses.item";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,12 +16,12 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import CourseInfo from "@/components/dashboard/page.courses/courses.info";
-import FilterButton from "@/components/dashboard/page.courses/courses.button.filter";
+import CourseInfo from "@/components/dashboard/page.courses/page.courses.info";
+import FilterButton from "@/components/dashboard/page.courses/page.courses.button.filter";
 
 import { useCourseState } from "@/providers/CourseState.provider";
-import CourseInfoModal from "@/components/dashboard/page.courses/courses.info.modal";
-import { CourseSkeleton } from "@/components/dashboard/page.courses/courses.skeleton";
+import CourseInfoModal from "@/components/dashboard/page.courses/page.courses.info.modal";
+import { CourseSkeleton } from "@/components/dashboard/page.courses/page.courses.skeleton";
 import { useSearchParams } from "next/navigation";
 import { CoursesFilter } from "@/types/drizzle.types";
 import { useState } from "react";

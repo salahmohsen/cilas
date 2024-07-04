@@ -1,6 +1,6 @@
 import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
 import { useCourseState } from "@/providers/CourseState.provider";
-import CourseInfo from "./courses.info";
+import CourseInfo from "./page.courses.info";
 
 const CourseInfoModal = () => {
   const { isSelected, setIsSelected, course: courseInfo } = useCourseState();
