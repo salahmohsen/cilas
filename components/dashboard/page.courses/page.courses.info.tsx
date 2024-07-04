@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/pagination";
 
 import { ChevronLeft, ChevronRight, Copy } from "lucide-react";
-import { PegonsAvatar } from "./page.courses.pegonAvatar";
+import { UserAvatar } from "./page.courses.user.avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -183,16 +183,16 @@ export default function CourseInfo({ className }: { className?: string }) {
             <div className="font-semibold">Pegons</div>
             <ScrollArea className="w-full rounded-md p-4">
               <div className="flex gap-1 text-muted-foreground">
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
-                <PegonsAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
+                <UserAvatar />
               </div>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>

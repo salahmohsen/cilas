@@ -1,5 +1,4 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { Calendar, User } from "lucide-react";
 
 export function CourseSkeleton({ itemsNumber }) {
   const skeletonArr = Array(itemsNumber).fill("course");
