@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import CourseMetadata from "./CourseMetadata";
-import UserHoverCard from "./UserHoverCard";
+import CourseMetadata from "./course.metadata";
+import UserHoverCard from "./course.user.hoverCard";
 import { Amiri, Yeseva_One } from "next/font/google";
 import { CourseWithFellow } from "@/types/drizzle.types";
 

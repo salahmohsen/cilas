@@ -1,4 +1,13 @@
+import { useEffect, useRef, useState, useTransition } from "react";
+import { useFormState } from "react-dom";
+import { FormProvider, useForm } from "react-hook-form";
+import { useCourseState } from "@/providers/CourseState.provider";
+import { FellowState, addFellow } from "@/actions/users.actions";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FellowSchema, fellowDefaultValues } from "@/types/fellow.schema";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -8,22 +17,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { TipTapInput } from "./inputs/InputTipTap";
-import { SquarePlus } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
-import { FellowSchema, fellowDefaultValues } from "@/types/fellow.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { BasicInput } from "./inputs/InputBasic";
 import { Form } from "@/components/ui/form";
-import { useEffect, useRef, useState, useTransition } from "react";
-import { useFormState } from "react-dom";
-import { FellowState, addFellow } from "@/actions/users.actions";
-import { toast } from "sonner";
-import { SubmitButton } from "./inputs/SubmitButton";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { TipTapInput } from "@/components/dashboard/form.inputs/input.tipTap";
+import { SubmitButton } from "@/components/dashboard/form.inputs/input.submit";
+import { BasicInput } from "@/components/dashboard/form.inputs/input.basic";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { SquarePlus } from "lucide-react";
 
 type NewFellowProps = {
   mode: "button" | "commandItem";

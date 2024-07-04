@@ -48,20 +48,20 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
           className={cn(
             direction === "horizontal"
               ? "grid grid-cols-7 items-center gap-2"
-              : "grid grid-cols-1 gap-2",
+              : "grid grid-cols-1",
             className,
           )}
         >
           <FormLabel
-            className={direction === "horizontal" ? "col-span-2" : "col-span-1"}
+            className={
+              direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"
+            }
           >
             {label}
           </FormLabel>
-          <FormControl className="space-y-2">
+          <FormControl>
             <div
-              className={
-                direction === "horizontal" ? "col-span-5" : "col-span-1"
-              }
+              className={` ${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"} `}
             >
               <Input
                 type={type === "number" ? "text" : type}
@@ -93,7 +93,7 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
                   />
                 </>
               )}
-              {direction === "horizontal" && <FormMessage />}
+              {direction === "horizontal" && <FormMessage className="mt-2" />}
             </div>
           </FormControl>
           {direction === "vertical" && <FormMessage />}

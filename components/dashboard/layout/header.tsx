@@ -16,8 +16,8 @@ import {
 import placeholderUser from "@/public/placeholder-user.svg";
 
 import { Search } from "lucide-react";
-import LayoutMobileSidebar from "./LayoutMobileSidebar";
-import LayoutBreadcrumb from "./LayoutBreadcrumb";
+import LayoutMobileSidebar from "./mobile.sidebar";
+import LayoutBreadcrumb from "./breadcrumb";
 import { logout } from "@/actions/auth.actions";
 
 export default function LayoutHeader({ children }) {

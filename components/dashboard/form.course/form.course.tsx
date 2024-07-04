@@ -10,9 +10,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { courseFormDefaultValues, courseSchema } from "@/types/course.schema";
 
 import { Form } from "@/components/ui/form";
-import CourseContent from "./ContentSection";
-import CourseMetadata from "./MetadataSection";
-import { SubmitButton } from "./inputs/SubmitButton";
+import CourseContent from "./form.course.content";
+import CourseMetadata from "./form.course.metadata";
+import { SubmitButton } from "@/components/dashboard/form.inputs/input.submit";
 
 import { toast } from "sonner";
 import { redirect } from "next/navigation";

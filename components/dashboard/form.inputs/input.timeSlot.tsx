@@ -7,9 +7,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../ui/form";
+} from "../../ui/form";
 import { StandardProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
+import { cn } from "@/lib/utils";
 
 export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
   name,
@@ -28,11 +29,11 @@ export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className={className}>
-          <FormLabel className="mt-6">{label}</FormLabel>
+        <FormItem className={cn("flex items-start gap-5 space-y-0", className)}>
+          <FormLabel>{label}</FormLabel>
           <FormControl>
             <div
-              className="flex items-center gap-5"
+              className="jus flex gap-5"
               ref={field.ref}
               onBlur={field.onBlur}
             >
@@ -72,7 +73,7 @@ export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
                   />
                 </div>
               </div>
-              <span className="mt-5">:</span>
+              <span className="mt-6">:</span>
               <div className="flex items-end gap-2" id="end-time">
                 <div className="grid gap-1 text-center">
                   <Label htmlFor="hours" className="text-xs">

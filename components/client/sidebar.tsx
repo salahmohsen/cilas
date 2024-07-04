@@ -9,8 +9,8 @@ import {
 
 import { Label } from "@/components/ui/label";
 
-import { SideBarAvailableFilter } from "./SideBarAvailableFilter";
-import { SideBarTypeFilter } from "./SideBarTypeFilter";
+import { SideBarAvailableFilter } from "./sidebar.filter.available";
+import { SideBarTypeFilter } from "./sidebar.filter.type";
 
 const Sidebar = () => {
   return (

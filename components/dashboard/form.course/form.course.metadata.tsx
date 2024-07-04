@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { BasicInput } from "./inputs/InputBasic";
-import { ComboBoxInput } from "./inputs/InputComboBox";
-import { MultiSelectorInput } from "./inputs/InputMultiSelector";
-import { SelectInput } from "./inputs/InputSelect";
-import { TimeInput } from "./inputs/InputTimeSlot";
+import { BasicInput } from "@/components/dashboard/form.inputs/input.basic";
+import { ComboBoxInput } from "@/components/dashboard/form.inputs/input.comboBox";
+import { MultiSelectorInput } from "@/components/dashboard/form.inputs/input.multiSelector";
+import { SelectInput } from "@/components/dashboard/form.inputs/input.select";
+import { TimeInput } from "@/components/dashboard/form.inputs/input.timeSlot";
+import { DateInput } from "@/components/dashboard/form.inputs/input.date";
 import { getUsersNamesByRole } from "@/actions/users.actions";
 import { SafeUser } from "@/types/drizzle.types";
-import { DateInput } from "./inputs/InputDate";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { ComboBoxOption } from "@/types/formInputs.types";
 
@@ -150,13 +150,7 @@ export default function CourseMetadata({
           options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
         />
 
-        <div className="-ml-4 flex w-full scale-90 items-center gap-2 md:ml-0 md:scale-100">
-          <TimeInput
-            name="timeSlot"
-            label="Time Slot"
-            placeholder="Start Time"
-          />
-        </div>
+        <TimeInput name="timeSlot" label="Time Slot" placeholder="Start Time" />
       </div>
     </fieldset>
   );

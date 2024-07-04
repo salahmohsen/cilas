@@ -3,8 +3,7 @@ import { Cairo, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
-import LayoutSidebar from "@/components/dashboard/LayoutSidebar";
-import LayoutHeader from "@/components/dashboard/LayoutHeader";
+import LayoutHeader from "@/components/dashboard/layout/header";
 import { ThemeProvider } from "@/providers/Theme.provider";
 
 import { Toaster } from "sonner";
@@ -30,6 +29,7 @@ export const metadata: Metadata = {
 import { validateRequest } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { CourseStateProvider } from "@/providers/CourseState.provider";
+import LayoutSidebar from "@/components/dashboard/layout/sidebar";
 
 export default async function RootLayout({
   children,

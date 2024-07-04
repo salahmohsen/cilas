@@ -1,6 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import EnglishTab from "./EnglishTab";
-import ArabicTab from "./ArabicTab";
+import EnglishTab from "./tab.english";
+import ArabicTab from "./tab.arabic";
 
 export default function CourseContent() {
   return (
