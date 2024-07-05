@@ -34,8 +34,8 @@ export const DateInput = memo(
         control={control}
         name={name}
         render={({ field }) => (
-          <FormItem className={cn("flex flex-col", className)}>
-            <FormLabel>{label}</FormLabel>
+          <FormItem className={className}>
+            <FormLabel className="min-w-max">{label}</FormLabel>
             <input hidden {...field} />
             <Popover>
               <PopoverTrigger asChild>
@@ -44,7 +44,7 @@ export const DateInput = memo(
                     variant={"outline"}
                     disabled={field.disabled}
                     className={cn(
-                      "w-full pl-3 text-left font-normal",
+                      "my-0 w-full pl-3 text-left font-normal",
                       !field.value && "text-muted-foreground",
                     )}
                   >

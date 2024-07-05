@@ -1,5 +1,5 @@
-import { courseTable, userTable } from "@/db/schema";
-import { InferSelectModel } from "drizzle-orm";
+import { coursesBundleTable, courseTable, userTable } from "@/db/db.schema";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export type SafeUser = Omit<
   InferSelectModel<typeof userTable>,
@@ -20,3 +20,5 @@ export interface Course extends InferSelectModel<typeof courseTable> {}
 export interface CourseWithFellow extends Course {
   fellow: SafeUser;
 }
+
+export type BundleTable = InferInsertModel<typeof coursesBundleTable>;

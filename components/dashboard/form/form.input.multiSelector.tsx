@@ -11,6 +11,7 @@ import MultipleSelector from "@/components/ui/multipleSelector";
 
 import { MultiSelectorProps } from "@/types/formInputs.types";
 import { memo } from "react";
+import { LoaderCircle } from "lucide-react";
 
 export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
   function MultiSelectorInput({
@@ -20,6 +21,7 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
     options,
     emptyMsg,
     className,
+    onSearch,
   }) {
     const { control } = useFormContext();
     return (
@@ -38,12 +40,12 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
                   onChange={field.onChange}
                 />
 
-                <div onBlur={field.onBlur} ref={field.ref}>
+                <div onBlur={field.onBlur} ref={field.ref} className="w-full">
                   <MultipleSelector
                     defaultOptions={options}
                     placeholder={placeholder}
                     emptyIndicator={
-                      <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                      <p className="flex w-full items-center justify-center text-sm leading-10 text-gray-600 dark:text-gray-400">
                         {emptyMsg}
                       </p>
                     }
@@ -53,6 +55,10 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
                     hidePlaceholderWhenSelected={true}
                     value={field.value}
                     onChange={(value) => field.onChange(value)}
+                    loadingIndicator={
+                      <LoaderCircle className="mx-auto mt-2 w-full animate-spin" />
+                    }
+                    onSearch={onSearch}
                   />
                 </div>
               </>

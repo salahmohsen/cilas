@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";

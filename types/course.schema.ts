@@ -3,7 +3,7 @@ import {
   optional_string,
   required_boolean,
   optional_url,
-  optional_days,
+  optional_selectOptions,
   required_timeSlot,
   optional_file,
   optional_number,
@@ -25,7 +25,7 @@ export const courseSchema = z
     isRegistrationOpen: required_boolean,
     price: optional_number,
     timeSlot: required_timeSlot,
-    days: optional_days,
+    days: optional_selectOptions,
     courseFlowUrl: optional_url,
     applyUrl: optional_url,
     startDate: required_date,
@@ -56,8 +56,10 @@ export const courseSchema = z
     message: "End date must be later than the start date",
   });
 
+export type CourseSchema = z.infer<typeof courseSchema>;
+
 // Default Values for Course Form
-export const courseFormDefaultValues: z.infer<typeof courseSchema> | {} = {
+export const courseFormDefaultValues: CourseSchema | {} = {
   enTitle: "",
   enContent: "",
   arTitle: "",

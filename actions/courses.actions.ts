@@ -1,9 +1,9 @@
 "use server";
 
 import db from "@/db/drizzle";
-import { courseTable } from "@/db/schema";
+import { courseTable } from "@/db/db.schema";
 import { courseSchema } from "@/types/course.schema";
-import { eq, desc, asc } from "drizzle-orm";
+import { eq, desc, asc, or, and, like, ilike } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { uploadImage } from "@/lib/cloudinary.utils";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/lib/actions.utils";
 import { coursesFilter } from "@/lib/drizzle.utils";
 import { CoursesFilter, UserWithSensitiveCols } from "@/types/drizzle.types";
+import { Option } from "@/components/ui/multipleSelector";
 
 export type CourseFormState = {
   success?: boolean;
@@ -111,12 +112,25 @@ export async function createEditCourse(
 }
 
 export const getCourses = async (
-  filter: CoursesFilter,
+  filter?: CoursesFilter,
+  id?: number,
   page: number = 1,
   pageSize: number = 10,
 ) => {
+  if (!filter || !id)
+    console.log("either filter or id or both must be provided");
+
+  const whereCondition =
+    id !== undefined && filter !== undefined
+      ? and(coursesFilter(filter), eq(courseTable.id, id))
+      : id !== undefined
+        ? eq(courseTable.id, id)
+        : filter !== undefined
+          ? coursesFilter(filter)
+          : undefined;
+
   const courses = await db.query.courseTable.findMany({
-    where: coursesFilter(filter),
+    where: whereCondition,
     with: { fellow: true },
     limit: pageSize,
     offset: (page - 1) * pageSize,
@@ -129,6 +143,30 @@ export const getCourses = async (
   });
 
   return safeCourses;
+};
+
+export const searchCoursesNames = async (value: string = "") => {
+  const data = await db.query.courseTable.findMany({
+    columns: {
+      id: true,
+      enTitle: true,
+      arTitle: true,
+    },
+    where: or(
+      ilike(courseTable.enTitle, `%${value.toLowerCase()}%`),
+      ilike(courseTable.arTitle, `%${value.toLowerCase()}%`),
+    ),
+  });
+
+  const coursesNames: Option[] = data.map((course) => {
+    if (course.enTitle)
+      return { label: course.enTitle, value: course.id.toString() };
+    else {
+      return { label: course.arTitle!, value: course.id.toString() };
+    }
+  });
+
+  return coursesNames;
 };
 
 export const getCourseById = async (courseId: number) => {

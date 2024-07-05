@@ -1,12 +1,12 @@
 import { FieldPath, FieldValues } from "react-hook-form";
-import { courseSchema } from "./course.schema";
-import { z } from "zod";
-import { SafeUser } from "./drizzle.types";
+import { CourseSchema } from "./course.schema";
 import { FellowSchema } from "./fellow.schema";
+import { BundleSchema } from "./bundle.schema";
+import { Option } from "@/components/ui/multipleSelector";
 
 export interface StandardProps<
   TName extends FieldPath<FieldValues> = FieldPath<
-    z.infer<typeof courseSchema> | z.infer<typeof FellowSchema>
+    CourseSchema | FellowSchema | BundleSchema
   >,
 > {
   name: TName;
@@ -28,8 +28,9 @@ export interface SelectProps extends StandardProps {
 }
 
 export interface MultiSelectorProps extends StandardProps {
-  options: { label: string; value: string }[];
+  options?: { label: string; value: string }[];
   emptyMsg?: string;
+  onSearch: ((value: string) => Promise<Option[]>) | undefined;
 }
 export type ComboBoxOption = {
   id: string;

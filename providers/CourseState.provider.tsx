@@ -36,6 +36,8 @@ type CourseStateContext = {
   handleDelete: (courseId: number) => void;
   fellow: SafeUser | undefined;
   setFellow: Dispatch<SetStateAction<SafeUser | undefined>>;
+  // coursesNames: Option[] | undefined;
+  // fetchCoursesNames: () => Promise<void>;
 };
 
 const CourseStateContext = createContext<CourseStateContext>(
@@ -51,13 +53,24 @@ export const CourseStateProvider = ({ children }) => {
     useState<CoursesFilter>("all published");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [courses, setCourses] = useState<CourseWithFellow[]>([]);
+  // const [coursesNames, setCoursesNames] = useState<Option | undefined>(
+  // undefined,
+  // );
 
   // fetch courses data
   const fetchCourses = useCallback(
     async (insertedId?: number) => {
       try {
         setIsLoading(true);
-        const coursesData = await getCourses(courseFilter);
+        let coursesData;
+        if (insertedId && courseFilter) {
+          coursesData = await getCourses(courseFilter, insertedId);
+        } else if (courseFilter && !insertedId) {
+          coursesData = await getCourses(undefined, insertedId);
+        } else {
+          coursesData = await getCourses(courseFilter);
+        }
+
         setCourses(coursesData);
         if (insertedId) {
           const newCourse = coursesData.find((c) => c.id === insertedId);
@@ -74,6 +87,22 @@ export const CourseStateProvider = ({ children }) => {
     },
     [courseFilter],
   );
+
+  // const fetchCoursesNames = useCallback(async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const coursesNames = await searchCoursesNames();
+  //     setCoursesNames(coursesNames);
+  //     setIsLoading(false);
+  //   } catch (error) {
+  //     if (error instanceof Error)
+  //       toast.error(`Unexpected error happened! ${error.message}`);
+  //   }
+  // }, []);
+
+  // useEffect(() => {
+  //   fetchCoursesNames();
+  // }, [fetchCoursesNames]);
 
   useEffect(() => {
     fetchCourses();
@@ -123,6 +152,8 @@ export const CourseStateProvider = ({ children }) => {
     handleDelete,
     fellow,
     setFellow,
+    // fetchCoursesNames,
+    // coursesNames,
   };
 
   return (

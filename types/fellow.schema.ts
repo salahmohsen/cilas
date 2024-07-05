@@ -14,8 +14,10 @@ export const FellowSchema = z.object({
   tel: optional_tel,
 });
 
+export type FellowSchema = z.infer<typeof FellowSchema>;
+
 // Default Values for Course Form
-export const fellowDefaultValues: z.infer<typeof FellowSchema> = {
+export const fellowDefaultValues: FellowSchema = {
   firstName: "",
   lastName: "",
   bio: "",
