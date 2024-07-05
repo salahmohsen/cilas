@@ -1,5 +1,5 @@
 import db from "@/db/drizzle";
-import { sessionTable, userTable } from "@/db/schema";
+import { sessionTable, userTable } from "@/db/db.schema";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 
 import { Lucia, User } from "lucia";

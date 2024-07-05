@@ -3,7 +3,7 @@ import { z } from "zod";
 import { cleanHtml } from "./sanitize-html.utils";
 import { convertToDate, convertToJson } from "./zodValidation.utils";
 import { InferInsertModel } from "drizzle-orm";
-import { courseTable } from "@/db/schema";
+import { courseTable } from "@/db/db.schema";
 
 export const formDataToCourseSchema = (
   formData: FormData,

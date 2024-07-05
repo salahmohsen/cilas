@@ -5,7 +5,7 @@ import { GoogleTokens, OAuth2RequestError } from "arctic";
 import { cookies } from "next/headers";
 import db from "@/db/drizzle";
 import { eq } from "drizzle-orm";
-import { userTable } from "@/db/schema";
+import { userTable } from "@/db/db.schema";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request): Promise<Response> {

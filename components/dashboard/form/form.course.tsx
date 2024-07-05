@@ -7,7 +7,11 @@ import { CourseFormState, createEditCourse } from "@/actions/courses.actions";
 import { useForm, FormProvider } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { courseFormDefaultValues, courseSchema } from "@/types/course.schema";
+import {
+  courseFormDefaultValues,
+  CourseSchema,
+  courseSchema,
+} from "@/types/course.schema";
 
 import { Form } from "@/components/ui/form";
 import { CourseContent } from "./form.course.section.content";
@@ -64,7 +68,7 @@ export function CourseForm({
   );
 
   // Setup Zod Validation
-  const formMethods = useForm<z.infer<typeof courseSchema>>({
+  const formMethods = useForm<CourseSchema>({
     resolver: zodResolver(courseSchema),
     mode: "onChange",
 
@@ -131,51 +135,46 @@ export function CourseForm({
   );
 
   return (
-    <>
-      <FormProvider {...formMethods}>
-        <main className="mx-0 xl:mx-32">
-          <div className="grid w-full items-start gap-10">
-            <Form {...formMethods}>
-              <form
-                ref={formRef}
-                className="space-y-8"
-                action={courseAction}
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  formMethods.handleSubmit(() => {
-                    handleSubmit(draftMode);
-                  })(e); // immediately invokes the handleSubmit with the original event object.
-                }}
-              >
-                <CourseContent />
-                <CourseMetadata
-                  editMode={editMode}
-                  fellow={courseData?.fellow}
+    <FormProvider {...formMethods}>
+      <main className="mx-0 xl:mx-32">
+        <div className="grid w-full items-start gap-10">
+          <Form {...formMethods}>
+            <form
+              ref={formRef}
+              className="space-y-8"
+              action={courseAction}
+              onSubmit={(e) => {
+                e.preventDefault();
+                formMethods.handleSubmit(() => {
+                  handleSubmit(draftMode);
+                })(e); // immediately invokes the handleSubmit with the original event object.
+              }}
+            >
+              <CourseContent />
+              <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
+              <div className="flex gap-5">
+                <SubmitButton
+                  isLoading={isLoading.secondaryButton}
+                  value="Save Draft"
+                  className="!mb-5"
+                  variant="secondary"
+                  handleOnClick={() => setDraftMode(true)}
                 />
-                <div className="flex gap-5">
-                  <SubmitButton
-                    isLoading={isLoading.secondaryButton}
-                    value="Save Draft"
-                    className="!mb-5"
-                    variant="secondary"
-                    handleOnClick={() => setDraftMode(true)}
-                  />
 
-                  <SubmitButton
-                    variant="default"
-                    isLoading={isLoading.primaryButton}
-                    value={
-                      editMode && !draftMode ? "Save Changes" : "Publish Course"
-                    }
-                    className="!mb-5"
-                    handleOnClick={() => setDraftMode(false)}
-                  />
-                </div>
-              </form>
-            </Form>
-          </div>
-        </main>
-      </FormProvider>
-    </>
+                <SubmitButton
+                  variant="default"
+                  isLoading={isLoading.primaryButton}
+                  value={
+                    editMode && !draftMode ? "Save Changes" : "Publish Course"
+                  }
+                  className="!mb-5"
+                  handleOnClick={() => setDraftMode(false)}
+                />
+              </div>
+            </form>
+          </Form>
+        </div>
+      </main>
+    </FormProvider>
   );
 }

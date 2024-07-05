@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import db from "@/db/drizzle";
-import { userTable } from "@/db/schema";
+import { userTable } from "@/db/db.schema";
 import { FellowSchema } from "@/types/fellow.schema";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";

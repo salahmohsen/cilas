@@ -1,6 +1,6 @@
 {
   "css.customData": [".vscode/tailwind.json"],
-  "cSpell.words": ["Cilas", "lucide"],
+  "cSpell.words": ["Cilas", "ilike", "lucide"],
   "conventionalCommits.scopes": [
     "dashboard",
     "dashboard/darkmode",

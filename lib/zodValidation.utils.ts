@@ -44,7 +44,8 @@ export const required_password = z
 // validating numbers
 export const required_number = z
   .string()
-  .regex(/^\d+$/, { message: "Required" });
+  .regex(/^\d+$/, { message: "Required" })
+  .or(z.number({ message: "Required" }));
 
 export const optional_number = z
   .string()
@@ -61,7 +62,7 @@ export const optional_file = z
   .or(z.string().url().nullable().optional())
   .or(emptyStringToNull);
 
-export const optional_days = z
+export const optional_selectOptions = z
   .array(
     z.object({
       label: z.string(),
@@ -69,7 +70,7 @@ export const optional_days = z
       disable: z.boolean().optional(),
     }),
   )
-  .nullable();
+  .or(emptyStringToNull);
 
 export const required_timeSlot = z
   .object({ from: z.date(), to: z.date() })

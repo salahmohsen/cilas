@@ -84,8 +84,11 @@ export const courseEnrollmentTable = pgTable("course_enrollment", {
 
 export const coursesBundleTable = pgTable("course_bundle", {
   id: serial("id").primaryKey(),
-  name: text("bundle_name").notNull(),
-  bundleDescription: text("bundle_description").notNull(),
+  year: integer("year").notNull(),
+  cycle: text("cycle").notNull(),
+  category: text("category").notNull(),
+  attendance: text("attendance").notNull(),
+  deadline: date("deadline", { mode: "date" }).notNull(),
 });
 
 export const courseBundleAssociationTable = pgTable(
@@ -107,7 +110,6 @@ export const courseRelations = relations(courseTable, ({ one, many }) => ({
   fellow: one(userTable, {
     fields: [courseTable.fellowId],
     references: [userTable.id],
-    
   }),
   enrollments: many(courseEnrollmentTable),
   bundleAssociations: one(courseBundleAssociationTable),
