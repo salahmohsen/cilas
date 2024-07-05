@@ -128,3 +128,14 @@ export const courseEnrollmentRelations = relations(
     }),
   }),
 );
+
+export const bundlesRelations = relations(
+  courseBundleAssociationTable,
+  ({ one, many }) => ({
+    bundle: one(coursesBundleTable, {
+      fields: [courseBundleAssociationTable.bundleId],
+      references: [coursesBundleTable.id],
+    }),
+    courses: many(courseTable),
+  }),
+);

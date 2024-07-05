@@ -88,3 +88,19 @@ export const createBundle = async (
     message: "Unexpected error happened, Please try again later",
   };
 };
+
+export const getBundles = async () => {
+  try {
+    const bundles = await db.query.courseBundleAssociationTable.findMany({
+      with: {
+        bundle: true,
+        courses: {
+          columns: { id: true, enTitle: true, arTitle: true },
+        },
+      },
+    });
+    return bundles;
+  } catch (e) {
+    if (e instanceof Error) return { error: true, message: e.message };
+  }
+};
