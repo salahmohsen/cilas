@@ -30,7 +30,7 @@ export interface SelectProps extends StandardProps {
 export interface MultiSelectorProps extends StandardProps {
   options?: { label: string; value: string }[];
   emptyMsg?: string;
-  onSearch: ((value: string) => Promise<Option[]>) | undefined;
+  onSearch?: ((value: string) => Promise<Option[]>) | undefined;
 }
 export type ComboBoxOption = {
   id: string;
