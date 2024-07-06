@@ -69,9 +69,35 @@ export const courseTable = pgTable("course", {
   applyUrl: text("apply_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  bundleId: integer("bundle_id").references(() => bundleTable.id),
 });
 
-export const courseEnrollmentTable = pgTable("course_enrollment", {
+export const courseRelations = relations(courseTable, ({ one, many }) => ({
+  fellow: one(userTable, {
+    fields: [courseTable.fellowId],
+    references: [userTable.id],
+  }),
+  enrollments: many(enrollmentTable),
+  bundle: one(bundleTable, {
+    fields: [courseTable.bundleId],
+    references: [bundleTable.id],
+  }),
+}));
+
+export const bundleTable = pgTable("course_bundle", {
+  id: serial("id").primaryKey(),
+  year: integer("year").notNull(),
+  cycle: text("cycle").notNull(),
+  category: text("category").notNull(),
+  attendance: text("attendance").notNull(),
+  deadline: date("deadline", { mode: "date" }).notNull(),
+});
+
+export const bundleTableRelations = relations(bundleTable, ({ many }) => ({
+  courses: many(courseTable),
+}));
+
+export const enrollmentTable = pgTable("course_enrollment", {
   id: serial("id").primaryKey(),
   courseId: integer("course_id")
     .notNull()
@@ -82,60 +108,16 @@ export const courseEnrollmentTable = pgTable("course_enrollment", {
   enrollmentDate: timestamp("enrollment_date").notNull().defaultNow(),
 });
 
-export const coursesBundleTable = pgTable("course_bundle", {
-  id: serial("id").primaryKey(),
-  year: integer("year").notNull(),
-  cycle: text("cycle").notNull(),
-  category: text("category").notNull(),
-  attendance: text("attendance").notNull(),
-  deadline: date("deadline", { mode: "date" }).notNull(),
-});
-
-export const courseBundleAssociationTable = pgTable(
-  "course_bundle_association",
-  {
-    id: serial("id").primaryKey(),
-    courseId: integer("course_id")
-      .notNull()
-      .references(() => courseTable.id),
-    bundleId: integer("bundle_id")
-      .notNull()
-      .references(() => coursesBundleTable.id),
-  },
-);
-
-// Relations
-
-export const courseRelations = relations(courseTable, ({ one, many }) => ({
-  fellow: one(userTable, {
-    fields: [courseTable.fellowId],
-    references: [userTable.id],
-  }),
-  enrollments: many(courseEnrollmentTable),
-  bundleAssociations: one(courseBundleAssociationTable),
-}));
-
 export const courseEnrollmentRelations = relations(
-  courseEnrollmentTable,
+  enrollmentTable,
   ({ one }) => ({
     course: one(courseTable, {
-      fields: [courseEnrollmentTable.courseId],
+      fields: [enrollmentTable.courseId],
       references: [courseTable.id],
     }),
     user: one(userTable, {
-      fields: [courseEnrollmentTable.userId],
+      fields: [enrollmentTable.userId],
       references: [userTable.id],
     }),
-  }),
-);
-
-export const bundlesRelations = relations(
-  courseBundleAssociationTable,
-  ({ one, many }) => ({
-    bundle: one(coursesBundleTable, {
-      fields: [courseBundleAssociationTable.bundleId],
-      references: [coursesBundleTable.id],
-    }),
-    courses: many(courseTable),
   }),
 );

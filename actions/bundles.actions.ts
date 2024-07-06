@@ -1,13 +1,11 @@
 "use server";
 
 import db from "@/db/drizzle";
-import {
-  courseBundleAssociationTable,
-  coursesBundleTable,
-} from "@/db/db.schema";
+import { bundleTable, courseTable } from "@/db/db.schema";
 import { Option } from "@/components/ui/multipleSelector";
 import { bundleSchema } from "@/types/bundle.schema";
 import { BundleTable } from "@/types/drizzle.types";
+import { eq } from "drizzle-orm";
 
 export type BundleState = {
   success?: boolean;
@@ -25,7 +23,6 @@ export const createBundle = async (
   const attendance = formData.get("attendance") as string;
   const deadline = new Date(formData.get("deadline") as string);
   const courses = JSON.parse(formData.get("courses") as string) as Option[];
-
   try {
     const parse = bundleSchema.safeParse({
       year,
@@ -45,10 +42,10 @@ export const createBundle = async (
       return { success: false, error: true, message: e.message };
   }
 
-  let bundleId: {
-    id: number;
+  let bundle: {
+    bundleId: number;
   }[];
-
+  // Create bundle and return success if no courses inserted
   try {
     const values: BundleTable = {
       year,
@@ -58,26 +55,25 @@ export const createBundle = async (
       deadline,
     };
 
-    bundleId = await db
-      .insert(coursesBundleTable)
+    bundle = await db
+      .insert(bundleTable)
       .values(values)
-      .returning({ id: coursesBundleTable.id });
+      .returning({ bundleId: bundleTable.id });
+
+    if (courses.length === 0)
+      return { success: true, message: "bundle created successfully!" };
   } catch (error) {
     if (error instanceof Error) return { error: true, message: error.message };
   }
 
+  // if courses length > 0 this should runs and try update courses with bundle IDs
   try {
-    if (courses !== undefined && courses.length > 0) {
-      courses.map(async (course) => {
-        const values = {
-          courseId: Number(course.value),
-          bundleId: bundleId[0].id,
-        };
-        const stmt = await db
-          .insert(courseBundleAssociationTable)
-          .values(values);
-      });
-    }
+    courses.map(async (course) => {
+      const stmt = await db
+        .update(courseTable)
+        .set(bundle[0])
+        .where(eq(courseTable.id, Number(course.value)));
+    });
     return { success: true, message: "Courses bundles created successfully" };
   } catch (error) {
     if (error instanceof Error) return { error: true, message: error.message };
@@ -89,18 +85,42 @@ export const createBundle = async (
   };
 };
 
-export const getBundles = async () => {
+export type Bundles = {
+  id: number;
+  category: string;
+  attendance: string;
+  year: number;
+  cycle: string;
+  deadline: Date;
+  courses: {
+    id: number;
+    enTitle: string | null;
+    arTitle: string | null;
+  }[];
+}[];
+
+export type GetBundles = {
+  success: boolean;
+  message?: string;
+  bundles?: Bundles;
+};
+
+export const getBundles = async (): Promise<GetBundles> => {
   try {
-    const bundles = await db.query.courseBundleAssociationTable.findMany({
+    const bundles = await db.query.bundleTable.findMany({
       with: {
-        bundle: true,
         courses: {
           columns: { id: true, enTitle: true, arTitle: true },
         },
       },
     });
-    return bundles;
+
+    return { success: true, bundles };
   } catch (e) {
-    if (e instanceof Error) return { error: true, message: e.message };
+    if (e instanceof Error) return { success: false, message: e.message };
   }
+  return {
+    success: false,
+    message: "Unexpected error happened, please try again!",
+  };
 };
