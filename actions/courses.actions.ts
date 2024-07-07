@@ -204,7 +204,6 @@ export const getUnbundledCourses = async (value: string = "") => {
     },
     where: isNull(courseTable.bundleId),
   });
-  console.log(data);
   const coursesNames: Option[] = data.map((course) => {
     if (course.enTitle)
       return { label: course.enTitle, value: course.id.toString() };

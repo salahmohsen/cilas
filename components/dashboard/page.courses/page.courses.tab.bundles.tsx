@@ -14,8 +14,23 @@ import { Bundle } from "@/actions/bundles.actions";
 import { format } from "date-fns";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { useCallback, useEffect, useState } from "react";
-import { GetSafeCourses, getSafeCourses } from "@/actions/courses.actions";
+import {
+  GetSafeCourses,
+  getSafeCourses,
+  getUnbundledCourses,
+} from "@/actions/courses.actions";
 import { toast } from "sonner";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+import MultipleSelector from "@/components/ui/multipleSelector";
 
 export const BundleItem = ({ bundle }: { bundle: Bundle }) => {
   const {
@@ -126,7 +141,7 @@ export const BundleItem = ({ bundle }: { bundle: Bundle }) => {
           <div className="flex flex-col flex-wrap gap-2">
             {bundle.courses.length > 0 ? (
               bundle.courses
-                .sort((a, b) => a.id - b.id)
+                .sort((a, b) => b.id - a.id)
                 .map((course) => (
                   <Badge
                     variant={
@@ -167,14 +182,46 @@ export const BundleItem = ({ bundle }: { bundle: Bundle }) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/dashboard/courses/edit-course/bundle`}>
+            <Link href={`/dashboard/courses/edit-bundle?id=${bundle.id}`}>
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-                Edit
+                Edit Bundle
               </DropdownMenuItem>
             </Link>
 
+            <DropdownMenuItem
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+            >
+              <Drawer>
+                <DrawerTrigger>Update Courses</DrawerTrigger>
+                <DrawerContent>
+                  <DrawerHeader>
+                    <DrawerTitle>Update Bundle Courses</DrawerTitle>
+                    <DrawerDescription>
+                      <MultipleSelector
+                        onSearch={getUnbundledCourses}
+                        triggerSearchOnFocus={false}
+                        placeholder="Select unbundled courses"
+                        emptyIndicator={
+                          <p className="flex w-full items-center justify-center text-sm leading-10 text-gray-600 dark:text-gray-400">
+                            No Courses found!
+                          </p>
+                        }
+                      />
+                    </DrawerDescription>
+                  </DrawerHeader>
+                  <DrawerFooter>
+                    <Button>Submit</Button>
+                    <DrawerClose>
+                      <Button variant="outline">Cancel</Button>
+                    </DrawerClose>
+                  </DrawerFooter>
+                </DrawerContent>
+              </Drawer>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
-
             <DropdownMenuItem
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               onClick={(e) => e.stopPropagation()}
