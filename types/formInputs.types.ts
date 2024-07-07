@@ -31,6 +31,7 @@ export interface MultiSelectorProps extends StandardProps {
   options?: { label: string; value: string }[];
   emptyMsg?: string;
   onSearch?: ((value: string) => Promise<Option[]>) | undefined;
+  triggerSearchOnFocus?: boolean;
 }
 export type ComboBoxOption = {
   id: string;

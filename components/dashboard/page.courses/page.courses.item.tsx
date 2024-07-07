@@ -1,6 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useOptimistic,
+  useState,
+  useTransition,
+} from "react";
 import { useCourseState } from "@/providers/CourseState.provider";
 
 import Link from "next/link";
@@ -20,16 +26,27 @@ import { Calendar, Ellipsis, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CourseWithFellow } from "@/types/drizzle.types";
 
-export function CourseItem({ course }: { course: CourseWithFellow }) {
-  const { isSelected, setIsSelected, setCourse, handleDelete } =
-    useCourseState();
+export function CourseItem({
+  course,
+  handleDelete,
+}: {
+  course: CourseWithFellow;
+  handleDelete: (courseId: number) => void;
+}) {
+  const {
+    isCourseSelected,
+    setIsCourseSelected,
+    setCourseInfo,
+    courses,
+    setCourses,
+  } = useCourseState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSelect = (id) => {
-    setIsSelected((prev) => ({
-      [id]: prev[id] === id ? undefined : !prev[id],
+    setIsCourseSelected((prev) => ({
+      [id]: prev[id] ? undefined : !prev[id],
     }));
-    setCourse(course);
+    setCourseInfo(course);
   };
   const courseStatues = ():
     | "ongoing"
@@ -52,7 +69,7 @@ export function CourseItem({ course }: { course: CourseWithFellow }) {
 
   return (
     <li
-      className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isSelected[course.id] || isMenuOpen ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
+      className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isCourseSelected[course.id] || isMenuOpen ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
       onClick={() => handleSelect(course.id)}
     >
       <div className="flex flex-col gap-4">
@@ -82,7 +99,7 @@ export function CourseItem({ course }: { course: CourseWithFellow }) {
             <Button
               size="icon"
               variant="outline"
-              className={`h-8 w-8 ${isSelected ? "bg-background text-foreground" : ""}`}
+              className={`h-8 w-8 ${isCourseSelected ? "bg-background text-foreground" : ""}`}
             >
               <Ellipsis className="h-3.5 w-3.5" />
               <span className="sr-only">More</span>

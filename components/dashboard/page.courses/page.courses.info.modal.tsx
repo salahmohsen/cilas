@@ -3,7 +3,11 @@ import { useCourseState } from "@/providers/CourseState.provider";
 import { CourseInfo } from "./page.courses.info";
 
 export const CourseInfoModal = () => {
-  const { isSelected, setIsSelected, course: courseInfo } = useCourseState();
+  const {
+    isCourseSelected: isSelected,
+    setIsCourseSelected: setIsSelected,
+    courseInfo,
+  } = useCourseState();
 
   if (!courseInfo) return;
 

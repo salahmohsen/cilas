@@ -35,7 +35,7 @@ const coursesFilter = [
 ];
 
 export function FilterButton() {
-  const { setCourseFilter } = useCourseState();
+  const { setFilter } = useCourseState();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("");
 
@@ -67,9 +67,9 @@ export function FilterButton() {
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue);
                     setOpen(false);
-                    setCourseFilter(
+                    setFilter(
                       currentValue === value
-                        ? "all published"
+                        ? "published"
                         : (currentValue as CoursesFilter),
                     );
                   }}

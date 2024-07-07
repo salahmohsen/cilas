@@ -1,4 +1,4 @@
-import { coursesBundleTable, courseTable, userTable } from "@/db/db.schema";
+import { bundleTable, courseTable, userTable } from "@/db/db.schema";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export type SafeUser = Omit<
@@ -9,11 +9,12 @@ export type SafeUser = Omit<
 export type UserWithSensitiveCols = InferSelectModel<typeof userTable>;
 
 export type CoursesFilter =
-  | "all published"
+  | "published"
   | "ongoing"
   | "archived"
   | "starting soon"
-  | "draft";
+  | "draft"
+  | "bundles";
 
 export interface Course extends InferSelectModel<typeof courseTable> {}
 
@@ -21,4 +22,4 @@ export interface CourseWithFellow extends Course {
   fellow: SafeUser;
 }
 
-export type BundleTable = InferInsertModel<typeof coursesBundleTable>;
+export type BundleTable = InferInsertModel<typeof bundleTable>;

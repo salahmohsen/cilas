@@ -47,7 +47,9 @@ export const createBundle = async (
   }[];
   // Create bundle and return success if no courses inserted
   try {
+    const name = `${year} ${cycle} ${category}`;
     const values: BundleTable = {
+      name,
       year,
       cycle,
       category,
@@ -63,7 +65,19 @@ export const createBundle = async (
     if (courses.length === 0)
       return { success: true, message: "bundle created successfully!" };
   } catch (error) {
-    if (error instanceof Error) return { error: true, message: error.message };
+    if (error instanceof Error) {
+      if (
+        error.message ===
+        `duplicate key value violates unique constraint "course_bundle_name_unique"`
+      ) {
+        return {
+          error: true,
+          message: `${year} ${cycle} ${category} already exists!`,
+        };
+      } else {
+        return { error: true, message: error.message };
+      }
+    }
   }
 
   // if courses length > 0 this should runs and try update courses with bundle IDs
@@ -85,8 +99,9 @@ export const createBundle = async (
   };
 };
 
-export type Bundles = {
+export type Bundle = {
   id: number;
+  name: string | null;
   category: string;
   attendance: string;
   year: number;
@@ -97,12 +112,13 @@ export type Bundles = {
     enTitle: string | null;
     arTitle: string | null;
   }[];
-}[];
+};
 
 export type GetBundles = {
-  success: boolean;
-  message?: string;
-  bundles?: Bundles;
+  success?: boolean;
+  error?: boolean;
+  message: string;
+  bundles?: Bundle[];
 };
 
 export const getBundles = async (): Promise<GetBundles> => {
@@ -115,9 +131,9 @@ export const getBundles = async (): Promise<GetBundles> => {
       },
     });
 
-    return { success: true, bundles };
+    return { success: true, message: "bundles fetched successfully", bundles };
   } catch (e) {
-    if (e instanceof Error) return { success: false, message: e.message };
+    if (e instanceof Error) return { error: true, message: e.message };
   }
   return {
     success: false,

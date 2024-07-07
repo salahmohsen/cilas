@@ -3,7 +3,17 @@
 import db from "@/db/drizzle";
 import { courseTable } from "@/db/db.schema";
 import { courseSchema } from "@/types/course.schema";
-import { eq, desc, asc, or, and, like, ilike } from "drizzle-orm";
+import {
+  eq,
+  desc,
+  asc,
+  or,
+  and,
+  like,
+  ilike,
+  isNull,
+  inArray,
+} from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { uploadImage } from "@/lib/cloudinary.utils";
 import {
@@ -111,17 +121,24 @@ export async function createEditCourse(
   };
 }
 
-export const getCourses = async (
+export type GetSafeCourses = Awaited<ReturnType<typeof getSafeCourses>>;
+
+export const getSafeCourses = async (
   filter?: CoursesFilter,
   id?: number,
+  idArr?: number[],
   page: number = 1,
   pageSize: number = 10,
 ) => {
-  if (!filter || !id)
-    console.log("either filter or id or both must be provided");
+  if (!filter && !id && !idArr)
+    return {
+      error: true,
+      message: "either filter or id or both or array of ids must be provided",
+    };
 
-  const whereCondition =
-    id !== undefined && filter !== undefined
+  const whereCondition = idArr
+    ? inArray(courseTable.id, idArr)
+    : id !== undefined && filter !== undefined
       ? and(coursesFilter(filter), eq(courseTable.id, id))
       : id !== undefined
         ? eq(courseTable.id, id)
@@ -129,20 +146,29 @@ export const getCourses = async (
           ? coursesFilter(filter)
           : undefined;
 
-  const courses = await db.query.courseTable.findMany({
-    where: whereCondition,
-    with: { fellow: true },
-    limit: pageSize,
-    offset: (page - 1) * pageSize,
-    orderBy: [desc(courseTable.startDate), desc(courseTable.createdAt)],
-  });
+  try {
+    const courses = await db.query.courseTable.findMany({
+      where: whereCondition,
+      with: { fellow: true },
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+      orderBy: [desc(courseTable.startDate), desc(courseTable.createdAt)],
+    });
 
-  const safeCourses = courses.map((course) => {
-    const { googleId, passwordHash, ...safeFellow } = course.fellow;
-    return { ...course, fellow: safeFellow };
-  });
+    const safeCourses = courses.map((course) => {
+      const { googleId, passwordHash, ...safeFellow } = course.fellow;
+      return { ...course, fellow: safeFellow };
+    });
 
-  return safeCourses;
+    return { error: false, safeCourses };
+  } catch (e) {
+    if (e instanceof Error) return { error: true, message: e.message };
+  }
+
+  return {
+    error: true,
+    message: "Unexpected error happened, please try again!",
+  };
 };
 
 export const searchCoursesNames = async (value: string = "") => {
@@ -166,6 +192,26 @@ export const searchCoursesNames = async (value: string = "") => {
     }
   });
 
+  return coursesNames;
+};
+
+export const getUnbundledCourses = async (value: string = "") => {
+  const data = await db.query.courseTable.findMany({
+    columns: {
+      id: true,
+      enTitle: true,
+      arTitle: true,
+    },
+    where: isNull(courseTable.bundleId),
+  });
+  console.log(data);
+  const coursesNames: Option[] = data.map((course) => {
+    if (course.enTitle)
+      return { label: course.enTitle, value: course.id.toString() };
+    else {
+      return { label: course.arTitle!, value: course.id.toString() };
+    }
+  });
   return coursesNames;
 };
 

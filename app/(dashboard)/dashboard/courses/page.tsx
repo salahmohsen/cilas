@@ -1,10 +1,23 @@
 "use client";
 
-import { useWindowSize } from "@uidotdev/usehooks";
-
+import { useFormState } from "react-dom";
+import {
+  useCallback,
+  useEffect,
+  useOptimistic,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import Link from "next/link";
-import { CourseItem } from "@/components/dashboard/page.courses/page.courses.item";
+import { useSearchParams } from "next/navigation";
+import { useWindowSize } from "@uidotdev/usehooks";
+import { useCourseState } from "@/providers/CourseState.provider";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { deleteCourse } from "@/actions/courses.actions";
 
+import { CourseItem } from "@/components/dashboard/page.courses/page.courses.item";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,18 +28,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import { CourseInfo } from "@/components/dashboard/page.courses/page.courses.info";
 import { FilterButton } from "@/components/dashboard/page.courses/page.courses.button.filter";
-
-import { useCourseState } from "@/providers/CourseState.provider";
 import { CourseInfoModal } from "@/components/dashboard/page.courses/page.courses.info.modal";
 import { CourseSkeleton } from "@/components/dashboard/page.courses/page.courses.skeleton";
-import { useSearchParams } from "next/navigation";
 import { CoursesFilter } from "@/types/drizzle.types";
-import { useState } from "react";
-import { cn } from "@/lib/utils";
-import { Sailboat, Waves } from "lucide-react";
+import { BundleItem } from "@/components/dashboard/page.courses/page.courses.tab.bundles";
+import { Loader, LoaderPinwheel, Sailboat, Waves } from "lucide-react";
 
 export default function CoursesPage() {
   const [activeTab, setActiveTab] = useState<"published" | "draft">(
@@ -34,10 +42,60 @@ export default function CoursesPage() {
   );
   const { width } = useWindowSize();
 
-  const { isLoading, courses, setCourseFilter, isSelected } = useCourseState();
+  const {
+    isLoading,
+    setFilter,
+    isCourseSelected: isSelected,
+    setIsCourseSelected: setIsSelected,
+    courses,
+    setCourses,
+    bundles,
+  } = useCourseState();
+
   const searchParams = useSearchParams();
-  const storedFilter = searchParams.get("publishedFilter") as CoursesFilter;
-  const courseMode = searchParams.get("course_mode");
+  const storedFilter = searchParams?.get("publishedFilter") as CoursesFilter;
+  const courseMode = searchParams?.get("course_mode");
+
+  // Delete Course
+  const [deleteState, deleteAction] = useFormState(deleteCourse, {});
+  const [isPending, startTransition] = useTransition();
+
+  const [optimisticCourses, addOptimisticCourse] = useOptimistic(
+    courses,
+    (currentState, courseIdToRemove: number) => {
+      if (currentState)
+        return currentState.filter((course) => course.id !== courseIdToRemove);
+    },
+  );
+
+  const handleDelete = useCallback(
+    (courseId: number) => {
+      startTransition(() => {
+        addOptimisticCourse(courseId);
+        const formData = new FormData();
+        formData.append("courseId", courseId.toString());
+        deleteAction(formData);
+      });
+    },
+    [addOptimisticCourse, deleteAction],
+  );
+  const toastId = useRef<string | number>();
+  useEffect(() => {
+    if (isPending) toastId.current = toast.loading("Loading...");
+  }, [isPending]);
+
+  useEffect(() => {
+    if (deleteState?.success) {
+      toast.success(deleteState.message, { id: toastId.current });
+      setCourses((current) =>
+        current?.filter(
+          (course) => course.id !== Number(deleteState?.deletedId),
+        ),
+      );
+    }
+    if (deleteState?.error) toast.error(deleteState.message);
+  }, [deleteState, setCourses, toastId]);
+
   return (
     <main className={`mx-4 flex flex-col gap-5`}>
       <Card className="flex flex-wrap items-end justify-between gap-5 p-6">
@@ -82,8 +140,9 @@ export default function CoursesPage() {
                   <TabsTrigger
                     value="published"
                     onClick={() => {
-                      setCourseFilter(storedFilter || "all published");
+                      setFilter(storedFilter || "published");
                       setActiveTab("published");
+                      setIsSelected(() => ({ key: false }));
                     }}
                   >
                     Published
@@ -94,8 +153,9 @@ export default function CoursesPage() {
                   <TabsTrigger
                     value="draft"
                     onClick={() => {
-                      setCourseFilter("draft");
+                      setFilter("draft");
                       setActiveTab("draft");
+                      setIsSelected(() => ({ key: false }));
                     }}
                   >
                     Draft
@@ -103,7 +163,13 @@ export default function CoursesPage() {
                 </Link>
 
                 <Link href="/dashboard/courses?course_mode=bundles">
-                  <TabsTrigger value="bundles" onClick={() => {}}>
+                  <TabsTrigger
+                    value="bundles"
+                    onClick={() => {
+                      setFilter("bundles");
+                      setIsSelected(() => ({ key: false }));
+                    }}
+                  >
                     Bundles
                   </TabsTrigger>
                 </Link>
@@ -122,8 +188,12 @@ export default function CoursesPage() {
                   <ul className="group/list space-y-2">
                     {isLoading && <CourseSkeleton itemsNumber={10} />}
                     {!isLoading &&
-                      courses.map((course) => (
-                        <CourseItem course={course} key={course.id} />
+                      optimisticCourses?.map((course) => (
+                        <CourseItem
+                          course={course}
+                          key={course.id}
+                          handleDelete={handleDelete}
+                        />
                       ))}
                   </ul>
                 </CardContent>
@@ -141,12 +211,30 @@ export default function CoursesPage() {
                   <ul className="group/list space-y-3">
                     {isLoading && <CourseSkeleton itemsNumber={10} />}
                     {!isLoading &&
-                      courses.map((course) => (
-                        <CourseItem course={course} key={course.id} />
+                      optimisticCourses?.map((course) => (
+                        <CourseItem
+                          course={course}
+                          key={course.id}
+                          handleDelete={handleDelete}
+                        />
                       ))}
                   </ul>
                 </CardContent>
-                <TabsContent value="bundles"></TabsContent>
+              </Card>
+            </TabsContent>
+            <TabsContent value="bundles">
+              <Card>
+                <CardHeader className="px-7">
+                  <CardTitle>Courses Bundles</CardTitle>
+                  <CardDescription>Manage courses bundles.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="group/list space-y-3">
+                    {bundles.map((bundle) => (
+                      <BundleItem key={bundle.id} bundle={{ ...bundle }} />
+                    ))}
+                  </ul>
+                </CardContent>
               </Card>
             </TabsContent>
           </Tabs>

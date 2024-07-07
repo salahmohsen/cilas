@@ -3,7 +3,7 @@ import { CoursesFilter } from "@/types/drizzle.types";
 import { eq, gte, lte, lt, gt, sql, and } from "drizzle-orm";
 
 export const coursesFilter = (filter: CoursesFilter) => {
-  if (filter === "all published") {
+  if (filter === "published") {
     return eq(courseTable.draftMode, false);
   }
   if (filter === "ongoing") {

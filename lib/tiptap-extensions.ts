@@ -5,7 +5,7 @@ import Typography from "@tiptap/extension-typography";
 import StarterKit from "@tiptap/starter-kit";
 import TextDirection from "tiptap-text-direction";
 
-// ToDo => Confifure classNames
+// ToDo => configure classNames
 
 export const starterKit = StarterKit.configure({
   paragraph: {

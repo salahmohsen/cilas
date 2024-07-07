@@ -26,48 +26,61 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 
 export function CourseInfo({ className }: { className?: string }) {
-  const { course, isSelected, setIsSelected, setCourse, courses } =
-    useCourseState();
-
+  const {
+    isCourseSelected,
+    setIsCourseSelected,
+    courseInfo,
+    setCourseInfo,
+    courses,
+  } = useCourseState();
   const { width } = useWindowSize();
-  if (!course) return;
+  if (!courseInfo) return;
 
-  const idArr: number[] = courses.map((item) => item.id);
-  const currentId = course?.id;
-  const currIndex = idArr.indexOf(currentId);
+  const idArr: number[] | undefined = courses?.map((item) => item.id);
+  const currentId = courseInfo.id;
+  const currIndex = idArr?.indexOf(currentId);
 
   const handleNext = () => {
-    if (currIndex < idArr.length - 1) {
+    if (
+      idArr &&
+      typeof currIndex === "number" &&
+      currIndex < idArr.length - 1
+    ) {
       const nextId = idArr[currIndex + 1];
-      setIsSelected({ [nextId]: true });
-      setCourse(
-        courses.find((item) => item?.id === nextId) as CourseWithFellow,
+      setIsCourseSelected({ [nextId]: true });
+      setCourseInfo(
+        courses?.find((item) => item?.id === nextId) as CourseWithFellow,
       );
     } else {
-      setIsSelected({ [idArr[0]]: true });
-      setCourse(courses[0]);
+      if (idArr) setIsCourseSelected({ [idArr[0]]: true });
+      if (courses) setCourseInfo(courses[0]);
     }
   };
 
   const handlePrev = () => {
-    if (currIndex > 0) {
+    if (idArr && typeof currIndex === "number" && currIndex > 0) {
       const prevId = idArr[currIndex - 1];
-      setIsSelected({ [prevId]: true });
-      setCourse(
-        courses.find((item) => item?.id === prevId) as CourseWithFellow,
+      setIsCourseSelected({ [prevId]: true });
+      setCourseInfo(
+        courses?.find((item) => item?.id === prevId) as CourseWithFellow,
       );
     } else {
-      setIsSelected({ [idArr.at(-1) as number]: true });
-      setCourse(courses.at(-1) as CourseWithFellow);
+      setIsCourseSelected({ [idArr?.at(-1) as number]: true });
+      setCourseInfo(courses?.at(-1) as CourseWithFellow);
     }
   };
+  console.log(
+    "Object.values(isCourseSelected)[0]",
+    Object.values(isCourseSelected)[0],
+  );
+  console.log("isCourseSelected", isCourseSelected);
   return (
     <Card
       className={cn(
         `flex flex-col justify-between`,
         width && width < 1024
           ? "w-full transition-none"
-          : Object.values(isSelected)[0]
+          : Object.values(isCourseSelected)[0]
             ? "ml-5 w-[30%] opacity-100"
             : "w-0 opacity-0",
         className,
@@ -77,8 +90,8 @@ export function CourseInfo({ className }: { className?: string }) {
         <CardHeader className="flex flex-row items-start bg-muted/50">
           <div className="grid gap-0.5">
             <CardTitle className="group flex items-center gap-2 text-lg">
-              <span className="" dir={course.enTitle ? "ltr" : "rtl"}>
-                {course?.enTitle || course?.arTitle}
+              <span className="" dir={courseInfo.enTitle ? "ltr" : "rtl"}>
+                {courseInfo.enTitle || courseInfo.arTitle}
               </span>
               <Button
                 size="icon"
@@ -86,10 +99,12 @@ export function CourseInfo({ className }: { className?: string }) {
                 className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                 onClick={() => {
                   navigator.clipboard
-                    .writeText((course?.enTitle || course?.arTitle) as string)
+                    .writeText(
+                      (courseInfo.enTitle || courseInfo.arTitle) as string,
+                    )
                     .then(() => {
                       toast.success(
-                        `${course?.enTitle || course?.arTitle} copied!`,
+                        `${courseInfo.enTitle || courseInfo.arTitle} copied!`,
                       );
                     });
                 }}
@@ -99,7 +114,7 @@ export function CourseInfo({ className }: { className?: string }) {
               </Button>
             </CardTitle>
             <CardDescription>
-              Date: {format(course.startDate, "dd MMMM yyyy")}
+              Date: {format(courseInfo.startDate, "dd MMMM yyyy")}
             </CardDescription>
           </div>
         </CardHeader>
@@ -110,41 +125,42 @@ export function CourseInfo({ className }: { className?: string }) {
             <ul className="grid gap-3">
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Category</span>
-                <span>{course.category}</span>
+                <span>{courseInfo.category}</span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Season Cycle</span>
-                <span>{getSeason(course?.startDate)}</span>
+                <span>{getSeason(courseInfo.startDate)}</span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Registration</span>
-                <span>{course?.isRegistrationOpen ? "Open" : "Closed"}</span>
+                <span>{courseInfo.isRegistrationOpen ? "Open" : "Closed"}</span>
               </li>
             </ul>
             <Separator className="my-2" />
             <ul className="grid gap-3">
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Start Date</span>
-                <span>{format(course?.startDate, "dd MMMM yyyy")}</span>
+                <span>{format(courseInfo.startDate, "dd MMMM yyyy")}</span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">End Date</span>
-                <span>{format(course?.endDate, "dd MMMM yyyy")}</span>
+                <span>{format(courseInfo.endDate, "dd MMMM yyyy")}</span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Duration</span>
                 <span>
-                  {differenceInWeeks(course?.endDate, course?.startDate)} Weeks
+                  {differenceInWeeks(courseInfo.endDate, courseInfo.startDate)}{" "}
+                  Weeks
                 </span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Days</span>
                 <span>
-                  {course.days?.length === 0
+                  {courseInfo.days?.length === 0
                     ? "-"
                     : "Every " +
-                      course.days?.map((day, index) =>
-                        course.days?.length === index + 1
+                      courseInfo.days?.map((day, index) =>
+                        courseInfo.days?.length === index + 1
                           ? ` and ${day.label}`
                           : `${day.label}`,
                       )}
@@ -159,19 +175,21 @@ export function CourseInfo({ className }: { className?: string }) {
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Name</dt>
                 <dd>
-                  {course.fellow?.firstName + " " + course.fellow?.lastName}
+                  {courseInfo.fellow?.firstName +
+                    " " +
+                    courseInfo.fellow?.lastName}
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Email</dt>
                 <dd>
-                  <a href="mailto:">{course.fellow?.email}</a>
+                  <a href="mailto:">{courseInfo.fellow?.email}</a>
                 </dd>
               </div>
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Phone</dt>
                 <dd>
-                  <a href="tel:">{course.fellow?.tel}</a>
+                  <a href="tel:">{courseInfo.fellow?.tel}</a>
                 </dd>
               </div>
             </dl>
@@ -203,7 +221,7 @@ export function CourseInfo({ className }: { className?: string }) {
         <div className="text-xs text-muted-foreground">
           Updated{" "}
           <time dateTime="2023-11-23">
-            {format(course.updatedAt, "dd MMMM yyyy")}
+            {format(courseInfo.updatedAt, "dd MMMM yyyy")}
           </time>
         </div>
         <Pagination className="ml-auto mr-0 w-auto">

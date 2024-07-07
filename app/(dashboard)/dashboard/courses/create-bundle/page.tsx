@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { BundleState, createBundle } from "@/actions/bundles.actions";
 import { DateInput } from "@/components/dashboard/form/form.input.date";
 import { MultiSelectorInput } from "@/components/dashboard/form/form.input.multiSelector";
@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { searchCoursesNames } from "@/actions/courses.actions";
+import { getUnbundledCourses } from "@/actions/courses.actions";
 
 export default function BundleForm() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -108,8 +108,9 @@ export default function BundleForm() {
             <MultiSelectorInput
               name="courses"
               label="Courses"
-              placeholder="Search for courses..."
-              onSearch={searchCoursesNames}
+              placeholder="Select unbundled courses"
+              onSearch={getUnbundledCourses}
+              triggerSearchOnFocus={true}
               emptyMsg="No Courses found!"
             />
           </fieldset>

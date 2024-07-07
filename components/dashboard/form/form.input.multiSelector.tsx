@@ -22,6 +22,7 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
     emptyMsg,
     className,
     onSearch,
+    triggerSearchOnFocus,
   }) {
     const { control } = useFormContext();
     return (
@@ -44,6 +45,7 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
                   <MultipleSelector
                     defaultOptions={options}
                     placeholder={placeholder}
+                    triggerSearchOnFocus={triggerSearchOnFocus}
                     emptyIndicator={
                       <p className="flex w-full items-center justify-center text-sm leading-10 text-gray-600 dark:text-gray-400">
                         {emptyMsg}
@@ -56,7 +58,9 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
                     value={field.value}
                     onChange={(value) => field.onChange(value)}
                     loadingIndicator={
-                      <LoaderCircle className="mx-auto mt-2 w-full animate-spin" />
+                      <div className="flex h-10 items-center justify-center">
+                        <LoaderCircle className="animate-spin" />
+                      </div>
                     }
                     onSearch={onSearch}
                   />

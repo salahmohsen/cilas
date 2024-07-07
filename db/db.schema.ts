@@ -86,6 +86,7 @@ export const courseRelations = relations(courseTable, ({ one, many }) => ({
 
 export const bundleTable = pgTable("course_bundle", {
   id: serial("id").primaryKey(),
+  name: text("name").unique(),
   year: integer("year").notNull(),
   cycle: text("cycle").notNull(),
   category: text("category").notNull(),

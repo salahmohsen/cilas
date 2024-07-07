@@ -13,7 +13,7 @@ export default function CreateCoursePage() {
   const [loading, setLoading] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
-  const courseId = searchParams.get("copy_values");
+  const courseId = searchParams?.get("copy_values");
 
   const fetchCourse = useCallback(async () => {
     if (!courseId) return;

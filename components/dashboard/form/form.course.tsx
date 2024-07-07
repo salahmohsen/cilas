@@ -45,7 +45,7 @@ export function CourseForm({
   // Form Refs
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { setCourseFilter, fetchCourses, setIsSelected } = useCourseState();
+  const { setFilter, forceUpdate } = useCourseState();
 
   // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(
@@ -83,8 +83,7 @@ export function CourseForm({
     // @success
     if (courseState.success) {
       toast.success(courseState.message);
-      fetchCourses(courseState.courseId); // trigger refetching
-
+      forceUpdate();
       // Redirect based on course submit mode: published | draft
       redirect(
         "/dashboard/courses?course_mode=" + (draftMode ? "draft" : "published"),
@@ -96,14 +95,7 @@ export function CourseForm({
     // stop loading
     if (!isPending && (courseState.success || courseState.error))
       setIsLoading({ primaryButton: false, secondaryButton: false });
-  }, [
-    courseState,
-    isPending,
-    draftMode,
-    setCourseFilter,
-    fetchCourses,
-    setIsSelected,
-  ]);
+  }, [courseState, draftMode, forceUpdate, isPending]);
 
   const handleSubmit = useCallback(
     (draftMode: boolean) => {
@@ -115,8 +107,6 @@ export function CourseForm({
         }));
       // establish courseAction
       startTransition(() => {
-        // set course filter which will determine which tab content will load after redirect
-        draftMode ? setCourseFilter("draft") : setCourseFilter("all published");
         // create formData object and append draftMode, editMode, and courseId
         const formData = new FormData(formRef.current!);
         formData.append("draftMode", draftMode.toString());
@@ -125,13 +115,7 @@ export function CourseForm({
         courseAction(formData);
       });
     },
-    [
-      formMethods.formState.errors,
-      setCourseFilter,
-      editMode,
-      courseId,
-      courseAction,
-    ],
+    [formMethods.formState.errors, editMode, courseId, courseAction],
   );
 
   return (
@@ -155,10 +139,15 @@ export function CourseForm({
               <div className="flex gap-5">
                 <SubmitButton
                   isLoading={isLoading.secondaryButton}
-                  value="Save Draft"
+                  value={
+                    editMode && !draftMode ? "Convert To Draft" : "Save Draft"
+                  }
                   className="!mb-5"
                   variant="secondary"
-                  handleOnClick={() => setDraftMode(true)}
+                  handleOnClick={() => {
+                    setDraftMode(true);
+                    setFilter("draft");
+                  }}
                 />
 
                 <SubmitButton
@@ -168,7 +157,10 @@ export function CourseForm({
                     editMode && !draftMode ? "Save Changes" : "Publish Course"
                   }
                   className="!mb-5"
-                  handleOnClick={() => setDraftMode(false)}
+                  handleOnClick={() => {
+                    setDraftMode(false);
+                    setFilter("published");
+                  }}
                 />
               </div>
             </form>

@@ -7,37 +7,40 @@ import {
   useContext,
   useEffect,
   useState,
-  useOptimistic,
-  useTransition,
   useCallback,
 } from "react";
-import { useFormState } from "react-dom";
-import { getCourses } from "@/actions/courses.actions";
-import { deleteCourse } from "@/actions/courses.actions";
+import { GetSafeCourses, getSafeCourses } from "@/actions/courses.actions";
 import {
   CoursesFilter,
   CourseWithFellow,
   SafeUser,
 } from "@/types/drizzle.types";
 import { toast } from "sonner";
+import {
+  getBundles as fetchBundles,
+  Bundle,
+  GetBundles,
+} from "@/actions/bundles.actions";
+import { useSearchParams } from "next/navigation";
 
 type IsSelected = { [key: number]: boolean | undefined };
 
 type CourseStateContext = {
-  isSelected: IsSelected;
-  setIsSelected: Dispatch<SetStateAction<IsSelected>>;
-  fetchCourses: (insertedId?: number) => Promise<void>;
-  course: CourseWithFellow | null;
-  setCourse: Dispatch<SetStateAction<CourseWithFellow | null>>;
-  courseFilter: CoursesFilter;
-  setCourseFilter: Dispatch<SetStateAction<CoursesFilter>>;
-  courses: CourseWithFellow[];
-  isLoading: boolean;
-  handleDelete: (courseId: number) => void;
+  courses: CourseWithFellow[] | undefined;
+  setCourses: Dispatch<SetStateAction<CourseWithFellow[] | undefined>>;
+  isCourseSelected: IsSelected;
+  setIsCourseSelected: Dispatch<SetStateAction<IsSelected>>;
+  isBundleSelected: IsSelected;
+  setIsBundleSelected: Dispatch<SetStateAction<IsSelected>>;
+  courseInfo: CourseWithFellow | undefined;
+  setCourseInfo: Dispatch<SetStateAction<CourseWithFellow | undefined>>;
+  filter: CoursesFilter;
+  setFilter: Dispatch<SetStateAction<CoursesFilter>>;
   fellow: SafeUser | undefined;
   setFellow: Dispatch<SetStateAction<SafeUser | undefined>>;
-  // coursesNames: Option[] | undefined;
-  // fetchCoursesNames: () => Promise<void>;
+  isLoading: boolean;
+  bundles: Bundle[];
+  forceUpdate: () => void;
 };
 
 const CourseStateContext = createContext<CourseStateContext>(
@@ -45,117 +48,89 @@ const CourseStateContext = createContext<CourseStateContext>(
 );
 
 export const CourseStateProvider = ({ children }) => {
-  const [isPending, startTransition] = useTransition();
-  const [isSelected, setIsSelected] = useState<IsSelected>({});
-  const [course, setCourse] = useState<CourseWithFellow | null>(null);
+  const searchParam = useSearchParams();
+  const param = searchParam?.get("course_mode");
+
+  const [isCourseSelected, setIsCourseSelected] = useState<IsSelected>({});
+  const [isBundleSelected, setIsBundleSelected] = useState<IsSelected>({});
+
+  const [courseInfo, setCourseInfo] = useState<CourseWithFellow | undefined>(
+    undefined,
+  );
   const [fellow, setFellow] = useState<SafeUser | undefined>(undefined);
-  const [courseFilter, setCourseFilter] =
-    useState<CoursesFilter>("all published");
+  const [filter, setFilter] = useState<CoursesFilter>(
+    (param as CoursesFilter) || "published", // this will first check param if there is a filter.. if not it will load the default published
+  );
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [courses, setCourses] = useState<CourseWithFellow[]>([]);
-  // const [coursesNames, setCoursesNames] = useState<Option | undefined>(
-  // undefined,
-  // );
+  const [courses, setCourses] = useState<CourseWithFellow[] | undefined>(
+    undefined,
+  );
+
+  const [bundles, setBundles] = useState<Bundle[]>([]);
+
+  const forceUpdate = () => {
+    getCourses();
+  };
 
   // fetch courses data
-  const fetchCourses = useCallback(
-    async (insertedId?: number) => {
-      try {
-        setIsLoading(true);
-        let coursesData;
-        if (insertedId && courseFilter) {
-          coursesData = await getCourses(courseFilter, insertedId);
-        } else if (courseFilter && !insertedId) {
-          coursesData = await getCourses(undefined, insertedId);
-        } else {
-          coursesData = await getCourses(courseFilter);
-        }
-
-        setCourses(coursesData);
-        if (insertedId) {
-          const newCourse = coursesData.find((c) => c.id === insertedId);
-          if (newCourse) {
-            setCourse(newCourse);
-            setIsSelected({ [insertedId]: true });
-          }
-        }
-      } catch (error) {
-        toast.error("Error fetching courses");
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [courseFilter],
-  );
-
-  // const fetchCoursesNames = useCallback(async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const coursesNames = await searchCoursesNames();
-  //     setCoursesNames(coursesNames);
-  //     setIsLoading(false);
-  //   } catch (error) {
-  //     if (error instanceof Error)
-  //       toast.error(`Unexpected error happened! ${error.message}`);
-  //   }
-  // }, []);
-
-  // useEffect(() => {
-  //   fetchCoursesNames();
-  // }, [fetchCoursesNames]);
-
-  useEffect(() => {
-    fetchCourses();
-  }, [fetchCourses]);
-
-  // Delete Course
-  const [deleteState, deleteAction] = useFormState(deleteCourse, {});
-
-  const [optimisticCourses, addOptimisticCourse] = useOptimistic(
-    courses,
-    (currentState, courseIdToRemove: number) => {
-      return currentState.filter((course) => course.id !== courseIdToRemove);
-    },
-  );
-
-  const handleDelete = (courseId: number) => {
-    startTransition(() => {
-      addOptimisticCourse(courseId);
-      const formData = new FormData();
-      formData.append("courseId", courseId.toString());
-      deleteAction(formData);
-    });
-  };
-
-  useEffect(() => {
-    if (deleteState?.success) {
-      toast.success(deleteState.message);
-      setCourses((current) =>
-        current.filter(
-          (course) => course.id !== Number(deleteState?.deletedId),
-        ),
-      );
+  const getCourses = useCallback(async () => {
+    if (!filter) return;
+    try {
+      setIsLoading(true);
+      let data: GetSafeCourses;
+      data = await getSafeCourses(filter);
+      if (!data.error) setCourses(data.safeCourses);
+      if (data.error) throw new Error(data.message);
+    } catch (error) {
+      if (error instanceof Error) toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
-    if (deleteState?.error) toast.error(deleteState.message);
-  }, [deleteState]);
+  }, [filter]);
+
+  // fetch courses bundles
+  const getBundles = useCallback(async () => {
+    let data: GetBundles;
+    try {
+      setIsLoading(true);
+      data = await fetchBundles();
+      if (data.success && data.bundles) {
+        setBundles(data.bundles);
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (e) {
+      if (e instanceof Error) toast.error(e.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (filter === "bundles") getBundles();
+  }, [getBundles, filter]);
+
+  useEffect(() => {
+    if (filter !== "bundles") getCourses();
+  }, [getCourses, filter]);
 
   const contextValue: CourseStateContext = {
-    isSelected: isSelected,
-    setIsSelected: setIsSelected,
-    fetchCourses,
-    course,
-    setCourse,
-    courseFilter,
-    setCourseFilter,
-    courses: optimisticCourses,
+    isCourseSelected,
+    setIsCourseSelected,
+    isBundleSelected,
+    setIsBundleSelected,
+    courseInfo,
+    setCourseInfo,
+    filter,
+    setFilter,
     isLoading,
-    handleDelete,
     fellow,
     setFellow,
-    // fetchCoursesNames,
-    // coursesNames,
+    bundles,
+    courses,
+    setCourses,
+    forceUpdate,
   };
-
   return (
     <CourseStateContext.Provider value={contextValue}>
       {children}
