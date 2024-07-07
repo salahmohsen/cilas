@@ -17,14 +17,16 @@ export function LayoutBreadcrumb() {
   const path = usePathname();
 
   let items: { name: string; href: string }[] = [];
-  const paths = path.split("/").filter((p) => p !== "");
-  paths.map((p, i) => {
-    if (i !== paths.length - 1)
-      items.push({
-        name: p.replace(/-/g, " ").trim(),
-        href: `/${paths.slice(0, i + 1).join("/")}`,
-      });
-  });
+  const paths = path?.split("/").filter((p) => p !== "");
+  if (paths) {
+    paths.map((p, i) => {
+      if (i !== paths.length - 1)
+        items.push({
+          name: p.replace(/-/g, " ").trim(),
+          href: `/${paths.slice(0, i + 1).join("/")}`,
+        });
+    });
+  }
 
   return (
     <Breadcrumb className="my-4 hidden md:flex">
@@ -34,10 +36,10 @@ export function LayoutBreadcrumb() {
         ))}
         <BreadcrumbItem className="capitalize">
           <BreadcrumbPage>
-            {paths[paths.length - 1] &&
+            {paths?.[paths.length - 1] &&
             paths[paths.length - 2] !== "edit-course"
               ? paths[paths.length - 1].replace(/-/g, " ").trim()
-              : paths[paths.length - 1]
+              : paths?.[paths.length - 1]
                   .replace(/-/g, " ")
                   .trim()
                   .split(" ")
