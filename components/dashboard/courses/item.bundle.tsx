@@ -13,12 +13,8 @@ import { Ellipsis, Target } from "lucide-react";
 import { Bundle } from "@/actions/bundles.actions";
 import { format } from "date-fns";
 import { useCourseState } from "@/providers/CourseState.provider";
-import { useCallback, useEffect, useState } from "react";
-import {
-  GetSafeCourses,
-  getSafeCourses,
-  getUnbundledCourses,
-} from "@/actions/courses.actions";
+import { useCallback } from "react";
+import { getSafeCourses, getUnbundledCourses } from "@/actions/courses.actions";
 import { toast } from "sonner";
 import {
   Drawer,

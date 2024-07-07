@@ -28,7 +28,7 @@ import {
   SetLink,
   UnsetLink,
   EditorToolbar,
-} from "./form.input.tipTap.toolBar";
+} from "./input.tipTap.toolBar";
 
 interface TipTapInputProps extends StandardProps {
   editorToolbar?: boolean;

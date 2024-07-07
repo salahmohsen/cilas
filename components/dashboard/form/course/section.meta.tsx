@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { BasicInput } from "@/components/dashboard/form/form.input.basic";
-import { ComboBoxInput } from "@/components/dashboard/form/form.input.comboBox";
-import { MultiSelectorInput } from "@/components/dashboard/form/form.input.multiSelector";
-import { SelectInput } from "@/components/dashboard/form/form.input.select";
-import { TimeInput } from "@/components/dashboard/form/form.input.timeSlot";
-import { DateInput } from "@/components/dashboard/form/form.input.date";
+import { BasicInput } from "@/components/dashboard/form/inputs/input.basic";
+import { ComboBoxInput } from "@/components/dashboard/form/inputs/input.comboBox";
+import { MultiSelectorInput } from "@/components/dashboard/form/inputs/input.multiSelector";
+import { SelectInput } from "@/components/dashboard/form/inputs/input.select";
+import { TimeInput } from "@/components/dashboard/form/inputs/input.timeSlot";
+import { DateInput } from "@/components/dashboard/form/inputs/input.date";
 import { getUsersNamesByRole } from "@/actions/users.actions";
 import { SafeUser } from "@/types/drizzle.types";
 import { useCourseState } from "@/providers/CourseState.provider";

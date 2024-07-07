@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  useCallback,
-  useEffect,
-  useOptimistic,
-  useState,
-  useTransition,
-} from "react";
+import { useState } from "react";
 import { useCourseState } from "@/providers/CourseState.provider";
 
 import Link from "next/link";
@@ -33,13 +27,8 @@ export function CourseItem({
   course: CourseWithFellow;
   handleDelete: (courseId: number) => void;
 }) {
-  const {
-    isCourseSelected,
-    setIsCourseSelected,
-    setCourseInfo,
-    courses,
-    setCourses,
-  } = useCourseState();
+  const { isCourseSelected, setIsCourseSelected, setCourseInfo } =
+    useCourseState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSelect = (id) => {

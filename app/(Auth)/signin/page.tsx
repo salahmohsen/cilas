@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { signinSchema } from "@/types/auth.schema";
 import { redirect } from "next/navigation";
 import { useSession } from "@/providers/Session.provider";
-import { AuthForm } from "@/components/auth/form.auth";
+import { AuthForm } from "@/components/auth/form/auth";
 
 export default function SigninPage() {
   const { user } = useSession();

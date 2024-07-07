@@ -6,7 +6,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../ui/form";
+} from "../../../ui/form";
 import MultipleSelector from "@/components/ui/multipleSelector";
 
 import { MultiSelectorProps } from "@/types/formInputs.types";

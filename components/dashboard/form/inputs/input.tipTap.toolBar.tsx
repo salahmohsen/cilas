@@ -21,13 +21,13 @@ import {
   RemoveFormatting as RemoveFormattingIcon,
 } from "lucide-react";
 
-import { Toggle } from "../../ui/toggle";
+import { Toggle } from "../../../ui/toggle";
 
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "../../ui/hover-card";
+} from "../../../ui/hover-card";
 import { useCallback, useState } from "react";
 import {
   Popover,
@@ -123,7 +123,7 @@ function BulletList({ editor }) {
 }
 
 function OrderedList({ editor }) {
-  const handleOrederedList = useCallback(
+  const handleOrderedList = useCallback(
     () => editor.chain().focus().toggleOrderedList().run(),
     [editor],
   );
@@ -132,7 +132,7 @@ function OrderedList({ editor }) {
       size="sm"
       className="hidden md:flex"
       pressed={editor.isActive("orderedList")}
-      onPressedChange={handleOrederedList}
+      onPressedChange={handleOrderedList}
     >
       <ToolbarIcon
         icon={<ListOrderedIcon className="h-4 w-4" />}

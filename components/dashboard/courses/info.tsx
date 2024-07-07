@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/pagination";
 
 import { ChevronLeft, ChevronRight, Copy } from "lucide-react";
-import { UserAvatar } from "./page.courses.user.avatar";
+import { UserAvatar } from "./user.avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";

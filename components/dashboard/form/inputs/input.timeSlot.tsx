@@ -7,7 +7,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../ui/form";
+} from "../../../ui/form";
 import { StandardProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";

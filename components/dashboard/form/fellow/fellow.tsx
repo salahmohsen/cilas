@@ -20,9 +20,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { TipTapInput } from "@/components/dashboard/form/form.input.tipTap";
-import { SubmitButton } from "@/components/dashboard/form/form.input.submit";
-import { BasicInput } from "@/components/dashboard/form/form.input.basic";
+import { TipTapInput } from "@/components/dashboard/form/inputs/input.tipTap";
+import { SubmitButton } from "@/components/dashboard/form/inputs/input.submit";
+import { BasicInput } from "@/components/dashboard/form/inputs/input.basic";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SquarePlus } from "lucide-react";

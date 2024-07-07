@@ -9,8 +9,8 @@ import {
 
 import { Label } from "@/components/ui/label";
 
-import { SideBarAvailableFilter } from "./pages.courses.sidebar.filter.available";
-import { SideBarTypeFilter } from "./pages.courses.sidebar.filter.type";
+import { SidebarAvailableFilter } from "@/components/client/courses/sidebar/filter.available";
+import { SidebarTypeFilter } from "@/components/client/courses/sidebar/filter.type";
 
 export const Sidebar = () => {
   return (
@@ -22,11 +22,11 @@ export const Sidebar = () => {
         <CardContent className="flex flex-col gap-5">
           <div className="flex flex-col space-y-1.5">
             <Label>Available</Label>
-            <SideBarAvailableFilter className="col-span-2" />
+            <SidebarAvailableFilter className="col-span-2" />
           </div>
           <div className="flex flex-col space-y-1.5">
             <Label>Type</Label>
-            <SideBarTypeFilter className="col-span-2" />
+            <SidebarTypeFilter className="col-span-2" />
           </div>
         </CardContent>
         {/* <CardFooter>

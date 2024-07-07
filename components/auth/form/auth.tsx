@@ -25,7 +25,7 @@ import { UseFormReturn } from "react-hook-form";
 import { SigninState, SignupState } from "@/actions/auth.actions";
 import { toast } from "sonner";
 import { isObjectEmpty, shake } from "@/lib/utils";
-import { PasswordInput } from "../ui/password-input";
+import { PasswordInput } from "../../ui/password-input";
 
 type SigninValues = {
   email: string;

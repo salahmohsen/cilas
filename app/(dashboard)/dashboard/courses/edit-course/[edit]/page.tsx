@@ -1,5 +1,5 @@
 import { getCourseById } from "@/actions/courses.actions";
-import { CourseForm } from "@/components/dashboard/form/form.course";
+import { CourseForm } from "@/components/dashboard/form/course/course";
 import { ErrorPage } from "@/components/ui/error";
 import { CourseWithFellow } from "@/types/drizzle.types";
 

@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { deleteCourse } from "@/actions/courses.actions";
 
-import { CourseItem } from "@/components/dashboard/page.courses/page.courses.item";
+import { CourseItem } from "@/components/dashboard/courses/item.course";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,12 +28,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CourseInfo } from "@/components/dashboard/page.courses/page.courses.info";
-import { FilterButton } from "@/components/dashboard/page.courses/page.courses.button.filter";
-import { CourseInfoModal } from "@/components/dashboard/page.courses/page.courses.info.modal";
-import { CourseSkeleton } from "@/components/dashboard/page.courses/page.courses.skeleton";
+import { CourseInfo } from "@/components/dashboard/courses/info";
+import { FilterButton } from "@/components/dashboard/courses/button.filter";
+import { CourseInfoModal } from "@/components/dashboard/courses/info.modal";
+import { CourseSkeleton } from "@/components/dashboard/courses/skeleton";
 import { CoursesFilter } from "@/types/drizzle.types";
-import { BundleItem } from "@/components/dashboard/page.courses/page.courses.tab.bundles";
+import { BundleItem } from "@/components/dashboard/courses/item.bundle";
 import { Loader, LoaderPinwheel, Sailboat, Waves } from "lucide-react";
 
 export default function CoursesPage() {

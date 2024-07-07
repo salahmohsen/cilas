@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { TabsContent } from "@/components/ui/tabs";
-import { BasicInput } from "@/components/dashboard/form/form.input.basic";
-import { TipTapInput } from "@/components/dashboard/form/form.input.tipTap";
+import { BasicInput } from "@/components/dashboard/form/inputs/input.basic";
+import { TipTapInput } from "@/components/dashboard/form/inputs/input.tipTap";
 
 export const ArabicTab = memo(() => {
   return (

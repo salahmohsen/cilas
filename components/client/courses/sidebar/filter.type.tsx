@@ -5,6 +5,7 @@ import {
   ArrowUpCircle,
   CheckCircle2,
   Circle,
+  HelpCircle,
   LucideIcon,
   XCircle,
 } from "lucide-react";
@@ -33,28 +34,23 @@ type Status = {
 
 const statuses: Status[] = [
   {
-    value: "OpenForRegistration",
-    label: "Upcoming",
+    value: "seasonalcourse",
+    label: "seasonal course",
     icon: Circle,
   },
   {
-    value: "in progress",
-    label: "In Progress",
+    value: "thematiccourse",
+    label: "thematic course",
     icon: ArrowUpCircle,
   },
   {
     value: "finished",
-    label: "Finished",
+    label: "Lab",
     icon: CheckCircle2,
-  },
-  {
-    value: "canceled",
-    label: "Canceled",
-    icon: XCircle,
   },
 ];
 
-export function SideBarAvailableFilter({ className }) {
+export function SidebarTypeFilter({ className }) {
   const [open, setOpen] = React.useState(false);
   const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
     null,

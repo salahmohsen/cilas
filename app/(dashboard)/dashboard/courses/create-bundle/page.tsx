@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { BundleState, createBundle } from "@/actions/bundles.actions";
-import { DateInput } from "@/components/dashboard/form/form.input.date";
-import { MultiSelectorInput } from "@/components/dashboard/form/form.input.multiSelector";
-import { SelectInput } from "@/components/dashboard/form/form.input.select";
-import { SubmitButton } from "@/components/dashboard/form/form.input.submit";
+import { DateInput } from "@/components/dashboard/form/inputs/input.date";
+import { MultiSelectorInput } from "@/components/dashboard/form/inputs/input.multiSelector";
+import { SelectInput } from "@/components/dashboard/form/inputs/input.select";
+import { SubmitButton } from "@/components/dashboard/form/inputs/input.submit";
 import { Form } from "@/components/ui/form";
 import {
   bundleDefaultValues,

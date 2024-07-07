@@ -26,7 +26,7 @@ import { cn } from "@/lib/utils";
 
 import { ComboBoxProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
-import { FellowForm } from "./from.fellow";
+import { FellowForm } from "../fellow/fellow";
 
 export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
   function ComboBoxInput({
