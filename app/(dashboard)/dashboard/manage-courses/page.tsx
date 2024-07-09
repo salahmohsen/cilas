@@ -47,11 +47,13 @@ export default function ManageCourses() {
   const {
     isLoading,
     setFilter,
-    isCourseSelected: isSelected,
-    setIsCourseSelected: setIsSelected,
+    isCourseSelected,
+    setIsCourseSelected,
     courses,
     setCourses,
     bundles,
+    forceUpdateBundles,
+    forceUpdateCourses,
   } = useCourseState();
 
   const searchParams = useSearchParams();
@@ -98,6 +100,11 @@ export default function ManageCourses() {
     if (deleteState?.error) toast.error(deleteState.message);
   }, [deleteState, setCourses, toastId]);
 
+  useEffect(() => {
+    forceUpdateBundles();
+    forceUpdateCourses();
+  }, [forceUpdateBundles, forceUpdateCourses]);
+
   return (
     <main className={`mx-4 flex flex-col gap-5`}>
       <Card className="flex flex-wrap items-end justify-between gap-5 p-6">
@@ -127,7 +134,7 @@ export default function ManageCourses() {
           className={`transition-all duration-500 ease-in-out ${
             width && width <= 768
               ? ""
-              : Object.values(isSelected)[0]
+              : Object.values(isCourseSelected)[0]
                 ? "w-[70%]"
                 : "w-full"
           }`}
@@ -144,7 +151,7 @@ export default function ManageCourses() {
                     onClick={() => {
                       setFilter(storedFilter || "published");
                       setActiveTab("published");
-                      setIsSelected(() => ({ key: false }));
+                      setIsCourseSelected(() => ({ key: false }));
                     }}
                   >
                     Published
@@ -157,7 +164,7 @@ export default function ManageCourses() {
                     onClick={() => {
                       setFilter("draft");
                       setActiveTab("draft");
-                      setIsSelected(() => ({ key: false }));
+                      setIsCourseSelected(() => ({ key: false }));
                     }}
                   >
                     Draft
@@ -169,7 +176,7 @@ export default function ManageCourses() {
                     value="bundles"
                     onClick={() => {
                       setFilter("bundles");
-                      setIsSelected(() => ({ key: false }));
+                      setIsCourseSelected(() => ({ key: false }));
                     }}
                   >
                     Bundles

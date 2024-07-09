@@ -40,8 +40,8 @@ type CourseStateContext = {
   setFellow: Dispatch<SetStateAction<SafeUser | undefined>>;
   isLoading: boolean;
   bundles: Bundle[];
-  forceUpdateCourses: () => void;
-  forceUpdateBundles: () => void;
+  forceUpdateCourses: () => Promise<void>;
+  forceUpdateBundles: () => Promise<void>;
 };
 
 const CourseStateContext = createContext<CourseStateContext>(
@@ -68,14 +68,6 @@ export const CourseStateProvider = ({ children }) => {
   );
 
   const [bundles, setBundles] = useState<Bundle[]>([]);
-
-  const forceUpdateCourses = () => {
-    getCourses();
-  };
-
-  const forceUpdateBundles = () => {
-    getBundles();
-  };
 
   // fetch courses data
   const getCourses = useCallback(async () => {
@@ -110,6 +102,14 @@ export const CourseStateProvider = ({ children }) => {
       setIsLoading(false);
     }
   }, []);
+
+  const forceUpdateCourses = useCallback(async () => {
+    await getCourses();
+  }, [getCourses]);
+
+  const forceUpdateBundles = useCallback(async () => {
+    await getBundles();
+  }, [getBundles]);
 
   useEffect(() => {
     if (filter === "bundles") getBundles();

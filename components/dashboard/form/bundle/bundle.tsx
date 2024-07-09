@@ -17,6 +17,8 @@ import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getUnbundledCourses } from "@/actions/courses.actions";
+import { redirect } from "next/navigation";
+import { useCourseState } from "@/providers/CourseState.provider";
 
 export default function BundleForm({
   bundleToEditValues,
@@ -39,7 +41,10 @@ export default function BundleForm({
     defaultValues: { ...bundleDefaultValues, ...(bundleToEditValues ?? {}) },
   });
   useEffect(() => {
-    if (bundleState.success) toast.success(bundleState.message);
+    if (bundleState.success) {
+      toast.success(bundleState.message);
+      redirect("/dashboard/manage-courses?tab=bundles");
+    }
     if (bundleState.error) toast.error(bundleState.message);
   }, [bundleState]);
 
