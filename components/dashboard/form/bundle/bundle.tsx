@@ -63,7 +63,7 @@ export default function BundleForm({
           }}
         >
           <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm lg:grid-cols-2">
-            <legend className="text-sm font-medium">Course Content</legend>
+            <legend className="text-sm font-medium">Bundle</legend>
 
             <SelectInput
               name="year"

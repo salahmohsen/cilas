@@ -96,7 +96,7 @@ export function CourseItem({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <Link
-              href={`/dashboard/manage-courses/edit-course/${slug(course.enTitle)}-${course.id}`}
+              href={`/dashboard/manage-courses/edit-course?id=${course.id}`}
             >
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Edit

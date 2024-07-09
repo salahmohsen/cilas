@@ -227,17 +227,15 @@ export const getCourseById = async (courseId: number) => {
   let course = await db.query.courseTable.findFirst({
     where: eq(courseTable.id, courseId),
     with: {
-      fellow: true,
+      fellow: {
+        columns: { passwordHash: false, googleId: false },
+      },
     },
   });
-
-  const { passwordHash, googleId, ...safeFellow } =
-    course?.fellow as UserWithSensitiveCols;
 
   if (course)
     return {
       ...course,
-      fellow: safeFellow,
       timeSlot: {
         from: new Date(course.timeSlot.from),
         to: new Date(course.timeSlot.to),
