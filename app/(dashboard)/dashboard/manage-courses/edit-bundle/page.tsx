@@ -5,8 +5,8 @@ import BundleForm from "@/components/dashboard/form/bundle/bundle";
 import { ErrorPage } from "@/components/ui/error";
 import { BundleSchema } from "@/types/bundle.schema";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
+import { Suspense, useEffect, useRef, useState } from "react";
+import Loading from "@/app/(dashboard)/dashboard/manage-courses/create-bundle/loading";
 
 const EditBundle = () => {
   const searchParam = useSearchParams();
@@ -47,10 +47,12 @@ const EditBundle = () => {
   if (error) {
     return <ErrorPage message={error} />;
   } else if (isLoading) {
-    return "loading..."; //To-Do add Bundle Skeleton here
+    return <Loading />;
   } else {
     return (
-      <BundleForm bundleToEditValues={bundleValues.current} editMode={true} />
+      <Suspense fallback={<Loading />}>
+        <BundleForm bundleToEditValues={bundleValues.current} editMode={true} />
+      </Suspense>
     );
   }
 };

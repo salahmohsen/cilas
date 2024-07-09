@@ -93,10 +93,10 @@ export const UpdateCourses = () => {
   if (width && width > 768)
     return (
       <Dialog onOpenChange={setDialogDrawerOpen} open={dialogDrawerOpen}>
-        <DialogTrigger>Update Courses</DialogTrigger>
+        <DialogTrigger>Edit Courses</DialogTrigger>
         <DialogContent>
           <DialogHeader className="border-0">
-            <DialogTitle>Update Courses</DialogTitle>
+            <DialogTitle>Edit Bundle Courses</DialogTitle>
           </DialogHeader>
           {selector}
           <DialogFooter>
@@ -119,10 +119,10 @@ export const UpdateCourses = () => {
 
   return (
     <Drawer onOpenChange={setDialogDrawerOpen} open={dialogDrawerOpen}>
-      <DrawerTrigger>Update Courses</DrawerTrigger>
+      <DrawerTrigger>Edit Courses</DrawerTrigger>
       <DrawerContent className="h-[50vh]">
         <DrawerHeader className="p-0 px-4 pb-0">
-          <DrawerTitle>Update Bundle Courses</DrawerTitle>
+          <DrawerTitle>Edit Bundle Courses</DrawerTitle>
         </DrawerHeader>
         {selector}
         <DrawerFooter>

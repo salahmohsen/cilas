@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { CourseForm } from "@/components/dashboard/form/course/course";
 import { getCourseById } from "@/actions/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
 import { CourseWithFellow } from "@/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
+import Loading from "./loading";
 
 export default function CreateCoursePage() {
   const [course, setCourse] = useState<CourseWithFellow | undefined>(undefined);
@@ -44,16 +45,8 @@ export default function CreateCoursePage() {
   }, [fetchCourse]);
 
   if (courseId) {
-    if (loading) {
-      return (
-        <p className="flex h-screen items-center justify-center text-4xl">
-          Loading...
-        </p>
-      );
-    }
-    if (error) {
-      return <ErrorPage message={error} />;
-    }
+    if (error) return <ErrorPage message={error} />;
+
     if (course) {
       return (
         <CourseForm
@@ -65,14 +58,13 @@ export default function CreateCoursePage() {
         />
       );
     }
-    // This case handles when courseId exists but course data is not yet loaded
-    return (
-      <p className="flex h-screen items-center justify-center text-4xl">
-        Loading...
-      </p>
-    ); // To-Do Change this to courseFormSkeleton when created
+    return <Loading />;
   }
 
   // If there's no courseId, render the form without course data
-  return <CourseForm />;
+  return (
+    <Suspense fallback={<Loading />}>
+      <CourseForm />
+    </Suspense>
+  );
 }
