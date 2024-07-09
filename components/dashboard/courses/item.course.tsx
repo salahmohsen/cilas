@@ -96,14 +96,14 @@ export function CourseItem({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <Link
-              href={`/dashboard/courses/edit-course/${slug(course.enTitle)}-${course.id}`}
+              href={`/dashboard/manage-courses/edit-course/${slug(course.enTitle)}-${course.id}`}
             >
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Edit
               </DropdownMenuItem>
             </Link>
             <Link
-              href={`/dashboard/courses/create-course?copy_values=${course.id}`}
+              href={`/dashboard/manage-courses/create-course?copy_values=${course.id}`}
             >
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Duplicate

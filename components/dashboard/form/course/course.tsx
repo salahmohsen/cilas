@@ -45,7 +45,7 @@ export function CourseForm({
   // Form Refs
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { setFilter, forceUpdate } = useCourseState();
+  const { setFilter, forceUpdateCourses: forceUpdate } = useCourseState();
 
   // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(
@@ -85,9 +85,7 @@ export function CourseForm({
       toast.success(courseState.message);
       forceUpdate();
       // Redirect based on course submit mode: published | draft
-      redirect(
-        "/dashboard/courses?course_mode=" + (draftMode ? "draft" : "published"),
-      );
+      redirect("/dashboard/manage-courses?tab=" + (draftMode ? "draft" : "published"));
     }
     // @error
     if (courseState.error) toast.error(courseState.message);

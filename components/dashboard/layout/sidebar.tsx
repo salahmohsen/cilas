@@ -59,7 +59,7 @@ export function LayoutSidebar() {
           />
           <SidebarItem
             name="Courses"
-            href="/dashboard/courses"
+            href="/dashboard/manage-courses"
             icon={<SquareLibrary className="size-5" />}
           />
           <SidebarItem

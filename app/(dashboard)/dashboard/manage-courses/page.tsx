@@ -33,7 +33,7 @@ import { FilterButton } from "@/components/dashboard/courses/button.filter";
 import { CourseInfoModal } from "@/components/dashboard/courses/info.modal";
 import { CourseSkeleton } from "@/components/dashboard/courses/skeleton";
 import { CoursesFilter } from "@/types/drizzle.types";
-import { BundleItem } from "@/components/dashboard/courses/item.bundle";
+import { BundleItem } from "@/components/dashboard/courses/tab.bundles/item.bundle";
 import { Loader, LoaderPinwheel, Sailboat, Waves } from "lucide-react";
 
 export default function CoursesPage() {
@@ -54,7 +54,7 @@ export default function CoursesPage() {
 
   const searchParams = useSearchParams();
   const storedFilter = searchParams?.get("publishedFilter") as CoursesFilter;
-  const courseMode = searchParams?.get("course_mode");
+  const courseMode = searchParams?.get("tab");
 
   // Delete Course
   const [deleteState, deleteAction] = useFormState(deleteCourse, {});
@@ -106,13 +106,13 @@ export default function CoursesPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex flex-wrap items-center gap-2 p-0">
-          <Link href="/dashboard/courses/create-course">
+          <Link href="/dashboard/manage-courses/create-course">
             <Button>
               <Sailboat className="mr-2 h-4 w-4" />
               New Course
             </Button>
           </Link>
-          <Link href="/dashboard/courses/create-bundle">
+          <Link href="/dashboard/manage-courses/create-bundle">
             <Button>
               <Waves className="mr-2 h-4 w-4" />
               New Bundle
@@ -120,7 +120,7 @@ export default function CoursesPage() {
           </Link>
         </CardFooter>
       </Card>
-      <div className="flex">
+      <div className="lg:flex">
         <div
           className={`transition-all duration-500 ease-in-out ${
             width && width <= 768
@@ -136,7 +136,7 @@ export default function CoursesPage() {
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
               <TabsList>
-                <Link href="/dashboard/courses?course_mode=published">
+                <Link href="/dashboard/manage-courses?tab=published">
                   <TabsTrigger
                     value="published"
                     onClick={() => {
@@ -149,7 +149,7 @@ export default function CoursesPage() {
                   </TabsTrigger>
                 </Link>
 
-                <Link href="/dashboard/courses?course_mode=draft">
+                <Link href="/dashboard/manage-courses?tab=draft">
                   <TabsTrigger
                     value="draft"
                     onClick={() => {
@@ -162,7 +162,7 @@ export default function CoursesPage() {
                   </TabsTrigger>
                 </Link>
 
-                <Link href="/dashboard/courses?course_mode=bundles">
+                <Link href="/dashboard/manage-courses?tab=bundles">
                   <TabsTrigger
                     value="bundles"
                     onClick={() => {

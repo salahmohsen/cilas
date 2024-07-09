@@ -18,7 +18,14 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { getUnbundledCourses } from "@/actions/courses.actions";
 
-export default function BundleForm() {
+export default function BundleForm({
+  bundleToEditValues,
+  editMode = false,
+}: {
+  bundleToEditValues?: BundleSchema;
+  editMode?: boolean;
+}) {
+  console.log(bundleToEditValues);
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -30,7 +37,7 @@ export default function BundleForm() {
   const formMethods = useForm<BundleSchema>({
     resolver: zodResolver(bundleSchema),
     mode: "onChange",
-    defaultValues: bundleDefaultValues,
+    defaultValues: { ...bundleDefaultValues, ...(bundleToEditValues ?? {}) },
   });
   useEffect(() => {
     if (bundleState.success) toast.success(bundleState.message);

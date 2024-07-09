@@ -40,7 +40,8 @@ type CourseStateContext = {
   setFellow: Dispatch<SetStateAction<SafeUser | undefined>>;
   isLoading: boolean;
   bundles: Bundle[];
-  forceUpdate: () => void;
+  forceUpdateCourses: () => void;
+  forceUpdateBundles: () => void;
 };
 
 const CourseStateContext = createContext<CourseStateContext>(
@@ -49,7 +50,7 @@ const CourseStateContext = createContext<CourseStateContext>(
 
 export const CourseStateProvider = ({ children }) => {
   const searchParam = useSearchParams();
-  const param = searchParam?.get("course_mode");
+  const param = searchParam?.get("tab");
 
   const [isCourseSelected, setIsCourseSelected] = useState<IsSelected>({});
   const [isBundleSelected, setIsBundleSelected] = useState<IsSelected>({});
@@ -68,8 +69,12 @@ export const CourseStateProvider = ({ children }) => {
 
   const [bundles, setBundles] = useState<Bundle[]>([]);
 
-  const forceUpdate = () => {
+  const forceUpdateCourses = () => {
     getCourses();
+  };
+
+  const forceUpdateBundles = () => {
+    getBundles();
   };
 
   // fetch courses data
@@ -129,7 +134,8 @@ export const CourseStateProvider = ({ children }) => {
     bundles,
     courses,
     setCourses,
-    forceUpdate,
+    forceUpdateCourses,
+    forceUpdateBundles,
   };
   return (
     <CourseStateContext.Provider value={contextValue}>

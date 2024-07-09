@@ -69,11 +69,7 @@ export function CourseInfo({ className }: { className?: string }) {
       setCourseInfo(courses?.at(-1) as CourseWithFellow);
     }
   };
-  console.log(
-    "Object.values(isCourseSelected)[0]",
-    Object.values(isCourseSelected)[0],
-  );
-  console.log("isCourseSelected", isCourseSelected);
+
   return (
     <Card
       className={cn(

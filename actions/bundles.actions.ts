@@ -7,6 +7,85 @@ import { bundleSchema } from "@/types/bundle.schema";
 import { BundleTable } from "@/types/drizzle.types";
 import { eq } from "drizzle-orm";
 
+export type Bundle = {
+  id: number;
+  name: string | null;
+  category: string;
+  attendance: string;
+  year: number;
+  cycle: string;
+  deadline: Date;
+  courses: {
+    id: number;
+    enTitle: string | null;
+    arTitle: string | null;
+  }[];
+};
+
+export type GetBundles = {
+  success?: boolean;
+  error?: boolean;
+  message: string;
+  bundles?: Bundle[];
+};
+
+export const getBundles = async (): Promise<GetBundles> => {
+  try {
+    const bundles = await db.query.bundleTable.findMany({
+      with: {
+        courses: {
+          columns: { id: true, enTitle: true, arTitle: true },
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "bundles fetched successfully",
+      bundles,
+    };
+  } catch (e) {
+    if (e instanceof Error) return { error: true, message: e.message };
+  }
+  return {
+    success: false,
+    message: "Unexpected error happened, please try again!",
+  };
+};
+export type GetBundleById = {
+  success?: boolean;
+  error?: boolean;
+  message: string;
+  bundle?: Bundle;
+};
+
+export const getBundleById = async (
+  bundleId: number,
+): Promise<GetBundleById> => {
+  try {
+    const bundle = await db.query.bundleTable.findFirst({
+      with: {
+        courses: {
+          columns: { id: true, enTitle: true, arTitle: true },
+        },
+      },
+      where: eq(bundleTable.id, bundleId),
+    });
+    if (!bundle) throw new Error("Bundle not found!");
+    return {
+      success: true,
+      message: "bundle fetched successfully",
+      bundle,
+    };
+  } catch (e) {
+    if (e instanceof Error) return { error: true, message: e.message };
+  }
+  return {
+    success: false,
+    message: "Unexpected error happened, please try again!",
+  };
+};
+
 export type BundleState = {
   success?: boolean;
   error?: boolean;
@@ -99,44 +178,74 @@ export const createBundle = async (
   };
 };
 
-export type Bundle = {
-  id: number;
-  name: string | null;
-  category: string;
-  attendance: string;
-  year: number;
-  cycle: string;
-  deadline: Date;
-  courses: {
-    id: number;
-    enTitle: string | null;
-    arTitle: string | null;
-  }[];
-};
-
-export type GetBundles = {
-  success?: boolean;
-  error?: boolean;
-  message: string;
-  bundles?: Bundle[];
-};
-
-export const getBundles = async (): Promise<GetBundles> => {
+const deleteAssociatedCoursesToBundle = async (bundleId: number) => {
   try {
-    const bundles = await db.query.bundleTable.findMany({
+    const originalCoursesWithBundleId = await db.query.bundleTable.findFirst({
       with: {
         courses: {
-          columns: { id: true, enTitle: true, arTitle: true },
+          columns: { id: true },
         },
       },
+      where: eq(bundleTable.id, bundleId),
+      columns: { id: true },
     });
+    const originalCoursesIds = originalCoursesWithBundleId?.courses ?? [];
 
-    return { success: true, message: "bundles fetched successfully", bundles };
+    // Remove bundle association from original courses
+    for (const { id } of originalCoursesIds) {
+      await db
+        .update(courseTable)
+        .set({ bundleId: null })
+        .where(eq(courseTable.id, id))
+        .execute();
+    }
   } catch (e) {
-    if (e instanceof Error) return { error: true, message: e.message };
+    throw new Error(
+      e instanceof Error ? e.message : "Unexpected error occurred!",
+    );
   }
-  return {
-    success: false,
-    message: "Unexpected error happened, please try again!",
-  };
+};
+
+export const updateBundleCourses = async (
+  coursesToUpdate: Option[],
+  bundleId: number,
+): Promise<BundleState> => {
+  console.log(coursesToUpdate);
+  console.log(bundleId);
+  try {
+    await deleteAssociatedCoursesToBundle(bundleId);
+
+    // Update new courses with bundle association
+    for (const { value: id } of coursesToUpdate) {
+      await db
+        .update(courseTable)
+        .set({ bundleId })
+        .where(eq(courseTable.id, Number(id)))
+        .execute();
+    }
+
+    return { success: true, message: "Bundle updated successfully" };
+  } catch (e) {
+    return {
+      success: false,
+      error: true,
+      message: e instanceof Error ? e.message : "An unknown error occurred",
+    };
+  }
+};
+
+export const deleteBundle = async (bundleId: number): Promise<BundleState> => {
+  try {
+    await deleteAssociatedCoursesToBundle(bundleId);
+    const result = await db
+      .delete(bundleTable)
+      .where(eq(bundleTable.id, bundleId));
+
+    return { success: true, message: "Bundle deleted successfully" };
+  } catch (e) {
+    return {
+      error: true,
+      message: e instanceof Error ? e.message : "Unexpected error occurred!",
+    };
+  }
 };

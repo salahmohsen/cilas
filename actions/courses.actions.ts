@@ -195,14 +195,23 @@ export const searchCoursesNames = async (value: string = "") => {
   return coursesNames;
 };
 
-export const getUnbundledCourses = async (value: string = "") => {
+export const getUnbundledCourses = async (
+  query: string,
+  defaultCourses?: Option[],
+) => {
   const data = await db.query.courseTable.findMany({
     columns: {
       id: true,
       enTitle: true,
       arTitle: true,
     },
-    where: isNull(courseTable.bundleId),
+    where: and(
+      isNull(courseTable.bundleId),
+      or(
+        ilike(courseTable.enTitle, `%${query.toLowerCase()}%`),
+        ilike(courseTable.arTitle, `%${query.toLowerCase()}%`),
+      ),
+    ),
   });
   const coursesNames: Option[] = data.map((course) => {
     if (course.enTitle)
@@ -211,7 +220,7 @@ export const getUnbundledCourses = async (value: string = "") => {
       return { label: course.arTitle!, value: course.id.toString() };
     }
   });
-  return coursesNames;
+  return [...coursesNames, ...(defaultCourses ?? [])];
 };
 
 export const getCourseById = async (courseId: number) => {
