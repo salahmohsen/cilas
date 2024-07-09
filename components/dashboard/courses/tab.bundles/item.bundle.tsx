@@ -8,13 +8,7 @@ import {
 } from "react";
 import { Badge } from "@/components/ui/badge";
 
-import {
-  Egg,
-  GitCommitVertical,
-  PanelRightOpen,
-  Rabbit,
-  Target,
-} from "lucide-react";
+import { PanelRightOpen, Rabbit, Target } from "lucide-react";
 import { Bundle } from "@/actions/bundles.actions";
 import { format } from "date-fns";
 import { useCourseState } from "@/providers/CourseState.provider";
@@ -128,10 +122,10 @@ export const BundleItem = ({ bundle }: { bundle: Bundle }) => {
       value={{ bundle, isOptionsMenuOpen, setIsOptionsMenuOpen }}
     >
       <li
-        className={`${isBundleSelected[bundle.id] || isOptionsMenuOpen ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"} group/item lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!opacity-100`}
+        className={`${isBundleSelected[bundle.id] || isOptionsMenuOpen ? "!scale-[1.01] bg-accent !opacity-100" : "bg-transparent"} group/item lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!opacity-100`}
       >
         <div
-          className={`relative cursor-pointer gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:hover:!scale-[1.02] lg:hover:bg-accent`}
+          className={`relative gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:hover:!scale-[1.01] lg:hover:bg-accent`}
           onClick={() => handleBundleSelect(bundle.id)}
         >
           <div className="flex flex-col gap-4">

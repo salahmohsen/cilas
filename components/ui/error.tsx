@@ -5,10 +5,10 @@ import { useEffect, useRef, useState } from "react";
 
 export function ErrorPage({ message }: { message: string }) {
   const squirrelRef = useRef<SVGSVGElement>(null);
-  const [angle, setAngle] = useState(0);
+  const [angle, setAngle] = useState<number>(0);
 
   useEffect(() => {
-    const handleMouseMove = (event) => {
+    const handleMouseMove = (event: MouseEvent) => {
       if (squirrelRef.current) {
         const { left, width } = squirrelRef.current.getBoundingClientRect();
         const centerX = left + width / 2;

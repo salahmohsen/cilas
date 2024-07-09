@@ -43,7 +43,7 @@ export const BundleOptions = () => {
   );
 
   return (
-    <DropdownMenu onOpenChange={setIsOptionsMenuOpen}>
+    <DropdownMenu onOpenChange={setIsOptionsMenuOpen} open={isOptionsMenuOpen}>
       <DropdownMenuTrigger
         asChild
         className={`invisible absolute right-5 group-hover/item:visible ${width && width < 769 && "visible"} ${isOptionsMenuOpen && "visible"} `}

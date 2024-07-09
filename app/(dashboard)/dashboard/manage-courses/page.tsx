@@ -34,9 +34,11 @@ import { CourseInfoModal } from "@/components/dashboard/courses/info.modal";
 import { CourseSkeleton } from "@/components/dashboard/courses/skeleton";
 import { CoursesFilter } from "@/types/drizzle.types";
 import { BundleItem } from "@/components/dashboard/courses/tab.bundles/item.bundle";
-import { Loader, LoaderPinwheel, Sailboat, Waves } from "lucide-react";
+import { Sailboat, Waves } from "lucide-react";
+import { NoCoursesFound } from "@/components/dashboard/courses/notFound";
+import { BundleSkeleton } from "@/components/dashboard/courses/tab.bundles/skeleton";
 
-export default function CoursesPage() {
+export default function ManageCourses() {
   const [activeTab, setActiveTab] = useState<"published" | "draft">(
     "published",
   );
@@ -195,6 +197,9 @@ export default function CoursesPage() {
                           handleDelete={handleDelete}
                         />
                       ))}
+                    {!isLoading && optimisticCourses?.length === 0 && (
+                      <NoCoursesFound message="No Published Courses Found!" />
+                    )}
                   </ul>
                 </CardContent>
               </Card>
@@ -218,6 +223,9 @@ export default function CoursesPage() {
                           handleDelete={handleDelete}
                         />
                       ))}
+                    {!isLoading && optimisticCourses?.length === 0 && (
+                      <NoCoursesFound message="No Drafts Found!" />
+                    )}
                   </ul>
                 </CardContent>
               </Card>
@@ -230,9 +238,14 @@ export default function CoursesPage() {
                 </CardHeader>
                 <CardContent>
                   <ul className="group/list space-y-3">
-                    {bundles.map((bundle) => (
-                      <BundleItem key={bundle.id} bundle={{ ...bundle }} />
-                    ))}
+                    {isLoading && <BundleSkeleton itemsNumber={10} />}
+                    {!isLoading &&
+                      bundles.map((bundle) => (
+                        <BundleItem key={bundle.id} bundle={{ ...bundle }} />
+                      ))}
+                    {!isLoading && bundles?.length === 0 && (
+                      <NoCoursesFound message="No Bundles Found!" />
+                    )}
                   </ul>
                 </CardContent>
               </Card>

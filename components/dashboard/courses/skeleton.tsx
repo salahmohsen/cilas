@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-export function CourseSkeleton({ itemsNumber }) {
+export function CourseSkeleton({ itemsNumber }: { itemsNumber: number }) {
   const skeletonArr = Array(itemsNumber).fill("course");
 
   return (
