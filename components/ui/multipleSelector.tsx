@@ -1,11 +1,10 @@
 "use client";
 
-import * as React from "react";
-import { forwardRef, useEffect } from "react";
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { X } from "lucide-react";
+import * as React from "react";
+import { forwardRef, useEffect } from "react";
 
-import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import {
   Command,
@@ -13,6 +12,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
 export interface Option {
   value: string;
@@ -74,6 +74,8 @@ interface MultipleSelectorProps {
     React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input>,
     "value" | "placeholder" | "disabled"
   >;
+  /** hide the clear all button. */
+  hideClearAllButton?: boolean;
 }
 
 export interface MultipleSelectorRef {
@@ -128,7 +130,7 @@ function removePickedOption(groupOption: GroupOption, picked: Option[]) {
 }
 
 function isOptionsExist(groupOption: GroupOption, targetOption: Option[]) {
-  for (const [key, value] of Object.entries(groupOption)) {
+  for (const [, value] of Object.entries(groupOption)) {
     if (
       value.some((option) => targetOption.find((p) => p.value === option.value))
     ) {
@@ -192,11 +194,13 @@ const MultipleSelector = React.forwardRef<
       triggerSearchOnFocus = false,
       commandProps,
       inputProps,
+      hideClearAllButton = false,
     }: MultipleSelectorProps,
     ref: React.Ref<MultipleSelectorRef>,
   ) => {
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [open, setOpen] = React.useState(false);
+    const mouseOn = React.useRef<boolean>(false);
     const [isLoading, setIsLoading] = React.useState(false);
 
     const [selected, setSelected] = React.useState<Option[]>(value || []);
@@ -231,7 +235,11 @@ const MultipleSelector = React.forwardRef<
         if (input) {
           if (e.key === "Delete" || e.key === "Backspace") {
             if (input.value === "" && selected.length > 0) {
-              handleUnselect(selected[selected.length - 1]);
+              const lastSelectOption = selected[selected.length - 1];
+              // If last item is fixed, we should not remove it.
+              if (!lastSelectOption.fixed) {
+                handleUnselect(selected[selected.length - 1]);
+              }
             }
           }
           // This is not a default behavior of the <input /> field
@@ -260,6 +268,8 @@ const MultipleSelector = React.forwardRef<
       }
     }, [arrayDefaultOptions, arrayOptions, groupBy, onSearch, options]);
 
+    const initialFocusRef = React.useRef(true);
+
     useEffect(() => {
       const doSearch = async () => {
         setIsLoading(true);
@@ -271,7 +281,8 @@ const MultipleSelector = React.forwardRef<
       const exec = async () => {
         if (!onSearch || !open) return;
 
-        if (triggerSearchOnFocus) {
+        if (triggerSearchOnFocus && initialFocusRef.current) {
+          initialFocusRef.current = false;
           await doSearch();
         }
 
@@ -282,7 +293,13 @@ const MultipleSelector = React.forwardRef<
 
       void exec();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedSearchTerm, groupBy, open, triggerSearchOnFocus]);
+    }, [
+      debouncedSearchTerm,
+      groupBy,
+      open,
+      triggerSearchOnFocus,
+      initialFocusRef,
+    ]);
 
     const CreatableItem = () => {
       if (!creatable) return undefined;
@@ -396,7 +413,7 @@ const MultipleSelector = React.forwardRef<
             inputRef.current?.focus();
           }}
         >
-          <div className="mr-2 flex flex-wrap gap-1">
+          <div className="relative flex flex-wrap gap-1">
             {selected.map((option) => {
               return (
                 <Badge
@@ -404,7 +421,6 @@ const MultipleSelector = React.forwardRef<
                   className={cn(
                     "data-[disabled]:bg-muted-foreground data-[disabled]:text-muted data-[disabled]:hover:bg-muted-foreground",
                     "data-[fixed]:bg-muted-foreground data-[fixed]:text-muted data-[fixed]:hover:bg-muted-foreground",
-                    "mb-1",
                     badgeClassName,
                   )}
                   data-fixed={option.fixed}
@@ -443,12 +459,13 @@ const MultipleSelector = React.forwardRef<
                 inputProps?.onValueChange?.(value);
               }}
               onBlur={(event) => {
-                setOpen(false);
+                if (mouseOn.current === false) {
+                  setOpen(false);
+                }
                 inputProps?.onBlur?.(event);
               }}
               onFocus={(event) => {
                 setOpen(true);
-                triggerSearchOnFocus && onSearch?.(debouncedSearchTerm);
                 inputProps?.onFocus?.(event);
               }}
               placeholder={
@@ -466,11 +483,39 @@ const MultipleSelector = React.forwardRef<
                 inputProps?.className,
               )}
             />
+            <button
+              type="button"
+              onClick={() => {
+                setSelected(selected.filter((s) => s.fixed));
+                onChange?.(selected.filter((s) => s.fixed));
+              }}
+              className={cn(
+                "absolute right-0 h-6 w-6 p-0",
+                (hideClearAllButton ||
+                  disabled ||
+                  selected.length < 1 ||
+                  selected.filter((s) => s.fixed).length === selected.length) &&
+                  "hidden",
+              )}
+            >
+              <X />
+            </button>
           </div>
         </div>
         <div className="relative">
           {open && (
-            <CommandList className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
+            <CommandList
+              className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in"
+              onMouseLeave={() => {
+                mouseOn.current = false;
+              }}
+              onMouseEnter={() => {
+                mouseOn.current = true;
+              }}
+              onMouseUp={() => {
+                inputRef.current?.focus();
+              }}
+            >
               {isLoading ? (
                 <>{loadingIndicator}</>
               ) : (
