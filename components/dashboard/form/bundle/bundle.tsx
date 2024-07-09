@@ -25,7 +25,6 @@ export default function BundleForm({
   bundleToEditValues?: BundleSchema;
   editMode?: boolean;
 }) {
-  console.log(bundleToEditValues);
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 

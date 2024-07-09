@@ -66,7 +66,7 @@ export const UpdateCourses = () => {
       disabled={loading}
       emptyIndicator={
         <p className="flex w-full items-center justify-center text-sm leading-10 text-muted-foreground">
-          No Courses found!
+          No courses found. Please start typing to begin your search.
         </p>
       }
     />
@@ -95,9 +95,8 @@ export const UpdateCourses = () => {
       <Dialog onOpenChange={setDialogDrawerOpen} open={dialogDrawerOpen}>
         <DialogTrigger>Update Courses</DialogTrigger>
         <DialogContent>
-          <DialogHeader>
+          <DialogHeader className="border-0">
             <DialogTitle>Update Courses</DialogTitle>
-            <DialogDescription>Start typing to search</DialogDescription>
           </DialogHeader>
           {selector}
           <DialogFooter>
@@ -124,7 +123,6 @@ export const UpdateCourses = () => {
       <DrawerContent className="h-[50vh]">
         <DrawerHeader className="p-0 px-4 pb-0">
           <DrawerTitle>Update Bundle Courses</DrawerTitle>
-          <DrawerDescription>Start typing to search</DrawerDescription>
         </DrawerHeader>
         {selector}
         <DrawerFooter>

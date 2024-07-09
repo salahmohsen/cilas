@@ -85,7 +85,9 @@ export function CourseForm({
       toast.success(courseState.message);
       forceUpdate();
       // Redirect based on course submit mode: published | draft
-      redirect("/dashboard/manage-courses?tab=" + (draftMode ? "draft" : "published"));
+      redirect(
+        "/dashboard/manage-courses?tab=" + (draftMode ? "draft" : "published"),
+      );
     }
     // @error
     if (courseState.error) toast.error(courseState.message);
