@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getBundles } from "@/actions/bundles.actions";
 import { getSafeCourses } from "@/actions/courses.actions";
 import Loading from "./loading";
 import ManageCourses from "@/components/dashboard/manage-courses/main.manage.courses";

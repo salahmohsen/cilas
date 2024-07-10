@@ -27,7 +27,9 @@ export default function ManageCourses({ courses }: ManageCoursesProps) {
       <div className="flex">
         <div
           className={`transition-all duration-500 ease-in-out ${
-            width && width >= 1024 && (Object.values(isCourseSelected ?? {})[0] ? "w-[70%]" : "w-full")
+            width &&
+            width >= 1024 &&
+            (Object.values(isCourseSelected ?? {})[0] ? "w-[70%]" : "w-full")
           }`}
         >
           <Tabs
