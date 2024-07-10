@@ -96,6 +96,7 @@ function StrikeThrough({ editor }) {
       size="sm"
       pressed={editor.isActive("strike")}
       onPressedChange={handleStrike}
+      className="hidden md:flex"
     >
       <ToolbarIcon
         icon={<Strikethrough className="h-4 w-4" />}

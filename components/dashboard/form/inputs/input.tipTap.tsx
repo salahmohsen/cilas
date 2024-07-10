@@ -131,8 +131,8 @@ const Editor: React.FC<EditorProps> = ({
       {editor && (
         <BubbleMenu
           editor={editor}
-          tippyOptions={{ duration: 100 }}
-          className="scale-80 rounded-lg border bg-background opacity-90"
+          updateDelay={0}
+          className="scale-80 hidden rounded-lg border bg-opacity-0 backdrop-blur-md md:block"
         >
           <Bold editor={editor} />
           <Italic editor={editor} />
