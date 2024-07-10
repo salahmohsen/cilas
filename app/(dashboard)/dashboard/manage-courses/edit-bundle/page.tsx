@@ -51,7 +51,11 @@ const EditBundle = () => {
   } else {
     return (
       <Suspense fallback={<Loading />}>
-        <BundleForm bundleToEditValues={bundleValues.current} editMode={true} />
+        <BundleForm
+          bundleToEditValues={bundleValues.current}
+          bundleId={Number(bundleId)}
+          editMode={true}
+        />
       </Suspense>
     );
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useTransition } from "react";
-import { BundleState, createBundle } from "@/actions/bundles.actions";
+import { BundleState, createBundle, editBundle } from "@/actions/bundles.actions";
 import { DateInput } from "@/components/dashboard/form/inputs/input.date";
 import { MultiSelectorInput } from "@/components/dashboard/form/inputs/input.multiSelector";
 import { SelectInput } from "@/components/dashboard/form/inputs/input.select";
@@ -21,15 +21,20 @@ import Link from "next/link";
 export default function BundleForm({
   bundleToEditValues,
   editMode = false,
+  bundleId,
 }: {
   bundleToEditValues?: BundleSchema;
   editMode?: boolean;
+  bundleId?: number;
 }) {
-  const { forceUpdateBundles } = useCourseState();
+  const { forceUpdateBundles, setActiveTab } = useCourseState();
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
-  const [bundleState, bundleAction] = useFormState(createBundle, {} as BundleState);
+  const [bundleState, bundleAction] = useFormState(
+    editMode && bundleId ? editBundle.bind(null, bundleId) : createBundle,
+    {} as BundleState,
+  );
 
   const formMethods = useForm<BundleSchema>({
     resolver: zodResolver(bundleSchema),
@@ -40,10 +45,11 @@ export default function BundleForm({
     if (bundleState.success) {
       forceUpdateBundles();
       toast.success(bundleState.message);
+      setActiveTab("bundles");
       redirect("/dashboard/manage-courses?tab=bundles");
     }
     if (bundleState.error) toast.error(bundleState.message);
-  }, [bundleState, forceUpdateBundles]);
+  }, [bundleState, forceUpdateBundles, setActiveTab]);
 
   return (
     <FormProvider {...formMethods}>
