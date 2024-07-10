@@ -45,7 +45,7 @@ export function CourseInfo({ className }: { className?: string }) {
                   navigator.clipboard
                     .writeText((courseInfo.enTitle || courseInfo.arTitle) as string)
                     .then(() => {
-                      toast.success(`${courseInfo.enTitle || courseInfo.arTitle} copied!`);
+                      toast.success("Copied!");
                     });
                 }}
               >
