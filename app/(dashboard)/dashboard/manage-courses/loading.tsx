@@ -1,9 +1,9 @@
-import { CourseSkeleton } from "@/components/dashboard/courses/skeleton";
+import { CourseSkeleton } from "@/components/dashboard/manage-courses/courses/course.skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {
   return (
-    <main className={`mx-4 mb-10`}>
+    <main className={`mx-4 mb-10 w-full`}>
       <div className="flex w-full flex-col gap-5 rounded-md border p-6">
         <div className="flex flex-col gap-1">
           <Skeleton className="h-8 w-48 rounded-md" />

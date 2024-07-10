@@ -1,19 +1,11 @@
-import {
-  memo,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useState } from "react";
 import { getUnbundledCourses } from "@/actions/courses.actions";
-import { Bundle, updateBundleCourses } from "@/actions/bundles.actions";
+import { updateBundleCourses } from "@/actions/bundles.actions";
 import { useWindowSize } from "@uidotdev/usehooks";
 
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -24,7 +16,6 @@ import {
   Drawer,
   DrawerClose,
   DrawerContent,
-  DrawerDescription,
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
@@ -33,7 +24,7 @@ import {
 
 import MultipleSelector, { Option } from "@/components/ui/multipleSelector";
 import { Button } from "@/components/ui/button";
-import { useBundle } from "./item.bundle";
+import { useBundle } from "./bundle.item";
 import { toast } from "sonner";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { LoaderPinwheel } from "lucide-react";

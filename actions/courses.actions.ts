@@ -3,26 +3,13 @@
 import db from "@/db/drizzle";
 import { courseTable } from "@/db/db.schema";
 import { courseSchema } from "@/types/course.schema";
-import {
-  eq,
-  desc,
-  asc,
-  or,
-  and,
-  like,
-  ilike,
-  isNull,
-  inArray,
-} from "drizzle-orm";
+import { eq, desc, asc, or, and, like, ilike, isNull, inArray } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { uploadImage } from "@/lib/cloudinary.utils";
-import {
-  courseSchemaToDbSchema,
-  formDataToCourseSchema,
-} from "@/lib/actions.utils";
-import { coursesFilter } from "@/lib/drizzle.utils";
-import { CoursesFilter, UserWithSensitiveCols } from "@/types/drizzle.types";
+import { courseSchemaToDbSchema, formDataToCourseSchema } from "@/lib/actions.utils";
 import { Option } from "@/components/ui/multipleSelector";
+import { CoursesFilter } from "@/types/manage.courses.types";
+import { coursesFilter } from "@/lib/drizzle.utils";
 
 export type CourseFormState = {
   success?: boolean;
@@ -31,10 +18,7 @@ export type CourseFormState = {
   message: string;
 };
 
-export async function createEditCourse(
-  prevState: CourseFormState,
-  formData: FormData,
-): Promise<CourseFormState> {
+export async function createEditCourse(prevState: CourseFormState, formData: FormData): Promise<CourseFormState> {
   let formObj = formDataToCourseSchema(formData);
   const draftMode: boolean = JSON.parse(formData.get("draftMode") as string);
   const editMode: boolean = JSON.parse(formData.get("editMode") as string);
@@ -47,9 +31,7 @@ export async function createEditCourse(
     const parse = courseSchema.safeParse(formObj);
     if (!parse.success) {
       console.log(parse.error.errors);
-      throw new Error(
-        `An error occurred while processing the form values: ${parse.error?.errors.map((e) => e.path[0])}`,
-      );
+      throw new Error(`An error occurred while processing the form values: ${parse.error?.errors.map((e) => e.path[0])}`);
     }
   } catch (error) {
     if (error instanceof Error)
@@ -73,10 +55,7 @@ export async function createEditCourse(
   // Publish new course
   if (!editMode) {
     try {
-      const result = await db
-        .insert(courseTable)
-        .values(dbObj)
-        .returning({ Id: courseTable.id });
+      const result = await db.insert(courseTable).values(dbObj).returning({ Id: courseTable.id });
 
       revalidatePath("/", "layout");
       return {
@@ -95,11 +74,7 @@ export async function createEditCourse(
     // Edit existing course
   } else if (editMode && typeof courseId === "number") {
     try {
-      const result = await db
-        .update(courseTable)
-        .set(dbObj)
-        .where(eq(courseTable.id, courseId))
-        .returning({ Id: courseTable.id });
+      const result = await db.update(courseTable).set(dbObj).where(eq(courseTable.id, courseId)).returning({ Id: courseTable.id });
 
       revalidatePath("/", "layout");
       return {
@@ -121,46 +96,34 @@ export async function createEditCourse(
   };
 }
 
-export type GetSafeCourses = Awaited<ReturnType<typeof getSafeCourses>>;
-
-export const getSafeCourses = async (
-  filter?: CoursesFilter,
-  id?: number,
-  idArr?: number[],
-  page: number = 1,
-  pageSize: number = 10,
-) => {
-  if (!filter && !id && !idArr)
-    return {
-      error: true,
-      message: "either filter or id or both or array of ids must be provided",
-    };
-
-  const whereCondition = idArr
-    ? inArray(courseTable.id, idArr)
-    : id !== undefined && filter !== undefined
-      ? and(coursesFilter(filter), eq(courseTable.id, id))
-      : id !== undefined
-        ? eq(courseTable.id, id)
-        : filter !== undefined
-          ? coursesFilter(filter)
-          : undefined;
+export const getSafeCourses = async (filter?: CoursesFilter, id?: number, idArr?: number[], page: number = 1, pageSize: number = 10) => {
+  const whereCondition =
+    !filter && !id && !idArr
+      ? undefined
+      : idArr
+        ? inArray(courseTable.id, idArr)
+        : id !== undefined && filter !== undefined
+          ? and(coursesFilter(filter), eq(courseTable.id, id))
+          : id !== undefined
+            ? eq(courseTable.id, id)
+            : filter !== undefined
+              ? coursesFilter(filter)
+              : undefined;
 
   try {
     const courses = await db.query.courseTable.findMany({
+      with: {
+        fellow: {
+          columns: { googleId: false, passwordHash: false },
+        },
+      },
       where: whereCondition,
-      with: { fellow: true },
       limit: pageSize,
       offset: (page - 1) * pageSize,
       orderBy: [desc(courseTable.startDate), desc(courseTable.createdAt)],
     });
 
-    const safeCourses = courses.map((course) => {
-      const { googleId, passwordHash, ...safeFellow } = course.fellow;
-      return { ...course, fellow: safeFellow };
-    });
-
-    return { error: false, safeCourses };
+    return { success: true, message: "Courses fetched successfully", courses };
   } catch (e) {
     if (e instanceof Error) return { error: true, message: e.message };
   }
@@ -178,15 +141,11 @@ export const searchCoursesNames = async (value: string = "") => {
       enTitle: true,
       arTitle: true,
     },
-    where: or(
-      ilike(courseTable.enTitle, `%${value.toLowerCase()}%`),
-      ilike(courseTable.arTitle, `%${value.toLowerCase()}%`),
-    ),
+    where: or(ilike(courseTable.enTitle, `%${value.toLowerCase()}%`), ilike(courseTable.arTitle, `%${value.toLowerCase()}%`)),
   });
 
   const coursesNames: Option[] = data.map((course) => {
-    if (course.enTitle)
-      return { label: course.enTitle, value: course.id.toString() };
+    if (course.enTitle) return { label: course.enTitle, value: course.id.toString() };
     else {
       return { label: course.arTitle!, value: course.id.toString() };
     }
@@ -195,10 +154,7 @@ export const searchCoursesNames = async (value: string = "") => {
   return coursesNames;
 };
 
-export const getUnbundledCourses = async (
-  query: string,
-  defaultCourses?: Option[],
-) => {
+export const getUnbundledCourses = async (query: string, defaultCourses?: Option[]) => {
   const data = await db.query.courseTable.findMany({
     columns: {
       id: true,
@@ -207,15 +163,11 @@ export const getUnbundledCourses = async (
     },
     where: and(
       isNull(courseTable.bundleId),
-      or(
-        ilike(courseTable.enTitle, `%${query.toLowerCase()}%`),
-        ilike(courseTable.arTitle, `%${query.toLowerCase()}%`),
-      ),
+      or(ilike(courseTable.enTitle, `%${query.toLowerCase()}%`), ilike(courseTable.arTitle, `%${query.toLowerCase()}%`)),
     ),
   });
   const coursesNames: Option[] = data.map((course) => {
-    if (course.enTitle)
-      return { label: course.enTitle, value: course.id.toString() };
+    if (course.enTitle) return { label: course.enTitle, value: course.id.toString() };
     else {
       return { label: course.arTitle!, value: course.id.toString() };
     }
@@ -249,18 +201,12 @@ type DeleteCourseState = {
   deletedId?: number;
   message?: string;
 };
-export const deleteCourse = async (
-  prevState: DeleteCourseState,
-  formData: FormData,
-): Promise<DeleteCourseState> => {
+export const deleteCourse = async (prevState: DeleteCourseState, formData: FormData): Promise<DeleteCourseState> => {
   const courseId = formData.get("courseId");
-  if (typeof courseId !== "string")
-    return { error: true, message: "invalid course id!" };
+  if (typeof courseId !== "string") return { error: true, message: "invalid course id!" };
 
   try {
-    const statement = await db
-      .delete(courseTable)
-      .where(eq(courseTable.id, Number(courseId)));
+    const statement = await db.delete(courseTable).where(eq(courseTable.id, Number(courseId)));
 
     revalidatePath("/", "layout");
 

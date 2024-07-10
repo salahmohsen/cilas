@@ -6,11 +6,11 @@ import slug from "slug";
 
 const CoursesPage = async () => {
   const data = await getSafeCourses("published");
-  if (data.error === false)
+  if (data.success)
     return (
       <section className="grid h-screen grid-cols-10 gap-5">
         <div className="relative col-span-10 mb-10 md:col-span-8">
-          {data.safeCourses?.map((course) => {
+          {data.courses?.map((course) => {
             return (
               <Course
                 key={course.id}

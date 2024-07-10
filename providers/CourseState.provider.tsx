@@ -8,78 +8,69 @@ import {
   useEffect,
   useState,
   useCallback,
+  ReactNode,
+  useOptimistic,
+  useRef,
+  useTransition,
 } from "react";
-import { GetSafeCourses, getSafeCourses } from "@/actions/courses.actions";
-import {
-  CoursesFilter,
-  CourseWithFellow,
-  SafeUser,
-} from "@/types/drizzle.types";
+import { deleteCourse, getSafeCourses } from "@/actions/courses.actions";
+import { BundleWithCoursesNames, CourseWithSafeFellow, SafeUser } from "@/types/drizzle.types";
 import { toast } from "sonner";
-import {
-  getBundles as fetchBundles,
-  Bundle,
-  GetBundles,
-} from "@/actions/bundles.actions";
+import { getBundles as fetchBundles } from "@/actions/bundles.actions";
 import { useSearchParams } from "next/navigation";
+import { useFormState } from "react-dom";
+import { CoursesFilter, Tab } from "@/types/manage.courses.types";
 
-type IsSelected = { [key: number]: boolean | undefined };
+type IsSelected = Record<number, boolean> | undefined;
 
 type CourseStateContext = {
-  courses: CourseWithFellow[] | undefined;
-  setCourses: Dispatch<SetStateAction<CourseWithFellow[] | undefined>>;
+  optimisticCourses: CourseWithSafeFellow[] | undefined;
+  setCourses: Dispatch<SetStateAction<CourseWithSafeFellow[] | undefined>>;
   isCourseSelected: IsSelected;
   setIsCourseSelected: Dispatch<SetStateAction<IsSelected>>;
   isBundleSelected: IsSelected;
   setIsBundleSelected: Dispatch<SetStateAction<IsSelected>>;
-  courseInfo: CourseWithFellow | undefined;
-  setCourseInfo: Dispatch<SetStateAction<CourseWithFellow | undefined>>;
+  courseInfo: CourseWithSafeFellow | undefined;
+  setCourseInfo: Dispatch<SetStateAction<CourseWithSafeFellow | undefined>>;
   filter: CoursesFilter;
   setFilter: Dispatch<SetStateAction<CoursesFilter>>;
   fellow: SafeUser | undefined;
   setFellow: Dispatch<SetStateAction<SafeUser | undefined>>;
   isLoading: boolean;
-  bundles: Bundle[];
+  bundles: BundleWithCoursesNames[];
   forceUpdateCourses: () => Promise<void>;
   forceUpdateBundles: () => Promise<void>;
+  handleDelete: (courseId: number) => void;
+  activeTab: Tab;
+  setActiveTab: Dispatch<SetStateAction<Tab>>;
 };
 
-const CourseStateContext = createContext<CourseStateContext>(
-  {} as CourseStateContext,
-);
+const CourseStateContext = createContext<CourseStateContext | undefined>(undefined);
 
-export const CourseStateProvider = ({ children }) => {
-  const searchParam = useSearchParams();
-  const param = searchParam?.get("tab");
-
-  const [isCourseSelected, setIsCourseSelected] = useState<IsSelected>({});
-  const [isBundleSelected, setIsBundleSelected] = useState<IsSelected>({});
-
-  const [courseInfo, setCourseInfo] = useState<CourseWithFellow | undefined>(
-    undefined,
-  );
+export const CourseStateProvider = ({ children }: { children: ReactNode }) => {
+  const [activeTab, setActiveTab] = useState<Tab>("published");
+  const [isCourseSelected, setIsCourseSelected] = useState<IsSelected>(undefined);
+  const [isBundleSelected, setIsBundleSelected] = useState<IsSelected>(undefined);
+  const [courseInfo, setCourseInfo] = useState<CourseWithSafeFellow | undefined>(undefined);
   const [fellow, setFellow] = useState<SafeUser | undefined>(undefined);
-  const [filter, setFilter] = useState<CoursesFilter>(
-    (param as CoursesFilter) || "published", // this will first check param if there is a filter.. if not it will load the default published
-  );
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [courses, setCourses] = useState<CourseWithFellow[] | undefined>(
-    undefined,
-  );
 
-  const [bundles, setBundles] = useState<Bundle[]>([]);
+  // this will first check param if there is a filter.. if not it will load the default published
+  const [filter, setFilter] = useState<CoursesFilter>("published");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [courses, setCourses] = useState<CourseWithSafeFellow[] | undefined>(undefined);
+
+  const [bundles, setBundles] = useState<BundleWithCoursesNames[]>([]);
 
   // fetch courses data
   const getCourses = useCallback(async () => {
     if (!filter) return;
     try {
       setIsLoading(true);
-      let data: GetSafeCourses;
-      data = await getSafeCourses(filter);
-      if (!data.error) setCourses(data.safeCourses);
+      const data = await getSafeCourses(filter);
       if (data.error) throw new Error(data.message);
+      setCourses(data.courses);
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      toast.error(error instanceof Error ? error.message : "Failed to fetch courses");
     } finally {
       setIsLoading(false);
     }
@@ -87,37 +78,64 @@ export const CourseStateProvider = ({ children }) => {
 
   // fetch courses bundles
   const getBundles = useCallback(async () => {
-    let data: GetBundles;
+    console.log("fetching bundles runned!");
     try {
       setIsLoading(true);
-      data = await fetchBundles();
-      if (data.success && data.bundles) {
-        setBundles(data.bundles);
-      } else {
-        throw new Error(data.message);
-      }
-    } catch (e) {
-      if (e instanceof Error) toast.error(e.message);
+      const data = await fetchBundles();
+
+      if (!data.success || !data.bundles) throw new Error(data.message);
+      setBundles(data.bundles);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to fetch bundles");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
-  const forceUpdateCourses = useCallback(async () => {
-    await getCourses();
-  }, [getCourses]);
+  const forceUpdateCourses = useCallback(async () => await getCourses(), [getCourses]);
 
-  const forceUpdateBundles = useCallback(async () => {
-    await getBundles();
-  }, [getBundles]);
+  const forceUpdateBundles = useCallback(async () => await getBundles(), [getBundles]);
 
   useEffect(() => {
-    if (filter === "bundles") getBundles();
-  }, [getBundles, filter]);
+    if (activeTab === "bundles") getBundles();
+  }, [getBundles, activeTab]);
 
   useEffect(() => {
-    if (filter !== "bundles") getCourses();
+    getCourses();
   }, [getCourses, filter]);
+
+  //*************************************************************************************** Delete Course
+
+  const [deleteState, deleteAction] = useFormState(deleteCourse, {});
+  const [isPending, startTransition] = useTransition();
+
+  const [optimisticCourses, addOptimisticCourse] = useOptimistic(courses, (currentState, courseIdToRemove: number) => {
+    if (currentState) return currentState.filter((course) => course.id !== courseIdToRemove);
+  });
+
+  const handleDelete = useCallback(
+    (courseId: number) => {
+      startTransition(() => {
+        addOptimisticCourse(courseId);
+        const formData = new FormData();
+        formData.append("courseId", courseId.toString());
+        deleteAction(formData);
+      });
+    },
+    [addOptimisticCourse, deleteAction],
+  );
+  const toastId = useRef<string | number>();
+  useEffect(() => {
+    if (isPending) toastId.current = toast.loading("Loading...");
+  }, [isPending]);
+
+  useEffect(() => {
+    if (deleteState?.success) {
+      toast.success(deleteState.message, { id: toastId.current });
+      setCourses((current) => current?.filter((course) => course.id !== Number(deleteState?.deletedId)));
+    }
+    if (deleteState?.error) toast.error(deleteState.message);
+  }, [deleteState, setCourses, toastId]);
 
   const contextValue: CourseStateContext = {
     isCourseSelected,
@@ -132,21 +150,19 @@ export const CourseStateProvider = ({ children }) => {
     fellow,
     setFellow,
     bundles,
-    courses,
+    optimisticCourses,
     setCourses,
     forceUpdateCourses,
     forceUpdateBundles,
+    handleDelete,
+    activeTab,
+    setActiveTab,
   };
-  return (
-    <CourseStateContext.Provider value={contextValue}>
-      {children}
-    </CourseStateContext.Provider>
-  );
+  return <CourseStateContext.Provider value={contextValue}>{children}</CourseStateContext.Provider>;
 };
 
 export const useCourseState = (): CourseStateContext => {
-  const courseStateContext = useContext(CourseStateContext);
-  if (!courseStateContext)
-    throw new Error("useCourseState must be used within course state context.");
-  return courseStateContext;
+  const context = useContext(CourseStateContext);
+  if (!context) throw new Error("useCourseState must be used within course state context.");
+  return context;
 };

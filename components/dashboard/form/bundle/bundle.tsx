@@ -1,17 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useTransition } from "react";
 import { BundleState, createBundle } from "@/actions/bundles.actions";
 import { DateInput } from "@/components/dashboard/form/inputs/input.date";
 import { MultiSelectorInput } from "@/components/dashboard/form/inputs/input.multiSelector";
 import { SelectInput } from "@/components/dashboard/form/inputs/input.select";
 import { SubmitButton } from "@/components/dashboard/form/inputs/input.submit";
 import { Form } from "@/components/ui/form";
-import {
-  bundleDefaultValues,
-  bundleSchema,
-  BundleSchema,
-} from "@/types/bundle.schema";
+import { bundleDefaultValues, bundleSchema, BundleSchema } from "@/types/bundle.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";
@@ -19,6 +15,8 @@ import { toast } from "sonner";
 import { getUnbundledCourses } from "@/actions/courses.actions";
 import { redirect } from "next/navigation";
 import { useCourseState } from "@/providers/CourseState.provider";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function BundleForm({
   bundleToEditValues,
@@ -27,13 +25,11 @@ export default function BundleForm({
   bundleToEditValues?: BundleSchema;
   editMode?: boolean;
 }) {
+  const { forceUpdateBundles } = useCourseState();
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
-  const [bundleState, bundleAction] = useFormState(
-    createBundle,
-    {} as BundleState,
-  );
+  const [bundleState, bundleAction] = useFormState(createBundle, {} as BundleState);
 
   const formMethods = useForm<BundleSchema>({
     resolver: zodResolver(bundleSchema),
@@ -42,11 +38,12 @@ export default function BundleForm({
   });
   useEffect(() => {
     if (bundleState.success) {
+      forceUpdateBundles();
       toast.success(bundleState.message);
       redirect("/dashboard/manage-courses?tab=bundles");
     }
     if (bundleState.error) toast.error(bundleState.message);
-  }, [bundleState]);
+  }, [bundleState, forceUpdateBundles]);
 
   return (
     <FormProvider {...formMethods}>
@@ -85,9 +82,7 @@ export default function BundleForm({
             <SelectInput
               name="cycle"
               label="Cycle"
-              options={[
-                { selectItems: ["Spring", "Summer", "Fall", "Winter"] },
-              ]}
+              options={[{ selectItems: ["Spring", "Summer", "Fall", "Winter"] }]}
               placeholder="Select a cycle"
             />
             <SelectInput
@@ -95,12 +90,7 @@ export default function BundleForm({
               label="Category"
               options={[
                 {
-                  selectItems: [
-                    "Seasonal",
-                    "Second Trimester",
-                    "Third Trimester",
-                    "Labs",
-                  ],
+                  selectItems: ["Seasonal", "Second Trimester", "Third Trimester", "Labs"],
                 },
               ]}
               placeholder="Select a category"
@@ -125,11 +115,17 @@ export default function BundleForm({
               emptyMsg="No Courses found!"
             />
           </fieldset>
-          <SubmitButton
-            value="Create bundle"
-            isLoading={isPending}
-            className="mt-8"
-          />
+          <div className="my-8 flex gap-5">
+            <Link href={"/dashboard/manage-courses#bundles"} className="w-full">
+              <Button variant="secondary" className="w-full">
+                Cancel
+              </Button>
+            </Link>
+            <SubmitButton
+              value={`${editMode ? "Save Changes" : "Create Bundle"}`}
+              isLoading={isPending}
+            />
+          </div>
         </form>
       </Form>
     </FormProvider>

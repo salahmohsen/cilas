@@ -12,7 +12,7 @@ import {
 import { Ellipsis } from "lucide-react";
 
 import { UpdateCourses } from "./options.updateCourses";
-import { useBundle } from "./item.bundle";
+import { useBundle } from "./bundle.item";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { deleteBundle } from "@/actions/bundles.actions";
 import { useCourseState } from "@/providers/CourseState.provider";
@@ -48,20 +48,14 @@ export const BundleOptions = () => {
         asChild
         className={`invisible absolute right-5 group-hover/item:visible ${width && width < 769 && "visible"} ${isOptionsMenuOpen && "visible"} `}
       >
-        <Button
-          size="icon"
-          variant="outline"
-          className={`h-8 w-8 bg-background text-foreground`}
-        >
+        <Button size="icon" variant="outline" className={`h-8 w-8 bg-background text-foreground`}>
           <Ellipsis className="h-3.5 w-3.5" />
           <span className="sr-only">More</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <Link href={`/dashboard/manage-courses/edit-bundle?id=${bundle.id}`}>
-          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
-            Edit Bundle
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={(e) => e.stopPropagation()}>Edit Bundle</DropdownMenuItem>
         </Link>
 
         <DropdownMenuItem
