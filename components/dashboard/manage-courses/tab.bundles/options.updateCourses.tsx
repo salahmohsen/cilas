@@ -50,14 +50,18 @@ export const UpdateCourses = () => {
       delay={300}
       onChange={setCourses}
       triggerSearchOnFocus
+      commandProps={{
+        className: "max-h-28 ",
+      }}
       onSearch={(query) => getUnbundledCourses(query, defaultCourses)}
       placeholder="Search for unbundled courses..."
       hidePlaceholderWhenSelected
       badgeClassName="rounded-sm"
       disabled={loading}
       emptyIndicator={
-        <p className="flex w-full items-center justify-center text-sm leading-10 text-muted-foreground">
-          No courses found. Please start typing to begin your search.
+        <p className="flex h-auto w-full flex-col items-center justify-center gap-1 text-sm text-muted-foreground">
+          <span>No courses Found</span>
+          <span>start typing to search...</span>
         </p>
       }
     />
@@ -111,12 +115,15 @@ export const UpdateCourses = () => {
   return (
     <Drawer onOpenChange={setDialogDrawerOpen} open={dialogDrawerOpen}>
       <DrawerTrigger>Edit Courses</DrawerTrigger>
-      <DrawerContent className="h-[50vh]">
-        <DrawerHeader className="p-0 px-4 pb-0">
-          <DrawerTitle>Edit Bundle Courses</DrawerTitle>
-        </DrawerHeader>
-        {selector}
-        <DrawerFooter>
+      <DrawerContent className="h-[70vh]">
+        <DrawerHeader className="pb-0">{selector}</DrawerHeader>
+
+        <DrawerFooter className="flex flex-row gap-2">
+          <DrawerClose asChild>
+            <Button variant="outline" className="w-full">
+              Cancel
+            </Button>
+          </DrawerClose>
           <Button onClick={handleUpdateBundleCourses} disabled={loading}>
             {loading ? (
               <span className="flex gap-2">
@@ -126,11 +133,6 @@ export const UpdateCourses = () => {
               "Save Changes"
             )}
           </Button>
-          <DrawerClose asChild>
-            <Button variant="outline" className="w-full">
-              Cancel
-            </Button>
-          </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
