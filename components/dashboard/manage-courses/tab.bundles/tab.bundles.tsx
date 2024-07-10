@@ -1,5 +1,11 @@
 import { useCourseState } from "@/providers/CourseState.provider";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { BundleSkeleton } from "./bundle.skeleton";
 import { BundleItem } from "./bundle.item";
@@ -16,9 +22,15 @@ export const BundlesTab = () => {
         </CardHeader>
         <CardContent>
           <ul className="group/list space-y-3">
-            {isLoading && <BundleSkeleton itemsNumber={10} />}
-            {!isLoading && bundles?.map((bundle) => <BundleItem key={bundle.id} bundle={bundle} />)}
-            {!isLoading && bundles?.length === 0 && <NoCoursesFound message="No Bundles Found!" />}
+            {isLoading ? (
+              <BundleSkeleton itemsNumber={10} />
+            ) : bundles?.length > 0 ? (
+              bundles?.map((bundle) => (
+                <BundleItem key={bundle.id} bundle={bundle} />
+              ))
+            ) : (
+              <NoCoursesFound message="No Bundles Found!" />
+            )}
           </ul>
         </CardContent>
       </Card>

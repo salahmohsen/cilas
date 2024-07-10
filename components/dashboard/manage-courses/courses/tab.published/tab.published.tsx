@@ -27,7 +27,7 @@ export const PublishedTab = ({ courses }: PublishedTabProps) => {
   return (
     <TabsContent value="published">
       <Card>
-        <CardHeader className="">
+        <CardHeader>
           <CardTitle>Published Courses</CardTitle>
           <CardDescription>
             Monitor and manage published courses.
@@ -35,9 +35,11 @@ export const PublishedTab = ({ courses }: PublishedTabProps) => {
         </CardHeader>
         <CardContent>
           <ul className="group/list space-y-2">
-            {isLoading && <CourseSkeleton itemsNumber={10} />}
+            {!optimisticCourses && <CourseSkeleton itemsNumber={10} />}
             {!isLoading &&
-              optimisticCourses?.map((course) => (
+              optimisticCourses &&
+              optimisticCourses.length > 0 &&
+              optimisticCourses.map((course) => (
                 <CourseItem course={course} key={course.id} />
               ))}
             {!isLoading && optimisticCourses?.length === 0 && (

@@ -12,12 +12,11 @@ export function CourseSkeleton({ itemsNumber }: { itemsNumber: number }) {
         >
           <div className="flex w-full flex-col gap-3">
             <div className="flex h-5 gap-1">
-              <Skeleton className="w-5 rounded-full" />
-              <Skeleton className="w-24 rounded-md" />
+              <Skeleton className="w-1/5 rounded-full" />
             </div>
             <div className="flex h-5 gap-2">
-              <Skeleton className="w-16" />
-              <Skeleton className="mr-10 w-full" />
+              <Skeleton className="w-1/12" />
+              <Skeleton className="mr-10 w-2/3" />
             </div>
             <div className="flex h-5 gap-1">
               <Skeleton className="w-5 rounded-full" />
