@@ -12,12 +12,15 @@ import { useCourseState } from "@/providers/CourseState.provider";
 import { NoCoursesFound } from "../../notFound";
 import { CourseSkeleton } from "../course.skeleton";
 import { CourseItem } from "../course.item";
+import { useEffect } from "react";
 
 export const DraftTab = () => {
   const {
     optimisticCourses,
     state: { isLoading },
+    dispatch,
   } = useCourseState();
+
   return (
     <TabsContent value="draft">
       <Card>
@@ -28,7 +31,7 @@ export const DraftTab = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="group/list space-y-2">
+          <ul className="group/list space-y-2 transition-all duration-200 ease-in-out">
             {isLoading && <CourseSkeleton itemsNumber={10} />}
             {!isLoading &&
               optimisticCourses.length > 0 &&

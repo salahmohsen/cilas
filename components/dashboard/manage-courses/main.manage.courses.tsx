@@ -17,9 +17,7 @@ import { TabsList } from "./tab.list";
 import { Tab } from "@/types/manage.courses.types";
 import { useSearchParams } from "next/navigation";
 
-type ManageCoursesProps = { courses: CourseWithSafeFellow[] };
-
-export default function ManageCourses({ courses }: ManageCoursesProps) {
+export default function ManageCourses() {
   const searchParams = useSearchParams();
   const openedTab = searchParams?.get("tab");
 
@@ -50,7 +48,7 @@ export default function ManageCourses({ courses }: ManageCoursesProps) {
             className={cn(`flex flex-col gap-2`)}
           >
             <TabsList />
-            <PublishedTab courses={courses} />
+            <PublishedTab />
             <DraftTab />
             <BundlesTab />
           </Tabs>

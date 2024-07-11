@@ -4,9 +4,22 @@ import Link from "next/link";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui/tabs";
 import { FilterButton } from "./courses/button.filter";
+import { useCallback } from "react";
+import { CoursesFilter, Tab } from "@/types/manage.courses.types";
 
 export const TabsList = () => {
-  const { state, dispatch } = useCourseState();
+  const {
+    state: { activeTab },
+    dispatch,
+  } = useCourseState();
+
+  const handleTabClick = useCallback(
+    (tab: Tab, filter?: CoursesFilter) => {
+      dispatch({ type: "SET_FILTER", payload: filter });
+      dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
+    },
+    [dispatch],
+  );
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -15,11 +28,7 @@ export const TabsList = () => {
           <TabsTrigger
             value="published"
             id="published"
-            onClick={() => {
-              dispatch({ type: "SET_FILTER", payload: "published" });
-              dispatch({ type: "SET_ACTIVE_TAB", payload: "published" });
-              dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
-            }}
+            onClick={() => handleTabClick("published", "published")}
           >
             Published
           </TabsTrigger>
@@ -29,11 +38,7 @@ export const TabsList = () => {
           <TabsTrigger
             value="draft"
             id="draft"
-            onClick={() => {
-              dispatch({ type: "SET_FILTER", payload: "draft" });
-              dispatch({ type: "SET_ACTIVE_TAB", payload: "draft" });
-              dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
-            }}
+            onClick={() => handleTabClick("draft", "draft")}
           >
             Draft
           </TabsTrigger>
@@ -43,16 +48,13 @@ export const TabsList = () => {
           <TabsTrigger
             value="bundles"
             id="bundles"
-            onClick={() => {
-              dispatch({ type: "SET_ACTIVE_TAB", payload: "bundles" });
-              dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
-            }}
+            onClick={() => handleTabClick("bundles", "published")}
           >
             Bundles
           </TabsTrigger>
         </Link>
       </TabsListUi>
-      {state.activeTab === "published" && <FilterButton />}
+      {activeTab === "published" && <FilterButton />}
     </div>
   );
 };

@@ -1,15 +1,18 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { getSafeCourses } from "@/actions/courses.actions";
 import Loading from "./loading";
 import ManageCourses from "@/components/dashboard/manage-courses/main.manage.courses";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Sailboat, Waves } from "lucide-react";
 
 export default async function ManageCoursesPage() {
-  const courses = await getSafeCourses("published");
-
   return (
     <Suspense fallback={<Loading />}>
       <main className={`mx-4 flex flex-col gap-5`}>
@@ -17,7 +20,8 @@ export default async function ManageCoursesPage() {
           <CardHeader className="p-0">
             <CardTitle>Cilas Courses</CardTitle>
             <CardDescription className="max-w-lg text-balance leading-relaxed">
-              Manage Cilas courses: create, update, delete, and filter with ease.
+              Manage Cilas courses: create, update, delete, and filter with
+              ease.
             </CardDescription>
           </CardHeader>
           <CardFooter className="flex flex-wrap items-center gap-2 p-0">
@@ -35,7 +39,7 @@ export default async function ManageCoursesPage() {
             </Link>
           </CardFooter>
         </Card>
-        <ManageCourses courses={courses.courses} />
+        <ManageCourses />
       </main>
     </Suspense>
   );
