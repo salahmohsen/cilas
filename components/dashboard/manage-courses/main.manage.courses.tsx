@@ -38,9 +38,12 @@ export default function ManageCourses() {
           )}
         >
           <Tabs
-            value={openedTab || activeTab || "published"}
+            value={activeTab}
             onValueChange={(value) =>
-              dispatch({ type: "SET_ACTIVE_TAB", payload: value as Tab })
+              dispatch({
+                type: "SET_ACTIVE_TAB",
+                payload: value as Tab,
+              })
             }
             className={cn(`flex flex-col gap-2`)}
           >

@@ -114,6 +114,7 @@ export const CourseStateProvider = ({ children }: { children: ReactNode }) => {
       if (!state.filter) return;
 
       try {
+        dispatch({ type: "SET_COURSES", payload: [] });
         dispatch({ type: "SET_LOADING", payload: true });
 
         const data = await getSafeCourses(filter);
@@ -155,8 +156,15 @@ export const CourseStateProvider = ({ children }: { children: ReactNode }) => {
   const activeTabParam = searchParams?.get("tab") as Tab | null;
 
   useEffect(() => {
-    dispatch({ type: "SET_ACTIVE_TAB", payload: activeTabParam as Tab });
+    dispatch({
+      type: "SET_ACTIVE_TAB",
+      payload: activeTabParam || "published",
+    });
   }, [activeTabParam]);
+
+  useEffect(() => {
+    if (!activeTabParam) getCourses(state.filter);
+  }, [activeTabParam, getCourses, state.filter]);
 
   useEffect(() => {
     if (activeTabParam === state.activeTab) {

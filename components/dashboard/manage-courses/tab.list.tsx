@@ -9,15 +9,17 @@ import { Tab } from "@/types/manage.courses.types";
 
 export const TabsList = () => {
   const {
-    state: { activeTab },
+    state: { activeTab, filter },
     dispatch,
   } = useCourseState();
 
   const handleTabClick = useCallback(
     (tab: Tab) => {
       dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
+      if (filter === "archived" || "ongoing" || "starting soon")
+        dispatch({ type: "SET_FILTER", payload: "published" });
     },
-    [dispatch],
+    [dispatch, filter],
   );
 
   return (
