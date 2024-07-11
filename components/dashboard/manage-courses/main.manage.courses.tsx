@@ -8,7 +8,6 @@ import { CourseInfo } from "@/components/dashboard/manage-courses/info/info";
 import { CourseInfoModal } from "@/components/dashboard/manage-courses/info/info.modal";
 
 import { Tabs } from "@/components/ui/tabs";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
 
 import { DraftTab } from "./courses/tab.draft/tab.draft";
 import { BundlesTab } from "./tab.bundles/tab.bundles";
@@ -27,7 +26,6 @@ export default function ManageCourses() {
     state: { isCourseSelected, activeTab },
     dispatch,
   } = useCourseState();
-
   return (
     <div>
       <div className="flex">
@@ -40,8 +38,7 @@ export default function ManageCourses() {
           )}
         >
           <Tabs
-            defaultValue={"published"}
-            value={openedTab || activeTab}
+            value={openedTab || activeTab || "published"}
             onValueChange={(value) =>
               dispatch({ type: "SET_ACTIVE_TAB", payload: value as Tab })
             }
