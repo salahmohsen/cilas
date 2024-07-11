@@ -47,8 +47,7 @@ type Action =
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_COURSES"; payload: CourseWithSafeFellow[] }
   | { type: "SET_BUNDLES"; payload: BundleWithCoursesNames[] }
-  | { type: "DELETE_COURSE"; payload: number }
-  | { type: "CLEAR_COURSES" };
+  | { type: "DELETE_COURSE"; payload: number };
 
 const initialState: State = {
   activeTab: "published",
@@ -87,8 +86,6 @@ function reducer(state: State, action: Action): State {
         ...state,
         courses: state.courses.filter((course) => course.id !== action.payload),
       };
-    case "CLEAR_COURSES":
-      return { ...state, courses: [] };
 
     default:
       return state;
@@ -118,7 +115,6 @@ export const CourseStateProvider = ({ children }: { children: ReactNode }) => {
 
       try {
         dispatch({ type: "SET_LOADING", payload: true });
-        dispatch({ type: "CLEAR_COURSES" });
 
         const data = await getSafeCourses(filter);
         if (data.error) throw new Error(data.message);
@@ -133,7 +129,6 @@ export const CourseStateProvider = ({ children }: { children: ReactNode }) => {
     },
     [state.filter],
   );
-
   const getBundles = useCallback(async () => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
@@ -157,19 +152,30 @@ export const CourseStateProvider = ({ children }: { children: ReactNode }) => {
   }, [getBundles]);
 
   const searchParams = useSearchParams();
-  const activeTabParam = searchParams?.get("tab");
+  const activeTabParam = searchParams?.get("tab") as Tab | null;
 
   useEffect(() => {
-    if (state.activeTab === "bundles") {
-      getBundles();
-    } else if ((state.activeTab && activeTabParam) === "published") {
-      getCourses(state.filter);
-    } else if (state.activeTab && activeTabParam === "draft") {
-      getCourses("draft");
-    } else {
-      getCourses(state.filter);
+    dispatch({ type: "SET_ACTIVE_TAB", payload: activeTabParam as Tab });
+  }, [activeTabParam]);
+
+  useEffect(() => {
+    if (activeTabParam === state.activeTab) {
+      switch (activeTabParam) {
+        case "bundles":
+          console.log("Active tab: bundles");
+          getBundles();
+          break;
+        case "published":
+          console.log("Active tab: published");
+          getCourses(state.filter);
+          break;
+        case "draft":
+          console.log("Active tab: draft");
+          getCourses("draft");
+          break;
+      }
     }
-  }, [activeTabParam, getBundles, getCourses, state.activeTab, state.filter]);
+  }, [activeTabParam, state.activeTab, getBundles, getCourses, state.filter]);
 
   const [optimisticCourses, addOptimisticCourse] = useOptimistic(
     state.courses,

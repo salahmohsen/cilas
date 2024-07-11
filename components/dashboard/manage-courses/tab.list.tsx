@@ -14,8 +14,7 @@ export const TabsList = () => {
   } = useCourseState();
 
   const handleTabClick = useCallback(
-    (tab: Tab, filter: CoursesFilter) => {
-      dispatch({ type: "SET_FILTER", payload: filter });
+    (tab: Tab) => {
       dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
     },
     [dispatch],
@@ -28,7 +27,7 @@ export const TabsList = () => {
           <TabsTrigger
             value="published"
             id="published"
-            onClick={() => handleTabClick("published", "published")}
+            onClick={() => handleTabClick("published")}
           >
             Published
           </TabsTrigger>
@@ -38,7 +37,7 @@ export const TabsList = () => {
           <TabsTrigger
             value="draft"
             id="draft"
-            onClick={() => handleTabClick("draft", "draft")}
+            onClick={() => handleTabClick("draft")}
           >
             Draft
           </TabsTrigger>
@@ -48,7 +47,7 @@ export const TabsList = () => {
           <TabsTrigger
             value="bundles"
             id="bundles"
-            onClick={() => handleTabClick("bundles", "published")}
+            onClick={() => handleTabClick("bundles")}
           >
             Bundles
           </TabsTrigger>

@@ -37,7 +37,7 @@ const coursesFilter = [
 export function FilterButton() {
   const { dispatch } = useCourseState();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState<string | undefined>(undefined);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -65,7 +65,7 @@ export function FilterButton() {
                   key={filter.value}
                   value={filter.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue);
+                    setValue(currentValue === value ? undefined : currentValue);
                     setOpen(false);
                     dispatch({
                       type: "SET_FILTER",

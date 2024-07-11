@@ -33,7 +33,7 @@ export function CourseInfo({ className }: { className?: string }) {
         width && width < 1024
           ? "w-full transition-none"
           : Object.values(isCourseSelected ?? {})[0]
-            ? "ml-5 w-[40%] opacity-100"
+            ? "ml-5 w-[30%] opacity-100"
             : "w-0 opacity-0",
         className,
       )}
