@@ -1,4 +1,10 @@
-import { useCallback, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { getUnbundledCourses } from "@/actions/courses.actions";
 import { updateBundleCourses } from "@/actions/bundles.actions";
 import { useWindowSize } from "@uidotdev/usehooks";
@@ -18,31 +24,64 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
 import MultipleSelector, { Option } from "@/components/ui/multipleSelector";
 import { Button } from "@/components/ui/button";
-import { useBundle } from "./bundle.item";
 import { toast } from "sonner";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { LoaderPinwheel } from "lucide-react";
 import { useCourseState } from "@/providers/CourseState.provider";
 
-export const UpdateCourses = () => {
-  const { bundle, setIsOptionsMenuOpen } = useBundle();
-  const { forceUpdateBundles } = useCourseState();
+export const UpdateCourses = ({
+  bundleId,
+  setIsOptionsMenuOpen,
+}: {
+  bundleId: number;
+  setIsOptionsMenuOpen: Dispatch<SetStateAction<boolean>>;
+}) => {
   const { width } = useWindowSize();
 
-  const defaultCourses: Option[] = bundle.courses.map((course) => ({
-    value: course.id.toString(),
-    label: (course.enTitle || course.arTitle) as string,
-  }));
+  const {
+    forceUpdateBundles,
 
-  const [courses, setCourses] = useState<Option[]>(defaultCourses);
+    state: { bundles },
+  } = useCourseState();
+
+  const bundle = bundles.find((bundle) => bundle.id === bundleId);
+
+  const defaultCourses: Option[] | undefined = bundle?.courses.map(
+    (course) => ({
+      value: course.id.toString(),
+      label: (course.enTitle || course.arTitle) as string,
+    }),
+  );
+
+  const [courses, setCourses] = useState<Option[] | undefined>(defaultCourses);
   const [loading, setLoading] = useState<boolean>(false);
   const [dialogDrawerOpen, setDialogDrawerOpen] = useState<boolean>(false);
+
+  const handleUpdateBundleCourses = useCallback(async () => {
+    if (courses) {
+      try {
+        setLoading(true);
+        const results = await updateBundleCourses(courses, bundleId);
+        if (results.error) throw new Error(results.message);
+        if (results.success) {
+          toast.success(results.message);
+          forceUpdateBundles();
+          setIsOptionsMenuOpen(false);
+          setDialogDrawerOpen(false);
+        }
+      } catch (e) {
+        toast.error(e instanceof Error && e.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+  }, [courses, bundleId, setIsOptionsMenuOpen, forceUpdateBundles]);
+
   const selector = (
     <MultipleSelector
       className="overflow-y-auto"
@@ -67,23 +106,8 @@ export const UpdateCourses = () => {
     />
   );
 
-  const handleUpdateBundleCourses = useCallback(async () => {
-    try {
-      setLoading(true);
-      const results = await updateBundleCourses(courses, bundle.id);
-      if (results.error) throw new Error(results.message);
-      if (results.success) {
-        toast.success(results.message);
-        forceUpdateBundles();
-        setDialogDrawerOpen(false);
-        setIsOptionsMenuOpen(false);
-      }
-    } catch (e) {
-      toast.error(e instanceof Error && e.message);
-    } finally {
-      setLoading(false);
-    }
-  }, [bundle.id, courses, forceUpdateBundles, setIsOptionsMenuOpen]);
+  if (!bundle)
+    return toast.error("Something went wrong, bundle is not available!");
 
   if (width && width > 768)
     return (

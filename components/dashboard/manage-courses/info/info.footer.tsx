@@ -1,40 +1,65 @@
 import { Button } from "@/components/ui/button";
 import { CardFooter } from "@/components/ui/card";
-import { Pagination, PaginationContent, PaginationItem } from "@/components/ui/pagination";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+} from "@/components/ui/pagination";
 import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export const InfoFooter = ({ className }: { className?: string }) => {
-  const { setIsCourseSelected, courseInfo, setCourseInfo, optimisticCourses } = useCourseState();
+  const {
+    state: { courseInfo },
+    dispatch,
+    optimisticCourses,
+  } = useCourseState();
 
   if (!courseInfo) return;
 
-  const idArr: number[] | undefined = optimisticCourses?.map((item) => item.id);
+  const idArr: number[] | undefined = optimisticCourses.map((item) => item.id);
   const currentId = courseInfo.id;
   const currIndex = idArr?.indexOf(currentId);
 
   const handleNext = () => {
-    if (idArr && typeof currIndex === "number" && currIndex < idArr.length - 1) {
+    if (
+      idArr &&
+      typeof currIndex === "number" &&
+      currIndex < idArr.length - 1
+    ) {
       const nextId = idArr[currIndex + 1];
-      setIsCourseSelected({ [nextId]: true });
-      setCourseInfo(optimisticCourses?.find((item) => item?.id === nextId) as CourseWithSafeFellow);
+      dispatch({ type: "SET_COURSE_SELECTED", payload: { [nextId]: true } });
+      dispatch({
+        type: "SET_COURSE_INFO",
+        payload: optimisticCourses?.find((item) => item?.id === nextId),
+      });
     } else {
-      if (idArr) setIsCourseSelected({ [idArr[0]]: true });
-      if (optimisticCourses) setCourseInfo(optimisticCourses[0]);
+      if (idArr) {
+        dispatch({
+          type: "SET_COURSE_SELECTED",
+          payload: { [idArr[0]]: true },
+        });
+      }
+      dispatch({ type: "SET_COURSE_INFO", payload: optimisticCourses[0] });
     }
   };
 
   const handlePrev = () => {
     if (idArr && typeof currIndex === "number" && currIndex > 0) {
       const prevId = idArr[currIndex - 1];
-      setIsCourseSelected({ [prevId]: true });
-      setCourseInfo(optimisticCourses?.find((item) => item?.id === prevId) as CourseWithSafeFellow);
+      dispatch({ type: "SET_COURSE_SELECTED", payload: { [prevId]: true } });
+      dispatch({
+        type: "SET_COURSE_INFO",
+        payload: optimisticCourses?.find((item) => item?.id === prevId),
+      });
     } else {
-      setIsCourseSelected({ [idArr?.at(-1) as number]: true });
-      setCourseInfo(optimisticCourses?.at(-1) as CourseWithSafeFellow);
+      dispatch({
+        type: "SET_COURSE_SELECTED",
+        payload: { [idArr?.at(-1) as number]: true },
+      });
+      dispatch({ type: "SET_COURSE_INFO", payload: optimisticCourses?.at(-1) });
     }
   };
   return (
@@ -45,7 +70,10 @@ export const InfoFooter = ({ className }: { className?: string }) => {
       )}
     >
       <div className="text-xs text-muted-foreground">
-        Updated <time dateTime="2023-11-23">{format(courseInfo.updatedAt, "dd MMMM yyyy")}</time>
+        Updated{" "}
+        <time dateTime="2023-11-23">
+          {format(courseInfo.updatedAt, "dd MMMM yyyy")}
+        </time>
       </div>
       <Pagination className="ml-auto mr-0 w-auto">
         <PaginationContent>

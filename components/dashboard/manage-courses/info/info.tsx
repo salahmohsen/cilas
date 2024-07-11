@@ -1,7 +1,13 @@
 import { useCourseState } from "@/providers/CourseState.provider";
 import { differenceInWeeks, format } from "date-fns";
 import { cn, getSeason } from "@/lib/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 import { Copy } from "lucide-react";
 import { UserAvatar } from "./info.avatars";
@@ -13,9 +19,11 @@ import { toast } from "sonner";
 import { InfoFooter } from "./info.footer";
 
 export function CourseInfo({ className }: { className?: string }) {
-  const { isCourseSelected, courseInfo } = useCourseState();
-
+  const {
+    state: { courseInfo, isCourseSelected },
+  } = useCourseState();
   const { width } = useWindowSize();
+
   if (!courseInfo) return;
 
   return (
@@ -25,7 +33,7 @@ export function CourseInfo({ className }: { className?: string }) {
         width && width < 1024
           ? "w-full transition-none"
           : Object.values(isCourseSelected ?? {})[0]
-            ? "ml-5 w-[30%] opacity-100"
+            ? "ml-5 w-[40%] opacity-100"
             : "w-0 opacity-0",
         className,
       )}
@@ -43,7 +51,9 @@ export function CourseInfo({ className }: { className?: string }) {
                 className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                 onClick={() => {
                   navigator.clipboard
-                    .writeText((courseInfo.enTitle || courseInfo.arTitle) as string)
+                    .writeText(
+                      (courseInfo.enTitle || courseInfo.arTitle) as string,
+                    )
                     .then(() => {
                       toast.success("Copied!");
                     });
@@ -53,7 +63,9 @@ export function CourseInfo({ className }: { className?: string }) {
                 <span className="sr-only">Copy Course Name</span>
               </Button>
             </CardTitle>
-            <CardDescription>Date: {format(courseInfo.startDate, "dd MMMM yyyy")}</CardDescription>
+            <CardDescription>
+              Date: {format(courseInfo.startDate, "dd MMMM yyyy")}
+            </CardDescription>
           </div>
         </CardHeader>
 
@@ -86,7 +98,10 @@ export function CourseInfo({ className }: { className?: string }) {
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Duration</span>
-                <span>{differenceInWeeks(courseInfo.endDate, courseInfo.startDate)} Weeks</span>
+                <span>
+                  {differenceInWeeks(courseInfo.endDate, courseInfo.startDate)}{" "}
+                  Weeks
+                </span>
               </li>
               <li className="flex items-center justify-between gap-5">
                 <span className="text-muted-foreground">Days</span>
@@ -109,7 +124,11 @@ export function CourseInfo({ className }: { className?: string }) {
             <dl className="grid gap-3">
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Name</dt>
-                <dd>{courseInfo.fellow?.firstName + " " + courseInfo.fellow?.lastName}</dd>
+                <dd>
+                  {courseInfo.fellow?.firstName +
+                    " " +
+                    courseInfo.fellow?.lastName}
+                </dd>
               </div>
               <div className="flex items-center justify-between gap-5">
                 <dt className="text-muted-foreground">Email</dt>

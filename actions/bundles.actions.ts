@@ -39,7 +39,9 @@ export type GetBundleById = {
   };
 };
 
-export const getBundleById = async (bundleId: number): Promise<GetBundleById> => {
+export const getBundleById = async (
+  bundleId: number,
+): Promise<GetBundleById> => {
   try {
     const bundle = await db.query.bundleTable.findFirst({
       with: {
@@ -122,7 +124,10 @@ export const createBundle = async (
       deadline,
     };
 
-    bundle = await db.insert(bundleTable).values(values).returning({ bundleId: bundleTable.id });
+    bundle = await db
+      .insert(bundleTable)
+      .values(values)
+      .returning({ bundleId: bundleTable.id });
     if (
       bundle instanceof Error &&
       bundle.message ===
@@ -130,7 +135,8 @@ export const createBundle = async (
     ) {
       throw new Error(`${name} already exists!`);
     }
-    if (courses.length === 0) return { success: true, message: "bundle created successfully!" };
+    if (courses.length === 0)
+      return { success: true, message: "bundle created successfully!" };
 
     // if courses length > 0 this should runs and try update courses with bundle IDs
 
@@ -151,11 +157,12 @@ export const createBundle = async (
 };
 
 export const editBundle = async (
-  bundleId: number,
   prevState: BundleState,
   formData: FormData,
 ): Promise<BundleState> => {
   try {
+    const bundleId = Number(formData.get("bundleId"));
+    if (isNaN(bundleId)) throw new Error("Bundle Id is not provided!");
     await deleteAssociatedCoursesToBundle(bundleId);
 
     const result = await parseBundleData(formData);
@@ -173,13 +180,17 @@ export const editBundle = async (
       deadline,
     };
     await updateBundleCourses(courses, bundleId);
-    await db.update(bundleTable).set(values).where(eq(bundleTable.id, bundleId));
+    await db
+      .update(bundleTable)
+      .set(values)
+      .where(eq(bundleTable.id, bundleId));
 
     return { success: true, message: "Changes saved successfully!" };
   } catch (error) {
     return {
       error: true,
-      message: error instanceof Error ? error.message : "Unexpected Error Occurs",
+      message:
+        error instanceof Error ? error.message : "Unexpected Error Occurs",
     };
   }
 };
@@ -199,10 +210,16 @@ const deleteAssociatedCoursesToBundle = async (bundleId: number) => {
 
     // Remove bundle association from original courses
     for (const { id } of originalCoursesIds) {
-      await db.update(courseTable).set({ bundleId: null }).where(eq(courseTable.id, id)).execute();
+      await db
+        .update(courseTable)
+        .set({ bundleId: null })
+        .where(eq(courseTable.id, id))
+        .execute();
     }
   } catch (e) {
-    throw new Error(e instanceof Error ? e.message : "Unexpected error occurred!");
+    throw new Error(
+      e instanceof Error ? e.message : "Unexpected error occurred!",
+    );
   }
 };
 
@@ -210,8 +227,6 @@ export const updateBundleCourses = async (
   coursesToUpdate: Option[],
   bundleId: number,
 ): Promise<BundleState> => {
-  console.log(coursesToUpdate);
-  console.log(bundleId);
   try {
     await deleteAssociatedCoursesToBundle(bundleId);
 
@@ -237,7 +252,9 @@ export const updateBundleCourses = async (
 export const deleteBundle = async (bundleId: number): Promise<BundleState> => {
   try {
     await deleteAssociatedCoursesToBundle(bundleId);
-    const result = await db.delete(bundleTable).where(eq(bundleTable.id, bundleId));
+    const result = await db
+      .delete(bundleTable)
+      .where(eq(bundleTable.id, bundleId));
 
     return { success: true, message: "Bundle deleted successfully" };
   } catch (e) {

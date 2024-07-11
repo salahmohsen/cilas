@@ -6,7 +6,7 @@ import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui/tabs";
 import { FilterButton } from "./courses/button.filter";
 
 export const TabsList = () => {
-  const { setFilter, setIsCourseSelected, activeTab, setActiveTab } = useCourseState();
+  const { state, dispatch } = useCourseState();
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -16,9 +16,9 @@ export const TabsList = () => {
             value="published"
             id="published"
             onClick={() => {
-              setFilter("published");
-              setActiveTab("published");
-              setIsCourseSelected(undefined);
+              dispatch({ type: "SET_FILTER", payload: "published" });
+              dispatch({ type: "SET_ACTIVE_TAB", payload: "published" });
+              dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
             }}
           >
             Published
@@ -30,9 +30,9 @@ export const TabsList = () => {
             value="draft"
             id="draft"
             onClick={() => {
-              setFilter("draft");
-              setActiveTab("draft");
-              setIsCourseSelected(undefined);
+              dispatch({ type: "SET_FILTER", payload: "draft" });
+              dispatch({ type: "SET_ACTIVE_TAB", payload: "draft" });
+              dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
             }}
           >
             Draft
@@ -44,15 +44,15 @@ export const TabsList = () => {
             value="bundles"
             id="bundles"
             onClick={() => {
-              setActiveTab("bundles");
-              setIsCourseSelected(undefined);
+              dispatch({ type: "SET_ACTIVE_TAB", payload: "bundles" });
+              dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
             }}
           >
             Bundles
           </TabsTrigger>
         </Link>
       </TabsListUi>
-      {activeTab === "published" && <FilterButton />}
+      {state.activeTab === "published" && <FilterButton />}
     </div>
   );
 };

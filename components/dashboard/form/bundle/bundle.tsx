@@ -1,13 +1,21 @@
 "use client";
 
 import { useEffect, useRef, useTransition } from "react";
-import { BundleState, createBundle, editBundle } from "@/actions/bundles.actions";
+import {
+  BundleState,
+  createBundle,
+  editBundle,
+} from "@/actions/bundles.actions";
 import { DateInput } from "@/components/dashboard/form/inputs/input.date";
 import { MultiSelectorInput } from "@/components/dashboard/form/inputs/input.multiSelector";
 import { SelectInput } from "@/components/dashboard/form/inputs/input.select";
 import { SubmitButton } from "@/components/dashboard/form/inputs/input.submit";
 import { Form } from "@/components/ui/form";
-import { bundleDefaultValues, bundleSchema, BundleSchema } from "@/types/bundle.schema";
+import {
+  bundleDefaultValues,
+  bundleSchema,
+  BundleSchema,
+} from "@/types/bundle.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";
@@ -27,12 +35,12 @@ export default function BundleForm({
   editMode?: boolean;
   bundleId?: number;
 }) {
-  const { forceUpdateBundles, setActiveTab } = useCourseState();
+  const { forceUpdateBundles, dispatch } = useCourseState();
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
   const [bundleState, bundleAction] = useFormState(
-    editMode && bundleId ? editBundle.bind(null, bundleId) : createBundle,
+    editMode && bundleId ? editBundle : createBundle,
     {} as BundleState,
   );
 
@@ -45,11 +53,12 @@ export default function BundleForm({
     if (bundleState.success) {
       forceUpdateBundles();
       toast.success(bundleState.message);
-      setActiveTab("bundles");
+      dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
+      dispatch({ type: "SET_ACTIVE_TAB", payload: "bundles" });
       redirect("/dashboard/manage-courses?tab=bundles");
     }
     if (bundleState.error) toast.error(bundleState.message);
-  }, [bundleState, forceUpdateBundles, setActiveTab]);
+  }, [bundleState, forceUpdateBundles, dispatch]);
 
   return (
     <FormProvider {...formMethods}>
@@ -72,7 +81,7 @@ export default function BundleForm({
         >
           <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm lg:grid-cols-2">
             <legend className="text-sm font-medium">Bundle</legend>
-
+            <input hidden name="bundleId" value={bundleId} readOnly />
             <SelectInput
               name="year"
               label="Year"
@@ -88,7 +97,9 @@ export default function BundleForm({
             <SelectInput
               name="cycle"
               label="Cycle"
-              options={[{ selectItems: ["Spring", "Summer", "Fall", "Winter"] }]}
+              options={[
+                { selectItems: ["Spring", "Summer", "Fall", "Winter"] },
+              ]}
               placeholder="Select a cycle"
             />
             <SelectInput
@@ -96,7 +107,12 @@ export default function BundleForm({
               label="Category"
               options={[
                 {
-                  selectItems: ["Seasonal", "Second Trimester", "Third Trimester", "Labs"],
+                  selectItems: [
+                    "Seasonal",
+                    "Second Trimester",
+                    "Third Trimester",
+                    "Labs",
+                  ],
                 },
               ]}
               placeholder="Select a category"

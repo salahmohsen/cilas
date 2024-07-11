@@ -15,14 +15,18 @@ import { CourseItem } from "../course.item";
 import { useEffect } from "react";
 import { NoCoursesFound } from "../../notFound";
 
-type PublishedTabProps = { courses: CourseWithSafeFellow[] | undefined };
+type PublishedTabProps = { courses: CourseWithSafeFellow[] };
 
 export const PublishedTab = ({ courses }: PublishedTabProps) => {
-  const { isLoading, optimisticCourses, setCourses } = useCourseState();
+  const {
+    state: { isLoading },
+    dispatch,
+    optimisticCourses,
+  } = useCourseState();
 
   useEffect(() => {
-    if (courses) setCourses(courses);
-  }, [courses, setCourses]);
+    if (courses) dispatch({ type: "SET_COURSES", payload: courses });
+  }, [courses, dispatch]);
 
   return (
     <TabsContent value="published">
@@ -35,14 +39,13 @@ export const PublishedTab = ({ courses }: PublishedTabProps) => {
         </CardHeader>
         <CardContent>
           <ul className="group/list space-y-2">
-            {!optimisticCourses && <CourseSkeleton itemsNumber={10} />}
+            {isLoading && <CourseSkeleton itemsNumber={10} />}
             {!isLoading &&
-              optimisticCourses &&
               optimisticCourses.length > 0 &&
               optimisticCourses.map((course) => (
                 <CourseItem course={course} key={course.id} />
               ))}
-            {!isLoading && optimisticCourses?.length === 0 && (
+            {optimisticCourses.length === 0 && (
               <NoCoursesFound message="No Courses Found!" />
             )}
           </ul>

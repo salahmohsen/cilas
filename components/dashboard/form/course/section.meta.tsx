@@ -18,7 +18,9 @@ export function CourseMetadata({
   fellow: SafeUser | undefined;
 }) {
   const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
-  const { fellow: fellowState } = useCourseState();
+  const {
+    state: { fellow: fellowState },
+  } = useCourseState();
   const [defaultOption, setDefaultOption] = useState<
     ComboBoxOption | undefined
   >(undefined);

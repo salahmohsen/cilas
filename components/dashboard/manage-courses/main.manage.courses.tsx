@@ -14,13 +14,21 @@ import { DraftTab } from "./courses/tab.draft/tab.draft";
 import { BundlesTab } from "./tab.bundles/tab.bundles";
 import { PublishedTab } from "./courses/tab.published/tab.published";
 import { TabsList } from "./tab.list";
+import { Tab } from "@/types/manage.courses.types";
+import { useSearchParams } from "next/navigation";
 
-type ManageCoursesProps = { courses: CourseWithSafeFellow[] | undefined };
+type ManageCoursesProps = { courses: CourseWithSafeFellow[] };
 
 export default function ManageCourses({ courses }: ManageCoursesProps) {
+  const searchParams = useSearchParams();
+  const openedTab = searchParams?.get("tab");
+
   const { width } = useWindowSize();
 
-  const { isCourseSelected, activeTab, setActiveTab } = useCourseState();
+  const {
+    state: { isCourseSelected, activeTab },
+    dispatch,
+  } = useCourseState();
 
   return (
     <div>
@@ -35,8 +43,10 @@ export default function ManageCourses({ courses }: ManageCoursesProps) {
         >
           <Tabs
             defaultValue={"published"}
-            value={activeTab}
-            onValueChange={setActiveTab as (value: string) => void}
+            value={openedTab || activeTab}
+            onValueChange={(value) =>
+              dispatch({ type: "SET_ACTIVE_TAB", payload: value as Tab })
+            }
             className={cn(`flex flex-col gap-2`)}
           >
             <TabsList />

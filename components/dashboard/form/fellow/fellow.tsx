@@ -39,7 +39,7 @@ export function FellowForm({ mode, fellowData }: NewFellowProps) {
     {} as FellowState,
   );
 
-  const { setFellow } = useCourseState();
+  const { dispatch } = useCourseState();
 
   const [isPending, startTransition] = useTransition();
 
@@ -53,10 +53,10 @@ export function FellowForm({ mode, fellowData }: NewFellowProps) {
     if (fellowState.success) {
       setOpen(false);
       toast.success(fellowState.message);
-      setFellow(fellowState.fellow);
+      dispatch({ type: "SET_FELLOW", payload: fellowState.fellow });
     }
     if (fellowState.error) toast.error(fellowState.message);
-  }, [fellowState, setFellow]);
+  }, [fellowState, dispatch]);
 
   const formRef = useRef<HTMLFormElement>(null);
 

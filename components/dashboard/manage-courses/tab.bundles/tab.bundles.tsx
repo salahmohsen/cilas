@@ -12,7 +12,7 @@ import { BundleItem } from "./bundle.item";
 import { NoCoursesFound } from "../notFound";
 
 export const BundlesTab = () => {
-  const { bundles, isLoading } = useCourseState();
+  const { state } = useCourseState();
   return (
     <TabsContent value="bundles">
       <Card>
@@ -22,10 +22,10 @@ export const BundlesTab = () => {
         </CardHeader>
         <CardContent>
           <ul className="group/list space-y-3">
-            {isLoading ? (
+            {state.isLoading ? (
               <BundleSkeleton itemsNumber={10} />
-            ) : bundles?.length > 0 ? (
-              bundles?.map((bundle) => (
+            ) : state.bundles.length > 0 ? (
+              state.bundles.map((bundle) => (
                 <BundleItem key={bundle.id} bundle={bundle} />
               ))
             ) : (

@@ -7,29 +7,47 @@ import Link from "next/link";
 import { format } from "date-fns";
 
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 import { Calendar, Ellipsis, User } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CourseWithSafeFellow } from "@/types/drizzle.types";
 
 export function CourseItem({ course }: { course: CourseWithSafeFellow }) {
-  const { isCourseSelected, setIsCourseSelected, setCourseInfo, handleDelete } = useCourseState();
+  const { state, dispatch, handleDelete } = useCourseState();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSelect = (id: number) => {
-    setIsCourseSelected((prev) => ({
-      [id]: !prev?.[id],
-    }));
-    setCourseInfo(course);
+    dispatch({
+      type: "SET_COURSE_SELECTED",
+      payload: { [id]: !state.isCourseSelected?.[id] },
+    });
+
+    dispatch({
+      type: "SET_COURSE_INFO",
+      payload: course,
+    });
   };
-  const courseStatues = (): "ongoing" | "starting soon" | "archived" | "draft" | "unknown status" => {
+
+  const courseStatues = ():
+    | "ongoing"
+    | "starting soon"
+    | "archived"
+    | "draft"
+    | "unknown status" => {
     const currentDate = new Date();
     const startDate = new Date(course.startDate);
     const endDate = new Date(course.endDate);
     const isDraft = course.draftMode;
     if (isDraft) return "draft";
-    if (startDate <= currentDate && endDate >= currentDate && !isDraft) return "ongoing";
+    if (startDate <= currentDate && endDate >= currentDate && !isDraft)
+      return "ongoing";
     if (startDate > currentDate && !isDraft) return "starting soon";
     if (endDate < currentDate && !isDraft) return "archived";
 
@@ -38,7 +56,7 @@ export function CourseItem({ course }: { course: CourseWithSafeFellow }) {
 
   return (
     <li
-      className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isCourseSelected?.[course.id] || isMenuOpen ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
+      className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${state.isCourseSelected?.[course.id] || isMenuOpen ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
       onClick={() => handleSelect(course.id)}
     >
       <div className="flex flex-col gap-4">
@@ -47,10 +65,15 @@ export function CourseItem({ course }: { course: CourseWithSafeFellow }) {
           {`${course.fellow?.firstName} ${course.fellow?.lastName}`}
         </span>
         <div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-2">
-          <Badge variant="default" className="h-6 min-w-max max-w-max rounded-sm">
+          <Badge
+            variant="default"
+            className="h-6 min-w-max max-w-max rounded-sm"
+          >
             {courseStatues()}
           </Badge>
-          <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">{course.enTitle || course.arTitle}</p>
+          <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">
+            {course.enTitle || course.arTitle}
+          </p>
         </div>
         <span className="flex gap-1 text-xs font-light">
           <Calendar size={16} strokeWidth={1.5} />
@@ -60,17 +83,29 @@ export function CourseItem({ course }: { course: CourseWithSafeFellow }) {
       <div>
         <DropdownMenu onOpenChange={setIsMenuOpen}>
           <DropdownMenuTrigger asChild>
-            <Button size="icon" variant="outline" className={`h-8 w-8 ${isCourseSelected ? "bg-background text-foreground" : ""}`}>
+            <Button
+              size="icon"
+              variant="outline"
+              className={`h-8 w-8 ${state.isCourseSelected ? "bg-background text-foreground" : ""}`}
+            >
               <Ellipsis className="h-3.5 w-3.5" />
               <span className="sr-only">More</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <Link href={`/dashboard/manage-courses/edit-course?id=${course.id}`}>
-              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>Edit</DropdownMenuItem>
+            <Link
+              href={`/dashboard/manage-courses/edit-course?id=${course.id}`}
+            >
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                Edit
+              </DropdownMenuItem>
             </Link>
-            <Link href={`/dashboard/manage-courses/create-course?copy_values=${course.id}`}>
-              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>Duplicate</DropdownMenuItem>
+            <Link
+              href={`/dashboard/manage-courses/create-course?copy_values=${course.id}`}
+            >
+              <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
+                Duplicate
+              </DropdownMenuItem>
             </Link>
             <DropdownMenuSeparator />
 

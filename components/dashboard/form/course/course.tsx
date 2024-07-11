@@ -45,7 +45,7 @@ export function CourseForm({
   // Form Refs
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { setFilter, forceUpdateCourses: forceUpdate } = useCourseState();
+  const { dispatch, forceUpdateCourses } = useCourseState();
 
   // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(
@@ -83,8 +83,12 @@ export function CourseForm({
     // @success
     if (courseState.success) {
       toast.success(courseState.message);
-      forceUpdate();
+      forceUpdateCourses();
       // Redirect based on course submit mode: published | draft
+      dispatch({
+        type: "SET_ACTIVE_TAB",
+        payload: draftMode ? "draft" : "published",
+      });
       redirect(
         "/dashboard/manage-courses?tab=" + (draftMode ? "draft" : "published"),
       );
@@ -95,7 +99,7 @@ export function CourseForm({
     // stop loading
     if (!isPending && (courseState.success || courseState.error))
       setIsLoading({ primaryButton: false, secondaryButton: false });
-  }, [courseState, draftMode, forceUpdate, isPending]);
+  }, [courseState, draftMode, forceUpdateCourses, isPending, dispatch]);
 
   const handleSubmit = useCallback(
     (draftMode: boolean) => {
@@ -146,7 +150,7 @@ export function CourseForm({
                   variant="secondary"
                   handleOnClick={() => {
                     setDraftMode(true);
-                    setFilter("draft");
+                    dispatch({ type: "SET_FILTER", payload: "draft" });
                   }}
                 />
 
@@ -159,7 +163,7 @@ export function CourseForm({
                   className="!mb-5"
                   handleOnClick={() => {
                     setDraftMode(false);
-                    setFilter("published");
+                    dispatch({ type: "SET_FILTER", payload: "published" });
                   }}
                 />
               </div>
