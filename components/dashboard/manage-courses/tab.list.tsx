@@ -14,7 +14,7 @@ export const TabsList = () => {
   } = useCourseState();
 
   const handleTabClick = useCallback(
-    (tab: Tab, filter?: CoursesFilter) => {
+    (tab: Tab, filter: CoursesFilter) => {
       dispatch({ type: "SET_FILTER", payload: filter });
       dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
     },
