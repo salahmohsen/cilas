@@ -1,49 +1,57 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { PanelRightOpen, Rabbit, Target } from "lucide-react";
+import { PanelRightClose, PanelRightOpen, Rabbit, Target } from "lucide-react";
 import { format } from "date-fns";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { BundleOptions } from "./bundle.options";
 import { BundleSkeleton } from "./bundle.skeleton";
-import { BundleWithCoursesNames } from "@/types/drizzle.types";
+import {
+  BundleWithCoursesNames,
+  CourseWithSafeFellow,
+} from "@/types/drizzle.types";
 import { getSafeCourses } from "@/actions/courses.actions";
+import { cn } from "@/lib/utils";
 
 export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
   const {
-    state: { isBundleSelected, isLoading, bundles },
+    state: { isBundleSelected, isLoading },
     dispatch,
   } = useCourseState();
 
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
+  const [coursesData, setCoursesData] = useState<
+    CourseWithSafeFellow[] | undefined
+  >(undefined);
 
-  const handleBundleSelect = useCallback(
-    async (bundleId: number) => {
-      dispatch({ type: "SET_BUNDLE_SELECTED", payload: {} });
-      const selectedBundle = bundles.find((bundle) => bundle.id === bundleId);
-      const bundleCoursesIds = selectedBundle?.courses.map(
-        (course) => course.id,
-      );
-      if (bundleCoursesIds && bundleCoursesIds.length > 0) {
+  useEffect(() => {
+    const fetchBundleCoursesData = async () => {
+      const bundleCoursesIds = bundle.courses.map((course) => course.id);
+      if (bundleCoursesIds.length > 0) {
         const bundleCourses = await getSafeCourses(
           undefined,
           undefined,
           bundleCoursesIds,
         );
         if (!bundleCourses.error && bundleCourses.courses) {
-          dispatch({ type: "SET_COURSES", payload: bundleCourses.courses });
+          setCoursesData(bundleCourses.courses);
         }
       }
-    },
-    [dispatch, bundles],
-  );
+    };
+    fetchBundleCoursesData();
+  }, [bundle]);
+
+  const handleBundleClick = () => {
+    // This will set the courses which courseInfo will use it to toggle between next and prev
+    dispatch({ type: "SET_COURSES", payload: coursesData ?? [] });
+  };
 
   return (
     <li
       className={`${isBundleSelected?.[bundle.id] || isOptionsMenuOpen ? "!scale-[1.01] bg-accent !opacity-100" : "bg-transparent"} group/item lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!opacity-100`}
+      onClick={handleBundleClick}
     >
       <div
-        className={`relative gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:hover:!scale-[1.01] lg:hover:bg-accent`}
-        onClick={() => handleBundleSelect(bundle.id)}
+        className={`relative gap-5 rounded-md border px-5 py-6 font-medium transition-all duration-300 lg:hover:!scale-[1.01] lg:hover:bg-accent`}
       >
         <div className="flex flex-col gap-4">
           <BundleOptions
@@ -52,7 +60,7 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
             setIsOptionsMenuOpen={setIsOptionsMenuOpen}
           />
           <div
-            className={`flex flex-col gap-2 pr-12 text-xs font-light lg:flex-row lg:pr-0`}
+            className={`flex flex-col gap-2 pr-12 font-light lg:flex-row lg:pr-0`}
           >
             <Badge className={`h-6 rounded-sm`}>
               {bundle.cycle} {bundle.year}
@@ -65,11 +73,12 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
             </Badge>
           </div>
           <div>
-            <ul className="space-y-3">
+            <ul className="space-y-2 border-y py-3">
               {isLoading && <BundleSkeleton itemsNumber={10} />}
               {!isLoading &&
-                bundle.courses.length > 0 &&
-                bundle.courses
+                coursesData &&
+                coursesData.length > 0 &&
+                coursesData
                   .sort((a, b) => b.id - a.id)
                   .map((course) => (
                     <BundleCourse
@@ -86,7 +95,7 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
               )}
             </ul>
           </div>
-          <p className="flex w-full gap-1 border-t-2 pt-4 text-xs font-light">
+          <p className="flex w-full gap-1 text-xs font-light">
             <Target size={16} strokeWidth={1.5} />
             <span>
               Registration Deadline {format(bundle.deadline, "d MMM yyyy")}
@@ -103,47 +112,61 @@ const BundleCourse = ({
   course,
 }: {
   bundle: BundleWithCoursesNames;
-  course: {
-    id: number;
-    enTitle: string | null;
-    arTitle: string | null;
-  };
+  course: CourseWithSafeFellow;
 }) => {
   const {
-    optimisticCourses,
-    state: { isLoading, isCourseSelected },
+    state: { isCourseSelected, isBundleSelected },
     dispatch,
   } = useCourseState();
 
-  const handleCourseSelect = useCallback(
-    (id: number, e: React.MouseEvent) => {
-      const courseToFind = optimisticCourses?.find((c) => c.id === id);
-      dispatch({ type: "SET_COURSE_INFO", payload: courseToFind });
+  const handleCourseSelect = useCallback(() => {
+    dispatch({ type: "SET_COURSE_INFO", payload: course });
+    dispatch({
+      type: "SET_BUNDLE_SELECTED",
+      payload: { [bundle.id]: isBundleSelected ? true : false },
+    });
+    dispatch({
+      type: "SET_COURSE_SELECTED",
+      payload: { [course.id]: !isCourseSelected?.[course.id] },
+    });
+  }, [dispatch, course, bundle.id, isCourseSelected, isBundleSelected]);
 
-      if (bundle.courses.length > 0) {
-        dispatch({
-          type: "SET_COURSE_SELECTED",
-          payload: { [id]: !isCourseSelected?.[id] },
-        });
-      }
-    },
-    [bundle.courses.length, dispatch, optimisticCourses, isCourseSelected],
+  const panelRightIcon = isCourseSelected?.[course.id] ? (
+    <PanelRightOpen
+      className={cn(
+        `hidden transition-opacity duration-200 ease-in-out group-hover:block`,
+        isCourseSelected?.[course.id] ? "block" : "hidden",
+      )}
+      size={20}
+    />
+  ) : (
+    <PanelRightClose
+      className={cn(
+        `hidden transition-opacity duration-200 ease-in-out group-hover:block`,
+        isCourseSelected?.[course.id] ? "block" : "hidden",
+      )}
+      size={20}
+    />
   );
 
   return (
     <div>
-      {!isLoading && (
-        <li
-          className={`group/courses flex max-w-max cursor-pointer items-center gap-2 hover:underline ${isCourseSelected?.[course.id] && "before:content-['-->']"}`}
-          onClick={(e) => handleCourseSelect(course.id, e)}
+      <li
+        className={`group/courses flex max-w-max cursor-pointer items-center gap-2`}
+        onClick={handleCourseSelect}
+      >
+        <p
+          className={cn(
+            "group flex gap-2 text-sm transition-transform duration-200 ease-in-out",
+            isCourseSelected?.[course.id]
+              ? `translate-x-2 rounded-md bg-foreground px-2 py-1 text-background`
+              : "translate-x-0 before:content-['⏺']",
+          )}
         >
-          <p>{course.enTitle || course.arTitle}</p>
-          <PanelRightOpen
-            className="opacity-0 transition-opacity duration-200 ease-in-out group-hover/courses:opacity-100"
-            size={16}
-          />
-        </li>
-      )}
+          {panelRightIcon}
+          {course.enTitle || course.arTitle}
+        </p>
+      </li>
     </div>
   );
 };

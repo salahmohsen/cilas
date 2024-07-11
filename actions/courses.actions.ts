@@ -211,6 +211,7 @@ export const getUnbundledCourses = async (
     },
     where: and(
       isNull(courseTable.bundleId),
+      eq(courseTable.draftMode, false),
       or(
         ilike(courseTable.enTitle, `%${query.toLowerCase()}%`),
         ilike(courseTable.arTitle, `%${query.toLowerCase()}%`),

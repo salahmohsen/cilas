@@ -1,13 +1,6 @@
-import {
-  Dispatch,
-  SetStateAction,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 import { getUnbundledCourses } from "@/actions/courses.actions";
 import { updateBundleCourses } from "@/actions/bundles.actions";
-import { useWindowSize } from "@uidotdev/usehooks";
 
 import {
   Dialog,
@@ -17,15 +10,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 
 import MultipleSelector, { Option } from "@/components/ui/multipleSelector";
 import { Button } from "@/components/ui/button";
@@ -41,8 +25,6 @@ export const UpdateCourses = ({
   bundleId: number;
   setIsOptionsMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { width } = useWindowSize();
-
   const {
     forceUpdateBundles,
 
@@ -60,7 +42,7 @@ export const UpdateCourses = ({
 
   const [courses, setCourses] = useState<Option[] | undefined>(defaultCourses);
   const [loading, setLoading] = useState<boolean>(false);
-  const [dialogDrawerOpen, setDialogDrawerOpen] = useState<boolean>(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const handleUpdateBundleCourses = useCallback(async () => {
     if (courses) {
@@ -72,7 +54,7 @@ export const UpdateCourses = ({
           toast.success(results.message);
           forceUpdateBundles();
           setIsOptionsMenuOpen(false);
-          setDialogDrawerOpen(false);
+          setDialogOpen(false);
         }
       } catch (e) {
         toast.error(e instanceof Error && e.message);
@@ -109,45 +91,18 @@ export const UpdateCourses = ({
   if (!bundle)
     return toast.error("Something went wrong, bundle is not available!");
 
-  if (width && width > 768)
-    return (
-      <Dialog onOpenChange={setDialogDrawerOpen} open={dialogDrawerOpen}>
-        <DialogTrigger>Edit Courses</DialogTrigger>
-        <DialogContent>
-          <DialogHeader className="border-0">
-            <DialogTitle>Edit Bundle Courses</DialogTitle>
-          </DialogHeader>
-          {selector}
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button onClick={handleUpdateBundleCourses} disabled={loading}>
-              {loading ? (
-                <span className="flex gap-2">
-                  <LoaderPinwheel className="animate-spin" /> Save Changes
-                </span>
-              ) : (
-                "Save Changes"
-              )}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    );
-
   return (
-    <Drawer onOpenChange={setDialogDrawerOpen} open={dialogDrawerOpen}>
-      <DrawerTrigger>Edit Courses</DrawerTrigger>
-      <DrawerContent className="h-[70vh]">
-        <DrawerHeader className="pb-0">{selector}</DrawerHeader>
-
-        <DrawerFooter className="flex flex-row gap-2">
-          <DrawerClose asChild>
-            <Button variant="outline" className="w-full">
-              Cancel
-            </Button>
-          </DrawerClose>
+    <Dialog onOpenChange={setDialogOpen} open={dialogOpen}>
+      <DialogTrigger>Edit Courses</DialogTrigger>
+      <DialogContent>
+        <DialogHeader className="border-0">
+          <DialogTitle>Edit Bundle Courses</DialogTitle>
+        </DialogHeader>
+        {selector}
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
           <Button onClick={handleUpdateBundleCourses} disabled={loading}>
             {loading ? (
               <span className="flex gap-2">
@@ -157,8 +112,8 @@ export const UpdateCourses = ({
               "Save Changes"
             )}
           </Button>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 };
