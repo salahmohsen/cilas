@@ -6,58 +6,39 @@
 
 ## Motivation
 
-During my one-year enrollment in the Bridge Programme at CILAS, I experienced a transformative learning environment that emphasized discussion-based learning, creative inquiry, self-reflection, and civic engagement. This was a stark contrast to the traditional, exam-focused education I was used to.
+During my one-year enrollment in the Bridge Programme at CILAS, I experienced a transformative learning environment that emphasized discussion-based learning, creative inquiry, self-reflection, and civic engagement. This was a stark contrast to the traditional academic approach I had previously encountered.
 
-The ethos of CILAS—to create an inclusive space where people from diverse socio-economic backgrounds can engage in meaningful education—resonated deeply with me. As I transition into a career as a web developer, I am eager to contribute to CILAS and enable its students to share their ideas and engage with such a complex world.
+Inspired by this powerful educational model, I am now driven to contribute to CILAS and similar forward-thinking institutions through the development of a comprehensive Education Management System. This platform aims to empower administrators to operate the institute with greater efficiency while, more crucially, providing students with a robust digital environment to share ideas, collaborate, and meaningfully engage with our complex world.
 
-## To-Do
+## Features
 
-### **Dashboard**
+### Course Management
 
-- [ ] **Course Management**:
+- [x] Create, Update, Delete, and Draft Courses.
+- [ ] Ability to assign students to specific courses
+- [ ] Automated invitations to students for course enrollment.
+- [x] Create and manage course bundles for each term cycleH
+- [ ] Automatically create digital certificates upon course completion.
 
-  - [x] Create course.
+### User Management
 
-    - [x] Setup create course form with ReactHookForm and Zod Validation.
-    - [x] Add draft option.
-    - [x] Attach to database
+- [ ] Different permissions for administrators, fellows, and students.
+      Blog Management System
+- [ ] Enable students to create and publish blog posts on their profiles.
+- [ ] Allow administrators to feature posts on the main websiteH
+- [ ] Categorization and Tagging: Organize blog posts for easy navigation.
 
-  - [x] Update, and delete courses.
-  - [x] Add filter option for courses page: all/ongoing/archived/starting soon.
-  - [ ] Add courses sets feature.
-  - [ ] Add students to courses feature.
+### Discussion Forums
 
-- [ ] **Blog Management**:
-- [ ] **Event Management**:
-- [ ] **User Management**:
-- [ ] **Multilingual Support**:
+- [ ] Each course has its own discussion space.
+- [ ] Create, reply to, and organize discussion threads.
+- [ ] Assign fellows to manage and moderate course discussions.
 
-## Setup
+### Notification System
 
-### Create .env file with your values
+- [ ] Send alerts for new course materials, discussion posts, and blog updates.
+- [ ] Real-time updates within the application.
 
-```
-NEXT_PUBLIC_BASE_URL=http://localhost:3000
+### Mobile Responsiveness
 
-#  set to false in localhost
-NODE_ENV=development
-
-NEON_DATABASE_URL=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_API_SECRET=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
-```
-
-### Run the server:
-
-```
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [ ] Access the system on various devices (desktop, tablet, mobile).
