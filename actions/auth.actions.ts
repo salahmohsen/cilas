@@ -35,12 +35,18 @@ export async function signin(prevState, formData) {
   }
 
   const existingUser = await _getUserByEmail(email);
+
+  if (existingUser && !existingUser.passwordHash)
+    return {
+      error:
+        "It looks like you're already signed up with your Google account. Please continue by logging in with your Google account to access your profile",
+    };
+
   if (!existingUser || !existingUser.passwordHash) {
     return {
       error: "You have entered an invalid username or password",
     };
   }
-
   const isValidPassword = await verify(existingUser.passwordHash, password);
   if (!isValidPassword)
     return { error: "You have entered an invalid username or password" };
@@ -73,7 +79,7 @@ export const logout = async () => {
   return redirect("/signin");
 };
 
-// signup action --------------------------------------------------------------------
+///////// signup action /////////
 
 export type SignupState =
   | {
@@ -116,7 +122,12 @@ export async function signup(prevState, formData: FormData) {
   const userId = generateIdFromEntropySize(10); // 16 characters long
   const existingUser = await _getUserByEmail(email);
   try {
-    if (existingUser) return { error: "This Email is already signed up" };
+    if (existingUser && !existingUser.passwordHash)
+      return {
+        error:
+          "It looks like you're already signed up with your Google account. Please continue by logging in with your Google account to access your profile",
+      };
+    if (existingUser) return { error: "This Email is already signed up." };
     await addUser(userId, email, passwordHash);
   } catch (error) {
     if (error instanceof Error)
