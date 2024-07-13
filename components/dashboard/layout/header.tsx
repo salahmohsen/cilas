@@ -1,11 +1,11 @@
 "use client";
+
 import Image from "next/image";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -19,8 +19,26 @@ import { Search } from "lucide-react";
 import { LayoutMobileSidebar } from "./sidebar.mobile";
 import { LayoutBreadcrumb } from "./breadcrumb";
 import { logout } from "@/actions/auth.actions";
+import React, { useEffect, useState } from "react";
+import { getUserAvatar } from "@/actions/users.actions";
 
-export function LayoutHeader({ children }) {
+export function LayoutHeader({
+  children,
+  userId,
+}: {
+  children: React.ReactNode;
+  userId: string;
+}) {
+  const [avatar, setAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAvatar = async () => {
+      const avatar = await getUserAvatar(userId);
+      setAvatar(avatar);
+    };
+    fetchAvatar();
+  }, [userId]);
+
   return (
     <div className="flex flex-col gap-4 sm:pl-14 md:py-0">
       <header className="sticky top-0 z-10 flex h-[57px] w-full items-center justify-between gap-1 border-b bg-background px-4">
@@ -45,11 +63,11 @@ export function LayoutHeader({ children }) {
                 className="overflow-hidden rounded-full"
               >
                 <Image
-                  src={placeholderUser}
+                  src={avatar ? avatar : placeholderUser}
                   width={36}
                   height={36}
                   alt="Avatar"
-                  className="overflow-hidden rounded-full p-2 opacity-70"
+                  className={`overflow-hidden rounded-full ${!avatar && "p-2 opacity-70"}`}
                 />
               </Button>
             </DropdownMenuTrigger>

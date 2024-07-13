@@ -37,6 +37,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const { user } = await validateRequest();
+
   if (!user) {
     return redirect("/signin");
   }
@@ -57,7 +58,7 @@ export default async function RootLayout({
             <Toaster richColors />
             <main>
               <LayoutSidebar />
-              <LayoutHeader>{children}</LayoutHeader>
+              <LayoutHeader userId={user.id}>{children}</LayoutHeader>
             </main>
           </ThemeProvider>
         </CourseStateProvider>

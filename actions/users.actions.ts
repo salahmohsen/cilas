@@ -161,3 +161,15 @@ export const _getUserByEmail = async (email: string) => {
 
   return user;
 };
+
+export const getUserAvatar = async (userId: string) => {
+  const avatar = await db.query.userTable.findFirst({
+    columns: { avatar: true },
+    where: eq(userTable.id, userId),
+  });
+  if (avatar) {
+    return avatar.avatar;
+  } else {
+    return null;
+  }
+};
