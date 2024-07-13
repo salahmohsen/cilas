@@ -17,15 +17,17 @@ Inspired by this powerful educational model, I am now driven to contribute to CI
 - [x] Create, Update, Delete, and Draft Courses.
 - [ ] Ability to assign students to specific courses
 - [ ] Automated invitations to students for course enrollment.
-- [x] Create and manage course bundles for each term cycleH
+- [x] Create and manage course bundles for each term cycle.
 - [ ] Automatically create digital certificates upon course completion.
 
 ### User Management
 
 - [ ] Different permissions for administrators, fellows, and students.
-      Blog Management System
+
+### Blog Management System
+
 - [ ] Enable students to create and publish blog posts on their profiles.
-- [ ] Allow administrators to feature posts on the main websiteH
+- [ ] Allow administrators to feature posts on the main website.
 - [ ] Categorization and Tagging: Organize blog posts for easy navigation.
 
 ### Discussion Forums
