@@ -9,12 +9,14 @@ import { useSearchParams } from "next/navigation";
 import Loading from "./loading";
 
 export default function CreateCoursePage() {
-  const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(undefined);
+  const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(
+    undefined,
+  );
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
-  const courseId = searchParams?.get("copy_values");
+  const courseId = searchParams?.get("duplicate-course");
 
   const fetchCourse = useCallback(async () => {
     if (!courseId) return;
@@ -32,7 +34,9 @@ export default function CreateCoursePage() {
 
       setCourse(courseData);
     } catch (error) {
-      setError(error instanceof Error ? error.message : "An unexpected error occurred");
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occurred",
+      );
     } finally {
       setLoading(false);
     }

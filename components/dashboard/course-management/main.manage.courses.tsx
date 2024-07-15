@@ -14,12 +14,8 @@ import { BundlesTab } from "./tab.bundles/tab.bundles";
 import { PublishedTab } from "./courses/tab.published/tab.published";
 import { TabsList } from "./tab.list";
 import { Tab } from "@/types/manage.courses.types";
-import { useSearchParams } from "next/navigation";
 
 export default function ManageCourses() {
-  const searchParams = useSearchParams();
-  const openedTab = searchParams?.get("tab");
-
   const { width } = useWindowSize();
 
   const {

@@ -19,7 +19,7 @@ export const BundleSkeleton = ({ itemsNumber }: { itemsNumber: number }) => {
                 <Skeleton className={"h-5 w-[80%] rounded-md"} />
               </ul>
             </div>
-            <div className="flex w-full gap-1 border-t-2 border-foreground/5 pt-4 text-xs font-light">
+            <div className="flex w-full gap-1 border-t-2 border-border pt-4 text-xs font-light">
               <Skeleton className={"h-5 w-5 rounded-md"} />
               <Skeleton className={"h-5 w-48 rounded-md"} />
             </div>

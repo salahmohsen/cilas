@@ -101,7 +101,7 @@ export function CourseItem({ course }: { course: CourseWithSafeFellow }) {
               </DropdownMenuItem>
             </Link>
             <Link
-              href={`/dashboard/course-management/create-course?copy_values=${course.id}`}
+              href={`/dashboard/course-management/create-course?duplicate-course=${course.id}`}
             >
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Duplicate
