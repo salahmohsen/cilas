@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Loading from "./loading";
-import ManageCourses from "@/components/dashboard/manage-courses/main.manage.courses";
+import ManageCourses from "@/components/dashboard/course-management/main.manage.courses";
 import { Button } from "@/components/ui/button";
 import {
   Card,

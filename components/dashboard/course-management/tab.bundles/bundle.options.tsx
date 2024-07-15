@@ -64,7 +64,7 @@ export const BundleOptions = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href={`/dashboard/manage-courses/edit-bundle?id=${bundleId}`}>
+        <Link href={`/dashboard/course-management/edit-bundle?id=${bundleId}`}>
           <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
             Edit Bundle
           </DropdownMenuItem>

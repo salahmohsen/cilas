@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { useWindowSize } from "@uidotdev/usehooks";
 
-import { CourseInfo } from "@/components/dashboard/manage-courses/info/info";
-import { CourseInfoModal } from "@/components/dashboard/manage-courses/info/info.modal";
+import { CourseInfo } from "@/components/dashboard/course-management/info/info";
+import { CourseInfoModal } from "@/components/dashboard/course-management/info/info.modal";
 
 import { Tabs } from "@/components/ui/tabs";
 

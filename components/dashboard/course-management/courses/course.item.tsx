@@ -94,14 +94,14 @@ export function CourseItem({ course }: { course: CourseWithSafeFellow }) {
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <Link
-              href={`/dashboard/manage-courses/edit-course?id=${course.id}`}
+              href={`/dashboard/course-management/edit-course?id=${course.id}`}
             >
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Edit
               </DropdownMenuItem>
             </Link>
             <Link
-              href={`/dashboard/manage-courses/create-course?copy_values=${course.id}`}
+              href={`/dashboard/course-management/create-course?copy_values=${course.id}`}
             >
               <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
                 Duplicate

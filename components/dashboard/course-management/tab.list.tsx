@@ -25,7 +25,7 @@ export const TabsList = () => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <TabsListUi>
-        <Link href="/dashboard/manage-courses?tab=published">
+        <Link href="/dashboard/course-management?tab=published">
           <TabsTrigger
             value="published"
             id="published"
@@ -35,7 +35,7 @@ export const TabsList = () => {
           </TabsTrigger>
         </Link>
 
-        <Link href="/dashboard/manage-courses?tab=draft">
+        <Link href="/dashboard/course-management?tab=draft">
           <TabsTrigger
             value="draft"
             id="draft"
@@ -45,7 +45,7 @@ export const TabsList = () => {
           </TabsTrigger>
         </Link>
 
-        <Link href="/dashboard/manage-courses?tab=bundles">
+        <Link href="/dashboard/course-management?tab=bundles">
           <TabsTrigger
             value="bundles"
             id="bundles"

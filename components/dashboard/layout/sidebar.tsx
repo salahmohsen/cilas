@@ -40,7 +40,7 @@ export function LayoutSidebar() {
           />
           <SidebarItem
             name="Courses"
-            href="/dashboard/manage-courses"
+            href="/dashboard/course-management"
             icon={<SquareLibrary className="size-5" />}
           />
           <SidebarItem
