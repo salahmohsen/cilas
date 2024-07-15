@@ -6,7 +6,7 @@ import { ErrorPage } from "@/components/ui/error";
 import { BundleSchema } from "@/types/bundle.schema";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
-import Loading from "@/app/(dashboard)/dashboard/manage-courses/create-bundle/loading";
+import Loading from "@/app/(dashboard)/dashboard/course-management/create-bundle/loading";
 
 const EditBundle = () => {
   const searchParam = useSearchParams();

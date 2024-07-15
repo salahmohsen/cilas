@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { useWindowSize } from "@uidotdev/usehooks";
 
-import { CourseInfo } from "@/components/dashboard/manage-courses/info/info";
-import { CourseInfoModal } from "@/components/dashboard/manage-courses/info/info.modal";
+import { CourseInfo } from "@/components/dashboard/course-management/info/info";
+import { CourseInfoModal } from "@/components/dashboard/course-management/info/info.modal";
 
 import { Tabs } from "@/components/ui/tabs";
 
@@ -14,12 +14,8 @@ import { BundlesTab } from "./tab.bundles/tab.bundles";
 import { PublishedTab } from "./courses/tab.published/tab.published";
 import { TabsList } from "./tab.list";
 import { Tab } from "@/types/manage.courses.types";
-import { useSearchParams } from "next/navigation";
 
 export default function ManageCourses() {
-  const searchParams = useSearchParams();
-  const openedTab = searchParams?.get("tab");
-
   const { width } = useWindowSize();
 
   const {

@@ -2,16 +2,9 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-
-import {
-  Home,
-  LineChart,
-  Package,
-  Package2,
-  PanelLeft,
-  ShoppingCart,
-  Users2,
-} from "lucide-react";
+import { Home, PanelLeft, Rss, SquareLibrary } from "lucide-react";
+import logo from "@/public/logo.png";
+import Image from "next/image";
 
 export function LayoutMobileSidebar() {
   return (
@@ -23,48 +16,42 @@ export function LayoutMobileSidebar() {
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="sm:max-w-xs">
-        <nav className="grid gap-6 text-lg font-medium">
+        <nav className="grid gap-6 text-xs font-medium">
           <Link
             href="#"
-            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
+            className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary"
           >
-            <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-            <span className="sr-only">Acme Inc</span>
+            <Image
+              src={logo}
+              width={15}
+              alt="Cairo Institute of Liberal Arts and Sciences"
+              className="invert transition-all group-hover:scale-110 dark:invert-0"
+            />
+            {/* <Package2 className="h-5 w-5 transition-all group-hover:scale-110" /> */}
+            <span className="sr-only">
+              Cairo Institute of Liberal Arts and Sciences
+            </span>
           </Link>
           <Link
-            href="#"
+            href="/dashboard"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <Home className="h-5 w-5" />
             Dashboard
           </Link>
           <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-foreground"
-          >
-            <ShoppingCart className="h-5 w-5" />
-            Orders
-          </Link>
-          <Link
-            href="#"
+            href="/dashboard/course-management"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <Package className="h-5 w-5" />
-            Products
+            <SquareLibrary className="h-5 w-5" />
+            Course Management
           </Link>
           <Link
-            href="#"
+            href="/dashboard/blog-management"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
-            <Users2 className="h-5 w-5" />
-            Customers
-          </Link>
-          <Link
-            href="#"
-            className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-          >
-            <LineChart className="h-5 w-5" />
-            Settings
+            <Rss className="h-5 w-5" />
+            Blog Management
           </Link>
         </nav>
       </SheetContent>

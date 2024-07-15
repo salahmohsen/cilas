@@ -122,3 +122,17 @@ export const courseEnrollmentRelations = relations(
     }),
   }),
 );
+
+export const blog = pgTable("blog", {
+  id: serial("id").primaryKey(),
+  draftMode: boolean("draft_mode").notNull(),
+  enTitle: text("en_title"),
+  enContent: text("en_content"),
+  arTitle: text("ar_title"),
+  arContent: text("ar_content"),
+});
+
+export const blogAuthors = pgTable("blog_authors", {
+  blogId: integer("blog_id").references(() => blog.id),
+  authorId: integer("author_id").references(() => userTable.id),
+});

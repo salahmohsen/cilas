@@ -9,6 +9,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import {
   Home,
   LifeBuoyIcon,
+  Rss,
   Settings2Icon,
   SquareLibrary,
   SquareUserIcon,
@@ -39,20 +40,25 @@ export function LayoutSidebar() {
             icon={<Home className="size-5" />}
           />
           <SidebarItem
-            name="Courses"
-            href="/dashboard/manage-courses"
+            name="Course Management"
+            href="/dashboard/course-management"
             icon={<SquareLibrary className="size-5" />}
           />
           <SidebarItem
+            name="Blog Management"
+            href="/dashboard/blog-management"
+            icon={<Rss className="size-5" />}
+          />
+          {/* <SidebarItem
             name="Settings"
             href="/dashboard/settings"
             icon={<Settings2Icon className="size-5" />}
-          />
+          /> */}
         </TooltipProvider>
       </nav>
       <nav className="mt-auto grid gap-1 p-2">
         <TooltipProvider>
-          <SidebarItem
+          {/* <SidebarItem
             name="Help"
             href="/dashboard/help"
             icon={<LifeBuoyIcon className="size-5" />}
@@ -63,7 +69,7 @@ export function LayoutSidebar() {
             href="/dashboard/account"
             icon={<SquareUserIcon className="size-5" />}
             className="mt-auto"
-          />
+          /> */}
 
           <ThemeToggle />
         </TooltipProvider>

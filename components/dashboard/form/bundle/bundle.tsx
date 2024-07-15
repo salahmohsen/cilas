@@ -55,7 +55,7 @@ export default function BundleForm({
       toast.success(bundleState.message);
       dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
       dispatch({ type: "SET_ACTIVE_TAB", payload: "bundles" });
-      redirect("/dashboard/manage-courses?tab=bundles");
+      redirect("/dashboard/course-management?tab=bundles");
     }
     if (bundleState.error) toast.error(bundleState.message);
   }, [bundleState, forceUpdateBundles, dispatch]);
@@ -138,7 +138,10 @@ export default function BundleForm({
             />
           </fieldset>
           <div className="my-8 flex gap-5">
-            <Link href={"/dashboard/manage-courses#bundles"} className="w-full">
+            <Link
+              href={"/dashboard/course-management#bundles"}
+              className="w-full"
+            >
               <Button variant="secondary" className="w-full">
                 Cancel
               </Button>

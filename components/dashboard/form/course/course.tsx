@@ -90,7 +90,8 @@ export function CourseForm({
         payload: draftMode ? "draft" : "published",
       });
       redirect(
-        "/dashboard/manage-courses?tab=" + (draftMode ? "draft" : "published"),
+        "/dashboard/course-management?tab=" +
+          (draftMode ? "draft" : "published"),
       );
     }
     // @error

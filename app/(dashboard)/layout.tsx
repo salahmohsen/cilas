@@ -51,7 +51,7 @@ export default async function RootLayout({
         <CourseStateProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="light"
+            defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >

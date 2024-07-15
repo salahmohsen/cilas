@@ -65,26 +65,15 @@
     --ring: 0 0% 83.1%;
   }
 }
-
 @layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: hsl(var(--border));
+  }
+
   body {
     font-family: var(--font-inter), var(--font-cairo);
-    @apply bg-background text-foreground;
-  }
-
-  #dashboard * {
-    @apply dark:border-muted-foreground;
-  }
-  h2 {
-    @apply prose-lg scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0;
-  }
-
-  #article-body > blockquote {
-    @apply mx-6 my-6 rounded-2xl border-l-2 bg-gray-100 p-5 pl-6 text-justify font-semibold italic leading-8 text-gray-700 shadow-sm;
-  }
-
-  #article-body > iframe {
-    @apply mx-auto mb-5 w-full;
   }
 
   .tiptap {

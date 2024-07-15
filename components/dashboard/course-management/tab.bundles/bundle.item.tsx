@@ -160,7 +160,7 @@ const BundleCourse = ({
             "group flex gap-2 text-sm transition-transform duration-200 ease-in-out",
             isCourseSelected?.[course.id]
               ? `translate-x-2 rounded-md bg-foreground px-2 py-1 text-background`
-              : "translate-x-0 before:content-['⏺']",
+              : "translate-x-0",
           )}
         >
           {panelRightIcon}
