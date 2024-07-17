@@ -43,6 +43,7 @@ import { ImageUpload } from "./ImageUpload";
 import { TableOfContentsNode } from "./TableOfContentsNode";
 import { lowlight } from "lowlight";
 import { uploadImage } from "@/lib/cloudinary.utils";
+import History from '@tiptap/extension-history'
 
 export const ExtensionKit = (server?: boolean) => [
   Document,
@@ -97,7 +98,7 @@ export const ExtensionKit = (server?: boolean) => [
             .run();
       });
     },
-    onPaste: (currentEditor, files) => {
+    onPaste: (currentEditor, files, pasteContent) => {
       files.forEach(async (file) => {
         const url = await uploadImage(file);
         if (typeof url === "string")
@@ -110,6 +111,7 @@ export const ExtensionKit = (server?: boolean) => [
             .focus()
             .run();
       });
+      return currentEditor.chain().removeEmptyTextStyle().;
     },
   }),
   Emoji.configure({
@@ -144,6 +146,7 @@ export const ExtensionKit = (server?: boolean) => [
     width: 2,
     class: "ProseMirror-dropcursor border-black",
   }),
+  History
 ];
 
 export default ExtensionKit;
