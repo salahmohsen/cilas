@@ -19,7 +19,7 @@ import { ThemeToggle } from "./theme.toggle";
 
 export function LayoutSidebar() {
   return (
-    <aside className="inset-y fixed left-0 z-20 hidden h-full flex-col border-r sm:flex">
+    <aside className="inset-y fixed left-0 z-[999999] hidden h-full flex-col border-r bg-background sm:flex">
       <div className="border-b p-2">
         <Link href="/">
           <Button aria-label="Home" size="icon" variant="ghost">

@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import placeholderUser from "@/public/placeholder-user.svg";
+import PlaceHolderUser from "@/public/placeholder-user.svg";
 
 import { Search } from "lucide-react";
 import { LayoutMobileSidebar } from "./sidebar.mobile";
@@ -38,10 +38,9 @@ export function LayoutHeader({
     };
     fetchAvatar();
   }, [userId]);
-
   return (
-    <div className="flex flex-col gap-4 sm:pl-14 md:py-0">
-      <header className="sticky top-0 z-10 flex h-[57px] w-full items-center justify-between gap-1 border-b bg-background px-4">
+    <div className="h-screen sm:pl-14 md:py-0">
+      <header className="sticky top-0 flex h-[58px] w-full items-center justify-between gap-1 border-b bg-background px-4">
         <div className="flex items-center gap-2">
           <LayoutMobileSidebar />
           <LayoutBreadcrumb />
@@ -62,13 +61,18 @@ export function LayoutHeader({
                 size="icon"
                 className="overflow-hidden rounded-full"
               >
-                <Image
-                  src={avatar ? avatar : placeholderUser}
-                  width={36}
-                  height={36}
-                  alt="Avatar"
-                  className={`overflow-hidden rounded-full ${!avatar && "p-2 opacity-70"}`}
-                />
+                {!avatar && (
+                  <PlaceHolderUser className="overflow-hidden rounded-full p-2 opacity-70" />
+                )}
+                {avatar && (
+                  <Image
+                    src={avatar}
+                    width={36}
+                    height={36}
+                    alt="Avatar"
+                    className={`overflow-hidden rounded-full ${!avatar && "p-2 opacity-70"}`}
+                  />
+                )}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

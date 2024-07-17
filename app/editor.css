@@ -1,0 +1,57 @@
+.ProseMirror {
+  & > *:first-child,
+  [data-type="column"] > * {
+    @apply first:mt-0 last:mb-0;
+  }
+
+  & > * + * {
+    margin-top: 0.75em;
+  }
+
+  .node-imageUpload {
+    @apply rounded border-2 border-dotted p-2;
+    transition: border 160ms cubic-bezier(0.45, 0.05, 0.55, 0.95);
+
+    &:hover {
+      @apply border-opacity-30;
+    }
+
+    &:has(.is-active),
+    &.has-focus {
+      @apply border-opacity-40;
+    }
+  }
+
+  [data-type="column"] {
+    @apply rounded border-2 border-dotted border-transparent p-1;
+    transition: border 160ms cubic-bezier(0.45, 0.05, 0.55, 0.95);
+  }
+
+  .node-imageBlock {
+    & img {
+      @apply overflow-hidden rounded-xl border-2 border-transparent;
+    }
+  }
+
+  .node-aiWriter,
+  .node-aiImage,
+  .node-tableOfContentsNode {
+    &.has-focus [data-node-view-wrapper] > * {
+      @apply rounded-lg shadow-[0_0_0_2px] shadow-black/30 transition-all dark:shadow-white/30;
+    }
+  }
+
+  .ProseMirror-gapcursor + .node-imageBlock,
+  .ProseMirror-gapcursor + .node-imageUpload,
+  .ProseMirror-gapcursor + [data-type="blockquoteFigure"] {
+    @apply outline-neutral-700 hover:outline-neutral-600 dark:outline-neutral-300 dark:hover:outline-neutral-400;
+  }
+
+  [data-type="blockquoteFigure"] > div {
+    @apply rounded-lg rounded-bl-none rounded-tl-none border-l-4 bg-opacity-80 px-4 py-2;
+  }
+
+  [data-type="blockquoteFigure"] figcaption {
+    @apply mt-4 overflow-hidden text-sm transition-all;
+  }
+}

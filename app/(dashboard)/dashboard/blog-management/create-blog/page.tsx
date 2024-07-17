@@ -1,3 +1,8 @@
+"use client";
+
+import { BlockEditor } from "@/tipTap/components/BlockEditor";
+import "@/tipTap/styles/index.css";
+import "@/app/editor.css";
 export default function CreateBlog() {
-  return <p>create blog</p>;
+  return <BlockEditor />;
 }

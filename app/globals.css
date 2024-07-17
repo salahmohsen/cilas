@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "./editor.css";
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -69,15 +71,31 @@
   *,
   ::before,
   ::after {
-    border-color: hsl(var(--border));
+    @apply border-border;
   }
 
   body {
     font-family: var(--font-inter), var(--font-cairo);
+    @apply antialiased;
   }
 
   .tiptap {
     font-family: var(--font-inter), var(--font-cairo);
-    @apply inter.variable amiri.variable;
+  }
+
+  /* //////////// */
+  .react-colorful {
+    width: 100% !important;
+  }
+
+  [data-reference-hidden] {
+    opacity: 0;
+    pointer-events: none;
+  }
+  ::-webkit-scrollbar {
+    @apply h-1 w-1 bg-neutral-500/20;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-neutral-500/50;
   }
 }
