@@ -3,6 +3,7 @@ import { EditorInfo } from "./EditorInfo";
 import { Toolbar } from "@/tipTap/components/ui/Toolbar";
 
 export type EditorHeaderProps = {
+  children?: React.ReactNode;
   isSidebarOpen?: boolean;
   toggleSidebar?: () => void;
   characters: number;
@@ -10,8 +11,8 @@ export type EditorHeaderProps = {
 };
 
 export const EditorHeader = ({
+  children,
   characters,
-
   words,
   isSidebarOpen,
   toggleSidebar,
@@ -30,6 +31,7 @@ export const EditorHeader = ({
           </Toolbar.Button>
         </div>
       </div>
+      {children}
       <EditorInfo characters={characters} words={words} />
     </div>
   );

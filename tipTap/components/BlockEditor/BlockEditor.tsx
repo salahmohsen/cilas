@@ -1,11 +1,9 @@
 "use client";
 
-import { EditorContent, PureEditorContent } from "@tiptap/react";
+import { Editor, EditorContent, PureEditorContent } from "@tiptap/react";
 import React, { useMemo, useRef } from "react";
 
 import { LinkMenu } from "@/tipTap/components/menus";
-
-import { useBlockEditor } from "@/tipTap/hooks/useBlockEditor";
 
 import "@/tipTap/styles/index.css";
 
@@ -17,12 +15,26 @@ import { TableColumnMenu, TableRowMenu } from "@/tipTap/extensions/Table/menus";
 import { EditorHeader } from "../EditorHeader";
 import { TextMenu } from "../menus/TextMenu";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
+import { SidebarState } from "@/tipTap/hooks/useSidebar";
 
-export const BlockEditor = () => {
+type BlockEditorProps = {
+  editor: Editor | null;
+  characterCount: {
+    characters: () => number;
+    words: () => number;
+  };
+  leftSidebar: SidebarState;
+  children?: React.ReactNode;
+};
+
+export const BlockEditor = ({
+  children,
+  editor,
+  characterCount,
+  leftSidebar,
+}: BlockEditorProps) => {
   const menuContainerRef = useRef(null);
   const editorRef = useRef<PureEditorContent | null>(null);
-
-  const { editor, characterCount, leftSidebar } = useBlockEditor();
 
   const providerValue = useMemo(() => {
     return {};
@@ -46,7 +58,9 @@ export const BlockEditor = () => {
             words={characterCount.words()}
             isSidebarOpen={leftSidebar.isOpen}
             toggleSidebar={leftSidebar.toggle}
-          />
+          >
+            {children}
+          </EditorHeader>
           <EditorContent
             editor={editor}
             ref={editorRef}

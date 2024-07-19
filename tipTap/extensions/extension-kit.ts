@@ -43,7 +43,7 @@ import { ImageUpload } from "./ImageUpload";
 import { TableOfContentsNode } from "./TableOfContentsNode";
 import { lowlight } from "lowlight";
 import { uploadImage } from "@/lib/cloudinary.utils";
-import History from '@tiptap/extension-history'
+import History from "@tiptap/extension-history";
 
 export const ExtensionKit = (server?: boolean) => [
   Document,
@@ -111,7 +111,7 @@ export const ExtensionKit = (server?: boolean) => [
             .focus()
             .run();
       });
-      return currentEditor.chain().removeEmptyTextStyle().;
+      return currentEditor.chain().removeEmptyTextStyle();
     },
   }),
   Emoji.configure({
@@ -146,7 +146,7 @@ export const ExtensionKit = (server?: boolean) => [
     width: 2,
     class: "ProseMirror-dropcursor border-black",
   }),
-  History
+  History,
 ];
 
 export default ExtensionKit;
