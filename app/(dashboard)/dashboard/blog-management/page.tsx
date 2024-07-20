@@ -11,7 +11,7 @@ import { SquarePen } from "lucide-react";
 
 export default function BlogManagement() {
   return (
-    <main className={`mx-4 flex flex-col gap-5`}>
+    <main className="flex w-full flex-col gap-5">
       <Card className="flex flex-wrap items-end justify-between gap-5 p-6">
         <CardHeader className="p-0">
           <CardTitle>Blog Management</CardTitle>

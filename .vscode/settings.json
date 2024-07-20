@@ -5,6 +5,7 @@
     "Auth",
     "dashboard/courses",
     "dashboard/blogs",
-    "tipTap"
+    "tipTap",
+    "dashboard"
   ]
 }
