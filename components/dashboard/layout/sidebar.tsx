@@ -1,8 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import logo from "@/public/logo.png";
-
 import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -16,22 +14,16 @@ import {
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { ThemeToggle } from "./theme.toggle";
+import { cn } from "@/lib/utils";
 
-export function LayoutSidebar() {
+export function LayoutSidebar({ className }: { className: string }) {
   return (
-    <aside className="inset-y fixed left-0 z-[999999] hidden h-full flex-col border-r bg-background sm:flex">
-      <div className="border-b p-2">
-        <Link href="/">
-          <Button aria-label="Home" size="icon" variant="ghost">
-            <Image
-              src={logo}
-              alt="Cilas"
-              width={16}
-              className="h-auto dark:invert"
-            />
-          </Button>
-        </Link>
-      </div>
+    <aside
+      className={cn(
+        "fixed hidden flex-col justify-between border-r bg-background sm:flex",
+        className,
+      )}
+    >
       <nav className="grid gap-1 p-2">
         <TooltipProvider>
           <SidebarItem
@@ -56,7 +48,7 @@ export function LayoutSidebar() {
           /> */}
         </TooltipProvider>
       </nav>
-      <nav className="mt-auto grid gap-1 p-2">
+      <nav className="grid gap-1 p-2">
         <TooltipProvider>
           {/* <SidebarItem
             name="Help"

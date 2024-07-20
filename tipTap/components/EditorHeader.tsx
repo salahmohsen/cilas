@@ -1,9 +1,9 @@
 import { Icon } from "@/tipTap/components/ui/Icon";
 import { EditorInfo } from "./EditorInfo";
 import { Toolbar } from "@/tipTap/components/ui/Toolbar";
+import { cn } from "@/lib/utils";
 
 export type EditorHeaderProps = {
-  children?: React.ReactNode;
   isSidebarOpen?: boolean;
   toggleSidebar?: () => void;
   characters: number;
@@ -11,14 +11,20 @@ export type EditorHeaderProps = {
 };
 
 export const EditorHeader = ({
-  children,
   characters,
   words,
   isSidebarOpen,
   toggleSidebar,
 }: EditorHeaderProps) => {
   return (
-    <div className="fixed z-50 flex w-full items-center justify-between border-b bg-background/50 px-6 py-2 backdrop-blur-sm sm:w-[calc(100vw-3rem)]">
+    <div
+      className={cn(
+        "fixed z-50 flex h-16 w-full items-center justify-between border-b px-6 py-2 sm:w-[calc(100vw-4rem)] sm:pr-8",
+        "bg-background/50 backdrop-blur-sm",
+        isSidebarOpen && "bg-background",
+      )}
+    >
+      <EditorInfo characters={characters} words={words} />
       <div className="flex flex-row items-center gap-x-1.5">
         <div className="flex items-center gap-x-1.5">
           <Toolbar.Button
@@ -27,12 +33,10 @@ export const EditorHeader = ({
             active={isSidebarOpen}
             className={isSidebarOpen ? "bg-transparent" : ""}
           >
-            <Icon name={isSidebarOpen ? "PanelLeftClose" : "PanelLeft"} />
+            <Icon name={isSidebarOpen ? "PanelRightClose" : "PanelRight"} />
           </Toolbar.Button>
         </div>
       </div>
-      {children}
-      <EditorInfo characters={characters} words={words} />
     </div>
   );
 };

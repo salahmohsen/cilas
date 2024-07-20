@@ -10,16 +10,23 @@ declare global {
   }
 }
 
-export const useBlockEditor = (initialContent?:JSONContent) => {
-  const leftSidebar = useSidebar();
+type useBlockEditorProps = {
+  initialContent?: JSONContent;
+  defaultSidebarOpen?: boolean;
+};
+
+export const useBlockEditor = ({
+  initialContent,
+  defaultSidebarOpen,
+}: useBlockEditorProps) => {
+  const leftSidebar = useSidebar(defaultSidebarOpen);
   const [content, setContent] = useState<JSONContent>();
-  console.log(content);
+
   const editor = useEditor(
     {
       autofocus: true,
       onCreate: ({ editor }) => {
         if (editor.isEmpty && initialContent) {
-
           editor.commands.setContent(initialContent);
         }
       },
@@ -43,6 +50,8 @@ export const useBlockEditor = (initialContent?:JSONContent) => {
     characters: () => 0,
     words: () => 0,
   };
+
+  if (typeof window !== "undefined") window.editor = editor;
 
   return { editor, characterCount, leftSidebar, content };
 };

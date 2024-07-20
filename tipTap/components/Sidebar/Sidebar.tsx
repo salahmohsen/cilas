@@ -5,10 +5,12 @@ import { TableOfContents } from "../TableOfContents";
 
 export const Sidebar = memo(
   ({
+    children,
     editor,
     isOpen,
     onClose,
   }: {
+    children: React.ReactNode;
     editor: Editor;
     isOpen?: boolean;
     onClose: () => void;
@@ -20,21 +22,17 @@ export const Sidebar = memo(
     }, [onClose]);
 
     const windowClassName = cn(
-      "fixed top-[107px] left-0 sm:left-[58px]  backdrop-blur-sm h-full lg:h-screen w-0 invisible duration-300 transition-all z-[999999]",
-      "bg-background/90",
-      !isOpen && "border-r-transparent",
-      isOpen && "w-80 border-r visible",
+      "fixed h-full right-0 lg:h-screen w-0 invisible transition-all duration-300 mt-16 ",
+      "bg-background",
+      !isOpen && "border-l-transparent",
+      isOpen && "w-full sm:w-1/3 border-l visible",
     );
 
     return (
       <div className={windowClassName}>
-        <div className="h-full w-full overflow-hidden">
-          <div className="h-full w-full overflow-auto p-6">
-            <TableOfContents
-              onItemClick={handlePotentialClose}
-              editor={editor}
-            />
-          </div>
+        <div className="h-full overflow-auto p-6">
+          <TableOfContents onItemClick={handlePotentialClose} editor={editor} />
+          {children}
         </div>
       </div>
     );
