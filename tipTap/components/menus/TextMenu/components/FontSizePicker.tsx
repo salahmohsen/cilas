@@ -5,15 +5,8 @@ import {
 import { Icon } from "@/tipTap/components/ui/Icon";
 import { Surface } from "@/tipTap/components/ui/Surface";
 import { Toolbar } from "@/tipTap/components/ui/Toolbar";
-// import * as Dropdown from "@radix-ui/react-dropdown-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import * as Popover from "@radix-ui/react-popover";
+
 import { useCallback } from "react";
 
 const FONT_SIZES = [
@@ -39,14 +32,15 @@ export const FontSizePicker = ({ onChange, value }: FontSizePickerProps) => {
   );
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <Popover.Root>
+      <Popover.Trigger asChild>
         <Toolbar.Button active={!!currentValue?.value} id="parent">
           {currentSizeLabel}
           <Icon name="ChevronDown" className="h-2 w-2" />
         </Toolbar.Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent asChild>
+      </Popover.Trigger>
+
+      <Popover.Content side="bottom" asChild>
         <Surface className="flex flex-col gap-1 px-2 py-4">
           {FONT_SIZES.map((size) => (
             <DropdownButton
@@ -58,7 +52,7 @@ export const FontSizePicker = ({ onChange, value }: FontSizePickerProps) => {
             </DropdownButton>
           ))}
         </Surface>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </Popover.Content>
+    </Popover.Root>
   );
 };

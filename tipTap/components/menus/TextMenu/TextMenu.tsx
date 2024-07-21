@@ -27,7 +27,6 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
   const commands = useTextmenuCommands(editor);
   const states = useTextmenuStates(editor);
   const blockOptions = useTextmenuContentTypes(editor);
-  const toolbarWrapperRef = useRef(null);
   return (
     <span>
       <BubbleMenu
@@ -41,11 +40,8 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
         shouldShow={states.shouldShow}
         updateDelay={100}
       >
-        <Toolbar.Wrapper ref={toolbarWrapperRef}>
-          <MemoContentTypePicker
-            options={blockOptions}
-            appendTo={toolbarWrapperRef}
-          />
+        <Toolbar.Wrapper>
+          <MemoContentTypePicker options={blockOptions} />
           <MemoFontSizePicker
             onChange={commands.onSetFontSize}
             value={states.currentSize || ""}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Editor, EditorContent, PureEditorContent } from "@tiptap/react";
+import { Editor, EditorContent } from "@tiptap/react";
 import React, { useMemo, useRef } from "react";
 
 import { LinkMenu } from "@/tipTap/components/menus";

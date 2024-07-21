@@ -1,16 +1,8 @@
 import { Icon } from "@/tipTap/components/ui/Icon";
 import { icons } from "lucide-react";
 import { useMemo } from "react";
-// import * as Dropdown from "@radix-ui/react-dropdown-menu";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuPortal,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+
+import * as Popover from "@radix-ui/react-popover";
 
 import { Toolbar } from "@/tipTap/components/ui/Toolbar";
 import { Surface } from "@/tipTap/components/ui/Surface";
@@ -41,7 +33,6 @@ export type ContentPickerOptions = Array<
 
 export type ContentTypePickerProps = {
   options: ContentPickerOptions;
-  appendTo: React.MutableRefObject<null>;
 };
 
 const isOption = (
@@ -53,7 +44,7 @@ const isCategory = (
 
 export const ContentTypePicker = ({
   options,
-  appendTo,
+  
 }: ContentTypePickerProps) => {
   const activeItem = useMemo(
     () =>
@@ -76,9 +67,9 @@ export const ContentTypePicker = ({
   );
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>{memoTrigger}</DropdownMenuTrigger>
-      <DropdownMenuContent asChild>
+    <Popover.Root>
+      <Popover.Trigger asChild>{memoTrigger}</Popover.Trigger>
+      <Popover.Content side="bottom" asChild>
         <Surface className="flex max-h-60 flex-col gap-1 overflow-y-auto px-2 py-4">
           {options.map((option) => {
             if (isOption(option)) {
@@ -103,7 +94,7 @@ export const ContentTypePicker = ({
             }
           })}
         </Surface>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </Popover.Content>
+    </Popover.Root>
   );
 };
