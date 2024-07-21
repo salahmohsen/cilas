@@ -35,6 +35,7 @@ import {
   Column,
   TaskItem,
   TaskList,
+  OnPaste,
 } from ".";
 import { gitHubEmojis } from "@tiptap-pro/extension-emoji";
 
@@ -147,6 +148,7 @@ export const ExtensionKit = (server?: boolean) => [
     class: "ProseMirror-dropcursor border-black",
   }),
   History,
+  OnPaste,
 ];
 
 export default ExtensionKit;

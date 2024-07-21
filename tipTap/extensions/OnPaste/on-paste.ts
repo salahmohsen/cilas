@@ -42,7 +42,7 @@ export const OnPaste = Extension.create<OnPasteOptions>({
             const { selection } = tr;
 
             // Insert the pasted content
-            tr.replaceSelection(slice);
+            tr?.replaceSelection(slice);
 
             dispatch(tr);
 
@@ -53,7 +53,7 @@ export const OnPaste = Extension.create<OnPasteOptions>({
             const chainCommands = this.editor
               .chain()
               .focus()
-              .setTextSelection({ from: start, to: end });
+              .setTextSelection({ from: start, to: end - 1 });
 
             if (this.options.resetColor) {
               chainCommands.setMeta("addToHistory", false).unsetColor();

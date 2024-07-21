@@ -3,10 +3,8 @@
 import { BlockEditor } from "@/tipTap/components/BlockEditor";
 import "@/tipTap/styles/index.css";
 import "@/app/editor.css";
-import { Button } from "@/components/ui/button";
 import { useBlockEditor } from "@/tipTap/hooks/useBlockEditor";
-import { initialContent } from "@/tipTap/lib/data/initialContent";
-import { EditorHeader } from "@/tipTap/components/EditorHeader";
+import { initialContent } from "@/tipTap/lib/data/course.initialContent";
 
 export default function CreateBlog() {
   const { editor, content, characterCount, leftSidebar } = useBlockEditor({
@@ -20,7 +18,7 @@ export default function CreateBlog() {
       characterCount={characterCount}
       leftSidebar={leftSidebar}
     >
-      Test Test Test Test{" "}
+      Form
     </BlockEditor>
   );
 }
