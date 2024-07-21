@@ -12,6 +12,7 @@ const config = {
     "./app/**/*.{js,jsx}",
     "./src/**/*.{js,jsx}",
     "./lib/*.{js,ts}", // This is to activate shake animation from utils file
+    "./tipTap/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {

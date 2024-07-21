@@ -57,8 +57,11 @@ export default async function RootLayout({
           >
             <Toaster richColors />
             <main>
-              <LayoutSidebar />
-              <LayoutHeader userId={user.id}>{children}</LayoutHeader>
+              <LayoutHeader userId={user.id} className="h-16 px-5 sm:pl-0" />
+              <div className="mt-16 flex w-full">
+                <LayoutSidebar className="h-[calc(100vh-4rem)] w-16" />
+                <div className="my-5 w-full px-5 sm:ml-16">{children}</div>
+              </div>
             </main>
           </ThemeProvider>
         </CourseStateProvider>
