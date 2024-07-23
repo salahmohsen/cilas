@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${cairo.variable} min-w-screen mx-10 mt-10 scroll-smooth`}
+        className={`${inter.variable} ${cairo.variable} min-w-screen mx-10 mt-10`}
       >
         <header className="mb-20 flex flex-col items-center justify-between gap-5 md:flex-row md:gap-10">
           <Link
