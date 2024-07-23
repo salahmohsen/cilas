@@ -29,19 +29,19 @@ export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem
-          className={cn("flex items-center gap-5 space-y-0", className)}
-        >
-          <FormLabel className="mt-5 min-w-max">{label}</FormLabel>
+        <FormItem className={cn("flex flex-col", className)}>
+          <FormLabel className="mb-3 min-w-max">{label}</FormLabel>
           <FormControl>
             <div
-              className="flex w-full justify-center gap-5"
+              className="flex w-full gap-5"
               ref={field.ref}
               onBlur={field.onBlur}
             >
               <div className="flex items-end gap-2" id="start-time">
                 <div className="grid gap-1 text-center">
-                  <Label className="text-xs">Hours</Label>
+                  <Label className="text-xs">
+                    <span className="text-[0.6rem]">24</span>Hours
+                  </Label>
                   <input
                     hidden
                     name={name}
@@ -79,7 +79,7 @@ export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
               <div className="flex items-end gap-2" id="end-time">
                 <div className="grid gap-1 text-center">
                   <Label htmlFor="hours" className="text-xs">
-                    Hours
+                    <span className="text-[0.6rem]">24</span>Hours
                   </Label>
 
                   <TimePickerInput
