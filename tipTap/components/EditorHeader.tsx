@@ -8,6 +8,7 @@ export type EditorHeaderProps = {
   toggleSidebar?: () => void;
   characters: number;
   words: number;
+  submitButtons: JSX.Element;
 };
 
 export const EditorHeader = ({
@@ -15,18 +16,24 @@ export const EditorHeader = ({
   words,
   isSidebarOpen,
   toggleSidebar,
+  submitButtons,
 }: EditorHeaderProps) => {
   return (
     <div
       className={cn(
-        "fixed z-50 flex h-16 w-full items-center justify-between border-b px-6 py-2 sm:w-[calc(100vw-4rem)] sm:pr-8",
+        "fixed z-[100] -mx-5 -mt-5 flex h-16 w-full items-center justify-between border-b px-4 py-2 sm:w-[calc(100vw-4rem)] sm:pr-8",
         "bg-background/50 backdrop-blur-sm",
         isSidebarOpen && "bg-background",
       )}
     >
-      <EditorInfo characters={characters} words={words} />
+      <EditorInfo
+        characters={characters}
+        words={words}
+        className="hidden sm:block"
+      />
       <div className="flex flex-row items-center gap-x-1.5">
-        <div className="flex items-center gap-x-1.5">
+        <div className="flex items-center justify-between gap-x-5 sm:gap-x-10">
+          {submitButtons}
           <Toolbar.Button
             tooltip={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
             onClick={toggleSidebar}

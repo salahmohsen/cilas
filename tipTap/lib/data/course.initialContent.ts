@@ -4,8 +4,6 @@ export const initialContent = {
     {
       type: "heading",
       attrs: {
-        id: "2c1d4a79-68eb-472e-a6df-6a5980d2c902",
-        "data-toc-id": "2c1d4a79-68eb-472e-a6df-6a5980d2c902",
         textAlign: "left",
         level: 1,
       },

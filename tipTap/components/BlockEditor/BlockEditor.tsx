@@ -19,10 +19,6 @@ import { EditorHeader } from "../EditorHeader";
 
 type BlockEditorProps = {
   editor: Editor | null;
-  characterCount: {
-    characters: () => number;
-    words: () => number;
-  };
   leftSidebar: SidebarState;
   children?: React.ReactNode;
 };
@@ -30,7 +26,6 @@ type BlockEditorProps = {
 export const BlockEditor = ({
   children,
   editor,
-  characterCount,
   leftSidebar,
 }: BlockEditorProps) => {
   const menuContainerRef = useRef(null);
@@ -49,12 +44,6 @@ export const BlockEditor = ({
         className="-mx-5 -mt-5 flex h-full overflow-hidden sm:w-[calc(100%-4rem)]"
         ref={menuContainerRef}
       >
-        <EditorHeader
-          characters={characterCount.characters()}
-          words={characterCount.words()}
-          isSidebarOpen={leftSidebar.isOpen}
-          toggleSidebar={leftSidebar.toggle}
-        />
         <EditorContent
           editor={editor}
           className={`mt-16 w-full transition-all duration-300 ${leftSidebar.isOpen ? "sm:w-2/3" : ""} `}

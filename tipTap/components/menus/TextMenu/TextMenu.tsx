@@ -34,6 +34,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           popperOptions: {
             placement: "bottom-start",
           },
+          appendTo: "parent",
         }}
         editor={editor}
         pluginKey="textMenu"

@@ -31,10 +31,7 @@ export const TableOfContents = memo(
     }, [editor]);
 
     return (
-      <>
-        <div className="mb-2 text-xs font-semibold uppercase text-neutral-500 dark:text-neutral-400">
-          Table of contents
-        </div>
+      <div>
         {data && data.content.length > 0 ? (
           <div className="flex flex-col gap-1">
             {data.content.map((item) => (
@@ -58,7 +55,7 @@ export const TableOfContents = memo(
             Start adding headlines to your document …
           </div>
         )}
-      </>
+      </div>
     );
   },
 );
