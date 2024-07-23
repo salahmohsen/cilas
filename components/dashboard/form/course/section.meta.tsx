@@ -9,21 +9,24 @@ import { getUsersNamesByRole } from "@/actions/users.actions";
 import { SafeUser } from "@/types/drizzle.types";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { ComboBoxOption } from "@/types/formInputs.types";
+import { SliderInput } from "../inputs/input.slider";
 
-export function CourseMetadata({
-  editMode,
-  fellow,
-}: {
+type CourseMetadataProps = {
   editMode: boolean;
   fellow: SafeUser | undefined;
-}) {
+};
+
+export function CourseMetadata({ editMode, fellow }: CourseMetadataProps) {
   const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
+
   const {
     state: { fellow: fellowState },
   } = useCourseState();
+
   const [defaultOption, setDefaultOption] = useState<
     ComboBoxOption | undefined
   >(undefined);
+
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -59,101 +62,94 @@ export function CourseMetadata({
   }, []);
 
   return (
-    <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm">
-      <legend className="-ml-1 px-1 text-sm font-medium">
-        Course Metadata
-      </legend>
-      <div className="grid justify-center gap-10 lg:grid-cols-2">
-        <DateInput
-          name="startDate"
-          label="Start Date"
-          placeholder="Pick a date"
-        />
+    <>
+      <DateInput
+        name="startDate"
+        label="Start Date"
+        placeholder="Pick a date"
+      />
 
-        <DateInput name="endDate" label="End Date" placeholder="Pick a date" />
+      <DateInput name="endDate" label="End Date" placeholder="Pick a date" />
 
-        <SelectInput
-          name="isRegistrationOpen"
-          label="Registration Status"
-          placeholder="Select status"
-          options={[{ selectItems: ["Open", "Closed"] }]}
-        />
-        <BasicInput
-          name="applyUrl"
-          label="Registration Form"
-          placeholder="Registration Form Url"
-          type="url"
-        />
+      <SelectInput
+        name="isRegistrationOpen"
+        label="Registration Status"
+        placeholder="Select status"
+        options={[{ selectItems: ["Open", "Closed"] }]}
+      />
+      <BasicInput
+        name="applyUrl"
+        label="Registration Form"
+        placeholder="Registration Form Url"
+        type="url"
+      />
 
-        <SelectInput
-          name="category"
-          label="Category"
-          placeholder="Select category"
-          options={[
-            { selectItems: ["Seasonal Course", "Workshop"] },
-            {
-              groupLabel: "Seasonal Semester",
-              selectItems: ["Thematic Course", "Lab"],
-            },
-          ]}
-        />
+      <SelectInput
+        name="category"
+        label="Category"
+        placeholder="Select category"
+        options={[
+          { selectItems: ["Seasonal Course", "Workshop"] },
+          {
+            groupLabel: "Seasonal Semester",
+            selectItems: ["Thematic Course", "Lab"],
+          },
+        ]}
+      />
 
-        <MultiSelectorInput
-          name="days"
-          label={"Days"}
-          placeholder="Select Days"
-          emptyMsg="no results found."
-          options={[
-            { label: "Saturday", value: "saturday" },
-            { label: "Sunday", value: "sunday" },
-            { label: "Monday", value: "monday" },
-            { label: "Tuesday", value: "tuesday" },
-            { label: "Wednesday", value: "wednesday" },
-            { label: "Thursday", value: "thursday" },
-            { label: "Friday", value: "friday" },
-          ]}
-        />
+      <MultiSelectorInput
+        name="days"
+        label={"Days"}
+        placeholder="Select Days"
+        emptyMsg="no results found."
+        options={[
+          { label: "Saturday", value: "saturday" },
+          { label: "Sunday", value: "sunday" },
+          { label: "Monday", value: "monday" },
+          { label: "Tuesday", value: "tuesday" },
+          { label: "Wednesday", value: "wednesday" },
+          { label: "Thursday", value: "thursday" },
+          { label: "Friday", value: "friday" },
+        ]}
+      />
 
-        <ComboBoxInput
-          name="fellowId"
-          label="Fellow"
-          placeholder="Select fellow..."
-          emptyMsg="Fellow Not Found"
-          searchPlaceholder="Search fellows..."
-          action={getFellowsNames}
-          options={fellowsNames}
-          defaultOption={defaultOption}
-          loading={loading}
-        />
+      <ComboBoxInput
+        name="fellowId"
+        label="Fellow"
+        placeholder="Select fellow..."
+        emptyMsg="Fellow Not Found"
+        searchPlaceholder="Search fellows..."
+        action={getFellowsNames}
+        options={fellowsNames}
+        defaultOption={defaultOption}
+        loading={loading}
+      />
 
-        <BasicInput
-          type="url"
-          name="courseFlowUrl"
-          label="Course Flow"
-          placeholder="Course Flow Url"
-        />
-        <BasicInput
-          type="file"
-          placeholder="Choose Poster"
-          name="image"
-          label="Course Poster"
-        />
-        <BasicInput
-          name="price"
-          label="Price"
-          placeholder="Enter price"
-          type="number"
-        />
+      <BasicInput
+        type="file"
+        placeholder="Choose Poster"
+        name="featuredImage"
+        label="Course Poster"
+      />
+      <SliderInput
+        name="suggestedPrice"
+        label="Suggested Price"
+        defaultValue={[2000, 3000]}
+        max={5000}
+        min={1000}
+        step={200}
+        minStepsBetweenThumbs={1}
+        formatLabelSign="EGP"
+      />
 
-        <SelectInput
-          name="attendance"
-          label="Attendance"
-          placeholder="Select mode"
-          options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
-        />
+      <SelectInput
+        name="attendance"
+        label="Attendance"
+        placeholder="Select mode"
+        options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
+      />
 
-        <TimeInput name="timeSlot" label="Time Slot" placeholder="Start Time" />
-      </div>
-    </fieldset>
+      <TimeInput name="timeSlot" label="Time Slot" placeholder="Start Time" />
+    </>
   );
 }
