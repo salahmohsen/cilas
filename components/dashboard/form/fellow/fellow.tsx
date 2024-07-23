@@ -74,7 +74,7 @@ export function FellowForm({ mode, fellowData }: NewFellowProps) {
           <SquarePlus strokeWidth={1} size={18} /> Add New Fellow
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="z-[110] sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Add Fellow</DialogTitle>
         </DialogHeader>
