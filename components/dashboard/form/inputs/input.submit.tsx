@@ -3,8 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { LoaderPinwheel } from "lucide-react";
 import { cn } from "@/lib/utils";
-import React, { forwardRef } from "react";
-import { useFormStatus } from "react-dom";
+import React from "react";
 
 type SubmitButtonProps = {
   className?: string;
@@ -27,6 +26,7 @@ export const SubmitButton = ({
       disabled={isLoading}
       className={cn("w-full", className)}
       variant={variant}
+      size={"sm"}
       onClick={handleOnClick}
     >
       {isLoading ? (
