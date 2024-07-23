@@ -1,7 +1,6 @@
 import "@/app/globals.css";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Cairo } from "next/font/google";
+import { Inter, IBM_Plex_Sans_Arabic } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
 import logo from "@/public/logo.png";
@@ -18,10 +17,11 @@ const inter = Inter({
 
   display: "swap",
 });
-const cairo = Cairo({
+
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "800"],
-  variable: "--font-cairo",
+  weight: ["200", "400", "700"],
+  variable: "--font-ibm-plex-sans-arabic",
   display: "swap",
 });
 
@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${cairo.variable} min-w-screen mx-10 mt-10`}
+        className={`${inter.variable} ${ibmPlexSansArabic.variable} min-w-screen mx-10 mt-10`}
       >
         <header className="mb-20 flex flex-col items-center justify-between gap-5 md:flex-row md:gap-10">
           <Link

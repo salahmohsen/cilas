@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo, Inter } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
@@ -13,10 +13,10 @@ const inter = Inter({
   adjustFontFallback: false,
   display: "swap",
 });
-const cairo = Cairo({
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "800"],
-  variable: "--font-cairo",
+  weight: ["200", "400", "700"],
+  variable: "--font-ibm-plex-sans-arabic",
   display: "swap",
 });
 
@@ -35,7 +35,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <SessionProvider value={sessionData}>
-        <body className={`${inter.variable} ${cairo.variable} `}>
+        <body className={`${inter.variable} ${ibmPlexSansArabic.variable} `}>
           <Toaster richColors />
           <main>{children}</main>
         </body>
