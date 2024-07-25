@@ -35,7 +35,10 @@ export const EditorHeader = ({
         {submitButtons}
         <Toolbar.Button
           tooltip={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
-          onClick={toggleSidebar}
+          onClick={(e) => {
+            e.preventDefault();
+            toggleSidebar?.();
+          }}
           active={isSidebarOpen}
           className={isSidebarOpen ? "bg-transparent" : "border border-border"}
         >
