@@ -27,7 +27,7 @@ export default async function ManageCoursesPage() {
               New Course
             </Button>
           </Link>
-          <Link href="/dashboard/blog-management/create-bundle">
+          <Link href="/dashboard/course-management/create-bundle">
             <Button>
               <Waves className="mr-2 h-4 w-4" />
               New Bundle

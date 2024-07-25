@@ -1,6 +1,6 @@
 .ProseMirror {
   p {
-    @apply leading-relaxed my-3 first:mt-0 last:mb-0;
+    @apply my-3 leading-relaxed first:mt-0 last:mb-0;
   }
 
   & > p {
@@ -53,25 +53,25 @@
   }
 
   a.link {
-    @apply text-blue-500 font-extrabold dark:text-blue-400;
+    @apply font-extrabold text-blue-500 dark:text-blue-400;
   }
 
   mark {
-    @apply bg-red-500 rounded-sm decoration-clone text-inherit py-1 px-0 dark:bg-red-400;
+    @apply rounded-sm bg-red-500 decoration-clone px-0 py-1 text-inherit dark:bg-red-400;
   }
 
   & img {
     @apply h-auto w-full max-w-full;
   }
 
-  [data-type='horizontalRule'] {
-    @apply my-8 py-4 transition-all duration-100 ease-in-out cursor-pointer;
+  [data-type="horizontalRule"] {
+    @apply my-8 cursor-pointer py-4 transition-all duration-100 ease-in-out;
 
     &.ProseMirror-selectednode {
-      @apply bg-black/5 dark:bg-white/10;
+      @apply bg-background;
 
       hr {
-        @apply border-t-black/30 dark:border-t-white/30;
+        @apply border-t-border;
       }
     }
 
@@ -81,8 +81,7 @@
     }
 
     hr {
-      @apply border-0 border-t border-black/20 bg-black/80;
-      @apply dark:border-white/20 dark:bg-white/80;
+      @apply border-0 border-t border-border;
     }
   }
 }
