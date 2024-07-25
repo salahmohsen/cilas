@@ -1,5 +1,4 @@
 import { memo, useEffect, useState } from "react";
-import { toast } from "sonner";
 import {
   FormControl,
   FormField,
@@ -21,7 +20,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Check, ChevronsUpDown, Ellipsis, LoaderCircle } from "lucide-react";
+import { Check, ChevronsUpDown, LoaderCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 import { ComboBoxProps } from "@/types/formInputs.types";
@@ -101,10 +100,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                       <CommandList>
                         <CommandInput placeholder={searchPlaceholder} />
                         <CommandEmpty>
-                          <div
-                            className="space-y-2"
-                            onClick={() => setOpen(false)}
-                          >
+                          <div className="space-y-2">
                             <p>{emptyMsg}</p>
                             <FellowForm mode="button" />
                           </div>
