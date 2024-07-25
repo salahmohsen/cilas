@@ -14,19 +14,37 @@ import { z } from "zod";
 
 export const courseSchema = z
   .object({
-    title: required_string,
-    content: required_string,
+    enTitle: optional_string,
+    arTitle: optional_string,
+    enContent: optional_string,
+    arContent: optional_string,
     fellowId: required_string,
     category: required_string,
     featuredImage: optional_file,
     attendance: required_string,
     isRegistrationOpen: required_boolean,
-    suggestedPrice: z.array(z.number(), z.number()).nonempty(),
+    suggestedPrice: z.tuple([z.number(), z.number()]),
     timeSlot: required_timeSlot,
     days: optional_selectOptions,
     applyUrl: optional_url,
     startDate: required_date,
     endDate: required_date,
+  })
+  .refine((data) => data.arTitle || data.enTitle, {
+    path: ["enTitle"],
+    message: "At least one English or Arabic title is required",
+  })
+  .refine((data) => data.enContent || data.arContent, {
+    path: ["enContent"],
+    message: "At least one English or Arabic content is required",
+  })
+  .refine((data) => data.arTitle || data.enTitle, {
+    path: ["arTitle"],
+    message: "At least one English or Arabic title is required.",
+  })
+  .refine((data) => data.enContent || data.arContent, {
+    path: ["arContent"],
+    message: "At least one English or Arabic content is required",
   })
   .refine((data) => data.endDate > data.startDate, {
     path: ["startDate"],
@@ -41,11 +59,13 @@ export type CourseSchema = z.infer<typeof courseSchema>;
 
 // Default Values for Course Form
 export const courseFormDefaultValues: CourseSchema | {} = {
-  title: "",
-  content: "",
+  enTitle: "",
+  arTitle: "",
+  enContent: "",
+  arContent: "",
   fellowId: "",
   category: "",
-  image: "",
+  featuredImage: "",
   attendance: "",
   isRegistrationOpen: "",
   suggestedPrice: [2000, 3000],
@@ -54,7 +74,6 @@ export const courseFormDefaultValues: CourseSchema | {} = {
     to: new Date(new Date().setHours(0, 0, 0, 0)),
   },
   days: [],
-  courseFlowUrl: "",
   applyUrl: "",
   startDate: "",
   endDate: "",

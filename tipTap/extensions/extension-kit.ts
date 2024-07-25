@@ -38,6 +38,7 @@ import {
   OnPaste,
 } from ".";
 import { gitHubEmojis } from "@tiptap-pro/extension-emoji";
+import TextDirection from "tiptap-text-direction";
 
 import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
 import { ImageUpload } from "./ImageUpload";
@@ -155,6 +156,9 @@ export const ExtensionKit = () => [
   }),
   History,
   OnPaste,
+  TextDirection.configure({
+    types: ["heading", "paragraph", "blockquote"],
+  }),
 ];
 
 export default ExtensionKit;

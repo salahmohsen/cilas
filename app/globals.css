@@ -83,14 +83,15 @@
     @apply antialiased;
   }
 
+  [data-radix-popper-content-wrapper] {
+    @apply !z-[300];
+  }
+
   .tiptap {
     font-family: var(--font-inter), var(--font-ibm-plex-sans-arabic);
   }
 
   /* //////////// */
-  /* .react-colorful {
-    width: 100% !important;
-  } */
 
   [data-reference-hidden] {
     opacity: 0;

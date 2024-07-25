@@ -93,6 +93,12 @@ const config = {
         "accordion-up": "accordion-up 0.2s ease-out",
         shake: "shake 0.82s cubic-bezier(.36,.07,.19,.97) both",
       },
+      width: {
+        inherit: "inherit",
+      },
+      boxShadow: {
+        insetRight: "inset -50px 0px 20px -50px rgba(0,0,0,0.30)",
+      },
     },
   },
   plugins: [

@@ -25,7 +25,7 @@ export function ErrorPage({ message }: { message: string }) {
   }, []);
 
   return (
-    <div className="flex h-[calc(100vh-73px)] flex-col items-center justify-center space-y-10">
+    <div className="flex h-[calc(100%-73px)] flex-col items-center justify-center space-y-10">
       <Bird
         size={200}
         strokeWidth={0.8}

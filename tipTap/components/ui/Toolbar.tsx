@@ -8,6 +8,7 @@ import Tooltip from "./Tooltip";
 export type ToolbarWrapperProps = {
   shouldShowContent?: boolean;
   isVertical?: boolean;
+  className?: string;
 } & HTMLProps<HTMLDivElement>;
 
 const ToolbarWrapper = forwardRef<HTMLDivElement, ToolbarWrapperProps>(

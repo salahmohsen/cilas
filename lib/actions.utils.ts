@@ -1,9 +1,8 @@
-import { courseSchema } from "@/types/course.schema";
+import { CourseSchema, courseSchema } from "@/types/course.schema";
 import { z } from "zod";
 import { cleanHtml } from "./sanitize-html.utils";
 import { convertToDate, convertToJson } from "./zodValidation.utils";
-import { InferInsertModel } from "drizzle-orm";
-import { courseTable } from "@/db/db.schema";
+import { CourseTableWrite } from "@/types/drizzle.types";
 
 export const formDataToCourseSchema = (
   formData: FormData,
@@ -14,13 +13,12 @@ export const formDataToCourseSchema = (
   const arContent = formData.get("arContent") as string;
   const fellowId = formData.get("fellowId") as string;
   const category = formData.get("category") as string;
-  const image = formData.get("image") as string | File;
+  const featuredImage = formData.get("featuredImage") as string | File;
   const attendance = formData.get("attendance") as string;
   const isRegistrationOpen = formData.get("isRegistrationOpen") === "Open";
-  const price = formData.get("price") as string;
+  const suggestedPrice = formData.get("suggestedPrice") as string;
   const timeSlot = formData.get("timeSlot") as string;
   const days = formData.get("days") as string;
-  const courseFlowUrl = formData.get("courseFlowUrl") as string;
   const applyUrl = formData.get("applyUrl") as string;
   const startDate = formData.get("startDate") as string;
   const endDate = formData.get("endDate") as string;
@@ -32,16 +30,15 @@ export const formDataToCourseSchema = (
     arContent: cleanHtml(arContent),
     fellowId,
     category,
-    image,
+    featuredImage,
     attendance,
     isRegistrationOpen,
-    price,
+    suggestedPrice: JSON.parse(suggestedPrice),
     timeSlot: {
       from: convertToDate(timeSlot, "from"),
       to: convertToDate(timeSlot, "to"),
     },
     days: convertToJson(days),
-    courseFlowUrl,
     applyUrl,
     startDate: new Date(startDate),
     endDate: new Date(endDate),
@@ -49,13 +46,15 @@ export const formDataToCourseSchema = (
 };
 
 export const courseSchemaToDbSchema = (
-  formObj: z.infer<typeof courseSchema>,
+  formObj: CourseSchema,
   draftMode: boolean,
-  image: string,
-): InferInsertModel<typeof courseTable> => {
+  featuredImage: string,
+): CourseTableWrite => {
   return {
     ...formObj,
+    enContent: JSON.parse(formObj.enContent || ""),
+    arContent: JSON.parse(formObj.arContent || ""),
     draftMode,
-    image,
+    featuredImage,
   };
 };

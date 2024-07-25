@@ -1,6 +1,6 @@
 import { useCourseState } from "@/providers/CourseState.provider";
 import { SubmitButton } from "../inputs/input.submit";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 type SubmitButtonsProps = {
   isLoading: {
@@ -12,12 +12,12 @@ type SubmitButtonsProps = {
   setDraftMode: Dispatch<SetStateAction<boolean>>;
 };
 
-export function SubmitButtons({
+export const SubmitButtons = ({
   isLoading,
   editMode,
   draftMode,
   setDraftMode,
-}: SubmitButtonsProps) {
+}: SubmitButtonsProps) => {
   const { dispatch } = useCourseState();
   return (
     <div className="flex gap-2">
@@ -42,4 +42,4 @@ export function SubmitButtons({
       />
     </div>
   );
-}
+};

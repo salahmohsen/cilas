@@ -183,7 +183,7 @@ const Slider = React.forwardRef(
         value={localValues}
         onValueChange={handleValueChange}
         className={cn(
-          "relative flex w-full touch-none select-none items-center pb-10",
+          "relative flex w-full touch-none select-none items-center pb-8",
           className,
         )}
         {...props}

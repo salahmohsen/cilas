@@ -51,7 +51,7 @@ export default function ManageCourses() {
         </div>
 
         {width && width >= 1024 && (
-          <CourseInfo className="sticky right-0 top-20 mt-14 max-h-[calc(100vh-150px)] overflow-y-auto transition-all duration-500 ease-in-out" />
+          <CourseInfo className="sticky right-0 top-20 mt-14 max-h-[calc(100%-150px)] overflow-y-auto transition-all duration-500 ease-in-out" />
         )}
       </div>
       {width && width < 1024 && <CourseInfoModal />}

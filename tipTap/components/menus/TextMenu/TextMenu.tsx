@@ -32,7 +32,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       <BubbleMenu
         tippyOptions={{
           popperOptions: {
-            placement: "bottom-start",
+            placement: "auto",
           },
           appendTo: "parent",
         }}
@@ -41,7 +41,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
         shouldShow={states.shouldShow}
         updateDelay={100}
       >
-        <Toolbar.Wrapper>
+        <Toolbar.Wrapper className="flex-wrap sm:flex-nowrap">
           <MemoContentTypePicker options={blockOptions} />
           <MemoFontSizePicker
             onChange={commands.onSetFontSize}

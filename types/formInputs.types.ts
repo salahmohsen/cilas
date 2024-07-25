@@ -12,6 +12,7 @@ export interface StandardProps<
   name: TName;
   label?: string;
   placeholder?: string;
+  description?: string;
   className?: string;
 }
 

@@ -4,7 +4,10 @@ import db from "@/db/drizzle";
 import { bundleTable, courseTable } from "@/db/db.schema";
 import { Option } from "@/components/ui/multipleSelector";
 import { bundleSchema } from "@/types/bundle.schema";
-import { BundleWithCoursesNames, BundleTable } from "@/types/drizzle.types";
+import {
+  BundleWithCoursesNames,
+  BundleTableWrite,
+} from "@/types/drizzle.types";
 import { eq } from "drizzle-orm";
 
 export const getBundles = async () => {
@@ -115,7 +118,7 @@ export const createBundle = async (
     const { year, cycle, category, attendance, deadline, courses } = result;
     name = `${year} ${cycle} ${category}`;
 
-    const values: BundleTable = {
+    const values: BundleTableWrite = {
       name,
       year,
       cycle,
@@ -171,7 +174,7 @@ export const editBundle = async (
     const { year, cycle, category, attendance, deadline, courses } = result;
     const name = `${year} ${cycle} ${category}`;
 
-    const values: BundleTable = {
+    const values: BundleTableWrite = {
       name,
       year,
       cycle,

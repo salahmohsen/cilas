@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {
   return (
-    <main className={`mx-4 mb-10 max-h-[calc(100vh-150px)]`}>
+    <main className={`mx-4 mb-10 max-h-[calc(100%-150px)]`}>
       <div className="flex w-full flex-col gap-5 rounded-md border p-6">
         <div className="flex flex-col gap-1">
           <Skeleton className="h-8 w-48 rounded-md" />

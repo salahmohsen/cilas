@@ -19,31 +19,33 @@ import { toast } from "sonner";
 import { redirect } from "next/navigation";
 import { isObjectEmpty } from "@/lib/utils";
 
-import { SafeUser } from "@/types/drizzle.types";
+import { CourseWithSafeFellow } from "@/types/drizzle.types";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { BlockEditor } from "@/tipTap/components/BlockEditor";
 import { useBlockEditor } from "@/tipTap/hooks/useBlockEditor";
-import { JSONContent } from "@tiptap/core";
 import { SubmitButtons } from "./submit.buttons";
 import { EditorHeader } from "@/tipTap/components/EditorHeader";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ContentInput } from "../inputs/input.content";
+import { JSONContent } from "@tiptap/core";
 
 type LoadingState = {
   primaryButton: boolean;
   secondaryButton: boolean;
 };
 
+type ActiveContentTab = "enContent" | "arContent";
+
 type CourseFormPropTypes = {
   editMode?: boolean;
-  courseData?: CourseSchema & { draftMode: boolean; fellow: SafeUser };
+  courseData?: CourseWithSafeFellow;
   courseId?: number;
-  initialContent?: JSONContent;
 };
 
 export function CourseForm({
   editMode = false,
   courseData,
   courseId,
-  initialContent,
 }: CourseFormPropTypes) {
   if (editMode && (!courseData || !courseId))
     throw new Error("course data or course id not provided");
@@ -71,10 +73,9 @@ export function CourseForm({
   const formMethods = useForm<CourseSchema>({
     resolver: zodResolver(courseSchema),
     mode: "onChange",
-
     defaultValues: {
       ...courseFormDefaultValues,
-      ...(courseData ?? {}),
+      ...((courseData as CourseSchema) ?? {}),
     },
   }); // Setup Course Form with Zod Validation
 
@@ -123,36 +124,48 @@ export function CourseForm({
     [formMethods.formState.errors, editMode, courseId, courseAction],
   );
 
-  const [content, setContent] = useState<JSONContent | undefined>(
-    initialContent,
+  const [enContent, setEnContent] = useState<JSONContent | undefined>(
+    courseData?.enContent as JSONContent,
   );
 
-  const { editor, characterCount, leftSidebar } = useBlockEditor({
+  const [arContent, setArContent] = useState<JSONContent | undefined>(
+    courseData?.arContent as JSONContent,
+  );
+
+  const [sidebarActiveTab, setSidebarActiveTab] = useState<string>("form");
+
+  const {
+    editor: enEditor,
+    characterCount: enCharacterCount,
+    leftSidebar: enLeftSidebar,
+  } = useBlockEditor({
     defaultSidebarOpen: true,
-    content,
-    setContent,
+    content: enContent,
+    setContent: setEnContent,
   });
 
-  console.log(formMethods.watch());
+  const {
+    editor: arEditor,
+    characterCount: arCharacterCount,
+    leftSidebar: arLeftSidebar,
+  } = useBlockEditor({
+    defaultSidebarOpen: true,
+    content: arContent,
+    setContent: setArContent,
+  });
+
+  const [activeContentTab, setActiveContentTab] =
+    useState<ActiveContentTab>("enContent");
+
+  console.log(
+    formMethods.watch(["enTitle", "arTitle", "arContent", "enContent"]),
+  );
 
   return (
     <FormProvider {...formMethods}>
-      <EditorHeader
-        characters={characterCount.characters()}
-        words={characterCount.words()}
-        isSidebarOpen={leftSidebar.isOpen}
-        toggleSidebar={leftSidebar.toggle}
-        submitButtons={
-          <SubmitButtons
-            isLoading={isLoading}
-            editMode={editMode}
-            draftMode={draftMode}
-            setDraftMode={setDraftMode}
-          />
-        }
-      />
       <Form {...formMethods}>
         <form
+          className="w-full"
           ref={formRef}
           action={courseAction}
           onSubmit={(e) => {
@@ -162,15 +175,77 @@ export function CourseForm({
             })(e); // immediately invokes the handleSubmit with the original event object.
           }}
         >
-          <BlockEditor editor={editor} leftSidebar={leftSidebar}>
-            <input
-              hidden
-              name="content"
-              value={JSON.stringify(content)}
-              onChange={setContent}
-            />
-            <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
-          </BlockEditor>
+          <EditorHeader
+            characters={
+              activeContentTab === "enContent"
+                ? enCharacterCount.characters()
+                : arCharacterCount.characters()
+            }
+            words={
+              activeContentTab === "enContent"
+                ? enCharacterCount.words()
+                : arCharacterCount.words()
+            }
+            isSidebarOpen={enLeftSidebar.isOpen}
+            toggleSidebar={enLeftSidebar.toggle}
+            submitButtons={
+              <SubmitButtons
+                isLoading={isLoading}
+                editMode={editMode}
+                draftMode={draftMode}
+                setDraftMode={setDraftMode}
+              />
+            }
+          />
+
+          <Tabs
+            value={activeContentTab}
+            onValueChange={setActiveContentTab as (string) => void}
+            className={`relative pt-16 transition-all duration-300 ${enLeftSidebar.isOpen ? "sm:w-2/3" : "sm:w-full"} `}
+          >
+            <TabsList
+              className={`absolute w-full rounded-none ${enLeftSidebar.isOpen && "sm:shadow-insetRight"} `}
+            >
+              <TabsTrigger value="enContent">English Content</TabsTrigger>
+              <TabsTrigger value="arContent">Arabic Content</TabsTrigger>
+            </TabsList>
+            <TabsContent value="enContent">
+              <BlockEditor
+                editor={enEditor}
+                leftSidebar={enLeftSidebar}
+                sidebarActiveTab={sidebarActiveTab}
+                setSidebarActiveTab={setSidebarActiveTab}
+              >
+                <CourseMetadata
+                  editMode={editMode}
+                  fellow={courseData?.fellow}
+                />
+              </BlockEditor>
+            </TabsContent>
+            <TabsContent value="arContent">
+              <BlockEditor
+                editor={arEditor}
+                leftSidebar={arLeftSidebar}
+                sidebarActiveTab={sidebarActiveTab}
+                setSidebarActiveTab={setSidebarActiveTab}
+              >
+                <CourseMetadata
+                  editMode={editMode}
+                  fellow={courseData?.fellow}
+                />
+              </BlockEditor>
+            </TabsContent>
+          </Tabs>
+          <ContentInput
+            titleName="arTitle"
+            contentName="arContent"
+            content={arContent}
+          />
+          <ContentInput
+            titleName="enTitle"
+            contentName="enContent"
+            content={enContent}
+          />
         </form>
       </Form>
     </FormProvider>

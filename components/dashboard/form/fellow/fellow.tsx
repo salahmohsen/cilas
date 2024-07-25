@@ -18,6 +18,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { TipTapInput } from "@/components/dashboard/form/inputs/input.tipTap";
@@ -74,11 +75,11 @@ export function FellowForm({ mode, fellowData }: NewFellowProps) {
           <SquarePlus strokeWidth={1} size={18} /> Add New Fellow
         </Button>
       </DialogTrigger>
-      <DialogContent className="z-[110] sm:max-w-lg">
+      <DialogContent className="z-[500] sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Add Fellow</DialogTitle>
         </DialogHeader>
-        <ScrollArea className="max-h-[calc(100vh-200px)] pr-3">
+        <ScrollArea className="-mr-1 max-h-[calc(100vh-200px)] pr-3">
           <FormProvider {...formMethods}>
             <Form {...formMethods}>
               <form
@@ -138,7 +139,7 @@ export function FellowForm({ mode, fellowData }: NewFellowProps) {
                     direction="horizontal"
                   />
                 </div>
-                <DialogFooter>
+                <DialogFooter className="mr-2 mt-2">
                   <SubmitButton
                     value="Add Fellow"
                     className="max-w-max px-10"

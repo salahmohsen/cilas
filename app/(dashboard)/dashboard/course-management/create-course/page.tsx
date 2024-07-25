@@ -7,10 +7,8 @@ import { ErrorPage } from "@/components/ui/error";
 import { CourseWithSafeFellow } from "@/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import Loading from "./loading";
-import { BlockEditor } from "@/tipTap/components/BlockEditor";
 import "@/tipTap/styles/index.css";
 import "@/app/editor.css";
-import { initialContent } from "@/tipTap/lib/data/course.initialContent";
 
 export default function CreateCoursePage() {
   const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(
@@ -70,7 +68,7 @@ export default function CreateCoursePage() {
   // If there's no courseId, render the form without course data
   return (
     <Suspense fallback={<Loading />}>
-      <CourseForm initialContent={initialContent} />
+      <CourseForm />
     </Suspense>
   );
 }

@@ -33,16 +33,24 @@ export const SliderInput: React.FC<SliderProps> = memo(function BasicInput({
         <FormItem className={cn("flex flex-col gap-3", className)}>
           <FormLabel>{label}</FormLabel>
           <FormControl>
-            <Slider
-              defaultValue={defaultValue}
-              max={max}
-              min={min}
-              step={step}
-              minStepsBetweenThumbs={minStepsBetweenThumbs}
-              value={field.value}
-              onValueChange={field.onChange}
-              formatLabel={(value) => `${value} ${formatLabelSign}`}
-            />
+            <>
+              <input
+                hidden
+                name={name}
+                value={JSON.stringify(field.value)}
+                onChange={field.onChange}
+              />
+              <Slider
+                defaultValue={defaultValue}
+                max={max}
+                min={min}
+                step={step}
+                minStepsBetweenThumbs={minStepsBetweenThumbs}
+                value={field.value}
+                onValueChange={field.onChange}
+                formatLabel={(value) => `${value} ${formatLabelSign}`}
+              />
+            </>
           </FormControl>
           <FormMessage />
         </FormItem>
