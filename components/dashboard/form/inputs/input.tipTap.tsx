@@ -64,7 +64,7 @@ export const TipTapInput = memo(function TipTapInput({
                 onChange={field.onChange}
                 onBlur={field.onBlur}
                 disabled={field.disabled}
-                placeholder={placeholder}
+                placeholder={placeholder ?? ""}
                 editorToolbar={editorToolbar}
               />
             </>

@@ -60,7 +60,7 @@ export async function createEditCourse(
   }
 
   // uploading the image if data parsing is succeed
-  const imageUrl = await uploadImage(formObj.image);
+  const imageUrl = await uploadImage(formObj.featuredImage);
   if (imageUrl instanceof Error)
     return {
       error: true,

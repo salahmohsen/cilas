@@ -20,7 +20,7 @@ export function LayoutSidebar({ className }: { className: string }) {
   return (
     <aside
       className={cn(
-        "fixed hidden flex-col justify-between border-r bg-background sm:flex",
+        "fixed z-[200] hidden flex-col items-center justify-between border-r bg-background sm:flex",
         className,
       )}
     >

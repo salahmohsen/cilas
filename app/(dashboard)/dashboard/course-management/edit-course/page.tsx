@@ -6,7 +6,6 @@ import { CourseForm } from "@/components/dashboard/form/course/course";
 import { ErrorPage } from "@/components/ui/error";
 import { CourseWithSafeFellow } from "@/types/drizzle.types";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CourseSchema } from "@/types/course.schema";
 import Loading from "../create-course/loading";
 
 export default function EditCoursePage() {
@@ -19,7 +18,8 @@ export default function EditCoursePage() {
   const fetchCourse = useCallback(async () => {
     try {
       setIsLoading(true);
-      if (!courseId || !Number(courseId)) throw new Error("course id is wrong!");
+      if (!courseId || !Number(courseId))
+        throw new Error("course id is wrong!");
       courseValues.current = await getCourseById(Number(courseId));
       if (!courseValues.current) throw new Error("Course not found!");
     } catch (error) {
@@ -37,5 +37,12 @@ export default function EditCoursePage() {
 
   if (courseId && isLoading) return <Loading />;
   if (error && !isLoading) return <ErrorPage message={error} />;
-  if (courseId && !isLoading) return <CourseForm editMode={true} courseData={courseValues.current} courseId={Number(courseId)} />;
+  if (courseId && !isLoading)
+    return (
+      <CourseForm
+        editMode={true}
+        courseData={courseValues.current}
+        courseId={Number(courseId)}
+      />
+    );
 }

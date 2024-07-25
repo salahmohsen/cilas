@@ -38,6 +38,7 @@ import {
   OnPaste,
 } from ".";
 import { gitHubEmojis } from "@tiptap-pro/extension-emoji";
+import TextDirection from "tiptap-text-direction";
 
 import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
 import { ImageUpload } from "./ImageUpload";
@@ -46,7 +47,7 @@ import { lowlight } from "lowlight";
 import { uploadImage } from "@/lib/cloudinary.utils";
 import History from "@tiptap/extension-history";
 
-export const ExtensionKit = (server?: boolean) => [
+export const ExtensionKit = () => [
   Document,
   Columns,
   TaskList,
@@ -137,7 +138,13 @@ export const ExtensionKit = (server?: boolean) => [
   Placeholder.configure({
     includeChildren: true,
     showOnlyCurrent: false,
-    placeholder: () => "",
+
+    placeholder: ({ node }) => {
+      if (node.type.name === "heading") {
+        return "What’s the title?";
+      }
+      return "";
+    },
   }),
   SlashCommand,
   Focus,
@@ -145,10 +152,13 @@ export const ExtensionKit = (server?: boolean) => [
   BlockquoteFigure,
   Dropcursor.configure({
     width: 2,
-    class: "ProseMirror-dropcursor border-black",
+    class: "ProseMirror-dropcursor border-border",
   }),
   History,
   OnPaste,
+  TextDirection.configure({
+    types: ["heading", "paragraph", "blockquote"],
+  }),
 ];
 
 export default ExtensionKit;

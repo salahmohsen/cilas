@@ -11,7 +11,8 @@ export interface StandardProps<
 > {
   name: TName;
   label?: string;
-  placeholder: string;
+  placeholder?: string;
+  description?: string;
   className?: string;
 }
 
@@ -44,4 +45,13 @@ export interface ComboBoxProps extends StandardProps {
   loading: boolean;
   options: ComboBoxOption[];
   defaultOption: ComboBoxOption | undefined;
+}
+
+export interface SliderProps extends StandardProps {
+  defaultValue: [number, number];
+  max: number;
+  min: number;
+  step: number;
+  minStepsBetweenThumbs: number;
+  formatLabelSign: string;
 }

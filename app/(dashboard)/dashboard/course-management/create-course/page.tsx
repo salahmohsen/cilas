@@ -7,6 +7,8 @@ import { ErrorPage } from "@/components/ui/error";
 import { CourseWithSafeFellow } from "@/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import Loading from "./loading";
+import "@/tipTap/styles/index.css";
+import "@/app/editor.css";
 
 export default function CreateCoursePage() {
   const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(

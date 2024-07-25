@@ -32,15 +32,16 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
       <BubbleMenu
         tippyOptions={{
           popperOptions: {
-            placement: "bottom-start",
+            placement: "auto",
           },
+          appendTo: "parent",
         }}
         editor={editor}
         pluginKey="textMenu"
         shouldShow={states.shouldShow}
         updateDelay={100}
       >
-        <Toolbar.Wrapper>
+        <Toolbar.Wrapper className="flex-wrap sm:flex-nowrap">
           <MemoContentTypePicker options={blockOptions} />
           <MemoFontSizePicker
             onChange={commands.onSetFontSize}

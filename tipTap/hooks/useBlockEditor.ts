@@ -2,32 +2,28 @@ import { Editor, JSONContent, useEditor } from "@tiptap/react";
 
 import { ExtensionKit } from "@/tipTap/extensions/extension-kit";
 import { useSidebar } from "./useSidebar";
-import { useState } from "react";
-
-declare global {
-  interface Window {
-    editor: Editor | null;
-  }
-}
+import { Dispatch, SetStateAction } from "react";
+import { textDirection } from "@/lib/tiptap-extensions";
 
 type useBlockEditorProps = {
-  initialContent?: JSONContent;
   defaultSidebarOpen?: boolean;
+  content: JSONContent | undefined;
+  setContent: Dispatch<SetStateAction<JSONContent | undefined>>;
 };
 
 export const useBlockEditor = ({
-  initialContent,
   defaultSidebarOpen,
+  content,
+  setContent,
 }: useBlockEditorProps) => {
   const leftSidebar = useSidebar(defaultSidebarOpen);
-  const [content, setContent] = useState<JSONContent>();
 
   const editor = useEditor(
     {
       autofocus: true,
       onCreate: ({ editor }) => {
-        if (editor.isEmpty && initialContent) {
-          editor.commands.setContent(initialContent);
+        if (editor.isEmpty && content) {
+          editor.commands.setContent(content);
         }
       },
       onUpdate: ({ editor }) => {
@@ -50,8 +46,6 @@ export const useBlockEditor = ({
     characters: () => 0,
     words: () => 0,
   };
-
-  if (typeof window !== "undefined") window.editor = editor;
 
   return { editor, characterCount, leftSidebar, content };
 };

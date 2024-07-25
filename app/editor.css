@@ -1,6 +1,13 @@
 .ProseMirror {
   .is-empty::before {
-    @apply text-neutral-500 dark:text-neutral-400;
+    @apply  text-neutral-500 dark:text-neutral-400;
+  }
+  h1.is-empty:first-child::before {
+    @apply text-muted-foreground/50;
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
   }
 
   & > *:first-child,

@@ -75,7 +75,7 @@ export const optional_selectOptions = z
 export const required_timeSlot = z
   .object({ from: z.date(), to: z.date() })
   .refine((data) => data.from.getTime() !== data.to.getTime(), {
-    message: "Required",
+    message: "Invalid Time Slot",
   });
 
 export const required_dateRange = z

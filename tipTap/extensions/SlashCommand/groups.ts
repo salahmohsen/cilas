@@ -1,3 +1,7 @@
+import {
+  initialEnCourseContent,
+  initialArCourseContent,
+} from "@/tipTap/lib/data";
 import { Group } from "./types";
 
 export const GROUPS: Group[] = [
@@ -149,6 +153,26 @@ export const GROUPS: Group[] = [
         shouldBeHidden: (editor) => editor.isActive("columns"),
         action: (editor) => {
           editor.chain().focus().insertTableOfContents().run();
+        },
+      },
+      {
+        name: "enCourseTemplate",
+        label: "English Course Template",
+        iconName: "ReceiptText",
+        aliases: [""],
+        description: "Insert english course template",
+        action: (editor) => {
+          editor.commands.insertContent(initialEnCourseContent);
+        },
+      },
+      {
+        name: "arCourseTemplate",
+        label: "Arabic Course Template",
+        iconName: "ReceiptText",
+        aliases: [""],
+        description: "Insert arabic course template",
+        action: (editor) => {
+          editor.commands.insertContent(initialArCourseContent);
         },
       },
     ],

@@ -1,11 +1,11 @@
-export const initialContent = {
+export const initialEnCourseContent = {
   type: "doc",
   content: [
     {
       type: "heading",
       attrs: {
-        id: "2c1d4a79-68eb-472e-a6df-6a5980d2c902",
-        "data-toc-id": "2c1d4a79-68eb-472e-a6df-6a5980d2c902",
+        id: "cb645d2e-9aeb-488c-8ac0-8164227040a1",
+        "data-toc-id": "cb645d2e-9aeb-488c-8ac0-8164227040a1",
         textAlign: "left",
         level: 1,
       },
@@ -768,7 +768,7 @@ export const initialContent = {
               },
             },
           ],
-          text: "Meta session",
+          text: "Meta session ",
         },
       ],
     },

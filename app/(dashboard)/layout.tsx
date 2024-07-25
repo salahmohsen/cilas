@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cairo, Inter } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
@@ -14,10 +14,10 @@ const inter = Inter({
   adjustFontFallback: false,
   display: "swap",
 });
-const cairo = Cairo({
+const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
   subsets: ["arabic"],
-  weight: ["400", "800"],
-  variable: "--font-cairo",
+  weight: ["200", "400", "700"],
+  variable: "--font-ibm-plex-sans-arabic",
   display: "swap",
 });
 
@@ -45,7 +45,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${cairo.variable} max-w-screen scroll-smooth text-pretty leading-relaxed antialiased`}
+        className={`${inter.variable} ${ibmPlexSansArabic.variable} max-w-screen text-pretty bg-background leading-relaxed antialiased`}
         id="dashboard"
       >
         <CourseStateProvider>
@@ -59,8 +59,8 @@ export default async function RootLayout({
             <main>
               <LayoutHeader userId={user.id} className="h-16 px-5 sm:pl-0" />
               <div className="mt-16 flex w-full">
-                <LayoutSidebar className="h-[calc(100vh-4rem)] w-16" />
-                <div className="my-5 w-full px-5 sm:ml-16">{children}</div>
+                <LayoutSidebar className="h-[calc(100%-4rem)] w-16" />
+                <div className="w-full sm:ml-16">{children}</div>
               </div>
             </main>
           </ThemeProvider>

@@ -1,3 +1,4 @@
+import { JSONContent } from "@tiptap/core";
 import { relations } from "drizzle-orm";
 import {
   text,
@@ -43,17 +44,17 @@ export const courseTable = pgTable("course", {
   id: serial("id").primaryKey(),
   draftMode: boolean("draft_mode").notNull(),
   enTitle: text("en_title"),
-  enContent: text("en_content"),
+  enContent: json("en_content").$type<JSONContent>(),
   arTitle: text("ar_title"),
-  arContent: text("ar_content"),
-  image: text("image_url"),
+  arContent: json("ar_content").$type<JSONContent>(),
+  featuredImage: text("featured_image"),
   fellowId: text("fellow_id")
     .notNull()
     .references(() => userTable.id),
   category: text("category").notNull(),
   isRegistrationOpen: boolean("registration_status").notNull(),
   attendance: text("attendance").notNull(),
-  price: text("price"),
+  suggestedPrice: json("suggestedPrice").notNull().$type<[number, number]>(),
   days: json("days").$type<
     {
       label: string;
@@ -65,7 +66,6 @@ export const courseTable = pgTable("course", {
   endDate: date("ending_date", { mode: "date" }).notNull(),
   timeSlot: json("time_slot").notNull().$type<{ from: Date; to: Date }>(),
   students: json("students"),
-  courseFlowUrl: text("course_flow_url"),
   applyUrl: text("apply_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -134,5 +134,5 @@ export const blog = pgTable("blog", {
 
 export const blogAuthors = pgTable("blog_authors", {
   blogId: integer("blog_id").references(() => blog.id),
-  authorId: integer("author_id").references(() => userTable.id),
+  authorId: text("author_id").references(() => userTable.id),
 });

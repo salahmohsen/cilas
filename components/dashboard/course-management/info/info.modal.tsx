@@ -30,7 +30,7 @@ export const CourseInfoModal = () => {
       }
     >
       <DialogContent
-        className={`h-[calc(100vh-20px)] scale-90 rounded-md border-none p-0`}
+        className={`h-[calc(100%-20px)] scale-90 rounded-md border-none p-0`}
       >
         <CourseInfo className={"mb-10 overflow-y-auto border-0"} />
         {width && width < 1024 && (

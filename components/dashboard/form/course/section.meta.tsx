@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useState } from "react";
+import React, {
+  forwardRef,
+  memo,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { BasicInput } from "@/components/dashboard/form/inputs/input.basic";
 import { ComboBoxInput } from "@/components/dashboard/form/inputs/input.comboBox";
 import { MultiSelectorInput } from "@/components/dashboard/form/inputs/input.multiSelector";
@@ -9,61 +16,61 @@ import { getUsersNamesByRole } from "@/actions/users.actions";
 import { SafeUser } from "@/types/drizzle.types";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { ComboBoxOption } from "@/types/formInputs.types";
+import { SliderInput } from "../inputs/input.slider";
 
-export function CourseMetadata({
-  editMode,
-  fellow,
-}: {
+type CourseMetadataProps = {
   editMode: boolean;
   fellow: SafeUser | undefined;
-}) {
-  const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
-  const {
-    state: { fellow: fellowState },
-  } = useCourseState();
-  const [defaultOption, setDefaultOption] = useState<
-    ComboBoxOption | undefined
-  >(undefined);
-  const [loading, setLoading] = useState<boolean>(false);
+};
 
-  useEffect(() => {
-    if (editMode)
-      setDefaultOption({
-        id: fellow?.id as string,
-        name: `${fellow?.firstName} ${fellow?.lastName}`,
-      });
-    if (fellowState) {
-      setDefaultOption({
-        id: fellowState.id,
-        name: `${fellowState.firstName} ${fellowState.lastName}`,
-      });
-    }
-  }, [editMode, fellow, fellowState]);
+export const CourseMetadata = memo(
+  ({ editMode, fellow }: CourseMetadataProps) => {
+    const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
 
-  const getFellowsNames = useCallback(async () => {
-    try {
-      setLoading(true);
-      const data = await getUsersNamesByRole("fellow");
-      const dataFormatted = data.map((fellow) => {
-        return {
-          id: fellow.id,
-          name: `${fellow.firstName} ${fellow.lastName}`,
-        };
-      });
-      setFellowsNames(dataFormatted);
-      setLoading(false);
-    } catch (error) {
-      if (error instanceof Error)
-        console.log(`Getting Fellows Names Failed! ${error.message}`);
-    }
-  }, []);
+    const {
+      state: { fellow: fellowState },
+    } = useCourseState();
 
-  return (
-    <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm">
-      <legend className="-ml-1 px-1 text-sm font-medium">
-        Course Metadata
-      </legend>
-      <div className="grid justify-center gap-10 lg:grid-cols-2">
+    const [defaultOption, setDefaultOption] = useState<
+      ComboBoxOption | undefined
+    >(undefined);
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    useEffect(() => {
+      if (editMode)
+        setDefaultOption({
+          id: fellow?.id as string,
+          name: `${fellow?.firstName} ${fellow?.lastName}`,
+        });
+      if (fellowState) {
+        setDefaultOption({
+          id: fellowState.id,
+          name: `${fellowState.firstName} ${fellowState.lastName}`,
+        });
+      }
+    }, [editMode, fellow, fellowState]);
+
+    const getFellowsNames = useCallback(async () => {
+      try {
+        setLoading(true);
+        const data = await getUsersNamesByRole("fellow");
+        const dataFormatted = data.map((fellow) => {
+          return {
+            id: fellow.id,
+            name: `${fellow.firstName} ${fellow.lastName}`,
+          };
+        });
+        setFellowsNames(dataFormatted);
+        setLoading(false);
+      } catch (error) {
+        if (error instanceof Error)
+          console.log(`Getting Fellows Names Failed! ${error.message}`);
+      }
+    }, []);
+
+    return (
+      <>
         <DateInput
           name="startDate"
           label="Start Date"
@@ -90,10 +97,13 @@ export function CourseMetadata({
           label="Category"
           placeholder="Select category"
           options={[
-            { selectItems: ["Seasonal Course", "Workshop"] },
             {
-              groupLabel: "Seasonal Semester",
+              groupLabel: "Bridge Programme",
               selectItems: ["Thematic Course", "Lab"],
+            },
+            {
+              groupLabel: "Other",
+              selectItems: ["Seasonal Course", "Workshop"],
             },
           ]}
         />
@@ -127,22 +137,20 @@ export function CourseMetadata({
         />
 
         <BasicInput
-          type="url"
-          name="courseFlowUrl"
-          label="Course Flow"
-          placeholder="Course Flow Url"
-        />
-        <BasicInput
           type="file"
           placeholder="Choose Poster"
-          name="image"
-          label="Course Poster"
+          name="featuredImage"
+          label="Featured Image"
         />
-        <BasicInput
-          name="price"
-          label="Price"
-          placeholder="Enter price"
-          type="number"
+        <SliderInput
+          name="suggestedPrice"
+          label="Suggested Price"
+          defaultValue={[2000, 3000]}
+          max={5000}
+          min={1000}
+          step={200}
+          minStepsBetweenThumbs={1}
+          formatLabelSign="EGP"
         />
 
         <SelectInput
@@ -153,7 +161,9 @@ export function CourseMetadata({
         />
 
         <TimeInput name="timeSlot" label="Time Slot" placeholder="Start Time" />
-      </div>
-    </fieldset>
-  );
-}
+      </>
+    );
+  },
+);
+
+CourseMetadata.displayName = "CourseMetadata";

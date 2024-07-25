@@ -13,11 +13,12 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
+  SelectSeparator,
 } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
 
 import { SelectProps } from "@/types/formInputs.types";
-import { memo } from "react";
+import React, { memo } from "react";
 
 export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
   name,
@@ -71,20 +72,23 @@ export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
                   />
                 </SelectTrigger>
                 <SelectContent>
-                  {options?.map((selectOption) => {
+                  {options?.map((selectOption, index) => {
                     if (selectOption.groupLabel) {
                       return (
-                        <SelectGroup key={selectOption.groupLabel}>
-                          <SelectLabel>{selectOption.groupLabel}</SelectLabel>
-                          {selectOption.selectItems.map((option) => (
-                            <SelectItem
-                              key={option}
-                              value={option?.toLowerCase()}
-                            >
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
+                        <React.Fragment key={index}>
+                          <SelectGroup>
+                            <SelectLabel>{selectOption.groupLabel}</SelectLabel>
+                            {selectOption.selectItems.map((option) => (
+                              <SelectItem
+                                key={option}
+                                value={option?.toLowerCase()}
+                              >
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectGroup>
+                          {index !== options.length - 1 && <SelectSeparator />}
+                        </React.Fragment>
                       );
                     } else {
                       return selectOption.selectItems.map((option) => (

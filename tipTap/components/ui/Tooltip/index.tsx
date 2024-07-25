@@ -1,7 +1,7 @@
 "use client";
 
 import Tippy from "@tippyjs/react/headless";
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useEffect } from "react";
 
 import { TippyProps, TooltipProps } from "./types";
 
@@ -36,17 +36,21 @@ export const Tooltip = ({
   shortcut,
   tippyOptions = {},
 }: TooltipProps): JSX.Element => {
+  const bodyRef = useRef<HTMLElement>(document.body);
+
   const renderTooltip = useCallback(
     (attrs: TippyProps) => (
       <span
-        className="z-[999] flex items-center gap-2 rounded-lg border border-neutral-100 bg-white px-2.5 py-1 shadow-sm"
+        className="z-[999] flex items-center gap-2 rounded-lg border border-border bg-popover px-2.5 py-1 text-popover-foreground shadow-sm"
         tabIndex={-1}
         data-placement={attrs["data-placement"]}
         data-reference-hidden={attrs["data-reference-hidden"]}
         data-escaped={attrs["data-escaped"]}
       >
         {title && (
-          <span className="text-xs font-medium text-neutral-500">{title}</span>
+          <span className="text-xs font-medium text-popover-foreground">
+            {title}
+          </span>
         )}
         {shortcut && (
           <span className="flex items-center gap-0.5">
@@ -67,7 +71,7 @@ export const Tooltip = ({
         offset={[0, 8]}
         touch={false}
         zIndex={99999}
-        appendTo={document.body}
+        appendTo={bodyRef.current}
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...tippyOptions}
         render={renderTooltip}

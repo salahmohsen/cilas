@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { LoaderPinwheel } from "lucide-react";
 import { cn } from "@/lib/utils";
 import React, { forwardRef } from "react";
-import { useFormStatus } from "react-dom";
 
 type SubmitButtonProps = {
   className?: string;
@@ -14,28 +13,35 @@ type SubmitButtonProps = {
   handleOnClick?: () => void;
 };
 
-export const SubmitButton = ({
-  className,
-  isLoading,
-  value,
-  variant,
-  handleOnClick,
-}: SubmitButtonProps) => {
-  return (
-    <Button
-      type="submit"
-      disabled={isLoading}
-      className={cn("w-full", className)}
-      variant={variant}
-      onClick={handleOnClick}
-    >
-      {isLoading ? (
-        <span className="flex gap-2">
-          <LoaderPinwheel className="animate-spin" /> {value}
-        </span>
-      ) : (
-        value
-      )}
-    </Button>
-  );
-};
+export const SubmitButton = forwardRef(
+  (
+    { className, isLoading, value, variant, handleOnClick }: SubmitButtonProps,
+    ref,
+  ) => {
+    return (
+      <Button
+        type="submit"
+        disabled={isLoading}
+        className={cn("w-full", className)}
+        variant={variant}
+        size={"sm"}
+        onClick={(e) => {
+          handleOnClick?.();
+          e.preventDefault();
+          e.stopPropagation();
+          e.currentTarget.form?.requestSubmit();
+        }}
+      >
+        {isLoading ? (
+          <span className="flex gap-2">
+            <LoaderPinwheel className="animate-spin" /> {value}
+          </span>
+        ) : (
+          value
+        )}
+      </Button>
+    );
+  },
+);
+
+SubmitButton.displayName = "SubmitButton";
