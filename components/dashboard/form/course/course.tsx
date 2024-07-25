@@ -157,10 +157,6 @@ export function CourseForm({
   const [activeContentTab, setActiveContentTab] =
     useState<ActiveContentTab>("enContent");
 
-  console.log(
-    formMethods.watch(["enTitle", "arTitle", "arContent", "enContent"]),
-  );
-
   return (
     <FormProvider {...formMethods}>
       <Form {...formMethods}>
