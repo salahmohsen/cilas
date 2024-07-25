@@ -50,7 +50,7 @@ export const Sidebar = memo(
 
           <TabsContent value="form" className="pr-2">
             <ScrollArea className="h-[calc(100vh-11rem)]">
-              <div className="space-y-8 p-6">{children}</div>
+             {children}
             </ScrollArea>
           </TabsContent>
           <TabsContent

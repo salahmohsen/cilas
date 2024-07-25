@@ -1,7 +1,7 @@
 "use client";
 
 import Tippy from "@tippyjs/react/headless";
-import React, { useCallback, useRef, useEffect } from "react";
+import React, { useCallback } from "react";
 
 import { TippyProps, TooltipProps } from "./types";
 

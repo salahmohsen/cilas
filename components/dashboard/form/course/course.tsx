@@ -153,9 +153,16 @@ export function CourseForm({
     content: arContent,
     setContent: setArContent,
   });
-
   const [activeContentTab, setActiveContentTab] =
     useState<ActiveContentTab>("enContent");
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarOpen((prev) => !prev);
+    enLeftSidebar.toggle();
+    arLeftSidebar.toggle();
+  }, [enLeftSidebar, arLeftSidebar]);
 
   return (
     <FormProvider {...formMethods}>
@@ -182,8 +189,8 @@ export function CourseForm({
                 ? enCharacterCount.words()
                 : arCharacterCount.words()
             }
-            isSidebarOpen={enLeftSidebar.isOpen}
-            toggleSidebar={enLeftSidebar.toggle}
+            isSidebarOpen={isSidebarOpen}
+            toggleSidebar={toggleSidebar}
             submitButtons={
               <SubmitButtons
                 isLoading={isLoading}
