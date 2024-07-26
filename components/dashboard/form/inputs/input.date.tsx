@@ -36,7 +36,7 @@ export const DateInput = memo(
         render={({ field }) => (
           <FormItem className={className}>
             <FormLabel className="min-w-max">{label}</FormLabel>
-            <input hidden {...field} tabIndex={-1} />
+            <input hidden {...field} />
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>

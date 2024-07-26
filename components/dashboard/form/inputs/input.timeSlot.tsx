@@ -47,7 +47,6 @@ export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
                     name={name}
                     value={JSON.stringify(field.value)}
                     onChange={field.onChange}
-                    tabIndex={-1}
                   />
                   <TimePickerInput
                     id="start-hour"
