@@ -1743,33 +1743,9 @@ export const initialArCourseContent = {
                 },
               ],
             },
-            {
-              type: "paragraph",
-              attrs: {
-                class: null,
-                textAlign: "left",
-                dir: null,
-              },
-            },
           ],
         },
       ],
-    },
-    {
-      type: "paragraph",
-      attrs: {
-        class: null,
-        textAlign: "left",
-        dir: null,
-      },
-    },
-    {
-      type: "paragraph",
-      attrs: {
-        class: null,
-        textAlign: "left",
-        dir: null,
-      },
     },
   ],
 };

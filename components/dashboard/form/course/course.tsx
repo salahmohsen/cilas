@@ -153,8 +153,16 @@ export function CourseForm({
     content: arContent,
     setContent: setArContent,
   });
+
+  const defaultActiveTab = useCallback((): ActiveContentTab => {
+    const arContent = courseData?.arContent?.content?.length ?? 0;
+    const enContent = courseData?.enContent?.content?.length ?? 0;
+    const defaultTab = arContent > enContent ? "arContent" : "enContent";
+    return defaultTab;
+  }, [courseData?.arContent, courseData?.enContent]);
+
   const [activeContentTab, setActiveContentTab] =
-    useState<ActiveContentTab>("enContent");
+    useState<ActiveContentTab>(defaultActiveTab());
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
