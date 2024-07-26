@@ -25,12 +25,7 @@ export const SubmitButton = forwardRef(
         className={cn("w-full", className)}
         variant={variant}
         size={"sm"}
-        onClick={(e) => {
-          handleOnClick?.();
-          e.preventDefault();
-          e.stopPropagation();
-          e.currentTarget.form?.requestSubmit();
-        }}
+        onClick={handleOnClick}
       >
         {isLoading ? (
           <span className="flex gap-2">
