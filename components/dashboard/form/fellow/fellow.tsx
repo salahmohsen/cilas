@@ -83,7 +83,7 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
         </DialogTrigger>
         <DialogPortal>
           <DialogOverlay className="z-[499] bg-black/50 backdrop-blur-sm">
-            <DialogContent className="z-[500] sm:max-w-lg">
+            <DialogContent className="z-[500] sm:max-w-lg" tabIndex={undefined}>
               <DialogHeader>
                 <DialogTitle>Add Fellow</DialogTitle>
               </DialogHeader>
