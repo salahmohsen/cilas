@@ -23,7 +23,7 @@ export default function ManageCourses() {
     dispatch,
   } = useCourseState();
   return (
-    <div>
+    <>
       <div className="flex">
         <div
           className={cn(
@@ -55,6 +55,6 @@ export default function ManageCourses() {
         )}
       </div>
       {width && width < 1024 && <CourseInfoModal />}
-    </div>
+    </>
   );
 }

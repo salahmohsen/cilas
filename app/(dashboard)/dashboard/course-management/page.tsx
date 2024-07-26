@@ -12,7 +12,7 @@ import { Sailboat, Waves } from "lucide-react";
 
 export default async function ManageCoursesPage() {
   return (
-    <main className="flex w-full flex-col gap-5">
+    <main className="flex w-full flex-col gap-5 p-5">
       <Card className="flex flex-wrap items-end justify-between gap-5 p-6">
         <CardHeader className="p-0">
           <CardTitle>Course Management</CardTitle>
