@@ -82,14 +82,15 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
           </Button>
         </DialogTrigger>
         <DialogPortal>
-          <DialogOverlay className="z-[499] bg-black/50 backdrop-blur-sm">
-            <DialogContent className="z-[500] sm:max-w-lg">
+          <DialogOverlay className="z-[499] backdrop-blur-md">
+            <DialogContent className="z-[500] sm:max-w-lg" tabIndex={undefined}>
               <DialogHeader>
                 <DialogTitle>Add Fellow</DialogTitle>
               </DialogHeader>
-              <ScrollArea className="-mr-1 max-h-[calc(100vh-200px)] pr-3">
-                <FormProvider {...formMethods}>
-                  <Form {...formMethods}>
+
+              <FormProvider {...formMethods}>
+                <Form {...formMethods}>
+                  <ScrollArea className="-mr-1 max-h-[calc(100vh-200px)] pr-3">
                     <form
                       ref={formRef}
                       action={fellowAction}
@@ -111,6 +112,7 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
                           placeholder="Paulo"
                           label="First Name"
                           direction="horizontal"
+                          autoFocus
                         />
                         <BasicInput
                           name="lastName"
@@ -155,9 +157,9 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
                         />
                       </DialogFooter>
                     </form>
-                  </Form>
-                </FormProvider>
-              </ScrollArea>
+                  </ScrollArea>
+                </Form>
+              </FormProvider>
             </DialogContent>
           </DialogOverlay>
         </DialogPortal>

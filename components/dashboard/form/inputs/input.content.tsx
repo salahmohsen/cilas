@@ -42,7 +42,7 @@ export const ContentInput: React.FC<ContentInputProps> = ({
   }, [extractTitle, extractContent]);
   return (
     <>
-      <input hidden name={titleName} value={title} readOnly />
+      <input hidden name={titleName} value={title} readOnly tabIndex={-1} />
       <input
         hidden
         name={contentName}

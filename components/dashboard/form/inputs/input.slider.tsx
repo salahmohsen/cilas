@@ -39,6 +39,7 @@ export const SliderInput: React.FC<SliderProps> = memo(function BasicInput({
                 name={name}
                 value={JSON.stringify(field.value)}
                 onChange={field.onChange}
+                tabIndex={-1}
               />
               <Slider
                 defaultValue={defaultValue}

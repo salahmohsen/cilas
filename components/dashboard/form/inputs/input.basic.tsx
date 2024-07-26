@@ -79,19 +79,17 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
                 }}
               />
               {(preview || (field.value && type === "file")) && (
-                <>
-                  <Image
-                    src={
-                      (preview as string) ||
-                      cloudinary_quality(field.value, "low") ||
-                      "/public/logo.png"
-                    }
-                    className="h-10 w-auto rounded-md"
-                    width={50}
-                    height={50}
-                    alt={label || ""}
-                  />
-                </>
+                <Image
+                  src={
+                    (preview as string) ||
+                    cloudinary_quality(field.value, "low") ||
+                    "/public/logo.png"
+                  }
+                  className="h-10 w-auto rounded-md"
+                  width={50}
+                  height={50}
+                  alt={label || ""}
+                />
               )}
               {direction === "horizontal" && <FormMessage className="mt-2" />}
             </div>

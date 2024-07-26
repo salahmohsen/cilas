@@ -39,6 +39,7 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
                   name={name}
                   value={JSON.stringify(field.value)}
                   onChange={field.onChange}
+                  tabIndex={-1}
                 />
 
                 <div onBlur={field.onBlur} ref={field.ref} className="w-full">

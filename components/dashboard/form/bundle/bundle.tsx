@@ -81,7 +81,13 @@ export default function BundleForm({
         >
           <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm lg:grid-cols-2">
             <legend className="text-sm font-medium">Bundle</legend>
-            <input hidden name="bundleId" value={bundleId} readOnly />
+            <input
+              hidden
+              name="bundleId"
+              value={bundleId}
+              readOnly
+              tabIndex={-1}
+            />
             <SelectInput
               name="year"
               label="Year"

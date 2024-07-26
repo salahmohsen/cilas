@@ -57,6 +57,7 @@ export const TipTapInput = memo(function TipTapInput({
                 name={name}
                 value={field.value}
                 onChange={field.onChange}
+                tabIndex={-1}
               />
               <Editor
                 editorRef={field.ref}

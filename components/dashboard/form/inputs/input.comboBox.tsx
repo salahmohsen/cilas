@@ -61,6 +61,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(
                   name={name}
                   value={field.value}
                   onChange={field.onChange}
+                  tabIndex={-1}
                 />
                 <Popover open={open} onOpenChange={setOpen}>
                   <PopoverTrigger asChild>

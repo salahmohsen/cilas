@@ -37,6 +37,7 @@ export const DateRangeInput: React.FC<StandardProps> = memo(
               name={name}
               value={JSON.stringify(field.value)}
               onChange={field.onChange}
+              tabIndex={-1}
             />
             <Popover modal={true}>
               <PopoverTrigger asChild>
