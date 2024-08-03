@@ -1,18 +1,18 @@
 import { memo, useRef } from "react";
-import { Label } from "@/components/ui/label";
-import { TimePickerInput } from "@/components/ui/time-picker-input";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "../../../ui/form";
+  Label,
+  TimePickerInput,
+} from "@/components/ui/";
 import { StandardProps } from "@/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
 import { cn } from "@/lib/utils";
 
-export const TimeInput: React.FC<StandardProps> = memo(function TimeInput({
+export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
   name,
   label,
   className,

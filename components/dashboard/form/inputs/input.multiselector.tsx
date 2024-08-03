@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../../../ui/form";
-import MultipleSelector from "@/components/ui/multipleSelector";
+import { MultipleSelector } from "@/components/ui/";
 
 import { MultiSelectorProps } from "@/types/formInputs.types";
 import { memo } from "react";

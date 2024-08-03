@@ -1,13 +1,13 @@
 import Link from "next/link";
 import ManageCourses from "@/components/dashboard/course-management/main.manage.courses";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+  Button,
+} from "@/components/ui";
 import { Sailboat, Waves } from "lucide-react";
 
 export default async function ManageCoursesPage() {

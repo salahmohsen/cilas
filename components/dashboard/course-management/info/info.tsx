@@ -7,13 +7,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+  Button,
+  Separator,
+  ScrollArea,
+  ScrollBar,
+} from "@/components/ui";
 
 import { Copy } from "lucide-react";
 import { UserAvatar } from "./info.avatars";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 import { InfoFooter } from "./info.footer";

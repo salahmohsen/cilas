@@ -2,12 +2,9 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import { Label } from "@/components/ui/label";
+  Label,
+} from "@/components/ui";
 
 import { SidebarAvailableFilter } from "@/components/client/courses/sidebar/filter.available";
 import { SidebarTypeFilter } from "@/components/client/courses/sidebar/filter.type";

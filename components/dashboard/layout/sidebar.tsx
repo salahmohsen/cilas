@@ -1,7 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
-
-import { Button } from "@/components/ui/button";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import {

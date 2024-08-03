@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { CardFooter } from "@/components/ui/card";
 import {
+  Button,
+  CardFooter,
   Pagination,
   PaginationContent,
   PaginationItem,
-} from "@/components/ui/pagination";
+} from "@/components/ui/";
+
 import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { format } from "date-fns";

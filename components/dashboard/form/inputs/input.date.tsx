@@ -5,22 +5,16 @@ import { cn } from "@/lib/utils";
 
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-
-import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-
-import { Calendar } from "@/components/ui/calendar";
-
-import { Button } from "@/components/ui/button";
+  Calendar,
+  Button,
+} from "@/components/ui/";
 
 import { CalendarIcon } from "lucide-react";
 import { StandardProps } from "@/types/formInputs.types";

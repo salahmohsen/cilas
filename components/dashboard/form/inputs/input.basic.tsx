@@ -1,14 +1,14 @@
 import { ChangeEvent, memo, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { Input } from "@/components/ui/input";
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+  Input,
+} from "@/components/ui/";
 import Image from "next/image";
 
 import { BasicInputProps } from "@/types/formInputs.types";

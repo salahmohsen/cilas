@@ -1,20 +1,27 @@
 "use client";
 
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+  Form,
+} from "@/components/ui/";
 import { FormProvider } from "react-hook-form";
 
-import { Form } from "@/components/ui/form";
 import { CourseMetadata } from "./section.meta";
 
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
 import { BlockEditor } from "@/tipTap/components/BlockEditor";
-import { SubmitButtons } from "./submit.buttons";
 import { EditorHeader } from "@/tipTap/components/EditorHeader";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ContentInput } from "../inputs/input.content";
-import { useCourseEditor } from "./useCourseEditor";
-import { useCourseTab } from "./useCourseTab";
-import { useCourseSidebar } from "./useCourseSidebar";
-import { useCourseForm } from "./useCourseForm";
+import { SubmitButtons } from "./submit.buttons";
+import { ContentInput } from "../inputs/";
+import {
+  useCourseForm,
+  useCourseEditor,
+  useCourseTab,
+  useCourseSidebar,
+} from "./course.hooks";
+import { CourseWithSafeFellow } from "@/types/drizzle.types";
 
 type CourseFormPropTypes = {
   editMode?: boolean;

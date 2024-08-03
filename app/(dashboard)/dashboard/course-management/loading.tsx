@@ -1,5 +1,5 @@
 import { CourseSkeleton } from "@/components/dashboard/course-management/courses/course.skeleton";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui";
 
 const Loading = () => {
   return (

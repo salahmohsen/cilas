@@ -21,22 +21,18 @@ import {
   RemoveFormatting as RemoveFormattingIcon,
 } from "lucide-react";
 
-import { Toggle } from "../../../ui/toggle";
-
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "../../../ui/hover-card";
 import { useCallback, useState } from "react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+  Toggle,
+  Input,
+  Button,
+} from "@/components/ui/";
 
 export function EditorToolbar({ editor }: { editor: any }) {
   if (!editor) return null;

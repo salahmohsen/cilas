@@ -1,22 +1,18 @@
-import React, {
-  forwardRef,
-  memo,
-  ReactNode,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
-import { BasicInput } from "@/components/dashboard/form/inputs/input.basic";
-import { ComboBoxInput } from "@/components/dashboard/form/inputs/input.comboBox";
-import { MultiSelectorInput } from "@/components/dashboard/form/inputs/input.multiSelector";
-import { SelectInput } from "@/components/dashboard/form/inputs/input.select";
-import { TimeInput } from "@/components/dashboard/form/inputs/input.timeSlot";
-import { DateInput } from "@/components/dashboard/form/inputs/input.date";
+import { forwardRef, memo, useCallback, useEffect, useState } from "react";
 import { getUsersNamesByRole } from "@/actions/users.actions";
 import { SafeUser } from "@/types/drizzle.types";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { ComboBoxOption } from "@/types/formInputs.types";
-import { SliderInput } from "../inputs/input.slider";
+
+import {
+  BasicInput,
+  ComboBoxInput,
+  DateInput,
+  MultiSelectorInput,
+  SelectInput,
+  SliderInput,
+  TimeSlotInput,
+} from "@/components/dashboard/form/inputs/";
 
 type CourseMetadataProps = {
   editMode: boolean;
@@ -165,7 +161,7 @@ export const CourseMetadata = memo(
             options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
           />
 
-          <TimeInput
+          <TimeSlotInput
             name="timeSlot"
             label="Time Slot"
             placeholder="Start Time"

@@ -6,17 +6,17 @@ import { useCourseState } from "@/providers/CourseState.provider";
 import Link from "next/link";
 import { format } from "date-fns";
 
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Button,
+  Badge,
+} from "@/components/ui";
 
 import { Calendar, Ellipsis, User } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { CourseWithSafeFellow } from "@/types/drizzle.types";
 
 export function CourseItem({ course }: { course: CourseWithSafeFellow }) {

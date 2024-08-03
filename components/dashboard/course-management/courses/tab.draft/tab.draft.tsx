@@ -6,13 +6,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { TabsContent } from "@/components/ui/tabs";
+  TabsContent,
+} from "@/components/ui";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { NoCoursesFound } from "../../notFound";
 import { CourseSkeleton } from "../course.skeleton";
 import { CourseItem } from "../course.item";
-import { useEffect } from "react";
 
 export const DraftTab = () => {
   const {

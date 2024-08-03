@@ -8,9 +8,9 @@ import { FellowState, addFellow } from "@/actions/users.actions";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FellowSchema, fellowDefaultValues } from "@/types/fellow.schema";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -19,13 +19,16 @@ import {
   DialogTrigger,
   DialogOverlay,
   DialogPortal,
-} from "@/components/ui/dialog";
-import { Form } from "@/components/ui/form";
-import { TipTapInput } from "@/components/dashboard/form/inputs/input.tipTap";
-import { SubmitButton } from "@/components/dashboard/form/inputs/input.submit";
-import { BasicInput } from "@/components/dashboard/form/inputs/input.basic";
-import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
+  Form,
+  Label,
+  ScrollArea,
+} from "@/components/ui/";
+import {
+  TipTapInput,
+  SubmitButton,
+  BasicInput,
+} from "@/components/dashboard/form/inputs/";
+
 import { SquarePlus } from "lucide-react";
 
 type NewFellowProps = {

@@ -1,15 +1,16 @@
+import Link from "next/link";
+
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card";
-
-import { Button } from "@/components/ui/button";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+  Button,
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui";
 
 import { AtSign } from "lucide-react";
-import Link from "next/link";
 
 export const UserHoverCard = ({ userName, userBio, userSlug }) => {
   return (

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCourseState } from "@/providers/CourseState.provider";
-import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui/tabs";
+import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui";
 import { FilterButton } from "./courses/button.filter";
 import { useCallback } from "react";
 import { Tab } from "@/types/manage.courses.types";
@@ -16,7 +16,11 @@ export const TabsList = () => {
   const handleTabClick = useCallback(
     (tab: Tab) => {
       dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
-      if (filter === "archived" || "ongoing" || "starting soon")
+      if (
+        filter === "archived" ||
+        filter === "ongoing" ||
+        filter === "starting soon"
+      )
         dispatch({ type: "SET_FILTER", payload: "published" });
     },
     [dispatch, filter],

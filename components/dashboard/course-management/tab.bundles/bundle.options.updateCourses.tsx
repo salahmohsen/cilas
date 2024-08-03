@@ -9,12 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+  MultipleSelector,
+  Option,
+  Button,
+  DialogClose,
+} from "@/components/ui";
 
-import MultipleSelector, { Option } from "@/components/ui/multipleSelector";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { DialogClose } from "@radix-ui/react-dialog";
 import { LoaderPinwheel } from "lucide-react";
 import { useCourseState } from "@/providers/CourseState.provider";
 

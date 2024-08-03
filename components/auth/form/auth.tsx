@@ -2,16 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
+import { UseFormReturn } from "react-hook-form";
+import { SigninState, SignupState } from "@/actions/auth.actions";
+import { toast } from "sonner";
+import { isObjectEmpty, shake } from "@/lib/utils";
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
+  Input,
+  Button,
   Form,
   FormControl,
   FormDescription,
@@ -19,13 +22,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+  PasswordInput,
+} from "@/components/ui/";
+
 import { SiGoogle } from "@icons-pack/react-simple-icons";
-import { UseFormReturn } from "react-hook-form";
-import { SigninState, SignupState } from "@/actions/auth.actions";
-import { toast } from "sonner";
-import { isObjectEmpty, shake } from "@/lib/utils";
-import { PasswordInput } from "../../ui/password-input";
 
 type SigninValues = {
   email: string;
