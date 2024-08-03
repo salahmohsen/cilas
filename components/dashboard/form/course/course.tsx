@@ -1,6 +1,14 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import {
+  FormEvent,
+  SyntheticEvent,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { useFormState } from "react-dom";
 import { CourseFormState, createEditCourse } from "@/actions/courses.actions";
 
@@ -28,6 +36,7 @@ import { EditorHeader } from "@/tipTap/components/EditorHeader";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ContentInput } from "../inputs/input.content";
 import { JSONContent } from "@tiptap/core";
+import { not } from "drizzle-orm";
 
 type LoadingState = {
   primaryButton: boolean;
@@ -179,11 +188,19 @@ export function CourseForm({
           className="w-full"
           ref={formRef}
           action={courseAction}
-          onSubmit={(e) => {
-            e.preventDefault();
-            formMethods.handleSubmit(() => {
-              handleSubmit(draftMode);
-            })(e); // immediately invokes the handleSubmit with the original event object.
+          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+            const nativeEvent = e.nativeEvent as SubmitEvent;
+            const submitter = (nativeEvent.submitter as HTMLButtonElement).name;
+            /*@note: This is a workaround to prevent the form from submitting when 
+            clicking on any button other than "Publish Course" || "Draft Button" button.*/
+            if (submitter === "Publish Course" || submitter === "Save Draft") {
+              e.preventDefault();
+              formMethods.handleSubmit(() => {
+                handleSubmit(draftMode);
+              })(e); // immediately invokes the handleSubmit with the original event object.
+            } else {
+              e.preventDefault();
+            }
           }}
         >
           <EditorHeader

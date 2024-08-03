@@ -13,11 +13,8 @@ type SubmitButtonProps = {
   handleOnClick?: () => void;
 };
 
-export const SubmitButton = forwardRef(
-  (
-    { className, isLoading, value, variant, handleOnClick }: SubmitButtonProps,
-    ref,
-  ) => {
+export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
+  ({ className, isLoading, value, variant, handleOnClick }, ref) => {
     return (
       <Button
         type="submit"
@@ -25,7 +22,9 @@ export const SubmitButton = forwardRef(
         className={cn("w-full", className)}
         variant={variant}
         size={"sm"}
+        name={value}
         onClick={handleOnClick}
+        ref={ref}
       >
         {isLoading ? (
           <span className="flex gap-2">

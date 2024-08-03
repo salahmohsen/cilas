@@ -1,6 +1,6 @@
 import { useCourseState } from "@/providers/CourseState.provider";
 import { SubmitButton } from "../inputs/input.submit";
-import { Dispatch, RefObject, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 
 type SubmitButtonsProps = {
   isLoading: {
