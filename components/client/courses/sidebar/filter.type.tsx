@@ -5,17 +5,19 @@ import { ArrowUpCircle, CheckCircle2, Circle, LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import {
-  Button,
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
+} from "@/components/ui/command";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui";
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 type Status = {
   value: string;

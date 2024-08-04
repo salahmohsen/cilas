@@ -3,17 +3,19 @@ import { useCourseState } from "@/providers/CourseState.provider";
 
 import { cn } from "@/lib/utils";
 import {
-  Button,
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
   CommandList,
+} from "@/components/ui/command";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui";
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
 
 import { Check, Filter } from "lucide-react";
 import { CoursesFilter } from "@/types/manage.courses.types";

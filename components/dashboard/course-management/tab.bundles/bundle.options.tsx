@@ -2,13 +2,13 @@ import React, { Dispatch, SetStateAction, useCallback } from "react";
 import Link from "next/link";
 
 import {
-  Button,
   DropdownMenuContent,
   DropdownMenuSeparator,
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/";
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 import { Ellipsis } from "lucide-react";
 
 import { UpdateCourses } from "./bundle.options.updateCourses";

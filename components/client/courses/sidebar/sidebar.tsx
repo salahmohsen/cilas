@@ -3,8 +3,8 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  Label,
-} from "@/components/ui";
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 import { SidebarAvailableFilter } from "@/components/client/courses/sidebar/filter.available";
 import { SidebarTypeFilter } from "@/components/client/courses/sidebar/filter.type";

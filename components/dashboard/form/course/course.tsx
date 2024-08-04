@@ -1,12 +1,7 @@
 "use client";
 
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-  Form,
-} from "@/components/ui/";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Form } from "@/components/ui/form";
 import { FormProvider } from "react-hook-form";
 
 import { CourseMetadata } from "./section.meta";

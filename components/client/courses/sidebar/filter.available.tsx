@@ -1,6 +1,22 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+
 import {
   ArrowUpCircle,
   CheckCircle2,
@@ -8,20 +24,6 @@ import {
   LucideIcon,
   XCircle,
 } from "lucide-react";
-
-import { cn } from "@/lib/utils";
-import {
-  Button,
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui";
 
 type Status = {
   value: string;
@@ -53,10 +55,8 @@ const statuses: Status[] = [
 ];
 
 export function SidebarAvailableFilter({ className }) {
-  const [open, setOpen] = React.useState(false);
-  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-    null,
-  );
+  const [open, setOpen] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<Status | null>(null);
 
   return (
     <div className={`flex items-center space-x-4 ${className}`}>

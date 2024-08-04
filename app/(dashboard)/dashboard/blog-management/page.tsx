@@ -5,8 +5,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Button,
-} from "@/components/ui";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 import { SquarePen } from "lucide-react";
 

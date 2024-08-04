@@ -12,9 +12,9 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Button,
-  Badge,
-} from "@/components/ui";
+} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 import { Calendar, Ellipsis, User } from "lucide-react";
 import { CourseWithSafeFellow } from "@/types/drizzle.types";

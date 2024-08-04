@@ -1,10 +1,10 @@
+import { CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import {
-  Button,
-  CardFooter,
   Pagination,
   PaginationContent,
   PaginationItem,
-} from "@/components/ui/";
+} from "@/components/ui/pagination";
 
 import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";

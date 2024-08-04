@@ -1,6 +1,4 @@
-import { useCourseForm } from "./useCourseForm";
-import { useCourseEditor } from "./useCourseEditor";
-import { useCourseTab } from "./useCourseTab";
-import { useCourseSidebar } from "./useCourseSidebar";
-
-export { useCourseForm, useCourseEditor, useCourseTab, useCourseSidebar };
+export { useCourseForm } from "./useCourseForm";
+export { useCourseEditor } from "./useCourseEditor";
+export { useCourseTab } from "./useCourseTab";
+export { useCourseSidebar } from "./useCourseSidebar";

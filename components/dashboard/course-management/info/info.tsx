@@ -7,17 +7,16 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Button,
-  Separator,
-  ScrollArea,
-  ScrollBar,
-} from "@/components/ui";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 import { Copy } from "lucide-react";
 import { UserAvatar } from "./info.avatars";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { toast } from "sonner";
 import { InfoFooter } from "./info.footer";
+import { Separator } from "@/components/ui/separator";
 
 export function CourseInfo({ className }: { className?: string }) {
   const {

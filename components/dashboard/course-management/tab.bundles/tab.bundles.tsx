@@ -5,8 +5,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  TabsContent,
-} from "@/components/ui";
+} from "@/components/ui/card";
+import { TabsContent } from "@/components/ui/tabs";
 import { BundleSkeleton } from "./bundle.skeleton";
 import { BundleItem } from "./bundle.item";
 import { NoCoursesFound } from "../notFound";

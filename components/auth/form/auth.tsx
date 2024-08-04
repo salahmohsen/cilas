@@ -13,8 +13,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  Input,
-  Button,
+} from "@/components/ui/card";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -22,9 +22,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  PasswordInput,
-} from "@/components/ui/";
-
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
+import { Button } from "@/components/ui/button";
 import { SiGoogle } from "@icons-pack/react-simple-icons";
 
 type SigninValues = {

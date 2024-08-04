@@ -1,4 +1,5 @@
 import { ChangeEvent, memo, useState } from "react";
+import Image from "next/image";
 import { useFormContext } from "react-hook-form";
 
 import {
@@ -7,9 +8,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-  Input,
-} from "@/components/ui/";
-import Image from "next/image";
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 import { BasicInputProps } from "@/types/formInputs.types";
 import { cloudinary_quality } from "@/lib/cloudinary.utils";

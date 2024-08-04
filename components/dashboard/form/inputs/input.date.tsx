@@ -9,12 +9,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+} from "@/components/ui/form";
+
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Calendar,
-  Button,
-} from "@/components/ui/";
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 
 import { CalendarIcon } from "lucide-react";
 import { StandardProps } from "@/types/formInputs.types";

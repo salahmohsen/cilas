@@ -4,11 +4,9 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Button,
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui";
+} from "@/components/ui/hover-card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { AtSign } from "lucide-react";
 

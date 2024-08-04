@@ -26,13 +26,15 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-  Toggle,
-  Input,
-  Button,
-} from "@/components/ui/";
+} from "@/components/ui/hover-card";
+import { Toggle } from "@/components/ui/toggle";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function EditorToolbar({ editor }: { editor: any }) {
   if (!editor) return null;

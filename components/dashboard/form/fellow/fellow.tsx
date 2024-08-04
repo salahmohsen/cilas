@@ -10,7 +10,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FellowSchema, fellowDefaultValues } from "@/types/fellow.schema";
 import { toast } from "sonner";
 import {
-  Button,
   Dialog,
   DialogContent,
   DialogFooter,
@@ -19,10 +18,12 @@ import {
   DialogTrigger,
   DialogOverlay,
   DialogPortal,
-  Form,
-  Label,
-  ScrollArea,
-} from "@/components/ui/";
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { Label } from "@/components/ui/label";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import {
   TipTapInput,
   SubmitButton,

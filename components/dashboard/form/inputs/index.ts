@@ -3,7 +3,7 @@ export { ComboBoxInput } from "./input.combobox";
 export { ContentInput } from "./input.content";
 export { DateInput } from "./input.date";
 export { DateRangeInput } from "./input.date.range";
-export { MultiSelectorInput } from "./input.multiselector";
+export { MultiSelectorInput } from "./input.multi.selector";
 export { SelectInput } from "./input.select";
 export { SliderInput } from "./input.slider";
 export { SubmitButton } from "./input.submit";

@@ -9,11 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  MultipleSelector,
-  Option,
-  Button,
   DialogClose,
-} from "@/components/ui";
+} from "@/components/ui/dialog";
+import { MultipleSelector, Option } from "@/components/ui/multipleSelector";
+import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner";
 import { LoaderPinwheel } from "lucide-react";

@@ -4,12 +4,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+} from "@/components/ui/form";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-  Button,
-  Calendar,
-} from "@/components/ui/";
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";

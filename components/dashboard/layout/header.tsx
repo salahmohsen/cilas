@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+import { logout } from "@/actions/auth.actions";
+import { getUserAvatar } from "@/actions/users.actions";
+import { cn } from "@/lib/utils";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,19 +15,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Input,
-  Button,
-} from "@/components/ui/";
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 import logo from "@/public/logo.png";
 import PlaceHolderUser from "@/public/placeholder-user.svg";
 
-import { Search } from "lucide-react";
 import { LayoutMobileSidebar } from "./sidebar.mobile";
 import { LayoutBreadcrumb } from "./breadcrumb";
-import { logout } from "@/actions/auth.actions";
-import { getUserAvatar } from "@/actions/users.actions";
-import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
 
 export function LayoutHeader({
   className,

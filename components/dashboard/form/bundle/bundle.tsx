@@ -22,7 +22,8 @@ import {
   DateInput,
   SubmitButton,
 } from "@/components/dashboard/form/inputs/";
-import { Button, Form } from "@/components/ui";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import {
   bundleDefaultValues,
   bundleSchema,

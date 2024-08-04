@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  TabsContent,
-} from "@/components/ui";
+} from "@/components/ui/card";
+import { TabsContent } from "@/components/ui/tabs";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { NoCoursesFound } from "../../notFound";
 import { CourseSkeleton } from "../course.skeleton";

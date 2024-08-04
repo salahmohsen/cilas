@@ -6,8 +6,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-  Button,
-} from "@/components/ui";
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Sailboat, Waves } from "lucide-react";
 
 export default async function ManageCoursesPage() {
