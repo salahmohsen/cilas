@@ -82,6 +82,7 @@ export const ImageBlockMenu = ({
       updateDelay={0}
       tippyOptions={{
         offset: [0, 8],
+        placement: "bottom",
         popperOptions: {
           modifiers: [{ name: "flip", enabled: false }],
         },

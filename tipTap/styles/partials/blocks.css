@@ -1,20 +1,20 @@
 .ProseMirror {
   /* Image Block */
-  figure[data-type='imageBlock'] {
+  figure[data-type="imageBlock"] {
     @apply m-0;
 
     img {
-      @apply rounded block w-full;
+      @apply block w-full rounded;
     }
   }
 
   /* Block Quote */
-  figure[data-type='blockquoteFigure'] {
+  figure[data-type="blockquoteFigure"] {
     @apply my-14 text-black dark:text-white;
   }
 
   & > blockquote,
-  [data-type='blockquoteFigure'] {
+  [data-type="blockquoteFigure"] {
     blockquote {
       @apply m-0;
 
@@ -25,23 +25,23 @@
   }
 
   /* Columns */
-  [data-type='columns'] {
-    @apply grid gap-4 mt-14 mb-12;
+  [data-type="columns"] {
+    @apply mb-12 mt-14 grid gap-4;
 
     &.layout-sidebar-left {
-      grid-template-columns: 40fr 60fr;
+      grid-template-columns: 40fr 60fr !important;
     }
 
     &.layout-sidebar-right {
-      grid-template-columns: 60fr 40fr;
+      grid-template-columns: 60fr 40fr !important;
     }
 
     &.layout-two-column {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr !important;
     }
   }
 
-  [data-type='column'] {
+  [data-type="column"] {
     @apply overflow-auto;
   }
 }
