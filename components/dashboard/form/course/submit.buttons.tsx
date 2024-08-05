@@ -24,6 +24,7 @@ export const SubmitButtons = ({
       <SubmitButton
         isLoading={isLoading.secondaryButton}
         value={editMode && !draftMode ? "Convert To Draft" : "Save Draft"}
+        className="px-2 sm:px-3"
         variant="secondary"
         handleOnClick={() => {
           setDraftMode(true);
@@ -35,6 +36,7 @@ export const SubmitButtons = ({
         variant="default"
         isLoading={isLoading.primaryButton}
         value={editMode && !draftMode ? "Save Changes" : "Publish Course"}
+        className="px-2 sm:px-3"
         handleOnClick={() => {
           setDraftMode(false);
           dispatch({ type: "SET_FILTER", payload: "published" });

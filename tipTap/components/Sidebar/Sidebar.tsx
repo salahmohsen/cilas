@@ -30,7 +30,7 @@ export const Sidebar = memo(
     }, [onClose]);
 
     const windowClassName = cn(
-      "fixed right-0 top-32 h-[calc(100%-8rem)]  w-0 invisible transition-all duration-300",
+      "fixed right-0 top-32 h-[calc(100%-8rem)]  w-0 invisible transition-all duration-300 z-[500]",
       "bg-background",
       !isOpen && "border-l-transparent",
       isOpen && "w-full sm:w-[calc((100%-4rem)/1/3)] border-l visible",

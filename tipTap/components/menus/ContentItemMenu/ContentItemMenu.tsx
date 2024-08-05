@@ -30,19 +30,16 @@ export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
       editor.commands.setMeta("lockDragHandle", false);
     }
   }, [editor, menuOpen]);
-  const offset: [number, number] =
-    window.innerWidth > 320 ? [-2, 40] : [-2, 16];
   return (
     <DragHandle
       pluginKey="ContentItemMenu"
       editor={editor}
       onNodeChange={data.handleNodeChange}
       tippyOptions={{
-        offset,
         zIndex: 400,
       }}
     >
-      <div className="flex items-center gap-0.5">
+      <div className="mt-0.5 flex items-center gap-0.5">
         <Toolbar.Button onClick={actions.handleAdd}>
           <Icon name="Plus" />
         </Toolbar.Button>

@@ -69,15 +69,10 @@
 
     &.ProseMirror-selectednode {
       @apply bg-background;
-
-      hr {
-        @apply border-t-border;
-      }
     }
 
     &:hover:not(&.ProseMirror-selectednode) {
-      @apply bg-black/5;
-      @apply dark:bg-white/10;
+      @apply bg-background/5;
     }
 
     hr {

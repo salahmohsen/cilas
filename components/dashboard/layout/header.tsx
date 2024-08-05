@@ -45,7 +45,7 @@ export function LayoutHeader({
   return (
     <header
       className={cn(
-        "fixed top-0 z-[100] flex w-full items-center justify-between gap-1 border-b bg-background",
+        "fixed top-0 z-[500] flex w-full items-center justify-between gap-1 border-b bg-background",
         className,
       )}
     >
