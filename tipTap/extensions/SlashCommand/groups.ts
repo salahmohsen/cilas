@@ -162,7 +162,7 @@ export const GROUPS: Group[] = [
         aliases: [""],
         description: "Insert english course template",
         action: (editor) => {
-          editor.commands.insertContent(initialEnCourseContent);
+          editor.commands.insertContentAt(1, initialEnCourseContent);
         },
       },
       {
@@ -172,7 +172,7 @@ export const GROUPS: Group[] = [
         aliases: [""],
         description: "Insert arabic course template",
         action: (editor) => {
-          editor.commands.insertContent(initialArCourseContent);
+          editor.commands.insertContentAt(1, initialArCourseContent);
         },
       },
     ],
