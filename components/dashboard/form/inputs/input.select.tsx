@@ -45,7 +45,9 @@ export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
       name={name}
       render={({ field }) => (
         <FormItem className={className}>
-          <FormLabel>{label}</FormLabel>
+          <FormLabel asChild>
+            <legend>{label}</legend>
+          </FormLabel>
           <FormControl>
             <div onBlur={field.onBlur} ref={field.ref}>
               <Select

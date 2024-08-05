@@ -53,12 +53,14 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
           )}
         >
           <FormLabel
+            asChild
             className={
               direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"
             }
           >
-            {label}
+            <legend>{label}</legend>
           </FormLabel>
+
           <FormControl>
             <div
               className={` ${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"} `}

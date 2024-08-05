@@ -3,6 +3,7 @@ import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cn } from "@/lib/utils";
 
 type SliderProps = {
+  name?: string;
   className?: string;
   min: number;
   max: number;
@@ -30,6 +31,7 @@ const Slider = React.forwardRef(
       formatLabel,
       value,
       onValueChange,
+      name,
       ...props
     }: SliderProps,
     ref,
@@ -176,6 +178,7 @@ const Slider = React.forwardRef(
     return (
       <SliderPrimitive.Root
         ref={ref as React.RefObject<HTMLDivElement>}
+        name={name}
         min={min}
         max={max}
         step={step}

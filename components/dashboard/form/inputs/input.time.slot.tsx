@@ -30,7 +30,10 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
       name={name}
       render={({ field }) => (
         <FormItem className={cn("flex flex-col", className)}>
-          <FormLabel className="mb-3 min-w-max">{label}</FormLabel>
+          <FormLabel asChild className="mb-3 min-w-max">
+            <legend>{label}</legend>
+          </FormLabel>
+
           <FormControl>
             <div
               className="flex w-full gap-5"
@@ -39,7 +42,7 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
             >
               <div className="flex items-end gap-2" id="start-time">
                 <div className="grid gap-1 text-center">
-                  <Label className="text-xs">
+                  <Label className="text-xs" htmlFor="start-hour">
                     <span className="text-[0.6rem]">24</span>Hours
                   </Label>
                   <input
@@ -61,7 +64,9 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
                   />
                 </div>
                 <div className="grid gap-1 text-center">
-                  <Label className="text-xs">Minutes</Label>
+                  <Label className="text-xs" htmlFor="start-minutes">
+                    Minutes
+                  </Label>
                   <TimePickerInput
                     id="start-minutes"
                     picker="minutes"
@@ -78,7 +83,7 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
               <span className="mt-6">:</span>
               <div className="flex items-end gap-2" id="end-time">
                 <div className="grid gap-1 text-center">
-                  <Label htmlFor="hours" className="text-xs">
+                  <Label className="text-xs" htmlFor="end-hour">
                     <span className="text-[0.6rem]">24</span>Hours
                   </Label>
 
@@ -95,7 +100,7 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
                   />
                 </div>
                 <div className="grid gap-1 text-center">
-                  <Label htmlFor="minutes" className="text-xs">
+                  <Label className="text-xs" htmlFor="end-minutes">
                     Minutes
                   </Label>
                   <TimePickerInput

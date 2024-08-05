@@ -31,7 +31,10 @@ export const MultiSelectorInput: React.FC<MultiSelectorProps> = memo(
         name={name}
         render={({ field }) => (
           <FormItem className={className}>
-            <FormLabel>{label}</FormLabel>
+            <FormLabel asChild>
+              <legend>{label}</legend>
+            </FormLabel>
+
             <FormControl>
               <>
                 <input
