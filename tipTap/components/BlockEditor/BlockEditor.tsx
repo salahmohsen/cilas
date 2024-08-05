@@ -38,7 +38,7 @@ export const BlockEditor = ({
 
   return (
     <div className="flex h-full overflow-hidden" ref={menuContainerRef}>
-      <EditorContent editor={editor} className={`mt-16 w-full pl-16 sm:px-0`} />
+      <EditorContent editor={editor} className={`mt-16 w-full pl-16 lg:px-0`} />
 
       <Sidebar
         isOpen={leftSidebar.isOpen}

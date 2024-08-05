@@ -84,7 +84,7 @@
   }
 
   [data-radix-popper-content-wrapper] {
-    @apply !z-[300];
+    @apply !z-[9997];
   }
 
   .tiptap {

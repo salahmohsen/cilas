@@ -1,9 +1,8 @@
-import { Editor, JSONContent, useEditor } from "@tiptap/react";
+import { JSONContent, useEditor } from "@tiptap/react";
 
 import { ExtensionKit } from "@/tipTap/extensions/extension-kit";
 import { useSidebar } from "./useSidebar";
 import { Dispatch, SetStateAction } from "react";
-import { textDirection } from "@/lib/tiptap-extensions";
 
 type useBlockEditorProps = {
   defaultSidebarOpen?: boolean;

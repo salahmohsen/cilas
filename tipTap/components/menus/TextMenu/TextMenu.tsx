@@ -31,9 +31,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
     <span>
       <BubbleMenu
         tippyOptions={{
-          popperOptions: {
-            placement: "auto",
-          },
+          placement: "bottom-start",
           appendTo: "parent",
         }}
         editor={editor}
@@ -41,7 +39,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
         shouldShow={states.shouldShow}
         updateDelay={100}
       >
-        <Toolbar.Wrapper className="flex-wrap sm:flex-nowrap">
+        <Toolbar.Wrapper className="scale-75 md:scale-100">
           <MemoContentTypePicker options={blockOptions} />
           <MemoFontSizePicker
             onChange={commands.onSetFontSize}
@@ -80,18 +78,22 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
           >
             <Icon name="Strikethrough" />
           </MemoButton>
-          <MemoButton
-            tooltip="Code"
-            tooltipShortcut={["Mod", "E"]}
-            onClick={commands.onCode}
-            active={states.isCode}
-          >
-            <Icon name="Code" />
-          </MemoButton>
-          <MemoButton tooltip="Code block" onClick={commands.onCodeBlock}>
-            <Icon name="CodeXml" />
-          </MemoButton>
-          <EditLinkPopover onSetLink={commands.onLink} />
+          {window.innerWidth > 425 && (
+            <>
+              <MemoButton
+                tooltip="Code"
+                tooltipShortcut={["Mod", "E"]}
+                onClick={commands.onCode}
+                active={states.isCode}
+              >
+                <Icon name="Code" />
+              </MemoButton>
+              <MemoButton tooltip="Code block" onClick={commands.onCodeBlock}>
+                <Icon name="CodeXml" />
+              </MemoButton>
+              <EditLinkPopover onSetLink={commands.onLink} />
+            </>
+          )}
 
           <Popover.Root>
             <Popover.Trigger asChild>
@@ -101,6 +103,25 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
             </Popover.Trigger>
             <Popover.Content side="bottom" asChild>
               <Toolbar.Wrapper>
+                {window.innerWidth <= 425 && (
+                  <>
+                    <EditLinkPopover onSetLink={commands.onLink} />
+                    <MemoButton
+                      tooltip="Code"
+                      tooltipShortcut={["Mod", "E"]}
+                      onClick={commands.onCode}
+                      active={states.isCode}
+                    >
+                      <Icon name="Code" />
+                    </MemoButton>
+                    <MemoButton
+                      tooltip="Code block"
+                      onClick={commands.onCodeBlock}
+                    >
+                      <Icon name="CodeXml" />
+                    </MemoButton>
+                  </>
+                )}
                 <MemoButton
                   tooltip="Subscript"
                   tooltipShortcut={["Mod", "."]}
