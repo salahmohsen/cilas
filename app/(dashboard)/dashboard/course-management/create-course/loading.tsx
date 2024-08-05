@@ -2,49 +2,56 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 const Loading = () => {
   return (
-    <main className="mx-0 xl:mx-32">
-      <div className="grid w-full items-start gap-10">
-        <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm">
-          <legend className="-ml-1 px-1 text-sm font-medium">
-            Course Content
-          </legend>
-          <div className="flex flex-col gap-5">
-            <div className="flex gap-5">
-              <Skeleton className="h-10 w-full rounded-md" />
-              <Skeleton className="h-10 w-full rounded-md" />
-            </div>
-            <Skeleton className="h-10 w-full rounded-md" />
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-wrap justify-center gap-2 rounded-md">
-                {Array(9)
-                  .fill("tool")
-                  .map((_, index) => (
-                    <Skeleton className="h-7 w-7 rounded-md" key={index} />
-                  ))}
-              </div>
-              <Skeleton className="h-44 w-full rounded-md" />
-            </div>
-          </div>
-        </fieldset>
-        <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm">
-          <legend className="-ml-1 px-1 text-sm font-medium">
-            Course Metadata
-          </legend>
-          <div className="grid justify-center gap-10 lg:grid-cols-2">
-            {Array(12)
-              .fill("tool")
-              .map((_, index) => (
-                <Skeleton className="h-10 w-full rounded-md" key={index} />
-              ))}
-          </div>
-        </fieldset>
-
-        <div className="-mt-3 mb-5 flex gap-5">
-          <Skeleton className="h-10 w-full rounded-md" />
-          <Skeleton className="h-10 w-full rounded-md" />
+    <div className="h-[calc(100vh-4rem)] w-full overflow-y-hidden">
+      {/* Header */}
+      <div className="flex h-16 w-full items-center justify-between border-b px-4 py-2 sm:px-8">
+        <div className="hidden items-center gap-2 md:flex">
+          <Skeleton className="h-4 w-24 rounded-md" />
+          <Skeleton className="h-4 w-24 rounded-md" />
+        </div>
+        <div className="flex w-full items-center justify-end gap-2 md:max-w-max md:justify-center">
+          <Skeleton className="h-9 w-28 rounded-md" />
+          <Skeleton className="h-9 w-28 rounded-md" />
+          <Skeleton className="h-9 w-9 rounded-md" />
         </div>
       </div>
-    </main>
+      <div className="flex">
+        {/* Content */}
+        <div className="flex w-full flex-col sm:w-2/3">
+          <div className="flex h-10 w-full items-center justify-center gap-2 bg-muted/50">
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-8 w-32" />
+          </div>
+          <div className="mt-6 w-full space-y-5 px-6 lg:px-36">
+            <Skeleton className="h-9 w-2/3" />
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-5 w-2/3" />
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-5 w-2/3" />
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-5 w-3/4" />
+            <Skeleton className="h-5 w-2/3" />
+          </div>
+        </div>
+        {/* Sidebar */}
+        <div className="hidden h-full w-full border-l sm:w-1/3 md:block">
+          <div className="flex h-10 w-full items-center justify-center gap-2 bg-muted/50 px-5">
+            <Skeleton className="h-8 w-32"></Skeleton>
+            <Skeleton className="h-8 w-32"></Skeleton>
+          </div>
+          <div className="space-y-8 p-6">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div className="w-full space-y-2" key={index}>
+                <Skeleton className="h-4 w-36 rounded-md" />
+                <Skeleton className="h-8 w-full rounded-md" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
