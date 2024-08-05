@@ -74,9 +74,5 @@
     &:hover:not(&.ProseMirror-selectednode) {
       @apply bg-background/5;
     }
-
-    hr {
-      @apply border-0 border-t border-border;
-    }
   }
 }
