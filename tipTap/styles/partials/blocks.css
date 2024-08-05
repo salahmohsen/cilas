@@ -25,22 +25,21 @@
   }
 
   /* Columns */
-  [data-type="columns"] {
+  div[data-type="columns"] {
     @apply mb-12 mt-14 grid gap-4;
-
-    &.layout-sidebar-left {
-      grid-template-columns: 40fr 60fr !important;
-    }
-
-    &.layout-sidebar-right {
-      grid-template-columns: 60fr 40fr !important;
-    }
-
-    &.layout-two-column {
-      grid-template-columns: 1fr 1fr !important;
-    }
   }
 
+  div[data-type="columns"].layout-sidebar-left {
+    grid-template-columns: 40fr 60fr !important;
+  }
+
+  div[data-type="columns"].layout-sidebar-right {
+    grid-template-columns: 60fr 40fr !important;
+  }
+
+  div[data-type="columns"].layout-two-column {
+    grid-template-columns: 1fr 1fr !important;
+  }
   [data-type="column"] {
     @apply overflow-auto;
   }
