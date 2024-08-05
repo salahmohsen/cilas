@@ -26,9 +26,6 @@ export const Sidebar = () => {
             <SidebarTypeFilter className="col-span-2" />
           </div>
         </CardContent>
-        {/* <CardFooter>
-          <p>Card Footer</p>
-        </CardFooter> */}
       </Card>
     </aside>
   );

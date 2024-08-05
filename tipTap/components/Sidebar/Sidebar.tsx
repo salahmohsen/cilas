@@ -1,5 +1,5 @@
 import { cn } from "@/tipTap/lib/utils";
-import React, { memo, useCallback } from "react";
+import React, { memo, useCallback, useEffect } from "react";
 import { Editor } from "@tiptap/react";
 import { TableOfContents } from "../TableOfContents";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -50,12 +50,12 @@ export const Sidebar = memo(
 
           <TabsContent value="form" className="pr-2">
             <ScrollArea className="h-[calc(100vh-11rem)]">
-             {children}
+              {children}
             </ScrollArea>
           </TabsContent>
           <TabsContent
             value="tableOfContent"
-            className="m-6 h-full overflow-y-auto"
+            className="m-6 h-full overflow-y-auto overflow-x-hidden"
           >
             <TableOfContents
               onItemClick={handlePotentialClose}
