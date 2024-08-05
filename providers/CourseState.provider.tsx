@@ -170,15 +170,12 @@ export const CourseStateProvider = ({ children }: { children: ReactNode }) => {
     if (activeTabParam === state.activeTab) {
       switch (activeTabParam) {
         case "bundles":
-          console.log("Active tab: bundles");
           getBundles();
           break;
         case "published":
-          console.log("Active tab: published");
           getCourses(state.filter);
           break;
         case "draft":
-          console.log("Active tab: draft");
           getCourses("draft");
           break;
       }

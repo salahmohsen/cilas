@@ -73,10 +73,11 @@ export function CourseForm({
           action={courseAction}
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             const nativeEvent = e.nativeEvent as SubmitEvent;
-            const submitter = (nativeEvent.submitter as HTMLButtonElement).name;
+            const submitter = (nativeEvent.submitter as HTMLButtonElement)
+              .classList;
             /*@note: This is a workaround to prevent the form from submitting when 
             clicking on any button other than "Publish Course" || "Draft Button" button.*/
-            if (submitter === "Publish Course" || submitter === "Save Draft") {
+            if (submitter.contains("submit-btn")) {
               e.preventDefault();
               formMethods.handleSubmit(() => {
                 handleSubmit(draftMode);

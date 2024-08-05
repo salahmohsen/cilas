@@ -19,7 +19,7 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
       <Button
         type="submit"
         disabled={isLoading}
-        className={cn("w-full", className)}
+        className={cn("submit-btn w-full", className)}
         variant={variant}
         size={"sm"}
         name={value}
