@@ -18,7 +18,6 @@ export const TableOfContents = memo(
       const handler = ({ editor: currentEditor }: { editor: CoreEditor }) => {
         setData({ ...currentEditor.extensionStorage.tableOfContents });
       };
-
       handler({ editor });
 
       editor.on("update", handler);

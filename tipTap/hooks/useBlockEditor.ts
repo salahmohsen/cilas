@@ -23,7 +23,10 @@ export const useBlockEditor = ({
       autofocus: true,
       onCreate: ({ editor }) => {
         if (editor.isEmpty && content) {
-          editor.commands.setContent(content);
+          setTimeout(() => {
+            editor.commands.setContent(content, true);
+            editor.commands.focus("start");
+          }, 0);
         }
       },
       onUpdate: ({ editor }) => {
