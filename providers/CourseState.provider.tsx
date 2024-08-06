@@ -23,13 +23,13 @@ import { useFormState } from "react-dom";
 import { CoursesFilter, Tab } from "@/types/manage.courses.types";
 import { useSearchParams } from "next/navigation";
 
-type isSelected = Record<number, boolean> | undefined;
+type isSelected = Record<number, boolean> | null;
 
 type State = {
   activeTab: Tab;
   isCourseSelected: isSelected;
   isBundleSelected: isSelected;
-  courseInfo: CourseWithSafeFellow | undefined;
+  courseInfo: CourseWithSafeFellow | undefined | null;
   filter: CoursesFilter;
   fellow: SafeUser | undefined;
   isLoading: boolean;
@@ -42,7 +42,10 @@ type Action =
   | { type: "SET_FILTER"; payload: CoursesFilter }
   | { type: "SET_COURSE_SELECTED"; payload: isSelected }
   | { type: "SET_BUNDLE_SELECTED"; payload: isSelected }
-  | { type: "SET_COURSE_INFO"; payload: CourseWithSafeFellow | undefined }
+  | {
+      type: "SET_COURSE_INFO";
+      payload: CourseWithSafeFellow | undefined | null;
+    }
   | { type: "SET_FELLOW"; payload: SafeUser | undefined }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_COURSES"; payload: CourseWithSafeFellow[] }
@@ -51,9 +54,9 @@ type Action =
 
 const initialState: State = {
   activeTab: "published",
-  isCourseSelected: undefined,
-  isBundleSelected: undefined,
-  courseInfo: undefined,
+  isCourseSelected: null,
+  isBundleSelected: null,
+  courseInfo: null,
   filter: "published",
   fellow: undefined,
   isLoading: false,

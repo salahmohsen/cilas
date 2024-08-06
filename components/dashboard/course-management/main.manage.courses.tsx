@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { useWindowSize } from "@uidotdev/usehooks";
 
-import { CourseInfo } from "@/components/dashboard/course-management/info/info";
+import { MotionCourseInfo } from "@/components/dashboard/course-management/info/info";
 import { CourseInfoModal } from "@/components/dashboard/course-management/info/info.modal";
 
 import { Tabs } from "@/components/ui/tabs";
@@ -14,6 +14,8 @@ import { BundlesTab } from "./tab.bundles/tab.bundles";
 import { PublishedTab } from "./courses/tab.published/tab.published";
 import { TabsList } from "./tab.list";
 import { Tab } from "@/types/manage.courses.types";
+import { motion, AnimatePresence } from "framer-motion";
+import { useCourseNavigation } from "./useCourseNavigation";
 
 export default function ManageCourses() {
   const { width } = useWindowSize();
@@ -22,17 +24,17 @@ export default function ManageCourses() {
     state: { isCourseSelected, activeTab },
     dispatch,
   } = useCourseState();
+
+  useCourseNavigation();
+
+  const isDesktop = width && width >= 1024;
+  const showCourseInfo =
+    isDesktop && Object.values(isCourseSelected ?? false)[0];
+
   return (
     <>
-      <div className="flex">
-        <div
-          className={cn(
-            "w-full transition-all duration-500 ease-in-out",
-            width &&
-              width >= 1024 &&
-              (Object.values(isCourseSelected ?? {})[0] ? "w-[70%]" : "w-full"),
-          )}
-        >
+      <div className="flex min-h-screen gap-5 overflow-x-clip px-2">
+        <div className={cn("w-full")}>
           <Tabs
             value={activeTab}
             onValueChange={(value) =>
@@ -49,12 +51,19 @@ export default function ManageCourses() {
             <BundlesTab />
           </Tabs>
         </div>
-
-        {width && width >= 1024 && (
-          <CourseInfo className="sticky right-0 top-20 mt-14 max-h-[calc(100%-150px)] overflow-y-auto transition-all duration-500 ease-in-out" />
-        )}
+        <AnimatePresence>
+          {isDesktop && showCourseInfo && (
+            <MotionCourseInfo
+              initial={{ x: "50vw", width: 0 }}
+              animate={{ x: 0, width: "50%" }}
+              exit={{ x: "50vw", width: 0 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+              className="sticky top-20 mt-14 max-h-[calc(85vh)]"
+            />
+          )}
+        </AnimatePresence>
       </div>
-      {width && width < 1024 && <CourseInfoModal />}
+      {!isDesktop && <CourseInfoModal />}
     </>
   );
 }

@@ -10,59 +10,14 @@ import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useCourseNavigation } from "../useCourseNavigation";
 
 export const InfoFooter = ({ className }: { className?: string }) => {
   const {
     state: { courseInfo },
-    dispatch,
-    optimisticCourses,
   } = useCourseState();
+  const { handleNext, handlePrev } = useCourseNavigation();
 
-  if (!courseInfo) return;
-
-  const idArr: number[] | undefined = optimisticCourses.map((item) => item.id);
-  const currentId = courseInfo.id;
-  const currIndex = idArr?.indexOf(currentId);
-
-  const handleNext = () => {
-    if (
-      idArr &&
-      typeof currIndex === "number" &&
-      currIndex < idArr.length - 1
-    ) {
-      const nextId = idArr[currIndex + 1];
-      dispatch({ type: "SET_COURSE_SELECTED", payload: { [nextId]: true } });
-      dispatch({
-        type: "SET_COURSE_INFO",
-        payload: optimisticCourses?.find((item) => item?.id === nextId),
-      });
-    } else {
-      if (idArr) {
-        dispatch({
-          type: "SET_COURSE_SELECTED",
-          payload: { [idArr[0]]: true },
-        });
-      }
-      dispatch({ type: "SET_COURSE_INFO", payload: optimisticCourses[0] });
-    }
-  };
-
-  const handlePrev = () => {
-    if (idArr && typeof currIndex === "number" && currIndex > 0) {
-      const prevId = idArr[currIndex - 1];
-      dispatch({ type: "SET_COURSE_SELECTED", payload: { [prevId]: true } });
-      dispatch({
-        type: "SET_COURSE_INFO",
-        payload: optimisticCourses?.find((item) => item?.id === prevId),
-      });
-    } else {
-      dispatch({
-        type: "SET_COURSE_SELECTED",
-        payload: { [idArr?.at(-1) as number]: true },
-      });
-      dispatch({ type: "SET_COURSE_INFO", payload: optimisticCourses?.at(-1) });
-    }
-  };
   return (
     <CardFooter
       className={cn(
@@ -73,7 +28,7 @@ export const InfoFooter = ({ className }: { className?: string }) => {
       <div className="text-xs text-muted-foreground">
         Updated{" "}
         <time dateTime="2023-11-23">
-          {format(courseInfo.updatedAt, "dd MMMM yyyy")}
+          {courseInfo && format(courseInfo.updatedAt, "dd MMMM yyyy")}
         </time>
       </div>
       <Pagination className="ml-auto mr-0 w-auto">

@@ -1,3 +1,5 @@
+"use client";
+
 import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { PanelRightClose, PanelRightOpen, Rabbit, Target } from "lucide-react";

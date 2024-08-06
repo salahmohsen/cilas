@@ -12,13 +12,15 @@ import { useCourseState } from "@/providers/CourseState.provider";
 import { NoCoursesFound } from "../../notFound";
 import { CourseSkeleton } from "../course.skeleton";
 import { CourseItem } from "../course.item";
+import { useCourseNavigation } from "../../useCourseNavigation";
 
 export const DraftTab = () => {
   const {
     optimisticCourses,
     state: { isLoading },
-    dispatch,
   } = useCourseState();
+
+  const { containerRef } = useCourseNavigation();
 
   return (
     <TabsContent value="draft">
@@ -30,7 +32,10 @@ export const DraftTab = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="group/list space-y-2 transition-all duration-200 ease-in-out">
+          <ul
+            className="group/list space-y-2 transition-all duration-200 ease-in-out"
+            ref={containerRef}
+          >
             {isLoading && <CourseSkeleton itemsNumber={10} />}
             {!isLoading &&
               optimisticCourses.length > 0 &&

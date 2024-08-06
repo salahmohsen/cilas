@@ -12,12 +12,15 @@ import { useCourseState } from "@/providers/CourseState.provider";
 import { CourseSkeleton } from "../course.skeleton";
 import { CourseItem } from "../course.item";
 import { NoCoursesFound } from "../../notFound";
+import { useCourseNavigation } from "../../useCourseNavigation";
 
 export const PublishedTab = () => {
   const {
     state: { isLoading },
     optimisticCourses,
   } = useCourseState();
+
+  const { containerRef } = useCourseNavigation();
 
   return (
     <TabsContent value="published">
@@ -29,7 +32,7 @@ export const PublishedTab = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="group/list space-y-2">
+          <ul className="group/list space-y-2" ref={containerRef}>
             {isLoading && <CourseSkeleton itemsNumber={10} />}
             {!isLoading &&
               optimisticCourses.length > 0 &&

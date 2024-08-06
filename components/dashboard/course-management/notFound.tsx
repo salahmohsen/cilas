@@ -1,3 +1,5 @@
+"use client";
+
 import { Bird } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 
