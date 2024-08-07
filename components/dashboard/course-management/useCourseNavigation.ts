@@ -1,65 +1,42 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCourseState } from "@/providers/CourseState.provider";
 
-export const useCourseNavigation = () => {
+export const useCourseNavigation = (
+  containerRef?: React.RefObject<HTMLUListElement>,
+) => {
   const {
     state: { courseInfo, isCourseSelected: isCourseSelectedObject },
     dispatch,
     optimisticCourses,
   } = useCourseState();
 
-  const containerRef = useRef<HTMLUListElement | null>(null);
+  const [scrollIndex, setScrollIndex] = useState<number | null>(null);
 
   const idArr = useMemo(
     () => optimisticCourses.map((item) => item.id),
     [optimisticCourses],
   );
+
   const isCourseSelected = useMemo(
     () => Object.values(isCourseSelectedObject ?? {}).some(Boolean),
     [isCourseSelectedObject],
-  );
-
-  const scrollToElement = useCallback(
-    (index: number) => {
-      if (!containerRef.current) return;
-
-      const container = containerRef.current;
-      const elements = container.querySelectorAll("[data-course-id]");
-
-      if (index >= 0 && index < elements.length) {
-        const element = elements[index];
-        if (element instanceof HTMLElement) {
-          const headerOffset = 70;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition =
-            elementPosition + window.scrollY - headerOffset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        } else {
-          console.error("Selected element is not an HTMLElement");
-        }
-      } else {
-        console.error("Invalid index or element not found");
-      }
-    },
-    [containerRef],
   );
 
   const resetSelection = useCallback(
     (isLast: boolean = false) => {
       if (optimisticCourses.length === 0) return;
 
-      const newCourse = isLast
+      const selectedCourse = isLast
         ? optimisticCourses.at(-1)
         : optimisticCourses[0];
-      const newId = newCourse?.id;
+      const selectedId = selectedCourse?.id;
 
-      if (newCourse && newId !== undefined) {
-        dispatch({ type: "SET_COURSE_INFO", payload: newCourse });
-        dispatch({ type: "SET_COURSE_SELECTED", payload: { [newId]: true } });
+      if (selectedCourse && selectedId !== undefined) {
+        dispatch({ type: "SET_COURSE_INFO", payload: selectedCourse });
+        dispatch({
+          type: "SET_COURSE_SELECTED",
+          payload: { [selectedId]: true },
+        });
       }
     },
     [dispatch, optimisticCourses],
@@ -67,10 +44,10 @@ export const useCourseNavigation = () => {
 
   const setSelection = useCallback(
     (id: number) => {
-      const newCourse = optimisticCourses.find((item) => item.id === id);
-      if (newCourse) {
+      const SelectedCourse = optimisticCourses.find((item) => item.id === id);
+      if (SelectedCourse) {
         dispatch({ type: "SET_COURSE_SELECTED", payload: { [id]: true } });
-        dispatch({ type: "SET_COURSE_INFO", payload: newCourse });
+        dispatch({ type: "SET_COURSE_INFO", payload: SelectedCourse });
       }
     },
     [dispatch, optimisticCourses],
@@ -79,17 +56,17 @@ export const useCourseNavigation = () => {
   const handleNext = useCallback(() => {
     if (!courseInfo || !isCourseSelected || optimisticCourses.length === 0) {
       resetSelection();
-      scrollToElement(0);
+      setScrollIndex(0);
       return;
     }
 
     const currIndex = idArr.indexOf(courseInfo.id);
     if (currIndex < idArr.length - 1) {
       setSelection(idArr[currIndex + 1]);
-      scrollToElement(currIndex + 1);
+      setScrollIndex(currIndex + 1);
     } else {
       resetSelection();
-      scrollToElement(0);
+      setScrollIndex(0);
     }
   }, [
     courseInfo,
@@ -98,13 +75,13 @@ export const useCourseNavigation = () => {
     optimisticCourses.length,
     resetSelection,
     setSelection,
-    scrollToElement,
   ]);
 
   const handlePrev = useCallback(() => {
     if (!courseInfo || !isCourseSelected || optimisticCourses.length === 0) {
       resetSelection(true);
-      scrollToElement(optimisticCourses.length - 1);
+
+      setScrollIndex(idArr.length - 1);
 
       return;
     }
@@ -112,10 +89,10 @@ export const useCourseNavigation = () => {
     const currIndex = idArr.indexOf(courseInfo.id);
     if (currIndex > 0) {
       setSelection(idArr[currIndex - 1]);
-      scrollToElement(currIndex - 1);
+      setScrollIndex(currIndex - 1);
     } else {
       resetSelection(true);
-      scrollToElement(optimisticCourses.length - 1);
+      setScrollIndex(idArr.length - 1);
     }
   }, [
     courseInfo,
@@ -124,7 +101,6 @@ export const useCourseNavigation = () => {
     optimisticCourses.length,
     resetSelection,
     setSelection,
-    scrollToElement,
   ]);
 
   useEffect(() => {
@@ -141,5 +117,31 @@ export const useCourseNavigation = () => {
     };
   }, [handleNext, handlePrev]);
 
-  return { handleNext, handlePrev, containerRef };
+  useEffect(() => {
+    console.log(containerRef?.current);
+    if (!containerRef || !containerRef.current || scrollIndex === null) return;
+
+    const container = containerRef.current;
+    const elements = container.querySelectorAll("[data-course-id]");
+
+    if (scrollIndex >= 0 && scrollIndex < elements.length) {
+      const element = elements[scrollIndex];
+      if (element instanceof HTMLElement) {
+        const headerOffset = 70;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
+      } else {
+        console.error("Selected element is not an HTMLElement");
+      }
+    } else {
+      console.error("Invalid index or element not found");
+    }
+  }, [containerRef, scrollIndex]);
+
+  return { handleNext, handlePrev };
 };

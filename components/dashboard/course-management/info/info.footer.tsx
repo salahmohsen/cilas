@@ -10,13 +10,15 @@ import { cn } from "@/lib/utils";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useCourseNavigation } from "../useCourseNavigation";
+import { useContext } from "react";
+import { courseNavContext } from "../main.manage.courses";
 
 export const InfoFooter = ({ className }: { className?: string }) => {
   const {
     state: { courseInfo },
   } = useCourseState();
-  const { handleNext, handlePrev } = useCourseNavigation();
+
+  const { handleNext, handlePrev } = useContext(courseNavContext);
 
   return (
     <CardFooter

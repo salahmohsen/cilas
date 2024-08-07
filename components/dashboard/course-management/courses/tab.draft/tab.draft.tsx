@@ -12,7 +12,8 @@ import { useCourseState } from "@/providers/CourseState.provider";
 import { NoCoursesFound } from "../../notFound";
 import { CourseSkeleton } from "../course.skeleton";
 import { CourseItem } from "../course.item";
-import { useCourseNavigation } from "../../useCourseNavigation";
+import { useContext } from "react";
+import { courseNavContext } from "../../main.manage.courses";
 
 export const DraftTab = () => {
   const {
@@ -20,7 +21,7 @@ export const DraftTab = () => {
     state: { isLoading },
   } = useCourseState();
 
-  const { containerRef } = useCourseNavigation();
+  const { containerRef } = useContext(courseNavContext);
 
   return (
     <TabsContent value="draft">

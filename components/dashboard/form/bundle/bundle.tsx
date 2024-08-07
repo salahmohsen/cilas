@@ -57,7 +57,7 @@ export default function BundleForm({
     if (bundleState.success) {
       forceUpdateBundles();
       toast.success(bundleState.message);
-      dispatch({ type: "SET_COURSE_SELECTED", payload: undefined });
+      dispatch({ type: "SET_COURSE_SELECTED", payload: null });
       dispatch({ type: "SET_ACTIVE_TAB", payload: "bundles" });
       redirect("/dashboard/course-management?tab=bundles");
     }

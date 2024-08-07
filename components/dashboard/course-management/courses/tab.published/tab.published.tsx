@@ -12,7 +12,8 @@ import { useCourseState } from "@/providers/CourseState.provider";
 import { CourseSkeleton } from "../course.skeleton";
 import { CourseItem } from "../course.item";
 import { NoCoursesFound } from "../../notFound";
-import { useCourseNavigation } from "../../useCourseNavigation";
+import { useContext } from "react";
+import { courseNavContext } from "../../main.manage.courses";
 
 export const PublishedTab = () => {
   const {
@@ -20,7 +21,7 @@ export const PublishedTab = () => {
     optimisticCourses,
   } = useCourseState();
 
-  const { containerRef } = useCourseNavigation();
+  const { containerRef } = useContext(courseNavContext);
 
   return (
     <TabsContent value="published">
