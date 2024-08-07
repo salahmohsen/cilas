@@ -45,7 +45,7 @@ export function LayoutHeader({
   return (
     <header
       className={cn(
-        "fixed top-0 z-[500] flex w-full items-center justify-between gap-1 border-b bg-background",
+        "fixed top-0 flex w-full items-center justify-between gap-1 border-b bg-background",
         className,
       )}
     >
@@ -97,7 +97,7 @@ export function LayoutHeader({
               )}
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="z-[101]">
+          <DropdownMenuContent align="end" className="z-40">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Settings</DropdownMenuItem>

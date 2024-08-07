@@ -69,7 +69,7 @@ export const Tooltip = ({
           delay={500}
           offset={[0, 8]}
           touch={false}
-          zIndex={99999}
+          zIndex={30}
           appendTo="parent"
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...tippyOptions}

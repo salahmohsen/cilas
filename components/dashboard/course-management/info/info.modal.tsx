@@ -3,6 +3,8 @@ import {
   DialogClose,
   DialogContent,
   DialogFooter,
+  DialogPortal,
+  DialogOverlay,
 } from "@/components/ui/dialog";
 import { useCourseState } from "@/providers/CourseState.provider";
 import { CourseInfo } from "./info";
@@ -22,12 +24,12 @@ export const CourseInfoModal = () => {
   return (
     <Dialog
       open={isCourseSelected?.[id]}
-      onOpenChange={() =>
+      onOpenChange={(open) => {
         dispatch({
           type: "SET_COURSE_SELECTED",
-          payload: { [id]: isCourseSelected?.[id] ? true : false },
-        })
-      }
+          payload: { [id]: open },
+        });
+      }}
     >
       <DialogContent
         className={`h-[calc(100%-20px)] scale-90 rounded-md border-none p-0`}

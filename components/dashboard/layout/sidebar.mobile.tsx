@@ -9,13 +9,13 @@ import Image from "next/image";
 export function LayoutMobileSidebar() {
   return (
     <Sheet>
-      <SheetTrigger asChild className="z-[200]">
+      <SheetTrigger asChild className="z-50">
         <Button size="icon" variant="outline" className="sm:hidden">
           <PanelLeft className="h-5 w-5" />
           <span className="sr-only">Toggle Menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="z-[200] sm:max-w-xs">
+      <SheetContent side="left" className="z-50 sm:max-w-xs">
         <nav className="grid gap-6 text-xs font-medium">
           <Link
             href="#"

@@ -51,9 +51,10 @@ export default function ManageCourses() {
             <BundlesTab />
           </Tabs>
         </div>
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {isDesktop && showCourseInfo && (
             <MotionCourseInfo
+              key={`course-info-${showCourseInfo}`}
               initial={{ x: "50vw", width: 0 }}
               animate={{ x: 0, width: "50%" }}
               exit={{ x: "50vw", width: 0 }}

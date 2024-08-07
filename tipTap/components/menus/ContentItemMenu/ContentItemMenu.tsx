@@ -36,7 +36,7 @@ export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
       editor={editor}
       onNodeChange={data.handleNodeChange}
       tippyOptions={{
-        zIndex: 400,
+        zIndex: 20,
       }}
     >
       <div className="mt-0.5 flex items-center gap-0.5">

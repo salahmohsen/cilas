@@ -85,89 +85,82 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
             <SquarePlus strokeWidth={1} size={18} /> Add New Fellow
           </Button>
         </DialogTrigger>
-        <DialogPortal>
-          <DialogOverlay className="z-[9998] bg-black/50 backdrop-blur-sm">
-            <DialogContent
-              className="z-[9999] sm:max-w-lg"
-              tabIndex={undefined}
-            >
-              <DialogHeader>
-                <DialogTitle>Add Fellow</DialogTitle>
-              </DialogHeader>
-              <ScrollArea className="-mr-1 max-h-[calc(100vh-200px)] pr-3">
-                <FormProvider {...formMethods}>
-                  <Form {...formMethods}>
-                    <form
-                      ref={formRef}
-                      action={fellowAction}
-                      onSubmit={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        formMethods.handleSubmit(() => {
-                          startTransition(() => {
-                            const formData = new FormData(formRef.current!);
-                            fellowAction(formData);
-                          });
-                        })(e); // immediately invokes the handleSubmit with the original event object.
-                      }}
-                    >
-                      <div className="grid gap-4 py-4 pr-2">
-                        <BasicInput
-                          name="firstName"
-                          type="text"
-                          placeholder="Paulo"
-                          label="First Name"
-                          direction="horizontal"
-                        />
-                        <BasicInput
-                          name="lastName"
-                          type="text"
-                          placeholder="Freire"
-                          label="Last Name"
-                          direction="horizontal"
-                        />
-                        <BasicInput
-                          name="email"
-                          type="email"
-                          placeholder="PauloFreire@domain.com"
-                          label="Email"
-                          direction="horizontal"
-                        />
+        <DialogContent className="z-50 sm:max-w-lg" tabIndex={undefined}>
+          <DialogHeader>
+            <DialogTitle>Add Fellow</DialogTitle>
+          </DialogHeader>
+          <ScrollArea className="-mr-1 max-h-[calc(100vh-200px)] pr-3">
+            <FormProvider {...formMethods}>
+              <Form {...formMethods}>
+                <form
+                  ref={formRef}
+                  action={fellowAction}
+                  onSubmit={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    formMethods.handleSubmit(() => {
+                      startTransition(() => {
+                        const formData = new FormData(formRef.current!);
+                        fellowAction(formData);
+                      });
+                    })(e); // immediately invokes the handleSubmit with the original event object.
+                  }}
+                >
+                  <div className="grid gap-4 py-4 pr-2">
+                    <BasicInput
+                      name="firstName"
+                      type="text"
+                      placeholder="Paulo"
+                      label="First Name"
+                      direction="horizontal"
+                    />
+                    <BasicInput
+                      name="lastName"
+                      type="text"
+                      placeholder="Freire"
+                      label="Last Name"
+                      direction="horizontal"
+                    />
+                    <BasicInput
+                      name="email"
+                      type="email"
+                      placeholder="PauloFreire@domain.com"
+                      label="Email"
+                      direction="horizontal"
+                    />
 
-                        <div className="grid grid-cols-7 items-center gap-2">
-                          <Label htmlFor="bio" className="col-span-2">
-                            Bio
-                          </Label>
-                          <TipTapInput
-                            className="col-span-5"
-                            editorToolbar={false}
-                            name="bio"
-                            placeholder="Marxist Brazilian educator and philosopher who was a leading advocate of critical pedagogy."
-                          />
-                        </div>
+                    <div className="grid grid-cols-7 items-center gap-2">
+                      <Label htmlFor="bio" className="col-span-2">
+                        Bio
+                      </Label>
+                      <TipTapInput
+                        className="col-span-5"
+                        editorToolbar={false}
+                        name="bio"
+                        placeholder="Marxist Brazilian educator and philosopher who was a leading advocate of critical pedagogy."
+                      />
+                    </div>
 
-                        <BasicInput
-                          name="tel"
-                          type="tel"
-                          placeholder="+201012345678"
-                          label="Tel"
-                          direction="horizontal"
-                        />
-                      </div>
-                      <DialogFooter className="mr-2 mt-2">
-                        <SubmitButton
-                          value="Add Fellow"
-                          className="max-w-max px-10"
-                          isLoading={isPending}
-                        />
-                      </DialogFooter>
-                    </form>
-                  </Form>
-                </FormProvider>
-              </ScrollArea>
-            </DialogContent>
-          </DialogOverlay>
-        </DialogPortal>
+                    <BasicInput
+                      name="tel"
+                      type="tel"
+                      placeholder="+201012345678"
+                      label="Tel"
+                      direction="horizontal"
+                    />
+                  </div>
+                  <DialogFooter className="mr-2 mt-2">
+                    <SubmitButton
+                      value="Add Fellow"
+                      className="max-w-max px-10"
+                      isLoading={isPending}
+                    />
+                  </DialogFooter>
+                </form>
+              </Form>
+            </FormProvider>
+          </ScrollArea>
+        </DialogContent>
       </Dialog>
     );
   },
