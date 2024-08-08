@@ -38,7 +38,10 @@ export const PublishedTab = () => {
             {!isLoading &&
               optimisticCourses.length > 0 &&
               optimisticCourses.map((course) => (
-                <CourseItem course={course} key={course.id} />
+                <CourseItem
+                  course={course}
+                  key={`${course.id}-${course.updatedAt}`}
+                />
               ))}
             {optimisticCourses.length === 0 && (
               <NoCoursesFound message="No Courses Found!" />
