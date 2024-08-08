@@ -6,6 +6,7 @@
     "dashboard/courses",
     "dashboard/blogs",
     "tipTap",
-    "dashboard"
+    "dashboard",
+    "Database"
   ]
 }

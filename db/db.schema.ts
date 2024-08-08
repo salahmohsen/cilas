@@ -92,6 +92,8 @@ export const bundleTable = pgTable("course_bundle", {
   category: text("category").notNull(),
   attendance: text("attendance").notNull(),
   deadline: date("deadline", { mode: "date" }).notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 export const bundleTableRelations = relations(bundleTable, ({ many }) => ({
@@ -123,16 +125,18 @@ export const courseEnrollmentRelations = relations(
   }),
 );
 
-export const blog = pgTable("blog", {
+export const blogTable = pgTable("blog", {
   id: serial("id").primaryKey(),
   draftMode: boolean("draft_mode").notNull(),
   enTitle: text("en_title"),
   enContent: text("en_content"),
   arTitle: text("ar_title"),
   arContent: text("ar_content"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-export const blogAuthors = pgTable("blog_authors", {
-  blogId: integer("blog_id").references(() => blog.id),
+export const blogAuthorsTable = pgTable("blog_authors", {
+  blogId: integer("blog_id").references(() => blogTable.id),
   authorId: text("author_id").references(() => userTable.id),
 });
