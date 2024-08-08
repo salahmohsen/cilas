@@ -16,17 +16,6 @@ export type CourseWithSafeFellow = CourseTableRead & {
   fellow: SafeUser;
 };
 
-export type BundleWithCoursesNames = {
-  id: number;
-  name: string | null;
-  category: string;
-  attendance: string;
-  year: number;
-  cycle: string;
-  deadline: Date;
-  courses: {
-    id: number;
-    enTitle: string | null;
-    arTitle: string | null;
-  }[];
+export type BundleWithCoursesNames = InferSelectModel<typeof bundleTable> & {
+  courses: Pick<CourseTableRead, "id" | "enTitle" | "arTitle">[];
 };
