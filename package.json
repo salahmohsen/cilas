@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev",
+    "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -118,7 +118,8 @@
     "uuid": "^10.0.0",
     "vaul": "^0.9.1",
     "zod": "^3.23.8",
-    "zod-error": "^1.5.0"
+    "zod-error": "^1.5.0",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.3.1",
