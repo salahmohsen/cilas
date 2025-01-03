@@ -9,13 +9,13 @@ import {
   BundleState,
   createBundle,
   editBundle,
-} from "@/actions/bundles.actions";
-import { getUnbundledCourses } from "@/actions/courses.actions";
+} from "@/lib/actions/bundles.actions";
+import { getUnbundledCourses } from "@/lib/actions/courses.actions";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import {
   MultiSelectorInput,
   SelectInput,
@@ -28,7 +28,7 @@ import {
   bundleDefaultValues,
   bundleSchema,
   BundleSchema,
-} from "@/types/bundle.schema";
+} from "@/lib/types/bundle.schema";
 
 export default function BundleForm({
   bundleToEditValues,

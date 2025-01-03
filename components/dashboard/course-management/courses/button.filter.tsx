@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import {
   Command,
   CommandEmpty,
@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { Check, Filter } from "lucide-react";
-import { CoursesFilter } from "@/types/manage.courses.types";
+import { CoursesFilter } from "@/lib/types/manage.courses.types";
 
 const coursesFilter = [
   {

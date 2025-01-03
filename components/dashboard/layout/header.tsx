@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { logout } from "@/actions/auth.actions";
-import { getUserAvatar } from "@/actions/users.actions";
-import { cn } from "@/lib/utils";
+import { logout } from "@/lib/actions/auth.actions";
+import { getUserAvatar } from "@/lib/actions/users.actions";
+import { cn } from "@/lib/utils/utils";
 
 import {
   DropdownMenu,

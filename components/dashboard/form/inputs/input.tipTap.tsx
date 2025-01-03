@@ -18,9 +18,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
-import { StandardProps } from "@/types/formInputs.types";
+import { StandardProps } from "@/lib/types/formInputs.types";
 import React, { memo } from "react";
 import {
   Bold,

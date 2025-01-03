@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
+import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 
 type ActiveContentTab = "enContent" | "arContent";
 type UseCourseTabProps = { courseData: CourseWithSafeFellow | undefined };

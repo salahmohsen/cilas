@@ -1,18 +1,18 @@
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
-import { CourseFormState, createEditCourse } from "@/actions/courses.actions";
+import { CourseFormState, createEditCourse } from "@/lib/actions/courses.actions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   courseFormDefaultValues,
   CourseSchema,
   courseSchema,
-} from "@/types/course.schema";
+} from "@/lib/types/course.schema";
 import { toast } from "sonner";
 import { redirect } from "next/navigation";
-import { isObjectEmpty } from "@/lib/utils";
-import { useCourseState } from "@/providers/CourseState.provider";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
+import { isObjectEmpty } from "@/lib/utils/utils";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
+import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 
 type LoadingState = {
   primaryButton: boolean;

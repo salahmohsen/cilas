@@ -1,4 +1,4 @@
-import { cn, getSeason } from "@/lib/utils";
+import { cn, getSeason } from "@/lib/utils/utils";
 import { format } from "date-fns";
 
 import {

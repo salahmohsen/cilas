@@ -13,8 +13,8 @@ import { Ellipsis } from "lucide-react";
 
 import { UpdateCourses } from "./bundle.options.updateCourses";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { deleteBundle } from "@/actions/bundles.actions";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { deleteBundle } from "@/lib/actions/bundles.actions";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { toast } from "sonner";
 
 export const BundleOptions = ({

@@ -6,8 +6,8 @@ import { FormProvider } from "react-hook-form";
 
 import { CourseMetadata } from "./section.meta";
 
-import { BlockEditor } from "@/tipTap/components/BlockEditor";
-import { EditorHeader } from "@/tipTap/components/EditorHeader";
+import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
+import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
 import { SubmitButtons } from "./submit.buttons";
 import { ContentInput } from "../inputs/";
 import {
@@ -16,7 +16,7 @@ import {
   useCourseTab,
   useCourseSidebar,
 } from "./course.hooks";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
+import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 
 type CourseFormPropTypes = {
   editMode?: boolean;

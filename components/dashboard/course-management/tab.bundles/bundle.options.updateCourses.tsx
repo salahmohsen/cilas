@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { getUnbundledCourses } from "@/actions/courses.actions";
-import { updateBundleCourses } from "@/actions/bundles.actions";
+import { getUnbundledCourses } from "@/lib/actions/courses.actions";
+import { updateBundleCourses } from "@/lib/actions/bundles.actions";
 
 import {
   Dialog,
@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 
 import { toast } from "sonner";
 import { LoaderPinwheel } from "lucide-react";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 
 export const UpdateCourses = ({
   bundleId,

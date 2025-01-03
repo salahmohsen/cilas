@@ -6,8 +6,8 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 
-import { cn } from "@/lib/utils";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { cn } from "@/lib/utils/utils";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useContext } from "react";

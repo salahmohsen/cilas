@@ -1,7 +1,7 @@
 "use client";
 
 import { forwardRef, useState } from "react";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 
 import Link from "next/link";
 import { format } from "date-fns";
@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 import { Calendar, Ellipsis, User } from "lucide-react";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
+import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 
 type CourseItemProps = { course: CourseWithSafeFellow };
 

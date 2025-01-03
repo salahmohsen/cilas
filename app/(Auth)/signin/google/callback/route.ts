@@ -1,5 +1,4 @@
-import { google, lucia } from "@/lib/auth";
-import { GoogleUser } from "@/types/auth.types";
+import { GoogleUser } from "@/lib/types/auth.types";
 import { generateIdFromEntropySize } from "lucia";
 import { GoogleTokens, OAuth2RequestError } from "arctic";
 import { cookies } from "next/headers";
@@ -7,6 +6,7 @@ import db from "@/db/drizzle";
 import { eq } from "drizzle-orm";
 import { userTable } from "@/db/db.schema";
 import { NextResponse } from "next/server";
+import { google, lucia } from "@/lib/apis/auth.api";
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);

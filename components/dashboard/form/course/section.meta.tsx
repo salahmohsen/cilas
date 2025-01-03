@@ -1,8 +1,8 @@
 import { forwardRef, memo, useCallback, useEffect, useState } from "react";
-import { getUsersNamesByRole } from "@/actions/users.actions";
-import { SafeUser } from "@/types/drizzle.types";
-import { useCourseState } from "@/providers/CourseState.provider";
-import { ComboBoxOption } from "@/types/formInputs.types";
+import { getUsersNamesByRole } from "@/lib/actions/users.actions";
+import { SafeUser } from "@/lib/types/drizzle.types";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
+import { ComboBoxOption } from "@/lib/types/formInputs.types";
 
 import {
   BasicInput,

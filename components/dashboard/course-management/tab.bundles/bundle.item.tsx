@@ -4,15 +4,15 @@ import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { PanelRightClose, PanelRightOpen, Rabbit, Target } from "lucide-react";
 import { format } from "date-fns";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { BundleOptions } from "./bundle.options";
 import { BundleSkeleton } from "./bundle.skeleton";
 import {
   BundleWithCoursesNames,
   CourseWithSafeFellow,
-} from "@/types/drizzle.types";
-import { getSafeCourses } from "@/actions/courses.actions";
-import { cn } from "@/lib/utils";
+} from "@/lib/types/drizzle.types";
+import { getSafeCourses } from "@/lib/actions/courses.actions";
+import { cn } from "@/lib/utils/utils";
 
 export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
   const {

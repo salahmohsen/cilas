@@ -9,7 +9,7 @@ import {
 } from "../../../ui/form";
 import { MultipleSelector } from "@/components/ui/multipleSelector";
 
-import { MultiSelectorProps } from "@/types/formInputs.types";
+import { MultiSelectorProps } from "@/lib/types/formInputs.types";
 import { memo } from "react";
 import { LoaderCircle } from "lucide-react";
 

@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { CourseSkeleton } from "../course.skeleton";
 import { CourseItem } from "../course.item";
 import { NoCoursesFound } from "../../notFound";

@@ -1,5 +1,5 @@
-import { useBlockEditor } from "@/tipTap/hooks/useBlockEditor";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
+import { useBlockEditor } from "@/lib/tiptap/hooks/useBlockEditor";
+import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 import { JSONContent as TipTapJSONContent } from "@tiptap/core";
 import { useState } from "react";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import "@/tipTap/styles/index.css";
+import "@/lib/tiptap/styles/index.css";
 import "@/app/editor.css";
 
 export default function CreateBlog() {

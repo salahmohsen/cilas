@@ -3,11 +3,11 @@
 import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";
-import { useCourseState } from "@/providers/CourseState.provider";
-import { FellowState, addFellow } from "@/actions/users.actions";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
+import { FellowState, addFellow } from "@/lib/actions/users.actions";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FellowSchema, fellowDefaultValues } from "@/types/fellow.schema";
+import { FellowSchema, fellowDefaultValues } from "@/lib/types/fellow.schema";
 import { toast } from "sonner";
 import {
   Dialog,

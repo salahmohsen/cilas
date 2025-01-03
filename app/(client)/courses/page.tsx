@@ -1,7 +1,7 @@
 import { Course } from "@/components/client/courses/courses";
 import { CoursePagination } from "@/components/client/courses/pagination";
 import { Sidebar } from "@/components/client/courses/sidebar/sidebar";
-import { getSafeCourses } from "@/actions/courses.actions";
+import { getSafeCourses } from "@/lib/actions/courses.actions";
 import slug from "slug";
 
 const CoursesPage = async () => {

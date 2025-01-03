@@ -1,9 +1,9 @@
 "use client";
 
-import { getBundleById, getBundles } from "@/actions/bundles.actions";
+import { getBundleById, getBundles } from "@/lib/actions/bundles.actions";
 import BundleForm from "@/components/dashboard/form/bundle/bundle";
 import { ErrorPage } from "@/components/ui/error";
-import { BundleSchema } from "@/types/bundle.schema";
+import { BundleSchema } from "@/lib/types/bundle.schema";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import Loading from "@/app/(dashboard)/dashboard/course-management/create-bundle/loading";

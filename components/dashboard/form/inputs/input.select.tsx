@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
 
-import { SelectProps } from "@/types/formInputs.types";
+import { SelectProps } from "@/lib/types/formInputs.types";
 import React, { memo } from "react";
 
 export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({

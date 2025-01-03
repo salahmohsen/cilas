@@ -1,6 +1,6 @@
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { differenceInWeeks, format } from "date-fns";
-import { cn, getSeason } from "@/lib/utils";
+import { cn, getSeason } from "@/lib/utils/utils";
 import {
   Card,
   CardContent,

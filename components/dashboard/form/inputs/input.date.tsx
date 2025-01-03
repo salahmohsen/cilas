@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { useFormContext } from "react-hook-form";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 import {
   FormControl,
@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 
 import { CalendarIcon } from "lucide-react";
-import { StandardProps } from "@/types/formInputs.types";
+import { StandardProps } from "@/lib/types/formInputs.types";
 
 export const DateInput = memo(
   ({ name, label, placeholder, className }: StandardProps) => {
