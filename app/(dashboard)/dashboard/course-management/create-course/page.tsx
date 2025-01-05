@@ -8,7 +8,6 @@ import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import Loading from "./loading";
 import "@/lib/tiptap/styles/index.css";
-import "@/app/editor.css";
 
 export default function CreateCoursePage() {
   const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(
