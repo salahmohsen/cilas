@@ -1,4 +1,4 @@
-import { bundleTable, courseTable, userTable } from "@/db/db.schema";
+import { bundleTable, courseTable, userTable } from "@/lib/db/db.schema";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
 export type CourseTableRead = InferSelectModel<typeof courseTable>;

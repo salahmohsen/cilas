@@ -1,7 +1,7 @@
 "use server";
 
-import db from "@/db/drizzle";
-import { bundleTable, courseTable } from "@/db/db.schema";
+import db from "@/lib/db/drizzle";
+import { bundleTable, courseTable } from "@/lib/db/db.schema";
 import { Option } from "@/components/ui/multipleSelector";
 import { bundleSchema } from "@/lib/types/bundle.schema";
 import {

@@ -1,7 +1,7 @@
 "use server";
 
-import db from "@/db/drizzle";
-import { courseTable } from "@/db/db.schema";
+import db from "@/lib/db/drizzle";
+import { courseTable } from "@/lib/db/db.schema";
 import { courseSchema } from "@/lib/types/course.schema";
 import {
   eq,

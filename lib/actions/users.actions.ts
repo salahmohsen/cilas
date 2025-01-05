@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import db from "@/db/drizzle";
-import { userTable } from "@/db/db.schema";
+import db from "@/lib/db/drizzle";
+import { userTable } from "@/lib/db/db.schema";
 import { FellowSchema } from "@/lib/types/fellow.schema";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
