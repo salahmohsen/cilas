@@ -1,14 +1,14 @@
 import { useFormContext } from "react-hook-form";
 
-import { useEditor, EditorContent, BubbleMenu } from "@tiptap/react";
 import {
-  starterKit,
-  placeholderExtension,
-  typography,
   link,
+  placeholderExtension,
+  starterKit,
   textAlign,
   textDirection,
-} from "@/lib/tiptap-extensions";
+  typography,
+} from "@/lib/tiptap/tiptap-extensions";
+import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 
 import {
   FormControl,
@@ -24,10 +24,10 @@ import { StandardProps } from "@/lib/types/formInputs.types";
 import React, { memo } from "react";
 import {
   Bold,
+  EditorToolbar,
   Italic,
   SetLink,
   UnsetLink,
-  EditorToolbar,
 } from "./input.tipTap.toolBar";
 
 interface TipTapInputProps extends StandardProps {
