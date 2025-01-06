@@ -9,8 +9,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { SliderProps } from "@/types/formInputs.types";
-import { cn } from "@/lib/utils";
+import { SliderProps } from "@/lib/types/formInputs.types";
+import { cn } from "@/lib/utils/utils";
 import { Slider } from "@/components/ui/slider";
 
 export const SliderInput: React.FC<SliderProps> = memo(function BasicInput({

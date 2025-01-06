@@ -1,8 +1,8 @@
 "use client";
 
 import { useRef, createContext, useCallback } from "react";
-import { cn } from "@/lib/utils";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { cn } from "@/lib/utils/utils";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { useWindowSize } from "@uidotdev/usehooks";
 
 import { CourseInfo } from "@/components/dashboard/course-management/info/info";
@@ -13,7 +13,7 @@ import { DraftTab } from "./courses/tab.draft/tab.draft";
 import { BundlesTab } from "./tab.bundles/tab.bundles";
 import { PublishedTab } from "./courses/tab.published/tab.published";
 import { TabsList } from "./tab.list";
-import { Tab } from "@/types/manage.courses.types";
+import { Tab } from "@/lib/types/manage.courses.types";
 import { useCourseNavigation } from "./useCourseNavigation";
 import { CourseInfoModal } from "./info/info.modal";
 

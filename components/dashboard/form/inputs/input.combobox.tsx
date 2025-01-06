@@ -22,9 +22,9 @@ import {
 import { Button } from "@/components/ui/button";
 
 import { Check, ChevronsUpDown, LoaderCircle } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
-import { ComboBoxProps } from "@/types/formInputs.types";
+import { ComboBoxProps } from "@/lib/types/formInputs.types";
 import { useFormContext } from "react-hook-form";
 import { FellowForm } from "../fellow/fellow";
 

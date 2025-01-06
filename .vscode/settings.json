@@ -8,5 +8,17 @@
     "tipTap",
     "dashboard",
     "Database"
+  ],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always",
+    "source.removeUnused.ts": "always",
+    "source.organizeImports": "always"
+  },
+  "tailwindCSS.classAttributes": [
+    "class",
+    "className",
+    "ngClass",
+    "class:list",
+    ".*Classes.*"
   ]
 }

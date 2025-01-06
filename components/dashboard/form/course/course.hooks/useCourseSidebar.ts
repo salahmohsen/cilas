@@ -1,4 +1,4 @@
-import { SidebarState } from "@/tipTap/hooks/useSidebar";
+import { SidebarState } from "@/lib/tiptap/hooks/useSidebar";
 import { useCallback, useState } from "react";
 
 type useCourseSidebarProps = {

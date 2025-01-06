@@ -1,4 +1,4 @@
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { SubmitButton } from "../inputs/input.submit";
 import { Dispatch, SetStateAction } from "react";
 

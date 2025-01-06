@@ -2,13 +2,12 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { CourseForm } from "@/components/dashboard/form/course/course";
-import { getCourseById } from "@/actions/courses.actions";
+import { getCourseById } from "@/lib/actions/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
+import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import Loading from "./loading";
-import "@/tipTap/styles/index.css";
-import "@/app/editor.css";
+import "@/lib/tiptap/styles/index.css";
 
 export default function CreateCoursePage() {
   const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(

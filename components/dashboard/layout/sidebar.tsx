@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { ThemeToggle } from "./theme.toggle";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 export function LayoutSidebar({ className }: { className: string }) {
   return (

@@ -1,5 +1,5 @@
 import { generateCodeVerifier, generateState } from "arctic";
-import { google } from "@/lib/auth";
+import { google } from "@/lib/apis/auth.api";
 
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";

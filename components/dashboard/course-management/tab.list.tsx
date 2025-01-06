@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useCourseState } from "@/providers/CourseState.provider";
+import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui/tabs";
 import { FilterButton } from "./courses/button.filter";
 import { useCallback } from "react";
-import { Tab } from "@/types/manage.courses.types";
+import { Tab } from "@/lib/types/manage.courses.types";
 
 export const TabsList = () => {
   const {

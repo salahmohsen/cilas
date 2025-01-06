@@ -1,13 +1,13 @@
 "use client";
 
 import { useFormState } from "react-dom";
-import { SignupState, signup } from "@/actions/auth.actions";
+import { SignupState, signup } from "@/lib/actions/auth.actions";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "@/types/auth.schema";
+import { signupSchema } from "@/lib/types/auth.schema";
 import { AuthForm } from "@/components/auth/form/auth";
-import { useSession } from "@/providers/Session.provider";
+import { useSession } from "@/lib/providers/Session.provider";
 import { redirect } from "next/navigation";
 
 export default function SignupPage() {

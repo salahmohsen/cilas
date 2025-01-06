@@ -1,6 +1,6 @@
 import React, { memo, ComponentProps, ReactElement } from "react";
 import { useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 
 import {
   FormControl,
@@ -11,7 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-import { StandardProps } from "@/types/formInputs.types";
+import { StandardProps } from "@/lib/types/formInputs.types";
 
 interface WrapperProps extends StandardProps {
   Input: React.ComponentType<any> | ReactElement;

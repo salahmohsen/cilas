@@ -3,9 +3,9 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { UseFormReturn } from "react-hook-form";
-import { SigninState, SignupState } from "@/actions/auth.actions";
+import { SigninState, SignupState } from "@/lib/actions/auth.actions";
 import { toast } from "sonner";
-import { isObjectEmpty, shake } from "@/lib/utils";
+import { isObjectEmpty, shake } from "@/lib/utils/utils";
 
 import {
   Card,

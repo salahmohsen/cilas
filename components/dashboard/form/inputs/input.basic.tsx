@@ -11,9 +11,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { BasicInputProps } from "@/types/formInputs.types";
-import { cloudinary_quality } from "@/lib/cloudinary.utils";
-import { cn } from "@/lib/utils";
+import { BasicInputProps } from "@/lib/types/formInputs.types";
+import { cloudinary_quality } from "@/lib/utils/cloudinary.utils";
+import { cn } from "@/lib/utils/utils";
 
 export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
   name,

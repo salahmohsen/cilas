@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/utils/utils";
 import { CourseMetadata } from "./meta";
 import { UserHoverCard } from "./user.hoverCard";
 import { Amiri, Yeseva_One } from "next/font/google";
-import { CourseWithSafeFellow } from "@/types/drizzle.types";
+import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 
 const yesevaOne = Yeseva_One({
   subsets: ["latin"],
