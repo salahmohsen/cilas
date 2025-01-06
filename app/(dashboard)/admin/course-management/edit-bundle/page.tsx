@@ -1,12 +1,12 @@
 "use client";
 
-import { getBundleById, getBundles } from "@/lib/actions/bundles.actions";
+import Loading from "@/app/(dashboard)/admin/course-management/create-bundle/loading";
 import BundleForm from "@/components/dashboard/form/bundle/bundle";
 import { ErrorPage } from "@/components/ui/error";
+import { getBundleById } from "@/lib/actions/bundles.actions";
 import { BundleSchema } from "@/lib/types/bundle.schema";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
-import Loading from "@/app/(dashboard)/dashboard/course-management/create-bundle/loading";
 
 const EditBundle = () => {
   const searchParam = useSearchParams();
