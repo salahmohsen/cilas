@@ -34,7 +34,7 @@ export const ImageBlockView = (props: ImageBlockViewProps) => {
     <NodeViewWrapper>
       <div className={wrapperClassName} style={{ width: node.attrs.width }}>
         <div contentEditable={false} ref={imageWrapperRef}>
-          <Image className="block" src={src} alt={alt} onClick={onClick} />
+          <img className="block" src={src} alt={alt} onClick={onClick} />
           <p className="text-sm">{alt}</p>
         </div>
       </div>
