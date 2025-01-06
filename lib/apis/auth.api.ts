@@ -1,12 +1,11 @@
-import db from "@/lib/db/drizzle";
 import { sessionTable, userTable } from "@/lib/db/db.schema";
+import db from "@/lib/db/drizzle";
 import { DrizzlePostgreSQLAdapter } from "@lucia-auth/adapter-drizzle";
 
-import { Lucia, User } from "lucia";
-import { cookies } from "next/headers";
 import { Google } from "arctic";
+import { Lucia, Session, User } from "lucia";
+import { cookies } from "next/headers";
 import { cache } from "react";
-import { Session } from "lucia";
 
 const adapter = new DrizzlePostgreSQLAdapter(db, sessionTable, userTable);
 
@@ -41,7 +40,7 @@ declare module "lucia" {
   }
 }
 
-export async function createAuthSession(user_id) {
+export async function createAuthSession(user_id: string) {
   const session = await lucia.createSession(user_id, {});
   const sessionCookie = lucia.createSessionCookie(session.id);
   cookies().set(

@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
 import { logout } from "@/lib/actions/auth.actions";
-import { getUserAvatar } from "@/lib/actions/users.actions";
 import { cn } from "@/lib/utils/utils";
 
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,31 +16,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 import logo from "@/public/logo.png";
 import PlaceHolderUser from "@/public/placeholder-user.svg";
 
-import { LayoutMobileSidebar } from "./sidebar.mobile";
-import { LayoutBreadcrumb } from "./breadcrumb";
+import useUserStore from "@/lib/store/user.slice";
 import { Search } from "lucide-react";
+import { LayoutBreadcrumb } from "./breadcrumb";
+import { LayoutMobileSidebar } from "./sidebar.mobile";
 
-export function LayoutHeader({
-  className,
-  userId,
-}: {
-  className: string;
-  userId: string;
-}) {
-  const [avatar, setAvatar] = useState<string | null>(null);
+export function LayoutHeader({ className }: { className: string }) {
+  const {
+    userInfo: { avatar },
+  } = useUserStore();
 
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      const avatar = await getUserAvatar(userId);
-      setAvatar(avatar);
-    };
-    fetchAvatar();
-  }, [userId]);
   return (
     <header
       className={cn(

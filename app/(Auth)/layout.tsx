@@ -3,9 +3,9 @@ import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
-import { Toaster } from "sonner";
-import { SessionProvider } from "@/lib/providers/Session.provider";
 import { validateRequest } from "@/lib/apis/auth.api";
+import { SessionProvider } from "@/lib/providers/Session.provider";
+import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
