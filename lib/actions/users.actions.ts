@@ -8,6 +8,7 @@ import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { validateRequest } from "../apis/auth.api";
 
 export const addUser = async (
   id: string,
@@ -160,4 +161,9 @@ export const _getUserByEmail = async (email: string) => {
   });
 
   return user;
+};
+
+export const getCurrentUserInfo = async () => {
+  const { user } = await validateRequest();
+  return user?.id ? getUserById(user.id) : null;
 };

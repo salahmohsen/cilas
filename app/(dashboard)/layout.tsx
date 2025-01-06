@@ -44,7 +44,7 @@ export default async function RootLayout({
   }
 
   return (
-    <RootProvider user={user}>
+    <RootProvider>
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${inter.variable} ${ibmPlexSansArabic.variable} max-w-screen text-pretty bg-background leading-relaxed antialiased`}
