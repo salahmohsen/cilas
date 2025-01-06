@@ -1,30 +1,36 @@
 "use client";
 
 import { create } from "zustand";
-import { SafeUser } from "../types/drizzle.types";
+import { devtools } from "zustand/middleware";
+import { userLocalInfo } from "../types/drizzle.types";
 
 interface UserStore {
-  userInfo: SafeUser;
-  setUserInfo: (user: SafeUser) => void;
+  userInfo: userLocalInfo;
+  setUserInfo: (user: userLocalInfo) => void;
 }
 
-const useUserStore = create<UserStore>((set) => ({
-  userInfo: {
-    id: "",
-    email: null,
-    userName: null,
-    firstName: null,
-    lastName: null,
-    tel: null,
-    avatar: null,
-    bio: null,
-    role: "user",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
+const useUserStore = create<UserStore>()(
+  devtools(
+    (set) => ({
+      userInfo: {
+        id: "",
+        email: null,
+        userName: null,
+        firstName: null,
+        lastName: null,
+        tel: null,
+        avatar: null,
+        bio: null,
+        role: "user",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
 
-  // Actions
-  setUserInfo: (user: SafeUser) => set({ userInfo: user }),
-}));
+      // Actions
+      setUserInfo: (user: userLocalInfo) => set({ userInfo: user }),
+    }),
+    { name: "userStore" },
+  ),
+);
 
 export default useUserStore;

@@ -1,8 +1,8 @@
-import { forwardRef, memo, useCallback, useEffect, useState } from "react";
 import { getUsersNamesByRole } from "@/lib/actions/users.actions";
-import { SafeUser } from "@/lib/types/drizzle.types";
 import { useCourseState } from "@/lib/providers/CourseState.provider";
+import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { ComboBoxOption } from "@/lib/types/formInputs.types";
+import { forwardRef, memo, useCallback, useEffect, useState } from "react";
 
 import {
   BasicInput,
@@ -16,7 +16,7 @@ import {
 
 type CourseMetadataProps = {
   editMode: boolean;
-  fellow: SafeUser | undefined;
+  fellow: userLocalInfo | undefined;
 };
 
 export const CourseMetadata = memo(

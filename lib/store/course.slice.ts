@@ -1,13 +1,13 @@
-import { create } from 'zustand'
-import { toast } from "sonner";
-import { deleteCourse, getSafeCourses } from "@/lib/actions/courses.actions";
 import { getBundles as fetchBundles } from "@/lib/actions/bundles.actions";
+import { deleteCourse, getSafeCourses } from "@/lib/actions/courses.actions";
 import {
   BundleWithCoursesNames,
   CourseWithSafeFellow,
-  SafeUser,
+  userLocalInfo,
 } from "@/lib/types/drizzle.types";
 import { CoursesFilter, Tab } from "@/lib/types/manage.courses.types";
+import { toast } from "sonner";
+import { create } from "zustand";
 
 interface CourseState {
   activeTab: Tab;
@@ -15,7 +15,7 @@ interface CourseState {
   isBundleSelected: Record<number, boolean> | null;
   courseInfo: CourseWithSafeFellow | undefined | null;
   filter: CoursesFilter;
-  fellow: SafeUser | undefined;
+  fellow: userLocalInfo | undefined;
   isLoading: boolean;
   courses: CourseWithSafeFellow[];
   bundles: BundleWithCoursesNames[];
@@ -28,7 +28,7 @@ interface CourseState {
   setBundleSelected: (selected: Record<number, boolean> | null) => void;
   setCourseInfo: (course: CourseWithSafeFellow | undefined | null) => void;
   setFilter: (filter: CoursesFilter) => void;
-  setFellow: (fellow: SafeUser | undefined) => void;
+  setFellow: (fellow: userLocalInfo | undefined) => void;
   setLoading: (loading: boolean) => void;
   setCourses: (courses: CourseWithSafeFellow[]) => void;
   setBundles: (bundles: BundleWithCoursesNames[]) => void;
@@ -65,9 +65,9 @@ const useCourseStore = create<CourseState>((set, get) => ({
   setLoading: (loading) => set({ isLoading: loading }),
   setCourses: (courses) => set({ courses, isLoading: false }),
   setBundles: (bundles) => set({ bundles, isLoading: false }),
-  deleteCourseFromState: (courseId) => 
+  deleteCourseFromState: (courseId) =>
     set((state) => ({
-      courses: state.courses.filter((course) => course.id !== courseId)
+      courses: state.courses.filter((course) => course.id !== courseId),
     })),
   setOptimisticCourses: (courses) => set({ optimisticCourses: courses }),
   setIsPending: (isPending) => set({ isPending }),
@@ -80,14 +80,14 @@ const useCourseStore = create<CourseState>((set, get) => ({
     try {
       set({ courses: [], isLoading: true });
       const data = await getSafeCourses(filter);
-      
+
       if (data.error) throw new Error(data.message);
       if (data.courses) {
         set({ courses: data.courses, isLoading: false });
       }
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to fetch courses"
+        error instanceof Error ? error.message : "Failed to fetch courses",
       );
       set({ isLoading: false });
     }
@@ -102,17 +102,16 @@ const useCourseStore = create<CourseState>((set, get) => ({
       set({ bundles: data.bundles, isLoading: false });
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Failed to fetch bundles"
+        error instanceof Error ? error.message : "Failed to fetch bundles",
       );
       set({ isLoading: false });
     }
   },
 
   handleDelete: async (courseId) => {
-    
     const state = get();
     const courseToDelete = state.courses.find(
-      (course) => course.id === courseId
+      (course) => course.id === courseId,
     );
     if (!courseToDelete) return toast.error("Course is not available!");
 
@@ -123,8 +122,8 @@ const useCourseStore = create<CourseState>((set, get) => ({
       // Optimistic update
       set({
         optimisticCourses: state.courses.filter(
-          (course) => course.id !== courseId
-        )
+          (course) => course.id !== courseId,
+        ),
       });
 
       const formData = new FormData();
@@ -134,7 +133,7 @@ const useCourseStore = create<CourseState>((set, get) => ({
       if (result.success) {
         toast.success(result.message, { id: toastId });
         set((state) => ({
-          courses: state.courses.filter((course) => course.id !== courseId)
+          courses: state.courses.filter((course) => course.id !== courseId),
         }));
       } else {
         throw new Error(result.message);
@@ -142,7 +141,7 @@ const useCourseStore = create<CourseState>((set, get) => ({
     } catch (error) {
       toast.error(
         error instanceof Error ? error.message : "Failed to delete course",
-        { id: toastId }
+        { id: toastId },
       );
       // Restore the optimistic update
       set({ optimisticCourses: state.courses });

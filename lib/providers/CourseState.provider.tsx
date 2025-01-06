@@ -1,27 +1,27 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useCallback,
-  ReactNode,
-  useOptimistic,
-  useRef,
-  useTransition,
-  useReducer,
-} from "react";
+import { getBundles as fetchBundles } from "@/lib/actions/bundles.actions";
 import { deleteCourse, getSafeCourses } from "@/lib/actions/courses.actions";
 import {
   BundleWithCoursesNames,
   CourseWithSafeFellow,
-  SafeUser,
+  userLocalInfo,
 } from "@/lib/types/drizzle.types";
-import { toast } from "sonner";
-import { getBundles as fetchBundles } from "@/lib/actions/bundles.actions";
-import { useFormState } from "react-dom";
 import { CoursesFilter, Tab } from "@/lib/types/manage.courses.types";
 import { useSearchParams } from "next/navigation";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useOptimistic,
+  useReducer,
+  useRef,
+  useTransition,
+} from "react";
+import { useFormState } from "react-dom";
+import { toast } from "sonner";
 
 type isSelected = Record<number, boolean> | null;
 
@@ -31,7 +31,7 @@ type State = {
   isBundleSelected: isSelected;
   courseInfo: CourseWithSafeFellow | undefined | null;
   filter: CoursesFilter;
-  fellow: SafeUser | undefined;
+  fellow: userLocalInfo | undefined;
   isLoading: boolean;
   courses: CourseWithSafeFellow[];
   bundles: BundleWithCoursesNames[];
@@ -46,7 +46,7 @@ type Action =
       type: "SET_COURSE_INFO";
       payload: CourseWithSafeFellow | undefined | null;
     }
-  | { type: "SET_FELLOW"; payload: SafeUser | undefined }
+  | { type: "SET_FELLOW"; payload: userLocalInfo | undefined }
   | { type: "SET_LOADING"; payload: boolean }
   | { type: "SET_COURSES"; payload: CourseWithSafeFellow[] }
   | { type: "SET_BUNDLES"; payload: BundleWithCoursesNames[] }

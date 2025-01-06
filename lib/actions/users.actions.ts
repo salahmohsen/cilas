@@ -2,7 +2,7 @@
 
 import { userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
-import { SafeUser } from "@/lib/types/drizzle.types";
+import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { FellowSchema } from "@/lib/types/fellow.schema";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
@@ -29,7 +29,7 @@ export type FellowState = {
   success?: boolean;
   error?: boolean;
   message: string;
-  fellow?: SafeUser;
+  fellow?: userLocalInfo;
 };
 
 export const addFellow = async (

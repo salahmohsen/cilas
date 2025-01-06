@@ -1,7 +1,7 @@
 import {
   BundleWithCoursesNames,
   CourseWithSafeFellow,
-  SafeUser,
+  userLocalInfo,
 } from "@/lib/types/drizzle.types";
 import { CoursesFilter, Tab } from "@/lib/types/manage.courses.types";
 
@@ -11,7 +11,7 @@ export interface CourseState {
   isBundleSelected: Record<number, boolean> | null;
   courseInfo: CourseWithSafeFellow | undefined | null;
   filter: CoursesFilter;
-  fellow: SafeUser | undefined;
+  fellow: userLocalInfo | undefined;
   isLoading: boolean;
   courses: CourseWithSafeFellow[];
   bundles: BundleWithCoursesNames[];
@@ -24,7 +24,7 @@ export interface CourseState {
   setBundleSelected: (selected: Record<number, boolean> | null) => void;
   setCourseInfo: (course: CourseWithSafeFellow | undefined | null) => void;
   setFilter: (filter: CoursesFilter) => void;
-  setFellow: (fellow: SafeUser | undefined) => void;
+  setFellow: (fellow: userLocalInfo | undefined) => void;
   setLoading: (loading: boolean) => void;
   setCourses: (courses: CourseWithSafeFellow[]) => void;
   setBundles: (bundles: BundleWithCoursesNames[]) => void;
