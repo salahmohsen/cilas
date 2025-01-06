@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 const DashboardHomePage = () => {
-  redirect("/dashboard/course-management");
+  redirect("/admin/course-management");
 };
 
 export default DashboardHomePage;
