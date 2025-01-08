@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 
-import { cn } from "@/lib/utils/utils";
+import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -15,10 +14,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils/utils";
 
-import { Check, Filter } from "lucide-react";
+import { useCourseStore } from "@/lib/store/course.slice";
 import { CoursesFilter } from "@/lib/types/manage.courses.types";
+import { Check, Filter } from "lucide-react";
 
 const coursesFilter = [
   {
@@ -36,7 +36,7 @@ const coursesFilter = [
 ];
 
 export function FilterButton() {
-  const { dispatch } = useCourseState();
+  const { setFilter } = useCourseStore();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState<string | undefined>(undefined);
 
@@ -68,13 +68,11 @@ export function FilterButton() {
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? undefined : currentValue);
                     setOpen(false);
-                    dispatch({
-                      type: "SET_FILTER",
-                      payload:
-                        currentValue === value
-                          ? "published"
-                          : (currentValue as CoursesFilter),
-                    });
+                    setFilter(
+                      currentValue === value
+                        ? "published"
+                        : (currentValue as CoursesFilter),
+                    );
                   }}
                 >
                   {filter.label}

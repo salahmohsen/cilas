@@ -1,18 +1,21 @@
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { useFormState } from "react-dom";
-import { CourseFormState, createEditCourse } from "@/lib/actions/courses.actions";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CourseFormState,
+  createEditCourse,
+} from "@/lib/actions/courses.actions";
+import { useCourseStore } from "@/lib/store/course.slice";
 import {
   courseFormDefaultValues,
   CourseSchema,
   courseSchema,
 } from "@/lib/types/course.schema";
-import { toast } from "sonner";
-import { redirect } from "next/navigation";
-import { isObjectEmpty } from "@/lib/utils/utils";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
+import { isObjectEmpty } from "@/lib/utils/utils";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { useFormState } from "react-dom";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 type LoadingState = {
   primaryButton: boolean;
@@ -32,7 +35,7 @@ export const useCourseForm = ({
 }: UseCourseFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { dispatch, forceUpdateCourses } = useCourseState();
+  const { forceUpdateCourses, setActiveTab } = useCourseStore();
 
   // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(
@@ -70,13 +73,10 @@ export const useCourseForm = ({
       toast.success(courseState.message);
       forceUpdateCourses();
       // Redirect based on course submit mode: published | draft
-      dispatch({
-        type: "SET_ACTIVE_TAB",
-        payload: draftMode ? "draft" : "published",
-      });
+      setActiveTab(draftMode ? "draft" : "published");
+
       redirect(
-        "/dashboard/course-management?tab=" +
-          (draftMode ? "draft" : "published"),
+        "/admin/course-management?tab=" + (draftMode ? "draft" : "published"),
       );
     }
     // @error
@@ -85,7 +85,7 @@ export const useCourseForm = ({
     // stop loading
     if (!isPending && (courseState.success || courseState.error))
       setIsLoading({ primaryButton: false, secondaryButton: false });
-  }, [courseState, draftMode, forceUpdateCourses, isPending, dispatch]);
+  }, [courseState, draftMode, forceUpdateCourses, isPending, setActiveTab]);
 
   const handleSubmit = useCallback(
     (draftMode: boolean) => {

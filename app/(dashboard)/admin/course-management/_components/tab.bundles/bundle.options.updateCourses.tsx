@@ -1,22 +1,22 @@
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { getUnbundledCourses } from "@/lib/actions/courses.actions";
 import { updateBundleCourses } from "@/lib/actions/bundles.actions";
+import { getUnbundledCourses } from "@/lib/actions/courses.actions";
+import { Dispatch, SetStateAction, useCallback, useState } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { MultipleSelector, Option } from "@/components/ui/multipleSelector";
-import { Button } from "@/components/ui/button";
 
-import { toast } from "sonner";
+import { useCourseStore } from "@/lib/store/course.slice";
 import { LoaderPinwheel } from "lucide-react";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
+import { toast } from "sonner";
 
 export const UpdateCourses = ({
   bundleId,
@@ -25,11 +25,7 @@ export const UpdateCourses = ({
   bundleId: number;
   setIsOptionsMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const {
-    forceUpdateBundles,
-
-    state: { bundles },
-  } = useCourseState();
+  const { bundles, forceUpdateBundles } = useCourseStore();
 
   const bundle = bundles.find((bundle) => bundle.id === bundleId);
 

@@ -1,14 +1,14 @@
 import { JSONContent } from "@tiptap/core";
 import { relations } from "drizzle-orm";
 import {
-  text,
   boolean,
+  date,
+  integer,
+  json,
   pgTable,
   serial,
-  json,
+  text,
   timestamp,
-  integer,
-  date,
 } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
@@ -22,7 +22,7 @@ export const userTable = pgTable("user", {
   tel: text("tel"),
   avatar: text("avatar"),
   bio: text("bio"),
-  role: text("role", { enum: ["user", "fellow", "admin"] })
+  role: text("role", { enum: ["user", "student", "fellow", "admin"] })
     .notNull()
     .default("user"),
   createdAt: timestamp("created_at").notNull().defaultNow(),

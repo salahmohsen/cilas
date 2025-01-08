@@ -1,5 +1,4 @@
 import { getUsersNamesByRole } from "@/lib/actions/users.actions";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { ComboBoxOption } from "@/lib/types/formInputs.types";
 import { forwardRef, memo, useCallback, useEffect, useState } from "react";
@@ -13,6 +12,7 @@ import {
   SliderInput,
   TimeSlotInput,
 } from "@/components/dashboard/form/inputs/";
+import { useCourseStore } from "@/lib/store/course.slice";
 
 type CourseMetadataProps = {
   editMode: boolean;
@@ -24,9 +24,7 @@ export const CourseMetadata = memo(
     ({ editMode, fellow }, ref) => {
       const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
 
-      const {
-        state: { fellow: fellowState },
-      } = useCourseState();
+      const { fellow: fellowState } = useCourseStore();
 
       const [defaultOption, setDefaultOption] = useState<
         ComboBoxOption | undefined

@@ -1,21 +1,21 @@
-import React, { Dispatch, SetStateAction, useCallback } from "react";
 import Link from "next/link";
+import React, { Dispatch, SetStateAction, useCallback } from "react";
 
+import { Button } from "@/components/ui/button";
 import {
-  DropdownMenuContent,
-  DropdownMenuSeparator,
   DropdownMenu,
+  DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Ellipsis } from "lucide-react";
 
-import { UpdateCourses } from "./bundle.options.updateCourses";
-import { useWindowSize } from "@uidotdev/usehooks";
 import { deleteBundle } from "@/lib/actions/bundles.actions";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
+import { useCourseStore } from "@/lib/store/course.slice";
+import { useWindowSize } from "@uidotdev/usehooks";
 import { toast } from "sonner";
+import { UpdateCourses } from "./bundle.options.updateCourses";
 
 export const BundleOptions = ({
   bundleId,
@@ -26,7 +26,7 @@ export const BundleOptions = ({
   isOptionsMenuOpen: boolean;
   setIsOptionsMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { forceUpdateBundles } = useCourseState();
+  const { forceUpdateBundles } = useCourseStore();
   const { width } = useWindowSize();
   const handleDelete = useCallback(
     async (e: React.MouseEvent) => {
@@ -64,7 +64,7 @@ export const BundleOptions = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <Link href={`/dashboard/course-management/edit-bundle?id=${bundleId}`}>
+        <Link href={`/admin/course-management/edit-bundle?id=${bundleId}`}>
           <DropdownMenuItem onClick={(e) => e.stopPropagation()}>
             Edit Bundle
           </DropdownMenuItem>

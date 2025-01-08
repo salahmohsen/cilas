@@ -1,5 +1,5 @@
-import Link from "next/link";
-import ManageCourses from "@/components/dashboard/course-management/main.manage.courses";
+import ManageCourses from "@/app/(dashboard)/admin/course-management/_components/main.manage.courses";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Sailboat, Waves } from "lucide-react";
+import Link from "next/link";
 
 export default async function ManageCoursesPage() {
   return (
@@ -21,13 +21,13 @@ export default async function ManageCoursesPage() {
           </CardDescription>
         </CardHeader>
         <CardFooter className="flex flex-wrap items-center gap-2 p-0">
-          <Link href="/dashboard/course-management/create-course">
+          <Link href="/admin/course-management/create-course">
             <Button>
               <Sailboat className="mr-2 h-4 w-4" />
               New Course
             </Button>
           </Link>
-          <Link href="/dashboard/course-management/create-bundle">
+          <Link href="/admin/course-management/create-bundle">
             <Button>
               <Waves className="mr-2 h-4 w-4" />
               New Bundle

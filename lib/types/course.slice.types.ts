@@ -29,11 +29,12 @@ export interface CourseState {
   setCourses: (courses: CourseWithSafeFellow[]) => void;
   setBundles: (bundles: BundleWithCoursesNames[]) => void;
   deleteCourseFromState: (courseId: number) => void;
-  setOptimisticCourses: (courses: CourseWithSafeFellow[]) => void;
   setIsPending: (isPending: boolean) => void;
 
   // Async actions
   getCourses: (filter: CoursesFilter) => Promise<void>;
   getBundles: () => Promise<void>;
   handleDelete: (courseId: number) => Promise<string | number | undefined>;
+  forceUpdateCourses: () => Promise<void>;
+  forceUpdateBundles: () => Promise<void>;
 }

@@ -39,7 +39,7 @@ export default async function RootLayout({
 }>) {
   const { user } = await validateRequest();
 
-  if (!user) {
+  if (!user || user.role !== "admin") {
     return redirect("/signin");
   }
 

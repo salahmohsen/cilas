@@ -3,8 +3,7 @@ import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
-import { validateRequest } from "@/lib/apis/auth.api";
-import { SessionProvider } from "@/lib/providers/Session.provider";
+import { RootProvider } from "@/lib/providers";
 import { Toaster } from "sonner";
 
 const inter = Inter({
@@ -30,16 +29,14 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const sessionData = await validateRequest();
-
   return (
-    <html lang="en" suppressHydrationWarning>
-      <SessionProvider value={sessionData}>
+    <RootProvider>
+      <html lang="en" suppressHydrationWarning>
         <body className={`${inter.variable} ${ibmPlexSansArabic.variable} `}>
           <Toaster richColors />
           <main>{children}</main>
         </body>
-      </SessionProvider>
-    </html>
+      </html>
+    </RootProvider>
   );
 }

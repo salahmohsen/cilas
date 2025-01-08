@@ -1,24 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { PanelRightClose, PanelRightOpen, Rabbit, Target } from "lucide-react";
-import { format } from "date-fns";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
-import { BundleOptions } from "./bundle.options";
-import { BundleSkeleton } from "./bundle.skeleton";
+import { getSafeCourses } from "@/lib/actions/courses.actions";
+import { useCourseStore } from "@/lib/store/course.slice";
 import {
   BundleWithCoursesNames,
   CourseWithSafeFellow,
 } from "@/lib/types/drizzle.types";
-import { getSafeCourses } from "@/lib/actions/courses.actions";
 import { cn } from "@/lib/utils/utils";
+import { format } from "date-fns";
+import { PanelRightClose, PanelRightOpen, Rabbit, Target } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { BundleOptions } from "./bundle.options";
+import { BundleSkeleton } from "./bundle.skeleton";
 
 export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
-  const {
-    state: { isBundleSelected, isLoading },
-    dispatch,
-  } = useCourseState();
+  const { isBundleSelected, isLoading, setCourses } = useCourseStore();
 
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [coursesData, setCoursesData] = useState<
@@ -44,7 +41,7 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
 
   const handleBundleClick = () => {
     // This will set the courses which courseInfo will use it to toggle between next and prev
-    dispatch({ type: "SET_COURSES", payload: coursesData ?? [] });
+    setCourses(coursesData ?? []);
   };
 
   return (
@@ -117,21 +114,26 @@ const BundleCourse = ({
   course: CourseWithSafeFellow;
 }) => {
   const {
-    state: { isCourseSelected, isBundleSelected },
-    dispatch,
-  } = useCourseState();
+    isCourseSelected,
+    isBundleSelected,
+    setCourseInfo,
+    setBundleSelected,
+    setCourseSelected,
+  } = useCourseStore();
 
   const handleCourseSelect = useCallback(() => {
-    dispatch({ type: "SET_COURSE_INFO", payload: course });
-    dispatch({
-      type: "SET_BUNDLE_SELECTED",
-      payload: { [bundle.id]: isBundleSelected ? true : false },
-    });
-    dispatch({
-      type: "SET_COURSE_SELECTED",
-      payload: { [course.id]: !isCourseSelected?.[course.id] },
-    });
-  }, [dispatch, course, bundle.id, isCourseSelected, isBundleSelected]);
+    setCourseInfo(course);
+    setBundleSelected({ [bundle.id]: isBundleSelected ? true : false });
+    setCourseSelected({ [course.id]: !isCourseSelected?.[course.id] });
+  }, [
+    setCourseInfo,
+    course,
+    setBundleSelected,
+    bundle.id,
+    isBundleSelected,
+    setCourseSelected,
+    isCourseSelected,
+  ]);
 
   const panelRightIcon = isCourseSelected?.[course.id] ? (
     <PanelRightOpen

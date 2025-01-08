@@ -1,19 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { getCurrentUserInfo } from "../actions/users.actions";
-import useUserStore from "../store/user.slice";
+import { useUserStore } from "../store/user.slice";
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
-  const updateUserInfo = useUserStore((state) => state.setUserInfo);
+  const { setUserInfo } = useUserStore();
 
   useEffect(() => {
-    const updateUserStore = async () => {
-      const userInfo = await getCurrentUserInfo();
-      if (userInfo) updateUserInfo(userInfo);
-    };
-    updateUserStore();
-  }, [updateUserInfo]);
+    setUserInfo();
+  }, [setUserInfo]);
 
   return <>{children}</>;
 };

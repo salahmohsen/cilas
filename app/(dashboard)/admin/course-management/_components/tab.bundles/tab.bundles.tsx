@@ -1,4 +1,3 @@
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 import {
   Card,
   CardContent,
@@ -7,14 +6,18 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { BundleSkeleton } from "./bundle.skeleton";
-import { BundleItem } from "./bundle.item";
+import { useCourseStore } from "@/lib/store/course.slice";
+import { useEffect } from "react";
 import { NoCoursesFound } from "../notFound";
+import { BundleItem } from "./bundle.item";
+import { BundleSkeleton } from "./bundle.skeleton";
 
 export const BundlesTab = () => {
-  const {
-    state: { isLoading, bundles },
-  } = useCourseState();
+  const { isLoading, bundles, getBundles } = useCourseStore();
+
+  useEffect(() => {
+    getBundles();
+  }, [getBundles]);
 
   return (
     <TabsContent value="bundles">

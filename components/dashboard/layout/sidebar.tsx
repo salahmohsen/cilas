@@ -1,22 +1,15 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 
-import {
-  Home,
-  LifeBuoyIcon,
-  Rss,
-  Settings2Icon,
-  SquareLibrary,
-  SquareUserIcon,
-} from "lucide-react";
+import { cn } from "@/lib/utils/utils";
+import { Home, Rss, SquareLibrary } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { ThemeToggle } from "./theme.toggle";
-import { cn } from "@/lib/utils/utils";
 
 export function LayoutSidebar({ className }: { className: string }) {
   return (
     <aside
       className={cn(
-        "fixed  hidden flex-col items-center justify-between border-r bg-background sm:flex",
+        "fixed hidden flex-col items-center justify-between border-r bg-background sm:flex",
         className,
       )}
     >
@@ -29,7 +22,7 @@ export function LayoutSidebar({ className }: { className: string }) {
           />
           <SidebarItem
             name="Course Management"
-            href="/dashboard/course-management"
+            href="/admin/course-management"
             icon={<SquareLibrary className="size-5" />}
           />
           <SidebarItem

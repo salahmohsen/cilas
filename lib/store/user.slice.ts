@@ -2,35 +2,34 @@
 
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
+import { getCurrentUserInfo } from "../actions/users.actions";
 import { userLocalInfo } from "../types/drizzle.types";
 
 interface UserStore {
-  userInfo: userLocalInfo;
-  setUserInfo: (user: userLocalInfo) => void;
+  userInfo: userLocalInfo | undefined;
+  isLogged: boolean;
+  setIsLogged: (isLogged: boolean) => void;
+  setUserInfo: () => void;
 }
 
-const useUserStore = create<UserStore>()(
+export const useUserStore = create<UserStore>()(
   devtools(
     (set) => ({
-      userInfo: {
-        id: "",
-        email: null,
-        userName: null,
-        firstName: null,
-        lastName: null,
-        tel: null,
-        avatar: null,
-        bio: null,
-        role: "user",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      userInfo: undefined,
+      userRole: (state: UserStore) => state.userInfo?.role,
+
+      isLogged: false,
 
       // Actions
-      setUserInfo: (user: userLocalInfo) => set({ userInfo: user }),
+      setIsLogged: (isLogged: boolean) => set({ isLogged }),
+      setUserInfo: async () => {
+        const userInfo = await getCurrentUserInfo();
+        if (userInfo) {
+          set({ userInfo });
+          set({ isLogged: true });
+        }
+      },
     }),
     { name: "userStore" },
   ),
 );
-
-export default useUserStore;

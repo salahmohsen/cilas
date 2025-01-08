@@ -2,8 +2,8 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Home, PanelLeft, Rss, SquareLibrary } from "lucide-react";
 import logo from "@/public/logo.png";
+import { Home, PanelLeft, Rss, SquareLibrary } from "lucide-react";
 import Image from "next/image";
 
 export function LayoutMobileSidebar() {
@@ -40,7 +40,7 @@ export function LayoutMobileSidebar() {
             Dashboard
           </Link>
           <Link
-            href="/dashboard/course-management"
+            href="/admin/course-management"
             className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
           >
             <SquareLibrary className="h-5 w-5" />

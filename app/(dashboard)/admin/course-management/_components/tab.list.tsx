@@ -1,35 +1,32 @@
 "use client";
 
-import Link from "next/link";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui/tabs";
-import { FilterButton } from "./courses/button.filter";
-import { useCallback } from "react";
+import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/manage.courses.types";
+import Link from "next/link";
+import { useCallback } from "react";
+import { FilterButton } from "./courses/button.filter";
 
 export const TabsList = () => {
-  const {
-    state: { activeTab, filter },
-    dispatch,
-  } = useCourseState();
+  const { activeTab, filter, setActiveTab, setFilter } = useCourseStore();
 
   const handleTabClick = useCallback(
     (tab: Tab) => {
-      dispatch({ type: "SET_ACTIVE_TAB", payload: tab });
+      setActiveTab(tab);
       if (
         filter === "archived" ||
         filter === "ongoing" ||
         filter === "starting soon"
       )
-        dispatch({ type: "SET_FILTER", payload: "published" });
+        setFilter("published");
     },
-    [dispatch, filter],
+    [filter, setActiveTab, setFilter],
   );
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <TabsListUi>
-        <Link href="/dashboard/course-management?tab=published">
+        <Link href="/admin/course-management?tab=published">
           <TabsTrigger
             value="published"
             id="published"
@@ -39,7 +36,7 @@ export const TabsList = () => {
           </TabsTrigger>
         </Link>
 
-        <Link href="/dashboard/course-management?tab=draft">
+        <Link href="/admin/course-management?tab=draft">
           <TabsTrigger
             value="draft"
             id="draft"
@@ -49,7 +46,7 @@ export const TabsList = () => {
           </TabsTrigger>
         </Link>
 
-        <Link href="/dashboard/course-management?tab=bundles">
+        <Link href="/admin/course-management?tab=bundles">
           <TabsTrigger
             value="bundles"
             id="bundles"

@@ -1,9 +1,9 @@
 "use client";
 
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import { useEffect, useRef, useTransition } from "react";
 import { useFormState } from "react-dom";
-import { redirect } from "next/navigation";
-import Link from "next/link";
 
 import {
   BundleState,
@@ -12,23 +12,23 @@ import {
 } from "@/lib/actions/bundles.actions";
 import { getUnbundledCourses } from "@/lib/actions/courses.actions";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 import {
+  DateInput,
   MultiSelectorInput,
   SelectInput,
-  DateInput,
   SubmitButton,
 } from "@/components/dashboard/form/inputs/";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { useCourseStore } from "@/lib/store/course.slice";
 import {
   bundleDefaultValues,
   bundleSchema,
   BundleSchema,
 } from "@/lib/types/bundle.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
 
 export default function BundleForm({
   bundleToEditValues,
@@ -39,7 +39,8 @@ export default function BundleForm({
   editMode?: boolean;
   bundleId?: number;
 }) {
-  const { forceUpdateBundles, dispatch } = useCourseState();
+  const { forceUpdateBundles, setCourseSelected, setActiveTab } =
+    useCourseStore();
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -57,12 +58,12 @@ export default function BundleForm({
     if (bundleState.success) {
       forceUpdateBundles();
       toast.success(bundleState.message);
-      dispatch({ type: "SET_COURSE_SELECTED", payload: null });
-      dispatch({ type: "SET_ACTIVE_TAB", payload: "bundles" });
-      redirect("/dashboard/course-management?tab=bundles");
+      setCourseSelected(null);
+      setActiveTab("bundles");
+      redirect("/admin/course-management?tab=bundles");
     }
     if (bundleState.error) toast.error(bundleState.message);
-  }, [bundleState, forceUpdateBundles, dispatch]);
+  }, [bundleState, forceUpdateBundles, setCourseSelected, setActiveTab]);
 
   return (
     <FormProvider {...formMethods}>
@@ -142,10 +143,7 @@ export default function BundleForm({
             />
           </fieldset>
           <div className="my-8 flex gap-5">
-            <Link
-              href={"/dashboard/course-management#bundles"}
-              className="w-full"
-            >
+            <Link href={"/admin/course-management#bundles"} className="w-full">
               <Button variant="secondary" className="w-full">
                 Cancel
               </Button>

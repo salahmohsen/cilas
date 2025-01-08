@@ -1,6 +1,5 @@
 "use client";
 
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { forwardRef, useState } from "react";
 
 import { format } from "date-fns";
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ConfirmationDialog } from "@/components/shared/confirmation.dialog";
+import { useCourseStore } from "@/lib/store/course.slice";
 import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 import { Calendar, Ellipsis, User } from "lucide-react";
 
@@ -24,24 +24,16 @@ type CourseItemProps = { course: CourseWithSafeFellow };
 
 export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
   ({ course }, ref) => {
-    const {
-      state: { isCourseSelected },
-      dispatch,
-      handleDelete,
-    } = useCourseState();
+    const { handleDelete, setCourseSelected, setCourseInfo, isCourseSelected } =
+      useCourseStore();
+
     const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
       useState<boolean>(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleSelect = (id: number) => {
-      dispatch({
-        type: "SET_COURSE_SELECTED",
-        payload: { [id]: !isCourseSelected?.[id] },
-      });
-      dispatch({
-        type: "SET_COURSE_INFO",
-        payload: isCourseSelected?.[id] ? null : course,
-      });
+      setCourseSelected({ [id]: !isCourseSelected?.[id] });
+      setCourseInfo(isCourseSelected?.[id] ? null : course);
     };
 
     const courseStatues = ():
@@ -106,7 +98,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <Link
-                  href={`/dashboard/course-management/edit-course?id=${course.id}`}
+                  href={`/admin/course-management/edit-course?id=${course.id}`}
                 >
                   <DropdownMenuItem
                     onClick={(e) => e.stopPropagation()}
@@ -116,7 +108,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
                   </DropdownMenuItem>
                 </Link>
                 <Link
-                  href={`/dashboard/course-management/create-course?duplicate-course=${course.id}`}
+                  href={`/admin/course-management/create-course?duplicate-course=${course.id}`}
                 >
                   <DropdownMenuItem
                     onClick={(e) => e.stopPropagation()}

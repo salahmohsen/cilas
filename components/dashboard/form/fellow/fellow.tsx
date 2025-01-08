@@ -1,14 +1,6 @@
 "use client";
 
-import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
-import { useFormState } from "react-dom";
-import { FormProvider, useForm } from "react-hook-form";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
-import { FellowState, addFellow } from "@/lib/actions/users.actions";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FellowSchema, fellowDefaultValues } from "@/lib/types/fellow.schema";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -16,20 +8,26 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogOverlay,
-  DialogPortal,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { FellowState, addFellow } from "@/lib/actions/users.actions";
+import { FellowSchema, fellowDefaultValues } from "@/lib/types/fellow.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
+import { useFormState } from "react-dom";
+import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
 import {
-  TipTapInput,
-  SubmitButton,
   BasicInput,
+  SubmitButton,
+  TipTapInput,
 } from "@/components/dashboard/form/inputs/";
 
+import { useCourseStore } from "@/lib/store/course.slice";
 import { SquarePlus } from "lucide-react";
 
 type NewFellowProps = {
@@ -45,8 +43,7 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
     );
     const [open, setOpen] = useState(false);
 
-    const { dispatch } = useCourseState();
-
+    const { setFellow } = useCourseStore();
     const [isPending, startTransition] = useTransition();
 
     const formMethods = useForm<z.infer<typeof FellowSchema>>({
@@ -58,11 +55,11 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
     useEffect(() => {
       if (fellowState.success) {
         toast.success(fellowState.message);
-        dispatch({ type: "SET_FELLOW", payload: fellowState.fellow });
+        setFellow(fellowState.fellow);
         setOpen(false);
       }
       if (fellowState.error) toast.error(fellowState.message);
-    }, [fellowState, dispatch]);
+    }, [fellowState, setFellow]);
 
     const formRef = useRef<HTMLFormElement>(null);
     return (

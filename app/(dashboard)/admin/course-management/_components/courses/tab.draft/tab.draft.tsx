@@ -8,32 +8,38 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
-import { CourseSkeleton } from "../course.skeleton";
-import { CourseItem } from "../course.item";
-import { NoCoursesFound } from "../../notFound";
-import { useContext } from "react";
+import { useCourseStore } from "@/lib/store/course.slice";
+import { useContext, useEffect } from "react";
 import { courseNavContext } from "../../main.manage.courses";
+import { NoCoursesFound } from "../../notFound";
+import { CourseItem } from "../course.item";
+import { CourseSkeleton } from "../course.skeleton";
 
-export const PublishedTab = () => {
-  const {
-    state: { isLoading },
-    optimisticCourses,
-  } = useCourseState();
+export const DraftTab = () => {
+  const { optimisticCourses, isLoading, getCourses, setFilter } =
+    useCourseStore();
+
+  useEffect(() => {
+    setFilter("draft");
+    getCourses("draft");
+  }, [getCourses, setFilter]);
 
   const { containerRef } = useContext(courseNavContext);
 
   return (
-    <TabsContent value="published">
+    <TabsContent value="draft">
       <Card>
-        <CardHeader>
-          <CardTitle>Published Courses</CardTitle>
+        <CardHeader className="px-7">
+          <CardTitle>Draft Courses</CardTitle>
           <CardDescription>
-            Monitor and manage published courses.
+            Manage and refine courses before publishing.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ul className="group/list space-y-2" ref={containerRef}>
+          <ul
+            className="group/list space-y-2 transition-all duration-200 ease-in-out"
+            ref={containerRef}
+          >
             {isLoading && <CourseSkeleton itemsNumber={10} />}
             {!isLoading &&
               optimisticCourses.length > 0 &&
@@ -44,7 +50,7 @@ export const PublishedTab = () => {
                 />
               ))}
             {optimisticCourses.length === 0 && (
-              <NoCoursesFound message="No Courses Found!" />
+              <NoCoursesFound message="No Drafts Found!" />
             )}
           </ul>
         </CardContent>

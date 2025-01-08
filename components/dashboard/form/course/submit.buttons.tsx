@@ -1,6 +1,6 @@
-import { useCourseState } from "@/lib/providers/CourseState.provider";
-import { SubmitButton } from "../inputs/input.submit";
+import { useCourseStore } from "@/lib/store/course.slice";
 import { Dispatch, SetStateAction } from "react";
+import { SubmitButton } from "../inputs/input.submit";
 
 type SubmitButtonsProps = {
   isLoading: {
@@ -18,7 +18,7 @@ export const SubmitButtons = ({
   draftMode,
   setDraftMode,
 }: SubmitButtonsProps) => {
-  const { dispatch } = useCourseState();
+  const { setFilter } = useCourseStore();
   return (
     <div className="flex gap-2">
       <SubmitButton
@@ -28,7 +28,7 @@ export const SubmitButtons = ({
         variant="secondary"
         handleOnClick={() => {
           setDraftMode(true);
-          dispatch({ type: "SET_FILTER", payload: "draft" });
+          setFilter("draft");
         }}
       />
 
@@ -39,7 +39,7 @@ export const SubmitButtons = ({
         className="px-2 sm:px-3"
         handleOnClick={() => {
           setDraftMode(false);
-          dispatch({ type: "SET_FILTER", payload: "published" });
+          setFilter("published");
         }}
       />
     </div>

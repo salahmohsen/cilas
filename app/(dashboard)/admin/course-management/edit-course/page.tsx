@@ -1,10 +1,10 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { getCourseById } from "@/lib/actions/courses.actions";
 import { CourseForm } from "@/components/dashboard/form/course/course";
 import { ErrorPage } from "@/components/ui/error";
+import { getCourseById } from "@/lib/actions/courses.actions";
 import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
+import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Loading from "../create-course/loading";
 

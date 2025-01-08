@@ -1,5 +1,7 @@
 "use client";
 
+// ToDo: "Delete this file as i convert to zustand state management";
+
 import { getBundles as fetchBundles } from "@/lib/actions/bundles.actions";
 import { deleteCourse, getSafeCourses } from "@/lib/actions/courses.actions";
 import {

@@ -1,6 +1,4 @@
-import { useCourseState } from "@/lib/providers/CourseState.provider";
-import { differenceInWeeks, format } from "date-fns";
-import { cn, getSeason } from "@/lib/utils/utils";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,17 +6,19 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { cn, getSeason } from "@/lib/utils/utils";
+import { differenceInWeeks, format } from "date-fns";
 
-import { Copy } from "lucide-react";
-import { UserAvatar } from "./info.avatars";
-import { useWindowSize } from "@uidotdev/usehooks";
-import { toast } from "sonner";
-import { InfoFooter } from "./info.footer";
 import { Separator } from "@/components/ui/separator";
+import { useCourseStore } from "@/lib/store/course.slice";
+import { useWindowSize } from "@uidotdev/usehooks";
+import { AnimatePresence, motion } from "framer-motion";
+import { Copy } from "lucide-react";
 import { forwardRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
+import { UserAvatar } from "./info.avatars";
+import { InfoFooter } from "./info.footer";
 
 type CourseInfoProps = {
   className?: string;
@@ -27,9 +27,8 @@ type CourseInfoProps = {
 
 export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
   ({ className, mode }, ref) => {
-    const {
-      state: { courseInfo, isCourseSelected },
-    } = useCourseState();
+    const { courseInfo, isCourseSelected } = useCourseStore();
+
     const { width } = useWindowSize();
 
     const showCourseInfo = Object.values(isCourseSelected ?? false)[0] ?? false;

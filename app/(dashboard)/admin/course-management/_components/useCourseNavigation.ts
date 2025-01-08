@@ -1,14 +1,16 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
+import { useCourseStore } from "@/lib/store/course.slice";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 export const useCourseNavigation = (
   containerRef?: React.RefObject<HTMLUListElement>,
 ) => {
   const {
-    state: { courseInfo, isCourseSelected: isCourseSelectedObject },
-    dispatch,
+    courseInfo,
+    isCourseSelected: isCourseSelectedObject,
     optimisticCourses,
-  } = useCourseState();
+    setCourseInfo,
+    setCourseSelected,
+  } = useCourseStore();
 
   const [scrollIndex, setScrollIndex] = useState<number | null>(null);
 
@@ -32,25 +34,22 @@ export const useCourseNavigation = (
       const selectedId = selectedCourse?.id;
 
       if (selectedCourse && selectedId !== undefined) {
-        dispatch({ type: "SET_COURSE_INFO", payload: selectedCourse });
-        dispatch({
-          type: "SET_COURSE_SELECTED",
-          payload: { [selectedId]: true },
-        });
+        setCourseInfo(selectedCourse);
+        setCourseSelected({ [selectedId]: true });
       }
     },
-    [dispatch, optimisticCourses],
+    [setCourseInfo, setCourseSelected, optimisticCourses],
   );
 
   const setSelection = useCallback(
     (id: number) => {
       const SelectedCourse = optimisticCourses.find((item) => item.id === id);
       if (SelectedCourse) {
-        dispatch({ type: "SET_COURSE_SELECTED", payload: { [id]: true } });
-        dispatch({ type: "SET_COURSE_INFO", payload: SelectedCourse });
+        setCourseSelected({ [id]: true });
+        setCourseInfo(SelectedCourse);
       }
     },
-    [dispatch, optimisticCourses],
+    [setCourseSelected, setCourseInfo, optimisticCourses],
   );
 
   const handleNext = useCallback(() => {
@@ -118,7 +117,6 @@ export const useCourseNavigation = (
   }, [handleNext, handlePrev]);
 
   useEffect(() => {
-    console.log(containerRef?.current);
     if (!containerRef || !containerRef.current || scrollIndex === null) return;
 
     const container = containerRef.current;

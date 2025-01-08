@@ -1,48 +1,10 @@
 import { getBundles as fetchBundles } from "@/lib/actions/bundles.actions";
 import { deleteCourse, getSafeCourses } from "@/lib/actions/courses.actions";
-import {
-  BundleWithCoursesNames,
-  CourseWithSafeFellow,
-  userLocalInfo,
-} from "@/lib/types/drizzle.types";
-import { CoursesFilter, Tab } from "@/lib/types/manage.courses.types";
 import { toast } from "sonner";
 import { create } from "zustand";
+import { CourseState } from "../types/course.slice.types";
 
-interface CourseState {
-  activeTab: Tab;
-  isCourseSelected: Record<number, boolean> | null;
-  isBundleSelected: Record<number, boolean> | null;
-  courseInfo: CourseWithSafeFellow | undefined | null;
-  filter: CoursesFilter;
-  fellow: userLocalInfo | undefined;
-  isLoading: boolean;
-  courses: CourseWithSafeFellow[];
-  bundles: BundleWithCoursesNames[];
-  optimisticCourses: CourseWithSafeFellow[];
-  isPending: boolean;
-
-  // Actions
-  setActiveTab: (tab: Tab) => void;
-  setCourseSelected: (selected: Record<number, boolean> | null) => void;
-  setBundleSelected: (selected: Record<number, boolean> | null) => void;
-  setCourseInfo: (course: CourseWithSafeFellow | undefined | null) => void;
-  setFilter: (filter: CoursesFilter) => void;
-  setFellow: (fellow: userLocalInfo | undefined) => void;
-  setLoading: (loading: boolean) => void;
-  setCourses: (courses: CourseWithSafeFellow[]) => void;
-  setBundles: (bundles: BundleWithCoursesNames[]) => void;
-  deleteCourseFromState: (courseId: number) => void;
-  setOptimisticCourses: (courses: CourseWithSafeFellow[]) => void;
-  setIsPending: (isPending: boolean) => void;
-
-  // Async actions
-  getCourses: (filter: CoursesFilter) => Promise<void>;
-  getBundles: () => Promise<void>;
-  handleDelete: (courseId: number) => Promise<string | number | undefined>;
-}
-
-const useCourseStore = create<CourseState>((set, get) => ({
+export const useCourseStore = create<CourseState>((set, get) => ({
   activeTab: "published",
   isCourseSelected: null,
   isBundleSelected: null,
@@ -83,7 +45,11 @@ const useCourseStore = create<CourseState>((set, get) => ({
 
       if (data.error) throw new Error(data.message);
       if (data.courses) {
-        set({ courses: data.courses, isLoading: false });
+        set({
+          courses: data.courses,
+          optimisticCourses: data.courses,
+          isLoading: false,
+        });
       }
     } catch (error) {
       toast.error(
@@ -149,6 +115,13 @@ const useCourseStore = create<CourseState>((set, get) => ({
       set({ isPending: false });
     }
   },
-}));
+  forceUpdateCourses: async () => {
+    const { getCourses } = get();
+    await getCourses(get().filter);
+  },
 
-export default useCourseStore;
+  forceUpdateBundles: async () => {
+    const { getBundles } = get();
+    await getBundles();
+  },
+}));

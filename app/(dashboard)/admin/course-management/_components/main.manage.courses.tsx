@@ -1,21 +1,21 @@
 "use client";
 
-import { useRef, createContext, useCallback } from "react";
 import { cn } from "@/lib/utils/utils";
-import { useCourseState } from "@/lib/providers/CourseState.provider";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { createContext, useCallback, useRef } from "react";
 
-import { CourseInfo } from "@/components/dashboard/course-management/info/info";
+import { CourseInfo } from "@/app/(dashboard)/admin/course-management/_components/info/info";
 
 import { Tabs } from "@/components/ui/tabs";
 
-import { DraftTab } from "./courses/tab.draft/tab.draft";
-import { BundlesTab } from "./tab.bundles/tab.bundles";
-import { PublishedTab } from "./courses/tab.published/tab.published";
-import { TabsList } from "./tab.list";
+import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/manage.courses.types";
-import { useCourseNavigation } from "./useCourseNavigation";
+import { DraftTab } from "./courses/tab.draft/tab.draft";
+import { PublishedTab } from "./courses/tab.published/tab.published";
 import { CourseInfoModal } from "./info/info.modal";
+import { BundlesTab } from "./tab.bundles/tab.bundles";
+import { TabsList } from "./tab.list";
+import { useCourseNavigation } from "./useCourseNavigation";
 
 type CourseNavContext = {
   handleNext: () => void;
@@ -30,10 +30,7 @@ export const courseNavContext = createContext<CourseNavContext>(
 export default function ManageCourses() {
   const { width } = useWindowSize();
 
-  const {
-    state: { activeTab },
-    dispatch,
-  } = useCourseState();
+  const { activeTab, setActiveTab, setCourseSelected } = useCourseStore();
 
   const containerRef = useRef<HTMLUListElement | null>(null);
 
@@ -43,16 +40,10 @@ export default function ManageCourses() {
 
   const onTabChange = useCallback(
     (tab: string) => {
-      dispatch({
-        type: "SET_ACTIVE_TAB",
-        payload: tab as Tab,
-      });
-      dispatch({
-        type: "SET_COURSE_SELECTED",
-        payload: null,
-      });
+      setActiveTab(tab as Tab);
+      setCourseSelected(null);
     },
-    [dispatch],
+    [setActiveTab, setCourseSelected],
   );
   return (
     <courseNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
