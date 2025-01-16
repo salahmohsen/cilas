@@ -22,23 +22,29 @@ import { Check, Filter } from "lucide-react";
 
 const coursesFilter = [
   {
-    value: "ongoing",
-    label: "Ongoing",
+    value: CoursesFilter.AllPublished,
+    label: "Show All",
   },
   {
-    value: "archived",
-    label: "Archived",
+    value: CoursesFilter.Ongoing,
+    label: CoursesFilter.Ongoing,
   },
   {
-    value: "starting soon",
-    label: "Starting soon",
+    value: CoursesFilter.Archived,
+    label: CoursesFilter.Archived,
+  },
+  {
+    value: CoursesFilter.StartingSoon,
+    label: CoursesFilter.StartingSoon,
   },
 ];
 
 export function FilterButton() {
   const { setFilter } = useCourseStore();
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<string | undefined>(undefined);
+  const [value, setValue] = useState<CoursesFilter | undefined>(
+    CoursesFilter.AllPublished,
+  );
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -66,11 +72,15 @@ export function FilterButton() {
                   key={filter.value}
                   value={filter.value}
                   onSelect={(currentValue) => {
-                    setValue(currentValue === value ? undefined : currentValue);
+                    setValue(
+                      currentValue === value
+                        ? CoursesFilter.AllPublished
+                        : (currentValue as CoursesFilter),
+                    );
                     setOpen(false);
                     setFilter(
                       currentValue === value
-                        ? CoursesFilter.Published
+                        ? CoursesFilter.AllPublished
                         : (currentValue as CoursesFilter),
                     );
                   }}
