@@ -1,4 +1,4 @@
-import ManageCourses from "@/app/(dashboard)/admin/course-management/_components/main.manage.courses";
+import ManageCourses from "@/app/(dashboard)/admin/course-management/_components/courses/manage.courses";
 import { Button } from "@/components/ui/button";
 import {
   Card,

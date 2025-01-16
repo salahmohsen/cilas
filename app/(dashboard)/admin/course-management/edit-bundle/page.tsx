@@ -1,7 +1,7 @@
 "use client";
 
+import BundleForm from "@/app/(dashboard)/admin/course-management/_components/bundles/bundle.editor";
 import Loading from "@/app/(dashboard)/admin/course-management/create-bundle/loading";
-import BundleForm from "@/components/dashboard/form/bundle/bundle";
 import { ErrorPage } from "@/components/ui/error";
 import { getBundleById } from "@/lib/actions/bundles.actions";
 import { BundleSchema } from "@/lib/types/bundle.schema";

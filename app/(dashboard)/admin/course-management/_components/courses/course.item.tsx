@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ConfirmationDialog } from "@/components/shared/confirmation.dialog";
+import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
 import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";

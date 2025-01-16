@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useContext } from "react";
-import { courseNavContext } from "../main.manage.courses";
+import { courseNavContext } from "../courses/manage.courses";
 
 export const InfoFooter = ({ className }: { className?: string }) => {
   const { courseInfo } = useCourseStore();

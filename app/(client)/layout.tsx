@@ -1,12 +1,12 @@
 import "@/app/globals.css";
+import logo from "@/public/logo.png";
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Sans_Arabic } from "next/font/google";
+import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import Image from "next/image";
 import Link from "next/link";
-import logo from "@/public/logo.png";
 
-import { MainNav } from "@/components/client/layout/header.mainNav";
-import { FloatingNav } from "@/components/client/layout/header.floatingNav";
+import { FloatingNav } from "./_components/layout/header.floatingNav";
+import { MainNav } from "./_components/layout/header.mainNav";
 
 import { Bird, Brain, HomeIcon, Map, Rss } from "lucide-react";
 

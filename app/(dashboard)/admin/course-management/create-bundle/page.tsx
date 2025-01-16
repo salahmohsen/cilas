@@ -1,4 +1,4 @@
-import BundleForm from "@/components/dashboard/form/bundle/bundle";
+import BundleForm from "@/app/(dashboard)/admin/course-management/_components/bundles/bundle.editor";
 
 const createBundle = () => {
   return <BundleForm />;

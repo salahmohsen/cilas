@@ -1,13 +1,13 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState } from "react";
-import { CourseForm } from "@/components/dashboard/form/course/course";
-import { getCourseById } from "@/lib/actions/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
+import { getCourseById } from "@/lib/actions/courses.actions";
+import "@/lib/tiptap/styles/index.css";
 import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { CourseForm } from "../_components/courses/editor/course.editor";
 import Loading from "./loading";
-import "@/lib/tiptap/styles/index.css";
 
 export default function CreateCoursePage() {
   const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(
