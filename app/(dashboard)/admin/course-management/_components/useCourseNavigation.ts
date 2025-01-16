@@ -55,8 +55,12 @@ export const useCourseNavigation = (
     }
 
     const currIndex = idArr?.indexOf(courseInfo.id);
-
-    if (idArr && currIndex && currIndex < idArr.length - 1) {
+    console.log("idArr", idArr, "currIndex", currIndex);
+    if (
+      idArr &&
+      typeof currIndex === "number" &&
+      currIndex < idArr.length - 1
+    ) {
       setSelection(idArr[currIndex + 1]);
       setScrollIndex(currIndex + 1);
     } else {
@@ -119,7 +123,7 @@ export const useCourseNavigation = (
     if (scrollIndex >= 0 && scrollIndex < elements.length) {
       const element = elements[scrollIndex];
       if (element instanceof HTMLElement) {
-        const headerOffset = 70;
+        const headerOffset = 160;
         const elementPosition = element.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
