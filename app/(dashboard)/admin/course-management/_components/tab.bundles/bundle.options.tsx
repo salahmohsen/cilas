@@ -26,7 +26,7 @@ export const BundleOptions = ({
   isOptionsMenuOpen: boolean;
   setIsOptionsMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { forceUpdateBundles } = useCourseStore();
+  const { getBundles } = useCourseStore();
   const { width } = useWindowSize();
   const handleDelete = useCallback(
     async (e: React.MouseEvent) => {
@@ -38,14 +38,14 @@ export const BundleOptions = ({
         if (result.error) throw new Error(result.message);
         if (result.success) {
           toast.success(result.message, { id: toastId });
-          forceUpdateBundles();
+          getBundles();
         }
       } catch (e) {
         toast.error(e instanceof Error && e.message, { id: toastId });
       } finally {
       }
     },
-    [setIsOptionsMenuOpen, bundleId, forceUpdateBundles],
+    [setIsOptionsMenuOpen, bundleId, getBundles],
   );
 
   return (

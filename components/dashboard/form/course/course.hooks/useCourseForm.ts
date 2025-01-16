@@ -8,6 +8,7 @@ import {
   CourseSchema,
   courseSchema,
 } from "@/lib/types/course.schema";
+import { Tab } from "@/lib/types/course.slice.types";
 import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,12 +36,14 @@ export const useCourseForm = ({
 }: UseCourseFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { forceUpdateCourses, setActiveTab } = useCourseStore();
+  const { getCourses, setActiveTab } = useCourseStore();
 
   // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(
     courseData?.draftMode ?? false,
   );
+
+  const activeTab = draftMode ? Tab.Draft : Tab.Published;
 
   // set separate loading for each button: Publish | Draft
   const [isLoading, setIsLoading] = useState<LoadingState>({
@@ -71,13 +74,11 @@ export const useCourseForm = ({
     // @success
     if (courseState.success) {
       toast.success(courseState.message);
-      forceUpdateCourses();
+      getCourses();
       // Redirect based on course submit mode: published | draft
-      setActiveTab(draftMode ? "draft" : "published");
+      setActiveTab(activeTab);
 
-      redirect(
-        "/admin/course-management?tab=" + (draftMode ? "draft" : "published"),
-      );
+      redirect("/admin/course-management?tab=" + activeTab);
     }
     // @error
     if (courseState.error) toast.error(courseState.message);
@@ -85,7 +86,7 @@ export const useCourseForm = ({
     // stop loading
     if (!isPending && (courseState.success || courseState.error))
       setIsLoading({ primaryButton: false, secondaryButton: false });
-  }, [courseState, draftMode, forceUpdateCourses, isPending, setActiveTab]);
+  }, [activeTab, courseState, draftMode, getCourses, isPending, setActiveTab]);
 
   const handleSubmit = useCallback(
     (draftMode: boolean) => {

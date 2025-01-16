@@ -29,7 +29,6 @@ export const metadata: Metadata = {
 import { LayoutSidebar } from "@/components/dashboard/layout/sidebar";
 import { validateRequest } from "@/lib/apis/auth.api";
 import { RootProvider } from "@/lib/providers";
-import { CourseStateProvider } from "@/lib/providers/CourseState.provider";
 import { redirect } from "next/navigation";
 
 export default async function RootLayout({
@@ -50,23 +49,21 @@ export default async function RootLayout({
           className={`${inter.variable} ${ibmPlexSansArabic.variable} max-w-screen text-pretty bg-background leading-relaxed antialiased`}
           id="dashboard"
         >
-          <CourseStateProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Toaster richColors />
-              <main>
-                <LayoutHeader className="z-40 h-16 px-5 sm:pl-0" />
-                <div className="mt-16 flex w-full">
-                  <LayoutSidebar className="z-40 h-[calc(100%-4rem)] w-16" />
-                  <div className="w-full sm:ml-16">{children}</div>
-                </div>
-              </main>
-            </ThemeProvider>
-          </CourseStateProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Toaster richColors />
+            <main>
+              <LayoutHeader className="z-40 h-16 px-5 sm:pl-0" />
+              <div className="mt-16 flex w-full">
+                <LayoutSidebar className="z-40 h-[calc(100%-4rem)] w-16" />
+                <div className="w-full sm:ml-16">{children}</div>
+              </div>
+            </main>
+          </ThemeProvider>
         </body>
       </html>
     </RootProvider>

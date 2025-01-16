@@ -1,11 +1,12 @@
 import { Course } from "@/components/client/courses/courses";
 import { CoursePagination } from "@/components/client/courses/pagination";
 import { Sidebar } from "@/components/client/courses/sidebar/sidebar";
-import { getSafeCourses } from "@/lib/actions/courses.actions";
+import { fetchCourses } from "@/lib/actions/courses.actions";
+import { CoursesFilter } from "@/lib/types/course.slice.types";
 import slug from "slug";
 
 const CoursesPage = async () => {
-  const data = await getSafeCourses("published");
+  const data = await fetchCourses(CoursesFilter.AllPublished);
   if (data.success)
     return (
       <section className="grid h-screen grid-cols-10 gap-5">

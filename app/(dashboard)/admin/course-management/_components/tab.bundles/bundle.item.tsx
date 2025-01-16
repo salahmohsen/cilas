@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { getSafeCourses } from "@/lib/actions/courses.actions";
+import { fetchCourses } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
 import {
   BundleWithCoursesNames,
@@ -26,7 +26,7 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
     const fetchBundleCoursesData = async () => {
       const bundleCoursesIds = bundle.courses.map((course) => course.id);
       if (bundleCoursesIds.length > 0) {
-        const bundleCourses = await getSafeCourses(
+        const bundleCourses = await fetchCourses(
           undefined,
           undefined,
           bundleCoursesIds,

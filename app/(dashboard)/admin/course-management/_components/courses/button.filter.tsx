@@ -17,7 +17,7 @@ import {
 import { cn } from "@/lib/utils/utils";
 
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter } from "@/lib/types/manage.courses.types";
+import { CoursesFilter } from "@/lib/types/course.slice.types";
 import { Check, Filter } from "lucide-react";
 
 const coursesFilter = [
@@ -70,7 +70,7 @@ export function FilterButton() {
                     setOpen(false);
                     setFilter(
                       currentValue === value
-                        ? "published"
+                        ? CoursesFilter.Published
                         : (currentValue as CoursesFilter),
                     );
                   }}

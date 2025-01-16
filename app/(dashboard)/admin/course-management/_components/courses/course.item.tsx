@@ -17,6 +17,7 @@ import {
 
 import { ConfirmationDialog } from "@/components/shared/confirmation.dialog";
 import { useCourseStore } from "@/lib/store/course.slice";
+import { CoursesFilter } from "@/lib/types/course.slice.types";
 import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 import { Calendar, Ellipsis, User } from "lucide-react";
 
@@ -36,23 +37,17 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
       setCourseInfo(isCourseSelected?.[id] ? null : course);
     };
 
-    const courseStatues = ():
-      | "ongoing"
-      | "starting soon"
-      | "archived"
-      | "draft"
-      | "unknown status" => {
+    const courseStatues = (): CoursesFilter | undefined => {
       const currentDate = new Date();
       const startDate = new Date(course.startDate);
       const endDate = new Date(course.endDate);
       const isDraft = course.draftMode;
-      if (isDraft) return "draft";
-      if (startDate <= currentDate && endDate >= currentDate && !isDraft)
-        return "ongoing";
-      if (startDate > currentDate && !isDraft) return "starting soon";
-      if (endDate < currentDate && !isDraft) return "archived";
-
-      return "unknown status";
+      if (isDraft) return CoursesFilter.Draft;
+      if (startDate <= currentDate && endDate >= currentDate)
+        return CoursesFilter.Ongoing;
+      if (startDate > currentDate) return CoursesFilter.StartingSoon;
+      if (endDate < currentDate) return CoursesFilter.Archived;
+      console.error("unknown status");
     };
 
     return (

@@ -1,28 +1,18 @@
 "use server";
 
-import db from "@/lib/db/drizzle";
+import { Option } from "@/components/ui/multipleSelector";
 import { courseTable } from "@/lib/db/db.schema";
+import db from "@/lib/db/drizzle";
 import { courseSchema } from "@/lib/types/course.schema";
-import {
-  eq,
-  desc,
-  asc,
-  or,
-  and,
-  like,
-  ilike,
-  isNull,
-  inArray,
-} from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import { uploadImage } from "@/lib/utils/cloudinary.utils";
+import { CoursesFilter } from "@/lib/types/course.slice.types";
 import {
   courseSchemaToDbSchema,
   formDataToCourseSchema,
 } from "@/lib/utils/actions.utils";
-import { Option } from "@/components/ui/multipleSelector";
-import { CoursesFilter } from "@/lib/types/manage.courses.types";
+import { uploadImage } from "@/lib/utils/cloudinary.utils";
 import { coursesFilter } from "@/lib/utils/drizzle.utils";
+import { and, desc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 
 export type CourseFormState = {
   success?: boolean;
@@ -131,7 +121,7 @@ export async function createEditCourse(
   };
 }
 
-export const getSafeCourses = async (
+export const fetchCourses = async (
   filter?: CoursesFilter,
   id?: number,
   idArr?: number[],

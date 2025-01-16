@@ -1,4 +1,5 @@
 import { useCourseStore } from "@/lib/store/course.slice";
+import { CoursesFilter } from "@/lib/types/course.slice.types";
 import { Dispatch, SetStateAction } from "react";
 import { SubmitButton } from "../inputs/input.submit";
 
@@ -28,7 +29,7 @@ export const SubmitButtons = ({
         variant="secondary"
         handleOnClick={() => {
           setDraftMode(true);
-          setFilter("draft");
+          setFilter(CoursesFilter.Draft);
         }}
       />
 
@@ -39,7 +40,7 @@ export const SubmitButtons = ({
         className="px-2 sm:px-3"
         handleOnClick={() => {
           setDraftMode(false);
-          setFilter("published");
+          setFilter(CoursesFilter.AllPublished);
         }}
       />
     </div>

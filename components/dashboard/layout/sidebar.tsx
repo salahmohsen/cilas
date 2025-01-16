@@ -17,12 +17,12 @@ export function LayoutSidebar({ className }: { className: string }) {
         <TooltipProvider>
           <SidebarItem
             name="Home"
-            href="/dashboard"
+            href="/admin"
             icon={<Home className="size-5" />}
           />
           <SidebarItem
             name="Course Management"
-            href="/admin/course-management"
+            href="/admin/course-management?tab=published"
             icon={<SquareLibrary className="size-5" />}
           />
           <SidebarItem

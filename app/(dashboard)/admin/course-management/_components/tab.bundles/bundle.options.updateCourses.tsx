@@ -25,9 +25,9 @@ export const UpdateCourses = ({
   bundleId: number;
   setIsOptionsMenuOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { bundles, forceUpdateBundles } = useCourseStore();
+  const { bundles, getBundles } = useCourseStore();
 
-  const bundle = bundles.find((bundle) => bundle.id === bundleId);
+  const bundle = bundles?.find((bundle) => bundle.id === bundleId);
 
   const defaultCourses: Option[] | undefined = bundle?.courses.map(
     (course) => ({
@@ -48,7 +48,7 @@ export const UpdateCourses = ({
         if (results.error) throw new Error(results.message);
         if (results.success) {
           toast.success(results.message);
-          forceUpdateBundles();
+          getBundles();
           setIsOptionsMenuOpen(false);
           setDialogOpen(false);
         }
@@ -58,7 +58,7 @@ export const UpdateCourses = ({
         setLoading(false);
       }
     }
-  }, [courses, bundleId, setIsOptionsMenuOpen, forceUpdateBundles]);
+  }, [courses, bundleId, setIsOptionsMenuOpen, getBundles]);
 
   const selector = (
     <MultipleSelector

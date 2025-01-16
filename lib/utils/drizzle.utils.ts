@@ -1,31 +1,31 @@
 import { courseTable } from "@/lib/db/db.schema";
-import { CoursesFilter } from "@/lib/types/manage.courses.types";
-import { eq, gte, lte, lt, gt, and } from "drizzle-orm";
+import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
 
 export const coursesFilter = (filter: CoursesFilter) => {
-  if (filter === "published") {
+  if (filter === CoursesFilter.AllPublished) {
     return eq(courseTable.draftMode, false);
   }
-  if (filter === "ongoing") {
+  if (filter === CoursesFilter.Ongoing) {
     return and(
       gte(courseTable.endDate, new Date()),
       lte(courseTable.startDate, new Date()),
       eq(courseTable.draftMode, false),
     );
   }
-  if (filter === "archived") {
+  if (filter === CoursesFilter.Archived) {
     return and(
       lt(courseTable.endDate, new Date()),
       eq(courseTable.draftMode, false),
     );
   }
-  if (filter === "starting soon") {
+  if (filter === CoursesFilter.StartingSoon) {
     return and(
       gt(courseTable.startDate, new Date()),
       eq(courseTable.draftMode, false),
     );
   }
-  if (filter === "draft") {
+  if (filter === CoursesFilter.Draft) {
     return eq(courseTable.draftMode, true);
   }
 };

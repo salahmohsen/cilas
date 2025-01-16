@@ -7,17 +7,14 @@ export const useCourseNavigation = (
   const {
     courseInfo,
     isCourseSelected: isCourseSelectedObject,
-    optimisticCourses,
+    courses,
     setCourseInfo,
     setCourseSelected,
   } = useCourseStore();
 
   const [scrollIndex, setScrollIndex] = useState<number | null>(null);
 
-  const idArr = useMemo(
-    () => optimisticCourses.map((item) => item.id),
-    [optimisticCourses],
-  );
+  const idArr = useMemo(() => courses?.map((item) => item.id), [courses]);
 
   const isCourseSelected = useMemo(
     () => Object.values(isCourseSelectedObject ?? {}).some(Boolean),
@@ -26,11 +23,9 @@ export const useCourseNavigation = (
 
   const resetSelection = useCallback(
     (isLast: boolean = false) => {
-      if (optimisticCourses.length === 0) return;
+      if (courses?.length === 0) return;
 
-      const selectedCourse = isLast
-        ? optimisticCourses.at(-1)
-        : optimisticCourses[0];
+      const selectedCourse = isLast ? courses?.at(-1) : courses?.[0];
       const selectedId = selectedCourse?.id;
 
       if (selectedCourse && selectedId !== undefined) {
@@ -38,29 +33,30 @@ export const useCourseNavigation = (
         setCourseSelected({ [selectedId]: true });
       }
     },
-    [setCourseInfo, setCourseSelected, optimisticCourses],
+    [setCourseInfo, setCourseSelected, courses],
   );
 
   const setSelection = useCallback(
     (id: number) => {
-      const SelectedCourse = optimisticCourses.find((item) => item.id === id);
+      const SelectedCourse = courses?.find((item) => item.id === id);
       if (SelectedCourse) {
         setCourseSelected({ [id]: true });
         setCourseInfo(SelectedCourse);
       }
     },
-    [setCourseSelected, setCourseInfo, optimisticCourses],
+    [setCourseSelected, setCourseInfo, courses],
   );
 
   const handleNext = useCallback(() => {
-    if (!courseInfo || !isCourseSelected || optimisticCourses.length === 0) {
+    if (!courseInfo || !isCourseSelected || courses?.length === 0) {
       resetSelection();
       setScrollIndex(0);
       return;
     }
 
-    const currIndex = idArr.indexOf(courseInfo.id);
-    if (currIndex < idArr.length - 1) {
+    const currIndex = idArr?.indexOf(courseInfo.id);
+
+    if (idArr && currIndex && currIndex < idArr.length - 1) {
       setSelection(idArr[currIndex + 1]);
       setScrollIndex(currIndex + 1);
     } else {
@@ -71,33 +67,31 @@ export const useCourseNavigation = (
     courseInfo,
     idArr,
     isCourseSelected,
-    optimisticCourses.length,
+    courses?.length,
     resetSelection,
     setSelection,
   ]);
 
   const handlePrev = useCallback(() => {
-    if (!courseInfo || !isCourseSelected || optimisticCourses.length === 0) {
+    if (!courseInfo || !isCourseSelected || courses?.length === 0) {
       resetSelection(true);
-
-      setScrollIndex(idArr.length - 1);
-
+      idArr && setScrollIndex(idArr.length - 1);
       return;
     }
 
-    const currIndex = idArr.indexOf(courseInfo.id);
-    if (currIndex > 0) {
+    const currIndex = idArr?.indexOf(courseInfo.id);
+    if (currIndex && idArr && currIndex > 0) {
       setSelection(idArr[currIndex - 1]);
       setScrollIndex(currIndex - 1);
     } else {
       resetSelection(true);
-      setScrollIndex(idArr.length - 1);
+      idArr && setScrollIndex(idArr.length - 1);
     }
   }, [
     courseInfo,
     idArr,
     isCourseSelected,
-    optimisticCourses.length,
+    courses?.length,
     resetSelection,
     setSelection,
   ]);

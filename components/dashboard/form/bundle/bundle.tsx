@@ -26,6 +26,7 @@ import {
   bundleSchema,
   BundleSchema,
 } from "@/lib/types/bundle.schema";
+import { Tab } from "@/lib/types/course.slice.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -39,8 +40,7 @@ export default function BundleForm({
   editMode?: boolean;
   bundleId?: number;
 }) {
-  const { forceUpdateBundles, setCourseSelected, setActiveTab } =
-    useCourseStore();
+  const { getBundles, setCourseSelected, setActiveTab } = useCourseStore();
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -56,14 +56,14 @@ export default function BundleForm({
   });
   useEffect(() => {
     if (bundleState.success) {
-      forceUpdateBundles();
+      getBundles();
       toast.success(bundleState.message);
       setCourseSelected(null);
-      setActiveTab("bundles");
-      redirect("/admin/course-management?tab=bundles");
+      setActiveTab(Tab.Bundles);
+      redirect(`/admin/course-management?tab=${Tab.Bundles}`);
     }
     if (bundleState.error) toast.error(bundleState.message);
-  }, [bundleState, forceUpdateBundles, setCourseSelected, setActiveTab]);
+  }, [bundleState, getBundles, setCourseSelected, setActiveTab]);
 
   return (
     <FormProvider {...formMethods}>
@@ -143,7 +143,10 @@ export default function BundleForm({
             />
           </fieldset>
           <div className="my-8 flex gap-5">
-            <Link href={"/admin/course-management#bundles"} className="w-full">
+            <Link
+              href={`/admin/course-management?tab=${Tab.Bundles}`}
+              className="w-full"
+            >
               <Button variant="secondary" className="w-full">
                 Cancel
               </Button>

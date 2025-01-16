@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { useCourseStore } from "@/lib/store/course.slice";
+import { Tab } from "@/lib/types/course.slice.types";
 import { useEffect } from "react";
 import { NoCoursesFound } from "../notFound";
 import { BundleItem } from "./bundle.item";
@@ -20,7 +21,7 @@ export const BundlesTab = () => {
   }, [getBundles]);
 
   return (
-    <TabsContent value="bundles">
+    <TabsContent value={Tab.Bundles}>
       <Card>
         <CardHeader className="px-7">
           <CardTitle>Courses Bundles</CardTitle>
@@ -30,7 +31,7 @@ export const BundlesTab = () => {
           <ul className="group/list space-y-3">
             {isLoading ? (
               <BundleSkeleton itemsNumber={5} />
-            ) : bundles.length > 0 ? (
+            ) : bundles && bundles.length > 0 ? (
               bundles.map((bundle) => (
                 <BundleItem
                   key={`${bundle.id}-${bundle.updatedAt}`}
