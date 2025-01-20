@@ -104,6 +104,7 @@ const config = {
     require("tailwindcss-animate"),
     require("@tailwindcss/typography"),
     require("tailwind-scrollbar")({ nocompatible: true }),
+    require("@tailwindcss/line-clamp"),
   ],
 } satisfies Config;
 
