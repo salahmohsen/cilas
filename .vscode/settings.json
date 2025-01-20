@@ -10,9 +10,8 @@
     "Database"
   ],
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "always",
-    "source.removeUnused.ts": "always",
-    "source.organizeImports": "always"
+    "source.removeUnusedImports": "explicit",
+    "source.organizeImports": "explicit"
   },
   "tailwindCSS.classAttributes": [
     "class",

@@ -1,12 +1,12 @@
-import { GoogleUser } from "@/lib/types/auth.types";
-import { generateIdFromEntropySize } from "lucia";
-import { GoogleTokens, OAuth2RequestError } from "arctic";
-import { cookies } from "next/headers";
-import db from "@/lib/db/drizzle";
-import { eq } from "drizzle-orm";
-import { userTable } from "@/lib/db/db.schema";
-import { NextResponse } from "next/server";
 import { google, lucia } from "@/lib/apis/auth.api";
+import { userTable } from "@/lib/db/db.schema";
+import db from "@/lib/db/drizzle";
+import { GoogleUser } from "@/lib/types/auth.types";
+import { GoogleTokens, OAuth2RequestError } from "arctic";
+import { eq } from "drizzle-orm";
+import { generateIdFromEntropySize } from "lucia";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
@@ -56,9 +56,9 @@ export async function GET(request: Request): Promise<Response> {
         sessionCookie.value,
         sessionCookie.attributes,
       );
-
+      // This will redirect the user to the dashboard based on their role
       return NextResponse.redirect(
-        new URL("/dashboard", process.env.NEXT_PUBLIC_BASE_URL),
+        new URL(`/${existingUser[0].role}`, process.env.NEXT_PUBLIC_BASE_URL),
         {
           status: 302,
         },
@@ -90,7 +90,7 @@ export async function GET(request: Request): Promise<Response> {
       return new NextResponse(null, {
         status: 302,
         headers: {
-          Location: "/dashboard",
+          Location: "/admin",
         },
       });
     }

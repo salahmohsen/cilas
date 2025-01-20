@@ -1,12 +1,12 @@
 "use server";
 
-import { signinSchema, signupSchema } from "@/lib/types/auth.schema";
-import { generateIdFromEntropySize } from "lucia";
-import { hash, verify } from "@node-rs/argon2";
 import { createAuthSession, lucia, validateRequest } from "@/lib/apis/auth.api";
-import { _getUserByEmail, addUser } from "./users.actions";
-import { redirect } from "next/navigation";
+import { signinSchema, signupSchema } from "@/lib/types/auth.schema";
+import { hash, verify } from "@node-rs/argon2";
+import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { _getUserByEmail, addUser } from "./users.actions";
 
 // signin action --------------------------------------------------------------------
 
@@ -79,7 +79,7 @@ export const logout = async () => {
   return redirect("/signin");
 };
 
-///////// signup action /////////
+/* signup action */
 
 export type SignupState =
   | {

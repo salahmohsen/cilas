@@ -1,18 +1,18 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { AuthForm } from "@/app/(Auth)/_components/auth";
 import { SignupState, signup } from "@/lib/actions/auth.actions";
+import { useUserStore } from "@/lib/store/user.slice";
+import { signupSchema } from "@/lib/types/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
+import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "@/lib/types/auth.schema";
-import { AuthForm } from "@/components/auth/form/auth";
-import { useSession } from "@/lib/providers/Session.provider";
-import { redirect } from "next/navigation";
 
 export default function SignupPage() {
-  const { user } = useSession();
-  if (user) redirect("/dashboard");
+  const { isLogged, userInfo } = useUserStore();
+  if (isLogged && userInfo) redirect(`/${userInfo.role}`);
 
   const [signupState, signupAction] = useFormState(signup, {} as SignupState);
 

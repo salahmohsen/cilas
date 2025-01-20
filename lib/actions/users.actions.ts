@@ -1,13 +1,14 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-import db from "@/lib/db/drizzle";
 import { userTable } from "@/lib/db/db.schema";
+import db from "@/lib/db/drizzle";
+import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { FellowSchema } from "@/lib/types/fellow.schema";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { SafeUser } from "@/lib/types/drizzle.types";
+import { validateRequest } from "../apis/auth.api";
 
 export const addUser = async (
   id: string,
@@ -29,7 +30,7 @@ export type FellowState = {
   success?: boolean;
   error?: boolean;
   message: string;
-  fellow?: SafeUser;
+  fellow?: userLocalInfo;
 };
 
 export const addFellow = async (
@@ -162,14 +163,7 @@ export const _getUserByEmail = async (email: string) => {
   return user;
 };
 
-export const getUserAvatar = async (userId: string) => {
-  const avatar = await db.query.userTable.findFirst({
-    columns: { avatar: true },
-    where: eq(userTable.id, userId),
-  });
-  if (avatar) {
-    return avatar.avatar;
-  } else {
-    return null;
-  }
+export const getCurrentUserInfo = async () => {
+  const { user } = await validateRequest();
+  return user?.id ? getUserById(user.id) : null;
 };

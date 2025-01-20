@@ -1,14 +1,15 @@
 import { JSONContent } from "@tiptap/core";
 import { relations } from "drizzle-orm";
 import {
-  text,
   boolean,
-  pgTable,
-  serial,
-  json,
-  timestamp,
-  integer,
   date,
+  integer,
+  json,
+  pgTable,
+  primaryKey,
+  serial,
+  text,
+  timestamp,
 } from "drizzle-orm/pg-core";
 
 export const userTable = pgTable("user", {
@@ -22,12 +23,18 @@ export const userTable = pgTable("user", {
   tel: text("tel"),
   avatar: text("avatar"),
   bio: text("bio"),
-  role: text("role", { enum: ["user", "fellow", "admin"] })
+  role: text("role", { enum: ["user", "student", "fellow", "admin"] })
     .notNull()
     .default("user"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export const userRelations = relations(userTable, ({ many }) => ({
+  sessions: many(sessionTable),
+  enrollments: many(enrollmentTable),
+  blogAuthors: many(blogAuthorsTable),
+}));
 
 export const sessionTable = pgTable("session", {
   id: text("id").primaryKey(),
@@ -100,16 +107,21 @@ export const bundleTableRelations = relations(bundleTable, ({ many }) => ({
   courses: many(courseTable),
 }));
 
-export const enrollmentTable = pgTable("course_enrollment", {
-  id: serial("id").primaryKey(),
-  courseId: integer("course_id")
-    .notNull()
-    .references(() => courseTable.id),
-  userId: text("user_id")
-    .notNull()
-    .references(() => userTable.id),
-  enrollmentDate: timestamp("enrollment_date").notNull().defaultNow(),
-});
+export const enrollmentTable = pgTable(
+  "course_enrollment",
+  {
+    courseId: integer("course_id")
+      .notNull()
+      .references(() => courseTable.id),
+    userId: text("user_id")
+      .notNull()
+      .references(() => userTable.id),
+    enrollmentDate: timestamp("enrollment_date").notNull().defaultNow(),
+  },
+  (t) => ({
+    id: primaryKey({ columns: [t.courseId, t.userId] }),
+  }),
+);
 
 export const courseEnrollmentRelations = relations(
   enrollmentTable,

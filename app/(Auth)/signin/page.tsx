@@ -1,18 +1,18 @@
 "use client";
 
-import { useFormState } from "react-dom";
+import { AuthForm } from "@/app/(Auth)/_components/auth";
 import { SigninState, signin } from "@/lib/actions/auth.actions";
+import { useUserStore } from "@/lib/store/user.slice";
+import { signinSchema } from "@/lib/types/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
+import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signinSchema } from "@/lib/types/auth.schema";
-import { redirect } from "next/navigation";
-import { useSession } from "@/lib/providers/Session.provider";
-import { AuthForm } from "@/components/auth/form/auth";
 
 export default function SigninPage() {
-  const { user } = useSession();
-  if (user) redirect("/dashboard");
+  const { isLogged, userInfo } = useUserStore();
+  if (isLogged && userInfo) redirect(`/${userInfo.role}`);
 
   const [signinState, signinAction] = useFormState(signin, {} as SigninState);
 
