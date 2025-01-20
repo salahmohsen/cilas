@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { fetchCourses } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
 import {
-  BundleWithCoursesNames,
-  CourseWithSafeFellow,
+  BundleWithCourseTitles,
+  CourseWithFellow,
 } from "@/lib/types/drizzle.types";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
@@ -14,12 +14,12 @@ import { useCallback, useEffect, useState } from "react";
 import { BundleOptions } from "./bundle.options";
 import { BundleSkeleton } from "./bundle.skeleton";
 
-export const BundleItem = ({ bundle }: { bundle: BundleWithCoursesNames }) => {
+export const BundleItem = ({ bundle }: { bundle: BundleWithCourseTitles }) => {
   const { isBundleSelected, isLoading, setCourses } = useCourseStore();
 
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
   const [coursesData, setCoursesData] = useState<
-    CourseWithSafeFellow[] | undefined
+    CourseWithFellow[] | undefined
   >(undefined);
 
   useEffect(() => {
@@ -110,8 +110,8 @@ const BundleCourse = ({
   bundle,
   course,
 }: {
-  bundle: BundleWithCoursesNames;
-  course: CourseWithSafeFellow;
+  bundle: BundleWithCourseTitles;
+  course: CourseWithFellow;
 }) => {
   const {
     isCourseSelected,

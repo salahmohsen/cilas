@@ -1,9 +1,9 @@
-import Link from "next/link";
+import { CourseWithFellow } from "@/lib/types/drizzle.types";
 import { cn } from "@/lib/utils/utils";
+import { Amiri, Yeseva_One } from "next/font/google";
+import Link from "next/link";
 import { CourseMetadata } from "./meta";
 import { UserHoverCard } from "./user.hoverCard";
-import { Amiri, Yeseva_One } from "next/font/google";
-import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
 
 const yesevaOne = Yeseva_One({
   subsets: ["latin"],
@@ -22,7 +22,7 @@ type CourseProps = {
   isOpen?: boolean;
   className?: string;
   titleSlug?: string;
-  course: CourseWithSafeFellow;
+  course: CourseWithFellow;
 };
 
 export const Course = async ({

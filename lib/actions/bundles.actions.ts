@@ -1,12 +1,12 @@
 "use server";
 
-import db from "@/lib/db/drizzle";
-import { bundleTable, courseTable } from "@/lib/db/db.schema";
 import { Option } from "@/components/ui/multipleSelector";
+import { bundleTable, courseTable } from "@/lib/db/db.schema";
+import db from "@/lib/db/drizzle";
 import { bundleSchema } from "@/lib/types/bundle.schema";
 import {
-  BundleWithCoursesNames,
   BundleTableWrite,
+  BundleWithCourseTitles,
 } from "@/lib/types/drizzle.types";
 import { eq } from "drizzle-orm";
 
@@ -37,7 +37,7 @@ export type GetBundleById = {
   success?: boolean;
   error?: boolean;
   message: string;
-  bundle?: Omit<BundleWithCoursesNames, "courses"> & {
+  bundle?: Omit<BundleWithCourseTitles, "courses"> & {
     courses: { id: number; enTitle: string | null; arTitle: string | null }[];
   };
 };

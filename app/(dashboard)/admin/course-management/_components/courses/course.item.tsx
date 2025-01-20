@@ -3,7 +3,6 @@
 import { forwardRef, useState } from "react";
 
 import { format } from "date-fns";
-import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -17,19 +16,19 @@ import {
 
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter } from "@/lib/types/course.slice.types";
-import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellow } from "@/lib/types/drizzle.types";
+import { getCourseStatus } from "@/lib/utils";
 import { Calendar, Ellipsis, User } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-type CourseItemProps = { course: CourseWithSafeFellow };
+type CourseItemProps = { course: CourseWithFellow };
 
 export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
   ({ course }, ref) => {
     const { handleDelete, setCourseSelected, setCourseInfo, isCourseSelected } =
       useCourseStore();
 
-    const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
-      useState<boolean>(false);
+    const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState<boolean>(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleSelect = (id: number) => {
@@ -37,18 +36,10 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
       setCourseInfo(isCourseSelected?.[id] ? null : course);
     };
 
-    const courseStatues = (): CoursesFilter | undefined => {
-      const currentDate = new Date();
-      const startDate = new Date(course.startDate);
-      const endDate = new Date(course.endDate);
-      const isDraft = course.draftMode;
-      if (isDraft) return CoursesFilter.Draft;
-      if (startDate <= currentDate && endDate >= currentDate)
-        return CoursesFilter.Ongoing;
-      if (startDate > currentDate) return CoursesFilter.StartingSoon;
-      if (endDate < currentDate) return CoursesFilter.Archived;
-      console.error("unknown status");
-    };
+    const router = useRouter();
+
+    const courseTitle = course.enTitle || course.arTitle;
+    const courseStatues = getCourseStatus(course);
 
     return (
       <>
@@ -63,17 +54,20 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
               <User size={16} strokeWidth={1.5} />
               {`${course.fellow?.firstName} ${course.fellow?.lastName}`}
             </span>
-            <div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-2">
-              <Badge
-                variant="default"
-                className="h-6 min-w-max max-w-max rounded-sm"
-              >
-                {courseStatues()}
-              </Badge>
-              <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">
-                {course.enTitle || course.arTitle}
-              </p>
-            </div>
+            {courseStatues && (
+              <div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-2">
+                <Badge
+                  variant="default"
+                  className="h-6 min-w-max max-w-max rounded-sm"
+                  title={`${courseTitle} is ${courseStatues}`}
+                >
+                  {courseStatues}
+                </Badge>
+                <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">
+                  {courseTitle}
+                </p>
+              </div>
+            )}
             <span className="flex gap-1 text-xs font-light">
               <Calendar size={16} strokeWidth={1.5} />
               {format(course.startDate, "MMMM dd yyyy")}
@@ -92,33 +86,34 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <Link
-                  href={`/admin/course-management/edit-course?id=${course.id}`}
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.stopPropagation();
+                    router.push(`/admin/course-management/edit-course?id=${course.id}`);
+                  }}
+                  className="cursor-pointer"
                 >
-                  <DropdownMenuItem
-                    onClick={(e) => e.stopPropagation()}
-                    className="cursor-pointer"
-                  >
-                    Edit
-                  </DropdownMenuItem>
-                </Link>
-                <Link
-                  href={`/admin/course-management/create-course?duplicate-course=${course.id}`}
+                  Edit
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onSelect={(e) => {
+                    e.stopPropagation();
+                    router.push(
+                      `/admin/course-management/create-course?duplicate-course=${course.id}`,
+                    );
+                  }}
+                  className="cursor-pointer"
                 >
-                  <DropdownMenuItem
-                    onClick={(e) => e.stopPropagation()}
-                    className="cursor-pointer"
-                  >
-                    Duplicate
-                  </DropdownMenuItem>
-                </Link>
+                  Duplicate
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem
                   className="cursor-pointer bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setIsConfirmationDialogOpen(true);
+                    setIsDeleteDialogVisible(true);
                   }}
                 >
                   Delete
@@ -128,8 +123,8 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
           </div>
         </li>
         <ConfirmationDialog
-          isOpen={isConfirmationDialogOpen}
-          setIsOpen={setIsConfirmationDialogOpen}
+          isOpen={isDeleteDialogVisible}
+          setIsOpen={setIsDeleteDialogVisible}
           title={`Delete ${(course.enTitle || course.arTitle) ?? "Course"}`}
           onConfirm={() => handleDelete(course.id)}
         />

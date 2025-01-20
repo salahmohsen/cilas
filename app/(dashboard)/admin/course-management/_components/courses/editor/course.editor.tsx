@@ -9,7 +9,7 @@ import { CourseMetadata } from "./meta.section";
 import { ContentInput } from "@/components/form-inputs";
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
-import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellow } from "@/lib/types/drizzle.types";
 import { SubmitButtons } from "../editor/submit.buttons";
 import {
   useCourseEditor,
@@ -20,7 +20,7 @@ import {
 
 type CourseFormPropTypes = {
   editMode?: boolean;
-  courseData?: CourseWithSafeFellow;
+  courseData?: CourseWithFellow;
   courseId?: number;
 };
 

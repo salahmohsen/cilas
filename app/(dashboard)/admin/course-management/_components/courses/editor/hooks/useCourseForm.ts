@@ -9,7 +9,7 @@ import {
   courseSchema,
 } from "@/lib/types/course.schema";
 import { Tab } from "@/lib/types/course.slice.types";
-import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellow } from "@/lib/types/drizzle.types";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
@@ -24,7 +24,7 @@ type LoadingState = {
 };
 
 type UseCourseFormProps = {
-  courseData: CourseWithSafeFellow | undefined;
+  courseData: CourseWithFellow | undefined;
   editMode: boolean;
   courseId: number | undefined;
 };

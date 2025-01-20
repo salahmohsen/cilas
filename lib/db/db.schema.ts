@@ -6,6 +6,7 @@ import {
   integer,
   json,
   pgTable,
+  primaryKey,
   serial,
   text,
   timestamp,
@@ -28,6 +29,12 @@ export const userTable = pgTable("user", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+export const userRelations = relations(userTable, ({ many }) => ({
+  sessions: many(sessionTable),
+  enrollments: many(enrollmentTable),
+  blogAuthors: many(blogAuthorsTable),
+}));
 
 export const sessionTable = pgTable("session", {
   id: text("id").primaryKey(),
@@ -100,16 +107,21 @@ export const bundleTableRelations = relations(bundleTable, ({ many }) => ({
   courses: many(courseTable),
 }));
 
-export const enrollmentTable = pgTable("course_enrollment", {
-  id: serial("id").primaryKey(),
-  courseId: integer("course_id")
-    .notNull()
-    .references(() => courseTable.id),
-  userId: text("user_id")
-    .notNull()
-    .references(() => userTable.id),
-  enrollmentDate: timestamp("enrollment_date").notNull().defaultNow(),
-});
+export const enrollmentTable = pgTable(
+  "course_enrollment",
+  {
+    courseId: integer("course_id")
+      .notNull()
+      .references(() => courseTable.id),
+    userId: text("user_id")
+      .notNull()
+      .references(() => userTable.id),
+    enrollmentDate: timestamp("enrollment_date").notNull().defaultNow(),
+  },
+  (t) => ({
+    id: primaryKey({ columns: [t.courseId, t.userId] }),
+  }),
+);
 
 export const courseEnrollmentRelations = relations(
   enrollmentTable,

@@ -3,16 +3,14 @@
 import { ErrorPage } from "@/components/ui/error";
 import { getCourseById } from "@/lib/actions/courses.actions";
 import "@/lib/tiptap/styles/index.css";
-import { CourseWithSafeFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellow } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { CourseForm } from "../_components/courses/editor/course.editor";
 import Loading from "./loading";
 
 export default function CreateCoursePage() {
-  const [course, setCourse] = useState<CourseWithSafeFellow | undefined>(
-    undefined,
-  );
+  const [course, setCourse] = useState<CourseWithFellow | undefined>(undefined);
   const [error, setError] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
 
