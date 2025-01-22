@@ -40,12 +40,7 @@ export function LayoutHeader({ className }: { className: string }) {
               href="/"
               className="flex h-full w-16 items-center justify-center border-r hover:bg-accent"
             >
-              <Image
-                src={logo}
-                alt="Cilas"
-                width={20}
-                className="h-auto dark:invert"
-              />
+              <Image src={logo} alt="Cilas" width={20} className="h-auto dark:invert" />
             </Link>
           </div>
           <LayoutMobileSidebar />
@@ -88,9 +83,7 @@ export function LayoutHeader({ className }: { className: string }) {
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => logout()}>
-                Logout
-              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

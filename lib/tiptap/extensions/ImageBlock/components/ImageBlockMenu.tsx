@@ -10,18 +10,14 @@ import { MenuProps } from "@/lib/tiptap/components/menus/types";
 import { getRenderContainer } from "@/lib/tiptap/lib/utils";
 import { ImageBlockAltUpdate } from "./ImageBlockAltUpdate";
 
-export const ImageBlockMenu = ({
-  editor,
-  appendTo,
-}: MenuProps): JSX.Element => {
+export const ImageBlockMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
   const menuRef = useRef<HTMLDivElement>(null);
   const tippyInstance = useRef<Instance | null>(null);
 
   const getReferenceClientRect = useCallback(() => {
     const renderContainer = getRenderContainer(editor, "node-imageBlock");
     const rect =
-      renderContainer?.getBoundingClientRect() ||
-      new DOMRect(-1000, -1000, 0, 0);
+      renderContainer?.getBoundingClientRect() || new DOMRect(-1000, -1000, 0, 0);
 
     return rect;
   }, [editor]);

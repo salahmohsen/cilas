@@ -15,11 +15,7 @@ export function LayoutSidebar({ className }: { className: string }) {
     >
       <nav className="grid gap-1 p-2">
         <TooltipProvider>
-          <SidebarItem
-            name="Home"
-            href="/admin"
-            icon={<Home className="size-5" />}
-          />
+          <SidebarItem name="Home" href="/admin" icon={<Home className="size-5" />} />
           <SidebarItem
             name="Course Management"
             href="/admin/course-management?tab=published"

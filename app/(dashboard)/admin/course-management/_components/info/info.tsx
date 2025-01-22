@@ -48,10 +48,7 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                 <CardHeader className="flex flex-row items-start bg-muted/50">
                   <div className="grid gap-0.5">
                     <CardTitle className="group flex items-center gap-2 text-lg">
-                      <span
-                        className=""
-                        dir={courseInfo.enTitle ? "ltr" : "rtl"}
-                      >
+                      <span className="" dir={courseInfo.enTitle ? "ltr" : "rtl"}>
                         {courseInfo.enTitle || courseInfo.arTitle}
                       </span>
                       <Button
@@ -61,8 +58,7 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                         onClick={() => {
                           navigator.clipboard
                             .writeText(
-                              (courseInfo.enTitle ||
-                                courseInfo.arTitle) as string,
+                              (courseInfo.enTitle || courseInfo.arTitle) as string,
                             )
                             .then(() => {
                               toast.success("Copied!");
@@ -88,43 +84,28 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                         <span>{courseInfo.category}</span>
                       </li>
                       <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">
-                          Season Cycle
-                        </span>
+                        <span className="text-muted-foreground">Season Cycle</span>
                         <span>{getSeason(courseInfo.startDate)}</span>
                       </li>
                       <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">
-                          Registration
-                        </span>
-                        <span>
-                          {courseInfo.isRegistrationOpen ? "Open" : "Closed"}
-                        </span>
+                        <span className="text-muted-foreground">Registration</span>
+                        <span>{courseInfo.isRegistrationOpen ? "Open" : "Closed"}</span>
                       </li>
                     </ul>
                     <Separator className="my-2" />
                     <ul className="grid gap-3">
                       <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">
-                          Start Date
-                        </span>
-                        <span>
-                          {format(courseInfo.startDate, "dd MMMM yyyy")}
-                        </span>
+                        <span className="text-muted-foreground">Start Date</span>
+                        <span>{format(courseInfo.startDate, "dd MMMM yyyy")}</span>
                       </li>
                       <li className="flex items-center justify-between gap-5">
                         <span className="text-muted-foreground">End Date</span>
-                        <span>
-                          {format(courseInfo.endDate, "dd MMMM yyyy")}
-                        </span>
+                        <span>{format(courseInfo.endDate, "dd MMMM yyyy")}</span>
                       </li>
                       <li className="flex items-center justify-between gap-5">
                         <span className="text-muted-foreground">Duration</span>
                         <span>
-                          {differenceInWeeks(
-                            courseInfo.endDate,
-                            courseInfo.startDate,
-                          )}{" "}
+                          {differenceInWeeks(courseInfo.endDate, courseInfo.startDate)}{" "}
                           Weeks
                         </span>
                       </li>

@@ -12,11 +12,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
 type Status = {
@@ -45,19 +41,13 @@ const statuses: Status[] = [
 
 export function SidebarTypeFilter({ className }) {
   const [open, setOpen] = React.useState(false);
-  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(
-    null,
-  );
+  const [selectedStatus, setSelectedStatus] = React.useState<Status | null>(null);
 
   return (
     <div className={`flex items-center space-x-4 ${className}`}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-[150px] justify-start"
-          >
+          <Button variant="outline" size="sm" className="w-[150px] justify-start">
             {selectedStatus ? (
               <>
                 <selectedStatus.icon className="mr-2 h-4 w-4 shrink-0" />
@@ -80,8 +70,7 @@ export function SidebarTypeFilter({ className }) {
                     value={status.value}
                     onSelect={(value) => {
                       setSelectedStatus(
-                        statuses.find((priority) => priority.value === value) ||
-                          null,
+                        statuses.find((priority) => priority.value === value) || null,
                       );
                       setOpen(false);
                     }}

@@ -1,10 +1,6 @@
 import React from "react";
 
-import {
-  TooltipTrigger,
-  TooltipContent,
-  Tooltip,
-} from "@/components/ui/tooltip";
+import { TooltipTrigger, TooltipContent, Tooltip } from "@/components/ui/tooltip";
 import Link from "next/link";
 import { SideBarButton } from "./sidebar.button";
 
@@ -23,12 +19,7 @@ export function SidebarItem({
     <Tooltip>
       <TooltipTrigger asChild>
         <Link href={href}>
-          <SideBarButton
-            name={name}
-            className={className}
-            href={href}
-            icon={icon}
-          />
+          <SideBarButton name={name} className={className} href={href} icon={icon} />
         </Link>
       </TooltipTrigger>
       <TooltipContent side="right" sideOffset={5}>

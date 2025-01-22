@@ -54,9 +54,7 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
         >
           <FormLabel
             asChild
-            className={
-              direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"
-            }
+            className={direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"}
           >
             <legend>{label}</legend>
           </FormLabel>

@@ -14,16 +14,10 @@ export const coursesFilter = (filter: CoursesFilter) => {
     );
   }
   if (filter === CoursesFilter.Archived) {
-    return and(
-      lt(courseTable.endDate, new Date()),
-      eq(courseTable.draftMode, false),
-    );
+    return and(lt(courseTable.endDate, new Date()), eq(courseTable.draftMode, false));
   }
   if (filter === CoursesFilter.StartingSoon) {
-    return and(
-      gt(courseTable.startDate, new Date()),
-      eq(courseTable.draftMode, false),
-    );
+    return and(gt(courseTable.startDate, new Date()), eq(courseTable.draftMode, false));
   }
   if (filter === CoursesFilter.Draft) {
     return eq(courseTable.draftMode, true);

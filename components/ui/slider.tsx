@@ -67,8 +67,7 @@ const Slider = React.forwardRef(
         const labelWidth = widths[index] || 0;
 
         const flipThreshold = 0.1; // 10% from either end
-        const shouldFlip =
-          percentage < flipThreshold || percentage > 1 - flipThreshold;
+        const shouldFlip = percentage < flipThreshold || percentage > 1 - flipThreshold;
 
         let leftPosition;
         if (shouldFlip) {
@@ -82,11 +81,7 @@ const Slider = React.forwardRef(
 
         return {
           left: leftPosition,
-          textAlign: shouldFlip
-            ? percentage < 0.5
-              ? "left"
-              : "right"
-            : "center",
+          textAlign: shouldFlip ? (percentage < 0.5 ? "left" : "right") : "center",
         };
       },
       [min, max],
@@ -108,15 +103,9 @@ const Slider = React.forwardRef(
           const rightWidth = (widths[i + 1] / sliderWidth) * 100;
           const minGap = 2; // Minimum gap between labels in percentage
 
-          if (
-            rightLabel - leftLabel <
-            leftWidth / 2 + rightWidth / 2 + minGap
-          ) {
+          if (rightLabel - leftLabel < leftWidth / 2 + rightWidth / 2 + minGap) {
             const overlap =
-              leftWidth / 2 +
-              rightWidth / 2 +
-              minGap -
-              (rightLabel - leftLabel);
+              leftWidth / 2 + rightWidth / 2 + minGap - (rightLabel - leftLabel);
             adjustedPositions[i].left = `${leftLabel - overlap / 2}%`;
             adjustedPositions[i + 1].left = `${rightLabel + overlap / 2}%`;
 

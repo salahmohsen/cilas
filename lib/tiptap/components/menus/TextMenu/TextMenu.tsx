@@ -113,10 +113,7 @@ export const TextMenu = ({ editor }: TextMenuProps) => {
                     >
                       <Icon name="Code" />
                     </MemoButton>
-                    <MemoButton
-                      tooltip="Code block"
-                      onClick={commands.onCodeBlock}
-                    >
+                    <MemoButton tooltip="Code block" onClick={commands.onCodeBlock}>
                       <Icon name="CodeXml" />
                     </MemoButton>
                   </>

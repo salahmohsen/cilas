@@ -56,10 +56,7 @@ export const Course = async ({
 
   return (
     <article
-      className={cn(
-        "mb-10 flex flex-col items-start justify-center gap-3",
-        className,
-      )}
+      className={cn("mb-10 flex flex-col items-start justify-center gap-3", className)}
     >
       <div
         id="article-header"
@@ -79,10 +76,7 @@ export const Course = async ({
             </h3>
           )}
           {!isOpen && (
-            <Link
-              href={`/courses/${titleSlug}`}
-              className="decoration-1 hover:underline"
-            >
+            <Link href={`/courses/${titleSlug}`} className="decoration-1 hover:underline">
               <h3
                 className={`${yesevaOne.className} ${amiri.className} prose flex text-3xl capitalize`}
               >

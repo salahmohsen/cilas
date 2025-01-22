@@ -10,15 +10,9 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { validateRequest } from "../apis/auth.api";
 
-export const addUser = async (
-  id: string,
-  email: string,
-  passwordHash: string,
-) => {
+export const addUser = async (id: string, email: string, passwordHash: string) => {
   try {
-    const stmt = db
-      .insert(userTable)
-      .values({ id, email, passwordHash, role: "user" });
+    const stmt = db.insert(userTable).values({ id, email, passwordHash, role: "user" });
     await db.execute(stmt);
     return { success: "user made!" };
   } catch (error) {
@@ -91,8 +85,7 @@ export const addFellow = async (
             fellow: safeFellow,
           };
         } catch (error) {
-          if (error instanceof Error)
-            return { error: true, message: error.message };
+          if (error instanceof Error) return { error: true, message: error.message };
         }
       } else {
         return { error: true, message: error.message };
@@ -114,9 +107,7 @@ export const getUsersByRole = async (role: "user" | "fellow" | "admin") => {
   return users;
 };
 
-export const getUsersNamesByRole = async (
-  role: "user" | "fellow" | "admin",
-) => {
+export const getUsersNamesByRole = async (role: "user" | "fellow" | "admin") => {
   const users = await db.query.userTable.findMany({
     where: eq(userTable.role, role),
     columns: {

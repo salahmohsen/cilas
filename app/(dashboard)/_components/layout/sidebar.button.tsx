@@ -11,21 +11,13 @@ type SideBarButtonProps = {
   icon: React.ReactNode;
 };
 
-export const SideBarButton = ({
-  name,
-  className,
-  href,
-  icon,
-}: SideBarButtonProps) => {
+export const SideBarButton = ({ name, className, href, icon }: SideBarButtonProps) => {
   const path = usePathname();
 
   return (
     <Button
       aria-label={name}
-      className={cn(
-        `rounded-lg ${path === href ? "bg-muted" : null}`,
-        className,
-      )}
+      className={cn(`rounded-lg ${path === href ? "bg-muted" : null}`, className)}
       size="icon"
       variant="ghost"
     >

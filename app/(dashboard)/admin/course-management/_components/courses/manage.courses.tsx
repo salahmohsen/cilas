@@ -24,21 +24,13 @@ type CourseNavContext = {
   containerRef: React.RefObject<HTMLUListElement>;
 };
 
-export const courseNavContext = createContext<CourseNavContext>(
-  {} as CourseNavContext,
-);
+export const courseNavContext = createContext<CourseNavContext>({} as CourseNavContext);
 
 export default function ManageCourses() {
   const { width } = useWindowSize();
 
-  const {
-    activeTab,
-    setActiveTab,
-    setCourseSelected,
-    getCourses,
-    setFilter,
-    filter,
-  } = useCourseStore();
+  const { activeTab, setActiveTab, setCourseSelected, getCourses, setFilter, filter } =
+    useCourseStore();
 
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab") as Tab;
@@ -83,10 +75,7 @@ export default function ManageCourses() {
           </Tabs>
         </div>
         {isDesktop && (
-          <CourseInfo
-            className="sticky top-20 mt-14 max-h-[calc(85vh)]"
-            mode="flex"
-          />
+          <CourseInfo className="sticky top-20 mt-14 max-h-[calc(85vh)]" mode="flex" />
         )}
       </div>
       {!isDesktop && <CourseInfoModal />}

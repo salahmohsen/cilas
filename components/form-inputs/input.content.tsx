@@ -43,12 +43,7 @@ export const ContentInput: React.FC<ContentInputProps> = ({
   return (
     <>
       <input hidden name={titleName} value={title} readOnly />
-      <input
-        hidden
-        name={contentName}
-        value={JSON.stringify(content)}
-        readOnly
-      />
+      <input hidden name={contentName} value={JSON.stringify(content)} readOnly />
     </>
   );
 };

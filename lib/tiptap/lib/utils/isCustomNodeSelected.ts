@@ -1,24 +1,37 @@
-import { Editor } from '@tiptap/react'
+import { Editor } from "@tiptap/react";
 
-import { Figcaption, ImageBlock, ImageUpload, Link, CodeBlock, HorizontalRule } from '@/lib/tiptap/extensions'
-import { TableOfContentsNode } from '@/lib/tiptap/extensions/TableOfContentsNode'
+import {
+  Figcaption,
+  ImageBlock,
+  ImageUpload,
+  Link,
+  CodeBlock,
+  HorizontalRule,
+} from "@/lib/tiptap/extensions";
+import { TableOfContentsNode } from "@/lib/tiptap/extensions/TableOfContentsNode";
 
 export const isTableGripSelected = (node: HTMLElement) => {
-  let container = node
+  let container = node;
 
-  while (container && !['TD', 'TH'].includes(container.tagName)) {
-    container = container.parentElement!
+  while (container && !["TD", "TH"].includes(container.tagName)) {
+    container = container.parentElement!;
   }
 
-  const gripColumn = container && container.querySelector && container.querySelector('a.grip-column.selected')
-  const gripRow = container && container.querySelector && container.querySelector('a.grip-row.selected')
+  const gripColumn =
+    container &&
+    container.querySelector &&
+    container.querySelector("a.grip-column.selected");
+  const gripRow =
+    container &&
+    container.querySelector &&
+    container.querySelector("a.grip-row.selected");
 
   if (gripColumn || gripRow) {
-    return true
+    return true;
   }
 
-  return false
-}
+  return false;
+};
 
 export const isCustomNodeSelected = (editor: Editor, node: HTMLElement) => {
   const customNodes = [
@@ -30,9 +43,9 @@ export const isCustomNodeSelected = (editor: Editor, node: HTMLElement) => {
     Link.name,
     Figcaption.name,
     TableOfContentsNode.name,
-  ]
+  ];
 
-  return customNodes.some(type => editor.isActive(type)) || isTableGripSelected(node)
-}
+  return customNodes.some((type) => editor.isActive(type)) || isTableGripSelected(node);
+};
 
-export default isCustomNodeSelected
+export default isCustomNodeSelected;

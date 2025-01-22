@@ -71,11 +71,7 @@ export const logout = async () => {
   await lucia.invalidateSession(session.id);
 
   const sessionCookie = lucia.createBlankSessionCookie();
-  cookies().set(
-    sessionCookie.name,
-    sessionCookie.value,
-    sessionCookie.attributes,
-  );
+  cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
   return redirect("/signin");
 };
 
@@ -130,15 +126,13 @@ export async function signup(prevState, formData: FormData) {
     if (existingUser) return { error: "This Email is already signed up." };
     await addUser(userId, email, passwordHash);
   } catch (error) {
-    if (error instanceof Error)
-      console.log(`creating user error: ${error.message}`);
+    if (error instanceof Error) console.log(`creating user error: ${error.message}`);
   }
   try {
     await createAuthSession(userId);
     redirect("/dashboard");
   } catch (error) {
-    if (error instanceof Error)
-      console.log(`creating session error ${error.message}`);
+    if (error instanceof Error) console.log(`creating session error ${error.message}`);
   }
   return { success: "Account created successfully!" };
 }

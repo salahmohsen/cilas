@@ -4,10 +4,7 @@ import { Option } from "@/components/ui/multipleSelector";
 import { bundleTable, courseTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
 import { bundleSchema } from "@/lib/types/bundle.schema";
-import {
-  BundleTableWrite,
-  BundleWithCourseTitles,
-} from "@/lib/types/drizzle.types";
+import { BundleTableWrite, BundleWithCourseTitles } from "@/lib/types/drizzle.types";
 import { eq } from "drizzle-orm";
 
 export const getBundles = async () => {
@@ -42,9 +39,7 @@ export type GetBundleById = {
   };
 };
 
-export const getBundleById = async (
-  bundleId: number,
-): Promise<GetBundleById> => {
+export const getBundleById = async (bundleId: number): Promise<GetBundleById> => {
   try {
     const bundle = await db.query.bundleTable.findFirst({
       with: {
@@ -183,17 +178,13 @@ export const editBundle = async (
       deadline,
     };
     await updateBundleCourses(courses, bundleId);
-    await db
-      .update(bundleTable)
-      .set(values)
-      .where(eq(bundleTable.id, bundleId));
+    await db.update(bundleTable).set(values).where(eq(bundleTable.id, bundleId));
 
     return { success: true, message: "Changes saved successfully!" };
   } catch (error) {
     return {
       error: true,
-      message:
-        error instanceof Error ? error.message : "Unexpected Error Occurs",
+      message: error instanceof Error ? error.message : "Unexpected Error Occurs",
     };
   }
 };
@@ -220,9 +211,7 @@ const deleteAssociatedCoursesToBundle = async (bundleId: number) => {
         .execute();
     }
   } catch (e) {
-    throw new Error(
-      e instanceof Error ? e.message : "Unexpected error occurred!",
-    );
+    throw new Error(e instanceof Error ? e.message : "Unexpected error occurred!");
   }
 };
 
@@ -255,9 +244,7 @@ export const updateBundleCourses = async (
 export const deleteBundle = async (bundleId: number): Promise<BundleState> => {
   try {
     await deleteAssociatedCoursesToBundle(bundleId);
-    const result = await db
-      .delete(bundleTable)
-      .where(eq(bundleTable.id, bundleId));
+    const result = await db.delete(bundleTable).where(eq(bundleTable.id, bundleId));
 
     return { success: true, message: "Bundle deleted successfully" };
   } catch (e) {

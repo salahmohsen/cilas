@@ -22,11 +22,7 @@ import {
 } from "lucide-react";
 
 import { useCallback, useState } from "react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   HoverCard,
   HoverCardContent,
@@ -63,13 +59,7 @@ export function EditorToolbar({ editor }: { editor: any }) {
   );
 }
 
-const ToolbarIcon = ({
-  icon,
-  name,
-}: {
-  icon: React.ReactNode;
-  name: string;
-}) => {
+const ToolbarIcon = ({ icon, name }: { icon: React.ReactNode; name: string }) => {
   return (
     <HoverCard openDelay={0} closeDelay={0}>
       <HoverCardTrigger>{icon}</HoverCardTrigger>
@@ -96,10 +86,7 @@ function StrikeThrough({ editor }) {
       onPressedChange={handleStrike}
       className="hidden md:flex"
     >
-      <ToolbarIcon
-        icon={<Strikethrough className="h-4 w-4" />}
-        name="Strikethrough"
-      />
+      <ToolbarIcon icon={<Strikethrough className="h-4 w-4" />} name="Strikethrough" />
     </Toggle>
   );
 }
@@ -133,10 +120,7 @@ function OrderedList({ editor }) {
       pressed={editor.isActive("orderedList")}
       onPressedChange={handleOrderedList}
     >
-      <ToolbarIcon
-        icon={<ListOrderedIcon className="h-4 w-4" />}
-        name="Ordered List"
-      />
+      <ToolbarIcon icon={<ListOrderedIcon className="h-4 w-4" />} name="Ordered List" />
     </Toggle>
   );
 }
@@ -152,10 +136,7 @@ function BlockQuote({ editor }) {
       pressed={editor.isActive("blockquote")}
       onPressedChange={handleBlockQuote}
     >
-      <ToolbarIcon
-        icon={<TextQuoteIcon className="h-4 w-4" />}
-        name="Blockquote"
-      />
+      <ToolbarIcon icon={<TextQuoteIcon className="h-4 w-4" />} name="Blockquote" />
     </Toggle>
   );
 }
@@ -171,10 +152,7 @@ function HorizontalLine({ editor }) {
       pressed={editor.isActive("horizontalRule")}
       onPressedChange={handleHorizontalLine}
     >
-      <ToolbarIcon
-        icon={<MinusIcon className="h-4 w-4" />}
-        name="horizontal Line"
-      />
+      <ToolbarIcon icon={<MinusIcon className="h-4 w-4" />} name="horizontal Line" />
     </Toggle>
   );
 }
@@ -195,12 +173,7 @@ export function SetLink({ editor }) {
         return;
       }
       // update link
-      editor
-        ?.chain()
-        .focus()
-        .extendMarkRange("link")
-        .setLink({ href: url })
-        .run();
+      editor?.chain().focus().extendMarkRange("link").setLink({ href: url }).run();
     },
     [editor],
   );
@@ -276,10 +249,7 @@ function Center({ editor }) {
       pressed={editor.isActive({ textAlign: "center" })}
       onPressedChange={handleCenter}
     >
-      <ToolbarIcon
-        icon={<AlignCenterIcon className="h-4 w-4" />}
-        name="Center"
-      />
+      <ToolbarIcon icon={<AlignCenterIcon className="h-4 w-4" />} name="Center" />
     </Toggle>
   );
 }
@@ -313,19 +283,13 @@ function Justify({ editor }) {
       pressed={editor.isActive({ textAlign: "justify" })}
       onPressedChange={handleJustify}
     >
-      <ToolbarIcon
-        icon={<AlignJustifyIcon className="h-4 w-4" />}
-        name="Justify"
-      />
+      <ToolbarIcon icon={<AlignJustifyIcon className="h-4 w-4" />} name="Justify" />
     </Toggle>
   );
 }
 
 function Undo({ editor }) {
-  const handleUndo = useCallback(
-    () => editor.chain().focus().undo().run(),
-    [editor],
-  );
+  const handleUndo = useCallback(() => editor.chain().focus().undo().run(), [editor]);
   return (
     <Toggle
       size="sm"
@@ -339,10 +303,7 @@ function Undo({ editor }) {
 }
 
 function Redo({ editor }) {
-  const handleRedo = useCallback(
-    () => editor.chain().focus().redo().run(),
-    [editor],
-  );
+  const handleRedo = useCallback(() => editor.chain().focus().redo().run(), [editor]);
   return (
     <Toggle
       size="sm"
@@ -380,11 +341,7 @@ export function Italic({ editor }) {
     [editor],
   );
   return (
-    <Toggle
-      size="sm"
-      pressed={editor.isActive("italic")}
-      onPressedChange={handleItalic}
-    >
+    <Toggle size="sm" pressed={editor.isActive("italic")} onPressedChange={handleItalic}>
       <ToolbarIcon icon={<ItalicIcon className="h-4 w-4" />} name="Italic" />
     </Toggle>
   );
@@ -396,11 +353,7 @@ export function Bold({ editor }) {
     [editor],
   );
   return (
-    <Toggle
-      size="sm"
-      pressed={editor.isActive("bold")}
-      onPressedChange={handleBold}
-    >
+    <Toggle size="sm" pressed={editor.isActive("bold")} onPressedChange={handleBold}>
       <ToolbarIcon icon={<BoldIcon className="h-4 w-4" />} name="Bold" />
     </Toggle>
   );
@@ -417,10 +370,7 @@ export function Heading({ editor }) {
       pressed={editor.isActive("heading")}
       onPressedChange={handleHeading}
     >
-      <ToolbarIcon
-        icon={<Heading4Icon className="h-4 w-4" />}
-        name="Heading-4"
-      />
+      <ToolbarIcon icon={<Heading4Icon className="h-4 w-4" />} name="Heading-4" />
     </Toggle>
   );
 }
@@ -436,10 +386,7 @@ export function Paragraph({ editor }) {
       pressed={editor.isActive("paragraph")}
       onPressedChange={handleParagraph}
     >
-      <ToolbarIcon
-        icon={<PilcrowIcon className="h-4 w-4" />}
-        name="Paragraph"
-      />
+      <ToolbarIcon icon={<PilcrowIcon className="h-4 w-4" />} name="Paragraph" />
     </Toggle>
   );
 }

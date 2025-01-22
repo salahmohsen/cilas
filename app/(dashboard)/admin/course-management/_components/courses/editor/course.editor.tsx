@@ -11,12 +11,7 @@ import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
 import { CourseWithFellow } from "@/lib/types/drizzle.types";
 import { SubmitButtons } from "../editor/submit.buttons";
-import {
-  useCourseEditor,
-  useCourseForm,
-  useCourseSidebar,
-  useCourseTab,
-} from "./hooks";
+import { useCourseEditor, useCourseForm, useCourseSidebar, useCourseTab } from "./hooks";
 
 type CourseFormPropTypes = {
   editMode?: boolean;
@@ -73,8 +68,7 @@ export function CourseForm({
           action={courseAction}
           onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
             const nativeEvent = e.nativeEvent as SubmitEvent;
-            const submitter = (nativeEvent.submitter as HTMLButtonElement)
-              .classList;
+            const submitter = (nativeEvent.submitter as HTMLButtonElement).classList;
             /*@note: This is a workaround to prevent the form from submitting when 
             clicking on any button other than "Publish Course" || "Draft Button" button.*/
             if (submitter.contains("submit-btn")) {
@@ -128,10 +122,7 @@ export function CourseForm({
                 sidebarActiveTab={sidebarActiveTab}
                 setSidebarActiveTab={setSidebarActiveTab}
               >
-                <CourseMetadata
-                  editMode={editMode}
-                  fellow={courseData?.fellow}
-                />
+                <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
               </BlockEditor>
             </TabsContent>
             <TabsContent value="arContent">
@@ -141,23 +132,12 @@ export function CourseForm({
                 sidebarActiveTab={sidebarActiveTab}
                 setSidebarActiveTab={setSidebarActiveTab}
               >
-                <CourseMetadata
-                  editMode={editMode}
-                  fellow={courseData?.fellow}
-                />
+                <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
               </BlockEditor>
             </TabsContent>
           </Tabs>
-          <ContentInput
-            titleName="arTitle"
-            contentName="arContent"
-            content={arContent}
-          />
-          <ContentInput
-            titleName="enTitle"
-            contentName="enContent"
-            content={enContent}
-          />
+          <ContentInput titleName="arTitle" contentName="arContent" content={arContent} />
+          <ContentInput titleName="enTitle" contentName="enContent" content={enContent} />
         </form>
       </Form>
     </FormProvider>

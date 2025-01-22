@@ -21,10 +21,7 @@ export interface TimePickerInputProps
   onLeftFocus?: () => void;
 }
 
-const TimePickerInput = React.forwardRef<
-  HTMLInputElement,
-  TimePickerInputProps
->(
+const TimePickerInput = React.forwardRef<HTMLInputElement, TimePickerInputProps>(
   (
     {
       className,

@@ -18,8 +18,7 @@ export default function EditCoursePage() {
   const fetchCourse = useCallback(async () => {
     try {
       setIsLoading(true);
-      if (!courseId || !Number(courseId))
-        throw new Error("course id is wrong!");
+      if (!courseId || !Number(courseId)) throw new Error("course id is wrong!");
       courseValues.current = await getCourseById(Number(courseId));
       if (!courseValues.current) throw new Error("Course not found!");
     } catch (error) {

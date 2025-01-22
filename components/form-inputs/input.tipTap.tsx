@@ -22,13 +22,7 @@ import { cn } from "@/lib/utils/utils";
 
 import { StandardProps } from "@/lib/types/formInputs.types";
 import React, { memo } from "react";
-import {
-  Bold,
-  EditorToolbar,
-  Italic,
-  SetLink,
-  UnsetLink,
-} from "./input.tipTap.toolBar";
+import { Bold, EditorToolbar, Italic, SetLink, UnsetLink } from "./input.tipTap.toolBar";
 
 interface TipTapInputProps extends StandardProps {
   editorToolbar?: boolean;
@@ -52,12 +46,7 @@ export const TipTapInput = memo(function TipTapInput({
           <FormLabel>{label}</FormLabel>
           <FormControl>
             <>
-              <input
-                hidden
-                name={name}
-                value={field.value}
-                onChange={field.onChange}
-              />
+              <input hidden name={name} value={field.value} onChange={field.onChange} />
               <Editor
                 editorRef={field.ref}
                 value={field.value}

@@ -36,8 +36,7 @@ export function LayoutBreadcrumb() {
         ))}
         <BreadcrumbItem className="capitalize">
           <BreadcrumbPage>
-            {paths?.[paths.length - 1] &&
-            paths[paths.length - 2] !== "edit-course"
+            {paths?.[paths.length - 1] && paths[paths.length - 2] !== "edit-course"
               ? paths[paths.length - 1].replace(/-/g, " ").trim()
               : paths?.[paths.length - 1]
                   .replace(/-/g, " ")

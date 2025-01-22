@@ -31,10 +31,7 @@ export const CourseMetadata = ({
   const season = getSeason(startDate);
   return (
     <div
-      className={cn(
-        "flex gap-4 text-xs leading-none text-muted-foreground",
-        className,
-      )}
+      className={cn("flex gap-4 text-xs leading-none text-muted-foreground", className)}
     >
       <Meta meta={year} />
       <Meta meta={attendance} />

@@ -11,11 +11,7 @@ export type PanelProps = {
 
 export const Panel = forwardRef<HTMLDivElement, PanelProps>(
   ({ asChild, className, children, spacing, noShadow, ...rest }, ref) => {
-    const panelClass = cn(
-      "p-2",
-      spacing === "small" && "p-[0.2rem]",
-      className,
-    );
+    const panelClass = cn("p-2", spacing === "small" && "p-[0.2rem]", className);
 
     const Comp = asChild ? Slot : "div";
 
@@ -52,10 +48,7 @@ export const PanelHeader = forwardRef<
   HTMLDivElement,
   { asChild?: boolean } & React.HTMLAttributes<HTMLDivElement>
 >(({ asChild, className, children, ...rest }, ref) => {
-  const headerClass = cn(
-    "border-b border-b-black/10 text-sm mb-2 pb-2",
-    className,
-  );
+  const headerClass = cn("border-b border-b-black/10 text-sm mb-2 pb-2", className);
 
   const Comp = asChild ? Slot : "div";
 
@@ -109,10 +102,7 @@ export const PanelFooter = forwardRef<
   HTMLDivElement,
   { asChild?: boolean } & React.HTMLAttributes<HTMLDivElement>
 >(({ asChild, className, children, ...rest }, ref) => {
-  const footerClass = cn(
-    "border-t border-black/10 text-sm mt-2 pt-2",
-    className,
-  );
+  const footerClass = cn("border-t border-black/10 text-sm mt-2 pt-2", className);
 
   const Comp = asChild ? Slot : "div";
 

@@ -44,19 +44,14 @@ const isCategory = (
 
 export const ContentTypePicker = ({ options }: ContentTypePickerProps) => {
   const activeItem = useMemo(
-    () =>
-      options.find((option) => option.type === "option" && option.isActive()),
+    () => options.find((option) => option.type === "option" && option.isActive()),
     [options],
   );
 
   const memoTrigger = useMemo(
     () => (
-      <Toolbar.Button
-        active={activeItem?.id !== "paragraph" && !!activeItem?.type}
-      >
-        <Icon
-          name={(activeItem?.type === "option" && activeItem.icon) || "Pilcrow"}
-        />
+      <Toolbar.Button active={activeItem?.id !== "paragraph" && !!activeItem?.type}>
+        <Icon name={(activeItem?.type === "option" && activeItem.icon) || "Pilcrow"} />
         <Icon name="ChevronDown" className="h-2 w-2" />
       </Toolbar.Button>
     ),

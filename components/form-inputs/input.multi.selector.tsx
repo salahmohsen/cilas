@@ -1,13 +1,7 @@
 import { useFormContext } from "react-hook-form";
 
 import { MultipleSelector } from "@/components/ui/multipleSelector";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 
 import { MultiSelectorProps } from "@/lib/types/formInputs.types";
 import { LoaderCircle } from "lucide-react";

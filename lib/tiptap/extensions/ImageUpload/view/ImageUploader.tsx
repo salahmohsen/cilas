@@ -5,11 +5,7 @@ import { Icon } from "@/lib/tiptap/components/ui/Icon";
 import { cn } from "@/lib/tiptap/lib/utils";
 import { ChangeEvent, useCallback } from "react";
 
-export const ImageUploader = ({
-  onUpload,
-}: {
-  onUpload: (url: string) => void;
-}) => {
+export const ImageUploader = ({ onUpload }: { onUpload: (url: string) => void }) => {
   const { loading, uploadFile } = useUploader({ onUpload });
   const { handleUploadClick, ref } = useFileUpload();
   const { draggedInside, onDrop, onDragEnter, onDragLeave } = useDropZone({

@@ -10,7 +10,7 @@ export async function GET(): Promise<Response> {
   const url: URL = await google.createAuthorizationURL(state, codeVerifier, {
     scopes: ["openid", "profile", "email"],
   });
-console.log(url)
+  console.log(url);
   cookies().set("google_oauth_state", state, {
     secure: process.env.NODE_ENV === "production",
     path: "/",

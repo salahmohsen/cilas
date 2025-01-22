@@ -1,7 +1,4 @@
-import {
-  CourseFormState,
-  createEditCourse,
-} from "@/lib/actions/courses.actions";
+import { CourseFormState, createEditCourse } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
 import {
   courseFormDefaultValues,
@@ -29,19 +26,13 @@ type UseCourseFormProps = {
   courseId: number | undefined;
 };
 
-export const useCourseForm = ({
-  courseData,
-  editMode,
-  courseId,
-}: UseCourseFormProps) => {
+export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormProps) => {
   const formRef = useRef<HTMLFormElement>(null);
 
   const { getCourses, setActiveTab } = useCourseStore();
 
   // set draft mode base on courseData passed to the component
-  const [draftMode, setDraftMode] = useState<boolean>(
-    courseData?.draftMode ?? false,
-  );
+  const [draftMode, setDraftMode] = useState<boolean>(courseData?.draftMode ?? false);
 
   const activeTab = draftMode ? Tab.Draft : Tab.Published;
 

@@ -39,9 +39,7 @@ const EmojiList = forwardRef(
         const item = props.items[index];
 
         if (item) {
-          const node = document.querySelector(
-            `[data-emoji-name="${item.name}"]`,
-          );
+          const node = document.querySelector(`[data-emoji-name="${item.name}"]`);
 
           if (node) {
             node.scrollIntoView({ block: "nearest" });
@@ -50,8 +48,7 @@ const EmojiList = forwardRef(
       };
 
       const upHandler = () => {
-        const newIndex =
-          (selectedIndex + props.items.length - 1) % props.items.length;
+        const newIndex = (selectedIndex + props.items.length - 1) % props.items.length;
         setSelectedIndex(newIndex);
         scrollIntoView(newIndex);
       };
@@ -110,12 +107,7 @@ const EmojiList = forwardRef(
             data-emoji-name={item.name}
           >
             {item.fallbackImage ? (
-              <Image
-                width={20}
-                height={20}
-                src={item.fallbackImage}
-                alt="emoji"
-              />
+              <Image width={20} height={20} src={item.fallbackImage} alt="emoji" />
             ) : (
               item.emoji
             )}{" "}

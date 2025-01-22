@@ -13,16 +13,9 @@ export async function GET(request: Request): Promise<Response> {
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
   const storedState = cookies().get("google_oauth_state")?.value ?? null;
-  const storedCodeVerifier =
-    cookies().get("google_code_verifier")?.value ?? null;
+  const storedCodeVerifier = cookies().get("google_code_verifier")?.value ?? null;
 
-  if (
-    !code ||
-    !state ||
-    !storedState ||
-    !storedCodeVerifier ||
-    state !== storedState
-  ) {
+  if (!code || !state || !storedState || !storedCodeVerifier || state !== storedState) {
     return new NextResponse(null, {
       status: 400,
     });
@@ -51,11 +44,7 @@ export async function GET(request: Request): Promise<Response> {
     if (existingUser[0]) {
       const session = await lucia.createSession(existingUser[0].id, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      );
+      cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
       // This will redirect the user to the dashboard based on their role
       return NextResponse.redirect(
         new URL(`/${existingUser[0].role}`, process.env.NEXT_PUBLIC_BASE_URL),
@@ -81,11 +70,7 @@ export async function GET(request: Request): Promise<Response> {
 
       const session = await lucia.createSession(userId, {});
       const sessionCookie = lucia.createSessionCookie(session.id);
-      cookies().set(
-        sessionCookie.name,
-        sessionCookie.value,
-        sessionCookie.attributes,
-      );
+      cookies().set(sessionCookie.name, sessionCookie.value, sessionCookie.attributes);
 
       return new NextResponse(null, {
         status: 302,

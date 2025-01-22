@@ -46,9 +46,7 @@ export const Tooltip = ({
         data-escaped={attrs["data-escaped"]}
       >
         {title && (
-          <span className="text-xs font-medium text-popover-foreground">
-            {title}
-          </span>
+          <span className="text-xs font-medium text-popover-foreground">{title}</span>
         )}
         {shortcut && (
           <span className="flex items-center gap-0.5">

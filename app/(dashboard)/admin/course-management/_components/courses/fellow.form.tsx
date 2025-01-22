@@ -21,11 +21,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import {
-  BasicInput,
-  SubmitButton,
-  TipTapInput,
-} from "@/components/form-inputs";
+import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
 
 import { useCourseStore } from "@/lib/store/course.slice";
 import { SquarePlus } from "lucide-react";
@@ -37,10 +33,7 @@ type NewFellowProps = {
 
 export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
   ({ mode, fellowData }, ref) => {
-    const [fellowState, fellowAction] = useFormState(
-      addFellow,
-      {} as FellowState,
-    );
+    const [fellowState, fellowAction] = useFormState(addFellow, {} as FellowState);
     const [open, setOpen] = useState(false);
 
     const { setFellow } = useCourseStore();

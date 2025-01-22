@@ -28,9 +28,7 @@ export function LayoutMobileSidebar() {
               className="invert transition-all group-hover:scale-110 dark:invert-0"
             />
             {/* <Package2 className="h-5 w-5 transition-all group-hover:scale-110" /> */}
-            <span className="sr-only">
-              Cairo Institute of Liberal Arts and Sciences
-            </span>
+            <span className="sr-only">Cairo Institute of Liberal Arts and Sciences</span>
           </Link>
           <Link
             href="/dashboard"

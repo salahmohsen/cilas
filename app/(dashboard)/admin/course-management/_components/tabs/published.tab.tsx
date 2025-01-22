@@ -26,9 +26,7 @@ export const PublishedTab = () => {
       <Card>
         <CardHeader>
           <CardTitle>Published Courses</CardTitle>
-          <CardDescription>
-            Monitor and manage published courses.
-          </CardDescription>
+          <CardDescription>Monitor and manage published courses.</CardDescription>
         </CardHeader>
         <CardContent>
           <ul className="group/list space-y-2" ref={containerRef}>
@@ -37,10 +35,7 @@ export const PublishedTab = () => {
               courses &&
               courses.length > 0 &&
               courses.map((course) => (
-                <CourseItem
-                  course={course}
-                  key={`${course.id}-${course.updatedAt}`}
-                />
+                <CourseItem course={course} key={`${course.id}-${course.updatedAt}`} />
               ))}
             {courses?.length === 0 && <NotFound message="No Courses Found!" />}
           </ul>

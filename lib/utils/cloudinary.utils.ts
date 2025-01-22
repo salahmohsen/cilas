@@ -36,9 +36,6 @@ export const cloudinary_quality = (
   const uploadIndex = url.indexOf("upload/") + "upload/".length;
   if (!uploadIndex) return undefined;
   const newUrl =
-    url.slice(0, uploadIndex) +
-    imageQuality[quality] +
-    "/" +
-    url.slice(uploadIndex);
+    url.slice(0, uploadIndex) + imageQuality[quality] + "/" + url.slice(uploadIndex);
   return newUrl;
 };

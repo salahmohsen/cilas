@@ -23,10 +23,7 @@ export const FontSizePicker = ({ onChange, value }: FontSizePickerProps) => {
   const currentValue = FONT_SIZES.find((size) => size.value === value);
   const currentSizeLabel = currentValue?.label.split(" ")[0] || "Medium";
 
-  const selectSize = useCallback(
-    (size: string) => () => onChange(size),
-    [onChange],
-  );
+  const selectSize = useCallback((size: string) => () => onChange(size), [onChange]);
 
   return (
     <Popover.Root>

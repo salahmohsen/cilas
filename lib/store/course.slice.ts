@@ -48,9 +48,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
         });
       }
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to fetch courses",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to fetch courses");
       set({ isLoading: false });
     }
   },
@@ -63,9 +61,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       if (!data.success || !data.bundles) throw new Error(data.message);
       set({ bundles: data.bundles, isLoading: false });
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to fetch bundles",
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to fetch bundles");
       set({ isLoading: false });
     }
   },
@@ -97,10 +93,9 @@ export const useCourseStore = create<CourseState>((set, get) => ({
         throw new Error(result.message);
       }
     } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : "Failed to delete course",
-        { id: toastId },
-      );
+      toast.error(error instanceof Error ? error.message : "Failed to delete course", {
+        id: toastId,
+      });
       // Restore the optimistic update
       set({ courses: originalCourses });
     }

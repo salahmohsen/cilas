@@ -5,11 +5,7 @@ import { memo } from "react";
 
 export const EnglishTab = memo(() => {
   return (
-    <TabsContent
-      value="EnVersion"
-      forceMount
-      className="data-[state=inactive]:hidden"
-    >
+    <TabsContent value="EnVersion" forceMount className="data-[state=inactive]:hidden">
       <div className={`flex flex-col gap-6`}>
         <BasicInput
           type="text"

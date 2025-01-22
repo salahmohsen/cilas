@@ -26,9 +26,7 @@ export const DraftTab = () => {
       <Card>
         <CardHeader className="px-7">
           <CardTitle>Draft Courses</CardTitle>
-          <CardDescription>
-            Manage and refine courses before publishing.
-          </CardDescription>
+          <CardDescription>Manage and refine courses before publishing.</CardDescription>
         </CardHeader>
         <CardContent>
           <ul
@@ -40,10 +38,7 @@ export const DraftTab = () => {
               courses &&
               courses.length > 0 &&
               courses.map((course) => (
-                <CourseItem
-                  course={course}
-                  key={`${course.id}-${course.updatedAt}`}
-                />
+                <CourseItem course={course} key={`${course.id}-${course.updatedAt}`} />
               ))}
             {courses?.length === 0 && <NotFound message="No Drafts Found!" />}
           </ul>

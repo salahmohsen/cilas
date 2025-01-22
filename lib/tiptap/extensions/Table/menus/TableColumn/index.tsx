@@ -5,10 +5,7 @@ import * as PopoverMenu from "@/lib/tiptap/components/ui/PopoverMenu";
 import { Toolbar } from "@/lib/tiptap/components/ui/Toolbar";
 import { isColumnGripSelected } from "./utils";
 import { Icon } from "@/lib/tiptap/components/ui/Icon";
-import {
-  MenuProps,
-  ShouldShowProps,
-} from "@/lib/tiptap/components/menus/types";
+import { MenuProps, ShouldShowProps } from "@/lib/tiptap/components/menus/types";
 
 export const TableColumnMenu = React.memo(
   ({ editor, appendTo }: MenuProps): JSX.Element => {

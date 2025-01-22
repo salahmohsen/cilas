@@ -33,10 +33,7 @@ export const BundlesTab = () => {
               <BundleSkeleton itemsNumber={5} />
             ) : bundles && bundles.length > 0 ? (
               bundles.map((bundle) => (
-                <BundleItem
-                  key={`${bundle.id}-${bundle.updatedAt}`}
-                  bundle={bundle}
-                />
+                <BundleItem key={`${bundle.id}-${bundle.updatedAt}`} bundle={bundle} />
               ))
             ) : (
               <NotFound message="No Bundles Found!" />

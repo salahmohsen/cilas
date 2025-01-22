@@ -33,9 +33,7 @@ export default function CreateCoursePage() {
 
       setCourse(courseData);
     } catch (error) {
-      setError(
-        error instanceof Error ? error.message : "An unexpected error occurred",
-      );
+      setError(error instanceof Error ? error.message : "An unexpected error occurred");
     } finally {
       setLoading(false);
     }

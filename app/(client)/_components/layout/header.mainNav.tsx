@@ -36,8 +36,8 @@ export function MainNav() {
                         Bridge programme
                       </div>
                       <p className="text-sm leading-tight text-muted-foreground">
-                        CILAS invites students from all walks of life to one
-                        year co-learning journey
+                        CILAS invites students from all walks of life to one year
+                        co-learning journey
                       </p>
                     </a>
                   </NavigationMenuLink>
@@ -46,8 +46,8 @@ export function MainNav() {
                   standalone courses open to the public/visiting students.
                 </ListItem>
                 <ListItem href="/courses" title="Thematic Courses">
-                  part of the second semester of bridge program and is open to
-                  the public/visiting students.
+                  part of the second semester of bridge program and is open to the
+                  public/visiting students.
                 </ListItem>
                 <ListItem href="/courses" title="Labs">
                   Styles for headings, paragraphs, lists...etc

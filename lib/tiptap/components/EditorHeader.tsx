@@ -26,11 +26,7 @@ export const EditorHeader = ({
         isSidebarOpen && "bg-background",
       )}
     >
-      <EditorInfo
-        characters={characters}
-        words={words}
-        className="hidden sm:block"
-      />
+      <EditorInfo characters={characters} words={words} className="hidden sm:block" />
       <div className="flex w-inherit items-center justify-between gap-x-2 sm:w-auto sm:gap-x-5">
         {submitButtons}
         <Toolbar.Button

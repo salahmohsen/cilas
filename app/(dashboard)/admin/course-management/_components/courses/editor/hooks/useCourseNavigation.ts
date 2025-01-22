@@ -1,9 +1,7 @@
 import { useCourseStore } from "@/lib/store/course.slice";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export const useCourseNavigation = (
-  containerRef?: React.RefObject<HTMLUListElement>,
-) => {
+export const useCourseNavigation = (containerRef?: React.RefObject<HTMLUListElement>) => {
   const {
     courseInfo,
     isCourseSelected: isCourseSelectedObject,
@@ -56,11 +54,7 @@ export const useCourseNavigation = (
 
     const currIndex = idArr?.indexOf(courseInfo.id);
     console.log("idArr", idArr, "currIndex", currIndex);
-    if (
-      idArr &&
-      typeof currIndex === "number" &&
-      currIndex < idArr.length - 1
-    ) {
+    if (idArr && typeof currIndex === "number" && currIndex < idArr.length - 1) {
       setSelection(idArr[currIndex + 1]);
       setScrollIndex(currIndex + 1);
     } else {

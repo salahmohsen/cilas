@@ -36,10 +36,7 @@ export const Menu = ({
         <Trigger asChild>{trigger}</Trigger>
       ) : (
         <Trigger asChild>
-          <Toolbar.Button
-            className={triggerClassName}
-            tooltip={!isOpen ? tooltip : ""}
-          >
+          <Toolbar.Button className={triggerClassName} tooltip={!isOpen ? tooltip : ""}>
             {trigger}
           </Toolbar.Button>
         </Trigger>

@@ -1,7 +1,4 @@
-import {
-  initialEnCourseContent,
-  initialArCourseContent,
-} from "@/lib/tiptap/lib/data";
+import { initialEnCourseContent, initialArCourseContent } from "@/lib/tiptap/lib/data";
 import { Group } from "./types";
 
 export const GROUPS: Group[] = [

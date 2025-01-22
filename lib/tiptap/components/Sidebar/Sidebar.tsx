@@ -15,14 +15,7 @@ type SidebarProps = {
 };
 
 export const Sidebar = memo(
-  ({
-    children,
-    editor,
-    isOpen,
-    onClose,
-    activeTab,
-    activeTabOnChange,
-  }: SidebarProps) => {
+  ({ children, editor, isOpen, onClose, activeTab, activeTabOnChange }: SidebarProps) => {
     const handlePotentialClose = useCallback(() => {
       if (window.innerWidth < 1024) {
         onClose();
@@ -49,18 +42,13 @@ export const Sidebar = memo(
           </TabsList>
 
           <TabsContent value="form" className="pr-2">
-            <ScrollArea className="h-[calc(100vh-11rem)]">
-              {children}
-            </ScrollArea>
+            <ScrollArea className="h-[calc(100vh-11rem)]">{children}</ScrollArea>
           </TabsContent>
           <TabsContent
             value="tableOfContent"
             className="m-6 h-full overflow-y-auto overflow-x-hidden"
           >
-            <TableOfContents
-              onItemClick={handlePotentialClose}
-              editor={editor}
-            />
+            <TableOfContents onItemClick={handlePotentialClose} editor={editor} />
           </TabsContent>
         </Tabs>
       </aside>

@@ -1,12 +1,7 @@
 import { cn } from "@/lib/tiptap/lib/utils";
 import React from "react";
 
-export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "quaternary"
-  | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "tertiary" | "quaternary" | "ghost";
 export type ButtonSize = "medium" | "small" | "icon" | "iconSmall";
 
 export type ButtonProps = {
@@ -82,12 +77,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     return (
-      <button
-        ref={ref}
-        disabled={disabled}
-        className={buttonClassName}
-        {...rest}
-      >
+      <button ref={ref} disabled={disabled} className={buttonClassName} {...rest}>
         {children}
       </button>
     );

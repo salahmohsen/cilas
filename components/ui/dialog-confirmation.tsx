@@ -30,8 +30,7 @@ export const ConfirmationDialog = ({
           <DialogTitle>{title}</DialogTitle>
         </DialogHeader>
         <DialogDescription>
-          {message ||
-            "This action cannot be undone. Are you sure you want to proceed?"}
+          {message || "This action cannot be undone. Are you sure you want to proceed?"}
         </DialogDescription>
         <DialogFooter>
           <Button variant="secondary" onClick={() => setIsOpen(false)}>

@@ -35,11 +35,7 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
           </FormLabel>
 
           <FormControl>
-            <div
-              className="flex w-full gap-5"
-              ref={field.ref}
-              onBlur={field.onBlur}
-            >
+            <div className="flex w-full gap-5" ref={field.ref} onBlur={field.onBlur}>
               <div className="flex items-end gap-2" id="start-time">
                 <div className="grid gap-1 text-center">
                   <Label className="text-xs" htmlFor="start-hour">

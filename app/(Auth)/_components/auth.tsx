@@ -152,11 +152,7 @@ export function AuthForm({
                 )}
               </div>
               <div className="flex flex-col gap-4">
-                <Button
-                  type="submit"
-                  className="w-full"
-                  onClick={handleSubmitClick}
-                >
+                <Button type="submit" className="w-full" onClick={handleSubmitClick}>
                   {authMode === "signin" ? "Sign in" : "Sign up"}
                 </Button>
                 <Link href="/signin/google">

@@ -8,10 +8,7 @@ declare module "@tiptap/core" {
   interface Commands<ReturnType> {
     imageBlock: {
       setImageBlock: (attributes: { src: string }) => ReturnType;
-      setImageBlockAt: (attributes: {
-        src: string;
-        pos: number | Range;
-      }) => ReturnType;
+      setImageBlockAt: (attributes: { src: string; pos: number | Range }) => ReturnType;
       setImageBlockAlign: (align: "left" | "center" | "right") => ReturnType;
       setImageBlockWidth: (width: number) => ReturnType;
     };
@@ -69,10 +66,7 @@ export const ImageBlock = Image.extend({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return [
-      "img",
-      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
-    ];
+    return ["img", mergeAttributes(this.options.HTMLAttributes, HTMLAttributes)];
   },
 
   addCommands() {

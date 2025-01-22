@@ -3,18 +3,11 @@ import { z } from "zod";
 const emptyStringToNull = z.literal("").transform(() => null);
 
 // Validate Strings
-export const required_string = z
-  .string()
-  .trim()
-  .min(1, { message: "Required" });
+export const required_string = z.string().trim().min(1, { message: "Required" });
 
 export const optional_string = z.string().min(1).or(emptyStringToNull);
 
-export const required_url = z
-  .string()
-  .url()
-  .trim()
-  .min(1, { message: "Required" });
+export const required_url = z.string().url().trim().min(1, { message: "Required" });
 
 export const optional_url = z.string().url().min(1).or(emptyStringToNull);
 

@@ -123,19 +123,16 @@ export const enrollmentTable = pgTable(
   }),
 );
 
-export const courseEnrollmentRelations = relations(
-  enrollmentTable,
-  ({ one }) => ({
-    course: one(courseTable, {
-      fields: [enrollmentTable.courseId],
-      references: [courseTable.id],
-    }),
-    user: one(userTable, {
-      fields: [enrollmentTable.userId],
-      references: [userTable.id],
-    }),
+export const courseEnrollmentRelations = relations(enrollmentTable, ({ one }) => ({
+  course: one(courseTable, {
+    fields: [enrollmentTable.courseId],
+    references: [courseTable.id],
   }),
-);
+  user: one(userTable, {
+    fields: [enrollmentTable.userId],
+    references: [userTable.id],
+  }),
+}));
 
 export const blogTable = pgTable("blog", {
   id: serial("id").primaryKey(),

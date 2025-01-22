@@ -152,11 +152,7 @@ export function getDateByType(date: Date, type: TimePickerType) {
   }
 }
 
-export function getArrowByType(
-  value: string,
-  step: number,
-  type: TimePickerType,
-) {
+export function getArrowByType(value: string, step: number, type: TimePickerType) {
   switch (type) {
     case "minutes":
       return getValidArrowMinuteOrSecond(value, step);

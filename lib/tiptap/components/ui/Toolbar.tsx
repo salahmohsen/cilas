@@ -13,13 +13,7 @@ export type ToolbarWrapperProps = {
 
 const ToolbarWrapper = forwardRef<HTMLDivElement, ToolbarWrapperProps>(
   (
-    {
-      shouldShowContent = true,
-      children,
-      isVertical = false,
-      className,
-      ...rest
-    },
+    { shouldShowContent = true, children, isVertical = false, className, ...rest },
     ref,
   ) => {
     const toolbarClassName = cn(

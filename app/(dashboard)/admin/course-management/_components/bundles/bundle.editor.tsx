@@ -5,11 +5,7 @@ import { redirect } from "next/navigation";
 import { useEffect, useRef, useTransition } from "react";
 import { useFormState } from "react-dom";
 
-import {
-  BundleState,
-  createBundle,
-  editBundle,
-} from "@/lib/actions/bundles.actions";
+import { BundleState, createBundle, editBundle } from "@/lib/actions/bundles.actions";
 import { getUnbundledCourses } from "@/lib/actions/courses.actions";
 
 import {
@@ -102,9 +98,7 @@ export default function BundleForm({
             <SelectInput
               name="cycle"
               label="Cycle"
-              options={[
-                { selectItems: ["Spring", "Summer", "Fall", "Winter"] },
-              ]}
+              options={[{ selectItems: ["Spring", "Summer", "Fall", "Winter"] }]}
               placeholder="Select a cycle"
             />
             <SelectInput
@@ -143,10 +137,7 @@ export default function BundleForm({
             />
           </fieldset>
           <div className="my-8 flex gap-5">
-            <Link
-              href={`/admin/course-management?tab=${Tab.Bundles}`}
-              className="w-full"
-            >
+            <Link href={`/admin/course-management?tab=${Tab.Bundles}`} className="w-full">
               <Button variant="secondary" className="w-full">
                 Cancel
               </Button>

@@ -179,8 +179,7 @@ export const searchCoursesNames = async (value: string = "") => {
   });
 
   const coursesNames: Option[] = data.map((course) => {
-    if (course.enTitle)
-      return { label: course.enTitle, value: course.id.toString() };
+    if (course.enTitle) return { label: course.enTitle, value: course.id.toString() };
     else {
       return { label: course.arTitle!, value: course.id.toString() };
     }
@@ -189,10 +188,7 @@ export const searchCoursesNames = async (value: string = "") => {
   return coursesNames;
 };
 
-export const getUnbundledCourses = async (
-  query: string,
-  defaultCourses?: Option[],
-) => {
+export const getUnbundledCourses = async (query: string, defaultCourses?: Option[]) => {
   const data = await db.query.courseTable.findMany({
     columns: {
       id: true,
@@ -209,8 +205,7 @@ export const getUnbundledCourses = async (
     ),
   });
   const coursesNames: Option[] = data.map((course) => {
-    if (course.enTitle)
-      return { label: course.enTitle, value: course.id.toString() };
+    if (course.enTitle) return { label: course.enTitle, value: course.id.toString() };
     else {
       return { label: course.arTitle!, value: course.id.toString() };
     }
@@ -249,8 +244,7 @@ export const deleteCourse = async (
   formData: FormData,
 ): Promise<DeleteCourseState> => {
   const courseId = formData.get("courseId");
-  if (typeof courseId !== "string")
-    return { error: true, message: "invalid course id!" };
+  if (typeof courseId !== "string") return { error: true, message: "invalid course id!" };
 
   try {
     const statement = await db

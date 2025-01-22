@@ -9,11 +9,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils/utils";
 
 import { useCourseStore } from "@/lib/store/course.slice";
@@ -56,9 +52,7 @@ export function FilterButton() {
           className="flex justify-between gap-2"
         >
           <Filter className="h-4 w-4 shrink-0 opacity-50" />
-          {value
-            ? coursesFilter.find((filter) => filter.value === value)?.label
-            : ""}
+          {value ? coursesFilter.find((filter) => filter.value === value)?.label : ""}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">

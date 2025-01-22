@@ -71,11 +71,7 @@ export const LinkMenu = ({ editor, appendTo }: MenuProps): JSX.Element => {
           onSetLink={onSetLink}
         />
       ) : (
-        <LinkPreviewPanel
-          url={link}
-          onClear={onUnsetLink}
-          onEdit={handleEdit}
-        />
+        <LinkPreviewPanel url={link} onClear={onUnsetLink} onEdit={handleEdit} />
       )}
     </BaseBubbleMenu>
   );

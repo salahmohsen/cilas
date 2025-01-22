@@ -15,9 +15,7 @@ export const useLinkEditorState = ({
   onSetLink,
 }: LinkEditorPanelProps) => {
   const [url, setUrl] = useState(initialUrl || "");
-  const [openInNewTab, setOpenInNewTab] = useState(
-    initialOpenInNewTab || false,
-  );
+  const [openInNewTab, setOpenInNewTab] = useState(initialOpenInNewTab || false);
 
   const onChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     setUrl(event.target.value);

@@ -63,8 +63,7 @@ export const MenuList = React.forwardRef((props: MenuListProps, ref) => {
 
         if (newCommandIndex < 0) {
           newGroupIndex = selectedGroupIndex - 1;
-          newCommandIndex =
-            props.items[newGroupIndex]?.commands.length - 1 || 0;
+          newCommandIndex = props.items[newGroupIndex]?.commands.length - 1 || 0;
         }
 
         if (newGroupIndex < 0) {

@@ -29,12 +29,10 @@ export const UpdateCourses = ({
 
   const bundle = bundles?.find((bundle) => bundle.id === bundleId);
 
-  const defaultCourses: Option[] | undefined = bundle?.courses.map(
-    (course) => ({
-      value: course.id.toString(),
-      label: (course.enTitle || course.arTitle) as string,
-    }),
-  );
+  const defaultCourses: Option[] | undefined = bundle?.courses.map((course) => ({
+    value: course.id.toString(),
+    label: (course.enTitle || course.arTitle) as string,
+  }));
 
   const [courses, setCourses] = useState<Option[] | undefined>(defaultCourses);
   const [loading, setLoading] = useState<boolean>(false);
@@ -84,8 +82,7 @@ export const UpdateCourses = ({
     />
   );
 
-  if (!bundle)
-    return toast.error("Something went wrong, bundle is not available!");
+  if (!bundle) return toast.error("Something went wrong, bundle is not available!");
 
   return (
     <Dialog onOpenChange={setDialogOpen} open={dialogOpen}>

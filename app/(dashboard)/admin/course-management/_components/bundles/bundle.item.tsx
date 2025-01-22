@@ -3,10 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { fetchCourses } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
-import {
-  BundleWithCourseTitles,
-  CourseWithFellow,
-} from "@/lib/types/drizzle.types";
+import { BundleWithCourseTitles, CourseWithFellow } from "@/lib/types/drizzle.types";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { PanelRightClose, PanelRightOpen, Rabbit, Target } from "lucide-react";
@@ -18,19 +15,15 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCourseTitles }) => {
   const { isBundleSelected, isLoading, setCourses } = useCourseStore();
 
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
-  const [coursesData, setCoursesData] = useState<
-    CourseWithFellow[] | undefined
-  >(undefined);
+  const [coursesData, setCoursesData] = useState<CourseWithFellow[] | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     const fetchBundleCoursesData = async () => {
       const bundleCoursesIds = bundle.courses.map((course) => course.id);
       if (bundleCoursesIds.length > 0) {
-        const bundleCourses = await fetchCourses(
-          undefined,
-          undefined,
-          bundleCoursesIds,
-        );
+        const bundleCourses = await fetchCourses(undefined, undefined, bundleCoursesIds);
         if (!bundleCourses.error && bundleCourses.courses) {
           setCoursesData(bundleCourses.courses);
         }
@@ -58,9 +51,7 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCourseTitles }) => {
             isOptionsMenuOpen={isOptionsMenuOpen}
             setIsOptionsMenuOpen={setIsOptionsMenuOpen}
           />
-          <div
-            className={`flex flex-col gap-2 pr-12 font-light lg:flex-row lg:pr-0`}
-          >
+          <div className={`flex flex-col gap-2 pr-12 font-light lg:flex-row lg:pr-0`}>
             <Badge className={`h-6 rounded-sm`}>
               {bundle.cycle} {bundle.year}
             </Badge>
@@ -80,11 +71,7 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCourseTitles }) => {
                 coursesData
                   .sort((a, b) => b.id - a.id)
                   .map((course) => (
-                    <BundleCourse
-                      key={course.id}
-                      bundle={bundle}
-                      course={course}
-                    />
+                    <BundleCourse key={course.id} bundle={bundle} course={course} />
                   ))}
               {!isLoading && bundle.courses.length === 0 && (
                 <div className="flex flex-col items-center justify-center gap-2">
@@ -96,9 +83,7 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCourseTitles }) => {
           </div>
           <p className="flex w-full gap-1 text-xs font-light">
             <Target size={16} strokeWidth={1.5} />
-            <span>
-              Registration Deadline {format(bundle.deadline, "d MMM yyyy")}
-            </span>
+            <span>Registration Deadline {format(bundle.deadline, "d MMM yyyy")}</span>
           </p>
         </div>
       </div>

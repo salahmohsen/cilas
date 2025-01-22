@@ -19,10 +19,7 @@ export const CourseInfoModal = () => {
       <DialogContent
         className={`h-[calc(100%-20px)] scale-90 rounded-md border-none p-0`}
       >
-        <CourseInfo
-          className={"mb-10 overflow-y-auto border-0"}
-          mode="dialog"
-        />
+        <CourseInfo className={"mb-10 overflow-y-auto border-0"} mode="dialog" />
         <InfoFooter className="fixed bottom-0 rounded-md" />
       </DialogContent>
     </Dialog>

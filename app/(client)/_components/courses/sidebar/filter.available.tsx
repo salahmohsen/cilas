@@ -10,20 +10,10 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 
-import {
-  ArrowUpCircle,
-  CheckCircle2,
-  Circle,
-  LucideIcon,
-  XCircle,
-} from "lucide-react";
+import { ArrowUpCircle, CheckCircle2, Circle, LucideIcon, XCircle } from "lucide-react";
 
 type Status = {
   value: string;
@@ -62,11 +52,7 @@ export function SidebarAvailableFilter({ className }) {
     <div className={`flex items-center space-x-4 ${className}`}>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            size="sm"
-            className="w-[150px] justify-start"
-          >
+          <Button variant="outline" size="sm" className="w-[150px] justify-start">
             {selectedStatus ? (
               <>
                 <selectedStatus.icon className="mr-2 h-4 w-4 shrink-0" />
@@ -89,8 +75,7 @@ export function SidebarAvailableFilter({ className }) {
                     value={status.value}
                     onSelect={(value) => {
                       setSelectedStatus(
-                        statuses.find((priority) => priority.value === value) ||
-                          null,
+                        statuses.find((priority) => priority.value === value) || null,
                       );
                       setOpen(false);
                     }}

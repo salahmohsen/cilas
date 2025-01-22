@@ -30,20 +30,11 @@ export function getSeason(date: string | Date) {
   // Determine the season based on month and day
   if ((month === 12 && day >= 21) || (month <= 3 && (month < 3 || day <= 20))) {
     return "Winter";
-  } else if (
-    (month === 3 && day >= 21) ||
-    (month <= 6 && (month < 6 || day <= 20))
-  ) {
+  } else if ((month === 3 && day >= 21) || (month <= 6 && (month < 6 || day <= 20))) {
     return "Spring";
-  } else if (
-    (month === 6 && day >= 21) ||
-    (month <= 9 && (month < 9 || day <= 22))
-  ) {
+  } else if ((month === 6 && day >= 21) || (month <= 9 && (month < 9 || day <= 22))) {
     return "Summer";
-  } else if (
-    (month === 9 && day >= 23) ||
-    (month <= 12 && (month < 12 || day <= 20))
-  ) {
+  } else if ((month === 9 && day >= 23) || (month <= 12 && (month < 12 || day <= 20))) {
     return "Fall";
   }
 }

@@ -9,13 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFormContext } from "react-hook-form";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 
 import { SelectProps } from "@/lib/types/formInputs.types";
 import React, { memo } from "react";
@@ -52,9 +46,7 @@ export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
             <div onBlur={field.onBlur} ref={field.ref}>
               <Select
                 name={field.name}
-                defaultValue={
-                  typeof field.value !== "boolean" ? field.value : undefined
-                }
+                defaultValue={typeof field.value !== "boolean" ? field.value : undefined}
                 disabled={field.disabled}
                 onValueChange={(selectOption) =>
                   handleChange(selectOption, field.onChange)
@@ -81,10 +73,7 @@ export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
                           <SelectGroup>
                             <SelectLabel>{selectOption.groupLabel}</SelectLabel>
                             {selectOption.selectItems.map((option) => (
-                              <SelectItem
-                                key={option}
-                                value={option?.toLowerCase()}
-                              >
+                              <SelectItem key={option} value={option?.toLowerCase()}>
                                 {option}
                               </SelectItem>
                             ))}
