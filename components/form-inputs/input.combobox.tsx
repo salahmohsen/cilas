@@ -45,12 +45,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
         return (
           <>
             {/* Hidden input to keep the field registered */}
-            <input
-              hidden
-              name={field.name}
-              value={JSON.stringify(value)}
-              onChange={setValue}
-            />
+            <input hidden name={field.name} value={value} onChange={setValue} />
             <Popover open={open} onOpenChange={setOpen}>
               <PopoverTrigger asChild>
                 <Button
