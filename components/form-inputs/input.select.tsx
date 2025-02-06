@@ -8,21 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFormContext } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
+import { FieldPath, FieldValues } from "react-hook-form";
 
+import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
 import { SelectProps } from "@/lib/types/formInputs.types";
 import React, { memo } from "react";
 
-export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
+const SelectInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
   label,
   placeholder,
   className,
   options,
-}) {
-  const { control } = useFormContext();
-
+}: SelectProps<TData, TName>) => {
   const handleChange = (selectedOption, onChange) => {
     if (selectedOption?.toLowerCase() === "open") {
       onChange(true);
@@ -34,68 +32,63 @@ export const SelectInput: React.FC<SelectProps> = memo(function SelectInput({
   };
 
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className={className}>
-          <FormLabel asChild>
-            <legend>{label}</legend>
-          </FormLabel>
-          <FormControl>
-            <div onBlur={field.onBlur} ref={field.ref}>
-              <Select
-                name={field.name}
-                defaultValue={typeof field.value !== "boolean" ? field.value : undefined}
-                disabled={field.disabled}
-                onValueChange={(selectOption) =>
-                  handleChange(selectOption, field.onChange)
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue
-                    placeholder={
-                      field.value && typeof field.value === "string"
-                        ? field.value?.toLowerCase()
-                        : field.value === true
-                          ? "open"
-                          : field.value === false
-                            ? "closed"
-                            : placeholder
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {options?.map((selectOption, index) => {
-                    if (selectOption.groupLabel) {
-                      return (
-                        <React.Fragment key={index}>
-                          <SelectGroup>
-                            <SelectLabel>{selectOption.groupLabel}</SelectLabel>
-                            {selectOption.selectItems.map((option) => (
-                              <SelectItem key={option} value={option?.toLowerCase()}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectGroup>
-                          {index !== options.length - 1 && <SelectSeparator />}
-                        </React.Fragment>
-                      );
-                    } else {
-                      return selectOption.selectItems.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ));
-                    }
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <FormFieldProvider<TData, TName> name={name} label={label} itemClasses={className}>
+      {({ field, fieldState }) => {
+        const value = field.value;
+        const setValue = field.onChange;
+
+        return (
+          <div onBlur={field.onBlur} ref={field.ref}>
+            <Select
+              name={field.name}
+              defaultValue={typeof value !== "boolean" ? value : undefined}
+              disabled={field.disabled}
+              onValueChange={(selectOption) => handleChange(selectOption, setValue)}
+            >
+              <SelectTrigger>
+                <SelectValue
+                  placeholder={
+                    value && typeof value === "string"
+                      ? value?.toLowerCase()
+                      : value === true
+                        ? "open"
+                        : value === false
+                          ? "closed"
+                          : placeholder
+                  }
+                />
+              </SelectTrigger>
+              <SelectContent>
+                {options?.map((selectOption, index) => {
+                  if (selectOption.groupLabel) {
+                    return (
+                      <React.Fragment key={index}>
+                        <SelectGroup>
+                          <SelectLabel>{selectOption.groupLabel}</SelectLabel>
+                          {selectOption.selectItems.map((option) => (
+                            <SelectItem key={option} value={option?.toLowerCase()}>
+                              {option}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                        {index !== options.length - 1 && <SelectSeparator />}
+                      </React.Fragment>
+                    );
+                  } else {
+                    return selectOption.selectItems.map((option) => (
+                      <SelectItem key={option} value={option}>
+                        {option}
+                      </SelectItem>
+                    ));
+                  }
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+        );
+      }}
+    </FormFieldProvider>
   );
-});
+};
+
+export default memo(SelectInput) as typeof SelectInput;

@@ -1,4 +1,4 @@
-import { useFormContext } from "react-hook-form";
+import { FieldPath, FieldValues } from "react-hook-form";
 
 import {
   link,
@@ -10,60 +10,44 @@ import {
 } from "@/lib/tiptap/tiptap-extensions";
 import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-
 import { cn } from "@/lib/utils/utils";
 
-import { StandardProps } from "@/lib/types/formInputs.types";
+import { TipTapInputProps } from "@/lib/types/formInputs.types";
 import React, { memo } from "react";
+import { FormFieldProvider } from "./form.input.wrapper";
 import { Bold, EditorToolbar, Italic, SetLink, UnsetLink } from "./input.tipTap.toolBar";
 
-interface TipTapInputProps extends StandardProps {
-  editorToolbar?: boolean;
-}
-
-export const TipTapInput = memo(function TipTapInput({
+const TipTapInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
   label,
   placeholder,
   className,
   editorToolbar = true,
-}: TipTapInputProps) {
-  const { control } = useFormContext();
-
+}: TipTapInputProps<TData, TName>) => {
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className={className}>
-          <FormLabel>{label}</FormLabel>
-          <FormControl>
-            <>
-              <input hidden name={name} value={field.value} onChange={field.onChange} />
-              <Editor
-                editorRef={field.ref}
-                value={field.value}
-                onChange={field.onChange}
-                onBlur={field.onBlur}
-                disabled={field.disabled}
-                placeholder={placeholder ?? ""}
-                editorToolbar={editorToolbar}
-              />
-            </>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <FormFieldProvider<TData, TName> name={name} label={label} itemClasses={className}>
+      {({ field, fieldState }) => {
+        const value = field.value;
+        const setValue = field.onChange;
+
+        return (
+          <>
+            <input hidden name={name} value={value} onChange={setValue} />
+            <Editor
+              editorRef={field.ref}
+              value={value}
+              onChange={setValue}
+              onBlur={field.onBlur}
+              disabled={field.disabled}
+              placeholder={placeholder ?? ""}
+              editorToolbar={editorToolbar}
+            />
+          </>
+        );
+      }}
+    </FormFieldProvider>
   );
-});
+};
 
 type EditorProps = {
   className?: string;
@@ -132,3 +116,5 @@ const Editor: React.FC<EditorProps> = ({
     </div>
   );
 };
+
+export default memo(TipTapInput) as typeof TipTapInput;

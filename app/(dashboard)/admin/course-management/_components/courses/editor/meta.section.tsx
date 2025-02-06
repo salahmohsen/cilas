@@ -13,6 +13,7 @@ import {
   TimeSlotInput,
 } from "@/components/form-inputs";
 import { useCourseStore } from "@/lib/store/course.slice";
+import { CourseSchema } from "@/lib/types/course.schema";
 
 type CourseMetadataProps = {
   editMode: boolean;
@@ -65,24 +66,32 @@ export const CourseMetadata = memo(
 
     return (
       <div className="space-y-8 p-6" ref={ref}>
-        <DateInput name="startDate" label="Start Date" placeholder="Pick a date" />
+        <DateInput<CourseSchema, "startDate">
+          name="startDate"
+          label="Start Date"
+          placeholder="Pick a date"
+        />
 
-        <DateInput name="endDate" label="End Date" placeholder="Pick a date" />
+        <DateInput<CourseSchema, "endDate">
+          name="endDate"
+          label="End Date"
+          placeholder="Pick a date"
+        />
 
-        <SelectInput
+        <SelectInput<CourseSchema, "isRegistrationOpen">
           name="isRegistrationOpen"
           label="Registration Status"
           placeholder="Select status"
           options={[{ selectItems: ["Open", "Closed"] }]}
         />
-        <BasicInput
+        <BasicInput<CourseSchema, "applyUrl">
           name="applyUrl"
           label="Registration Form"
           placeholder="Registration Form Url"
           type="url"
         />
 
-        <SelectInput
+        <SelectInput<CourseSchema, "category">
           name="category"
           label="Category"
           placeholder="Select category"
@@ -98,7 +107,7 @@ export const CourseMetadata = memo(
           ]}
         />
 
-        <MultiSelectorInput
+        <MultiSelectorInput<CourseSchema, "days">
           name="days"
           label={"Days"}
           placeholder="Select Days"
@@ -114,7 +123,7 @@ export const CourseMetadata = memo(
           ]}
         />
 
-        <ComboBoxInput
+        <ComboBoxInput<CourseSchema, "fellowId">
           name="fellowId"
           label="Fellow"
           placeholder="Select fellow..."
@@ -126,13 +135,13 @@ export const CourseMetadata = memo(
           loading={loading}
         />
 
-        <BasicInput
+        <BasicInput<CourseSchema, "featuredImage">
+          name="featuredImage"
           type="file"
           placeholder="Choose Poster"
-          name="featuredImage"
           label="Featured Image"
         />
-        <SliderInput
+        <SliderInput<CourseSchema, "suggestedPrice">
           name="suggestedPrice"
           label="Suggested Price"
           defaultValue={[2000, 3000]}
@@ -143,14 +152,18 @@ export const CourseMetadata = memo(
           formatLabelSign="EGP"
         />
 
-        <SelectInput
+        <SelectInput<CourseSchema, "attendance">
           name="attendance"
           label="Attendance"
           placeholder="Select mode"
           options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
         />
 
-        <TimeSlotInput name="timeSlot" label="Time Slot" placeholder="Start Time" />
+        <TimeSlotInput<CourseSchema, "timeSlot">
+          name="timeSlot"
+          label="Time Slot"
+          placeholder="Start Time"
+        />
       </div>
     );
   }),

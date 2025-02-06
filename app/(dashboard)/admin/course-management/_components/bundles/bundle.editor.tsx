@@ -83,7 +83,7 @@ export default function BundleForm({
           <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm lg:grid-cols-2">
             <legend className="text-sm font-medium">Bundle</legend>
             <input hidden name="bundleId" value={bundleId} readOnly />
-            <SelectInput
+            <SelectInput<BundleSchema, "year">
               name="year"
               label="Year"
               options={[
@@ -95,13 +95,13 @@ export default function BundleForm({
               ]}
               placeholder="Select a year"
             />
-            <SelectInput
+            <SelectInput<BundleSchema, "cycle">
               name="cycle"
               label="Cycle"
               options={[{ selectItems: ["Spring", "Summer", "Fall", "Winter"] }]}
               placeholder="Select a cycle"
             />
-            <SelectInput
+            <SelectInput<BundleSchema, "category">
               name="category"
               label="Category"
               options={[
@@ -116,18 +116,18 @@ export default function BundleForm({
               ]}
               placeholder="Select a category"
             />
-            <SelectInput
+            <SelectInput<BundleSchema, "attendance">
               name="attendance"
               label="Attendance"
               options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
               placeholder="Select a attendance"
             />
-            <DateInput
+            <DateInput<BundleSchema, "deadline">
               name="deadline"
               label="Registration deadline"
               placeholder="Select a deadline"
             />
-            <MultiSelectorInput
+            <MultiSelectorInput<BundleSchema, "courses">
               name="courses"
               label="Courses"
               placeholder="Select unbundled courses"

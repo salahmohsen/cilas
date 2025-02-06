@@ -1,30 +1,22 @@
 import Image from "next/image";
 import { ChangeEvent, memo, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldPath, FieldValues } from "react-hook-form";
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
 import { BasicInputProps } from "@/lib/types/formInputs.types";
 import { cloudinary_quality } from "@/lib/utils/cloudinary.utils";
 import { cn } from "@/lib/utils/utils";
 
-export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
+const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
   label,
   type,
   placeholder,
   className,
   direction = "vertical",
-}) {
-  const { control } = useFormContext();
-
+}: BasicInputProps<TData, TName>) => {
   const [preview, setPreview] = useState<unknown>(undefined);
   const handleImageInput = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,65 +32,61 @@ export const BasicInput: React.FC<BasicInputProps> = memo(function BasicInput({
   };
 
   return (
-    <FormField
-      control={control}
+    <FormFieldProvider<TData, TName>
       name={name}
-      render={({ field }) => (
-        <FormItem
-          className={cn(
-            direction === "horizontal"
-              ? "grid grid-cols-7 items-center gap-2"
-              : "grid grid-cols-1",
-            className,
-          )}
-        >
-          <FormLabel
-            asChild
-            className={direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"}
-          >
-            <legend>{label}</legend>
-          </FormLabel>
-
-          <FormControl>
-            <div
-              className={` ${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"} `}
-            >
-              <Input
-                type={type === "number" ? "text" : type}
-                {...field}
-                placeholder={placeholder}
-                accept={type === "file" ? ".jpg, .jpeg, .png" : undefined}
-                value={type === "file" ? undefined : field.value}
-                onChange={(e) => {
-                  if (type !== "file") {
-                    field.onChange(e.target.value);
-                  } else if (type === "file") {
-                    handleImageInput(e);
-                    field.onChange(e.target.files?.[0]);
-                  }
-                }}
-              />
-              {(preview || (field.value && type === "file")) && (
-                <>
-                  <Image
-                    src={
-                      (preview as string) ||
-                      cloudinary_quality(field.value, "low") ||
-                      "/public/logo.png"
-                    }
-                    className="h-10 w-auto rounded-md"
-                    width={50}
-                    height={50}
-                    alt={label || ""}
-                  />
-                </>
-              )}
-              {direction === "horizontal" && <FormMessage className="mt-2" />}
-            </div>
-          </FormControl>
-          {direction === "vertical" && <FormMessage />}
-        </FormItem>
+      label={label}
+      labelClasses={direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"}
+      itemClasses={cn(
+        direction === "horizontal"
+          ? "grid grid-cols-7 items-center gap-2"
+          : "grid grid-cols-1",
+        className,
       )}
-    />
+      messageClasses={cn(direction !== "horizontal" && "mt-2")}
+    >
+      {({ field, fieldState }) => {
+        const value = field.value;
+        const setValue = field.onChange;
+
+        return (
+          <div
+            className={` ${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"} `}
+          >
+            <Input
+              type={type === "number" ? "text" : type}
+              {...field}
+              placeholder={placeholder}
+              accept={type === "file" ? ".jpg, .jpeg, .png" : undefined}
+              value={type === "file" ? undefined : value}
+              onChange={(e) => {
+                if (type !== "file") {
+                  setValue(e.target.value);
+                } else if (type === "file") {
+                  handleImageInput(e);
+                  setValue(e.target.files?.[0]);
+                }
+              }}
+            />
+            {(preview || (value && type === "file")) && (
+              <>
+                <Image
+                  src={
+                    (preview as string) ||
+                    cloudinary_quality(value, "low") ||
+                    "/public/logo.png"
+                  }
+                  className="h-10 w-auto rounded-md"
+                  width={50}
+                  height={50}
+                  alt={label || ""}
+                />
+              </>
+            )}
+          </div>
+        );
+      }}
+    </FormFieldProvider>
   );
-});
+};
+
+export default memo(BasicInput) as typeof BasicInput;

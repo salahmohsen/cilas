@@ -1,23 +1,16 @@
-import { memo, useRef } from "react";
-import { useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils/utils";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { TimePickerInput } from "@/components/ui/time-picker-input";
 import { StandardProps } from "@/lib/types/formInputs.types";
+import { cn } from "@/lib/utils/utils";
+import { memo, useRef } from "react";
+import { FieldPath, FieldValues } from "react-hook-form";
+import { FormFieldProvider } from "./form.input.wrapper";
 
-export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
+const TimeSlotInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
   label,
   className,
-}) {
-  const { control } = useFormContext();
+}: StandardProps<TData, TName>) => {
   // Refs for accessibility and changing input focus
   const startHourRef = useRef<HTMLInputElement>(null);
   const startMinuteRef = useRef<HTMLInputElement>(null);
@@ -25,16 +18,18 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
   const endMinuteRef = useRef<HTMLInputElement>(null);
 
   return (
-    <FormField
-      control={control}
+    <FormFieldProvider<TData, TName>
       name={name}
-      render={({ field }) => (
-        <FormItem className={cn("flex flex-col", className)}>
-          <FormLabel asChild className="mb-3 min-w-max">
-            <legend>{label}</legend>
-          </FormLabel>
+      label={label}
+      itemClasses={cn("flex flex-col", className)}
+      labelClasses="mb-3 min-w-max"
+    >
+      {({ field, fieldState }) => {
+        const value = field.value;
+        const setValue = field.onChange;
 
-          <FormControl>
+        return (
+          <>
             <div className="flex w-full gap-5" ref={field.ref} onBlur={field.onBlur}>
               <div className="flex items-end gap-2" id="start-time">
                 <div className="grid gap-1 text-center">
@@ -44,16 +39,14 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
                   <input
                     hidden
                     name={name}
-                    value={JSON.stringify(field.value)}
-                    onChange={field.onChange}
+                    value={JSON.stringify(value)}
+                    onChange={setValue}
                   />
                   <TimePickerInput
                     id="start-hour"
                     picker="hours"
-                    date={field.value.from}
-                    setDate={(updatedDate) =>
-                      field.onChange({ ...field.value, from: updatedDate })
-                    }
+                    date={value.from}
+                    setDate={(updatedDate) => setValue({ ...value, from: updatedDate })}
                     ref={startHourRef}
                     onRightFocus={() => startMinuteRef?.current?.focus()}
                     onLeftFocus={() => endMinuteRef?.current?.focus()}
@@ -67,10 +60,8 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
                     id="start-minutes"
                     picker="minutes"
                     ref={startMinuteRef}
-                    date={field.value.from}
-                    setDate={(updatedDate) =>
-                      field.onChange({ ...field.value, from: updatedDate })
-                    }
+                    date={value.from}
+                    setDate={(updatedDate) => setValue({ ...value, from: updatedDate })}
                     onRightFocus={() => endHourRef?.current?.focus()}
                     onLeftFocus={() => startHourRef?.current?.focus()}
                   />
@@ -86,10 +77,8 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
                   <TimePickerInput
                     id="end-hour"
                     picker="hours"
-                    date={field.value.to}
-                    setDate={(updatedDate) =>
-                      field.onChange({ ...field.value, to: updatedDate })
-                    }
+                    date={value.to}
+                    setDate={(updatedDate) => setValue({ ...value, to: updatedDate })}
                     ref={endHourRef}
                     onRightFocus={() => endMinuteRef?.current?.focus()}
                     onLeftFocus={() => startMinuteRef?.current?.focus()}
@@ -102,10 +91,8 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
                   <TimePickerInput
                     id="end-minutes"
                     picker="minutes"
-                    date={field.value.to}
-                    setDate={(updatedDate) =>
-                      field.onChange({ ...field.value, to: updatedDate })
-                    }
+                    date={value.to}
+                    setDate={(updatedDate) => setValue({ ...value, to: updatedDate })}
                     ref={endMinuteRef}
                     onRightFocus={() => startHourRef?.current?.focus()}
                     onLeftFocus={() => endHourRef?.current?.focus()}
@@ -113,10 +100,11 @@ export const TimeSlotInput: React.FC<StandardProps> = memo(function TimeInput({
                 </div>
               </div>
             </div>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+          </>
+        );
+      }}
+    </FormFieldProvider>
   );
-});
+};
+
+export default memo(TimeSlotInput) as typeof TimeSlotInput;

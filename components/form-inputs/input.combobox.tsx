@@ -1,3 +1,7 @@
+"use client";
+
+import { FellowForm } from "@/app/(dashboard)/admin/course-management/_components/courses/fellow.form";
+import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -7,24 +11,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { memo, useEffect, useState } from "react";
-
+import { ComboBoxProps } from "@/lib/types/formInputs.types";
 import { cn } from "@/lib/utils/utils";
 import { Check, ChevronsUpDown, LoaderCircle } from "lucide-react";
+import { memo, useEffect, useState } from "react";
+import { FieldPath, FieldValues } from "react-hook-form";
 
-import { FellowForm } from "@/app/(dashboard)/admin/course-management/_components/courses/fellow.form";
-import { ComboBoxProps } from "@/lib/types/formInputs.types";
-import { useFormContext } from "react-hook-form";
-
-export const ComboBoxInput: React.FC<ComboBoxProps> = memo(function ComboBoxInput({
+const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
   label,
   placeholder,
@@ -35,8 +29,7 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(function ComboBoxInpu
   loading,
   options,
   defaultOption,
-}) {
-  const { control } = useFormContext();
+}: ComboBoxProps<TData, TName>) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -44,100 +37,106 @@ export const ComboBoxInput: React.FC<ComboBoxProps> = memo(function ComboBoxInpu
   }, [open, action]);
 
   return (
-    <FormField
-      control={control}
-      name={name}
-      render={({ field }) => (
-        <FormItem className={className}>
-          <FormLabel asChild>
-            <legend>{label}</legend>
-          </FormLabel>
-          <FormControl>
-            <>
-              <input hidden name={name} value={field.value} onChange={field.onChange} />
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    ref={field.ref}
-                    onBlur={field.onBlur}
-                    className={cn(
-                      "w-full justify-between",
-                      !field.value && "text-muted-foreground",
-                    )}
-                  >
-                    {field.value
-                      ? defaultOption
-                        ? defaultOption.name
-                        : options?.find((item) => item?.id === field.value)?.name
-                      : placeholder}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[200px] p-0" align="start">
-                  <Command
-                    filter={(value, search, keywords) => {
-                      if (
-                        [keywords]?.join()?.toLowerCase()?.includes(search.toLowerCase())
-                      )
-                        return 1;
-                      return 0;
-                    }}
-                  >
-                    <CommandList>
-                      <CommandInput placeholder={searchPlaceholder} />
-                      <CommandEmpty>
-                        <div className="space-y-2">
-                          <p>{emptyMsg}</p>
-                          <FellowForm mode="button" />
-                        </div>
-                      </CommandEmpty>
-                      <CommandGroup>
-                        {options?.map((option) => (
-                          <CommandItem
-                            keywords={[option?.name]}
-                            key={option.id}
-                            value={option.id}
-                            id={name}
-                            onSelect={(currentValue) => {
-                              field.onChange(
-                                currentValue === field.value ? "" : currentValue,
-                              );
-                              setOpen(false);
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                field.value === option.id ? "opacity-100" : "opacity-0",
-                              )}
-                            />
-                            {option.name || ""}
-                          </CommandItem>
-                        ))}
-                        {!loading && options.length !== 0 && (
-                          <FellowForm mode="commandItem" />
-                        )}
-                        {loading && (
-                          <CommandItem
-                            disabled
-                            className="grid animate-spin place-items-center"
-                          >
-                            <LoaderCircle />
-                          </CommandItem>
-                        )}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      )}
-    />
+    <FormFieldProvider<TData, TName> name={name} label={label}>
+      {({ field, fieldState }) => {
+        const value = field.value;
+        const setValue = field.onChange;
+
+        return (
+          <>
+            {/* Hidden input to keep the field registered */}
+            <input
+              hidden
+              name={field.name}
+              value={JSON.stringify(value)}
+              onChange={setValue}
+            />
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  aria-expanded={open}
+                  ref={field.ref}
+                  onBlur={field.onBlur}
+                  className={cn(
+                    "w-full justify-between",
+                    !value && "text-muted-foreground",
+                  )}
+                >
+                  {(() => {
+                    if (value) {
+                      // First check for matching option in options array
+                      const selectedOption = options.find((item) => item.id === value);
+                      if (selectedOption) return selectedOption.name;
+
+                      // Then check defaultOption if no match found
+                      if (defaultOption) return defaultOption.name;
+                    }
+                    return placeholder;
+                  })()}
+
+                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0 [&>*]:!z-[9969]" align="start">
+                <Command
+                  filter={(value, search, keywords) => {
+                    if ([keywords]?.join()?.toLowerCase()?.includes(search.toLowerCase()))
+                      return 1;
+                    return 0;
+                  }}
+                >
+                  <CommandList>
+                    <CommandInput placeholder={searchPlaceholder} />
+                    <CommandEmpty>
+                      <div className="space-y-2">
+                        <p>{emptyMsg}</p>
+                        <FellowForm mode="button" />
+                      </div>
+                    </CommandEmpty>
+                    <CommandGroup>
+                      {options?.map((option) => (
+                        <CommandItem
+                          keywords={[option?.name]}
+                          key={option.id}
+                          value={option.id}
+                          id={field.name}
+                          onSelect={(currentValue) => {
+                            setValue(currentValue === value ? "" : currentValue);
+                            setOpen(false);
+                          }}
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              value === option.id ? "opacity-100" : "opacity-0",
+                            )}
+                          />
+                          {option.name || ""}
+                        </CommandItem>
+                      ))}
+                      {!loading && options?.length !== 0 && (
+                        <FellowForm mode="commandItem" />
+                      )}
+                      {loading && (
+                        <CommandItem
+                          disabled
+                          className="grid animate-spin place-items-center"
+                        >
+                          <LoaderCircle />
+                        </CommandItem>
+                      )}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </>
+        );
+      }}
+    </FormFieldProvider>
   );
-});
+};
+
+export default memo(ComboBoxInput) as typeof ComboBoxInput;

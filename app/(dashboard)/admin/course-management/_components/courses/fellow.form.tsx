@@ -97,21 +97,21 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
                   }}
                 >
                   <div className="grid gap-4 py-4 pr-2">
-                    <BasicInput
+                    <BasicInput<FellowSchema, "firstName">
                       name="firstName"
                       type="text"
                       placeholder="Paulo"
                       label="First Name"
                       direction="horizontal"
                     />
-                    <BasicInput
+                    <BasicInput<FellowSchema, "lastName">
                       name="lastName"
                       type="text"
                       placeholder="Freire"
                       label="Last Name"
                       direction="horizontal"
                     />
-                    <BasicInput
+                    <BasicInput<FellowSchema, "email">
                       name="email"
                       type="email"
                       placeholder="PauloFreire@domain.com"
@@ -123,15 +123,15 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
                       <Label htmlFor="bio" className="col-span-2">
                         Bio
                       </Label>
-                      <TipTapInput
+                      <TipTapInput<FellowSchema, "bio">
+                        name="bio"
                         className="col-span-5"
                         editorToolbar={false}
-                        name="bio"
                         placeholder="Marxist Brazilian educator and philosopher who was a leading advocate of critical pedagogy."
                       />
                     </div>
 
-                    <BasicInput
+                    <BasicInput<FellowSchema, "tel">
                       name="tel"
                       type="tel"
                       placeholder="+201012345678"

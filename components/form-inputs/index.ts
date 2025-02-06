@@ -1,13 +1,13 @@
-export { BasicInput } from "./input.basic";
-export { ComboBoxInput } from "./input.combobox";
+export { default as BasicInput } from "./input.basic";
+export { default as ComboBoxInput } from "./input.combobox";
+export { default as DateInput } from "./input.date";
+export { default as DateRangeInput } from "./input.date.range";
+export { default as MultiSelectorInput } from "./input.multiselector";
+export { default as SelectInput } from "./input.select";
+export { default as SliderInput } from "./input.slider";
+export { default as TimeSlotInput } from "./input.time.slot";
+export { default as TipTapInput } from "./input.tipTap";
+
 export { ContentInput } from "./input.content";
-export { DateInput } from "./input.date";
-export { DateRangeInput } from "./input.date.range";
-export { MultiSelectorInput } from "./input.multi.selector";
-export { SelectInput } from "./input.select";
-export { SliderInput } from "./input.slider";
 export { SubmitButton } from "./input.submit";
-export { TimeSlotInput } from "./input.time.slot";
 export { EditorToolbar } from "./input.tipTap.toolBar";
-export { TipTapInput } from "./input.tipTap";
-export { InputWrapper } from "./input.wrapper";

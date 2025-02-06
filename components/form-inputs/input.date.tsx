@@ -1,34 +1,37 @@
-import { memo } from "react";
-import { useFormContext } from "react-hook-form";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils/utils";
+import { format } from "date-fns";
+import { FieldPath, FieldValues } from "react-hook-form";
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { FormControl } from "@/components/ui/form";
 
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { CalendarIcon } from "lucide-react";
+import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
 import { StandardProps } from "@/lib/types/formInputs.types";
+import { CalendarIcon } from "lucide-react";
+import { memo } from "react";
 
-export const DateInput = memo(
-  ({ name, label, placeholder, className }: StandardProps) => {
-    const { control } = useFormContext();
+const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
+  name,
+  label,
+  placeholder,
+  className,
+}: StandardProps<TData, TName>) => {
+  return (
+    <FormFieldProvider<TData, TName>
+      name={name}
+      label={label}
+      itemClasses={className}
+      labelClasses="min-w-max"
+    >
+      {({ field, fieldState }) => {
+        const value = field.value;
+        const setValue = field.onChange;
 
-    return (
-      <FormField
-        control={control}
-        name={name}
-        render={({ field }) => (
-          <FormItem className={className}>
-            <FormLabel className="min-w-max">{label}</FormLabel>
+        return (
+          <>
             <input hidden {...field} />
             <Popover>
               <PopoverTrigger asChild>
@@ -60,13 +63,11 @@ export const DateInput = memo(
                 />
               </PopoverContent>
             </Popover>
+          </>
+        );
+      }}
+    </FormFieldProvider>
+  );
+};
 
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-    );
-  },
-);
-
-DateInput.displayName = "DateInput";
+export default memo(DateInput) as typeof DateInput;

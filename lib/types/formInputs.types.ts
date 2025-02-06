@@ -1,13 +1,30 @@
-import { FieldPath, FieldValues } from "react-hook-form";
-import { CourseSchema } from "./course.schema";
-import { FellowSchema } from "./fellow.schema";
-import { BundleSchema } from "./bundle.schema";
 import { Option } from "@/components/ui/multipleSelector";
+import {
+  ControllerFieldState,
+  ControllerRenderProps,
+  FieldPath,
+  FieldValues,
+} from "react-hook-form";
+
+export interface FormFieldProviderProps<
+  TData extends FieldValues,
+  TName extends FieldPath<TData>,
+> {
+  name: TName;
+  label?: string;
+  itemClasses?: string;
+  labelClasses?: string;
+  controlClasses?: string;
+  messageClasses?: string;
+  children: (args: {
+    field: ControllerRenderProps<TData, TName>;
+    fieldState: ControllerFieldState;
+  }) => React.ReactNode;
+}
 
 export interface StandardProps<
-  TName extends FieldPath<FieldValues> = FieldPath<
-    CourseSchema | FellowSchema | BundleSchema
-  >,
+  TData extends FieldValues,
+  TName extends FieldPath<TData>,
 > {
   name: TName;
   label?: string;
@@ -16,19 +33,33 @@ export interface StandardProps<
   className?: string;
 }
 
-export interface BasicInputProps extends StandardProps {
+export interface TipTapInputProps<
+  TData extends FieldValues,
+  TName extends FieldPath<TData>,
+> extends StandardProps<TData, TName> {
+  editorToolbar?: boolean;
+}
+
+export interface BasicInputProps<
+  TData extends FieldValues,
+  TName extends FieldPath<TData>,
+> extends StandardProps<TData, TName> {
   type: "text" | "number" | "url" | "file" | "tel" | "email";
   direction?: "vertical" | "horizontal";
 }
 
-export interface SelectProps extends StandardProps {
+export interface SelectProps<TData extends FieldValues, TName extends FieldPath<TData>>
+  extends StandardProps<TData, TName> {
   options: {
     groupLabel?: string;
     selectItems: string[];
   }[];
 }
 
-export interface MultiSelectorProps extends StandardProps {
+export interface MultiSelectorProps<
+  TData extends FieldValues,
+  TName extends FieldPath<TData>,
+> extends StandardProps<TData, TName> {
   options?: { label: string; value: string }[];
   emptyMsg?: string;
   onSearch?: ((value: string) => Promise<Option[]>) | undefined;
@@ -38,16 +69,18 @@ export type ComboBoxOption = {
   id: string;
   name: string;
 };
-export interface ComboBoxProps extends StandardProps {
+export interface ComboBoxProps<TData extends FieldValues, TName extends FieldPath<TData>>
+  extends StandardProps<TData, TName> {
   emptyMsg: string;
   searchPlaceholder: string;
   action: () => Promise<void>;
   loading: boolean;
   options: ComboBoxOption[];
-  defaultOption: ComboBoxOption | undefined;
+  defaultOption?: ComboBoxOption;
 }
 
-export interface SliderProps extends StandardProps {
+export interface SliderProps<TData extends FieldValues, TName extends FieldPath<TData>>
+  extends StandardProps<TData, TName> {
   defaultValue: [number, number];
   max: number;
   min: number;

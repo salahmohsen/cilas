@@ -1,5 +1,4 @@
-import { memo } from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldPath, FieldValues, useFormContext } from "react-hook-form";
 
 import {
   FormControl,
@@ -9,11 +8,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
+import { Slider } from "@/components/ui/slider";
 import { SliderProps } from "@/lib/types/formInputs.types";
 import { cn } from "@/lib/utils/utils";
-import { Slider } from "@/components/ui/slider";
+import { memo } from "react";
 
-export const SliderInput: React.FC<SliderProps> = memo(function BasicInput({
+const SliderInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
   label,
   className,
@@ -23,7 +23,7 @@ export const SliderInput: React.FC<SliderProps> = memo(function BasicInput({
   step,
   minStepsBetweenThumbs,
   formatLabelSign,
-}) {
+}: SliderProps<TData, TName>) => {
   const { control } = useFormContext();
   return (
     <FormField
@@ -60,4 +60,6 @@ export const SliderInput: React.FC<SliderProps> = memo(function BasicInput({
       )}
     />
   );
-});
+};
+
+export default memo(SliderInput) as typeof SliderInput;
