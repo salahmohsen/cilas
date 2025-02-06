@@ -1,7 +1,10 @@
 import { CourseTableWrite } from "@/lib/types/drizzle.types";
-import { CourseSchema } from "@/lib/types/forms.schema";
+import { bundleSchema, CourseSchema } from "@/lib/types/forms.schema";
+import { CoursesFilter } from "../types/course.slice.types";
+import { CourseWithFellow } from "../types/drizzle.types";
 import { cleanHtml } from "./sanitize-html.utils";
 import { convertToDate, convertToJson } from "./zodValidation.utils";
+import { Option } from "@/components/ui/multipleSelector";
 
 export const formDataToCourseSchema = (formData: FormData): CourseSchema => {
   const enTitle = formData.get("enTitle") as string;
@@ -54,4 +57,45 @@ export const courseSchemaToDbSchema = (
     draftMode,
     featuredImage,
   };
+};
+
+export const getCourseStatus = (course: CourseWithFellow): CoursesFilter | undefined => {
+  const currentDate = new Date();
+  const startDate = new Date(course.startDate);
+  const endDate = new Date(course.endDate);
+  const isDraft = course.draftMode;
+
+  if (isDraft) return CoursesFilter.Draft;
+  if (startDate <= currentDate && endDate >= currentDate) return CoursesFilter.Ongoing;
+  if (startDate > currentDate) return CoursesFilter.StartingSoon;
+  if (endDate < currentDate) return CoursesFilter.Archived;
+  console.error("unknown status");
+};
+
+export const parseBundleData = async (formData: FormData) => {
+  const year = Number(formData.get("year") as string);
+  const cycle = formData.get("cycle") as string;
+  const category = formData.get("category") as string;
+  const attendance = formData.get("attendance") as string;
+  const deadline = new Date(formData.get("deadline") as string);
+  const courses = JSON.parse(formData.get("courses") as string) as Option[];
+
+  try {
+    const parse = bundleSchema.schema.safeParse({
+      year,
+      cycle,
+      category,
+      attendance,
+      deadline,
+      courses,
+    });
+    if (!parse.success) {
+      throw new Error(
+        `There is errors on these fields: ${parse.error?.errors.map((e) => e.path[0])}`,
+      );
+    }
+    return { courses, year, cycle, category, attendance, deadline };
+  } catch (e) {
+    if (e instanceof Error) return { error: true, message: e.message };
+  }
 };

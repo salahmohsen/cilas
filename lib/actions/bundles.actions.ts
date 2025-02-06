@@ -4,8 +4,8 @@ import { Option } from "@/components/ui/multipleSelector";
 import { bundleTable, courseTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
 import { BundleTableWrite, BundleWithCourseTitles } from "@/lib/types/drizzle.types";
-import { bundleSchema } from "@/lib/types/forms.schema";
 import { eq } from "drizzle-orm";
+import { parseBundleData } from "../utils";
 
 export const getBundles = async () => {
   try {
@@ -62,34 +62,6 @@ export const getBundleById = async (bundleId: number): Promise<GetBundleById> =>
     success: false,
     message: "Unexpected error happened, please try again!",
   };
-};
-
-const parseBundleData = async (formData: FormData) => {
-  const year = Number(formData.get("year") as string);
-  const cycle = formData.get("cycle") as string;
-  const category = formData.get("category") as string;
-  const attendance = formData.get("attendance") as string;
-  const deadline = new Date(formData.get("deadline") as string);
-  const courses = JSON.parse(formData.get("courses") as string) as Option[];
-
-  try {
-    const parse = bundleSchema.schema.safeParse({
-      year,
-      cycle,
-      category,
-      attendance,
-      deadline,
-      courses,
-    });
-    if (!parse.success) {
-      throw new Error(
-        `There is errors on these fields: ${parse.error?.errors.map((e) => e.path[0])}`,
-      );
-    }
-    return { courses, year, cycle, category, attendance, deadline };
-  } catch (e) {
-    if (e instanceof Error) return { error: true, message: e.message };
-  }
 };
 
 export type BundleState = {
