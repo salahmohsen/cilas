@@ -13,13 +13,7 @@ import { uploadImage } from "@/lib/utils/cloudinary.utils";
 import { coursesFilter } from "@/lib/utils/drizzle.utils";
 import { and, desc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-
-export type CourseFormState = {
-  success?: boolean;
-  error?: boolean;
-  courseId?: number;
-  message: string;
-};
+import { CourseFormState, DeleteCourseState } from "../types/courses.actions.types";
 
 export async function createEditCourse(
   prevState: CourseFormState,
@@ -233,12 +227,6 @@ export const getCourseById = async (courseId: number) => {
     };
 };
 
-type DeleteCourseState = {
-  success?: boolean;
-  error?: boolean;
-  deletedId?: number;
-  message?: string;
-};
 export const deleteCourse = async (
   prevState: DeleteCourseState,
   formData: FormData,
