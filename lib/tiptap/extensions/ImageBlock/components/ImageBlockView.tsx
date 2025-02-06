@@ -1,24 +1,25 @@
 import { cn } from "@/lib/utils";
 import { Node } from "@tiptap/pm/model";
 import { Editor, NodeViewWrapper } from "@tiptap/react";
-import Image from "next/image";
 import { useCallback, useRef } from "react";
 
 interface ImageBlockViewProps {
   editor: Editor;
   getPos: () => number;
-  node: Node & {
-    attrs: {
-      src: string;
-    };
-  };
+  node: Node;
   updateAttributes: (attrs: Record<string, string>) => void;
 }
 
 export const ImageBlockView = (props: ImageBlockViewProps) => {
-  const { editor, getPos, node } = props;
+  const { editor, getPos, node } = props as ImageBlockViewProps & {
+    node: Node & {
+      attrs: {
+        src: string;
+      };
+    };
+  };
   const imageWrapperRef = useRef<HTMLDivElement>(null);
-  const { src, alt } = node.attrs;
+  const { src } = node.attrs;
 
   const wrapperClassName = cn(
     node.attrs.align === "left" ? "ml-0" : "ml-auto",
@@ -32,10 +33,13 @@ export const ImageBlockView = (props: ImageBlockViewProps) => {
 
   return (
     <NodeViewWrapper>
-      <div className={wrapperClassName} style={{ width: node.attrs.width }}>
+      <div
+        className={wrapperClassName}
+        style={{ width: node.attrs.width }}
+        data-drag-handle
+      >
         <div contentEditable={false} ref={imageWrapperRef}>
-          <img className="block" src={src} alt={alt} onClick={onClick} />
-          <p className="text-sm">{alt}</p>
+          <img className="block" src={src} alt="" onClick={onClick} />
         </div>
       </div>
     </NodeViewWrapper>
