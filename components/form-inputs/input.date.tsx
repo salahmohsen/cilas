@@ -9,7 +9,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
-import { StandardProps } from "@/lib/types/formInputs.types";
+import { StandardProps } from "@/lib/types/form.inputs.types";
 import { CalendarIcon } from "lucide-react";
 import { memo } from "react";
 

@@ -3,11 +3,10 @@
 import { userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
-import { FellowSchema } from "@/lib/types/fellow.schema";
+import { fellowSchema, FellowSchema } from "@/lib/types/forms.schema";
 import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 import { validateRequest } from "../apis/auth.api";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
@@ -31,12 +30,10 @@ export const addFellow = async (
   prevState: FellowState,
   formData: FormData,
 ): Promise<FellowState> => {
-  const formEntries: z.infer<typeof FellowSchema> = Object.fromEntries(
-    formData,
-  ) as z.infer<typeof FellowSchema>;
+  const formEntries: FellowSchema = Object.fromEntries(formData) as FellowSchema;
 
   try {
-    const parse = FellowSchema.safeParse(formEntries);
+    const parse = fellowSchema.schema.safeParse(formEntries);
     if (!parse.success)
       throw new Error(
         `An error occurred while processing the form values: ${parse.error.errors.map((e) => e.path[0])}`,

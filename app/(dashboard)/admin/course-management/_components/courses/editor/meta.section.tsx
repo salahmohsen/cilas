@@ -1,6 +1,6 @@
 import { getUsersNamesByRole } from "@/lib/actions/users.actions";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
-import { ComboBoxOption } from "@/lib/types/formInputs.types";
+import { ComboBoxOption } from "@/lib/types/form.inputs.types";
 import { forwardRef, memo, useCallback, useEffect, useState } from "react";
 
 import {
@@ -13,7 +13,7 @@ import {
   TimeSlotInput,
 } from "@/components/form-inputs";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CourseSchema } from "@/lib/types/course.schema";
+import { CourseSchema } from "@/lib/types/forms.schema";
 
 type CourseMetadataProps = {
   editMode: boolean;

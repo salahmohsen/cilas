@@ -1,5 +1,4 @@
-import { BasicInput } from "@/components/form-inputs/input.basic";
-import { TipTapInput } from "@/components/form-inputs/input.tipTap";
+import { BasicInput, TipTapInput } from "@/components/form-inputs/";
 import { TabsContent } from "@/components/ui/tabs";
 import { memo } from "react";
 

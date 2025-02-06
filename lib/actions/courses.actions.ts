@@ -3,8 +3,8 @@
 import { Option } from "@/components/ui/multipleSelector";
 import { courseTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
-import { courseSchema } from "@/lib/types/course.schema";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { courseSchema } from "@/lib/types/forms.schema";
 import {
   courseSchemaToDbSchema,
   formDataToCourseSchema,
@@ -34,7 +34,7 @@ export async function createEditCourse(
   }
   // parse the data
   try {
-    const parse = courseSchema.safeParse(formObj);
+    const parse = courseSchema.schema.safeParse(formObj);
     if (!parse.success) {
       console.log(parse.error.errors);
       throw new Error(

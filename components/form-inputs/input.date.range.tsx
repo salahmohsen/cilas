@@ -4,7 +4,7 @@ import { FormControl } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
-import { StandardProps } from "@/lib/types/formInputs.types";
+import { StandardProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";

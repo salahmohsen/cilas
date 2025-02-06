@@ -1,7 +1,7 @@
 import { MultipleSelector } from "@/components/ui/multipleSelector";
 
 import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
-import { MultiSelectorProps } from "@/lib/types/formInputs.types";
+import { MultiSelectorProps } from "@/lib/types/form.inputs.types";
 import { LoaderCircle } from "lucide-react";
 import { memo } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";

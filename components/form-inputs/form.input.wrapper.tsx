@@ -8,7 +8,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { FieldPath, FieldValues, useFormContext } from "react-hook-form";
-import { FormFieldProviderProps } from "../../lib/types/formInputs.types";
+import { FormFieldProviderProps } from "../../lib/types/form.inputs.types";
 
 export const FormFieldProvider = <
   TData extends FieldValues,

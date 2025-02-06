@@ -1,12 +1,8 @@
 import { CourseFormState, createEditCourse } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
-import {
-  courseFormDefaultValues,
-  CourseSchema,
-  courseSchema,
-} from "@/lib/types/course.schema";
 import { Tab } from "@/lib/types/course.slice.types";
 import { CourseWithFellow } from "@/lib/types/drizzle.types";
+import { CourseSchema, courseSchema } from "@/lib/types/forms.schema";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
@@ -53,10 +49,10 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
 
   // Setup Course Form with Zod Validation
   const formMethods = useForm<CourseSchema>({
-    resolver: zodResolver(courseSchema),
+    resolver: zodResolver(courseSchema.schema),
     mode: "onChange",
     defaultValues: {
-      ...courseFormDefaultValues,
+      ...courseSchema.defaults,
       ...((courseData as CourseSchema) ?? {}),
     },
   });

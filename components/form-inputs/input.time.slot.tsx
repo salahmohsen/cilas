@@ -1,6 +1,6 @@
 import { Label } from "@/components/ui/label";
 import { TimePickerInput } from "@/components/ui/time-picker-input";
-import { StandardProps } from "@/lib/types/formInputs.types";
+import { StandardProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
 import { memo, useRef } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";

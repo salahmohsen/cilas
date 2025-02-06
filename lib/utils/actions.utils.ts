@@ -1,12 +1,9 @@
-import { CourseSchema, courseSchema } from "@/lib/types/course.schema";
-import { z } from "zod";
 import { CourseTableWrite } from "@/lib/types/drizzle.types";
+import { CourseSchema } from "@/lib/types/forms.schema";
 import { cleanHtml } from "./sanitize-html.utils";
 import { convertToDate, convertToJson } from "./zodValidation.utils";
 
-export const formDataToCourseSchema = (
-  formData: FormData,
-): z.infer<typeof courseSchema> => {
+export const formDataToCourseSchema = (formData: FormData): CourseSchema => {
   const enTitle = formData.get("enTitle") as string;
   const arTitle = formData.get("arTitle") as string;
   const enContent = formData.get("enContent") as string;

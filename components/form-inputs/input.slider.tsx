@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/form";
 
 import { Slider } from "@/components/ui/slider";
-import { SliderProps } from "@/lib/types/formInputs.types";
+import { SliderProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
 import { memo } from "react";
 

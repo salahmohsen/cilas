@@ -12,7 +12,7 @@ import { BubbleMenu, EditorContent, useEditor } from "@tiptap/react";
 
 import { cn } from "@/lib/utils/utils";
 
-import { TipTapInputProps } from "@/lib/types/formInputs.types";
+import { TipTapInputProps } from "@/lib/types/form.inputs.types";
 import React, { memo } from "react";
 import { FormFieldProvider } from "./form.input.wrapper";
 import { Bold, EditorToolbar, Italic, SetLink, UnsetLink } from "./input.tipTap.toolBar";

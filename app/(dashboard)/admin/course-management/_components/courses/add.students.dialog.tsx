@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { searchUsers } from "@/lib/actions/users.actions";
-import { AddStudentSchema, addStudentSchema } from "@/lib/types/form.schemas";
+import { AddStudentSchema, addStudentSchema } from "@/lib/types/forms.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useCallback, useState } from "react";
@@ -35,7 +35,7 @@ export const AddStudentsDialog = ({ isOpen, setIsOpen }) => {
 
   const formMethods = useForm<AddStudentSchema>({
     resolver: zodResolver(addStudentSchema.schema),
-    defaultValues: addStudentSchema.defaultValues,
+    defaultValues: addStudentSchema.defaults,
   });
 
   function onSubmit(values: AddStudentSchema) {

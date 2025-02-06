@@ -19,7 +19,7 @@ export const ImageBlockView = (props: ImageBlockViewProps) => {
     };
   };
   const imageWrapperRef = useRef<HTMLDivElement>(null);
-  const { src } = node.attrs;
+  const { src, alt } = node.attrs;
 
   const wrapperClassName = cn(
     node.attrs.align === "left" ? "ml-0" : "ml-auto",
@@ -39,7 +39,8 @@ export const ImageBlockView = (props: ImageBlockViewProps) => {
         data-drag-handle
       >
         <div contentEditable={false} ref={imageWrapperRef}>
-          <img className="block" src={src} alt="" onClick={onClick} />
+          <img className="block" src={src} alt={alt} onClick={onClick} />
+          <p className="text-sm">{alt}</p>
         </div>
       </div>
     </NodeViewWrapper>

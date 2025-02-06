@@ -13,13 +13,12 @@ import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FellowState, addFellow } from "@/lib/actions/users.actions";
-import { FellowSchema, fellowDefaultValues } from "@/lib/types/fellow.schema";
+import { FellowSchema, fellowSchema } from "@/lib/types/forms.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
 
@@ -28,7 +27,7 @@ import { SquarePlus } from "lucide-react";
 
 type NewFellowProps = {
   mode: "button" | "commandItem";
-  fellowData?: z.infer<typeof FellowSchema> | undefined;
+  fellowData?: FellowSchema | undefined;
 };
 
 export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
@@ -39,10 +38,10 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
     const { setFellow } = useCourseStore();
     const [isPending, startTransition] = useTransition();
 
-    const formMethods = useForm<z.infer<typeof FellowSchema>>({
-      resolver: zodResolver(FellowSchema),
+    const formMethods = useForm<FellowSchema>({
+      resolver: zodResolver(fellowSchema.schema),
       mode: "onChange",
-      defaultValues: { ...fellowDefaultValues, ...(fellowData ?? {}) },
+      defaultValues: { ...fellowSchema.defaults, ...(fellowData ?? {}) },
     });
 
     useEffect(() => {

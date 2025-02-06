@@ -4,7 +4,7 @@ import BundleForm from "@/app/(dashboard)/admin/course-management/_components/bu
 import Loading from "@/app/(dashboard)/admin/course-management/create-bundle/loading";
 import { ErrorPage } from "@/components/ui/error";
 import { getBundleById } from "@/lib/actions/bundles.actions";
-import { BundleSchema } from "@/lib/types/bundle.schema";
+import { BundleSchema } from "@/lib/types/forms.schema";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 

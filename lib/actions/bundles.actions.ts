@@ -3,8 +3,8 @@
 import { Option } from "@/components/ui/multipleSelector";
 import { bundleTable, courseTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
-import { bundleSchema } from "@/lib/types/bundle.schema";
 import { BundleTableWrite, BundleWithCourseTitles } from "@/lib/types/drizzle.types";
+import { bundleSchema } from "@/lib/types/forms.schema";
 import { eq } from "drizzle-orm";
 
 export const getBundles = async () => {
@@ -73,7 +73,7 @@ const parseBundleData = async (formData: FormData) => {
   const courses = JSON.parse(formData.get("courses") as string) as Option[];
 
   try {
-    const parse = bundleSchema.safeParse({
+    const parse = bundleSchema.schema.safeParse({
       year,
       cycle,
       category,

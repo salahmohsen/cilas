@@ -17,12 +17,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useCourseStore } from "@/lib/store/course.slice";
-import {
-  bundleDefaultValues,
-  bundleSchema,
-  BundleSchema,
-} from "@/lib/types/bundle.schema";
 import { Tab } from "@/lib/types/course.slice.types";
+import { bundleSchema, BundleSchema } from "@/lib/types/forms.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -46,9 +42,9 @@ export default function BundleForm({
   );
 
   const formMethods = useForm<BundleSchema>({
-    resolver: zodResolver(bundleSchema),
+    resolver: zodResolver(bundleSchema.schema),
     mode: "onChange",
-    defaultValues: { ...bundleDefaultValues, ...(bundleToEditValues ?? {}) },
+    defaultValues: { ...bundleSchema.defaults, ...(bundleToEditValues ?? {}) },
   });
   useEffect(() => {
     if (bundleState.success) {

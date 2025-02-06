@@ -12,7 +12,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { ComboBoxProps } from "@/lib/types/formInputs.types";
+import { ComboBoxProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
 import { Check, ChevronsUpDown, LoaderCircle } from "lucide-react";
 import { memo, useEffect, useState } from "react";

@@ -11,7 +11,7 @@ import {
 import { FieldPath, FieldValues } from "react-hook-form";
 
 import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
-import { SelectProps } from "@/lib/types/formInputs.types";
+import { SelectProps } from "@/lib/types/form.inputs.types";
 import React, { memo } from "react";
 
 const SelectInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
