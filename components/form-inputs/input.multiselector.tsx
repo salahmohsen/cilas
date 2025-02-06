@@ -40,7 +40,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
                   "py-1 mx-1 text-zinc-800 bg-gray-100 hover:bg-gray-300 rounded-sm"
                 }
                 hidePlaceholderWhenSelected={true}
-                value={field.value}
+                value={value}
                 onChange={setValue}
                 loadingIndicator={
                   <div className="flex h-10 items-center justify-center">

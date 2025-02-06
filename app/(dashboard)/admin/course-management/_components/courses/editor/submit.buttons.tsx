@@ -1,7 +1,6 @@
 import { SubmitButton } from "@/components/form-inputs/input.submit";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
-import { Dispatch, SetStateAction } from "react";
 
 type SubmitButtonsProps = {
   isLoading: {
@@ -10,7 +9,7 @@ type SubmitButtonsProps = {
   };
   editMode: boolean;
   draftMode: boolean;
-  setDraftMode: Dispatch<SetStateAction<boolean>>;
+  setDraftMode: (value: boolean) => void;
 };
 
 export const SubmitButtons = ({
