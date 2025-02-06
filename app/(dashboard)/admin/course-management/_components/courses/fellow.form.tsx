@@ -12,7 +12,7 @@ import {
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { FellowState, addFellow } from "@/lib/actions/users.actions";
+import { addFellow } from "@/lib/actions/users.actions";
 import { FellowSchema, fellowSchema } from "@/lib/types/forms.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
@@ -23,6 +23,7 @@ import { toast } from "sonner";
 import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
 
 import { useCourseStore } from "@/lib/store/course.slice";
+import { FellowState } from "@/lib/types/users.actions.types";
 import { SquarePlus } from "lucide-react";
 
 type NewFellowProps = {

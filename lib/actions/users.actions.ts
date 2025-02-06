@@ -2,12 +2,12 @@
 
 import { userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
-import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { fellowSchema, FellowSchema } from "@/lib/types/forms.schema";
 import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { revalidatePath } from "next/cache";
 import { validateRequest } from "../apis/auth.api";
+import { FellowState } from "../types/users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
   try {
@@ -17,13 +17,6 @@ export const addUser = async (id: string, email: string, passwordHash: string) =
   } catch (error) {
     if (error instanceof Error) return { error: error.message };
   }
-};
-
-export type FellowState = {
-  success?: boolean;
-  error?: boolean;
-  message: string;
-  fellow?: userLocalInfo;
 };
 
 export const addFellow = async (
@@ -173,3 +166,5 @@ export const searchUsers = async (query: string) => {
 
   return users;
 };
+
+export const addStudentToCourse = async () => {};
