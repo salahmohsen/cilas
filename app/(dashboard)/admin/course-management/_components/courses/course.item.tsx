@@ -20,6 +20,7 @@ import { CourseWithFellow } from "@/lib/types/drizzle.types";
 import { getCourseStatus } from "@/lib/utils";
 import { Calendar, Ellipsis, User } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { AddStudentsDialog } from "./add.students.dialog";
 
 type CourseItemProps = { course: CourseWithFellow };
 
@@ -28,8 +29,9 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
     const { handleDelete, setCourseSelected, setCourseInfo, isCourseSelected } =
       useCourseStore();
 
-    const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState<boolean>(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState<boolean>(false);
+    const [isStudentDialogOpen, setIsStudentDialogOpen] = useState<boolean>(false);
 
     const handleSelect = (id: number) => {
       setCourseSelected({ [id]: !isCourseSelected?.[id] });
@@ -87,22 +89,30 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
-                  onSelect={(e) => {
-                    e.stopPropagation();
-                    router.push(`/admin/course-management/edit-course?id=${course.id}`);
-                  }}
+                  onSelect={() =>
+                    router.push(`/admin/course-management/edit-course?id=${course.id}`)
+                  }
+                  onClick={(e) => e.stopPropagation()}
                   className="cursor-pointer"
                 >
                   Edit
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
-                  onSelect={(e) => {
-                    e.stopPropagation();
+                  onSelect={() => setIsStudentDialogOpen(true)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="cursor-pointer"
+                >
+                  Add Students
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onSelect={() =>
                     router.push(
                       `/admin/course-management/create-course?duplicate-course=${course.id}`,
-                    );
-                  }}
+                    )
+                  }
+                  onClick={(e) => e.stopPropagation()}
                   className="cursor-pointer"
                 >
                   Duplicate
@@ -111,10 +121,8 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
 
                 <DropdownMenuItem
                   className="cursor-pointer bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsDeleteDialogVisible(true);
-                  }}
+                  onSelect={() => setIsDeleteDialogVisible(true)}
+                  onClick={(e) => e.stopPropagation()}
                 >
                   Delete
                 </DropdownMenuItem>
@@ -122,6 +130,10 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
             </DropdownMenu>
           </div>
         </li>
+        <AddStudentsDialog
+          isOpen={isStudentDialogOpen}
+          setIsOpen={setIsStudentDialogOpen}
+        />
         <ConfirmationDialog
           isOpen={isDeleteDialogVisible}
           setIsOpen={setIsDeleteDialogVisible}

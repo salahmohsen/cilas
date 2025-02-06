@@ -8,6 +8,9 @@ export type userLocalInfo = Omit<
 
 export type UserWithProtectedFields = InferSelectModel<typeof userTable>;
 
+export const userRole = ["user", "student", "fellow", "admin"] as const;
+export type UserRole = (typeof userRole)[number];
+
 export type CourseTableRead = InferSelectModel<typeof courseTable>;
 export type CourseTableWrite = InferInsertModel<typeof courseTable>;
 export type CourseWithFellow = CourseTableRead & {

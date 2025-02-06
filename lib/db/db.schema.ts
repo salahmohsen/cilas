@@ -11,6 +11,7 @@ import {
   text,
   timestamp,
 } from "drizzle-orm/pg-core";
+import { userRole } from "../types/drizzle.types";
 
 export const userTable = pgTable("user", {
   id: text("id").primaryKey(),
@@ -23,9 +24,7 @@ export const userTable = pgTable("user", {
   tel: text("tel"),
   avatar: text("avatar"),
   bio: text("bio"),
-  role: text("role", { enum: ["user", "student", "fellow", "admin"] })
-    .notNull()
-    .default("user"),
+  role: text("role", { enum: userRole }).notNull().default("admin"), // Change to user in production
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });

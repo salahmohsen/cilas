@@ -4,7 +4,7 @@ import { userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { FellowSchema } from "@/lib/types/fellow.schema";
-import { eq } from "drizzle-orm";
+import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -157,4 +157,22 @@ export const _getUserByEmail = async (email: string) => {
 export const getCurrentUserInfo = async () => {
   const { user } = await validateRequest();
   return user?.id ? getUserById(user.id) : null;
+};
+
+export const searchUsers = async (query: string) => {
+  const sanitizedQuery = `%${query.toLowerCase()}%`;
+
+  const users = await db.query.userTable.findMany({
+    columns: {
+      id: true,
+      firstName: true,
+      lastName: true,
+    },
+    where: or(
+      ilike(userTable.firstName, sanitizedQuery),
+      ilike(userTable.lastName, sanitizedQuery),
+    ),
+  });
+
+  return users;
 };
