@@ -20,7 +20,7 @@ import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/course.slice.types";
 import { bundleSchema, BundleSchema } from "@/lib/types/forms.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function BundleForm({
@@ -58,93 +58,86 @@ export default function BundleForm({
   }, [bundleState, getBundles, setCourseSelected, setActiveTab]);
 
   return (
-    <FormProvider {...formMethods}>
-      <Form {...formMethods}>
-        <form
-          ref={formRef}
-          className="mx-5"
-          action={bundleAction}
-          onSubmit={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
+    <Form {...formMethods}>
+      <form
+        ref={formRef}
+        className="mx-5"
+        action={bundleAction}
+        onSubmit={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
 
-            formMethods.handleSubmit(() => {
-              startTransition(() => {
-                const formData = new FormData(formRef.current!);
-                bundleAction(formData);
-              });
-            })(e);
-          }}
-        >
-          <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm lg:grid-cols-2">
-            <legend className="text-sm font-medium">Bundle</legend>
-            <input hidden name="bundleId" value={bundleId} readOnly />
-            <SelectInput<BundleSchema, "year">
-              name="year"
-              label="Year"
-              options={[
-                {
-                  selectItems: Array.from({ length: 14 }, (_, i) =>
-                    (new Date().getFullYear() - i).toString(),
-                  ),
-                },
-              ]}
-              placeholder="Select a year"
-            />
-            <SelectInput<BundleSchema, "cycle">
-              name="cycle"
-              label="Cycle"
-              options={[{ selectItems: ["Spring", "Summer", "Fall", "Winter"] }]}
-              placeholder="Select a cycle"
-            />
-            <SelectInput<BundleSchema, "category">
-              name="category"
-              label="Category"
-              options={[
-                {
-                  selectItems: [
-                    "Seasonal",
-                    "Second Trimester",
-                    "Third Trimester",
-                    "Labs",
-                  ],
-                },
-              ]}
-              placeholder="Select a category"
-            />
-            <SelectInput<BundleSchema, "attendance">
-              name="attendance"
-              label="Attendance"
-              options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
-              placeholder="Select a attendance"
-            />
-            <DateInput<BundleSchema, "deadline">
-              name="deadline"
-              label="Registration deadline"
-              placeholder="Select a deadline"
-            />
-            <MultiSelectorInput<BundleSchema, "courses">
-              name="courses"
-              label="Courses"
-              placeholder="Select unbundled courses"
-              onSearch={getUnbundledCourses}
-              triggerSearchOnFocus={true}
-              emptyMsg="No Courses found!"
-            />
-          </fieldset>
-          <div className="my-8 flex gap-5">
-            <Link href={`/admin/course-management?tab=${Tab.Bundles}`} className="w-full">
-              <Button variant="secondary" className="w-full">
-                Cancel
-              </Button>
-            </Link>
-            <SubmitButton
-              value={`${editMode ? "Save Changes" : "Create Bundle"}`}
-              isLoading={isPending}
-            />
-          </div>
-        </form>
-      </Form>
-    </FormProvider>
+          formMethods.handleSubmit(() => {
+            startTransition(() => {
+              const formData = new FormData(formRef.current!);
+              bundleAction(formData);
+            });
+          })(e);
+        }}
+      >
+        <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm lg:grid-cols-2">
+          <legend className="text-sm font-medium">Bundle</legend>
+          <input hidden name="bundleId" value={bundleId} readOnly />
+          <SelectInput<BundleSchema, "year">
+            name="year"
+            label="Year"
+            options={[
+              {
+                selectItems: Array.from({ length: 14 }, (_, i) =>
+                  (new Date().getFullYear() - i).toString(),
+                ),
+              },
+            ]}
+            placeholder="Select a year"
+          />
+          <SelectInput<BundleSchema, "cycle">
+            name="cycle"
+            label="Cycle"
+            options={[{ selectItems: ["Spring", "Summer", "Fall", "Winter"] }]}
+            placeholder="Select a cycle"
+          />
+          <SelectInput<BundleSchema, "category">
+            name="category"
+            label="Category"
+            options={[
+              {
+                selectItems: ["Seasonal", "Second Trimester", "Third Trimester", "Labs"],
+              },
+            ]}
+            placeholder="Select a category"
+          />
+          <SelectInput<BundleSchema, "attendance">
+            name="attendance"
+            label="Attendance"
+            options={[{ selectItems: ["Online", "Offline", "Hybrid"] }]}
+            placeholder="Select a attendance"
+          />
+          <DateInput<BundleSchema, "deadline">
+            name="deadline"
+            label="Registration deadline"
+            placeholder="Select a deadline"
+          />
+          <MultiSelectorInput<BundleSchema, "courses">
+            name="courses"
+            label="Courses"
+            placeholder="Select unbundled courses"
+            onSearch={getUnbundledCourses}
+            triggerSearchOnFocus={true}
+            emptyMsg="No Courses found!"
+          />
+        </fieldset>
+        <div className="my-8 flex gap-5">
+          <Link href={`/admin/course-management?tab=${Tab.Bundles}`} className="w-full">
+            <Button variant="secondary" className="w-full">
+              Cancel
+            </Button>
+          </Link>
+          <SubmitButton
+            value={`${editMode ? "Save Changes" : "Create Bundle"}`}
+            isLoading={isPending}
+          />
+        </div>
+      </form>
+    </Form>
   );
 }

@@ -2,7 +2,6 @@
 
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { FormProvider } from "react-hook-form";
 
 import { CourseMetadata } from "./meta.section";
 
@@ -60,86 +59,84 @@ export function CourseForm({
   });
 
   return (
-    <FormProvider {...formMethods}>
-      <Form {...formMethods}>
-        <form
-          className="w-full"
-          ref={formRef}
-          action={courseAction}
-          onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
-            const nativeEvent = e.nativeEvent as SubmitEvent;
-            const submitter = (nativeEvent.submitter as HTMLButtonElement).classList;
-            /*@note: This is a workaround to prevent the form from submitting when 
+    <Form {...formMethods}>
+      <form
+        className="w-full"
+        ref={formRef}
+        action={courseAction}
+        onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
+          const nativeEvent = e.nativeEvent as SubmitEvent;
+          const submitter = (nativeEvent.submitter as HTMLButtonElement).classList;
+          /*@note: This is a workaround to prevent the form from submitting when 
             clicking on any button other than "Publish Course" || "Draft Button" button.*/
-            if (submitter.contains("submit-btn")) {
-              e.preventDefault();
-              formMethods.handleSubmit(() => {
-                handleSubmit(draftMode);
-              })(e); // immediately invokes the handleSubmit with the original event object.
-            } else {
-              e.preventDefault();
-            }
-          }}
-        >
-          <EditorHeader
-            characters={
-              activeContentTab === "enContent"
-                ? enCharacterCount.characters()
-                : arCharacterCount.characters()
-            }
-            words={
-              activeContentTab === "enContent"
-                ? enCharacterCount.words()
-                : arCharacterCount.words()
-            }
-            isSidebarOpen={isSidebarOpen}
-            toggleSidebar={toggleSidebar}
-            submitButtons={
-              <SubmitButtons
-                isLoading={isLoading}
-                editMode={editMode}
-                draftMode={draftMode}
-                setDraftMode={setDraftMode}
-              />
-            }
-          />
+          if (submitter.contains("submit-btn")) {
+            e.preventDefault();
+            formMethods.handleSubmit(() => {
+              handleSubmit(draftMode);
+            })(e); // immediately invokes the handleSubmit with the original event object.
+          } else {
+            e.preventDefault();
+          }
+        }}
+      >
+        <EditorHeader
+          characters={
+            activeContentTab === "enContent"
+              ? enCharacterCount.characters()
+              : arCharacterCount.characters()
+          }
+          words={
+            activeContentTab === "enContent"
+              ? enCharacterCount.words()
+              : arCharacterCount.words()
+          }
+          isSidebarOpen={isSidebarOpen}
+          toggleSidebar={toggleSidebar}
+          submitButtons={
+            <SubmitButtons
+              isLoading={isLoading}
+              editMode={editMode}
+              draftMode={draftMode}
+              setDraftMode={setDraftMode}
+            />
+          }
+        />
 
-          <Tabs
-            value={activeContentTab}
-            onValueChange={setActiveContentTab as (string) => void}
-            className={`relative pt-16 transition-all duration-300 ${enLeftSidebar.isOpen ? "sm:w-2/3" : "sm:w-full"} `}
+        <Tabs
+          value={activeContentTab}
+          onValueChange={setActiveContentTab as (string) => void}
+          className={`relative pt-16 transition-all duration-300 ${enLeftSidebar.isOpen ? "sm:w-2/3" : "sm:w-full"} `}
+        >
+          <TabsList
+            className={`absolute w-full rounded-none ${enLeftSidebar.isOpen && "sm:shadow-insetRight"} `}
           >
-            <TabsList
-              className={`absolute w-full rounded-none ${enLeftSidebar.isOpen && "sm:shadow-insetRight"} `}
+            <TabsTrigger value="enContent">English Content</TabsTrigger>
+            <TabsTrigger value="arContent">Arabic Content</TabsTrigger>
+          </TabsList>
+          <TabsContent value="enContent">
+            <BlockEditor
+              editor={enEditor}
+              leftSidebar={enLeftSidebar}
+              sidebarActiveTab={sidebarActiveTab}
+              setSidebarActiveTab={setSidebarActiveTab}
             >
-              <TabsTrigger value="enContent">English Content</TabsTrigger>
-              <TabsTrigger value="arContent">Arabic Content</TabsTrigger>
-            </TabsList>
-            <TabsContent value="enContent">
-              <BlockEditor
-                editor={enEditor}
-                leftSidebar={enLeftSidebar}
-                sidebarActiveTab={sidebarActiveTab}
-                setSidebarActiveTab={setSidebarActiveTab}
-              >
-                <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
-              </BlockEditor>
-            </TabsContent>
-            <TabsContent value="arContent">
-              <BlockEditor
-                editor={arEditor}
-                leftSidebar={arLeftSidebar}
-                sidebarActiveTab={sidebarActiveTab}
-                setSidebarActiveTab={setSidebarActiveTab}
-              >
-                <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
-              </BlockEditor>
-            </TabsContent>
-          </Tabs>
-          <ContentInput titleName="arTitle" contentName="arContent" content={arContent} />
-          <ContentInput titleName="enTitle" contentName="enContent" content={enContent} />
-        </form>
-      </Form>
-    </FormProvider>
+              <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
+            </BlockEditor>
+          </TabsContent>
+          <TabsContent value="arContent">
+            <BlockEditor
+              editor={arEditor}
+              leftSidebar={arLeftSidebar}
+              sidebarActiveTab={sidebarActiveTab}
+              setSidebarActiveTab={setSidebarActiveTab}
+            >
+              <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
+            </BlockEditor>
+          </TabsContent>
+        </Tabs>
+        <ContentInput titleName="arTitle" contentName="arContent" content={arContent} />
+        <ContentInput titleName="enTitle" contentName="enContent" content={enContent} />
+      </form>
+    </Form>
   );
 }
