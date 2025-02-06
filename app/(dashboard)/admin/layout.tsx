@@ -4,7 +4,7 @@ import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import "@/app/globals.css";
 
 import { LayoutHeader } from "@/app/(dashboard)/_components/layout/header";
-import { ThemeProvider } from "@/lib/providers/Theme.provider";
+import { ThemeProvider } from "@/lib/providers/theme.provider";
 
 import { Toaster } from "sonner";
 
