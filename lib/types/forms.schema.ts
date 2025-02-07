@@ -117,9 +117,13 @@ export const fellowSchema = {
 
 export const addStudentSchema = {
   schema: z.object({
-    students: z.array(z.string()).min(1, "Select at least one student."),
+    students: z.array(z.object({})).min(1, "Select at least one student."),
+    courseId: required_number,
   }),
-  defaults: { students: [] },
+  defaults: (courseId: number) => ({
+    students: [],
+    courseId,
+  }),
 };
 
 export type CourseSchema = z.infer<typeof courseSchema.schema>;

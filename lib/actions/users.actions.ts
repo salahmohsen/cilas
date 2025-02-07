@@ -1,13 +1,14 @@
 "use server";
 
-import { userTable } from "@/lib/db/db.schema";
+import { Option } from "@/components/ui/multipleSelector";
+import { enrollmentTable, userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
-import { fellowSchema, FellowSchema } from "@/lib/types/forms.schema";
+import { addStudentSchema, fellowSchema, FellowSchema } from "@/lib/types/forms.schema";
 import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { revalidatePath } from "next/cache";
 import { validateRequest } from "../apis/auth.api";
-import { FellowState } from "../types/users.actions.types";
+import { AddStudentToCourseState, FellowState } from "../types/users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
   try {
@@ -149,7 +150,7 @@ export const getCurrentUserInfo = async () => {
   return user?.id ? getUserById(user.id) : null;
 };
 
-export const searchUsers = async (query: string) => {
+export const searchUsers = async (query: string): Promise<Option[]> => {
   const sanitizedQuery = `%${query.toLowerCase()}%`;
 
   const users = await db.query.userTable.findMany({
@@ -164,7 +165,49 @@ export const searchUsers = async (query: string) => {
     ),
   });
 
-  return users;
+  const dataFormatted = users.map((user) => ({
+    value: user.id,
+    label: `${user.firstName} ${user.lastName}`,
+  }));
+
+  return dataFormatted;
 };
 
-export const addStudentToCourse = async () => {};
+export const addStudentToCourse = async (
+  prevState: AddStudentToCourseState,
+  formDate: FormData,
+): Promise<AddStudentToCourseState> => {
+  console.log("formDate", formDate);
+  const students = JSON.parse(formDate.get("students") as string);
+  const courseId = Number(formDate.get("courseId"));
+
+  try {
+    const parse = addStudentSchema.schema.safeParse({ students, courseId });
+    if (!parse.success) throw new Error("Failed to parse the form data");
+
+    const studentsIds: string[] = students.map((student: { value: string }) =>
+      String(student.value),
+    );
+
+    // console.log(
+    //   "db valuse",
+    //   studentsIds.map((userId) => ({ userId, courseId })),
+    // );
+
+    const result = await db
+      .insert(enrollmentTable)
+      .values(studentsIds.map((userId) => ({ userId, courseId })))
+      .onConflictDoNothing();
+
+    if (result instanceof Error)
+      throw new Error("Failed to add students to the database");
+  } catch (error) {
+    if (error instanceof Error)
+      return {
+        error: true,
+        message: `An error occurred while processing adding students: ${error.message}`,
+      };
+  }
+
+  return { success: true, message: "Students added successfully!" };
+};

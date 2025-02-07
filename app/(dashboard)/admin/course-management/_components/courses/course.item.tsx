@@ -131,6 +131,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
           </div>
         </li>
         <AddStudentsDialog
+          courseId={course.id}
           isOpen={isStudentDialogOpen}
           setIsOpen={setIsStudentDialogOpen}
         />

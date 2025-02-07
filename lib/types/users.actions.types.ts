@@ -6,3 +6,9 @@ export type FellowState = {
   message: string;
   fellow?: userLocalInfo;
 };
+
+export type AddStudentToCourseState = {
+  success?: boolean;
+  error?: boolean;
+  message: string;
+};
