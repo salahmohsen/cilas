@@ -133,9 +133,9 @@ export default function BundleForm({
             </Button>
           </Link>
           <SubmitButton
-            value={`${editMode ? "Save Changes" : "Create Bundle"}`}
+            className="w-full"
             isLoading={isPending}
-          />
+          >{`${editMode ? "Save Changes" : "Create Bundle"}`}</SubmitButton>
         </div>
       </form>
     </Form>

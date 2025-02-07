@@ -1,37 +1,39 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { LoaderPinwheel } from "lucide-react";
 import { cn } from "@/lib/utils/utils";
-import React, { forwardRef } from "react";
+import { LoaderPinwheel } from "lucide-react";
+import { forwardRef } from "react";
+import { useFormStatus } from "react-dom";
 
 type SubmitButtonProps = {
   className?: string;
   isLoading?: boolean;
-  value: string;
   variant?: "default" | "secondary";
   handleOnClick?: () => void;
+  children?: string;
 };
 
 export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
-  ({ className, isLoading, value, variant, handleOnClick }, ref) => {
+  ({ className, isLoading, variant, handleOnClick, children }, ref) => {
+    const { pending } = useFormStatus();
+
     return (
       <Button
         type="submit"
         disabled={isLoading}
-        className={cn("submit-btn w-full", className)}
+        className={cn("submit-btn", className)}
         variant={variant}
         size={"sm"}
-        name={value}
         onClick={handleOnClick}
         ref={ref}
       >
-        {isLoading ? (
+        {isLoading || pending ? (
           <span className="flex gap-2">
-            <LoaderPinwheel className="animate-spin" /> {value}
+            <LoaderPinwheel className="animate-spin" /> {children}
           </span>
         ) : (
-          value
+          children
         )}
       </Button>
     );

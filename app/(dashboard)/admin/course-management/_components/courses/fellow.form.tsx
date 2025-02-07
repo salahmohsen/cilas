@@ -139,11 +139,7 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
                   />
                 </div>
                 <DialogFooter className="mr-2 mt-2">
-                  <SubmitButton
-                    value="Add Fellow"
-                    className="max-w-max px-10"
-                    isLoading={isPending}
-                  />
+                  <SubmitButton isLoading={isPending}>Add Fellow</SubmitButton>
                 </DialogFooter>
               </form>
             </Form>

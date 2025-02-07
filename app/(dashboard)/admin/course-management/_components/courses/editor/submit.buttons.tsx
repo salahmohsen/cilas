@@ -23,25 +23,25 @@ export const SubmitButtons = ({
     <div className="flex gap-2">
       <SubmitButton
         isLoading={isLoading.secondaryButton}
-        value={editMode && !draftMode ? "Convert To Draft" : "Save Draft"}
-        className="px-2 sm:px-3"
         variant="secondary"
         handleOnClick={() => {
           setDraftMode(true);
           setFilter(CoursesFilter.Draft);
         }}
-      />
+      >
+        {editMode && !draftMode ? "Convert To Draft" : "Save Draft"}
+      </SubmitButton>
 
       <SubmitButton
         variant="default"
         isLoading={isLoading.primaryButton}
-        value={editMode && !draftMode ? "Save Changes" : "Publish Course"}
-        className="px-2 sm:px-3"
         handleOnClick={() => {
           setDraftMode(false);
           setFilter(CoursesFilter.AllPublished);
         }}
-      />
+      >
+        {editMode && !draftMode ? "Save Changes" : "Publish Course"}
+      </SubmitButton>
     </div>
   );
 };
