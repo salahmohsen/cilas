@@ -1,7 +1,7 @@
 "use client";
 
 import { FellowForm } from "@/app/(dashboard)/admin/course-management/_components/courses/fellow.form";
-import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
+import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -37,7 +37,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
   }, [open, action]);
 
   return (
-    <FormFieldProvider<TData, TName> name={name} label={label}>
+    <InputWrapper<TData, TName> name={name} label={label}>
       {({ field, fieldState }) => {
         const value = field.value;
         const setValue = field.onChange;
@@ -130,7 +130,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
           </>
         );
       }}
-    </FormFieldProvider>
+    </InputWrapper>
   );
 };
 

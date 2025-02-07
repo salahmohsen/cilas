@@ -4,7 +4,7 @@ import { FieldPath, FieldValues } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
 
-import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
+import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
 import { BasicInputProps } from "@/lib/types/form.inputs.types";
 import { cloudinary_quality } from "@/lib/utils/cloudinary.utils";
 import { cn } from "@/lib/utils/utils";
@@ -32,7 +32,7 @@ const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   };
 
   return (
-    <FormFieldProvider<TData, TName>
+    <InputWrapper<TData, TName>
       name={name}
       label={label}
       labelClasses={direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"}
@@ -85,7 +85,7 @@ const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
           </div>
         );
       }}
-    </FormFieldProvider>
+    </InputWrapper>
   );
 };
 

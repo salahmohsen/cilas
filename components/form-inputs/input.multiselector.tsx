@@ -1,6 +1,6 @@
 import { MultipleSelector } from "@/components/ui/multipleSelector";
 
-import { FormFieldProvider } from "@/components/form-inputs/form.input.wrapper";
+import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
 import { MultiSelectorProps } from "@/lib/types/form.inputs.types";
 import { LoaderCircle } from "lucide-react";
 import { memo } from "react";
@@ -17,7 +17,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
   triggerSearchOnFocus,
 }: MultiSelectorProps<TData, TName>) {
   return (
-    <FormFieldProvider<TData, TName> name={name} label={label}>
+    <InputWrapper<TData, TName> name={name} label={label}>
       {({ field, fieldState }) => {
         const value = field.value;
         const setValue = field.onChange;
@@ -53,7 +53,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
           </>
         );
       }}
-    </FormFieldProvider>
+    </InputWrapper>
   );
 }
 
