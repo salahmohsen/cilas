@@ -13,6 +13,9 @@ export type UserRole = (typeof userRole)[number];
 
 export type CourseTableRead = InferSelectModel<typeof courseTable>;
 export type CourseTableWrite = InferInsertModel<typeof courseTable>;
+export type CourseWithFellow = CourseTableRead & {
+  fellow: userLocalInfo;
+};
 export type CourseWithFellowAndStudents = CourseTableRead & {
   fellow: userLocalInfo;
   students: userLocalInfo[];

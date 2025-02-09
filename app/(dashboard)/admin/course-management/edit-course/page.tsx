@@ -1,7 +1,7 @@
 "use client";
 
 import { ErrorPage } from "@/components/ui/error";
-import { getCourseById } from "@/lib/actions/courses.actions";
+import { getCourseWithEnrollmentsById } from "@/lib/actions/courses.actions";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -19,7 +19,7 @@ export default function EditCoursePage() {
     try {
       setIsLoading(true);
       if (!courseId || !Number(courseId)) throw new Error("course id is wrong!");
-      courseValues.current = await getCourseById(Number(courseId));
+      courseValues.current = await getCourseWithEnrollmentsById(Number(courseId));
       if (!courseValues.current) throw new Error("Course not found!");
     } catch (error) {
       if (error instanceof Error) {

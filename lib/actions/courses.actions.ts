@@ -228,7 +228,7 @@ export const getUnbundledCourses = async (query: string, defaultCourses?: Option
   return [...coursesNames, ...(defaultCourses ?? [])];
 };
 
-export const getCourseById = async (courseId: number) => {
+export const getPublicCourseById = async (courseId: number) => {
   let course = await db.query.courseTable.findFirst({
     where: eq(courseTable.id, courseId),
     with: {
@@ -238,14 +238,37 @@ export const getCourseById = async (courseId: number) => {
     },
   });
 
-  if (course)
-    return {
-      ...course,
-      timeSlot: {
-        from: new Date(course.timeSlot.from),
-        to: new Date(course.timeSlot.to),
+  return course;
+};
+
+export const getCourseWithEnrollmentsById = async (courseId: number) => {
+  let course = await db.query.courseTable.findFirst({
+    where: eq(courseTable.id, courseId),
+    with: {
+      fellow: {
+        columns: { passwordHash: false, googleId: false },
       },
-    };
+      enrollments: {
+        columns: { enrollmentDate: true },
+        with: {
+          user: {
+            columns: { googleId: false, passwordHash: false },
+          },
+        },
+      },
+    },
+  });
+
+  if (!course) return undefined;
+
+  return {
+    ...course,
+    students: course?.enrollments.map((e) => ({
+      ...e.user,
+      enrolledAt: e.enrollmentDate,
+    })),
+    enrollments: undefined,
+  };
 };
 
 export const deleteCourse = async (

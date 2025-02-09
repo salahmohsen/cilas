@@ -1,7 +1,7 @@
 "use client";
 
 import { ErrorPage } from "@/components/ui/error";
-import { getCourseById } from "@/lib/actions/courses.actions";
+import { getCourseWithEnrollmentsById } from "@/lib/actions/courses.actions";
 import "@/lib/tiptap/styles/index.css";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
@@ -28,7 +28,7 @@ export default function CreateCoursePage() {
       if (isNaN(id)) {
         throw new Error(errorMessage);
       }
-      const courseData = await getCourseById(id);
+      const courseData = await getCourseWithEnrollmentsById(id);
       if (!courseData) {
         throw new Error(errorMessage);
       }
