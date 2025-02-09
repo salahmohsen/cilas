@@ -12,6 +12,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { userRole } from "../types/drizzle.types";
+import { timeSlot } from "../utils";
 
 export const userTable = pgTable("user", {
   id: text("id").primaryKey(),
@@ -70,7 +71,7 @@ export const courseTable = pgTable("course", {
   >(),
   startDate: date("starting_date", { mode: "date" }).notNull(),
   endDate: date("ending_date", { mode: "date" }).notNull(),
-  timeSlot: json("time_slot").notNull().$type<{ from: Date; to: Date }>(),
+  timeSlot: timeSlot("time_slot").notNull(),
   students: json("students"),
   applyUrl: text("apply_url"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
