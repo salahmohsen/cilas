@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { Option } from "@/components/ui/multipleSelector";
 import {
   optional_file,
   optional_selectOptions,
@@ -117,11 +118,11 @@ export const fellowSchema = {
 
 export const addStudentSchema = {
   schema: z.object({
-    students: z.array(z.object({})).min(1, "Select at least one student."),
+    students: z.array(z.object({})),
     courseId: required_number,
   }),
-  defaults: (courseId: number) => ({
-    students: [],
+  defaults: (courseId: number, students: Option[]) => ({
+    students: students || [],
     courseId,
   }),
 };

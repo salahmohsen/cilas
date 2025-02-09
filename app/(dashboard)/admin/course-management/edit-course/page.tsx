@@ -2,7 +2,7 @@
 
 import { ErrorPage } from "@/components/ui/error";
 import { getCourseById } from "@/lib/actions/courses.actions";
-import { CourseWithFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CourseForm } from "../_components/courses/editor/course.editor";
@@ -11,7 +11,7 @@ import Loading from "../create-course/loading";
 export default function EditCoursePage() {
   const searchParam = useSearchParams();
   const courseId = searchParam?.get("id");
-  let courseValues = useRef<CourseWithFellow | undefined>(undefined);
+  let courseValues = useRef<CourseWithFellowAndStudents | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

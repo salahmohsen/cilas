@@ -10,7 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { addStudentToCourse, searchUsers } from "@/lib/actions/users.actions";
+import { Option } from "@/components/ui/multipleSelector";
+import { searchUsers, updateCourseEnrollments } from "@/lib/actions/users.actions";
+import { useCourseStore } from "@/lib/store/course.slice";
 import { AddStudentSchema, addStudentSchema } from "@/lib/types/forms.schema";
 import { AddStudentToCourseState } from "@/lib/types/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,18 +23,22 @@ type AddStudentsDialogProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   courseId: number;
+  courseStudents: Option[];
 };
 
 export const AddStudentsDialog = ({
   isOpen,
   setIsOpen,
   courseId,
+  courseStudents,
 }: AddStudentsDialogProps) => {
   const formMethods = useForm<AddStudentSchema>({
     resolver: zodResolver(addStudentSchema.schema),
-    defaultValues: addStudentSchema.defaults(courseId),
+    defaultValues: addStudentSchema.defaults(courseId, courseStudents),
     mode: "onSubmit",
   });
+
+  const { revalidateCourse: updateCourse } = useCourseStore();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -46,8 +52,11 @@ export const AddStudentsDialog = ({
 
         <FormWrapper<AddStudentSchema, AddStudentToCourseState>
           formMethods={formMethods}
-          serverAction={addStudentToCourse}
-          onSuccess={() => setIsOpen(false)}
+          serverAction={updateCourseEnrollments}
+          onSuccess={() => {
+            setIsOpen(false);
+            updateCourse(courseId);
+          }}
         >
           {({ isPending }) => (
             <>
@@ -65,7 +74,9 @@ export const AddStudentsDialog = ({
                 <Button variant="secondary" onClick={() => setIsOpen(false)}>
                   Cancel
                 </Button>
-                <SubmitButton isLoading={isPending}>Add Students</SubmitButton>
+                <SubmitButton isLoading={isPending}>
+                  Update course enrollments
+                </SubmitButton>
               </DialogFooter>
             </>
           )}

@@ -53,6 +53,38 @@ export const useCourseStore = create<CourseState>((set, get) => ({
     }
   },
 
+  revalidateCourse: async (courseId: number) => {
+    try {
+      set({ isLoading: true });
+      const data = await fetchCourses(undefined, courseId);
+      if (data.error) {
+        set({ isLoading: false });
+        throw new Error(data.message);
+      }
+      if (data.courses) {
+        const revalidatedCourse = data.courses[0];
+        const { courses } = get();
+        const remainingCourses = courses?.filter((course) => course.id !== courseId);
+        const sortedCourses = [...(remainingCourses || []), revalidatedCourse].sort(
+          (a, b) => {
+            const startDateDiff =
+              new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+            if (startDateDiff !== 0) return startDateDiff;
+            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // If startDates are the same, sort by createdAt
+          },
+        );
+        set({
+          courses: sortedCourses,
+          courseInfo: revalidatedCourse,
+          isLoading: false,
+        });
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to fetch course");
+      set({ isLoading: false });
+    }
+  },
+
   getBundles: async () => {
     try {
       set({ isLoading: true });

@@ -1,4 +1,4 @@
-import { CourseWithFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { cn } from "@/lib/utils/utils";
 import { Amiri, Yeseva_One } from "next/font/google";
 import Link from "next/link";
@@ -22,7 +22,7 @@ type CourseProps = {
   isOpen?: boolean;
   className?: string;
   titleSlug?: string;
-  course: CourseWithFellow;
+  course: CourseWithFellowAndStudents;
 };
 
 export const Course = async ({

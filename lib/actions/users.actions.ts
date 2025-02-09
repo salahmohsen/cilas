@@ -8,6 +8,7 @@ import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { revalidatePath } from "next/cache";
 import { validateRequest } from "../apis/auth.api";
+import { userLocalInfo } from "../types/drizzle.types";
 import { AddStudentToCourseState, FellowState } from "../types/users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
@@ -173,41 +174,128 @@ export const searchUsers = async (query: string): Promise<Option[]> => {
   return dataFormatted;
 };
 
-export const addStudentToCourse = async (
+export const updateCourseEnrollments = async (
   prevState: AddStudentToCourseState,
-  formDate: FormData,
+  formData: FormData,
 ): Promise<AddStudentToCourseState> => {
-  console.log("formDate", formDate);
-  const students = JSON.parse(formDate.get("students") as string);
-  const courseId = Number(formDate.get("courseId"));
+  const students = JSON.parse(formData.get("students") as string);
+  const courseId = Number(formData.get("courseId"));
+
+  console.log("students", students);
+  console.log("courseId", courseId);
 
   try {
+    // Validate input
     const parse = addStudentSchema.schema.safeParse({ students, courseId });
-    if (!parse.success) throw new Error("Failed to parse the form data");
+    if (!parse.success) throw new Error("Invalid form data");
 
-    const studentsIds: string[] = students.map((student: { value: string }) =>
-      String(student.value),
-    );
+    // Convert to simple array of user IDs
+    const newStudentIds = students.map((s: { value: string }) => s.value);
 
-    // console.log(
-    //   "db valuse",
-    //   studentsIds.map((userId) => ({ userId, courseId })),
-    // );
+    // 1. First delete existing enrollments
+    const deleteResult = await db
+      .delete(enrollmentTable)
+      .where(eq(enrollmentTable.courseId, courseId));
 
-    const result = await db
-      .insert(enrollmentTable)
-      .values(studentsIds.map((userId) => ({ userId, courseId })))
-      .onConflictDoNothing();
+    if (deleteResult instanceof Error) {
+      throw new Error("Failed to clear existing enrollments");
+    }
 
-    if (result instanceof Error)
-      throw new Error("Failed to add students to the database");
+    // 2. Insert new enrollments if any exist
+    if (newStudentIds.length > 0) {
+      const insertResult = await db
+        .insert(enrollmentTable)
+        .values(
+          newStudentIds.map((userId) => ({
+            userId,
+            courseId,
+            enrollmentDate: new Date(),
+          })),
+        )
+        .onConflictDoNothing();
+
+      if (insertResult instanceof Error) {
+        throw new Error("Failed to add new enrollments");
+      }
+    }
+
+    return { success: true, message: "Enrollments updated successfully!" };
   } catch (error) {
-    if (error instanceof Error)
-      return {
-        error: true,
-        message: `An error occurred while processing adding students: ${error.message}`,
-      };
+    console.error("Enrollment update error:", error);
+    return {
+      error: true,
+      message:
+        error instanceof Error
+          ? `Update failed: ${error.message}`
+          : "Unknown error during enrollment update",
+    };
   }
+};
 
-  return { success: true, message: "Students added successfully!" };
+// try {
+//   const parse = addStudentSchema.schema.safeParse({ students, courseId });
+//   if (!parse.success) throw new Error("Failed to parse the form data");
+
+//   const studentsIds: string[] = students.map((student: { value: string }) =>
+//     String(student.value),
+//   );
+
+//   const result = await db
+//     .insert(enrollmentTable)
+//     .values(studentsIds.map((userId) => ({ userId, courseId })))
+//     .onConflictDoNothing();
+
+//   if (result instanceof Error)
+//     throw new Error("Failed to add students to the database");
+// } catch (error) {
+//   if (error instanceof Error)
+//     return {
+//       error: true,
+//       message: `An error occurred while processing adding students: ${error.message}`,
+//     };
+// }
+
+// return { success: true, message: "Students added successfully!" };
+// };
+
+/**
+ *
+ * @param courseId course id
+ * @param boolean if true, return full user data, if false, return only id and name, default is false
+ * @returns Option[] | UserWithProtectedFields[]
+ */
+
+type studentReturnType<T> = T extends true ? userLocalInfo[] : Option[];
+
+export const getStudentsByCourseId = async <T extends boolean>(
+  courseId: number,
+  fullData: boolean = false,
+): Promise<studentReturnType<T>> => {
+  const students = await db.query.enrollmentTable.findMany({
+    where: eq(enrollmentTable.courseId, courseId),
+  });
+  const studentsIds = students.map((student) => student.userId);
+
+  const studentsData = await Promise.all(
+    studentsIds.map((studentId) => getUserById(studentId)),
+  );
+
+  const studentsOptions = studentsData
+    .map((student) => {
+      if (student) {
+        return {
+          value: student.id,
+          label: `${student.firstName} ${student.lastName}`,
+        };
+      }
+    })
+    .filter(Boolean) as Option[];
+
+  if (fullData) {
+    return studentsData.filter(
+      (student): student is userLocalInfo => student !== undefined,
+    ) as studentReturnType<T>;
+  } else {
+    return studentsOptions as studentReturnType<T>;
+  }
 };

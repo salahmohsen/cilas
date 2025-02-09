@@ -1,4 +1,4 @@
-import { Option } from "@/components/ui/multipleSelector";
+import { MultipleSelectorProps, Option } from "@/components/ui/multipleSelector";
 import {
   ControllerFieldState,
   ControllerRenderProps,
@@ -56,14 +56,13 @@ export interface SelectProps<TData extends FieldValues, TName extends FieldPath<
   }[];
 }
 
-export interface MultiSelectorProps<
+export interface MultipleSelectorInputProps<
   TData extends FieldValues,
   TName extends FieldPath<TData>,
-> extends StandardProps<TData, TName> {
-  options?: { label: string; value: string }[];
+> extends StandardProps<TData, TName>,
+    MultipleSelectorProps {
   emptyMsg?: string;
-  onSearch?: ((value: string) => Promise<Option[]>) | undefined;
-  triggerSearchOnFocus?: boolean;
+  getPreValuesAction?: () => Promise<Option[]>;
 }
 export type ComboBoxOption = {
   id: string;

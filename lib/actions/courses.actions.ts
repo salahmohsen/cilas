@@ -136,10 +136,18 @@ export const fetchCourses = async (
               : undefined;
 
   try {
-    const courses = await db.query.courseTable.findMany({
+    const rawCourses = await db.query.courseTable.findMany({
       with: {
         fellow: {
           columns: { googleId: false, passwordHash: false },
+        },
+        enrollments: {
+          columns: { enrollmentDate: true },
+          with: {
+            user: {
+              columns: { googleId: false, passwordHash: false },
+            },
+          },
         },
       },
       where: whereCondition,
@@ -148,7 +156,20 @@ export const fetchCourses = async (
       orderBy: [desc(courseTable.startDate), desc(courseTable.createdAt)],
     });
 
-    return { success: true, message: "Courses fetched successfully", courses };
+    const courses = rawCourses.map((course) => ({
+      ...course,
+      students: course.enrollments.map((e) => ({
+        ...e.user,
+        enrolledAt: e.enrollmentDate,
+      })),
+      enrollments: undefined,
+    }));
+
+    return {
+      success: true,
+      message: "Courses fetched successfully",
+      courses,
+    };
   } catch (e) {
     if (e instanceof Error) return { error: true, message: e.message };
   }

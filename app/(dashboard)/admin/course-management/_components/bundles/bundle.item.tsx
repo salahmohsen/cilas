@@ -3,7 +3,10 @@
 import { Badge } from "@/components/ui/badge";
 import { fetchCourses } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { BundleWithCourseTitles, CourseWithFellow } from "@/lib/types/drizzle.types";
+import {
+  BundleWithCourseTitles,
+  CourseWithFellowAndStudents,
+} from "@/lib/types/drizzle.types";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { PanelRightClose, PanelRightOpen, Rabbit, Target } from "lucide-react";
@@ -15,9 +18,9 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCourseTitles }) => {
   const { isBundleSelected, isLoading, setCourses } = useCourseStore();
 
   const [isOptionsMenuOpen, setIsOptionsMenuOpen] = useState(false);
-  const [coursesData, setCoursesData] = useState<CourseWithFellow[] | undefined>(
-    undefined,
-  );
+  const [coursesData, setCoursesData] = useState<
+    CourseWithFellowAndStudents[] | undefined
+  >(undefined);
 
   useEffect(() => {
     const fetchBundleCoursesData = async () => {
@@ -96,7 +99,7 @@ const BundleCourse = ({
   course,
 }: {
   bundle: BundleWithCourseTitles;
-  course: CourseWithFellow;
+  course: CourseWithFellowAndStudents;
 }) => {
   const {
     isCourseSelected,

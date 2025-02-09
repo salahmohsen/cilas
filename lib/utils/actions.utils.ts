@@ -1,10 +1,10 @@
+import { Option } from "@/components/ui/multipleSelector";
 import { CourseTableWrite } from "@/lib/types/drizzle.types";
 import { bundleSchema, CourseSchema } from "@/lib/types/forms.schema";
 import { CoursesFilter } from "../types/course.slice.types";
-import { CourseWithFellow } from "../types/drizzle.types";
+import { CourseWithFellowAndStudents } from "../types/drizzle.types";
 import { cleanHtml } from "./sanitize-html.utils";
 import { convertToDate, convertToJson } from "./zodValidation.utils";
-import { Option } from "@/components/ui/multipleSelector";
 
 export const formDataToCourseSchema = (formData: FormData): CourseSchema => {
   const enTitle = formData.get("enTitle") as string;
@@ -59,7 +59,9 @@ export const courseSchemaToDbSchema = (
   };
 };
 
-export const getCourseStatus = (course: CourseWithFellow): CoursesFilter | undefined => {
+export const getCourseStatus = (
+  course: CourseWithFellowAndStudents,
+): CoursesFilter | undefined => {
   const currentDate = new Date();
   const startDate = new Date(course.startDate);
   const endDate = new Date(course.endDate);

@@ -1,9 +1,9 @@
-import { MultipleSelector } from "@/components/ui/multipleSelector";
+import { MultipleSelector, Option } from "@/components/ui/multipleSelector";
 
 import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
-import { MultiSelectorProps } from "@/lib/types/form.inputs.types";
+import { MultipleSelectorInputProps } from "@/lib/types/form.inputs.types";
 import { LoaderCircle } from "lucide-react";
-import { memo } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 
 function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<TData>>({
@@ -15,11 +15,29 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
   className,
   onSearch,
   triggerSearchOnFocus,
-}: MultiSelectorProps<TData, TName>) {
+  getPreValuesAction,
+  ...props
+}: MultipleSelectorInputProps<TData, TName>) {
+  const [actionPreValues, setActionPreValues] = useState<Option[]>([]);
+  const [loadingPreValues, setLoadingPreValues] = useState(false);
+
+  const fetchDefaultValues = useCallback(async () => {
+    if (!getPreValuesAction) return;
+    setLoadingPreValues(true);
+    const defaultValues = await getPreValuesAction?.();
+    setActionPreValues(defaultValues);
+    setLoadingPreValues(false);
+  }, [getPreValuesAction]);
+
+  useEffect(() => {
+    fetchDefaultValues();
+  }, [fetchDefaultValues]);
+
   return (
     <InputWrapper<TData, TName> name={name} label={label}>
       {({ field, fieldState }) => {
-        const value = field.value;
+        const value = actionPreValues.length ? actionPreValues : field.value;
+
         const setValue = field.onChange;
 
         return (
@@ -28,8 +46,8 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
 
             <div onBlur={field.onBlur} ref={field.ref} className="w-full">
               <MultipleSelector
-                defaultOptions={options}
-                placeholder={placeholder}
+                options={options}
+                placeholder={loadingPreValues ? "Loading..." : placeholder}
                 triggerSearchOnFocus={triggerSearchOnFocus}
                 emptyIndicator={
                   <p className="flex w-full items-center justify-center text-sm leading-10 text-gray-600 dark:text-gray-400">
@@ -48,6 +66,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
                   </div>
                 }
                 onSearch={onSearch}
+                {...props}
               />
             </div>
           </>

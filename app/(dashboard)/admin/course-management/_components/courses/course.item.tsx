@@ -16,13 +16,13 @@ import {
 
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CourseWithFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { getCourseStatus } from "@/lib/utils";
 import { Calendar, Ellipsis, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { AddStudentsDialog } from "./add.students.dialog";
 
-type CourseItemProps = { course: CourseWithFellow };
+type CourseItemProps = { course: CourseWithFellowAndStudents };
 
 export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
   ({ course }, ref) => {
@@ -134,6 +134,10 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
           courseId={course.id}
           isOpen={isStudentDialogOpen}
           setIsOpen={setIsStudentDialogOpen}
+          courseStudents={course.students.map((student) => ({
+            value: student.id,
+            label: `${student.firstName} ${student.lastName}`,
+          }))}
         />
         <ConfirmationDialog
           isOpen={isDeleteDialogVisible}

@@ -153,20 +153,14 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
 
                   <Separator className="my-4" />
                   <div className="grid auto-rows-max gap-3">
-                    {/* //TODO -> Adding students */}
-                    <div className="font-semibold">Pegons</div>
+                    <div className="font-semibold">Students</div>
                     <ScrollArea className="w-full rounded-md p-4">
                       <div className="flex gap-1 text-muted-foreground">
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
-                        <UserAvatar />
+                        {courseInfo.students &&
+                          courseInfo.students.map((student) => (
+                            <UserAvatar key={student.id} user={student} />
+                          ))}
+                        {!courseInfo.students?.length && <p>No students found</p>}
                       </div>
                       <ScrollBar orientation="horizontal" />
                     </ScrollArea>

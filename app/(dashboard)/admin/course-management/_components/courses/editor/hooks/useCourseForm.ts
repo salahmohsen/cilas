@@ -2,7 +2,7 @@ import { createEditCourse } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/course.slice.types";
 import { CourseFormState } from "@/lib/types/courses.actions.types";
-import { CourseWithFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { CourseSchema, courseSchema } from "@/lib/types/forms.schema";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +18,7 @@ type LoadingState = {
 };
 
 type UseCourseFormProps = {
-  courseData: CourseWithFellow | undefined;
+  courseData: CourseWithFellowAndStudents | undefined;
   editMode: boolean;
   courseId: number | undefined;
 };

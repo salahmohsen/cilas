@@ -80,16 +80,22 @@ export const FormWrapper = <
   );
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
+  const toastShownRef = useRef(false);
 
   useEffect(() => {
-    if (formState.success) {
+    if (formState.success && !toastShownRef.current) {
       toast.success(formState.message);
       onSuccess?.();
+      toastShownRef.current = true;
     }
-    if (formState.error) {
+    if (formState.error && !toastShownRef.current) {
       toast.error(formState.message);
       onError?.();
+      toastShownRef.current = true;
     }
+    return () => {
+      toastShownRef.current = false;
+    };
   }, [formState, onSuccess, onError]);
 
   return (
