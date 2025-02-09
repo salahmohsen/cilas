@@ -2,6 +2,7 @@ import { JSONContent } from "@tiptap/core";
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  customType,
   date,
   integer,
   json,
@@ -12,7 +13,30 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { userRole } from "../types/drizzle.types";
-import { timeSlot } from "../utils";
+
+type TimeSlot = {
+  from: Date;
+  to: Date;
+};
+
+const timeSlot = customType<{ data: TimeSlot }>({
+  dataType: () => "jsonb",
+  fromDriver: (value: unknown): TimeSlot => {
+    // Runtime validation
+    if (typeof value === "object" && value !== null) {
+      const slot = value as { from?: string; to?: string };
+      return {
+        from: new Date(slot.from || Date.now()),
+        to: new Date(slot.to || Date.now()),
+      };
+    }
+    throw new Error("Invalid time slot format");
+  },
+  toDriver: (value: TimeSlot): unknown => ({
+    from: value.from.toISOString(),
+    to: value.to.toISOString(),
+  }),
+});
 
 export const userTable = pgTable("user", {
   id: text("id").primaryKey(),
