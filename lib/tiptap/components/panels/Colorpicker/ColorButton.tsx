@@ -14,7 +14,7 @@ export const ColorButton = memo(({ color, active, onColorChange }: ColorButtonPr
     active && "bg-neutral-100",
   );
   const bubbleClassName = cn(
-    "w-4 h-4 rounded bg-slate-100 shadow-sm ring-offset-2 ring-current",
+    "w-4 h-4 rounded bg-slate-100 shadow-xs ring-offset-2 ring-current",
     !active && `hover:ring-1`,
     active && `ring-1`,
   );

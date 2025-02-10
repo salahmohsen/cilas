@@ -62,7 +62,7 @@ export const LinkEditorPanel = ({
           <Icon name="Link" className="flex-none text-black dark:text-white" />
           <input
             type="url"
-            className="min-w-[12rem] flex-1 bg-transparent text-sm text-black outline-none dark:text-white"
+            className="min-w-[12rem] flex-1 bg-transparent text-sm text-black outline-hidden dark:text-white"
             placeholder="Enter URL"
             value={state.url}
             onChange={state.onChange}

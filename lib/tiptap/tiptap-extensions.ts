@@ -26,7 +26,7 @@ export const starterKit = StarterKit.configure({
   blockquote: {
     HTMLAttributes: {
       class:
-        "mx-6 my-6 rounded-2xl border-l-2 bg-gray-100 p-5 pl-6 text-justify font-semibold italic leading-8 text-gray-700 shadow-sm ",
+        "mx-6 my-6 rounded-2xl border-l-2 bg-gray-100 p-5 pl-6 text-justify font-semibold italic leading-8 text-gray-700 shadow-xs ",
     },
   },
 

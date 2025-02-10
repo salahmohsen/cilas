@@ -42,11 +42,11 @@ export const BundleItem = ({ bundle }: { bundle: BundleWithCourseTitles }) => {
 
   return (
     <li
-      className={`${isBundleSelected?.[bundle.id] || isOptionsMenuOpen ? "!scale-[1.01] bg-accent !opacity-100" : "bg-transparent"} group/item lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!opacity-100`}
+      className={`${isBundleSelected?.[bundle.id] || isOptionsMenuOpen ? "scale-[1.01]! bg-accent opacity-100!" : "bg-transparent"} group/item lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:opacity-100!`}
       onClick={handleBundleClick}
     >
       <div
-        className={`relative gap-5 rounded-md border px-5 py-6 font-medium transition-all duration-300 lg:hover:!scale-[1.01] lg:hover:bg-accent`}
+        className={`relative gap-5 rounded-md border px-5 py-6 font-medium transition-all duration-300 lg:hover:scale-[1.01]! lg:hover:bg-accent`}
       >
         <div className="flex flex-col gap-4">
           <BundleOptions

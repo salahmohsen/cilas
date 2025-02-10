@@ -81,7 +81,7 @@
       }
 
       &.selected {
-        @apply border-black/30 bg-black/30 shadow-sm;
+        @apply border-black/30 bg-black/30 shadow-xs;
         @apply dark:border-white/30 dark:bg-white/30;
 
         &::before {
@@ -120,7 +120,7 @@
       }
 
       &.selected {
-        @apply border-black/30 bg-black/30 shadow-sm;
+        @apply border-black/30 bg-black/30 shadow-xs;
         @apply dark:border-white/30 dark:bg-white/30;
 
         &::before {

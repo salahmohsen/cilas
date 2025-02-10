@@ -22,7 +22,7 @@ export const EditorHeader = ({
     <div
       className={cn(
         "fixed z-30 flex h-16 w-full items-center justify-between border-b px-4 py-2 sm:w-[calc(100%-4rem)] sm:px-8",
-        "bg-background/50 backdrop-blur-sm",
+        "bg-background/50 backdrop-blur-xs",
         isSidebarOpen && "bg-background",
       )}
     >

@@ -44,14 +44,14 @@ export const Menu = ({
       {withPortal ? (
         <Popover.Portal>
           <Popover.Content asChild sideOffset={8}>
-            <Surface className="z-[9999] flex max-h-80 min-w-[15rem] flex-col gap-0.5 overflow-auto p-2">
+            <Surface className="z-9999 flex max-h-80 min-w-[15rem] flex-col gap-0.5 overflow-auto p-2">
               {children}
             </Surface>
           </Popover.Content>
         </Popover.Portal>
       ) : (
         <Popover.Content asChild sideOffset={8}>
-          <Surface className="z-[9999] flex max-h-80 min-w-[15rem] flex-col gap-0.5 overflow-auto p-2">
+          <Surface className="z-9999 flex max-h-80 min-w-[15rem] flex-col gap-0.5 overflow-auto p-2">
             {children}
           </Surface>
         </Popover.Content>

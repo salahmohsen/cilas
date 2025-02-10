@@ -120,7 +120,7 @@ export const MenuList = React.forwardRef((props: MenuListProps, ref) => {
   return (
     <Surface
       ref={scrollContainer}
-      className="mb-8 max-h-[min(80vh,24rem)] !overflow-auto px-4 py-2"
+      className="mb-8 max-h-[min(80vh,24rem)] overflow-auto! px-4 py-2"
     >
       <div className="grid grid-cols-1 gap-0.5">
         {props.items.map((group, groupIndex: number) => (

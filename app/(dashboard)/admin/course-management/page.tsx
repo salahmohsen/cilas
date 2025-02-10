@@ -16,7 +16,7 @@ export default async function ManageCoursesPage() {
       <Card className="flex flex-wrap items-end justify-between gap-5 p-6">
         <CardHeader className="p-0">
           <CardTitle>Course Management</CardTitle>
-          <CardDescription className="max-w-lg text-balance leading-relaxed">
+          <CardDescription className="max-w-lg leading-relaxed text-balance">
             Manage courses: create, update, delete, and filter with ease.
           </CardDescription>
         </CardHeader>

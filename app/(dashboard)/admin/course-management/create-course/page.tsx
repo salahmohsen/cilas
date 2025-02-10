@@ -2,7 +2,6 @@
 
 import { ErrorPage } from "@/components/ui/error";
 import { getCourseWithEnrollmentsById } from "@/lib/actions/courses.actions";
-import "@/lib/tiptap/styles/index.css";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";

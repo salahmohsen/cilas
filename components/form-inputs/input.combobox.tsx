@@ -74,7 +74,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                   <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0 [&>*]:!z-[9969]" align="start">
+              <PopoverContent className="w-[200px] p-0 *:z-9969!" align="start">
                 <Command
                   filter={(value, search, keywords) => {
                     if ([keywords]?.join()?.toLowerCase()?.includes(search.toLowerCase()))

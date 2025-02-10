@@ -75,7 +75,7 @@ export default function BundleForm({
           })(e);
         }}
       >
-        <fieldset className="grid gap-6 rounded-lg border p-4 shadow-sm lg:grid-cols-2">
+        <fieldset className="grid gap-6 rounded-lg border p-4 shadow-xs lg:grid-cols-2">
           <legend className="text-sm font-medium">Bundle</legend>
           <input hidden name="bundleId" value={bundleId} readOnly />
           <SelectInput<BundleSchema, "year">

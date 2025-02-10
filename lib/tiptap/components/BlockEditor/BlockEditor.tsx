@@ -1,19 +1,17 @@
 "use client";
 
 import { Editor, EditorContent } from "@tiptap/react";
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef } from "react";
 
 import { LinkMenu } from "@/lib/tiptap/components/menus";
-
-import "@/lib/tiptap/styles/index.css";
 
 import { Sidebar } from "@/lib/tiptap/components/Sidebar";
 import ImageBlockMenu from "@/lib/tiptap/extensions/ImageBlock/components/ImageBlockMenu";
 import { ColumnsMenu } from "@/lib/tiptap/extensions/MultiColumn/menus";
 import { TableColumnMenu, TableRowMenu } from "@/lib/tiptap/extensions/Table/menus";
-import { TextMenu } from "../menus/TextMenu";
-import { ContentItemMenu } from "../menus/ContentItemMenu";
 import { SidebarState } from "@/lib/tiptap/hooks/useSidebar";
+import { ContentItemMenu } from "../menus/ContentItemMenu";
+import { TextMenu } from "../menus/TextMenu";
 
 type BlockEditorProps = {
   editor: Editor | null;

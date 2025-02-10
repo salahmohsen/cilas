@@ -46,7 +46,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
     return (
       <>
         <li
-          className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:!scale-[1.02] lg:hover:bg-accent lg:hover:!opacity-100 ${isCourseSelected?.[course.id] || isMenuOpen ? "!scale-[1.02] bg-accent !opacity-100" : "bg-transparent"}`}
+          className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:scale-[1.02]! lg:hover:bg-accent lg:hover:opacity-100! ${isCourseSelected?.[course.id] || isMenuOpen ? "scale-[1.02]! bg-accent opacity-100!" : "bg-transparent"}`}
           onClick={() => handleSelect(course.id)}
           data-course-id={course.id}
           ref={ref}

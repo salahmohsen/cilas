@@ -11,7 +11,7 @@ export const Surface = forwardRef<HTMLDivElement, SurfaceProps>(
     const surfaceClass = cn(
       className,
       "rounded-lg bg-background",
-      withShadow ? "shadow-sm" : "",
+      withShadow ? "shadow-xs" : "",
       withBorder ? "border  " : "",
     );
 
