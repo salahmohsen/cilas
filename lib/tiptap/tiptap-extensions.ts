@@ -43,11 +43,12 @@ export const starterKit = StarterKit.configure({
   },
 });
 
+const DEFAULT_PLACEHOLDER = "Click here to start writing …";
+
 export const placeholderExtension = (placeholder: string) => {
   return Placeholder.configure({
-    placeholder: placeholder,
-    emptyNodeClass:
-      "first:before:h-0 first:before:text-gray-400 first:before:float-left first:before:content-[attr(data-placeholder)] first:before:pointer-events-none text-sm",
+    placeholder: placeholder || DEFAULT_PLACEHOLDER,
+    emptyNodeClass: `first:before:h-0 first:before:text-gray-400 first:before:float-left first:before:content-[attr(data-placeholder)] first:before:pointer-events-none text-sm`,
   });
 };
 
