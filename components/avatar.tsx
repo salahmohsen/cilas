@@ -1,21 +1,30 @@
+import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { cn } from "@/lib/utils";
-import { forwardRef } from "react";
+import { forwardRef, useCallback } from "react";
 import { Avatar as AvatarComponent, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type AvatarComponentProps = {
-  avatar?: string;
-  alt?: string;
-  fallback: string;
+  user: userLocalInfo;
   className?: string;
   onClick?: () => void;
 };
 
 export const Avatar = forwardRef<HTMLDivElement, AvatarComponentProps>(
-  ({ avatar, alt, fallback, className, onClick }, ref) => {
+  ({ user, className, onClick }, ref) => {
+    const getFallback = useCallback(() => {
+      const firstNameChar = user.firstName?.slice(0, 1).toUpperCase() || "";
+      const lastNameChar = user.lastName?.slice(0, 1).toUpperCase() || "";
+      return firstNameChar || lastNameChar ? `${firstNameChar}${lastNameChar}` : "?";
+    }, [user.firstName, user.lastName]);
+
     return (
       <AvatarComponent className={cn(className, onClick && "cursor-pointer")} ref={ref}>
-        <AvatarImage src={avatar} alt={alt} onClick={onClick} />
-        <AvatarFallback onClick={onClick}>{fallback}</AvatarFallback>
+        <AvatarImage
+          src={user.avatar || undefined}
+          alt={`${user.firstName} ${user.lastName}`}
+          onClick={onClick}
+        />
+        <AvatarFallback onClick={onClick}>{getFallback()}</AvatarFallback>
       </AvatarComponent>
     );
   },

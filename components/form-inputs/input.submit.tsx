@@ -22,7 +22,7 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
       <Button
         type="submit"
         disabled={isLoading}
-        className={cn("submit-btn", className)}
+        className={cn("submit-btn cursor-pointer", className)}
         variant={variant}
         size={"sm"}
         onClick={handleOnClick}
