@@ -1,10 +1,15 @@
+import { gitHubEmojis } from "@tiptap-pro/extension-emoji";
+import TextDirection from "tiptap-text-direction";
 import {
   BlockquoteFigure,
   CharacterCount,
   Color,
+  Column,
+  Columns,
   Document,
   Dropcursor,
   Emoji,
+  emojiSuggestion,
   Figcaption,
   FileHandler,
   Focus,
@@ -14,6 +19,7 @@ import {
   HorizontalRule,
   ImageBlock,
   Link,
+  OnPaste,
   Placeholder,
   Selection,
   SlashCommand,
@@ -21,31 +27,25 @@ import {
   Subscript,
   Superscript,
   Table,
-  TableOfContents,
   TableCell,
   TableHeader,
+  TableOfContents,
   TableRow,
+  TaskItem,
+  TaskList,
   TextAlign,
   TextStyle,
   TrailingNode,
   Typography,
   Underline,
-  emojiSuggestion,
-  Columns,
-  Column,
-  TaskItem,
-  TaskList,
-  OnPaste,
 } from ".";
-import { gitHubEmojis } from "@tiptap-pro/extension-emoji";
-import TextDirection from "tiptap-text-direction";
 
+import { uploadImage, UploadingFolder } from "@/lib/utils/cloudinary.utils";
 import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
+import History from "@tiptap/extension-history";
+import { lowlight } from "lowlight";
 import { ImageUpload } from "./ImageUpload";
 import { TableOfContentsNode } from "./TableOfContentsNode";
-import { lowlight } from "lowlight";
-import { uploadImage } from "@/lib/utils/cloudinary.utils";
-import History from "@tiptap/extension-history";
 
 export const ExtensionKit = () => [
   Document,
@@ -91,14 +91,14 @@ export const ExtensionKit = () => [
     allowedMimeTypes: ["image/png", "image/jpeg", "image/gif", "image/webp"],
     onDrop: (currentEditor, files, pos) => {
       files.forEach(async (file) => {
-        const url = await uploadImage(file);
+        const url = await uploadImage(file, UploadingFolder.courses);
         if (typeof url === "string")
           currentEditor.chain().setImageBlockAt({ pos, src: url }).focus().run();
       });
     },
     onPaste: (currentEditor, files, pasteContent) => {
       files.forEach(async (file) => {
-        const url = await uploadImage(file);
+        const url = await uploadImage(file, UploadingFolder.courses);
         if (typeof url === "string")
           return currentEditor
             .chain()

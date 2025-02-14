@@ -14,6 +14,7 @@ import {
   required_string,
   required_timeSlot,
 } from "@/lib/utils/zodValidation.utils";
+import { userLocalInfo } from "./drizzle.types";
 
 export const courseSchema = {
   schema: z
@@ -127,7 +128,31 @@ export const addStudentSchema = {
   }),
 };
 
+export const userProfileSchema = {
+  schema: z.object({
+    id: required_string,
+    firstName: required_string,
+    lastName: required_string,
+    userName: required_string,
+    avatar: optional_string,
+    bio: optional_string,
+    email: required_email,
+    tel: optional_tel,
+  }),
+  defaults: (user: userLocalInfo) => ({
+    id: user.id || "",
+    firstName: user.firstName || "",
+    lastName: user.lastName || "",
+    userName: user.userName || "",
+    avatar: user.avatar || "",
+    bio: user.bio || "",
+    email: user.email || "",
+    tel: user.tel || "",
+  }),
+};
+
 export type CourseSchema = z.infer<typeof courseSchema.schema>;
 export type BundleSchema = z.infer<typeof bundleSchema.schema>;
 export type FellowSchema = z.infer<typeof fellowSchema.schema>;
 export type AddStudentSchema = z.infer<typeof addStudentSchema.schema>;
+export type UserProfileSchema = z.infer<typeof userProfileSchema.schema>;

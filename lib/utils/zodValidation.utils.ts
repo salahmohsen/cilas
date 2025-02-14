@@ -9,7 +9,7 @@ export const optional_string = z.string().min(1).or(emptyStringToNull);
 
 export const required_url = z.string().url().trim().min(1, { message: "Required" });
 
-export const optional_url = z.string().url().min(1).or(emptyStringToNull);
+export const optional_url = z.string().url().min(1);
 
 export const required_email = z
   .string()
@@ -23,7 +23,7 @@ export const optional_tel = z
   .regex(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/, {
     message: "Please provide a valid number",
   })
-  .optional();
+  .or(emptyStringToNull);
 
 export const required_password = z
   .string()

@@ -45,7 +45,7 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
           >
             <Card>
               <ScrollArea className="overflow-y-auto" type="hover">
-                <CardHeader className="flex flex-row items-start bg-muted/50">
+                <CardHeader className="bg-muted/50 flex flex-row items-start">
                   <div className="grid gap-0.5">
                     <CardTitle className="group flex items-center gap-2 text-lg">
                       <span className="" dir={courseInfo.enTitle ? "ltr" : "rtl"}>
@@ -155,10 +155,14 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                   <div className="grid auto-rows-max gap-3">
                     <div className="font-semibold">Students</div>
                     <ScrollArea className="w-full rounded-md p-4">
-                      <div className="flex gap-1 text-muted-foreground">
+                      <div className="text-muted-foreground flex gap-1">
                         {courseInfo.students &&
                           courseInfo.students.map((student) => (
-                            <UserAvatar key={student.id} user={student} />
+                            <UserAvatar
+                              key={student.id}
+                              user={student}
+                              courseId={courseInfo.id}
+                            />
                           ))}
                         {!courseInfo.students?.length && <p>No students found</p>}
                       </div>

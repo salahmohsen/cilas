@@ -1,5 +1,12 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
   TooltipContent,
@@ -7,21 +14,23 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
+import { forwardRef, useState } from "react";
 import { UserSettings } from "./user.settings";
 
 type UserAvatarProps = {
   user: userLocalInfo;
+  courseId: number;
   className?: string;
 };
 
-export function UserAvatar({ user }: UserAvatarProps) {
-  const {} = user;
+export function UserAvatar({ user, courseId, className }: UserAvatarProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger>
         <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger>
+          <Tooltip delayDuration={200}>
+            <TooltipTrigger className="cursor-pointer" asChild>
               <AvatarComponent user={user} />
             </TooltipTrigger>
             <TooltipContent side="bottom">
@@ -32,21 +41,47 @@ export function UserAvatar({ user }: UserAvatarProps) {
           </Tooltip>
         </TooltipProvider>
       </DialogTrigger>
-      <DialogContent className="h-2/3 w-2/3 max-w-full border-0 p-0">
-        <UserSettings user={user} />
-      </DialogContent>
+      {isDialogOpen && (
+        <DialogContent className="h-2/3 w-2/3 max-w-full border-0 p-0">
+          <DialogTitle className="sr-only">User profile settings</DialogTitle>
+          <DialogDescription className="sr-only"></DialogDescription>
+
+          <ScrollArea className="max-h-full">
+            <UserSettings
+              user={user}
+              courseId={courseId}
+              open={isDialogOpen}
+              onOpenChange={setIsDialogOpen}
+            />
+          </ScrollArea>
+        </DialogContent>
+      )}
     </Dialog>
   );
 }
 
-export const AvatarComponent = ({ user, className }: UserAvatarProps) => {
-  return (
-    <Avatar className={className}>
-      <AvatarImage src={user.avatar ?? ""} alt={`${user.firstName} ${user.lastName}`} />
-      <AvatarFallback>
-        {user.firstName?.slice(0, 1).toUpperCase()}{" "}
-        {user.lastName?.slice(0, 1).toUpperCase()}
-      </AvatarFallback>
-    </Avatar>
-  );
+type AvatarComponentProps = {
+  user: userLocalInfo;
+  className?: string;
+  onClick?: () => void;
 };
+
+export const AvatarComponent = forwardRef<HTMLDivElement, AvatarComponentProps>(
+  ({ user, className, onClick }, ref) => {
+    return (
+      <Avatar className={className} ref={ref}>
+        <AvatarImage
+          src={user.avatar || undefined}
+          alt={`${user.firstName} ${user.lastName}`}
+          onClick={onClick}
+        />
+        <AvatarFallback onClick={onClick}>
+          {user.firstName?.slice(0, 1).toUpperCase()}{" "}
+          {user.lastName?.slice(0, 1).toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+    );
+  },
+);
+
+AvatarComponent.displayName = "AvatarComponent";

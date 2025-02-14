@@ -1,6 +1,6 @@
+import { uploadImage, UploadingFolder } from "@/lib/utils/cloudinary.utils";
 import { DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
-import { uploadImage } from "@/lib/utils/cloudinary.utils";
 
 export const useUploader = ({ onUpload }: { onUpload: (url: string) => void }) => {
   const [loading, setLoading] = useState(false);
@@ -9,7 +9,7 @@ export const useUploader = ({ onUpload }: { onUpload: (url: string) => void }) =
     async (image: File) => {
       setLoading(true);
       try {
-        const url = await uploadImage(image);
+        const url = await uploadImage(image, UploadingFolder.courses);
         if (!url) throw new Error("url undefined");
         if (url instanceof Error) throw new Error(url.message);
         onUpload(url);

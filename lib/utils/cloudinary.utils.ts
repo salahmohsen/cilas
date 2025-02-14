@@ -1,8 +1,15 @@
 import { cloudinaryUploader } from "../actions/cloudinary";
 import { isURL } from "./utils";
 
+export enum UploadingFolder {
+  courses = "courses",
+  avatar = "avatar",
+  feature = "featured",
+}
+
 export const uploadImage = async (
   image: unknown,
+  folder: UploadingFolder,
 ): Promise<string | undefined | Error> => {
   if (image === "") return;
   if (typeof image === "string" && isURL(image)) return image as string;
@@ -10,7 +17,7 @@ export const uploadImage = async (
 
   const imageData = new FormData();
   imageData.append("image", image as Blob);
-  imageData.append("folder", "courses");
+  imageData.append("folder", folder);
 
   try {
     const imageUrl: string = await cloudinaryUploader(imageData);

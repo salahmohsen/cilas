@@ -1,15 +1,20 @@
 "use server";
 
 import { Option } from "@/components/ui/multipleSelector";
+
 import { enrollmentTable, userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
-import { addStudentSchema, fellowSchema, FellowSchema } from "@/lib/types/forms.schema";
+import {
+  addStudentSchema,
+  fellowSchema,
+  FellowSchema,
+  userProfileSchema,
+} from "@/lib/types/forms.schema";
 import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
-import { revalidatePath } from "next/cache";
 import { validateRequest } from "../apis/auth.api";
 import { userLocalInfo } from "../types/drizzle.types";
-import { AddStudentToCourseState, FellowState } from "../types/users.actions.types";
+import { BasePrevState, FellowState } from "../types/users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
   try {
@@ -112,16 +117,15 @@ export const getUsersNamesByRole = async (role: "user" | "fellow" | "admin") => 
   return users;
 };
 
-export const getUserById = async (userId: string) => {
+export const getUserById = async (id: string): Promise<userLocalInfo | undefined> => {
   const user = db.query.userTable.findFirst({
-    where: eq(userTable.id, userId),
+    where: eq(userTable.id, id),
     columns: {
       passwordHash: false,
       googleId: false,
     },
   });
 
-  revalidatePath("/courses");
   return user;
 };
 
@@ -175,9 +179,9 @@ export const searchUsers = async (query: string): Promise<Option[]> => {
 };
 
 export const updateCourseEnrollments = async (
-  prevState: AddStudentToCourseState,
+  prevState: BasePrevState,
   formData: FormData,
-): Promise<AddStudentToCourseState> => {
+): Promise<BasePrevState> => {
   const students = JSON.parse(formData.get("students") as string);
   const courseId = Number(formData.get("courseId"));
 
@@ -297,5 +301,51 @@ export const getStudentsByCourseId = async <T extends boolean>(
     ) as studentReturnType<T>;
   } else {
     return studentsOptions as studentReturnType<T>;
+  }
+};
+
+export const updateUserInfo = async (
+  prevState: BasePrevState,
+  formData: FormData,
+): Promise<BasePrevState> => {
+  const id = formData.get("id") as string;
+  const firstName = formData.get("firstName") as string;
+  const lastName = formData.get("lastName") as string;
+  const userName = formData.get("userName") as string;
+  const avatar = formData.get("avatar") as string;
+  const bio = formData.get("bio") as string;
+  const email = formData.get("email") as string;
+  const tel = formData.get("tel") as string;
+
+  try {
+    const parse = userProfileSchema.schema.safeParse({
+      id,
+      firstName,
+      lastName,
+      userName,
+      avatar,
+      bio,
+      email,
+      tel,
+    });
+
+    if (!parse.success) throw new Error(`Invalid form data ${parse.error} `);
+
+    const stmt = await db
+      .update(userTable)
+      .set({ firstName, lastName, avatar, bio, email, tel })
+      .where(eq(userTable.id, id))
+      .returning();
+
+    return { success: true, message: "user profile updated successfully!" };
+  } catch (error) {
+    console.error("update user info failed: ", error);
+    return {
+      error: true,
+      message:
+        error instanceof Error
+          ? `Update failed: ${error.message}`
+          : "Unknown error during user profile update",
+    };
   }
 };

@@ -7,6 +7,7 @@ type serverActionStateBase = {
   success?: boolean;
   error?: boolean;
   message: string;
+  data?: unknown;
 };
 
 type FormWrapperProps<
@@ -21,6 +22,7 @@ type FormWrapperProps<
   ) => Promise<serverActionState>;
   onSuccess?: () => void;
   onError?: () => void;
+  className?: string;
 };
 
 /**
@@ -73,6 +75,7 @@ export const FormWrapper = <
   serverAction,
   onSuccess,
   onError,
+  className,
 }: FormWrapperProps<Schema, serverActionState>) => {
   const [formState, formAction] = useFormState(
     serverAction,
@@ -80,35 +83,33 @@ export const FormWrapper = <
   );
   const [isPending, startTransition] = useTransition();
   const formRef = useRef<HTMLFormElement>(null);
-  const toastShownRef = useRef(false);
 
   useEffect(() => {
-    if (formState.success && !toastShownRef.current) {
+    if (formState.success) {
       toast.success(formState.message);
       onSuccess?.();
-      toastShownRef.current = true;
+      formMethods.reset();
     }
-    if (formState.error && !toastShownRef.current) {
+    if (formState.error) {
       toast.error(formState.message);
       onError?.();
-      toastShownRef.current = true;
     }
-    return () => {
-      toastShownRef.current = false;
-    };
-  }, [formState, onSuccess, onError]);
+  }, [formState, onSuccess, onError, formMethods]);
 
   return (
     <FormProvider {...formMethods}>
       <form
         ref={formRef}
+        className={className}
         onSubmit={(e) => {
           e.preventDefault();
-          startTransition(() => {
-            formMethods.handleSubmit(() => {
-              formAction(new FormData(formRef.current!));
-            })(e);
-          });
+          formMethods.handleSubmit(() => {
+            const formData = new FormData(formRef.current!);
+
+            startTransition(() => {
+              formAction(formData);
+            });
+          })(e);
         }}
         action={formAction}
       >

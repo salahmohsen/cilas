@@ -9,7 +9,7 @@ import {
   courseSchemaToDbSchema,
   formDataToCourseSchema,
 } from "@/lib/utils/actions.utils";
-import { uploadImage } from "@/lib/utils/cloudinary.utils";
+import { uploadImage, UploadingFolder } from "@/lib/utils/cloudinary.utils";
 import { coursesFilter } from "@/lib/utils/drizzle.utils";
 import { and, desc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -44,7 +44,7 @@ export async function createEditCourse(
   }
 
   // uploading the image if data parsing is succeed
-  const imageUrl = await uploadImage(formObj.featuredImage);
+  const imageUrl = await uploadImage(formObj.featuredImage, UploadingFolder.feature);
   if (imageUrl instanceof Error)
     return {
       error: true,

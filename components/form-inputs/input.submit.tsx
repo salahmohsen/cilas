@@ -1,21 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { cn } from "@/lib/utils/utils";
 import { LoaderPinwheel } from "lucide-react";
 import { forwardRef } from "react";
 import { useFormStatus } from "react-dom";
 
-type SubmitButtonProps = {
+interface SubmitButtonProps extends ButtonProps {
   className?: string;
   isLoading?: boolean;
   variant?: "default" | "secondary";
   handleOnClick?: () => void;
   children?: string;
-};
+}
 
 export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
-  ({ className, isLoading, variant, handleOnClick, children }, ref) => {
+  ({ className, isLoading, variant, handleOnClick, children, ...props }, ref) => {
     const { pending } = useFormStatus();
 
     return (
@@ -27,6 +27,7 @@ export const SubmitButton = forwardRef<HTMLButtonElement, SubmitButtonProps>(
         size={"sm"}
         onClick={handleOnClick}
         ref={ref}
+        {...props}
       >
         {isLoading || pending ? (
           <span className="flex gap-2">

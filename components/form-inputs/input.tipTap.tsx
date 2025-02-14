@@ -71,6 +71,7 @@ const Editor: React.FC<EditorProps> = ({
   editorToolbar,
 }) => {
   const editor = useEditor({
+    immediatelyRender: false,
     extensions: [
       starterKit,
       placeholderExtension(placeholder),
@@ -99,13 +100,13 @@ const Editor: React.FC<EditorProps> = ({
         ref={editorRef}
         onBlur={onBlur}
         disabled={disabled}
-        className="max-w-full break-all"
+        className="max-w-full break-all **:ms-0!"
       />
       {editor && (
         <BubbleMenu
           editor={editor}
           updateDelay={0}
-          className="scale-80 hidden rounded-lg border bg-opacity-0 backdrop-blur-md md:block"
+          className="bg-opacity-0 hidden scale-80 rounded-lg border backdrop-blur-md md:block"
         >
           <Bold editor={editor} />
           <Italic editor={editor} />
