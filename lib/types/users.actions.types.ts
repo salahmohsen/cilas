@@ -1,14 +1,11 @@
 import { userLocalInfo } from "./drizzle.types";
 
-export type FellowState = {
+export type BasePrevState = {
   success?: boolean;
   error?: boolean;
   message: string;
-  fellow?: userLocalInfo;
 };
 
-export type AddStudentToCourseState = {
-  success?: boolean;
-  error?: boolean;
-  message: string;
-};
+export interface FellowState extends BasePrevState {
+  fellow?: userLocalInfo;
+}

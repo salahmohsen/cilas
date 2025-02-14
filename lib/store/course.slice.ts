@@ -64,6 +64,14 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       if (data.courses) {
         const revalidatedCourse = data.courses[0];
         const { courses } = get();
+
+        // Check if the course data actually changed to avoid unnecessary updates
+        const existingCourse = courses?.find((course) => course.id === courseId);
+        if (JSON.stringify(existingCourse) === JSON.stringify(data.courses?.[0])) {
+          set({ isLoading: false });
+          return;
+        }
+
         const remainingCourses = courses?.filter((course) => course.id !== courseId);
         const sortedCourses = [...(remainingCourses || []), revalidatedCourse].sort(
           (a, b) => {

@@ -14,7 +14,7 @@ import { Option } from "@/components/ui/multipleSelector";
 import { searchUsers, updateCourseEnrollments } from "@/lib/actions/users.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { AddStudentSchema, addStudentSchema } from "@/lib/types/forms.schema";
-import { AddStudentToCourseState } from "@/lib/types/users.actions.types";
+import { BasePrevState } from "@/lib/types/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
@@ -38,7 +38,7 @@ export const AddStudentsDialog = ({
     mode: "onSubmit",
   });
 
-  const { revalidateCourse: updateCourse } = useCourseStore();
+  const { revalidateCourse } = useCourseStore();
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -50,12 +50,12 @@ export const AddStudentsDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <FormWrapper<AddStudentSchema, AddStudentToCourseState>
+        <FormWrapper<AddStudentSchema, BasePrevState>
           formMethods={formMethods}
           serverAction={updateCourseEnrollments}
           onSuccess={() => {
             setIsOpen(false);
-            updateCourse(courseId);
+            revalidateCourse(courseId);
           }}
         >
           {({ isPending }) => (
