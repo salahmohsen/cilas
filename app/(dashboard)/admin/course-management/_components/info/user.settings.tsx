@@ -12,7 +12,7 @@ import { BasePrevState } from "@/lib/types/users.actions.types";
 import { uploadImage, UploadingFolder } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserCog, UserPen } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -29,6 +29,8 @@ export const UserSettings = ({
   onOpenChange,
 }: UserSettingsProps) => {
   const { revalidateCourse } = useCourseStore();
+  const [isUploading, setIsUploading] = useState<boolean>(false);
+
   const formMethods = useForm<UserProfileSchema>({
     resolver: zodResolver(userProfileSchema.schema),
     defaultValues: userProfileSchema.defaults(user),
@@ -37,8 +39,9 @@ export const UserSettings = ({
   const { watch, setValue } = formMethods;
 
   const avatarValue = watch("avatar");
+
   const imageInput = useRef<HTMLInputElement>(null);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
+
   const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -65,12 +68,6 @@ export const UserSettings = ({
       console.error("Upload error:", error);
     }
   };
-
-  const getFallback = useCallback(() => {
-    const firstNameChar = user.firstName?.slice(0, 1).toUpperCase() || "";
-    const lastNameChar = user.lastName?.slice(0, 1).toUpperCase() || "";
-    return firstNameChar || lastNameChar ? `${firstNameChar}${lastNameChar}` : "?";
-  }, [user.firstName, user.lastName]);
 
   return (
     <Tabs defaultValue="profile" className="flex min-w-96" orientation="vertical">
@@ -112,12 +109,11 @@ export const UserSettings = ({
                   </p>
                   <div className="flex items-center gap-5">
                     <Avatar
-                      avatar={user.avatar || undefined}
-                      alt={`${user.firstName} ${user.lastName}`}
-                      fallback={getFallback()}
+                      user={{ ...user, avatar: avatarValue || "" }}
                       className="h-36 w-36"
                     />
                     <Button
+                      className="cursor-pointer"
                       onClick={(e) => {
                         e.preventDefault();
                         imageInput.current?.click();
@@ -127,6 +123,7 @@ export const UserSettings = ({
                     </Button>
                     <Button
                       variant="destructive"
+                      className="cursor-pointer"
                       onClick={(e) => {
                         e.preventDefault();
                         setValue("avatar", "", {

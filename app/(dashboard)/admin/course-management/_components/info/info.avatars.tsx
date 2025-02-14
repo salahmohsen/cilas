@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { UserSettings } from "./user.settings";
 
 type UserAvatarProps = {
@@ -25,11 +25,6 @@ type UserAvatarProps = {
 
 export function UserAvatar({ user, courseId, className }: UserAvatarProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const getFallback = useCallback(() => {
-    const firstNameChar = user.firstName?.slice(0, 1).toUpperCase() || "";
-    const lastNameChar = user.lastName?.slice(0, 1).toUpperCase() || "";
-    return firstNameChar || lastNameChar ? `${firstNameChar}${lastNameChar}` : "?";
-  }, [user.firstName, user.lastName]);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -37,11 +32,7 @@ export function UserAvatar({ user, courseId, className }: UserAvatarProps) {
         <TooltipProvider>
           <Tooltip delayDuration={200}>
             <TooltipTrigger className="cursor-pointer" asChild>
-              <Avatar
-                avatar={user.avatar || undefined}
-                alt={`${user.firstName} ${user.lastName}`}
-                fallback={getFallback()}
-              />
+              <Avatar user={user} />
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p>
