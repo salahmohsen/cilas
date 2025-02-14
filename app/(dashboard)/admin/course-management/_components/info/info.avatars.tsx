@@ -28,20 +28,19 @@ export function UserAvatar({ user, courseId, className }: UserAvatarProps) {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger>
-        <TooltipProvider>
-          <Tooltip delayDuration={200}>
-            <TooltipTrigger className="cursor-pointer" asChild>
+      <TooltipProvider>
+        <Tooltip delayDuration={400}>
+          <TooltipTrigger className="cursor-pointer" asChild>
+            <DialogTrigger>
               <Avatar user={user} />
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p>
-                {user.firstName} {user.lastName}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-      </DialogTrigger>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">
+            {user.firstName} {user.lastName}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
       {isDialogOpen && (
         <DialogContent className="h-2/3 w-2/3 max-w-full border-0 p-0">
           <DialogTitle className="sr-only">User profile settings</DialogTitle>
