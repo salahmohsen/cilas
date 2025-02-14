@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar } from "@/components/avatar";
 import {
   Dialog,
   DialogContent,
@@ -14,7 +14,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
-import { forwardRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { UserSettings } from "./user.settings";
 
 type UserAvatarProps = {
@@ -25,13 +25,23 @@ type UserAvatarProps = {
 
 export function UserAvatar({ user, courseId, className }: UserAvatarProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const getFallback = useCallback(() => {
+    const firstNameChar = user.firstName?.slice(0, 1).toUpperCase() || "";
+    const lastNameChar = user.lastName?.slice(0, 1).toUpperCase() || "";
+    return firstNameChar || lastNameChar ? `${firstNameChar}${lastNameChar}` : "?";
+  }, [user.firstName, user.lastName]);
+
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger>
         <TooltipProvider>
           <Tooltip delayDuration={200}>
             <TooltipTrigger className="cursor-pointer" asChild>
-              <AvatarComponent user={user} />
+              <Avatar
+                avatar={user.avatar || undefined}
+                alt={`${user.firstName} ${user.lastName}`}
+                fallback={getFallback()}
+              />
             </TooltipTrigger>
             <TooltipContent side="bottom">
               <p>
@@ -59,29 +69,3 @@ export function UserAvatar({ user, courseId, className }: UserAvatarProps) {
     </Dialog>
   );
 }
-
-type AvatarComponentProps = {
-  user: userLocalInfo;
-  className?: string;
-  onClick?: () => void;
-};
-
-export const AvatarComponent = forwardRef<HTMLDivElement, AvatarComponentProps>(
-  ({ user, className, onClick }, ref) => {
-    return (
-      <Avatar className={className} ref={ref}>
-        <AvatarImage
-          src={user.avatar || undefined}
-          alt={`${user.firstName} ${user.lastName}`}
-          onClick={onClick}
-        />
-        <AvatarFallback onClick={onClick}>
-          {user.firstName?.slice(0, 1).toUpperCase()}{" "}
-          {user.lastName?.slice(0, 1).toUpperCase()}
-        </AvatarFallback>
-      </Avatar>
-    );
-  },
-);
-
-AvatarComponent.displayName = "AvatarComponent";

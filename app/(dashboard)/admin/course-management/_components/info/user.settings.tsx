@@ -1,3 +1,4 @@
+import { Avatar } from "@/components/avatar";
 import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
 import { Button } from "@/components/ui/button";
@@ -11,10 +12,9 @@ import { BasePrevState } from "@/lib/types/users.actions.types";
 import { uploadImage, UploadingFolder } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserCog, UserPen } from "lucide-react";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { AvatarComponent } from "./info.avatars";
 
 type UserSettingsProps = {
   user: userLocalInfo;
@@ -66,6 +66,12 @@ export const UserSettings = ({
     }
   };
 
+  const getFallback = useCallback(() => {
+    const firstNameChar = user.firstName?.slice(0, 1).toUpperCase() || "";
+    const lastNameChar = user.lastName?.slice(0, 1).toUpperCase() || "";
+    return firstNameChar || lastNameChar ? `${firstNameChar}${lastNameChar}` : "?";
+  }, [user.firstName, user.lastName]);
+
   return (
     <Tabs defaultValue="profile" className="flex min-w-96" orientation="vertical">
       <TabsList className="fixed my-0 flex h-full w-1/4 flex-col items-start justify-start overflow-hidden rounded-r-none border-r p-0 px-0 *:flex *:w-full *:cursor-pointer *:justify-start *:gap-3 *:rounded-none *:px-5 *:py-3">
@@ -105,10 +111,11 @@ export const UserSettings = ({
                     Profile picture
                   </p>
                   <div className="flex items-center gap-5">
-                    <AvatarComponent
-                      user={{ ...user, avatar: avatarValue || "" }}
-                      className="h-32 w-32 cursor-pointer"
-                      onClick={() => imageInput.current?.click()}
+                    <Avatar
+                      avatar={user.avatar || undefined}
+                      alt={`${user.firstName} ${user.lastName}`}
+                      fallback={getFallback()}
+                      className="h-36 w-36"
                     />
                     <Button
                       onClick={(e) => {

@@ -25,13 +25,13 @@ export const InfoFooter = ({ className }: { className?: string }) => {
         className,
       )}
     >
-      <div className="text-xs text-muted-foreground">
+      <div className="text-muted-foreground text-xs">
         Updated{" "}
         <time dateTime="2023-11-23">
           {courseInfo && format(courseInfo.updatedAt, "dd MMMM yyyy")}
         </time>
       </div>
-      <Pagination className="ml-auto mr-0 w-auto">
+      <Pagination className="mr-0 ml-auto w-auto">
         <PaginationContent>
           <PaginationItem>
             <Button
