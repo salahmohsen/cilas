@@ -46,7 +46,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
     return (
       <>
         <li
-          className={`flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:scale-[1.02]! lg:hover:bg-accent lg:hover:opacity-100! ${isCourseSelected?.[course.id] || isMenuOpen ? "scale-[1.02]! bg-accent opacity-100!" : "bg-transparent"}`}
+          className={`lg:hover:bg-accent flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:scale-[1.02]! lg:hover:opacity-100! ${isCourseSelected?.[course.id] || isMenuOpen ? "bg-accent scale-[1.02]! opacity-100!" : "bg-transparent"}`}
           onClick={() => handleSelect(course.id)}
           data-course-id={course.id}
           ref={ref}
@@ -60,7 +60,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
               <div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-2">
                 <Badge
                   variant="default"
-                  className="h-6 min-w-max max-w-max rounded-sm"
+                  className="h-6 max-w-max min-w-max rounded-sm"
                   title={`${courseTitle} is ${courseStatues}`}
                 >
                   {courseStatues}
@@ -99,14 +99,6 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
-                  onSelect={() => setIsStudentDialogOpen(true)}
-                  onClick={(e) => e.stopPropagation()}
-                  className="cursor-pointer"
-                >
-                  Add Students
-                </DropdownMenuItem>
-
-                <DropdownMenuItem
                   onSelect={() =>
                     router.push(
                       `/admin/course-management/create-course?duplicate-course=${course.id}`,
@@ -117,10 +109,19 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
                 >
                   Duplicate
                 </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onSelect={() => setIsStudentDialogOpen(true)}
+                  onClick={(e) => e.stopPropagation()}
+                  className="cursor-pointer"
+                >
+                  Update enrollments
+                </DropdownMenuItem>
+
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem
-                  className="cursor-pointer bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
                   onSelect={() => setIsDeleteDialogVisible(true)}
                   onClick={(e) => e.stopPropagation()}
                 >

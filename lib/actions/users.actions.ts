@@ -236,32 +236,6 @@ export const updateCourseEnrollments = async (
   }
 };
 
-// try {
-//   const parse = addStudentSchema.schema.safeParse({ students, courseId });
-//   if (!parse.success) throw new Error("Failed to parse the form data");
-
-//   const studentsIds: string[] = students.map((student: { value: string }) =>
-//     String(student.value),
-//   );
-
-//   const result = await db
-//     .insert(enrollmentTable)
-//     .values(studentsIds.map((userId) => ({ userId, courseId })))
-//     .onConflictDoNothing();
-
-//   if (result instanceof Error)
-//     throw new Error("Failed to add students to the database");
-// } catch (error) {
-//   if (error instanceof Error)
-//     return {
-//       error: true,
-//       message: `An error occurred while processing adding students: ${error.message}`,
-//     };
-// }
-
-// return { success: true, message: "Students added successfully!" };
-// };
-
 /**
  *
  * @param courseId course id

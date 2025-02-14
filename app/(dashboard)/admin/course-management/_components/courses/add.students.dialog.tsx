@@ -42,11 +42,11 @@ export const AddStudentsDialog = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent aria-description="add students to course">
+      <DialogContent aria-description="Update course enrollments">
         <DialogHeader>
-          <DialogTitle>Add Students</DialogTitle>
+          <DialogTitle>Update course enrollments</DialogTitle>
           <DialogDescription className="text-sm text-gray-500">
-            Start typing the name of the student you want to add to this course.
+            Start typing to add new students or remove existing ones from this course.
           </DialogDescription>
         </DialogHeader>
 
@@ -74,9 +74,7 @@ export const AddStudentsDialog = ({
                 <Button variant="secondary" onClick={() => setIsOpen(false)}>
                   Cancel
                 </Button>
-                <SubmitButton isLoading={isPending}>
-                  Update course enrollments
-                </SubmitButton>
+                <SubmitButton isLoading={isPending}>Update</SubmitButton>
               </DialogFooter>
             </>
           )}
