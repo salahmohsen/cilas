@@ -18,7 +18,8 @@ import { BasePrevState, FellowState } from "../types/users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
   try {
-    const stmt = db.insert(userTable).values({ id, email, passwordHash, role: "user" });
+    // TODO: Change default role later
+    const stmt = db.insert(userTable).values({ id, email, passwordHash, role: "admin" });
     await db.execute(stmt);
     return { success: "user made!" };
   } catch (error) {

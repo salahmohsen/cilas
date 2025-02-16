@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import Link from "next/link";
-import { UseFormReturn } from "react-hook-form";
-import { SigninState, SignupState } from "@/lib/actions/auth.actions";
-import { toast } from "sonner";
 import { isObjectEmpty, shake } from "@/lib/utils/utils";
+import Link from "next/link";
+import { useEffect, useRef } from "react";
+import { UseFormReturn } from "react-hook-form";
+import { toast } from "sonner";
 
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -25,8 +25,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { Button } from "@/components/ui/button";
+import { AuthState } from "@/lib/types/users.actions.types";
 import { SiGoogle } from "@icons-pack/react-simple-icons";
+import { redirect } from "next/navigation";
 
 type SigninValues = {
   email: string;
@@ -44,13 +45,13 @@ type AuthFormProps =
       authMode: "signin";
       formMethods: UseFormReturn<SigninValues>;
       formAction: (payload: FormData) => void;
-      formState: SigninState;
+      formState: AuthState;
     }
   | {
       authMode: "signup";
       formMethods: UseFormReturn<SignupValues>;
       formAction: (payload: FormData) => void;
-      formState: SignupState;
+      formState: AuthState;
     };
 
 export function AuthForm({
@@ -64,11 +65,12 @@ export function AuthForm({
 
   useEffect(() => {
     if (formState.error) {
-      toast.error(formState.error);
+      toast.error(formState.message);
       shake(mainCardRef);
     }
     if (formState.success) {
-      toast.success(formState.success);
+      toast.success(formState.message);
+      formState.redirectPath && redirect(formState.redirectPath);
     }
   }, [formState]);
 
@@ -152,14 +154,18 @@ export function AuthForm({
                 )}
               </div>
               <div className="flex flex-col gap-4">
-                <Button type="submit" className="w-full" onClick={handleSubmitClick}>
+                <Button
+                  type="submit"
+                  className="w-full cursor-pointer"
+                  onClick={handleSubmitClick}
+                >
                   {authMode === "signin" ? "Sign in" : "Sign up"}
                 </Button>
                 <Link href="/signin/google">
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex w-full items-center gap-2"
+                    className="flex w-full cursor-pointer items-center gap-2"
                   >
                     <SiGoogle size={15} /> Continue with Google
                   </Button>

@@ -6,21 +6,15 @@ import { hash, verify } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { AuthState } from "../types/users.actions.types";
 import { _getUserByEmail, addUser } from "./users.actions";
 
 // signin action --------------------------------------------------------------------
 
-export type SigninState =
-  | {
-      error: string;
-      success?: undefined;
-    }
-  | {
-      success: string;
-      error?: undefined;
-    };
-
-export async function signin(prevState, formData) {
+export async function signin(
+  prevState: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
@@ -31,33 +25,43 @@ export async function signin(prevState, formData) {
         `creating user error: ${parse.error.errors.map((error, index) => `${error.path[index]} ${error.message[index]}}`)}`,
       );
   } catch (error) {
-    if (error instanceof Error) return { error: `${error.message}` };
+    if (error instanceof Error) return { error: true, message: `${error.message}` };
   }
 
   const existingUser = await _getUserByEmail(email);
 
   if (existingUser && !existingUser.passwordHash)
     return {
-      error:
+      error: true,
+      message:
         "It looks like you're already signed up with your Google account. Please continue by logging in with your Google account to access your profile",
     };
 
   if (!existingUser || !existingUser.passwordHash) {
     return {
-      error: "You have entered an invalid username or password",
+      error: true,
+      message: "You have entered an invalid username or password",
     };
   }
   const isValidPassword = await verify(existingUser.passwordHash, password);
   if (!isValidPassword)
-    return { error: "You have entered an invalid username or password" };
+    return { error: true, message: "You have entered an invalid username or password" };
 
   try {
     await createAuthSession(existingUser.id);
-    redirect("/dashboard");
   } catch (error) {
-    if (error instanceof Error) return { error: `${error.message}` };
+    console.error(error);
+    if (error instanceof Error) return { error: true, message: `${error.message}` };
   }
-  return { success: "Welcome! You have successfully logged in" };
+
+  const role = existingUser.role;
+
+  // Note: This return is unreachable due to redirect, but added for type safety
+  return {
+    success: true,
+    message: "Welcome! You have successfully logged in",
+    redirectPath: `/${role}`,
+  };
 }
 
 export const logout = async () => {
@@ -77,17 +81,10 @@ export const logout = async () => {
 
 /* signup action */
 
-export type SignupState =
-  | {
-      error: string;
-      success?: undefined;
-    }
-  | {
-      success: string;
-      error?: undefined;
-    };
-
-export async function signup(prevState, formData: FormData) {
+export async function signup(
+  prevState: AuthState,
+  formData: FormData,
+): Promise<AuthState> {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const passwordConfirmation = formData.get("passwordConfirmation") as string;
@@ -104,7 +101,8 @@ export async function signup(prevState, formData: FormData) {
   } catch (error) {
     if (error instanceof Error)
       return {
-        error: error.message,
+        error: true,
+        message: error.message,
       };
   }
 
@@ -120,19 +118,25 @@ export async function signup(prevState, formData: FormData) {
   try {
     if (existingUser && !existingUser.passwordHash)
       return {
-        error:
+        error: true,
+        message:
           "It looks like you're already signed up with your Google account. Please continue by logging in with your Google account to access your profile",
       };
-    if (existingUser) return { error: "This Email is already signed up." };
+    if (existingUser) return { error: true, message: "This Email is already signed up." };
     await addUser(userId, email, passwordHash);
   } catch (error) {
-    if (error instanceof Error) console.log(`creating user error: ${error.message}`);
+    if (error instanceof Error) console.error(`creating user error: ${error.message}`);
   }
   try {
     await createAuthSession(userId);
-    redirect("/dashboard");
+    const { user } = await validateRequest();
+    return {
+      success: true,
+      message: "Account created successfully!",
+      redirectPath: `/${user?.role}`,
+    };
   } catch (error) {
     if (error instanceof Error) console.log(`creating session error ${error.message}`);
   }
-  return { success: "Account created successfully!" };
+  return { success: true, message: "Account created successfully!" };
 }

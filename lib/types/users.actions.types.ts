@@ -6,6 +6,10 @@ export type BasePrevState = {
   message: string;
 };
 
+export interface AuthState extends BasePrevState {
+  redirectPath?: string;
+}
+
 export interface FellowState extends BasePrevState {
   fellow?: userLocalInfo;
 }
