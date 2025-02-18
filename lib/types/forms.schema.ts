@@ -10,6 +10,7 @@ import {
   required_boolean,
   required_date,
   required_email,
+  required_name,
   required_number,
   required_string,
   required_timeSlot,
@@ -102,8 +103,8 @@ export const bundleSchema = {
 
 export const fellowSchema = {
   schema: z.object({
-    firstName: required_string,
-    lastName: required_string,
+    firstName: required_name("First name"),
+    lastName: required_name("Last name"),
     bio: required_string,
     email: required_email,
     tel: optional_tel,
@@ -131,9 +132,9 @@ export const addStudentSchema = {
 export const userProfileSchema = {
   schema: z.object({
     id: required_string,
-    firstName: required_string,
-    lastName: required_string,
-    userName: required_string,
+    firstName: required_name("First name"),
+    lastName: required_name("Last name"),
+    userName: required_name("User name", 2, 15),
     avatar: optional_string,
     bio: optional_string,
     email: required_email,

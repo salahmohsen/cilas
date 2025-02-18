@@ -90,6 +90,16 @@ export const required_boolean = z.boolean({
   invalid_type_error: "Required",
 });
 
+export const required_name = (inputName: string, min?: number, max?: number) => {
+  return z
+    .string()
+    .min(min || 2, `${inputName} must be at least 2 characters`)
+    .max(max || 50, `${inputName} cannot exceed 50 characters`)
+    .regex(/^[a-zA-Z]*$/, `${inputName} can only contain letters`)
+    .transform((val) => val.trim())
+    .refine((val) => val.length > 0, `${inputName} is required`);
+};
+
 // Helper functions
 
 export const convertToDate = (value: string, state: "from" | "to") => {

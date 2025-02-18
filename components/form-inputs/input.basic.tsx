@@ -42,10 +42,10 @@ const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
           : "grid grid-cols-1",
         className,
       )}
-      messageClasses={cn(direction !== "horizontal" && "mt-2")}
     >
       {({ field, fieldState }) => {
         const value = field.value;
+
         const setValue = field.onChange;
 
         return (
@@ -53,8 +53,8 @@ const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
             className={` ${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"} `}
           >
             <Input
-              type={type === "number" ? "text" : type}
               {...field}
+              type={type === "number" ? "text" : type}
               placeholder={placeholder}
               accept={type === "file" ? ".jpg, .jpeg, .png" : undefined}
               value={type === "file" ? undefined : value}

@@ -34,6 +34,7 @@ export const UserSettings = ({
   const formMethods = useForm<UserProfileSchema>({
     resolver: zodResolver(userProfileSchema.schema),
     defaultValues: userProfileSchema.defaults(user),
+    mode: "onChange",
   });
 
   const { watch, setValue } = formMethods;
@@ -107,34 +108,38 @@ export const UserSettings = ({
                   <p className="text-muted-foreground text-sm font-bold">
                     Profile picture
                   </p>
-                  <div className="flex items-center gap-5">
+                  <div className="flex items-center gap-4">
                     <Avatar
                       user={{ ...user, avatar: avatarValue || "" }}
                       className="h-36 w-36"
                     />
-                    <Button
-                      className="cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        imageInput.current?.click();
-                      }}
-                    >
-                      Change picture
-                    </Button>
-                    <Button
-                      variant="destructive"
-                      className="cursor-pointer"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setValue("avatar", "", {
-                          shouldDirty: true,
-                          shouldTouch: true,
-                          shouldValidate: true,
-                        });
-                      }}
-                    >
-                      Delete picture
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        className="cursor-pointer"
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          imageInput.current?.click();
+                        }}
+                      >
+                        Change picture
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        className="cursor-pointer"
+                        size="sm"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setValue("avatar", "", {
+                            shouldDirty: true,
+                            shouldTouch: true,
+                            shouldValidate: true,
+                          });
+                        }}
+                      >
+                        Delete picture
+                      </Button>
+                    </div>
                   </div>
                 </div>
                 <div className="grid w-full grid-cols-2 gap-5">
