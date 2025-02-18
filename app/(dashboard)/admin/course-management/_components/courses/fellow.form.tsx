@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   Dialog,
   DialogContent,
@@ -20,7 +20,7 @@ import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
+import { BasicInput, TipTapInput } from "@/components/form-inputs";
 
 import { useCourseStore } from "@/lib/store/course.slice";
 import { FellowState } from "@/lib/types/users.actions.types";
@@ -138,8 +138,10 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
                     direction="horizontal"
                   />
                 </div>
-                <DialogFooter className="mr-2 mt-2">
-                  <SubmitButton isLoading={isPending}>Add Fellow</SubmitButton>
+                <DialogFooter className="mt-2 mr-2">
+                  <Button type="submit" isLoading={isPending}>
+                    Add Fellow
+                  </Button>
                 </DialogFooter>
               </form>
             </Form>

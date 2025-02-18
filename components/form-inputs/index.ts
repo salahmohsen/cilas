@@ -9,5 +9,4 @@ export { default as TimeSlotInput } from "./input.time.slot";
 export { default as TipTapInput } from "./input.tipTap";
 
 export { ContentInput } from "./input.content";
-export { SubmitButton } from "./input.submit";
 export { EditorToolbar } from "./input.tipTap.toolBar";

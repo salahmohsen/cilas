@@ -1,7 +1,7 @@
 import { Avatar } from "@/components/avatar";
-import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
+import { BasicInput, TipTapInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateUserInfo } from "@/lib/actions/users.actions";
@@ -11,7 +11,7 @@ import { UserProfileSchema, userProfileSchema } from "@/lib/types/forms.schema";
 import { BasePrevState } from "@/lib/types/users.actions.types";
 import { uploadImage, UploadingFolder } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserCog, UserPen } from "lucide-react";
+import { ImagePlus, Trash2, UserCog, UserPen } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -115,7 +115,7 @@ export const UserSettings = ({
                     />
                     <div className="flex gap-2">
                       <Button
-                        className="cursor-pointer"
+                        icon={<ImagePlus />}
                         size="sm"
                         onClick={(e) => {
                           e.preventDefault();
@@ -125,8 +125,8 @@ export const UserSettings = ({
                         Change picture
                       </Button>
                       <Button
+                        icon={<Trash2 />}
                         variant="destructive"
-                        className="cursor-pointer"
                         size="sm"
                         onClick={(e) => {
                           e.preventDefault();
@@ -187,7 +187,8 @@ export const UserSettings = ({
                   <Button variant="secondary" onClick={() => onOpenChange(false)}>
                     Cancel
                   </Button>
-                  <SubmitButton
+                  <Button
+                    type="submit"
                     isLoading={isPending}
                     disabled={
                       !formMethods.formState.isDirty ||
@@ -196,7 +197,7 @@ export const UserSettings = ({
                     }
                   >
                     Save changes
-                  </SubmitButton>
+                  </Button>
                 </DialogFooter>
               </>
             );

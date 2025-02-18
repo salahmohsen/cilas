@@ -1,8 +1,8 @@
 "use client";
 
-import { MultiSelectorInput, SubmitButton } from "@/components/form-inputs";
+import { MultiSelectorInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   Dialog,
   DialogContent,
@@ -74,7 +74,9 @@ export const AddStudentsDialog = ({
                 <Button variant="secondary" onClick={() => setIsOpen(false)}>
                   Cancel
                 </Button>
-                <SubmitButton isLoading={isPending}>Update</SubmitButton>
+                <Button type="submit" isLoading={isPending}>
+                  Update
+                </Button>
               </DialogFooter>
             </>
           )}
