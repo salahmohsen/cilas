@@ -61,7 +61,7 @@ export default function ManageCourses() {
   );
   return (
     <courseNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
-      <div className="flex min-h-screen gap-5 overflow-x-clip px-2">
+      <div className="flex min-h-screen gap-5 overflow-x-clip px-4">
         <div className={cn("w-full")}>
           <Tabs
             value={activeTab as Tab}
