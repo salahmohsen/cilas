@@ -1,8 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { Button } from "@/components/hoc/button";
 import { cn } from "@/lib/utils/utils";
-import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 
 type SideBarButtonProps = {
   name: string;

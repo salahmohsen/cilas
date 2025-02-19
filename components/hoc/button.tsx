@@ -6,9 +6,15 @@ import { LoaderPinwheel } from "lucide-react";
 import Link from "next/link";
 import { forwardRef, ReactNode } from "react";
 import { useFormStatus } from "react-dom";
-import { Button as ShadcnButton, ButtonProps as ShadcnButtonProps } from "../ui/button";
+import {
+  buttonVariants,
+  Button as ShadcnButton,
+  ButtonProps as ShadcnButtonProps,
+} from "../ui/button";
 
-interface ButtonProps extends ShadcnButtonProps {
+export { buttonVariants };
+
+export interface ButtonProps extends ShadcnButtonProps {
   icon?: ReactNode;
   link?: string;
   isLoading?: boolean;

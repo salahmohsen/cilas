@@ -1,12 +1,12 @@
 import Link from "next/link";
 
+import { Button } from "@/components/hoc/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { AtSign } from "lucide-react";
 
@@ -17,7 +17,7 @@ export const UserHoverCard = ({ userName, userBio, userSlug }) => {
         <HoverCardTrigger asChild>
           <Button
             variant="link"
-            className="h-min p-0 text-xs leading-none text-muted-foreground"
+            className="text-muted-foreground h-min p-0 text-xs leading-none"
           >
             {userName}
           </Button>
@@ -37,7 +37,7 @@ export const UserHoverCard = ({ userName, userBio, userSlug }) => {
               ></div>
               <div className="flex items-center pt-2">
                 <AtSign className="mr-2 h-4 w-4 opacity-70" />
-                <Link href={userSlug} className="text-xs text-muted-foreground">
+                <Link href={userSlug} className="text-muted-foreground text-xs">
                   View Profile
                 </Link>
               </div>

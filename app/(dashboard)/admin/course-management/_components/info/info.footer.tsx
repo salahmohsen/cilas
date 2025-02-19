@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import { CardFooter } from "@/components/ui/card";
 import {
   Pagination,
