@@ -1,11 +1,11 @@
 "use client";
 
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Slot } from "@radix-ui/react-slot";
 import { LoaderPinwheel } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { forwardRef, ReactNode } from "react";
+import { forwardRef, ReactNode, useMemo } from "react";
 import { useFormStatus } from "react-dom";
 import {
   buttonVariants,
@@ -15,74 +15,134 @@ import {
 
 export { buttonVariants };
 
-export interface ButtonProps extends Omit<ShadcnButtonProps, "type"> {
+export interface ButtonProps extends ShadcnButtonProps {
   icon?: ReactNode;
   href?: string;
   isLoading?: boolean;
   pendingText?: string;
   pendingIcon?: ReactNode;
-  ariaLabelName?: string;
-  type?: "button" | "submit" | "reset" | "sidebarBtn";
+  isSidebarBtn?: boolean;
+  tooltip?: string;
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ icon, href, asChild = false, isLoading, type, children, ...props }, ref) => {
-    const Comp = asChild ? Slot : "button";
-
-    const buttonContent = (
-      <Comp ref={ref} className="flex items-center gap-2">
-        {icon && !isLoading && <span className="flex h-4 w-4 items-center">{icon}</span>}
-        {isLoading ? (
-          <>
-            <LoaderPinwheel className="animate-spin" />
-            {children}
-          </>
-        ) : (
-          children
-        )}
-      </Comp>
+  (
+    {
+      icon,
+      href,
+      asChild = false,
+      isSidebarBtn,
+      isLoading,
+      type,
+      tooltip,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const buttonContent = useMemo(
+      () => (
+        <span className="flex items-center gap-2">
+          {(isLoading || icon) && (
+            <span className="inline-flex items-center justify-center">
+              {isLoading && type !== "submit" ? (
+                <LoaderPinwheel className="h-4 w-4 animate-spin" />
+              ) : (
+                icon && <span className="flex h-4 w-4 items-center">{icon}</span>
+              )}
+            </span>
+          )}
+          {children}
+        </span>
+      ),
+      [children, icon, isLoading, type],
     );
 
     if (type === "submit") {
       return (
-        <SubmitBtn {...props} ref={ref} type={type} isLoading={isLoading} icon={icon}>
-          {children}
+        <SubmitBtn
+          {...props}
+          ref={ref}
+          className={cn(
+            props.className,
+            "submit-btn",
+            !props.disabled && "cursor-pointer",
+          )}
+          type={type}
+          isLoading={isLoading}
+          icon={icon}
+          asChild={asChild}
+        >
+          {buttonContent}
         </SubmitBtn>
       );
     }
 
-    if (type === "sidebarBtn") {
+    if (isSidebarBtn) {
       return (
-        <SideBarBtn {...props} ref={ref} isLoading={isLoading} icon={icon}>
-          {children}
+        <SideBarBtn
+          {...props}
+          className={props.className}
+          ref={ref}
+          isLoading={isLoading}
+          icon={icon}
+          asChild={asChild}
+        >
+          {buttonContent}
         </SideBarBtn>
       );
     }
 
-    if (href && !asChild) {
+    if (href) {
       return (
-        <Link href={href} className="inline-block">
-          <ShadcnButton
-            {...props}
-            className={cn(props.className, !props.disabled && "cursor-pointer")}
-            ref={ref}
-          >
-            {buttonContent}
-          </ShadcnButton>
+        <Link
+          href={href}
+          className={cn(
+            buttonVariants({ variant: props.variant, size: props.size }),
+            props.className,
+          )}
+          role="button"
+          aria-disabled={props.disabled}
+          tabIndex={props.disabled ? -1 : 0}
+        >
+          {asChild ? children : buttonContent}
         </Link>
       );
     }
 
+    if (tooltip) {
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <ShadcnButton
+              {...props}
+              ref={ref}
+              asChild={asChild}
+              className={cn(!props.disabled && "cursor-pointer", props.className)}
+            >
+              {asChild ? children : buttonContent}
+            </ShadcnButton>
+          </TooltipTrigger>
+          <TooltipContent side="bottom">{tooltip}</TooltipContent>
+        </Tooltip>
+      );
+    }
+
     return (
-      <ShadcnButton {...props} asChild={asChild} ref={ref}>
-        {buttonContent}
+      <ShadcnButton
+        {...props}
+        ref={ref}
+        asChild={asChild}
+        className={cn(!props.disabled && "cursor-pointer", props.className)}
+      >
+        {asChild ? children : buttonContent}
       </ShadcnButton>
     );
   },
 );
 
 const SubmitBtn = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, isLoading, pendingText, pendingIcon, children, ...props }, ref) => {
+  ({ isLoading, pendingText, pendingIcon, children, asChild, icon, ...props }, ref) => {
     const { pending } = useFormStatus();
     const isPending = pending || isLoading;
 
@@ -90,40 +150,62 @@ const SubmitBtn = forwardRef<HTMLButtonElement, ButtonProps>(
       <ShadcnButton
         {...props}
         ref={ref}
+        asChild={asChild}
         type="submit"
-        className={cn(
-          className,
-          "submit-btn",
-          (!isPending || !props.disabled) && "cursor-pointer",
-        )}
         disabled={isPending || props.disabled}
       >
-        <span className="flex items-center gap-2">
-          {isPending
-            ? pendingIcon || <LoaderPinwheel className="animate-spin" />
-            : props.icon && (
-                <span className="flex h-4 w-4 items-center">{props.icon}</span>
-              )}
-          {isPending ? pendingText || children : children}
-        </span>
+        {asChild ? (
+          children
+        ) : (
+          <>
+            {isPending
+              ? pendingIcon || <LoaderPinwheel className="animate-spin" />
+              : icon}
+            {isPending ? pendingText || children : children}
+          </>
+        )}
       </ShadcnButton>
     );
   },
 );
 
 const SideBarBtn = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ ariaLabelName, className, href, icon }: ButtonProps) => {
+  (
+    {
+      name,
+      className,
+      href,
+      asChild,
+      size = "icon",
+      variant = "ghost",
+      isLoading,
+      ...props
+    },
+    ref,
+  ) => {
     const path = usePathname();
 
+    const isOpened = path.includes(name?.toLowerCase().replaceAll(" ", "-") ?? "");
+
     return (
-      <Button
-        aria-label={ariaLabelName}
-        className={cn(`rounded-lg ${path === href ? "bg-muted" : null}`, className)}
-        size="icon"
-        variant="ghost"
+      <ShadcnButton
+        {...props}
+        ref={ref}
+        asChild={asChild}
+        aria-label={name}
+        size={size}
+        variant={variant}
+        className={cn(`rounded-lg ${isOpened && "bg-muted"}`, className)}
       >
-        {icon}
-      </Button>
+        {asChild ? (
+          props.children
+        ) : (
+          <span className="flex items-center gap-2">
+            {props.icon}
+            {props.children}
+          </span>
+        )}
+      </ShadcnButton>
     );
   },
 );
