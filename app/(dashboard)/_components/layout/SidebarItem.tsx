@@ -24,7 +24,7 @@ export function SidebarItem({
             type="sidebarBtn"
             name={name}
             className={cn(className, "cursor-pointer")}
-            link={href}
+            href={href}
             icon={icon}
           />
         </Link>

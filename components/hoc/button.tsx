@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { LoaderPinwheel } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { forwardRef, ReactNode } from "react";
 import { useFormStatus } from "react-dom";
 import {
@@ -14,20 +15,22 @@ import {
 
 export { buttonVariants };
 
-export interface ButtonProps extends ShadcnButtonProps {
+export interface ButtonProps extends Omit<ShadcnButtonProps, "type"> {
   icon?: ReactNode;
-  link?: string;
+  href?: string;
   isLoading?: boolean;
   pendingText?: string;
   pendingIcon?: ReactNode;
+  ariaLabelName?: string;
+  type?: "button" | "submit" | "reset" | "sidebarBtn";
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ icon, link, asChild = false, isLoading, type, children, ...props }, ref) => {
-    const Comp = asChild ? Slot : "span";
+  ({ icon, href, asChild = false, isLoading, type, children, ...props }, ref) => {
+    const Comp = asChild ? Slot : "button";
 
     const buttonContent = (
-      <Comp className="flex items-center gap-2">
+      <Comp ref={ref} className="flex items-center gap-2">
         {icon && !isLoading && <span className="flex h-4 w-4 items-center">{icon}</span>}
         {isLoading ? (
           <>
@@ -42,15 +45,23 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     if (type === "submit") {
       return (
-        <SubmitButton {...props} ref={ref} type={type} isLoading={isLoading} icon={icon}>
+        <SubmitBtn {...props} ref={ref} type={type} isLoading={isLoading} icon={icon}>
           {children}
-        </SubmitButton>
+        </SubmitBtn>
       );
     }
 
-    if (link && !asChild) {
+    if (type === "sidebarBtn") {
       return (
-        <Link href={link} className="inline-block">
+        <SideBarBtn {...props} ref={ref} isLoading={isLoading} icon={icon}>
+          {children}
+        </SideBarBtn>
+      );
+    }
+
+    if (href && !asChild) {
+      return (
+        <Link href={href} className="inline-block">
           <ShadcnButton
             {...props}
             className={cn(props.className, !props.disabled && "cursor-pointer")}
@@ -70,7 +81,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 
-const SubmitButton = forwardRef<HTMLButtonElement, ButtonProps>(
+const SubmitBtn = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, isLoading, pendingText, pendingIcon, children, ...props }, ref) => {
     const { pending } = useFormStatus();
     const isPending = pending || isLoading;
@@ -100,5 +111,23 @@ const SubmitButton = forwardRef<HTMLButtonElement, ButtonProps>(
   },
 );
 
-SubmitButton.displayName = "SubmitButton";
+const SideBarBtn = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ ariaLabelName, className, href, icon }: ButtonProps) => {
+    const path = usePathname();
+
+    return (
+      <Button
+        aria-label={ariaLabelName}
+        className={cn(`rounded-lg ${path === href ? "bg-muted" : null}`, className)}
+        size="icon"
+        variant="ghost"
+      >
+        {icon}
+      </Button>
+    );
+  },
+);
+
+SubmitBtn.displayName = "SubmitButton";
+SideBarBtn.displayName = "SideBarBtn";
 Button.displayName = "Button";
