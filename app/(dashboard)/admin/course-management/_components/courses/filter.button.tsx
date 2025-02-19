@@ -50,8 +50,8 @@ export function FilterButton() {
           role="combobox"
           aria-expanded={open}
           className="flex justify-between gap-2"
+          icon={<Filter className="opacity-50" />}
         >
-          <Filter className="h-4 w-4 shrink-0 opacity-50" />
           {value ? coursesFilter.find((filter) => filter.value === value)?.label : ""}
         </Button>
       </PopoverTrigger>

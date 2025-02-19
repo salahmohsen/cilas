@@ -2,7 +2,6 @@ import React from "react";
 
 import { Button } from "@/components/hoc/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export function SidebarItem({
@@ -21,9 +20,10 @@ export function SidebarItem({
       <TooltipTrigger asChild>
         <Link href={href}>
           <Button
-            type="sidebarBtn"
+            isSidebarBtn
+            asChild
             name={name}
-            className={cn(className, "cursor-pointer")}
+            className={className}
             href={href}
             icon={icon}
           />
