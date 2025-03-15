@@ -10,14 +10,15 @@ import ImageBlockMenu from "@/lib/tiptap/extensions/ImageBlock/components/ImageB
 import { ColumnsMenu } from "@/lib/tiptap/extensions/MultiColumn/menus";
 import { TableColumnMenu, TableRowMenu } from "@/lib/tiptap/extensions/Table/menus";
 import { SidebarState } from "@/lib/tiptap/hooks/useSidebar";
+import { EditorSidebar } from "@/lib/types/editor";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
 import { TextMenu } from "../menus/TextMenu";
 
 type BlockEditorProps = {
   editor: Editor | null;
   leftSidebar: SidebarState;
-  sidebarActiveTab: string;
-  setSidebarActiveTab: (value: string) => void;
+  sidebarActiveTab: EditorSidebar;
+  setSidebarActiveTab: (value: EditorSidebar) => void;
   children?: React.ReactNode;
 };
 
