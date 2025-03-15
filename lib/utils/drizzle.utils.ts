@@ -1,4 +1,4 @@
-import { courseTable } from "@/lib/db/db.schema";
+import { courseTable } from "@/lib/db/schema";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
 import { and, eq, gt, gte, lt, lte } from "drizzle-orm";
 

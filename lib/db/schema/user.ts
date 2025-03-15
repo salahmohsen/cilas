@@ -1,9 +1,9 @@
 import { relations } from "drizzle-orm";
 import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { userRole } from "../../types/drizzle.types";
-import blogAuthorsTable from "./blog.to.author";
 import courseTable from "./course";
 import enrollmentTable from "./enrollment";
+import blogAuthorsTable from "./post.author.to.role";
 import sessionTable from "./session";
 
 const userTable = pgTable("user", {

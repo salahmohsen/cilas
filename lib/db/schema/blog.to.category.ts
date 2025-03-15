@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import blogsTable from "./blog";
-import blogCategoriesTable from "./blog.category";
+import blogsTable from "./post";
+import blogCategoriesTable from "./post.category";
 
 const blogsToCategoriesTable = pgTable(
   "blogs_to_categories",

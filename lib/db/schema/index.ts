@@ -1,7 +1,3 @@
-export { blogRelations, default as blogsTable } from "./blog";
-export { default as blogCategoriesTable, blogCategoryRelations } from "./blog.category";
-export { blogTagRelations, default as blogTagsTable } from "./blog.tags";
-export { blogAuthorRelations, default as blogAuthorsTable } from "./blog.to.author";
 export {
   blogsToCategoriesRelations,
   default as blogsToCategoriesTable,
@@ -10,5 +6,9 @@ export { blogsToTagsRelations, default as blogsToTagsTable } from "./blog.to.tag
 export { courseRelations, default as courseTable } from "./course";
 export { bundleRelations, default as bundleTable } from "./course.bundle";
 export { enrollmentRelations, default as enrollmentTable } from "./enrollment";
+export { blogRelations, default as blogsTable } from "./post";
+export { blogAuthorRelations, default as blogAuthorsTable } from "./post.author.to.role";
+export { default as blogCategoriesTable, blogCategoryRelations } from "./post.category";
+export { blogTagRelations, default as blogTagsTable } from "./post.tag";
 export { sessionRelations, default as sessionTable } from "./session";
 export { userRelations, default as userTable } from "./user";

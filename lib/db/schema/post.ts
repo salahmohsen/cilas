@@ -9,11 +9,11 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import blogAuthorsTable from "./blog.to.author";
 import blogsToCategoriesTable from "./blog.to.category";
 import blogsToTagsTable from "./blog.to.tags";
+import blogAuthorsTable from "./post.author.to.role";
 
-const blogsTable = pgTable("blogs", {
+const postsTable = pgTable("blog_posts", {
   id: serial("id").primaryKey(),
   isDraft: boolean("is_draft").notNull().default(true),
   slug: varchar("slug", { length: 255 }).unique().notNull(),
@@ -32,10 +32,10 @@ const blogsTable = pgTable("blogs", {
     .defaultNow(),
 });
 
-export const blogRelations = relations(blogsTable, ({ many }) => ({
+export const blogRelations = relations(postsTable, ({ many }) => ({
   authors: many(blogAuthorsTable),
   tags: many(blogsToTagsTable),
   categories: many(blogsToCategoriesTable),
 }));
 
-export default blogsTable;
+export default postsTable;
