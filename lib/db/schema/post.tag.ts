@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
-import blogsToTagsTable from "./blog.to.tags";
+import blogsToTagsTable from "./post.to.tag";
 
 const blogTagsTable = pgTable("blog_tags", {
   id: serial("id").primaryKey(),

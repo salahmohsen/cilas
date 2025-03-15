@@ -9,9 +9,9 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import blogsToCategoriesTable from "./blog.to.category";
-import blogsToTagsTable from "./blog.to.tags";
 import blogAuthorsTable from "./post.author.to.role";
+import blogsToCategoriesTable from "./post.to.category";
+import blogsToTagsTable from "./post.to.tag";
 
 const postsTable = pgTable("blog_posts", {
   id: serial("id").primaryKey(),

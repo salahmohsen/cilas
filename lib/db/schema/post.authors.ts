@@ -1,9 +1,10 @@
-import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import userTable from "./user";
+import { relations } from "drizzle-orm";
+import { boolean, integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
 import postsTable from "./post";
 import authorRules from "./post.author.rule";
+import userTable from "./user";
 
-const blogAuthorsTable = pgTable(
+const authorsTable = pgTable(
   "author_to_role",
   {
     authorId: integer("author_id")
@@ -15,6 +16,24 @@ const blogAuthorsTable = pgTable(
     ruleId: integer("rule_id")
       .notNull()
       .references(() => authorRules.id, { onDelete: "cascade" }),
+    isMainAuthor: boolean("is_main_author").default(false),
   },
   (t) => [primaryKey({ columns: [t.authorId, t.postId] })],
 );
+
+const authorsRelations = relations(authorsTable, ({ one }) => ({
+  author: one(userTable, {
+    fields: [authorsTable.authorId],
+    references: [userTable.id],
+  }),
+  post: one(postsTable, {
+    fields: [authorsTable.postId],
+    references: [postsTable.id],
+  }),
+  rule: one(authorRules, {
+    fields: [authorsTable.ruleId],
+    references: [authorRules.id],
+  }),
+}));
+
+export default authorsTable;
