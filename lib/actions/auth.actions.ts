@@ -1,7 +1,7 @@
 "use server";
 
 import { createAuthSession, lucia, validateRequest } from "@/lib/apis/auth.api";
-import { signinSchema, signupSchema } from "@/lib/types/auth.schema";
+import { signinSchema, signupSchema } from "@/lib/types/form.schema";
 import { hash, verify } from "@node-rs/argon2";
 import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";

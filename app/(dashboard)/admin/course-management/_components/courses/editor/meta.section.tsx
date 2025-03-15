@@ -13,7 +13,7 @@ import {
   TimeSlotInput,
 } from "@/components/form-inputs";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CourseSchema } from "@/lib/types/forms.schema";
+import { CourseSchema } from "@/lib/types/form.schema";
 
 type CourseMetadataProps = {
   editMode: boolean;

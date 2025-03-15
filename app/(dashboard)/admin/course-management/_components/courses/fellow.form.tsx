@@ -13,7 +13,7 @@ import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { addFellow } from "@/lib/actions/users.actions";
-import { FellowSchema, fellowSchema } from "@/lib/types/forms.schema";
+import { FellowSchema, fellowSchema } from "@/lib/types/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
@@ -69,7 +69,7 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
             className={`flex gap-2 text-sm font-normal ${
               mode === "commandItem"
                 ? "mt-1 h-auto w-full px-2 py-1.5"
-                : "mx-auto mt-1 h-auto w-32 py-1.5"
+                : "mx-auto mt-1 h-auto py-1.5"
             }`}
           >
             <SquarePlus strokeWidth={1} size={18} /> Add New Fellow

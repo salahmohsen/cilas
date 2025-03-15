@@ -3,7 +3,7 @@
 import { AuthForm } from "@/app/(Auth)/_components/auth";
 import { signin } from "@/lib/actions/auth.actions";
 import { useUserStore } from "@/lib/store/user.slice";
-import { signinSchema, SigninSchema } from "@/lib/types/auth.schema";
+import { signinSchema, SigninSchema } from "@/lib/types/form.schema";
 import { AuthState } from "@/lib/types/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";

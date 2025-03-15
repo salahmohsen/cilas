@@ -13,7 +13,7 @@ import { Button } from "@/components/hoc/button";
 import { Form } from "@/components/ui/form";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/course.slice.types";
-import { bundleSchema, BundleSchema } from "@/lib/types/forms.schema";
+import { bundleSchema, BundleSchema } from "@/lib/types/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";

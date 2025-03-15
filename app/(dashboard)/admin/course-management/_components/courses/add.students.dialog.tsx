@@ -13,7 +13,7 @@ import {
 import { Option } from "@/components/ui/multipleSelector";
 import { searchUsers, updateCourseEnrollments } from "@/lib/actions/users.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { AddStudentSchema, addStudentSchema } from "@/lib/types/forms.schema";
+import { studentSchema, StudentSchema } from "@/lib/types/form.schema";
 import { BasePrevState } from "@/lib/types/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
@@ -32,9 +32,9 @@ export const AddStudentsDialog = ({
   courseId,
   courseStudents,
 }: AddStudentsDialogProps) => {
-  const formMethods = useForm<AddStudentSchema>({
-    resolver: zodResolver(addStudentSchema.schema),
-    defaultValues: addStudentSchema.defaults(courseId, courseStudents),
+  const formMethods = useForm<StudentSchema>({
+    resolver: zodResolver(studentSchema.schema),
+    defaultValues: studentSchema.defaults(courseId, courseStudents),
     mode: "onSubmit",
   });
 
@@ -50,7 +50,7 @@ export const AddStudentsDialog = ({
           </DialogDescription>
         </DialogHeader>
 
-        <FormWrapper<AddStudentSchema, BasePrevState>
+        <FormWrapper<StudentSchema, BasePrevState>
           formMethods={formMethods}
           serverAction={updateCourseEnrollments}
           onSuccess={() => {
@@ -60,7 +60,7 @@ export const AddStudentsDialog = ({
         >
           {({ isPending }) => (
             <>
-              <MultiSelectorInput<AddStudentSchema, "students">
+              <MultiSelectorInput<StudentSchema, "students">
                 name="students"
                 placeholder="Select students"
                 onSearch={searchUsers}

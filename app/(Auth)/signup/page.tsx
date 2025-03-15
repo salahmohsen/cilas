@@ -3,13 +3,12 @@
 import { AuthForm } from "@/app/(Auth)/_components/auth";
 import { signup } from "@/lib/actions/auth.actions";
 import { useUserStore } from "@/lib/store/user.slice";
-import { signupSchema } from "@/lib/types/auth.schema";
+import { signupSchema, SignupSchema } from "@/lib/types/form.schema";
 import { AuthState } from "@/lib/types/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 export default function SignupPage() {
   const { isLogged, userInfo } = useUserStore();
@@ -17,7 +16,7 @@ export default function SignupPage() {
 
   const [signupState, signupAction] = useFormState(signup, {} as AuthState);
 
-  const formMethods = useForm<z.infer<typeof signupSchema>>({
+  const formMethods = useForm<SignupSchema>({
     resolver: zodResolver(signupSchema),
     progressive: false,
     mode: "onSubmit",
