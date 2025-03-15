@@ -12,11 +12,11 @@ import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/course.slice.types";
 import { useContext } from "react";
 import { NotFound } from "../../../../../../components/not-found";
+import { courseNavContext } from "../../page";
 import { CourseItem } from "../courses/course.item";
 import { CourseSkeleton } from "../courses/course.skeleton";
-import { courseNavContext } from "../courses/manage.courses";
 
-export const PublishedTab = () => {
+export const PublishedCourses = () => {
   const { courses, isLoading } = useCourseStore();
 
   const { containerRef } = useContext(courseNavContext);

@@ -2,17 +2,17 @@
 
 import { Option } from "@/components/ui/multipleSelector";
 
-import { enrollmentTable, userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
 import {
-  addStudentSchema,
   fellowSchema,
   FellowSchema,
-  userProfileSchema,
-} from "@/lib/types/forms.schema";
+  profileSchema,
+  studentSchema,
+} from "@/lib/types/form.schema";
 import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { validateRequest } from "../apis/auth.api";
+import { enrollmentTable, userTable } from "../db/schema";
 import { userLocalInfo } from "../types/drizzle.types";
 import { BasePrevState, FellowState } from "../types/users.actions.types";
 
@@ -191,7 +191,7 @@ export const updateCourseEnrollments = async (
 
   try {
     // Validate input
-    const parse = addStudentSchema.schema.safeParse({ students, courseId });
+    const parse = studentSchema.schema.safeParse({ students, courseId });
     if (!parse.success) throw new Error("Invalid form data");
 
     // Convert to simple array of user IDs
@@ -293,7 +293,7 @@ export const updateUserInfo = async (
   const tel = formData.get("tel") as string;
 
   try {
-    const parse = userProfileSchema.schema.safeParse({
+    const parse = profileSchema.schema.safeParse({
       id,
       firstName,
       lastName,

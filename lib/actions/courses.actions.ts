@@ -1,10 +1,10 @@
 "use server";
 
 import { Option } from "@/components/ui/multipleSelector";
-import { courseTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
+import { courseTable } from "@/lib/db/schema";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
-import { courseSchema } from "@/lib/types/forms.schema";
+import { courseSchema } from "@/lib/types/form.schema";
 import {
   courseSchemaToDbSchema,
   formDataToCourseSchema,
@@ -13,7 +13,7 @@ import { uploadImage, UploadingFolder } from "@/lib/utils/cloudinary.utils";
 import { coursesFilter } from "@/lib/utils/drizzle.utils";
 import { and, desc, eq, ilike, inArray, isNull, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { CourseFormState, DeleteCourseState } from "../types/courses.actions.types";
+import { CourseFormState, DeleteCourseState } from "../types/server.actions";
 
 export async function createEditCourse(
   prevState: CourseFormState,

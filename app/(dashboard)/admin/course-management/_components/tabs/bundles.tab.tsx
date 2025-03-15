@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import { BundleItem } from "../bundles/bundle.item";
 import { BundleSkeleton } from "../bundles/bundle.skeleton";
 
-export const BundlesTab = () => {
+export const CourseBundles = () => {
   const { isLoading, bundles, getBundles } = useCourseStore();
 
   useEffect(() => {

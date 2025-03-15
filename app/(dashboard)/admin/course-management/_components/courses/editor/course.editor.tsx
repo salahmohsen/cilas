@@ -6,11 +6,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CourseMetadata } from "./meta.section";
 
 import { ContentInput } from "@/components/form-inputs";
+import {
+  useCourseEditor,
+  useCourseForm,
+  useCourseSidebar,
+  useCourseTab,
+} from "@/lib/hooks/courses";
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { SubmitButtons } from "../editor/submit.buttons";
-import { useCourseEditor, useCourseForm, useCourseSidebar, useCourseTab } from "./hooks";
 
 type CourseFormPropTypes = {
   editMode?: boolean;

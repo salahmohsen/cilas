@@ -7,7 +7,9 @@ type UseCourseEditorProps = { courseData: CourseWithFellowAndStudents | undefine
 type JSONContent = TipTapJSONContent | undefined;
 
 export const useCourseEditor = ({ courseData }: UseCourseEditorProps) => {
-  const [sidebarActiveTab, setSidebarActiveTab] = useState<string>("form");
+  const [sidebarActiveTab, setSidebarActiveTab] = useState<"form" | "tableOfContent">(
+    "form",
+  );
 
   const [enContent, setEnContent] = useState<JSONContent>(
     courseData?.enContent as JSONContent,

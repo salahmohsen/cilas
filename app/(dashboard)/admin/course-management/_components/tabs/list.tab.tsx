@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useCallback } from "react";
 import { FilterButton } from "../courses/filter.button";
 
-export const TabsList = () => {
+export const CoursesTabList = () => {
   const { activeTab, setActiveTab, setFilter } = useCourseStore();
 
   const handleTabClick = useCallback(
