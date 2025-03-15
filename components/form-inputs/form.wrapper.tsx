@@ -1,14 +1,8 @@
+import { serverActionStateBase } from "@/lib/types/server.actions";
 import { useEffect, useRef, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-
-type serverActionStateBase = {
-  success?: boolean;
-  error?: boolean;
-  message: string;
-  data?: unknown;
-};
 
 type FormWrapperProps<
   Schema extends FieldValues,

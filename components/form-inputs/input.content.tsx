@@ -1,10 +1,11 @@
+import { ContentName, TitleName } from "@/lib/types/editor";
 import { JSONContent } from "@tiptap/core";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
 type ContentInputProps = {
-  contentName: "enContent" | "arContent";
-  titleName: "enTitle" | "arTitle";
+  contentName: ContentName;
+  titleName: TitleName;
   content?: JSONContent | undefined;
 };
 
