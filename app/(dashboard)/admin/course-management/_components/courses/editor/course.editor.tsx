@@ -15,6 +15,7 @@ import {
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
+import { ContentName, TitleName } from "@/lib/types/editor";
 import { SubmitButtons } from "../editor/submit.buttons";
 
 type CourseFormPropTypes = {
@@ -139,8 +140,16 @@ export function CourseForm({
             </BlockEditor>
           </TabsContent>
         </Tabs>
-        <ContentInput titleName="arTitle" contentName="arContent" content={arContent} />
-        <ContentInput titleName="enTitle" contentName="enContent" content={enContent} />
+        <ContentInput
+          titleName={TitleName.ar}
+          contentName={ContentName.ar}
+          content={arContent}
+        />
+        <ContentInput
+          titleName={TitleName.en}
+          contentName={ContentName.en}
+          content={enContent}
+        />
       </form>
     </Form>
   );

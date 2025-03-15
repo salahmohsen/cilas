@@ -1,5 +1,6 @@
 import { useBlockEditor } from "@/lib/tiptap/hooks/useBlockEditor";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
+import { EditorSidebar } from "@/lib/types/editor";
 import { JSONContent as TipTapJSONContent } from "@tiptap/core";
 import { useState } from "react";
 
@@ -7,8 +8,8 @@ type UseCourseEditorProps = { courseData: CourseWithFellowAndStudents | undefine
 type JSONContent = TipTapJSONContent | undefined;
 
 export const useCourseEditor = ({ courseData }: UseCourseEditorProps) => {
-  const [sidebarActiveTab, setSidebarActiveTab] = useState<"form" | "tableOfContent">(
-    "form",
+  const [sidebarActiveTab, setSidebarActiveTab] = useState<EditorSidebar>(
+    EditorSidebar.form,
   );
 
   const [enContent, setEnContent] = useState<JSONContent>(
