@@ -3,7 +3,7 @@
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { CourseMetadata } from "./meta.section";
+import { CourseMeta } from "./course.meta";
 
 import { ContentInput } from "@/components/form-inputs";
 import {
@@ -126,7 +126,7 @@ export function CourseForm({
               sidebarActiveTab={sidebarActiveTab}
               setSidebarActiveTab={setSidebarActiveTab}
             >
-              <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
+              <CourseMeta editMode={editMode} fellow={courseData?.fellow} />
             </BlockEditor>
           </TabsContent>
           <TabsContent value="arContent">
@@ -136,7 +136,7 @@ export function CourseForm({
               sidebarActiveTab={sidebarActiveTab}
               setSidebarActiveTab={setSidebarActiveTab}
             >
-              <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
+              <CourseMeta editMode={editMode} fellow={courseData?.fellow} />
             </BlockEditor>
           </TabsContent>
         </Tabs>

@@ -49,6 +49,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
                 options={options}
                 placeholder={loadingPreValues ? "Loading..." : placeholder}
                 triggerSearchOnFocus={triggerSearchOnFocus}
+                className="dark:bg-input/30"
                 emptyIndicator={
                   <p className="flex w-full items-center justify-center text-sm leading-10 text-gray-600 dark:text-gray-400">
                     {emptyMsg}

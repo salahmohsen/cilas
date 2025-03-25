@@ -96,14 +96,21 @@ export const FormWrapper = <
         ref={formRef}
         className={className}
         onSubmit={(e) => {
-          e.preventDefault();
-          formMethods.handleSubmit(() => {
-            const formData = new FormData(formRef.current!);
+          const nativeEvent = e.nativeEvent as SubmitEvent;
+          const submitter = (nativeEvent.submitter as HTMLButtonElement).classList;
 
-            startTransition(() => {
-              formAction(formData);
-            });
-          })(e);
+          if (submitter.contains("submit-btn")) {
+            e.preventDefault();
+            formMethods.handleSubmit(() => {
+              const formData = new FormData(formRef.current!);
+
+              startTransition(() => {
+                formAction(formData);
+              });
+            })(e);
+          } else {
+            e.preventDefault();
+          }
         }}
         action={formAction}
       >

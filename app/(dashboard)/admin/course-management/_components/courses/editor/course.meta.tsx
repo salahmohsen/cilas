@@ -1,4 +1,4 @@
-import { getUsersNamesByRole } from "@/lib/actions/users.actions";
+import { getUsersNames } from "@/lib/actions/users.actions";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { ComboBoxOption } from "@/lib/types/form.inputs.types";
 import { forwardRef, memo, useCallback, useEffect, useState } from "react";
@@ -20,7 +20,7 @@ type CourseMetadataProps = {
   fellow: userLocalInfo | undefined;
 };
 
-export const CourseMetadata = memo(
+export const CourseMeta = memo(
   forwardRef<HTMLDivElement, CourseMetadataProps>(({ editMode, fellow }, ref) => {
     const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
 
@@ -49,14 +49,9 @@ export const CourseMetadata = memo(
     const getFellowsNames = useCallback(async () => {
       try {
         setLoading(true);
-        const data = await getUsersNamesByRole("fellow");
-        const dataFormatted = data.map((fellow) => {
-          return {
-            id: fellow.id,
-            name: `${fellow.firstName} ${fellow.lastName}`,
-          };
-        });
-        setFellowsNames(dataFormatted);
+        const data = await getUsersNames("fellow", true);
+
+        setFellowsNames(data as ComboBoxOption[]);
         setLoading(false);
       } catch (error) {
         if (error instanceof Error)
@@ -169,4 +164,4 @@ export const CourseMetadata = memo(
   }),
 );
 
-CourseMetadata.displayName = "CourseMetadata";
+CourseMeta.displayName = "CourseMetadata";

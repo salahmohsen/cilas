@@ -142,7 +142,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 );
 
 const SubmitBtn = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ isLoading, pendingText, pendingIcon, children, asChild, icon, ...props }, ref) => {
+  (
+    { isLoading, pendingText, pendingIcon, children, asChild, icon, className, ...props },
+    ref,
+  ) => {
     const { pending } = useFormStatus();
     const isPending = pending || isLoading;
 
@@ -152,6 +155,7 @@ const SubmitBtn = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         asChild={asChild}
         type="submit"
+        className={cn(className, "submit-btn")}
         disabled={isPending || props.disabled}
       >
         {asChild ? (

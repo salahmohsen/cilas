@@ -16,7 +16,7 @@ export default function BlogManagement() {
           New Post
         </Button>
         <Button href="/admin/blog-management/collection-new" icon={<Library />}>
-          New collection
+          New Series
         </Button>
       </PageHeader>
       <Tabs defaultValue="published" className={cn(`px-4`)}>

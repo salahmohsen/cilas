@@ -14,6 +14,7 @@ import { generateIdFromEntropySize } from "lucia";
 import { validateRequest } from "../apis/auth.api";
 import { enrollmentTable, userTable } from "../db/schema";
 import { userLocalInfo } from "../types/drizzle.types";
+import { ComboBoxOption } from "../types/form.inputs.types";
 import { BasePrevState, FellowState } from "../types/users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
@@ -105,16 +106,42 @@ export const getUsersByRole = async (role: "user" | "fellow" | "admin") => {
   return users;
 };
 
-export const getUsersNamesByRole = async (role: "user" | "fellow" | "admin") => {
-  const users = await db.query.userTable.findMany({
-    where: eq(userTable.role, role),
-    columns: {
-      id: true,
-      firstName: true,
-      lastName: true,
-    },
-  });
+type User = {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+};
 
+export const getUsersNames = async (
+  role?: "user" | "fellow" | "admin",
+  optionsList?: boolean,
+): Promise<User[] | ComboBoxOption[]> => {
+  let users: User[] | ComboBoxOption[] = [];
+  if (role) {
+    users = await db.query.userTable.findMany({
+      where: eq(userTable.role, role),
+      columns: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    });
+  } else {
+    users = await db.query.userTable.findMany({
+      columns: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    });
+  }
+
+  if (optionsList) {
+    return users.map((user) => ({
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`,
+    }));
+  }
   return users;
 };
 

@@ -108,7 +108,7 @@ export default function BlogEditor() {
                 sidebarActiveTab={sidebarActiveTab}
                 setSidebarActiveTab={setSidebarActiveTab}
               >
-                <BlogMeta />
+                <BlogMeta formMethods={formMethods} />
               </BlockEditor>
             </TabsContent>
             <TabsContent value={ContentName.ar}>

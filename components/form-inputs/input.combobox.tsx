@@ -47,7 +47,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
             {/* Hidden input to keep the field registered */}
             <input hidden name={field.name} value={value} onChange={setValue} />
             <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild className="dark:bg-input/30">
                 <Button
                   variant="outline"
                   role="combobox"

@@ -1,6 +1,10 @@
 import { z } from "zod";
 
-import { optional_file, optional_string } from "@/lib/utils/zodValidation.utils";
+import {
+  optional_file,
+  optional_string,
+  required_string,
+} from "@/lib/utils/zodValidation.utils";
 
 const blogSchema = {
   schema: z
@@ -14,6 +18,8 @@ const blogSchema = {
       excerpt: optional_string,
       featuredImage: optional_file,
       publishedAt: z.date().optional(),
+      mainAuthorId: required_string,
+      coAuthors: z.array(z.string()).optional(),
     })
     .refine((data) => data.arTitle || data.enTitle, {
       path: ["enTitle"],
@@ -41,6 +47,8 @@ const blogSchema = {
     excerpt: "",
     featuredImage: "",
     publishedAt: new Date(),
+    mainAuthorId: "",
+    coAuthors: [],
   },
 };
 

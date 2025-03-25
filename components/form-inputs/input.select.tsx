@@ -45,7 +45,7 @@ const SelectInput = <TData extends FieldValues, TName extends FieldPath<TData>>(
               disabled={field.disabled}
               onValueChange={(selectOption) => handleChange(selectOption, setValue)}
             >
-              <SelectTrigger>
+              <SelectTrigger className="dark:bg-input/30">
                 <SelectValue
                   placeholder={
                     value && typeof value === "string"

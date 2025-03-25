@@ -79,7 +79,6 @@
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",
     "@tiptap/suggestion": "^2.11.5",
-    "@types/node": "20.4.4",
     "@types/react-dom": "18.2.18",
     "@uidotdev/usehooks": "^2.4.1",
     "arctic": "^1.9.1",
@@ -128,8 +127,8 @@
     "@svgr/webpack": "^8.0.1",
     "@tailwindcss/postcss": "^4.0.0",
     "@tailwindcss/typography": "^0.5.16",
-    "@types/node": "^20.12.12",
-    "@types/react": "^18.3.12",
+    "@types/node": "20.17.25",
+    "@types/react": "18.3.19",
     "@types/react-dom": "^18.3.0",
     "@types/sanitize-html": "^2.11.0",
     "@types/styled-components": "^5.1.15",
@@ -143,6 +142,6 @@
     "tailwind-scrollbar": "^4.0.0",
     "tailwindcss": "^4.0.0",
     "tailwindcss-animate": "^1.0.7",
-    "typescript": "^5.4.5"
+    "typescript": "5.8.2"
   }
 }

@@ -1,9 +1,35 @@
-import { BasicInput, DateInput, Textarea } from "@/components/form-inputs";
+import { BasicInput, ComboBoxInput, DateInput, Textarea } from "@/components/form-inputs";
+import { getUsersNames } from "@/lib/actions/users.actions";
+import { ComboBoxOption } from "@/lib/types/form.inputs.types";
 import { BlogSchema } from "@/lib/types/form.schema";
+import { useCallback, useEffect, useState } from "react";
+import { UseFormReturn } from "react-hook-form";
 
-type BlogMetaProps = {};
+type BlogMetaProps = { formMethods: UseFormReturn<BlogSchema> };
 
-export default function BlogMeta({}: BlogMetaProps) {
+export default function BlogMeta({ formMethods }: BlogMetaProps) {
+  const [authors, setAuthors] = useState<ComboBoxOption[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [coAuthors, setCoAuthors] = useState<string[] | undefined>([]);
+
+  const getAuthors = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await getUsersNames(undefined, true);
+      setAuthors(data as ComboBoxOption[]);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+
+  const coAuthor = formMethods.getValues("coAuthors");
+  useEffect(() => {
+    setCoAuthors((prev) => (prev && coAuthor ? [...prev, ...coAuthor] : coAuthor));
+  }, []);
+
+  console.log("coAuthors", coAuthors);
+
   return (
     <div className="space-y-5 p-5">
       <BasicInput<BlogSchema, "slug">
@@ -25,6 +51,28 @@ export default function BlogMeta({}: BlogMetaProps) {
         label="Published At"
         name="publishedAt"
         placeholder="Select publish date..."
+      />
+      <ComboBoxInput<BlogSchema, "mainAuthorId">
+        name="mainAuthorId"
+        label="Main author"
+        placeholder="Select main author..."
+        emptyMsg="User Not Found"
+        searchPlaceholder="Search users..."
+        action={getAuthors}
+        options={authors}
+        // defaultOption={}
+        loading={isLoading}
+      />
+      <ComboBoxInput<BlogSchema, "coAuthors">
+        name="coAuthors"
+        label="Co-Authors"
+        placeholder="Select co-author author..."
+        emptyMsg="User Not Found"
+        searchPlaceholder="Search users..."
+        action={getAuthors}
+        options={authors}
+        // defaultOption={}
+        loading={isLoading}
       />
     </div>
   );

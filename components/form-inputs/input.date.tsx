@@ -34,7 +34,7 @@ const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
           <>
             <input hidden {...field} />
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild className="dark:bg-input/30">
                 <FormControl>
                   <Button
                     variant={"outline"}
