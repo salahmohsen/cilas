@@ -2,7 +2,7 @@
 
 import { FellowForm } from "@/app/(dashboard)/admin/course-management/_components/courses/fellow.form";
 import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   Command,
   CommandEmpty,
@@ -47,7 +47,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
             {/* Hidden input to keep the field registered */}
             <input hidden name={field.name} value={value} onChange={setValue} />
             <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild className="dark:bg-input/30">
                 <Button
                   variant="outline"
                   role="combobox"

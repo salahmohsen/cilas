@@ -1,12 +1,21 @@
 import { google, lucia } from "@/lib/apis/auth.api";
-import { userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
-import { GoogleUser } from "@/lib/types/auth.types";
+import { userTable } from "@/lib/db/schema";
 import { GoogleTokens, OAuth2RequestError } from "arctic";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+
+export interface GoogleUser {
+  sub: string;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
+}
 
 export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);

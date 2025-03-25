@@ -2,18 +2,19 @@
 
 import { Option } from "@/components/ui/multipleSelector";
 
-import { enrollmentTable, userTable } from "@/lib/db/db.schema";
 import db from "@/lib/db/drizzle";
 import {
-  addStudentSchema,
   fellowSchema,
   FellowSchema,
-  userProfileSchema,
-} from "@/lib/types/forms.schema";
+  profileSchema,
+  studentSchema,
+} from "@/lib/types/form.schema";
 import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { validateRequest } from "../apis/auth.api";
+import { enrollmentTable, userTable } from "../db/schema";
 import { userLocalInfo } from "../types/drizzle.types";
+import { ComboBoxOption } from "../types/form.inputs.types";
 import { BasePrevState, FellowState } from "../types/users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
@@ -105,16 +106,42 @@ export const getUsersByRole = async (role: "user" | "fellow" | "admin") => {
   return users;
 };
 
-export const getUsersNamesByRole = async (role: "user" | "fellow" | "admin") => {
-  const users = await db.query.userTable.findMany({
-    where: eq(userTable.role, role),
-    columns: {
-      id: true,
-      firstName: true,
-      lastName: true,
-    },
-  });
+type User = {
+  id: string;
+  firstName: string | null;
+  lastName: string | null;
+};
 
+export const getUsersNames = async (
+  role?: "user" | "fellow" | "admin",
+  optionsList?: boolean,
+): Promise<User[] | ComboBoxOption[]> => {
+  let users: User[] | ComboBoxOption[] = [];
+  if (role) {
+    users = await db.query.userTable.findMany({
+      where: eq(userTable.role, role),
+      columns: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    });
+  } else {
+    users = await db.query.userTable.findMany({
+      columns: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    });
+  }
+
+  if (optionsList) {
+    return users.map((user) => ({
+      id: user.id,
+      name: `${user.firstName} ${user.lastName}`,
+    }));
+  }
   return users;
 };
 
@@ -191,7 +218,7 @@ export const updateCourseEnrollments = async (
 
   try {
     // Validate input
-    const parse = addStudentSchema.schema.safeParse({ students, courseId });
+    const parse = studentSchema.schema.safeParse({ students, courseId });
     if (!parse.success) throw new Error("Invalid form data");
 
     // Convert to simple array of user IDs
@@ -293,7 +320,7 @@ export const updateUserInfo = async (
   const tel = formData.get("tel") as string;
 
   try {
-    const parse = userProfileSchema.schema.safeParse({
+    const parse = profileSchema.schema.safeParse({
       id,
       firstName,
       lastName,

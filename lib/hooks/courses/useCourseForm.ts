@@ -1,9 +1,9 @@
 import { createEditCourse } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/course.slice.types";
-import { CourseFormState } from "@/lib/types/courses.actions.types";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
-import { CourseSchema, courseSchema } from "@/lib/types/forms.schema";
+import { CourseSchema, courseSchema } from "@/lib/types/form.schema";
+import { CourseFormState } from "@/lib/types/server.actions";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";

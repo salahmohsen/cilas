@@ -4,8 +4,8 @@ import { forwardRef, useState } from "react";
 
 import { format } from "date-fns";
 
+import { Button } from "@/components/hoc/button";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -80,10 +80,10 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
               <DropdownMenuTrigger asChild>
                 <Button
                   size="icon"
+                  icon={<Ellipsis />}
                   variant="outline"
-                  className={`h-8 w-8 ${isCourseSelected ? "bg-background text-foreground" : ""}`}
+                  className={`${isCourseSelected && "bg-background text-foreground"}`}
                 >
-                  <Ellipsis className="h-3.5 w-3.5" />
                   <span className="sr-only">More</span>
                 </Button>
               </DropdownMenuTrigger>

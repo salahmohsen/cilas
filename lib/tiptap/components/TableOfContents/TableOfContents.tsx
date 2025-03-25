@@ -1,9 +1,9 @@
 "use client";
 
+import { cn } from "@/lib/tiptap/lib/utils";
+import { TableOfContentsStorage } from "@tiptap-pro/extension-table-of-contents";
 import { Editor as CoreEditor } from "@tiptap/core";
 import { memo, useCallback, useEffect, useState } from "react";
-import { TableOfContentsStorage } from "@tiptap-pro/extension-table-of-contents";
-import { cn } from "@/lib/tiptap/lib/utils";
 
 export type TableOfContentsProps = {
   editor: CoreEditor;
@@ -27,10 +27,12 @@ export const TableOfContents = memo(({ editor, onItemClick }: TableOfContentsPro
     };
     updateData();
 
+    editor.on("create", handler);
     editor.on("update", handler);
     editor.on("selectionUpdate", handler);
 
     return () => {
+      editor.off("create", handler);
       editor.off("update", handler);
       editor.off("selectionUpdate", handler);
     };
@@ -47,9 +49,8 @@ export const TableOfContents = memo(({ editor, onItemClick }: TableOfContentsPro
               style={{ marginLeft: `${1 * item.level - 1}rem` }}
               onClick={onItemClick}
               className={cn(
-                "block w-full truncate rounded bg-opacity-10 p-1 text-sm font-medium text-neutral-500 transition-all hover:bg-black hover:bg-opacity-5 hover:text-neutral-800 dark:text-neutral-300",
-                item.isActive &&
-                  "bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-100",
+                "bg-opacity-10 hover:bg-opacity-5 hover:bg-foreground hover:text-background block truncate rounded p-1 text-sm font-medium transition-all",
+                item.isActive && "text-background bg-foreground",
               )}
             >
               {item.itemIndex}. {item.textContent}

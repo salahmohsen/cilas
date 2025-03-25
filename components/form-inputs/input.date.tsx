@@ -4,7 +4,7 @@ import { FieldPath, FieldValues } from "react-hook-form";
 
 import { FormControl } from "@/components/ui/form";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
@@ -34,7 +34,7 @@ const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
           <>
             <input hidden {...field} />
             <Popover>
-              <PopoverTrigger asChild>
+              <PopoverTrigger asChild className="dark:bg-input/30">
                 <FormControl>
                   <Button
                     variant={"outline"}

@@ -9,7 +9,7 @@ export const optional_string = z.string().min(1).or(emptyStringToNull);
 
 export const required_url = z.string().url().trim().min(1, { message: "Required" });
 
-export const optional_url = z.string().url().min(1);
+export const optional_url = z.string().url().min(1).or(emptyStringToNull);
 
 export const required_email = z
   .string()

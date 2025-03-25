@@ -2,7 +2,7 @@ import { updateBundleCourses } from "@/lib/actions/bundles.actions";
 import { getUnbundledCourses } from "@/lib/actions/courses.actions";
 import { Dispatch, SetStateAction, useCallback, useState } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   Dialog,
   DialogClose,
@@ -74,7 +74,7 @@ export const UpdateCourses = ({
       badgeClassName="rounded-sm"
       disabled={loading}
       emptyIndicator={
-        <p className="flex h-auto w-full flex-col items-center justify-center gap-1 text-sm text-muted-foreground">
+        <p className="text-muted-foreground flex h-auto w-full flex-col items-center justify-center gap-1 text-sm">
           <span>No courses Found</span>
           <span>start typing to search...</span>
         </p>

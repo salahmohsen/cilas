@@ -10,7 +10,7 @@ export type EditorInfoProps = {
 export const EditorInfo = memo(({ characters, words, className }: EditorInfoProps) => {
   return (
     <div className={cn("flex items-center", className)}>
-      <div className="flex justify-center gap-5 text-right text-muted-foreground">
+      <div className="text-muted-foreground flex justify-center gap-5 text-right">
         <div className="text-xs font-semibold">
           {words} {words === 1 ? "word" : "words"}
         </div>

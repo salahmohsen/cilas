@@ -3,14 +3,20 @@
 import { Form } from "@/components/ui/form";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { CourseMetadata } from "./meta.section";
+import { CourseMeta } from "./course.meta";
 
 import { ContentInput } from "@/components/form-inputs";
+import {
+  useCourseEditor,
+  useCourseForm,
+  useCourseSidebar,
+  useCourseTab,
+} from "@/lib/hooks/courses";
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
+import { ContentName, TitleName } from "@/lib/types/editor";
 import { SubmitButtons } from "../editor/submit.buttons";
-import { useCourseEditor, useCourseForm, useCourseSidebar, useCourseTab } from "./hooks";
 
 type CourseFormPropTypes = {
   editMode?: boolean;
@@ -120,7 +126,7 @@ export function CourseForm({
               sidebarActiveTab={sidebarActiveTab}
               setSidebarActiveTab={setSidebarActiveTab}
             >
-              <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
+              <CourseMeta editMode={editMode} fellow={courseData?.fellow} />
             </BlockEditor>
           </TabsContent>
           <TabsContent value="arContent">
@@ -130,12 +136,20 @@ export function CourseForm({
               sidebarActiveTab={sidebarActiveTab}
               setSidebarActiveTab={setSidebarActiveTab}
             >
-              <CourseMetadata editMode={editMode} fellow={courseData?.fellow} />
+              <CourseMeta editMode={editMode} fellow={courseData?.fellow} />
             </BlockEditor>
           </TabsContent>
         </Tabs>
-        <ContentInput titleName="arTitle" contentName="arContent" content={arContent} />
-        <ContentInput titleName="enTitle" contentName="enContent" content={enContent} />
+        <ContentInput
+          titleName={TitleName.ar}
+          contentName={ContentName.ar}
+          content={arContent}
+        />
+        <ContentInput
+          titleName={TitleName.en}
+          contentName={ContentName.en}
+          content={enContent}
+        />
       </form>
     </Form>
   );

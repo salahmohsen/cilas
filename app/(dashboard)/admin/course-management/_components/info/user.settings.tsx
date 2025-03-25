@@ -1,17 +1,17 @@
 import { Avatar } from "@/components/avatar";
-import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
+import { BasicInput, TipTapInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateUserInfo } from "@/lib/actions/users.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
-import { UserProfileSchema, userProfileSchema } from "@/lib/types/forms.schema";
+import { profileSchema, ProfileSchema } from "@/lib/types/form.schema";
 import { BasePrevState } from "@/lib/types/users.actions.types";
 import { uploadImage, UploadingFolder } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserCog, UserPen } from "lucide-react";
+import { ImagePlus, Trash2, UserCog, UserPen } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -31,9 +31,9 @@ export const UserSettings = ({
   const { revalidateCourse } = useCourseStore();
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
-  const formMethods = useForm<UserProfileSchema>({
-    resolver: zodResolver(userProfileSchema.schema),
-    defaultValues: userProfileSchema.defaults(user),
+  const formMethods = useForm<ProfileSchema>({
+    resolver: zodResolver(profileSchema.schema),
+    defaultValues: profileSchema.defaults(user),
     mode: "onChange",
   });
 
@@ -83,7 +83,7 @@ export const UserSettings = ({
         </TabsTrigger>
       </TabsList>
       <TabsContent value="profile" className="m-8 ml-[25%] w-full pl-5">
-        <FormWrapper<UserProfileSchema, BasePrevState>
+        <FormWrapper<ProfileSchema, BasePrevState>
           formMethods={formMethods}
           serverAction={updateUserInfo}
           onSuccess={() => {
@@ -115,7 +115,7 @@ export const UserSettings = ({
                     />
                     <div className="flex gap-2">
                       <Button
-                        className="cursor-pointer"
+                        icon={<ImagePlus />}
                         size="sm"
                         onClick={(e) => {
                           e.preventDefault();
@@ -125,8 +125,8 @@ export const UserSettings = ({
                         Change picture
                       </Button>
                       <Button
+                        icon={<Trash2 />}
                         variant="destructive"
-                        className="cursor-pointer"
                         size="sm"
                         onClick={(e) => {
                           e.preventDefault();
@@ -143,14 +143,14 @@ export const UserSettings = ({
                   </div>
                 </div>
                 <div className="grid w-full grid-cols-2 gap-5">
-                  <BasicInput<UserProfileSchema, "firstName">
+                  <BasicInput<ProfileSchema, "firstName">
                     label="First name"
                     name="firstName"
                     type="text"
                     className="block"
                     placeholder="Type your first name..."
                   />
-                  <BasicInput<UserProfileSchema, "lastName">
+                  <BasicInput<ProfileSchema, "lastName">
                     label="Last name"
                     name="lastName"
                     type="text"
@@ -158,26 +158,26 @@ export const UserSettings = ({
                     placeholder="Type your last name..."
                   />
                 </div>
-                <BasicInput<UserProfileSchema, "userName">
+                <BasicInput<ProfileSchema, "userName">
                   label="Username"
                   name="userName"
                   type="text"
                   placeholder="Type your username..."
                 />
-                <TipTapInput<UserProfileSchema, "bio">
+                <TipTapInput<ProfileSchema, "bio">
                   name="bio"
                   label="Bio"
                   className="col-span-5"
                   editorToolbar={false}
                   placeholder="Click here to start writing your bio..."
                 />
-                <BasicInput<UserProfileSchema, "email">
+                <BasicInput<ProfileSchema, "email">
                   label="Email"
                   name="email"
                   type="email"
                   placeholder="Type your email..."
                 />
-                <BasicInput<UserProfileSchema, "tel">
+                <BasicInput<ProfileSchema, "tel">
                   label="Tel"
                   name="tel"
                   type="tel"
@@ -187,7 +187,8 @@ export const UserSettings = ({
                   <Button variant="secondary" onClick={() => onOpenChange(false)}>
                     Cancel
                   </Button>
-                  <SubmitButton
+                  <Button
+                    type="submit"
                     isLoading={isPending}
                     disabled={
                       !formMethods.formState.isDirty ||
@@ -196,7 +197,7 @@ export const UserSettings = ({
                     }
                   >
                     Save changes
-                  </SubmitButton>
+                  </Button>
                 </DialogFooter>
               </>
             );

@@ -1,4 +1,5 @@
 import * as dotenv from "dotenv";
+import type { Config } from "drizzle-kit";
 import { defineConfig } from "drizzle-kit";
 
 dotenv.config({
@@ -6,10 +7,10 @@ dotenv.config({
 });
 
 export default defineConfig({
-  schema: "./lib/db/db.schema.ts",
-  out: "./lib/db/drizzle",
+  schema: "./lib/db/schema",
+  out: "./lib/db/migrations",
   dialect: "postgresql",
   dbCredentials: {
     url: process.env.NEON_DATABASE_URL!,
   },
-});
+}) satisfies Config;

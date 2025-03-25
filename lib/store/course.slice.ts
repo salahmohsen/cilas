@@ -122,7 +122,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
 
       const formData = new FormData();
       formData.append("courseId", courseId.toString());
-      const result = await deleteCourse({}, formData);
+      const result = await deleteCourse({ message: "" }, formData);
 
       if (result.success) {
         toast.success(result.message, { id: toastId });

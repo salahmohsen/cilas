@@ -1,34 +1,34 @@
-import Link from "next/link";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import { SquarePen } from "lucide-react";
+import { Button } from "@/components/hoc/button";
+import { cn } from "@/lib/utils";
+import { Library, SquarePen } from "lucide-react";
+import { PageHeader } from "../_components/page.header";
 
 export default function BlogManagement() {
   return (
-    <main className="flex w-full flex-col gap-5 p-5">
-      <Card className="flex flex-wrap items-end justify-between gap-5 p-6">
-        <CardHeader className="p-0">
-          <CardTitle>Blog Management</CardTitle>
-          <CardDescription className="max-w-lg text-balance leading-relaxed">
-            Manage blogs: create, update, delete, and filter with ease.
-          </CardDescription>
-        </CardHeader>
-        <CardFooter className="flex flex-wrap items-center gap-2 p-0">
-          <Link href="/dashboard/blog-management/create-blog">
-            <Button>
-              <SquarePen className="mr-2 h-4 w-4" />
-              New Blog
-            </Button>
-          </Link>
-        </CardFooter>
-      </Card>
-    </main>
+    <>
+      <PageHeader
+        title="Blog Management"
+        description="Manage blogs: create, update, delete, and filter with ease."
+      >
+        <Button href="/admin/blog-management/new-post" icon={<SquarePen />}>
+          New Post
+        </Button>
+        <Button href="/admin/blog-management/collection-new" icon={<Library />}>
+          New Series
+        </Button>
+      </PageHeader>
+      <Tabs defaultValue="published" className={cn(`px-4`)}>
+        <TabsList className="*:cursor-pointer">
+          <TabsTrigger value="published">Published</TabsTrigger>
+          <TabsTrigger value="draft">Draft</TabsTrigger>
+          <TabsTrigger value="collections">Series</TabsTrigger>
+        </TabsList>
+        <TabsContent value="published">published.</TabsContent>
+        <TabsContent value="draft">draft.</TabsContent>
+        <TabsContent value="collections">collections.</TabsContent>
+      </Tabs>
+    </>
   );
 }

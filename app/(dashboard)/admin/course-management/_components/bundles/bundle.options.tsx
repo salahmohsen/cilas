@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { Dispatch, SetStateAction, useCallback } from "react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,7 +57,7 @@ export const BundleOptions = ({
         <Button
           size="icon"
           variant="outline"
-          className={`h-8 w-8 bg-background text-foreground`}
+          className={`bg-background text-foreground h-8 w-8`}
         >
           <Ellipsis className="h-3.5 w-3.5" />
           <span className="sr-only">More</span>

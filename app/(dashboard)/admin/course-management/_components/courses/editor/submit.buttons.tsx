@@ -1,4 +1,4 @@
-import { SubmitButton } from "@/components/form-inputs/input.submit";
+import { Button } from "@/components/hoc/button";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
 
@@ -21,27 +21,29 @@ export const SubmitButtons = ({
   const { setFilter } = useCourseStore();
   return (
     <div className="flex gap-2">
-      <SubmitButton
+      <Button
         isLoading={isLoading.secondaryButton}
         variant="secondary"
-        handleOnClick={() => {
+        type="submit"
+        onClick={() => {
           setDraftMode(true);
           setFilter(CoursesFilter.Draft);
         }}
       >
         {editMode && !draftMode ? "Convert To Draft" : "Save Draft"}
-      </SubmitButton>
+      </Button>
 
-      <SubmitButton
+      <Button
         variant="default"
         isLoading={isLoading.primaryButton}
-        handleOnClick={() => {
+        type="submit"
+        onClick={() => {
           setDraftMode(false);
           setFilter(CoursesFilter.AllPublished);
         }}
       >
         {editMode && !draftMode ? "Save Changes" : "Publish Course"}
-      </SubmitButton>
+      </Button>
     </div>
   );
 };

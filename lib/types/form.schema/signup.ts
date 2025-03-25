@@ -5,7 +5,7 @@ import {
 } from "@/lib/utils/zodValidation.utils";
 import { z } from "zod";
 
-export const signupSchema = z
+const signupSchema = z
   .object({
     email: required_email,
     password: required_password,
@@ -16,10 +16,5 @@ export const signupSchema = z
     path: ["passwordConfirmation"],
   });
 
-export const signinSchema = z.object({
-  email: required_email,
-  password: required_password,
-});
-
-export type SigninSchema = z.infer<typeof signinSchema>;
 export type SignupSchema = z.infer<typeof signupSchema>;
+export default signupSchema;

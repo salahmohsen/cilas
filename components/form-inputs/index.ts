@@ -5,9 +5,9 @@ export { default as DateRangeInput } from "./input.date.range";
 export { default as MultiSelectorInput } from "./input.multiselector";
 export { default as SelectInput } from "./input.select";
 export { default as SliderInput } from "./input.slider";
+export { default as Textarea } from "./input.textarea";
 export { default as TimeSlotInput } from "./input.time.slot";
 export { default as TipTapInput } from "./input.tipTap";
 
 export { ContentInput } from "./input.content";
-export { SubmitButton } from "./input.submit";
 export { EditorToolbar } from "./input.tipTap.toolBar";

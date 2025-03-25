@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   Card,
   CardContent,

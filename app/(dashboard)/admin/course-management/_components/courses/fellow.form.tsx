@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   Dialog,
   DialogContent,
@@ -13,14 +13,14 @@ import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { addFellow } from "@/lib/actions/users.actions";
-import { FellowSchema, fellowSchema } from "@/lib/types/forms.schema";
+import { FellowSchema, fellowSchema } from "@/lib/types/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { BasicInput, SubmitButton, TipTapInput } from "@/components/form-inputs";
+import { BasicInput, TipTapInput } from "@/components/form-inputs";
 
 import { useCourseStore } from "@/lib/store/course.slice";
 import { FellowState } from "@/lib/types/users.actions.types";
@@ -69,7 +69,7 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
             className={`flex gap-2 text-sm font-normal ${
               mode === "commandItem"
                 ? "mt-1 h-auto w-full px-2 py-1.5"
-                : "mx-auto mt-1 h-auto w-32 py-1.5"
+                : "mx-auto mt-1 h-auto py-1.5"
             }`}
           >
             <SquarePlus strokeWidth={1} size={18} /> Add New Fellow
@@ -138,8 +138,10 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
                     direction="horizontal"
                   />
                 </div>
-                <DialogFooter className="mr-2 mt-2">
-                  <SubmitButton isLoading={isPending}>Add Fellow</SubmitButton>
+                <DialogFooter className="mt-2 mr-2">
+                  <Button type="submit" isLoading={isPending}>
+                    Add Fellow
+                  </Button>
                 </DialogFooter>
               </form>
             </Form>

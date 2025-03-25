@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import {
   Card,
   CardContent,
@@ -54,6 +54,7 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                       <Button
                         size="icon"
                         variant="outline"
+                        icon={<Copy className="p-0.5" />}
                         className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
                         onClick={() => {
                           navigator.clipboard
@@ -65,7 +66,6 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                             });
                         }}
                       >
-                        <Copy className="h-3 w-3" />
                         <span className="sr-only">Copy Course Name</span>
                       </Button>
                     </CardTitle>

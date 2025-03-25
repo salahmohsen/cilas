@@ -1,17 +1,18 @@
-import { cn } from "@/lib/tiptap/lib/utils";
-import React, { memo, useCallback, useEffect } from "react";
-import { Editor } from "@tiptap/react";
-import { TableOfContents } from "../TableOfContents";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from "@/lib/tiptap/lib/utils";
+import { EditorSidebar } from "@/lib/types/editor";
+import { Editor } from "@tiptap/react";
+import React, { memo, useCallback } from "react";
+import { TableOfContents } from "../TableOfContents";
 
 type SidebarProps = {
   children: React.ReactNode;
   editor: Editor;
   isOpen?: boolean;
   onClose: () => void;
-  activeTab: string;
-  activeTabOnChange: (value: string) => void;
+  activeTab: EditorSidebar;
+  activeTabOnChange: (value: EditorSidebar) => void;
 };
 
 export const Sidebar = memo(
@@ -33,7 +34,7 @@ export const Sidebar = memo(
       <aside className={windowClassName}>
         <Tabs
           value={activeTab}
-          onValueChange={activeTabOnChange}
+          onValueChange={activeTabOnChange as (value: string) => void}
           className="h-[calc(100%-8rem)]"
         >
           <TabsList className="grid w-full grid-cols-2 rounded-none">
@@ -46,7 +47,7 @@ export const Sidebar = memo(
           </TabsContent>
           <TabsContent
             value="tableOfContent"
-            className="m-6 h-full overflow-y-auto overflow-x-hidden"
+            className="m-6 h-full overflow-x-hidden overflow-y-auto"
           >
             <TableOfContents onItemClick={handlePotentialClose} editor={editor} />
           </TabsContent>

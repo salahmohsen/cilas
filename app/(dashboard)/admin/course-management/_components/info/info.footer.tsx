@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/hoc/button";
 import { CardFooter } from "@/components/ui/card";
 import {
   Pagination,
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useContext } from "react";
-import { courseNavContext } from "../courses/manage.courses";
+import { courseNavContext } from "../../page";
 
 export const InfoFooter = ({ className }: { className?: string }) => {
   const { courseInfo } = useCourseStore();
@@ -36,22 +36,22 @@ export const InfoFooter = ({ className }: { className?: string }) => {
           <PaginationItem>
             <Button
               size="icon"
+              icon={<ChevronLeft />}
               variant="outline"
               className="h-8 w-8 lg:h-6 lg:w-6"
               onClick={handlePrev}
             >
-              <ChevronLeft className="h-3.5 w-3.5" />
               <span className="sr-only">Previous Order</span>
             </Button>
           </PaginationItem>
           <PaginationItem>
             <Button
               size="icon"
+              icon={<ChevronRight />}
               variant="outline"
               className="h-8 w-8 lg:h-6 lg:w-6"
               onClick={handleNext}
             >
-              <ChevronRight className="h-3.5 w-3.5" />
               <span className="sr-only">Next Order</span>
             </Button>
           </PaginationItem>

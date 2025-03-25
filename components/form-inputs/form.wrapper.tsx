@@ -1,14 +1,8 @@
+import { serverActionStateBase } from "@/lib/types/server.actions";
 import { useEffect, useRef, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
-
-type serverActionStateBase = {
-  success?: boolean;
-  error?: boolean;
-  message: string;
-  data?: unknown;
-};
 
 type FormWrapperProps<
   Schema extends FieldValues,
@@ -102,14 +96,21 @@ export const FormWrapper = <
         ref={formRef}
         className={className}
         onSubmit={(e) => {
-          e.preventDefault();
-          formMethods.handleSubmit(() => {
-            const formData = new FormData(formRef.current!);
+          const nativeEvent = e.nativeEvent as SubmitEvent;
+          const submitter = (nativeEvent.submitter as HTMLButtonElement).classList;
 
-            startTransition(() => {
-              formAction(formData);
-            });
-          })(e);
+          if (submitter.contains("submit-btn")) {
+            e.preventDefault();
+            formMethods.handleSubmit(() => {
+              const formData = new FormData(formRef.current!);
+
+              startTransition(() => {
+                formAction(formData);
+              });
+            })(e);
+          } else {
+            e.preventDefault();
+          }
         }}
         action={formAction}
       >

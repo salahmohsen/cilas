@@ -8,17 +8,12 @@ import { useFormState } from "react-dom";
 import { BundleState, createBundle, editBundle } from "@/lib/actions/bundles.actions";
 import { getUnbundledCourses } from "@/lib/actions/courses.actions";
 
-import {
-  DateInput,
-  MultiSelectorInput,
-  SelectInput,
-  SubmitButton,
-} from "@/components/form-inputs";
-import { Button } from "@/components/ui/button";
+import { DateInput, MultiSelectorInput, SelectInput } from "@/components/form-inputs";
+import { Button } from "@/components/hoc/button";
 import { Form } from "@/components/ui/form";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/course.slice.types";
-import { bundleSchema, BundleSchema } from "@/lib/types/forms.schema";
+import { bundleSchema, BundleSchema } from "@/lib/types/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -132,10 +127,11 @@ export default function BundleForm({
               Cancel
             </Button>
           </Link>
-          <SubmitButton
+          <Button
             className="w-full"
+            type="submit"
             isLoading={isPending}
-          >{`${editMode ? "Save Changes" : "Create Bundle"}`}</SubmitButton>
+          >{`${editMode ? "Save Changes" : "Create Bundle"}`}</Button>
         </div>
       </form>
     </Form>

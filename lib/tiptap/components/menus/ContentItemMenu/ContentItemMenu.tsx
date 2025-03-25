@@ -3,12 +3,12 @@ import { Toolbar } from "@/lib/tiptap/components/ui/Toolbar";
 import DragHandle from "@tiptap-pro/extension-drag-handle-react";
 import { Editor } from "@tiptap/react";
 
-import * as Popover from "@radix-ui/react-popover";
-import { Surface } from "@/lib/tiptap/components/ui/Surface";
 import { DropdownButton } from "@/lib/tiptap/components/ui/Dropdown";
+import { Surface } from "@/lib/tiptap/components/ui/Surface";
+import * as Popover from "@radix-ui/react-popover";
+import { useEffect, useState } from "react";
 import useContentItemActions from "./hooks/useContentItemActions";
 import { useData } from "./hooks/useData";
-import { useEffect, useState } from "react";
 
 export type ContentItemMenuProps = {
   editor: Editor;
@@ -46,7 +46,7 @@ export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
             </Toolbar.Button>
           </Popover.Trigger>
           <Popover.Content side="bottom" align="start" sideOffset={8}>
-            <Surface className="flex min-w-[16rem] flex-col p-2">
+            <Surface className="flex min-w-[16rem] flex-col p-2 *:cursor-pointer">
               <Popover.Close asChild>
                 <DropdownButton onClick={actions.resetTextFormatting}>
                   <Icon name="RemoveFormatting" />
@@ -69,7 +69,7 @@ export const ContentItemMenu = ({ editor }: ContentItemMenuProps) => {
               <Popover.Close asChild>
                 <DropdownButton
                   onClick={actions.deleteNode}
-                  className="bg-red-500 bg-opacity-10 text-red-500 hover:bg-red-500 hover:bg-opacity-20 dark:text-red-500 dark:hover:bg-red-500 dark:hover:bg-opacity-20 dark:hover:text-red-500"
+                  className="bg-destructive bg-opacity-10 hover:bg-opacity-20 dark:hover:bg-opacity-20 hover:bg-red-500"
                 >
                   <Icon name="Trash2" />
                   Delete

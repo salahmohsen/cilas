@@ -1,42 +1,42 @@
 "use client";
 
 import {
-  Bold as BoldIcon,
-  Strikethrough as Strikethrough,
-  Italic as ItalicIcon,
-  List as ListIcon,
-  ListOrdered as ListOrderedIcon,
-  TextQuote as TextQuoteIcon,
-  Heading4 as Heading4Icon,
-  Minus as MinusIcon,
-  Link2 as Link2Icon,
-  Link2Off as Link2OffIcon,
-  Pilcrow as PilcrowIcon,
-  Undo as UndoIcon,
-  Redo as RedoIcon,
-  AlignJustify as AlignJustifyIcon,
   AlignCenter as AlignCenterIcon,
+  AlignJustify as AlignJustifyIcon,
   AlignLeft as AlignLeftIcon,
   AlignRight as AlignRightIcon,
+  Bold as BoldIcon,
+  Heading4 as Heading4Icon,
+  Italic as ItalicIcon,
+  Link2 as Link2Icon,
+  Link2Off as Link2OffIcon,
+  List as ListIcon,
+  ListOrdered as ListOrderedIcon,
+  Minus as MinusIcon,
+  Pilcrow as PilcrowIcon,
+  Redo as RedoIcon,
   RemoveFormatting as RemoveFormattingIcon,
+  Strikethrough,
+  TextQuote as TextQuoteIcon,
+  Undo as UndoIcon,
 } from "lucide-react";
 
-import { useCallback, useState } from "react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Button } from "@/components/hoc/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
-import { Toggle } from "@/components/ui/toggle";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Toggle } from "@/components/ui/toggle";
+import { useCallback, useState } from "react";
 
 export function EditorToolbar({ editor }: { editor: any }) {
   if (!editor) return null;
 
   return (
-    <div className="flex flex-wrap justify-center rounded-md border border-input bg-transparent">
+    <div className="border-input flex flex-wrap justify-center rounded-md border bg-transparent">
       <Paragraph editor={editor} />
       <Heading editor={editor} />
       <Bold editor={editor} />
@@ -66,7 +66,7 @@ const ToolbarIcon = ({ icon, name }: { icon: React.ReactNode; name: string }) =>
       <HoverCardContent
         side="top"
         align="center"
-        className="w-fit p-2 text-xs text-muted-foreground"
+        className="text-muted-foreground w-fit p-2 text-xs"
       >
         {name}
       </HoverCardContent>

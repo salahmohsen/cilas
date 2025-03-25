@@ -7,12 +7,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { useState } from "react";
 import { UserSettings } from "./user.settings";
@@ -28,18 +23,16 @@ export function UserAvatar({ user, courseId, className }: UserAvatarProps) {
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <TooltipProvider>
-        <Tooltip delayDuration={400}>
-          <TooltipTrigger className="cursor-pointer" asChild>
-            <DialogTrigger>
-              <Avatar user={user} />
-            </DialogTrigger>
-          </TooltipTrigger>
-          <TooltipContent side="bottom">
-            {user.firstName} {user.lastName}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
+      <Tooltip delayDuration={400}>
+        <TooltipTrigger className="cursor-pointer" asChild>
+          <DialogTrigger>
+            <Avatar user={user} />
+          </DialogTrigger>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          {user.firstName} {user.lastName}
+        </TooltipContent>
+      </Tooltip>
 
       {isDialogOpen && (
         <DialogContent className="h-2/3 w-2/3 max-w-full border-0 p-0">
