@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
 import postsTable from "./post";
 import authorRules from "./post.author.rule";
 import userTable from "./user";
@@ -7,7 +7,7 @@ import userTable from "./user";
 const authorsTable = pgTable(
   "author_to_role",
   {
-    authorId: integer("author_id")
+    authorId: text("author_id")
       .notNull()
       .references(() => userTable.id, { onDelete: "cascade" }),
     postId: integer("post_id")

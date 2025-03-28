@@ -1,12 +1,12 @@
 import { relations } from "drizzle-orm";
-import { boolean, integer, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
+import { boolean, integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
 import authorRules from "./post.author.rule";
 import userTable from "./user";
 
 const authorToRoleTable = pgTable(
   "author_to_role",
   {
-    authorId: text("author_id")
+    authorId: integer("author_id")
       .notNull()
       .references(() => userTable.id, { onDelete: "cascade" }),
 
