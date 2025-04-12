@@ -1,6 +1,5 @@
 import { serverActionStateBase } from "@/lib/types/server.actions";
-import { useEffect, useRef, useTransition } from "react";
-import { useFormState } from "react-dom";
+import { useEffect, useRef, useTransition, useActionState } from "react";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -71,7 +70,7 @@ export const FormWrapper = <
   onError,
   className,
 }: FormWrapperProps<Schema, serverActionState>) => {
-  const [formState, formAction] = useFormState(
+  const [formState, formAction] = useActionState(
     serverAction,
     {} as Awaited<serverActionState>,
   );

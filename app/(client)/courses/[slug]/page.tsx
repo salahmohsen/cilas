@@ -1,7 +1,8 @@
 import { getPublicCourseById } from "@/lib/actions/courses.actions";
 import { Course } from "../../_components/courses/courses";
 
-const page = async ({ params }) => {
+const page = async props => {
+  const params = await props.params;
   const { slug } = params;
   const courseId = slug.split("-").slice(-1)[0];
   const course = await getPublicCourseById(courseId);

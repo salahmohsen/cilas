@@ -1,7 +1,7 @@
 import { getUsersNames } from "@/lib/actions/users.actions";
 import { userLocalInfo } from "@/lib/types/drizzle.types";
 import { ComboBoxOption } from "@/lib/types/form.inputs.types";
-import { forwardRef, memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useEffect, useState } from "react";
 
 import {
   BasicInput,
@@ -21,7 +21,15 @@ type CourseMetadataProps = {
 };
 
 export const CourseMeta = memo(
-  forwardRef<HTMLDivElement, CourseMetadataProps>(({ editMode, fellow }, ref) => {
+  (
+    {
+      ref,
+      editMode,
+      fellow
+    }: CourseMetadataProps & {
+      ref: React.RefObject<HTMLDivElement>;
+    }
+  ) => {
     const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
 
     const { fellow: fellowState } = useCourseStore();
@@ -161,7 +169,7 @@ export const CourseMeta = memo(
         />
       </div>
     );
-  }),
+  },
 );
 
 CourseMeta.displayName = "CourseMetadata";

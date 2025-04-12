@@ -18,7 +18,7 @@ export function SidebarItem({
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Link href={href}>
+        <Link href={href} >
           <Button
             isSidebarBtn
             asChild

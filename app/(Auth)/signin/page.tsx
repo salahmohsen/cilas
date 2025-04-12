@@ -1,3 +1,4 @@
+import { useActionState } from "react";
 "use client";
 
 import { AuthForm } from "@/app/(Auth)/_components/auth";
@@ -7,14 +8,13 @@ import { signinSchema, SigninSchema } from "@/lib/types/form.schema";
 import { AuthState } from "@/lib/types/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
-import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 
 export default function SigninPage() {
   const { isLogged, userInfo } = useUserStore();
   if (isLogged && userInfo) redirect(`/${userInfo.role}`);
 
-  const [signinState, signinAction] = useFormState(signin, {} as AuthState);
+  const [signinState, signinAction] = useActionState(signin, {} as AuthState);
 
   const formMethods = useForm<SigninSchema>({
     resolver: zodResolver(signinSchema),

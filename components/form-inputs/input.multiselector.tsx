@@ -41,7 +41,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
         const setValue = field.onChange;
 
         return (
-          <>
+          <div>
             <input hidden name={name} value={JSON.stringify(value)} onChange={setValue} />
 
             <div onBlur={field.onBlur} ref={field.ref} className="w-full">
@@ -70,7 +70,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
                 {...props}
               />
             </div>
-          </>
+          </div>
         );
       }}
     </InputWrapper>

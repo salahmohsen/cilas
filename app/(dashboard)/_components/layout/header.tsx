@@ -1,5 +1,4 @@
 "use client";
-1234;
 import Image from "next/image";
 import Link from "next/link";
 
@@ -39,7 +38,7 @@ export function LayoutHeader({ className }: { className: string }) {
             <Link
               href="/"
               className="hover:bg-accent flex h-full w-16 items-center justify-center border-r"
-            >
+              >
               <Image src={logo} alt="Cilas" width={20} className="h-auto dark:invert" />
             </Link>
           </div>

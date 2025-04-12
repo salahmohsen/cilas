@@ -31,7 +31,7 @@ const TipTapInput = <TData extends FieldValues, TName extends FieldPath<TData>>(
         const setValue = field.onChange;
 
         return (
-          <>
+          <div>
             <input hidden name={name} value={value} onChange={setValue} />
             <Editor
               editorRef={field.ref}
@@ -42,7 +42,7 @@ const TipTapInput = <TData extends FieldValues, TName extends FieldPath<TData>>(
               placeholder={placeholder ?? ""}
               editorToolbar={editorToolbar}
             />
-          </>
+          </div>
         );
       }}
     </InputWrapper>

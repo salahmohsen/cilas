@@ -21,7 +21,7 @@ export const CoursesTabList = () => {
   return (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <TabsListUi>
-        <Link href={`/admin/course-management?tab=${Tab.Published}`}>
+        <Link href={`/admin/course-management?tab=${Tab.Published}`} >
           <TabsTrigger
             value={Tab.Published}
             id={Tab.Published}
@@ -31,7 +31,7 @@ export const CoursesTabList = () => {
           </TabsTrigger>
         </Link>
 
-        <Link href={`/admin/course-management?tab=${Tab.Draft}`}>
+        <Link href={`/admin/course-management?tab=${Tab.Draft}`} >
           <TabsTrigger
             value={Tab.Draft}
             id={Tab.Draft}
@@ -41,7 +41,7 @@ export const CoursesTabList = () => {
           </TabsTrigger>
         </Link>
 
-        <Link href={`/admin/course-management?tab=${Tab.Bundles}`}>
+        <Link href={`/admin/course-management?tab=${Tab.Bundles}`} >
           <TabsTrigger
             value={Tab.Bundles}
             id={Tab.Bundles}

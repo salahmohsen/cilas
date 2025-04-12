@@ -7,8 +7,7 @@ import { CourseFormState } from "@/lib/types/server.actions";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
-import { useFormState } from "react-dom";
+import { useCallback, useEffect, useRef, useState, useTransition, useActionState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
@@ -43,7 +42,7 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
   const [isPending, startTransition] = useTransition();
 
   // Setup useFormState for creating/editing course
-  const [courseState, courseAction] = useFormState(
+  const [courseState, courseAction] = useActionState(
     createEditCourse,
     {} as CourseFormState,
   );

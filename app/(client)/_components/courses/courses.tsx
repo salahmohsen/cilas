@@ -76,7 +76,10 @@ export const Course = async ({
             </h3>
           )}
           {!isOpen && (
-            <Link href={`/courses/${titleSlug}`} className="decoration-1 hover:underline">
+            <Link
+              href={`/courses/${titleSlug}`}
+              className="decoration-1 hover:underline"
+              >
               <h3
                 className={`${yesevaOne.className} ${amiri.className} prose flex text-3xl capitalize`}
               >

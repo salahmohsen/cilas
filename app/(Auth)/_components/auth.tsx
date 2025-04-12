@@ -161,7 +161,7 @@ export function AuthForm({
                 >
                   {authMode === "signin" ? "Sign in" : "Sign up"}
                 </Button>
-                <Link href="/signin/google">
+                <Link href="/signin/google" >
                   <Button
                     type="button"
                     variant="outline"
@@ -179,7 +179,7 @@ export function AuthForm({
                     <Link
                       href={`/${authMode === "signin" ? "signup" : "signin"}`}
                       className="underline"
-                    >
+                      >
                       {authMode === "signin" ? "Sign up" : "Sign in"}
                     </Link>
                   </div>

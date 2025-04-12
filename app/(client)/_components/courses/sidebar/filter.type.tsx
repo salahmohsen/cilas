@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowUpCircle, CheckCircle2, Circle, LucideIcon } from "lucide-react";
-import * as React from "react";
+import React, * as React from "react";
 
 import { Button } from "@/components/hoc/button";
 import {

@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { useEffect, useRef, useTransition } from "react";
-import { useFormState } from "react-dom";
+import { useActionState, useEffect, useRef, useTransition } from "react";
 
 import { BundleState, createBundle, editBundle } from "@/lib/actions/bundles.actions";
 import { getUnbundledCourses } from "@/lib/actions/courses.actions";
@@ -31,7 +30,7 @@ export default function BundleForm({
   const formRef = useRef<HTMLFormElement>(null);
   const [isPending, startTransition] = useTransition();
 
-  const [bundleState, bundleAction] = useFormState(
+  const [bundleState, bundleAction] = useActionState(
     editMode && bundleId ? editBundle : createBundle,
     {} as BundleState,
   );
@@ -122,7 +121,10 @@ export default function BundleForm({
           />
         </fieldset>
         <div className="my-8 flex gap-5">
-          <Link href={`/admin/course-management?tab=${Tab.Bundles}`} className="w-full">
+          <Link
+            href={`/admin/course-management?tab=${Tab.Bundles}`}
+            className="w-full"
+            >
             <Button variant="secondary" className="w-full">
               Cancel
             </Button>

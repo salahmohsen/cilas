@@ -31,7 +31,7 @@ const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
         const setValue = field.onChange;
 
         return (
-          <>
+          <div>
             <input hidden {...field} />
             <Popover>
               <PopoverTrigger asChild className="dark:bg-input/30">
@@ -63,7 +63,7 @@ const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
                 />
               </PopoverContent>
             </Popover>
-          </>
+          </div>
         );
       }}
     </InputWrapper>

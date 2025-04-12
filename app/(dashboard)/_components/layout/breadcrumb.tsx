@@ -1,13 +1,11 @@
 "use client";
 
 import {
-  Breadcrumb,
-  BreadcrumbEllipsis,
-  BreadcrumbItem,
+  Breadcrumb, BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
-  BreadcrumbSeparator,
+  BreadcrumbSeparator
 } from "@/components/ui/breadcrumb";
 
 import Link from "next/link";
@@ -56,7 +54,7 @@ function Item({ item }) {
     <>
       <BreadcrumbItem>
         <BreadcrumbLink asChild>
-          <Link className="capitalize" href={item.href}>
+          <Link className="capitalize" href={item.href} >
             {item.name}
           </Link>
         </BreadcrumbLink>
