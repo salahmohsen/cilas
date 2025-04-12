@@ -38,7 +38,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.variable} ${ibmPlexSansArabic.variable} min-w-screen mx-10 mt-10`}
+        className={`${inter.variable} ${ibmPlexSansArabic.variable} mx-10 mt-10 min-w-screen`}
       >
         <header className="mb-20 flex flex-col items-center justify-between gap-5 md:flex-row md:gap-10">
           <Link href="/" className="flex h-auto flex-col items-center gap-5 md:flex-row">

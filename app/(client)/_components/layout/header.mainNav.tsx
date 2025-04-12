@@ -19,23 +19,23 @@ import PigeonTower from "@/public/pigeonTower.svg";
 export function MainNav() {
   return (
     <nav>
-      <NavigationMenu className="[&>.absolute>.relative]:mt-0 [&>.absolute>.relative]:rounded-t-none [&>.absolute>.relative]:border-t-0 [&>.absolute]:-right-3 [&>.absolute]:left-auto [&>.absolute]:mt-5">
+      <NavigationMenu className="[&>.absolute]:-right-3 [&>.absolute]:left-auto [&>.absolute]:mt-5 [&>.absolute>.relative]:mt-0 [&>.absolute>.relative]:rounded-t-none [&>.absolute>.relative]:border-t-0">
         <NavigationMenuList>
-          <NavigationMenuItem className="left-[unset] right-0">
+          <NavigationMenuItem className="right-0 left-[unset]">
             <NavigationMenuTrigger>Admissions</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]">
                 <li className="row-span-3">
                   <NavigationMenuLink asChild>
                     <a
-                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-linear-to-b from-muted/50 to-muted p-6 no-underline outline-hidden focus:shadow-md"
+                      className="from-muted/50 to-muted flex h-full w-full flex-col justify-end rounded-md bg-linear-to-b p-6 no-underline outline-hidden select-none focus:shadow-md"
                       href="/courses"
                     >
                       <Image src={PigeonTower} alt="bridge programme" />
-                      <div className="mb-2 mt-4 text-lg font-medium">
+                      <div className="mt-4 mb-2 text-lg font-medium">
                         Bridge programme
                       </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
+                      <p className="text-muted-foreground text-sm leading-tight">
                         CILAS invites students from all walks of life to one year
                         co-learning journey
                       </p>
@@ -92,13 +92,13 @@ const ListItem = React.forwardRef<
         <a
           ref={ref}
           className={cn(
-            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline outline-hidden transition-colors select-none",
             className,
           )}
           {...props}
         >
-          <div className="text-sm font-medium leading-none">{title}</div>
-          <p className="line-clamp-3 text-sm leading-snug text-muted-foreground">
+          <div className="text-sm leading-none font-medium">{title}</div>
+          <p className="text-muted-foreground line-clamp-3 text-sm leading-snug">
             {children}
           </p>
         </a>

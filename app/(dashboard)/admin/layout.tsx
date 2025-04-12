@@ -46,7 +46,7 @@ export default async function RootLayout({
     <RootProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${inter.variable} ${ibmPlexSansArabic.variable} max-w-screen text-pretty bg-background leading-relaxed antialiased`}
+          className={`${inter.variable} ${ibmPlexSansArabic.variable} bg-background max-w-screen leading-relaxed text-pretty antialiased`}
           id="dashboard"
         >
           <ThemeProvider

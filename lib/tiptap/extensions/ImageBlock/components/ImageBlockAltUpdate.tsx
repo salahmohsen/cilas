@@ -39,7 +39,7 @@ export const ImageBlockAltUpdate = ({ onUpdate, editor }) => {
         side="bottom"
         align="start"
         sideOffset={8}
-        className="flex flex-col gap-2 rounded-md bg-background p-2"
+        className="bg-background flex flex-col gap-2 rounded-md p-2"
       >
         <Surface className="p-2" withBorder={false}>
           <Textarea

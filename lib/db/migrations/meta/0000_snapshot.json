@@ -78,9 +78,7 @@
         "course_bundle_name_unique": {
           "name": "course_bundle_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
+          "columns": ["name"]
         }
       },
       "policies": {},
@@ -228,12 +226,8 @@
           "name": "course_fellow_id_user_id_fk",
           "tableFrom": "course",
           "tableTo": "user",
-          "columnsFrom": [
-            "fellow_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["fellow_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -241,12 +235,8 @@
           "name": "course_bundle_id_course_bundle_id_fk",
           "tableFrom": "course",
           "tableTo": "course_bundle",
-          "columnsFrom": [
-            "bundle_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["bundle_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -306,12 +296,8 @@
           "name": "course_enrollment_course_id_course_id_fk",
           "tableFrom": "course_enrollment",
           "tableTo": "course",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -319,12 +305,8 @@
           "name": "course_enrollment_user_id_user_id_fk",
           "tableFrom": "course_enrollment",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -332,10 +314,7 @@
       "compositePrimaryKeys": {
         "course_enrollment_course_id_user_id_pk": {
           "name": "course_enrollment_course_id_user_id_pk",
-          "columns": [
-            "course_id",
-            "user_id"
-          ]
+          "columns": ["course_id", "user_id"]
         }
       },
       "uniqueConstraints": {},
@@ -379,12 +358,8 @@
           "name": "author_to_role_author_id_user_id_fk",
           "tableFrom": "author_to_role",
           "tableTo": "user",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["author_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -392,12 +367,8 @@
           "name": "author_to_role_post_id_blog_posts_id_fk",
           "tableFrom": "author_to_role",
           "tableTo": "blog_posts",
-          "columnsFrom": [
-            "post_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["post_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -405,12 +376,8 @@
           "name": "author_to_role_rule_id_blog_posts_rules_id_fk",
           "tableFrom": "author_to_role",
           "tableTo": "blog_posts_rules",
-          "columnsFrom": [
-            "rule_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["rule_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -418,10 +385,7 @@
       "compositePrimaryKeys": {
         "author_to_role_author_id_post_id_pk": {
           "name": "author_to_role_author_id_post_id_pk",
-          "columns": [
-            "author_id",
-            "post_id"
-          ]
+          "columns": ["author_id", "post_id"]
         }
       },
       "uniqueConstraints": {},
@@ -479,23 +443,17 @@
         "post_categories_en_name_unique": {
           "name": "post_categories_en_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "en_name"
-          ]
+          "columns": ["en_name"]
         },
         "post_categories_ar_name_unique": {
           "name": "post_categories_ar_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "ar_name"
-          ]
+          "columns": ["ar_name"]
         },
         "post_categories_slug_unique": {
           "name": "post_categories_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -589,9 +547,7 @@
         "blog_posts_slug_unique": {
           "name": "blog_posts_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -621,12 +577,8 @@
           "name": "blogs_to_categories_blog_id_blog_posts_id_fk",
           "tableFrom": "blogs_to_categories",
           "tableTo": "blog_posts",
-          "columnsFrom": [
-            "blog_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["blog_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -634,12 +586,8 @@
           "name": "blogs_to_categories_category_id_post_categories_id_fk",
           "tableFrom": "blogs_to_categories",
           "tableTo": "post_categories",
-          "columnsFrom": [
-            "category_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["category_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -647,10 +595,7 @@
       "compositePrimaryKeys": {
         "blogs_to_categories_blog_id_category_id_pk": {
           "name": "blogs_to_categories_blog_id_category_id_pk",
-          "columns": [
-            "blog_id",
-            "category_id"
-          ]
+          "columns": ["blog_id", "category_id"]
         }
       },
       "uniqueConstraints": {},
@@ -681,12 +626,8 @@
           "name": "blogs_to_tags_blog_id_blog_posts_id_fk",
           "tableFrom": "blogs_to_tags",
           "tableTo": "blog_posts",
-          "columnsFrom": [
-            "blog_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["blog_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -694,12 +635,8 @@
           "name": "blogs_to_tags_tag_id_blog_tags_id_fk",
           "tableFrom": "blogs_to_tags",
           "tableTo": "blog_tags",
-          "columnsFrom": [
-            "tag_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["tag_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -707,10 +644,7 @@
       "compositePrimaryKeys": {
         "blogs_to_tags_blog_id_tag_id_pk": {
           "name": "blogs_to_tags_blog_id_tag_id_pk",
-          "columns": [
-            "blog_id",
-            "tag_id"
-          ]
+          "columns": ["blog_id", "tag_id"]
         }
       },
       "uniqueConstraints": {},
@@ -768,23 +702,17 @@
         "blog_tags_en_name_unique": {
           "name": "blog_tags_en_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "en_name"
-          ]
+          "columns": ["en_name"]
         },
         "blog_tags_ar_name_unique": {
           "name": "blog_tags_ar_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "ar_name"
-          ]
+          "columns": ["ar_name"]
         },
         "blog_tags_slug_unique": {
           "name": "blog_tags_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -820,12 +748,8 @@
           "name": "session_user_id_user_id_fk",
           "tableFrom": "session",
           "tableTo": "user",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -929,23 +853,17 @@
         "user_google_id_unique": {
           "name": "user_google_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "google_id"
-          ]
+          "columns": ["google_id"]
         },
         "user_email_unique": {
           "name": "user_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         },
         "user_user_name_unique": {
           "name": "user_user_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_name"
-          ]
+          "columns": ["user_name"]
         }
       },
       "policies": {},
@@ -988,16 +906,12 @@
         "blog_posts_rules_ar_name_unique": {
           "name": "blog_posts_rules_ar_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "ar_name"
-          ]
+          "columns": ["ar_name"]
         },
         "blog_posts_rules_en_name_unique": {
           "name": "blog_posts_rules_en_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "en_name"
-          ]
+          "columns": ["en_name"]
         }
       },
       "policies": {},
@@ -1065,12 +979,8 @@
           "name": "series_posts_series_id_series_id_fk",
           "tableFrom": "series_posts",
           "tableTo": "series",
-          "columnsFrom": [
-            "series_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["series_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1078,12 +988,8 @@
           "name": "series_posts_post_id_blog_posts_id_fk",
           "tableFrom": "series_posts",
           "tableTo": "blog_posts",
-          "columnsFrom": [
-            "post_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["post_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1091,10 +997,7 @@
       "compositePrimaryKeys": {
         "series_posts_series_id_post_id_pk": {
           "name": "series_posts_series_id_post_id_pk",
-          "columns": [
-            "series_id",
-            "post_id"
-          ]
+          "columns": ["series_id", "post_id"]
         }
       },
       "uniqueConstraints": {},

@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { createContext, useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 import { CourseInfo } from "@/app/(dashboard)/admin/course-management/_components/info/info";
 
@@ -20,14 +20,7 @@ import { CourseBundles } from "./_components/tabs/bundles.tab";
 import { DraftCourses } from "./_components/tabs/draft.tab";
 import { CoursesTabList } from "./_components/tabs/list.tab";
 import { PublishedCourses } from "./_components/tabs/published.tab";
-
-type CourseNavContext = {
-  handleNext: () => void;
-  handlePrev: () => void;
-  containerRef: React.RefObject<HTMLUListElement>;
-};
-
-export const courseNavContext = createContext<CourseNavContext>({} as CourseNavContext);
+import { courseNavContext } from "./_context/course.nav.context";
 
 export default function ManageCoursesPage() {
   const { width } = useWindowSize();

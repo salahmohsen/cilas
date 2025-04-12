@@ -18,7 +18,7 @@ const Loading = () => {
       <div className="flex">
         {/* Content */}
         <div className="flex w-full flex-col sm:w-2/3">
-          <div className="flex h-10 w-full items-center justify-center gap-2 bg-muted/50">
+          <div className="bg-muted/50 flex h-10 w-full items-center justify-center gap-2">
             <Skeleton className="h-8 w-32" />
             <Skeleton className="h-8 w-32" />
           </div>
@@ -37,7 +37,7 @@ const Loading = () => {
         </div>
         {/* Sidebar */}
         <div className="hidden h-full w-full border-l sm:w-1/3 md:block">
-          <div className="flex h-10 w-full items-center justify-center gap-2 bg-muted/50 px-5">
+          <div className="bg-muted/50 flex h-10 w-full items-center justify-center gap-2 px-5">
             <Skeleton className="h-8 w-32"></Skeleton>
             <Skeleton className="h-8 w-32"></Skeleton>
           </div>

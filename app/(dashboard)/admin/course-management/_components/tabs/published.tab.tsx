@@ -12,7 +12,7 @@ import { useCourseStore } from "@/lib/store/course.slice";
 import { Tab } from "@/lib/types/course.slice.types";
 import { useContext } from "react";
 import { NotFound } from "../../../../../../components/not-found";
-import { courseNavContext } from "../../page";
+import { courseNavContext } from "../../_context/course.nav.context";
 import { CourseItem } from "../courses/course.item";
 import { CourseSkeleton } from "../courses/course.skeleton";
 

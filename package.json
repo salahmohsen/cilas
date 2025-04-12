@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
-    "@icons-pack/react-simple-icons": "^9.5.0",
+    "@icons-pack/react-simple-icons": "^9.7.0",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "@neondatabase/serverless": "^0.10.4",
     "@node-rs/argon2": "^1.8.3",

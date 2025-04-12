@@ -39,14 +39,14 @@ export const Tooltip = ({
   const renderTooltip = useCallback(
     (attrs: TippyProps) => (
       <span
-        className="z-999 flex items-center gap-2 rounded-lg border border-border bg-popover px-2.5 py-1 text-popover-foreground shadow-xs"
+        className="border-border bg-popover text-popover-foreground z-999 flex items-center gap-2 rounded-lg border px-2.5 py-1 shadow-xs"
         tabIndex={-1}
         data-placement={attrs["data-placement"]}
         data-reference-hidden={attrs["data-reference-hidden"]}
         data-escaped={attrs["data-escaped"]}
       >
         {title && (
-          <span className="text-xs font-medium text-popover-foreground">{title}</span>
+          <span className="text-popover-foreground text-xs font-medium">{title}</span>
         )}
         {shortcut && (
           <span className="flex items-center gap-0.5">

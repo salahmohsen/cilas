@@ -26,7 +26,7 @@
 
   /* Columns */
   div[data-type="columns"] {
-    @apply mb-12 mt-14 grid gap-4;
+    @apply mt-14 mb-12 grid gap-4;
   }
 
   div[data-type="columns"].layout-sidebar-left {

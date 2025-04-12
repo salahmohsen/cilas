@@ -1,8 +1,10 @@
-import type { NextConfig } from "next";
+/** @type {import('next').NextConfig} */
 
 
-const nextConfig:NextConfig = {
-  serverExternalPackages: ["@node-rs/argon2"],
+const nextConfig = {
+  experimental: {
+   serverComponentsExternalPackages: ["@node-rs/argon2"],
+  },
   
 
   images: {

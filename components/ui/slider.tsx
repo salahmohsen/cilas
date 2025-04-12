@@ -175,13 +175,13 @@ const Slider = React.forwardRef(
         value={localValues}
         onValueChange={handleValueChange}
         className={cn(
-          "relative flex w-full touch-none select-none items-center pb-8",
+          "relative flex w-full touch-none items-center pb-8 select-none",
           className,
         )}
         {...props}
       >
-        <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20">
-          <SliderPrimitive.Range className="absolute h-full bg-primary" />
+        <SliderPrimitive.Track className="bg-primary/20 relative h-1.5 w-full grow overflow-hidden rounded-full">
+          <SliderPrimitive.Range className="bg-primary absolute h-full" />
         </SliderPrimitive.Track>
         <div ref={sliderRef} className="absolute inset-0 -mt-[5px]">
           {localValues.map((value, index) => (
@@ -199,7 +199,7 @@ const Slider = React.forwardRef(
                 </span>
               </div>
 
-              <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow-sm transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
+              <SliderPrimitive.Thumb className="border-primary/50 bg-background focus-visible:ring-ring block h-4 w-4 rounded-full border shadow-sm transition-colors focus-visible:ring-1 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50" />
             </React.Fragment>
           ))}
         </div>

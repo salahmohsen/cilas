@@ -26,7 +26,7 @@ export default function BlogMeta({ formMethods }: BlogMetaProps) {
   const coAuthor = formMethods.getValues("coAuthors");
   useEffect(() => {
     setCoAuthors((prev) => (prev && coAuthor ? [...prev, ...coAuthor] : coAuthor));
-  }, []);
+  }, [coAuthor]);
 
   console.log("coAuthors", coAuthors);
 
