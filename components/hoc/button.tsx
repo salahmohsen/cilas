@@ -199,7 +199,10 @@ const SideBarBtn = forwardRef<HTMLButtonElement, ButtonProps>(
         aria-label={name}
         size={size}
         variant={variant}
-        className={cn(`rounded-lg ${isOpened && "bg-muted"}`, className)}
+        className={cn(
+          `bg-accent h-10 w-10 rounded-full ${isOpened && "bg-neutral-300"}`,
+          className,
+        )}
       >
         {asChild ? (
           props.children

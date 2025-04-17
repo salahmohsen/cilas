@@ -159,6 +159,12 @@ export const CourseMeta = memo(
           label="Time Slot"
           placeholder="Start Time"
         />
+        {/* <SubmitButtons
+          isLoading={isLoading}
+          editMode={editMode}
+          draftMode={draftMode}
+          setDraftMode={setDraftMode}
+        /> */}
       </div>
     );
   }),

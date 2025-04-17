@@ -6,4 +6,4 @@ export type CourseNavContext = {
   containerRef: React.RefObject<HTMLUListElement>;
 };
 
-export const courseNavContext = createContext<CourseNavContext>({} as CourseNavContext);
+export const courseNavContext = createContext<CourseNavContext | null>(null);

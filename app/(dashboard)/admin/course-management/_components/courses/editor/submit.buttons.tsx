@@ -1,6 +1,7 @@
 import { Button } from "@/components/hoc/button";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { Circle, CircleDashed } from "lucide-react";
 
 type SubmitButtonsProps = {
   isLoading: {
@@ -20,7 +21,7 @@ export const SubmitButtons = ({
 }: SubmitButtonsProps) => {
   const { setFilter } = useCourseStore();
   return (
-    <div className="flex gap-2">
+    <>
       <Button
         isLoading={isLoading.secondaryButton}
         variant="secondary"
@@ -29,8 +30,10 @@ export const SubmitButtons = ({
           setDraftMode(true);
           setFilter(CoursesFilter.Draft);
         }}
+        className="rounded-none border-x bg-transparent"
       >
-        {editMode && !draftMode ? "Convert To Draft" : "Save Draft"}
+        <CircleDashed size={18} />
+        {editMode && !draftMode ? "Convert to draft" : "Save draft"}
       </Button>
 
       <Button
@@ -41,9 +44,11 @@ export const SubmitButtons = ({
           setDraftMode(false);
           setFilter(CoursesFilter.AllPublished);
         }}
+        className="rounded-none"
       >
+        <Circle size={18} />
         {editMode && !draftMode ? "Save Changes" : "Publish Course"}
       </Button>
-    </div>
+    </>
   );
 };

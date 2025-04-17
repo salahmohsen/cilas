@@ -2,7 +2,6 @@
 
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
@@ -29,7 +28,7 @@ export function LayoutBreadcrumb() {
   }
 
   return (
-    <Breadcrumb className="my-4 hidden md:flex">
+    <Breadcrumb className="hidden border-b px-6 py-4 md:flex">
       <BreadcrumbList>
         {items.map((item) => (
           <Item item={item} key={item.name} />

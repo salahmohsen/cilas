@@ -1,50 +1,42 @@
 import { cn } from "@/lib/utils/utils";
+import logo from "@/public/logo.png";
 import { Home, Rss, SquareLibrary } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { SidebarAvatar } from "./sidebar.avatar";
 import { SidebarItem } from "./SidebarItem";
 import { ThemeToggle } from "./theme.toggle";
 
-export function LayoutSidebar({ className }: { className: string }) {
+export function LayoutSidebar({ className }: { className?: string }) {
   return (
-    <aside
-      className={cn(
-        "bg-background fixed hidden flex-col items-center justify-between border-r sm:flex",
-        className,
-      )}
-    >
-      <nav className="grid gap-1 p-2">
-        <SidebarItem name="Home" href="/admin" icon={<Home className="size-5" />} />
-        <SidebarItem
-          name="Course Management"
-          href="/admin/course-management"
-          icon={<SquareLibrary className="size-5" />}
+    <aside className={cn("flex h-screen flex-col items-center gap-3", className)}>
+      <Link href="/" className="relative h-10 w-10">
+        <Image
+          src={logo}
+          alt="Cilas"
+          fill
+          className="absolute w-auto object-contain dark:invert"
         />
-        <SidebarItem
-          name="Blog Management"
-          href="/admin/blog-management"
-          icon={<Rss className="size-5" />}
-        />
-        {/* <SidebarItem
-            name="Settings"
-            href="/dashboard/settings"
-            icon={<Settings2Icon className="size-5" />}
-          /> */}
-      </nav>
-      <nav className="grid gap-1 p-2">
-        {/* <SidebarItem
-            name="Help"
-            href="/dashboard/help"
-            icon={<LifeBuoyIcon className="size-5" />}
-            className="mt-auto"
+      </Link>
+      <div className="flex h-full flex-col items-center justify-center gap-5 rounded-full">
+        <nav className="m-2.5 flex w-full flex-col items-center justify-center gap-5">
+          <SidebarItem name="Home" href="/admin" icon={<Home className="size-5" />} />
+          <SidebarItem
+            name="Course Management"
+            href="/admin/course-management"
+            icon={<SquareLibrary className="size-5" />}
           />
           <SidebarItem
-            name="Account"
-            href="/dashboard/account"
-            icon={<SquareUserIcon className="size-5" />}
-            className="mt-auto"
-          /> */}
-
-        <ThemeToggle />
-      </nav>
+            name="Blog Management"
+            href="/admin/blog-management"
+            icon={<Rss className="size-5" />}
+          />
+        </nav>
+        <div className="mt-auto mb-2.5 flex flex-col gap-5">
+          <SidebarAvatar />
+          <ThemeToggle />
+        </div>
+      </div>
     </aside>
   );
 }

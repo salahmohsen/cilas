@@ -7,11 +7,22 @@ import { CourseFormState } from "@/lib/types/server.actions";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
-import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  useTransition,
+} from "react";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
+// Define types first
 type LoadingState = {
   primaryButton: boolean;
   secondaryButton: boolean;
@@ -21,6 +32,16 @@ type UseCourseFormProps = {
   courseData: CourseWithFellowAndStudents | undefined;
   editMode: boolean;
   courseId: number | undefined;
+};
+
+export const CourseFormContext = createContext<unknown>(null);
+
+export const useCourseFormContext = () => {
+  const context = useContext(CourseFormContext);
+  if (!context) {
+    throw new Error("useCourseFormContext must be used within a CourseFormProvider");
+  }
+  return context;
 };
 
 export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormProps) => {
@@ -57,6 +78,7 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
       ...((courseData as CourseSchema) ?? {}),
     },
   });
+
   // Handle course state
   useEffect(() => {
     // @success
@@ -97,7 +119,26 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
     [formMethods.formState.errors, editMode, courseId, courseAction],
   );
 
+  const CourseFormProvider = ({ children }: { children: ReactNode }) => {
+    const contextValue = {
+      formRef,
+      formMethods,
+      isLoading,
+      handleSubmit,
+      draftMode,
+      setDraftMode,
+      courseAction,
+    };
+
+    return (
+      <CourseFormContext.Provider value={contextValue}>
+        {children}
+      </CourseFormContext.Provider>
+    );
+  };
+
   return {
+    // CourseFormProvider,
     formRef,
     formMethods,
     isLoading,

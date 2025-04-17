@@ -5,7 +5,7 @@ import { getCourseWithEnrollmentsById } from "@/lib/actions/courses.actions";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
-import { CourseForm } from "../_components/courses/editor/course.editor";
+import { CourseEditor } from "../_components/courses/editor/course.editor";
 import Loading from "./loading";
 
 export default function CreateCoursePage() {
@@ -49,7 +49,7 @@ export default function CreateCoursePage() {
 
     if (course) {
       return (
-        <CourseForm
+        <CourseEditor
           courseData={{
             ...course,
             startDate: new Date(course?.startDate),
@@ -64,7 +64,7 @@ export default function CreateCoursePage() {
   // If there's no courseId, render the form without course data
   return (
     <Suspense fallback={<Loading />}>
-      <CourseForm />
+      <CourseEditor />
     </Suspense>
   );
 }

@@ -14,12 +14,12 @@ import { cn } from "@/lib/utils/utils";
 
 import { useCourseStore } from "@/lib/store/course.slice";
 import { CoursesFilter } from "@/lib/types/course.slice.types";
-import { Check, Filter } from "lucide-react";
+import { Blend, Check } from "lucide-react";
 
 const coursesFilter = [
   {
     value: CoursesFilter.AllPublished,
-    label: "Show All",
+    label: "Default",
   },
   {
     value: CoursesFilter.Ongoing,
@@ -50,8 +50,9 @@ export function FilterButton() {
           role="combobox"
           aria-expanded={open}
           className="flex justify-between gap-2"
-          icon={<Filter className="opacity-50" />}
+          icon={<Blend />}
         >
+          <span>View Preferences:</span>
           {value ? coursesFilter.find((filter) => filter.value === value)?.label : ""}
         </Button>
       </PopoverTrigger>

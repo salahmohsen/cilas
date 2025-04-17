@@ -3,7 +3,6 @@ import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 
 import "@/app/globals.css";
 
-import { LayoutHeader } from "@/app/(dashboard)/_components/layout/header";
 import { ThemeProvider } from "@/lib/providers/theme.provider";
 
 import { Toaster } from "sonner";
@@ -30,6 +29,7 @@ import { LayoutSidebar } from "@/app/(dashboard)/_components/layout/sidebar";
 import { validateRequest } from "@/lib/apis/auth.api";
 import { RootProvider } from "@/lib/providers";
 import { redirect } from "next/navigation";
+import { LayoutBreadcrumb } from "../_components/layout/breadcrumb";
 
 export default async function RootLayout({
   children,
@@ -56,13 +56,14 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Toaster richColors />
-            <main>
-              <LayoutHeader className="z-40 h-16 px-5 sm:pl-0" />
-              <div className="mt-16 flex w-full">
-                <LayoutSidebar className="z-40 h-[calc(100%-4rem)] w-16" />
-                <div className="w-full sm:ml-16">{children}</div>
-              </div>
-            </main>
+            <div className="flex h-screen overflow-hidden">
+              <LayoutSidebar className="h-screen border-r pt-5" />
+              {/* <LayoutHeader className="z-40 h-16 px-5 sm:pl-0" /> */}
+              <main className="max-h-screen flex-1 overflow-x-hidden overflow-y-auto">
+                <LayoutBreadcrumb />
+                {children}
+              </main>
+            </div>
           </ThemeProvider>
         </body>
       </html>

@@ -3,25 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { logout } from "@/lib/actions/auth.actions";
 import { useUserStore } from "@/lib/store/user.slice";
 import { cn } from "@/lib/utils/utils";
 
-import { Button } from "@/components/hoc/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { LayoutBreadcrumb } from "./breadcrumb";
 import { LayoutMobileSidebar } from "./sidebar.mobile";
 
 import logo from "@/public/logo.png";
-import PlaceHolderUser from "@/public/placeholder-user.svg";
 import { Search } from "lucide-react";
 
 export function LayoutHeader({ className }: { className: string }) {
@@ -56,36 +45,6 @@ export function LayoutHeader({ className }: { className: string }) {
               id="header-search"
             />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="overflow-hidden rounded-full"
-              >
-                {!userInfo.avatar && (
-                  <PlaceHolderUser className="overflow-hidden rounded-full p-2 opacity-70" />
-                )}
-                {userInfo.avatar && (
-                  <Image
-                    src={userInfo.avatar}
-                    width={36}
-                    height={36}
-                    alt="Avatar"
-                    className={`overflow-hidden rounded-full ${!userInfo.avatar && "p-2 opacity-70"}`}
-                  />
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="z-40">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => logout()}>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </header>
     );

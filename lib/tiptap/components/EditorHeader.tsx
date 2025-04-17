@@ -1,6 +1,7 @@
 import { Button } from "@/components/hoc/button";
 import { Icon } from "@/lib/tiptap/components/ui/Icon";
 import { cn } from "@/lib/utils/utils";
+import { ReactNode, useState } from "react";
 import { EditorInfo } from "./EditorInfo";
 
 export type EditorHeaderProps = {
@@ -8,7 +9,7 @@ export type EditorHeaderProps = {
   toggleSidebar?: () => void;
   characters: number;
   words: number;
-  submitButtons: JSX.Element;
+  children?: ReactNode;
 };
 
 export const EditorHeader = ({
@@ -16,31 +17,57 @@ export const EditorHeader = ({
   words,
   isSidebarOpen,
   toggleSidebar,
-  submitButtons,
+  children,
 }: EditorHeaderProps) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   return (
     <div
       className={cn(
-        "fixed z-30 flex h-16 w-full items-center justify-end border-b px-4 py-2 sm:w-[calc(100%-4rem)] sm:px-8 md:justify-between",
+        "absolute z-30 flex h-max w-full items-center justify-end border-b px-4 sm:px-6 md:justify-between",
         "bg-background/50 backdrop-blur-xs",
         isSidebarOpen && "bg-background",
       )}
     >
       <EditorInfo characters={characters} words={words} className="hidden sm:block" />
       <div className="md:w-inherit flex w-full items-center justify-between gap-x-2 sm:w-auto sm:gap-x-3">
-        {submitButtons}
+        {children}
         <Button
           tooltip={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
           onClick={(e) => {
             e.preventDefault();
             toggleSidebar?.();
           }}
-          className={
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+          className={cn(
+            "rounded-none border-y-0",
             isSidebarOpen
               ? "border"
-              : "text-foreground hover:text-background border bg-transparent"
+              : "text-foreground hover:text-background border bg-transparent",
+            isHovered && isSidebarOpen && "",
+          )}
+          icon={
+            <Icon
+              name={
+                isSidebarOpen && isHovered
+                  ? "ArrowRightToLine"
+                  : isSidebarOpen && !isHovered
+                    ? "PanelRightClose"
+                    : !isSidebarOpen && !isHovered
+                      ? "PanelRight"
+                      : "ArrowLeftToLine"
+              }
+            />
           }
-          icon={<Icon name={isSidebarOpen ? "PanelRightClose" : "PanelRight"} />}
         />
       </div>
     </div>
