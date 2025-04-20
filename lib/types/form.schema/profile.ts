@@ -7,7 +7,7 @@ import {
   required_name,
   required_string,
 } from "@/lib/utils/zodValidation.utils";
-import { userLocalInfo } from "../drizzle.types";
+import { SafeUser } from "../drizzle.types";
 
 const profileSchema = {
   schema: z.object({
@@ -20,7 +20,7 @@ const profileSchema = {
     email: required_email,
     tel: optional_tel,
   }),
-  defaults: (user: userLocalInfo) => ({
+  defaults: (user: SafeUser) => ({
     id: user.id || "",
     firstName: user.firstName || "",
     lastName: user.lastName || "",

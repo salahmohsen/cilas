@@ -98,8 +98,22 @@ export default function BlogManagement() {
             <PostsTabList />
             <PostsTabContent
               tabValue={PostsTabs.Published}
-              title="Published Courses"
-              description="Monitor and manage published courses."
+              title="Published Posts"
+              description="Monitor and manage published posts."
+            >
+              {isLoading && <CourseSkeleton itemsNumber={10} />}
+              {!isLoading &&
+                posts &&
+                posts.length > 0 &&
+                posts.map((post) => (
+                  <PostItem post={post} key={`${post.id}-${post.updatedAt}`} />
+                ))}
+              {posts?.length === 0 && <NotFound message="No Courses Found!" />}
+            </PostsTabContent>
+            <PostsTabContent
+              tabValue={PostsTabs.Draft}
+              title="Draft Posts"
+              description="Monitor and manage draft posts."
             >
               {isLoading && <CourseSkeleton itemsNumber={10} />}
               {!isLoading &&

@@ -1,4 +1,4 @@
-import { userLocalInfo } from "./drizzle.types";
+import { SafeUser } from "./drizzle.types";
 
 export type BasePrevState = {
   success?: boolean;
@@ -11,5 +11,5 @@ export interface AuthState extends BasePrevState {
 }
 
 export interface FellowState extends BasePrevState {
-  fellow?: userLocalInfo;
+  fellow?: SafeUser;
 }

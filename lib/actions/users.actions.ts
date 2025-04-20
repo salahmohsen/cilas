@@ -13,7 +13,7 @@ import { eq, ilike, or } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { validateRequest } from "../apis/auth.api";
 import { enrollmentTable, userTable } from "../db/schema";
-import { userLocalInfo } from "../types/drizzle.types";
+import { SafeUser } from "../types/drizzle.types";
 import { ComboBoxOption } from "../types/form.inputs.types";
 import { BasePrevState, FellowState } from "../types/users.actions.types";
 
@@ -145,7 +145,7 @@ export const getUsersNames = async (
   return users;
 };
 
-export const getUserById = async (id: string): Promise<userLocalInfo | undefined> => {
+export const getUserById = async (id: string): Promise<SafeUser | undefined> => {
   const user = db.query.userTable.findFirst({
     where: eq(userTable.id, id),
     columns: {
@@ -271,7 +271,7 @@ export const updateCourseEnrollments = async (
  * @returns Option[] | UserWithProtectedFields[]
  */
 
-type studentReturnType<T> = T extends true ? userLocalInfo[] : Option[];
+type studentReturnType<T> = T extends true ? SafeUser[] : Option[];
 
 export const getStudentsByCourseId = async <T extends boolean>(
   courseId: number,
@@ -299,7 +299,7 @@ export const getStudentsByCourseId = async <T extends boolean>(
 
   if (fullData) {
     return studentsData.filter(
-      (student): student is userLocalInfo => student !== undefined,
+      (student): student is SafeUser => student !== undefined,
     ) as studentReturnType<T>;
   } else {
     return studentsOptions as studentReturnType<T>;

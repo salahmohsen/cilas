@@ -31,8 +31,8 @@ export const PostsTabContent = ({
     <TabsContent value={tabValue}>
       <Card className="border-0 bg-transparent shadow-none">
         <CardHeader className="sr-only">
-          <CardTitle>Published Posts</CardTitle>
-          <CardDescription>Monitor and manage published posts.</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <ul className="group/list space-y-2" ref={containerRef}>

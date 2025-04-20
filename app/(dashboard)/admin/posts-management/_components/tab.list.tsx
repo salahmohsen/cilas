@@ -32,8 +32,8 @@ export const PostsTabList = () => {
       <TabsListUi className={tabClasses.list}>
         <Link href={`/admin/course-management?tab=${CourseTabs.Published}`}>
           <TabsTrigger
-            value={CourseTabs.Published}
-            id={CourseTabs.Published}
+            value={PostsTabs.Published}
+            id={PostsTabs.Published}
             onClick={() => handleTabClick(PostsTabs.Published)}
             className={
               activeTab === PostsTabs.Published ? tabClasses.active : tabClasses.Inactive
@@ -46,8 +46,8 @@ export const PostsTabList = () => {
 
         <Link href={`/admin/course-management?tab=${CourseTabs.Draft}`}>
           <TabsTrigger
-            value={CourseTabs.Draft}
-            id={CourseTabs.Draft}
+            value={PostsTabs.Draft}
+            id={PostsTabs.Draft}
             onClick={() => handleTabClick(PostsTabs.Draft)}
             className={
               activeTab === PostsTabs.Draft ? tabClasses.active : tabClasses.Inactive

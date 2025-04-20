@@ -31,7 +31,7 @@ export const usePostsStore = create<PostsState>((set, get) => ({
   getPosts: async () => {
     const filter = get().filter;
     if (!filter) {
-      console.error("There is no filter to get courses!");
+      console.error("There is no filter to get posts!");
       return;
     }
 
@@ -49,48 +49,45 @@ export const usePostsStore = create<PostsState>((set, get) => ({
         });
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to fetch courses");
+      toast.error(error instanceof Error ? error.message : "Failed to fetch posts");
       set({ isLoading: false });
     }
   },
 
-  revalidatePost: async (courseId: number) => {
+  revalidatePost: async (postID: number) => {
     try {
       set({ isLoading: true });
-      const data = await fetchPosts(undefined, courseId);
+      const data = await fetchPosts(undefined, postID);
       if (data.error) {
         set({ isLoading: false });
         throw new Error(data.message);
       }
       if (data.posts) {
-        const revalidatedCourse = data.posts[0];
+        const revalidatedPost = data.posts[0];
         const { posts } = get();
 
-        // Check if the course data actually changed to avoid unnecessary updates
-        const existingPost = posts?.find((course) => course.id === courseId);
+        // Check if the post data actually changed to avoid unnecessary updates
+        const existingPost = posts?.find((post) => post.id === postID);
         if (JSON.stringify(existingPost) === JSON.stringify(data.posts[0])) {
           set({ isLoading: false });
           return;
         }
 
-        const remainingCourses = posts?.filter((course) => course.id !== courseId);
-        const sortedCourses = [...(remainingCourses || []), revalidatedCourse].sort(
-          (a, b) => {
-            const startDateDiff =
-              new Date(b.createdAt ?? "").getTime() -
-              new Date(a.createdAt ?? "").getTime();
-            if (startDateDiff !== 0) return startDateDiff;
-            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // If startDates are the same, sort by createdAt
-          },
-        );
+        const remainingPosts = posts?.filter((post) => post.id !== postID);
+        const sortedPosts = [...(remainingPosts || []), revalidatedPost].sort((a, b) => {
+          const startDateDiff =
+            new Date(b.createdAt ?? "").getTime() - new Date(a.createdAt ?? "").getTime();
+          if (startDateDiff !== 0) return startDateDiff;
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // If startDates are the same, sort by createdAt
+        });
         set({
-          posts: sortedCourses,
-          postInfo: revalidatedCourse,
+          posts: sortedPosts,
+          postInfo: revalidatedPost,
           isLoading: false,
         });
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to fetch course");
+      toast.error(error instanceof Error ? error.message : "Failed to fetch post");
       set({ isLoading: false });
     }
   },
@@ -108,38 +105,38 @@ export const usePostsStore = create<PostsState>((set, get) => ({
     }
   },
 
-  handleDelete: async (courseId) => {
+  handleDelete: async (postID) => {
     const { posts } = get();
-    const originalCourses = posts;
-    const courseToDelete = posts?.find((course) => course.id === courseId);
-    if (!courseToDelete) return toast.error("Course is not available!");
+    const originalPosts = posts;
+    const postToDelete = posts?.find((post) => post.id === postID);
+    if (!postToDelete) return toast.error("Post is not available!");
 
     const toastId = toast.loading("Loading...");
 
     try {
       // Optimistic update
       set({
-        posts: posts?.filter((course) => course.id !== courseId),
+        posts: posts?.filter((post) => post.id !== postID),
       });
 
       const formData = new FormData();
-      formData.append("courseId", courseId.toString());
+      formData.append("postID", postID.toString());
       const result = await deleteCourse({ message: "" }, formData);
 
       if (result.success) {
         toast.success(result.message, { id: toastId });
         set((state) => ({
-          posts: state.posts?.filter((course) => course.id !== courseId),
+          posts: state.posts?.filter((post) => post.id !== postID),
         }));
       } else {
         throw new Error(result.message);
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to delete course", {
+      toast.error(error instanceof Error ? error.message : "Failed to delete post", {
         id: toastId,
       });
       // Restore the optimistic update
-      set({ posts: originalCourses });
+      set({ posts: originalPosts });
     }
   },
 }));

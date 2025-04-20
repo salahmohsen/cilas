@@ -43,8 +43,8 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
             exit={mode === "flex" ? { x: "50vw", width: 0 } : undefined}
             ref={ref}
           >
-            <Card className="overflow-hidden">
-              <ScrollArea className="overflow-y-auto" type="hover">
+            <Card className="overflow-y-auto">
+              <ScrollArea type="hover" className="h-[calc(100%-60px)]">
                 <CardHeader className="bg-accent flex flex-row items-start">
                   <div className="grid gap-0.5">
                     <CardTitle className="group flex items-center gap-2 text-lg">

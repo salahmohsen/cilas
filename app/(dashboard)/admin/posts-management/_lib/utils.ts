@@ -8,6 +8,6 @@ export const postsFilter = (filter: PostsFilter) => {
       return eq(postsTable.isDraft, false);
 
     case PostsFilter.Draft:
-      return eq(postsTable, true);
+      return eq(postsTable.isDraft, true);
   }
 };

@@ -201,6 +201,6 @@
     @apply h-1 w-2 hover:w-3;
   }
   div ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-neutral-500/50;
+    @apply rounded-full bg-neutral-500;
   }
 }

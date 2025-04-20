@@ -76,7 +76,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
                 </span>
 
                 <span className="flex gap-1 text-xs font-light">
-                  {userInfo && <Avatar user={userInfo} className="h-4 w-4" />}
+                  <Avatar user={course.fellow} className="h-4 w-4" />
                   {`${course.fellow?.firstName} ${course.fellow?.lastName}`}
                 </span>
               </div>

@@ -1,5 +1,5 @@
 import { getUsersNames } from "@/lib/actions/users.actions";
-import { userLocalInfo } from "@/lib/types/drizzle.types";
+import { SafeUser } from "@/lib/types/drizzle.types";
 import { ComboBoxOption } from "@/lib/types/form.inputs.types";
 import { forwardRef, memo, useCallback, useEffect, useState } from "react";
 
@@ -17,7 +17,7 @@ import { CourseSchema } from "@/lib/types/form.schema";
 
 type CourseMetadataProps = {
   editMode: boolean;
-  fellow: userLocalInfo | undefined;
+  fellow: SafeUser | undefined;
 };
 
 export const CourseMeta = memo(

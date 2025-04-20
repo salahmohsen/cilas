@@ -44,7 +44,7 @@ export default async function RootLayout({
 
   return (
     <RootProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" suppressHydrationWarning className="max-h-screen overflow-hidden">
         <body
           className={`${inter.variable} ${ibmPlexSansArabic.variable} bg-background max-w-screen leading-relaxed text-pretty antialiased`}
           id="dashboard"
@@ -56,7 +56,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <Toaster richColors />
-            <div className="flex h-screen overflow-hidden">
+            <div className="flex">
               <LayoutSidebar className="h-screen border-r pt-5" />
               {/* <LayoutHeader className="z-40 h-16 px-5 sm:pl-0" /> */}
               <main className="max-h-screen flex-1 overflow-x-hidden overflow-y-auto">

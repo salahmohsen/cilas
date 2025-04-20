@@ -13,7 +13,7 @@ import { authorsTable } from "./";
 import blogsToCategoriesTable from "./post.to.category";
 import blogsToTagsTable from "./post.to.tag";
 
-const postsTable = pgTable("blog_posts", {
+const postsTable = pgTable("posts", {
   id: serial("id").primaryKey(),
   isDraft: boolean("is_draft").notNull().default(true),
   slug: varchar("slug", { length: 255 }).unique().notNull(),

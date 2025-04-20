@@ -1,10 +1,10 @@
-import { userLocalInfo } from "@/lib/types/drizzle.types";
+import { SafeUser } from "@/lib/types/drizzle.types";
 import { cn } from "@/lib/utils";
 import { forwardRef, useCallback } from "react";
 import { Avatar as AvatarComponent, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type AvatarComponentProps = {
-  user: userLocalInfo;
+  user: SafeUser;
   className?: string;
   onClick?: () => void;
 };

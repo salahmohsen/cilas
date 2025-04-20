@@ -3,10 +3,10 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { getCurrentUserInfo } from "../actions/users.actions";
-import { userLocalInfo } from "../types/drizzle.types";
+import { SafeUser } from "../types/drizzle.types";
 
 interface UserStore {
-  userInfo: userLocalInfo | undefined;
+  userInfo: SafeUser | undefined;
   isLogged: boolean;
   setIsLogged: (isLogged: boolean) => void;
   setUserInfo: () => void;

@@ -3,7 +3,6 @@
 import { ContentInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { newPost } from "@/lib/actions/blog.actions";
 import { useCourseSidebar } from "@/lib/hooks/courses";
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
@@ -17,6 +16,7 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { SubmitButtons } from "../../course-management/_components/courses/editor/submit.buttons";
+import { newPost } from "../_lib/posts.actions";
 import BlogMeta from "./blog.meta";
 
 export default function BlogEditor() {
@@ -80,15 +80,14 @@ export default function BlogEditor() {
             }
             isSidebarOpen={isSidebarOpen}
             toggleSidebar={toggleSidebar}
-            submitButtons={
-              <SubmitButtons
-                isLoading={{ primaryButton: false, secondaryButton: false }}
-                editMode={false}
-                draftMode={false}
-                setDraftMode={() => {}}
-              />
-            }
-          />
+          >
+            <SubmitButtons
+              isLoading={{ primaryButton: false, secondaryButton: false }}
+              editMode={false}
+              draftMode={false}
+              setDraftMode={() => {}}
+            />
+          </EditorHeader>
 
           <Tabs
             value={activeContentTab}

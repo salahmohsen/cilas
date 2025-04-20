@@ -1,7 +1,7 @@
 import { bundleTable, courseTable, userTable } from "@/lib/db/schema";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 
-export type userLocalInfo = Omit<
+export type SafeUser = Omit<
   InferSelectModel<typeof userTable>,
   "passwordHash" | "googleId"
 >;
@@ -14,11 +14,11 @@ export type UserRole = (typeof userRole)[number];
 export type CourseTableRead = InferSelectModel<typeof courseTable>;
 export type CourseTableWrite = InferInsertModel<typeof courseTable>;
 export type CourseWithFellow = CourseTableRead & {
-  fellow: userLocalInfo;
+  fellow: SafeUser;
 };
 export type CourseWithFellowAndStudents = CourseTableRead & {
-  fellow: userLocalInfo;
-  students: userLocalInfo[];
+  fellow: SafeUser;
+  students: SafeUser[];
 };
 
 export type BundleTableWrite = InferInsertModel<typeof bundleTable>;

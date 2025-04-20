@@ -6,7 +6,7 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { updateUserInfo } from "@/lib/actions/users.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { userLocalInfo } from "@/lib/types/drizzle.types";
+import { SafeUser } from "@/lib/types/drizzle.types";
 import { profileSchema, ProfileSchema } from "@/lib/types/form.schema";
 import { BasePrevState } from "@/lib/types/users.actions.types";
 import { uploadImage, UploadingFolder } from "@/lib/utils";
@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 type UserSettingsProps = {
-  user: userLocalInfo;
+  user: SafeUser;
   courseId: number;
   open: boolean;
   onOpenChange: (value: boolean) => void;

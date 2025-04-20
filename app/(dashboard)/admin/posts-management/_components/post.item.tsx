@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { format } from "date-fns";
 
+import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/hoc/button";
-import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +13,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useUserStore } from "@/lib/store/user.slice";
 import { Calendar, Ellipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Post } from "../_lib/posts.actions.type";
@@ -23,8 +22,6 @@ type PostItemProps = { post: Post };
 
 export const PostItem = ({ post }: PostItemProps) => {
   const { handleDelete, setPostSelected, setPostInfo, isPostSelected } = usePostsStore();
-
-  const { userInfo } = useUserStore();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState<boolean>(false);
@@ -56,6 +53,19 @@ export const PostItem = ({ post }: PostItemProps) => {
                   {format(post.publishedAt, "MMMM dd yyyy")}
                 </span>
               )}
+              <span className="flex gap-1 text-xs font-light">
+                {post.authors.map((author, i) => (
+                  <Avatar
+                    key={author.author.safeAuthor.id}
+                    user={author.author.safeAuthor}
+                    className="h-4 w-4"
+                  />
+                ))}
+                {post.authors.map(
+                  (author) =>
+                    `${author.author.safeAuthor?.firstName} ${author.author.safeAuthor?.lastName}`,
+                )}
+              </span>
             </div>
           </div>
           <DropdownMenu onOpenChange={setIsMenuOpen}>
@@ -72,7 +82,7 @@ export const PostItem = ({ post }: PostItemProps) => {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onSelect={() =>
-                  router.push(`/admin/posts-management/edit-post?id=${post.id}`)
+                  router.push(`/admin/course-management/edit-post?id=${post.id}`)
                 }
                 onClick={(e) => e.stopPropagation()}
                 className="cursor-pointer"
@@ -83,7 +93,7 @@ export const PostItem = ({ post }: PostItemProps) => {
               <DropdownMenuItem
                 onSelect={() =>
                   router.push(
-                    `/admin/course-management/create-post?duplicate-course=${post.id}`,
+                    `/admin/posts-management/create-post?duplicate-course=${post.id}`,
                   )
                 }
                 onClick={(e) => e.stopPropagation()}
@@ -113,13 +123,21 @@ export const PostItem = ({ post }: PostItemProps) => {
           </DropdownMenu>
         </div>
       </li>
-
-      <ConfirmationDialog
-        isOpen={isDeleteDialogVisible}
-        setIsOpen={setIsDeleteDialogVisible}
-        title={`Delete ${postTitle ?? "Post"}`}
-        onConfirm={() => handleDelete(post.id)}
-      />
+      {/* <AddStudentsDialog
+      courseId={course.id}
+      isOpen={isStudentDialogOpen}
+      setIsOpen={setIsStudentDialogOpen}
+      courseStudents={course.students.map((student) => ({
+        value: student.id,
+        label: `${student.firstName} ${student.lastName}`,
+      }))}
+    />
+    <ConfirmationDialog
+      isOpen={isDeleteDialogVisible}
+      setIsOpen={setIsDeleteDialogVisible}
+      title={`Delete ${(course.enTitle || course.arTitle) ?? "Course"}`}
+      onConfirm={() => handleDelete(course.id)}
+    /> */}
     </>
   );
 };

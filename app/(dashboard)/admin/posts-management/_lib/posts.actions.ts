@@ -7,6 +7,8 @@ import {
   postsTable,
   postsToCategoriesTable,
 } from "@/lib/db/schema";
+import { SafeUser } from "@/lib/types/drizzle.types";
+import { serverActionStateBase } from "@/lib/types/server.actions";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { PostsFilter } from "./posts.slice.types";
 import { postsFilter } from "./utils";
@@ -44,15 +46,18 @@ export const fetchPosts = async (
       rawPosts.map(async (post) => {
         const authors = await Promise.all(
           post.authors.map(async (author) => {
-            const authorData = await db.query.authorToRoleTable.findFirst({
+            const authorAndRole = await db.query.authorToRoleTable.findFirst({
               where: eq(authorToRoleTable.roleId, author.roleId),
               columns: {},
               with: { role: true, author: true },
             });
 
+            const { author: authorData, role } = authorAndRole ?? {};
+            const { passwordHash, googleId, ...safeAuthor } = authorData ?? {};
+
             return {
-              author: authorData?.author,
-              role: authorData?.role,
+              author: { safeAuthor, role } as { safeAuthor: SafeUser },
+              role: authorAndRole?.role,
               isMainAuthor: author.isMainAuthor,
             };
           }),
@@ -97,4 +102,18 @@ export const fetchPosts = async (
     error: true,
     message: "Unexpected error happened, please try again!",
   };
+};
+
+export const newPost = (
+  prevState: serverActionStateBase,
+  formData: FormData,
+): Promise<serverActionStateBase> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({
+        success: true,
+        message: "Post created successfully",
+      });
+    }, 2000);
+  });
 };

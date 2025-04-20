@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
 import { RefObject } from "react";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -56,3 +56,7 @@ export const isArabic = (string: string) => {
   const pattern = new RegExp("^[p{Arabic}sp{N}]+$");
   return pattern.test(string);
 };
+
+export function isEmptyObject(value = {}): boolean {
+  return Object.keys(value).length === 0 && value.constructor === Object;
+}

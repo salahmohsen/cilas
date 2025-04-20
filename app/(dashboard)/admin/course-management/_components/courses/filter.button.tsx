@@ -49,7 +49,7 @@ export function FilterButton() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="flex justify-between gap-2"
+          className="flex justify-between gap-2 border-0 hover:border-1"
           icon={<Blend />}
         >
           <span>View Preferences:</span>

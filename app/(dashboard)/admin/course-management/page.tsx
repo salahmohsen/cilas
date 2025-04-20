@@ -4,8 +4,6 @@ import { cn } from "@/lib/utils/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useCallback, useEffect, useRef } from "react";
 
-import { CourseInfo } from "@/app/(dashboard)/admin/course-management/_components/info/info";
-
 import { Tabs } from "@/components/ui/tabs";
 
 import { Button } from "@/components/hoc/button";
@@ -19,6 +17,7 @@ import { PageHeader } from "../_components/page.header";
 import { ItemsNavContext } from "../_context/items.nav.context";
 import { CourseItem } from "./_components/courses/course.item";
 import { CourseSkeleton } from "./_components/courses/course.skeleton";
+import { CourseInfo } from "./_components/info/info";
 import { CourseInfoModal } from "./_components/info/info.modal";
 import { CoursesTabList } from "./_components/tabs/list.tab";
 import { CourseTabContent } from "./_components/tabs/tab.content";
@@ -75,7 +74,7 @@ export default function ManageCoursesPage() {
     [setActiveTab, setCourseSelected, setFilter],
   );
   return (
-    <div className="flex h-[100vh] flex-col gap-12 p-8">
+    <div className="flex h-[92vh] flex-col gap-12 p-8">
       <PageHeader
         title="Course Management"
         description="Manage courses: create, update, delete, and filter with ease."
@@ -135,7 +134,10 @@ export default function ManageCoursesPage() {
             />
           </Tabs>
           {isDesktop && (
-            <CourseInfo className="sticky max-h-[70vh] max-w-1/3" mode="flex" />
+            <CourseInfo
+              className="sticky max-h-[70vh] max-w-1/3 overflow-hidden"
+              mode="flex"
+            />
           )}
           {!isDesktop && <CourseInfoModal />}
         </div>

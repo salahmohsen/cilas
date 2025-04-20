@@ -1,7 +1,7 @@
 import {
   BundleWithCourseTitles,
   CourseWithFellowAndStudents,
-  userLocalInfo,
+  SafeUser,
 } from "@/lib/types/drizzle.types";
 
 export enum CoursesFilter {
@@ -22,7 +22,7 @@ export interface CourseState {
   isBundleSelected: Record<number, boolean> | null;
   courseInfo: CourseWithFellowAndStudents | null;
   filter: CoursesFilter;
-  fellow: userLocalInfo | undefined;
+  fellow: SafeUser | undefined;
   isLoading: boolean;
   courses: null | CourseWithFellowAndStudents[];
   bundles: null | BundleWithCourseTitles[];
@@ -33,7 +33,7 @@ export interface CourseState {
   setBundleSelected: (selected: Record<number, boolean> | null) => void;
   setCourseInfo: (course: CourseWithFellowAndStudents | undefined | null) => void;
   setFilter: (filter: CoursesFilter) => void;
-  setFellow: (fellow: userLocalInfo | undefined) => void;
+  setFellow: (fellow: SafeUser | undefined) => void;
   setLoading: (loading: boolean) => void;
   setCourses: (courses: CourseWithFellowAndStudents[]) => void;
   setBundles: (bundles: BundleWithCourseTitles[]) => void;

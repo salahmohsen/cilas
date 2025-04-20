@@ -1,6 +1,6 @@
 import { pgTable, serial, varchar } from "drizzle-orm/pg-core";
 
-const authorRulesTable = pgTable("blog_posts_rules", {
+const authorRulesTable = pgTable("posts_authors_roles", {
   id: serial("id").primaryKey(),
   arName: varchar("ar_name", { length: 255 }).unique(),
   enName: varchar("en_name", { length: 255 }).unique().notNull(),

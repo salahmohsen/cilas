@@ -32,13 +32,13 @@ export const EditorHeader = ({
   return (
     <div
       className={cn(
-        "absolute z-30 flex h-max w-full items-center justify-end border-b px-4 sm:px-6 md:justify-between",
+        "absolute z-30 flex h-max w-full items-center justify-end border-b px-4 sm:pr-0 sm:pl-6 md:justify-between",
         "bg-background/50 backdrop-blur-xs",
         isSidebarOpen && "bg-background",
       )}
     >
       <EditorInfo characters={characters} words={words} className="hidden sm:block" />
-      <div className="md:w-inherit flex w-full items-center justify-between gap-x-2 sm:w-auto sm:gap-x-3">
+      <div className="flex w-full items-center justify-between gap-x-2 sm:w-auto sm:gap-x-4">
         {children}
         <Button
           tooltip={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
@@ -53,7 +53,6 @@ export const EditorHeader = ({
             isSidebarOpen
               ? "border"
               : "text-foreground hover:text-background border bg-transparent",
-            isHovered && isSidebarOpen && "",
           )}
           icon={
             <Icon
