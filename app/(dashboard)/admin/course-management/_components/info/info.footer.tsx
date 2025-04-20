@@ -11,12 +11,12 @@ import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useContext } from "react";
-import { courseNavContext } from "../../_context/course.nav.context";
+import { ItemsNavContext } from "../../../_context/items.nav.context";
 
 export const InfoFooter = ({ className }: { className?: string }) => {
   const { courseInfo } = useCourseStore();
 
-  const { handleNext, handlePrev } = useContext(courseNavContext);
+  const { handleNext, handlePrev } = useContext(ItemsNavContext);
 
   return (
     <CardFooter

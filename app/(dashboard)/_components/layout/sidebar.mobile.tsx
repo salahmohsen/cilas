@@ -45,7 +45,7 @@ export function LayoutMobileSidebar() {
             Course Management
           </Link>
           <Link
-            href="/dashboard/blog-management"
+            href="/dashboard/posts-management"
             className="text-muted-foreground hover:text-foreground flex items-center gap-4 px-2.5"
           >
             <Rss className="h-5 w-5" />

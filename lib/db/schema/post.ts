@@ -9,7 +9,7 @@ import {
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
-import blogAuthorsTable from "./post.author.to.role";
+import { authorsTable } from "./";
 import blogsToCategoriesTable from "./post.to.category";
 import blogsToTagsTable from "./post.to.tag";
 
@@ -32,8 +32,8 @@ const postsTable = pgTable("blog_posts", {
     .defaultNow(),
 });
 
-export const blogRelations = relations(postsTable, ({ many }) => ({
-  authors: many(blogAuthorsTable),
+export const postsRelations = relations(postsTable, ({ many }) => ({
+  authors: many(authorsTable),
   tags: many(blogsToTagsTable),
   categories: many(blogsToCategoriesTable),
 }));

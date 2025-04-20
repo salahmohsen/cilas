@@ -1,20 +1,21 @@
 "use client";
 
 import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui/tabs";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter, CourseTabs } from "@/lib/types/courses.slice.types";
+import { CourseTabs } from "@/lib/types/courses.slice.types";
 import { Circle, CircleDashed } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
-import { FilterButton } from "../courses/filter.button";
+import { FilterButton } from "../../course-management/_components/courses/filter.button";
+import { usePostsStore } from "../_lib/posts.slice";
+import { PostsFilter, PostsTabs } from "../_lib/posts.slice.types";
 
-export const CoursesTabList = () => {
-  const { activeTab, setActiveTab, setFilter } = useCourseStore();
+export const PostsTabList = () => {
+  const { activeTab, setActiveTab, setFilter } = usePostsStore();
 
   const handleTabClick = useCallback(
-    (tab: CourseTabs) => {
+    (tab: PostsTabs) => {
       setActiveTab(tab);
-      if (activeTab === CourseTabs.Published) setFilter(CoursesFilter.AllPublished);
+      if (activeTab === PostsTabs.Published) setFilter(PostsFilter.Published);
     },
     [activeTab, setActiveTab, setFilter],
   );
@@ -33,9 +34,9 @@ export const CoursesTabList = () => {
           <TabsTrigger
             value={CourseTabs.Published}
             id={CourseTabs.Published}
-            onClick={() => handleTabClick(CourseTabs.Published)}
+            onClick={() => handleTabClick(PostsTabs.Published)}
             className={
-              activeTab === CourseTabs.Published ? tabClasses.active : tabClasses.Inactive
+              activeTab === PostsTabs.Published ? tabClasses.active : tabClasses.Inactive
             }
           >
             <Circle size={16} />
@@ -47,9 +48,9 @@ export const CoursesTabList = () => {
           <TabsTrigger
             value={CourseTabs.Draft}
             id={CourseTabs.Draft}
-            onClick={() => handleTabClick(CourseTabs.Draft)}
+            onClick={() => handleTabClick(PostsTabs.Draft)}
             className={
-              activeTab === CourseTabs.Draft ? tabClasses.active : tabClasses.Inactive
+              activeTab === PostsTabs.Draft ? tabClasses.active : tabClasses.Inactive
             }
           >
             <CircleDashed size={16} />
@@ -57,7 +58,7 @@ export const CoursesTabList = () => {
           </TabsTrigger>
         </Link>
       </TabsListUi>
-      {activeTab === CourseTabs.Published && <FilterButton />}
+      {activeTab === PostsTabs.Published && <FilterButton />}
     </nav>
   );
 };

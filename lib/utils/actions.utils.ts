@@ -1,7 +1,7 @@
 import { Option } from "@/components/ui/multipleSelector";
 import { CourseTableWrite } from "@/lib/types/drizzle.types";
 import { bundleSchema, CourseSchema } from "@/lib/types/form.schema";
-import { CoursesFilter } from "../types/course.slice.types";
+import { CoursesFilter } from "../types/courses.slice.types";
 import { CourseWithFellowAndStudents } from "../types/drizzle.types";
 import { cleanHtml } from "./sanitize-html.utils";
 import { convertToDate, convertToJson } from "./zodValidation.utils";

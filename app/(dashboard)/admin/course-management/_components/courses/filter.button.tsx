@@ -13,7 +13,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils/utils";
 
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { CoursesFilter } from "@/lib/types/courses.slice.types";
 import { Blend, Check } from "lucide-react";
 
 const coursesFilter = [

@@ -1,58 +1,65 @@
-import { useCourseStore } from "@/lib/store/course.slice";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-export const useCourseNavigation = (containerRef?: React.RefObject<HTMLUListElement>) => {
-  const {
-    courseInfo,
-    isCourseSelected: isCourseSelectedObject,
-    courses,
-    setCourseInfo,
-    setCourseSelected,
-  } = useCourseStore();
+interface ItemsNavigationProps<T> {
+  itemInfo: T | null;
+  isItemSelected: Record<number, boolean> | null;
+  items: T[] | null;
+  setItemInfo: (course: T | null) => void;
+  setItemSelected: (selected: Record<number, boolean> | null) => void;
+  containerRef?: React.RefObject<HTMLUListElement>;
+}
 
+export const useItemsNavigation = <T extends { id: number }>({
+  itemInfo,
+  isItemSelected,
+  items,
+  setItemInfo,
+  setItemSelected,
+  containerRef,
+}: ItemsNavigationProps<T>) => {
   const [scrollIndex, setScrollIndex] = useState<number | null>(null);
 
-  const idArr = useMemo(() => courses?.map((item) => item.id), [courses]);
+  const idArr = useMemo(() => items?.map((item) => item.id), [items]);
 
   const isCourseSelected = useMemo(
-    () => Object.values(isCourseSelectedObject ?? {}).some(Boolean),
-    [isCourseSelectedObject],
+    () => Object.values(isItemSelected ?? {}).some(Boolean),
+    [isItemSelected],
   );
 
   const resetSelection = useCallback(
     (isLast: boolean = false) => {
-      if (courses?.length === 0) return;
+      if (items?.length === 0) return;
 
-      const selectedCourse = isLast ? courses?.at(-1) : courses?.[0];
-      const selectedId = selectedCourse?.id;
+      const selectedItem = isLast ? items?.at(-1) : items?.[0];
+      const selectedId = selectedItem?.id;
 
-      if (selectedCourse && selectedId !== undefined) {
-        setCourseInfo(selectedCourse);
-        setCourseSelected({ [selectedId]: true });
+      if (selectedItem && selectedId !== undefined) {
+        setItemInfo(selectedItem);
+        setItemSelected({ [selectedId]: true });
       }
     },
-    [setCourseInfo, setCourseSelected, courses],
+    [setItemInfo, setItemSelected, items],
   );
 
   const setSelection = useCallback(
     (id: number) => {
-      const SelectedCourse = courses?.find((item) => item.id === id);
-      if (SelectedCourse) {
-        setCourseSelected({ [id]: true });
-        setCourseInfo(SelectedCourse);
+      const selectedItem = items?.find((item) => item.id === id);
+      if (selectedItem) {
+        setItemSelected({ [id]: true });
+        setItemInfo(selectedItem);
       }
     },
-    [setCourseSelected, setCourseInfo, courses],
+    [setItemSelected, setItemInfo, items],
   );
 
   const handleNext = useCallback(() => {
-    if (!courseInfo || !isCourseSelected || courses?.length === 0) {
+    if (!itemInfo || !isItemSelected || items?.length === 0) {
       resetSelection();
       setScrollIndex(0);
       return;
     }
 
-    const currIndex = idArr?.indexOf(courseInfo.id);
+    const currIndex = idArr?.indexOf(itemInfo.id);
     console.log("idArr", idArr, "currIndex", currIndex);
     if (idArr && typeof currIndex === "number" && currIndex < idArr.length - 1) {
       setSelection(idArr[currIndex + 1]);
@@ -61,23 +68,16 @@ export const useCourseNavigation = (containerRef?: React.RefObject<HTMLUListElem
       resetSelection();
       setScrollIndex(0);
     }
-  }, [
-    courseInfo,
-    idArr,
-    isCourseSelected,
-    courses?.length,
-    resetSelection,
-    setSelection,
-  ]);
+  }, [itemInfo, idArr, isItemSelected, items?.length, resetSelection, setSelection]);
 
   const handlePrev = useCallback(() => {
-    if (!courseInfo || !isCourseSelected || courses?.length === 0) {
+    if (!itemInfo || !isCourseSelected || items?.length === 0) {
       resetSelection(true);
       idArr && setScrollIndex(idArr.length - 1);
       return;
     }
 
-    const currIndex = idArr?.indexOf(courseInfo.id);
+    const currIndex = idArr?.indexOf(itemInfo.id);
     if (currIndex && idArr && currIndex > 0) {
       setSelection(idArr[currIndex - 1]);
       setScrollIndex(currIndex - 1);
@@ -85,14 +85,7 @@ export const useCourseNavigation = (containerRef?: React.RefObject<HTMLUListElem
       resetSelection(true);
       idArr && setScrollIndex(idArr.length - 1);
     }
-  }, [
-    courseInfo,
-    idArr,
-    isCourseSelected,
-    courses?.length,
-    resetSelection,
-    setSelection,
-  ]);
+  }, [itemInfo, isCourseSelected, items?.length, idArr, resetSelection, setSelection]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

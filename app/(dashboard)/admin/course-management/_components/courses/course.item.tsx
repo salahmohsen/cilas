@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useCourseStore } from "@/lib/store/course.slice";
 import { useUserStore } from "@/lib/store/user.slice";
-import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { CoursesFilter } from "@/lib/types/courses.slice.types";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { getCourseStatus } from "@/lib/utils";
 import { Calendar, CircleDashed, Ellipsis, PlayCircle, StopCircle } from "lucide-react";

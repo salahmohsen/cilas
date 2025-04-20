@@ -63,7 +63,7 @@ export default function BlogEditor() {
     <FormWrapper<BlogSchema, serverActionStateBase>
       formMethods={formMethods}
       serverAction={newPost}
-      onSuccess={() => redirect("/dashboard/admin/blog-management")}
+      onSuccess={() => redirect("/dashboard/admin/posts-management")}
     >
       {({ isPending }) => (
         <>

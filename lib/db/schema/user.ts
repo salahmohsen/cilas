@@ -30,7 +30,7 @@ export const userRelations = relations(userTable, ({ many }) => ({
   sessions: many(sessionTable),
   enrollments: many(enrollmentTable),
   courses: many(courseTable, { relationName: "fellow" }),
-  blogAuthors: many(blogAuthorsTable),
+  postAuthors: many(blogAuthorsTable),
 }));
 
 export default userTable;

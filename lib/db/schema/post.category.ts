@@ -1,6 +1,4 @@
-import { relations } from "drizzle-orm";
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
-import blogsToCategoriesTable from "./post.to.category";
 
 const postCategoriesTable = pgTable("post_categories", {
   id: serial("id").primaryKey(),
@@ -14,9 +12,5 @@ const postCategoriesTable = pgTable("post_categories", {
     .notNull()
     .defaultNow(),
 });
-
-export const blogCategoryRelations = relations(postCategoriesTable, ({ many }) => ({
-  blogs: many(blogsToCategoriesTable),
-}));
 
 export default postCategoriesTable;

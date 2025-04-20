@@ -1,6 +1,6 @@
 import { createEditCourse } from "@/lib/actions/courses.actions";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { Tab } from "@/lib/types/course.slice.types";
+import { CourseTabs } from "@/lib/types/courses.slice.types";
 import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
 import { CourseSchema, courseSchema } from "@/lib/types/form.schema";
 import { CourseFormState } from "@/lib/types/server.actions";
@@ -52,7 +52,7 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
   // set draft mode base on courseData passed to the component
   const [draftMode, setDraftMode] = useState<boolean>(courseData?.draftMode ?? false);
 
-  const activeTab = draftMode ? Tab.Draft : Tab.Published;
+  const activeTab = draftMode ? CourseTabs.Draft : CourseTabs.Published;
 
   // set separate loading for each button: Publish | Draft
   const [isLoading, setIsLoading] = useState<LoadingState>({

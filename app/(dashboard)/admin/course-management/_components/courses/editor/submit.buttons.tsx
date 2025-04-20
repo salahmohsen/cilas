@@ -1,6 +1,6 @@
 import { Button } from "@/components/hoc/button";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { CoursesFilter } from "@/lib/types/courses.slice.types";
 import { Circle, CircleDashed } from "lucide-react";
 
 type SubmitButtonsProps = {

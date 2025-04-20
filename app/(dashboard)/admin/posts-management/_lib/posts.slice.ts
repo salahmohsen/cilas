@@ -1,33 +1,34 @@
 import { getBundles as fetchBundles } from "@/lib/actions/bundles.actions";
-import { deleteCourse, fetchCourses } from "@/lib/actions/courses.actions";
+import { deleteCourse } from "@/lib/actions/courses.actions";
 import { toast } from "sonner";
 import { create } from "zustand";
-import { CourseState, CoursesFilter } from "../types/courses.slice.types";
+import { fetchPosts } from "./posts.actions";
+import { PostsFilter, PostsState } from "./posts.slice.types";
 
-export const useCourseStore = create<CourseState>((set, get) => ({
+export const usePostsStore = create<PostsState>((set, get) => ({
   activeTab: null,
-  isCourseSelected: null,
-  isBundleSelected: null,
-  courseInfo: null,
-  filter: CoursesFilter.AllPublished,
-  fellow: undefined,
+  isPostSelected: null,
+  isSeriesSelected: null,
+  postInfo: null,
+  filter: PostsFilter.Published,
+  author: undefined,
   isLoading: false,
-  courses: null,
-  bundles: null,
+  posts: null,
+  series: null,
 
   // Simple actions
   setActiveTab: (tab) => set({ activeTab: tab }),
-  setCourseSelected: (selected) => set({ isCourseSelected: selected }),
-  setBundleSelected: (selected) => set({ isBundleSelected: selected }),
-  setCourseInfo: (course) => set({ courseInfo: course }),
+  setPostSelected: (selected) => set({ isPostSelected: selected }),
+  setSeriesSelected: (selected) => set({ isSeriesSelected: selected }),
+  setPostInfo: (post) => set({ postInfo: post }),
   setFilter: (filter) => set({ filter }),
-  setFellow: (fellow) => set({ fellow }),
+  setAuthor: (author) => set({ author }),
   setLoading: (loading) => set({ isLoading: loading }),
-  setCourses: (courses) => set({ courses, isLoading: false }),
-  setBundles: (bundles) => set({ bundles, isLoading: false }),
+  setPosts: (posts) => set({ posts, isLoading: false }),
+  setSeries: (series) => set({ series, isLoading: false }),
 
   // Async actions
-  getCourses: async () => {
+  getPosts: async () => {
     const filter = get().filter;
     if (!filter) {
       console.error("There is no filter to get courses!");
@@ -36,14 +37,14 @@ export const useCourseStore = create<CourseState>((set, get) => ({
 
     try {
       set({ isLoading: true });
-      const data = await fetchCourses(filter);
+      const data = await fetchPosts(filter);
 
       if (data.error) {
         throw new Error(data.message);
       }
-      if (data.courses) {
+      if (data.posts) {
         set({
-          courses: data.courses,
+          posts: data.posts,
           isLoading: false,
         });
       }
@@ -53,37 +54,38 @@ export const useCourseStore = create<CourseState>((set, get) => ({
     }
   },
 
-  revalidateCourse: async (courseId: number) => {
+  revalidatePost: async (courseId: number) => {
     try {
       set({ isLoading: true });
-      const data = await fetchCourses(undefined, courseId);
+      const data = await fetchPosts(undefined, courseId);
       if (data.error) {
         set({ isLoading: false });
         throw new Error(data.message);
       }
-      if (data.courses) {
-        const revalidatedCourse = data.courses[0];
-        const { courses } = get();
+      if (data.posts) {
+        const revalidatedCourse = data.posts[0];
+        const { posts } = get();
 
         // Check if the course data actually changed to avoid unnecessary updates
-        const existingCourse = courses?.find((course) => course.id === courseId);
-        if (JSON.stringify(existingCourse) === JSON.stringify(data.courses?.[0])) {
+        const existingPost = posts?.find((course) => course.id === courseId);
+        if (JSON.stringify(existingPost) === JSON.stringify(data.posts[0])) {
           set({ isLoading: false });
           return;
         }
 
-        const remainingCourses = courses?.filter((course) => course.id !== courseId);
+        const remainingCourses = posts?.filter((course) => course.id !== courseId);
         const sortedCourses = [...(remainingCourses || []), revalidatedCourse].sort(
           (a, b) => {
             const startDateDiff =
-              new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
+              new Date(b.createdAt ?? "").getTime() -
+              new Date(a.createdAt ?? "").getTime();
             if (startDateDiff !== 0) return startDateDiff;
             return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(); // If startDates are the same, sort by createdAt
           },
         );
         set({
-          courses: sortedCourses,
-          courseInfo: revalidatedCourse,
+          posts: sortedCourses,
+          postInfo: revalidatedCourse,
           isLoading: false,
         });
       }
@@ -93,13 +95,13 @@ export const useCourseStore = create<CourseState>((set, get) => ({
     }
   },
 
-  getBundles: async () => {
+  getSeries: async () => {
     try {
       set({ isLoading: true });
       const data = await fetchBundles();
 
       if (!data.success || !data.bundles) throw new Error(data.message);
-      set({ bundles: data.bundles, isLoading: false });
+      set({ series: data.bundles, isLoading: false });
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to fetch bundles");
       set({ isLoading: false });
@@ -107,9 +109,9 @@ export const useCourseStore = create<CourseState>((set, get) => ({
   },
 
   handleDelete: async (courseId) => {
-    const { courses } = get();
-    const originalCourses = courses;
-    const courseToDelete = courses?.find((course) => course.id === courseId);
+    const { posts } = get();
+    const originalCourses = posts;
+    const courseToDelete = posts?.find((course) => course.id === courseId);
     if (!courseToDelete) return toast.error("Course is not available!");
 
     const toastId = toast.loading("Loading...");
@@ -117,7 +119,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
     try {
       // Optimistic update
       set({
-        courses: courses?.filter((course) => course.id !== courseId),
+        posts: posts?.filter((course) => course.id !== courseId),
       });
 
       const formData = new FormData();
@@ -127,7 +129,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
       if (result.success) {
         toast.success(result.message, { id: toastId });
         set((state) => ({
-          courses: state.courses?.filter((course) => course.id !== courseId),
+          posts: state.posts?.filter((course) => course.id !== courseId),
         }));
       } else {
         throw new Error(result.message);
@@ -137,7 +139,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
         id: toastId,
       });
       // Restore the optimistic update
-      set({ courses: originalCourses });
+      set({ posts: originalCourses });
     }
   },
 }));

@@ -8,35 +8,35 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { CourseTabs } from "@/lib/types/courses.slice.types";
 import { ReactNode } from "react";
-import { useItemsNavContext } from "../../../_context/items.nav.context";
+import { useItemsNavContext } from "../../_context/items.nav.context";
+import { PostsTabs } from "../_lib/posts.slice.types";
 
-type CourseTabContentProps = {
-  tabValue: CourseTabs;
+type PostsTabContentProps = {
+  tabValue: PostsTabs;
   title: string;
   description: string;
-  content: ReactNode;
+  children: ReactNode;
 };
 
-export const CourseTabContent = ({
+export const PostsTabContent = ({
   tabValue,
   title,
   description,
-  content,
-}: CourseTabContentProps) => {
+  children,
+}: PostsTabContentProps) => {
   const { containerRef } = useItemsNavContext();
 
   return (
     <TabsContent value={tabValue}>
       <Card className="border-0 bg-transparent shadow-none">
         <CardHeader className="sr-only">
-          <CardTitle>Published Courses</CardTitle>
-          <CardDescription>Monitor and manage published courses.</CardDescription>
+          <CardTitle>Published Posts</CardTitle>
+          <CardDescription>Monitor and manage published posts.</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <ul className="group/list space-y-2" ref={containerRef}>
-            {content}
+            {children}
           </ul>
         </CardContent>
       </Card>

@@ -12,7 +12,7 @@ import { DateInput, MultiSelectorInput, SelectInput } from "@/components/form-in
 import { Button } from "@/components/hoc/button";
 import { Form } from "@/components/ui/form";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { Tab } from "@/lib/types/course.slice.types";
+import { CourseTabs } from "@/lib/types/courses.slice.types";
 import { bundleSchema, BundleSchema } from "@/lib/types/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -46,8 +46,8 @@ export default function BundleForm({
       getBundles();
       toast.success(bundleState.message);
       setCourseSelected(null);
-      setActiveTab(Tab.Bundles);
-      redirect(`/admin/course-management?tab=${Tab.Bundles}`);
+      setActiveTab(CourseTabs.Bundles);
+      redirect(`/admin/course-management?tab=${CourseTabs.Bundles}`);
     }
     if (bundleState.error) toast.error(bundleState.message);
   }, [bundleState, getBundles, setCourseSelected, setActiveTab]);
@@ -122,7 +122,10 @@ export default function BundleForm({
           />
         </fieldset>
         <div className="my-8 flex gap-5">
-          <Link href={`/admin/course-management?tab=${Tab.Bundles}`} className="w-full">
+          <Link
+            href={`/admin/course-management?tab=${CourseTabs.Bundles}`}
+            className="w-full"
+          >
             <Button variant="secondary" className="w-full">
               Cancel
             </Button>

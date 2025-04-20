@@ -10,18 +10,18 @@ import { Tabs } from "@/components/ui/tabs";
 
 import { Button } from "@/components/hoc/button";
 import { NotFound } from "@/components/not-found";
+import { useItemsNavigation } from "@/lib/hooks/courses";
 import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter, Tab } from "@/lib/types/course.slice.types";
+import { CoursesFilter, CourseTabs } from "@/lib/types/courses.slice.types";
 import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useCourseNavigation } from "../../../../lib/hooks/courses";
 import { PageHeader } from "../_components/page.header";
+import { ItemsNavContext } from "../_context/items.nav.context";
 import { CourseItem } from "./_components/courses/course.item";
 import { CourseSkeleton } from "./_components/courses/course.skeleton";
 import { CourseInfoModal } from "./_components/info/info.modal";
 import { CoursesTabList } from "./_components/tabs/list.tab";
 import { CourseTabContent } from "./_components/tabs/tab.content";
-import { courseNavContext } from "./_context/course.nav.context";
 
 export default function ManageCoursesPage() {
   const { width } = useWindowSize();
@@ -35,14 +35,24 @@ export default function ManageCoursesPage() {
     getCourses,
     setFilter,
     filter,
+    courseInfo,
+    isCourseSelected,
+    setCourseInfo,
   } = useCourseStore();
 
   const searchParams = useSearchParams();
-  const tabParam = searchParams.get("tab") as Tab;
+  const tabParam = searchParams.get("tab") as CourseTabs;
 
   const containerRef = useRef<HTMLUListElement | null>(null);
 
-  const { handleNext, handlePrev } = useCourseNavigation(containerRef);
+  const { handleNext, handlePrev } = useItemsNavigation({
+    containerRef,
+    itemInfo: courseInfo,
+    isItemSelected: isCourseSelected,
+    items: courses,
+    setItemInfo: setCourseInfo,
+    setItemSelected: setCourseSelected,
+  });
 
   const isDesktop = width && width >= 1024;
 
@@ -51,21 +61,21 @@ export default function ManageCoursesPage() {
   }, [setActiveTab, tabParam]);
 
   useEffect(() => {
-    if (!activeTab) setActiveTab(Tab.Published);
+    if (!activeTab) setActiveTab(CourseTabs.Published);
     getCourses();
   }, [getCourses, activeTab, filter, setActiveTab]);
 
   const onTabChange = useCallback(
-    (tab: Tab) => {
+    (tab: CourseTabs) => {
       setActiveTab(tab);
       setCourseSelected(null);
-      if (tab === Tab.Published) setFilter(CoursesFilter.AllPublished);
-      if (tab === Tab.Draft) setFilter(CoursesFilter.Draft);
+      if (tab === CourseTabs.Published) setFilter(CoursesFilter.AllPublished);
+      if (tab === CourseTabs.Draft) setFilter(CoursesFilter.Draft);
     },
     [setActiveTab, setCourseSelected, setFilter],
   );
   return (
-    <div className="flex h-full flex-col gap-12 p-8">
+    <div className="flex h-[100vh] flex-col gap-12 p-8">
       <PageHeader
         title="Course Management"
         description="Manage courses: create, update, delete, and filter with ease."
@@ -75,20 +85,20 @@ export default function ManageCoursesPage() {
         </Button>
       </PageHeader>
 
-      <courseNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
+      <ItemsNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
         <div className="flex gap-8">
           <Tabs
-            value={activeTab as Tab}
-            onValueChange={(tab) => onTabChange(tab as Tab)}
+            value={activeTab as CourseTabs}
+            onValueChange={(tab) => onTabChange(tab as CourseTabs)}
             className={cn(`flex flex-1 flex-col gap-12`)}
           >
             <CoursesTabList />
             <CourseTabContent
-              tabValue={Tab.Published}
+              tabValue={CourseTabs.Published}
               title="Published Courses"
               description="Monitor and manage published courses."
               content={
-                <div>
+                <div className="space-y-2">
                   {isLoading && <CourseSkeleton itemsNumber={10} />}
                   {!isLoading &&
                     courses &&
@@ -104,7 +114,7 @@ export default function ManageCoursesPage() {
               }
             />
             <CourseTabContent
-              tabValue={Tab.Draft}
+              tabValue={CourseTabs.Draft}
               title="Draft Courses"
               description="Manage and refine courses before publishing."
               content={
@@ -129,7 +139,7 @@ export default function ManageCoursesPage() {
           )}
           {!isDesktop && <CourseInfoModal />}
         </div>
-      </courseNavContext.Provider>
+      </ItemsNavContext.Provider>
     </div>
   );
 }

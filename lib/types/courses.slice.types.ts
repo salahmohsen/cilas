@@ -11,17 +11,16 @@ export enum CoursesFilter {
   StartingSoon = "starting soon",
   Draft = "draft",
 }
-export enum Tab {
+export enum CourseTabs {
   Published = "published",
   Draft = "draft",
-  Bundles = "bundles",
 }
 
 export interface CourseState {
-  activeTab: Tab | null;
+  activeTab: CourseTabs | null;
   isCourseSelected: Record<number, boolean> | null;
   isBundleSelected: Record<number, boolean> | null;
-  courseInfo: CourseWithFellowAndStudents | undefined | null;
+  courseInfo: CourseWithFellowAndStudents | null;
   filter: CoursesFilter;
   fellow: userLocalInfo | undefined;
   isLoading: boolean;
@@ -29,7 +28,7 @@ export interface CourseState {
   bundles: null | BundleWithCourseTitles[];
 
   // Actions
-  setActiveTab: (tab: Tab) => void;
+  setActiveTab: (tab: CourseTabs) => void;
   setCourseSelected: (selected: Record<number, boolean> | null) => void;
   setBundleSelected: (selected: Record<number, boolean> | null) => void;
   setCourseInfo: (course: CourseWithFellowAndStudents | undefined | null) => void;

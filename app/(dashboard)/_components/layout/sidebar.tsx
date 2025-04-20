@@ -28,7 +28,7 @@ export function LayoutSidebar({ className }: { className?: string }) {
           />
           <SidebarItem
             name="Blog Management"
-            href="/admin/blog-management"
+            href="/admin/posts-management"
             icon={<Rss className="size-5" />}
           />
         </nav>

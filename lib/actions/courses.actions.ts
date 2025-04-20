@@ -3,7 +3,7 @@
 import { Option } from "@/components/ui/multipleSelector";
 import db from "@/lib/db/drizzle";
 import { courseTable } from "@/lib/db/schema";
-import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { CoursesFilter } from "@/lib/types/courses.slice.types";
 import { courseSchema } from "@/lib/types/form.schema";
 import {
   courseSchemaToDbSchema,

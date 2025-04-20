@@ -6,19 +6,19 @@ import postTagsTable from "./post.tag";
 const blogsToTagsTable = pgTable(
   "blogs_to_tags",
   {
-    blogId: integer("blog_id")
+    postId: integer("blog_id")
       .notNull()
       .references(() => blogsTable.id, { onDelete: "cascade" }),
     tagId: integer("tag_id")
       .notNull()
       .references(() => postTagsTable.id, { onDelete: "cascade" }),
   },
-  (t) => [primaryKey({ columns: [t.blogId, t.tagId] })],
+  (t) => [primaryKey({ columns: [t.postId, t.tagId] })],
 );
 
 export const blogsToTagsRelations = relations(blogsToTagsTable, ({ one }) => ({
   blog: one(blogsTable, {
-    fields: [blogsToTagsTable.blogId],
+    fields: [blogsToTagsTable.postId],
     references: [blogsTable.id],
   }),
   tag: one(postTagsTable, {

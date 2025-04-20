@@ -1,5 +1,5 @@
-export { default as blogSchema } from "./blog";
-export type { BlogSchema } from "./blog";
+export { default as blogSchema } from "../../../app/(dashboard)/admin/posts-management/_lib/posts.schema";
+export type { BlogSchema } from "../../../app/(dashboard)/admin/posts-management/_lib/posts.schema";
 export { default as bundleSchema } from "./bundle";
 export type { BundleSchema } from "./bundle";
 export { default as courseSchema } from "./course";
