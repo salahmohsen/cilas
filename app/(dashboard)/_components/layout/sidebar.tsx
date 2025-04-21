@@ -15,7 +15,9 @@ export function LayoutSidebar({ className }: { className?: string }) {
   const { setCourseSelected } = useCourseStore();
   const { setSelectedPost } = usePostsStore();
   return (
-    <aside className={cn("flex h-screen flex-col items-center gap-3", className)}>
+    <aside
+      className={cn("hidden h-screen flex-col items-center gap-3 md:flex", className)}
+    >
       <Link href="/" className="relative h-10 w-10">
         <Image
           src={logo}

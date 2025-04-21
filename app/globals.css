@@ -202,6 +202,6 @@
 
 @layer components {
   .content-list-item {
-    @apply lg:hover:bg-accent data-[selected=true]:bg-accent cursor-pointer items-center gap-4 rounded-md py-6 text-sm font-medium transition-all duration-300 hover:-mx-4 hover:px-5 data-[selected=false]:bg-transparent data-[selected=true]:-mx-4 data-[selected=true]:px-5 data-[selected=true]:opacity-100 lg:group-hover/list:opacity-65 lg:hover:opacity-100;
+    @apply lg:hover:bg-accent! data-[selected=true]:bg-accent cursor-pointer items-center gap-4 rounded-md py-6 text-sm font-medium transition-all duration-300 hover:-mx-4 hover:px-5 data-[selected=false]:bg-transparent data-[selected=true]:-mx-4 data-[selected=true]:px-5 data-[selected=true]:opacity-100 lg:group-hover/list:opacity-65 lg:hover:opacity-100;
   }
 }

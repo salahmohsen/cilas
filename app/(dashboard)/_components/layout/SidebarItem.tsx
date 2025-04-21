@@ -20,7 +20,7 @@ export function SidebarItem({
   onClick?: () => void;
 }) {
   const path = usePathname();
-  const active = path === href;
+  const active = href.includes(path);
 
   return (
     <Tooltip>
