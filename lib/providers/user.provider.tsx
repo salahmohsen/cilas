@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import { useUserStore } from "../store/user.slice";
+import { useUserStore } from "../users/user.slice";
 
 const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { setUserInfo } = useUserStore();

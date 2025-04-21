@@ -5,17 +5,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { CourseMeta } from "./course.meta";
 
+import { ContentName, TitleName } from "@/app/(dashboard)/_lib/tiptap.types";
 import { ContentInput } from "@/components/form-inputs";
-import {
-  useCourseEditor,
-  useCourseForm,
-  useCourseSidebar,
-  useCourseTab,
-} from "@/lib/hooks/courses";
+import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
+
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
-import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
-import { ContentName, TitleName } from "@/lib/types/editor";
+import { useCourseEditor } from "../../../_lib/useCourseEditor";
+import { useCourseForm } from "../../../_lib/useCourseForm";
+import { useCourseSidebar } from "../../../_lib/useCourseSidebar";
+import { useCourseTab } from "../../../_lib/useCourseTab";
 import { SubmitButtons } from "./submit.buttons";
 
 type CourseFormPropTypes = {

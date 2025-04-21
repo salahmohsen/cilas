@@ -7,6 +7,10 @@
 @import "./partials/table.css";
 @import "./partials/typography.css";
 
+.tiptap {
+  font-family: var(--font-inter), var(--font-ibm-plex-sans-arabic);
+}
+
 .ProseMirror {
   @apply z-0 px-4 py-8 caret-black outline-0 lg:px-8 dark:caret-white;
 

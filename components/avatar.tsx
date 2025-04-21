@@ -1,4 +1,4 @@
-import { SafeUser } from "@/lib/types/drizzle.types";
+import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { cn } from "@/lib/utils";
 import { forwardRef, useCallback } from "react";
 import { Avatar as AvatarComponent, AvatarFallback, AvatarImage } from "./ui/avatar";

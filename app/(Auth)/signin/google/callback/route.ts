@@ -1,6 +1,6 @@
-import { google, lucia } from "@/lib/apis/auth.api";
-import db from "@/lib/db/drizzle";
-import { userTable } from "@/lib/db/schema";
+import { google, lucia } from "@/app/(Auth)/_lib/auth.lucia";
+import db from "@/lib/drizzle/drizzle";
+import { userTable } from "@/lib/drizzle/schema";
 import { GoogleTokens, OAuth2RequestError } from "arctic";
 import { eq } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";

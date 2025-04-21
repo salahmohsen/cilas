@@ -6,15 +6,18 @@ import { useCallback, useEffect, useRef } from "react";
 
 import { Tabs } from "@/components/ui/tabs";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import {
+  CoursesFilter,
+  CourseTabs,
+} from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import { Button } from "@/components/hoc/button";
 import { NotFound } from "@/components/not-found";
-import { useItemsNavigation } from "@/lib/hooks/courses";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter, CourseTabs } from "@/lib/types/courses.slice.types";
 import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { ItemsNavContext } from "../../_lib/items.nav.context";
+import { useItemsNavigation } from "../../_lib/use.items.navigation";
 import { PageHeader } from "../_components/page.header";
-import { ItemsNavContext } from "../_context/items.nav.context";
 import { CourseItem } from "./_components/courses/course.item";
 import { CourseSkeleton } from "./_components/courses/course.skeleton";
 import { CourseInfo } from "./_components/info/info";
@@ -33,14 +36,13 @@ export default function ManageCoursesPage() {
     setCourseSelected,
     getCourses,
     setFilter,
-    filter,
     courseInfo,
     isCourseSelected,
     setCourseInfo,
   } = useCourseStore();
 
   const searchParams = useSearchParams();
-  const tabParam = searchParams.get("tab") as CourseTabs;
+  const tabParam = searchParams.get("tab") as CourseTabs | undefined;
 
   const containerRef = useRef<HTMLUListElement | null>(null);
 
@@ -56,13 +58,9 @@ export default function ManageCoursesPage() {
   const isDesktop = width && width >= 1024;
 
   useEffect(() => {
-    setActiveTab(tabParam);
-  }, [setActiveTab, tabParam]);
-
-  useEffect(() => {
-    if (!activeTab) setActiveTab(CourseTabs.Published);
+    setActiveTab(tabParam ?? CourseTabs.Published);
     getCourses();
-  }, [getCourses, activeTab, filter, setActiveTab]);
+  }, [getCourses, setActiveTab, tabParam]);
 
   const onTabChange = useCallback(
     (tab: CourseTabs) => {
@@ -74,17 +72,17 @@ export default function ManageCoursesPage() {
     [setActiveTab, setCourseSelected, setFilter],
   );
   return (
-    <div className="flex h-[92vh] flex-col gap-12 p-8">
-      <PageHeader
-        title="Course Management"
-        description="Manage courses: create, update, delete, and filter with ease."
-      >
-        <Button href="/admin/course-management/create-course" icon={<Sailboat />}>
-          New Course
-        </Button>
-      </PageHeader>
+    <ItemsNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
+      <div className="flex h-full flex-col gap-12 p-4 md:p-8">
+        <PageHeader
+          title="Course Management"
+          description="Manage courses: create, update, delete, and filter with ease."
+        >
+          <Button href="/admin/course-management/create-course" icon={<Sailboat />}>
+            New Course
+          </Button>
+        </PageHeader>
 
-      <ItemsNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
         <div className="flex gap-8">
           <Tabs
             value={activeTab as CourseTabs}
@@ -92,56 +90,51 @@ export default function ManageCoursesPage() {
             className={cn(`flex flex-1 flex-col gap-12`)}
           >
             <CoursesTabList />
+
             <CourseTabContent
               tabValue={CourseTabs.Published}
               title="Published Courses"
               description="Monitor and manage published courses."
-              content={
-                <div className="space-y-2">
-                  {isLoading && <CourseSkeleton itemsNumber={10} />}
-                  {!isLoading &&
-                    courses &&
-                    courses.length > 0 &&
-                    courses.map((course) => (
-                      <CourseItem
-                        course={course}
-                        key={`${course.id}-${course.updatedAt}`}
-                      />
-                    ))}
-                  {courses?.length === 0 && <NotFound message="No Courses Found!" />}
-                </div>
-              }
-            />
+            >
+              <div className="space-y-2">
+                {isLoading && <CourseSkeleton itemsNumber={10} />}
+                {!isLoading &&
+                  courses &&
+                  courses.length > 0 &&
+                  courses.map((course) => (
+                    <CourseItem
+                      course={course}
+                      key={`${course.id}-${course.updatedAt}`}
+                    />
+                  ))}
+                {courses?.length === 0 && <NotFound message="No Courses Found!" />}
+              </div>
+            </CourseTabContent>
             <CourseTabContent
               tabValue={CourseTabs.Draft}
               title="Draft Courses"
               description="Manage and refine courses before publishing."
-              content={
-                <>
-                  {isLoading && <CourseSkeleton itemsNumber={10} />}
-                  {!isLoading &&
-                    courses &&
-                    courses.length > 0 &&
-                    courses.map((course) => (
-                      <CourseItem
-                        course={course}
-                        key={`${course.id}-${course.updatedAt}`}
-                      />
-                    ))}
-                  {courses?.length === 0 && <NotFound message="No Drafts Found!" />}
-                </>
-              }
-            />
+            >
+              {isLoading && <CourseSkeleton itemsNumber={10} />}
+              {!isLoading &&
+                courses &&
+                courses.length > 0 &&
+                courses.map((course) => (
+                  <CourseItem course={course} key={`${course.id}-${course.updatedAt}`} />
+                ))}
+              {courses?.length === 0 && <NotFound message="No Drafts Found!" />}
+            </CourseTabContent>
           </Tabs>
+
           {isDesktop && (
             <CourseInfo
-              className="sticky max-h-[70vh] max-w-1/3 overflow-hidden"
+              className="sticky top-10 max-h-[70vh] max-w-1/3 overflow-hidden"
               mode="flex"
             />
           )}
           {!isDesktop && <CourseInfoModal />}
         </div>
-      </ItemsNavContext.Provider>
-    </div>
+      </div>
+    </ItemsNavContext.Provider>
   );
 }

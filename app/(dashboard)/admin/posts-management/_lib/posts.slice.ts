@@ -1,5 +1,4 @@
-import { getBundles as fetchBundles } from "@/lib/actions/bundles.actions";
-import { deleteCourse } from "@/lib/actions/courses.actions";
+import { deleteCourse } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
 import { toast } from "sonner";
 import { create } from "zustand";
 import { fetchPosts } from "./posts.actions";
@@ -7,8 +6,8 @@ import { PostsFilter, PostsState } from "./posts.slice.types";
 
 export const usePostsStore = create<PostsState>((set, get) => ({
   activeTab: null,
-  isPostSelected: null,
-  isSeriesSelected: null,
+  selectedPost: null,
+  selectedSeries: null,
   postInfo: null,
   filter: PostsFilter.Published,
   author: undefined,
@@ -18,8 +17,8 @@ export const usePostsStore = create<PostsState>((set, get) => ({
 
   // Simple actions
   setActiveTab: (tab) => set({ activeTab: tab }),
-  setPostSelected: (selected) => set({ isPostSelected: selected }),
-  setSeriesSelected: (selected) => set({ isSeriesSelected: selected }),
+  setSelectedPost: (selected) => set({ selectedPost: selected }),
+  setSelectedSeries: (selected) => set({ selectedSeries: selected }),
   setPostInfo: (post) => set({ postInfo: post }),
   setFilter: (filter) => set({ filter }),
   setAuthor: (author) => set({ author }),
@@ -93,16 +92,15 @@ export const usePostsStore = create<PostsState>((set, get) => ({
   },
 
   getSeries: async () => {
-    try {
-      set({ isLoading: true });
-      const data = await fetchBundles();
-
-      if (!data.success || !data.bundles) throw new Error(data.message);
-      set({ series: data.bundles, isLoading: false });
-    } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to fetch bundles");
-      set({ isLoading: false });
-    }
+    // try {
+    //   set({ isLoading: true });
+    //   const data = ;
+    //   if (!data.success || !data.bundles) throw new Error(data.message);
+    //   set({ series: data.bundles, isLoading: false });
+    // } catch (error) {
+    //   toast.error(error instanceof Error ? error.message : "Failed to fetch bundles");
+    //   set({ isLoading: false });
+    // }
   },
 
   handleDelete: async (postID) => {

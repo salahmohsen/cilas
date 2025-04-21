@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { SafeUser } from "@/lib/types/drizzle.types";
+import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { useState } from "react";
 import { UserSettings } from "./user.settings";
 

@@ -5,8 +5,8 @@ import { FieldPath, FieldValues } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 
 import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { cloudinary_quality } from "@/lib/cloudinary/cloudinary.utils";
 import { BasicInputProps } from "@/lib/types/form.inputs.types";
-import { cloudinary_quality } from "@/lib/utils/cloudinary.utils";
 import { cn } from "@/lib/utils/utils";
 
 const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({

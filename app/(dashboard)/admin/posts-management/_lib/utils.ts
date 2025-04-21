@@ -1,4 +1,4 @@
-import { postsTable } from "@/lib/db/schema";
+import { postsTable } from "@/lib/drizzle/schema";
 import { eq } from "drizzle-orm";
 import { PostsFilter } from "./posts.slice.types";
 

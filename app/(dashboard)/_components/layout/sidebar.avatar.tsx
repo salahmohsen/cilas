@@ -1,5 +1,6 @@
 "use client";
 
+import { logout } from "@/app/(Auth)/_lib/auth.actions";
 import { Button } from "@/components/hoc/button";
 import {
   DropdownMenu,
@@ -9,8 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logout } from "@/lib/actions/auth.actions";
-import { useUserStore } from "@/lib/store/user.slice";
+import { useUserStore } from "@/lib/users/user.slice";
 import { UserRound } from "lucide-react";
 import Image from "next/image";
 

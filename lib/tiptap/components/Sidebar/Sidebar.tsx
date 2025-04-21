@@ -1,7 +1,7 @@
+import { EditorSidebar } from "@/app/(dashboard)/_lib/tiptap.types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/tiptap/lib/utils";
-import { EditorSidebar } from "@/lib/types/editor";
 import { Editor } from "@tiptap/react";
 import React, { memo, useCallback } from "react";
 import { TableOfContents } from "../TableOfContents";

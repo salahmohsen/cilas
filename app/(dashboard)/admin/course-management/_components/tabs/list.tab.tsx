@@ -1,8 +1,11 @@
 "use client";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import {
+  CoursesFilter,
+  CourseTabs,
+} from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import { TabsList as TabsListUi, TabsTrigger } from "@/components/ui/tabs";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter, CourseTabs } from "@/lib/types/courses.slice.types";
 import { Circle, CircleDashed } from "lucide-react";
 import Link from "next/link";
 import { useCallback } from "react";
@@ -27,7 +30,7 @@ export const CoursesTabList = () => {
   };
 
   return (
-    <nav className="flex flex-wrap items-center justify-between gap-1">
+    <nav className="flex flex-wrap items-center justify-between gap-1 gap-y-4">
       <TabsListUi className={tabClasses.list}>
         <Link href={`/admin/course-management?tab=${CourseTabs.Published}`}>
           <TabsTrigger

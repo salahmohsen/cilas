@@ -12,8 +12,8 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils/utils";
 
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter } from "@/lib/types/courses.slice.types";
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import { CoursesFilter } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import { Blend, Check } from "lucide-react";
 
 const coursesFilter = [
@@ -49,7 +49,7 @@ export function FilterButton() {
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="flex justify-between gap-2 border-0 hover:border-1"
+          className="flex justify-between gap-2 hover:border-1 md:border-0"
           icon={<Blend />}
         >
           <span>View Preferences:</span>

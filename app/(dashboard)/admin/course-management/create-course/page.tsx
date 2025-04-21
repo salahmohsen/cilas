@@ -1,8 +1,8 @@
 "use client";
 
+import { getCourseWithEnrollmentsById } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
-import { getCourseWithEnrollmentsById } from "@/lib/actions/courses.actions";
-import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
+import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { CourseEditor } from "../_components/courses/editor/course.editor";

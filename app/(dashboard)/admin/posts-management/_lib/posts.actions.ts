@@ -1,13 +1,13 @@
 "use server";
 
-import db from "@/lib/db/drizzle";
+import db from "@/lib/drizzle/drizzle";
+import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import {
   authorToRoleTable,
   blogsToTagsTable,
   postsTable,
   postsToCategoriesTable,
-} from "@/lib/db/schema";
-import { SafeUser } from "@/lib/types/drizzle.types";
+} from "@/lib/drizzle/schema";
 import { serverActionStateBase } from "@/lib/types/server.actions";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { PostsFilter } from "./posts.slice.types";

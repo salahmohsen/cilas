@@ -1,5 +1,7 @@
 "use client";
 
+import { useItemsNavContext } from "@/app/(dashboard)/_lib/items.nav.context";
+import { CourseTabs } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import {
   Card,
   CardContent,
@@ -8,35 +10,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
-import { CourseTabs } from "@/lib/types/courses.slice.types";
 import { ReactNode } from "react";
-import { useItemsNavContext } from "../../../_context/items.nav.context";
 
 type CourseTabContentProps = {
   tabValue: CourseTabs;
   title: string;
   description: string;
-  content: ReactNode;
+  children: ReactNode;
 };
 
 export const CourseTabContent = ({
   tabValue,
   title,
   description,
-  content,
+  children,
 }: CourseTabContentProps) => {
   const { containerRef } = useItemsNavContext();
 
   return (
-    <TabsContent value={tabValue}>
+    <TabsContent value={tabValue} className="-m-4 rounded-md p-4">
       <Card className="border-0 bg-transparent shadow-none">
         <CardHeader className="sr-only">
-          <CardTitle>Published Courses</CardTitle>
-          <CardDescription>Monitor and manage published courses.</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent className="p-0">
           <ul className="group/list space-y-2" ref={containerRef}>
-            {content}
+            {children}
           </ul>
         </CardContent>
       </Card>

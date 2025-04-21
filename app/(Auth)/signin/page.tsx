@@ -1,14 +1,14 @@
 "use client";
 
 import { AuthForm } from "@/app/(Auth)/_components/auth";
-import { signin } from "@/lib/actions/auth.actions";
-import { useUserStore } from "@/lib/store/user.slice";
-import { signinSchema, SigninSchema } from "@/lib/types/form.schema";
-import { AuthState } from "@/lib/types/users.actions.types";
+import { signin } from "@/app/(Auth)/_lib/auth.actions";
+import { useUserStore } from "@/lib/users/user.slice";
+import { AuthState } from "@/lib/users/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
+import signinSchema, { SigninSchema } from "../_lib/signin.schema";
 
 export default function SigninPage() {
   const { isLogged, userInfo } = useUserStore();

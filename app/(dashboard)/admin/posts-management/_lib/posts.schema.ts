@@ -1,10 +1,6 @@
 import { z } from "zod";
 
-import {
-  optional_file,
-  optional_string,
-  required_string,
-} from "@/lib/utils/zodValidation.utils";
+import { optional_file, optional_string, required_string } from "@/lib/utils/zod.utils";
 
 const blogSchema = {
   schema: z

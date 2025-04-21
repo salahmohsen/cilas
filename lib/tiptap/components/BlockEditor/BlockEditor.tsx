@@ -5,12 +5,12 @@ import React, { useRef } from "react";
 
 import { LinkMenu } from "@/lib/tiptap/components/menus";
 
+import { EditorSidebar } from "@/app/(dashboard)/_lib/tiptap.types";
 import { Sidebar } from "@/lib/tiptap/components/Sidebar";
 import ImageBlockMenu from "@/lib/tiptap/extensions/ImageBlock/components/ImageBlockMenu";
 import { ColumnsMenu } from "@/lib/tiptap/extensions/MultiColumn/menus";
 import { TableColumnMenu, TableRowMenu } from "@/lib/tiptap/extensions/Table/menus";
 import { SidebarState } from "@/lib/tiptap/hooks/useSidebar";
-import { EditorSidebar } from "@/lib/types/editor";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
 import { TextMenu } from "../menus/TextMenu";
 

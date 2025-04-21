@@ -129,8 +129,7 @@
 
     --border: hsl(0 0% 95%);
     --input: hsl(0 0% 89.8%);
-    --ring: hsl(0 0% 3.9%);
-
+    --ring: hsl(0 0% 70%);
     --radius: 0.5rem;
   }
 
@@ -164,7 +163,7 @@
 
     --border: hsl(0 0% 8%);
     --input: hsl(0 0% 14.9%);
-    --ring: hsl(0 0% 83.1%);
+    --ring: hsl(0 0% 63.9%);
   }
 }
 
@@ -188,10 +187,6 @@
     @apply z-50!;
   }
 
-  .tiptap {
-    font-family: var(--font-inter), var(--font-ibm-plex-sans-arabic);
-  }
-
   [data-reference-hidden] {
     opacity: 0;
     pointer-events: none;
@@ -202,5 +197,11 @@
   }
   div ::-webkit-scrollbar-thumb {
     @apply rounded-full bg-neutral-500;
+  }
+}
+
+@layer components {
+  .content-list-item {
+    @apply lg:hover:bg-accent data-[selected=true]:bg-accent cursor-pointer items-center gap-4 rounded-md py-6 text-sm font-medium transition-all duration-300 hover:-mx-4 hover:px-5 data-[selected=false]:bg-transparent data-[selected=true]:-mx-4 data-[selected=true]:px-5 data-[selected=true]:opacity-100 lg:group-hover/list:opacity-65 lg:hover:opacity-100;
   }
 }

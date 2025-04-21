@@ -7,16 +7,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn, getSeason } from "@/lib/utils/utils";
+import { cn } from "@/lib/utils/utils";
 import { differenceInWeeks, format } from "date-fns";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Separator } from "@/components/ui/separator";
-import { useCourseStore } from "@/lib/store/course.slice";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { Copy } from "lucide-react";
 import { forwardRef } from "react";
 import { toast } from "sonner";
+import { getSeason } from "../../_lib/courses.utils";
 import { UserAvatar } from "./info.avatars";
 import { InfoFooter } from "./info.footer";
 

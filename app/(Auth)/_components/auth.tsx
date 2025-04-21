@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
-import { AuthState } from "@/lib/types/users.actions.types";
+import { AuthState } from "@/lib/users/users.actions.types";
 import { SiGoogle } from "@icons-pack/react-simple-icons";
 import { redirect } from "next/navigation";
 

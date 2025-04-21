@@ -1,4 +1,4 @@
-import { BundleWithCourseTitles, SafeUser } from "@/lib/types/drizzle.types";
+import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { Posts } from "./posts.actions.type";
 
 export enum PostsFilter {
@@ -12,25 +12,25 @@ export enum PostsTabs {
 
 export interface PostsState {
   activeTab: PostsTabs | null;
-  isPostSelected: Record<number, boolean> | null;
-  isSeriesSelected: Record<number, boolean> | null;
+  selectedPost: Record<number, boolean> | null;
+  selectedSeries: Record<number, boolean> | null;
   postInfo: Posts[0] | null;
   filter: PostsFilter;
   author: SafeUser | undefined;
   isLoading: boolean;
   posts: Posts | null;
-  series: null | BundleWithCourseTitles[];
+  series: null;
 
   // Actions
   setActiveTab: (tab: PostsTabs) => void;
-  setPostSelected: (selected: Record<number, boolean> | null) => void;
-  setSeriesSelected: (selected: Record<number, boolean> | null) => void;
+  setSelectedPost: (selected: Record<number, boolean> | null) => void;
+  setSelectedSeries: (selected: Record<number, boolean> | null) => void;
   setPostInfo: (post: Posts[0] | undefined | null) => void;
   setFilter: (filter: PostsFilter) => void;
   setAuthor: (fellow: SafeUser | undefined) => void;
   setLoading: (loading: boolean) => void;
   setPosts: (posts: Posts) => void;
-  setSeries: (bundles: BundleWithCourseTitles[]) => void;
+  setSeries: (bundles: null) => void;
   revalidatePost: (postId: number) => Promise<void>;
 
   // Async actions

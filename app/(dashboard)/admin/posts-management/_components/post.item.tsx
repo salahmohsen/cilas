@@ -21,15 +21,15 @@ import { usePostsStore } from "../_lib/posts.slice";
 type PostItemProps = { post: Post };
 
 export const PostItem = ({ post }: PostItemProps) => {
-  const { handleDelete, setPostSelected, setPostInfo, isPostSelected } = usePostsStore();
+  const { handleDelete, setSelectedPost, setPostInfo, selectedPost } = usePostsStore();
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState<boolean>(false);
   const [isStudentDialogOpen, setIsStudentDialogOpen] = useState<boolean>(false);
 
   const handleSelect = (id: number) => {
-    setPostSelected({ [id]: !isPostSelected?.[id] });
-    setPostInfo(isPostSelected?.[id] ? null : post);
+    setSelectedPost({ [id]: !selectedPost?.[id] });
+    setPostInfo(selectedPost?.[id] ? null : post);
   };
 
   const router = useRouter();
@@ -39,9 +39,10 @@ export const PostItem = ({ post }: PostItemProps) => {
   return (
     <>
       <li
-        className={`lg:hover:bg-accent flex cursor-pointer items-center gap-4 rounded-md py-6 text-sm font-medium transition-all duration-300 hover:-mx-4 hover:px-5 lg:group-hover/list:opacity-50 lg:hover:opacity-100! ${isPostSelected?.[post.id] || isMenuOpen ? "bg-accent -mx-4 px-5 opacity-100!" : "bg-transparent"}`}
+        className="content-list-item flex"
         onClick={() => handleSelect(post.id)}
-        data-course-id={post.id}
+        data-item-id={post.id}
+        data-selected={selectedPost?.[post.id] || isMenuOpen}
       >
         <div className="flex w-full justify-between">
           <div className="flex flex-1 flex-col gap-4">

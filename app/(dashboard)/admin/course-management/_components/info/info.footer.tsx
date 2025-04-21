@@ -6,17 +6,16 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 
-import { useCourseStore } from "@/lib/store/course.slice";
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useContext } from "react";
-import { ItemsNavContext } from "../../../_context/items.nav.context";
+import { useItemsNavContext } from "../../../../_lib/items.nav.context";
 
 export const InfoFooter = ({ className }: { className?: string }) => {
   const { courseInfo } = useCourseStore();
 
-  const { handleNext, handlePrev } = useContext(ItemsNavContext);
+  const { handleNext, handlePrev } = useItemsNavContext();
 
   return (
     <CardFooter

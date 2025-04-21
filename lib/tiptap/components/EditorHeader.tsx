@@ -32,7 +32,7 @@ export const EditorHeader = ({
   return (
     <div
       className={cn(
-        "absolute z-30 flex h-max w-full items-center justify-end border-b px-4 sm:pr-0 sm:pl-6 md:justify-between",
+        "absolute z-30 flex h-10 w-full items-center justify-end border-b px-4 sm:pr-0 sm:pl-6 md:justify-between",
         "bg-background/50 backdrop-blur-xs",
         isSidebarOpen && "bg-background",
       )}

@@ -1,6 +1,6 @@
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import { CoursesFilter } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import { Button } from "@/components/hoc/button";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter } from "@/lib/types/courses.slice.types";
 import { Circle, CircleDashed } from "lucide-react";
 
 type SubmitButtonsProps = {

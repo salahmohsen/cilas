@@ -9,20 +9,20 @@ import {
 } from "@/app/(dashboard)/admin/posts-management/_lib/posts.slice.types";
 import { Button } from "@/components/hoc/button";
 import { NotFound } from "@/components/not-found";
-import { useItemsNavigation } from "@/lib/hooks/courses";
 import { cn } from "@/lib/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
+import { ItemsNavContext } from "../../_lib/items.nav.context";
+import { useItemsNavigation } from "../../_lib/use.items.navigation";
 import { PageHeader } from "../_components/page.header";
-import { ItemsNavContext } from "../_context/items.nav.context";
 import { CourseSkeleton } from "../course-management/_components/courses/course.skeleton";
-import { CourseInfo } from "../course-management/_components/info/info";
 import { CourseInfoModal } from "../course-management/_components/info/info.modal";
+import { PostInfo } from "./_components/post.info";
 import { PostItem } from "./_components/post.item";
-import { PostsTabContent } from "./_components/tab.content";
-import { PostsTabList } from "./_components/tab.list";
+import { PostsTabList } from "./_components/post.list";
+import { PostsTabContent } from "./_components/post.tab.content";
 
 export default function BlogManagement() {
   const containerRef = useRef<HTMLUListElement | null>(null);
@@ -32,12 +32,12 @@ export default function BlogManagement() {
     isLoading,
     activeTab,
     setActiveTab,
-    setPostSelected,
+    setSelectedPost,
     getPosts,
     setFilter,
     filter,
     postInfo,
-    isPostSelected,
+    selectedPost,
     setPostInfo,
   } = usePostsStore();
 
@@ -45,46 +45,40 @@ export default function BlogManagement() {
     containerRef,
     items: posts,
     itemInfo: postInfo,
-    isItemSelected: isPostSelected,
+    isItemSelected: selectedPost,
     setItemInfo: setPostInfo,
-    setItemSelected: setPostSelected,
+    setItemSelected: setSelectedPost,
   });
 
   const { width } = useWindowSize();
   const isDesktop = width && width >= 1024;
 
   const searchParams = useSearchParams();
-  const tabParam = searchParams.get("tab") as PostsTabs;
+  const tabParam = searchParams.get("tab") as PostsTabs | undefined;
 
   useEffect(() => {
-    setActiveTab(tabParam);
-  }, [setActiveTab, tabParam]);
-
-  useEffect(() => {
-    if (!activeTab) setActiveTab(PostsTabs.Published);
+    setActiveTab(tabParam ?? PostsTabs.Published);
     getPosts();
-  }, [getPosts, activeTab, filter, setActiveTab]);
+  }, [getPosts, setActiveTab, tabParam]);
 
   const onTabChange = useCallback(
     (tab: PostsTabs) => {
       setActiveTab(tab);
-      setPostSelected(null);
+      setSelectedPost(null);
       if (tab === PostsTabs.Published) setFilter(PostsFilter.Published);
       if (tab === PostsTabs.Draft) setFilter(PostsFilter.Draft);
     },
-    [setActiveTab, setPostSelected, setFilter],
+    [setActiveTab, setSelectedPost, setFilter],
   );
 
-  console.log(posts);
-
   return (
-    <div className="flex h-[100vh] flex-col gap-12 p-8">
+    <div className="flex h-[100vh] flex-1 flex-col gap-12 p-8">
       <PageHeader
-        title="Course Management"
-        description="Manage courses: create, update, delete, and filter with ease."
+        title="Posts Management"
+        description="Manage posts: create, update, delete, and filter with ease."
       >
-        <Button href="/admin/course-management/create-course" icon={<Sailboat />}>
-          New Course
+        <Button href="/admin/course-management/create-post" icon={<Sailboat />}>
+          New Post
         </Button>
       </PageHeader>
 
@@ -108,7 +102,7 @@ export default function BlogManagement() {
                 posts.map((post) => (
                   <PostItem post={post} key={`${post.id}-${post.updatedAt}`} />
                 ))}
-              {posts?.length === 0 && <NotFound message="No Courses Found!" />}
+              {posts?.length === 0 && <NotFound message="No Posts Found!" />}
             </PostsTabContent>
             <PostsTabContent
               tabValue={PostsTabs.Draft}
@@ -122,11 +116,11 @@ export default function BlogManagement() {
                 posts.map((post) => (
                   <PostItem post={post} key={`${post.id}-${post.updatedAt}`} />
                 ))}
-              {posts?.length === 0 && <NotFound message="No Courses Found!" />}
+              {posts?.length === 0 && <NotFound message="No Posts Found!" />}
             </PostsTabContent>
           </Tabs>
           {isDesktop && (
-            <CourseInfo className="sticky max-h-[70vh] max-w-1/3" mode="flex" />
+            <PostInfo className="sticky max-h-[70vh] max-w-1/3" mode="flex" />
           )}
           {!isDesktop && <CourseInfoModal />}
         </div>
