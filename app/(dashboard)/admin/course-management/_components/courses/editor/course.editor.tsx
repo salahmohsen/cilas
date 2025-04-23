@@ -5,18 +5,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { CourseMeta } from "./course.meta";
 
+import { ContentName, TitleName } from "@/app/(dashboard)/_lib/tiptap.types";
 import { ContentInput } from "@/components/form-inputs";
-import {
-  useCourseEditor,
-  useCourseForm,
-  useCourseSidebar,
-  useCourseTab,
-} from "@/lib/hooks/courses";
+import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
+
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
-import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
-import { ContentName, TitleName } from "@/lib/types/editor";
-import { SubmitButtons } from "../editor/submit.buttons";
+import { useCourseEditor } from "../../../_lib/useCourseEditor";
+import { useCourseForm } from "../../../_lib/useCourseForm";
+import { useCourseSidebar } from "../../../_lib/useCourseSidebar";
+import { useCourseTab } from "../../../_lib/useCourseTab";
+import { SubmitButtons } from "./submit.buttons";
 
 type CourseFormPropTypes = {
   editMode?: boolean;
@@ -24,7 +23,7 @@ type CourseFormPropTypes = {
   courseId?: number;
 };
 
-export function CourseForm({
+export function CourseEditor({
   editMode = false,
   courseData,
   courseId,
@@ -40,6 +39,7 @@ export function CourseForm({
     draftMode,
     setDraftMode,
     courseAction,
+    // CourseFormProvider,
   } = useCourseForm({ courseData, editMode, courseId });
 
   const {
@@ -67,7 +67,7 @@ export function CourseForm({
   return (
     <Form {...formMethods}>
       <form
-        className="w-full"
+        className="relative h-[94vh] w-full overflow-hidden!"
         ref={formRef}
         action={courseAction}
         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -98,28 +98,41 @@ export function CourseForm({
           }
           isSidebarOpen={isSidebarOpen}
           toggleSidebar={toggleSidebar}
-          submitButtons={
-            <SubmitButtons
-              isLoading={isLoading}
-              editMode={editMode}
-              draftMode={draftMode}
-              setDraftMode={setDraftMode}
-            />
-          }
-        />
-
+        >
+          <SubmitButtons
+            isLoading={isLoading}
+            editMode={editMode}
+            draftMode={draftMode}
+            setDraftMode={setDraftMode}
+          />
+        </EditorHeader>
+        {/* <CourseFormProvider> */}
         <Tabs
           value={activeContentTab}
           onValueChange={setActiveContentTab as (string) => void}
-          className={`relative pt-16 transition-all duration-300 ${enLeftSidebar.isOpen ? "sm:w-2/3" : "sm:w-full"} `}
+          className={`relative h-16 pt-10 duration-300`}
         >
           <TabsList
-            className={`absolute w-full rounded-none ${enLeftSidebar.isOpen && "sm:shadow-insetRight"} `}
+            className={`bg-accent absolute left-0 h-10 w-full rounded-none border-b p-0 transition-all ${enLeftSidebar.isOpen && "sm:shadow-insetRight w-3/4"} `}
           >
-            <TabsTrigger value="enContent">English Content</TabsTrigger>
-            <TabsTrigger value="arContent">Arabic Content</TabsTrigger>
+            <TabsTrigger
+              value="enContent"
+              className={
+                "data-[state=active]:bg-background h-full w-full border-0 shadow-none data-[state=inactive]:cursor-pointer"
+              }
+            >
+              English Content
+            </TabsTrigger>
+            <TabsTrigger
+              value="arContent"
+              className={
+                "data-[state=active]:bg-background h-full w-full border-0 shadow-none data-[state=inactive]:cursor-pointer"
+              }
+            >
+              Arabic Content
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="enContent">
+          <TabsContent value="enContent" className="mt-0">
             <BlockEditor
               editor={enEditor}
               leftSidebar={enLeftSidebar}
@@ -129,7 +142,7 @@ export function CourseForm({
               <CourseMeta editMode={editMode} fellow={courseData?.fellow} />
             </BlockEditor>
           </TabsContent>
-          <TabsContent value="arContent">
+          <TabsContent value="arContent" className="mt-0">
             <BlockEditor
               editor={arEditor}
               leftSidebar={arLeftSidebar}
@@ -140,6 +153,7 @@ export function CourseForm({
             </BlockEditor>
           </TabsContent>
         </Tabs>
+        {/* </CourseFormProvider> */}
         <ContentInput
           titleName={TitleName.ar}
           contentName={ContentName.ar}

@@ -1,11 +1,11 @@
 "use client";
 
+import { getCourseWithEnrollmentsById } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
-import { getCourseWithEnrollmentsById } from "@/lib/actions/courses.actions";
-import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
+import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CourseForm } from "../_components/courses/editor/course.editor";
+import { CourseEditor } from "../_components/courses/editor/course.editor";
 import Loading from "../create-course/loading";
 
 export default function EditCoursePage() {
@@ -38,7 +38,7 @@ export default function EditCoursePage() {
   if (error && !isLoading) return <ErrorPage message={error} />;
   if (courseId && !isLoading)
     return (
-      <CourseForm
+      <CourseEditor
         editMode={true}
         courseData={courseValues.current}
         courseId={Number(courseId)}

@@ -1,4 +1,5 @@
-import { cn, getSeason } from "@/lib/utils/utils";
+import { getSeason } from "@/app/(dashboard)/admin/course-management/_lib/courses.utils";
+import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 
 import {

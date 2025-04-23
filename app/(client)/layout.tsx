@@ -75,7 +75,7 @@ export default function RootLayout({
                 icon: <Map size={16} strokeWidth={1} />,
               },
               {
-                name: "Blog",
+                name: "Posts",
                 link: "/",
                 icon: <Rss size={16} strokeWidth={1} />,
               },

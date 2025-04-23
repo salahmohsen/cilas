@@ -4,7 +4,6 @@ import { IBM_Plex_Sans_Arabic, Inter } from "next/font/google";
 import "@/app/globals.css";
 
 import { RootProvider } from "@/lib/providers";
-import { Toaster } from "sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,13 +29,12 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <RootProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.variable} ${ibmPlexSansArabic.variable} `}>
-          <Toaster richColors />
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.variable} ${ibmPlexSansArabic.variable} `}>
+        <RootProvider>
           <main>{children}</main>
-        </body>
-      </html>
-    </RootProvider>
+        </RootProvider>
+      </body>
+    </html>
   );
 }

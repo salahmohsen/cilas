@@ -1,5 +1,5 @@
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useCourseStore } from "@/lib/store/course.slice";
 import { CourseInfo } from "./info";
 import { InfoFooter } from "./info.footer";
 
@@ -15,7 +15,6 @@ export const CourseInfoModal = () => {
       open={isCourseSelected?.[id]}
       onOpenChange={(open) => setCourseSelected({ [id]: open })}
     >
-      s
       <DialogContent
         className={`h-[calc(100%-20px)] scale-90 rounded-md border-none p-0`}
       >

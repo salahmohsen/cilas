@@ -4,91 +4,137 @@ import { cn } from "@/lib/utils/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useCallback, useEffect, useRef } from "react";
 
-import { CourseInfo } from "@/app/(dashboard)/admin/course-management/_components/info/info";
-
 import { Tabs } from "@/components/ui/tabs";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import {
+  CoursesFilter,
+  CourseTabs,
+} from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import { Button } from "@/components/hoc/button";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CoursesFilter, Tab } from "@/lib/types/course.slice.types";
-import { Sailboat, Waves } from "lucide-react";
+import { NotFound } from "@/components/not-found";
+import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useCourseNavigation } from "../../../../lib/hooks/courses";
+import { ItemsNavContext } from "../../_lib/items.nav.context";
+import { useItemsNavigation } from "../../_lib/use.items.navigation";
 import { PageHeader } from "../_components/page.header";
+import { CourseItem } from "./_components/courses/course.item";
+import { CourseSkeleton } from "./_components/courses/course.skeleton";
+import { CourseInfo } from "./_components/info/info";
 import { CourseInfoModal } from "./_components/info/info.modal";
-import { CourseBundles } from "./_components/tabs/bundles.tab";
-import { DraftCourses } from "./_components/tabs/draft.tab";
-import { CoursesTabList } from "./_components/tabs/list.tab";
-import { PublishedCourses } from "./_components/tabs/published.tab";
-import { courseNavContext } from "./_context/course.nav.context";
+import { CoursesTabList } from "./_components/tabs/course.tabs";
+import { CourseTabContent } from "./_components/tabs/course.tabs.content";
 
 export default function ManageCoursesPage() {
   const { width } = useWindowSize();
 
-  const { activeTab, setActiveTab, setCourseSelected, getCourses, setFilter, filter } =
-    useCourseStore();
+  const {
+    courses,
+    isLoading,
+    activeTab,
+    setActiveTab,
+    setCourseSelected,
+    getCourses,
+    setFilter,
+    courseInfo,
+    isCourseSelected,
+    setCourseInfo,
+  } = useCourseStore();
 
   const searchParams = useSearchParams();
-  const tabParam = searchParams.get("tab") as Tab;
+  const tabParam = searchParams.get("tab") as CourseTabs | undefined;
 
   const containerRef = useRef<HTMLUListElement | null>(null);
 
-  const { handleNext, handlePrev } = useCourseNavigation(containerRef);
+  const { handleNext, handlePrev } = useItemsNavigation({
+    containerRef,
+    itemInfo: courseInfo,
+    isItemSelected: isCourseSelected,
+    items: courses,
+    setItemInfo: setCourseInfo,
+    setItemSelected: setCourseSelected,
+  });
 
   const isDesktop = width && width >= 1024;
 
   useEffect(() => {
-    setActiveTab(tabParam);
-  }, [setActiveTab, tabParam]);
-
-  useEffect(() => {
-    if (!activeTab) setActiveTab(Tab.Published);
+    setActiveTab(tabParam ?? CourseTabs.Published);
     getCourses();
-  }, [getCourses, activeTab, filter, setActiveTab]);
+  }, [getCourses, setActiveTab, tabParam]);
 
   const onTabChange = useCallback(
-    (tab: Tab) => {
+    (tab: CourseTabs) => {
       setActiveTab(tab);
       setCourseSelected(null);
-      if (tab === Tab.Published) setFilter(CoursesFilter.AllPublished);
-      if (tab === Tab.Draft) setFilter(CoursesFilter.Draft);
+      if (tab === CourseTabs.Published) setFilter(CoursesFilter.AllPublished);
+      if (tab === CourseTabs.Draft) setFilter(CoursesFilter.Draft);
     },
     [setActiveTab, setCourseSelected, setFilter],
   );
   return (
-    <>
-      <PageHeader
-        title="Course Management"
-        description="Manage courses: create, update, delete, and filter with ease."
-      >
-        <Button href="/admin/course-management/create-course" icon={<Sailboat />}>
-          New Course
-        </Button>
-        <Button href="/admin/course-management/create-bundle" icon={<Waves />}>
-          New Bundle
-        </Button>
-      </PageHeader>
+    <ItemsNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
+      <div className="flex h-full flex-col gap-12 p-4 md:p-8">
+        <PageHeader
+          title="Course Management"
+          description="Manage courses: create, update, delete, and filter with ease."
+        >
+          <Button href="/admin/course-management/create-course" icon={<Sailboat />}>
+            New Course
+          </Button>
+        </PageHeader>
 
-      <courseNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
-        <div className="flex min-h-screen gap-5 overflow-x-clip px-4">
-          <div className={cn("w-full")}>
-            <Tabs
-              value={activeTab as Tab}
-              onValueChange={(tab) => onTabChange(tab as Tab)}
-              className={cn(`flex flex-col gap-2`)}
+        <div className="flex gap-8">
+          <Tabs
+            value={activeTab as CourseTabs}
+            onValueChange={(tab) => onTabChange(tab as CourseTabs)}
+            className={cn(`flex flex-1 flex-col gap-12`)}
+          >
+            <CoursesTabList />
+
+            <CourseTabContent
+              tabValue={CourseTabs.Published}
+              title="Published Courses"
+              description="Monitor and manage published courses."
             >
-              <CoursesTabList />
-              <PublishedCourses />
-              <DraftCourses />
-              <CourseBundles />
-            </Tabs>
-          </div>
+              <div className="space-y-2">
+                {isLoading && <CourseSkeleton itemsNumber={10} />}
+                {!isLoading &&
+                  courses &&
+                  courses.length > 0 &&
+                  courses.map((course) => (
+                    <CourseItem
+                      course={course}
+                      key={`${course.id}-${course.updatedAt}`}
+                    />
+                  ))}
+                {courses?.length === 0 && <NotFound message="No Courses Found!" />}
+              </div>
+            </CourseTabContent>
+            <CourseTabContent
+              tabValue={CourseTabs.Draft}
+              title="Draft Courses"
+              description="Manage and refine courses before publishing."
+            >
+              {isLoading && <CourseSkeleton itemsNumber={10} />}
+              {!isLoading &&
+                courses &&
+                courses.length > 0 &&
+                courses.map((course) => (
+                  <CourseItem course={course} key={`${course.id}-${course.updatedAt}`} />
+                ))}
+              {courses?.length === 0 && <NotFound message="No Drafts Found!" />}
+            </CourseTabContent>
+          </Tabs>
+
           {isDesktop && (
-            <CourseInfo className="sticky top-20 mt-14 max-h-[calc(85vh)]" mode="flex" />
+            <CourseInfo
+              className="sticky top-10 max-h-[70vh] max-w-1/3 overflow-hidden"
+              mode="flex"
+            />
           )}
+          {!isDesktop && <CourseInfoModal />}
         </div>
-        {!isDesktop && <CourseInfoModal />}
-      </courseNavContext.Provider>
-    </>
+      </div>
+    </ItemsNavContext.Provider>
   );
 }

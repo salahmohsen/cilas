@@ -1,4 +1,4 @@
-import { uploadImage, UploadingFolder } from "@/lib/utils/cloudinary.utils";
+import { uploadImage, UploadingFolder } from "@/lib/cloudinary/cloudinary.utils";
 import { DragEvent, useCallback, useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 

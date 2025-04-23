@@ -1,5 +1,5 @@
-import { fetchCourses } from "@/lib/actions/courses.actions";
-import { CoursesFilter } from "@/lib/types/course.slice.types";
+import { fetchCourses } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
+import { CoursesFilter } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import slug from "slug";
 import { Course } from "../_components/courses/courses";
 import { CoursePagination } from "../_components/courses/pagination";

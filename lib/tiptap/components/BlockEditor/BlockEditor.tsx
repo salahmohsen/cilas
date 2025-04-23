@@ -5,12 +5,12 @@ import React, { useRef } from "react";
 
 import { LinkMenu } from "@/lib/tiptap/components/menus";
 
+import { EditorSidebar } from "@/app/(dashboard)/_lib/tiptap.types";
 import { Sidebar } from "@/lib/tiptap/components/Sidebar";
 import ImageBlockMenu from "@/lib/tiptap/extensions/ImageBlock/components/ImageBlockMenu";
 import { ColumnsMenu } from "@/lib/tiptap/extensions/MultiColumn/menus";
 import { TableColumnMenu, TableRowMenu } from "@/lib/tiptap/extensions/Table/menus";
 import { SidebarState } from "@/lib/tiptap/hooks/useSidebar";
-import { EditorSidebar } from "@/lib/types/editor";
 import { ContentItemMenu } from "../menus/ContentItemMenu";
 import { TextMenu } from "../menus/TextMenu";
 
@@ -36,8 +36,11 @@ export const BlockEditor = ({
   }
 
   return (
-    <div className="flex h-full overflow-hidden" ref={menuContainerRef}>
-      <EditorContent editor={editor} className={`mt-16 w-full pl-16 lg:px-0`} />
+    <div className="flex w-full" ref={menuContainerRef}>
+      <EditorContent
+        editor={editor}
+        className={`mt-10 mr-1 h-[85vh] w-full overflow-y-auto pl-16 lg:px-0`}
+      />
 
       <Sidebar
         isOpen={leftSidebar.isOpen}

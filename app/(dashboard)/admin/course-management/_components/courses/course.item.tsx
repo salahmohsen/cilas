@@ -4,8 +4,11 @@ import { forwardRef, useState } from "react";
 
 import { format } from "date-fns";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import { CoursesFilter } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
+import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/hoc/button";
-import { Badge } from "@/components/ui/badge";
+import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,13 +16,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CourseWithFellowAndStudents } from "@/lib/types/drizzle.types";
+import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
+import { useUserStore } from "@/lib/users/user.slice";
 import { getCourseStatus } from "@/lib/utils";
-import { Calendar, Ellipsis, User } from "lucide-react";
+import {
+  Calendar,
+  CircleDashed,
+  Ellipsis,
+  Hash,
+  PlayCircle,
+  StopCircle,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getSeason, getSeasonIcon } from "../../_lib/courses.utils";
 import { AddStudentsDialog } from "./add.students.dialog";
 
 type CourseItemProps = { course: CourseWithFellowAndStudents };
@@ -28,6 +37,8 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
   ({ course }, ref) => {
     const { handleDelete, setCourseSelected, setCourseInfo, isCourseSelected } =
       useCourseStore();
+
+    const { userInfo } = useUserStore();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState<boolean>(false);
@@ -43,46 +54,60 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
     const courseTitle = course.enTitle || course.arTitle;
     const courseStatues = getCourseStatus(course);
 
+    const status =
+      courseStatues === CoursesFilter.Ongoing ? (
+        <PlayCircle strokeWidth={0.67} />
+      ) : courseStatues === CoursesFilter.StartingSoon ? (
+        <CircleDashed strokeWidth={0.67} />
+      ) : (
+        <StopCircle strokeWidth={0.67} />
+      );
+
+    const season = getSeason(course.startDate);
+    const SeasonIcon = getSeasonIcon(season);
+
     return (
       <>
         <li
-          className={`lg:hover:bg-accent flex cursor-pointer items-center justify-between gap-5 rounded-md border px-5 py-6 text-sm font-medium transition-all duration-300 lg:group-hover/list:scale-100 lg:group-hover/list:opacity-50 lg:hover:scale-[1.02]! lg:hover:opacity-100! ${isCourseSelected?.[course.id] || isMenuOpen ? "bg-accent scale-[1.02]! opacity-100!" : "bg-transparent"}`}
+          className={`content-list-item flex`}
+          data-selected={isCourseSelected?.[course.id] || isMenuOpen}
+          data-item-id={course.id}
           onClick={() => handleSelect(course.id)}
-          data-course-id={course.id}
           ref={ref}
         >
-          <div className="flex flex-col gap-4">
-            <span className="flex gap-1 text-xs font-light">
-              <User size={16} strokeWidth={1.5} />
-              {`${course.fellow?.firstName} ${course.fellow?.lastName}`}
-            </span>
-            {courseStatues && (
-              <div className="flex flex-col gap-2 md:flex-row md:items-start md:gap-2">
-                <Badge
-                  variant="default"
-                  className="h-6 max-w-max min-w-max rounded-sm"
-                  title={`${courseTitle} is ${courseStatues}`}
-                >
-                  {courseStatues}
-                </Badge>
-                <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">
-                  {courseTitle}
-                </p>
+          {courseStatues && <span className="hidden md:block"> {status}</span>}
+          <div className="flex w-full justify-between">
+            <div className="flex flex-1 flex-col gap-2">
+              <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">
+                {courseTitle}
+              </p>
+              <div className="flex items-center gap-5">
+                <span className="flex items-center gap-1 text-sm font-light">
+                  <Calendar size={16} strokeWidth={1.5} />
+                  {format(course.startDate, "MMMM dd yyyy")}
+                </span>
+
+                <span className="flex items-center gap-1 text-sm font-light">
+                  <Avatar user={course.fellow} className="h-4 w-4" />
+                  {`${course.fellow?.firstName} ${course.fellow?.lastName}`}
+                </span>
+                <span className="hidden items-center gap-1 text-sm font-light md:flex">
+                  <Hash size={16} strokeWidth={1.5} />
+                  {course.category}
+                </span>
+                <span className="hidden items-center gap-1 text-sm font-light md:flex">
+                  {SeasonIcon}
+                  {season}
+                </span>
               </div>
-            )}
-            <span className="flex gap-1 text-xs font-light">
-              <Calendar size={16} strokeWidth={1.5} />
-              {format(course.startDate, "MMMM dd yyyy")}
-            </span>
-          </div>
-          <div>
+            </div>
             <DropdownMenu onOpenChange={setIsMenuOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
                   size="icon"
                   icon={<Ellipsis />}
                   variant="outline"
-                  className={`${isCourseSelected && "bg-background text-foreground"}`}
+                  className={"border-0"}
                 >
                   <span className="sr-only">More</span>
                 </Button>

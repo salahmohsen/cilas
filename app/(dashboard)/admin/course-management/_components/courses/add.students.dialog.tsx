@@ -1,5 +1,6 @@
 "use client";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { MultiSelectorInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
 import { Button } from "@/components/hoc/button";
@@ -11,13 +12,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Option } from "@/components/ui/multipleSelector";
-import { searchUsers, updateCourseEnrollments } from "@/lib/actions/users.actions";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { studentSchema, StudentSchema } from "@/lib/types/form.schema";
-import { BasePrevState } from "@/lib/types/users.actions.types";
+import { searchUsers, updateCourseEnrollments } from "@/lib/users/users.actions";
+import { BasePrevState } from "@/lib/users/users.actions.types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DialogDescription } from "@radix-ui/react-dialog";
 import { useForm } from "react-hook-form";
+import studentSchema, { StudentSchema } from "../../_lib/student.schema";
 
 type AddStudentsDialogProps = {
   isOpen: boolean;

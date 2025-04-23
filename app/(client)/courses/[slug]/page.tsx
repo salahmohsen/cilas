@@ -1,4 +1,4 @@
-import { getPublicCourseById } from "@/lib/actions/courses.actions";
+import { getPublicCourseById } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
 import { Course } from "../../_components/courses/courses";
 
 const page = async ({ params }) => {

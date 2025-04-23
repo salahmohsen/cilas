@@ -1,50 +1,52 @@
+"use client";
+
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { cn } from "@/lib/utils/utils";
+import logo from "@/public/logo.png";
 import { Home, Rss, SquareLibrary } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePostsStore } from "../../admin/posts-management/_lib/posts.slice";
+import { SidebarAvatar } from "./sidebar.avatar";
 import { SidebarItem } from "./SidebarItem";
 import { ThemeToggle } from "./theme.toggle";
 
-export function LayoutSidebar({ className }: { className: string }) {
+export function LayoutSidebar({ className }: { className?: string }) {
+  const { setCourseSelected } = useCourseStore();
+  const { setSelectedPost } = usePostsStore();
   return (
     <aside
-      className={cn(
-        "bg-background fixed hidden flex-col items-center justify-between border-r sm:flex",
-        className,
-      )}
+      className={cn("hidden h-screen flex-col items-center gap-3 md:flex", className)}
     >
-      <nav className="grid gap-1 p-2">
-        <SidebarItem name="Home" href="/admin" icon={<Home className="size-5" />} />
-        <SidebarItem
-          name="Course Management"
-          href="/admin/course-management"
-          icon={<SquareLibrary className="size-5" />}
+      <Link href="/" className="relative h-10 w-10">
+        <Image
+          src={logo}
+          alt="Cilas"
+          fill
+          className="absolute w-auto object-contain dark:invert"
         />
-        <SidebarItem
-          name="Blog Management"
-          href="/admin/blog-management"
-          icon={<Rss className="size-5" />}
-        />
-        {/* <SidebarItem
-            name="Settings"
-            href="/dashboard/settings"
-            icon={<Settings2Icon className="size-5" />}
-          /> */}
-      </nav>
-      <nav className="grid gap-1 p-2">
-        {/* <SidebarItem
-            name="Help"
-            href="/dashboard/help"
-            icon={<LifeBuoyIcon className="size-5" />}
-            className="mt-auto"
+      </Link>
+      <div className="flex h-full flex-col items-center justify-center gap-5 rounded-full">
+        <nav className="m-2.5 flex w-full flex-col items-center justify-center gap-5">
+          <SidebarItem name="Home" href="/admin" icon={<Home className="size-5" />} />
+          <SidebarItem
+            name="Course Management"
+            href="/admin/course-management"
+            icon={<SquareLibrary className="size-5" />}
+            onClick={() => setCourseSelected(null)}
           />
           <SidebarItem
-            name="Account"
-            href="/dashboard/account"
-            icon={<SquareUserIcon className="size-5" />}
-            className="mt-auto"
-          /> */}
-
-        <ThemeToggle />
-      </nav>
+            name="Posts Management"
+            href="/admin/posts-management"
+            icon={<Rss className="size-5" />}
+            onClick={() => setSelectedPost(null)}
+          />
+        </nav>
+        <div className="mt-auto mb-2.5 flex flex-col gap-5">
+          <SidebarAvatar />
+          <ThemeToggle />
+        </div>
+      </div>
     </aside>
   );
 }

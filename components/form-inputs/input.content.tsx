@@ -1,4 +1,4 @@
-import { ContentName, TitleName } from "@/lib/types/editor";
+import { ContentName, TitleName } from "@/app/(dashboard)/_lib/tiptap.types";
 import { JSONContent } from "@tiptap/core";
 import React, { useCallback, useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";

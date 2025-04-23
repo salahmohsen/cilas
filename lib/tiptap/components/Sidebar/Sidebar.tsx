@@ -1,7 +1,7 @@
+import { EditorSidebar } from "@/app/(dashboard)/_lib/tiptap.types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/tiptap/lib/utils";
-import { EditorSidebar } from "@/lib/types/editor";
 import { Editor } from "@tiptap/react";
 import React, { memo, useCallback } from "react";
 import { TableOfContents } from "../TableOfContents";
@@ -24,10 +24,10 @@ export const Sidebar = memo(
     }, [onClose]);
 
     const windowClassName = cn(
-      "fixed right-0 top-32 h-[calc(100%-8rem)]  w-0 invisible transition-all duration-300 ",
+      " h-full w-0 invisible transition-all duration-300 ",
       "bg-background",
       !isOpen && "border-l-transparent",
-      isOpen && "w-full sm:w-[calc((100%-4rem)/1/3)] border-l visible",
+      isOpen && "w-full sm:w-1/3 border-l visible",
     );
 
     return (
@@ -43,7 +43,7 @@ export const Sidebar = memo(
           </TabsList>
 
           <TabsContent value="form" className="pr-2">
-            <ScrollArea className="h-[calc(100vh-11rem)]">{children}</ScrollArea>
+            <ScrollArea className="h-[85vh]">{children}</ScrollArea>
           </TabsContent>
           <TabsContent
             value="tableOfContent"

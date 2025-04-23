@@ -1,23 +1,23 @@
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Avatar } from "@/components/avatar";
 import { BasicInput, TipTapInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
 import { Button } from "@/components/hoc/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { updateUserInfo } from "@/lib/actions/users.actions";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { userLocalInfo } from "@/lib/types/drizzle.types";
-import { profileSchema, ProfileSchema } from "@/lib/types/form.schema";
-import { BasePrevState } from "@/lib/types/users.actions.types";
+import { SafeUser } from "@/lib/drizzle/drizzle.types";
+import { updateUserInfo } from "@/lib/users/users.actions";
+import { BasePrevState } from "@/lib/users/users.actions.types";
 import { uploadImage, UploadingFolder } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, Trash2, UserCog, UserPen } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import profileSchema, { ProfileSchema } from "../../_lib/profile.schema";
 
 type UserSettingsProps = {
-  user: userLocalInfo;
+  user: SafeUser;
   courseId: number;
   open: boolean;
   onOpenChange: (value: boolean) => void;

@@ -40,7 +40,7 @@ import {
   Underline,
 } from ".";
 
-import { uploadImage, UploadingFolder } from "@/lib/utils/cloudinary.utils";
+import { uploadImage, UploadingFolder } from "@/lib/cloudinary/cloudinary.utils";
 import { CodeBlockLowlight } from "@tiptap/extension-code-block-lowlight";
 import History from "@tiptap/extension-history";
 import { lowlight } from "lowlight";

@@ -9,6 +9,7 @@
     "dashboard",
     "Database"
   ],
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.removeUnusedImports": "explicit",
     "source.organizeImports": "explicit"

@@ -12,8 +12,6 @@ import {
 import { Form } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { addFellow } from "@/lib/actions/users.actions";
-import { FellowSchema, fellowSchema } from "@/lib/types/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { forwardRef, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
@@ -22,9 +20,11 @@ import { toast } from "sonner";
 
 import { BasicInput, TipTapInput } from "@/components/form-inputs";
 
-import { useCourseStore } from "@/lib/store/course.slice";
-import { FellowState } from "@/lib/types/users.actions.types";
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import { addFellow } from "@/lib/users/users.actions";
+import { FellowState } from "@/lib/users/users.actions.types";
 import { SquarePlus } from "lucide-react";
+import fellowSchema, { FellowSchema } from "../../_lib/fellow.schema";
 
 type NewFellowProps = {
   mode: "button" | "commandItem";

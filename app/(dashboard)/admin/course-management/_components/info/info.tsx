@@ -7,16 +7,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { cn, getSeason } from "@/lib/utils/utils";
+import { cn } from "@/lib/utils/utils";
 import { differenceInWeeks, format } from "date-fns";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Separator } from "@/components/ui/separator";
-import { useCourseStore } from "@/lib/store/course.slice";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { Copy } from "lucide-react";
 import { forwardRef } from "react";
 import { toast } from "sonner";
+import { getSeason } from "../../_lib/courses.utils";
 import { UserAvatar } from "./info.avatars";
 import { InfoFooter } from "./info.footer";
 
@@ -43,9 +44,9 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
             exit={mode === "flex" ? { x: "50vw", width: 0 } : undefined}
             ref={ref}
           >
-            <Card>
-              <ScrollArea className="overflow-y-auto" type="hover">
-                <CardHeader className="bg-muted/50 flex flex-row items-start">
+            <Card className="overflow-y-auto">
+              <ScrollArea type="hover" className="h-[calc(100%-60px)]">
+                <CardHeader className="bg-accent flex flex-row items-start">
                   <div className="grid gap-0.5">
                     <CardTitle className="group flex items-center gap-2 text-lg">
                       <span className="" dir={courseInfo.enTitle ? "ltr" : "rtl"}>

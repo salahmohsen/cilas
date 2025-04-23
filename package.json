@@ -4,13 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS='--inspect' next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "validate": "npm run lint && npm run type-check",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,md,json}\" --ignore-path .gitignore"
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,md,json}\" --ignore-path .gitignore",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
@@ -136,6 +137,7 @@
     "drizzle-kit": "^0.30.4",
     "eslint": "^8.57.0",
     "eslint-config-next": "^14.2.23",
+    "husky": "^8.0.0",
     "postcss": "^8.4.38",
     "prettier": "^3.3.0",
     "prettier-plugin-tailwindcss": "^0.6.11",

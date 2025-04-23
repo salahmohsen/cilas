@@ -1,4 +1,4 @@
-import { CourseWithFellow } from "@/lib/types/drizzle.types";
+import { CourseWithFellow } from "@/lib/drizzle/drizzle.types";
 import { cn } from "@/lib/utils/utils";
 import { Amiri, Yeseva_One } from "next/font/google";
 import Link from "next/link";

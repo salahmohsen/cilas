@@ -1,8 +1,8 @@
-import { getUsersNames } from "@/lib/actions/users.actions";
-import { userLocalInfo } from "@/lib/types/drizzle.types";
+import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { ComboBoxOption } from "@/lib/types/form.inputs.types";
 import { forwardRef, memo, useCallback, useEffect, useState } from "react";
 
+import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import {
   BasicInput,
   ComboBoxInput,
@@ -12,12 +12,12 @@ import {
   SliderInput,
   TimeSlotInput,
 } from "@/components/form-inputs";
-import { useCourseStore } from "@/lib/store/course.slice";
-import { CourseSchema } from "@/lib/types/form.schema";
+import { getUsersNames } from "@/lib/users/users.actions";
+import { CourseSchema } from "../../../_lib/course.schema";
 
 type CourseMetadataProps = {
   editMode: boolean;
-  fellow: userLocalInfo | undefined;
+  fellow: SafeUser | undefined;
 };
 
 export const CourseMeta = memo(
@@ -159,6 +159,12 @@ export const CourseMeta = memo(
           label="Time Slot"
           placeholder="Start Time"
         />
+        {/* <SubmitButtons
+          isLoading={isLoading}
+          editMode={editMode}
+          draftMode={draftMode}
+          setDraftMode={setDraftMode}
+        /> */}
       </div>
     );
   }),

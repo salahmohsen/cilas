@@ -14,7 +14,7 @@ type PageHeaderProps = {
 
 export const PageHeader = ({ title, description, children }: PageHeaderProps) => {
   return (
-    <Card className="m-5 flex flex-wrap items-end justify-between gap-5 p-5">
+    <Card className="flex flex-wrap items-end justify-between gap-5 border-0 bg-transparent shadow-none">
       <CardHeader className="p-0">
         <CardTitle>{title}</CardTitle>
         <CardDescription className="max-w-lg leading-relaxed text-balance">
