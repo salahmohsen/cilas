@@ -113,7 +113,7 @@ export function AuthForm({
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input type="email" {...field} />
+                        <Input type="email" autoComplete="username" {...field} />
                       </FormControl>
                       <FormDescription />
                       <FormMessage />
@@ -128,7 +128,12 @@ export function AuthForm({
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <PasswordInput {...field} />
+                        <PasswordInput
+                          autoComplete={
+                            authMode === "signin" ? "current-password" : "new-password"
+                          }
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription />
                       <FormMessage />
@@ -144,7 +149,7 @@ export function AuthForm({
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
                           {/* @ts-expect-error */}
-                          <PasswordInput {...field} />
+                          <PasswordInput autoComplete="new-password" {...field} />
                         </FormControl>
                         <FormDescription />
                         <FormMessage />
