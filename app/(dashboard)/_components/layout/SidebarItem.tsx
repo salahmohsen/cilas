@@ -30,7 +30,11 @@ export function SidebarItem({
             isSidebarBtn
             asChild
             name={name}
-            className={cn(className, active && "bg-primary **:text-background")}
+            className={cn(
+              className,
+              "hover:bg-muted-foreground hover:text-primary-foreground",
+              active && "bg-primary **:text-background",
+            )}
             href={href}
             icon={icon}
             onClick={onClick}
