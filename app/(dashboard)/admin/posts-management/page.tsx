@@ -11,7 +11,7 @@ import { Button } from "@/components/hoc/button";
 import { NotFound } from "@/components/not-found";
 import { cn } from "@/lib/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { Sailboat } from "lucide-react";
+import { MessageCircleWarning, Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { TabContentSheet } from "../../_components/tab.content.sheet";
@@ -72,7 +72,11 @@ export default function BlogManagement() {
   );
 
   return (
-    <div className="flex h-[100vh] flex-1 flex-col gap-12 p-8">
+    <div className="relative flex h-[100vh] flex-1 flex-col gap-12 p-8">
+      <div className="bg-destructive absolute right-5 bottom-5 flex items-center gap-2 rounded-md p-2">
+        <MessageCircleWarning />
+        Posts Management system is under development
+      </div>
       <PageHeader
         title="Posts Management"
         description="Manage posts: create, update, delete, and filter with ease."
