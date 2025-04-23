@@ -32,6 +32,8 @@ export const PostItem = ({ post }: PostItemProps) => {
     setPostInfo(selectedPost?.[id] ? null : post);
   };
 
+  console.log(post);
+
   const router = useRouter();
 
   const postTitle = post.enTitle || post.arTitle;
@@ -55,16 +57,19 @@ export const PostItem = ({ post }: PostItemProps) => {
                 </span>
               )}
               <span className="flex gap-1 text-xs font-light">
-                {post.authors.map((author, i) => (
-                  <Avatar
-                    key={author.author.safeAuthor.id}
-                    user={author.author.safeAuthor}
-                    className="h-4 w-4"
-                  />
-                ))}
+                {post.authors.map(
+                  (author, i) =>
+                    author && (
+                      <Avatar
+                        key={author.user.id}
+                        user={author.user}
+                        className="h-4 w-4"
+                      />
+                    ),
+                )}
                 {post.authors.map(
                   (author) =>
-                    `${author.author.safeAuthor?.firstName} ${author.author.safeAuthor?.lastName}`,
+                    author && `${author.user.firstName} ${author.user.lastName}`,
                 )}
               </span>
             </div>

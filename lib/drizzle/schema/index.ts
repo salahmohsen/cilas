@@ -10,6 +10,9 @@ export {
   postsToCategoriesRelations,
   default as postsToCategoriesTable,
 } from "./post.to.category";
-export { blogsToTagsRelations, default as blogsToTagsTable } from "./post.to.tag";
+export {
+  postsToTagsRelations as blogsToTagsRelations,
+  default as postsToTagsTable,
+} from "./post.to.tag";
 export { sessionRelations, default as sessionTable } from "./session";
 export { userRelations, default as userTable } from "./user";

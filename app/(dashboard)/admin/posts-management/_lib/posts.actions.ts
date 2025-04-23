@@ -1,13 +1,16 @@
 "use server";
 
 import db from "@/lib/drizzle/drizzle";
-import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import {
-  authorToRoleTable,
-  blogsToTagsTable,
+  authorRolesTable,
+  authorsTable,
+  postCategoriesTable,
   postsTable,
   postsToCategoriesTable,
+  postsToTagsTable,
+  userTable,
 } from "@/lib/drizzle/schema";
+import blogTagsTable from "@/lib/drizzle/schema/post.tag";
 import { serverActionStateBase } from "@/lib/types/server.actions";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { PostsFilter } from "./posts.slice.types";
@@ -34,65 +37,99 @@ export const fetchPosts = async (
               : undefined;
 
   try {
+    // Step 1: Get posts with pagination and filtering
     const rawPosts = await db.query.postsTable.findMany({
-      with: { authors: true, tags: true, categories: true },
       where: whereCondition,
       limit: pageSize,
       offset: (page - 1) * pageSize,
       orderBy: [desc(postsTable.createdAt)],
     });
 
-    const posts = await Promise.all(
-      rawPosts.map(async (post) => {
-        const authors = await Promise.all(
-          post.authors.map(async (author) => {
-            const authorAndRole = await db.query.authorToRoleTable.findFirst({
-              where: eq(authorToRoleTable.roleId, author.roleId),
-              columns: {},
-              with: { role: true, author: true },
-            });
+    // Get all post IDs for batch fetching
+    const postIds = rawPosts.map((post) => post.id);
 
-            const { author: authorData, role } = authorAndRole ?? {};
-            const { passwordHash, googleId, ...safeAuthor } = authorData ?? {};
+    if (postIds.length === 0) {
+      return {
+        success: true,
+        message: "No posts found",
+        posts: [],
+      };
+    }
 
-            return {
-              author: { safeAuthor, role } as { safeAuthor: SafeUser },
-              role: authorAndRole?.role,
-              isMainAuthor: author.isMainAuthor,
-            };
-          }),
-        );
+    // Step 2: Fetch all authors for these posts in a single query
+    const allAuthors = await db
+      .select({
+        postId: authorsTable.postId,
+        authorId: authorsTable.authorId,
+        roleId: authorsTable.roleId,
+        isMainAuthor: authorsTable.isMainAuthor,
+        role: authorRolesTable,
+        user: userTable,
+      })
+      .from(authorsTable)
+      .leftJoin(authorRolesTable, eq(authorsTable.roleId, authorRolesTable.id))
+      .leftJoin(userTable, eq(authorsTable.authorId, userTable.id))
+      .where(inArray(authorsTable.postId, postIds));
 
-        const categories = await Promise.all(
-          post.categories.map(async (category) => {
-            const result = await db.query.postsToCategoriesTable.findFirst({
-              where: eq(postsToCategoriesTable.categoryId, category.categoryId),
-              columns: undefined,
-              with: { category: true },
-            });
-            const categoryResult = result?.category;
-            return categoryResult;
-          }),
-        );
-        const tags = await Promise.all(
-          post.tags.map(async (tag) => {
-            const result = await db.query.blogsToTagsTable.findFirst({
-              where: eq(blogsToTagsTable.tagId, tag.tagId),
-              with: { tag: true },
-            });
-            const tagResult = result?.tag;
-            return tagResult;
-          }),
-        );
+    // Step 3: Fetch all categories for these posts in a single query
+    const allCategories = await db
+      .select({
+        postId: postsToCategoriesTable.postId,
+        category: postCategoriesTable,
+      })
+      .from(postsToCategoriesTable)
+      .leftJoin(
+        postCategoriesTable,
+        eq(postsToCategoriesTable.categoryId, postCategoriesTable.id),
+      )
+      .where(inArray(postsToCategoriesTable.postId, postIds));
 
-        return { ...post, authors, categories, tags };
-      }),
-    );
+    // Step 4: Fetch all tags for these posts in a single query
+    const allTags = await db
+      .select({
+        postId: postsToTagsTable.postId,
+        tag: blogTagsTable,
+      })
+      .from(postsToTagsTable)
+      .leftJoin(blogTagsTable, eq(postsToTagsTable.tagId, blogTagsTable.id))
+      .where(inArray(postsToTagsTable.postId, postIds));
+
+    // Step 5: Organize data by post
+    const postsWithRelations = rawPosts.map((post) => {
+      // Get authors for this post
+      const postAuthors = allAuthors
+        .filter((a) => a.postId === post.id)
+        .map((authorData) => {
+          if (!authorData.user) return null;
+          const { passwordHash, googleId, ...safeAuthor } = authorData.user;
+
+          return {
+            user: { ...safeAuthor },
+            role: authorData.role,
+            isMainAuthor: authorData.isMainAuthor,
+          };
+        });
+
+      // Get categories for this post
+      const postCategories = allCategories
+        .filter((c) => c.postId === post.id)
+        .map((c) => c.category);
+
+      // Get tags for this post
+      const postTags = allTags.filter((t) => t.postId === post.id).map((t) => t.tag);
+
+      return {
+        ...post,
+        authors: postAuthors,
+        categories: postCategories,
+        tags: postTags,
+      };
+    });
 
     return {
       success: true,
       message: "Posts fetched successfully",
-      posts,
+      posts: postsWithRelations,
     };
   } catch (e) {
     if (e instanceof Error) return { error: true, message: e.message };

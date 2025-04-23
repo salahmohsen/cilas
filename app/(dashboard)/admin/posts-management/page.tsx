@@ -14,6 +14,7 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
+import { TabContentSheet } from "../../_components/tab.content.sheet";
 import { ItemsNavContext } from "../../_lib/items.nav.context";
 import { useItemsNavigation } from "../../_lib/use.items.navigation";
 import { PageHeader } from "../_components/page.header";
@@ -21,8 +22,7 @@ import { CourseSkeleton } from "../course-management/_components/courses/course.
 import { CourseInfoModal } from "../course-management/_components/info/info.modal";
 import { PostInfo } from "./_components/post.info";
 import { PostItem } from "./_components/post.item";
-import { PostsTabList } from "./_components/post.list";
-import { PostsTabContent } from "./_components/post.tab.content";
+import { PostsTabList } from "./_components/post.tabs";
 
 export default function BlogManagement() {
   const containerRef = useRef<HTMLUListElement | null>(null);
@@ -90,7 +90,7 @@ export default function BlogManagement() {
             className={cn(`flex flex-1 flex-col gap-12`)}
           >
             <PostsTabList />
-            <PostsTabContent
+            <TabContentSheet
               tabValue={PostsTabs.Published}
               title="Published Posts"
               description="Monitor and manage published posts."
@@ -103,8 +103,8 @@ export default function BlogManagement() {
                   <PostItem post={post} key={`${post.id}-${post.updatedAt}`} />
                 ))}
               {posts?.length === 0 && <NotFound message="No Posts Found!" />}
-            </PostsTabContent>
-            <PostsTabContent
+            </TabContentSheet>
+            <TabContentSheet
               tabValue={PostsTabs.Draft}
               title="Draft Posts"
               description="Monitor and manage draft posts."
@@ -117,7 +117,7 @@ export default function BlogManagement() {
                   <PostItem post={post} key={`${post.id}-${post.updatedAt}`} />
                 ))}
               {posts?.length === 0 && <NotFound message="No Posts Found!" />}
-            </PostsTabContent>
+            </TabContentSheet>
           </Tabs>
           {isDesktop && (
             <PostInfo className="sticky max-h-[70vh] max-w-1/3" mode="flex" />

@@ -9,8 +9,8 @@ import {
 } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { ReactNode } from "react";
-import { useItemsNavContext } from "../../../_lib/items.nav.context";
-import { PostsTabs } from "../_lib/posts.slice.types";
+import { useItemsNavContext } from "../_lib/items.nav.context";
+import { PostsTabs } from "../admin/posts-management/_lib/posts.slice.types";
 
 type PostsTabContentProps = {
   tabValue: PostsTabs;
@@ -19,7 +19,7 @@ type PostsTabContentProps = {
   children: ReactNode;
 };
 
-export const PostsTabContent = ({
+export const TabContentSheet = ({
   tabValue,
   title,
   description,

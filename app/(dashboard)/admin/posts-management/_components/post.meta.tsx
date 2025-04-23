@@ -37,7 +37,7 @@ export default function BlogMeta({ formMethods }: BlogMetaProps) {
         name="slug"
         type="text"
         className="block"
-        placeholder="Type blog slug here..."
+        placeholder="Type post slug here..."
       />
       <Textarea<BlogSchema, "excerpt"> name="excerpt" label="Excerpt" />
       <BasicInput<BlogSchema, "featuredImage">

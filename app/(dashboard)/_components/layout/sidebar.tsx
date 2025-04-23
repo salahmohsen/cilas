@@ -36,7 +36,7 @@ export function LayoutSidebar({ className }: { className?: string }) {
             onClick={() => setCourseSelected(null)}
           />
           <SidebarItem
-            name="Blog Management"
+            name="Posts Management"
             href="/admin/posts-management"
             icon={<Rss className="size-5" />}
             onClick={() => setSelectedPost(null)}

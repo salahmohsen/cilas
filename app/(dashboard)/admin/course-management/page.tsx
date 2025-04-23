@@ -22,8 +22,8 @@ import { CourseItem } from "./_components/courses/course.item";
 import { CourseSkeleton } from "./_components/courses/course.skeleton";
 import { CourseInfo } from "./_components/info/info";
 import { CourseInfoModal } from "./_components/info/info.modal";
-import { CoursesTabList } from "./_components/tabs/list.tab";
-import { CourseTabContent } from "./_components/tabs/tab.content";
+import { CoursesTabList } from "./_components/tabs/course.tabs";
+import { CourseTabContent } from "./_components/tabs/course.tabs.content";
 
 export default function ManageCoursesPage() {
   const { width } = useWindowSize();

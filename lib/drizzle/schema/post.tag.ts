@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { pgTable, serial, timestamp, varchar } from "drizzle-orm/pg-core";
-import blogsToTagsTable from "./post.to.tag";
+import postsToTagsTable from "./post.to.tag";
 
 const blogTagsTable = pgTable("blog_tags", {
   id: serial("id").primaryKey(),
@@ -16,7 +16,7 @@ const blogTagsTable = pgTable("blog_tags", {
 });
 
 export const blogTagRelations = relations(blogTagsTable, ({ many }) => ({
-  blogs: many(blogsToTagsTable),
+  blogs: many(postsToTagsTable),
 }));
 
 export default blogTagsTable;

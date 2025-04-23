@@ -1,9 +1,5 @@
 "use client";
 
-import * as React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { cn } from "@/lib/utils/utils";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +9,10 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils/utils";
+import Image from "next/image";
+import Link from "next/link";
+import * as React from "react";
 
 import PigeonTower from "@/public/pigeonTower.svg";
 
@@ -72,7 +72,7 @@ export function MainNav() {
           <NavigationMenuItem>
             <Link href="/docs" legacyBehavior passHref>
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                Blog
+                Posts
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
