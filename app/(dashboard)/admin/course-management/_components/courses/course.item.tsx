@@ -17,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
-import { useUserStore } from "@/lib/users/user.slice";
 import { getCourseStatus } from "@/lib/utils";
 import {
   Calendar,
@@ -35,18 +34,16 @@ type CourseItemProps = { course: CourseWithFellowAndStudents };
 
 export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
   ({ course }, ref) => {
-    const { handleDelete, setCourseSelected, setCourseInfo, isCourseSelected } =
+    const { handleDelete, setSelectedCourse, setCourseInfo, selectedCourse } =
       useCourseStore();
-
-    const { userInfo } = useUserStore();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isDeleteDialogVisible, setIsDeleteDialogVisible] = useState<boolean>(false);
     const [isStudentDialogOpen, setIsStudentDialogOpen] = useState<boolean>(false);
 
     const handleSelect = (id: number) => {
-      setCourseSelected({ [id]: !isCourseSelected?.[id] });
-      setCourseInfo(isCourseSelected?.[id] ? null : course);
+      setSelectedCourse({ [id]: !selectedCourse?.[id] });
+      setCourseInfo(selectedCourse?.[id] ? null : course);
     };
 
     const router = useRouter();
@@ -70,7 +67,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
       <>
         <li
           className={`content-list-item flex`}
-          data-selected={isCourseSelected?.[course.id] || isMenuOpen}
+          data-selected={selectedCourse?.[course.id] || isMenuOpen}
           data-item-id={course.id}
           onClick={() => handleSelect(course.id)}
           ref={ref}

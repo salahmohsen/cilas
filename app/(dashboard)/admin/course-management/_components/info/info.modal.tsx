@@ -4,7 +4,7 @@ import { CourseInfo } from "./info";
 import { InfoFooter } from "./info.footer";
 
 export const CourseInfoModal = () => {
-  const { courseInfo, isCourseSelected, setCourseSelected } = useCourseStore();
+  const { courseInfo, selectedCourse, setSelectedCourse } = useCourseStore();
 
   if (!courseInfo) return;
 
@@ -12,8 +12,8 @@ export const CourseInfoModal = () => {
 
   return (
     <Dialog
-      open={isCourseSelected?.[id]}
-      onOpenChange={(open) => setCourseSelected({ [id]: open })}
+      open={selectedCourse?.[id]}
+      onOpenChange={(open) => setSelectedCourse({ [id]: open })}
     >
       <DialogContent
         className={`h-[calc(100%-20px)] scale-90 rounded-md border-none p-0`}

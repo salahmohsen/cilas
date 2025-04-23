@@ -8,7 +8,7 @@ import { CourseState, CoursesFilter } from "./courses.slice.types";
 
 export const useCourseStore = create<CourseState>((set, get) => ({
   activeTab: null,
-  isCourseSelected: null,
+  selectedCourse: null,
   courseInfo: null,
   filter: CoursesFilter.AllPublished,
   fellow: undefined,
@@ -17,7 +17,7 @@ export const useCourseStore = create<CourseState>((set, get) => ({
 
   // Simple actions
   setActiveTab: (tab) => set({ activeTab: tab }),
-  setCourseSelected: (selected) => set({ isCourseSelected: selected }),
+  setSelectedCourse: (selected) => set({ selectedCourse: selected }),
   setCourseInfo: (course) => set({ courseInfo: course }),
   setFilter: (filter) => set({ filter }),
   setFellow: (fellow) => set({ fellow }),

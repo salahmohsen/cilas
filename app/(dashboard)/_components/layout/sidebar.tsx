@@ -12,7 +12,7 @@ import { SidebarItem } from "./SidebarItem";
 import { ThemeToggle } from "./theme.toggle";
 
 export function LayoutSidebar({ className }: { className?: string }) {
-  const { setCourseSelected } = useCourseStore();
+  const { setSelectedCourse } = useCourseStore();
   const { setSelectedPost } = usePostsStore();
   return (
     <aside
@@ -33,7 +33,7 @@ export function LayoutSidebar({ className }: { className?: string }) {
             name="Course Management"
             href="/admin/course-management"
             icon={<SquareLibrary className="size-5" />}
-            onClick={() => setCourseSelected(null)}
+            onClick={() => setSelectedCourse(null)}
           />
           <SidebarItem
             name="Posts Management"

@@ -14,7 +14,7 @@ export enum CourseTabs {
 
 export interface CourseState {
   activeTab: CourseTabs | null;
-  isCourseSelected: Record<number, boolean> | null;
+  selectedCourse: Record<number, boolean> | null;
   courseInfo: CourseWithFellowAndStudents | null;
   filter: CoursesFilter;
   fellow: SafeUser | undefined;
@@ -23,7 +23,7 @@ export interface CourseState {
 
   // Actions
   setActiveTab: (tab: CourseTabs) => void;
-  setCourseSelected: (selected: Record<number, boolean> | null) => void;
+  setSelectedCourse: (selected: Record<number, boolean> | null) => void;
   setCourseInfo: (course: CourseWithFellowAndStudents | undefined | null) => void;
   setFilter: (filter: CoursesFilter) => void;
   setFellow: (fellow: SafeUser | undefined) => void;

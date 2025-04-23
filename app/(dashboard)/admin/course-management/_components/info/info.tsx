@@ -28,11 +28,11 @@ type CourseInfoProps = {
 
 export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
   ({ className, mode }, ref) => {
-    const { courseInfo, isCourseSelected } = useCourseStore();
+    const { courseInfo, selectedCourse } = useCourseStore();
 
     const { width } = useWindowSize();
 
-    const showCourseInfo = Object.values(isCourseSelected ?? false)[0] ?? false;
+    const showCourseInfo = Object.values(selectedCourse ?? false)[0] ?? false;
 
     return (
       <AnimatePresence>

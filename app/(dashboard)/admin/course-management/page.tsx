@@ -33,11 +33,11 @@ export default function ManageCoursesPage() {
     isLoading,
     activeTab,
     setActiveTab,
-    setCourseSelected,
+    setSelectedCourse,
     getCourses,
     setFilter,
     courseInfo,
-    isCourseSelected,
+    selectedCourse,
     setCourseInfo,
   } = useCourseStore();
 
@@ -49,10 +49,10 @@ export default function ManageCoursesPage() {
   const { handleNext, handlePrev } = useItemsNavigation({
     containerRef,
     itemInfo: courseInfo,
-    isItemSelected: isCourseSelected,
+    isItemSelected: selectedCourse,
     items: courses,
     setItemInfo: setCourseInfo,
-    setItemSelected: setCourseSelected,
+    setItemSelected: setSelectedCourse,
   });
 
   const isDesktop = width && width >= 1024;
@@ -65,11 +65,11 @@ export default function ManageCoursesPage() {
   const onTabChange = useCallback(
     (tab: CourseTabs) => {
       setActiveTab(tab);
-      setCourseSelected(null);
+      setSelectedCourse(null);
       if (tab === CourseTabs.Published) setFilter(CoursesFilter.AllPublished);
       if (tab === CourseTabs.Draft) setFilter(CoursesFilter.Draft);
     },
-    [setActiveTab, setCourseSelected, setFilter],
+    [setActiveTab, setSelectedCourse, setFilter],
   );
   return (
     <ItemsNavContext.Provider value={{ handleNext, handlePrev, containerRef }}>
