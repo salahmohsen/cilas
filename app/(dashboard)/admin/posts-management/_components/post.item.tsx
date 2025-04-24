@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { format } from "date-fns";
 
-import { Avatar } from "@/components/avatar";
+import { AvatarGroup } from "@/components/avatar";
 import { Button } from "@/components/hoc/button";
 import {
   DropdownMenu,
@@ -32,11 +32,17 @@ export const PostItem = ({ post }: PostItemProps) => {
     setPostInfo(selectedPost?.[id] ? null : post);
   };
 
-  console.log(post);
-
   const router = useRouter();
 
   const postTitle = post.enTitle || post.arTitle;
+
+  const users = post.authors.map((author) => {
+    return {
+      ...author.user,
+      authorRole: author.role,
+      isMainAuthor: author.isMainAuthor,
+    };
+  });
 
   return (
     <>
@@ -48,7 +54,13 @@ export const PostItem = ({ post }: PostItemProps) => {
       >
         <div className="flex w-full justify-between">
           <div className="flex flex-1 flex-col gap-4">
-            <p className="line-clamp-3 leading-relaxed lg:line-clamp-1">{postTitle}</p>
+            <div className="flex items-center gap-2">
+              {users && <AvatarGroup users={users} />}
+
+              <span className="line-clamp-3 leading-relaxed lg:line-clamp-1">
+                {postTitle}
+              </span>
+            </div>
             <div className="flex items-center gap-5">
               {post.publishedAt && (
                 <span className="flex gap-1 text-xs font-light">
@@ -56,22 +68,6 @@ export const PostItem = ({ post }: PostItemProps) => {
                   {format(post.publishedAt, "MMMM dd yyyy")}
                 </span>
               )}
-              <span className="flex gap-1 text-xs font-light">
-                {post.authors.map(
-                  (author, i) =>
-                    author && (
-                      <Avatar
-                        key={author.user.id}
-                        user={author.user}
-                        className="h-4 w-4"
-                      />
-                    ),
-                )}
-                {post.authors.map(
-                  (author) =>
-                    author && `${author.user.firstName} ${author.user.lastName}`,
-                )}
-              </span>
             </div>
           </div>
           <DropdownMenu onOpenChange={setIsMenuOpen}>

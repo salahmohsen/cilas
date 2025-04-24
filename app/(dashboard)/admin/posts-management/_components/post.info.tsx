@@ -9,7 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Copy } from "lucide-react";
 import { forwardRef } from "react";
 import { toast } from "sonner";
-import { InfoFooter } from "../../course-management/_components/info/info.footer";
+import { InfoFooter } from "../../course-management/_components/info/course.info.footer";
 import { usePostsStore } from "../_lib/posts.slice";
 
 type PostInfoProps = {
@@ -59,9 +59,11 @@ export const PostInfo = forwardRef<HTMLDivElement, PostInfoProps>(
                         <span className="sr-only">Copy Course Name</span>
                       </Button>
                     </CardTitle>
-                    <CardDescription>
-                      Date: {format(postInfo.publishedAt, "dd MMMM yyyy")}
-                    </CardDescription>
+                    {postInfo.publishedAt && (
+                      <CardDescription>
+                        Date: {format(postInfo.publishedAt, "dd MMMM yyyy")}
+                      </CardDescription>
+                    )}
                   </div>
                 </CardHeader>
 

@@ -19,7 +19,7 @@ import { ItemsNavContext } from "../../_lib/items.nav.context";
 import { useItemsNavigation } from "../../_lib/use.items.navigation";
 import { PageHeader } from "../_components/page.header";
 import { CourseSkeleton } from "../course-management/_components/courses/course.skeleton";
-import { CourseInfoModal } from "../course-management/_components/info/info.modal";
+import { CourseInfoModal } from "../course-management/_components/info/course.info.modal";
 import { PostInfo } from "./_components/post.info";
 import { PostItem } from "./_components/post.item";
 import { PostsTabList } from "./_components/post.tabs";
@@ -73,7 +73,7 @@ export default function BlogManagement() {
 
   return (
     <div className="relative flex h-[100vh] flex-1 flex-col gap-12 p-8">
-      <div className="bg-destructive absolute right-5 bottom-5 flex items-center gap-2 rounded-md p-2">
+      <div className="bg-destructive absolute right-5 bottom-5 flex items-center gap-2 rounded-md p-2 text-white">
         <MessageCircleWarning />
         Posts Management system is under development
       </div>

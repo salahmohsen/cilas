@@ -1,6 +1,7 @@
 "use client";
 
 import { logout } from "@/app/(Auth)/_lib/auth.actions";
+import { Avatar } from "@/components/avatar";
 import { Button } from "@/components/hoc/button";
 import {
   DropdownMenu,
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useUserStore } from "@/lib/users/user.slice";
 import { UserRound } from "lucide-react";
-import Image from "next/image";
 
 export const SidebarAvatar = () => {
   const { userInfo } = useUserStore();
@@ -25,11 +25,8 @@ export const SidebarAvatar = () => {
             <UserRound className="overflow-hidden rounded-full p-2 opacity-70" />
           )}
           {userInfo && userInfo.avatar && (
-            <Image
-              src={userInfo.avatar}
-              width={40}
-              height={40}
-              alt="Avatar"
+            <Avatar
+              user={userInfo}
               className={`overflow-hidden rounded-full ${!userInfo.avatar && "p-2 opacity-70"}`}
             />
           )}

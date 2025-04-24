@@ -17,9 +17,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Copy } from "lucide-react";
 import { forwardRef } from "react";
 import { toast } from "sonner";
+import { UserSettingDialog } from "../../../../_components/users/user.setting.dialog";
 import { getSeason } from "../../_lib/courses.utils";
-import { UserAvatar } from "./info.avatars";
-import { InfoFooter } from "./info.footer";
+import { InfoFooter } from "./course.info.footer";
 
 type CourseInfoProps = {
   className?: string;
@@ -155,18 +155,14 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                   <Separator className="my-4" />
                   <div className="grid auto-rows-max gap-3">
                     <div className="font-semibold">Students</div>
-                    <ScrollArea className="w-full rounded-md p-4">
-                      <div className="text-muted-foreground flex gap-1">
-                        {courseInfo.students &&
-                          courseInfo.students.map((student) => (
-                            <UserAvatar
-                              key={student.id}
-                              user={student}
-                              courseId={courseInfo.id}
-                            />
-                          ))}
-                        {!courseInfo.students?.length && <p>No students found</p>}
-                      </div>
+                    <ScrollArea className="w-full">
+                      {courseInfo.students && (
+                        <UserSettingDialog
+                          users={courseInfo.students}
+                          courseId={courseInfo.id}
+                        />
+                      )}
+                      {!courseInfo.students?.length && <p>No students found</p>}
                       <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                   </div>

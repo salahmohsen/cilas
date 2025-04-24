@@ -1,7 +1,7 @@
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { CourseInfo } from "./info";
-import { InfoFooter } from "./info.footer";
+import { CourseInfo } from "./course.info";
+import { InfoFooter } from "./course.info.footer";
 
 export const CourseInfoModal = () => {
   const { courseInfo, selectedCourse, setSelectedCourse } = useCourseStore();

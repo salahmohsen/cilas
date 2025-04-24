@@ -1,11 +1,9 @@
 /** @type {import('next').NextConfig} */
 
-
 const nextConfig = {
   experimental: {
-   serverComponentsExternalPackages: ["@node-rs/argon2"],
+    serverComponentsExternalPackages: ["@node-rs/argon2"],
   },
-  
 
   images: {
     remotePatterns: [
@@ -25,6 +23,7 @@ const nextConfig = {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
         port: "",
+        pathname: "/**",
       },
     ],
   },

@@ -20,15 +20,15 @@ const profileSchema = {
     email: required_email,
     tel: optional_tel,
   }),
-  defaults: (user: SafeUser) => ({
-    id: user.id || "",
-    firstName: user.firstName || "",
-    lastName: user.lastName || "",
-    userName: user.userName || "",
-    avatar: user.avatar || "",
-    bio: user.bio || "",
-    email: user.email || "",
-    tel: user.tel || "",
+  defaults: (user: SafeUser | undefined) => ({
+    id: user?.id ?? "",
+    firstName: user?.firstName ?? "",
+    lastName: user?.lastName ?? "",
+    userName: user?.userName ?? "",
+    avatar: user?.avatar ?? "",
+    bio: user?.bio ?? "",
+    email: user?.email ?? "",
+    tel: user?.tel ?? "",
   }),
 };
 

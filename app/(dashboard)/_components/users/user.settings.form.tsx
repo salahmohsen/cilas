@@ -1,4 +1,5 @@
-import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+"use-client";
+
 import { Avatar } from "@/components/avatar";
 import { BasicInput, TipTapInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
@@ -14,21 +15,16 @@ import { ImagePlus, Trash2, UserCog, UserPen } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import profileSchema, { ProfileSchema } from "../../_lib/profile.schema";
+import profileSchema, {
+  ProfileSchema,
+} from "../../admin/course-management/_lib/profile.schema";
 
-type UserSettingsProps = {
+type UserSettingsFormProps = {
   user: SafeUser;
-  courseId: number;
   open: boolean;
   onOpenChange: (value: boolean) => void;
 };
-export const UserSettings = ({
-  user,
-  courseId,
-  open,
-  onOpenChange,
-}: UserSettingsProps) => {
-  const { revalidateCourse } = useCourseStore();
+export const UserSettingsForm = ({ user, open, onOpenChange }: UserSettingsFormProps) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
 
   const formMethods = useForm<ProfileSchema>({
@@ -87,7 +83,6 @@ export const UserSettings = ({
           formMethods={formMethods}
           serverAction={updateUserInfo}
           onSuccess={() => {
-            revalidateCourse(courseId);
             onOpenChange(false);
           }}
           className="space-y-5 *:space-y-4"
@@ -95,7 +90,7 @@ export const UserSettings = ({
           {({ isPending }) => {
             return (
               <>
-                <input name="id" value={user.id} hidden readOnly />
+                <input name="id" value={user?.id} hidden readOnly />
                 <input name="avatar" value={avatarValue || ""} hidden readOnly />
                 <input
                   className="hidden"
@@ -109,10 +104,12 @@ export const UserSettings = ({
                     Profile picture
                   </p>
                   <div className="flex items-center gap-4">
-                    <Avatar
-                      user={{ ...user, avatar: avatarValue || "" }}
-                      className="h-36 w-36"
-                    />
+                    {user && (
+                      <Avatar
+                        user={{ ...user, avatar: avatarValue ?? null }}
+                        className="h-36 w-36"
+                      />
+                    )}
                     <div className="flex gap-2">
                       <Button
                         icon={<ImagePlus />}

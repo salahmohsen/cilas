@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/drizzle/drizzle";
+import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import {
   authorRolesTable,
   authorsTable,
@@ -13,6 +14,7 @@ import {
 import blogTagsTable from "@/lib/drizzle/schema/post.tag";
 import { serverActionStateBase } from "@/lib/types/server.actions";
 import { and, desc, eq, inArray } from "drizzle-orm";
+import { omit } from "lodash-es";
 import { PostsFilter } from "./posts.slice.types";
 import { postsFilter } from "./utils";
 
@@ -100,8 +102,10 @@ export const fetchPosts = async (
       const postAuthors = allAuthors
         .filter((a) => a.postId === post.id)
         .map((authorData) => {
-          if (!authorData.user) return null;
-          const { passwordHash, googleId, ...safeAuthor } = authorData.user;
+          const safeAuthor = omit(authorData.user, [
+            "passwordHash",
+            "googleId",
+          ]) as SafeUser;
 
           return {
             user: { ...safeAuthor },
