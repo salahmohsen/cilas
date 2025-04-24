@@ -23,7 +23,7 @@ const postsTable = pgTable("posts", {
   arContent: json("ar_content").$type<JSONContent>().notNull(),
   excerpt: text("excerpt"),
   featuredImage: text("featured_image"),
-  publishedAt: timestamp("published_at", { mode: "date", withTimezone: true }).notNull(),
+  publishedAt: timestamp("published_at", { mode: "date", withTimezone: true }),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
     .defaultNow(),

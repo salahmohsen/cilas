@@ -3,7 +3,7 @@ import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import { userRole } from "../drizzle.types";
 import courseTable from "./course";
 import enrollmentTable from "./enrollment";
-import blogAuthorsTable from "./post.author.to.role";
+import authorsTable from "./post.authors";
 import sessionTable from "./session";
 
 const userTable = pgTable("user", {
@@ -30,7 +30,7 @@ export const userRelations = relations(userTable, ({ many }) => ({
   sessions: many(sessionTable),
   enrollments: many(enrollmentTable),
   courses: many(courseTable, { relationName: "fellow" }),
-  postAuthors: many(blogAuthorsTable),
+  postAuthors: many(authorsTable),
 }));
 
 export default userTable;
