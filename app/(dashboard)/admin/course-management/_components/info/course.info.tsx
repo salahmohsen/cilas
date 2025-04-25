@@ -12,6 +12,7 @@ import { differenceInWeeks, format } from "date-fns";
 
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Separator } from "@/components/ui/separator";
+import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { TailwindBreakpoint } from "@/lib/types/geniric.enums";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
@@ -29,13 +30,13 @@ type CourseInfoProps = {
 
 export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
   ({ className, mode }, ref) => {
-    const { courseInfo, selectedCourse } = useCourseStore();
+    const { courseInfo: course, selectedCourse } = useCourseStore();
     const { width } = useWindowSize();
     const showCourseInfo = Object.values(selectedCourse ?? false)[0] ?? false;
 
     return (
       <AnimatePresence>
-        {showCourseInfo && courseInfo && (
+        {showCourseInfo && course && (
           <motion.div
             className={cn(`flex w-full flex-col justify-between`, className)}
             initial={mode === "flex" && { x: "50vw", width: 0 }}
@@ -50,18 +51,18 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                 type="hover"
                 className={cn(mode === "flex" ? "h-[calc(100%-60px)]" : "h-full")}
               >
-                <Header course={courseInfo} />
+                <Header course={course} />
 
                 <CardContent className="p-6 text-sm">
-                  <CourseDetails course={courseInfo} />
+                  <CourseDetails course={course} />
                   <Separator className="my-4" />
-                  <FacilitatorInfo course={courseInfo} />
+                  <FacilitatorInfo course={course} />
                   <Separator className="my-4" />
-                  <StudentsSection course={courseInfo} />
+                  <StudentsSection course={course} />
                 </CardContent>
               </ScrollArea>
-              {width && courseInfo.updatedAt && width >= TailwindBreakpoint.LG && (
-                <InfoFooter updatedAt={courseInfo.updatedAt} />
+              {width && course.updatedAt && width >= TailwindBreakpoint.LG && (
+                <InfoFooter updatedAt={course.updatedAt} />
               )}
             </Card>
           </motion.div>
@@ -71,7 +72,7 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
   },
 );
 
-const Header = ({ course }) => {
+const Header = ({ course }: { course: CourseWithFellowAndStudents }) => {
   return (
     <CardHeader className="bg-accent flex flex-row items-start">
       <div className="grid gap-0.5">
@@ -103,7 +104,7 @@ const Header = ({ course }) => {
   );
 };
 
-const CourseDetails = ({ course }) => {
+const CourseDetails = ({ course }: { course: CourseWithFellowAndStudents }) => {
   return (
     <div className="grid gap-3">
       <div className="font-semibold">Course Details</div>
@@ -114,7 +115,7 @@ const CourseDetails = ({ course }) => {
   );
 };
 
-const CourseCategory = ({ course }) => {
+const CourseCategory = ({ course }: { course: CourseWithFellowAndStudents }) => {
   return (
     <ul className="grid gap-3">
       <li className="flex items-center justify-between gap-5">
@@ -133,7 +134,7 @@ const CourseCategory = ({ course }) => {
   );
 };
 
-const CourseDuration = ({ course }) => {
+const CourseDuration = ({ course }: { course: CourseWithFellowAndStudents }) => {
   return (
     <ul className="grid gap-3">
       <li className="flex items-center justify-between gap-5">
@@ -163,7 +164,7 @@ const CourseDuration = ({ course }) => {
   );
 };
 
-const FacilitatorInfo = ({ course }) => {
+const FacilitatorInfo = ({ course }: { course: CourseWithFellowAndStudents }) => {
   return (
     <div className="grid gap-3">
       <div className="font-semibold">Facilitator Information</div>
@@ -189,7 +190,7 @@ const FacilitatorInfo = ({ course }) => {
   );
 };
 
-const StudentsSection = ({ course }) => {
+const StudentsSection = ({ course }: { course: CourseWithFellowAndStudents }) => {
   return (
     <div className="grid auto-rows-max gap-3">
       <div className="font-semibold">Students</div>
