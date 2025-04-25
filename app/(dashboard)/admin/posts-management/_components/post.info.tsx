@@ -54,11 +54,11 @@ export const PostInfo = forwardRef<HTMLDivElement, PostInfoProps>(
               >
                 <Header post={post} />
 
-                <CardContent className="flex flex-col gap-6 pt-6 text-sm">
+                <CardContent className="p-6 text-sm">
                   <PostDetails post={post} />
-                  <Separator />
+                  <Separator className="my-4" />
                   <Excerpt post={post} />
-                  <Separator />
+                  <Separator className="my-4" />
                   <Authors post={post} />
                 </CardContent>
               </ScrollArea>
@@ -219,10 +219,7 @@ const Authors = ({ post }: { post: Post }) => {
         </div>
       ))}
       {subAuthors.map((author) => (
-        <div
-          key={author.id}
-          className="grid grid-cols-2 items-center justify-between gap-5"
-        >
+        <div key={author.id} className="grid grid-cols-2 items-center gap-5">
           <span className="text-muted-foreground font-medium capitalize">
             {author.authorRole?.enName}
           </span>

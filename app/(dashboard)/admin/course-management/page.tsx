@@ -12,8 +12,8 @@ import {
   CourseTabs,
 } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import { Button } from "@/components/button";
+import { NewCourseIcon } from "@/components/icons";
 import { NotFound } from "@/components/not-found";
-import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { ItemsNavContext } from "../../_lib/items.nav.context";
 import { useItemsNavigation } from "../../_lib/use.items.navigation";
@@ -78,7 +78,7 @@ export default function ManageCoursesPage() {
           title="Course Management"
           description="Manage courses: create, update, delete, and filter with ease."
         >
-          <Button href="/admin/course-management/create-course" icon={<Sailboat />}>
+          <Button href="/admin/course-management/create-course" icon={<NewCourseIcon />}>
             New Course
           </Button>
         </PageHeader>

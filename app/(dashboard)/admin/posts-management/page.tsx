@@ -77,7 +77,7 @@ export default function BlogManagement() {
         title="Posts Management"
         description="Manage posts: create, update, delete, and filter with ease."
       >
-        <Button href="/admin/course-management/create-post" icon={<Newspaper />}>
+        <Button href="/admin/posts-management/new" icon={<Newspaper />}>
           New Post
         </Button>
       </PageHeader>
