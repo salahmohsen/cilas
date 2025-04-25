@@ -97,7 +97,7 @@ export default function ManageCoursesPage() {
               description="Monitor and manage published courses."
             >
               <div className="space-y-2">
-                {isLoading && <CourseSkeleton itemsNumber={5} />}
+                {isLoading && <CourseSkeleton itemsNumber={3} />}
                 {!isLoading &&
                   courses &&
                   courses.length > 0 &&
@@ -107,7 +107,9 @@ export default function ManageCoursesPage() {
                       key={`${course.id}-${course.updatedAt}`}
                     />
                   ))}
-                {courses?.length === 0 && <NotFound message="No Courses Found!" />}
+                {courses?.length === 0 && !isLoading && (
+                  <NotFound message="No Courses Found!" />
+                )}
               </div>
             </CourseTabContent>
             <CourseTabContent
@@ -115,7 +117,7 @@ export default function ManageCoursesPage() {
               title="Draft Courses"
               description="Manage and refine courses before publishing."
             >
-              {isLoading && <CourseSkeleton itemsNumber={5} />}
+              {isLoading && <CourseSkeleton itemsNumber={3} />}
               {!isLoading &&
                 courses &&
                 courses.length > 0 &&

@@ -95,28 +95,32 @@ export default function BlogManagement() {
               title="Published Posts"
               description="Monitor and manage published posts."
             >
-              {isLoading && <CourseSkeleton itemsNumber={5} />}
+              {isLoading && <CourseSkeleton itemsNumber={3} />}
               {!isLoading &&
                 posts &&
                 posts.length > 0 &&
                 posts.map((post) => (
                   <PostItem post={post} key={`${post.id}-${post.updatedAt}`} />
                 ))}
-              {posts?.length === 0 && <NotFound message="No Posts Found!" />}
+              {posts?.length === 0 && !isLoading && (
+                <NotFound message="No Posts Found!" />
+              )}
             </TabContentSheet>
             <TabContentSheet
               tabValue={PostsTabs.Draft}
               title="Draft Posts"
               description="Monitor and manage draft posts."
             >
-              {isLoading && <CourseSkeleton itemsNumber={5} />}
+              {isLoading && <CourseSkeleton itemsNumber={3} />}
               {!isLoading &&
                 posts &&
                 posts.length > 0 &&
                 posts.map((post) => (
                   <PostItem post={post} key={`${post.id}-${post.updatedAt}`} />
                 ))}
-              {posts?.length === 0 && <NotFound message="No Posts Found!" />}
+              {posts?.length === 0 && !isLoading && (
+                <NotFound message="No Posts Found!" />
+              )}
             </TabContentSheet>
           </Tabs>
           {isDesktop && (
