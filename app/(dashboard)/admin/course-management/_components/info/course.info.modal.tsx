@@ -1,7 +1,7 @@
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { InfoFooter } from "../../../_components/info.footer";
 import { CourseInfo } from "./course.info";
-import { InfoFooter } from "./course.info.footer";
 
 export const CourseInfoModal = () => {
   const { courseInfo, selectedCourse, setSelectedCourse } = useCourseStore();
@@ -19,7 +19,10 @@ export const CourseInfoModal = () => {
         className={`h-[calc(100%-20px)] scale-90 rounded-md border-none p-0`}
       >
         <CourseInfo className={"mb-10 overflow-y-auto border-0"} mode="dialog" />
-        <InfoFooter className="fixed bottom-0 rounded-md" />
+        <InfoFooter
+          updatedAt={courseInfo.updatedAt}
+          className="fixed bottom-0 rounded-md"
+        />
       </DialogContent>
     </Dialog>
   );

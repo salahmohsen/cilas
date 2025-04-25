@@ -12,14 +12,15 @@ import { differenceInWeeks, format } from "date-fns";
 
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Separator } from "@/components/ui/separator";
+import { TailwindBreakpoint } from "@/lib/types/geniric.enums";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
 import { Copy } from "lucide-react";
 import { forwardRef } from "react";
 import { toast } from "sonner";
-import { UserSettingDialog } from "../../../../_components/users/user.setting.dialog";
+import { InfoFooter } from "../../../_components/info.footer";
+import { UserSettingDialog } from "../../../_components/users/user.setting.dialog";
 import { getSeason } from "../../_lib/courses.utils";
-import { InfoFooter } from "./course.info.footer";
 
 type CourseInfoProps = {
   className?: string;
@@ -168,7 +169,9 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                   </div>
                 </CardContent>
               </ScrollArea>
-              {width && width >= 1024 && <InfoFooter />}
+              {width && courseInfo.updatedAt && width >= TailwindBreakpoint.LG && (
+                <InfoFooter updatedAt={courseInfo.updatedAt} />
+              )}
             </Card>
           </motion.div>
         )}

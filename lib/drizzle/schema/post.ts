@@ -11,7 +11,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { authorsTable } from ".";
 import blogsToCategoriesTable from "./post.to.category";
-import postsToTagsTable from "./post.to.tag";
+import postToTagTable from "./post.to.tag";
 
 const postsTable = pgTable("posts", {
   id: serial("id").primaryKey(),
@@ -34,7 +34,7 @@ const postsTable = pgTable("posts", {
 
 export const postsRelations = relations(postsTable, ({ many }) => ({
   authors: many(authorsTable),
-  tags: many(postsToTagsTable),
+  tags: many(postToTagTable),
   categories: many(blogsToCategoriesTable),
 }));
 

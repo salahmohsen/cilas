@@ -1,15 +1,25 @@
 import { Button } from "@/components/hoc/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 
+import { Avatar } from "@/components/avatar";
+import { Separator } from "@/components/ui/separator";
+import { TailwindBreakpoint } from "@/lib/types/geniric.enums";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
-import { Copy } from "lucide-react";
+import { Calendar, Copy, SwatchBook, TagsIcon } from "lucide-react";
 import { forwardRef } from "react";
 import { toast } from "sonner";
-import { InfoFooter } from "../../course-management/_components/info/course.info.footer";
+import { InfoFooter } from "../../_components/info.footer";
+import { Post } from "../_lib/posts.actions.type";
 import { usePostsStore } from "../_lib/posts.slice";
 
 type PostInfoProps = {
@@ -19,15 +29,15 @@ type PostInfoProps = {
 
 export const PostInfo = forwardRef<HTMLDivElement, PostInfoProps>(
   ({ className, mode }, ref) => {
-    const { postInfo, selectedPost } = usePostsStore();
+    const { postInfo: post, selectedPost } = usePostsStore();
 
     const { width } = useWindowSize();
 
-    const showCourseInfo = Object.values(selectedPost ?? false)[0] ?? false;
+    const isSelectedPost = Object.values(selectedPost ?? false)[0] ?? false;
 
     return (
       <AnimatePresence>
-        {showCourseInfo && postInfo && (
+        {isSelectedPost && post && (
           <motion.div
             className={cn(`flex w-full flex-col justify-between`, className)}
             initial={mode === "flex" && { x: "50vw", width: 0 }}
@@ -37,130 +47,19 @@ export const PostInfo = forwardRef<HTMLDivElement, PostInfoProps>(
           >
             <Card className="overflow-y-auto">
               <ScrollArea type="hover" className="h-[calc(100%-60px)]">
-                <CardHeader className="bg-accent flex flex-row items-start">
-                  <div className="grid gap-0.5">
-                    <CardTitle className="group flex items-center gap-2 text-lg">
-                      <span className="" dir={postInfo.enTitle ? "ltr" : "rtl"}>
-                        {postInfo.enTitle || postInfo.arTitle}
-                      </span>
-                      <Button
-                        size="icon"
-                        variant="outline"
-                        icon={<Copy className="p-0.5" />}
-                        className="h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
-                        onClick={() => {
-                          navigator.clipboard
-                            .writeText((postInfo.enTitle || postInfo.arTitle) as string)
-                            .then(() => {
-                              toast.success("Copied!");
-                            });
-                        }}
-                      >
-                        <span className="sr-only">Copy Course Name</span>
-                      </Button>
-                    </CardTitle>
-                    {postInfo.publishedAt && (
-                      <CardDescription>
-                        Date: {format(postInfo.publishedAt, "dd MMMM yyyy")}
-                      </CardDescription>
-                    )}
-                  </div>
-                </CardHeader>
+                <Header post={post} />
 
-                {/* <CardContent className="p-6 text-sm">
-                  <div className="grid gap-3">
-                    <div className="font-semibold">Course Details</div>
-                    <ul className="grid gap-3">
-                      <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">Category</span>
-                        <span>{postInfo.category}</span>
-                      </li>
-                      <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">Season Cycle</span>
-                        <span>{getSeason(postInfo.startDate)}</span>
-                      </li>
-                      <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">Registration</span>
-                        <span>{postInfo.isRegistrationOpen ? "Open" : "Closed"}</span>
-                      </li>
-                    </ul>
-                    <Separator className="my-2" />
-                    <ul className="grid gap-3">
-                      <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">Start Date</span>
-                        <span>{format(postInfo.startDate, "dd MMMM yyyy")}</span>
-                      </li>
-                      <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">End Date</span>
-                        <span>{format(postInfo.endDate, "dd MMMM yyyy")}</span>
-                      </li>
-                      <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">Duration</span>
-                        <span>
-                          {differenceInWeeks(postInfo.endDate, postInfo.startDate)} Weeks
-                        </span>
-                      </li>
-                      <li className="flex items-center justify-between gap-5">
-                        <span className="text-muted-foreground">Days</span>
-                        <span className="text-right">
-                          {postInfo.days?.length === 0
-                            ? "-"
-                            : "Every " +
-                              postInfo.days?.map((day, index) =>
-                                postInfo.days?.length === index + 1
-                                  ? ` and ${day.label}`
-                                  : ` ${day.label}`,
-                              )}
-                        </span>
-                      </li>
-                    </ul>
-                  </div>
-                  <Separator className="my-4" />
-                  <div className="grid gap-3">
-                    <div className="font-semibold">Facilitator Information</div>
-                    <dl className="grid gap-3">
-                      <div className="flex items-center justify-between gap-5">
-                        <dt className="text-muted-foreground">Name</dt>
-                        <dd>
-                          {postInfo.fellow?.firstName + " " + postInfo.fellow?.lastName}
-                        </dd>
-                      </div>
-                      <div className="flex items-center justify-between gap-5">
-                        <dt className="text-muted-foreground">Email</dt>
-                        <dd>
-                          <a href="mailto:">{postInfo.fellow?.email}</a>
-                        </dd>
-                      </div>
-                      <div className="flex items-center justify-between gap-5">
-                        <dt className="text-muted-foreground">Phone</dt>
-                        <dd>
-                          <a href="tel:">{postInfo.fellow?.tel}</a>
-                        </dd>
-                      </div>
-                    </dl>
-                  </div>
-
-                  <Separator className="my-4" />
-                  <div className="grid auto-rows-max gap-3">
-                    <div className="font-semibold">Students</div>
-                    <ScrollArea className="w-full rounded-md p-4">
-                      <div className="text-muted-foreground flex gap-1">
-                        {postInfo.students &&
-                          postInfo.students.map((student) => (
-                            <UserAvatar
-                              key={student.id}
-                              user={student}
-                              courseId={postInfo.id}
-                            />
-                          ))}
-                        {!postInfo.students?.length && <p>No students found</p>}
-                      </div>
-                      <ScrollBar orientation="horizontal" />
-                    </ScrollArea>
-                  </div>
-                </CardContent> */}
+                <CardContent className="flex flex-col gap-6 pt-6 text-sm">
+                  <PostDetails post={post} />
+                  <Separator />
+                  <Excerpt post={post} />
+                  <Separator />
+                  <Authors post={post} />
+                </CardContent>
               </ScrollArea>
-              {width && width >= 1024 && <InfoFooter />}
+              {width && width >= TailwindBreakpoint.LG && (
+                <InfoFooter updatedAt={post.updatedAt} />
+              )}
             </Card>
           </motion.div>
         )}
@@ -168,5 +67,168 @@ export const PostInfo = forwardRef<HTMLDivElement, PostInfoProps>(
     );
   },
 );
+
+const Header = ({ post }: { post: Post }) => {
+  return (
+    <CardHeader className={cn("bg-accent relative z-0 flex flex-row items-start")}>
+      <div className="grid gap-0.5">
+        <CardTitle className="group flex items-center gap-2 text-lg">
+          <span dir={post.enTitle ? "ltr" : "rtl"}>{post.enTitle || post.arTitle}</span>
+          <Button
+            size="icon"
+            variant="outline"
+            icon={<Copy className="p-0.5" />}
+            className="**:text-foreground! h-6 w-6 opacity-0 transition-opacity group-hover:opacity-100"
+            onClick={() => {
+              navigator.clipboard
+                .writeText((post.enTitle || post.arTitle) as string)
+                .then(() => {
+                  toast.success("Copied!");
+                });
+            }}
+          >
+            <span className="sr-only">Copy Course Name</span>
+          </Button>
+        </CardTitle>
+        {post.publishedAt && (
+          <CardDescription>
+            <span>Published Date: {format(post.publishedAt, "dd MMMM yyyy")}</span>
+          </CardDescription>
+        )}
+      </div>
+    </CardHeader>
+  );
+};
+
+const PostDetails = ({ post }: { post: Post }) => {
+  const tags = post.tags;
+
+  return (
+    <div className="grid gap-5">
+      <Categories post={post} />
+      <Separator />
+      <Tags post={post} />
+      <Separator />
+      <PublishedAt post={post} />
+    </div>
+  );
+};
+
+const Categories = ({ post }: { post: Post }) => {
+  const categories = post.categories;
+
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <span className="text-muted-foreground flex items-center gap-2 font-medium">
+        <SwatchBook strokeWidth={0.8} />
+        Categories
+      </span>
+      <div className="flex flex-col items-end gap-2">
+        {categories.map(
+          (category) =>
+            category && (
+              <span key={category.id} className="capitalize">
+                {category.enName}
+              </span>
+            ),
+        )}
+      </div>
+    </div>
+  );
+};
+
+const PublishedAt = ({ post }: { post: Post }) => {
+  const publishedAt = post.publishedAt && format(post.publishedAt, "dd MMMM yyyy");
+  if (!publishedAt) return;
+
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <span className="text-muted-foreground flex items-center gap-2 font-medium">
+        <Calendar strokeWidth={0.8} />
+        Published At
+      </span>
+      <div className="flex flex-col items-end gap-2">{publishedAt}</div>
+    </div>
+  );
+};
+
+const Tags = ({ post }: { post: Post }) => {
+  const tags = post.tags;
+
+  return (
+    <div className="grid grid-cols-2 gap-3">
+      <span className="text-muted-foreground flex items-center gap-2 font-medium">
+        <TagsIcon strokeWidth={0.8} />
+        Tags
+      </span>
+      <div className="flex flex-col items-end gap-2">
+        {tags.map(
+          (tag) =>
+            tag && (
+              <span key={tag.id} className="capitalize">
+                {tag.enName}
+              </span>
+            ),
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Excerpt = ({ post }: { post: Post }) => {
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="font-semibold">Excerpt</div>
+      <span>{post.excerpt}</span>
+    </div>
+  );
+};
+
+const Authors = ({ post }: { post: Post }) => {
+  const authors = post?.authors.map((author) => {
+    return {
+      ...author.user,
+      authorRole: author.role,
+      isMainAuthor: author.isMainAuthor,
+    };
+  });
+
+  const mainAuthors = authors.filter((author) => Boolean(author.isMainAuthor));
+  const subAuthors = authors.filter((author) => !Boolean(author.isMainAuthor));
+
+  return (
+    <div className="grid gap-3">
+      <h3 className="text-md font-bold">Authors</h3>
+      {mainAuthors.map((author) => (
+        <div
+          key={author.id}
+          className="grid grid-cols-2 items-center justify-between gap-5"
+        >
+          <span className="text-muted-foreground font-medium capitalize">
+            {author.authorRole?.enName}
+          </span>
+          <div className="flex items-center gap-4">
+            <Avatar user={author} />
+            <span>{`${author.firstName} ${author.lastName}`}</span>
+          </div>
+        </div>
+      ))}
+      {subAuthors.map((author) => (
+        <div
+          key={author.id}
+          className="grid grid-cols-2 items-center justify-between gap-5"
+        >
+          <span className="text-muted-foreground font-medium capitalize">
+            {author.authorRole?.enName}
+          </span>
+          <div className="flex items-center gap-4">
+            <Avatar user={author} />
+            <span>{`${author.firstName} ${author.lastName}`}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
 
 PostInfo.displayName = "CourseInfo";

@@ -7,7 +7,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { cn } from "@/lib/utils";
-import { forwardRef, useCallback, useMemo, useState } from "react";
+import { forwardRef, useCallback, useState } from "react";
 import { Avatar as AvatarComponent, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 type AvatarProps = React.ComponentPropsWithoutRef<typeof AvatarComponent> & {
@@ -22,7 +22,7 @@ const Avatar = forwardRef<React.ElementRef<typeof AvatarComponent>, AvatarProps>
       return firstNameChar || lastNameChar ? `${firstNameChar}${lastNameChar}` : "?";
     }, [user.firstName, user.lastName]);
 
-    const avatar = useMemo(() => user.avatar ?? undefined, [user]);
+    const avatar = user.avatar ?? undefined;
 
     return (
       <AvatarComponent
@@ -55,23 +55,9 @@ function AvatarGroup({ users, ...props }: AvatarGroupProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const lastIndex = users.length - 1;
 
-  const sortedUsers = useMemo(() => {
-    return [...users].sort((a, b) => {
-      // First check if user is main author
-      const aIsMain = a.isMainAuthor || false;
-      const bIsMain = b.isMainAuthor || false;
-
-      if (aIsMain && !bIsMain) return -1;
-      if (!aIsMain && bIsMain) return 1;
-
-      // If both are main authors or both are not, sort alphabetically by name
-      return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`);
-    });
-  }, [users]);
-
   return (
     <div className="group flex -space-x-2">
-      {sortedUsers.map((user, index) => {
+      {users.map((user, index) => {
         const isLast = index === lastIndex;
         const fullname = `${user.firstName} ${user.lastName}`;
         const role = user?.authorRole?.enName || user.authorRole?.arName;
@@ -84,6 +70,7 @@ function AvatarGroup({ users, ...props }: AvatarGroupProps) {
                 className={cn(
                   "ring-background ring-1 transition-transform",
                   activeIndex === index && "z-10 scale-110",
+                  props.className,
                 )}
                 onMouseEnter={() => setActiveIndex(index)}
                 onMouseLeave={() => setActiveIndex(null)}

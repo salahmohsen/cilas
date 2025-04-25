@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import profileSchema, {
   ProfileSchema,
-} from "../../admin/course-management/_lib/profile.schema";
+} from "../../course-management/_lib/profile.schema";
 
 type UserSettingsFormProps = {
   user: SafeUser;

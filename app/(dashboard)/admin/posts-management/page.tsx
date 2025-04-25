@@ -99,7 +99,7 @@ export default function BlogManagement() {
               title="Published Posts"
               description="Monitor and manage published posts."
             >
-              {isLoading && <CourseSkeleton itemsNumber={10} />}
+              {isLoading && <CourseSkeleton itemsNumber={5} />}
               {!isLoading &&
                 posts &&
                 posts.length > 0 &&
@@ -113,7 +113,7 @@ export default function BlogManagement() {
               title="Draft Posts"
               description="Monitor and manage draft posts."
             >
-              {isLoading && <CourseSkeleton itemsNumber={10} />}
+              {isLoading && <CourseSkeleton itemsNumber={5} />}
               {!isLoading &&
                 posts &&
                 posts.length > 0 &&

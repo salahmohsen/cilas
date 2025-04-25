@@ -97,7 +97,7 @@ export default function ManageCoursesPage() {
               description="Monitor and manage published courses."
             >
               <div className="space-y-2">
-                {isLoading && <CourseSkeleton itemsNumber={10} />}
+                {isLoading && <CourseSkeleton itemsNumber={5} />}
                 {!isLoading &&
                   courses &&
                   courses.length > 0 &&
@@ -115,7 +115,7 @@ export default function ManageCoursesPage() {
               title="Draft Courses"
               description="Manage and refine courses before publishing."
             >
-              {isLoading && <CourseSkeleton itemsNumber={10} />}
+              {isLoading && <CourseSkeleton itemsNumber={5} />}
               {!isLoading &&
                 courses &&
                 courses.length > 0 &&

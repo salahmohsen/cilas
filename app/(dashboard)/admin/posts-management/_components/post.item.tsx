@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { format } from "date-fns";
 
@@ -44,6 +44,20 @@ export const PostItem = ({ post }: PostItemProps) => {
     };
   });
 
+  const sortedUsers = useMemo(() => {
+    return [...users].sort((a, b) => {
+      // First check if user is main author
+      const aIsMain = a.isMainAuthor || false;
+      const bIsMain = b.isMainAuthor || false;
+
+      if (aIsMain && !bIsMain) return -1;
+      if (!aIsMain && bIsMain) return 1;
+
+      // If both are main authors or both are not, sort alphabetically by name
+      return `${a.firstName} ${a.lastName}`.localeCompare(`${b.firstName} ${b.lastName}`);
+    });
+  }, [users]);
+
   return (
     <>
       <li
@@ -55,7 +69,7 @@ export const PostItem = ({ post }: PostItemProps) => {
         <div className="flex w-full justify-between">
           <div className="flex flex-1 flex-col gap-4">
             <div className="flex items-center gap-2">
-              {users && <AvatarGroup users={users} />}
+              {sortedUsers && <AvatarGroup users={sortedUsers} />}
 
               <span className="line-clamp-3 leading-relaxed lg:line-clamp-1">
                 {postTitle}

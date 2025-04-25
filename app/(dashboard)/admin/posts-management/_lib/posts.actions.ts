@@ -7,11 +7,11 @@ import {
   authorsTable,
   postCategoriesTable,
   postsTable,
-  postsToCategoriesTable,
-  postsToTagsTable,
+  postToCategory,
+  postToTagTable,
   userTable,
 } from "@/lib/drizzle/schema";
-import blogTagsTable from "@/lib/drizzle/schema/post.tag";
+import postTagsTable from "@/lib/drizzle/schema/post.tag";
 import { serverActionStateBase } from "@/lib/types/server.actions";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { omit } from "lodash-es";
@@ -76,25 +76,25 @@ export const fetchPosts = async (
     // Step 3: Fetch all categories for these posts in a single query
     const allCategories = await db
       .select({
-        postId: postsToCategoriesTable.postId,
+        postId: postToCategory.postId,
         category: postCategoriesTable,
       })
-      .from(postsToCategoriesTable)
+      .from(postToCategory)
       .leftJoin(
         postCategoriesTable,
-        eq(postsToCategoriesTable.categoryId, postCategoriesTable.id),
+        eq(postToCategory.categoryId, postCategoriesTable.id),
       )
-      .where(inArray(postsToCategoriesTable.postId, postIds));
+      .where(inArray(postToCategory.postId, postIds));
 
     // Step 4: Fetch all tags for these posts in a single query
     const allTags = await db
       .select({
-        postId: postsToTagsTable.postId,
-        tag: blogTagsTable,
+        postId: postToTagTable.postId,
+        tag: postTagsTable,
       })
-      .from(postsToTagsTable)
-      .leftJoin(blogTagsTable, eq(postsToTagsTable.tagId, blogTagsTable.id))
-      .where(inArray(postsToTagsTable.postId, postIds));
+      .from(postToTagTable)
+      .leftJoin(postTagsTable, eq(postToTagTable.tagId, postTagsTable.id))
+      .where(inArray(postToTagTable.postId, postIds));
 
     // Step 5: Organize data by post
     const postsWithRelations = rawPosts.map((post) => {

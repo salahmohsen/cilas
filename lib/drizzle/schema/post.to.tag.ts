@@ -3,10 +3,10 @@ import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
 import postsTable from "./post";
 import postTagsTable from "./post.tag";
 
-const postsToTagsTable = pgTable(
-  "blogs_to_tags",
+const postToTagTable = pgTable(
+  "post_to_tag",
   {
-    postId: integer("blog_id")
+    postId: integer("post_id")
       .notNull()
       .references(() => postsTable.id, { onDelete: "cascade" }),
     tagId: integer("tag_id")
@@ -16,15 +16,15 @@ const postsToTagsTable = pgTable(
   (t) => [primaryKey({ columns: [t.postId, t.tagId] })],
 );
 
-export const postsToTagsRelations = relations(postsToTagsTable, ({ one }) => ({
+export const postToTagRelations = relations(postToTagTable, ({ one }) => ({
   post: one(postsTable, {
-    fields: [postsToTagsTable.postId],
+    fields: [postToTagTable.postId],
     references: [postsTable.id],
   }),
   tag: one(postTagsTable, {
-    fields: [postsToTagsTable.tagId],
+    fields: [postToTagTable.tagId],
     references: [postTagsTable.id],
   }),
 }));
 
-export default postsToTagsTable;
+export default postToTagTable;

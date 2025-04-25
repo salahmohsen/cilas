@@ -6,15 +6,18 @@ import {
   PaginationItem,
 } from "@/components/ui/pagination";
 
-import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useItemsNavContext } from "../../../../_lib/items.nav.context";
+import { useItemsNavContext } from "../../_lib/items.nav.context";
 
-export const InfoFooter = ({ className }: { className?: string }) => {
-  const { courseInfo } = useCourseStore();
-
+export const InfoFooter = ({
+  className,
+  updatedAt,
+}: {
+  className?: string;
+  updatedAt: Date;
+}) => {
   const { handleNext, handlePrev } = useItemsNavContext();
 
   return (
@@ -25,10 +28,7 @@ export const InfoFooter = ({ className }: { className?: string }) => {
       )}
     >
       <div className="text-muted-foreground text-xs">
-        Updated{" "}
-        <time dateTime="2023-11-23">
-          {courseInfo && format(courseInfo.updatedAt, "dd MMMM yyyy")}
-        </time>
+        Updated <time dateTime="2023-11-23">{format(updatedAt, "dd MMMM yyyy")}</time>
       </div>
       <Pagination className="mr-0 ml-auto w-auto">
         <PaginationContent>

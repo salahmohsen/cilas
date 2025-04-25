@@ -22,7 +22,6 @@ type UserAvatarProps = {
 
 export function UserSettingDialog({ users, courseId, className }: UserAvatarProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<SafeUser | undefined>(undefined);
 
