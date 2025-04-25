@@ -54,11 +54,11 @@ export const PostInfo = forwardRef<HTMLDivElement, PostInfoProps>(
               >
                 <Header post={post} />
 
-                <CardContent className="p-6 text-sm">
+                <CardContent className="space-y-4 p-6 text-sm">
                   <PostDetails post={post} />
-                  <Separator className="my-4" />
+                  <Separator />
                   <Excerpt post={post} />
-                  <Separator className="my-4" />
+                  <Separator />
                   <Authors post={post} />
                 </CardContent>
               </ScrollArea>
@@ -123,7 +123,7 @@ const Categories = ({ post }: { post: Post }) => {
   const categories = post.categories;
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 items-start gap-3">
       <span className="text-muted-foreground flex items-center gap-2 font-medium">
         <SwatchBook strokeWidth={0.8} />
         Categories
@@ -161,7 +161,7 @@ const Tags = ({ post }: { post: Post }) => {
   const tags = post.tags;
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 items-start gap-3">
       <span className="text-muted-foreground flex items-center gap-2 font-medium">
         <TagsIcon strokeWidth={0.8} />
         Tags
@@ -182,7 +182,7 @@ const Tags = ({ post }: { post: Post }) => {
 
 const Excerpt = ({ post }: { post: Post }) => {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="grid gap-5">
       <div className="font-semibold">Excerpt</div>
       <span>{post.excerpt}</span>
     </div>
@@ -203,30 +203,27 @@ const Authors = ({ post }: { post: Post }) => {
 
   return (
     <div className="grid gap-5">
-      <h3 className="text-md -mb-2 font-bold">Authors</h3>
+      <h3 className="text-md font-bold">Authors</h3>
       {mainAuthors.map((author) => (
-        <div
-          key={author.id}
-          className="grid grid-cols-2 items-center justify-between gap-5"
-        >
-          <span className="text-muted-foreground font-medium capitalize">
-            {author.authorRole?.enName}
-          </span>
+        <div key={author.id} className="grid grid-cols-2 items-center gap-3">
           <div className="flex items-center gap-4">
             <Avatar user={author} />
             <span>{`${author.firstName} ${author.lastName}`}</span>
           </div>
+          <span className="text-muted-foreground justify-self-end font-medium capitalize">
+            {author.authorRole?.enName}
+          </span>
         </div>
       ))}
       {subAuthors.map((author) => (
         <div key={author.id} className="grid grid-cols-2 items-center gap-5">
-          <span className="text-muted-foreground font-medium capitalize">
-            {author.authorRole?.enName}
-          </span>
           <div className="flex items-center gap-4">
             <Avatar user={author} />
             <span>{`${author.firstName} ${author.lastName}`}</span>
           </div>
+          <span className="text-muted-foreground justify-self-end font-medium capitalize">
+            {author.authorRole?.enName}
+          </span>
         </div>
       ))}
     </div>

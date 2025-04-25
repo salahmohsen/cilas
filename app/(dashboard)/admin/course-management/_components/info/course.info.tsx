@@ -53,11 +53,11 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
               >
                 <Header course={course} />
 
-                <CardContent className="p-6 text-sm">
+                <CardContent className="space-y-4 p-6 text-sm">
                   <CourseDetails course={course} />
-                  <Separator className="my-4" />
+                  <Separator />
                   <FacilitatorInfo course={course} />
-                  <Separator className="my-4" />
+                  <Separator />
                   <StudentsSection course={course} />
                 </CardContent>
               </ScrollArea>
