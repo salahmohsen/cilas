@@ -17,9 +17,9 @@ import { useCallback, useEffect, useRef } from "react";
 import { TabContentSheet } from "../../_components/tab.content.sheet";
 import { ItemsNavContext } from "../../_lib/items.nav.context";
 import { useItemsNavigation } from "../../_lib/use.items.navigation";
+import { InfoModal } from "../_components/info.modal";
 import { PageHeader } from "../_components/page.header";
 import { CourseSkeleton } from "../course-management/_components/courses/course.skeleton";
-import { CourseInfoModal } from "../course-management/_components/info/course.info.modal";
 import { PostInfo } from "./_components/post.info";
 import { PostItem } from "./_components/post.item";
 import { PostsTabList } from "./_components/post.tabs";
@@ -126,7 +126,14 @@ export default function BlogManagement() {
           {isDesktop && (
             <PostInfo className="sticky max-h-[70vh] max-w-1/3" mode="flex" />
           )}
-          {!isDesktop && <CourseInfoModal />}
+          {!isDesktop && (
+            <InfoModal
+              type="post"
+              info={postInfo}
+              selectedItem={selectedPost}
+              setSelectedItem={setSelectedPost}
+            />
+          )}
         </div>
       </ItemsNavContext.Provider>
     </div>

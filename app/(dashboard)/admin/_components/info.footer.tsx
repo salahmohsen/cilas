@@ -28,7 +28,10 @@ export const InfoFooter = ({
       )}
     >
       <div className="text-muted-foreground text-xs">
-        Updated <time dateTime="2023-11-23">{format(updatedAt, "dd MMMM yyyy")}</time>
+        Updated{" "}
+        <time dateTime={updatedAt.toDateString()}>
+          {format(updatedAt, "dd MMMM yyyy")}
+        </time>
       </div>
       <Pagination className="mr-0 ml-auto w-auto">
         <PaginationContent>

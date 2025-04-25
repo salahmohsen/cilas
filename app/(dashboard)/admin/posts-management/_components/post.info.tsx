@@ -45,8 +45,13 @@ export const PostInfo = forwardRef<HTMLDivElement, PostInfoProps>(
             exit={mode === "flex" ? { x: "50vw", width: 0 } : undefined}
             ref={ref}
           >
-            <Card className="overflow-y-auto">
-              <ScrollArea type="hover" className="h-[calc(100%-60px)]">
+            <Card
+              className={cn("overflow-y-auto", mode === "dialog" && "h-full border-0")}
+            >
+              <ScrollArea
+                type="hover"
+                className={cn(mode === "flex" ? "h-[calc(100%-60px)]" : "h-full")}
+              >
                 <Header post={post} />
 
                 <CardContent className="flex flex-col gap-6 pt-6 text-sm">
@@ -197,8 +202,8 @@ const Authors = ({ post }: { post: Post }) => {
   const subAuthors = authors.filter((author) => !Boolean(author.isMainAuthor));
 
   return (
-    <div className="grid gap-3">
-      <h3 className="text-md font-bold">Authors</h3>
+    <div className="grid gap-5">
+      <h3 className="text-md -mb-2 font-bold">Authors</h3>
       {mainAuthors.map((author) => (
         <div
           key={author.id}

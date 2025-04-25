@@ -17,11 +17,11 @@ import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { ItemsNavContext } from "../../_lib/items.nav.context";
 import { useItemsNavigation } from "../../_lib/use.items.navigation";
+import { InfoModal } from "../_components/info.modal";
 import { PageHeader } from "../_components/page.header";
 import { CourseItem } from "./_components/courses/course.item";
 import { CourseSkeleton } from "./_components/courses/course.skeleton";
 import { CourseInfo } from "./_components/info/course.info";
-import { CourseInfoModal } from "./_components/info/course.info.modal";
 import { CoursesTabList } from "./_components/tabs/course.tabs";
 import { CourseTabContent } from "./_components/tabs/course.tabs.content";
 
@@ -132,7 +132,14 @@ export default function ManageCoursesPage() {
               mode="flex"
             />
           )}
-          {!isDesktop && <CourseInfoModal />}
+          {!isDesktop && (
+            <InfoModal
+              type="course"
+              info={courseInfo}
+              selectedItem={selectedCourse}
+              setSelectedItem={setSelectedCourse}
+            />
+          )}
         </div>
       </div>
     </ItemsNavContext.Provider>
