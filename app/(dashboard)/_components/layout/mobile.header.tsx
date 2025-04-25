@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar } from "@/components/avatar";
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useUserStore } from "@/lib/users/user.slice";
 import { cn } from "@/lib/utils";

@@ -1,4 +1,4 @@
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import { Icon } from "@/lib/tiptap/components/ui/Icon";
 import { cn } from "@/lib/utils/utils";
 import { ReactNode, useState } from "react";

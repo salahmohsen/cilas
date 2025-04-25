@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { format } from "date-fns";
 
 import { AvatarGroup } from "@/components/avatar";
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

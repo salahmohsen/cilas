@@ -11,7 +11,7 @@ import {
   buttonVariants,
   Button as ShadcnButton,
   ButtonProps as ShadcnButtonProps,
-} from "../ui/button";
+} from "./ui/button";
 
 export { buttonVariants };
 

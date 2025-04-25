@@ -11,7 +11,7 @@ import {
   CoursesFilter,
   CourseTabs,
 } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import { NotFound } from "@/components/not-found";
 import { Sailboat } from "lucide-react";
 import { useSearchParams } from "next/navigation";

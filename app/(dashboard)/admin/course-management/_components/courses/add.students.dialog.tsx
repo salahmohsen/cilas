@@ -1,9 +1,9 @@
 "use client";
 
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
+import { Button } from "@/components/button";
 import { MultiSelectorInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
-import { Button } from "@/components/hoc/button";
 import {
   Dialog,
   DialogContent,

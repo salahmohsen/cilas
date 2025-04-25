@@ -2,7 +2,7 @@
 
 import { useTheme } from "next-themes";
 
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

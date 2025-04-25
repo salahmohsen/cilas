@@ -21,7 +21,7 @@ import {
   Undo as UndoIcon,
 } from "lucide-react";
 
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import {
   HoverCard,
   HoverCardContent,

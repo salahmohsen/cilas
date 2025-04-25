@@ -7,7 +7,7 @@ import { format } from "date-fns";
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { CoursesFilter } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
 import { Avatar } from "@/components/avatar";
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import {
   DropdownMenu,

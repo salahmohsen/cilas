@@ -1,8 +1,8 @@
 "use client";
 
 import { FellowForm } from "@/app/(dashboard)/admin/course-management/_components/courses/fellow.form";
+import { Button } from "@/components/button";
 import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
-import { Button } from "@/components/hoc/button";
 import {
   Command,
   CommandEmpty,

@@ -1,4 +1,4 @@
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import {
   Card,
   CardContent,

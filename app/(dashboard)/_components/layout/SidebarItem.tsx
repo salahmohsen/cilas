@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

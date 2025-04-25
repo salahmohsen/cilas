@@ -2,7 +2,7 @@
 
 import { logout } from "@/app/(Auth)/_lib/auth.actions";
 import { Avatar } from "@/components/avatar";
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import {
   DropdownMenu,
   DropdownMenuContent,

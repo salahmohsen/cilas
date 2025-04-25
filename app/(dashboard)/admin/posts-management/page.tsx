@@ -7,11 +7,11 @@ import {
   PostsFilter,
   PostsTabs,
 } from "@/app/(dashboard)/admin/posts-management/_lib/posts.slice.types";
-import { Button } from "@/components/hoc/button";
+import { Button } from "@/components/button";
 import { NotFound } from "@/components/not-found";
 import { cn } from "@/lib/utils";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { Sailboat } from "lucide-react";
+import { Newspaper } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useRef } from "react";
 import { TabContentSheet } from "../../_components/tab.content.sheet";
@@ -77,7 +77,7 @@ export default function BlogManagement() {
         title="Posts Management"
         description="Manage posts: create, update, delete, and filter with ease."
       >
-        <Button href="/admin/course-management/create-post" icon={<Sailboat />}>
+        <Button href="/admin/course-management/create-post" icon={<Newspaper />}>
           New Post
         </Button>
       </PageHeader>

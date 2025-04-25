@@ -1,9 +1,9 @@
 "use-client";
 
 import { Avatar } from "@/components/avatar";
+import { Button } from "@/components/button";
 import { BasicInput, TipTapInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
-import { Button } from "@/components/hoc/button";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { SafeUser } from "@/lib/drizzle/drizzle.types";
