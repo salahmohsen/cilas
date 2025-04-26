@@ -23,12 +23,14 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
   label,
   placeholder,
   className,
+  disableSearch = false,
   emptyMsg,
   searchPlaceholder,
   action,
   loading,
   options,
   defaultOption,
+  children,
 }: ComboBoxProps<TData, TName>) => {
   const [open, setOpen] = useState(false);
 
@@ -74,7 +76,10 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                   <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-[200px] p-0 *:z-9969!" align="start">
+              <PopoverContent
+                className="w-[var(--radix-popover-trigger-width)] p-0 *:z-9969!"
+                align="start"
+              >
                 <Command
                   filter={(value, search, keywords) => {
                     if ([keywords]?.join()?.toLowerCase()?.includes(search.toLowerCase()))
@@ -83,11 +88,11 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                   }}
                 >
                   <CommandList>
-                    <CommandInput placeholder={searchPlaceholder} />
+                    {!disableSearch && <CommandInput placeholder={searchPlaceholder} />}
                     <CommandEmpty>
                       <div className="space-y-2">
                         <p>{emptyMsg}</p>
-                        <FellowForm mode="button" />
+                        {children}
                       </div>
                     </CommandEmpty>
                     <CommandGroup>

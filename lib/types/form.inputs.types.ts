@@ -1,4 +1,5 @@
 import { MultipleSelectorProps, Option } from "@/components/ui/multipleSelector";
+import { ReactNode } from "react";
 import {
   ControllerFieldState,
   ControllerRenderProps,
@@ -71,11 +72,13 @@ export type ComboBoxOption = {
 export interface ComboBoxProps<TData extends FieldValues, TName extends FieldPath<TData>>
   extends StandardProps<TData, TName> {
   emptyMsg: string;
-  searchPlaceholder: string;
+  disableSearch?: boolean;
+  searchPlaceholder?: string;
   action: () => Promise<void>;
   loading: boolean;
   options: ComboBoxOption[];
   defaultOption?: ComboBoxOption;
+  children: ReactNode;
 }
 
 export interface SliderProps<TData extends FieldValues, TName extends FieldPath<TData>>
