@@ -55,7 +55,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                   ref={field.ref}
                   onBlur={field.onBlur}
                   className={cn(
-                    "w-full justify-between",
+                    "w-full *:w-full *:justify-between",
                     !value && "text-muted-foreground",
                   )}
                 >
@@ -71,7 +71,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                     return placeholder;
                   })()}
 
-                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-[200px] p-0 *:z-9969!" align="start">
