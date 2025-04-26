@@ -423,7 +423,7 @@ export const MultipleSelector = React.forwardRef<
                     }}
                     onClick={() => handleUnselect(option)}
                   >
-                    <X className="text-background h-3 w-3" />
+                    <X className="text-primary h-3 w-3" />
                   </button>
                 </Badge>
               );
