@@ -23,7 +23,7 @@ import { BasicInput, TipTapInput } from "@/components/form-inputs";
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { addFellow } from "@/lib/users/users.actions";
 import { FellowState } from "@/lib/users/users.actions.types";
-import { SquarePlus } from "lucide-react";
+import { UserRoundPlus } from "lucide-react";
 import fellowSchema, { FellowSchema } from "../../_lib/fellow.schema";
 
 type NewFellowProps = {
@@ -68,11 +68,11 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
             }}
             className={`flex gap-2 text-sm font-normal ${
               mode === "commandItem"
-                ? "mt-1 h-auto w-full px-2 py-1.5"
+                ? "mt-1 h-auto w-full justify-start px-2 py-1.5"
                 : "mx-auto mt-1 h-auto py-1.5"
             }`}
           >
-            <SquarePlus strokeWidth={1} size={18} /> Add New Fellow
+            <UserRoundPlus strokeWidth={1} size={18} /> Add New Fellow
           </Button>
         </DialogTrigger>
         <DialogContent className="z-50 sm:max-w-lg" tabIndex={undefined}>
