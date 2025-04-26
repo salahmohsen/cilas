@@ -56,7 +56,7 @@ export const MobileHeader = () => {
             />
             <MenuItem
               title="Posts management"
-              href="/admin/posts-management"
+              href="/admin/post-management"
               icon={<Origami className="h-6 w-6" strokeWidth={0.67} />}
               setOpen={setOpen}
             />

@@ -1,8 +1,8 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { CourseInfo } from "../course-management/_components/info/course.info";
-import { PostInfo } from "../posts-management/_components/post.info";
-import { Post } from "../posts-management/_lib/posts.actions.type";
+import { PostInfo } from "../post-management/_components/post.info";
+import { Post } from "../post-management/_lib/posts.actions.type";
 import { InfoFooter } from "./info.footer";
 
 type InfoModal = {

@@ -3,11 +3,11 @@ import { ComboBoxOption } from "@/lib/types/form.inputs.types";
 import { getUsersNames } from "@/lib/users/users.actions";
 import { useCallback, useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { BlogSchema } from "../_lib/posts.schema";
+import { PostSchema } from "../_lib/posts.schema";
 
-type BlogMetaProps = { formMethods: UseFormReturn<BlogSchema> };
+type PostMetaProps = { formMethods: UseFormReturn<PostSchema> };
 
-export default function BlogMeta({ formMethods }: BlogMetaProps) {
+export default function PostMeta({ formMethods }: PostMetaProps) {
   const [authors, setAuthors] = useState<ComboBoxOption[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [coAuthors, setCoAuthors] = useState<string[] | undefined>([]);
@@ -28,31 +28,29 @@ export default function BlogMeta({ formMethods }: BlogMetaProps) {
     setCoAuthors((prev) => (prev && coAuthor ? [...prev, ...coAuthor] : coAuthor));
   }, [coAuthor]);
 
-  console.log("coAuthors", coAuthors);
-
   return (
     <div className="space-y-5 p-5">
-      <BasicInput<BlogSchema, "slug">
+      <BasicInput<PostSchema, "slug">
         label="Slug"
         name="slug"
         type="text"
         className="block"
         placeholder="Type post slug here..."
       />
-      <Textarea<BlogSchema, "excerpt"> name="excerpt" label="Excerpt" />
-      <BasicInput<BlogSchema, "featuredImage">
+      <Textarea<PostSchema, "excerpt"> name="excerpt" label="Excerpt" />
+      <BasicInput<PostSchema, "featuredImage">
         label="Featured Image"
         name="featuredImage"
         type="file"
         className="block"
         placeholder="Upload featured image..."
       />
-      <DateInput<BlogSchema, "publishedAt">
+      <DateInput<PostSchema, "publishedAt">
         label="Published At"
         name="publishedAt"
         placeholder="Select publish date..."
       />
-      <ComboBoxInput<BlogSchema, "mainAuthorId">
+      <ComboBoxInput<PostSchema, "mainAuthorId">
         name="mainAuthorId"
         label="Main author"
         placeholder="Select main author..."
@@ -63,7 +61,7 @@ export default function BlogMeta({ formMethods }: BlogMetaProps) {
         // defaultOption={}
         loading={isLoading}
       />
-      <ComboBoxInput<BlogSchema, "coAuthors">
+      <ComboBoxInput<PostSchema, "coAuthors">
         name="coAuthors"
         label="Co-Authors"
         placeholder="Select co-author author..."

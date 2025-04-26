@@ -147,12 +147,12 @@ const PublishedAt = ({ post }: { post: Post }) => {
   if (!publishedAt) return;
 
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 items-center gap-3">
       <span className="text-muted-foreground flex items-center gap-2 font-medium">
         <Calendar strokeWidth={0.8} />
         Published At
       </span>
-      <div className="flex flex-col items-end gap-2">{publishedAt}</div>
+      <div className="justify-self-end">{publishedAt}</div>
     </div>
   );
 };

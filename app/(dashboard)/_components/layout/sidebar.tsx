@@ -6,7 +6,7 @@ import logo from "@/public/logo.png";
 import { Home, Rss, SquareLibrary } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePostsStore } from "../../admin/posts-management/_lib/posts.slice";
+import { usePostsStore } from "../../admin/post-management/_lib/posts.slice";
 import { SidebarAvatar } from "./sidebar.avatar";
 import { SidebarItem } from "./SidebarItem";
 import { ThemeToggle } from "./theme.toggle";
@@ -37,7 +37,7 @@ export function LayoutSidebar({ className }: { className?: string }) {
           />
           <SidebarItem
             name="Posts Management"
-            href="/admin/posts-management"
+            href="/admin/post-management"
             icon={<Rss className="size-5" />}
             onClick={() => setSelectedPost(null)}
           />

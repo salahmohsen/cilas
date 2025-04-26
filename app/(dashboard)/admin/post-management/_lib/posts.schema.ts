@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { optional_file, optional_string, required_string } from "@/lib/utils/zod.utils";
 
-const blogSchema = {
+export const postSchema = {
   schema: z
     .object({
       isDraft: z.boolean(),
@@ -48,5 +48,4 @@ const blogSchema = {
   },
 };
 
-export type BlogSchema = z.infer<typeof blogSchema.schema>;
-export default blogSchema;
+export type PostSchema = z.infer<typeof postSchema.schema>;

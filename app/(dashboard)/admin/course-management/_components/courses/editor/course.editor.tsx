@@ -39,7 +39,6 @@ export function CourseEditor({
     draftMode,
     setDraftMode,
     courseAction,
-    // CourseFormProvider,
   } = useCourseForm({ courseData, editMode, courseId });
 
   const {

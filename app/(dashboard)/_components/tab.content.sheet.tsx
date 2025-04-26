@@ -10,7 +10,7 @@ import {
 import { TabsContent } from "@/components/ui/tabs";
 import { ReactNode } from "react";
 import { useItemsNavContext } from "../_lib/items.nav.context";
-import { PostsTabs } from "../admin/posts-management/_lib/posts.slice.types";
+import { PostsTabs } from "../admin/post-management/_lib/posts.slice.types";
 
 type PostsTabContentProps = {
   tabValue: PostsTabs;

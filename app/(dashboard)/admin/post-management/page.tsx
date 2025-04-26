@@ -2,11 +2,6 @@
 
 import { Tabs } from "@/components/ui/tabs";
 
-import { usePostsStore } from "@/app/(dashboard)/admin/posts-management/_lib/posts.slice";
-import {
-  PostsFilter,
-  PostsTabs,
-} from "@/app/(dashboard)/admin/posts-management/_lib/posts.slice.types";
 import { Button } from "@/components/button";
 import { NotFound } from "@/components/not-found";
 import { cn } from "@/lib/utils";
@@ -23,6 +18,8 @@ import { CourseSkeleton } from "../course-management/_components/courses/course.
 import { PostInfo } from "./_components/post.info";
 import { PostItem } from "./_components/post.item";
 import { PostsTabList } from "./_components/post.tabs";
+import { usePostsStore } from "./_lib/posts.slice";
+import { PostsFilter, PostsTabs } from "./_lib/posts.slice.types";
 
 export default function BlogManagement() {
   const containerRef = useRef<HTMLUListElement | null>(null);
@@ -77,7 +74,7 @@ export default function BlogManagement() {
         title="Posts Management"
         description="Manage posts: create, update, delete, and filter with ease."
       >
-        <Button href="/admin/posts-management/new" icon={<Newspaper />}>
+        <Button href="/admin/post-management/new" icon={<Newspaper />}>
           New Post
         </Button>
       </PageHeader>

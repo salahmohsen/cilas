@@ -30,7 +30,7 @@ export const PostsTabList = () => {
   return (
     <nav className="flex flex-wrap items-center justify-between gap-1">
       <TabsListUi className={tabClasses.list}>
-        <Link href={`/admin/posts-management?tab=${CourseTabs.Published}`}>
+        <Link href={`/admin/post-management?tab=${CourseTabs.Published}`}>
           <TabsTrigger
             value={PostsTabs.Published}
             id={PostsTabs.Published}
@@ -44,7 +44,7 @@ export const PostsTabList = () => {
           </TabsTrigger>
         </Link>
 
-        <Link href={`/admin/posts-management?tab=${CourseTabs.Draft}`}>
+        <Link href={`/admin/post-management?tab=${CourseTabs.Draft}`}>
           <TabsTrigger
             value={PostsTabs.Draft}
             id={PostsTabs.Draft}

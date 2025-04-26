@@ -3,7 +3,7 @@
 import {
   IsMainAuthor,
   Role,
-} from "@/app/(dashboard)/admin/posts-management/_lib/posts.actions.type";
+} from "@/app/(dashboard)/admin/post-management/_lib/posts.actions.type";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { cn } from "@/lib/utils";

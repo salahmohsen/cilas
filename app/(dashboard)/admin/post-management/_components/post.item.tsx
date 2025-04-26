@@ -97,9 +97,7 @@ export const PostItem = ({ post }: PostItemProps) => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onSelect={() =>
-                  router.push(`/admin/course-management/edit-post?id=${post.id}`)
-                }
+                onSelect={() => router.push(`/admin/post-management/edit?id=${post.id}`)}
                 onClick={(e) => e.stopPropagation()}
                 className="cursor-pointer"
               >
@@ -108,9 +106,7 @@ export const PostItem = ({ post }: PostItemProps) => {
 
               <DropdownMenuItem
                 onSelect={() =>
-                  router.push(
-                    `/admin/posts-management/create-post?duplicate-course=${post.id}`,
-                  )
+                  router.push(`/admin/post-management/new?duplicate=${post.id}`)
                 }
                 onClick={(e) => e.stopPropagation()}
                 className="cursor-pointer"
