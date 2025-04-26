@@ -93,14 +93,14 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.39.2",
     "eslint": "8.45.0",
-    "framer-motion": "^11.3.21",
+    "framer-motion": "^11.18.2",
     "i": "^0.3.7",
     "iframe-resizer": "^4.3.9",
     "lodash-es": "^4.17.21",
     "lowlight": "^2.9.0",
     "lucia": "^3.2.0",
     "lucide-react": "^0.475.0",
-    "next": "^14.2.23",
+    "next": "^14.2.28",
     "next-themes": "^0.3.0",
     "npm": "^11.1.0",
     "postcss": "8.4.27",
@@ -146,5 +146,16 @@
     "tailwindcss": "^4.1.4",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "5.8.2"
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.0"
+    },
+    "@esbuild-kit/esm-loader": {
+      "esbuild": "0.25.0"
+    },
+    "drizzle-kit": {
+      "esbuild": "0.25.0"
+    }
   }
 }
