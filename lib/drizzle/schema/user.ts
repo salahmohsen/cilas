@@ -1,10 +1,11 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
-import { userRole } from "../drizzle.types";
+import { pgEnum, pgTable, text, timestamp, varchar } from "drizzle-orm/pg-core";
 import courseTable from "./course";
 import enrollmentTable from "./enrollment";
 import authorsTable from "./post.authors";
 import sessionTable from "./session";
+
+export const userRoleEnum = pgEnum("user_role", ["user", "student", "fellow", "admin"]);
 
 const userTable = pgTable("user", {
   id: text("id").primaryKey(),
@@ -17,7 +18,7 @@ const userTable = pgTable("user", {
   tel: varchar("tel", { length: 20 }),
   avatar: text("avatar"),
   bio: text("bio"),
-  role: text("role", { enum: userRole }).notNull().default("admin"), // Change to user in production
+  role: userRoleEnum("role").notNull().default("admin"), // Change default to user in production
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
     .defaultNow(),

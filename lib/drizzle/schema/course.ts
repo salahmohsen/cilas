@@ -6,14 +6,16 @@ import {
   date,
   integer,
   json,
+  pgEnum,
   pgTable,
   serial,
   text,
   timestamp,
   varchar,
 } from "drizzle-orm/pg-core";
+import courseFellowTable from "./course.fellows";
+import courseToCategory from "./course.to.category";
 import enrollmentTable from "./enrollment";
-import userTable from "./user";
 
 type TimeSlot = {
   from: Date;
@@ -39,28 +41,32 @@ const timeSlot = customType<{ data: TimeSlot }>({
   }),
 });
 
+const days = json("days").$type<
+  {
+    label: string;
+    value: string;
+  }[]
+>();
+
+export const attendanceTypeEnum = pgEnum("attendance_type", [
+  "online",
+  "offline",
+  "hybrid",
+]);
+
 const courseTable = pgTable("course", {
   id: serial("id").primaryKey(),
-  draftMode: boolean("draft_mode").default(true),
+  slug: varchar("slug", { length: 100 }).unique().notNull(),
+  isDraft: boolean("is_draft").default(true),
   enTitle: varchar("en_title", { length: 255 }),
   enContent: json("en_content").$type<JSONContent>(),
   arTitle: varchar("ar_title", { length: 255 }),
   arContent: json("ar_content").$type<JSONContent>(),
   featuredImage: text("featured_image"),
-  fellowId: text("fellow_id")
-    .notNull()
-    .references(() => userTable.id),
-  category: varchar("category", { length: 100 }).notNull(),
   isRegistrationOpen: boolean("is_registration_open").notNull().default(false),
-  attendance: varchar("attendance", { length: 50 }).notNull(),
+  attendance: attendanceTypeEnum("attendance").notNull(),
   suggestedPrice: json("suggestedPrice").notNull().$type<[number, number]>(),
-  days: json("days").$type<
-    {
-      label: string;
-      value: string;
-      disable?: boolean;
-    }[]
-  >(),
+  days: days,
   startDate: date("start_date", { mode: "date" }).notNull(),
   endDate: date("end_date", { mode: "date" }).notNull(),
   timeSlot: timeSlot("time_slot").notNull(),
@@ -75,11 +81,12 @@ const courseTable = pgTable("course", {
 });
 
 export const courseRelations = relations(courseTable, ({ one, many }) => ({
-  fellow: one(userTable, {
-    fields: [courseTable.fellowId],
-    references: [userTable.id],
-  }),
+  fellows: many(courseFellowTable),
   enrollments: many(enrollmentTable),
+  category: one(courseToCategory, {
+    fields: [courseTable.id],
+    references: [courseToCategory.courseId],
+  }),
 }));
 
 export default courseTable;

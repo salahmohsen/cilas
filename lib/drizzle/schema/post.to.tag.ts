@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import postsTable from "./post";
+import postTable from "./post";
 import postTagsTable from "./post.tag";
 
 const postToTagTable = pgTable(
@@ -8,7 +8,7 @@ const postToTagTable = pgTable(
   {
     postId: integer("post_id")
       .notNull()
-      .references(() => postsTable.id, { onDelete: "cascade" }),
+      .references(() => postTable.id, { onDelete: "cascade" }),
     tagId: integer("tag_id")
       .notNull()
       .references(() => postTagsTable.id, { onDelete: "cascade" }),
@@ -17,9 +17,9 @@ const postToTagTable = pgTable(
 );
 
 export const postToTagRelations = relations(postToTagTable, ({ one }) => ({
-  post: one(postsTable, {
+  post: one(postTable, {
     fields: [postToTagTable.postId],
-    references: [postsTable.id],
+    references: [postTable.id],
   }),
   tag: one(postTagsTable, {
     fields: [postToTagTable.tagId],

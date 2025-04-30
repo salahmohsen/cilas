@@ -1,14 +1,21 @@
 import { relations } from "drizzle-orm";
 import {
   integer,
+  pgEnum,
   pgTable,
   primaryKey,
   text,
   timestamp,
-  varchar,
 } from "drizzle-orm/pg-core";
 import courseTable from "./course";
 import userTable from "./user";
+
+export const studentStatusEnum = pgEnum("student_status", [
+  "unpaid",
+  "paid",
+  "enrolled",
+  "certified",
+]);
 
 const enrollmentTable = pgTable(
   "course_enrollment",
@@ -22,7 +29,7 @@ const enrollmentTable = pgTable(
     enrollmentDate: timestamp("enrollment_date", { mode: "date", withTimezone: true })
       .notNull()
       .defaultNow(),
-    status: varchar("status", { length: 20 }).notNull().default("pending"),
+    status: studentStatusEnum("status").notNull(),
     paidAmount: integer("paid_amount"),
     paymentDate: timestamp("payment_date", { mode: "date", withTimezone: true }),
   },

@@ -1,6 +1,6 @@
 import { relations } from "drizzle-orm";
 import { boolean, integer, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
-import postsTable from "./post";
+import postTable from "./post";
 import authorRoles from "./post.author.role";
 import userTable from "./user";
 
@@ -12,7 +12,7 @@ const authorsTable = pgTable(
       .references(() => userTable.id, { onDelete: "cascade" }),
     postId: integer("post_id")
       .notNull()
-      .references(() => postsTable.id, { onDelete: "cascade" }),
+      .references(() => postTable.id, { onDelete: "cascade" }),
     roleId: integer("role_id")
       .notNull()
       .references(() => authorRoles.id, { onDelete: "cascade" }),
@@ -26,9 +26,9 @@ export const authorsRelations = relations(authorsTable, ({ one }) => ({
     fields: [authorsTable.authorId],
     references: [userTable.id],
   }),
-  post: one(postsTable, {
+  post: one(postTable, {
     fields: [authorsTable.postId],
-    references: [postsTable.id],
+    references: [postTable.id],
   }),
   role: one(authorRoles, {
     fields: [authorsTable.roleId],

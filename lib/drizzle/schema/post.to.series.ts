@@ -1,7 +1,7 @@
 import { relations } from "drizzle-orm";
 import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
+import postTable from "./post";
 import seriesTable from "./post.series";
-import postsTable from "./post";
 
 const blogToSeriesTable = pgTable(
   "series_posts",
@@ -11,7 +11,7 @@ const blogToSeriesTable = pgTable(
       .references(() => seriesTable.id, { onDelete: "cascade" }),
     postId: integer("post_id")
       .notNull()
-      .references(() => postsTable.id, { onDelete: "cascade" }),
+      .references(() => postTable.id, { onDelete: "cascade" }),
     order: integer("order").notNull().default(0),
   },
   (t) => ({
@@ -24,9 +24,9 @@ export const blogToSeriesRelations = relations(blogToSeriesTable, ({ one }) => (
     fields: [blogToSeriesTable.seriesId],
     references: [seriesTable.id],
   }),
-  post: one(postsTable, {
+  post: one(postTable, {
     fields: [blogToSeriesTable.postId],
-    references: [postsTable.id],
+    references: [postTable.id],
   }),
 }));
 

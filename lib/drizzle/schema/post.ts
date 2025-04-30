@@ -13,7 +13,7 @@ import { authorsTable } from ".";
 import blogsToCategoriesTable from "./post.to.category";
 import postToTagTable from "./post.to.tag";
 
-const postsTable = pgTable("posts", {
+const postTable = pgTable("post", {
   id: serial("id").primaryKey(),
   isDraft: boolean("is_draft").notNull().default(true),
   slug: varchar("slug", { length: 255 }).unique().notNull(),
@@ -32,10 +32,10 @@ const postsTable = pgTable("posts", {
     .defaultNow(),
 });
 
-export const postsRelations = relations(postsTable, ({ many }) => ({
+export const postsRelations = relations(postTable, ({ many }) => ({
   authors: many(authorsTable),
   tags: many(postToTagTable),
   categories: many(blogsToCategoriesTable),
 }));
 
-export default postsTable;
+export default postTable;
