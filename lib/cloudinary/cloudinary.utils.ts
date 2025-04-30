@@ -10,20 +10,23 @@ export enum UploadingFolder {
 export const uploadImage = async (
   image: unknown,
   folder: UploadingFolder,
-): Promise<string | undefined | Error> => {
-  if (image === "") return;
-  if (typeof image === "string" && isURL(image)) return image as string;
-  if (image instanceof File && image.size === 0) return;
-
-  const imageData = new FormData();
-  imageData.append("image", image as Blob);
-  imageData.append("folder", folder);
-
+): Promise<string | undefined> => {
   try {
+    if (image === "" || image === null) return;
+    if (typeof image === "string" && isURL(image)) return image;
+    if (image instanceof File && image.size === 0) return;
+
+    const imageData = new FormData();
+    imageData.append("image", image as Blob);
+    imageData.append("folder", folder);
+
     const imageUrl: string = await cloudinaryUploader(imageData);
     return imageUrl;
   } catch (error) {
-    if (error instanceof Error) return error;
+    if (error instanceof Error) {
+      console.error(error.message || "Image Uploading Failed, please try again later!");
+      throw new Error(error.message || "Image Uploading Failed, please try again later!");
+    }
   }
 };
 
