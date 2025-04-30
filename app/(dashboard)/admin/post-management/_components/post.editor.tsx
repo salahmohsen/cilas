@@ -9,6 +9,7 @@ import { Post } from "../_lib/posts.actions.type";
 import { usePostEditor } from "../_lib/usePostEditor";
 import { usePostSidebar } from "../_lib/usePostSidebar";
 import { usePostTab } from "../_lib/usePostTab";
+import PostMeta from "./post.meta";
 
 type PostEditorProps = {
   editMode?: boolean;
@@ -66,7 +67,6 @@ export const PostEditor = ({ editMode = false, post, postId }: PostEditorProps) 
           setDraftMode={() => false}
         />
       </EditorHeader>
-      {/* <CourseFormProvider> */}
       <Tabs
         value={activeContentTab}
         onValueChange={setActiveContentTab as (string) => void}
@@ -81,14 +81,16 @@ export const PostEditor = ({ editMode = false, post, postId }: PostEditorProps) 
               "data-[state=active]:bg-background h-full w-full border-0 shadow-none data-[state=inactive]:cursor-pointer"
             }
           >
-            English Content
+            English version
           </TabsTrigger>
           <TabsTrigger
             value="arContent"
             className={
               "data-[state=active]:bg-background h-full w-full border-0 shadow-none data-[state=inactive]:cursor-pointer"
             }
-          ></TabsTrigger>
+          >
+            Arabic version
+          </TabsTrigger>
         </TabsList>
         <TabsContent value="enContent" className="mt-0">
           <BlockEditor
@@ -96,7 +98,9 @@ export const PostEditor = ({ editMode = false, post, postId }: PostEditorProps) 
             leftSidebar={enLeftSidebar}
             sidebarActiveTab={sidebarActiveTab}
             setSidebarActiveTab={setSidebarActiveTab}
-          ></BlockEditor>
+          >
+            <PostMeta />
+          </BlockEditor>
         </TabsContent>
         <TabsContent value="arContent" className="mt-0">
           <BlockEditor

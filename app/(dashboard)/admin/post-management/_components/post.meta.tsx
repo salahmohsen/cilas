@@ -1,6 +1,6 @@
 import { BasicInput, ComboBoxInput, DateInput, Textarea } from "@/components/form-inputs";
 import { ComboBoxOption } from "@/lib/types/form.inputs.types";
-import { getUsersNames } from "@/lib/users/users.actions";
+import { searchUsers } from "@/lib/users/users.actions";
 import { useCallback, useEffect, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { PostSchema } from "../_lib/posts.schema";
@@ -15,7 +15,7 @@ export default function PostMeta({ formMethods }: PostMetaProps) {
   const getAuthors = useCallback(async () => {
     try {
       setIsLoading(true);
-      const data = await getUsersNames(undefined, true);
+      const data = await searchUsers(undefined, true);
       setAuthors(data as ComboBoxOption[]);
       setIsLoading(false);
     } catch (error) {

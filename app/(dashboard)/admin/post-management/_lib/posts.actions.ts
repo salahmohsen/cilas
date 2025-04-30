@@ -6,13 +6,13 @@ import {
   authorRolesTable,
   authorsTable,
   postCategoriesTable,
-  postsTable,
+  postTable,
   postToCategory,
   postToTagTable,
   userTable,
 } from "@/lib/drizzle/schema";
 import postTagsTable from "@/lib/drizzle/schema/post.tag";
-import { serverActionStateBase } from "@/lib/types/server.actions";
+import { ServerActionReturn } from "@/lib/types/server.actions";
 import { and, desc, eq, inArray } from "drizzle-orm";
 import { omit } from "lodash-es";
 import { PostsFilter } from "./posts.slice.types";
@@ -29,22 +29,22 @@ export const fetchPosts = async (
     !filter && !id && !idArr
       ? undefined
       : idArr
-        ? inArray(postsTable.id, idArr)
+        ? inArray(postTable.id, idArr)
         : id !== undefined && filter !== undefined
-          ? and(postsFilter(filter), eq(postsTable.id, id))
+          ? and(postsFilter(filter), eq(postTable.id, id))
           : id !== undefined
-            ? eq(postsTable.id, id)
+            ? eq(postTable.id, id)
             : filter !== undefined
               ? postsFilter(filter)
               : undefined;
 
   try {
     // Step 1: Get posts with pagination and filtering
-    const rawPosts = await db.query.postsTable.findMany({
+    const rawPosts = await db.query.postTable.findMany({
       where: whereCondition,
       limit: pageSize,
       offset: (page - 1) * pageSize,
-      orderBy: [desc(postsTable.createdAt)],
+      orderBy: [desc(postTable.createdAt)],
     });
 
     // Get all post IDs for batch fetching
@@ -146,9 +146,9 @@ export const fetchPosts = async (
 };
 
 export const newPost = (
-  prevState: serverActionStateBase,
+  prevState: ServerActionReturn,
   formData: FormData,
-): Promise<serverActionStateBase> => {
+): Promise<ServerActionReturn> => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({

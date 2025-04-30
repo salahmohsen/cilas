@@ -1,20 +1,20 @@
 import { z } from "zod";
 
-import { optional_file, optional_string, required_string } from "@/lib/utils/zod.utils";
+import { file, string } from "@/lib/utils/zod.utils";
 
 export const postSchema = {
   schema: z
     .object({
       isDraft: z.boolean(),
-      slug: optional_string,
-      enTitle: optional_string,
-      arTitle: optional_string,
-      enContent: optional_string,
-      arContent: optional_string,
-      excerpt: optional_string,
-      featuredImage: optional_file,
+      slug: string().optional,
+      enTitle: string().optional,
+      arTitle: string().optional,
+      enContent: string().optional,
+      arContent: string().optional,
+      excerpt: string().optional,
+      featuredImage: file().optional,
       publishedAt: z.date().optional(),
-      mainAuthorId: required_string,
+      mainAuthorId: string().required,
       coAuthors: z.array(z.string()).optional(),
     })
     .refine((data) => data.arTitle || data.enTitle, {
