@@ -5,14 +5,14 @@ import {
   Role,
 } from "@/app/(dashboard)/admin/post-management/_lib/posts.actions.type";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { SafeUser } from "@/lib/drizzle/drizzle.types";
+import { SafeUser } from "@/lib/users/users.actions.types";
 import { cn } from "@/lib/utils";
 import { forwardRef, useCallback, useState } from "react";
 import { Avatar as AvatarComponent, AvatarFallback, AvatarImage } from "./ui/avatar";
 
-type AvatarProps = React.ComponentPropsWithoutRef<typeof AvatarComponent> & {
+interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarComponent> {
   user: SafeUser;
-};
+}
 
 const Avatar = forwardRef<React.ElementRef<typeof AvatarComponent>, AvatarProps>(
   ({ user, className, onClick, ...props }, ref) => {
