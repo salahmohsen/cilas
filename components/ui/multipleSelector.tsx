@@ -7,7 +7,9 @@ import { forwardRef, useEffect } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
+import { ServerActionReturn } from "@/lib/types/server.actions";
 import { cn } from "@/lib/utils/utils";
+import { toast } from "sonner";
 
 export interface Option {
   value: string;
@@ -40,7 +42,7 @@ export interface MultipleSelectorProps {
    **/
   triggerSearchOnFocus?: boolean;
   /** async search */
-  onSearch?: (value: string) => Promise<Option[]>;
+  onSearch?: (value: string) => Promise<ServerActionReturn & { data: Option[] | null }>;
   onChange?: (options: Option[]) => void;
   /** Limit the maximum number of selected options. */
   maxSelected?: number;
@@ -265,7 +267,10 @@ export const MultipleSelector = React.forwardRef<
       const doSearch = async () => {
         setIsLoading(true);
         const res = await onSearch?.(debouncedSearchTerm);
-        setOptions(transToGroupOption(res || [], groupBy));
+        if (res && res.error) {
+          return toast.error(res?.message || "error fetching options!");
+        }
+        setOptions(transToGroupOption(res?.data || [], groupBy));
         setIsLoading(false);
       };
 

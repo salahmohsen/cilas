@@ -1,69 +1,78 @@
 import { z } from "zod";
 
+import { cleanHtml } from "@/lib/utils";
 import {
-  optional_file,
-  optional_selectOptions,
-  optional_string,
-  optional_url,
-  required_boolean,
-  required_date,
-  required_string,
-  required_timeSlot,
+  boolean,
+  date,
+  ErrorMessages,
+  file,
+  number,
+  selectOptions,
+  string,
+  timeSlot,
+  url,
 } from "@/lib/utils/zod.utils";
 
 const courseSchema = {
   schema: z
     .object({
-      enTitle: optional_string,
-      arTitle: optional_string,
-      enContent: optional_string,
-      arContent: optional_string,
-      fellowId: required_string,
-      category: required_string,
-      featuredImage: optional_file,
-      attendance: required_string,
-      isRegistrationOpen: required_boolean,
+      enTitle: string().optional.transform(cleanHtml),
+      arTitle: string().optional.transform(cleanHtml),
+      enContent: string().optional.transform(cleanHtml),
+      arContent: string().optional.transform(cleanHtml),
+      slug: string().slug(100),
+      fellowId: string().required,
+      category: number().required,
+      featuredImage: file().optional,
+      attendance: z.preprocess(
+        (val) => (typeof val === "string" ? val.toLowerCase() : val),
+        z.enum(["online", "offline", "hybrid"], {
+          message: ErrorMessages.string.required,
+        }),
+      ),
+      isRegistrationOpen: boolean().required,
       suggestedPrice: z.tuple([z.number(), z.number()]),
-      timeSlot: required_timeSlot,
-      days: optional_selectOptions,
-      applyUrl: optional_url,
-      startDate: required_date,
-      endDate: required_date,
-    })
-    .refine((data) => data.arTitle || data.enTitle, {
-      path: ["enTitle"],
-      message: "At least one English or Arabic title is required",
-    })
-    .refine((data) => data.enContent || data.arContent, {
-      path: ["enContent"],
-      message: "At least one English or Arabic content is required",
+      timeSlot: timeSlot().sameDayWithMinDuration(30),
+      days: selectOptions().optional,
+      applyUrl: url().optional,
+      startDate: date().required,
+      endDate: date().required,
     })
     .refine((data) => data.arTitle || data.enTitle, {
       path: ["arTitle"],
+      message: "At least one English or Arabic title is required.",
+    })
+    .refine((data) => data.arTitle || data.enTitle, {
+      path: ["enTitle"],
       message: "At least one English or Arabic title is required.",
     })
     .refine((data) => data.enContent || data.arContent, {
       path: ["arContent"],
       message: "At least one English or Arabic content is required",
     })
+    .refine((data) => data.enContent || data.arContent, {
+      path: ["enContent"],
+      message: "At least one English or Arabic content is required",
+    })
     .refine((data) => data.endDate > data.startDate, {
       path: ["startDate"],
-      message: "End date must be later than the start date",
+      message: "Start date must be earlier than end date",
     })
     .refine((data) => data.endDate > data.startDate, {
       path: ["endDate"],
-      message: "End date must be later than the start date",
+      message: "End date must be after start date",
     }),
   defaults: {
     enTitle: "",
     arTitle: "",
     enContent: "",
     arContent: "",
+    slug: "",
     fellowId: "",
     category: "",
     featuredImage: "",
     attendance: "",
-    isRegistrationOpen: "",
+    isRegistrationOpen: false,
     suggestedPrice: [2000, 3000],
     timeSlot: {
       from: new Date(new Date().setHours(0, 0, 0, 0)),
@@ -71,10 +80,16 @@ const courseSchema = {
     },
     days: [],
     applyUrl: "",
-    startDate: "",
-    endDate: "",
+    startDate: new Date(),
+    endDate: new Date(Date.now() + 86400000),
   },
 };
+
+export const CourseFormStateSchema = z.object({
+  isDraft: boolean().stringToBoolean,
+  editMode: boolean().stringToBoolean,
+  courseId: number().optional,
+});
 
 export type CourseSchema = z.infer<typeof courseSchema.schema>;
 export default courseSchema;

@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils/utils";
 
 import { TipTapInputProps } from "@/lib/types/form.inputs.types";
 import React, { memo } from "react";
-import { InputWrapper } from "./form.input.wrapper";
+import { FormFieldWrapper } from "./form.field.wrapper";
 import { Bold, EditorToolbar, Italic, SetLink, UnsetLink } from "./input.tipTap.toolBar";
 
 const TipTapInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
@@ -25,7 +25,7 @@ const TipTapInput = <TData extends FieldValues, TName extends FieldPath<TData>>(
   editorToolbar = true,
 }: TipTapInputProps<TData, TName>) => {
   return (
-    <InputWrapper<TData, TName> name={name} label={label} itemClasses={className}>
+    <FormFieldWrapper<TData, TName> name={name} label={label} itemClasses={className}>
       {({ field, fieldState }) => {
         const value = field.value;
         const setValue = field.onChange;
@@ -45,7 +45,7 @@ const TipTapInput = <TData extends FieldValues, TName extends FieldPath<TData>>(
           </>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

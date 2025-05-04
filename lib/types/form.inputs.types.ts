@@ -1,27 +1,8 @@
+import { ComboboxOption } from "@/components/ui/combobox";
 import { MultipleSelectorProps, Option } from "@/components/ui/multipleSelector";
 import { ReactNode } from "react";
-import {
-  ControllerFieldState,
-  ControllerRenderProps,
-  FieldPath,
-  FieldValues,
-} from "react-hook-form";
-
-export interface FormFieldProviderProps<
-  TData extends FieldValues,
-  TName extends FieldPath<TData>,
-> {
-  name: TName;
-  label?: string;
-  itemClasses?: string;
-  labelClasses?: string;
-  controlClasses?: string;
-  messageClasses?: string;
-  children: (args: {
-    field: ControllerRenderProps<TData, TName>;
-    fieldState: ControllerFieldState;
-  }) => React.ReactNode;
-}
+import { FieldPath, FieldValues } from "react-hook-form";
+import { ServerActionReturn } from "./server.actions";
 
 export interface StandardProps<
   TData extends FieldValues,
@@ -45,7 +26,7 @@ export interface BasicInputProps<
   TData extends FieldValues,
   TName extends FieldPath<TData>,
 > extends StandardProps<TData, TName> {
-  type: "text" | "number" | "url" | "file" | "tel" | "email";
+  type: "text" | "number" | "url" | "file" | "tel" | "email" | "date";
   direction?: "vertical" | "horizontal";
 }
 
@@ -65,20 +46,19 @@ export interface MultipleSelectorInputProps<
   emptyMsg?: string;
   getPreValuesAction?: () => Promise<Option[]>;
 }
-export type ComboBoxOption = {
-  id: string;
-  name: string;
-};
+
 export interface ComboBoxProps<TData extends FieldValues, TName extends FieldPath<TData>>
   extends StandardProps<TData, TName> {
   emptyMsg: string;
   disableSearch?: boolean;
   searchPlaceholder?: string;
-  action: () => Promise<void>;
-  loading: boolean;
-  options: ComboBoxOption[];
-  defaultOption?: ComboBoxOption;
-  children: ReactNode;
+  action: (
+    query?: string,
+  ) => Promise<ServerActionReturn & { data: ComboboxOption[] | null }>;
+  initialLoading?: boolean;
+  initialOptions?: Option[];
+  defaultOption?: Option;
+  children?: ReactNode;
 }
 
 export interface SliderProps<TData extends FieldValues, TName extends FieldPath<TData>>

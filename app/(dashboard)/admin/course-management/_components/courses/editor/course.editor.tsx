@@ -7,10 +7,10 @@ import { CourseMeta } from "./course.meta";
 
 import { ContentName, TitleName } from "@/app/(dashboard)/_lib/tiptap.types";
 import { ContentInput } from "@/components/form-inputs";
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 
 import { BlockEditor } from "@/lib/tiptap/components/BlockEditor";
 import { EditorHeader } from "@/lib/tiptap/components/EditorHeader";
+import { PrivateCourse } from "../../../_lib/courses.actions.types";
 import { useCourseEditor } from "../../../_lib/useCourseEditor";
 import { useCourseForm } from "../../../_lib/useCourseForm";
 import { useCourseSidebar } from "../../../_lib/useCourseSidebar";
@@ -19,7 +19,7 @@ import { SubmitButtons } from "./submit.buttons";
 
 type CourseFormPropTypes = {
   editMode?: boolean;
-  courseData?: CourseWithFellowAndStudents;
+  courseData?: PrivateCourse | null;
   courseId?: number;
 };
 
@@ -138,7 +138,7 @@ export function CourseEditor({
               sidebarActiveTab={sidebarActiveTab}
               setSidebarActiveTab={setSidebarActiveTab}
             >
-              <CourseMeta editMode={editMode} fellow={courseData?.fellow} />
+              <CourseMeta editMode={editMode} course={courseData} />
             </BlockEditor>
           </TabsContent>
           <TabsContent value="arContent" className="mt-0">
@@ -148,7 +148,7 @@ export function CourseEditor({
               sidebarActiveTab={sidebarActiveTab}
               setSidebarActiveTab={setSidebarActiveTab}
             >
-              <CourseMeta editMode={editMode} fellow={courseData?.fellow} />
+              <CourseMeta editMode={editMode} course={courseData} />
             </BlockEditor>
           </TabsContent>
         </Tabs>

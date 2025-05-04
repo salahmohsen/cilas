@@ -1,67 +1,48 @@
-"use client";
-
-import { getCourseWithEnrollmentsById } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
+import { fetchPrivateCourse } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
 import { ErrorPage } from "@/components/ui/error";
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
-import { useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { CourseEditor } from "../_components/courses/editor/course.editor";
+import { PrivateCourse } from "../_lib/courses.actions.types";
 import Loading from "./loading";
 
-export default function CreateCoursePage() {
-  const [course, setCourse] = useState<CourseWithFellowAndStudents | undefined>(
-    undefined,
-  );
-  const [error, setError] = useState<string | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean>(false);
+export default async function CreateCoursePage({
+  searchParams,
+}: {
+  searchParams: { duplicate?: string };
+}) {
+  const slug = searchParams?.duplicate;
 
-  const searchParams = useSearchParams();
-  const courseId = searchParams?.get("duplicate-course");
+  let course: PrivateCourse | null = null;
+  let error: string | undefined = undefined;
 
-  const fetchCourse = useCallback(async () => {
-    if (!courseId) return;
-    const errorMessage = `The course you're trying to copy it's values does not exist or cannot be found. Please check the course ID and try again.`;
-    setLoading(true);
+  if (slug) {
     try {
-      const id = Number(courseId);
-      if (isNaN(id)) {
-        throw new Error(errorMessage);
-      }
-      const courseData = await getCourseWithEnrollmentsById(id);
+      const { data: courseData } = await fetchPrivateCourse({ slug });
+
       if (!courseData) {
-        throw new Error(errorMessage);
+        throw new Error(
+          "The course you're trying to copy it's values does not exist or cannot be found. Please try again.",
+        );
       }
 
-      setCourse(courseData);
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "An unexpected error occurred");
-    } finally {
-      setLoading(false);
+      course = courseData;
+    } catch (err) {
+      error = err instanceof Error ? err.message : "An unexpected error occurred";
     }
-  }, [courseId]);
-
-  useEffect(() => {
-    fetchCourse();
-  }, [fetchCourse]);
-
-  if (courseId) {
-    if (error) return <ErrorPage message={error} />;
-
-    if (course) {
-      return (
-        <CourseEditor
-          courseData={{
-            ...course,
-            startDate: new Date(course?.startDate),
-            endDate: new Date(course?.endDate),
-          }}
-        />
-      );
-    }
-    return <Loading />;
   }
 
-  // If there's no courseId, render the form without course data
+  if (error) {
+    return <ErrorPage message={error} />;
+  }
+
+  if (slug) {
+    if (!course) {
+      return <Loading />;
+    }
+
+    return <CourseEditor courseData={course} />;
+  }
+
   return (
     <Suspense fallback={<Loading />}>
       <CourseEditor />

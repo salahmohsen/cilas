@@ -1,8 +1,7 @@
 "use client";
 
-import { FellowForm } from "@/app/(dashboard)/admin/course-management/_components/courses/fellow.form";
 import { Button } from "@/components/button";
-import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { FormFieldWrapper } from "@/components/form-inputs/form.field.wrapper";
 import {
   Command,
   CommandEmpty,
@@ -17,6 +16,7 @@ import { cn } from "@/lib/utils/utils";
 import { Check, ChevronsUpDown, LoaderCircle } from "lucide-react";
 import { memo, useEffect, useState } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
+import { Option } from "../ui/multipleSelector";
 
 const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
@@ -27,19 +27,55 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
   emptyMsg,
   searchPlaceholder,
   action,
-  loading,
-  options,
+  initialLoading = false,
+  initialOptions = [],
   defaultOption,
   children,
 }: ComboBoxProps<TData, TName>) => {
   const [open, setOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(initialLoading);
+  const [options, setOptions] = useState<Option[]>(initialOptions);
 
+  // Fetch data based on search query
   useEffect(() => {
-    if (open) action();
+    const fetchData = async () => {
+      if (!open) return;
+
+      setLoading(true);
+      try {
+        // Call the action function with the current search query
+        const results = await action(searchQuery);
+        if (results.success && results.data) setOptions(results.data);
+        if (results.error) throw new Error(results.message);
+      } catch (error) {
+        if (error instanceof Error)
+          console.error("Error fetching options:", error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    // Debounce the search to avoid too many requests
+    const timeoutId = setTimeout(fetchData, 300);
+    return () => clearTimeout(timeoutId);
+  }, [open, searchQuery, action]);
+
+  // Initial load when opening the dropdown
+  useEffect(() => {
+    if (open) {
+      setSearchQuery("");
+      action("").then((results) => results.data && setOptions(results.data));
+    }
   }, [open, action]);
 
+  // Handle search input changes
+  const handleSearchChange = (value: string) => {
+    setSearchQuery(value);
+  };
+
   return (
-    <InputWrapper<TData, TName> name={name} label={label}>
+    <FormFieldWrapper<TData, TName> name={name} label={label}>
       {({ field, fieldState }) => {
         const value = field.value;
         const setValue = field.onChange;
@@ -64,11 +100,11 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                   {(() => {
                     if (value) {
                       // First check for matching option in options array
-                      const selectedOption = options.find((item) => item.id === value);
-                      if (selectedOption) return selectedOption.name;
+                      const selectedOption = options.find((item) => item.value === value);
+                      if (selectedOption) return selectedOption.label;
 
                       // Then check defaultOption if no match found
-                      if (defaultOption) return defaultOption.name;
+                      if (defaultOption) return defaultOption.label;
                     }
                     return placeholder;
                   })()}
@@ -88,7 +124,13 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                   }}
                 >
                   <CommandList>
-                    {!disableSearch && <CommandInput placeholder={searchPlaceholder} />}
+                    {!disableSearch && (
+                      <CommandInput
+                        placeholder={searchPlaceholder}
+                        value={searchQuery}
+                        onValueChange={handleSearchChange}
+                      />
+                    )}
                     <CommandEmpty>
                       <div className="space-y-2">
                         <p>{emptyMsg}</p>
@@ -98,9 +140,9 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                     <CommandGroup>
                       {options?.map((option) => (
                         <CommandItem
-                          keywords={[option?.name]}
-                          key={option.id}
-                          value={option.id}
+                          keywords={[option?.label]}
+                          key={option.value}
+                          value={option.value}
                           id={field.name}
                           onSelect={(currentValue) => {
                             setValue(currentValue === value ? "" : currentValue);
@@ -110,15 +152,12 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
                           <Check
                             className={cn(
                               "mr-2 h-4 w-4",
-                              value === option.id ? "opacity-100" : "opacity-0",
+                              value === option.value ? "opacity-100" : "opacity-0",
                             )}
                           />
-                          {option.name || ""}
+                          {option.label || ""}
                         </CommandItem>
                       ))}
-                      {!loading && options?.length !== 0 && (
-                        <FellowForm mode="commandItem" />
-                      )}
                       {loading && (
                         <CommandItem
                           disabled
@@ -135,7 +174,7 @@ const ComboBoxInput = <TData extends FieldValues, TName extends FieldPath<TData>
           </>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

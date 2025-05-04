@@ -1,24 +1,18 @@
 import { z } from "zod";
 
-import {
-  optional_string,
-  optional_tel,
-  required_email,
-  required_name,
-  required_string,
-} from "@/lib/utils/zod.utils";
+import { email, name, phone, string } from "@/lib/utils/zod.utils";
 import { SafeUser } from "../../../../../lib/drizzle/drizzle.types";
 
 const profileSchema = {
   schema: z.object({
-    id: required_string,
-    firstName: required_name("First name"),
-    lastName: required_name("Last name"),
-    userName: required_name("User name", 2, 15),
-    avatar: optional_string,
-    bio: optional_string,
-    email: required_email,
-    tel: optional_tel,
+    id: string().required,
+    firstName: string().required,
+    lastName: name(),
+    userName: name(),
+    avatar: string().optional,
+    bio: string().optional,
+    email: email().required,
+    tel: phone().optional,
   }),
   defaults: (user: SafeUser | undefined) => ({
     id: user?.id ?? "",

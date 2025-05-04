@@ -1,10 +1,10 @@
 import { EditorSidebar } from "@/app/(dashboard)/_lib/tiptap.types";
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { useBlockEditor } from "@/lib/tiptap/hooks/useBlockEditor";
 import { JSONContent as TipTapJSONContent } from "@tiptap/core";
 import { useState } from "react";
+import { PrivateCourse } from "./courses.actions.types";
 
-type UseCourseEditorProps = { courseData: CourseWithFellowAndStudents | undefined };
+type UseCourseEditorProps = { courseData: PrivateCourse | null | undefined };
 type JSONContent = TipTapJSONContent | undefined;
 
 export const useCourseEditor = ({ courseData }: UseCourseEditorProps) => {

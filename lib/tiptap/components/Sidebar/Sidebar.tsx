@@ -1,5 +1,4 @@
 import { EditorSidebar } from "@/app/(dashboard)/_lib/tiptap.types";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/tiptap/lib/utils";
 import { Editor } from "@tiptap/react";
@@ -42,8 +41,8 @@ export const Sidebar = memo(
             <TabsTrigger value="tableOfContent">Contents</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="form" className="pr-2">
-            <ScrollArea className="h-[85vh]">{children}</ScrollArea>
+          <TabsContent value="form" className="mt-0 h-[86vh] overflow-auto">
+            {children}
           </TabsContent>
           <TabsContent
             value="tableOfContent"

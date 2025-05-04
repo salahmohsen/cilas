@@ -1,8 +1,5 @@
-import { SafeUser } from "@/lib/drizzle/drizzle.types";
-import { ComboBoxOption } from "@/lib/types/form.inputs.types";
-import { forwardRef, memo, useCallback, useEffect, useState } from "react";
+import { forwardRef, memo } from "react";
 
-import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import {
   BasicInput,
   ComboBoxInput,
@@ -12,52 +9,34 @@ import {
   SliderInput,
   TimeSlotInput,
 } from "@/components/form-inputs";
-import { getUsersNames } from "@/lib/users/users.actions";
+import { searchUsers } from "@/lib/users/users.actions";
 import { CourseSchema } from "../../../_lib/course.schema";
+import { getCategoriesOptions } from "../../../_lib/courses.actions";
+import { PrivateCourse } from "../../../_lib/courses.actions.types";
+import { FellowForm } from "../fellow.form";
 
 type CourseMetadataProps = {
   editMode: boolean;
-  fellow: SafeUser | undefined;
+  course: PrivateCourse | null | undefined;
 };
 
 export const CourseMeta = memo(
-  forwardRef<HTMLDivElement, CourseMetadataProps>(({ editMode, fellow }, ref) => {
-    const [fellowsNames, setFellowsNames] = useState<ComboBoxOption[]>([]);
+  forwardRef<HTMLDivElement, CourseMetadataProps>(({ editMode, course }, ref) => {
+    const defaultCategory = (() => {
+      if (!course || !course.category.id || !course.category.enName) return undefined;
+      return {
+        value: String(course.category.id),
+        label: course.category.enName,
+      };
+    })();
 
-    const { fellow: fellowState } = useCourseStore();
-
-    const [defaultOption, setDefaultOption] = useState<ComboBoxOption | undefined>(
-      undefined,
-    );
-
-    const [loading, setLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-      if (editMode)
-        setDefaultOption({
-          id: fellow?.id as string,
-          name: `${fellow?.firstName} ${fellow?.lastName}`,
-        });
-      if (fellowState) {
-        setDefaultOption({
-          id: fellowState.id,
-          name: `${fellowState.firstName} ${fellowState.lastName}`,
-        });
-      }
-    }, [editMode, fellow, fellowState]);
-
-    const getFellowsNames = useCallback(async () => {
-      try {
-        setLoading(true);
-        const data = await getUsersNames("fellow", true);
-
-        setFellowsNames(data as ComboBoxOption[]);
-        setLoading(false);
-      } catch (error) {
-        if (error instanceof Error)
-          console.log(`Getting Fellows Names Failed! ${error.message}`);
-      }
-    }, []);
+    const defaultFellow = (() => {
+      if (!course) return undefined;
+      return {
+        value: course.fellows[0].id,
+        label: `${course.fellows[0].firstName} ${course.fellows[0].lastName}`,
+      };
+    })();
 
     return (
       <div className="space-y-8 p-6" ref={ref}>
@@ -86,20 +65,20 @@ export const CourseMeta = memo(
           type="url"
         />
 
-        <SelectInput<CourseSchema, "category">
+        <BasicInput<CourseSchema, "slug">
+          name="slug"
+          label="Course slug"
+          placeholder="Course slug"
+          type="text"
+        />
+
+        <ComboBoxInput<CourseSchema, "category">
           name="category"
           label="Category"
-          placeholder="Select category"
-          options={[
-            {
-              groupLabel: "Bridge Programme",
-              selectItems: ["Thematic Course", "Lab"],
-            },
-            {
-              groupLabel: "Other",
-              selectItems: ["Seasonal Course", "Workshop"],
-            },
-          ]}
+          disableSearch
+          emptyMsg="No categories found!"
+          action={getCategoriesOptions}
+          defaultOption={defaultCategory}
         />
 
         <MultiSelectorInput<CourseSchema, "days">
@@ -122,13 +101,16 @@ export const CourseMeta = memo(
           name="fellowId"
           label="Fellow"
           placeholder="Select fellow..."
-          emptyMsg="Fellow Not Found"
-          searchPlaceholder="Search fellows..."
-          action={getFellowsNames}
-          options={fellowsNames}
-          defaultOption={defaultOption}
-          loading={loading}
-        />
+          emptyMsg="User Not Found"
+          searchPlaceholder="Search users..."
+          action={searchUsers}
+          defaultOption={defaultFellow}
+        >
+          <FellowForm
+            mode="button"
+            triggerClasses="w-full bg-primary text-primary-foreground"
+          />
+        </ComboBoxInput>
 
         <BasicInput<CourseSchema, "featuredImage">
           name="featuredImage"
@@ -159,12 +141,6 @@ export const CourseMeta = memo(
           label="Time Slot"
           placeholder="Start Time"
         />
-        {/* <SubmitButtons
-          isLoading={isLoading}
-          editMode={editMode}
-          draftMode={draftMode}
-          setDraftMode={setDraftMode}
-        /> */}
       </div>
     );
   }),

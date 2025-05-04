@@ -8,14 +8,13 @@ import fellowSchema, {
   FellowSchema,
 } from "@/app/(dashboard)/admin/course-management/_lib/fellow.schema";
 import profileSchema from "@/app/(dashboard)/admin/course-management/_lib/profile.schema";
-import studentSchema from "@/app/(dashboard)/admin/course-management/_lib/student.schema";
-import { eq, ilike, or } from "drizzle-orm";
+import { ComboboxOption } from "@/components/ui/combobox";
+import { and, eq, ilike, or, SQL } from "drizzle-orm";
 import { generateIdFromEntropySize } from "lucia";
 import { validateRequest } from "../../app/(Auth)/_lib/auth.lucia";
-import { SafeUser } from "../drizzle/drizzle.types";
 import { enrollmentTable, userTable } from "../drizzle/schema";
-import { ComboBoxOption } from "../types/form.inputs.types";
-import { BasePrevState, FellowState } from "./users.actions.types";
+import { ServerActionReturn } from "../types/server.actions";
+import { BasePrevState, FellowState, SafeUser, UserRole } from "./users.actions.types";
 
 export const addUser = async (id: string, email: string, passwordHash: string) => {
   try {
@@ -110,39 +109,79 @@ type User = {
   id: string;
   firstName: string | null;
   lastName: string | null;
+  avatar?: string | null;
 };
 
-export const getUsersNames = async (
-  role?: "user" | "fellow" | "admin",
-  optionsList?: boolean,
-): Promise<User[] | ComboBoxOption[]> => {
-  let users: User[] | ComboBoxOption[] = [];
-  if (role) {
-    users = await db.query.userTable.findMany({
-      where: eq(userTable.role, role),
-      columns: {
-        id: true,
-        firstName: true,
-        lastName: true,
-      },
-    });
-  } else {
-    users = await db.query.userTable.findMany({
-      columns: {
-        id: true,
-        firstName: true,
-        lastName: true,
-      },
-    });
-  }
+export const searchUsers = async (
+  query?: string,
+  role?: UserRole,
+): Promise<ServerActionReturn & { data: ComboboxOption[] | null }> => {
+  try {
+    let users: User[];
 
-  if (optionsList) {
-    return users.map((user) => ({
-      id: user.id,
-      name: `${user.firstName} ${user.lastName}`,
+    const whereConditions: SQL<unknown>[] = [];
+
+    if (role) {
+      whereConditions.push(eq(userTable.role, role));
+    }
+
+    // Add search filter if query is provided and not empty
+    if (query && query.trim()) {
+      whereConditions.push(
+        // @ts-expect-error
+        or(
+          ilike(userTable.firstName, `%${query}%`),
+          ilike(userTable.lastName, `%${query}%`),
+        ),
+      );
+    }
+
+    // Execute query with all conditions
+    if (whereConditions.length > 0) {
+      users = await db.query.userTable.findMany({
+        where: and(...whereConditions),
+        columns: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          avatar: true,
+        },
+        // Limit to 5 items when query is empty or not provided
+        limit: !query || !query.trim() ? 5 : undefined,
+      });
+    } else {
+      users = await db.query.userTable.findMany({
+        columns: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          avatar: true,
+        },
+        // Limit to 5 items when query is empty or not provided
+        limit: 5,
+      });
+    }
+
+    const result: ComboboxOption[] = users.map((user) => ({
+      value: user.id,
+      label: `${user.firstName} ${user.lastName}`,
+      avatar: user.avatar,
     }));
+
+    return { success: true, message: "Users fetched successfully!", data: result };
+  } catch (error) {
+    if (error instanceof Error)
+      return {
+        error: true,
+        message: error.message,
+        data: null,
+      };
+    return {
+      error: true,
+      message: "Something went wrong with searching users",
+      data: null,
+    };
   }
-  return users;
 };
 
 export const getUserById = async (id: string): Promise<SafeUser | undefined> => {
@@ -181,87 +220,6 @@ export const _getUserByEmail = async (email: string) => {
 export const getCurrentUserInfo = async () => {
   const { user } = await validateRequest();
   return user?.id ? getUserById(user.id) : null;
-};
-
-export const searchUsers = async (query: string): Promise<Option[]> => {
-  const sanitizedQuery = `%${query.toLowerCase()}%`;
-
-  const users = await db.query.userTable.findMany({
-    columns: {
-      id: true,
-      firstName: true,
-      lastName: true,
-    },
-    where: or(
-      ilike(userTable.firstName, sanitizedQuery),
-      ilike(userTable.lastName, sanitizedQuery),
-    ),
-  });
-
-  const dataFormatted = users.map((user) => ({
-    value: user.id,
-    label: `${user.firstName} ${user.lastName}`,
-  }));
-
-  return dataFormatted;
-};
-
-export const updateCourseEnrollments = async (
-  prevState: BasePrevState,
-  formData: FormData,
-): Promise<BasePrevState> => {
-  const students = JSON.parse(formData.get("students") as string);
-  const courseId = Number(formData.get("courseId"));
-
-  console.log("students", students);
-  console.log("courseId", courseId);
-
-  try {
-    // Validate input
-    const parse = studentSchema.schema.safeParse({ students, courseId });
-    if (!parse.success) throw new Error("Invalid form data");
-
-    // Convert to simple array of user IDs
-    const newStudentIds = students.map((s: { value: string }) => s.value);
-
-    // 1. First delete existing enrollments
-    const deleteResult = await db
-      .delete(enrollmentTable)
-      .where(eq(enrollmentTable.courseId, courseId));
-
-    if (deleteResult instanceof Error) {
-      throw new Error("Failed to clear existing enrollments");
-    }
-
-    // 2. Insert new enrollments if any exist
-    if (newStudentIds.length > 0) {
-      const insertResult = await db
-        .insert(enrollmentTable)
-        .values(
-          newStudentIds.map((userId) => ({
-            userId,
-            courseId,
-            enrollmentDate: new Date(),
-          })),
-        )
-        .onConflictDoNothing();
-
-      if (insertResult instanceof Error) {
-        throw new Error("Failed to add new enrollments");
-      }
-    }
-
-    return { success: true, message: "Enrollments updated successfully!" };
-  } catch (error) {
-    console.error("Enrollment update error:", error);
-    return {
-      error: true,
-      message:
-        error instanceof Error
-          ? `Update failed: ${error.message}`
-          : "Unknown error during enrollment update",
-    };
-  }
 };
 
 /**
@@ -309,7 +267,7 @@ export const getStudentsByCourseId = async <T extends boolean>(
 export const updateUserInfo = async (
   prevState: BasePrevState,
   formData: FormData,
-): Promise<BasePrevState> => {
+): Promise<ServerActionReturn> => {
   const id = formData.get("id") as string;
   const firstName = formData.get("firstName") as string;
   const lastName = formData.get("lastName") as string;
@@ -320,7 +278,7 @@ export const updateUserInfo = async (
   const tel = formData.get("tel") as string;
 
   try {
-    const parse = profileSchema.schema.safeParse({
+    const parse = profileSchema.schema.parse({
       id,
       firstName,
       lastName,
@@ -331,15 +289,13 @@ export const updateUserInfo = async (
       tel,
     });
 
-    if (!parse.success) throw new Error(`Invalid form data ${parse.error} `);
-
-    const stmt = await db
+    const [{ userID }] = await db
       .update(userTable)
       .set({ firstName, lastName, avatar, bio, email, tel })
       .where(eq(userTable.id, id))
-      .returning();
+      .returning({ userID: userTable.id });
 
-    return { success: true, message: "user profile updated successfully!" };
+    return { success: true, message: "user profile updated successfully!", data: userID };
   } catch (error) {
     console.error("update user info failed: ", error);
     return {
@@ -348,6 +304,32 @@ export const updateUserInfo = async (
         error instanceof Error
           ? `Update failed: ${error.message}`
           : "Unknown error during user profile update",
+      data: null,
+    };
+  }
+};
+
+export const fetchAvatar = async (id: string): Promise<ServerActionReturn> => {
+  try {
+    const avatar = await db.query.userTable.findFirst({
+      where: eq(userTable.id, id),
+      columns: {
+        avatar: true,
+      },
+    });
+    return {
+      success: true,
+      message: "Avatar fetched successfully!",
+      data: avatar?.avatar,
+    };
+  } catch (error) {
+    return {
+      error: true,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Something went wrong while fetching avatar",
+      data: null,
     };
   }
 };

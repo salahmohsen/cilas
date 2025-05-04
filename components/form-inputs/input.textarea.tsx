@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 
-import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { FormFieldWrapper } from "@/components/form-inputs/form.field.wrapper";
 import { StandardProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
 import { Textarea as TextareaShcn } from "../ui/textarea";
@@ -13,7 +13,7 @@ const Textarea = <TData extends FieldValues, TName extends FieldPath<TData>>({
   className,
 }: StandardProps<TData, TName>) => {
   return (
-    <InputWrapper<TData, TName>
+    <FormFieldWrapper<TData, TName>
       name={name}
       label={label}
       itemClasses={cn("space-y-5", className)}
@@ -32,7 +32,7 @@ const Textarea = <TData extends FieldValues, TName extends FieldPath<TData>>({
           />
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

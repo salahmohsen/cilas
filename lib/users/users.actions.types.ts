@@ -1,4 +1,5 @@
-import { SafeUser } from "../drizzle/drizzle.types";
+import { InferSelectModel } from "drizzle-orm";
+import { userRoleEnum, userTable } from "../drizzle/schema";
 
 export type BasePrevState = {
   success?: boolean;
@@ -13,3 +14,12 @@ export interface AuthState extends BasePrevState {
 export interface FellowState extends BasePrevState {
   fellow?: SafeUser;
 }
+
+export type SafeUser = Omit<
+  InferSelectModel<typeof userTable>,
+  "passwordHash" | "googleId"
+>;
+
+export type UserRole = (typeof userRoleEnum.enumValues)[number];
+
+export type UserWithProtectedFields = InferSelectModel<typeof userTable>;

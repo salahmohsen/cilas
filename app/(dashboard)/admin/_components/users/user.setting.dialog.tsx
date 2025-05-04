@@ -7,15 +7,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { getUserById } from "@/lib/users/users.actions";
+import { SafeUser } from "@/lib/users/users.actions.types";
 import { debounce } from "lodash-es";
 import { LoaderPinwheel } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import { UserSettingsForm } from "./user.settings.form";
 
 type UserAvatarProps = {
-  users: SafeUser[];
+  users: (SafeUser | undefined)[];
   courseId?: number;
   className?: string;
 };

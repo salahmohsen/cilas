@@ -11,18 +11,20 @@ import { forwardRef, useCallback, useState } from "react";
 import { Avatar as AvatarComponent, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 interface AvatarProps extends React.ComponentPropsWithoutRef<typeof AvatarComponent> {
-  user: SafeUser;
+  user?: SafeUser;
 }
 
 const Avatar = forwardRef<React.ElementRef<typeof AvatarComponent>, AvatarProps>(
   ({ user, className, onClick, ...props }, ref) => {
     const getFallback = useCallback(() => {
-      const firstNameChar = user.firstName?.slice(0, 1).toUpperCase() || "";
-      const lastNameChar = user.lastName?.slice(0, 1).toUpperCase() || "";
+      const firstNameChar = user?.firstName?.slice(0, 1).toUpperCase() || "";
+      const lastNameChar = user?.lastName?.slice(0, 1).toUpperCase() || "";
       return firstNameChar || lastNameChar ? `${firstNameChar}${lastNameChar}` : "?";
-    }, [user.firstName, user.lastName]);
+    }, [user?.firstName, user?.lastName]);
 
-    const avatar = user.avatar ?? undefined;
+    if (!user) return <AvatarComponent className={className} {...props} />;
+
+    const avatar = user?.avatar ?? undefined;
 
     return (
       <AvatarComponent

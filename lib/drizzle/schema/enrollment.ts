@@ -30,7 +30,7 @@ const enrollmentTable = pgTable(
       .notNull()
       .defaultNow(),
     status: studentStatusEnum("status").notNull(),
-    paidAmount: integer("paid_amount"),
+    paidAmount: integer("paid_amount").default(0),
     paymentDate: timestamp("payment_date", { mode: "date", withTimezone: true }),
   },
   (t) => [primaryKey({ columns: [t.courseId, t.userId] })],

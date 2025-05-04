@@ -1,6 +1,6 @@
 {
   "css.customData": [".vscode/tailwind.json"],
-  "cSpell.words": ["Cilas", "ilike", "lucide", "Shadcn"],
+  "cSpell.words": ["Cilas", "ilike", "lucide", "Shadcn", "arktype", "drizzle-arktype"],
   "conventionalCommits.scopes": [
     "Auth",
     "dashboard/courses",
@@ -20,5 +20,11 @@
     "ngClass",
     "class:list",
     ".*Classes.*"
-  ]
+  ],
+  // allow autocomplete for ArkType expressions like "string | num"
+  "editor.quickSuggestions": {
+    "strings": "on"
+  },
+  // prioritize ArkType's "type" for autoimports
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"]
 }

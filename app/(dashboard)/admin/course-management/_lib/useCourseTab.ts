@@ -1,8 +1,8 @@
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { useCallback, useState } from "react";
+import { PrivateCourse } from "./courses.actions.types";
 
 type ActiveContentTab = "enContent" | "arContent";
-type UseCourseTabProps = { courseData: CourseWithFellowAndStudents | undefined };
+type UseCourseTabProps = { courseData: PrivateCourse | null | undefined };
 
 export const useCourseTab = ({ courseData }: UseCourseTabProps) => {
   const defaultActiveTab = useCallback((): ActiveContentTab => {

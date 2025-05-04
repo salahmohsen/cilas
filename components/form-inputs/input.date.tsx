@@ -8,11 +8,10 @@ import { Button } from "@/components/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { FormFieldWrapper } from "@/components/form-inputs/form.field.wrapper";
 import { StandardProps } from "@/lib/types/form.inputs.types";
 import { CalendarIcon } from "lucide-react";
 import { memo } from "react";
-
 const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
   label,
@@ -20,7 +19,7 @@ const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   className,
 }: StandardProps<TData, TName>) => {
   return (
-    <InputWrapper<TData, TName>
+    <FormFieldWrapper<TData, TName>
       name={name}
       label={label}
       itemClasses={className}
@@ -66,7 +65,7 @@ const DateInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
           </>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

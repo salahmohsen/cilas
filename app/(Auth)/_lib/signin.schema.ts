@@ -1,9 +1,9 @@
-import { required_email, required_password } from "@/lib/utils/zod.utils";
+import { email, password } from "@/lib/utils/zod.utils";
 import { z } from "zod";
 
 const signinSchema = z.object({
-  email: required_email,
-  password: required_password,
+  email: email().required,
+  password: password(),
 });
 
 export type SigninSchema = z.infer<typeof signinSchema>;

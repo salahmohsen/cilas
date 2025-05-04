@@ -6,7 +6,7 @@ import { format } from "date-fns";
 
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { CoursesFilter } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
-import { Avatar } from "@/components/avatar";
+import { AvatarGroup } from "@/components/avatar";
 import { Button } from "@/components/button";
 import { ConfirmationDialog } from "@/components/ui/dialog-confirmation";
 import {
@@ -16,8 +16,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
-import { getCourseStatus } from "@/lib/utils";
 import {
   Calendar,
   CircleDashed,
@@ -27,10 +25,12 @@ import {
   StopCircle,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { PrivateCourse } from "../../_lib/courses.actions.types";
 import { getSeason, getSeasonIcon } from "../../_lib/courses.utils";
-import { AddStudentsDialog } from "./add.students.dialog";
+import { getCourseStatus } from "../../_lib/utils";
+import { UpdateEnrollmentsDialog } from "./update.enrollments.dialog";
 
-type CourseItemProps = { course: CourseWithFellowAndStudents };
+type CourseItemProps = { course: PrivateCourse };
 
 export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
   ({ course }, ref) => {
@@ -80,17 +80,19 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
               </p>
               <div className="flex items-center gap-5">
                 <span className="flex items-center gap-1 text-sm font-light">
+                  <AvatarGroup
+                    users={course.fellows}
+                    className="h-8 w-8 cursor-default!"
+                  />
+                </span>
+                <span className="flex items-center gap-1 text-sm font-light">
                   <Calendar size={16} strokeWidth={1.5} />
                   {format(course.startDate, "MMMM dd yyyy")}
                 </span>
 
-                <span className="flex items-center gap-1 text-sm font-light">
-                  <Avatar user={course.fellow} className="h-4 w-4" />
-                  {`${course.fellow?.firstName} ${course.fellow?.lastName}`}
-                </span>
                 <span className="hidden items-center gap-1 text-sm font-light md:flex">
                   <Hash size={16} strokeWidth={1.5} />
-                  {course.category}
+                  {course.category.enName}
                 </span>
                 <span className="hidden items-center gap-1 text-sm font-light md:flex">
                   {SeasonIcon}
@@ -112,7 +114,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
               <DropdownMenuContent align="end">
                 <DropdownMenuItem
                   onSelect={() =>
-                    router.push(`/admin/course-management/edit-course?id=${course.id}`)
+                    router.push(`/admin/course-management/edit/${course.slug}`)
                   }
                   onClick={(e) => e.stopPropagation()}
                   className="cursor-pointer"
@@ -123,7 +125,7 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
                 <DropdownMenuItem
                   onSelect={() =>
                     router.push(
-                      `/admin/course-management/create-course?duplicate-course=${course.id}`,
+                      `/admin/course-management/create-course?duplicate=${course.slug}`,
                     )
                   }
                   onClick={(e) => e.stopPropagation()}
@@ -153,14 +155,11 @@ export const CourseItem = forwardRef<HTMLLIElement, CourseItemProps>(
             </DropdownMenu>
           </div>
         </li>
-        <AddStudentsDialog
+        <UpdateEnrollmentsDialog
           courseId={course.id}
           isOpen={isStudentDialogOpen}
           setIsOpen={setIsStudentDialogOpen}
-          courseStudents={course.students.map((student) => ({
-            value: student.id,
-            label: `${student.firstName} ${student.lastName}`,
-          }))}
+          enrollments={course.enrollments}
         />
         <ConfirmationDialog
           isOpen={isDeleteDialogVisible}

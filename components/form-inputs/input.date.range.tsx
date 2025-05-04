@@ -3,7 +3,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { FormControl } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
-import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { FormFieldWrapper } from "@/components/form-inputs/form.field.wrapper";
 import { StandardProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
 import { format } from "date-fns";
@@ -18,7 +18,7 @@ const DateRangeInput = <TData extends FieldValues, TName extends FieldPath<TData
   className,
 }: StandardProps<TData, TName>) => {
   return (
-    <InputWrapper<TData, TName> name={name} label={label} itemClasses={className}>
+    <FormFieldWrapper<TData, TName> name={name} label={label} itemClasses={className}>
       {({ field, fieldState }) => {
         const value = field.value;
         const setValue = field.onChange;
@@ -72,7 +72,7 @@ const DateRangeInput = <TData extends FieldValues, TName extends FieldPath<TData
           </>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

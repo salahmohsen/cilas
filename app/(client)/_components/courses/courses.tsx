@@ -1,4 +1,4 @@
-import { CourseWithFellow } from "@/lib/drizzle/drizzle.types";
+import { PublicCourse } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions.types";
 import { cn } from "@/lib/utils/utils";
 import { Amiri, Yeseva_One } from "next/font/google";
 import Link from "next/link";
@@ -22,7 +22,7 @@ type CourseProps = {
   isOpen?: boolean;
   className?: string;
   titleSlug?: string;
-  course: CourseWithFellow;
+  course: PublicCourse;
 };
 
 export const Course = async ({
@@ -49,10 +49,10 @@ export const Course = async ({
     applyUrl,
     createdAt,
     updatedAt,
-    fellow,
+    fellows,
   } = course;
 
-  const authorName = fellow["firstName"] + " " + fellow["lastName"];
+  const authorName = fellows[0]["firstName"] + " " + fellows[0]["lastName"];
 
   return (
     <article
@@ -87,8 +87,8 @@ export const Course = async ({
 
           <UserHoverCard
             userName={authorName}
-            userBio={fellow?.bio}
-            userSlug={`courses/author/${fellow.id}`}
+            userBio={fellows[0]?.bio}
+            userSlug={`courses/author/${fellows[0].id}`}
           />
         </div>
       </div>

@@ -1,19 +1,16 @@
-import { serverActionStateBase } from "@/lib/types/server.actions";
-import { useEffect, useRef, useTransition } from "react";
+import { ServerActionReturn } from "@/lib/types/server.actions";
+import { useEffect, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 import { toast } from "sonner";
 
-type FormWrapperProps<
-  Schema extends FieldValues,
-  serverActionState extends serverActionStateBase,
-> = {
+type FormWrapperProps<TFieldValues extends FieldValues> = {
   children: ({ isPending }: { isPending: boolean }) => JSX.Element;
-  formMethods: UseFormReturn<Schema>;
+  formMethods: UseFormReturn<TFieldValues>;
   serverAction: (
-    prevState: Awaited<serverActionState>,
+    prevState: ServerActionReturn,
     formData: FormData,
-  ) => Promise<serverActionState>;
+  ) => Promise<ServerActionReturn>;
   onSuccess?: () => void;
   onError?: () => void;
   className?: string;
@@ -24,7 +21,6 @@ type FormWrapperProps<
  * and handles form submission states.
  *
  * @template TSchema - The form schema type extending FieldValues
- * @template TServerState - The server action response type extending ServerActionStateBase
  *
  * Features:
  * - Integrates react-hook-form with server actions
@@ -36,7 +32,6 @@ type FormWrapperProps<
  * @example
  * ```tsx
  * type FormSchema = { email: string; password: string };
- * type ServerState = ServerActionStateBase & { data?: User };
  *
  * const MyForm = () => {
  *   const formMethods = useForm<FormSchema>();
@@ -60,23 +55,20 @@ type FormWrapperProps<
  * ```
  */
 
-export const FormWrapper = <
-  Schema extends FieldValues,
-  serverActionState extends serverActionStateBase,
->({
+export const FormWrapper = <TFieldValues extends FieldValues>({
   children,
   formMethods,
   serverAction,
   onSuccess,
   onError,
   className,
-}: FormWrapperProps<Schema, serverActionState>) => {
+}: FormWrapperProps<TFieldValues>) => {
   const [formState, formAction] = useFormState(
     serverAction,
-    {} as Awaited<serverActionState>,
+    {} as Awaited<ServerActionReturn>,
   );
   const [isPending, startTransition] = useTransition();
-  const formRef = useRef<HTMLFormElement>(null);
+  // const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (formState.success) {
@@ -84,16 +76,19 @@ export const FormWrapper = <
       onSuccess?.();
       formMethods.reset();
     }
+  }, [formState, onSuccess, formMethods]);
+
+  useEffect(() => {
     if (formState.error) {
       toast.error(formState.message);
       onError?.();
     }
-  }, [formState, onSuccess, onError, formMethods]);
+  }, [formState, onError]);
 
   return (
     <FormProvider {...formMethods}>
       <form
-        ref={formRef}
+        // ref={formRef}
         className={className}
         onSubmit={(e) => {
           const nativeEvent = e.nativeEvent as SubmitEvent;
@@ -101,8 +96,9 @@ export const FormWrapper = <
 
           if (submitter.contains("submit-btn")) {
             e.preventDefault();
-            formMethods.handleSubmit(() => {
-              const formData = new FormData(formRef.current!);
+            formMethods.handleSubmit((data) => {
+              const formData = new FormData();
+              formData.append("data", JSON.stringify(data));
 
               startTransition(() => {
                 formAction(formData);

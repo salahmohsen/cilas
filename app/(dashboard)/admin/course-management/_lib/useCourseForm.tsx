@@ -1,17 +1,17 @@
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { createEditCourse } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
 import { CourseTabs } from "@/app/(dashboard)/admin/course-management/_lib/courses.slice.types";
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { isObjectEmpty } from "@/lib/utils/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
 
+import { InitialState } from "@/lib/types/server.actions";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import courseSchema, { CourseSchema } from "./course.schema";
-import { CourseFormState } from "./courses.actions.types";
+import { CourseFormState, PrivateCourse } from "./courses.actions.types";
 
 // Define types first
 type LoadingState = {
@@ -20,7 +20,7 @@ type LoadingState = {
 };
 
 type UseCourseFormProps = {
-  courseData: CourseWithFellowAndStudents | undefined;
+  courseData: PrivateCourse | null | undefined;
   editMode: boolean;
   courseId: number | undefined;
 };
@@ -31,7 +31,7 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
   const { getCourses, setActiveTab } = useCourseStore();
 
   // set draft mode base on courseData passed to the component
-  const [draftMode, setDraftMode] = useState<boolean>(courseData?.draftMode ?? false);
+  const [draftMode, setDraftMode] = useState<boolean>(courseData?.isDraft ?? false);
 
   const activeTab = draftMode ? CourseTabs.Draft : CourseTabs.Published;
 
@@ -47,7 +47,7 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
   // Setup useFormState for creating/editing course
   const [courseState, courseAction] = useFormState(
     createEditCourse,
-    {} as CourseFormState,
+    InitialState as CourseFormState,
   );
 
   // Setup Course Form with Zod Validation
@@ -56,7 +56,11 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
     mode: "onChange",
     defaultValues: {
       ...courseSchema.defaults,
-      ...((courseData as CourseSchema) ?? {}),
+      ...({
+        ...courseData,
+        category: courseData?.category.id,
+        fellowId: courseData?.fellows[0].id,
+      } as CourseSchema),
     },
   });
 
@@ -71,7 +75,6 @@ export const useCourseForm = ({ courseData, editMode, courseId }: UseCourseFormP
 
       redirect("/admin/course-management?tab=" + activeTab);
     }
-    // @error
     if (courseState.error) toast.error(courseState.message);
 
     // stop loading

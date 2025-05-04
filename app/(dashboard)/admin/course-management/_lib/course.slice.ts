@@ -1,6 +1,7 @@
 import {
   deleteCourse,
-  fetchCourses,
+  fetchPrivateCourse,
+  fetchPrivateCourses,
 } from "@/app/(dashboard)/admin/course-management/_lib/courses.actions";
 import { toast } from "sonner";
 import { create } from "zustand";
@@ -34,14 +35,16 @@ export const useCourseStore = create<CourseState>((set, get) => ({
 
     try {
       set({ isLoading: true });
-      const data = await fetchCourses(filter);
+      const { success, error, data, message } = await fetchPrivateCourses({
+        filter: filter,
+      });
 
-      if (data.error) {
-        throw new Error(data.message);
+      if (error) {
+        throw new Error(message);
       }
-      if (data.courses) {
+      if (success) {
         set({
-          courses: data.courses,
+          courses: data,
           isLoading: false,
         });
       }
@@ -54,18 +57,20 @@ export const useCourseStore = create<CourseState>((set, get) => ({
   revalidateCourse: async (courseId: number) => {
     try {
       set({ isLoading: true });
-      const data = await fetchCourses(undefined, courseId);
-      if (data.error) {
+      const { success, error, data, message } = await fetchPrivateCourse({
+        id: courseId,
+      });
+      if (error || data === null) {
         set({ isLoading: false });
-        throw new Error(data.message);
+        throw new Error(message);
       }
-      if (data.courses) {
-        const revalidatedCourse = data.courses[0];
+      if (success && data !== null) {
+        const revalidatedCourse = data;
         const { courses } = get();
 
         // Check if the course data actually changed to avoid unnecessary updates
         const existingCourse = courses?.find((course) => course.id === courseId);
-        if (JSON.stringify(existingCourse) === JSON.stringify(data.courses?.[0])) {
+        if (JSON.stringify(existingCourse) === JSON.stringify(data)) {
           set({ isLoading: false });
           return;
         }

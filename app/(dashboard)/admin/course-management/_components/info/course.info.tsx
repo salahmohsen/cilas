@@ -12,7 +12,6 @@ import { differenceInWeeks, format } from "date-fns";
 
 import { useCourseStore } from "@/app/(dashboard)/admin/course-management/_lib/course.slice";
 import { Separator } from "@/components/ui/separator";
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { TailwindBreakpoint } from "@/lib/types/geniric.enums";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { AnimatePresence, motion } from "framer-motion";
@@ -21,6 +20,7 @@ import { forwardRef } from "react";
 import { toast } from "sonner";
 import { InfoFooter } from "../../../_components/info.footer";
 import { UserSettingDialog } from "../../../_components/users/user.setting.dialog";
+import { PrivateCourse } from "../../_lib/courses.actions.types";
 import { getSeason } from "../../_lib/courses.utils";
 
 type CourseInfoProps = {
@@ -54,7 +54,12 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
                 <Header course={course} />
 
                 <CardContent className="space-y-4 p-6 text-sm">
-                  <CourseDetails course={course} />
+                  <div className="grid gap-3">
+                    <div className="font-semibold">Course Details</div>
+                    <CourseDetails course={course} />
+                    <Separator className="my-2" />
+                    <CourseDuration course={course} />
+                  </div>
                   <Separator />
                   <FacilitatorInfo course={course} />
                   <Separator />
@@ -72,7 +77,7 @@ export const CourseInfo = forwardRef<HTMLDivElement, CourseInfoProps>(
   },
 );
 
-const Header = ({ course }: { course: CourseWithFellowAndStudents }) => {
+const Header = ({ course }: { course: PrivateCourse }) => {
   return (
     <CardHeader className="bg-accent flex flex-row items-start">
       <div className="grid gap-0.5">
@@ -104,23 +109,12 @@ const Header = ({ course }: { course: CourseWithFellowAndStudents }) => {
   );
 };
 
-const CourseDetails = ({ course }: { course: CourseWithFellowAndStudents }) => {
-  return (
-    <div className="grid gap-3">
-      <div className="font-semibold">Course Details</div>
-      <CourseCategory course={course} />
-      <Separator className="my-2" />
-      <CourseDuration course={course} />
-    </div>
-  );
-};
-
-const CourseCategory = ({ course }: { course: CourseWithFellowAndStudents }) => {
+const CourseDetails = ({ course }: { course: PrivateCourse }) => {
   return (
     <ul className="grid gap-3">
       <li className="flex items-center justify-between gap-5">
         <span className="text-muted-foreground">Category</span>
-        <span>{course.category}</span>
+        <span>{course.category.enName}</span>
       </li>
       <li className="flex items-center justify-between gap-5">
         <span className="text-muted-foreground">Season Cycle</span>
@@ -130,11 +124,15 @@ const CourseCategory = ({ course }: { course: CourseWithFellowAndStudents }) => 
         <span className="text-muted-foreground">Registration</span>
         <span>{course.isRegistrationOpen ? "Open" : "Closed"}</span>
       </li>
+      <li className="flex items-center justify-between gap-5">
+        <span className="text-muted-foreground">Course slug</span>
+        <span>{course.slug}</span>
+      </li>
     </ul>
   );
 };
 
-const CourseDuration = ({ course }: { course: CourseWithFellowAndStudents }) => {
+const CourseDuration = ({ course }: { course: PrivateCourse }) => {
   return (
     <ul className="grid gap-3">
       <li className="flex items-center justify-between gap-5">
@@ -164,25 +162,25 @@ const CourseDuration = ({ course }: { course: CourseWithFellowAndStudents }) => 
   );
 };
 
-const FacilitatorInfo = ({ course }: { course: CourseWithFellowAndStudents }) => {
+const FacilitatorInfo = ({ course }: { course: PrivateCourse }) => {
   return (
     <div className="grid gap-3">
       <div className="font-semibold">Facilitator Information</div>
       <dl className="grid gap-3">
         <div className="flex items-center justify-between gap-5">
           <dt className="text-muted-foreground">Name</dt>
-          <dd>{course.fellow?.firstName + " " + course.fellow?.lastName}</dd>
+          <dd>{course.fellows[0].firstName + " " + course.fellows[0].lastName}</dd>
         </div>
         <div className="flex items-center justify-between gap-5">
           <dt className="text-muted-foreground">Email</dt>
           <dd>
-            <a href="mailto:">{course.fellow?.email}</a>
+            <a href="mailto:">{course.fellows[0].email}</a>
           </dd>
         </div>
         <div className="flex items-center justify-between gap-5">
           <dt className="text-muted-foreground">Phone</dt>
           <dd>
-            <a href="tel:">{course.fellow?.tel}</a>
+            <a href="tel:">{course.fellows[0].tel}</a>
           </dd>
         </div>
       </dl>
@@ -190,15 +188,18 @@ const FacilitatorInfo = ({ course }: { course: CourseWithFellowAndStudents }) =>
   );
 };
 
-const StudentsSection = ({ course }: { course: CourseWithFellowAndStudents }) => {
+const StudentsSection = ({ course }: { course: PrivateCourse }) => {
   return (
     <div className="grid auto-rows-max gap-3">
       <div className="font-semibold">Students</div>
       <ScrollArea className="w-full">
-        {course.students && (
-          <UserSettingDialog users={course.students} courseId={course.id} />
+        {course.enrollments && (
+          <UserSettingDialog
+            users={course.enrollments.map((student) => student.user)}
+            courseId={course.id}
+          />
         )}
-        {!course.students?.length && <p>No students found</p>}
+        {!course.enrollments?.length && <p>No students found</p>}
         <ScrollBar orientation="horizontal" />
       </ScrollArea>
     </div>

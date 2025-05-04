@@ -4,7 +4,7 @@ import { StandardProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
 import { memo, useRef } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
-import { InputWrapper } from "./form.input.wrapper";
+import { FormFieldWrapper } from "./form.field.wrapper";
 
 const TimeSlotInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   name,
@@ -18,7 +18,7 @@ const TimeSlotInput = <TData extends FieldValues, TName extends FieldPath<TData>
   const endMinuteRef = useRef<HTMLInputElement>(null);
 
   return (
-    <InputWrapper<TData, TName>
+    <FormFieldWrapper<TData, TName>
       name={name}
       label={label}
       itemClasses={cn("flex flex-col", className)}
@@ -30,7 +30,7 @@ const TimeSlotInput = <TData extends FieldValues, TName extends FieldPath<TData>
 
         return (
           <>
-            <div className="flex w-full gap-5" ref={field.ref} onBlur={field.onBlur}>
+            <div className="flex w-full gap-5" onBlur={field.onBlur} ref={field.ref}>
               <div className="flex items-end gap-2" id="start-time">
                 <div className="grid gap-1 text-center">
                   <Label className="text-xs" htmlFor="start-hour">
@@ -103,7 +103,7 @@ const TimeSlotInput = <TData extends FieldValues, TName extends FieldPath<TData>
           </>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

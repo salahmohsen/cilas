@@ -1,10 +1,10 @@
 import Image from "next/image";
-import { ChangeEvent, memo, useState } from "react";
+import { ChangeEvent, memo, useRef } from "react";
 import { FieldPath, FieldValues } from "react-hook-form";
 
 import { Input } from "@/components/ui/input";
 
-import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { FormFieldWrapper } from "@/components/form-inputs/form.field.wrapper";
 import { cloudinary_quality } from "@/lib/cloudinary/cloudinary.utils";
 import { BasicInputProps } from "@/lib/types/form.inputs.types";
 import { cn } from "@/lib/utils/utils";
@@ -17,22 +17,11 @@ const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
   className,
   direction = "vertical",
 }: BasicInputProps<TData, TName>) => {
-  const [preview, setPreview] = useState<unknown>(undefined);
-  const handleImageInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onloadend = () => {
-        if (reader.result) {
-          setPreview(reader.result);
-        }
-      };
-    }
-  };
+  // Use a ref for file input instead of controlled state
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <InputWrapper<TData, TName>
+    <FormFieldWrapper<TData, TName>
       name={name}
       label={label}
       labelClasses={direction === "horizontal" ? "col-span-2" : "col-span-1 mt-1"}
@@ -45,47 +34,56 @@ const BasicInput = <TData extends FieldValues, TName extends FieldPath<TData>>({
     >
       {({ field, fieldState }) => {
         const value = field.value;
-
         const setValue = field.onChange;
 
-        return (
-          <div
-            className={` ${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"} `}
-          >
-            <Input
-              {...field}
-              type={type === "number" ? "text" : type}
-              placeholder={placeholder}
-              accept={type === "file" ? ".jpg, .jpeg, .png" : undefined}
-              value={type === "file" ? undefined : value}
-              onChange={(e) => {
-                if (type !== "file") {
-                  setValue(e.target.value);
-                } else if (type === "file") {
-                  handleImageInput(e);
-                  setValue(e.target.files?.[0]);
-                }
-              }}
-            />
-            {(preview || (value && type === "file")) && (
-              <>
+        // Handle file input separately from other input types
+        if (type === "file") {
+          const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+            const file = e.target.files?.[0];
+            if (file) {
+              setValue(file);
+            }
+          };
+
+          return (
+            <div
+              className={`${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"}`}
+            >
+              <Input
+                ref={fileInputRef}
+                type="file"
+                accept=".jpg, .jpeg, .png"
+                placeholder={placeholder}
+                onChange={handleFileChange}
+              />
+              {value && (
                 <Image
-                  src={
-                    (preview as string) ||
-                    cloudinary_quality(value, "low") ||
-                    "/public/logo.png"
-                  }
+                  src={cloudinary_quality(value, "low") || "/public/logo.png"}
                   className="h-10 w-auto rounded-md"
                   width={50}
                   height={50}
                   alt={label || ""}
                 />
-              </>
-            )}
+              )}
+            </div>
+          );
+        }
+
+        // All other input types (text, number, etc.)
+        return (
+          <div
+            className={`${direction === "horizontal" ? "col-span-5" : "col-span-1 flex items-center gap-5"}`}
+          >
+            <Input
+              {...field}
+              type={type === "number" ? "text" : type}
+              placeholder={placeholder}
+              onChange={(e) => setValue(e.target.value)}
+            />
           </div>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

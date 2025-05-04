@@ -1,19 +1,14 @@
 import { z } from "zod";
 
-import {
-  optional_tel,
-  required_email,
-  required_name,
-  required_string,
-} from "@/lib/utils/zod.utils";
+import { email, name, phone, string } from "@/lib/utils/zod.utils";
 
 const fellowSchema = {
   schema: z.object({
-    firstName: required_name("First name"),
-    lastName: required_name("Last name"),
-    bio: required_string,
-    email: required_email,
-    tel: optional_tel,
+    firstName: name(),
+    lastName: name(),
+    bio: string().required,
+    email: email().required,
+    tel: phone().optional,
   }),
   defaults: {
     firstName: "",

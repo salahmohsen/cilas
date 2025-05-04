@@ -37,7 +37,7 @@ type SigninValues = {
 type SignupValues = {
   email: string;
   password: string;
-  passwordConfirmation: string | null;
+  passwordConfirmation: string;
 };
 
 type AuthFormProps =
@@ -148,7 +148,6 @@ export function AuthForm({
                       <FormItem>
                         <FormLabel>Confirm Password</FormLabel>
                         <FormControl>
-                          {/* @ts-expect-error */}
                           <PasswordInput autoComplete="new-password" {...field} />
                         </FormControl>
                         <FormDescription />

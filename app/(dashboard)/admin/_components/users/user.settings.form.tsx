@@ -6,9 +6,8 @@ import { BasicInput, TipTapInput } from "@/components/form-inputs";
 import { FormWrapper } from "@/components/form-inputs/form.wrapper";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SafeUser } from "@/lib/drizzle/drizzle.types";
 import { updateUserInfo } from "@/lib/users/users.actions";
-import { BasePrevState } from "@/lib/users/users.actions.types";
+import { SafeUser } from "@/lib/users/users.actions.types";
 import { uploadImage, UploadingFolder } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, Trash2, UserCog, UserPen } from "lucide-react";
@@ -43,9 +42,11 @@ export const UserSettingsForm = ({ user, open, onOpenChange }: UserSettingsFormP
     const file = event.target.files?.[0];
     if (!file) return;
 
+    const toastID = "uploading-avatar-image";
+
     try {
       setIsUploading(true);
-      const toastId = toast.loading("Uploading...");
+      toast.loading("Uploading...", { id: toastID });
       const uploadedUrl = await uploadImage(file, UploadingFolder.avatar);
       if (uploadedUrl && typeof uploadedUrl === "string") {
         setValue("avatar", uploadedUrl, {
@@ -55,14 +56,15 @@ export const UserSettingsForm = ({ user, open, onOpenChange }: UserSettingsFormP
         });
 
         setIsUploading(false);
-        toast.success("Avatar uploaded successfully!", { id: toastId });
-      } else if (uploadedUrl instanceof Error) {
-        setIsUploading(false);
-        toast.error("failed uploading avatar!", { id: toastId });
-        throw new Error(uploadedUrl.message);
+        toast.success("Avatar uploaded successfully!", { id: toastID });
       }
     } catch (error) {
-      console.error("Upload error:", error);
+      if (error instanceof Error) {
+        console.error("Upload error:", error);
+        toast.error("failed uploading avatar!", { id: toastID });
+      }
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -79,7 +81,7 @@ export const UserSettingsForm = ({ user, open, onOpenChange }: UserSettingsFormP
         </TabsTrigger>
       </TabsList>
       <TabsContent value="profile" className="m-8 ml-[25%] w-full pl-5">
-        <FormWrapper<ProfileSchema, BasePrevState>
+        <FormWrapper<ProfileSchema>
           formMethods={formMethods}
           serverAction={updateUserInfo}
           onSuccess={() => {

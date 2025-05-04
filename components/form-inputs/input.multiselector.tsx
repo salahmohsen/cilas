@@ -1,6 +1,6 @@
 import { MultipleSelector, Option } from "@/components/ui/multipleSelector";
 
-import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { FormFieldWrapper } from "@/components/form-inputs/form.field.wrapper";
 import { MultipleSelectorInputProps } from "@/lib/types/form.inputs.types";
 import { LoaderCircle } from "lucide-react";
 import { memo, useCallback, useEffect, useState } from "react";
@@ -34,7 +34,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
   }, [fetchDefaultValues]);
 
   return (
-    <InputWrapper<TData, TName> name={name} label={label}>
+    <FormFieldWrapper<TData, TName> name={name} label={label}>
       {({ field, fieldState }) => {
         const value = actionPreValues.length ? actionPreValues : field.value;
 
@@ -73,7 +73,7 @@ function MultiSelectorInput<TData extends FieldValues, TName extends FieldPath<T
           </>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 }
 

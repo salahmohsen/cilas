@@ -29,10 +29,11 @@ import fellowSchema, { FellowSchema } from "../../_lib/fellow.schema";
 type NewFellowProps = {
   mode: "button" | "commandItem";
   fellowData?: FellowSchema | undefined;
+  triggerClasses?: string;
 };
 
 export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
-  ({ mode, fellowData }, ref) => {
+  ({ mode, fellowData, triggerClasses }, ref) => {
     const [fellowState, fellowAction] = useFormState(addFellow, {} as FellowState);
     const [open, setOpen] = useState(false);
 
@@ -57,7 +58,11 @@ export const FellowForm = forwardRef<HTMLButtonElement, NewFellowProps>(
     const formRef = useRef<HTMLFormElement>(null);
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild onClick={(e) => e.stopPropagation()}>
+        <DialogTrigger
+          className={triggerClasses}
+          asChild
+          onClick={(e) => e.stopPropagation()}
+        >
           <Button
             variant={mode === "button" ? "outline" : "ghost"}
             ref={ref}

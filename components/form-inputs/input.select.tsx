@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/select";
 import { FieldPath, FieldValues } from "react-hook-form";
 
-import { InputWrapper } from "@/components/form-inputs/form.input.wrapper";
+import { FormFieldWrapper } from "@/components/form-inputs/form.field.wrapper";
 import { SelectProps } from "@/lib/types/form.inputs.types";
 import React, { memo } from "react";
 
@@ -32,7 +32,7 @@ const SelectInput = <TData extends FieldValues, TName extends FieldPath<TData>>(
   };
 
   return (
-    <InputWrapper<TData, TName> name={name} label={label} itemClasses={className}>
+    <FormFieldWrapper<TData, TName> name={name} label={label} itemClasses={className}>
       {({ field, fieldState }) => {
         const value = field.value;
         const setValue = field.onChange;
@@ -87,7 +87,7 @@ const SelectInput = <TData extends FieldValues, TName extends FieldPath<TData>>(
           </div>
         );
       }}
-    </InputWrapper>
+    </FormFieldWrapper>
   );
 };
 

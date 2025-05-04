@@ -39,7 +39,7 @@ export const BlockEditor = ({
     <div className="flex w-full" ref={menuContainerRef}>
       <EditorContent
         editor={editor}
-        className={`mt-10 mr-1 h-[85vh] w-full overflow-y-auto pl-16 lg:px-0`}
+        className={`mt-10 h-[85vh] w-full overflow-y-auto pl-16 lg:px-0`}
       />
 
       <Sidebar

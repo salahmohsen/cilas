@@ -1,12 +1,12 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { CourseWithFellowAndStudents } from "@/lib/drizzle/drizzle.types";
 import { CourseInfo } from "../course-management/_components/info/course.info";
+import { PrivateCourse } from "../course-management/_lib/courses.actions.types";
 import { PostInfo } from "../post-management/_components/post.info";
 import { Post } from "../post-management/_lib/posts.actions.type";
 import { InfoFooter } from "./info.footer";
 
 type InfoModal = {
-  info: CourseWithFellowAndStudents | Post | null;
+  info: PrivateCourse | Post | null;
   selectedItem: Record<number, boolean> | null;
   setSelectedItem: (selected: Record<number, boolean> | null) => void;
   type: "course" | "post";
