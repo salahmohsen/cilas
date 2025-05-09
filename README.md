@@ -1,46 +1,36 @@
-<div align="center">
-  <img width="92" height="157" src="public/logo.png">
-  <h1>CILAS<br/> Cairo Institute of Liberal Arts and Sciences</h1>
-  <br>
-</div>
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Motivation
+## Getting Started
 
-During my one-year enrollment in the Bridge Programme at CILAS, I experienced a transformative learning environment that emphasized discussion-based learning, creative inquiry, self-reflection, and civic engagement. This was a stark contrast to the traditional academic approach I had previously encountered.
+First, run the development server:
 
-Inspired by this powerful educational model, I am now driven to contribute to CILAS and similar forward-thinking institutions through the development of a comprehensive Education Management System. This platform aims to empower administrators to operate the institute with greater efficiency while, more crucially, providing students with a robust digital environment to share ideas, collaborate, and meaningfully engage with our complex world.
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## Features
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### Course Management
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-- [x] Create, Update, Delete, and Draft Courses.
-- [ ] Ability to assign students to specific courses
-- [ ] Automated invitations to students for course enrollment.
-- [x] Create and manage course bundles for each term cycle.
-- [ ] Automatically create digital certificates upon course completion.
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-### User Management
+## Learn More
 
-- [ ] Different permissions for administrators, fellows, and students.
+To learn more about Next.js, take a look at the following resources:
 
-### Blog Management System
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-- [ ] Enable students to create and publish blog posts on their profiles.
-- [ ] Allow administrators to feature posts on the main website.
-- [ ] Categorization and Tagging: Organize blog posts for easy navigation.
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### Discussion Forums
+## Deploy on Vercel
 
-- [ ] Each course has its own discussion space.
-- [ ] Create, reply to, and organize discussion threads.
-- [ ] Assign fellows to manage and moderate course discussions.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-### Notification System
-
-- [ ] Send alerts for new course materials, discussion posts, and blog updates.
-- [ ] Real-time updates within the application.
-
-### Mobile Responsiveness
-
-- [ ] Access the system on various devices (desktop, tablet, mobile).
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

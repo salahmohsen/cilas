@@ -1,19 +1,11 @@
 {
   "css.customData": [".vscode/tailwind.json"],
-  "cSpell.words": ["Cilas", "ilike", "lucide", "Shadcn", "arktype", "drizzle-arktype"],
-  "conventionalCommits.scopes": [
-    "Auth",
-    "dashboard/courses",
-    "dashboard/blogs",
-    "tipTap",
-    "dashboard",
-    "Database"
-  ],
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {
     "source.removeUnusedImports": "explicit",
     "source.organizeImports": "explicit"
   },
+  "tailwindCSS.classFunctions": ["cn"],
   "tailwindCSS.classAttributes": [
     "class",
     "className",
@@ -26,5 +18,7 @@
     "strings": "on"
   },
   // prioritize ArkType's "type" for autoimports
-  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"]
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["^(node:)?os$"],
+  "conventionalCommits.scopes": [],
+  "cSpell.words": ["neondatabase", "arktype", "turbopack"]
 }
