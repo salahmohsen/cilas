@@ -7,16 +7,27 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "validate": "npm run lint && npm run tsc --noEmit",
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,css,md,json}\" --ignore-path .gitignore",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint-staged": "lint-staged",
+    "db:studio": "drizzle-kit studio",
+    "db:push": "drizzle-kit push",
+    "db:migrate": "drizzle-kit migrate",
+    "db:pull": "drizzle-kit pull",
+    "init-npmrc": "npx npmrc-replace-env"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^1.9.0",
     "@neondatabase/serverless": "^1.0.0",
     "@t3-oss/env-nextjs": "^0.13.4",
     "arktype": "^2.1.20",
+    "bcrypt-ts": "^7.0.0",
+    "better-auth": "^1.2.7",
     "drizzle-orm": "^0.43.1",
+    "lint-staged": "^15.5.2",
     "next": "15.3.2",
+    "next-auth": "^5.0.0-beta.27",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "ws": "^8.18.2"
@@ -32,10 +43,30 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-perfectionist": "^4.12.3",
+    "eslint-plugin-prettier": "^5.4.0",
     "eslint-plugin-project-structure": "^3.13.3",
     "husky": "^9.1.7",
     "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "bun run lint:fix"
+    ]
+  },
+  "overrides": {
+    "@esbuild-kit/core-utils": {
+      "esbuild": "0.25.0"
+    },
+    "@esbuild-kit/esm-loader": {
+      "esbuild": "0.25.0"
+    },
+    "drizzle-kit": {
+      "esbuild": "0.25.0"
+    }
   }
 }

@@ -1,5 +1,0 @@
-{
-  "plugins": ["prettier-plugin-tailwindcss"],
-  "printWidth": 90,
-  "trailingComma": "none"
-}

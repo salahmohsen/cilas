@@ -28,7 +28,8 @@
         "src/hooks/**",
         "src/lib/**",
         "src/server/**",
-        "src/env.ts"
+        "src/env.ts",
+        "src/auth/**"
       ],
       "allowImportsFrom": ["{sharedImports}"],
       "errorMessage": "🔥 Shared folders are not allowed to import items from the `features` and `app` folders. 🔥"
@@ -54,4 +55,9 @@
       "src/env.ts"
     ]
   }
+  // "pathAliases": {
+  //   "baseUrl": ".",
+  //   "paths": {
+  //   }
+  // }
 }
