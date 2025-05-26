@@ -1,33 +1,32 @@
-import { relations } from "drizzle-orm";
-import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import postsTable from "./post";
-import blogCategoriesTable from "./post.category";
+import { primaryKey, integer, pgTable } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
-const postsToCategoriesTable = pgTable(
-  "blogs_to_categories",
+import { postCategories } from './post.category';
+import { posts } from './post';
+
+export const postsToCategories = pgTable(
+  'post_to_categories',
   {
-    postId: integer("blog_id")
+    categoryId: integer('category_id')
       .notNull()
-      .references(() => postsTable.id, { onDelete: "cascade" }),
-    categoryId: integer("category_id")
+      .references(() => postCategories.id, { onDelete: 'cascade' }),
+    postId: integer('post_id')
       .notNull()
-      .references(() => blogCategoriesTable.id, { onDelete: "cascade" }),
+      .references(() => posts.id, { onDelete: 'cascade' })
   },
-  (t) => [primaryKey({ columns: [t.postId, t.categoryId] })],
+  (t) => [primaryKey({ columns: [t.postId, t.categoryId] })]
 );
 
 export const postsToCategoriesRelations = relations(
-  postsToCategoriesTable,
+  postsToCategories,
   ({ one }) => ({
-    post: one(postsTable, {
-      fields: [postsToCategoriesTable.postId],
-      references: [postsTable.id],
+    category: one(postCategories, {
+      fields: [postsToCategories.categoryId],
+      references: [postCategories.id]
     }),
-    category: one(blogCategoriesTable, {
-      fields: [postsToCategoriesTable.categoryId],
-      references: [blogCategoriesTable.id],
-    }),
-  }),
+    post: one(posts, {
+      fields: [postsToCategories.postId],
+      references: [posts.id]
+    })
+  })
 );
-
-export default postsToCategoriesTable;

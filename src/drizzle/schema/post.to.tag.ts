@@ -1,30 +1,31 @@
-import { relations } from "drizzle-orm";
-import { integer, pgTable, primaryKey } from "drizzle-orm/pg-core";
-import postsTable from "./post";
-import postTagsTable from "./post.tag";
+import { primaryKey, integer, pgTable } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
-const postsToTagsTable = pgTable(
-  "blogs_to_tags",
+import { postTags } from './post.tag';
+import { posts } from './post';
+
+export const postsToTags = pgTable(
+  'post_to_tags',
   {
-    postId: integer("blog_id")
+    tagId: integer('tag_id')
       .notNull()
-      .references(() => postsTable.id, { onDelete: "cascade" }),
-    tagId: integer("tag_id")
+      .references(() => postTags.id, { onDelete: 'cascade' }),
+    postId: integer('post_id')
       .notNull()
-      .references(() => postTagsTable.id, { onDelete: "cascade" }),
+      .references(() => posts.id, { onDelete: 'cascade' })
   },
-  (t) => [primaryKey({ columns: [t.postId, t.tagId] })],
+  (t) => [primaryKey({ columns: [t.postId, t.tagId] })]
 );
 
-export const postsToTagsRelations = relations(postsToTagsTable, ({ one }) => ({
-  post: one(postsTable, {
-    fields: [postsToTagsTable.postId],
-    references: [postsTable.id],
+export const postsToTagsRelations = relations(postsToTags, ({ one }) => ({
+  tag: one(postTags, {
+    fields: [postsToTags.tagId],
+    references: [postTags.id]
   }),
-  tag: one(postTagsTable, {
-    fields: [postsToTagsTable.tagId],
-    references: [postTagsTable.id],
-  }),
+  post: one(posts, {
+    fields: [postsToTags.postId],
+    references: [posts.id]
+  })
 }));
 
-export default postsToTagsTable;
+export default postsToTags;

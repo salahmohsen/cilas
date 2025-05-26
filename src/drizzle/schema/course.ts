@@ -1,30 +1,31 @@
-import { relations } from "drizzle-orm";
 import {
-  boolean,
   customType,
-  date,
-  integer,
-  json,
-  pgTable,
-  serial,
-  text,
   timestamp,
+  boolean,
+  integer,
+  pgTable,
   varchar,
-} from "drizzle-orm/pg-core";
-import enrollmentTable from "./enrollment";
-import userTable from "./user";
+  serial,
+  date,
+  json,
+  text
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+
+import { enrollments } from './enrollment';
+import { user } from './auth-schema';
 
 export type JSONContent = {
-  type?: string;
-  attrs?: Record<string, unknown>;
-  content?: JSONContent[];
   marks?: {
-    type: string;
     attrs?: Record<string, unknown>;
     [key: string]: unknown;
+    type: string;
   }[];
-  text?: string;
+  attrs?: Record<string, unknown>;
+  content?: JSONContent[];
   [key: string]: unknown;
+  text?: string;
+  type?: string;
 };
 
 type TimeSlot = {
@@ -33,65 +34,63 @@ type TimeSlot = {
 };
 
 const timeSlot = customType<{ data: TimeSlot }>({
-  dataType: () => "json",
   fromDriver: (value: unknown): TimeSlot => {
     // Runtime validation
-    if (typeof value === "object" && value !== null) {
+    if (typeof value === 'object' && value !== null) {
       const slot = value as { from?: string; to?: string };
       return {
         from: new Date(slot.from || Date.now()),
-        to: new Date(slot.to || Date.now()),
+        to: new Date(slot.to || Date.now())
       };
     }
-    throw new Error("Invalid time slot format");
+    throw new Error('Invalid time slot format');
   },
   toDriver: (value: TimeSlot): unknown => ({
     from: value.from.toISOString(),
-    to: value.to.toISOString(),
+    to: value.to.toISOString()
   }),
+  dataType: () => 'json'
 });
 
-const courseTable = pgTable("course", {
-  id: serial("id").primaryKey(),
-  draftMode: boolean("draft_mode").default(true),
-  enTitle: varchar("en_title", { length: 255 }),
-  enContent: json("en_content").$type<JSONContent>(),
-  arTitle: varchar("ar_title", { length: 255 }),
-  arContent: json("ar_content").$type<JSONContent>(),
-  featuredImage: text("featured_image"),
-  fellowId: text("fellow_id")
-    .notNull()
-    .references(() => userTable.id),
-  category: varchar("category", { length: 100 }).notNull(),
-  isRegistrationOpen: boolean("is_registration_open").notNull().default(false),
-  attendance: varchar("attendance", { length: 50 }).notNull(),
-  suggestedPrice: json("suggestedPrice").notNull().$type<[number, number]>(),
-  days: json("days").$type<
+export const courses = pgTable('course', {
+  days: json('days').$type<
     {
+      disable?: boolean;
       label: string;
       value: string;
-      disable?: boolean;
     }[]
   >(),
-  startDate: date("start_date", { mode: "date" }).notNull(),
-  endDate: date("end_date", { mode: "date" }).notNull(),
-  timeSlot: timeSlot("time_slot").notNull(),
-  maxStudents: integer("max_students"),
-  applyUrl: text("apply_url"),
-  createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+  createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' })
     .notNull()
     .defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
+  updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' })
     .notNull()
     .defaultNow(),
+  isRegistrationOpen: boolean('is_registration_open').notNull().default(false),
+  suggestedPrice: json('suggestedPrice').notNull().$type<[number, number]>(),
+  fellowId: text('fellow_id')
+    .notNull()
+    .references(() => user.id),
+  attendance: varchar('attendance', { length: 50 }).notNull(),
+  startDate: date('start_date', { mode: 'date' }).notNull(),
+  category: varchar('category', { length: 100 }).notNull(),
+  endDate: date('end_date', { mode: 'date' }).notNull(),
+  arContent: json('ar_content').$type<JSONContent>(),
+  enContent: json('en_content').$type<JSONContent>(),
+  draftMode: boolean('draft_mode').default(true),
+  arTitle: varchar('ar_title', { length: 255 }),
+  enTitle: varchar('en_title', { length: 255 }),
+  timeSlot: timeSlot('time_slot').notNull(),
+  featuredImage: text('featured_image'),
+  maxStudents: integer('max_students'),
+  id: serial('id').primaryKey(),
+  applyUrl: text('apply_url')
 });
 
-export const courseRelations = relations(courseTable, ({ one, many }) => ({
-  fellow: one(userTable, {
-    fields: [courseTable.fellowId],
-    references: [userTable.id],
+export const coursesRelations = relations(courses, ({ many, one }) => ({
+  fellow: one(user, {
+    fields: [courses.fellowId],
+    references: [user.id]
   }),
-  enrollments: many(enrollmentTable),
+  enrollments: many(enrollments)
 }));
-
-export default courseTable;

@@ -1,39 +1,42 @@
-import { relations } from "drizzle-orm";
-import { boolean, integer, pgTable, primaryKey, text } from "drizzle-orm/pg-core";
-import postsTable from "./post";
-import authorRoles from "./post.author.role";
-import userTable from "./user";
+import {
+  primaryKey,
+  boolean,
+  integer,
+  pgTable,
+  text
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
-const authorsTable = pgTable(
-  "authors_table",
+import { authorRoles, posts, user } from './';
+
+export const authors = pgTable(
+  'authors_table',
   {
-    authorId: text("author_id")
+    roleId: integer('role_id')
       .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
-    postId: integer("post_id")
+      .references(() => authorRoles.id, { onDelete: 'cascade' }),
+    authorId: text('author_id')
       .notNull()
-      .references(() => postsTable.id, { onDelete: "cascade" }),
-    roleId: integer("role_id")
+      .references(() => user.id, { onDelete: 'cascade' }),
+    postId: integer('post_id')
       .notNull()
-      .references(() => authorRoles.id, { onDelete: "cascade" }),
-    isMainAuthor: boolean("is_main_author").default(false),
+      .references(() => posts.id, { onDelete: 'cascade' }),
+    isMainAuthor: boolean('is_main_author').default(false)
   },
-  (t) => [primaryKey({ columns: [t.authorId, t.postId] })],
+  (t) => [primaryKey({ columns: [t.authorId, t.postId] })]
 );
 
-export const authorsRelations = relations(authorsTable, ({ one }) => ({
-  author: one(userTable, {
-    fields: [authorsTable.authorId],
-    references: [userTable.id],
-  }),
-  post: one(postsTable, {
-    fields: [authorsTable.postId],
-    references: [postsTable.id],
-  }),
+export const authorsRelations = relations(authors, ({ one }) => ({
   role: one(authorRoles, {
-    fields: [authorsTable.roleId],
     references: [authorRoles.id],
+    fields: [authors.roleId]
   }),
+  author: one(user, {
+    fields: [authors.authorId],
+    references: [user.id]
+  }),
+  post: one(posts, {
+    fields: [authors.postId],
+    references: [posts.id]
+  })
 }));
-
-export default authorsTable;

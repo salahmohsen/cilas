@@ -1,11 +1,9 @@
-import { pgTable, serial, varchar } from "drizzle-orm/pg-core";
+import { pgTable, varchar, serial } from 'drizzle-orm/pg-core';
 
-const authorRulesTable = pgTable("posts_authors_roles", {
-  id: serial("id").primaryKey(),
-  arName: varchar("ar_name", { length: 255 }).unique(),
-  enName: varchar("en_name", { length: 255 }).unique().notNull(),
-  arDescription: varchar("description", { length: 255 }),
-  enDescription: varchar("description", { length: 255 }),
+export const authorRoles = pgTable('posts_authors_roles', {
+  enName: varchar('en_name', { length: 255 }).unique().notNull(),
+  arDescription: varchar('description', { length: 255 }),
+  enDescription: varchar('description', { length: 255 }),
+  arName: varchar('ar_name', { length: 255 }).unique(),
+  id: serial('id').primaryKey()
 });
-
-export default authorRulesTable;

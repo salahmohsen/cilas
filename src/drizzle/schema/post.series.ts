@@ -1,9 +1,7 @@
-import { pgTable, serial, text, varchar } from "drizzle-orm/pg-core";
+import { pgTable, varchar, serial, text } from 'drizzle-orm/pg-core';
 
-const seriesTable = pgTable("series", {
-  id: serial("id").primaryKey(),
-  name: varchar("name", { length: 255 }).notNull(),
-  description: text("description"),
+export const postSeries = pgTable('series', {
+  name: varchar('name', { length: 255 }).notNull(),
+  description: text('description'),
+  id: serial('id').primaryKey()
 });
-
-export default seriesTable;

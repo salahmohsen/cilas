@@ -1,43 +1,48 @@
-import { relations } from "drizzle-orm";
 import {
+  primaryKey,
+  timestamp,
   integer,
   pgTable,
-  primaryKey,
-  text,
-  timestamp,
   varchar,
-} from "drizzle-orm/pg-core";
-import courseTable from "./course";
-import userTable from "./user";
+  text
+} from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
 
-const enrollmentTable = pgTable(
-  "course_enrollment",
+import { user } from './auth-schema';
+import { courses } from './course';
+
+export const enrollments = pgTable(
+  'course_enrollment',
   {
-    courseId: integer("course_id")
-      .notNull()
-      .references(() => courseTable.id, { onDelete: "cascade" }),
-    userId: text("user_id")
-      .notNull()
-      .references(() => userTable.id, { onDelete: "cascade" }),
-    enrollmentDate: timestamp("enrollment_date", { mode: "date", withTimezone: true })
+    enrollmentDate: timestamp('enrollment_date', {
+      withTimezone: true,
+      mode: 'date'
+    })
       .notNull()
       .defaultNow(),
-    status: varchar("status", { length: 20 }).notNull().default("pending"),
-    paidAmount: integer("paid_amount"),
-    paymentDate: timestamp("payment_date", { mode: "date", withTimezone: true }),
+    courseId: integer('course_id')
+      .notNull()
+      .references(() => courses.id, { onDelete: 'cascade' }),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    paymentDate: timestamp('payment_date', {
+      withTimezone: true,
+      mode: 'date'
+    }),
+    status: varchar('status', { length: 20 }).notNull().default('pending'),
+    paidAmount: integer('paid_amount')
   },
-  (t) => [primaryKey({ columns: [t.courseId, t.userId] })],
+  (t) => [primaryKey({ columns: [t.courseId, t.userId] })]
 );
 
-export const enrollmentRelations = relations(enrollmentTable, ({ one }) => ({
-  course: one(courseTable, {
-    fields: [enrollmentTable.courseId],
-    references: [courseTable.id],
+export const enrollmentRelations = relations(enrollments, ({ one }) => ({
+  course: one(courses, {
+    fields: [enrollments.courseId],
+    references: [courses.id]
   }),
-  user: one(userTable, {
-    fields: [enrollmentTable.userId],
-    references: [userTable.id],
-  }),
+  user: one(user, {
+    fields: [enrollments.userId],
+    references: [user.id]
+  })
 }));
-
-export default enrollmentTable;

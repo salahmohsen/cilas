@@ -1,18 +1,16 @@
-export { courseRelations, default as courseTable } from "./course";
-export { enrollmentRelations, default as enrollmentTable } from "./enrollment";
-export { postsRelations, default as postsTable } from "./post";
-export { default as authorRolesTable } from "./post.author.role";
-export { default as authorToRoleTable, postAuthorRelations } from "./post.author.to.role";
-export { authorsRelations, default as authorsTable } from "./post.authors";
-export { default as postCategoriesTable } from "./post.category";
-export { blogTagRelations, default as postTagsTable } from "./post.tag";
 export {
   postsToCategoriesRelations,
-  default as postsToCategoriesTable,
-} from "./post.to.category";
-export {
-  postsToTagsRelations as blogsToTagsRelations,
-  default as postsToTagsTable,
-} from "./post.to.tag";
-export { sessionRelations, default as sessionTable } from "./session";
-export { userRelations, default as userTable } from "./user";
+  postsToCategories
+} from './post.to.category';
+export { postAuthorRelations, authorToRoleTable } from './post.author.to.role';
+export { postToSeriesRelations, postToSeries } from './post.to.series';
+export { verification, session, account, user } from './auth-schema';
+export { postsToTagsRelations, postsToTags } from './post.to.tag';
+export { enrollmentRelations, enrollments } from './enrollment';
+export { authorsRelations, authors } from './post.authors';
+export { postTagRelations, postTags } from './post.tag';
+export { coursesRelations, courses } from './course';
+export { authorRoles } from './post.author.role';
+export { postCategories } from './post.category';
+export { postsRelations, posts } from './post';
+export { postSeries } from './post.series';
