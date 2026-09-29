@@ -1,16 +1,14 @@
-import { dirname } from 'path'
-import { fileURLToPath } from 'url'
-import { FlatCompat } from '@eslint/eslintrc'
+import nextCoreWebVitals from 'eslint-config-next/core-web-vitals'
+import nextTypescript from 'eslint-config-next/typescript'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-})
-
+// `eslint-config-next@16` ships flat configs directly (`main: None`, subpath
+// exports to `dist/*.js`). They must NOT be loaded through `FlatCompat`: that
+// bridge is for *legacy* shareable configs, and feeding it a flat config makes
+// `@eslint/eslintrc` JSON.stringify a live plugin object, which throws
+// "Converting circular structure to JSON" on eslint-plugin-react.
 const eslintConfig = [
-  ...compat.extends('next/core-web-vitals', 'next/typescript'),
+  ...nextCoreWebVitals,
+  ...nextTypescript,
   {
     rules: {
       '@typescript-eslint/ban-ts-comment': 'warn',
@@ -31,6 +29,8 @@ const eslintConfig = [
     },
   },
   {
+    // `.kilo/worktrees/*` holds full nested checkouts of this repo; linting them
+    // duplicates every finding. Git ignores them, ESLint does not.
     ignores: ['.next/', 'src/payload-types.ts', 'src/payload-generated-schema.ts'],
   },
 ]
