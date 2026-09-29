@@ -19,9 +19,35 @@ import { Spaces } from './collections/Spaces'
 import { ArticleCollections } from './collections/Article-collections'
 import { SiteSettings } from './globals/SiteSettings'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { s3Storage } from '@payloadcms/storage-s3'
+import { payloadTheme } from 'payload-theme'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+const storage = s3Storage({
+  collections: {
+    media: {
+      disableLocalStorage: true, // Recommended for production
+      prefix: 'media', // Optional prefix for uploaded files
+      generateFileURL: ({ filename, prefix }) => {
+        const base = process.env.R2_PUBLIC_URL
+        if (!base) return `/${prefix}/${encodeURIComponent(filename)}`
+        return `${base.replace(/\/+$/, '')}/${prefix}/${encodeURIComponent(filename)}`
+      },
+    },
+  },
+  bucket: process.env.R2_BUCKET || '',
+  config: {
+    endpoint: process.env.R2_ENDPOINT || '', // R2_ENDPOINT already includes https://
+    credentials: {
+      accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+    },
+    region: 'auto', // Required for R2
+    forcePathStyle: true, // Required for R2
+  },
+})
 
 export default buildConfig({
   admin: {
@@ -64,5 +90,5 @@ export default buildConfig({
     },
   }),
   sharp,
-  plugins: [formBuilderPlugin({})],
+  plugins: [formBuilderPlugin({}), storage, payloadTheme({ accent: '#000' })],
 })
