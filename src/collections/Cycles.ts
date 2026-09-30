@@ -11,7 +11,7 @@ export const Cycles: CollectionConfig = {
     delete: isAdmin,
   },
   fields: [
-    { name: 'label', type: 'text', required: true }, // "Spring Semester 2026"
+    { name: 'label', type: 'text' }, // "Spring Semester 2026"
     {
       name: 'season',
       type: 'select',
@@ -30,6 +30,6 @@ export const Cycles: CollectionConfig = {
     { name: 'courses', type: 'relationship', relationTo: 'courses', hasMany: true },
   ],
   admin: {
-    useAsTitle: "label"
-  }
+    useAsTitle: 'label',
+  },
 }
