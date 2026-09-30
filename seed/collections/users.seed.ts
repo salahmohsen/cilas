@@ -387,20 +387,20 @@ export const seedUsers = async (payload: Payload, ctx: SeedContext): Promise<voi
 }
 
 /**
- * Second pass. `users.field_of_study` and `users.courses` point at collections
- * that do not exist yet on the first pass, so both are derived from
- * `coursesData` — one source of truth for who teaches what.
+ * Second pass. `users.field_of_study` points at a collection that does not exist
+ * yet on the first pass, so it is derived from `coursesData`.
+ *
+ * Only `field_of_study` is written. `users.courses` is a virtual field derived
+ * from `courses.fellows`, and the `fellow` role is granted by the Courses
+ * `afterChange` hook, so neither belongs here.
  */
 export const linkFellows = async (payload: Payload, ctx: SeedContext): Promise<void> => {
     const fieldByEmail = new Map<string, number>()
-    const coursesByEmail = new Map<string, number[]>()
 
     for (const course of coursesData) {
-        const courseId = requireId(ctx.courses, course.title)
         const fieldId = requireId(ctx.fieldsOfStudy, course.fields_of_study[0])
         for (const email of course.fellows) {
             fieldByEmail.set(email, fieldId)
-            coursesByEmail.set(email, [...(coursesByEmail.get(email) ?? []), courseId])
         }
     }
 
@@ -408,7 +408,7 @@ export const linkFellows = async (payload: Payload, ctx: SeedContext): Promise<v
         await payload.update({
             collection: 'users',
             id: requireId(ctx.users, email),
-            data: { field_of_study: fieldId, courses: coursesByEmail.get(email) ?? [] },
+            data: { field_of_study: fieldId },
             overrideAccess: true,
         })
         console.log('fellow linked:', email)
