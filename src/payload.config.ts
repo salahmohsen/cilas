@@ -88,6 +88,12 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    // Explicit migrations rather than dev-mode schema auto-push. Auto-push asks
+    // to DROP tables on stdin, which silently destroys data when it runs
+    // non-interactively (CI, vitest, any `getPayload` in a script) — and it
+    // leaves no record of what changed.
+    push: false,
+    migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
   plugins: [formBuilderPlugin({}), storage, payloadTheme({ accent: '#000' })],
