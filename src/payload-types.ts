@@ -411,7 +411,7 @@ export interface Course {
  */
 export interface Cycle {
   id: number;
-  label: string;
+  label?: string | null;
   season?: ('fall' | 'winter' | 'spring' | 'summer') | null;
   year?: number | null;
   mode?: ('OFFLINE' | 'ONLINE' | 'HYBRID') | null;
