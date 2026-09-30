@@ -22,6 +22,8 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { payloadTheme } from 'payload-theme'
 
+import { env } from './env'
+
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
@@ -30,19 +32,17 @@ const storage = s3Storage({
     media: {
       disableLocalStorage: true, // Recommended for production
       prefix: 'media', // Optional prefix for uploaded files
-      generateFileURL: ({ filename, prefix }) => {
-        const base = process.env.R2_PUBLIC_URL
-        if (!base) return `/${prefix}/${encodeURIComponent(filename)}`
-        return `${base.replace(/\/+$/, '')}/${prefix}/${encodeURIComponent(filename)}`
-      },
+      // No local fallback: disableLocalStorage means nothing else to serve from.
+      generateFileURL: ({ filename, prefix }) =>
+        `${env.R2_PUBLIC_URL.replace(/\/+$/, '')}/${prefix}/${encodeURIComponent(filename)}`,
     },
   },
-  bucket: process.env.R2_BUCKET || '',
+  bucket: env.R2_BUCKET,
   config: {
-    endpoint: process.env.R2_ENDPOINT || '', // R2_ENDPOINT already includes https://
+    endpoint: env.R2_ENDPOINT,
     credentials: {
-      accessKeyId: process.env.R2_ACCESS_KEY_ID || '',
-      secretAccessKey: process.env.R2_SECRET_ACCESS_KEY || '',
+      accessKeyId: env.R2_ACCESS_KEY_ID,
+      secretAccessKey: env.R2_SECRET_ACCESS_KEY,
     },
     region: 'auto', // Required for R2
     forcePathStyle: true, // Required for R2
@@ -80,13 +80,13 @@ export default buildConfig({
     fallback: true,
   },
   editor: lexicalEditor(),
-  secret: process.env.PAYLOAD_SECRET || '',
+  secret: env.PAYLOAD_SECRET,
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URL || '',
+      connectionString: env.DATABASE_URL,
     },
     // Explicit migrations rather than dev-mode schema auto-push. Auto-push asks
     // to DROP tables on stdin, which silently destroys data when it runs

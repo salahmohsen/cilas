@@ -1,3 +1,6 @@
+// Fails the build on a missing or malformed variable.
+import './src/env'
+
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
 import path from 'path'
