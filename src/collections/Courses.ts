@@ -278,7 +278,11 @@ export const Courses: CollectionConfig = {
       type: 'group',
       fields: [
         { name: 'amount', type: 'number' },
-        { name: 'need_based', type: 'checkbox', label: 'Need-based deductions available' },
+        {
+          name: 'based_deductions_available',
+          type: 'checkbox',
+          label: 'Need-based deductions available',
+        },
       ],
       admin: {
         position: 'sidebar',

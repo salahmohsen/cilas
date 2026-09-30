@@ -365,7 +365,7 @@ export interface Course {
   };
   tuition?: {
     amount?: number | null;
-    need_based?: boolean | null;
+    based_deductions_available?: boolean | null;
   };
   fellows?: (number | User)[] | null;
   registration_form?: (number | null) | Form;
@@ -748,6 +748,7 @@ export interface Event {
   recurrence_until?: string | null;
   location?: ('OFFLINE' | 'ONLINE') | null;
   fellows?: (number | User)[] | null;
+  registration_form?: (number | null) | Form;
   updatedAt: string;
   createdAt: string;
 }
@@ -1017,7 +1018,7 @@ export interface CoursesSelect<T extends boolean = true> {
     | T
     | {
         amount?: T;
-        need_based?: T;
+        based_deductions_available?: T;
       };
   fellows?: T;
   registration_form?: T;
@@ -1166,6 +1167,7 @@ export interface EventsSelect<T extends boolean = true> {
   recurrence_until?: T;
   location?: T;
   fellows?: T;
+  registration_form?: T;
   updatedAt?: T;
   createdAt?: T;
 }

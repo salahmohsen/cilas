@@ -59,6 +59,11 @@ export const Events: CollectionConfig = {
       ],
     },
     { name: 'fellows', type: 'relationship', relationTo: 'users', hasMany: true },
+    {
+      name: 'registration_form',
+      type: 'relationship',
+      relationTo: 'forms',
+    },
   ],
   admin: {
     useAsTitle: 'title',
