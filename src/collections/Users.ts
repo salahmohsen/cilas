@@ -5,7 +5,7 @@ import type { CollectionConfig, PayloadRequest } from 'payload'
 export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
-    useAsTitle: 'email',
+    useAsTitle: 'name',
     hidden: (ctx) => !ctx.user?.roles.includes('super_admin') && !ctx.user?.roles.includes('admin'),
   },
   auth: true,
@@ -42,9 +42,7 @@ export const Users: CollectionConfig = {
       admin: { condition: (d) => d.roles?.includes('ciliasian') },
     }, // "CILASians 2016–2017"
     {
-      // Derived, not stored: `courses.fellows` is the single source of truth.
-      // Storing both sides let them drift — the fellow-role hooks in
-      // `Courses.ts` would then be fighting a stale copy here.
+      // courses.fellows is the source of truth; storing both sides drifted.
       name: 'courses',
       type: 'relationship',
       relationTo: 'courses',
@@ -55,21 +53,18 @@ export const Users: CollectionConfig = {
   ],
   hooks: {
     afterRead: [
-      // Args are annotated because Payload types the hook's `doc` as
-      // `T extends TypeWithID = any`; without this the spread below is unchecked.
+      // doc is typed as `any` by Payload, hence the annotation.
       async ({ req, doc }: { req: PayloadRequest; doc?: { id?: number } }) => {
         if (typeof doc?.id !== 'number') return doc
 
         const res = await req.payload.find({
           collection: 'courses',
           where: { fellows: { contains: doc.id } },
-          // depth 0 is required: courses.fellows is a hasMany back to users, so
-          // populating it here would re-enter this hook.
+          // Populating fellows would re-enter this hook.
           depth: 0,
           select: { title: true },
           limit: 100,
-          // courses.read is tiered by status and ownership, so without this a
-          // fellow would see none of their own draft courses.
+          // courses.read is tiered by status and ownership.
           overrideAccess: true,
         })
 

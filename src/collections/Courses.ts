@@ -20,7 +20,6 @@ const toIds = (fellows: Course['fellows'] | undefined): number[] =>
     .map((fellow) => (typeof fellow === 'object' ? fellow.id : fellow))
     .filter((id): id is number => typeof id === 'number')
 
-/** Idempotent and additive: an existing fellow is skipped, no other role is dropped. */
 const grantFellow = async (payload: Payload, id: number): Promise<void> => {
   const user = await payload.findByID({
     collection: 'users',
@@ -35,16 +34,14 @@ const grantFellow = async (payload: Payload, id: number): Promise<void> => {
     collection: 'users',
     id,
     data: { roles: [...user.roles, 'fellow'] },
-    // `users.update` is admin-only, so this system-side write must override.
+    // users.update is admin-only.
     overrideAccess: true,
   })
 }
 
 /**
- * Drops `fellow` only once the user is listed on no other course, whatever that
- * course's status — teaching one course is what makes someone a fellow.
- * `exceptCourseId` is excluded so the course being saved or deleted never counts
- * itself.
+ * Revokes `fellow` once the user is on no other course, at any status. The
+ * course being saved or deleted is excluded so it cannot vouch for itself.
  */
 const revokeIfUnteaching = async (
   payload: Payload,
@@ -58,8 +55,7 @@ const revokeIfUnteaching = async (
     },
     limit: 1,
     depth: 0,
-    // Courses.read is tiered by status and ownership; this check must not be
-    // filtered by whoever happens to be saving the course.
+    // courses.read is tiered by status and ownership.
     overrideAccess: true,
   })
 
@@ -79,21 +75,16 @@ const revokeIfUnteaching = async (
   await payload.update({
     collection: 'users',
     id,
-    // `roles` is required, so someone whose only role was fellow falls back to
-    // the collection default rather than failing validation on an empty array.
+    // roles is required, so fall back rather than write an empty array.
     data: { roles: roles.length > 0 ? roles : ['ciliasian'] },
     overrideAccess: true,
   })
 }
 
 /**
- * Being listed in `courses.fellows` should make someone a fellow, and being
- * removed should take it away. The relationship stores only ids, so nothing
- * propagates the role by itself.
- *
- * This has to touch the `users` documents explicitly; rewriting the course's own
- * `fellows` field would not. `afterChange` rather than `beforeChange` so users
- * are only updated once the course write has actually landed.
+ * `courses.fellows` stores ids, so granting and revoking the role means writing
+ * to the user documents — the course's own field cannot do it. afterChange, not
+ * beforeChange, so users are only touched once the course write has landed.
  */
 export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   doc,
@@ -114,10 +105,7 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   return doc
 }
 
-/**
- * Deleting a course must revoke too — `afterChange` never fires for a delete, so
- * without this its fellows keep a stale role.
- */
+/** afterChange never fires for a delete, so revocation needs its own hook. */
 export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = async ({
   doc,
   req,

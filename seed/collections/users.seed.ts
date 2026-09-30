@@ -353,18 +353,16 @@ export const usersData: UserSeed[] = [
  * Accounts are matched by email, so re-running never duplicates them and never
  * touches an existing password.
  *
- * Both locale passes run on every seed, not just on create. `getOrCreateUser`
- * only creates, so without these updates a field that changed shape after the
- * account was first seeded (e.g. `name` and `bio` becoming `localized`) would
- * stay empty forever — the row is found by email, so the create never re-runs.
+ * Both locale passes update on every run, not only on create. getOrCreateUser
+ * only creates, so a field that changed shape after the account was first seeded
+ * (name and bio becoming localized) would otherwise stay empty forever.
  */
 export const seedUsers = async (payload: Payload, ctx: SeedContext): Promise<void> => {
     for (const user of usersData) {
         const id = await getOrCreateUser(payload, user)
         ctx.users[user.email] = id
 
-        // English pass. `password` is deliberately omitted so a real account's
-        // password survives; `roles` is set so a promoted admin is reflected.
+        // No password, so a real account's credentials survive.
         await payload.update({
             collection: 'users',
             id,
@@ -372,8 +370,6 @@ export const seedUsers = async (payload: Payload, ctx: SeedContext): Promise<voi
             overrideAccess: true,
         })
 
-        // Arabic pass. `bio` is Lexical, so it needs the same conversion plus
-        // `rtl` direction.
         await payload.update({
             collection: 'users',
             id,
