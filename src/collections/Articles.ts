@@ -107,15 +107,15 @@ export const Articles: CollectionConfig = {
     ],
   },
   access: {
+    // Enforced here, not via `admin.baseFilter`. baseFilter only pre-filters the
+    // admin list view, and Payload ANDs it with this constraint — it does not
+    // restrict what the API can read, and it cannot express the admin branch.
     read: ({ req }): Where => {
       if (!req.user) return { status: { equals: 'public' } }
-      if (req.user && isAdminUser(req.user)) return {}
-      return {
-        or: [
-          { status: { in: ['community', 'public'] } },
-          { author: { equals: req.user.id } }, // own drafts
-        ],
-      }
+      if (isAdminUser(req.user)) return { status: { in: ['community', 'public'] } }
+      // A relationship filter takes the id directly: `{ id: n }` yields
+      // `author_id = NaN`.
+      return { author: { equals: req.user.id } }
     },
     create: isAuthenticated,
     update: isAdminOrOwnArticle,
