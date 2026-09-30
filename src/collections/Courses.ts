@@ -6,7 +6,94 @@ import {
   ownsViaFellows,
   readTiers,
 } from '@/access'
-import type { CollectionConfig } from 'payload'
+import type { CollectionAfterChangeHook, CollectionConfig } from 'payload'
+import type { Course } from '@/payload-types'
+
+/** `fellows` arrives as ids, or as populated users when depth > 0. */
+const toIds = (fellows: Course['fellows'] | undefined): number[] =>
+  (fellows ?? [])
+    .map((fellow) => (typeof fellow === 'object' ? fellow.id : fellow))
+    .filter((id): id is number => typeof id === 'number')
+
+/**
+ * Being listed in `courses.fellows` should make someone a fellow, and being
+ * removed should take it away — but only once they are off every course. The
+ * relationship stores ids, so nothing propagates the role by itself.
+ *
+ * This has to touch the `users` documents explicitly; rewriting the course's own
+ * `fellows` field would not. `afterChange` rather than `beforeChange` so users
+ * are only updated once the course write has actually landed.
+ */
+export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
+  doc,
+  req,
+  previousDoc,
+}) => {
+  const { payload } = req
+
+  const added = toIds(doc.fellows).filter((id) => !toIds(previousDoc?.fellows).includes(id))
+  const removed = toIds(previousDoc?.fellows).filter((id) => !toIds(doc.fellows).includes(id))
+
+  for (const id of added) {
+    const user = await payload.findByID({
+      collection: 'users',
+      id,
+      depth: 0,
+      overrideAccess: true,
+    })
+
+    // Idempotent, and additive: never drops a role the user already holds.
+    if (user.roles.includes('fellow')) continue
+
+    await payload.update({
+      collection: 'users',
+      id,
+      data: { roles: [...user.roles, 'fellow'] },
+      // `users.update` is admin-only, so this system-side write must override.
+      overrideAccess: true,
+    })
+  }
+
+  for (const id of removed) {
+    // They keep the role while they are still listed on any other course,
+    // whatever its status — teaching one course is what makes someone a fellow.
+    const elsewhere = await payload.find({
+      collection: 'courses',
+      where: {
+        and: [{ fellows: { contains: id } }, { id: { not_equals: doc.id } }],
+      },
+      limit: 1,
+      depth: 0,
+      // Courses.read is tiered by status and ownership; this check must not be
+      // filtered by whoever happens to be saving the course.
+      overrideAccess: true,
+    })
+
+    if (elsewhere.totalDocs > 0) continue
+
+    const user = await payload.findByID({
+      collection: 'users',
+      id,
+      depth: 0,
+      overrideAccess: true,
+    })
+
+    if (!user.roles.includes('fellow')) continue
+
+    const roles = user.roles.filter((role) => role !== 'fellow')
+
+    await payload.update({
+      collection: 'users',
+      id,
+      // `roles` is required, so someone whose only role was fellow falls back to
+      // the collection default rather than failing validation on an empty array.
+      data: { roles: roles.length > 0 ? roles : ['ciliasian'] },
+      overrideAccess: true,
+    })
+  }
+
+  return doc
+}
 
 export const Courses: CollectionConfig = {
   slug: 'courses',
@@ -231,5 +318,8 @@ export const Courses: CollectionConfig = {
   ],
   admin: {
     useAsTitle: 'title',
+  },
+  hooks: {
+    afterChange: [propagateFellowRole],
   },
 }
