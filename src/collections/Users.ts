@@ -1,5 +1,31 @@
-import { isAdmin } from '@/access'
-import type { CollectionConfig } from 'payload'
+import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
+
+import { isAdmin, personOf, type Role } from '@/access'
+import { teaches, withFellowRole } from '@/lib/fellow-role'
+import type { User } from '@/payload-types'
+
+/**
+ * Keeps `fellow` true to the linked person when the link itself changes. The
+ * course hooks cover the other direction (a course listing a person).
+ * beforeChange, so the role lands in the same write as the link.
+ */
+export const syncFellowRoleOnLink: CollectionBeforeChangeHook<User> = async ({
+  data,
+  originalDoc,
+  req,
+}) => {
+  if (!('person' in data)) return data
+
+  const before = personOf(originalDoc)
+  const after = personOf(data)
+  if (before === after) return data
+
+  const isTeaching = after !== null && (await teaches(req.payload, after))
+  const current = (data.roles ?? originalDoc?.roles ?? ['member']) as Role[]
+  if (current.includes('fellow') === isTeaching) return data
+
+  return { ...data, roles: withFellowRole(current, isTeaching) }
+}
 
 /** Login accounts. Public profiles live in `people` (ADR 0001). */
 export const Users: CollectionConfig = {
@@ -12,6 +38,9 @@ export const Users: CollectionConfig = {
   auth: true,
   access: {
     update: isAdmin,
+  },
+  hooks: {
+    beforeChange: [syncFellowRoleOnLink],
   },
   fields: [
     {
