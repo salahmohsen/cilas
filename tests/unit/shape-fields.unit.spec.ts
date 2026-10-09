@@ -1,6 +1,7 @@
 import type { Field, FieldHookArgs } from 'payload'
 import { describe, expect, it } from 'vitest'
 
+import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { computeEndDate, scheduleField } from '@/fields/schedule'
 import { endAfterStart, httpUrl, notBelow, timeOfDay } from '@/fields/validators'
@@ -82,5 +83,24 @@ describe('registrationField', () => {
   it('has no default method, so an empty one falls back to the parent', () => {
     const method = registrationField().fields.find((f) => 'name' in f && f.name === 'method')
     expect(method && 'defaultValue' in method ? method.defaultValue : undefined).toBeUndefined()
+  })
+})
+
+describe('pricingField', () => {
+  it('is named pricing by default, with the spec fields', () => {
+    const field = pricingField()
+    expect(field.name).toBe('pricing')
+    expect(names(field.fields)).toEqual([
+      'min',
+      'max',
+      'currency',
+      'note',
+      'need_based_deductions',
+      'payment_plans',
+    ])
+  })
+
+  it('takes another name, for a course override', () => {
+    expect(pricingField({ name: 'pricing_override' }).name).toBe('pricing_override')
   })
 })
