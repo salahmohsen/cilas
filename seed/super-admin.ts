@@ -30,7 +30,6 @@ export const createSuperAdmin = async (payload: Payload): Promise<void> => {
     data: {
       email: SUPER_ADMIN_EMAIL,
       password: SUPER_ADMIN_PASSWORD,
-      name: 'Salah Mohsen',
       roles: ['super_admin'],
     },
     overrideAccess: true,

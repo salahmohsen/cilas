@@ -1,11 +1,12 @@
 import { isAdmin } from '@/access'
-import type { CollectionConfig, PayloadRequest } from 'payload'
+import type { CollectionConfig } from 'payload'
 
-// The plan's `people` collection — auth users of the community.
+/** Login accounts. Public profiles live in `people` (ADR 0001). */
 export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: 'email',
+    defaultColumns: ['email', 'person', 'roles'],
     hidden: (ctx) => !ctx.user?.roles.includes('super_admin') && !ctx.user?.roles.includes('admin'),
   },
   auth: true,
@@ -13,54 +14,13 @@ export const Users: CollectionConfig = {
     update: isAdmin,
   },
   fields: [
-    { name: 'name', type: 'text', localized: true },
     {
-      // Portrait reads against the sidebar, beside identity metadata rather
-      // than interrupting the profile text.
-      name: 'photo',
-      type: 'upload',
-      relationTo: 'media',
+      // At most one account per person.
+      name: 'person',
+      type: 'relationship',
+      relationTo: 'people',
+      unique: true,
       admin: { position: 'sidebar' },
-    },
-    {
-      label: 'Profile',
-      type: 'group',
-      fields: [{ name: 'bio', type: 'richText', localized: true }], // single source of truth
-    },
-    {
-      // Where to find and follow this person. `website` owns the primary
-      // link; each social entry is one platform, one URL.
-      label: 'Social',
-      type: 'group',
-      fields: [
-        { name: 'website', type: 'text', admin: { placeholder: 'https://…' } },
-        {
-          name: 'social_links',
-          type: 'array',
-          label: 'Social media',
-          fields: [
-            {
-              name: 'platform',
-              type: 'select',
-              required: true,
-              options: ['facebook', 'x', 'youtube', 'instagram', 'linkedin'].map((v) => ({
-                label: v.charAt(0).toUpperCase() + v.slice(1),
-                value: v,
-              })),
-            },
-            {
-              name: 'url',
-              type: 'text',
-              required: true,
-              admin: { placeholder: 'https://…' },
-              validate: (value: unknown) =>
-                typeof value === 'string' && /^https?:\/\/\S+$/.test(value)
-                  ? true
-                  : 'Enter a full URL starting with https:// or http://',
-            },
-          ],
-        },
-      ],
     },
     {
       // Role plumbing lives in the sidebar: identity first, permissions to
@@ -83,43 +43,7 @@ export const Users: CollectionConfig = {
             { label: 'Non-Degree-Seeking Student', value: 'non_degree_seeking' },
           ],
         },
-        {
-          // courses.fellows is the source of truth; storing both sides drifted.
-          name: 'courses',
-          type: 'relationship',
-          relationTo: 'courses',
-          hasMany: true,
-          virtual: true,
-          admin: { condition: (d) => d.roles?.includes('fellow') },
-        },
       ],
     },
   ],
-  hooks: {
-    afterRead: [
-      // doc is typed as `any` by Payload, hence the annotation.
-      async ({ req, doc }: { req: PayloadRequest; doc?: { id?: number } }) => {
-        if (typeof doc?.id !== 'number') return doc
-
-        const res = await req.payload.find({
-          collection: 'courses',
-          where: { fellows: { contains: doc.id } },
-          // Populating fellows would re-enter this hook.
-          depth: 0,
-          select: { title: true },
-          limit: 100,
-          // courses.read is tiered by status and ownership.
-          overrideAccess: true,
-        })
-
-        return {
-          ...doc,
-          courses: res.docs.map((d: { id: number; title?: string }) => ({
-            id: d.id,
-            title: d.title,
-          })),
-        }
-      },
-    ],
-  },
 }
