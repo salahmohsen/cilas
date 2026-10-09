@@ -1,5 +1,7 @@
+import type { Field, FieldHookArgs } from 'payload'
 import { describe, expect, it } from 'vitest'
 
+import { computeEndDate, scheduleField } from '@/fields/schedule'
 import { endAfterStart, httpUrl, notBelow, timeOfDay } from '@/fields/validators'
 
 describe('validators', () => {
@@ -30,5 +32,34 @@ describe('validators', () => {
   it('httpUrl still lives here', () => {
     expect(httpUrl('https://cilas.net')).toBe(true)
     expect(httpUrl('cilas.net')).toMatch(/https/)
+  })
+})
+
+// Names of the data fields directly inside a group, looking through rows.
+const names = (fields: Field[]): string[] =>
+  fields.flatMap((f) => ('name' in f ? [f.name] : 'fields' in f ? names(f.fields) : []))
+
+describe('scheduleField', () => {
+  it('is a named group with the spec fields', () => {
+    const field = scheduleField()
+    expect(field.name).toBe('schedule')
+    expect(names(field.fields)).toEqual([
+      'start_date',
+      'start_precision',
+      'weeks',
+      'slots',
+      'end_date',
+      'note',
+    ])
+  })
+
+  it('computes end_date from its sibling pattern', () => {
+    const siblingData = {
+      start_date: '2026-03-03',
+      weeks: 2,
+      slots: [{ weekday: 'tue', start_time: '19:00', end_time: '21:00' }],
+    }
+    expect(computeEndDate({ siblingData } as unknown as FieldHookArgs)).toBe('2026-03-10')
+    expect(computeEndDate({ siblingData: {} } as unknown as FieldHookArgs)).toBeNull()
   })
 })
