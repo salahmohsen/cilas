@@ -76,7 +76,7 @@ const revokeIfUnteaching = async (
     collection: 'users',
     id,
     // roles is required, so fall back rather than write an empty array.
-    data: { roles: roles.length > 0 ? roles : ['ciliasian'] },
+    data: { roles: roles.length > 0 ? roles : ['member'] },
     overrideAccess: true,
   })
 }

@@ -29,7 +29,7 @@ const probe = {
     email: EMAIL,
     bio: 'English bio.',
     bio_ar: 'سيرة ذاتية بالعربية.',
-    roles: ['ciliasian'],
+    roles: ['member'],
 } satisfies UserSeed
 
 let payload: Payload

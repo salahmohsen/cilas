@@ -143,7 +143,7 @@ export const usersData: UserSeed[] = [
     bio: 'Assistant Professor of Philosophy at the American University in Cairo. Specializes in 20th-century Continental Philosophy, Critical Theory, Aesthetics and Feminism; recent work explores aesthetics from early critical theory, and theories of the image within psychoanalysis, phenomenology and social theory.',
     bio_ar:
       'أستاذة مساعدة للفلسفة بالجامعة الأمريكية بالقاهرة، متخصصة في الفلسفة القارية والنظرية النقدية والجمالية والنظرية النسوية، وقد نشرت في أنطولوجيا (The Aesthetic Ground of Critical Theory) وغيرها.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'I-Kai Jeng',
@@ -152,7 +152,7 @@ export const usersData: UserSeed[] = [
     bio: 'Received his PhD/MA in Philosophy and Classical Studies at Boston University; visiting fellow at CILAS for a trimester. Now in the Department of Philosophy, National Taiwan University, and a specialist in Greek philosophy — especially Plato on philosophical engagement in politics and the character of philosophical discourse.',
     bio_ar:
       'حاصل على الدكتوراه والماجستير في الفلسفة والدراسات الكلاسيكية من جامعة بوسطن، وكان زميل زيارته في CILAS لفصل دراسي. يعمل اليوم في قسم الفلسفة بجامعة تايوان الوطنية، ومتخصص في الفلسفة الإغريقية، خصوصًا أفلاطون.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Robin Weiss',
@@ -161,7 +161,7 @@ export const usersData: UserSeed[] = [
     bio: 'Received her PhD from DePaul University, and taught most recently at Mount Allison University in Canada. Specializes in ancient Greek and Roman philosophy — Roman Stoicism in particular, where it relates the connection between thought and action.',
     bio_ar:
       'حاصلة على الدكتوراه من جامعة ديبول، وآخر تدريسها في جامعة ماونت أليسون بكندا. متخصصة في الفلسفة الإغريقية والرومانية القديمة، وفي الرواقية الرومانية وعلاقة الفكر بالفعل.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
 
   // ---- advisors ----
@@ -171,7 +171,7 @@ export const usersData: UserSeed[] = [
     email: 'michael.brint@cilas.test',
     bio: 'Professor of International Studies at California Lutheran University.',
     bio_ar: 'أستاذ الدراسات الدولية في جامعة كاليفورنيا لويثريان.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Teun Dekker',
@@ -180,7 +180,7 @@ export const usersData: UserSeed[] = [
     bio: 'Vice-Dean of Academic Affairs and Professor of Liberal Arts and Sciences Education at University College Maastricht; did his BA at University College Utrecht, completed graduate studies in political philosophy at Oxford (desert-based theories of distributive justice) and continued at Yale. Teaches political philosophy and writes about the educational philosophy behind LAS education.',
     bio_ar:
       'نائب عميد الشؤون الأكاديمية وأستاذ تربية العلوم والآداب الحرة بجامعة كولج ماستريخت؛ نال البكالوريوس من يوترخت ودراساته العليا في الفلسفة السياسية من أكسفورد ثم ييل، وتعلّم الفلسفة السياسية ويكتب عن فلسفة تعليم العلوم والآداب الحرة.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Yen-Chi Fan',
@@ -188,7 +188,7 @@ export const usersData: UserSeed[] = [
     email: 'yenchi.fan@cilas.test',
     bio: 'Chair of Applied English at I-Shou University, Taiwan.',
     bio_ar: 'رئيس قسم الإنجليزية التطبيقية في جامعة إيشو في تايوان.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Abdul Hayy Lammert Holdijk',
@@ -196,7 +196,7 @@ export const usersData: UserSeed[] = [
     email: 'abdulhayy@cilas.test',
     bio: 'Associate Chair of Rhetoric and Composition at AUC.',
     bio_ar: 'رئيس مساعد قسم البلاغة والتأليف في الجامعة الأمريكية بالقاهرة.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Tommaso Vitale',
@@ -204,7 +204,7 @@ export const usersData: UserSeed[] = [
     email: 'tommaso.vitale@cilas.test',
     bio: 'Associate Professor of Sociology at Sciences Po Paris.',
     bio_ar: 'أستاذ مساعد لعلم الاجتماع في العلوم السياسية باريس.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
 
   // ---- trustees ----
@@ -214,7 +214,7 @@ export const usersData: UserSeed[] = [
     email: 'karim@cilas.test',
     bio: 'Founder of CILAS.',
     bio_ar: 'مؤسس مركز CILAS.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Amani Elshimi',
@@ -222,7 +222,7 @@ export const usersData: UserSeed[] = [
     email: 'amani.elshimi@cilas.test',
     bio: 'Director of Undergraduate Research at AUC.',
     bio_ar: 'مديرة أبحاث البكالوريوس في الجامعة الأمريكية بالقاهرة.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Ahmed Galal',
@@ -230,7 +230,7 @@ export const usersData: UserSeed[] = [
     email: 'ahmed.galal@cilas.test',
     bio: 'Project Manager at Netsis Egypt.',
     bio_ar: 'مدير مشروع في مؤسسة نتسيس مصر.',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
 
   // ---- CILAS Translation Lab, 2016–2018 ----
@@ -245,7 +245,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translation Lab supervisor and coordinator (إشراف وتنسيق), 2016–2018. Translator and reviewer on all five articles in "أعمال مختبر الترجمة" (CILAS, 2018).',
     bio_ar:
       'مشرف ومنسّق مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم ومراجع للمقالات الخمسة جميعها في «أعمال مختبر الترجمة» (CILAS، 2018).',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Hind El-Ghazaly',
@@ -254,7 +254,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translation Lab supervisor and coordinator (إشراف وتنسيق), 2016–2018. Translator of "استعادة حريقنا في التعليم" in "أعمال مختبر الترجمة" (CILAS, 2018).',
     bio_ar:
       'مشرفة ومنسّقة مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم» في «أعمال مختبر الترجمة» (CILAS، 2018).',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'El-Sayed Mahmoud',
@@ -263,7 +263,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translation Lab supervisor and coordinator (إشراف وتنسيق), 2016–2018. Translator of "التعافي من داء الدبلومات" and "استعادة حريقنا في التعليم".',
     bio_ar:
       'مشرف ومنسّق مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقالَي «التعافي من داء الدبلومات» و«استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Iman Marak',
@@ -272,7 +272,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Lead translator of "حول كيفية قراءة الأعمال النظرية".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجمة الرئيسية لمقال «حول كيفية قراءة الأعمال النظرية».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Ayman El-Husseini',
@@ -280,7 +280,7 @@ export const usersData: UserSeed[] = [
     email: 'ayman.elhusseini@cilas.test',
     bio: 'Translator and reviewer in the CILAS Translation Lab, 2016–2018.',
     bio_ar: 'مترجم ومراجع في مختبر الترجمة بمركز CILAS (2016–2018).',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Mad Bahi',
@@ -288,7 +288,7 @@ export const usersData: UserSeed[] = [
     email: 'mad.bahi@cilas.test',
     bio: 'Translator in the CILAS Translation Lab, 2016–2018.',
     bio_ar: 'مترجم في مختبر الترجمة بمركز CILAS (2016–2018).',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Nazihy Halouda',
@@ -297,7 +297,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Howaida Ahmed',
@@ -306,7 +306,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "حول كيفية قراءة الأعمال النظرية".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «حول كيفية قراءة الأعمال النظرية».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Iman Kal Abdel Hamid',
@@ -315,7 +315,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator and reviewer in the CILAS Translation Lab, 2016–2018. Sole translator of "القراءة والكتابة والفهم".',
     bio_ar:
       'مترجمة ومراجعة في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجمة الوحيدة لمقال «القراءة والكتابة والفهم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Ahmed El-Mengy',
@@ -324,7 +324,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Lead translator of "استعادة حريقنا في التعليم".',
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجم الرئيسي لمقال «استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Islam Karam',
@@ -333,7 +333,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Iman Safwat',
@@ -342,7 +342,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Rehab Soliman',
@@ -351,7 +351,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Abdel Rahman Adel',
@@ -360,7 +360,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Mariam Salem',
@@ -369,7 +369,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Noura Halmy',
@@ -378,7 +378,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Sara Alaa',
@@ -387,7 +387,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Amal Abdel Rahman',
@@ -396,7 +396,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Heba El-Mansour',
@@ -405,7 +405,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Sara Salam',
@@ -414,7 +414,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Mohamed Nagu Senjer',
@@ -423,7 +423,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «التعافي من داء الدبلومات».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Amir Zaki',
@@ -432,7 +432,7 @@ export const usersData: UserSeed[] = [
     bio: 'Reviewer (مراجعة) in the CILAS Translation Lab, 2016–2018, for "موجز تاريخ التعليم البديل" and "القراءة والكتابة والفهم".',
     bio_ar:
       'مراجع (مراجعة) في مختبر الترجمة بمركز CILAS (2016–2018) لمقالَي «موجز تاريخ التعليم البديل» و«القراءة والكتابة والفهم».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Nahir Emad',
@@ -441,7 +441,7 @@ export const usersData: UserSeed[] = [
     bio: 'Reviewer (مراجعة) of "القراءة والكتابة والفهم" in the CILAS Translation Lab, 2016–2018.',
     bio_ar:
       'مراجِعة (مراجعة) لمقال «القراءة والكتابة والفهم» في مختبر الترجمة بمركز CILAS (2016–2018).',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Nazihy Awad',
@@ -450,7 +450,7 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "حول كيفية قراءة الأعمال النظرية".',
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «حول كيفية قراءة الأعمال النظرية».',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
   {
     name: 'Amr Okasha',
@@ -459,7 +459,7 @@ export const usersData: UserSeed[] = [
     bio: 'Cover designer (تصميم الغلاف) and art director (الإخراج الفني) of "أعمال مختبر الترجمة" (CILAS, 2018).',
     bio_ar:
       'مصمم الغلاف (تصميم الغلاف) والمخرج الفني (الإخراج الفني) لكتاب «أعمال مختبر الترجمة» (CILAS، 2018).',
-    roles: ['ciliasian'],
+    roles: ['member'],
   },
 
   // ---- admin ----

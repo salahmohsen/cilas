@@ -174,7 +174,7 @@ export interface User {
         id?: string | null;
       }[]
     | null;
-  roles: ('super_admin' | 'admin' | 'fellow' | 'ciliasian' | 'non_degree_seeking')[];
+  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
   courses?: (number | Course)[] | null;
   updatedAt: string;
   createdAt: string;
