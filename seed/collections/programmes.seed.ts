@@ -1,4 +1,5 @@
 import type { Payload } from 'payload'
+import { slugify } from '@/lib/slugify'
 import type { ProgrammeSeed, SeedContext } from '../seed.type'
 import { getOrCreateId, lexical, requireIds } from '../seed.utils'
 
@@ -30,6 +31,7 @@ export const seedProgrammes = async (payload: Payload, ctx: SeedContext): Promis
                     data: {
                         ...rest,
                         title,
+                        slug: slugify(title),
                         cycles: requireIds(ctx.cycles, cycles),
                         admission_requirements: admission_requirements
                             ? lexical(admission_requirements)

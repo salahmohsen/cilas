@@ -2,8 +2,8 @@ import { getPayload } from 'payload'
 import type { Payload } from 'payload'
 import { createSeedContext } from './seed.type'
 import { resetContent } from './seed.utils'
+import { createSuperAdmin } from './super-admin'
 import { seedUsers, linkFellows } from './collections/users.seed'
-import { seedFieldsOfStudy } from './collections/fields-of-study.seed'
 import { seedCycles } from './collections/cycles.seed'
 import { seedProgrammes } from './collections/programmes.seed'
 import { seedCourses } from './collections/courses.seed'
@@ -21,16 +21,20 @@ const { default: config } = await import('../src/payload.config')
 const payload: Payload = await getPayload({ config })
 const ctx = createSeedContext()
 
+// First: the superadmin account. Must run before resetContent, which only
+// deletes content collections — user accounts are matched by email and
+// survive, so a fresh migration never leaves the admin panel unreachable.
+await createSuperAdmin(payload)
+
 // Content is wiped; user accounts are matched by email and survive.
 await resetContent(payload)
 
 // Order matters: every seeder reads ids resolved by the ones above it.
 await seedUsers(payload, ctx)
-await seedFieldsOfStudy(payload, ctx)
 await seedCycles(payload, ctx)
 await seedProgrammes(payload, ctx)
 await seedCourses(payload, ctx)
-await linkFellows(payload, ctx) // needs fields-of-study + courses to exist
+await linkFellows(payload, ctx) // needs courses to exist
 await seedGovernance(payload, ctx)
 await seedArticles(payload, ctx)
 await seedPress(payload)

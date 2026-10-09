@@ -1,79 +1,124 @@
-import { isAdmin, isAdminOrOwnArticle, isAdminUser, isAuthenticated } from '@/access'
+import {
+  canSetTier,
+  isAdmin,
+  isAdminOrOwnAndDraft,
+  isAdminUser,
+  isAuthenticated,
+  ownsViaAuthor,
+  readTiers,
+} from '@/access'
+import { slugField } from '@/fields/slug'
 import type { CollectionConfig, PayloadRequest, Where } from 'payload'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
   fields: [
-    { name: 'cover_image', type: 'upload', relationTo: 'media' },
     { name: 'title', type: 'text', required: true, localized: true },
-    { name: 'body', type: 'richText', localized: true },
+    slugField(),
     {
-      name: 'author',
-      type: 'relationship',
-      relationTo: 'users',
-      required: true,
+      label: 'Content',
+      type: 'group',
+      fields: [{ name: 'body', type: 'richText', localized: true }],
+    },
+    {
+      name: 'cover_image',
+      type: 'upload',
+      relationTo: 'media',
       admin: {
         position: 'sidebar',
       },
     },
     {
-      name: 'published_date',
-      type: 'date',
-      admin: {
-        position: 'sidebar',
-      },
-    },
-    {
-      name: 'status',
-      type: 'select',
-      defaultValue: 'draft',
-      options: [
-        { label: 'Draft', value: 'draft' }, // author only
-        { label: 'Community', value: 'community' }, // all logged-in users
-        { label: 'Public', value: 'public' }, // world — admin/super_admin only
+      label: 'Metadata',
+      type: 'group',
+      fields: [
+        {
+          name: 'author',
+          type: 'relationship',
+          relationTo: 'users',
+          hasMany: true,
+          required: true,
+          admin: {
+            position: 'sidebar',
+          },
+        },
+        {
+          name: 'published_date',
+          type: 'date',
+          admin: {
+            position: 'sidebar',
+          },
+        },
       ],
-      admin: {
-        position: 'sidebar',
-      },
     },
     {
-      name: 'featured',
-      type: 'checkbox',
-      label: 'Feature on home page',
-      admin: { position: 'sidebar' },
-    }, // admin/super_admin only
-    {
-      name: 'tags',
-      type: 'array',
-      fields: [{ name: 'tag', type: 'text' }],
-      admin: {
-        position: 'sidebar',
-      },
+      label: 'Visibility',
+      type: 'group',
+      fields: [
+        {
+          name: 'tier',
+          type: 'select',
+          defaultValue: 'owner',
+          options: [
+            { label: 'Owner only', value: 'owner' },
+            { label: 'Community', value: 'community' },
+            { label: 'Public', value: 'public' },
+          ],
+          admin: {
+            position: 'sidebar',
+          },
+          access: { create: canSetTier, update: canSetTier },
+        },
+        {
+          name: 'featured',
+          type: 'checkbox',
+          label: 'Feature on home page',
+          admin: {
+            position: 'sidebar',
+            condition: (_, siblingData) => isAdminUser(siblingData.author),
+          },
+          access: { create: canSetTier, update: canSetTier },
+        },
+      ],
     },
     {
-      name: 'related_articles',
-      type: 'relationship',
-      relationTo: 'articles',
-      hasMany: true,
-      admin: {
-        description:
-          'Manual override: editor-curated related articles. If empty, automated recommendations by tag overlap are used.',
-        position: 'sidebar',
-      },
-    },
-    {
-      // Name kept as-is (with the space) for backwards compatibility with
-      // `articles.article_collection_id`.
-      name: 'Article Collection',
-      type: 'relationship',
-      relationTo: 'article-collections',
-      hasMany: true,
-      // Derived, not stored: `article-collections.articles` is the single
-      // source of truth. Storing both sides let them drift.
-      virtual: true,
-      admin: {
-        position: 'sidebar',
-      },
+      label: 'Relations',
+      type: 'group',
+      fields: [
+        {
+          name: 'tags',
+          type: 'array',
+          fields: [{ name: 'tag', type: 'text' }],
+          admin: {
+            position: 'sidebar',
+          },
+        },
+        {
+          name: 'related_articles',
+          type: 'relationship',
+          relationTo: 'articles',
+          hasMany: true,
+          admin: {
+            description:
+              'Manual override: editor-curated related articles. If empty, automated recommendations by tag overlap are used.',
+            position: 'sidebar',
+          },
+        },
+        {
+          // Name kept as-is (with the space) for backwards compatibility with
+          // `articles.article_collection_id`.
+          name: 'Article Collection',
+          type: 'relationship',
+          relationTo: 'article-collections',
+          hasMany: true,
+          // Derived, not stored: `article-collections.articles` is the single
+          // source of truth. Storing both sides let them drift.
+          virtual: true,
+          admin: {
+            position: 'sidebar',
+          },
+        },
+      ],
     },
   ],
   hooks: {
@@ -107,19 +152,13 @@ export const Articles: CollectionConfig = {
     ],
   },
   access: {
-    // Enforced here, not via `admin.baseFilter`. baseFilter only pre-filters the
-    // admin list view, and Payload ANDs it with this constraint — it does not
-    // restrict what the API can read, and it cannot express the admin branch.
-    read: ({ req }): Where => {
-      if (!req.user) return { status: { equals: 'public' } }
-      if (isAdminUser(req.user)) return { status: { in: ['community', 'public'] } }
-      // A relationship filter takes the id directly: `{ id: n }` yields
-      // `author_id = NaN`.
-      return { author: { equals: req.user.id } }
-    },
+    read: readTiers(ownsViaAuthor, { drafts: true }),
     create: isAuthenticated,
-    update: isAdminOrOwnArticle,
-    delete: isAdmin,
+    update: isAdminOrOwnAndDraft(ownsViaAuthor),
+    delete: isAdminOrOwnAndDraft(ownsViaAuthor),
+  },
+  versions: {
+    drafts: true,
   },
 
   admin: {

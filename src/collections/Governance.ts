@@ -19,18 +19,24 @@ export const Governance: CollectionConfig = {
     delete: isAdmin,
   },
   fields: [
-    { name: 'user', type: 'relationship', relationTo: 'users' },
     {
-      name: 'role',
-      type: 'select',
-      required: true,
-      options: [
-        { label: 'Advisor', value: 'advisor' },
-        { label: 'Trustee', value: 'trustee' },
+      label: 'Membership',
+      type: 'group',
+      fields: [
+        { name: 'user', type: 'relationship', relationTo: 'users' },
+        {
+          name: 'role',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Advisor', value: 'advisor' },
+            { label: 'Trustee', value: 'trustee' },
+          ],
+        },
+        { name: 'board_role', type: 'text', admin: { condition: (d) => d.role === 'trustee' } }, // "Chairman", "Secretary", "Treasurer"
+        { name: 'advises_on', type: 'text', admin: { condition: (d) => d.role === 'advisor' } }, // "curriculum design and university partnerships"
       ],
     },
-    { name: 'board_role', type: 'text', admin: { condition: (d) => d.role === 'trustee' } }, // "Chairman", "Secretary", "Treasurer"
-    { name: 'advises_on', type: 'text', admin: { condition: (d) => d.role === 'advisor' } }, // "curriculum design and university partnerships"
   ],
 
 }

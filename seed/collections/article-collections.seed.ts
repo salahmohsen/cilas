@@ -1,4 +1,5 @@
 import type { Payload } from 'payload'
+import { slugify } from '@/lib/slugify'
 import type { ArticleCollectionSeed, SeedContext } from '../seed.type'
 import { getOrCreateId, lexical } from '../seed.utils'
 
@@ -72,6 +73,7 @@ export const seedArticleCollections = async (payload: Payload, ctx: SeedContext)
                 data: {
                     ...rest,
                     title,
+                    slug: slugify(title),
                     description: description ? lexical(description) : null,
                     ...(articleIds ? { articles: articleIds } : {}),
                 },

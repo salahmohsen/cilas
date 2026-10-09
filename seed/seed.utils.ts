@@ -16,7 +16,6 @@ export const CONTENT_COLLECTIONS: CollectionSlug[] = [
   'courses',
   'cycles',
   'programmes',
-  'fields-of-study',
   'governance',
   'article-collections',
   'articles',
@@ -93,16 +92,39 @@ export const link = (title: string, note?: string, href?: string): MaterialSeed 
 
 /* ================================================================ courses */
 
-export const DAY_NAMES = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'] as const
-export type DayName = (typeof DAY_NAMES)[number]
-
-export const day = (days_of_week: DayName, start_time: string, end_time: string) => ({
-  days_of_week,
-  start_time,
-  end_time,
+/**
+ * A session's timing, previously a course-level `schedule.Days` entry. Times are
+ * plain `HH:MM` strings; the seeder combines them with the session's date.
+ */
+export const time = (start: string, end: string) => ({
+  start_time: start,
+  end_time: end,
 })
 
 export const session = (seed: SessionSeed): SessionSeed => seed
+
+const addDays = (iso: string, days: number): string => {
+  const d = new Date(`${iso}T00:00:00.000Z`)
+  d.setUTCDate(d.getUTCDate() + days)
+  return d.toISOString().slice(0, 10)
+}
+
+/**
+ * Expands a weekly course into per-session dates, since a session now owns its
+ * own timing rather than reading it from a course-level schedule. Each session
+ * lands seven days after the last, starting at `firstDate`.
+ */
+export const weekly = (
+  firstDate: string,
+  start: string,
+  end: string,
+  sessions: Array<Omit<SessionSeed, 'date' | 'time'>>,
+): SessionSeed[] =>
+  sessions.map((s, i) => ({
+    ...s,
+    date: addDays(firstDate, i * 7),
+    time: { start_time: start, end_time: end },
+  }))
 
 /* ================================================================== upsert */
 

@@ -1,16 +1,20 @@
 import type { Payload } from 'payload'
+import { slugify } from '@/lib/slugify'
 import type { CourseSeed, SeedContext, SessionSeed } from '../seed.type'
-import { day, getOrCreateId, lexical, reading, requireId, requireIds, watch } from '../seed.utils'
-
-const sunDays = [day('Sun', '2026-04-26T18:00:00.000Z', '2026-04-26T20:30:00.000Z')]
-const tueDays = [day('Tue', '2026-04-28T18:00:00.000Z', '2026-04-28T20:30:00.000Z')]
-const thuDays = [day('Thu', '2026-04-30T18:00:00.000Z', '2026-04-30T20:30:00.000Z')]
-const satDays = [day('Sat', '2026-04-25T18:00:00.000Z', '2026-04-25T20:30:00.000Z')]
+import {
+  getOrCreateId,
+  lexical,
+  reading,
+  requireId,
+  requireIds,
+  watch,
+  weekly,
+} from '../seed.utils'
 
 export const coursesData: CourseSeed[] = [
   {
     course_type: 'THEMATIC',
-    status: 'public',
+    tier: 'public',
     title: 'Heroism and Modernity',
     title_ar: 'البطولة والحداثة',
     description:
@@ -20,8 +24,7 @@ export const coursesData: CourseSeed[] = [
     fields_of_study: ['Philosophical and Poetic Inquiry'],
     cycle: 'Spring Cycle 2026',
     fellows: ['karim.eldalil@cilas.test'],
-    schedule: { session_count: 6, first_session_date: '2026-04-26', Days: sunDays },
-    sessions: [
+    sessions: weekly('2026-04-26', '18:00', '20:30', [
       {
         order: 1,
         week: '1',
@@ -83,11 +86,11 @@ export const coursesData: CourseSeed[] = [
           reading('Between Past and Future — The Crisis in Culture', 'Hannah Arendt'),
         ],
       },
-    ],
+    ]),
   },
   {
     course_type: 'THEMATIC',
-    status: 'public',
+    tier: 'public',
     title: 'Buddhist Psychology',
     description:
       'This course covers the psychological aspects of the Buddhist doctrine, exploring the origins and developments of the Indian experience of mind-examination — from dukkha to meditation, tranquillity, mindfulness and renunciation — read against modern Western psychology.',
@@ -96,11 +99,10 @@ export const coursesData: CourseSeed[] = [
     fields_of_study: ['Philosophical and Poetic Inquiry'],
     cycle: 'Spring Cycle 2026',
     fellows: ['mahaviveka@cilas.test'],
-    schedule: { session_count: 8, first_session_date: '2026-04-28', Days: tueDays },
   },
   {
     course_type: 'THEMATIC',
-    status: 'public',
+    tier: 'public',
     title: 'Place in Modern Arabic Literature',
     title_ar: 'المكان في الأدب الحديث',
     description:
@@ -110,11 +112,10 @@ export const coursesData: CourseSeed[] = [
     fields_of_study: ['Historical Consciousness'],
     cycle: 'Spring Cycle 2026',
     fellows: ['yasser@cilas.test'],
-    schedule: { session_count: 8, first_session_date: '2026-04-25', Days: satDays },
   },
   {
     course_type: 'THEMATIC',
-    status: 'public',
+    tier: 'public',
     title: 'Modernity and the Ecological Crisis',
     title_ar: 'الحداثة والأزمة البيئية: لماذا لا نستطيع إلا أن ندمّر العالم',
     description:
@@ -124,8 +125,7 @@ export const coursesData: CourseSeed[] = [
     fields_of_study: ['Ethnographic Study'],
     cycle: 'Spring Cycle 2026',
     fellows: ['ahmad.mahana@cilas.test'],
-    schedule: { session_count: 8, first_session_date: '2026-04-30', Days: thuDays },
-    sessions: [
+    sessions: weekly('2026-04-30', '18:00', '20:30', [
       {
         order: 1,
         week: '1',
@@ -214,7 +214,7 @@ export const coursesData: CourseSeed[] = [
           reading('How Forests Think', 'Kohn, E. (2013)'),
         ],
       },
-    ],
+    ]),
   },
 ]
 
@@ -236,6 +236,7 @@ export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<v
         data: {
           ...rest,
           title: course.title,
+          slug: slugify(course.title),
           description: description ? lexical(description) : null,
           fellows: requireIds(ctx.users, fellows),
           fields_of_study: requireIds(ctx.fieldsOfStudy, fields_of_study),

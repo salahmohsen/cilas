@@ -20,10 +20,17 @@ export const env = createEnv({
         R2_PUBLIC_URL: z.url(),
     },
 
-    // Nothing is client-side yet. New client variables go under `client` with a
-    // NEXT_PUBLIC_ prefix and get named here; server keys cannot be read from
-    // the client.
-    experimental__runtimeEnv: {},
+    // Read by the admin live-preview iframe, which postMessages back to Payload.
+    // Payload matches messages with `event.origin === serverURL`, so this must
+    // be a real absolute origin. The admin and frontend share one in
+    // development, so it is only needed when they are deployed separately.
+    client: {
+        NEXT_PUBLIC_SERVER_URL: z.string().url().default('http://localhost:3000'),
+    },
+
+    experimental__runtimeEnv: {
+        NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
+    },
 
     // Stops a blank R2_SECRET_ACCESS_KEY in .env passing as an empty string and
     // failing later inside the AWS SDK.

@@ -1,4 +1,5 @@
 import type { Payload } from 'payload'
+import { slugify } from '@/lib/slugify'
 import type { ArticleSeed, SeedContext } from '../seed.type'
 import { getOrCreateId, lexical, requireId } from '../seed.utils'
 
@@ -46,7 +47,7 @@ export const articlesData: ArticleSeed[] = [
       'لقد حان الوقت لمواجهة هذا السؤال بجدية: لمن تكون الأجندة التي تقوم الشهادات والدبلومات خدمتها؟',
     ],
     author_email: 'sayid.mahmoud@cilas.test',
-    status: 'community',
+    tier: 'community',
     published_date: '2018-01-01',
     tags: [{ tag: 'alternative-education' }, { tag: 'credentials' }, { tag: 'social-justice' }],
   },
@@ -90,7 +91,7 @@ export const articlesData: ArticleSeed[] = [
       'في موضعي هذا، كل أنا هي نحن، بالفعل نحن نعيش معا في حاضرنا المتجذر في تربيتنا الثقافية والاجتماعية، ونرعى الآمال مستلهمين تجربة الزاباتيستا، حيث خلق جميعنا عالما جديدا كليا.',
     ],
     author_email: 'ahmed.elmengy@cilas.test',
-    status: 'community',
+    tier: 'community',
     published_date: '2018-01-01',
     tags: [{ tag: 'alternative-education' }, { tag: 'zapatista' }, { tag: 'autonomy' }],
   },
@@ -133,7 +134,7 @@ export const articlesData: ArticleSeed[] = [
       'رأى إيفان إيليتش في كتابه الصادر عام 1970 مجتمعا بلا تعليم مدرسي. ووصف جيمس في كتابه الحديث أن فكرة المدرسة العامة استنفدت غايتها،zusätzlich وآخرون من المؤلفين، في مجتمع ديمقراطي وغني بالمعلومات، بحيث يحدث تغيير في كل مكان في المجتمع، وبألا يكون للشباب القدرة على الوصول إلى الموجّهين الذين يغذون اهتماماتهم الشخصية المتنوعة وأساليبهم في التعلم. أمامنا طريق طويل علينا أن نقطعه قبل أن يكون هذا النوع من النظام متاحا، لكن إذا تحرك مجتمعنا حقيقة في هذا الاتجاه، فربما سيكون هناك مربون بديلون يقومون بإنارة الطريق.',
     ],
     author_email: 'hussein.alhag@cilas.test',
-    status: 'community',
+    tier: 'community',
     published_date: '2018-01-01',
     tags: [
       { tag: 'alternative-education' },
@@ -179,7 +180,7 @@ export const articlesData: ArticleSeed[] = [
       'افسح لمبررات المجال: إذا لم تستطع أن تجد فيما تقرأ شيئا يمت بصلة إلى خبراتك وحياتك الشخصية، فثمة مشكلة، إما لديك أو لدى المؤلف. ولا يعني ذلك أن تقص تفاصيل حياتك لشريك، أو شركاء القراءة، بل حاول وانفتح على فكرة أن في القراءة ما سيكشف لك شيئا عن نفسك، بما في ذلك كيفية الارتباط بالشخص أو الأشخاص الذين تقرأ معهم، وآليات عمل المجموعة.',
     ],
     author_email: 'imani.marak@cilas.test',
-    status: 'community',
+    tier: 'community',
     published_date: '2018-01-01',
     tags: [{ tag: 'reading' }, { tag: 'theory' }, { tag: 'critical-thinking' }],
   },
@@ -226,7 +227,7 @@ export const articlesData: ArticleSeed[] = [
       'أما بالنسبة للتعلم، فإن فعل الكتابة يوفر تاريخا لأفكارنا، والذي يمكننا فيما بعد من تصنيفه، وتجسيمه، وتعديله، والبناء عليه، ويساعدنا على أن نكون منغمسين في أفكارنا وفي التعلم.',
     ],
     author_email: 'imani.kal@cilas.test',
-    status: 'community',
+    tier: 'community',
     published_date: '2018-01-01',
     tags: [{ tag: 'reading' }, { tag: 'writing' }, { tag: 'pedagogy' }],
   },
@@ -242,6 +243,7 @@ export const seedArticles = async (payload: Payload, ctx: SeedContext): Promise<
         data: {
           ...rest,
           title,
+          slug: slugify(title),
           body: body ? lexical(body) : null,
           author: requireId(ctx.users, author_email),
         },

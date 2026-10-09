@@ -72,7 +72,6 @@ export interface Config {
     courses: Course;
     programmes: Programme;
     cycles: Cycle;
-    'fields-of-study': FieldsOfStudy;
     governance: Governance;
     articles: Article;
     'article-collections': ArticleCollection;
@@ -93,7 +92,6 @@ export interface Config {
     courses: CoursesSelect<false> | CoursesSelect<true>;
     programmes: ProgrammesSelect<false> | ProgrammesSelect<true>;
     cycles: CyclesSelect<false> | CyclesSelect<true>;
-    'fields-of-study': FieldsOfStudySelect<false> | FieldsOfStudySelect<true>;
     governance: GovernanceSelect<false> | GovernanceSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
     'article-collections': ArticleCollectionsSelect<false> | ArticleCollectionsSelect<true>;
@@ -169,7 +167,6 @@ export interface User {
     [k: string]: unknown;
   } | null;
   roles: ('super_admin' | 'admin' | 'fellow' | 'ciliasian' | 'non_degree_seeking')[];
-  field_of_study?: (number | null) | FieldsOfStudy;
   cohort_year?: string | null;
   courses?: (number | Course)[] | null;
   updatedAt: string;
@@ -239,7 +236,12 @@ export interface Media {
 export interface Space {
   id: number;
   name: string;
-  status?: ('current' | 'former') | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  state?: ('current' | 'former') | null;
   description?: {
     root: {
       type: string;
@@ -266,24 +268,23 @@ export interface Space {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fields-of-study".
- */
-export interface FieldsOfStudy {
-  id: number;
-  title: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "courses".
  */
 export interface Course {
   id: number;
-  status: 'draft' | 'community' | 'public';
+  tier: 'owner' | 'community' | 'public';
   course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP';
+  cycle: number | Cycle;
+  cover_image?: (number | null) | Media;
   title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   subtitle?: string | null;
+  summary?: string | null;
+  epigraph?: string | null;
   description?: {
     root: {
       type: string;
@@ -299,81 +300,20 @@ export interface Course {
     };
     [k: string]: unknown;
   } | null;
-  epigraph?: string | null;
-  learning_outcomes?:
-    | {
-        outcome?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
-  bibliography?:
-    | {
-        citation?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  why_apply?:
-    | {
-        point?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  weekly_workload?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  mode_note?: string | null;
-  fields_of_study?: (number | FieldsOfStudy)[] | null;
-  cycle?: (number | null) | Cycle;
   location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
-  schedule: {
-    session_count: number;
-    first_session_date: string;
-    Days?:
-      | {
-          days_of_week: 'Sat' | 'Sun' | 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri';
-          start_time: string;
-          end_time: string;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  tuition?: {
-    amount?: number | null;
-    based_deductions_available?: boolean | null;
-  };
+  amount?: number | null;
+  based_deductions_available?: boolean | null;
   fellows?: (number | User)[] | null;
   registration_form?: (number | null) | Form;
   sessions?:
     | {
         order?: number | null;
-        week?: string | null;
-        theme?: string | null;
+        session_title?: string | null;
+        'Date and Time'?: {
+          date?: string | null;
+          start_time?: string | null;
+          end_time?: string | null;
+        };
         description?: {
           root: {
             type: string;
@@ -389,10 +329,9 @@ export interface Course {
           };
           [k: string]: unknown;
         } | null;
-        activity?: string | null;
-        materials?:
+        bibliography?:
           | {
-              type: 'reading' | 'watch' | 'listen' | 'sit_with' | 'case_study' | 'prompt' | 'lecture' | 'link';
+              type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
               title?: string | null;
               href?: string | null;
               note?: string | null;
@@ -402,8 +341,18 @@ export interface Course {
         id?: string | null;
       }[]
     | null;
+  bibliography?:
+    | {
+        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
+        title?: string | null;
+        href?: string | null;
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -411,11 +360,61 @@ export interface Course {
  */
 export interface Cycle {
   id: number;
-  label?: string | null;
-  season?: ('fall' | 'winter' | 'spring' | 'summer') | null;
-  year?: number | null;
-  mode?: ('OFFLINE' | 'ONLINE' | 'HYBRID') | null;
-  courses?: (number | Course)[] | null;
+  title?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  cycle?: {
+    season?: ('fall' | 'winter' | 'spring' | 'summer') | null;
+    year?: number | null;
+    mode?: ('OFFLINE' | 'ONLINE' | 'HYBRID') | null;
+  };
+  programme?: {
+    programme?: (number | null) | Programme;
+  };
+  courses?: {
+    courses?: (number | Course)[] | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programmes".
+ */
+export interface Programme {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  academic_year?: string | null;
+  cycles?: (number | Cycle)[] | null;
+  self_directed_study?: boolean | null;
+  weekly_hours?: number | null;
+  admission_requirements?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  amount?: number | null;
+  installments?: number | null;
+  need_based_deductions?: boolean | null;
+  registration_form?: (number | null) | Form;
   updatedAt: string;
   createdAt: string;
 }
@@ -586,42 +585,6 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programmes".
- */
-export interface Programme {
-  id: number;
-  title: string;
-  kind?: 'BRIDGE' | null;
-  academic_year?: string | null;
-  cycles?: (number | Cycle)[] | null;
-  tuition?: {
-    amount?: number | null;
-    installments?: number | null;
-    need_based_deductions?: boolean | null;
-  };
-  weekly_hours?: number | null;
-  admission_requirements?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  self_directed_study?: boolean | null;
-  registration_form?: (number | null) | Form;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "governance".
  */
 export interface Governance {
@@ -639,8 +602,12 @@ export interface Governance {
  */
 export interface Article {
   id: number;
-  cover_image?: (number | null) | Media;
   title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   body?: {
     root: {
       type: string;
@@ -656,9 +623,10 @@ export interface Article {
     };
     [k: string]: unknown;
   } | null;
-  author: number | User;
+  cover_image?: (number | null) | Media;
+  author: (number | User)[];
   published_date?: string | null;
-  status?: ('draft' | 'community' | 'public') | null;
+  tier?: ('owner' | 'community' | 'public') | null;
   featured?: boolean | null;
   tags?:
     | {
@@ -673,6 +641,7 @@ export interface Article {
   'Article Collection'?: (number | ArticleCollection)[] | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -681,6 +650,11 @@ export interface Article {
 export interface ArticleCollection {
   id: number;
   title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   subtitle?: string | null;
   description?: {
     root: {
@@ -709,9 +683,14 @@ export interface ArticleCollection {
 export interface Press {
   id: number;
   organisation: string;
-  logo?: (number | null) | Media;
   article_url: string;
+  logo?: (number | null) | Media;
   article_title?: string | null;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug?: string | null;
   published_date?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -722,8 +701,13 @@ export interface Press {
  */
 export interface Event {
   id: number;
-  status: 'draft' | 'community' | 'public';
+  tier: 'owner' | 'community' | 'public';
   title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   description?: {
     root: {
       type: string;
@@ -814,10 +798,6 @@ export interface PayloadLockedDocument {
         value: number | Cycle;
       } | null)
     | ({
-        relationTo: 'fields-of-study';
-        value: number | FieldsOfStudy;
-      } | null)
-    | ({
         relationTo: 'governance';
         value: number | Governance;
       } | null)
@@ -900,7 +880,6 @@ export interface UsersSelect<T extends boolean = true> {
   photo?: T;
   bio?: T;
   roles?: T;
-  field_of_study?: T;
   cohort_year?: T;
   courses?: T;
   updatedAt?: T;
@@ -971,66 +950,36 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "courses_select".
  */
 export interface CoursesSelect<T extends boolean = true> {
-  status?: T;
+  tier?: T;
   course_type?: T;
-  title?: T;
-  subtitle?: T;
-  description?: T;
-  epigraph?: T;
-  learning_outcomes?:
-    | T
-    | {
-        outcome?: T;
-        id?: T;
-      };
-  bibliography?:
-    | T
-    | {
-        citation?: T;
-        id?: T;
-      };
-  why_apply?:
-    | T
-    | {
-        point?: T;
-        id?: T;
-      };
-  weekly_workload?: T;
-  mode_note?: T;
-  fields_of_study?: T;
   cycle?: T;
+  cover_image?: T;
+  title?: T;
+  generateSlug?: T;
+  slug?: T;
+  subtitle?: T;
+  summary?: T;
+  epigraph?: T;
+  description?: T;
   location?: T;
-  schedule?:
-    | T
-    | {
-        session_count?: T;
-        first_session_date?: T;
-        Days?:
-          | T
-          | {
-              days_of_week?: T;
-              start_time?: T;
-              end_time?: T;
-              id?: T;
-            };
-      };
-  tuition?:
-    | T
-    | {
-        amount?: T;
-        based_deductions_available?: T;
-      };
+  amount?: T;
+  based_deductions_available?: T;
   fellows?: T;
   registration_form?: T;
   sessions?:
     | T
     | {
         order?: T;
-        week?: T;
-        theme?: T;
+        session_title?: T;
+        'Date and Time'?:
+          | T
+          | {
+              date?: T;
+              start_time?: T;
+              end_time?: T;
+            };
         description?: T;
-        activity?: T;
-        materials?:
+        bibliography?:
           | T
           | {
               type?: T;
@@ -1041,8 +990,18 @@ export interface CoursesSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  bibliography?:
+    | T
+    | {
+        type?: T;
+        title?: T;
+        href?: T;
+        note?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1050,19 +1009,16 @@ export interface CoursesSelect<T extends boolean = true> {
  */
 export interface ProgrammesSelect<T extends boolean = true> {
   title?: T;
-  kind?: T;
+  generateSlug?: T;
+  slug?: T;
   academic_year?: T;
   cycles?: T;
-  tuition?:
-    | T
-    | {
-        amount?: T;
-        installments?: T;
-        need_based_deductions?: T;
-      };
+  self_directed_study?: T;
   weekly_hours?: T;
   admission_requirements?: T;
-  self_directed_study?: T;
+  amount?: T;
+  installments?: T;
+  need_based_deductions?: T;
   registration_form?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1072,20 +1028,26 @@ export interface ProgrammesSelect<T extends boolean = true> {
  * via the `definition` "cycles_select".
  */
 export interface CyclesSelect<T extends boolean = true> {
-  label?: T;
-  season?: T;
-  year?: T;
-  mode?: T;
-  courses?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "fields-of-study_select".
- */
-export interface FieldsOfStudySelect<T extends boolean = true> {
   title?: T;
+  generateSlug?: T;
+  slug?: T;
+  cycle?:
+    | T
+    | {
+        season?: T;
+        year?: T;
+        mode?: T;
+      };
+  programme?:
+    | T
+    | {
+        programme?: T;
+      };
+  courses?:
+    | T
+    | {
+        courses?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1106,12 +1068,14 @@ export interface GovernanceSelect<T extends boolean = true> {
  * via the `definition` "articles_select".
  */
 export interface ArticlesSelect<T extends boolean = true> {
-  cover_image?: T;
   title?: T;
+  generateSlug?: T;
+  slug?: T;
   body?: T;
+  cover_image?: T;
   author?: T;
   published_date?: T;
-  status?: T;
+  tier?: T;
   featured?: T;
   tags?:
     | T
@@ -1123,6 +1087,7 @@ export interface ArticlesSelect<T extends boolean = true> {
   'Article Collection'?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1130,6 +1095,8 @@ export interface ArticlesSelect<T extends boolean = true> {
  */
 export interface ArticleCollectionsSelect<T extends boolean = true> {
   title?: T;
+  generateSlug?: T;
+  slug?: T;
   subtitle?: T;
   description?: T;
   articles?: T;
@@ -1143,9 +1110,11 @@ export interface ArticleCollectionsSelect<T extends boolean = true> {
  */
 export interface PressSelect<T extends boolean = true> {
   organisation?: T;
-  logo?: T;
   article_url?: T;
+  logo?: T;
   article_title?: T;
+  generateSlug?: T;
+  slug?: T;
   published_date?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -1155,8 +1124,10 @@ export interface PressSelect<T extends boolean = true> {
  * via the `definition` "events_select".
  */
 export interface EventsSelect<T extends boolean = true> {
-  status?: T;
+  tier?: T;
   title?: T;
+  generateSlug?: T;
+  slug?: T;
   description?: T;
   event_type?: T;
   date?: T;
@@ -1177,7 +1148,9 @@ export interface EventsSelect<T extends boolean = true> {
  */
 export interface SpacesSelect<T extends boolean = true> {
   name?: T;
-  status?: T;
+  generateSlug?: T;
+  slug?: T;
+  state?: T;
   description?: T;
   images?:
     | T

@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { optionalSlugField } from '@/fields/slug'
 import { anyone, isAdmin } from '../access'
 
 // Marquee source — external media coverage. Admin-curated, no author, no workflow.
@@ -13,10 +14,17 @@ export const Press: CollectionConfig = {
   },
   fields: [
     { name: 'organisation', type: 'text', required: true }, // "Mada Masr", "OpenDemocracy", "Egyptian Streets"
-    { name: 'logo', type: 'upload', relationTo: 'media' },
     { name: 'article_url', type: 'text', required: true }, // external link to the piece mentioning CILAS
-    { name: 'article_title', type: 'text' },
-    { name: 'published_date', type: 'date' },
+    {
+      label: 'Details',
+      type: 'group',
+      fields: [
+        { name: 'logo', type: 'upload', relationTo: 'media' },
+        { name: 'article_title', type: 'text' },
+        optionalSlugField(),
+        { name: 'published_date', type: 'date' },
+      ],
+    },
   ],
   admin: {
     useAsTitle: 'organisation',

@@ -6,26 +6,38 @@ export const SiteSettings: GlobalConfig = {
   fields: [
     { name: 'site_title', type: 'text' },
     {
-      name: 'contact_emails',
+      label: 'Contact',
       type: 'group',
       fields: [
-        { name: 'admissions', type: 'text' },
-        { name: 'info', type: 'text' },
+        {
+          name: 'contact_emails',
+          type: 'group',
+          fields: [
+            { name: 'admissions', type: 'text' },
+            { name: 'info', type: 'text' },
+          ],
+        },
+        {
+          name: 'social_links',
+          type: 'array',
+          fields: [
+            {
+              name: 'platform',
+              type: 'select',
+              options: ['facebook', 'twitter', 'youtube', 'instagram'].map((s) => ({ label: s, value: s })),
+            },
+            { name: 'url', type: 'text' },
+          ],
+        },
       ],
     },
     {
-      name: 'social_links',
-      type: 'array',
+      label: 'Footer',
+      type: 'group',
       fields: [
-        {
-          name: 'platform',
-          type: 'select',
-          options: ['facebook', 'twitter', 'youtube', 'instagram'].map((s) => ({ label: s, value: s })),
-        },
-        { name: 'url', type: 'text' },
+        { name: 'footer_text', type: 'richText', localized: true },
+        { name: 'support_us', type: 'richText', localized: true }, // IBAN bank-transfer donation details
       ],
     },
-    { name: 'footer_text', type: 'richText', localized: true },
-    { name: 'support_us', type: 'richText', localized: true }, // IBAN bank-transfer donation details
   ],
 }

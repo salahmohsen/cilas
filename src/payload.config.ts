@@ -10,7 +10,6 @@ import { Media } from './collections/Media'
 import { Courses } from './collections/Courses'
 import { Programmes } from './collections/Programmes'
 import { Cycles } from './collections/Cycles'
-import { FieldsOfStudy } from './collections/FieldsOfStudy'
 import { Governance } from './collections/Governance'
 import { Articles } from './collections/Articles'
 import { Press } from './collections/Press'
@@ -55,6 +54,18 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    // Opens the frontend route for the document being edited, in an iframe,
+    // and refreshes it as autosave lands. Each collection supplies its own path
+    // via `admin.livePreview.url`.
+    livePreview: {
+      url: '/',
+      collections: ['courses'],
+      breakpoints: [
+        { name: 'mobile', label: 'Mobile', width: 390, height: 844 },
+        { name: 'tablet', label: 'Tablet', width: 768, height: 1024 },
+        { name: 'desktop', label: 'Desktop', width: 1440, height: 900 },
+      ],
+    },
   },
   collections: [
     Users,
@@ -62,7 +73,6 @@ export default buildConfig({
     Courses,
     Programmes,
     Cycles,
-    FieldsOfStudy,
     Governance,
     Articles,
     ArticleCollections,
@@ -92,7 +102,7 @@ export default buildConfig({
     // to DROP tables on stdin, which silently destroys data when it runs
     // non-interactively (CI, vitest, any `getPayload` in a script) — and it
     // leaves no record of what changed.
-    push: false,
+    push: true,
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,

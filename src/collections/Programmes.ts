@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { slugField } from '@/fields/slug'
 import { anyone, isAdmin } from '../access'
 
 export const Programmes: CollectionConfig = {
@@ -12,15 +13,32 @@ export const Programmes: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true },
+    slugField(),
     {
-      name: 'kind',
-      type: 'select',
-      options: [{ label: 'Bridge Programme', value: 'BRIDGE' }],
+      label: 'Identity',
+      type: 'group',
+      fields: [
+        { name: 'academic_year', type: 'text' }, // e.g. "2025–2026"
+      ],
     },
-    { name: 'academic_year', type: 'text' }, // e.g. "2025–2026"
-    { name: 'cycles', type: 'relationship', relationTo: 'cycles', hasMany: true }, // ordered: fall → spring
     {
-      name: 'tuition',
+      label: 'Structure',
+      type: 'group',
+      fields: [
+        { name: 'cycles', type: 'relationship', relationTo: 'cycles', hasMany: true }, // ordered: fall → spring
+        { name: 'self_directed_study', type: 'checkbox' }, // between the two semesters
+      ],
+    },
+    {
+      label: 'Requirements',
+      type: 'group',
+      fields: [
+        { name: 'weekly_hours', type: 'number' }, // ≥15
+        { name: 'admission_requirements', type: 'richText', localized: true },
+      ],
+    },
+    {
+      label: 'Tuition',
       type: 'group',
       fields: [
         { name: 'amount', type: 'number' }, // 18,000
@@ -28,12 +46,13 @@ export const Programmes: CollectionConfig = {
         { name: 'need_based_deductions', type: 'checkbox' },
       ],
     },
-    { name: 'weekly_hours', type: 'number' }, // ≥15
-    { name: 'admission_requirements', type: 'richText', localized: true },
-    { name: 'self_directed_study', type: 'checkbox' }, // between the two semesters
-    { name: 'registration_form', type: 'relationship', relationTo: 'forms' }, // open for registration
+    {
+      label: 'Registration',
+      type: 'group',
+      fields: [{ name: 'registration_form', type: 'relationship', relationTo: 'forms' }], // open for registration
+    },
   ],
   admin: {
-    useAsTitle: "title"
-  }
+    useAsTitle: 'title',
+  },
 }

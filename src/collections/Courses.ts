@@ -1,11 +1,11 @@
 import {
-  canSetStatus,
-  isAdmin,
-  isAdminOrListedAsFellow,
+  canSetTier,
+  isAdminOrOwnAndDraft,
   isAdminOrSuperAdminOrFellow,
   ownsViaFellows,
   readTiers,
 } from '@/access'
+import { slugField } from '@/fields/slug'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
@@ -40,7 +40,7 @@ const grantFellow = async (payload: Payload, id: number): Promise<void> => {
 }
 
 /**
- * Revokes `fellow` once the user is on no other course, at any status. The
+ * Revokes `fellow` once the user is on no other course, at any tier. The
  * course being saved or deleted is excluded so it cannot vouch for itself.
  */
 const revokeIfUnteaching = async (
@@ -55,7 +55,7 @@ const revokeIfUnteaching = async (
     },
     limit: 1,
     depth: 0,
-    // courses.read is tiered by status and ownership.
+    // courses.read is tiered by `tier` and ownership.
     overrideAccess: true,
   })
 
@@ -120,28 +120,41 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
 export const Courses: CollectionConfig = {
   slug: 'courses',
   access: {
-    read: readTiers(ownsViaFellows),
+    read: readTiers(ownsViaFellows, { drafts: true }),
     create: isAdminOrSuperAdminOrFellow,
-    update: isAdminOrListedAsFellow,
-    delete: isAdmin,
+    update: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),
+    delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),
+  },
+  versions: {
+    drafts: {
+      autosave: {
+        interval: 300,
+      },
+    },
   },
   fields: [
     {
-      name: 'status',
+      // `tier` is who may see this, not whether it is published — that is
+      // Payload's `_status`. Named distinctly so the two never read alike.
+      name: 'tier',
       type: 'select',
-      defaultValue: 'draft',
+      defaultValue: 'owner',
       required: true,
       options: [
-        { label: 'Draft', value: 'draft' }, // owner only
+        { label: 'Owner only', value: 'owner' }, // whoever can edit it
         { label: 'Community', value: 'community' }, // signed-in members only
         { label: 'Public', value: 'public' }, // world
       ],
       // Admin-only on create *and* update, so a fellow's course keeps the
-      // `draft` default and promoting it stays an admin action.
-      access: { create: canSetStatus, update: canSetStatus },
+      // `owner` default and promoting it stays an admin action.
+      access: { create: canSetTier, update: canSetTier },
+      admin: {
+        position: 'sidebar',
+      },
     },
     {
       name: 'course_type',
+      label: 'Course Type',
       type: 'select',
       required: true,
       options: [
@@ -157,53 +170,41 @@ export const Courses: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    { name: 'title', type: 'text', required: true, localized: true },
-    { name: 'subtitle', type: 'text', localized: true },
-    { name: 'description', type: 'richText', localized: true },
-    { name: 'epigraph', type: 'text', localized: true }, // "food for thought" quote,
-    {
-      name: 'learning_outcomes',
-      type: 'array',
-      localized: true,
-      fields: [{ name: 'outcome', type: 'richText' }],
-    },
-    {
-      name: 'bibliography',
-      type: 'array',
-      localized: true,
-      fields: [{ name: 'citation', type: 'text' }],
-    },
-    {
-      name: 'why_apply',
-      type: 'array',
-      localized: true,
-      fields: [{ name: 'point', type: 'text' }],
-    },
-    { name: 'weekly_workload', type: 'richText', localized: true }, // "what to expect"
-    {
-      name: 'mode_note',
-      type: 'text',
-      admin: {
-        position: 'sidebar',
-      },
-    }, // "in person or on Zoom",
-    {
-      name: 'fields_of_study',
-      type: 'relationship',
-      relationTo: 'fields-of-study',
-      hasMany: true,
-      admin: {
-        condition: (data) => ['CORE', 'THEMATIC'].includes(data.course_type),
-        position: 'sidebar',
-      },
-    },
     {
       name: 'cycle',
+      label: 'Cycle',
       type: 'relationship',
       relationTo: 'cycles',
+      required: true,
       admin: {
         position: 'sidebar',
       },
+    },
+    {
+      name: 'cover_image',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Cover Image',
+      admin: {
+        position: 'sidebar',
+      },
+    },
+    { name: 'title', type: 'text', required: true, localized: true },
+    slugField(),
+    {
+      // Presentational — groups identity fields without nesting them.
+      label: 'Overview',
+      type: 'group',
+      fields: [
+        { name: 'subtitle', type: 'text', localized: true },
+        { name: 'summary', type: 'text', localized: true },
+        { name: 'epigraph', type: 'text', localized: true },
+      ],
+    },
+    {
+      label: 'Description',
+      type: 'group',
+      fields: [{ name: 'description', type: 'richText', localized: true }],
     },
     {
       name: 'location',
@@ -219,62 +220,7 @@ export const Courses: CollectionConfig = {
       },
     },
     {
-      name: 'schedule',
-      type: 'group',
-      admin: {
-        position: 'sidebar',
-      },
-      fields: [
-        { name: 'session_count', type: 'number', required: true },
-        { name: 'first_session_date', type: 'date', required: true },
-        {
-          name: 'Days',
-          type: 'array',
-          fields: [
-            {
-              name: 'days_of_week',
-              type: 'select',
-              required: true,
-              options: ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((d) => ({
-                label: d,
-                value: d,
-              })),
-            },
-            {
-              type: 'row',
-              fields: [
-                {
-                  name: 'start_time',
-                  type: 'date',
-                  admin: {
-                    width: '50%',
-                    date: {
-                      pickerAppearance: 'timeOnly',
-                      displayFormat: 'h:mm:ss a',
-                    },
-                  },
-                  required: true,
-                },
-                {
-                  name: 'end_time',
-                  type: 'date',
-                  admin: {
-                    width: '50%',
-                    date: {
-                      pickerAppearance: 'timeOnly',
-                      displayFormat: 'h:mm:ss a',
-                    },
-                  },
-                  required: true,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'tuition',
+      label: 'Tuition',
       type: 'group',
       fields: [
         { name: 'amount', type: 'number' },
@@ -306,44 +252,101 @@ export const Courses: CollectionConfig = {
       },
     },
     {
-      name: 'sessions',
-      type: 'array',
-      label: 'Syllabus (session-by-session)',
+      label: 'Syllabus',
+      type: 'group',
       fields: [
-        { name: 'order', type: 'number' }, // sort key
-        { name: 'week', type: 'text' }, // "Week 1", "2&3", "9–10 (optional)" — text, not integer
-        { name: 'theme', type: 'text', localized: true },
-        { name: 'description', type: 'richText', localized: true },
-        { name: 'activity', type: 'text', localized: true }, // "Field visit", "Guest lecture", "Screening"
         {
-          name: 'materials',
+          name: 'sessions',
           type: 'array',
+          label: 'Session-by-session',
           fields: [
+            { name: 'order', type: 'number' }, // sort key
+            { name: 'session_title', type: 'text', label: 'Session Title' },
             {
-              name: 'type',
-              type: 'select',
-              required: true,
-              options: [
-                { label: 'Reading', value: 'reading' },
-                { label: 'Watch', value: 'watch' },
-                { label: 'Listen', value: 'listen' },
-                { label: 'Sit with', value: 'sit_with' },
-                { label: 'Case study', value: 'case_study' },
-                { label: 'Prompt', value: 'prompt' },
-                { label: 'Lecture', value: 'lecture' },
-                { label: 'Link', value: 'link' },
+              name: 'Date and Time',
+              type: 'group',
+              admin: { position: 'sidebar' },
+              fields: [
+                { name: 'date', type: 'date' },
+                {
+                  name: 'start_time',
+                  label: 'Start Time',
+                  type: 'date',
+                  admin: {
+                    width: '50%',
+                    date: { pickerAppearance: 'timeOnly', displayFormat: 'h:mm a' },
+                  },
+                },
+                {
+                  name: 'end_time',
+                  label: 'End Time',
+                  type: 'date',
+                  admin: {
+                    width: '50%',
+                    date: { pickerAppearance: 'timeOnly', displayFormat: 'h:mm a' },
+                  },
+                },
               ],
             },
-            { name: 'title', type: 'text', localized: true, index: true },
-            { name: 'href', type: 'text' }, // youtube / vimeo / article url
-            { name: 'note', type: 'text', localized: true }, // author, year, pages; primary vs secondary reading
+            { name: 'description', type: 'richText', localized: true },
+            {
+              name: 'bibliography',
+              type: 'array',
+              fields: [
+                {
+                  name: 'type',
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: 'Reading', value: 'reading' },
+                    { label: 'Watch', value: 'watch' },
+                    { label: 'Listen', value: 'listen' },
+                    { label: 'Prompt', value: 'prompt' },
+                    { label: 'Other', value: 'other' },
+                  ],
+                },
+                { name: 'title', type: 'text', localized: true, index: true },
+                { name: 'href', type: 'text' }, // youtube / vimeo / article url
+                { name: 'note', type: 'text', localized: true }, // author, year, pages; primary vs secondary reading
+              ],
+            },
           ],
         },
       ],
     },
+    {
+      name: 'bibliography',
+      type: 'array',
+      label: 'Course Bibliography (all sessions)',
+      fields: [
+        {
+          name: 'type',
+          type: 'select',
+          required: true,
+          options: [
+            { label: 'Reading', value: 'reading' },
+            { label: 'Watch', value: 'watch' },
+            { label: 'Listen', value: 'listen' },
+            { label: 'Prompt', value: 'prompt' },
+            { label: 'Other', value: 'other' },
+          ],
+        },
+        { name: 'title', type: 'text', localized: true, index: true },
+        { name: 'href', type: 'text' }, // youtube / vimeo / article url
+        { name: 'note', type: 'text', localized: true }, // author, year, pages; primary vs secondary reading
+      ],
+    },
   ],
+
   admin: {
     useAsTitle: 'title',
+    // The admin iframe loads this URL directly, so it must go through
+    // /api/preview rather than the page itself: that route authenticates the
+    // editor, enables draft mode, and only then redirects to the course, which
+    // is what lets the page render an unpublished draft.
+    livePreview: {
+      url: ({ data }) => `/api/preview?collection=courses&slug=${data?.slug ?? ''}`,
+    },
   },
   hooks: {
     afterChange: [propagateFellowRole],

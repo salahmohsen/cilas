@@ -189,12 +189,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "field_of_study_id": {
-          "name": "field_of_study_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "cohort_year": {
           "name": "cohort_year",
           "type": "varchar",
@@ -281,21 +275,6 @@
           "method": "btree",
           "with": {}
         },
-        "users_field_of_study_idx": {
-          "name": "users_field_of_study_idx",
-          "columns": [
-            {
-              "expression": "field_of_study_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "users_updated_at_idx": {
           "name": "users_updated_at_idx",
           "columns": [
@@ -349,19 +328,6 @@
           "tableTo": "media",
           "columnsFrom": [
             "photo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "users_field_of_study_id_fields_of_study_id_fk": {
-          "name": "users_field_of_study_id_fields_of_study_id_fk",
-          "tableFrom": "users",
-          "tableTo": "fields_of_study",
-          "columnsFrom": [
-            "field_of_study_id"
           ],
           "columnsTo": [
             "id"
@@ -745,318 +711,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.courses_learning_outcomes": {
-      "name": "courses_learning_outcomes",
-      "schema": "",
-      "columns": {
-        "_order": {
-          "name": "_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_parent_id": {
-          "name": "_parent_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_locale": {
-          "name": "_locale",
-          "type": "_locales",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "outcome": {
-          "name": "outcome",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "courses_learning_outcomes_order_idx": {
-          "name": "courses_learning_outcomes_order_idx",
-          "columns": [
-            {
-              "expression": "_order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "courses_learning_outcomes_parent_id_idx": {
-          "name": "courses_learning_outcomes_parent_id_idx",
-          "columns": [
-            {
-              "expression": "_parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "courses_learning_outcomes_locale_idx": {
-          "name": "courses_learning_outcomes_locale_idx",
-          "columns": [
-            {
-              "expression": "_locale",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "courses_learning_outcomes_parent_id_fk": {
-          "name": "courses_learning_outcomes_parent_id_fk",
-          "tableFrom": "courses_learning_outcomes",
-          "tableTo": "courses",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.courses_bibliography": {
-      "name": "courses_bibliography",
-      "schema": "",
-      "columns": {
-        "_order": {
-          "name": "_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_parent_id": {
-          "name": "_parent_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_locale": {
-          "name": "_locale",
-          "type": "_locales",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "citation": {
-          "name": "citation",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "courses_bibliography_order_idx": {
-          "name": "courses_bibliography_order_idx",
-          "columns": [
-            {
-              "expression": "_order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "courses_bibliography_parent_id_idx": {
-          "name": "courses_bibliography_parent_id_idx",
-          "columns": [
-            {
-              "expression": "_parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "courses_bibliography_locale_idx": {
-          "name": "courses_bibliography_locale_idx",
-          "columns": [
-            {
-              "expression": "_locale",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "courses_bibliography_parent_id_fk": {
-          "name": "courses_bibliography_parent_id_fk",
-          "tableFrom": "courses_bibliography",
-          "tableTo": "courses",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.courses_why_apply": {
-      "name": "courses_why_apply",
-      "schema": "",
-      "columns": {
-        "_order": {
-          "name": "_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_parent_id": {
-          "name": "_parent_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_locale": {
-          "name": "_locale",
-          "type": "_locales",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "point": {
-          "name": "point",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "courses_why_apply_order_idx": {
-          "name": "courses_why_apply_order_idx",
-          "columns": [
-            {
-              "expression": "_order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "courses_why_apply_parent_id_idx": {
-          "name": "courses_why_apply_parent_id_idx",
-          "columns": [
-            {
-              "expression": "_parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "courses_why_apply_locale_idx": {
-          "name": "courses_why_apply_locale_idx",
-          "columns": [
-            {
-              "expression": "_locale",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "courses_why_apply_parent_id_fk": {
-          "name": "courses_why_apply_parent_id_fk",
-          "tableFrom": "courses_why_apply",
-          "tableTo": "courses",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.courses_location": {
       "name": "courses_location",
       "schema": "",
@@ -1140,103 +794,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.courses_schedule_days": {
-      "name": "courses_schedule_days",
-      "schema": "",
-      "columns": {
-        "_order": {
-          "name": "_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_parent_id": {
-          "name": "_parent_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "days_of_week": {
-          "name": "days_of_week",
-          "type": "enum_courses_schedule_days_days_of_week",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "start_time": {
-          "name": "start_time",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "end_time": {
-          "name": "end_time",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "courses_schedule_days_order_idx": {
-          "name": "courses_schedule_days_order_idx",
-          "columns": [
-            {
-              "expression": "_order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "courses_schedule_days_parent_id_idx": {
-          "name": "courses_schedule_days_parent_id_idx",
-          "columns": [
-            {
-              "expression": "_parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "courses_schedule_days_parent_id_fk": {
-          "name": "courses_schedule_days_parent_id_fk",
-          "tableFrom": "courses_schedule_days",
-          "tableTo": "courses",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.courses_sessions_materials": {
-      "name": "courses_sessions_materials",
+    "public.courses_sessions_bibliography": {
+      "name": "courses_sessions_bibliography",
       "schema": "",
       "columns": {
         "_order": {
@@ -1259,10 +818,10 @@
         },
         "type": {
           "name": "type",
-          "type": "enum_courses_sessions_materials_type",
+          "type": "enum_courses_sessions_bibliography_type",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "href": {
           "name": "href",
@@ -1272,8 +831,8 @@
         }
       },
       "indexes": {
-        "courses_sessions_materials_order_idx": {
-          "name": "courses_sessions_materials_order_idx",
+        "courses_sessions_bibliography_order_idx": {
+          "name": "courses_sessions_bibliography_order_idx",
           "columns": [
             {
               "expression": "_order",
@@ -1287,8 +846,8 @@
           "method": "btree",
           "with": {}
         },
-        "courses_sessions_materials_parent_id_idx": {
-          "name": "courses_sessions_materials_parent_id_idx",
+        "courses_sessions_bibliography_parent_id_idx": {
+          "name": "courses_sessions_bibliography_parent_id_idx",
           "columns": [
             {
               "expression": "_parent_id",
@@ -1304,9 +863,9 @@
         }
       },
       "foreignKeys": {
-        "courses_sessions_materials_parent_id_fk": {
-          "name": "courses_sessions_materials_parent_id_fk",
-          "tableFrom": "courses_sessions_materials",
+        "courses_sessions_bibliography_parent_id_fk": {
+          "name": "courses_sessions_bibliography_parent_id_fk",
+          "tableFrom": "courses_sessions_bibliography",
           "tableTo": "courses_sessions",
           "columnsFrom": [
             "_parent_id"
@@ -1324,8 +883,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.courses_sessions_materials_locales": {
-      "name": "courses_sessions_materials_locales",
+    "public.courses_sessions_bibliography_locales": {
+      "name": "courses_sessions_bibliography_locales",
       "schema": "",
       "columns": {
         "title": {
@@ -1361,8 +920,8 @@
         }
       },
       "indexes": {
-        "courses_sessions_materials_title_idx": {
-          "name": "courses_sessions_materials_title_idx",
+        "courses_sessions_bibliography_title_idx": {
+          "name": "courses_sessions_bibliography_title_idx",
           "columns": [
             {
               "expression": "title",
@@ -1382,8 +941,8 @@
           "method": "btree",
           "with": {}
         },
-        "courses_sessions_materials_locales_locale_parent_id_unique": {
-          "name": "courses_sessions_materials_locales_locale_parent_id_unique",
+        "courses_sessions_bibliography_locales_locale_parent_id_uniqu": {
+          "name": "courses_sessions_bibliography_locales_locale_parent_id_uniqu",
           "columns": [
             {
               "expression": "_locale",
@@ -1405,10 +964,10 @@
         }
       },
       "foreignKeys": {
-        "courses_sessions_materials_locales_parent_id_fk": {
-          "name": "courses_sessions_materials_locales_parent_id_fk",
-          "tableFrom": "courses_sessions_materials_locales",
-          "tableTo": "courses_sessions_materials",
+        "courses_sessions_bibliography_locales_parent_id_fk": {
+          "name": "courses_sessions_bibliography_locales_parent_id_fk",
+          "tableFrom": "courses_sessions_bibliography_locales",
+          "tableTo": "courses_sessions_bibliography",
           "columnsFrom": [
             "_parent_id"
           ],
@@ -1453,9 +1012,27 @@
           "primaryKey": false,
           "notNull": false
         },
-        "week": {
-          "name": "week",
+        "session_title": {
+          "name": "session_title",
           "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_and_time_date": {
+          "name": "date_and_time_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_and_time_start_time": {
+          "name": "date_and_time_start_time",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_and_time_end_time": {
+          "name": "date_and_time_end_time",
+          "type": "timestamp(3) with time zone",
           "primaryKey": false,
           "notNull": false
         }
@@ -1517,21 +1094,9 @@
       "name": "courses_sessions_locales",
       "schema": "",
       "columns": {
-        "theme": {
-          "name": "theme",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": false
-        },
         "description": {
           "name": "description",
           "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "activity": {
-          "name": "activity",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -1599,6 +1164,196 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.courses_bibliography": {
+      "name": "courses_bibliography",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "enum_courses_bibliography_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "href": {
+          "name": "href",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "courses_bibliography_order_idx": {
+          "name": "courses_bibliography_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_bibliography_parent_id_idx": {
+          "name": "courses_bibliography_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_bibliography_parent_id_fk": {
+          "name": "courses_bibliography_parent_id_fk",
+          "tableFrom": "courses_bibliography",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.courses_bibliography_locales": {
+      "name": "courses_bibliography_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "courses_bibliography_title_idx": {
+          "name": "courses_bibliography_title_idx",
+          "columns": [
+            {
+              "expression": "title",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_bibliography_locales_locale_parent_id_unique": {
+          "name": "courses_bibliography_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_bibliography_locales_parent_id_fk": {
+          "name": "courses_bibliography_locales_parent_id_fk",
+          "tableFrom": "courses_bibliography_locales",
+          "tableTo": "courses_bibliography",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.courses": {
       "name": "courses",
       "schema": "",
@@ -1609,24 +1364,18 @@
           "primaryKey": true,
           "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "enum_courses_status",
+        "tier": {
+          "name": "tier",
+          "type": "enum_courses_tier",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true,
-          "default": "'draft'"
+          "notNull": false,
+          "default": "'owner'"
         },
         "course_type": {
           "name": "course_type",
           "type": "enum_courses_course_type",
           "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "mode_note": {
-          "name": "mode_note",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -1636,26 +1385,33 @@
           "primaryKey": false,
           "notNull": false
         },
-        "schedule_session_count": {
-          "name": "schedule_session_count",
-          "type": "numeric",
+        "cover_image_id": {
+          "name": "cover_image_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "schedule_first_session_date": {
-          "name": "schedule_first_session_date",
-          "type": "timestamp(3) with time zone",
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false,
+          "default": true
         },
-        "tuition_amount": {
-          "name": "tuition_amount",
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "amount": {
+          "name": "amount",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "tuition_need_based": {
-          "name": "tuition_need_based",
+        "based_deductions_available": {
+          "name": "based_deductions_available",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
@@ -1679,6 +1435,14 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "_status": {
+          "name": "_status",
+          "type": "enum_courses_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
         }
       },
       "indexes": {
@@ -1693,6 +1457,36 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_cover_image_idx": {
+          "name": "courses_cover_image_idx",
+          "columns": [
+            {
+              "expression": "cover_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_slug_idx": {
+          "name": "courses_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -1741,6 +1535,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "courses__status_idx": {
+          "name": "courses__status_idx",
+          "columns": [
+            {
+              "expression": "_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -1750,6 +1559,19 @@
           "tableTo": "cycles",
           "columnsFrom": [
             "cycle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "courses_cover_image_id_media_id_fk": {
+          "name": "courses_cover_image_id_media_id_fk",
+          "tableFrom": "courses",
+          "tableTo": "media",
+          "columnsFrom": [
+            "cover_image_id"
           ],
           "columnsTo": [
             "id"
@@ -1785,7 +1607,7 @@
           "name": "title",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "subtitle": {
           "name": "subtitle",
@@ -1793,9 +1615,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "description": {
-          "name": "description",
-          "type": "jsonb",
+        "summary": {
+          "name": "summary",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -1805,8 +1627,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "weekly_workload": {
-          "name": "weekly_workload",
+        "description": {
+          "name": "description",
           "type": "jsonb",
           "primaryKey": false,
           "notNull": false
@@ -1903,12 +1725,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "fields_of_study_id": {
-          "name": "fields_of_study_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "users_id": {
           "name": "users_id",
           "type": "integer",
@@ -1962,21 +1778,6 @@
           "method": "btree",
           "with": {}
         },
-        "courses_rels_fields_of_study_id_idx": {
-          "name": "courses_rels_fields_of_study_id_idx",
-          "columns": [
-            {
-              "expression": "fields_of_study_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
         "courses_rels_users_id_idx": {
           "name": "courses_rels_users_id_idx",
           "columns": [
@@ -2007,12 +1808,1295 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "courses_rels_fields_of_study_fk": {
-          "name": "courses_rels_fields_of_study_fk",
+        "courses_rels_users_fk": {
+          "name": "courses_rels_users_fk",
           "tableFrom": "courses_rels",
-          "tableTo": "fields_of_study",
+          "tableTo": "users",
           "columnsFrom": [
-            "fields_of_study_id"
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_location": {
+      "name": "_courses_v_version_location",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum__courses_v_version_location",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_location_order_idx": {
+          "name": "_courses_v_version_location_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_location_parent_idx": {
+          "name": "_courses_v_version_location_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_location_parent_fk": {
+          "name": "_courses_v_version_location_parent_fk",
+          "tableFrom": "_courses_v_version_location",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_sessions_bibliography": {
+      "name": "_courses_v_version_sessions_bibliography",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "enum__courses_v_version_sessions_bibliography_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "href": {
+          "name": "href",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_courses_v_version_sessions_bibliography_order_idx": {
+          "name": "_courses_v_version_sessions_bibliography_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_sessions_bibliography_parent_id_idx": {
+          "name": "_courses_v_version_sessions_bibliography_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_sessions_bibliography_parent_id_fk": {
+          "name": "_courses_v_version_sessions_bibliography_parent_id_fk",
+          "tableFrom": "_courses_v_version_sessions_bibliography",
+          "tableTo": "_courses_v_version_sessions",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_sessions_bibliography_locales": {
+      "name": "_courses_v_version_sessions_bibliography_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_sessions_bibliography_title_idx": {
+          "name": "_courses_v_version_sessions_bibliography_title_idx",
+          "columns": [
+            {
+              "expression": "title",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_sessions_bibliography_locales_locale_pare": {
+          "name": "_courses_v_version_sessions_bibliography_locales_locale_pare",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_sessions_bibliography_locales_parent_i_fk": {
+          "name": "_courses_v_version_sessions_bibliography_locales_parent_i_fk",
+          "tableFrom": "_courses_v_version_sessions_bibliography_locales",
+          "tableTo": "_courses_v_version_sessions_bibliography",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_sessions": {
+      "name": "_courses_v_version_sessions",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "session_title": {
+          "name": "session_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_and_time_date": {
+          "name": "date_and_time_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_and_time_start_time": {
+          "name": "date_and_time_start_time",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "date_and_time_end_time": {
+          "name": "date_and_time_end_time",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_courses_v_version_sessions_order_idx": {
+          "name": "_courses_v_version_sessions_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_sessions_parent_id_idx": {
+          "name": "_courses_v_version_sessions_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_sessions_parent_id_fk": {
+          "name": "_courses_v_version_sessions_parent_id_fk",
+          "tableFrom": "_courses_v_version_sessions",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_sessions_locales": {
+      "name": "_courses_v_version_sessions_locales",
+      "schema": "",
+      "columns": {
+        "description": {
+          "name": "description",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_sessions_locales_locale_parent_id_unique": {
+          "name": "_courses_v_version_sessions_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_sessions_locales_parent_id_fk": {
+          "name": "_courses_v_version_sessions_locales_parent_id_fk",
+          "tableFrom": "_courses_v_version_sessions_locales",
+          "tableTo": "_courses_v_version_sessions",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_bibliography": {
+      "name": "_courses_v_version_bibliography",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "enum__courses_v_version_bibliography_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "href": {
+          "name": "href",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_courses_v_version_bibliography_order_idx": {
+          "name": "_courses_v_version_bibliography_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_bibliography_parent_id_idx": {
+          "name": "_courses_v_version_bibliography_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_bibliography_parent_id_fk": {
+          "name": "_courses_v_version_bibliography_parent_id_fk",
+          "tableFrom": "_courses_v_version_bibliography",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_bibliography_locales": {
+      "name": "_courses_v_version_bibliography_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_bibliography_title_idx": {
+          "name": "_courses_v_version_bibliography_title_idx",
+          "columns": [
+            {
+              "expression": "title",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_bibliography_locales_locale_parent_id_uni": {
+          "name": "_courses_v_version_bibliography_locales_locale_parent_id_uni",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_bibliography_locales_parent_id_fk": {
+          "name": "_courses_v_version_bibliography_locales_parent_id_fk",
+          "tableFrom": "_courses_v_version_bibliography_locales",
+          "tableTo": "_courses_v_version_bibliography",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v": {
+      "name": "_courses_v",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_tier": {
+          "name": "version_tier",
+          "type": "enum__courses_v_version_tier",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'owner'"
+        },
+        "version_course_type": {
+          "name": "version_course_type",
+          "type": "enum__courses_v_version_course_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_cycle_id": {
+          "name": "version_cycle_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_cover_image_id": {
+          "name": "version_cover_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_generate_slug": {
+          "name": "version_generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "version_slug": {
+          "name": "version_slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_amount": {
+          "name": "version_amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_based_deductions_available": {
+          "name": "version_based_deductions_available",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_form_id": {
+          "name": "version_registration_form_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "enum__courses_v_version_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "snapshot": {
+          "name": "snapshot",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_locale": {
+          "name": "published_locale",
+          "type": "enum__courses_v_published_locale",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latest": {
+          "name": "latest",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "autosave": {
+          "name": "autosave",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_courses_v_parent_idx": {
+          "name": "_courses_v_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version_cycle_idx": {
+          "name": "_courses_v_version_version_cycle_idx",
+          "columns": [
+            {
+              "expression": "version_cycle_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version_cover_image_idx": {
+          "name": "_courses_v_version_version_cover_image_idx",
+          "columns": [
+            {
+              "expression": "version_cover_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version_slug_idx": {
+          "name": "_courses_v_version_version_slug_idx",
+          "columns": [
+            {
+              "expression": "version_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version_registration_form_idx": {
+          "name": "_courses_v_version_version_registration_form_idx",
+          "columns": [
+            {
+              "expression": "version_registration_form_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version_updated_at_idx": {
+          "name": "_courses_v_version_version_updated_at_idx",
+          "columns": [
+            {
+              "expression": "version_updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version_created_at_idx": {
+          "name": "_courses_v_version_version_created_at_idx",
+          "columns": [
+            {
+              "expression": "version_created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version__status_idx": {
+          "name": "_courses_v_version_version__status_idx",
+          "columns": [
+            {
+              "expression": "version__status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_created_at_idx": {
+          "name": "_courses_v_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_updated_at_idx": {
+          "name": "_courses_v_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_snapshot_idx": {
+          "name": "_courses_v_snapshot_idx",
+          "columns": [
+            {
+              "expression": "snapshot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_published_locale_idx": {
+          "name": "_courses_v_published_locale_idx",
+          "columns": [
+            {
+              "expression": "published_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_latest_idx": {
+          "name": "_courses_v_latest_idx",
+          "columns": [
+            {
+              "expression": "latest",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_autosave_idx": {
+          "name": "_courses_v_autosave_idx",
+          "columns": [
+            {
+              "expression": "autosave",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_parent_id_courses_id_fk": {
+          "name": "_courses_v_parent_id_courses_id_fk",
+          "tableFrom": "_courses_v",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_courses_v_version_cycle_id_cycles_id_fk": {
+          "name": "_courses_v_version_cycle_id_cycles_id_fk",
+          "tableFrom": "_courses_v",
+          "tableTo": "cycles",
+          "columnsFrom": [
+            "version_cycle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_courses_v_version_cover_image_id_media_id_fk": {
+          "name": "_courses_v_version_cover_image_id_media_id_fk",
+          "tableFrom": "_courses_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_cover_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_courses_v_version_registration_form_id_forms_id_fk": {
+          "name": "_courses_v_version_registration_form_id_forms_id_fk",
+          "tableFrom": "_courses_v",
+          "tableTo": "forms",
+          "columnsFrom": [
+            "version_registration_form_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_locales": {
+      "name": "_courses_v_locales",
+      "schema": "",
+      "columns": {
+        "version_title": {
+          "name": "version_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_subtitle": {
+          "name": "version_subtitle",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_summary": {
+          "name": "version_summary",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_epigraph": {
+          "name": "version_epigraph",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_description": {
+          "name": "version_description",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_locales_locale_parent_id_unique": {
+          "name": "_courses_v_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_locales_parent_id_fk": {
+          "name": "_courses_v_locales_parent_id_fk",
+          "tableFrom": "_courses_v_locales",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_rels": {
+      "name": "_courses_v_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "users_id": {
+          "name": "users_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_courses_v_rels_order_idx": {
+          "name": "_courses_v_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_rels_parent_idx": {
+          "name": "_courses_v_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_rels_path_idx": {
+          "name": "_courses_v_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_rels_users_id_idx": {
+          "name": "_courses_v_rels_users_id_idx",
+          "columns": [
+            {
+              "expression": "users_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_rels_parent_fk": {
+          "name": "_courses_v_rels_parent_fk",
+          "tableFrom": "_courses_v_rels",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "parent_id"
           ],
           "columnsTo": [
             "id"
@@ -2020,9 +3104,9 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "courses_rels_users_fk": {
-          "name": "courses_rels_users_fk",
-          "tableFrom": "courses_rels",
+        "_courses_v_rels_users_fk": {
+          "name": "_courses_v_rels_users_fk",
+          "tableFrom": "_courses_v_rels",
           "tableTo": "users",
           "columnsFrom": [
             "users_id"
@@ -2056,12 +3140,18 @@
           "primaryKey": false,
           "notNull": true
         },
-        "kind": {
-          "name": "kind",
-          "type": "enum_programmes_kind",
-          "typeSchema": "public",
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
           "primaryKey": false,
-          "notNull": false
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         },
         "academic_year": {
           "name": "academic_year",
@@ -2069,20 +3159,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "tuition_amount": {
-          "name": "tuition_amount",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tuition_installments": {
-          "name": "tuition_installments",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tuition_need_based_deductions": {
-          "name": "tuition_need_based_deductions",
+        "self_directed_study": {
+          "name": "self_directed_study",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
@@ -2093,8 +3171,20 @@
           "primaryKey": false,
           "notNull": false
         },
-        "self_directed_study": {
-          "name": "self_directed_study",
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "installments": {
+          "name": "installments",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "need_based_deductions": {
+          "name": "need_based_deductions",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false
@@ -2121,6 +3211,21 @@
         }
       },
       "indexes": {
+        "programmes_slug_idx": {
+          "name": "programmes_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "programmes_registration_form_idx": {
           "name": "programmes_registration_form_idx",
           "columns": [
@@ -2403,11 +3508,24 @@
           "primaryKey": true,
           "notNull": true
         },
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "label": {
           "name": "label",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "season": {
           "name": "season",
@@ -2429,6 +3547,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "programme_id": {
+          "name": "programme_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -2445,6 +3569,36 @@
         }
       },
       "indexes": {
+        "cycles_slug_idx": {
+          "name": "cycles_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycles_programme_idx": {
+          "name": "cycles_programme_idx",
+          "columns": [
+            {
+              "expression": "programme_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "cycles_updated_at_idx": {
           "name": "cycles_updated_at_idx",
           "columns": [
@@ -2476,7 +3630,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "cycles_programme_id_programmes_id_fk": {
+          "name": "cycles_programme_id_programmes_id_fk",
+          "tableFrom": "cycles",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "programme_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -2600,144 +3768,6 @@
           "tableTo": "courses",
           "columnsFrom": [
             "courses_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.fields_of_study": {
-      "name": "fields_of_study",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "fields_of_study_updated_at_idx": {
-          "name": "fields_of_study_updated_at_idx",
-          "columns": [
-            {
-              "expression": "updated_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "fields_of_study_created_at_idx": {
-          "name": "fields_of_study_created_at_idx",
-          "columns": [
-            {
-              "expression": "created_at",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.fields_of_study_locales": {
-      "name": "fields_of_study_locales",
-      "schema": "",
-      "columns": {
-        "title": {
-          "name": "title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "_locale": {
-          "name": "_locale",
-          "type": "_locales",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_parent_id": {
-          "name": "_parent_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "fields_of_study_locales_locale_parent_id_unique": {
-          "name": "fields_of_study_locales_locale_parent_id_unique",
-          "columns": [
-            {
-              "expression": "_locale",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "_parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "fields_of_study_locales_parent_id_fk": {
-          "name": "fields_of_study_locales_parent_id_fk",
-          "tableFrom": "fields_of_study_locales",
-          "tableTo": "fields_of_study",
-          "columnsFrom": [
-            "_parent_id"
           ],
           "columnsTo": [
             "id"
@@ -2962,17 +3992,24 @@
           "primaryKey": true,
           "notNull": true
         },
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "cover_image_id": {
           "name": "cover_image_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
-        },
-        "author_id": {
-          "name": "author_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
         },
         "published_date": {
           "name": "published_date",
@@ -2980,13 +4017,13 @@
           "primaryKey": false,
           "notNull": false
         },
-        "status": {
-          "name": "status",
-          "type": "enum_articles_status",
+        "tier": {
+          "name": "tier",
+          "type": "enum_articles_tier",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
-          "default": "'draft'"
+          "default": "'owner'"
         },
         "featured": {
           "name": "featured",
@@ -3007,29 +4044,37 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "_status": {
+          "name": "_status",
+          "type": "enum_articles_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
         }
       },
       "indexes": {
-        "articles_cover_image_idx": {
-          "name": "articles_cover_image_idx",
+        "articles_slug_idx": {
+          "name": "articles_slug_idx",
           "columns": [
             {
-              "expression": "cover_image_id",
+              "expression": "slug",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "isUnique": false,
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
         },
-        "articles_author_idx": {
-          "name": "articles_author_idx",
+        "articles_cover_image_idx": {
+          "name": "articles_cover_image_idx",
           "columns": [
             {
-              "expression": "author_id",
+              "expression": "cover_image_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -3069,6 +4114,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "articles__status_idx": {
+          "name": "articles__status_idx",
+          "columns": [
+            {
+              "expression": "_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -3078,19 +4138,6 @@
           "tableTo": "media",
           "columnsFrom": [
             "cover_image_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "articles_author_id_users_id_fk": {
-          "name": "articles_author_id_users_id_fk",
-          "tableFrom": "articles",
-          "tableTo": "users",
-          "columnsFrom": [
-            "author_id"
           ],
           "columnsTo": [
             "id"
@@ -3113,7 +4160,7 @@
           "name": "title",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "body": {
           "name": "body",
@@ -3213,6 +4260,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "users_id": {
+          "name": "users_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "articles_id": {
           "name": "articles_id",
           "type": "integer",
@@ -3266,6 +4319,21 @@
           "method": "btree",
           "with": {}
         },
+        "articles_rels_users_id_idx": {
+          "name": "articles_rels_users_id_idx",
+          "columns": [
+            {
+              "expression": "users_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "articles_rels_articles_id_idx": {
           "name": "articles_rels_articles_id_idx",
           "columns": [
@@ -3296,9 +4364,665 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
+        "articles_rels_users_fk": {
+          "name": "articles_rels_users_fk",
+          "tableFrom": "articles_rels",
+          "tableTo": "users",
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "articles_rels_articles_fk": {
           "name": "articles_rels_articles_fk",
           "tableFrom": "articles_rels",
+          "tableTo": "articles",
+          "columnsFrom": [
+            "articles_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._articles_v_version_tags": {
+      "name": "_articles_v_version_tags",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "tag": {
+          "name": "tag",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_articles_v_version_tags_order_idx": {
+          "name": "_articles_v_version_tags_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_version_tags_parent_id_idx": {
+          "name": "_articles_v_version_tags_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_articles_v_version_tags_parent_id_fk": {
+          "name": "_articles_v_version_tags_parent_id_fk",
+          "tableFrom": "_articles_v_version_tags",
+          "tableTo": "_articles_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._articles_v": {
+      "name": "_articles_v",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_generate_slug": {
+          "name": "version_generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "version_slug": {
+          "name": "version_slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_cover_image_id": {
+          "name": "version_cover_image_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_published_date": {
+          "name": "version_published_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_tier": {
+          "name": "version_tier",
+          "type": "enum__articles_v_version_tier",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'owner'"
+        },
+        "version_featured": {
+          "name": "version_featured",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "enum__articles_v_version_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "snapshot": {
+          "name": "snapshot",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_locale": {
+          "name": "published_locale",
+          "type": "enum__articles_v_published_locale",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latest": {
+          "name": "latest",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_articles_v_parent_idx": {
+          "name": "_articles_v_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_version_version_slug_idx": {
+          "name": "_articles_v_version_version_slug_idx",
+          "columns": [
+            {
+              "expression": "version_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_version_version_cover_image_idx": {
+          "name": "_articles_v_version_version_cover_image_idx",
+          "columns": [
+            {
+              "expression": "version_cover_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_version_version_updated_at_idx": {
+          "name": "_articles_v_version_version_updated_at_idx",
+          "columns": [
+            {
+              "expression": "version_updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_version_version_created_at_idx": {
+          "name": "_articles_v_version_version_created_at_idx",
+          "columns": [
+            {
+              "expression": "version_created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_version_version__status_idx": {
+          "name": "_articles_v_version_version__status_idx",
+          "columns": [
+            {
+              "expression": "version__status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_created_at_idx": {
+          "name": "_articles_v_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_updated_at_idx": {
+          "name": "_articles_v_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_snapshot_idx": {
+          "name": "_articles_v_snapshot_idx",
+          "columns": [
+            {
+              "expression": "snapshot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_published_locale_idx": {
+          "name": "_articles_v_published_locale_idx",
+          "columns": [
+            {
+              "expression": "published_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_latest_idx": {
+          "name": "_articles_v_latest_idx",
+          "columns": [
+            {
+              "expression": "latest",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_articles_v_parent_id_articles_id_fk": {
+          "name": "_articles_v_parent_id_articles_id_fk",
+          "tableFrom": "_articles_v",
+          "tableTo": "articles",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_articles_v_version_cover_image_id_media_id_fk": {
+          "name": "_articles_v_version_cover_image_id_media_id_fk",
+          "tableFrom": "_articles_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_cover_image_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._articles_v_locales": {
+      "name": "_articles_v_locales",
+      "schema": "",
+      "columns": {
+        "version_title": {
+          "name": "version_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_body": {
+          "name": "version_body",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_articles_v_locales_locale_parent_id_unique": {
+          "name": "_articles_v_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_articles_v_locales_parent_id_fk": {
+          "name": "_articles_v_locales_parent_id_fk",
+          "tableFrom": "_articles_v_locales",
+          "tableTo": "_articles_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._articles_v_rels": {
+      "name": "_articles_v_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "users_id": {
+          "name": "users_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "articles_id": {
+          "name": "articles_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_articles_v_rels_order_idx": {
+          "name": "_articles_v_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_rels_parent_idx": {
+          "name": "_articles_v_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_rels_path_idx": {
+          "name": "_articles_v_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_rels_users_id_idx": {
+          "name": "_articles_v_rels_users_id_idx",
+          "columns": [
+            {
+              "expression": "users_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_rels_articles_id_idx": {
+          "name": "_articles_v_rels_articles_id_idx",
+          "columns": [
+            {
+              "expression": "articles_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_articles_v_rels_parent_fk": {
+          "name": "_articles_v_rels_parent_fk",
+          "tableFrom": "_articles_v_rels",
+          "tableTo": "_articles_v",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_articles_v_rels_users_fk": {
+          "name": "_articles_v_rels_users_fk",
+          "tableFrom": "_articles_v_rels",
+          "tableTo": "users",
+          "columnsFrom": [
+            "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_articles_v_rels_articles_fk": {
+          "name": "_articles_v_rels_articles_fk",
+          "tableFrom": "_articles_v_rels",
           "tableTo": "articles",
           "columnsFrom": [
             "articles_id"
@@ -3326,6 +5050,19 @@
           "primaryKey": true,
           "notNull": true
         },
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
         "cover_image_id": {
           "name": "cover_image_id",
           "type": "integer",
@@ -3348,6 +5085,21 @@
         }
       },
       "indexes": {
+        "article_collections_slug_idx": {
+          "name": "article_collections_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "article_collections_cover_image_idx": {
           "name": "article_collections_cover_image_idx",
           "columns": [
@@ -3648,20 +5400,33 @@
           "primaryKey": false,
           "notNull": true
         },
-        "logo_id": {
-          "name": "logo_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "article_url": {
           "name": "article_url",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
+        "logo_id": {
+          "name": "logo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "article_title": {
           "name": "article_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -3699,6 +5464,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "press_slug_idx": {
+          "name": "press_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -3765,13 +5545,26 @@
           "primaryKey": true,
           "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "enum_events_status",
+        "tier": {
+          "name": "tier",
+          "type": "enum_events_tier",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true,
-          "default": "'draft'"
+          "default": "'owner'"
+        },
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
         },
         "event_type": {
           "name": "event_type",
@@ -3824,6 +5617,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "registration_form_id": {
+          "name": "registration_form_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -3840,6 +5639,36 @@
         }
       },
       "indexes": {
+        "events_slug_idx": {
+          "name": "events_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "events_registration_form_idx": {
+          "name": "events_registration_form_idx",
+          "columns": [
+            {
+              "expression": "registration_form_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "events_updated_at_idx": {
           "name": "events_updated_at_idx",
           "columns": [
@@ -3871,7 +5700,21 @@
           "with": {}
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "events_registration_form_id_forms_id_fk": {
+          "name": "events_registration_form_id_forms_id_fk",
+          "tableFrom": "events",
+          "tableTo": "forms",
+          "columnsFrom": [
+            "registration_form_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -4215,9 +6058,22 @@
           "primaryKey": false,
           "notNull": true
         },
-        "status": {
-          "name": "status",
-          "type": "enum_spaces_status",
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
+          "type": "enum_spaces_state",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
@@ -4238,6 +6094,21 @@
         }
       },
       "indexes": {
+        "spaces_slug_idx": {
+          "name": "spaces_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "spaces_updated_at_idx": {
           "name": "spaces_updated_at_idx",
           "columns": [
@@ -7007,12 +8878,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "fields_of_study_id": {
-          "name": "fields_of_study_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
         "governance_id": {
           "name": "governance_id",
           "type": "integer",
@@ -7173,21 +9038,6 @@
           "columns": [
             {
               "expression": "cycles_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "payload_locked_documents_rels_fields_of_study_id_idx": {
-          "name": "payload_locked_documents_rels_fields_of_study_id_idx",
-          "columns": [
-            {
-              "expression": "fields_of_study_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -7391,19 +9241,6 @@
           "tableTo": "cycles",
           "columnsFrom": [
             "cycles_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "payload_locked_documents_rels_fields_of_study_fk": {
-          "name": "payload_locked_documents_rels_fields_of_study_fk",
-          "tableFrom": "payload_locked_documents_rels",
-          "tableTo": "fields_of_study",
-          "columnsFrom": [
-            "fields_of_study_id"
           ],
           "columnsTo": [
             "id"
@@ -8068,38 +9905,33 @@
         "HYBRID"
       ]
     },
-    "public.enum_courses_schedule_days_days_of_week": {
-      "name": "enum_courses_schedule_days_days_of_week",
-      "schema": "public",
-      "values": [
-        "Sat",
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri"
-      ]
-    },
-    "public.enum_courses_sessions_materials_type": {
-      "name": "enum_courses_sessions_materials_type",
+    "public.enum_courses_sessions_bibliography_type": {
+      "name": "enum_courses_sessions_bibliography_type",
       "schema": "public",
       "values": [
         "reading",
         "watch",
         "listen",
-        "sit_with",
-        "case_study",
         "prompt",
-        "lecture",
-        "link"
+        "other"
       ]
     },
-    "public.enum_courses_status": {
-      "name": "enum_courses_status",
+    "public.enum_courses_bibliography_type": {
+      "name": "enum_courses_bibliography_type",
       "schema": "public",
       "values": [
-        "draft",
+        "reading",
+        "watch",
+        "listen",
+        "prompt",
+        "other"
+      ]
+    },
+    "public.enum_courses_tier": {
+      "name": "enum_courses_tier",
+      "schema": "public",
+      "values": [
+        "owner",
         "community",
         "public"
       ]
@@ -8114,11 +9946,78 @@
         "WORKSHOP"
       ]
     },
-    "public.enum_programmes_kind": {
-      "name": "enum_programmes_kind",
+    "public.enum_courses_status": {
+      "name": "enum_courses_status",
       "schema": "public",
       "values": [
-        "BRIDGE"
+        "draft",
+        "published"
+      ]
+    },
+    "public.enum__courses_v_version_location": {
+      "name": "enum__courses_v_version_location",
+      "schema": "public",
+      "values": [
+        "OFFLINE",
+        "ONLINE",
+        "HYBRID"
+      ]
+    },
+    "public.enum__courses_v_version_sessions_bibliography_type": {
+      "name": "enum__courses_v_version_sessions_bibliography_type",
+      "schema": "public",
+      "values": [
+        "reading",
+        "watch",
+        "listen",
+        "prompt",
+        "other"
+      ]
+    },
+    "public.enum__courses_v_version_bibliography_type": {
+      "name": "enum__courses_v_version_bibliography_type",
+      "schema": "public",
+      "values": [
+        "reading",
+        "watch",
+        "listen",
+        "prompt",
+        "other"
+      ]
+    },
+    "public.enum__courses_v_version_tier": {
+      "name": "enum__courses_v_version_tier",
+      "schema": "public",
+      "values": [
+        "owner",
+        "community",
+        "public"
+      ]
+    },
+    "public.enum__courses_v_version_course_type": {
+      "name": "enum__courses_v_version_course_type",
+      "schema": "public",
+      "values": [
+        "CORE",
+        "THEMATIC",
+        "LAB",
+        "WORKSHOP"
+      ]
+    },
+    "public.enum__courses_v_version_status": {
+      "name": "enum__courses_v_version_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "published"
+      ]
+    },
+    "public.enum__courses_v_published_locale": {
+      "name": "enum__courses_v_published_locale",
+      "schema": "public",
+      "values": [
+        "en",
+        "ar"
       ]
     },
     "public.enum_cycles_season": {
@@ -8148,20 +10047,53 @@
         "trustee"
       ]
     },
+    "public.enum_articles_tier": {
+      "name": "enum_articles_tier",
+      "schema": "public",
+      "values": [
+        "owner",
+        "community",
+        "public"
+      ]
+    },
     "public.enum_articles_status": {
       "name": "enum_articles_status",
       "schema": "public",
       "values": [
         "draft",
+        "published"
+      ]
+    },
+    "public.enum__articles_v_version_tier": {
+      "name": "enum__articles_v_version_tier",
+      "schema": "public",
+      "values": [
+        "owner",
         "community",
         "public"
       ]
     },
-    "public.enum_events_status": {
-      "name": "enum_events_status",
+    "public.enum__articles_v_version_status": {
+      "name": "enum__articles_v_version_status",
       "schema": "public",
       "values": [
         "draft",
+        "published"
+      ]
+    },
+    "public.enum__articles_v_published_locale": {
+      "name": "enum__articles_v_published_locale",
+      "schema": "public",
+      "values": [
+        "en",
+        "ar"
+      ]
+    },
+    "public.enum_events_tier": {
+      "name": "enum_events_tier",
+      "schema": "public",
+      "values": [
+        "owner",
         "community",
         "public"
       ]
@@ -8195,8 +10127,8 @@
         "ONLINE"
       ]
     },
-    "public.enum_spaces_status": {
-      "name": "enum_spaces_status",
+    "public.enum_spaces_state": {
+      "name": "enum_spaces_state",
       "schema": "public",
       "values": [
         "current",
@@ -8232,6 +10164,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "b0cef7e9-c561-456f-a982-e54cf163499a",
+  "id": "c359e452-5dac-4d5f-9499-11c2c49f44e8",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

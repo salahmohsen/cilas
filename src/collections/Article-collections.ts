@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { slugField } from '@/fields/slug'
 import { anyone, isAdmin } from '../access'
 
 // The Pigeon Tower section — CILAS' own productions.
@@ -13,15 +14,28 @@ export const ArticleCollections: CollectionConfig = {
   },
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
-    { name: 'subtitle', type: 'text', localized: true },
-    { name: 'description', type: 'richText', localized: true },
+    slugField(),
     {
-      name: 'articles',
-      type: 'relationship',
-      hasMany: true,
-      relationTo: "articles"
+      label: 'Overview',
+      type: 'group',
+      fields: [
+        { name: 'subtitle', type: 'text', localized: true },
+        { name: 'description', type: 'richText', localized: true },
+      ],
     },
-    { name: 'cover_image', type: 'upload', relationTo: 'media' },
+    {
+      label: 'Articles',
+      type: 'group',
+      fields: [
+        {
+          name: 'articles',
+          type: 'relationship',
+          hasMany: true,
+          relationTo: 'articles',
+        },
+        { name: 'cover_image', type: 'upload', relationTo: 'media' },
+      ],
+    },
   ],
   admin: {
     useAsTitle: "title"
