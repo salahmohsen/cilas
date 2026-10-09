@@ -34,9 +34,13 @@ export const isFellowUser = (user: RoleHolder): boolean => hasRole(user, 'fellow
 /**
  * How a user owns a document. The relationship field differs per collection,
  * so ownership is supplied as a constraint builder rather than hardcoded.
+ * `false` means this user cannot own anything here (e.g. an account with no
+ * linked person), and callers must treat it as "no ownership path".
  */
-export const ownsViaFellows = (user: User): Where => ({ fellows: { contains: user.id } })
-export const ownsViaAuthor = (user: User): Where => ({ author: { equals: user.id } })
+export type Ownership = (user: User) => Where | false
+
+export const ownsViaFellows: Ownership = (user) => ({ fellows: { contains: user.id } })
+export const ownsViaAuthor: Ownership = (user) => ({ author: { equals: user.id } })
 
 /* =========================================================== access rules */
 
@@ -58,12 +62,18 @@ export const isFellow: Access = ({ req }) => isFellowUser(req.user)
  * the fellows listed on it, not by any logged-in user who happens to be linked.
  */
 export const isAdminOrOwnAndDraft =
-  (owned: (user: User) => Where, { allow }: { allow?: Role[] } = {}): Access =>
+  (owned: Ownership, { allow }: { allow?: Role[] } = {}): Access =>
   ({ req }) => {
     if (isAdminUser(req.user)) return true
     if (!req.user) return false
     if (allow && !hasRole(req.user, ...allow)) return false
-    return owned(req.user) && { _status: { equals: 'draft' } }
+
+    const owns = owned(req.user)
+    if (!owns) return false
+
+    // Both constraints must hold. `owns && { _status }` would evaluate to the
+    // second object alone and drop ownership entirely.
+    return { and: [owns, { _status: { equals: 'draft' } }] }
   }
 
 /**
@@ -95,7 +105,7 @@ export const isAdminOrOwnAndDraft =
  * `_status` column it does not have.
  */
 export const readTiers =
-  (owned?: (user: User) => Where, { drafts = false }: { drafts?: boolean } = {}): Access =>
+  (owned?: Ownership, { drafts = false }: { drafts?: boolean } = {}): Access =>
   ({ req }): Where | boolean => {
     // Whoever may edit the document must be able to read it back, or the admin
     // cannot render the draft it is currently editing.
@@ -114,7 +124,8 @@ export const readTiers =
         ? { and: [{ tier: { in: ['community', 'public'] } }, published] }
         : { tier: { in: ['community', 'public'] } },
     ]
-    if (owned) visible.push(owned(req.user))
+    const owns = owned?.(req.user)
+    if (owns) visible.push(owns)
     return { or: visible }
   }
 
