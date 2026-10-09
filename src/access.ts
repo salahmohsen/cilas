@@ -29,6 +29,19 @@ export const isAdminUser = (user: RoleHolder): boolean => hasRole(user, 'admin',
 
 export const isFellowUser = (user: RoleHolder): boolean => hasRole(user, 'fellow')
 
+/**
+ * The person a signed-in account acts as, or null when the account is not
+ * linked. `person` arrives as an id, or populated when depth > 0.
+ */
+export const personOf = (user: unknown): number | null => {
+  const person = (user as { person?: unknown } | null | undefined)?.person
+  if (typeof person === 'number') return person
+  if (person && typeof person === 'object' && typeof (person as { id?: unknown }).id === 'number') {
+    return (person as { id: number }).id
+  }
+  return null
+}
+
 /* ============================================================= constraints */
 
 /**
