@@ -1,7 +1,7 @@
 import type { FieldHook, NamedGroupField } from 'payload'
 
 import { WEEKDAYS } from '@/lib/cairo-day'
-import { scheduleEndDate, type Schedule } from '@/lib/schedule'
+import { scheduleEndDate, type Schedule, type SessionDates } from '@/lib/schedule'
 import { endAfterStart, timeOfDay } from './validators'
 
 const WEEKDAY_LABELS: Record<(typeof WEEKDAYS)[number], string> = {
@@ -15,11 +15,17 @@ const WEEKDAY_LABELS: Record<(typeof WEEKDAYS)[number], string> = {
 }
 
 /**
- * Pattern-only end date. Courses recompute it with their sessions in a
- * collection hook, since a field hook can't see them.
+ * The last meeting that isn't cancelled. Payload doesn't merge stored data into
+ * a field's `beforeChange`, so the incoming values are laid over the previous
+ * ones; a partial update then keeps its date. When the document has top-level
+ * `sessions` they are counted too, so no collection hook is needed. Collection
+ * hooks run before field hooks, so one could not override this anyway.
  */
-export const computeEndDate: FieldHook = ({ siblingData }) =>
-  scheduleEndDate(siblingData as Schedule)
+export const computeEndDate: FieldHook = ({ siblingData, previousSiblingDoc, data, originalDoc }) =>
+  scheduleEndDate(
+    { ...previousSiblingDoc, ...siblingData } as Schedule,
+    (data?.sessions ?? originalDoc?.sessions) as SessionDates[] | undefined,
+  )
 
 /**
  * How something meets: a start date, a number of weeks and weekly slots in
