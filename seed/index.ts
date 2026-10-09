@@ -34,11 +34,11 @@ await seedUsers(payload, ctx)
 await seedCycles(payload, ctx)
 await seedProgrammes(payload, ctx)
 await seedCourses(payload, ctx)
-await linkFellows(payload, ctx) // needs courses to exist
+await linkFellows(payload, ctx) // validates that course fellows were seeded
 await seedGovernance(payload, ctx)
 await seedArticles(payload, ctx)
 await seedPress(payload)
-await seedEvents(payload)
+await seedEvents(payload, ctx)
 await seedSpaces(payload)
 await seedArticleCollections(payload, ctx)
 await seedSiteSettings(payload)

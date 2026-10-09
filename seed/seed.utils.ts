@@ -78,30 +78,15 @@ export const watch = (title: string, note?: string, href?: string): MaterialSeed
 export const listen = (title: string, note?: string, href?: string): MaterialSeed =>
   material('listen', title, note, href)
 
-export const caseStudy = (title: string, note?: string, href?: string): MaterialSeed =>
-  material('case_study', title, note, href)
-
 export const prompt = (title: string, note?: string, href?: string): MaterialSeed =>
   material('prompt', title, note, href)
 
-export const lecture = (title: string, note?: string, href?: string): MaterialSeed =>
-  material('lecture', title, note, href)
-
-export const link = (title: string, note?: string, href?: string): MaterialSeed =>
-  material('link', title, note, href)
+export const link = (title: string, href: string, note?: string): MaterialSeed =>
+  material('other', title, note, href)
 
 /* ================================================================ courses */
-
-/**
- * A session's timing, previously a course-level `schedule.Days` entry. Times are
- * plain `HH:MM` strings; the seeder combines them with the session's date.
- */
-export const time = (start: string, end: string) => ({
-  start_time: start,
-  end_time: end,
-})
-
-export const session = (seed: SessionSeed): SessionSeed => seed
+const stampTime = (iso: string, hhmm: string): string =>
+  `${iso}T${hhmm}:00.000Z`
 
 const addDays = (iso: string, days: number): string => {
   const d = new Date(`${iso}T00:00:00.000Z`)
@@ -110,21 +95,33 @@ const addDays = (iso: string, days: number): string => {
 }
 
 /**
- * Expands a weekly course into per-session dates, since a session now owns its
- * own timing rather than reading it from a course-level schedule. Each session
- * lands seven days after the last, starting at `firstDate`.
+ * Expands a recurring course into per-session rows. Each session owns its
+ * timing in the `'Date and Time'` group; sessions land seven days apart from
+ * `firstDate`, and shift the clock every seven days must not drift across DST,
+ * hence the UTC-only keying.
  */
 export const weekly = (
   firstDate: string,
   start: string,
   end: string,
-  sessions: Array<Omit<SessionSeed, 'date' | 'time'>>,
+  sessions: Array<Omit<SessionSeed, "'Date and Time'">>,
 ): SessionSeed[] =>
-  sessions.map((s, i) => ({
-    ...s,
-    date: addDays(firstDate, i * 7),
-    time: { start_time: start, end_time: end },
-  }))
+  sessions.map((s, i) => {
+    const date = addDays(firstDate, i * 7)
+    return {
+      ...s,
+      'Date and Time': { date, start_time: stampTime(date, start), end_time: stampTime(date, end) },
+    }
+  })
+
+/* ================================================== bibliography (shared) */
+
+/**
+ * Course- or session-level bibliography entry, mirroring the schema's
+ * reading/watch/listen/prompt/other select.
+ */
+export const bib = ({ type, title, note, href }: MaterialSeed) =>
+  ({ type, title, note, href })
 
 /* ================================================================== upsert */
 

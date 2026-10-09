@@ -4,16 +4,96 @@ import type { ArticleSeed, SeedContext } from '../seed.type'
 import { getOrCreateId, lexical, requireId } from '../seed.utils'
 
 /**
- * The five articles of "أعمال مختبر الترجمة" (CILAS, 2018) — the collected
- * works of the Translation Lab, 2016–2018. Licensed CC BY-NC-SA by the
- * Institute for Translation and Interpreting (ci-las.org).
+ * Article seeds, in two sets:
  *
- * Every one was translated collectively: `author_email` is the lead
- * translator of record, and the full credit line is preserved in the body.
- * `title`/`body` carry the English framing, `title_ar`/`body_ar` the Arabic
- * text, written in a follow-up `locale: 'ar'` update.
+ * 1. "On the emergence of Pigeon Towers" (CILAS, 2018) — foreword by
+ *    Karim-Yassin Goessinger plus four essays by academic philosophers on the
+ *    anchoring principles of diversity, intimacy, ignorance and play. Written
+ *    in English, translated into Arabic by Hussein El-Hajj. CC BY-NC-SA. Full
+ *    text lives in the published volume; each seed below carries the credit
+ *    line and a digest of its contribution.
+ *
+ * 2. The five articles of "أعمال مختبر الترجمة" (CILAS, 2018) — the collected
+ *    works of the Translation Lab, 2016–2018. Licensed CC BY-NC-SA by the
+ *    Institute for Translation and Interpreting (ci-las.org).
+ *
+ * Collective works carry `author_email` as the author of record, with the full
+ * credit line preserved in the body. `title`/`body` carry the English framing,
+ * `title_ar`/`body_ar` the Arabic text, written in a follow-up `locale: 'ar'`
+ * update.
  */
 export const articlesData: ArticleSeed[] = [
+  /* === On the emergence of Pigeon Towers (CILAS, 2018) === */
+  {
+    title: 'On the Emergence of Pigeon Towers: Foreword',
+    title_ar: 'عن ظهور برج الحمام — تمهيد',
+    body: [
+      'From "On the emergence of Pigeon Towers" (CILAS, 2018). Foreword by Karim-Yassin Goessinger. CC BY-NC-SA.',
+      '‘Rather than spend primary energy to get the university to become a community of scholars, create your own — and by so doing you may affect the institution as well as making a practical difference.’ (Paul Goodman, Compulsory Mis-Education and the Community of Scholars)',
+      'The metaphor of the Pigeon Tower first occurred to me when searching for a name to give to the Cairo Institute of Liberal Arts and Sciences’ (CILAS) newsletter. Inaugurated in the summer of 2013, CILAS was set up with the intention of inviting adult learners to engage with the tradition of liberal arts education. My concern as founder was less with formalizing, that is with accrediting, such a learning experience as it was with co-creating a learning environment that would be conducive to critical inquiry, self-reflection and civic engagement.',
+      'It was amidst the turmoil of al-Ghuria — its corridors dressed in everything from nightgowns and lingerie, to sandals, kitchen utensils and blankets — that the metaphor of a Pigeon Tower emerged. The Pigeon Tower has since come to serve as a guiding metaphor in the exploration of the operations and the raison d’être of CILAS.',
+      'Three characteristics of this metaphorical Pigeon Tower are worthy of consideration here: first, its recognition of the importance of forming communities of scholars, or scholarly collectives — pigeon flocks self-organize into inclusive, non-hierarchical collectives whose collective wisdom could guide our efforts to reimagine higher education. Second, its sense of place: as a Pigeon Tower, CILAS is embedded in the urban fabric of Cairo, co-producing knowledge, sounds and laughter, and recognising imperfection and fallibility. Third, its bridging function: it bridges intellectual learning and experiential, place-based learning — floating mid-air between the height of the Ivory Tower and the streets.',
+      'Four contributing authors — Teun J. Dekker, Surti Singh, I-Kai Jeng and Robin Weiss — developed philosophical inquiries in the form of essays on the anchoring principles of a Pigeon Tower: diversity, intimacy, ignorance and play.',
+    ],
+    author_email: 'karim@cilas.test',
+    tier: 'public',
+    published_date: '2018-02-01',
+    tags: [{ tag: 'pigeon-towers' }, { tag: 'higher-education' }],
+  },
+  {
+    title: 'Diversity and Differentiation in the Dialectic of Liberal Arts',
+    title_ar: 'التنوع والتفاوت في جدل العلوم والآداب الحرة',
+    body: [
+      'From "On the emergence of Pigeon Towers" (CILAS, 2018), CC BY-NC-SA. Translated into Arabic by Hussein El-Hajj in the volume edition.',
+      'On the anchoring principle of diversity. The essay clarifies the notions of diversity and differentiation, and the importance they carry for the emergence of Pigeon Towers — communities of scholars whose differences do not dissolve into sameness but are made productive in common.',
+      'Written in the form of a speech: of the two contributors to write in oratory form, Teun was encouraged to draw on his methodological strength in political philosophy.',
+    ],
+    author_email: 'teun.dekker@cilas.test',
+    tier: 'public',
+    published_date: '2018-02-01',
+    tags: [{ tag: 'pigeon-towers' }, { tag: 'liberal-arts' }],
+  },
+  {
+    title: 'Playing Our Selves: An Aesthetic Education for the Twenty-First Century',
+    title_ar: 'نحن نلعب أدوارنا: تربية جمالية للقرن الحادي والعشرين',
+    body: [
+      'From "On the emergence of Pigeon Towers" (CILAS, 2018), CC BY-NC-SA. Translated into Arabic by Hussein El-Hajj in the volume edition.',
+      'A playful essay on the anchoring principle of play, tying in pop culture to the reflection: what it would mean to educate aesthetically for the twenty-first century, in a learning environment where play — the unison of the intellectual and the sensuous — is the mode of study rather than its reward.',
+      'Written after conversations around tea and e-mail exchanges over the second half of 2017, drawing on the author’s expertise in aesthetics and critical theory.',
+    ],
+    author_email: 'surti.singh@cilas.test',
+    tier: 'public',
+    published_date: '2018-02-01',
+    tags: [{ tag: 'pigeon-towers' }, { tag: 'aesthetics' }],
+  },
+  {
+    title: 'Equality and Intimacy: An Imaginary Construction',
+    title_ar: 'المساواة والحميمية: بناء تخيلي',
+    body: [
+      'From "On the emergence of Pigeon Towers" (CILAS, 2018), CC BY-NC-SA. Translated into Arabic by Hussein El-Hajj in the volume edition.',
+      'On the anchoring principle of intimacy — and its flip side, radical equality. A fragmentary essay drawing on Jacques Rancière, productively destabilising the assumption that closeness in learning must be earned or administered.',
+      'Written as a dialogue-adjacent imaginary construction, keeping the fragmentary form the author was encouraged to adopt.',
+    ],
+    author_email: 'ikai.jeng@cilas.test',
+    tier: 'public',
+    published_date: '2018-02-01',
+    tags: [{ tag: 'pigeon-towers' }, { tag: 'equality' }],
+  },
+  {
+    title: 'On Ignorance',
+    title_ar: 'عن الجهل',
+    body: [
+      'From "On the emergence of Pigeon Towers" (CILAS, 2018), CC BY-NC-SA. Translated into Arabic by Hussein El-Hajj in the volume edition.',
+      'On the anchoring principle of ignorance. Written in fragments, to shed light on the fragmentary nature of the pursuit of knowledge itself: from Stoic practical intelligence — thinking and acting as one — to the question of what a scholar who does not yet know can still teach.',
+      'A discussion of the essay took place at CILAS in the Fall of 2017 and was audio-recorded.',
+    ],
+    author_email: 'robin.weiss@cilas.test',
+    tier: 'public',
+    published_date: '2018-02-01',
+    tags: [{ tag: 'pigeon-towers' }, { tag: 'stoicism' }],
+  },
+
+  /* === أعمال مختبر الترجمة (Works of the Translation Lab, CILAS 2018) === */
   {
     title: 'Recovering from the Diploma Disease',
     title_ar: 'التعافي من داء الدبلومات',
@@ -245,7 +325,7 @@ export const seedArticles = async (payload: Payload, ctx: SeedContext): Promise<
           title,
           slug: slugify(title),
           body: body ? lexical(body) : null,
-          author: requireId(ctx.users, author_email),
+          author: [requireId(ctx.users, author_email)],
         },
         overrideAccess: true,
       }),

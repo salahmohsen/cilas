@@ -79,8 +79,7 @@ export type ProgrammeSeed = Omit<Draft<Programme>, 'admission_requirements' | 'c
 
 /* ================================================================ courses */
 
-export type MaterialType =
-  'reading' | 'watch' | 'listen' | 'sit_with' | 'case_study' | 'prompt' | 'lecture' | 'link'
+export type MaterialType = 'reading' | 'watch' | 'listen' | 'prompt' | 'other'
 
 export type MaterialSeed = {
   type: MaterialType
@@ -92,22 +91,20 @@ export type MaterialSeed = {
 
 type SessionDraft = NonNullable<Draft<Course>['sessions']>[number]
 
-export type SessionSeed = Omit<SessionDraft, 'description' | 'materials'> & {
+export type SessionSeed = Omit<SessionDraft, 'description' | 'bibliography'> & {
   description?: string
-  materials?: MaterialSeed[]
+  bibliography?: MaterialSeed[]
 }
 
 export type CourseSeed = Omit<
   Draft<Course>,
-  'description' | 'sessions' | 'fellows' | 'fields_of_study' | 'cycle' | 'slug'
+  'description' | 'sessions' | 'fellows' | 'cycle' | 'slug'
 > & {
   description?: string
   sessions?: SessionSeed[]
   /** User emails, resolved to user ids. */
   fellows: string[]
-  /** English field-of-study titles, resolved to ids. */
-  fields_of_study: string[]
-  /** Cycle label, resolved to a cycle id. */
+  /** Cycle key like `fall-2025`, resolved to a cycle id. */
   cycle: string
   /** Arabic title, written in a follow-up `locale: 'ar'` update. */
   title_ar?: string
@@ -142,8 +139,10 @@ export type PressSeed = Draft<Press>
 
 /* ================================================================= events */
 
-export type EventSeed = Omit<Draft<Event>, 'description' | 'slug'> & {
+export type EventSeed = Omit<Draft<Event>, 'description' | 'slug' | 'fellows'> & {
   description?: string
+  /** User emails, resolved to user ids. */
+  fellows?: string[]
 }
 
 /* ================================================================= spaces */
@@ -183,7 +182,6 @@ export type IdMap = Record<string, number>
 
 export type SeedContext = {
   users: IdMap
-  fieldsOfStudy: IdMap
   cycles: IdMap
   courses: IdMap
   programmes: IdMap
@@ -193,7 +191,6 @@ export type SeedContext = {
 
 export const createSeedContext = (): SeedContext => ({
   users: {},
-  fieldsOfStudy: {},
   cycles: {},
   courses: {},
   programmes: {},
