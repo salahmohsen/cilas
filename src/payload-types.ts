@@ -89,6 +89,7 @@ export interface Config {
   collectionsJoins: {
     people: {
       courses: 'courses';
+      governance: 'governance';
     };
   };
   collectionsSelect: {
@@ -215,6 +216,11 @@ export interface Person {
     | null;
   courses?: {
     docs?: (number | Course)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  governance?: {
+    docs?: (number | Governance)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -620,10 +626,14 @@ export interface Form {
  */
 export interface Governance {
   id: number;
-  user?: (number | null) | User;
+  person: number | Person;
   role: 'advisor' | 'trustee';
+  title?: string | null;
   board_role?: string | null;
   advises_on?: string | null;
+  term_from?: number | null;
+  term_to?: number | null;
+  order?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -950,6 +960,7 @@ export interface PeopleSelect<T extends boolean = true> {
         id?: T;
       };
   courses?: T;
+  governance?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1108,10 +1119,14 @@ export interface CyclesSelect<T extends boolean = true> {
  * via the `definition` "governance_select".
  */
 export interface GovernanceSelect<T extends boolean = true> {
-  user?: T;
+  person?: T;
   role?: T;
+  title?: T;
   board_role?: T;
   advises_on?: T;
+  term_from?: T;
+  term_to?: T;
+  order?: T;
   updatedAt?: T;
   createdAt?: T;
 }

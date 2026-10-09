@@ -49,5 +49,12 @@ export const People: CollectionConfig = {
       on: 'fellows',
       admin: { allowCreate: false, defaultColumns: ['title', 'cycle', 'course_type'] },
     },
+    {
+      name: 'governance',
+      type: 'join',
+      collection: 'governance',
+      on: 'person',
+      admin: { allowCreate: false, defaultColumns: ['role', 'term_from', 'term_to'] },
+    },
   ],
 }
