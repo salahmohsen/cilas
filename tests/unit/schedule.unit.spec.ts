@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { expandSchedule, type Schedule } from '@/lib/schedule'
+import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
 
 // 3 March 2026 is a Tuesday.
 const tueThu: Schedule = {
@@ -57,5 +57,76 @@ describe('expandSchedule (pattern only)', () => {
     expect(expandSchedule({ ...tueThu, weeks: 0 })).toEqual([])
     expect(expandSchedule({ ...tueThu, slots: [] })).toEqual([])
     expect(expandSchedule(null)).toEqual([])
+  })
+})
+
+describe('expandSchedule with sessions', () => {
+  // Tuesdays and Thursdays for 3 weeks: 6 meetings, 2 per session.
+  const threeWeeks: Schedule = { ...tueThu, weeks: 3 }
+  const pick = (sessions: SessionDates[]) =>
+    expandSchedule(threeWeeks, sessions).map(({ date, session, cancelled }) => ({
+      date,
+      session,
+      ...(cancelled ? { cancelled } : {}),
+    }))
+
+  it('gives each session one week of meetings by default', () => {
+    expect(pick([{}, {}, {}])).toEqual([
+      { date: '2026-03-03', session: 1 },
+      { date: '2026-03-05', session: 1 },
+      { date: '2026-03-10', session: 2 },
+      { date: '2026-03-12', session: 2 },
+      { date: '2026-03-17', session: 3 },
+      { date: '2026-03-19', session: 3 },
+    ])
+  })
+
+  it('lets a session take a different number of meetings', () => {
+    expect(pick([{ meetings: 1 }, { meetings: 3 }])).toEqual([
+      { date: '2026-03-03', session: 1 },
+      { date: '2026-03-05', session: 2 },
+      { date: '2026-03-10', session: 2 },
+      { date: '2026-03-12', session: 2 },
+      // Left over after the last session.
+      { date: '2026-03-17', session: undefined },
+      { date: '2026-03-19', session: undefined },
+    ])
+  })
+
+  it('keeps a cancelled session in place, marked cancelled', () => {
+    expect(pick([{}, { cancelled: true }, {}])).toEqual([
+      { date: '2026-03-03', session: 1 },
+      { date: '2026-03-05', session: 1 },
+      { date: '2026-03-10', session: 2, cancelled: true },
+      { date: '2026-03-12', session: 2, cancelled: true },
+      { date: '2026-03-17', session: 3 },
+      { date: '2026-03-19', session: 3 },
+    ])
+  })
+
+  it("uses a session's own dates instead of the computed ones", () => {
+    const moved = expandSchedule(threeWeeks, [
+      {},
+      {},
+      { dates: [{ date: '2026-03-21', start_time: '10:00', end_time: '12:00' }] },
+    ])
+    expect(moved.slice(4)).toEqual([
+      { date: '2026-03-21', start_time: '10:00', end_time: '12:00', session: 3 },
+    ])
+  })
+
+  it('reads stored timestamps in session dates as Cairo days', () => {
+    const moved = expandSchedule(threeWeeks, [
+      { dates: [{ date: '2026-03-20T22:00:00.000Z', start_time: '10:00', end_time: '12:00' }] },
+    ])
+    expect(moved.find((m) => m.session === 1)?.date).toBe('2026-03-21')
+  })
+
+  it('numbers sessions by order, not array position', () => {
+    expect(pick([{ order: 2 }, { order: 1, meetings: 1 }]).slice(0, 3)).toEqual([
+      { date: '2026-03-03', session: 1 },
+      { date: '2026-03-05', session: 2 },
+      { date: '2026-03-10', session: 2 },
+    ])
   })
 })
