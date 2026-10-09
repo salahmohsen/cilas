@@ -166,6 +166,14 @@ export interface User {
     };
     [k: string]: unknown;
   } | null;
+  website?: string | null;
+  social_links?:
+    | {
+        platform: 'facebook' | 'x' | 'youtube' | 'instagram' | 'linkedin';
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
   roles: ('super_admin' | 'admin' | 'fellow' | 'ciliasian' | 'non_degree_seeking')[];
   courses?: (number | Course)[] | null;
   updatedAt: string;
@@ -877,6 +885,14 @@ export interface UsersSelect<T extends boolean = true> {
   name?: T;
   photo?: T;
   bio?: T;
+  website?: T;
+  social_links?:
+    | T
+    | {
+        platform?: T;
+        url?: T;
+        id?: T;
+      };
   roles?: T;
   courses?: T;
   updatedAt?: T;

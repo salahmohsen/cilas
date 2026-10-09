@@ -14,15 +14,60 @@ export const Users: CollectionConfig = {
   },
   fields: [
     { name: 'name', type: 'text', localized: true },
-    { name: 'photo', type: 'upload', relationTo: 'media' },
+    {
+      // Portrait reads against the sidebar, beside identity metadata rather
+      // than interrupting the profile text.
+      name: 'photo',
+      type: 'upload',
+      relationTo: 'media',
+      admin: { position: 'sidebar' },
+    },
     {
       label: 'Profile',
       type: 'group',
       fields: [{ name: 'bio', type: 'richText', localized: true }], // single source of truth
     },
     {
+      // Where to find and follow this person. `website` owns the primary
+      // link; each social entry is one platform, one URL.
+      label: 'Social',
+      type: 'group',
+      fields: [
+        { name: 'website', type: 'text', admin: { placeholder: 'https://…' } },
+        {
+          name: 'social_links',
+          type: 'array',
+          label: 'Social media',
+          fields: [
+            {
+              name: 'platform',
+              type: 'select',
+              required: true,
+              options: ['facebook', 'x', 'youtube', 'instagram', 'linkedin'].map((v) => ({
+                label: v.charAt(0).toUpperCase() + v.slice(1),
+                value: v,
+              })),
+            },
+            {
+              name: 'url',
+              type: 'text',
+              required: true,
+              admin: { placeholder: 'https://…' },
+              validate: (value: unknown) =>
+                typeof value === 'string' && /^https?:\/\/\S+$/.test(value)
+                  ? true
+                  : 'Enter a full URL starting with https:// or http://',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      // Role plumbing lives in the sidebar: identity first, permissions to
+      // the side.
       label: 'Roles',
       type: 'group',
+      admin: { position: 'sidebar' },
       fields: [
         {
           name: 'roles',
