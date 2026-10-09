@@ -372,7 +372,7 @@ export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<v
           title: course.title,
           slug: slugify(course.title),
           description: description ? lexical(description) : null,
-          fellows: requireIds(ctx.users, fellows),
+          fellows: requireIds(ctx.people, fellows),
           cycle: requireIds(ctx.cycles, [cycle])[0],
           sessions: (sessions ?? []).map(({ description, bibliography, ...s }) => ({
             ...s,

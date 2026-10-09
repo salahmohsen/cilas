@@ -11,7 +11,11 @@ import type {
 
 export const DEFAULT_PASSWORD = '03e8a7b597945379eda7388a'
 
-/** Wiped on every run. `users` is deliberately absent — accounts survive. */
+/**
+ * Wiped on every run, in this order. `users` is deliberately absent — accounts
+ * survive, and seedUsers restores their `person` link. `people` goes last:
+ * governance and memberships require a person.
+ */
 export const CONTENT_COLLECTIONS: CollectionSlug[] = [
   'courses',
   'cycles',
@@ -22,6 +26,8 @@ export const CONTENT_COLLECTIONS: CollectionSlug[] = [
   'press',
   'events',
   'spaces',
+  'memberships',
+  'people',
 ]
 
 /* ================================================================= lexical */
@@ -163,11 +169,11 @@ export const getOrCreateId = async (
  * on every run must issue their own `update` — see `seedUsers`.
  */
 export const getOrCreateUser = async (payload: Payload, user: UserSeed): Promise<number> => {
-  const { email, bio, roles, password, name } = user
+  const { email, roles, password } = user
   return getOrCreateId(payload, 'users', { email: { equals: email } }, () =>
     payload.create({
       collection: 'users',
-      data: { email, password: password ?? DEFAULT_PASSWORD, name, bio: lexical(bio), roles },
+      data: { email, password: password ?? DEFAULT_PASSWORD, roles },
       overrideAccess: true,
     }),
   )

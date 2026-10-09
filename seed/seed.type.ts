@@ -33,17 +33,20 @@ export type Draft<T> = Omit<T, 'id' | 'updatedAt' | 'createdAt'>
 
 /* ================================================================== users */
 
-export type UserSeed = Omit<
-  User,
-  'id' | 'updatedAt' | 'createdAt' | 'collection' | 'name' | 'bio'
-> & {
+/**
+ * One fixture person. Every fixture person also gets a login account, keyed by
+ * `email`, so local development can sign in as anyone.
+ */
+export type UserSeed = {
+  email: string
   name: string
-  /** Stored as plain text here; converted to Lexical by the seeder. */
-  bio: string
   /** Arabic name, written in a follow-up `locale: 'ar'` update. */
   name_ar: string
+  /** Stored as plain text here; converted to Lexical by the seeder. */
+  bio: string
   /** Arabic bio, written in the same follow-up `locale: 'ar'` update. */
   bio_ar: string
+  roles: User['roles']
   password?: string
 }
 
@@ -113,7 +116,7 @@ export type CourseSeed = Omit<
 /* ============================================================= governance */
 
 export type GovernanceSeed = {
-  /** The linked user must already exist in `usersData`. */
+  /** The linked person must already exist in `usersData`. */
   email: string
   role: 'advisor' | 'trustee'
   board_role?: string
@@ -182,6 +185,8 @@ export type IdMap = Record<string, number>
 
 export type SeedContext = {
   users: IdMap
+  /** Fixture emails, resolved to person ids. */
+  people: IdMap
   cycles: IdMap
   courses: IdMap
   programmes: IdMap
@@ -191,6 +196,7 @@ export type SeedContext = {
 
 export const createSeedContext = (): SeedContext => ({
   users: {},
+  people: {},
   cycles: {},
   courses: {},
   programmes: {},

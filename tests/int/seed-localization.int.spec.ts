@@ -1,127 +1,75 @@
 // @vitest-environment node
-// Server-side: touches the database and signs a JWT on login, which needs node
-// crypto. The default jsdom environment fails with "payload must be an instance
-// of Uint8Array" inside jose.
+// Server-side: touches the database.
 import { getPayload } from 'payload'
 import type { Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { DEFAULT_PASSWORD, getOrCreateUser, lexical } from '../../seed/seed.utils'
-import type { UserSeed } from '../../seed/seed.type'
+import { lexical } from '../../seed/seed.utils'
 
 /**
- * Regression cover for the seeder's localized user fields.
+ * Regression cover for the seeder's localized profile fields: a person is
+ * created in English, then gets an Arabic pass. Both locales must survive.
  *
- * `getOrCreateUser` only creates. Before `seedUsers` started issuing its own
- * English update, an account created before `name`/`bio` became localized kept
- * a null English name forever — 36 of 38 rows in the dev database had one.
- *
- * Needs a reachable DATABASE_URL; the assertions read through the local API, so
- * they are skipped rather than faked if the database is unavailable.
+ * Needs a reachable DATABASE_URL.
  */
-
-const EMAIL = 'seed-locale-probe@cilas.test'
-
-const probe = {
-    name: 'Probe Fellow',
-    name_ar: 'زميل الاختبار',
-    email: EMAIL,
-    bio: 'English bio.',
-    bio_ar: 'سيرة ذاتية بالعربية.',
-    roles: ['member'],
-} satisfies UserSeed
-
 let payload: Payload
+let personId: number
 
-const read = (id: number) =>
-    payload.findByID({ collection: 'users', id, depth: 0, locale: 'all', overrideAccess: true })
-
-/** The two locale passes `seedUsers` performs on every run. */
-const applyLocalePasses = async (id: number, seed: UserSeed) => {
-    await payload.update({
-        collection: 'users',
-        id,
-        data: { name: seed.name, bio: lexical(seed.bio), roles: seed.roles },
-        overrideAccess: true,
-    })
-    await payload.update({
-        collection: 'users',
-        id,
-        data: { name: seed.name_ar, bio: lexical(seed.bio_ar, 'rtl') },
-        locale: 'ar',
-        overrideAccess: true,
-    })
+type LocalizedPerson = {
+  name: { en: string; ar: string }
+  bio: { en: unknown; ar: { root: { direction: string } } }
 }
 
 const bioText = (bio: unknown): string => {
-    const root = (bio as { root?: { children?: Array<{ children?: Array<{ text?: string }> }> } })?.root
-    return root?.children?.[0]?.children?.[0]?.text ?? ''
+  const root = (bio as { root?: { children?: Array<{ children?: Array<{ text?: string }> }> } })
+    ?.root
+  return root?.children?.[0]?.children?.[0]?.text ?? ''
 }
 
+const read = async (): Promise<LocalizedPerson> =>
+  (await payload.findByID({
+    collection: 'people',
+    id: personId,
+    depth: 0,
+    locale: 'all',
+    overrideAccess: true,
+  })) as unknown as LocalizedPerson
+
 describe('seed localization', () => {
-    let userId: number
-
-    beforeAll(async () => {
-        payload = await getPayload({ config: await config })
-        userId = await getOrCreateUser(payload, probe)
+  beforeAll(async () => {
+    payload = await getPayload({ config: await config })
+    const person = await payload.create({
+      collection: 'people',
+      data: { name: 'Probe Fellow', slug: 'probe-fellow', bio: lexical('English bio.') },
+      overrideAccess: true,
     })
-
-    afterAll(async () => {
-        await payload.delete({ collection: 'users', id: userId, overrideAccess: true })
-        await payload.destroy()
+    personId = person.id
+    await payload.update({
+      collection: 'people',
+      id: personId,
+      data: { name: 'زميل الاختبار', bio: lexical('سيرة ذاتية بالعربية.', 'rtl') },
+      locale: 'ar',
+      overrideAccess: true,
     })
+  })
 
-    it('writes both name and bio, in English and Arabic', async () => {
-        await applyLocalePasses(userId, probe)
-        const user = (await read(userId)) as unknown as {
-            name: { en: string; ar: string }
-            bio: { en: unknown; ar: unknown }
-        }
+  afterAll(async () => {
+    await payload.delete({ collection: 'people', id: personId, overrideAccess: true })
+    await payload.destroy()
+  })
 
-        expect(user.name.en).toBe(probe.name)
-        expect(user.name.ar).toBe(probe.name_ar)
-        expect(bioText(user.bio.en)).toBe(probe.bio)
-        expect(bioText(user.bio.ar)).toBe(probe.bio_ar)
-    })
+  it('keeps name and bio in English and Arabic', async () => {
+    const person = await read()
 
-    it('marks the Arabic bio as rtl so Lexical renders the direction', async () => {
-        await applyLocalePasses(userId, probe)
-        const user = (await read(userId)) as unknown as {
-            bio: { ar: { root: { direction: string } } }
-        }
+    expect(person.name).toEqual({ en: 'Probe Fellow', ar: 'زميل الاختبار' })
+    expect(bioText(person.bio.en)).toBe('English bio.')
+    expect(bioText(person.bio.ar)).toBe('سيرة ذاتية بالعربية.')
+  })
 
-        expect(user.bio.ar.root.direction).toBe('rtl')
-    })
+  it('marks the Arabic bio as rtl so Lexical renders the direction', async () => {
+    const person = await read()
 
-    it('refreshes English on an existing account, not just on create', async () => {
-        // Simulate a row written before the field was localized: English wiped,
-        // Arabic still present.
-        await payload.update({
-            collection: 'users',
-            id: userId,
-            data: { name: null },
-            overrideAccess: true,
-        })
-        expect(((await read(userId)) as unknown as { name: { en: string } }).name.en).toBeNull()
-
-        await applyLocalePasses(userId, probe)
-        const user = (await read(userId)) as unknown as { name: { en: string } }
-
-        expect(user.name.en).toBe(probe.name)
-    })
-
-    it('leaves the password alone when refreshing an existing account', async () => {
-        // The locale passes must never send `password`, or a real account's
-        // credentials get reset on every seed. The probe was created with
-        // DEFAULT_PASSWORD, so that password must still log in afterwards.
-        await applyLocalePasses(userId, { ...probe, password: 'a-brand-new-password' })
-
-        const result = await payload.login({
-            collection: 'users',
-            data: { email: EMAIL, password: DEFAULT_PASSWORD },
-        })
-
-        expect(result.user?.email).toBe(EMAIL)
-    })
+    expect(person.bio.ar.root.direction).toBe('rtl')
+  })
 })

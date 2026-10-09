@@ -45,7 +45,7 @@ export const seedEvents = async (payload: Payload, ctx: SeedContext): Promise<vo
                     title,
                     slug: slugify(title),
                     description: description ? lexical(description) : null,
-                    ...(fellows ? { fellows: requireIds(ctx.users, fellows) } : {}),
+                    ...(fellows ? { fellows: requireIds(ctx.people, fellows) } : {}),
                 },
                 overrideAccess: true,
             }),

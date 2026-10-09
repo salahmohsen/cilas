@@ -37,12 +37,12 @@ export const governanceData: GovernanceSeed[] = [
 export const seedGovernance = async (payload: Payload, ctx: SeedContext): Promise<void> => {
     for (const member of governanceData) {
         const { email, role, ...detail } = member
-        const userId = requireId(ctx.users, email)
+        const personId = requireId(ctx.people, email)
 
-        await getOrCreateId(payload, 'governance', { user: { equals: userId } }, () =>
+        await getOrCreateId(payload, 'governance', { person: { equals: personId } }, () =>
             payload.create({
                 collection: 'governance',
-                data: { user: userId, role, ...detail },
+                data: { person: personId, role, ...detail },
                 overrideAccess: true,
             }),
         )

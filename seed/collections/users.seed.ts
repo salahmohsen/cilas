@@ -1,6 +1,7 @@
 import type { Payload } from 'payload'
 import type { SeedContext, UserSeed } from '../seed.type'
-import { getOrCreateUser, lexical, requireId } from '../seed.utils'
+import { slugify } from '@/lib/slugify'
+import { getOrCreateId, getOrCreateUser, lexical } from '../seed.utils'
 import { coursesData } from './courses.seed'
 
 export const usersData: UserSeed[] = [
@@ -475,47 +476,50 @@ export const usersData: UserSeed[] = [
 ]
 
 /**
- * Accounts are matched by email, so re-running never duplicates them and never
- * touches an existing password.
+ * Each fixture becomes a person (public profile) and an account linked to it.
+ * People are wiped by resetContent and recreated; accounts are matched by email
+ * and survive, so a real account's password is never touched.
  *
- * Both locale passes update on every run, not only on create. getOrCreateUser
- * only creates, so a field that changed shape after the account was first seeded
- * (name and bio becoming localized) would otherwise stay empty forever.
+ * The account's roles are written before courses exist, so the users hook
+ * strips `fellow` here; the Courses hook grants it back as seedCourses lists
+ * each person.
  */
 export const seedUsers = async (payload: Payload, ctx: SeedContext): Promise<void> => {
-  for (const user of usersData) {
-    const id = await getOrCreateUser(payload, user)
-    ctx.users[user.email] = id
-
-    // No password, so a real account's credentials survive.
+  for (const seed of usersData) {
+    const personId = await getOrCreateId(payload, 'people', { name: { equals: seed.name } }, () =>
+      payload.create({
+        collection: 'people',
+        data: { name: seed.name, slug: slugify(seed.name), bio: lexical(seed.bio) },
+        overrideAccess: true,
+      }),
+    )
     await payload.update({
-      collection: 'users',
-      id,
-      data: { name: user.name, bio: lexical(user.bio), roles: user.roles },
-      overrideAccess: true,
-    })
-
-    await payload.update({
-      collection: 'users',
-      id,
-      data: { name: user.name_ar, bio: lexical(user.bio_ar, 'rtl') },
+      collection: 'people',
+      id: personId,
+      data: { name: seed.name_ar, bio: lexical(seed.bio_ar, 'rtl') },
       locale: 'ar',
       overrideAccess: true,
     })
+    ctx.people[seed.email] = personId
 
-    console.log('user:', user.name)
+    const userId = await getOrCreateUser(payload, seed)
+    await payload.update({
+      collection: 'users',
+      id: userId,
+      data: { roles: seed.roles, person: personId },
+      overrideAccess: true,
+    })
+    ctx.users[seed.email] = userId
+
+    console.log('person:', seed.name)
   }
 }
 
-/**
- * `users.courses` is a virtual field derived from `courses.fellows`, and the
- * `fellow` role is granted by the Courses `afterChange` hook — neither belongs
- * in the user seeder.
- */
-export const linkFellows = async (payload: Payload, ctx: SeedContext): Promise<void> => {
+/** Fails fast if a course lists someone who was never seeded. */
+export const linkFellows = async (_payload: Payload, ctx: SeedContext): Promise<void> => {
   for (const course of coursesData) {
     for (const email of course.fellows) {
-      if (ctx.users[email] === undefined) {
+      if (ctx.people[email] === undefined) {
         throw new Error(`seed: course fellow "${email}" not seeded before courses`)
       }
     }
