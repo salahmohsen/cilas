@@ -392,7 +392,6 @@ export interface Programme {
    */
   generateSlug?: boolean | null;
   slug: string;
-  academic_year?: string | null;
   cycles?: (number | Cycle)[] | null;
   self_directed_study?: boolean | null;
   weekly_hours?: number | null;
@@ -1011,7 +1010,6 @@ export interface ProgrammesSelect<T extends boolean = true> {
   title?: T;
   generateSlug?: T;
   slug?: T;
-  academic_year?: T;
   cycles?: T;
   self_directed_study?: T;
   weekly_hours?: T;

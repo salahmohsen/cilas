@@ -15,13 +15,6 @@ export const Programmes: CollectionConfig = {
     { name: 'title', type: 'text', required: true },
     slugField(),
     {
-      label: 'Identity',
-      type: 'group',
-      fields: [
-        { name: 'academic_year', type: 'text' }, // e.g. "2025–2026"
-      ],
-    },
-    {
       label: 'Structure',
       type: 'group',
       fields: [

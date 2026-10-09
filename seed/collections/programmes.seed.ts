@@ -7,7 +7,6 @@ export const programmesData: ProgrammeSeed[] = [
     {
         title: 'Bridge Programme 2025–2026',
         kind: 'BRIDGE',
-        academic_year: '2025–2026',
         cycles: ['Fall Cycle 2025', 'Spring Cycle 2026'],
         tuition: { amount: 18000, installments: 3, need_based_deductions: true },
         weekly_hours: 15,
