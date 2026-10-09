@@ -66,13 +66,6 @@ Conventions:
 - `testimonials[]`, `capacity`, `schedule_note`, `self_directed_study`, `weekly_hours`
 - `registration`, `requirements`, `pricing`, `faqs[]`, `partners[]` → partners
 
-**`memberships`**
-- `person` → people
-- `programme` → programmes
-- `role`: student | residential_fellow | visiting_fellow
-- `title` (localized, e.g. "coordinates Social Sciences")
-- `note`
-
 ## Teaching
 
 **`courses`**
@@ -110,26 +103,9 @@ Conventions:
 - `assessment`
 - `source`
 
-## People
+## Partners
 
-**`people`** (ADR 0001)
-- `name` (localized), `photo`, `bio`
-- `social`: `website`, `social_links[]` {platform: facebook | x | youtube | instagram | linkedin, url}
-
-**`users`**
-- auth, `person` → people (optional)
-- `roles[]`: super_admin | admin | fellow | member | non_degree_seeking
-  - `member` replaces `ciliasian`. It is a writing permission, not a cohort; cohorts come from memberships.
-  - `fellow` is granted only to a user whose linked person teaches a course.
-  - `non_degree_seeking` is granted by hand for now.
-- Ownership is checked through `req.user.person`.
-
-**`governance`**
-- `person` → people
-- `role`: advisor | trustee
-- `title`, `board_role`, `advises_on`
-- `term_from`, `term_to`
-- `order`
+People, users, governance and memberships match the code (ADR 0001).
 
 **`partners`**
 - name, logo, url, kind (funder | co_host | outlet | other)

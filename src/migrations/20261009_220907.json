@@ -2,95 +2,6 @@
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.users_social_links": {
-      "name": "users_social_links",
-      "schema": "",
-      "columns": {
-        "_order": {
-          "name": "_order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "_parent_id": {
-          "name": "_parent_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "id": {
-          "name": "id",
-          "type": "varchar",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "platform": {
-          "name": "platform",
-          "type": "enum_users_social_links_platform",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "url": {
-          "name": "url",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {
-        "users_social_links_order_idx": {
-          "name": "users_social_links_order_idx",
-          "columns": [
-            {
-              "expression": "_order",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "users_social_links_parent_id_idx": {
-          "name": "users_social_links_parent_id_idx",
-          "columns": [
-            {
-              "expression": "_parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "users_social_links_parent_id_fk": {
-          "name": "users_social_links_parent_id_fk",
-          "tableFrom": "users_social_links",
-          "tableTo": "users",
-          "columnsFrom": [
-            "_parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.users_roles": {
       "name": "users_roles",
       "schema": "",
@@ -272,15 +183,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "photo_id": {
-          "name": "photo_id",
+        "person_id": {
+          "name": "person_id",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "website": {
-          "name": "website",
-          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -349,17 +254,17 @@
         }
       },
       "indexes": {
-        "users_photo_idx": {
-          "name": "users_photo_idx",
+        "users_person_idx": {
+          "name": "users_person_idx",
           "columns": [
             {
-              "expression": "photo_id",
+              "expression": "person_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "isUnique": false,
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -411,9 +316,231 @@
         }
       },
       "foreignKeys": {
-        "users_photo_id_media_id_fk": {
-          "name": "users_photo_id_media_id_fk",
+        "users_person_id_people_id_fk": {
+          "name": "users_person_id_people_id_fk",
           "tableFrom": "users",
+          "tableTo": "people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.people_social_links": {
+      "name": "people_social_links",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "platform": {
+          "name": "platform",
+          "type": "enum_people_social_links_platform",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "people_social_links_order_idx": {
+          "name": "people_social_links_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "people_social_links_parent_id_idx": {
+          "name": "people_social_links_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "people_social_links_parent_id_fk": {
+          "name": "people_social_links_parent_id_fk",
+          "tableFrom": "people_social_links",
+          "tableTo": "people",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.people": {
+      "name": "people",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "photo_id": {
+          "name": "photo_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "website": {
+          "name": "website",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "people_slug_idx": {
+          "name": "people_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "people_photo_idx": {
+          "name": "people_photo_idx",
+          "columns": [
+            {
+              "expression": "photo_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "people_updated_at_idx": {
+          "name": "people_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "people_created_at_idx": {
+          "name": "people_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "people_photo_id_media_id_fk": {
+          "name": "people_photo_id_media_id_fk",
+          "tableFrom": "people",
           "tableTo": "media",
           "columnsFrom": [
             "photo_id"
@@ -431,15 +558,15 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.users_locales": {
-      "name": "users_locales",
+    "public.people_locales": {
+      "name": "people_locales",
       "schema": "",
       "columns": {
         "name": {
           "name": "name",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "bio": {
           "name": "bio",
@@ -468,8 +595,8 @@
         }
       },
       "indexes": {
-        "users_locales_locale_parent_id_unique": {
-          "name": "users_locales_locale_parent_id_unique",
+        "people_locales_locale_parent_id_unique": {
+          "name": "people_locales_locale_parent_id_unique",
           "columns": [
             {
               "expression": "_locale",
@@ -491,10 +618,252 @@
         }
       },
       "foreignKeys": {
-        "users_locales_parent_id_fk": {
-          "name": "users_locales_parent_id_fk",
-          "tableFrom": "users_locales",
-          "tableTo": "users",
+        "people_locales_parent_id_fk": {
+          "name": "people_locales_parent_id_fk",
+          "tableFrom": "people_locales",
+          "tableTo": "people",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.memberships": {
+      "name": "memberships",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "programme_id": {
+          "name": "programme_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role": {
+          "name": "role",
+          "type": "enum_memberships_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'student'"
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "memberships_person_idx": {
+          "name": "memberships_person_idx",
+          "columns": [
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "memberships_programme_idx": {
+          "name": "memberships_programme_idx",
+          "columns": [
+            {
+              "expression": "programme_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "memberships_updated_at_idx": {
+          "name": "memberships_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "memberships_created_at_idx": {
+          "name": "memberships_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "person_programme_idx": {
+          "name": "person_programme_idx",
+          "columns": [
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "programme_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "memberships_person_id_people_id_fk": {
+          "name": "memberships_person_id_people_id_fk",
+          "tableFrom": "memberships",
+          "tableTo": "people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "memberships_programme_id_programmes_id_fk": {
+          "name": "memberships_programme_id_programmes_id_fk",
+          "tableFrom": "memberships",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "programme_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.memberships_locales": {
+      "name": "memberships_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "memberships_locales_locale_parent_id_unique": {
+          "name": "memberships_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "memberships_locales_parent_id_fk": {
+          "name": "memberships_locales_parent_id_fk",
+          "tableFrom": "memberships_locales",
+          "tableTo": "memberships",
           "columnsFrom": [
             "_parent_id"
           ],
@@ -1814,8 +2183,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "users_id": {
-          "name": "users_id",
+        "people_id": {
+          "name": "people_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -1867,11 +2236,11 @@
           "method": "btree",
           "with": {}
         },
-        "courses_rels_users_id_idx": {
-          "name": "courses_rels_users_id_idx",
+        "courses_rels_people_id_idx": {
+          "name": "courses_rels_people_id_idx",
           "columns": [
             {
-              "expression": "users_id",
+              "expression": "people_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1897,12 +2266,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "courses_rels_users_fk": {
-          "name": "courses_rels_users_fk",
+        "courses_rels_people_fk": {
+          "name": "courses_rels_people_fk",
           "tableFrom": "courses_rels",
-          "tableTo": "users",
+          "tableTo": "people",
           "columnsFrom": [
-            "users_id"
+            "people_id"
           ],
           "columnsTo": [
             "id"
@@ -3110,8 +3479,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "users_id": {
-          "name": "users_id",
+        "people_id": {
+          "name": "people_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -3163,11 +3532,11 @@
           "method": "btree",
           "with": {}
         },
-        "_courses_v_rels_users_id_idx": {
-          "name": "_courses_v_rels_users_id_idx",
+        "_courses_v_rels_people_id_idx": {
+          "name": "_courses_v_rels_people_id_idx",
           "columns": [
             {
-              "expression": "users_id",
+              "expression": "people_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -3193,12 +3562,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "_courses_v_rels_users_fk": {
-          "name": "_courses_v_rels_users_fk",
+        "_courses_v_rels_people_fk": {
+          "name": "_courses_v_rels_people_fk",
           "tableFrom": "_courses_v_rels",
-          "tableTo": "users",
+          "tableTo": "people",
           "columnsFrom": [
-            "users_id"
+            "people_id"
           ],
           "columnsTo": [
             "id"
@@ -3875,11 +4244,11 @@
           "primaryKey": true,
           "notNull": true
         },
-        "user_id": {
-          "name": "user_id",
+        "person_id": {
+          "name": "person_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "role": {
           "name": "role",
@@ -3894,9 +4263,21 @@
           "primaryKey": false,
           "notNull": false
         },
-        "advises_on": {
-          "name": "advises_on",
-          "type": "varchar",
+        "term_from": {
+          "name": "term_from",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "term_to": {
+          "name": "term_to",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "order": {
+          "name": "order",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
@@ -3916,11 +4297,11 @@
         }
       },
       "indexes": {
-        "governance_user_idx": {
-          "name": "governance_user_idx",
+        "governance_person_idx": {
+          "name": "governance_person_idx",
           "columns": [
             {
-              "expression": "user_id",
+              "expression": "person_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -3963,17 +4344,97 @@
         }
       },
       "foreignKeys": {
-        "governance_user_id_users_id_fk": {
-          "name": "governance_user_id_users_id_fk",
+        "governance_person_id_people_id_fk": {
+          "name": "governance_person_id_people_id_fk",
           "tableFrom": "governance",
-          "tableTo": "users",
+          "tableTo": "people",
           "columnsFrom": [
-            "user_id"
+            "person_id"
           ],
           "columnsTo": [
             "id"
           ],
           "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.governance_locales": {
+      "name": "governance_locales",
+      "schema": "",
+      "columns": {
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "advises_on": {
+          "name": "advises_on",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "governance_locales_locale_parent_id_unique": {
+          "name": "governance_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "governance_locales_parent_id_fk": {
+          "name": "governance_locales_parent_id_fk",
+          "tableFrom": "governance_locales",
+          "tableTo": "governance",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -5912,8 +6373,8 @@
           "primaryKey": false,
           "notNull": true
         },
-        "users_id": {
-          "name": "users_id",
+        "people_id": {
+          "name": "people_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": false
@@ -5965,11 +6426,11 @@
           "method": "btree",
           "with": {}
         },
-        "events_rels_users_id_idx": {
-          "name": "events_rels_users_id_idx",
+        "events_rels_people_id_idx": {
+          "name": "events_rels_people_id_idx",
           "columns": [
             {
-              "expression": "users_id",
+              "expression": "people_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -5995,12 +6456,12 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "events_rels_users_fk": {
-          "name": "events_rels_users_fk",
+        "events_rels_people_fk": {
+          "name": "events_rels_people_fk",
           "tableFrom": "events_rels",
-          "tableTo": "users",
+          "tableTo": "people",
           "columnsFrom": [
-            "users_id"
+            "people_id"
           ],
           "columnsTo": [
             "id"
@@ -8937,6 +9398,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "people_id": {
+          "name": "people_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "memberships_id": {
+          "name": "memberships_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "media_id": {
           "name": "media_id",
           "type": "integer",
@@ -9061,6 +9534,36 @@
           "columns": [
             {
               "expression": "users_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_people_id_idx": {
+          "name": "payload_locked_documents_rels_people_id_idx",
+          "columns": [
+            {
+              "expression": "people_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_memberships_id_idx": {
+          "name": "payload_locked_documents_rels_memberships_id_idx",
+          "columns": [
+            {
+              "expression": "memberships_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -9272,6 +9775,32 @@
           "tableTo": "users",
           "columnsFrom": [
             "users_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_people_fk": {
+          "name": "payload_locked_documents_rels_people_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "people",
+          "columnsFrom": [
+            "people_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_memberships_fk": {
+          "name": "payload_locked_documents_rels_memberships_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "memberships",
+          "columnsFrom": [
+            "memberships_id"
           ],
           "columnsTo": [
             "id"
@@ -9968,8 +10497,19 @@
         "ar"
       ]
     },
-    "public.enum_users_social_links_platform": {
-      "name": "enum_users_social_links_platform",
+    "public.enum_users_roles": {
+      "name": "enum_users_roles",
+      "schema": "public",
+      "values": [
+        "super_admin",
+        "admin",
+        "fellow",
+        "member",
+        "non_degree_seeking"
+      ]
+    },
+    "public.enum_people_social_links_platform": {
+      "name": "enum_people_social_links_platform",
       "schema": "public",
       "values": [
         "facebook",
@@ -9979,15 +10519,13 @@
         "linkedin"
       ]
     },
-    "public.enum_users_roles": {
-      "name": "enum_users_roles",
+    "public.enum_memberships_role": {
+      "name": "enum_memberships_role",
       "schema": "public",
       "values": [
-        "super_admin",
-        "admin",
-        "fellow",
-        "ciliasian",
-        "non_degree_seeking"
+        "student",
+        "residential_fellow",
+        "visiting_fellow"
       ]
     },
     "public.enum_courses_location": {
@@ -10258,6 +10796,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "cb27c6bd-c66c-450f-b845-5d37cae74080",
+  "id": "e867dad1-6400-4af5-aea9-b19c6ba997f2",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
