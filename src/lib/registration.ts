@@ -23,7 +23,9 @@ export const registrationStatus = (
   const method = own?.method ?? parent?.method
   if (!method || method === 'closed') return 'closed'
 
-  const deadline = own?.deadline ?? parent?.deadline
-  if (!deadline) return 'open'
-  return cairoDay(now) <= cairoDay(deadline) ? 'open' : 'closed'
+  const deadline = cairoDay(own?.deadline ?? parent?.deadline ?? '')
+  const today = cairoDay(now)
+  // An unset or invalid deadline never closes registration.
+  if (!deadline || !today) return 'open'
+  return today <= deadline ? 'open' : 'closed'
 }

@@ -46,4 +46,8 @@ describe('registrationStatus', () => {
     const cycle = { method: 'form' as const }
     expect(registrationStatus({ method: 'closed' }, cycle)).toBe('closed')
   })
+
+  it('treats an invalid deadline as absent', () => {
+    expect(registrationStatus({ method: 'form', deadline: 'nope' }, null, dayAfter)).toBe('open')
+  })
 })

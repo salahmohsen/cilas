@@ -58,6 +58,14 @@ describe('expandSchedule (pattern only)', () => {
     expect(days({ ...tueThu, start_date: '2026-03-02T22:00:00.000Z' })[0]).toBe('2026-03-03')
   })
 
+  it('is empty for an invalid start date', () => {
+    expect(expandSchedule({ ...tueThu, start_date: '2026-13-01' })).toEqual([])
+  })
+
+  it('uses whole weeks only', () => {
+    expect(days({ ...tueThu, weeks: 1.5 })).toEqual(['2026-03-03', '2026-03-05'])
+  })
+
   it('is empty until start date, weeks and slots are all set', () => {
     expect(expandSchedule({ ...tueThu, start_date: null })).toEqual([])
     expect(expandSchedule({ ...tueThu, weeks: 0 })).toEqual([])
@@ -134,6 +142,71 @@ describe('expandSchedule with sessions', () => {
       { date: '2026-03-05', session: 2 },
       { date: '2026-03-10', session: 2 },
     ])
+  })
+})
+
+describe('expandSchedule edge cases', () => {
+  const threeWeeks: Schedule = { ...tueThu, weeks: 3 }
+  const dated = (sessions: SessionDates[]) =>
+    expandSchedule(threeWeeks, sessions).map((m) => m.date)
+
+  it('takes no meetings for a negative or NaN count, without duplicating dates', () => {
+    expect(dated([{ meetings: -1 }, {}])).toEqual([
+      '2026-03-03',
+      '2026-03-05',
+      '2026-03-10',
+      '2026-03-12',
+      '2026-03-17',
+      '2026-03-19',
+    ])
+    expect(dated([{ meetings: NaN }, {}])).toEqual(dated([{ meetings: 0 }, {}]))
+    expect(new Set(dated([{ meetings: -1 }, {}])).size).toBe(6)
+  })
+
+  it('gives a zero-meeting session nothing and starts the next where the cursor was', () => {
+    const out = expandSchedule(threeWeeks, [{ meetings: 0 }, {}]).filter((m) => m.session)
+    expect(out.map(({ date, session }) => ({ date, session }))).toEqual([
+      { date: '2026-03-03', session: 2 },
+      { date: '2026-03-05', session: 2 },
+    ])
+  })
+
+  it('skips session dates that are not real days', () => {
+    const out = expandSchedule(threeWeeks, [
+      { dates: [{ date: 'nope', start_time: '10:00', end_time: '12:00' }] },
+    ])
+    expect(out.some((m) => m.session === 1)).toBe(false)
+  })
+
+  it('numbers explicit orders first, then unset ones in array order', () => {
+    const out = expandSchedule(threeWeeks, [
+      { order: 1, meetings: 1 },
+      { meetings: 1 },
+      { order: 0, meetings: 1 },
+    ])
+    expect(out.slice(0, 3).map((m) => m.date)).toEqual(['2026-03-03', '2026-03-05', '2026-03-10'])
+    // order 0 takes the first meeting and is session 1, order 1 is 2, unset is 3.
+    expect(out.slice(0, 3).map((m) => m.session)).toEqual([1, 2, 3])
+  })
+
+  it('marks a cancelled session with its own dates as cancelled', () => {
+    const out = expandSchedule(threeWeeks, [
+      {
+        cancelled: true,
+        dates: [{ date: '2026-03-21', start_time: '10:00', end_time: '12:00' }],
+      },
+    ])
+    expect(out.find((m) => m.date === '2026-03-21')).toMatchObject({ session: 1, cancelled: true })
+  })
+
+  it('gives just the override meetings when there is no pattern', () => {
+    expect(
+      expandSchedule(null, [{ dates: [{ date: '2026-03-21', start_time: '10:00', end_time: '12:00' }] }]),
+    ).toEqual([{ date: '2026-03-21', start_time: '10:00', end_time: '12:00', session: 1 }])
+  })
+
+  it('has no end date when every meeting is cancelled', () => {
+    expect(scheduleEndDate(tueThu, [{ cancelled: true }, { cancelled: true }])).toBeNull()
   })
 })
 

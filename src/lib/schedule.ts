@@ -51,8 +51,10 @@ const expandPattern = (schedule: Schedule): Meeting[] => {
   if (!start_date || !weeks || !slots?.length) return []
 
   const start = cairoDay(start_date)
+  if (!start) return []
+
   const meetings: Meeting[] = []
-  for (let week = 0; week < weeks; week++) {
+  for (let week = 0; week < Math.floor(weeks); week++) {
     for (const { weekday, start_time, end_time, label } of slots) {
       meetings.push({
         date: addDays(start, week * 7 + daysUntil(start, weekday)),
@@ -67,8 +69,8 @@ const expandPattern = (schedule: Schedule): Meeting[] => {
 
 const inOrder = (sessions: SessionDates[]): SessionDates[] =>
   sessions
-    .map((session, index) => ({ session, key: session.order ?? index }))
-    .sort((a, b) => a.key - b.key)
+    .map((session, index) => ({ session, index, key: session.order ?? Infinity }))
+    .sort((a, b) => (a.key === b.key ? a.index - b.index : a.key - b.key))
     .map(({ session }) => session)
 
 /**
@@ -89,15 +91,15 @@ export const expandSchedule = (
 
   inOrder(sessions).forEach((s, index) => {
     const session = index + 1
-    const share = pattern.slice(cursor, cursor + (s.meetings ?? perWeek))
-    cursor += s.meetings ?? perWeek
+    const take = Math.max(0, Math.floor(s.meetings ?? perWeek)) || 0
+    const share = pattern.slice(cursor, cursor + take)
+    cursor += take
 
-    const own = s.dates?.length
-      ? s.dates.map(({ date, start_time, end_time }) => ({
-          date: cairoDay(date),
-          start_time,
-          end_time,
-        }))
+    const own: Meeting[] = s.dates?.length
+      ? s.dates.flatMap(({ date, start_time, end_time }) => {
+          const day = cairoDay(date)
+          return day ? [{ date: day, start_time, end_time }] : []
+        })
       : share
 
     for (const meeting of own) {
