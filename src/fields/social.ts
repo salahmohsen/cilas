@@ -1,11 +1,8 @@
 import type { Field } from 'payload'
 
-export const SOCIAL_PLATFORMS = ['facebook', 'x', 'youtube', 'instagram', 'linkedin'] as const
+import { httpUrl } from './validators'
 
-export const httpUrl = (value: unknown): true | string =>
-  typeof value === 'string' && /^https?:\/\/\S+$/.test(value)
-    ? true
-    : 'Enter a full URL starting with https:// or http://'
+export const SOCIAL_PLATFORMS = ['facebook', 'x', 'youtube', 'instagram', 'linkedin'] as const
 
 /**
  * Where to find and follow someone. `website` owns the primary link; each

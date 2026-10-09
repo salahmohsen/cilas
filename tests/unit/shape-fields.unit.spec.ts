@@ -1,0 +1,34 @@
+import { describe, expect, it } from 'vitest'
+
+import { endAfterStart, httpUrl, notBelow, timeOfDay } from '@/fields/validators'
+
+describe('validators', () => {
+  it('timeOfDay accepts 24-hour HH:MM only', () => {
+    expect(timeOfDay('19:00')).toBe(true)
+    expect(timeOfDay('00:05')).toBe(true)
+    expect(timeOfDay('7:00')).toMatch(/HH:MM/)
+    expect(timeOfDay('24:00')).toMatch(/HH:MM/)
+    expect(timeOfDay('7pm')).toMatch(/HH:MM/)
+    expect(timeOfDay(null)).toMatch(/HH:MM/)
+  })
+
+  it('endAfterStart needs the end strictly later', () => {
+    expect(endAfterStart('21:00', '19:00')).toBe(true)
+    expect(endAfterStart('19:00', '19:00')).toMatch(/after/)
+    expect(endAfterStart('18:00', '19:00')).toMatch(/after/)
+    // An invalid end is reported by timeOfDay; an unset start can't be compared.
+    expect(endAfterStart('21:00', undefined)).toBe(true)
+  })
+
+  it('notBelow allows an empty or larger value', () => {
+    expect(notBelow(500, 300, 'the minimum')).toBe(true)
+    expect(notBelow(300, 300, 'the minimum')).toBe(true)
+    expect(notBelow(null, 300, 'the minimum')).toBe(true)
+    expect(notBelow(100, 300, 'the minimum')).toBe('Must not be below the minimum.')
+  })
+
+  it('httpUrl still lives here', () => {
+    expect(httpUrl('https://cilas.net')).toBe(true)
+    expect(httpUrl('cilas.net')).toMatch(/https/)
+  })
+})
