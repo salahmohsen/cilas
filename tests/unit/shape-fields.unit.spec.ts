@@ -1,6 +1,7 @@
 import type { Field, FieldHookArgs } from 'payload'
 import { describe, expect, it } from 'vitest'
 
+import { registrationField } from '@/fields/registration'
 import { computeEndDate, scheduleField } from '@/fields/schedule'
 import { endAfterStart, httpUrl, notBelow, timeOfDay } from '@/fields/validators'
 
@@ -61,5 +62,25 @@ describe('scheduleField', () => {
     }
     expect(computeEndDate({ siblingData } as unknown as FieldHookArgs)).toBe('2026-03-10')
     expect(computeEndDate({ siblingData: {} } as unknown as FieldHookArgs)).toBeNull()
+  })
+})
+
+describe('registrationField', () => {
+  it('is a named group with the spec fields', () => {
+    const field = registrationField()
+    expect(field.name).toBe('registration')
+    expect(names(field.fields)).toEqual([
+      'method',
+      'form',
+      'url',
+      'deadline',
+      'application_requirements',
+      'archived_registration_url',
+    ])
+  })
+
+  it('has no default method, so an empty one falls back to the parent', () => {
+    const method = registrationField().fields.find((f) => 'name' in f && f.name === 'method')
+    expect(method && 'defaultValue' in method ? method.defaultValue : undefined).toBeUndefined()
   })
 })
