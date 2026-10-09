@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     users: User;
     people: Person;
+    memberships: Membership;
     media: Media;
     courses: Course;
     programmes: Programme;
@@ -90,11 +91,13 @@ export interface Config {
     people: {
       courses: 'courses';
       governance: 'governance';
+      memberships: 'memberships';
     };
   };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     people: PeopleSelect<false> | PeopleSelect<true>;
+    memberships: MembershipsSelect<false> | MembershipsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     courses: CoursesSelect<false> | CoursesSelect<true>;
     programmes: ProgrammesSelect<false> | ProgrammesSelect<true>;
@@ -221,6 +224,11 @@ export interface Person {
   };
   governance?: {
     docs?: (number | Governance)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  memberships?: {
+    docs?: (number | Membership)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -639,6 +647,20 @@ export interface Governance {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "memberships".
+ */
+export interface Membership {
+  id: number;
+  person: number | Person;
+  programme: number | Programme;
+  role: 'student' | 'residential_fellow' | 'visiting_fellow';
+  title?: string | null;
+  note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "articles".
  */
 export interface Article {
@@ -827,6 +849,10 @@ export interface PayloadLockedDocument {
         value: number | Person;
       } | null)
     | ({
+        relationTo: 'memberships';
+        value: number | Membership;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -961,6 +987,20 @@ export interface PeopleSelect<T extends boolean = true> {
       };
   courses?: T;
   governance?: T;
+  memberships?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "memberships_select".
+ */
+export interface MembershipsSelect<T extends boolean = true> {
+  person?: T;
+  programme?: T;
+  role?: T;
+  title?: T;
+  note?: T;
   updatedAt?: T;
   createdAt?: T;
 }

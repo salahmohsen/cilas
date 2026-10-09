@@ -56,5 +56,12 @@ export const People: CollectionConfig = {
       on: 'person',
       admin: { allowCreate: false, defaultColumns: ['role', 'term_from', 'term_to'] },
     },
+    {
+      name: 'memberships',
+      type: 'join',
+      collection: 'memberships',
+      on: 'person',
+      admin: { allowCreate: true, defaultColumns: ['programme', 'role'] },
+    },
   ],
 }

@@ -7,6 +7,7 @@ import sharp from 'sharp'
 
 import { Users } from './collections/Users'
 import { People } from './collections/People'
+import { Memberships } from './collections/Memberships'
 import { Media } from './collections/Media'
 import { Courses } from './collections/Courses'
 import { Programmes } from './collections/Programmes'
@@ -71,6 +72,7 @@ export default buildConfig({
   collections: [
     Users,
     People,
+    Memberships,
     Media,
     Courses,
     Programmes,
