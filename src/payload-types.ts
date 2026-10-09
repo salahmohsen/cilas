@@ -86,7 +86,11 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    people: {
+      courses: 'courses';
+    };
+  };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     people: PeopleSelect<false> | PeopleSelect<true>;
@@ -209,6 +213,11 @@ export interface Person {
         id?: string | null;
       }[]
     | null;
+  courses?: {
+    docs?: (number | Course)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -326,7 +335,7 @@ export interface Course {
   location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
   amount?: number | null;
   based_deductions_available?: boolean | null;
-  fellows?: (number | User)[] | null;
+  fellows?: (number | Person)[] | null;
   registration_form?: (number | null) | Form;
   sessions?:
     | {
@@ -753,7 +762,7 @@ export interface Event {
   frequency?: ('weekly' | 'biweekly' | 'monthly') | null;
   recurrence_until?: string | null;
   location?: ('OFFLINE' | 'ONLINE') | null;
-  fellows?: (number | User)[] | null;
+  fellows?: (number | Person)[] | null;
   registration_form?: (number | null) | Form;
   updatedAt: string;
   createdAt: string;
@@ -940,6 +949,7 @@ export interface PeopleSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
+  courses?: T;
   updatedAt?: T;
   createdAt?: T;
 }

@@ -52,7 +52,10 @@ export const personOf = (user: unknown): number | null => {
  */
 export type Ownership = (user: User) => Where | false
 
-export const ownsViaFellows: Ownership = (user) => ({ fellows: { contains: user.id } })
+export const ownsViaFellows: Ownership = (user) => {
+  const person = personOf(user)
+  return person === null ? false : { fellows: { contains: person } }
+}
 export const ownsViaAuthor: Ownership = (user) => ({ author: { equals: user.id } })
 
 /* =========================================================== access rules */

@@ -6,93 +6,23 @@ import {
   readTiers,
 } from '@/access'
 import { slugField } from '@/fields/slug'
-import type {
-  CollectionAfterChangeHook,
-  CollectionAfterDeleteHook,
-  CollectionConfig,
-  Payload,
-} from 'payload'
+import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
+import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig } from 'payload'
 import type { Course } from '@/payload-types'
 
-/** `fellows` arrives as ids, or as populated users when depth > 0. */
-const toIds = (fellows: Course['fellows'] | undefined): number[] =>
-  (fellows ?? [])
-    .map((fellow) => (typeof fellow === 'object' ? fellow.id : fellow))
-    .filter((id): id is number => typeof id === 'number')
-
-const grantFellow = async (payload: Payload, id: number): Promise<void> => {
-  const user = await payload.findByID({
-    collection: 'users',
-    id,
-    depth: 0,
-    overrideAccess: true,
-  })
-
-  if (user.roles.includes('fellow')) return
-
-  await payload.update({
-    collection: 'users',
-    id,
-    data: { roles: [...user.roles, 'fellow'] },
-    // users.update is admin-only.
-    overrideAccess: true,
-  })
-}
-
 /**
- * Revokes `fellow` once the user is on no other course, at any tier. The
- * course being saved or deleted is excluded so it cannot vouch for itself.
- */
-const revokeIfUnteaching = async (
-  payload: Payload,
-  id: number,
-  exceptCourseId: number,
-): Promise<void> => {
-  const elsewhere = await payload.find({
-    collection: 'courses',
-    where: {
-      and: [{ fellows: { contains: id } }, { id: { not_equals: exceptCourseId } }],
-    },
-    limit: 1,
-    depth: 0,
-    // courses.read is tiered by `tier` and ownership.
-    overrideAccess: true,
-  })
-
-  if (elsewhere.totalDocs > 0) return
-
-  const user = await payload.findByID({
-    collection: 'users',
-    id,
-    depth: 0,
-    overrideAccess: true,
-  })
-
-  if (!user.roles.includes('fellow')) return
-
-  const roles = user.roles.filter((role) => role !== 'fellow')
-
-  await payload.update({
-    collection: 'users',
-    id,
-    // roles is required, so fall back rather than write an empty array.
-    data: { roles: roles.length > 0 ? roles : ['member'] },
-    overrideAccess: true,
-  })
-}
-
-/**
- * `courses.fellows` stores ids, so granting and revoking the role means writing
- * to the user documents — the course's own field cannot do it. afterChange, not
- * beforeChange, so users are only touched once the course write has landed.
+ * `courses.fellows` lists people, but the `fellow` role lives on the account
+ * linked to each person, so granting and revoking means writing to `users` —
+ * the course's own field cannot do it. afterChange, not beforeChange, so
+ * accounts are only touched once the course write has landed.
  */
 export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   doc,
   req,
   previousDoc,
 }) => {
-  const before = toIds(previousDoc?.fellows)
-  const after = toIds(doc.fellows)
+  const before = toPersonIds(previousDoc?.fellows)
+  const after = toPersonIds(doc.fellows)
 
   for (const id of after.filter((id) => !before.includes(id))) {
     await grantFellow(req.payload, id)
@@ -110,7 +40,7 @@ export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = asy
   doc,
   req,
 }) => {
-  for (const id of toIds(doc.fellows)) {
+  for (const id of toPersonIds(doc.fellows)) {
     await revokeIfUnteaching(req.payload, id, doc.id)
   }
 
@@ -237,7 +167,7 @@ export const Courses: CollectionConfig = {
     {
       name: 'fellows',
       type: 'relationship',
-      relationTo: 'users',
+      relationTo: 'people',
       hasMany: true,
       admin: {
         position: 'sidebar',

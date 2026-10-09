@@ -25,8 +25,8 @@ describe('isAdminOrOwnAndDraft', () => {
   })
 
   it('keeps ownership AND draft for a fellow', () => {
-    expect(run(rule, user(['fellow']))).toEqual({
-      and: [{ fellows: { contains: 7 } }, { _status: { equals: 'draft' } }],
+    expect(run(rule, user(['fellow'], { person: 42 }))).toEqual({
+      and: [{ fellows: { contains: 42 } }, { _status: { equals: 'draft' } }],
     })
   })
 
@@ -42,5 +42,23 @@ describe('readTiers', () => {
     expect(run(rule, user(['non_degree_seeking']))).toEqual({
       or: [{ tier: { in: ['community', 'public'] } }],
     })
+  })
+})
+
+describe('ownsViaFellows', () => {
+  it('owns through the linked person id', () => {
+    expect(ownsViaFellows(user(['fellow'], { person: 42 }))).toEqual({
+      fellows: { contains: 42 },
+    })
+  })
+
+  it('accepts a populated person', () => {
+    expect(ownsViaFellows(user(['fellow'], { person: { id: 42 } }))).toEqual({
+      fellows: { contains: 42 },
+    })
+  })
+
+  it('owns nothing without a linked person', () => {
+    expect(ownsViaFellows(user(['fellow']))).toBe(false)
   })
 })

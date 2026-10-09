@@ -75,7 +75,7 @@ export const Events: CollectionConfig = {
             { label: 'Online', value: 'ONLINE' },
           ],
         },
-        { name: 'fellows', type: 'relationship', relationTo: 'users', hasMany: true },
+        { name: 'fellows', type: 'relationship', relationTo: 'people', hasMany: true },
         {
           name: 'registration_form',
           type: 'relationship',

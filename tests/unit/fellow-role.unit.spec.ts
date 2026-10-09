@@ -5,24 +5,38 @@ import { propagateFellowRole, revokeDeletedCourseFellows } from '@/collections/C
 import type { Course, User } from '@/payload-types'
 
 type Role = User['roles'][number]
+type Account = { id: number; person: number | null; roles: Role[] }
+
+type FindArgs = {
+  collection: string
+  where: {
+    person?: { equals: number }
+    and?: Array<{ fellows: { contains: number } }>
+  }
+}
 
 /**
- * The three payload calls the hooks make, stubbed. `listedElsewhere` is the set
- * of fellow ids still listed on some course, so it drives the "is this their
- * only course" decision without touching a database.
+ * The two payload calls the hooks make, stubbed:
+ *   find users   -> the account linked to a person
+ *   find courses -> whether that person is still listed on another course
+ * `teaching` is the set of person ids listed on some other course.
  */
-const stubPayload = (users: Record<number, Role[]>, listedElsewhere: number[] = []) => {
+const stubPayload = (accounts: Account[], teaching: number[] = []) => {
   const updates: Array<{ id: number; data: { roles: Role[] } }> = []
 
   const payload = {
-    findByID: vi.fn(async ({ id }: { id: number }) => ({ id, roles: users[id] ?? [] })),
-    find: vi.fn(async ({ where }: { where: { and: Array<{ fellows: { contains: number } }> } }) => ({
-      docs: [],
-      totalDocs: listedElsewhere.includes(where.and[0].fellows.contains) ? 1 : 0,
-    })),
+    find: vi.fn(async ({ collection, where }: FindArgs) => {
+      if (collection === 'users') {
+        const docs = accounts.filter((a) => a.person === where.person?.equals)
+        return { docs, totalDocs: docs.length }
+      }
+      const person = where.and?.[0].fellows.contains ?? -1
+      return { docs: [], totalDocs: teaching.includes(person) ? 1 : 0 }
+    }),
     update: vi.fn(async ({ id, data }: { id: number; data: { roles: Role[] } }) => {
       updates.push({ id, data })
-      users[id] = data.roles
+      const account = accounts.find((a) => a.id === id)
+      if (account) account.roles = data.roles
       return { id, ...data }
     }),
   }
@@ -59,67 +73,78 @@ const onDelete = (payload: Payload, doc: Course): DeleteArgs =>
     req: { payload },
   }) as unknown as DeleteArgs
 
-describe('propagateFellowRole', () => {
-  it('grants fellow to someone newly listed', async () => {
-    const { payload, updates } = stubPayload({ 5: ['member'] })
+// Person 50 is linked to account 5.
+const linked = (roles: Role[]): Account[] => [{ id: 5, person: 50, roles }]
 
-    await propagateFellowRole(onChange(payload, course(1, [5]), course(1, [])))
+describe('propagateFellowRole', () => {
+  it('grants fellow to the account of a newly listed person', async () => {
+    const { payload, updates } = stubPayload(linked(['member']))
+
+    await propagateFellowRole(onChange(payload, course(1, [50]), course(1, [])))
 
     expect(updates).toEqual([{ id: 5, data: { roles: ['member', 'fellow'] } }])
   })
 
-  it('does not duplicate a role the user already holds', async () => {
-    const { payload, updates } = stubPayload({ 5: ['member', 'fellow'] })
+  it('does nothing for a person with no account', async () => {
+    const { payload, updates } = stubPayload([])
 
-    await propagateFellowRole(onChange(payload, course(1, [5]), course(1, [])))
+    await propagateFellowRole(onChange(payload, course(1, [50]), course(1, [])))
+
+    expect(updates).toEqual([])
+  })
+
+  it('does not duplicate a role the account already holds', async () => {
+    const { payload, updates } = stubPayload(linked(['member', 'fellow']))
+
+    await propagateFellowRole(onChange(payload, course(1, [50]), course(1, [])))
 
     expect(updates).toEqual([])
   })
 
   it('keeps every other role when granting', async () => {
-    const { payload, updates } = stubPayload({ 5: ['super_admin'] })
+    const { payload, updates } = stubPayload(linked(['super_admin']))
 
-    await propagateFellowRole(onChange(payload, course(1, [5]), course(1, [])))
+    await propagateFellowRole(onChange(payload, course(1, [50]), course(1, [])))
 
     expect(updates[0].data.roles).toEqual(['super_admin', 'fellow'])
   })
 
   it('revokes fellow when removed from their only course', async () => {
-    const { payload, updates } = stubPayload({ 5: ['member', 'fellow'] })
+    const { payload, updates } = stubPayload(linked(['member', 'fellow']))
 
-    await propagateFellowRole(onChange(payload, course(1, []), course(1, [5])))
+    await propagateFellowRole(onChange(payload, course(1, []), course(1, [50])))
 
     expect(updates).toEqual([{ id: 5, data: { roles: ['member'] } }])
   })
 
   it('keeps fellow when still listed on another course', async () => {
-    const { payload, updates } = stubPayload({ 5: ['member', 'fellow'] }, [5])
+    const { payload, updates } = stubPayload(linked(['member', 'fellow']), [50])
 
-    await propagateFellowRole(onChange(payload, course(1, []), course(1, [5])))
+    await propagateFellowRole(onChange(payload, course(1, []), course(1, [50])))
 
     expect(updates).toEqual([])
   })
 
   it('falls back to member when fellow was the only role', async () => {
-    const { payload, updates } = stubPayload({ 5: ['fellow'] })
+    const { payload, updates } = stubPayload(linked(['fellow']))
 
-    await propagateFellowRole(onChange(payload, course(1, []), course(1, [5])))
+    await propagateFellowRole(onChange(payload, course(1, []), course(1, [50])))
 
     expect(updates).toEqual([{ id: 5, data: { roles: ['member'] } }])
   })
 
   it('ignores a save that changes nothing', async () => {
-    const { payload, updates } = stubPayload({ 5: ['fellow'] })
+    const { payload, updates } = stubPayload(linked(['fellow']))
 
-    await propagateFellowRole(onChange(payload, course(1, [5]), course(1, [5])))
+    await propagateFellowRole(onChange(payload, course(1, [50]), course(1, [50])))
 
     expect(updates).toEqual([])
   })
 
-  it('accepts fellows as populated objects, not just ids', async () => {
-    const { payload, updates } = stubPayload({ 5: ['member'] })
+  it('accepts fellows as populated people, not just ids', async () => {
+    const { payload, updates } = stubPayload(linked(['member']))
 
-    await propagateFellowRole(onChange(payload, course(1, [{ id: 5 }]), course(1, [])))
+    await propagateFellowRole(onChange(payload, course(1, [{ id: 50 }]), course(1, [])))
 
     expect(updates).toEqual([{ id: 5, data: { roles: ['member', 'fellow'] } }])
   })
@@ -127,17 +152,17 @@ describe('propagateFellowRole', () => {
 
 describe('revokeDeletedCourseFellows', () => {
   it('revokes fellow when the course is deleted', async () => {
-    const { payload, updates } = stubPayload({ 5: ['member', 'fellow'] })
+    const { payload, updates } = stubPayload(linked(['member', 'fellow']))
 
-    await revokeDeletedCourseFellows(onDelete(payload, course(1, [5])))
+    await revokeDeletedCourseFellows(onDelete(payload, course(1, [50])))
 
     expect(updates).toEqual([{ id: 5, data: { roles: ['member'] } }])
   })
 
   it('keeps fellow when another course still lists them', async () => {
-    const { payload, updates } = stubPayload({ 5: ['member', 'fellow'] }, [5])
+    const { payload, updates } = stubPayload(linked(['member', 'fellow']), [50])
 
-    await revokeDeletedCourseFellows(onDelete(payload, course(1, [5])))
+    await revokeDeletedCourseFellows(onDelete(payload, course(1, [50])))
 
     expect(updates).toEqual([])
   })

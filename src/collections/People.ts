@@ -41,5 +41,13 @@ export const People: CollectionConfig = {
       fields: [{ name: 'bio', type: 'richText', localized: true }],
     },
     socialFields,
+    {
+      // Derived from courses.fellows; never stored on the person.
+      name: 'courses',
+      type: 'join',
+      collection: 'courses',
+      on: 'fellows',
+      admin: { allowCreate: false, defaultColumns: ['title', 'cycle', 'course_type'] },
+    },
   ],
 }
