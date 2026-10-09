@@ -104,3 +104,25 @@ describe('pricingField', () => {
     expect(pricingField({ name: 'pricing_override' }).name).toBe('pricing_override')
   })
 })
+
+describe('pricingField dbName', () => {
+  const arrays = (field: ReturnType<typeof pricingField>) => {
+    const plans = field.fields.find((f) => 'name' in f && f.name === 'payment_plans')
+    if (!plans || plans.type !== 'array') throw new Error('no payment_plans')
+    const items = plans.fields.find((f) => 'name' in f && f.name === 'installments')
+    if (!items || items.type !== 'array') throw new Error('no installments')
+    return { plans, items }
+  }
+
+  it('gives the arrays short table names when asked', () => {
+    const { plans, items } = arrays(pricingField({ dbName: 'course_price' }))
+    expect(plans.dbName).toBe('course_price_plans')
+    expect(items.dbName).toBe('course_price_plan_items')
+  })
+
+  it('leaves them unset by default', () => {
+    const { plans, items } = arrays(pricingField())
+    expect(plans.dbName).toBeUndefined()
+    expect(items.dbName).toBeUndefined()
+  })
+})

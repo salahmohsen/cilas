@@ -6,11 +6,17 @@ import { notBelow } from './validators'
  * What something costs, as a range in EGP with optional payment plans.
  * Cycles hold one per course type; a course can override with
  * `pricingField({ name: 'pricing_override' })`.
+ *
+ * Postgres cuts identifiers at 63 characters, and the nested arrays build long
+ * table and index names. Collections with drafts, or with a long path, must pass
+ * a short static `dbName`, e.g.
+ * `pricingField({ name: 'pricing_override', dbName: 'course_price' })`.
  */
 export const pricingField = ({
   name = 'pricing',
   label,
-}: { name?: string; label?: string } = {}): NamedGroupField => ({
+  dbName,
+}: { name?: string; label?: string; dbName?: string } = {}): NamedGroupField => ({
   name,
   ...(label ? { label } : {}),
   type: 'group',
@@ -41,11 +47,13 @@ export const pricingField = ({
     {
       name: 'payment_plans',
       type: 'array',
+      ...(dbName ? { dbName: `${dbName}_plans` } : {}),
       fields: [
         { name: 'label', type: 'text', localized: true, required: true },
         {
           name: 'installments',
           type: 'array',
+          ...(dbName ? { dbName: `${dbName}_plan_items` } : {}),
           fields: [
             {
               type: 'row',
