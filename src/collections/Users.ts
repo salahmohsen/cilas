@@ -39,11 +39,6 @@ export const Users: CollectionConfig = {
           ],
         },
         {
-          name: 'cohort_year',
-          type: 'text',
-          admin: { condition: (d) => d.roles?.includes('ciliasian') },
-        }, // "CILASians 2016–2017"
-        {
           // courses.fellows is the source of truth; storing both sides drifted.
           name: 'courses',
           type: 'relationship',

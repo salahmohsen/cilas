@@ -167,7 +167,6 @@ export interface User {
     [k: string]: unknown;
   } | null;
   roles: ('super_admin' | 'admin' | 'fellow' | 'ciliasian' | 'non_degree_seeking')[];
-  cohort_year?: string | null;
   courses?: (number | Course)[] | null;
   updatedAt: string;
   createdAt: string;
@@ -879,7 +878,6 @@ export interface UsersSelect<T extends boolean = true> {
   photo?: T;
   bio?: T;
   roles?: T;
-  cohort_year?: T;
   courses?: T;
   updatedAt?: T;
   createdAt?: T;

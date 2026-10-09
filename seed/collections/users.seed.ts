@@ -123,7 +123,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مشرف ومنسّق مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم ومراجع للمقالات الخمسة جميعها في «أعمال مختبر الترجمة» (CILAS، 2018).',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Hind El-Ghazaly',
@@ -133,7 +132,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مشرفة ومنسّقة مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم» في «أعمال مختبر الترجمة» (CILAS، 2018).',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'El-Sayed Mahmoud',
@@ -143,7 +141,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مشرف ومنسّق مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقالَي «التعافي من داء الدبلومات» و«استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Iman Marak',
@@ -153,7 +150,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجمة الرئيسية لمقال «حول كيفية قراءة الأعمال النظرية».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Ayman El-Husseini',
@@ -162,7 +158,6 @@ export const usersData: UserSeed[] = [
     bio: 'Translator and reviewer in the CILAS Translation Lab, 2016–2018.',
     bio_ar: 'مترجم ومراجع في مختبر الترجمة بمركز CILAS (2016–2018).',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Mad Bahi',
@@ -171,7 +166,6 @@ export const usersData: UserSeed[] = [
     bio: 'Translator in the CILAS Translation Lab, 2016–2018.',
     bio_ar: 'مترجم في مختبر الترجمة بمركز CILAS (2016–2018).',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Nazihy Halouda',
@@ -181,7 +175,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Howaida Ahmed',
@@ -191,7 +184,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «حول كيفية قراءة الأعمال النظرية».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Iman Kal Abdel Hamid',
@@ -201,7 +193,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة ومراجعة في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجمة الوحيدة لمقال «القراءة والكتابة والفهم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Ahmed El-Mengy',
@@ -211,7 +202,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجم الرئيسي لمقال «استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Islam Karam',
@@ -221,7 +211,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Iman Safwat',
@@ -231,7 +220,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Rehab Soliman',
@@ -241,7 +229,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Abdel Rahman Adel',
@@ -251,7 +238,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Mariam Salem',
@@ -261,7 +247,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Noura Halmy',
@@ -271,7 +256,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Sara Alaa',
@@ -281,7 +265,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Amal Abdel Rahman',
@@ -291,7 +274,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Heba El-Mansour',
@@ -301,7 +283,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Sara Salam',
@@ -311,7 +292,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Mohamed Nagu Senjer',
@@ -321,7 +301,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «التعافي من داء الدبلومات».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Amir Zaki',
@@ -331,7 +310,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مراجع (مراجعة) في مختبر الترجمة بمركز CILAS (2016–2018) لمقالَي «موجز تاريخ التعليم البديل» و«القراءة والكتابة والفهم».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Nahir Emad',
@@ -341,7 +319,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مراجِعة (مراجعة) لمقال «القراءة والكتابة والفهم» في مختبر الترجمة بمركز CILAS (2016–2018).',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Nazihy Awad',
@@ -351,7 +328,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «حول كيفية قراءة الأعمال النظرية».',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
   {
     name: 'Amr Okasha',
@@ -361,7 +337,6 @@ export const usersData: UserSeed[] = [
     bio_ar:
       'مصمم الغلاف (تصميم الغلاف) والمخرج الفني (الإخراج الفني) لكتاب «أعمال مختبر الترجمة» (CILAS، 2018).',
     roles: ['ciliasian'],
-    cohort_year: 'CILASians 2016–2018',
   },
 
   // ---- admin ----
