@@ -60,6 +60,13 @@ Expected: no output. If `seed/*`, `CourseView.tsx` or `study-filters.tsx` show a
 Run: `pnpm test:int`
 Expected: all tests pass. If any fail, write down which ones before continuing so they aren't blamed on this plan.
 
+- [ ] **Step 3: Record the type-check baseline**
+
+Run: `pnpm exec tsc --noEmit 2>&1 | grep -c "error TS"`
+Expected: a number. Save the full output to the scratchpad. Later "no errors" checks mean "no errors beyond this baseline".
+
+> **Database warning.** `DATABASE_URL` points at a remote Neon database, and `push: true` syncs the schema whenever Payload boots (int tests, `pnpm dev`, seeding). From Task 2 to Task 9 the schema drops user columns and renames an enum value. A push like that asks for interactive confirmation and may abort or exit when there's no terminal. **Don't boot Payload against the database between Task 2 and Task 10.** Only `pnpm generate:types`, `tsc` and the unit tests are safe, because they don't connect. Task 10 rebuilds the database in one step, after the owner confirms it is disposable.
+
 ---
 
 ### Task 1: Fix the course-ownership bug
@@ -463,7 +470,7 @@ git commit -m "refactor(users): auth and roles only, linked to an optional perso
 
 **Files:**
 - Create: `src/lib/fellow-role.ts`
-- Modify: `src/access.ts`, `src/collections/Courses.ts`
+- Modify: `src/access.ts`, `src/collections/Courses.ts`, `src/collections/Events.ts`, `src/collections/People.ts`
 - Rewrite: `tests/unit/fellow-role.unit.spec.ts`
 - Modify: `tests/unit/access.unit.spec.ts`
 
@@ -744,6 +751,8 @@ In `src/collections/Courses.ts`:
     },
 ```
 
+In `src/collections/Events.ts`, change the `fellows` field to `relationTo: 'people'` too. Event read access uses `ownsViaFellows`, which now yields a person id. Plan 4 reshapes this field into `speakers[]`.
+
 Now that `courses.fellows` points at people, append the join to `People.fields` in `src/collections/People.ts`:
 
 ```ts
@@ -774,7 +783,7 @@ Expected: PASS (all of access, fellow-role).
 - [ ] **Step 5: Commit**
 
 ```bash
-git add src/lib/fellow-role.ts src/access.ts src/collections/Courses.ts src/collections/People.ts src/payload-types.ts tests/unit
+git add src/lib/fellow-role.ts src/access.ts src/collections/Courses.ts src/collections/Events.ts src/collections/People.ts src/payload-types.ts tests/unit
 git commit -m "feat(courses): fellows are people; the fellow role follows the linked account"
 ```
 
@@ -1057,10 +1066,9 @@ describe('people and memberships', () => {
 
 If `programmes` requires more fields than `title`, add them to that `create` call. Run `grep -n "required: true" src/collections/Programmes.ts` to check.
 
-- [ ] **Step 2: Run the test to make sure it fails**
+- [ ] **Step 2: Don't run it yet**
 
-Run: `pnpm exec vitest run tests/int/people.int.spec.ts`
-Expected: FAIL. The `memberships` collection doesn't exist.
+This test boots Payload, which would push a half-migrated schema (see the Task 0 warning). It runs in Task 10 Step 3, after the database rebuild. For now, check only that it compiles once Step 3 is done.
 
 - [ ] **Step 3: Implement**
 
@@ -1123,10 +1131,10 @@ Append to `People.fields`:
 
 Register it in `src/payload.config.ts`: `import { Memberships } from './collections/Memberships'`, and add `Memberships` after `People`.
 
-- [ ] **Step 4: Push the schema and run the test**
+- [ ] **Step 4: Type-check**
 
-Run: `pnpm generate:types && pnpm exec vitest run tests/int/people.int.spec.ts`
-Expected: PASS. `push: true` creates the table and the unique index when Payload boots. If the second test passes without a throw, the compound index wasn't created. Check `\d memberships` in psql before going further.
+Run: `pnpm generate:types && pnpm exec tsc --noEmit`
+Expected: no new errors outside `seed/` and `tests/int/seed-localization.int.spec.ts` (Task 9 fixes those).
 
 - [ ] **Step 5: Commit**
 
@@ -1143,9 +1151,10 @@ git commit -m "feat(memberships): a person's place in a programme community"
 - Modify: `src/collections/Events.ts`, `seed/seed.type.ts`, `seed/seed.utils.ts`, `seed/collections/users.seed.ts`, `seed/collections/courses.seed.ts`, `seed/collections/events.seed.ts`, `seed/collections/governance.seed.ts`, `seed/index.ts`
 - Rewrite: `tests/int/seed-localization.int.spec.ts`
 
-- [ ] **Step 1: Point event fellows at people**
+- [ ] **Step 1: Confirm event fellows already point at people**
 
-In `src/collections/Events.ts`, the `fellows` field becomes `relationTo: 'people'`. Plan 4 reshapes it into `speakers[]`.
+Run: `grep -n "relationTo: 'people'" src/collections/Events.ts`
+Expected: one hit (from Task 5). If there's none, make that change now.
 
 - [ ] **Step 2: Seed types**
 
@@ -1393,7 +1402,7 @@ Expected: `[ 'member', 'fellow' ] Shadi Jamal`. The seed sets `['fellow']`, the 
 - [ ] **Step 3: Run the whole suite**
 
 Run: `pnpm test:int && pnpm lint`
-Expected: all pass; lint clean.
+Expected: all pass (including `tests/int/people.int.spec.ts` from Task 8); lint clean. If "refuses a second membership" passes without a throw, the compound unique index wasn't created. Check `\d memberships` in psql.
 
 - [ ] **Step 4: Smoke-test the admin**
 
