@@ -396,7 +396,7 @@ describe('expandSchedule with sessions', () => {
     const moved = expandSchedule(threeWeeks, [
       { dates: [{ date: '2026-03-20T22:00:00.000Z', start_time: '10:00', end_time: '12:00' }] },
     ])
-    expect(moved[0].date).toBe('2026-03-21')
+    expect(moved.find((m) => m.session === 1)?.date).toBe('2026-03-21')
   })
 
   it('numbers sessions by order, not array position', () => {
