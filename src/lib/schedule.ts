@@ -108,3 +108,16 @@ export const expandSchedule = (
   meetings.push(...pattern.slice(cursor))
   return meetings.sort(byWhen)
 }
+
+/** The last day the course actually meets, or null with no meetings. */
+export const scheduleEndDate = (
+  schedule: Schedule | null | undefined,
+  sessions?: SessionDates[] | null,
+): string | null =>
+  expandSchedule(schedule, sessions)
+    .filter((m) => !m.cancelled)
+    .at(-1)?.date ?? null
+
+/** Only schedules whose start day is known go on the calendar (ADR 0002). */
+export const isOnCalendar = (schedule: Schedule | null | undefined): boolean =>
+  !!schedule && schedule.start_precision !== 'week' && expandSchedule(schedule).length > 0

@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
+import {
+  expandSchedule,
+  isOnCalendar,
+  scheduleEndDate,
+  type Schedule,
+  type SessionDates,
+} from '@/lib/schedule'
 
 // 3 March 2026 is a Tuesday.
 const tueThu: Schedule = {
@@ -128,5 +134,44 @@ describe('expandSchedule with sessions', () => {
       { date: '2026-03-05', session: 2 },
       { date: '2026-03-10', session: 2 },
     ])
+  })
+})
+
+describe('scheduleEndDate', () => {
+  it('is the last meeting day', () => {
+    expect(scheduleEndDate(tueThu)).toBe('2026-03-12')
+  })
+
+  it('ignores cancelled meetings', () => {
+    expect(scheduleEndDate(tueThu, [{}, { cancelled: true }])).toBe('2026-03-05')
+  })
+
+  it('follows moved session dates', () => {
+    expect(
+      scheduleEndDate(tueThu, [
+        {},
+        { dates: [{ date: '2026-03-28', start_time: '10:00', end_time: '12:00' }] },
+      ]),
+    ).toBe('2026-03-28')
+  })
+
+  it('is null with no meetings', () => {
+    expect(scheduleEndDate({ ...tueThu, slots: [] })).toBeNull()
+  })
+})
+
+describe('isOnCalendar', () => {
+  it('shows day-precision schedules, the default', () => {
+    expect(isOnCalendar(tueThu)).toBe(true)
+    expect(isOnCalendar({ ...tueThu, start_precision: 'day' })).toBe(true)
+  })
+
+  it('keeps week-precision schedules off the calendar', () => {
+    expect(isOnCalendar({ ...tueThu, start_precision: 'week' })).toBe(false)
+  })
+
+  it('keeps empty schedules off the calendar', () => {
+    expect(isOnCalendar({ ...tueThu, start_date: null })).toBe(false)
+    expect(isOnCalendar(null)).toBe(false)
   })
 })
