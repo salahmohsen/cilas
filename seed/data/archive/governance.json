@@ -1,0 +1,74 @@
+[
+  {
+    "person": "Michael Brint",
+    "role": "advisor",
+    "title": "Uyeno-Tseng Professor of International Studies and Professor of Political Science at California Lutheran University",
+    "advises_on": "curriculum design and university partnerships in the US and the UK",
+    "board_role": null,
+    "order": 1,
+    "legacy_url": "/advisors.html#michael-brint"
+  },
+  {
+    "person": "Teun Dekker",
+    "role": "advisor",
+    "title": "Associate Professor of Political Philosophy and Vice-Dean of Academic Affairs at University College Maastricht",
+    "advises_on": "skills training and university partnerships in the Netherlands",
+    "board_role": null,
+    "order": 2,
+    "legacy_url": "/advisors.html#teun-dekker"
+  },
+  {
+    "person": "Yen-Chi Fan",
+    "role": "advisor",
+    "title": "Chair of the Applied English Department at I-Shou University in Taiwan",
+    "advises_on": null,
+    "board_role": null,
+    "order": 3,
+    "legacy_url": "/advisors.html#yen-chi-fan"
+  },
+  {
+    "person": "Abdul Hayy Lammert Holdijk",
+    "role": "advisor",
+    "title": "Associate Chair of the Department of Rhetoric and Composition at the American University in Cairo",
+    "advises_on": "curriculum design and partnership with the American University in Cairo",
+    "board_role": null,
+    "order": 4,
+    "legacy_url": "/advisors.html#abdul-hayy-lammert-holdijk"
+  },
+  {
+    "person": "Tommaso Vitale",
+    "role": "advisor",
+    "title": "Associate Professor of Sociology at Sciences Po Paris",
+    "advises_on": "capstone projects and university partnerships in France and Italy",
+    "board_role": null,
+    "order": 5,
+    "legacy_url": "/advisors.html#tommaso-vitale"
+  },
+  {
+    "person": "Karim-Yassin Goessinger",
+    "role": "trustee",
+    "title": null,
+    "advises_on": null,
+    "board_role": "Chairman",
+    "order": 1,
+    "legacy_url": "/trustees.html#karim-yassin-goessinger"
+  },
+  {
+    "person": "Amani Elshimi",
+    "role": "trustee",
+    "title": "Director of Undergraduate Research and Senior Instructor at the Department of Rhetoric and Composition at the American University in Cairo",
+    "advises_on": null,
+    "board_role": "Secretary",
+    "order": 2,
+    "legacy_url": "/trustees.html#amani-elshimi"
+  },
+  {
+    "person": "Ahmed Galal",
+    "role": "trustee",
+    "title": "Project Manager at Netsis Egypt and Head of Operations at Salis IT Services",
+    "advises_on": null,
+    "board_role": "Treasurer",
+    "order": 3,
+    "legacy_url": "/trustees.html#ahmed-galal"
+  }
+]
