@@ -11,6 +11,9 @@ import type { Course } from '@/payload-types'
 
 type Params = { params: Promise<{ slug: string }> }
 
+// Registration open/closed is computed from today's date, so rebuild hourly.
+export const revalidate = 3600
+
 /**
  * Pre-renders every public course at build time. The route stays dynamic
  * (`dynamicParams`) so a course published after the build is still reachable
@@ -41,6 +44,9 @@ export default async function CoursePage({ params }: Params) {
     // Must match the `depth` given to `useLivePreview` in CourseLivePreview,
     // or populated relationships will not survive the live merge.
     depth: 2,
+    // Joins are admin views (a course's enrollments, a cycle's courses); never
+    // ship them to the page, where a previewing fellow would see assessments.
+    joins: false,
     overrideAccess: isPreview,
   })
 
@@ -64,6 +70,7 @@ export default async function CoursePage({ params }: Params) {
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 2,
+    joins: false,
     overrideAccess: true,
     draft: true,
   })

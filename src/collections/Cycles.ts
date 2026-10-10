@@ -25,7 +25,15 @@ export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
   const spaceId = typeof merged.space === 'object' ? merged.space?.id : merged.space
   const space = spaceId
     ? await req.payload
-        .findByID({ collection: 'spaces', id: spaceId, depth: 0, req })
+        .findByID({
+          collection: 'spaces',
+          id: spaceId,
+          depth: 0,
+          // Title and slug are not localized: always name the place in the
+          // default locale, whatever locale the editor is working in.
+          locale: 'en', // the config's defaultLocale
+          req,
+        })
         .catch(() => null)
     : null
 
@@ -52,6 +60,8 @@ export const Cycles: CollectionConfig = {
     defaultColumns: ['title', 'academic_year', 'start_date'],
   },
   defaultSort: '-start_date',
+  // One intake per season, year and space (ADR 0003).
+  indexes: [{ fields: ['season', 'start_year', 'space'], unique: true }],
   hooks: {
     beforeValidate: [deriveCycleIdentity],
   },

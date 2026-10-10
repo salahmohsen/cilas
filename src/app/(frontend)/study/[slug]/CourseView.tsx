@@ -16,7 +16,8 @@ import type { Course } from '@/payload-types'
  * growing around the whole page.
  */
 export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
-  const cover = course.cover_image && typeof course.cover_image === 'object' ? course.cover_image : null
+  const cover =
+    course.cover_image && typeof course.cover_image === 'object' ? course.cover_image : null
   const cycle = course.cycle && typeof course.cycle === 'object' ? course.cycle : null
   const cycleLabel = cycle?.title ?? null
   const sessions = sessionsInOrder(course.sessions ?? [])
@@ -33,7 +34,9 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
         <h1 className="mt-3 text-4xl font-semibold tracking-tight">{course.title}</h1>
         {course.subtitle && <p className="mt-2 text-lg opacity-70">{course.subtitle}</p>}
         {course.epigraph && (
-          <blockquote className="mt-6 border-s-2 ps-4 italic opacity-70">{course.epigraph}</blockquote>
+          <blockquote className="mt-6 border-s-2 ps-4 italic opacity-70">
+            {course.epigraph}
+          </blockquote>
         )}
       </header>
 
@@ -64,7 +67,10 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
         {firstMeeting ? (
           <>
             <dt className="text-xs tracking-widest uppercase opacity-50">Starts</dt>
-            <dd>{dayLabel(firstMeeting.date)}</dd>
+            <dd>
+              {course.schedule?.start_precision === 'week' ? 'Week of ' : ''}
+              {dayLabel(firstMeeting.date)}
+            </dd>
           </>
         ) : null}
         {price ? (
@@ -158,5 +164,4 @@ const dayLabel = (day: string): string =>
   })
 
 /** "Tue 3 Mar, 18:00–20:30" */
-const meetingLabel = (m: Meeting): string =>
-  `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`
+const meetingLabel = (m: Meeting): string => `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`
