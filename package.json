@@ -13,7 +13,7 @@
     "db:seed": "npx tsx seed/index.ts",
     "db:migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "db:migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
-    "db:reset": "npm run generate:types && find src/migrations -maxdepth 1 -type f \\( -name '*.json' -o -name '*.ts' \\) ! -name 'index.ts' -delete && npm run db:migrate:create && npm run db:migrate && npm run db:seed",
+    "db:reset": "pnpm db:migrate:create && pnpm payload migrate:fresh --force-accept-warning && pnpm db:seed",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
@@ -76,8 +76,9 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "sharp",
+      "@parcel/watcher@2.6.0",
       "esbuild",
+      "sharp",
       "unrs-resolver"
     ]
   }
