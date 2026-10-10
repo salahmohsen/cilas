@@ -6641,20 +6641,8 @@
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/1754460642__q_dd41c43459_orig.jpg",
-          "missing": true
-        },
-        {
-          "path": "uploads/1/9/1/0/19102967/3-course-image__q_fc57bd07ba_orig.png",
-          "missing": true
-        },
-        {
           "path": "uploads/1/9/1/0/19102967/cilas_course_-_mina_nagy.pdf",
           "missing": false
-        },
-        {
-          "path": "uploads/1/9/1/0/19102967/image1__q_a8ae8ab941_orig.jpg",
-          "missing": true
         },
         {
           "path": "uploads/1/9/1/0/19102967/melancholia_in_the_city.pdf",
@@ -6669,8 +6657,20 @@
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/oedipus-patchwork__q_2f16cbb068_orig.jpeg",
-          "missing": true
+          "path": "uploads/1/9/1/0/19102967/published/1754460642__q_dd41c43459.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/3-course-image__q_fc57bd07ba.png",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/image1__q_a8ae8ab941.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/oedipus-patchwork__q_2f16cbb068.jpeg",
+          "missing": false
         },
         {
           "path": "uploads/1/9/1/0/19102967/برنامج_الدورة__6_أسابيع_.pdf",
@@ -12977,16 +12977,8 @@
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/45__q_944f608ecb_orig.png",
-          "missing": true
-        },
-        {
           "path": "uploads/1/9/1/0/19102967/buddhist_psychology_course_description_with_a_reading_list_and_bio.pdf",
           "missing": false
-        },
-        {
-          "path": "uploads/1/9/1/0/19102967/end-of-history__q_2c0cebb74f_orig.jpg",
-          "missing": true
         },
         {
           "path": "uploads/1/9/1/0/19102967/heroism_and_modernity_workflow.docx.pdf",
@@ -12997,11 +12989,19 @@
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/photo-from-sohair-9__q_9d8a938758_orig.jpg",
-          "missing": true
+          "path": "uploads/1/9/1/0/19102967/proposal_for_spring_semester_ahmed.docx.pdf",
+          "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/proposal_for_spring_semester_ahmed.docx.pdf",
+          "path": "uploads/1/9/1/0/19102967/published/45__q_944f608ecb.png",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/end-of-history__q_2c0cebb74f.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/photo-from-sohair-9__q_9d8a938758.jpg",
           "missing": false
         },
         {
@@ -13711,10 +13711,6 @@
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/abstract-concrete__q_bd74f7eca5_orig.jpg",
-          "missing": true
-        },
-        {
           "path": "uploads/1/9/1/0/19102967/course_outline_-مقدمة_في_التاريخ_الاجتماعي_للتراث_الإسلامي.docx.pdf",
           "missing": false
         },
@@ -13725,10 +13721,6 @@
         {
           "path": "uploads/1/9/1/0/19102967/course-image_orig.png",
           "missing": false
-        },
-        {
-          "path": "uploads/1/9/1/0/19102967/ghoson__q_9cf88620e9_orig.jpg",
-          "missing": true
         },
         {
           "path": "uploads/1/9/1/0/19102967/global_esotericism_syllabus_final.docx.pdf",
@@ -13764,6 +13756,14 @@
         },
         {
           "path": "uploads/1/9/1/0/19102967/photo-from-sohair-8_orig.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/abstract-concrete__q_bd74f7eca5.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/ghoson__q_9cf88620e9.jpg",
           "missing": false
         },
         {
@@ -13949,10 +13949,6 @@
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/archive__q_16fd2f8ddd_orig.png",
-          "missing": true
-        },
-        {
           "path": "uploads/1/9/1/0/19102967/dramatizing_the_archive_-_cilas_proposal.docx.pdf",
           "missing": false
         },
@@ -13962,6 +13958,10 @@
         },
         {
           "path": "uploads/1/9/1/0/19102967/photo-from-sohair-7_orig.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/archive__q_16fd2f8ddd.png",
           "missing": false
         },
         {
@@ -17327,20 +17327,8 @@
       ],
       "uploads": [
         {
-          "path": "uploads/1/9/1/0/19102967/1000346659__q_67c6b7c5f6_orig.jpg",
-          "missing": true
-        },
-        {
           "path": "uploads/1/9/1/0/19102967/1395412828.png",
           "missing": false
-        },
-        {
-          "path": "uploads/1/9/1/0/19102967/ahmed__q_992c04b754_orig.png",
-          "missing": true
-        },
-        {
-          "path": "uploads/1/9/1/0/19102967/america-m-p9-100__q_493e614473_orig.jpeg",
-          "missing": true
         },
         {
           "path": "uploads/1/9/1/0/19102967/beyond_the_binary.docx.pdf",
@@ -17352,6 +17340,18 @@
         },
         {
           "path": "uploads/1/9/1/0/19102967/leon_orig.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/1000346659__q_67c6b7c5f6.jpg",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/ahmed__q_992c04b754.png",
+          "missing": false
+        },
+        {
+          "path": "uploads/1/9/1/0/19102967/published/america-m-p9-100__q_493e614473.jpeg",
           "missing": false
         },
         {
@@ -17519,8 +17519,8 @@
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/1903553547__q_9229bd4ca3_orig.png",
-          "missing": true
+          "path": "uploads/1/9/1/0/19102967/published/1903553547__q_9229bd4ca3.png",
+          "missing": false
         },
         {
           "path": "uploads/1/9/1/0/19102967/writing_the_self_summer_2025_lab.pdf",
@@ -24957,72 +24957,100 @@
     {
       "path": "uploads/1/9/1/0/19102967/published/1000346659__q_67c6b7c5f6.jpg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/winter-cycle-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/1754460642__q_dd41c43459.jpg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/fall-cycle-2025.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/1903553547__q_9229bd4ca3.png",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/writing-the-self.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/3-course-image__q_fc57bd07ba.png",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/fall-cycle-2025.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/45__q_944f608ecb.png",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/spring-cycle-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/abstract-concrete__q_bd74f7eca5.jpg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/spring-semester-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/ahmed__q_992c04b754.png",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/winter-cycle-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/america-m-p9-100__q_493e614473.jpeg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/winter-cycle-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/archive__q_16fd2f8ddd.png",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/spring-semester-labs-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/end-of-history__q_2c0cebb74f.jpg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/spring-cycle-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/ghoson__q_9cf88620e9.jpg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/spring-semester-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/image1__q_a8ae8ab941.jpg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/fall-cycle-2025.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/oedipus-patchwork__q_2f16cbb068.jpeg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/fall-cycle-2025.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/published/photo-from-sohair-9__q_9d8a938758.jpg",
       "source": "mirror",
-      "referenced_by": []
+      "referenced_by": [
+        "/spring-cycle-2026.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/race_and_shakespeare_-_fall_2020.pdf",

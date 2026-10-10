@@ -30,6 +30,14 @@ describe('resolveUpload', () => {
     })
   })
 
+  it('falls back to the published copy when the original is not on disk', () => {
+    const onlyPublished = new Set(['uploads/1/9/1/0/19102967/published/abc.jpg'])
+    expect(resolveUpload('uploads/1/9/1/0/19102967/published/abc.jpg', onlyPublished)).toEqual({
+      path: 'uploads/1/9/1/0/19102967/published/abc.jpg',
+      missing: false,
+    })
+  })
+
   it('keeps an unknown upload, marked missing', () => {
     expect(resolveUpload('/uploads/1/9/1/0/19102967/gone.pdf', files)).toEqual({
       path: 'uploads/1/9/1/0/19102967/gone.pdf',
