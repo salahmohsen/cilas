@@ -124,9 +124,15 @@ export const isAdminOrOwnVersions =
     return owns ? appendVersionToQueryKey(owns) : false
   }
 
-/** Who may write articles: community members, fellows, visiting students and admins. */
-export const canAuthor: Access = ({ req }) =>
-  hasRole(req.user, 'member', 'fellow', 'non_degree_seeking', 'admin', 'super_admin')
+/**
+ * Who may write articles: community members, fellows, visiting students and
+ * admins. A non-admin also needs a linked person, since an article is owned
+ * through its authors and an unlinked account could never reach it again.
+ */
+export const canAuthor: Access = ({ req }) => {
+  if (isAdminUser(req.user)) return true
+  return hasRole(req.user, 'member', 'fellow', 'non_degree_seeking') && personOf(req.user) !== null
+}
 
 /**
  * Admins edit anything; an owner only while the document also matches

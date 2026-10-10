@@ -147,12 +147,28 @@ describe('isAdminOrOwnVersions', () => {
 })
 
 describe('canAuthor', () => {
-  it.each(['member', 'fellow', 'non_degree_seeking', 'admin', 'super_admin'] as const)(
-    'lets a %s write articles',
+  it.each(['member', 'fellow', 'non_degree_seeking'] as const)(
+    'lets a linked %s write articles',
     (role) => {
-      expect(run(canAuthor, user([role]))).toBe(true)
+      expect(run(canAuthor, user([role], { person: 7 }))).toBe(true)
     },
   )
+
+  it.each(['member', 'fellow', 'non_degree_seeking'] as const)(
+    'refuses a %s with no linked person',
+    (role) => {
+      expect(run(canAuthor, user([role]))).toBe(false)
+      expect(run(canAuthor, user([role], { person: null }))).toBe(false)
+    },
+  )
+
+  it.each(['admin', 'super_admin'] as const)('lets a %s write without a person', (role) => {
+    expect(run(canAuthor, user([role]))).toBe(true)
+  })
+
+  it('refuses a linked account with no role', () => {
+    expect(run(canAuthor, user([], { person: 7 }))).toBe(false)
+  })
 
   it('refuses anonymous visitors', () => {
     expect(run(canAuthor, null)).toBe(false)
