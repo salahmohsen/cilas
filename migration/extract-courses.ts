@@ -14,17 +14,13 @@
  * With ANTHROPIC_API_KEY set, it can instead call the API for every page:
  *   npx tsx --env-file=.env migration/extract-courses.ts migration/raw --api [--only a.html,b.html]
  */
-import { createHash } from 'node:crypto'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import * as z from 'zod'
 
+import { agentPrompt, isCurrent as isCurrentAnswer, recordAnswer, shaOf } from './lib/agent-extract'
 import { CoursePage, PROMPT_VERSION, coursePrompt } from './lib/extraction-schema'
 import { EXTRACT_MODEL, anthropicCall, extractCached } from './lib/llm'
 import { pageText } from './lib/page-text'
-
-/** Recorded on answers written by a Claude Code agent rather than the API. */
-const AGENT_MODEL = 'claude-code:haiku'
 
 const [raw, mode, ...rest] = process.argv.slice(2)
 if (!raw || !mode) {
@@ -56,16 +52,9 @@ const pageNamed = (file: string): ManifestPage => {
   return page
 }
 
-const shaOf = (model: string, prompt: string) =>
-  createHash('sha256').update(`${PROMPT_VERSION}\n${model}\n${prompt}`).digest('hex')
-
 /** Cached under either model, and still matching the current page text and prompt. */
-const isCurrent = (page: ManifestPage): boolean => {
-  const file = path.join(outDir, `${page.file}.json`)
-  if (!existsSync(file)) return false
-  const cached = JSON.parse(readFileSync(file, 'utf8')) as { sha256: string; model: string }
-  return cached.sha256 === shaOf(cached.model, promptFor(page))
-}
+const isCurrent = (page: ManifestPage): boolean =>
+  isCurrentAnswer({ outDir, name: page.file, prompt: promptFor(page), version: PROMPT_VERSION })
 
 const main = async () => {
   if (mode === '--pending') {
@@ -77,23 +66,20 @@ const main = async () => {
 
   if (mode === '--prompt') {
     const page = pageNamed(rest[0])
-    const { $schema: _draft, ...schema } = z.toJSONSchema(CoursePage) as Record<string, unknown>
-    console.log(promptFor(page).replace(/\n\nCall the record_page tool with the result\.$/, ''))
-    console.log('\nAnswer with one JSON object matching this JSON Schema, and nothing else:\n')
-    console.log(JSON.stringify(schema))
+    console.log(agentPrompt(promptFor(page), CoursePage))
     return
   }
 
   if (mode === '--record') {
     const page = pageNamed(rest[0])
-    const answer = JSON.parse(readFileSync(rest[1], 'utf8')) as unknown
-    const data = CoursePage.parse(answer) // throws with the exact field on a bad answer
-    const prompt = promptFor(page)
-    mkdirSync(outDir, { recursive: true })
-    writeFileSync(
-      path.join(outDir, `${page.file}.json`),
-      `${JSON.stringify({ sha256: shaOf(AGENT_MODEL, prompt), model: AGENT_MODEL, version: PROMPT_VERSION, data }, null, 2)}\n`,
-    )
+    const data = recordAnswer({
+      outDir,
+      name: page.file,
+      prompt: promptFor(page),
+      version: PROMPT_VERSION,
+      schema: CoursePage, // throws with the exact field on a bad answer
+      answerFile: rest[1],
+    })
     const n = data.course ? 1 : data.cycles.reduce((s, c) => s + c.courses.length, 0)
     console.log(`${page.file}: recorded, ${n} course(s)`)
     return
@@ -117,7 +103,7 @@ const main = async () => {
       const data = CoursePage.parse(cached.data)
       writeFileSync(
         file,
-        `${JSON.stringify({ sha256: shaOf(cached.model, prompt), model: cached.model, version: PROMPT_VERSION, data }, null, 2)}\n`,
+        `${JSON.stringify({ sha256: shaOf(PROMPT_VERSION, cached.model, prompt), model: cached.model, version: PROMPT_VERSION, data }, null, 2)}\n`,
       )
       restamped++
     }
