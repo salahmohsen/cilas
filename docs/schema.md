@@ -11,79 +11,20 @@ Conventions:
 
 ## Shared shapes
 
-`schedule`, `registration` and `pricing` are built as field builders in `src/fields/` (`scheduleField()`, `registrationField()`, `pricingField()`), with their logic in `src/lib/schedule.ts` and `src/lib/registration.ts` (ADR 0002). Collections adopt them in plans 3 and 4. When wiring them in:
-- `schedule.end_date` is computed by the field's own hook, which counts the document's top-level `sessions`. So keep `sessions` top-level on courses, and add no collection hook for it.
-- Every `pricingField()` in a collection with drafts takes a short, distinct static `dbName` (e.g. `course_price`), or Postgres index names collide at 63 characters and Payload refuses to boot.
-- `registration.form` uses the column `registration_form_id`, the same one as the old top-level `registration_form` on courses and events. Remove the old field in the same migration.
+`schedule`, `registration` and `pricing` are built as field builders in `src/fields/`, with their logic in `src/lib/` (ADR 0002). Courses, cycles and programmes use them. Events adopt them in plan 4: give their `pricingField()` a short `dbName`, and drop events' top-level `registration_form` in the same migration (it shares the `registration_form_id` column).
 
 **`credits[]`** (articles, publications)
 - `role`: author | translator | editor | illustrator | photographer | other
 - `label`
 - `people[]` → people
 
-## Time and place
+## Time and place, programmes, teaching
 
-**`spaces`**
-- name, slug, `state` (current | former), `city`, `opened_year`, `closed_year`, description, images[]
-
-**`cycles`** (ADR 0003)
-- `season`: fall | winter | spring | summer
-- `start_year`
-- `space` → spaces (required)
-- `title` and `slug` are built from season, year and space and normalised. Legacy trimesters map onto fall, winter and spring.
-- `start_date`. `academic_year` is derived from it, with the year starting in September.
-- `registration`
-- `pricing[]` {`course_types[]`, `pricing`}
-- Dropped: `mode` (use the course's `location`), `programme` group, `courses` group (courses point to their cycle).
-
-## Programmes
-
-**`programmes`**: drafts enabled. Unverified Bridge years (2020–21, 2023–24, 2024–25) are kept as drafts.
-- `kind`: bridge | women_studies | residency
-- `title`, `slug`, `tagline`, `cover`, `overview`, `highlights[]`
-- `cycles[]` → cycles: the two semester cycles for a Bridge
-- `components[]` {`label`, `description`, `cycle`, `course_types[]`}. The courses in each component are derived from its cycle and course types.
-- `featured_courses[]`
-- People come from memberships and are not stored on the programme.
-- `testimonials[]`, `capacity`, `schedule_note`, `self_directed_study`, `weekly_hours`
-- `registration`, `requirements`, `pricing`, `faqs[]`, `partners[]` → partners
-
-## Teaching
-
-**`courses`**
-- `tier`
-- `course_type`: CORE | THEMATIC | LAB | WORKSHOP | SHORT
-- `cycle` (required)
-- title, slug, subtitle, summary, epigraph, cover_image, description
-- `location` hasMany: OFFLINE | ONLINE | HYBRID. This is the only place mode is stored.
-- `teaching_languages[]`, `language_note`
-- `schedule`
-- `registration`, `pricing_override`
-- `fellows[]` → people
-- `facilitator_note`, `content_warning`, `syllabus_tentative`
-- `session_unit`: `week` | `session` (default `session`). It controls the label shown: "Week 3" / "الأسبوع ٣" or "Session 3" / "الجلسة ٣". There is no per-session label; odd units use `session_title`.
-- `sessions[]`
-  - `order`, `session_title`, `description`
-  - `meetings`: how many of the schedule's meetings this session takes, by default the number of slots per week
-  - `dates[]` {`date`, `start_time`, `end_time`} (optional)
-    - When filled, it replaces this session's computed dates: remove a row to cancel a meeting, change a date to move it, add one to make it up.
-    - These dates stay fixed even if the schedule changes later.
-    - In the admin, the computed dates are shown as placeholders.
-  - `cancelled`: skips the whole session
-  - `bibliography[]` (material: reading | watch | listen | prompt | other, with an optional `href`)
-  - `activities[]` {`kind`: discussion | field_visit | exercise | screening | presentation | other, `description` (localized)}
-- course-level `bibliography[]`
-- Dropped: `tuition` group, `based_deductions_available`, `fields_of_study`, the per-session date/time group.
-- Course flows are not attached to the course. Their content is imported into it (ADR 0004).
-- No `why_apply`, `learning_outcomes`, `weekly_workload`, `mode_note` or `location_note`. Workload and outcomes stay in the description in the fellow's own words; only about 16% of course flows have an outcomes section. Space comes from the cycle, and exceptions to the mode go in `schedule.note`.
-
-**`enrollments`**
-- `person` → people
-- `course` → courses
-- `status`
-- `slot`
-- `assessment`
-- `source`
+Spaces, cycles, programmes, courses and enrollments match the code (ADR 0002, ADR 0003). Still to do:
+- **Admin:** show a course session's computed dates as placeholders in its `dates[]` (needs a custom field component).
+- **Programmes:** `partners[]` → partners, once plan 4 adds the collection.
+- **Access:** courses and articles have no `readVersions` rule, so any signed-in account can read their drafts through the versions endpoint. Set it to match their edit rules (plan 4 reworks articles).
+- **Archive import (plan 6):** `legacy_url` and `import_status` on imported documents; unverified Bridge years (2020–21, 2023–24, 2024–25) as draft programmes; legacy trimesters mapped onto fall, winter and spring.
 
 ## Partners
 
