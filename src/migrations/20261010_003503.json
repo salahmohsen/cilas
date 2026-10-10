@@ -1169,42 +1169,54 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.courses_location": {
-      "name": "courses_location",
+    "public.courses_schedule_slots": {
+      "name": "courses_schedule_slots",
       "schema": "",
       "columns": {
-        "order": {
-          "name": "order",
+        "_order": {
+          "name": "_order",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "parent_id": {
-          "name": "parent_id",
+        "_parent_id": {
+          "name": "_parent_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "value": {
-          "name": "value",
-          "type": "enum_courses_location",
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "weekday": {
+          "name": "weekday",
+          "type": "enum_courses_schedule_slots_weekday",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
+        "start_time": {
+          "name": "start_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
-        "courses_location_order_idx": {
-          "name": "courses_location_order_idx",
+        "courses_schedule_slots_order_idx": {
+          "name": "courses_schedule_slots_order_idx",
           "columns": [
             {
-              "expression": "order",
+              "expression": "_order",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1215,11 +1227,11 @@
           "method": "btree",
           "with": {}
         },
-        "courses_location_parent_idx": {
-          "name": "courses_location_parent_idx",
+        "courses_schedule_slots_parent_id_idx": {
+          "name": "courses_schedule_slots_parent_id_idx",
           "columns": [
             {
-              "expression": "parent_id",
+              "expression": "_parent_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1232,12 +1244,418 @@
         }
       },
       "foreignKeys": {
-        "courses_location_parent_fk": {
-          "name": "courses_location_parent_fk",
-          "tableFrom": "courses_location",
+        "courses_schedule_slots_parent_id_fk": {
+          "name": "courses_schedule_slots_parent_id_fk",
+          "tableFrom": "courses_schedule_slots",
           "tableTo": "courses",
           "columnsFrom": [
-            "parent_id"
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.courses_schedule_slots_locales": {
+      "name": "courses_schedule_slots_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "courses_schedule_slots_locales_locale_parent_id_unique": {
+          "name": "courses_schedule_slots_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_schedule_slots_locales_parent_id_fk": {
+          "name": "courses_schedule_slots_locales_parent_id_fk",
+          "tableFrom": "courses_schedule_slots_locales",
+          "tableTo": "courses_schedule_slots",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.course_price_plan_items": {
+      "name": "course_price_plan_items",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "course_price_plan_items_order_idx": {
+          "name": "course_price_plan_items_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "course_price_plan_items_parent_id_idx": {
+          "name": "course_price_plan_items_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "course_price_plan_items_parent_id_fk": {
+          "name": "course_price_plan_items_parent_id_fk",
+          "tableFrom": "course_price_plan_items",
+          "tableTo": "course_price_plans",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.course_price_plans": {
+      "name": "course_price_plans",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "course_price_plans_order_idx": {
+          "name": "course_price_plans_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "course_price_plans_parent_id_idx": {
+          "name": "course_price_plans_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "course_price_plans_parent_id_fk": {
+          "name": "course_price_plans_parent_id_fk",
+          "tableFrom": "course_price_plans",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.course_price_plans_locales": {
+      "name": "course_price_plans_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "course_price_plans_locales_locale_parent_id_unique": {
+          "name": "course_price_plans_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "course_price_plans_locales_parent_id_fk": {
+          "name": "course_price_plans_locales_parent_id_fk",
+          "tableFrom": "course_price_plans_locales",
+          "tableTo": "course_price_plans",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.courses_sessions_dates": {
+      "name": "courses_sessions_dates",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "courses_sessions_dates_order_idx": {
+          "name": "courses_sessions_dates_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_sessions_dates_parent_id_idx": {
+          "name": "courses_sessions_dates_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_sessions_dates_parent_id_fk": {
+          "name": "courses_sessions_dates_parent_id_fk",
+          "tableFrom": "courses_sessions_dates",
+          "tableTo": "courses_sessions",
+          "columnsFrom": [
+            "_parent_id"
           ],
           "columnsTo": [
             "id"
@@ -1442,6 +1860,163 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.courses_sessions_activities": {
+      "name": "courses_sessions_activities",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "enum_courses_sessions_activities_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "courses_sessions_activities_order_idx": {
+          "name": "courses_sessions_activities_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_sessions_activities_parent_id_idx": {
+          "name": "courses_sessions_activities_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_sessions_activities_parent_id_fk": {
+          "name": "courses_sessions_activities_parent_id_fk",
+          "tableFrom": "courses_sessions_activities",
+          "tableTo": "courses_sessions",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.courses_sessions_activities_locales": {
+      "name": "courses_sessions_activities_locales",
+      "schema": "",
+      "columns": {
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "courses_sessions_activities_locales_locale_parent_id_unique": {
+          "name": "courses_sessions_activities_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_sessions_activities_locales_parent_id_fk": {
+          "name": "courses_sessions_activities_locales_parent_id_fk",
+          "tableFrom": "courses_sessions_activities_locales",
+          "tableTo": "courses_sessions_activities",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.courses_sessions": {
       "name": "courses_sessions",
       "schema": "",
@@ -1470,27 +2045,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "session_title": {
-          "name": "session_title",
-          "type": "varchar",
+        "meetings": {
+          "name": "meetings",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "date_and_time_date": {
-          "name": "date_and_time_date",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "date_and_time_start_time": {
-          "name": "date_and_time_start_time",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "date_and_time_end_time": {
-          "name": "date_and_time_end_time",
-          "type": "timestamp(3) with time zone",
+        "cancelled": {
+          "name": "cancelled",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": false
         }
@@ -1552,6 +2115,12 @@
       "name": "courses_sessions_locales",
       "schema": "",
       "columns": {
+        "session_title": {
+          "name": "session_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "description": {
           "name": "description",
           "type": "jsonb",
@@ -1812,6 +2381,172 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.courses_location": {
+      "name": "courses_location",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum_courses_location",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "courses_location_order_idx": {
+          "name": "courses_location_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_location_parent_idx": {
+          "name": "courses_location_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_location_parent_fk": {
+          "name": "courses_location_parent_fk",
+          "tableFrom": "courses_location",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.courses_teaching_languages": {
+      "name": "courses_teaching_languages",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum_courses_teaching_languages",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "courses_teaching_languages_order_idx": {
+          "name": "courses_teaching_languages_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_teaching_languages_parent_idx": {
+          "name": "courses_teaching_languages_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "courses_teaching_languages_parent_fk": {
+          "name": "courses_teaching_languages_parent_fk",
+          "tableFrom": "courses_teaching_languages",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.courses": {
       "name": "courses",
       "schema": "",
@@ -1862,15 +2597,36 @@
           "primaryKey": false,
           "notNull": false
         },
-        "amount": {
-          "name": "amount",
+        "schedule_start_date": {
+          "name": "schedule_start_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "schedule_start_precision": {
+          "name": "schedule_start_precision",
+          "type": "enum_courses_schedule_start_precision",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'day'"
+        },
+        "schedule_weeks": {
+          "name": "schedule_weeks",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "based_deductions_available": {
-          "name": "based_deductions_available",
-          "type": "boolean",
+        "schedule_end_date": {
+          "name": "schedule_end_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_method": {
+          "name": "registration_method",
+          "type": "enum_courses_registration_method",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
@@ -1879,6 +2635,64 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "registration_url": {
+          "name": "registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_deadline": {
+          "name": "registration_deadline",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_archived_registration_url": {
+          "name": "registration_archived_registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_override_min": {
+          "name": "pricing_override_min",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_override_max": {
+          "name": "pricing_override_max",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_override_currency": {
+          "name": "pricing_override_currency",
+          "type": "enum_courses_pricing_override_currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'EGP'"
+        },
+        "pricing_override_need_based_deductions": {
+          "name": "pricing_override_need_based_deductions",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "syllabus_tentative": {
+          "name": "syllabus_tentative",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "session_unit": {
+          "name": "session_unit",
+          "type": "enum_courses_session_unit",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'session'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -1949,8 +2763,8 @@
           "method": "btree",
           "with": {}
         },
-        "courses_registration_form_idx": {
-          "name": "courses_registration_form_idx",
+        "courses_registration_registration_form_idx": {
+          "name": "courses_registration_registration_form_idx",
           "columns": [
             {
               "expression": "registration_form_id",
@@ -2088,6 +2902,42 @@
         "description": {
           "name": "description",
           "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "facilitator_note": {
+          "name": "facilitator_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "content_warning": {
+          "name": "content_warning",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "schedule_note": {
+          "name": "schedule_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_application_requirements": {
+          "name": "registration_application_requirements",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_override_note": {
+          "name": "pricing_override_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "language_note": {
+          "name": "language_note",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -2286,42 +3136,60 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public._courses_v_version_location": {
-      "name": "_courses_v_version_location",
+    "public._courses_v_version_schedule_slots": {
+      "name": "_courses_v_version_schedule_slots",
       "schema": "",
       "columns": {
-        "order": {
-          "name": "order",
+        "_order": {
+          "name": "_order",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "parent_id": {
-          "name": "parent_id",
+        "_parent_id": {
+          "name": "_parent_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
-        },
-        "value": {
-          "name": "value",
-          "type": "enum__courses_v_version_location",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
         },
         "id": {
           "name": "id",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "weekday": {
+          "name": "weekday",
+          "type": "enum__courses_v_version_schedule_slots_weekday",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
-        "_courses_v_version_location_order_idx": {
-          "name": "_courses_v_version_location_order_idx",
+        "_courses_v_version_schedule_slots_order_idx": {
+          "name": "_courses_v_version_schedule_slots_order_idx",
           "columns": [
             {
-              "expression": "order",
+              "expression": "_order",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2332,11 +3200,11 @@
           "method": "btree",
           "with": {}
         },
-        "_courses_v_version_location_parent_idx": {
-          "name": "_courses_v_version_location_parent_idx",
+        "_courses_v_version_schedule_slots_parent_id_idx": {
+          "name": "_courses_v_version_schedule_slots_parent_id_idx",
           "columns": [
             {
-              "expression": "parent_id",
+              "expression": "_parent_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2349,12 +3217,436 @@
         }
       },
       "foreignKeys": {
-        "_courses_v_version_location_parent_fk": {
-          "name": "_courses_v_version_location_parent_fk",
-          "tableFrom": "_courses_v_version_location",
+        "_courses_v_version_schedule_slots_parent_id_fk": {
+          "name": "_courses_v_version_schedule_slots_parent_id_fk",
+          "tableFrom": "_courses_v_version_schedule_slots",
           "tableTo": "_courses_v",
           "columnsFrom": [
-            "parent_id"
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_schedule_slots_locales": {
+      "name": "_courses_v_version_schedule_slots_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_schedule_slots_locales_locale_parent_id_u": {
+          "name": "_courses_v_version_schedule_slots_locales_locale_parent_id_u",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_schedule_slots_locales_parent_id_fk": {
+          "name": "_courses_v_version_schedule_slots_locales_parent_id_fk",
+          "tableFrom": "_courses_v_version_schedule_slots_locales",
+          "tableTo": "_courses_v_version_schedule_slots",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._course_price_plan_items_v": {
+      "name": "_course_price_plan_items_v",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_course_price_plan_items_v_order_idx": {
+          "name": "_course_price_plan_items_v_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_course_price_plan_items_v_parent_id_idx": {
+          "name": "_course_price_plan_items_v_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_course_price_plan_items_v_parent_id_fk": {
+          "name": "_course_price_plan_items_v_parent_id_fk",
+          "tableFrom": "_course_price_plan_items_v",
+          "tableTo": "_course_price_plans_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._course_price_plans_v": {
+      "name": "_course_price_plans_v",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_course_price_plans_v_order_idx": {
+          "name": "_course_price_plans_v_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_course_price_plans_v_parent_id_idx": {
+          "name": "_course_price_plans_v_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_course_price_plans_v_parent_id_fk": {
+          "name": "_course_price_plans_v_parent_id_fk",
+          "tableFrom": "_course_price_plans_v",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._course_price_plans_v_locales": {
+      "name": "_course_price_plans_v_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_course_price_plans_v_locales_locale_parent_id_unique": {
+          "name": "_course_price_plans_v_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_course_price_plans_v_locales_parent_id_fk": {
+          "name": "_course_price_plans_v_locales_parent_id_fk",
+          "tableFrom": "_course_price_plans_v_locales",
+          "tableTo": "_course_price_plans_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_sessions_dates": {
+      "name": "_courses_v_version_sessions_dates",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_courses_v_version_sessions_dates_order_idx": {
+          "name": "_courses_v_version_sessions_dates_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_sessions_dates_parent_id_idx": {
+          "name": "_courses_v_version_sessions_dates_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_sessions_dates_parent_id_fk": {
+          "name": "_courses_v_version_sessions_dates_parent_id_fk",
+          "tableFrom": "_courses_v_version_sessions_dates",
+          "tableTo": "_courses_v_version_sessions",
+          "columnsFrom": [
+            "_parent_id"
           ],
           "columnsTo": [
             "id"
@@ -2565,6 +3857,169 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public._courses_v_version_sessions_activities": {
+      "name": "_courses_v_version_sessions_activities",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "enum__courses_v_version_sessions_activities_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_courses_v_version_sessions_activities_order_idx": {
+          "name": "_courses_v_version_sessions_activities_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_sessions_activities_parent_id_idx": {
+          "name": "_courses_v_version_sessions_activities_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_sessions_activities_parent_id_fk": {
+          "name": "_courses_v_version_sessions_activities_parent_id_fk",
+          "tableFrom": "_courses_v_version_sessions_activities",
+          "tableTo": "_courses_v_version_sessions",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_sessions_activities_locales": {
+      "name": "_courses_v_version_sessions_activities_locales",
+      "schema": "",
+      "columns": {
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_sessions_activities_locales_locale_parent": {
+          "name": "_courses_v_version_sessions_activities_locales_locale_parent",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_sessions_activities_locales_parent_id_fk": {
+          "name": "_courses_v_version_sessions_activities_locales_parent_id_fk",
+          "tableFrom": "_courses_v_version_sessions_activities_locales",
+          "tableTo": "_courses_v_version_sessions_activities",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public._courses_v_version_sessions": {
       "name": "_courses_v_version_sessions",
       "schema": "",
@@ -2593,27 +4048,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "session_title": {
-          "name": "session_title",
-          "type": "varchar",
+        "meetings": {
+          "name": "meetings",
+          "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "date_and_time_date": {
-          "name": "date_and_time_date",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "date_and_time_start_time": {
-          "name": "date_and_time_start_time",
-          "type": "timestamp(3) with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "date_and_time_end_time": {
-          "name": "date_and_time_end_time",
-          "type": "timestamp(3) with time zone",
+        "cancelled": {
+          "name": "cancelled",
+          "type": "boolean",
           "primaryKey": false,
           "notNull": false
         },
@@ -2681,6 +4124,12 @@
       "name": "_courses_v_version_sessions_locales",
       "schema": "",
       "columns": {
+        "session_title": {
+          "name": "session_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "description": {
           "name": "description",
           "type": "jsonb",
@@ -2947,6 +4396,172 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public._courses_v_version_location": {
+      "name": "_courses_v_version_location",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum__courses_v_version_location",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_location_order_idx": {
+          "name": "_courses_v_version_location_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_location_parent_idx": {
+          "name": "_courses_v_version_location_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_location_parent_fk": {
+          "name": "_courses_v_version_location_parent_fk",
+          "tableFrom": "_courses_v_version_location",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._courses_v_version_teaching_languages": {
+      "name": "_courses_v_version_teaching_languages",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum__courses_v_version_teaching_languages",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_courses_v_version_teaching_languages_order_idx": {
+          "name": "_courses_v_version_teaching_languages_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_teaching_languages_parent_idx": {
+          "name": "_courses_v_version_teaching_languages_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_courses_v_version_teaching_languages_parent_fk": {
+          "name": "_courses_v_version_teaching_languages_parent_fk",
+          "tableFrom": "_courses_v_version_teaching_languages",
+          "tableTo": "_courses_v",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public._courses_v": {
       "name": "_courses_v",
       "schema": "",
@@ -3003,15 +4618,36 @@
           "primaryKey": false,
           "notNull": false
         },
-        "version_amount": {
-          "name": "version_amount",
+        "version_schedule_start_date": {
+          "name": "version_schedule_start_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_schedule_start_precision": {
+          "name": "version_schedule_start_precision",
+          "type": "enum__courses_v_version_schedule_start_precision",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'day'"
+        },
+        "version_schedule_weeks": {
+          "name": "version_schedule_weeks",
           "type": "numeric",
           "primaryKey": false,
           "notNull": false
         },
-        "version_based_deductions_available": {
-          "name": "version_based_deductions_available",
-          "type": "boolean",
+        "version_schedule_end_date": {
+          "name": "version_schedule_end_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_method": {
+          "name": "version_registration_method",
+          "type": "enum__courses_v_version_registration_method",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
@@ -3020,6 +4656,64 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "version_registration_url": {
+          "name": "version_registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_deadline": {
+          "name": "version_registration_deadline",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_archived_registration_url": {
+          "name": "version_registration_archived_registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_override_min": {
+          "name": "version_pricing_override_min",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_override_max": {
+          "name": "version_pricing_override_max",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_override_currency": {
+          "name": "version_pricing_override_currency",
+          "type": "enum__courses_v_version_pricing_override_currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'EGP'"
+        },
+        "version_pricing_override_need_based_deductions": {
+          "name": "version_pricing_override_need_based_deductions",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_syllabus_tentative": {
+          "name": "version_syllabus_tentative",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_session_unit": {
+          "name": "version_session_unit",
+          "type": "enum__courses_v_version_session_unit",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'session'"
         },
         "version_updated_at": {
           "name": "version_updated_at",
@@ -3142,8 +4836,8 @@
           "method": "btree",
           "with": {}
         },
-        "_courses_v_version_version_registration_form_idx": {
-          "name": "_courses_v_version_version_registration_form_idx",
+        "_courses_v_version_registration_version_registration_for_idx": {
+          "name": "_courses_v_version_registration_version_registration_for_idx",
           "columns": [
             {
               "expression": "version_registration_form_id",
@@ -3387,6 +5081,42 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_facilitator_note": {
+          "name": "version_facilitator_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_content_warning": {
+          "name": "version_content_warning",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_schedule_note": {
+          "name": "version_schedule_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_application_requirements": {
+          "name": "version_registration_application_requirements",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_override_note": {
+          "name": "version_pricing_override_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_language_note": {
+          "name": "version_language_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "id": {
           "name": "id",
           "type": "serial",
@@ -3582,8 +5312,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.programmes": {
-      "name": "programmes",
+    "public.enrollments": {
+      "name": "enrollments",
       "schema": "",
       "columns": {
         "id": {
@@ -3592,60 +5322,39 @@
           "primaryKey": true,
           "notNull": true
         },
-        "title": {
-          "name": "title",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "generate_slug": {
-          "name": "generate_slug",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": true
-        },
-        "slug": {
-          "name": "slug",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "self_directed_study": {
-          "name": "self_directed_study",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "weekly_hours": {
-          "name": "weekly_hours",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "amount": {
-          "name": "amount",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "installments": {
-          "name": "installments",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "need_based_deductions": {
-          "name": "need_based_deductions",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "registration_form_id": {
-          "name": "registration_form_id",
+        "person_id": {
+          "name": "person_id",
           "type": "integer",
           "primaryKey": false,
+          "notNull": true
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "enum_enrollments_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'applied'"
+        },
+        "slot": {
+          "name": "slot",
+          "type": "varchar",
+          "primaryKey": false,
           "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "enum_enrollments_source",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'admin'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -3663,6 +5372,1353 @@
         }
       },
       "indexes": {
+        "enrollments_person_idx": {
+          "name": "enrollments_person_idx",
+          "columns": [
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "enrollments_course_idx": {
+          "name": "enrollments_course_idx",
+          "columns": [
+            {
+              "expression": "course_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "enrollments_updated_at_idx": {
+          "name": "enrollments_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "enrollments_created_at_idx": {
+          "name": "enrollments_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "person_course_idx": {
+          "name": "person_course_idx",
+          "columns": [
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "course_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "enrollments_person_id_people_id_fk": {
+          "name": "enrollments_person_id_people_id_fk",
+          "tableFrom": "enrollments",
+          "tableTo": "people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "enrollments_course_id_courses_id_fk": {
+          "name": "enrollments_course_id_courses_id_fk",
+          "tableFrom": "enrollments",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.enrollments_locales": {
+      "name": "enrollments_locales",
+      "schema": "",
+      "columns": {
+        "assessment": {
+          "name": "assessment",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "enrollments_locales_locale_parent_id_unique": {
+          "name": "enrollments_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "enrollments_locales_parent_id_fk": {
+          "name": "enrollments_locales_parent_id_fk",
+          "tableFrom": "enrollments_locales",
+          "tableTo": "enrollments",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_highlights": {
+      "name": "programmes_highlights",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programmes_highlights_order_idx": {
+          "name": "programmes_highlights_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_highlights_parent_id_idx": {
+          "name": "programmes_highlights_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_highlights_parent_id_fk": {
+          "name": "programmes_highlights_parent_id_fk",
+          "tableFrom": "programmes_highlights",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_highlights_locales": {
+      "name": "programmes_highlights_locales",
+      "schema": "",
+      "columns": {
+        "text": {
+          "name": "text",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programmes_highlights_locales_locale_parent_id_unique": {
+          "name": "programmes_highlights_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_highlights_locales_parent_id_fk": {
+          "name": "programmes_highlights_locales_parent_id_fk",
+          "tableFrom": "programmes_highlights_locales",
+          "tableTo": "programmes_highlights",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_components_course_types": {
+      "name": "programmes_components_course_types",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum_programmes_components_course_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programmes_components_course_types_order_idx": {
+          "name": "programmes_components_course_types_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_components_course_types_parent_idx": {
+          "name": "programmes_components_course_types_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_components_course_types_parent_fk": {
+          "name": "programmes_components_course_types_parent_fk",
+          "tableFrom": "programmes_components_course_types",
+          "tableTo": "programmes_components",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_components": {
+      "name": "programmes_components",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "cycle_id": {
+          "name": "cycle_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "programmes_components_order_idx": {
+          "name": "programmes_components_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_components_parent_id_idx": {
+          "name": "programmes_components_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_components_cycle_idx": {
+          "name": "programmes_components_cycle_idx",
+          "columns": [
+            {
+              "expression": "cycle_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_components_cycle_id_cycles_id_fk": {
+          "name": "programmes_components_cycle_id_cycles_id_fk",
+          "tableFrom": "programmes_components",
+          "tableTo": "cycles",
+          "columnsFrom": [
+            "cycle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "programmes_components_parent_id_fk": {
+          "name": "programmes_components_parent_id_fk",
+          "tableFrom": "programmes_components",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_components_locales": {
+      "name": "programmes_components_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programmes_components_locales_locale_parent_id_unique": {
+          "name": "programmes_components_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_components_locales_parent_id_fk": {
+          "name": "programmes_components_locales_parent_id_fk",
+          "tableFrom": "programmes_components_locales",
+          "tableTo": "programmes_components",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programme_price_plan_items": {
+      "name": "programme_price_plan_items",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "programme_price_plan_items_order_idx": {
+          "name": "programme_price_plan_items_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programme_price_plan_items_parent_id_idx": {
+          "name": "programme_price_plan_items_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programme_price_plan_items_parent_id_fk": {
+          "name": "programme_price_plan_items_parent_id_fk",
+          "tableFrom": "programme_price_plan_items",
+          "tableTo": "programme_price_plans",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programme_price_plans": {
+      "name": "programme_price_plans",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programme_price_plans_order_idx": {
+          "name": "programme_price_plans_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programme_price_plans_parent_id_idx": {
+          "name": "programme_price_plans_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programme_price_plans_parent_id_fk": {
+          "name": "programme_price_plans_parent_id_fk",
+          "tableFrom": "programme_price_plans",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programme_price_plans_locales": {
+      "name": "programme_price_plans_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programme_price_plans_locales_locale_parent_id_unique": {
+          "name": "programme_price_plans_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programme_price_plans_locales_parent_id_fk": {
+          "name": "programme_price_plans_locales_parent_id_fk",
+          "tableFrom": "programme_price_plans_locales",
+          "tableTo": "programme_price_plans",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_testimonials": {
+      "name": "programmes_testimonials",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "programmes_testimonials_order_idx": {
+          "name": "programmes_testimonials_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_testimonials_parent_id_idx": {
+          "name": "programmes_testimonials_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_testimonials_person_idx": {
+          "name": "programmes_testimonials_person_idx",
+          "columns": [
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_testimonials_person_id_people_id_fk": {
+          "name": "programmes_testimonials_person_id_people_id_fk",
+          "tableFrom": "programmes_testimonials",
+          "tableTo": "people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "programmes_testimonials_parent_id_fk": {
+          "name": "programmes_testimonials_parent_id_fk",
+          "tableFrom": "programmes_testimonials",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_testimonials_locales": {
+      "name": "programmes_testimonials_locales",
+      "schema": "",
+      "columns": {
+        "quote": {
+          "name": "quote",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribution": {
+          "name": "attribution",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programmes_testimonials_locales_locale_parent_id_unique": {
+          "name": "programmes_testimonials_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_testimonials_locales_parent_id_fk": {
+          "name": "programmes_testimonials_locales_parent_id_fk",
+          "tableFrom": "programmes_testimonials_locales",
+          "tableTo": "programmes_testimonials",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_faqs": {
+      "name": "programmes_faqs",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programmes_faqs_order_idx": {
+          "name": "programmes_faqs_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_faqs_parent_id_idx": {
+          "name": "programmes_faqs_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_faqs_parent_id_fk": {
+          "name": "programmes_faqs_parent_id_fk",
+          "tableFrom": "programmes_faqs",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes_faqs_locales": {
+      "name": "programmes_faqs_locales",
+      "schema": "",
+      "columns": {
+        "question": {
+          "name": "question",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "answer": {
+          "name": "answer",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "programmes_faqs_locales_locale_parent_id_unique": {
+          "name": "programmes_faqs_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "programmes_faqs_locales_parent_id_fk": {
+          "name": "programmes_faqs_locales_parent_id_fk",
+          "tableFrom": "programmes_faqs_locales",
+          "tableTo": "programmes_faqs",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.programmes": {
+      "name": "programmes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "kind": {
+          "name": "kind",
+          "type": "enum_programmes_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cover_id": {
+          "name": "cover_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "generate_slug": {
+          "name": "generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "self_directed_study": {
+          "name": "self_directed_study",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "capacity": {
+          "name": "capacity",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "weekly_hours": {
+          "name": "weekly_hours",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_method": {
+          "name": "registration_method",
+          "type": "enum_programmes_registration_method",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_form_id": {
+          "name": "registration_form_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_url": {
+          "name": "registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_deadline": {
+          "name": "registration_deadline",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_archived_registration_url": {
+          "name": "registration_archived_registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_min": {
+          "name": "pricing_min",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_max": {
+          "name": "pricing_max",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_currency": {
+          "name": "pricing_currency",
+          "type": "enum_programmes_pricing_currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'EGP'"
+        },
+        "pricing_need_based_deductions": {
+          "name": "pricing_need_based_deductions",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "_status": {
+          "name": "_status",
+          "type": "enum_programmes_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
+        }
+      },
+      "indexes": {
+        "programmes_cover_idx": {
+          "name": "programmes_cover_idx",
+          "columns": [
+            {
+              "expression": "cover_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "programmes_slug_idx": {
           "name": "programmes_slug_idx",
           "columns": [
@@ -3678,8 +6734,8 @@
           "method": "btree",
           "with": {}
         },
-        "programmes_registration_form_idx": {
-          "name": "programmes_registration_form_idx",
+        "programmes_registration_registration_form_idx": {
+          "name": "programmes_registration_registration_form_idx",
           "columns": [
             {
               "expression": "registration_form_id",
@@ -3722,9 +6778,37 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "programmes__status_idx": {
+          "name": "programmes__status_idx",
+          "columns": [
+            {
+              "expression": "_status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
+        "programmes_cover_id_media_id_fk": {
+          "name": "programmes_cover_id_media_id_fk",
+          "tableFrom": "programmes",
+          "tableTo": "media",
+          "columnsFrom": [
+            "cover_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "programmes_registration_form_id_forms_id_fk": {
           "name": "programmes_registration_form_id_forms_id_fk",
           "tableFrom": "programmes",
@@ -3749,9 +6833,45 @@
       "name": "programmes_locales",
       "schema": "",
       "columns": {
-        "admission_requirements": {
-          "name": "admission_requirements",
+        "title": {
+          "name": "title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tagline": {
+          "name": "tagline",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "overview": {
+          "name": "overview",
           "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "schedule_note": {
+          "name": "schedule_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "requirements": {
+          "name": "requirements",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_application_requirements": {
+          "name": "registration_application_requirements",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_note": {
+          "name": "pricing_note",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -3852,6 +6972,12 @@
           "type": "integer",
           "primaryKey": false,
           "notNull": false
+        },
+        "courses_id": {
+          "name": "courses_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -3914,6 +7040,21 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "programmes_rels_courses_id_idx": {
+          "name": "programmes_rels_courses_id_idx",
+          "columns": [
+            {
+              "expression": "courses_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -3936,6 +7077,2234 @@
           "tableTo": "cycles",
           "columnsFrom": [
             "cycles_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "programmes_rels_courses_fk": {
+          "name": "programmes_rels_courses_fk",
+          "tableFrom": "programmes_rels",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courses_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_highlights": {
+      "name": "_programmes_v_version_highlights",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_highlights_order_idx": {
+          "name": "_programmes_v_version_highlights_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_highlights_parent_id_idx": {
+          "name": "_programmes_v_version_highlights_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_highlights_parent_id_fk": {
+          "name": "_programmes_v_version_highlights_parent_id_fk",
+          "tableFrom": "_programmes_v_version_highlights",
+          "tableTo": "_programmes_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_highlights_locales": {
+      "name": "_programmes_v_version_highlights_locales",
+      "schema": "",
+      "columns": {
+        "text": {
+          "name": "text",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_highlights_locales_locale_parent_id_un": {
+          "name": "_programmes_v_version_highlights_locales_locale_parent_id_un",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_highlights_locales_parent_id_fk": {
+          "name": "_programmes_v_version_highlights_locales_parent_id_fk",
+          "tableFrom": "_programmes_v_version_highlights_locales",
+          "tableTo": "_programmes_v_version_highlights",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_components_course_types": {
+      "name": "_programmes_v_version_components_course_types",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum__programmes_v_version_components_course_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_components_course_types_order_idx": {
+          "name": "_programmes_v_version_components_course_types_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_components_course_types_parent_idx": {
+          "name": "_programmes_v_version_components_course_types_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_components_course_types_parent_fk": {
+          "name": "_programmes_v_version_components_course_types_parent_fk",
+          "tableFrom": "_programmes_v_version_components_course_types",
+          "tableTo": "_programmes_v_version_components",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_components": {
+      "name": "_programmes_v_version_components",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "cycle_id": {
+          "name": "cycle_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_components_order_idx": {
+          "name": "_programmes_v_version_components_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_components_parent_id_idx": {
+          "name": "_programmes_v_version_components_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_components_cycle_idx": {
+          "name": "_programmes_v_version_components_cycle_idx",
+          "columns": [
+            {
+              "expression": "cycle_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_components_cycle_id_cycles_id_fk": {
+          "name": "_programmes_v_version_components_cycle_id_cycles_id_fk",
+          "tableFrom": "_programmes_v_version_components",
+          "tableTo": "cycles",
+          "columnsFrom": [
+            "cycle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_programmes_v_version_components_parent_id_fk": {
+          "name": "_programmes_v_version_components_parent_id_fk",
+          "tableFrom": "_programmes_v_version_components",
+          "tableTo": "_programmes_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_components_locales": {
+      "name": "_programmes_v_version_components_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_components_locales_locale_parent_id_un": {
+          "name": "_programmes_v_version_components_locales_locale_parent_id_un",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_components_locales_parent_id_fk": {
+          "name": "_programmes_v_version_components_locales_parent_id_fk",
+          "tableFrom": "_programmes_v_version_components_locales",
+          "tableTo": "_programmes_v_version_components",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programme_price_plan_items_v": {
+      "name": "_programme_price_plan_items_v",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programme_price_plan_items_v_order_idx": {
+          "name": "_programme_price_plan_items_v_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programme_price_plan_items_v_parent_id_idx": {
+          "name": "_programme_price_plan_items_v_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programme_price_plan_items_v_parent_id_fk": {
+          "name": "_programme_price_plan_items_v_parent_id_fk",
+          "tableFrom": "_programme_price_plan_items_v",
+          "tableTo": "_programme_price_plans_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programme_price_plans_v": {
+      "name": "_programme_price_plans_v",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programme_price_plans_v_order_idx": {
+          "name": "_programme_price_plans_v_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programme_price_plans_v_parent_id_idx": {
+          "name": "_programme_price_plans_v_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programme_price_plans_v_parent_id_fk": {
+          "name": "_programme_price_plans_v_parent_id_fk",
+          "tableFrom": "_programme_price_plans_v",
+          "tableTo": "_programmes_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programme_price_plans_v_locales": {
+      "name": "_programme_price_plans_v_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_programme_price_plans_v_locales_locale_parent_id_unique": {
+          "name": "_programme_price_plans_v_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programme_price_plans_v_locales_parent_id_fk": {
+          "name": "_programme_price_plans_v_locales_parent_id_fk",
+          "tableFrom": "_programme_price_plans_v_locales",
+          "tableTo": "_programme_price_plans_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_testimonials": {
+      "name": "_programmes_v_version_testimonials",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "person_id": {
+          "name": "person_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_testimonials_order_idx": {
+          "name": "_programmes_v_version_testimonials_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_testimonials_parent_id_idx": {
+          "name": "_programmes_v_version_testimonials_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_testimonials_person_idx": {
+          "name": "_programmes_v_version_testimonials_person_idx",
+          "columns": [
+            {
+              "expression": "person_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_testimonials_person_id_people_id_fk": {
+          "name": "_programmes_v_version_testimonials_person_id_people_id_fk",
+          "tableFrom": "_programmes_v_version_testimonials",
+          "tableTo": "people",
+          "columnsFrom": [
+            "person_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_programmes_v_version_testimonials_parent_id_fk": {
+          "name": "_programmes_v_version_testimonials_parent_id_fk",
+          "tableFrom": "_programmes_v_version_testimonials",
+          "tableTo": "_programmes_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_testimonials_locales": {
+      "name": "_programmes_v_version_testimonials_locales",
+      "schema": "",
+      "columns": {
+        "quote": {
+          "name": "quote",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "attribution": {
+          "name": "attribution",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_testimonials_locales_locale_parent_id_": {
+          "name": "_programmes_v_version_testimonials_locales_locale_parent_id_",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_testimonials_locales_parent_id_fk": {
+          "name": "_programmes_v_version_testimonials_locales_parent_id_fk",
+          "tableFrom": "_programmes_v_version_testimonials_locales",
+          "tableTo": "_programmes_v_version_testimonials",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_faqs": {
+      "name": "_programmes_v_version_faqs",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_uuid": {
+          "name": "_uuid",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_faqs_order_idx": {
+          "name": "_programmes_v_version_faqs_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_faqs_parent_id_idx": {
+          "name": "_programmes_v_version_faqs_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_faqs_parent_id_fk": {
+          "name": "_programmes_v_version_faqs_parent_id_fk",
+          "tableFrom": "_programmes_v_version_faqs",
+          "tableTo": "_programmes_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_version_faqs_locales": {
+      "name": "_programmes_v_version_faqs_locales",
+      "schema": "",
+      "columns": {
+        "question": {
+          "name": "question",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "answer": {
+          "name": "answer",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_programmes_v_version_faqs_locales_locale_parent_id_unique": {
+          "name": "_programmes_v_version_faqs_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_version_faqs_locales_parent_id_fk": {
+          "name": "_programmes_v_version_faqs_locales_parent_id_fk",
+          "tableFrom": "_programmes_v_version_faqs_locales",
+          "tableTo": "_programmes_v_version_faqs",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v": {
+      "name": "_programmes_v",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_kind": {
+          "name": "version_kind",
+          "type": "enum__programmes_v_version_kind",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_cover_id": {
+          "name": "version_cover_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_generate_slug": {
+          "name": "version_generate_slug",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        },
+        "version_slug": {
+          "name": "version_slug",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_self_directed_study": {
+          "name": "version_self_directed_study",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_capacity": {
+          "name": "version_capacity",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_weekly_hours": {
+          "name": "version_weekly_hours",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_method": {
+          "name": "version_registration_method",
+          "type": "enum__programmes_v_version_registration_method",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_form_id": {
+          "name": "version_registration_form_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_url": {
+          "name": "version_registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_deadline": {
+          "name": "version_registration_deadline",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_archived_registration_url": {
+          "name": "version_registration_archived_registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_min": {
+          "name": "version_pricing_min",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_max": {
+          "name": "version_pricing_max",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_currency": {
+          "name": "version_pricing_currency",
+          "type": "enum__programmes_v_version_pricing_currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'EGP'"
+        },
+        "version_pricing_need_based_deductions": {
+          "name": "version_pricing_need_based_deductions",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_updated_at": {
+          "name": "version_updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_created_at": {
+          "name": "version_created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version__status": {
+          "name": "version__status",
+          "type": "enum__programmes_v_version_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'draft'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "snapshot": {
+          "name": "snapshot",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "published_locale": {
+          "name": "published_locale",
+          "type": "enum__programmes_v_published_locale",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "latest": {
+          "name": "latest",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programmes_v_parent_idx": {
+          "name": "_programmes_v_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_version_cover_idx": {
+          "name": "_programmes_v_version_version_cover_idx",
+          "columns": [
+            {
+              "expression": "version_cover_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_version_slug_idx": {
+          "name": "_programmes_v_version_version_slug_idx",
+          "columns": [
+            {
+              "expression": "version_slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_registration_version_registration__idx": {
+          "name": "_programmes_v_version_registration_version_registration__idx",
+          "columns": [
+            {
+              "expression": "version_registration_form_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_version_updated_at_idx": {
+          "name": "_programmes_v_version_version_updated_at_idx",
+          "columns": [
+            {
+              "expression": "version_updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_version_created_at_idx": {
+          "name": "_programmes_v_version_version_created_at_idx",
+          "columns": [
+            {
+              "expression": "version_created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_version__status_idx": {
+          "name": "_programmes_v_version_version__status_idx",
+          "columns": [
+            {
+              "expression": "version__status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_created_at_idx": {
+          "name": "_programmes_v_created_at_idx",
+          "columns": [
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_updated_at_idx": {
+          "name": "_programmes_v_updated_at_idx",
+          "columns": [
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_snapshot_idx": {
+          "name": "_programmes_v_snapshot_idx",
+          "columns": [
+            {
+              "expression": "snapshot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_published_locale_idx": {
+          "name": "_programmes_v_published_locale_idx",
+          "columns": [
+            {
+              "expression": "published_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_latest_idx": {
+          "name": "_programmes_v_latest_idx",
+          "columns": [
+            {
+              "expression": "latest",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_parent_id_programmes_id_fk": {
+          "name": "_programmes_v_parent_id_programmes_id_fk",
+          "tableFrom": "_programmes_v",
+          "tableTo": "programmes",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_programmes_v_version_cover_id_media_id_fk": {
+          "name": "_programmes_v_version_cover_id_media_id_fk",
+          "tableFrom": "_programmes_v",
+          "tableTo": "media",
+          "columnsFrom": [
+            "version_cover_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "_programmes_v_version_registration_form_id_forms_id_fk": {
+          "name": "_programmes_v_version_registration_form_id_forms_id_fk",
+          "tableFrom": "_programmes_v",
+          "tableTo": "forms",
+          "columnsFrom": [
+            "version_registration_form_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_locales": {
+      "name": "_programmes_v_locales",
+      "schema": "",
+      "columns": {
+        "version_title": {
+          "name": "version_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_tagline": {
+          "name": "version_tagline",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_overview": {
+          "name": "version_overview",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_schedule_note": {
+          "name": "version_schedule_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_requirements": {
+          "name": "version_requirements",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_registration_application_requirements": {
+          "name": "version_registration_application_requirements",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_pricing_note": {
+          "name": "version_pricing_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "_programmes_v_locales_locale_parent_id_unique": {
+          "name": "_programmes_v_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_locales_parent_id_fk": {
+          "name": "_programmes_v_locales_parent_id_fk",
+          "tableFrom": "_programmes_v_locales",
+          "tableTo": "_programmes_v",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public._programmes_v_rels": {
+      "name": "_programmes_v_rels",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "path": {
+          "name": "path",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "cycles_id": {
+          "name": "cycles_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "courses_id": {
+          "name": "courses_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "_programmes_v_rels_order_idx": {
+          "name": "_programmes_v_rels_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_rels_parent_idx": {
+          "name": "_programmes_v_rels_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_rels_path_idx": {
+          "name": "_programmes_v_rels_path_idx",
+          "columns": [
+            {
+              "expression": "path",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_rels_cycles_id_idx": {
+          "name": "_programmes_v_rels_cycles_id_idx",
+          "columns": [
+            {
+              "expression": "cycles_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_rels_courses_id_idx": {
+          "name": "_programmes_v_rels_courses_id_idx",
+          "columns": [
+            {
+              "expression": "courses_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "_programmes_v_rels_parent_fk": {
+          "name": "_programmes_v_rels_parent_fk",
+          "tableFrom": "_programmes_v_rels",
+          "tableTo": "_programmes_v",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_programmes_v_rels_cycles_fk": {
+          "name": "_programmes_v_rels_cycles_fk",
+          "tableFrom": "_programmes_v_rels",
+          "tableTo": "cycles",
+          "columnsFrom": [
+            "cycles_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "_programmes_v_rels_courses_fk": {
+          "name": "_programmes_v_rels_courses_fk",
+          "tableFrom": "_programmes_v_rels",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "courses_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cycles_pricing_course_types": {
+      "name": "cycles_pricing_course_types",
+      "schema": "",
+      "columns": {
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "enum_cycles_pricing_course_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "cycles_pricing_course_types_order_idx": {
+          "name": "cycles_pricing_course_types_order_idx",
+          "columns": [
+            {
+              "expression": "order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycles_pricing_course_types_parent_idx": {
+          "name": "cycles_pricing_course_types_parent_idx",
+          "columns": [
+            {
+              "expression": "parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cycles_pricing_course_types_parent_fk": {
+          "name": "cycles_pricing_course_types_parent_fk",
+          "tableFrom": "cycles_pricing_course_types",
+          "tableTo": "cycles_pricing",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cycle_price_plan_items": {
+      "name": "cycle_price_plan_items",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "cycle_price_plan_items_order_idx": {
+          "name": "cycle_price_plan_items_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycle_price_plan_items_parent_id_idx": {
+          "name": "cycle_price_plan_items_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cycle_price_plan_items_parent_id_fk": {
+          "name": "cycle_price_plan_items_parent_id_fk",
+          "tableFrom": "cycle_price_plan_items",
+          "tableTo": "cycle_price_plans",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cycle_price_plans": {
+      "name": "cycle_price_plans",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "cycle_price_plans_order_idx": {
+          "name": "cycle_price_plans_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycle_price_plans_parent_id_idx": {
+          "name": "cycle_price_plans_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cycle_price_plans_parent_id_fk": {
+          "name": "cycle_price_plans_parent_id_fk",
+          "tableFrom": "cycle_price_plans",
+          "tableTo": "cycles_pricing",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cycle_price_plans_locales": {
+      "name": "cycle_price_plans_locales",
+      "schema": "",
+      "columns": {
+        "label": {
+          "name": "label",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "cycle_price_plans_locales_locale_parent_id_unique": {
+          "name": "cycle_price_plans_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cycle_price_plans_locales_parent_id_fk": {
+          "name": "cycle_price_plans_locales_parent_id_fk",
+          "tableFrom": "cycle_price_plans_locales",
+          "tableTo": "cycle_price_plans",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cycles_pricing": {
+      "name": "cycles_pricing",
+      "schema": "",
+      "columns": {
+        "_order": {
+          "name": "_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "id": {
+          "name": "id",
+          "type": "varchar",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "pricing_min": {
+          "name": "pricing_min",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_max": {
+          "name": "pricing_max",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pricing_currency": {
+          "name": "pricing_currency",
+          "type": "enum_cycles_pricing_pricing_currency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'EGP'"
+        },
+        "pricing_need_based_deductions": {
+          "name": "pricing_need_based_deductions",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "cycles_pricing_order_idx": {
+          "name": "cycles_pricing_order_idx",
+          "columns": [
+            {
+              "expression": "_order",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycles_pricing_parent_id_idx": {
+          "name": "cycles_pricing_parent_id_idx",
+          "columns": [
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cycles_pricing_parent_id_fk": {
+          "name": "cycles_pricing_parent_id_fk",
+          "tableFrom": "cycles_pricing",
+          "tableTo": "cycles",
+          "columnsFrom": [
+            "_parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.cycles_pricing_locales": {
+      "name": "cycles_pricing_locales",
+      "schema": "",
+      "columns": {
+        "pricing_note": {
+          "name": "pricing_note",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "_parent_id": {
+          "name": "_parent_id",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "cycles_pricing_locales_locale_parent_id_unique": {
+          "name": "cycles_pricing_locales_locale_parent_id_unique",
+          "columns": [
+            {
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cycles_pricing_locales_parent_id_fk": {
+          "name": "cycles_pricing_locales_parent_id_fk",
+          "tableFrom": "cycles_pricing_locales",
+          "tableTo": "cycles_pricing",
+          "columnsFrom": [
+            "_parent_id"
           ],
           "columnsTo": [
             "id"
@@ -3966,42 +9335,71 @@
           "primaryKey": false,
           "notNull": false
         },
-        "generate_slug": {
-          "name": "generate_slug",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": true
-        },
         "slug": {
           "name": "slug",
           "type": "varchar",
           "primaryKey": false,
+          "notNull": false
+        },
+        "season": {
+          "name": "season",
+          "type": "enum_cycles_season",
+          "typeSchema": "public",
+          "primaryKey": false,
           "notNull": true
         },
-        "cycle_season": {
-          "name": "cycle_season",
-          "type": "enum_cycles_cycle_season",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "cycle_year": {
-          "name": "cycle_year",
+        "start_year": {
+          "name": "start_year",
           "type": "numeric",
           "primaryKey": false,
+          "notNull": true
+        },
+        "space_id": {
+          "name": "space_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
           "notNull": false
         },
-        "cycle_mode": {
-          "name": "cycle_mode",
-          "type": "enum_cycles_cycle_mode",
+        "academic_year": {
+          "name": "academic_year",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_method": {
+          "name": "registration_method",
+          "type": "enum_cycles_registration_method",
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         },
-        "programme_programme_id": {
-          "name": "programme_programme_id",
+        "registration_form_id": {
+          "name": "registration_form_id",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_url": {
+          "name": "registration_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_deadline": {
+          "name": "registration_deadline",
+          "type": "timestamp(3) with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registration_archived_registration_url": {
+          "name": "registration_archived_registration_url",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
@@ -4036,11 +9434,41 @@
           "method": "btree",
           "with": {}
         },
-        "cycles_programme_programme_programme_idx": {
-          "name": "cycles_programme_programme_programme_idx",
+        "cycles_space_idx": {
+          "name": "cycles_space_idx",
           "columns": [
             {
-              "expression": "programme_programme_id",
+              "expression": "space_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycles_academic_year_idx": {
+          "name": "cycles_academic_year_idx",
+          "columns": [
+            {
+              "expression": "academic_year",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycles_registration_registration_form_idx": {
+          "name": "cycles_registration_registration_form_idx",
+          "columns": [
+            {
+              "expression": "registration_form_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -4080,15 +9508,55 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "season_start_year_space_idx": {
+          "name": "season_start_year_space_idx",
+          "columns": [
+            {
+              "expression": "season",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "start_year",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "space_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
-        "cycles_programme_programme_id_programmes_id_fk": {
-          "name": "cycles_programme_programme_id_programmes_id_fk",
+        "cycles_space_id_spaces_id_fk": {
+          "name": "cycles_space_id_spaces_id_fk",
           "tableFrom": "cycles",
-          "tableTo": "programmes",
+          "tableTo": "spaces",
           "columnsFrom": [
-            "programme_programme_id"
+            "space_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "cycles_registration_form_id_forms_id_fk": {
+          "name": "cycles_registration_form_id_forms_id_fk",
+          "tableFrom": "cycles",
+          "tableTo": "forms",
+          "columnsFrom": [
+            "registration_form_id"
           ],
           "columnsTo": [
             "id"
@@ -4103,123 +9571,66 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.cycles_rels": {
-      "name": "cycles_rels",
+    "public.cycles_locales": {
+      "name": "cycles_locales",
       "schema": "",
       "columns": {
+        "registration_application_requirements": {
+          "name": "registration_application_requirements",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "id": {
           "name": "id",
           "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
-        "order": {
-          "name": "order",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "parent_id": {
-          "name": "parent_id",
-          "type": "integer",
+        "_locale": {
+          "name": "_locale",
+          "type": "_locales",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
-        "path": {
-          "name": "path",
-          "type": "varchar",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "courses_id": {
-          "name": "courses_id",
+        "_parent_id": {
+          "name": "_parent_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {
-        "cycles_rels_order_idx": {
-          "name": "cycles_rels_order_idx",
+        "cycles_locales_locale_parent_id_unique": {
+          "name": "cycles_locales_locale_parent_id_unique",
           "columns": [
             {
-              "expression": "order",
+              "expression": "_locale",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "_parent_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "cycles_rels_parent_idx": {
-          "name": "cycles_rels_parent_idx",
-          "columns": [
-            {
-              "expression": "parent_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "cycles_rels_path_idx": {
-          "name": "cycles_rels_path_idx",
-          "columns": [
-            {
-              "expression": "path",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "cycles_rels_courses_id_idx": {
-          "name": "cycles_rels_courses_id_idx",
-          "columns": [
-            {
-              "expression": "courses_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
         }
       },
       "foreignKeys": {
-        "cycles_rels_parent_fk": {
-          "name": "cycles_rels_parent_fk",
-          "tableFrom": "cycles_rels",
+        "cycles_locales_parent_id_fk": {
+          "name": "cycles_locales_parent_id_fk",
+          "tableFrom": "cycles_locales",
           "tableTo": "cycles",
           "columnsFrom": [
-            "parent_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "cycles_rels_courses_fk": {
-          "name": "cycles_rels_courses_fk",
-          "tableFrom": "cycles_rels",
-          "tableTo": "courses",
-          "columnsFrom": [
-            "courses_id"
+            "_parent_id"
           ],
           "columnsTo": [
             "id"
@@ -6622,6 +12033,18 @@
           "primaryKey": false,
           "notNull": false
         },
+        "opened_year": {
+          "name": "opened_year",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "closed_year": {
+          "name": "closed_year",
+          "type": "numeric",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -6695,6 +12118,12 @@
       "name": "spaces_locales",
       "schema": "",
       "columns": {
+        "city": {
+          "name": "city",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "description": {
           "name": "description",
           "type": "jsonb",
@@ -9422,6 +14851,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "enrollments_id": {
+          "name": "enrollments_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "programmes_id": {
           "name": "programmes_id",
           "type": "integer",
@@ -9594,6 +15029,21 @@
           "columns": [
             {
               "expression": "courses_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "payload_locked_documents_rels_enrollments_id_idx": {
+          "name": "payload_locked_documents_rels_enrollments_id_idx",
+          "columns": [
+            {
+              "expression": "enrollments_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -9827,6 +15277,19 @@
           "tableTo": "courses",
           "columnsFrom": [
             "courses_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "payload_locked_documents_rels_enrollments_fk": {
+          "name": "payload_locked_documents_rels_enrollments_fk",
+          "tableFrom": "payload_locked_documents_rels",
+          "tableTo": "enrollments",
+          "columnsFrom": [
+            "enrollments_id"
           ],
           "columnsTo": [
             "id"
@@ -10528,13 +15991,17 @@
         "visiting_fellow"
       ]
     },
-    "public.enum_courses_location": {
-      "name": "enum_courses_location",
+    "public.enum_courses_schedule_slots_weekday": {
+      "name": "enum_courses_schedule_slots_weekday",
       "schema": "public",
       "values": [
-        "OFFLINE",
-        "ONLINE",
-        "HYBRID"
+        "sat",
+        "sun",
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
       ]
     },
     "public.enum_courses_sessions_bibliography_type": {
@@ -10548,6 +16015,18 @@
         "other"
       ]
     },
+    "public.enum_courses_sessions_activities_kind": {
+      "name": "enum_courses_sessions_activities_kind",
+      "schema": "public",
+      "values": [
+        "discussion",
+        "field_visit",
+        "exercise",
+        "screening",
+        "presentation",
+        "other"
+      ]
+    },
     "public.enum_courses_bibliography_type": {
       "name": "enum_courses_bibliography_type",
       "schema": "public",
@@ -10557,6 +16036,23 @@
         "listen",
         "prompt",
         "other"
+      ]
+    },
+    "public.enum_courses_location": {
+      "name": "enum_courses_location",
+      "schema": "public",
+      "values": [
+        "OFFLINE",
+        "ONLINE",
+        "HYBRID"
+      ]
+    },
+    "public.enum_courses_teaching_languages": {
+      "name": "enum_courses_teaching_languages",
+      "schema": "public",
+      "values": [
+        "ar",
+        "en"
       ]
     },
     "public.enum_courses_tier": {
@@ -10575,7 +16071,40 @@
         "CORE",
         "THEMATIC",
         "LAB",
-        "WORKSHOP"
+        "WORKSHOP",
+        "SHORT"
+      ]
+    },
+    "public.enum_courses_schedule_start_precision": {
+      "name": "enum_courses_schedule_start_precision",
+      "schema": "public",
+      "values": [
+        "day",
+        "week"
+      ]
+    },
+    "public.enum_courses_registration_method": {
+      "name": "enum_courses_registration_method",
+      "schema": "public",
+      "values": [
+        "form",
+        "external",
+        "closed"
+      ]
+    },
+    "public.enum_courses_pricing_override_currency": {
+      "name": "enum_courses_pricing_override_currency",
+      "schema": "public",
+      "values": [
+        "EGP"
+      ]
+    },
+    "public.enum_courses_session_unit": {
+      "name": "enum_courses_session_unit",
+      "schema": "public",
+      "values": [
+        "session",
+        "week"
       ]
     },
     "public.enum_courses_status": {
@@ -10586,13 +16115,17 @@
         "published"
       ]
     },
-    "public.enum__courses_v_version_location": {
-      "name": "enum__courses_v_version_location",
+    "public.enum__courses_v_version_schedule_slots_weekday": {
+      "name": "enum__courses_v_version_schedule_slots_weekday",
       "schema": "public",
       "values": [
-        "OFFLINE",
-        "ONLINE",
-        "HYBRID"
+        "sat",
+        "sun",
+        "mon",
+        "tue",
+        "wed",
+        "thu",
+        "fri"
       ]
     },
     "public.enum__courses_v_version_sessions_bibliography_type": {
@@ -10606,6 +16139,18 @@
         "other"
       ]
     },
+    "public.enum__courses_v_version_sessions_activities_kind": {
+      "name": "enum__courses_v_version_sessions_activities_kind",
+      "schema": "public",
+      "values": [
+        "discussion",
+        "field_visit",
+        "exercise",
+        "screening",
+        "presentation",
+        "other"
+      ]
+    },
     "public.enum__courses_v_version_bibliography_type": {
       "name": "enum__courses_v_version_bibliography_type",
       "schema": "public",
@@ -10615,6 +16160,23 @@
         "listen",
         "prompt",
         "other"
+      ]
+    },
+    "public.enum__courses_v_version_location": {
+      "name": "enum__courses_v_version_location",
+      "schema": "public",
+      "values": [
+        "OFFLINE",
+        "ONLINE",
+        "HYBRID"
+      ]
+    },
+    "public.enum__courses_v_version_teaching_languages": {
+      "name": "enum__courses_v_version_teaching_languages",
+      "schema": "public",
+      "values": [
+        "ar",
+        "en"
       ]
     },
     "public.enum__courses_v_version_tier": {
@@ -10633,7 +16195,40 @@
         "CORE",
         "THEMATIC",
         "LAB",
-        "WORKSHOP"
+        "WORKSHOP",
+        "SHORT"
+      ]
+    },
+    "public.enum__courses_v_version_schedule_start_precision": {
+      "name": "enum__courses_v_version_schedule_start_precision",
+      "schema": "public",
+      "values": [
+        "day",
+        "week"
+      ]
+    },
+    "public.enum__courses_v_version_registration_method": {
+      "name": "enum__courses_v_version_registration_method",
+      "schema": "public",
+      "values": [
+        "form",
+        "external",
+        "closed"
+      ]
+    },
+    "public.enum__courses_v_version_pricing_override_currency": {
+      "name": "enum__courses_v_version_pricing_override_currency",
+      "schema": "public",
+      "values": [
+        "EGP"
+      ]
+    },
+    "public.enum__courses_v_version_session_unit": {
+      "name": "enum__courses_v_version_session_unit",
+      "schema": "public",
+      "values": [
+        "session",
+        "week"
       ]
     },
     "public.enum__courses_v_version_status": {
@@ -10652,8 +16247,142 @@
         "ar"
       ]
     },
-    "public.enum_cycles_cycle_season": {
-      "name": "enum_cycles_cycle_season",
+    "public.enum_enrollments_status": {
+      "name": "enum_enrollments_status",
+      "schema": "public",
+      "values": [
+        "applied",
+        "accepted",
+        "confirmed",
+        "completed",
+        "withdrawn"
+      ]
+    },
+    "public.enum_enrollments_source": {
+      "name": "enum_enrollments_source",
+      "schema": "public",
+      "values": [
+        "registration_form",
+        "admin",
+        "backfill"
+      ]
+    },
+    "public.enum_programmes_components_course_types": {
+      "name": "enum_programmes_components_course_types",
+      "schema": "public",
+      "values": [
+        "CORE",
+        "THEMATIC",
+        "LAB",
+        "WORKSHOP",
+        "SHORT"
+      ]
+    },
+    "public.enum_programmes_kind": {
+      "name": "enum_programmes_kind",
+      "schema": "public",
+      "values": [
+        "bridge",
+        "women_studies",
+        "residency"
+      ]
+    },
+    "public.enum_programmes_registration_method": {
+      "name": "enum_programmes_registration_method",
+      "schema": "public",
+      "values": [
+        "form",
+        "external",
+        "closed"
+      ]
+    },
+    "public.enum_programmes_pricing_currency": {
+      "name": "enum_programmes_pricing_currency",
+      "schema": "public",
+      "values": [
+        "EGP"
+      ]
+    },
+    "public.enum_programmes_status": {
+      "name": "enum_programmes_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "published"
+      ]
+    },
+    "public.enum__programmes_v_version_components_course_types": {
+      "name": "enum__programmes_v_version_components_course_types",
+      "schema": "public",
+      "values": [
+        "CORE",
+        "THEMATIC",
+        "LAB",
+        "WORKSHOP",
+        "SHORT"
+      ]
+    },
+    "public.enum__programmes_v_version_kind": {
+      "name": "enum__programmes_v_version_kind",
+      "schema": "public",
+      "values": [
+        "bridge",
+        "women_studies",
+        "residency"
+      ]
+    },
+    "public.enum__programmes_v_version_registration_method": {
+      "name": "enum__programmes_v_version_registration_method",
+      "schema": "public",
+      "values": [
+        "form",
+        "external",
+        "closed"
+      ]
+    },
+    "public.enum__programmes_v_version_pricing_currency": {
+      "name": "enum__programmes_v_version_pricing_currency",
+      "schema": "public",
+      "values": [
+        "EGP"
+      ]
+    },
+    "public.enum__programmes_v_version_status": {
+      "name": "enum__programmes_v_version_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "published"
+      ]
+    },
+    "public.enum__programmes_v_published_locale": {
+      "name": "enum__programmes_v_published_locale",
+      "schema": "public",
+      "values": [
+        "en",
+        "ar"
+      ]
+    },
+    "public.enum_cycles_pricing_course_types": {
+      "name": "enum_cycles_pricing_course_types",
+      "schema": "public",
+      "values": [
+        "CORE",
+        "THEMATIC",
+        "LAB",
+        "WORKSHOP",
+        "SHORT"
+      ]
+    },
+    "public.enum_cycles_pricing_pricing_currency": {
+      "name": "enum_cycles_pricing_pricing_currency",
+      "schema": "public",
+      "values": [
+        "EGP"
+      ]
+    },
+    "public.enum_cycles_season": {
+      "name": "enum_cycles_season",
       "schema": "public",
       "values": [
         "fall",
@@ -10662,13 +16391,13 @@
         "summer"
       ]
     },
-    "public.enum_cycles_cycle_mode": {
-      "name": "enum_cycles_cycle_mode",
+    "public.enum_cycles_registration_method": {
+      "name": "enum_cycles_registration_method",
       "schema": "public",
       "values": [
-        "OFFLINE",
-        "ONLINE",
-        "HYBRID"
+        "form",
+        "external",
+        "closed"
       ]
     },
     "public.enum_governance_role": {
@@ -10796,6 +16525,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "e867dad1-6400-4af5-aea9-b19c6ba997f2",
+  "id": "c31e5c14-632d-4ad2-b449-cc30337991b5",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

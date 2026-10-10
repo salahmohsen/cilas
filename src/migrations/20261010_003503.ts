@@ -6,21 +6,50 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_users_roles" AS ENUM('super_admin', 'admin', 'fellow', 'member', 'non_degree_seeking');
   CREATE TYPE "public"."enum_people_social_links_platform" AS ENUM('facebook', 'x', 'youtube', 'instagram', 'linkedin');
   CREATE TYPE "public"."enum_memberships_role" AS ENUM('student', 'residential_fellow', 'visiting_fellow');
-  CREATE TYPE "public"."enum_courses_location" AS ENUM('OFFLINE', 'ONLINE', 'HYBRID');
+  CREATE TYPE "public"."enum_courses_schedule_slots_weekday" AS ENUM('sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri');
   CREATE TYPE "public"."enum_courses_sessions_bibliography_type" AS ENUM('reading', 'watch', 'listen', 'prompt', 'other');
+  CREATE TYPE "public"."enum_courses_sessions_activities_kind" AS ENUM('discussion', 'field_visit', 'exercise', 'screening', 'presentation', 'other');
   CREATE TYPE "public"."enum_courses_bibliography_type" AS ENUM('reading', 'watch', 'listen', 'prompt', 'other');
+  CREATE TYPE "public"."enum_courses_location" AS ENUM('OFFLINE', 'ONLINE', 'HYBRID');
+  CREATE TYPE "public"."enum_courses_teaching_languages" AS ENUM('ar', 'en');
   CREATE TYPE "public"."enum_courses_tier" AS ENUM('owner', 'community', 'public');
-  CREATE TYPE "public"."enum_courses_course_type" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP');
+  CREATE TYPE "public"."enum_courses_course_type" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT');
+  CREATE TYPE "public"."enum_courses_schedule_start_precision" AS ENUM('day', 'week');
+  CREATE TYPE "public"."enum_courses_registration_method" AS ENUM('form', 'external', 'closed');
+  CREATE TYPE "public"."enum_courses_pricing_override_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum_courses_session_unit" AS ENUM('session', 'week');
   CREATE TYPE "public"."enum_courses_status" AS ENUM('draft', 'published');
-  CREATE TYPE "public"."enum__courses_v_version_location" AS ENUM('OFFLINE', 'ONLINE', 'HYBRID');
+  CREATE TYPE "public"."enum__courses_v_version_schedule_slots_weekday" AS ENUM('sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri');
   CREATE TYPE "public"."enum__courses_v_version_sessions_bibliography_type" AS ENUM('reading', 'watch', 'listen', 'prompt', 'other');
+  CREATE TYPE "public"."enum__courses_v_version_sessions_activities_kind" AS ENUM('discussion', 'field_visit', 'exercise', 'screening', 'presentation', 'other');
   CREATE TYPE "public"."enum__courses_v_version_bibliography_type" AS ENUM('reading', 'watch', 'listen', 'prompt', 'other');
+  CREATE TYPE "public"."enum__courses_v_version_location" AS ENUM('OFFLINE', 'ONLINE', 'HYBRID');
+  CREATE TYPE "public"."enum__courses_v_version_teaching_languages" AS ENUM('ar', 'en');
   CREATE TYPE "public"."enum__courses_v_version_tier" AS ENUM('owner', 'community', 'public');
-  CREATE TYPE "public"."enum__courses_v_version_course_type" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP');
+  CREATE TYPE "public"."enum__courses_v_version_course_type" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT');
+  CREATE TYPE "public"."enum__courses_v_version_schedule_start_precision" AS ENUM('day', 'week');
+  CREATE TYPE "public"."enum__courses_v_version_registration_method" AS ENUM('form', 'external', 'closed');
+  CREATE TYPE "public"."enum__courses_v_version_pricing_override_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum__courses_v_version_session_unit" AS ENUM('session', 'week');
   CREATE TYPE "public"."enum__courses_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__courses_v_published_locale" AS ENUM('en', 'ar');
-  CREATE TYPE "public"."enum_cycles_cycle_season" AS ENUM('fall', 'winter', 'spring', 'summer');
-  CREATE TYPE "public"."enum_cycles_cycle_mode" AS ENUM('OFFLINE', 'ONLINE', 'HYBRID');
+  CREATE TYPE "public"."enum_enrollments_status" AS ENUM('applied', 'accepted', 'confirmed', 'completed', 'withdrawn');
+  CREATE TYPE "public"."enum_enrollments_source" AS ENUM('registration_form', 'admin', 'backfill');
+  CREATE TYPE "public"."enum_programmes_components_course_types" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT');
+  CREATE TYPE "public"."enum_programmes_kind" AS ENUM('bridge', 'women_studies', 'residency');
+  CREATE TYPE "public"."enum_programmes_registration_method" AS ENUM('form', 'external', 'closed');
+  CREATE TYPE "public"."enum_programmes_pricing_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum_programmes_status" AS ENUM('draft', 'published');
+  CREATE TYPE "public"."enum__programmes_v_version_components_course_types" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT');
+  CREATE TYPE "public"."enum__programmes_v_version_kind" AS ENUM('bridge', 'women_studies', 'residency');
+  CREATE TYPE "public"."enum__programmes_v_version_registration_method" AS ENUM('form', 'external', 'closed');
+  CREATE TYPE "public"."enum__programmes_v_version_pricing_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum__programmes_v_version_status" AS ENUM('draft', 'published');
+  CREATE TYPE "public"."enum__programmes_v_published_locale" AS ENUM('en', 'ar');
+  CREATE TYPE "public"."enum_cycles_pricing_course_types" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT');
+  CREATE TYPE "public"."enum_cycles_pricing_pricing_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum_cycles_season" AS ENUM('fall', 'winter', 'spring', 'summer');
+  CREATE TYPE "public"."enum_cycles_registration_method" AS ENUM('form', 'external', 'closed');
   CREATE TYPE "public"."enum_governance_role" AS ENUM('advisor', 'trustee');
   CREATE TYPE "public"."enum_articles_tier" AS ENUM('owner', 'community', 'public');
   CREATE TYPE "public"."enum_articles_status" AS ENUM('draft', 'published');
@@ -138,11 +167,50 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"sizes_card_filename" varchar
   );
   
-  CREATE TABLE "courses_location" (
-  	"order" integer NOT NULL,
-  	"parent_id" integer NOT NULL,
-  	"value" "enum_courses_location",
-  	"id" serial PRIMARY KEY NOT NULL
+  CREATE TABLE "courses_schedule_slots" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"weekday" "enum_courses_schedule_slots_weekday",
+  	"start_time" varchar,
+  	"end_time" varchar
+  );
+  
+  CREATE TABLE "courses_schedule_slots_locales" (
+  	"label" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "course_price_plan_items" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"amount" numeric,
+  	"due_date" timestamp(3) with time zone
+  );
+  
+  CREATE TABLE "course_price_plans" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "course_price_plans_locales" (
+  	"label" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "courses_sessions_dates" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"date" timestamp(3) with time zone,
+  	"start_time" varchar,
+  	"end_time" varchar
   );
   
   CREATE TABLE "courses_sessions_bibliography" (
@@ -161,18 +229,31 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_parent_id" varchar NOT NULL
   );
   
+  CREATE TABLE "courses_sessions_activities" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"kind" "enum_courses_sessions_activities_kind"
+  );
+  
+  CREATE TABLE "courses_sessions_activities_locales" (
+  	"description" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
   CREATE TABLE "courses_sessions" (
   	"_order" integer NOT NULL,
   	"_parent_id" integer NOT NULL,
   	"id" varchar PRIMARY KEY NOT NULL,
   	"order" numeric,
-  	"session_title" varchar,
-  	"date_and_time_date" timestamp(3) with time zone,
-  	"date_and_time_start_time" timestamp(3) with time zone,
-  	"date_and_time_end_time" timestamp(3) with time zone
+  	"meetings" numeric,
+  	"cancelled" boolean
   );
   
   CREATE TABLE "courses_sessions_locales" (
+  	"session_title" varchar,
   	"description" jsonb,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
@@ -195,6 +276,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_parent_id" varchar NOT NULL
   );
   
+  CREATE TABLE "courses_location" (
+  	"order" integer NOT NULL,
+  	"parent_id" integer NOT NULL,
+  	"value" "enum_courses_location",
+  	"id" serial PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "courses_teaching_languages" (
+  	"order" integer NOT NULL,
+  	"parent_id" integer NOT NULL,
+  	"value" "enum_courses_teaching_languages",
+  	"id" serial PRIMARY KEY NOT NULL
+  );
+  
   CREATE TABLE "courses" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"tier" "enum_courses_tier" DEFAULT 'owner',
@@ -203,9 +298,21 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"cover_image_id" integer,
   	"generate_slug" boolean DEFAULT true,
   	"slug" varchar,
-  	"amount" numeric,
-  	"based_deductions_available" boolean,
+  	"schedule_start_date" timestamp(3) with time zone,
+  	"schedule_start_precision" "enum_courses_schedule_start_precision" DEFAULT 'day',
+  	"schedule_weeks" numeric,
+  	"schedule_end_date" timestamp(3) with time zone,
+  	"registration_method" "enum_courses_registration_method",
   	"registration_form_id" integer,
+  	"registration_url" varchar,
+  	"registration_deadline" timestamp(3) with time zone,
+  	"registration_archived_registration_url" varchar,
+  	"pricing_override_min" numeric,
+  	"pricing_override_max" numeric,
+  	"pricing_override_currency" "enum_courses_pricing_override_currency" DEFAULT 'EGP',
+  	"pricing_override_need_based_deductions" boolean,
+  	"syllabus_tentative" boolean,
+  	"session_unit" "enum_courses_session_unit" DEFAULT 'session',
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"_status" "enum_courses_status" DEFAULT 'draft'
@@ -217,6 +324,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"summary" varchar,
   	"epigraph" varchar,
   	"description" jsonb,
+  	"facilitator_note" varchar,
+  	"content_warning" varchar,
+  	"schedule_note" varchar,
+  	"registration_application_requirements" jsonb,
+  	"pricing_override_note" varchar,
+  	"language_note" varchar,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
   	"_parent_id" integer NOT NULL
@@ -230,11 +343,54 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"people_id" integer
   );
   
-  CREATE TABLE "_courses_v_version_location" (
-  	"order" integer NOT NULL,
-  	"parent_id" integer NOT NULL,
-  	"value" "enum__courses_v_version_location",
-  	"id" serial PRIMARY KEY NOT NULL
+  CREATE TABLE "_courses_v_version_schedule_slots" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"weekday" "enum__courses_v_version_schedule_slots_weekday",
+  	"start_time" varchar,
+  	"end_time" varchar,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_courses_v_version_schedule_slots_locales" (
+  	"label" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_course_price_plan_items_v" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"amount" numeric,
+  	"due_date" timestamp(3) with time zone,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_course_price_plans_v" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_course_price_plans_v_locales" (
+  	"label" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_courses_v_version_sessions_dates" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"date" timestamp(3) with time zone,
+  	"start_time" varchar,
+  	"end_time" varchar,
+  	"_uuid" varchar
   );
   
   CREATE TABLE "_courses_v_version_sessions_bibliography" (
@@ -254,19 +410,33 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_parent_id" integer NOT NULL
   );
   
+  CREATE TABLE "_courses_v_version_sessions_activities" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"kind" "enum__courses_v_version_sessions_activities_kind",
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_courses_v_version_sessions_activities_locales" (
+  	"description" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
   CREATE TABLE "_courses_v_version_sessions" (
   	"_order" integer NOT NULL,
   	"_parent_id" integer NOT NULL,
   	"id" serial PRIMARY KEY NOT NULL,
   	"order" numeric,
-  	"session_title" varchar,
-  	"date_and_time_date" timestamp(3) with time zone,
-  	"date_and_time_start_time" timestamp(3) with time zone,
-  	"date_and_time_end_time" timestamp(3) with time zone,
+  	"meetings" numeric,
+  	"cancelled" boolean,
   	"_uuid" varchar
   );
   
   CREATE TABLE "_courses_v_version_sessions_locales" (
+  	"session_title" varchar,
   	"description" jsonb,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
@@ -290,6 +460,20 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"_parent_id" integer NOT NULL
   );
   
+  CREATE TABLE "_courses_v_version_location" (
+  	"order" integer NOT NULL,
+  	"parent_id" integer NOT NULL,
+  	"value" "enum__courses_v_version_location",
+  	"id" serial PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "_courses_v_version_teaching_languages" (
+  	"order" integer NOT NULL,
+  	"parent_id" integer NOT NULL,
+  	"value" "enum__courses_v_version_teaching_languages",
+  	"id" serial PRIMARY KEY NOT NULL
+  );
+  
   CREATE TABLE "_courses_v" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"parent_id" integer,
@@ -299,9 +483,21 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"version_cover_image_id" integer,
   	"version_generate_slug" boolean DEFAULT true,
   	"version_slug" varchar,
-  	"version_amount" numeric,
-  	"version_based_deductions_available" boolean,
+  	"version_schedule_start_date" timestamp(3) with time zone,
+  	"version_schedule_start_precision" "enum__courses_v_version_schedule_start_precision" DEFAULT 'day',
+  	"version_schedule_weeks" numeric,
+  	"version_schedule_end_date" timestamp(3) with time zone,
+  	"version_registration_method" "enum__courses_v_version_registration_method",
   	"version_registration_form_id" integer,
+  	"version_registration_url" varchar,
+  	"version_registration_deadline" timestamp(3) with time zone,
+  	"version_registration_archived_registration_url" varchar,
+  	"version_pricing_override_min" numeric,
+  	"version_pricing_override_max" numeric,
+  	"version_pricing_override_currency" "enum__courses_v_version_pricing_override_currency" DEFAULT 'EGP',
+  	"version_pricing_override_need_based_deductions" boolean,
+  	"version_syllabus_tentative" boolean,
+  	"version_session_unit" "enum__courses_v_version_session_unit" DEFAULT 'session',
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
   	"version__status" "enum__courses_v_version_status" DEFAULT 'draft',
@@ -319,6 +515,12 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"version_summary" varchar,
   	"version_epigraph" varchar,
   	"version_description" jsonb,
+  	"version_facilitator_note" varchar,
+  	"version_content_warning" varchar,
+  	"version_schedule_note" varchar,
+  	"version_registration_application_requirements" jsonb,
+  	"version_pricing_override_note" varchar,
+  	"version_language_note" varchar,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
   	"_parent_id" integer NOT NULL
@@ -332,23 +534,140 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"people_id" integer
   );
   
-  CREATE TABLE "programmes" (
+  CREATE TABLE "enrollments" (
   	"id" serial PRIMARY KEY NOT NULL,
-  	"title" varchar NOT NULL,
-  	"generate_slug" boolean DEFAULT true,
-  	"slug" varchar NOT NULL,
-  	"self_directed_study" boolean,
-  	"weekly_hours" numeric,
-  	"amount" numeric,
-  	"installments" numeric,
-  	"need_based_deductions" boolean,
-  	"registration_form_id" integer,
+  	"person_id" integer NOT NULL,
+  	"course_id" integer NOT NULL,
+  	"status" "enum_enrollments_status" DEFAULT 'applied' NOT NULL,
+  	"slot" varchar,
+  	"source" "enum_enrollments_source" DEFAULT 'admin' NOT NULL,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
+  CREATE TABLE "enrollments_locales" (
+  	"assessment" jsonb,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "programmes_highlights" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "programmes_highlights_locales" (
+  	"text" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "programmes_components_course_types" (
+  	"order" integer NOT NULL,
+  	"parent_id" varchar NOT NULL,
+  	"value" "enum_programmes_components_course_types",
+  	"id" serial PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "programmes_components" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"cycle_id" integer
+  );
+  
+  CREATE TABLE "programmes_components_locales" (
+  	"label" varchar,
+  	"description" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "programme_price_plan_items" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"amount" numeric,
+  	"due_date" timestamp(3) with time zone
+  );
+  
+  CREATE TABLE "programme_price_plans" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "programme_price_plans_locales" (
+  	"label" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "programmes_testimonials" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"person_id" integer
+  );
+  
+  CREATE TABLE "programmes_testimonials_locales" (
+  	"quote" varchar,
+  	"attribution" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "programmes_faqs" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "programmes_faqs_locales" (
+  	"question" varchar,
+  	"answer" jsonb,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "programmes" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"kind" "enum_programmes_kind",
+  	"cover_id" integer,
+  	"generate_slug" boolean DEFAULT true,
+  	"slug" varchar,
+  	"self_directed_study" boolean,
+  	"capacity" numeric,
+  	"weekly_hours" numeric,
+  	"registration_method" "enum_programmes_registration_method",
+  	"registration_form_id" integer,
+  	"registration_url" varchar,
+  	"registration_deadline" timestamp(3) with time zone,
+  	"registration_archived_registration_url" varchar,
+  	"pricing_min" numeric,
+  	"pricing_max" numeric,
+  	"pricing_currency" "enum_programmes_pricing_currency" DEFAULT 'EGP',
+  	"pricing_need_based_deductions" boolean,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"_status" "enum_programmes_status" DEFAULT 'draft'
+  );
+  
   CREATE TABLE "programmes_locales" (
-  	"admission_requirements" jsonb,
+  	"title" varchar,
+  	"tagline" varchar,
+  	"overview" jsonb,
+  	"schedule_note" varchar,
+  	"requirements" jsonb,
+  	"registration_application_requirements" jsonb,
+  	"pricing_note" varchar,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
   	"_parent_id" integer NOT NULL
@@ -359,28 +678,220 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"order" integer,
   	"parent_id" integer NOT NULL,
   	"path" varchar NOT NULL,
-  	"cycles_id" integer
+  	"cycles_id" integer,
+  	"courses_id" integer
+  );
+  
+  CREATE TABLE "_programmes_v_version_highlights" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_programmes_v_version_highlights_locales" (
+  	"text" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_programmes_v_version_components_course_types" (
+  	"order" integer NOT NULL,
+  	"parent_id" integer NOT NULL,
+  	"value" "enum__programmes_v_version_components_course_types",
+  	"id" serial PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "_programmes_v_version_components" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"cycle_id" integer,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_programmes_v_version_components_locales" (
+  	"label" varchar,
+  	"description" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_programme_price_plan_items_v" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"amount" numeric,
+  	"due_date" timestamp(3) with time zone,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_programme_price_plans_v" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_programme_price_plans_v_locales" (
+  	"label" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_programmes_v_version_testimonials" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"person_id" integer,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_programmes_v_version_testimonials_locales" (
+  	"quote" varchar,
+  	"attribution" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_programmes_v_version_faqs" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_uuid" varchar
+  );
+  
+  CREATE TABLE "_programmes_v_version_faqs_locales" (
+  	"question" varchar,
+  	"answer" jsonb,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_programmes_v" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"parent_id" integer,
+  	"version_kind" "enum__programmes_v_version_kind",
+  	"version_cover_id" integer,
+  	"version_generate_slug" boolean DEFAULT true,
+  	"version_slug" varchar,
+  	"version_self_directed_study" boolean,
+  	"version_capacity" numeric,
+  	"version_weekly_hours" numeric,
+  	"version_registration_method" "enum__programmes_v_version_registration_method",
+  	"version_registration_form_id" integer,
+  	"version_registration_url" varchar,
+  	"version_registration_deadline" timestamp(3) with time zone,
+  	"version_registration_archived_registration_url" varchar,
+  	"version_pricing_min" numeric,
+  	"version_pricing_max" numeric,
+  	"version_pricing_currency" "enum__programmes_v_version_pricing_currency" DEFAULT 'EGP',
+  	"version_pricing_need_based_deductions" boolean,
+  	"version_updated_at" timestamp(3) with time zone,
+  	"version_created_at" timestamp(3) with time zone,
+  	"version__status" "enum__programmes_v_version_status" DEFAULT 'draft',
+  	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
+  	"snapshot" boolean,
+  	"published_locale" "enum__programmes_v_published_locale",
+  	"latest" boolean
+  );
+  
+  CREATE TABLE "_programmes_v_locales" (
+  	"version_title" varchar,
+  	"version_tagline" varchar,
+  	"version_overview" jsonb,
+  	"version_schedule_note" varchar,
+  	"version_requirements" jsonb,
+  	"version_registration_application_requirements" jsonb,
+  	"version_pricing_note" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
+  );
+  
+  CREATE TABLE "_programmes_v_rels" (
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"order" integer,
+  	"parent_id" integer NOT NULL,
+  	"path" varchar NOT NULL,
+  	"cycles_id" integer,
+  	"courses_id" integer
+  );
+  
+  CREATE TABLE "cycles_pricing_course_types" (
+  	"order" integer NOT NULL,
+  	"parent_id" varchar NOT NULL,
+  	"value" "enum_cycles_pricing_course_types",
+  	"id" serial PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "cycle_price_plan_items" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"amount" numeric NOT NULL,
+  	"due_date" timestamp(3) with time zone
+  );
+  
+  CREATE TABLE "cycle_price_plans" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" varchar NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL
+  );
+  
+  CREATE TABLE "cycle_price_plans_locales" (
+  	"label" varchar NOT NULL,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
+  );
+  
+  CREATE TABLE "cycles_pricing" (
+  	"_order" integer NOT NULL,
+  	"_parent_id" integer NOT NULL,
+  	"id" varchar PRIMARY KEY NOT NULL,
+  	"pricing_min" numeric,
+  	"pricing_max" numeric,
+  	"pricing_currency" "enum_cycles_pricing_pricing_currency" DEFAULT 'EGP',
+  	"pricing_need_based_deductions" boolean
+  );
+  
+  CREATE TABLE "cycles_pricing_locales" (
+  	"pricing_note" varchar,
+  	"id" serial PRIMARY KEY NOT NULL,
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" varchar NOT NULL
   );
   
   CREATE TABLE "cycles" (
   	"id" serial PRIMARY KEY NOT NULL,
   	"title" varchar,
-  	"generate_slug" boolean DEFAULT true,
-  	"slug" varchar NOT NULL,
-  	"cycle_season" "enum_cycles_cycle_season",
-  	"cycle_year" numeric,
-  	"cycle_mode" "enum_cycles_cycle_mode",
-  	"programme_programme_id" integer,
+  	"slug" varchar,
+  	"season" "enum_cycles_season" NOT NULL,
+  	"start_year" numeric NOT NULL,
+  	"space_id" integer NOT NULL,
+  	"start_date" timestamp(3) with time zone,
+  	"academic_year" varchar,
+  	"registration_method" "enum_cycles_registration_method",
+  	"registration_form_id" integer,
+  	"registration_url" varchar,
+  	"registration_deadline" timestamp(3) with time zone,
+  	"registration_archived_registration_url" varchar,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
-  CREATE TABLE "cycles_rels" (
+  CREATE TABLE "cycles_locales" (
+  	"registration_application_requirements" jsonb,
   	"id" serial PRIMARY KEY NOT NULL,
-  	"order" integer,
-  	"parent_id" integer NOT NULL,
-  	"path" varchar NOT NULL,
-  	"courses_id" integer
+  	"_locale" "_locales" NOT NULL,
+  	"_parent_id" integer NOT NULL
   );
   
   CREATE TABLE "governance" (
@@ -570,11 +1081,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"generate_slug" boolean DEFAULT true,
   	"slug" varchar NOT NULL,
   	"state" "enum_spaces_state",
+  	"opened_year" numeric,
+  	"closed_year" numeric,
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
   
   CREATE TABLE "spaces_locales" (
+  	"city" varchar,
   	"description" jsonb,
   	"id" serial PRIMARY KEY NOT NULL,
   	"_locale" "_locales" NOT NULL,
@@ -834,6 +1348,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"memberships_id" integer,
   	"media_id" integer,
   	"courses_id" integer,
+  	"enrollments_id" integer,
   	"programmes_id" integer,
   	"cycles_id" integer,
   	"governance_id" integer,
@@ -905,26 +1420,44 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "memberships" ADD CONSTRAINT "memberships_programme_id_programmes_id_fk" FOREIGN KEY ("programme_id") REFERENCES "public"."programmes"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "memberships_locales" ADD CONSTRAINT "memberships_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."memberships"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "media" ADD CONSTRAINT "media_space_id_spaces_id_fk" FOREIGN KEY ("space_id") REFERENCES "public"."spaces"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "courses_location" ADD CONSTRAINT "courses_location_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "courses_schedule_slots" ADD CONSTRAINT "courses_schedule_slots_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "courses_schedule_slots_locales" ADD CONSTRAINT "courses_schedule_slots_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_schedule_slots"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "course_price_plan_items" ADD CONSTRAINT "course_price_plan_items_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."course_price_plans"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "course_price_plans" ADD CONSTRAINT "course_price_plans_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "course_price_plans_locales" ADD CONSTRAINT "course_price_plans_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."course_price_plans"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "courses_sessions_dates" ADD CONSTRAINT "courses_sessions_dates_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_sessions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_sessions_bibliography" ADD CONSTRAINT "courses_sessions_bibliography_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_sessions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_sessions_bibliography_locales" ADD CONSTRAINT "courses_sessions_bibliography_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_sessions_bibliography"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "courses_sessions_activities" ADD CONSTRAINT "courses_sessions_activities_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_sessions"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "courses_sessions_activities_locales" ADD CONSTRAINT "courses_sessions_activities_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_sessions_activities"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_sessions" ADD CONSTRAINT "courses_sessions_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_sessions_locales" ADD CONSTRAINT "courses_sessions_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_sessions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_bibliography" ADD CONSTRAINT "courses_bibliography_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_bibliography_locales" ADD CONSTRAINT "courses_bibliography_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses_bibliography"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "courses_location" ADD CONSTRAINT "courses_location_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "courses_teaching_languages" ADD CONSTRAINT "courses_teaching_languages_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses" ADD CONSTRAINT "courses_cycle_id_cycles_id_fk" FOREIGN KEY ("cycle_id") REFERENCES "public"."cycles"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "courses" ADD CONSTRAINT "courses_cover_image_id_media_id_fk" FOREIGN KEY ("cover_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "courses" ADD CONSTRAINT "courses_registration_form_id_forms_id_fk" FOREIGN KEY ("registration_form_id") REFERENCES "public"."forms"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "courses_locales" ADD CONSTRAINT "courses_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_rels" ADD CONSTRAINT "courses_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "courses_rels" ADD CONSTRAINT "courses_rels_people_fk" FOREIGN KEY ("people_id") REFERENCES "public"."people"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "_courses_v_version_location" ADD CONSTRAINT "_courses_v_version_location_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_courses_v_version_schedule_slots" ADD CONSTRAINT "_courses_v_version_schedule_slots_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_courses_v_version_schedule_slots_locales" ADD CONSTRAINT "_courses_v_version_schedule_slots_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_schedule_slots"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_course_price_plan_items_v" ADD CONSTRAINT "_course_price_plan_items_v_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_course_price_plans_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_course_price_plans_v" ADD CONSTRAINT "_course_price_plans_v_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_course_price_plans_v_locales" ADD CONSTRAINT "_course_price_plans_v_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_course_price_plans_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_courses_v_version_sessions_dates" ADD CONSTRAINT "_courses_v_version_sessions_dates_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_sessions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_version_sessions_bibliography" ADD CONSTRAINT "_courses_v_version_sessions_bibliography_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_sessions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_version_sessions_bibliography_locales" ADD CONSTRAINT "_courses_v_version_sessions_bibliography_locales_parent_i_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_sessions_bibliography"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_courses_v_version_sessions_activities" ADD CONSTRAINT "_courses_v_version_sessions_activities_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_sessions"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_courses_v_version_sessions_activities_locales" ADD CONSTRAINT "_courses_v_version_sessions_activities_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_sessions_activities"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_version_sessions" ADD CONSTRAINT "_courses_v_version_sessions_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_version_sessions_locales" ADD CONSTRAINT "_courses_v_version_sessions_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_sessions"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_version_bibliography" ADD CONSTRAINT "_courses_v_version_bibliography_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_version_bibliography_locales" ADD CONSTRAINT "_courses_v_version_bibliography_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v_version_bibliography"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_courses_v_version_location" ADD CONSTRAINT "_courses_v_version_location_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_courses_v_version_teaching_languages" ADD CONSTRAINT "_courses_v_version_teaching_languages_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v" ADD CONSTRAINT "_courses_v_parent_id_courses_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."courses"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_courses_v" ADD CONSTRAINT "_courses_v_version_cycle_id_cycles_id_fk" FOREIGN KEY ("version_cycle_id") REFERENCES "public"."cycles"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "_courses_v" ADD CONSTRAINT "_courses_v_version_cover_image_id_media_id_fk" FOREIGN KEY ("version_cover_image_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
@@ -932,13 +1465,59 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "_courses_v_locales" ADD CONSTRAINT "_courses_v_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_rels" ADD CONSTRAINT "_courses_v_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_courses_v"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "_courses_v_rels" ADD CONSTRAINT "_courses_v_rels_people_fk" FOREIGN KEY ("people_id") REFERENCES "public"."people"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "enrollments" ADD CONSTRAINT "enrollments_person_id_people_id_fk" FOREIGN KEY ("person_id") REFERENCES "public"."people"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "enrollments" ADD CONSTRAINT "enrollments_course_id_courses_id_fk" FOREIGN KEY ("course_id") REFERENCES "public"."courses"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "enrollments_locales" ADD CONSTRAINT "enrollments_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."enrollments"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_highlights" ADD CONSTRAINT "programmes_highlights_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_highlights_locales" ADD CONSTRAINT "programmes_highlights_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes_highlights"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_components_course_types" ADD CONSTRAINT "programmes_components_course_types_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."programmes_components"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_components" ADD CONSTRAINT "programmes_components_cycle_id_cycles_id_fk" FOREIGN KEY ("cycle_id") REFERENCES "public"."cycles"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "programmes_components" ADD CONSTRAINT "programmes_components_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_components_locales" ADD CONSTRAINT "programmes_components_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes_components"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programme_price_plan_items" ADD CONSTRAINT "programme_price_plan_items_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programme_price_plans"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programme_price_plans" ADD CONSTRAINT "programme_price_plans_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programme_price_plans_locales" ADD CONSTRAINT "programme_price_plans_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programme_price_plans"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_testimonials" ADD CONSTRAINT "programmes_testimonials_person_id_people_id_fk" FOREIGN KEY ("person_id") REFERENCES "public"."people"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "programmes_testimonials" ADD CONSTRAINT "programmes_testimonials_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_testimonials_locales" ADD CONSTRAINT "programmes_testimonials_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes_testimonials"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_faqs" ADD CONSTRAINT "programmes_faqs_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_faqs_locales" ADD CONSTRAINT "programmes_faqs_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes_faqs"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes" ADD CONSTRAINT "programmes_cover_id_media_id_fk" FOREIGN KEY ("cover_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "programmes" ADD CONSTRAINT "programmes_registration_form_id_forms_id_fk" FOREIGN KEY ("registration_form_id") REFERENCES "public"."forms"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "programmes_locales" ADD CONSTRAINT "programmes_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "programmes_rels" ADD CONSTRAINT "programmes_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "programmes_rels" ADD CONSTRAINT "programmes_rels_cycles_fk" FOREIGN KEY ("cycles_id") REFERENCES "public"."cycles"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "cycles" ADD CONSTRAINT "cycles_programme_programme_id_programmes_id_fk" FOREIGN KEY ("programme_programme_id") REFERENCES "public"."programmes"("id") ON DELETE set null ON UPDATE no action;
-  ALTER TABLE "cycles_rels" ADD CONSTRAINT "cycles_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."cycles"("id") ON DELETE cascade ON UPDATE no action;
-  ALTER TABLE "cycles_rels" ADD CONSTRAINT "cycles_rels_courses_fk" FOREIGN KEY ("courses_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "programmes_rels" ADD CONSTRAINT "programmes_rels_courses_fk" FOREIGN KEY ("courses_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_highlights" ADD CONSTRAINT "_programmes_v_version_highlights_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_highlights_locales" ADD CONSTRAINT "_programmes_v_version_highlights_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v_version_highlights"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_components_course_types" ADD CONSTRAINT "_programmes_v_version_components_course_types_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_programmes_v_version_components"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_components" ADD CONSTRAINT "_programmes_v_version_components_cycle_id_cycles_id_fk" FOREIGN KEY ("cycle_id") REFERENCES "public"."cycles"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_components" ADD CONSTRAINT "_programmes_v_version_components_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_components_locales" ADD CONSTRAINT "_programmes_v_version_components_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v_version_components"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programme_price_plan_items_v" ADD CONSTRAINT "_programme_price_plan_items_v_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programme_price_plans_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programme_price_plans_v" ADD CONSTRAINT "_programme_price_plans_v_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programme_price_plans_v_locales" ADD CONSTRAINT "_programme_price_plans_v_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programme_price_plans_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_testimonials" ADD CONSTRAINT "_programmes_v_version_testimonials_person_id_people_id_fk" FOREIGN KEY ("person_id") REFERENCES "public"."people"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_testimonials" ADD CONSTRAINT "_programmes_v_version_testimonials_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_testimonials_locales" ADD CONSTRAINT "_programmes_v_version_testimonials_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v_version_testimonials"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_faqs" ADD CONSTRAINT "_programmes_v_version_faqs_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_version_faqs_locales" ADD CONSTRAINT "_programmes_v_version_faqs_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v_version_faqs"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v" ADD CONSTRAINT "_programmes_v_parent_id_programmes_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."programmes"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_programmes_v" ADD CONSTRAINT "_programmes_v_version_cover_id_media_id_fk" FOREIGN KEY ("version_cover_id") REFERENCES "public"."media"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_programmes_v" ADD CONSTRAINT "_programmes_v_version_registration_form_id_forms_id_fk" FOREIGN KEY ("version_registration_form_id") REFERENCES "public"."forms"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "_programmes_v_locales" ADD CONSTRAINT "_programmes_v_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."_programmes_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_rels" ADD CONSTRAINT "_programmes_v_rels_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."_programmes_v"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_rels" ADD CONSTRAINT "_programmes_v_rels_cycles_fk" FOREIGN KEY ("cycles_id") REFERENCES "public"."cycles"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "_programmes_v_rels" ADD CONSTRAINT "_programmes_v_rels_courses_fk" FOREIGN KEY ("courses_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "cycles_pricing_course_types" ADD CONSTRAINT "cycles_pricing_course_types_parent_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."cycles_pricing"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "cycle_price_plan_items" ADD CONSTRAINT "cycle_price_plan_items_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."cycle_price_plans"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "cycle_price_plans" ADD CONSTRAINT "cycle_price_plans_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."cycles_pricing"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "cycle_price_plans_locales" ADD CONSTRAINT "cycle_price_plans_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."cycle_price_plans"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "cycles_pricing" ADD CONSTRAINT "cycles_pricing_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."cycles"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "cycles_pricing_locales" ADD CONSTRAINT "cycles_pricing_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."cycles_pricing"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "cycles" ADD CONSTRAINT "cycles_space_id_spaces_id_fk" FOREIGN KEY ("space_id") REFERENCES "public"."spaces"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "cycles" ADD CONSTRAINT "cycles_registration_form_id_forms_id_fk" FOREIGN KEY ("registration_form_id") REFERENCES "public"."forms"("id") ON DELETE set null ON UPDATE no action;
+  ALTER TABLE "cycles_locales" ADD CONSTRAINT "cycles_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."cycles"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "governance" ADD CONSTRAINT "governance_person_id_people_id_fk" FOREIGN KEY ("person_id") REFERENCES "public"."people"("id") ON DELETE set null ON UPDATE no action;
   ALTER TABLE "governance_locales" ADD CONSTRAINT "governance_locales_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."governance"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "articles_tags" ADD CONSTRAINT "articles_tags_parent_id_fk" FOREIGN KEY ("_parent_id") REFERENCES "public"."articles"("id") ON DELETE cascade ON UPDATE no action;
@@ -997,6 +1576,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_memberships_fk" FOREIGN KEY ("memberships_id") REFERENCES "public"."memberships"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_media_fk" FOREIGN KEY ("media_id") REFERENCES "public"."media"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_courses_fk" FOREIGN KEY ("courses_id") REFERENCES "public"."courses"("id") ON DELETE cascade ON UPDATE no action;
+  ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_enrollments_fk" FOREIGN KEY ("enrollments_id") REFERENCES "public"."enrollments"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_programmes_fk" FOREIGN KEY ("programmes_id") REFERENCES "public"."programmes"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_cycles_fk" FOREIGN KEY ("cycles_id") REFERENCES "public"."cycles"("id") ON DELETE cascade ON UPDATE no action;
   ALTER TABLE "payload_locked_documents_rels" ADD CONSTRAINT "payload_locked_documents_rels_governance_fk" FOREIGN KEY ("governance_id") REFERENCES "public"."governance"("id") ON DELETE cascade ON UPDATE no action;
@@ -1038,12 +1618,23 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX "media_filename_idx" ON "media" USING btree ("filename");
   CREATE INDEX "media_sizes_thumbnail_sizes_thumbnail_filename_idx" ON "media" USING btree ("sizes_thumbnail_filename");
   CREATE INDEX "media_sizes_card_sizes_card_filename_idx" ON "media" USING btree ("sizes_card_filename");
-  CREATE INDEX "courses_location_order_idx" ON "courses_location" USING btree ("order");
-  CREATE INDEX "courses_location_parent_idx" ON "courses_location" USING btree ("parent_id");
+  CREATE INDEX "courses_schedule_slots_order_idx" ON "courses_schedule_slots" USING btree ("_order");
+  CREATE INDEX "courses_schedule_slots_parent_id_idx" ON "courses_schedule_slots" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "courses_schedule_slots_locales_locale_parent_id_unique" ON "courses_schedule_slots_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "course_price_plan_items_order_idx" ON "course_price_plan_items" USING btree ("_order");
+  CREATE INDEX "course_price_plan_items_parent_id_idx" ON "course_price_plan_items" USING btree ("_parent_id");
+  CREATE INDEX "course_price_plans_order_idx" ON "course_price_plans" USING btree ("_order");
+  CREATE INDEX "course_price_plans_parent_id_idx" ON "course_price_plans" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "course_price_plans_locales_locale_parent_id_unique" ON "course_price_plans_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "courses_sessions_dates_order_idx" ON "courses_sessions_dates" USING btree ("_order");
+  CREATE INDEX "courses_sessions_dates_parent_id_idx" ON "courses_sessions_dates" USING btree ("_parent_id");
   CREATE INDEX "courses_sessions_bibliography_order_idx" ON "courses_sessions_bibliography" USING btree ("_order");
   CREATE INDEX "courses_sessions_bibliography_parent_id_idx" ON "courses_sessions_bibliography" USING btree ("_parent_id");
   CREATE INDEX "courses_sessions_bibliography_title_idx" ON "courses_sessions_bibliography_locales" USING btree ("title","_locale");
   CREATE UNIQUE INDEX "courses_sessions_bibliography_locales_locale_parent_id_uniqu" ON "courses_sessions_bibliography_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "courses_sessions_activities_order_idx" ON "courses_sessions_activities" USING btree ("_order");
+  CREATE INDEX "courses_sessions_activities_parent_id_idx" ON "courses_sessions_activities" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "courses_sessions_activities_locales_locale_parent_id_unique" ON "courses_sessions_activities_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "courses_sessions_order_idx" ON "courses_sessions" USING btree ("_order");
   CREATE INDEX "courses_sessions_parent_id_idx" ON "courses_sessions" USING btree ("_parent_id");
   CREATE UNIQUE INDEX "courses_sessions_locales_locale_parent_id_unique" ON "courses_sessions_locales" USING btree ("_locale","_parent_id");
@@ -1051,10 +1642,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "courses_bibliography_parent_id_idx" ON "courses_bibliography" USING btree ("_parent_id");
   CREATE INDEX "courses_bibliography_title_idx" ON "courses_bibliography_locales" USING btree ("title","_locale");
   CREATE UNIQUE INDEX "courses_bibliography_locales_locale_parent_id_unique" ON "courses_bibliography_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "courses_location_order_idx" ON "courses_location" USING btree ("order");
+  CREATE INDEX "courses_location_parent_idx" ON "courses_location" USING btree ("parent_id");
+  CREATE INDEX "courses_teaching_languages_order_idx" ON "courses_teaching_languages" USING btree ("order");
+  CREATE INDEX "courses_teaching_languages_parent_idx" ON "courses_teaching_languages" USING btree ("parent_id");
   CREATE INDEX "courses_cycle_idx" ON "courses" USING btree ("cycle_id");
   CREATE INDEX "courses_cover_image_idx" ON "courses" USING btree ("cover_image_id");
   CREATE UNIQUE INDEX "courses_slug_idx" ON "courses" USING btree ("slug");
-  CREATE INDEX "courses_registration_form_idx" ON "courses" USING btree ("registration_form_id");
+  CREATE INDEX "courses_registration_registration_form_idx" ON "courses" USING btree ("registration_form_id");
   CREATE INDEX "courses_updated_at_idx" ON "courses" USING btree ("updated_at");
   CREATE INDEX "courses_created_at_idx" ON "courses" USING btree ("created_at");
   CREATE INDEX "courses__status_idx" ON "courses" USING btree ("_status");
@@ -1063,12 +1658,23 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "courses_rels_parent_idx" ON "courses_rels" USING btree ("parent_id");
   CREATE INDEX "courses_rels_path_idx" ON "courses_rels" USING btree ("path");
   CREATE INDEX "courses_rels_people_id_idx" ON "courses_rels" USING btree ("people_id");
-  CREATE INDEX "_courses_v_version_location_order_idx" ON "_courses_v_version_location" USING btree ("order");
-  CREATE INDEX "_courses_v_version_location_parent_idx" ON "_courses_v_version_location" USING btree ("parent_id");
+  CREATE INDEX "_courses_v_version_schedule_slots_order_idx" ON "_courses_v_version_schedule_slots" USING btree ("_order");
+  CREATE INDEX "_courses_v_version_schedule_slots_parent_id_idx" ON "_courses_v_version_schedule_slots" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "_courses_v_version_schedule_slots_locales_locale_parent_id_u" ON "_courses_v_version_schedule_slots_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_course_price_plan_items_v_order_idx" ON "_course_price_plan_items_v" USING btree ("_order");
+  CREATE INDEX "_course_price_plan_items_v_parent_id_idx" ON "_course_price_plan_items_v" USING btree ("_parent_id");
+  CREATE INDEX "_course_price_plans_v_order_idx" ON "_course_price_plans_v" USING btree ("_order");
+  CREATE INDEX "_course_price_plans_v_parent_id_idx" ON "_course_price_plans_v" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "_course_price_plans_v_locales_locale_parent_id_unique" ON "_course_price_plans_v_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_courses_v_version_sessions_dates_order_idx" ON "_courses_v_version_sessions_dates" USING btree ("_order");
+  CREATE INDEX "_courses_v_version_sessions_dates_parent_id_idx" ON "_courses_v_version_sessions_dates" USING btree ("_parent_id");
   CREATE INDEX "_courses_v_version_sessions_bibliography_order_idx" ON "_courses_v_version_sessions_bibliography" USING btree ("_order");
   CREATE INDEX "_courses_v_version_sessions_bibliography_parent_id_idx" ON "_courses_v_version_sessions_bibliography" USING btree ("_parent_id");
   CREATE INDEX "_courses_v_version_sessions_bibliography_title_idx" ON "_courses_v_version_sessions_bibliography_locales" USING btree ("title","_locale");
   CREATE UNIQUE INDEX "_courses_v_version_sessions_bibliography_locales_locale_pare" ON "_courses_v_version_sessions_bibliography_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_courses_v_version_sessions_activities_order_idx" ON "_courses_v_version_sessions_activities" USING btree ("_order");
+  CREATE INDEX "_courses_v_version_sessions_activities_parent_id_idx" ON "_courses_v_version_sessions_activities" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "_courses_v_version_sessions_activities_locales_locale_parent" ON "_courses_v_version_sessions_activities_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "_courses_v_version_sessions_order_idx" ON "_courses_v_version_sessions" USING btree ("_order");
   CREATE INDEX "_courses_v_version_sessions_parent_id_idx" ON "_courses_v_version_sessions" USING btree ("_parent_id");
   CREATE UNIQUE INDEX "_courses_v_version_sessions_locales_locale_parent_id_unique" ON "_courses_v_version_sessions_locales" USING btree ("_locale","_parent_id");
@@ -1076,11 +1682,15 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_courses_v_version_bibliography_parent_id_idx" ON "_courses_v_version_bibliography" USING btree ("_parent_id");
   CREATE INDEX "_courses_v_version_bibliography_title_idx" ON "_courses_v_version_bibliography_locales" USING btree ("title","_locale");
   CREATE UNIQUE INDEX "_courses_v_version_bibliography_locales_locale_parent_id_uni" ON "_courses_v_version_bibliography_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_courses_v_version_location_order_idx" ON "_courses_v_version_location" USING btree ("order");
+  CREATE INDEX "_courses_v_version_location_parent_idx" ON "_courses_v_version_location" USING btree ("parent_id");
+  CREATE INDEX "_courses_v_version_teaching_languages_order_idx" ON "_courses_v_version_teaching_languages" USING btree ("order");
+  CREATE INDEX "_courses_v_version_teaching_languages_parent_idx" ON "_courses_v_version_teaching_languages" USING btree ("parent_id");
   CREATE INDEX "_courses_v_parent_idx" ON "_courses_v" USING btree ("parent_id");
   CREATE INDEX "_courses_v_version_version_cycle_idx" ON "_courses_v" USING btree ("version_cycle_id");
   CREATE INDEX "_courses_v_version_version_cover_image_idx" ON "_courses_v" USING btree ("version_cover_image_id");
   CREATE INDEX "_courses_v_version_version_slug_idx" ON "_courses_v" USING btree ("version_slug");
-  CREATE INDEX "_courses_v_version_version_registration_form_idx" ON "_courses_v" USING btree ("version_registration_form_id");
+  CREATE INDEX "_courses_v_version_registration_version_registration_for_idx" ON "_courses_v" USING btree ("version_registration_form_id");
   CREATE INDEX "_courses_v_version_version_updated_at_idx" ON "_courses_v" USING btree ("version_updated_at");
   CREATE INDEX "_courses_v_version_version_created_at_idx" ON "_courses_v" USING btree ("version_created_at");
   CREATE INDEX "_courses_v_version_version__status_idx" ON "_courses_v" USING btree ("version__status");
@@ -1095,23 +1705,102 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_courses_v_rels_parent_idx" ON "_courses_v_rels" USING btree ("parent_id");
   CREATE INDEX "_courses_v_rels_path_idx" ON "_courses_v_rels" USING btree ("path");
   CREATE INDEX "_courses_v_rels_people_id_idx" ON "_courses_v_rels" USING btree ("people_id");
+  CREATE INDEX "enrollments_person_idx" ON "enrollments" USING btree ("person_id");
+  CREATE INDEX "enrollments_course_idx" ON "enrollments" USING btree ("course_id");
+  CREATE INDEX "enrollments_updated_at_idx" ON "enrollments" USING btree ("updated_at");
+  CREATE INDEX "enrollments_created_at_idx" ON "enrollments" USING btree ("created_at");
+  CREATE UNIQUE INDEX "person_course_idx" ON "enrollments" USING btree ("person_id","course_id");
+  CREATE UNIQUE INDEX "enrollments_locales_locale_parent_id_unique" ON "enrollments_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "programmes_highlights_order_idx" ON "programmes_highlights" USING btree ("_order");
+  CREATE INDEX "programmes_highlights_parent_id_idx" ON "programmes_highlights" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "programmes_highlights_locales_locale_parent_id_unique" ON "programmes_highlights_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "programmes_components_course_types_order_idx" ON "programmes_components_course_types" USING btree ("order");
+  CREATE INDEX "programmes_components_course_types_parent_idx" ON "programmes_components_course_types" USING btree ("parent_id");
+  CREATE INDEX "programmes_components_order_idx" ON "programmes_components" USING btree ("_order");
+  CREATE INDEX "programmes_components_parent_id_idx" ON "programmes_components" USING btree ("_parent_id");
+  CREATE INDEX "programmes_components_cycle_idx" ON "programmes_components" USING btree ("cycle_id");
+  CREATE UNIQUE INDEX "programmes_components_locales_locale_parent_id_unique" ON "programmes_components_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "programme_price_plan_items_order_idx" ON "programme_price_plan_items" USING btree ("_order");
+  CREATE INDEX "programme_price_plan_items_parent_id_idx" ON "programme_price_plan_items" USING btree ("_parent_id");
+  CREATE INDEX "programme_price_plans_order_idx" ON "programme_price_plans" USING btree ("_order");
+  CREATE INDEX "programme_price_plans_parent_id_idx" ON "programme_price_plans" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "programme_price_plans_locales_locale_parent_id_unique" ON "programme_price_plans_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "programmes_testimonials_order_idx" ON "programmes_testimonials" USING btree ("_order");
+  CREATE INDEX "programmes_testimonials_parent_id_idx" ON "programmes_testimonials" USING btree ("_parent_id");
+  CREATE INDEX "programmes_testimonials_person_idx" ON "programmes_testimonials" USING btree ("person_id");
+  CREATE UNIQUE INDEX "programmes_testimonials_locales_locale_parent_id_unique" ON "programmes_testimonials_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "programmes_faqs_order_idx" ON "programmes_faqs" USING btree ("_order");
+  CREATE INDEX "programmes_faqs_parent_id_idx" ON "programmes_faqs" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "programmes_faqs_locales_locale_parent_id_unique" ON "programmes_faqs_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "programmes_cover_idx" ON "programmes" USING btree ("cover_id");
   CREATE UNIQUE INDEX "programmes_slug_idx" ON "programmes" USING btree ("slug");
-  CREATE INDEX "programmes_registration_form_idx" ON "programmes" USING btree ("registration_form_id");
+  CREATE INDEX "programmes_registration_registration_form_idx" ON "programmes" USING btree ("registration_form_id");
   CREATE INDEX "programmes_updated_at_idx" ON "programmes" USING btree ("updated_at");
   CREATE INDEX "programmes_created_at_idx" ON "programmes" USING btree ("created_at");
+  CREATE INDEX "programmes__status_idx" ON "programmes" USING btree ("_status");
   CREATE UNIQUE INDEX "programmes_locales_locale_parent_id_unique" ON "programmes_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "programmes_rels_order_idx" ON "programmes_rels" USING btree ("order");
   CREATE INDEX "programmes_rels_parent_idx" ON "programmes_rels" USING btree ("parent_id");
   CREATE INDEX "programmes_rels_path_idx" ON "programmes_rels" USING btree ("path");
   CREATE INDEX "programmes_rels_cycles_id_idx" ON "programmes_rels" USING btree ("cycles_id");
+  CREATE INDEX "programmes_rels_courses_id_idx" ON "programmes_rels" USING btree ("courses_id");
+  CREATE INDEX "_programmes_v_version_highlights_order_idx" ON "_programmes_v_version_highlights" USING btree ("_order");
+  CREATE INDEX "_programmes_v_version_highlights_parent_id_idx" ON "_programmes_v_version_highlights" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "_programmes_v_version_highlights_locales_locale_parent_id_un" ON "_programmes_v_version_highlights_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_programmes_v_version_components_course_types_order_idx" ON "_programmes_v_version_components_course_types" USING btree ("order");
+  CREATE INDEX "_programmes_v_version_components_course_types_parent_idx" ON "_programmes_v_version_components_course_types" USING btree ("parent_id");
+  CREATE INDEX "_programmes_v_version_components_order_idx" ON "_programmes_v_version_components" USING btree ("_order");
+  CREATE INDEX "_programmes_v_version_components_parent_id_idx" ON "_programmes_v_version_components" USING btree ("_parent_id");
+  CREATE INDEX "_programmes_v_version_components_cycle_idx" ON "_programmes_v_version_components" USING btree ("cycle_id");
+  CREATE UNIQUE INDEX "_programmes_v_version_components_locales_locale_parent_id_un" ON "_programmes_v_version_components_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_programme_price_plan_items_v_order_idx" ON "_programme_price_plan_items_v" USING btree ("_order");
+  CREATE INDEX "_programme_price_plan_items_v_parent_id_idx" ON "_programme_price_plan_items_v" USING btree ("_parent_id");
+  CREATE INDEX "_programme_price_plans_v_order_idx" ON "_programme_price_plans_v" USING btree ("_order");
+  CREATE INDEX "_programme_price_plans_v_parent_id_idx" ON "_programme_price_plans_v" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "_programme_price_plans_v_locales_locale_parent_id_unique" ON "_programme_price_plans_v_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_programmes_v_version_testimonials_order_idx" ON "_programmes_v_version_testimonials" USING btree ("_order");
+  CREATE INDEX "_programmes_v_version_testimonials_parent_id_idx" ON "_programmes_v_version_testimonials" USING btree ("_parent_id");
+  CREATE INDEX "_programmes_v_version_testimonials_person_idx" ON "_programmes_v_version_testimonials" USING btree ("person_id");
+  CREATE UNIQUE INDEX "_programmes_v_version_testimonials_locales_locale_parent_id_" ON "_programmes_v_version_testimonials_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_programmes_v_version_faqs_order_idx" ON "_programmes_v_version_faqs" USING btree ("_order");
+  CREATE INDEX "_programmes_v_version_faqs_parent_id_idx" ON "_programmes_v_version_faqs" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "_programmes_v_version_faqs_locales_locale_parent_id_unique" ON "_programmes_v_version_faqs_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_programmes_v_parent_idx" ON "_programmes_v" USING btree ("parent_id");
+  CREATE INDEX "_programmes_v_version_version_cover_idx" ON "_programmes_v" USING btree ("version_cover_id");
+  CREATE INDEX "_programmes_v_version_version_slug_idx" ON "_programmes_v" USING btree ("version_slug");
+  CREATE INDEX "_programmes_v_version_registration_version_registration__idx" ON "_programmes_v" USING btree ("version_registration_form_id");
+  CREATE INDEX "_programmes_v_version_version_updated_at_idx" ON "_programmes_v" USING btree ("version_updated_at");
+  CREATE INDEX "_programmes_v_version_version_created_at_idx" ON "_programmes_v" USING btree ("version_created_at");
+  CREATE INDEX "_programmes_v_version_version__status_idx" ON "_programmes_v" USING btree ("version__status");
+  CREATE INDEX "_programmes_v_created_at_idx" ON "_programmes_v" USING btree ("created_at");
+  CREATE INDEX "_programmes_v_updated_at_idx" ON "_programmes_v" USING btree ("updated_at");
+  CREATE INDEX "_programmes_v_snapshot_idx" ON "_programmes_v" USING btree ("snapshot");
+  CREATE INDEX "_programmes_v_published_locale_idx" ON "_programmes_v" USING btree ("published_locale");
+  CREATE INDEX "_programmes_v_latest_idx" ON "_programmes_v" USING btree ("latest");
+  CREATE UNIQUE INDEX "_programmes_v_locales_locale_parent_id_unique" ON "_programmes_v_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "_programmes_v_rels_order_idx" ON "_programmes_v_rels" USING btree ("order");
+  CREATE INDEX "_programmes_v_rels_parent_idx" ON "_programmes_v_rels" USING btree ("parent_id");
+  CREATE INDEX "_programmes_v_rels_path_idx" ON "_programmes_v_rels" USING btree ("path");
+  CREATE INDEX "_programmes_v_rels_cycles_id_idx" ON "_programmes_v_rels" USING btree ("cycles_id");
+  CREATE INDEX "_programmes_v_rels_courses_id_idx" ON "_programmes_v_rels" USING btree ("courses_id");
+  CREATE INDEX "cycles_pricing_course_types_order_idx" ON "cycles_pricing_course_types" USING btree ("order");
+  CREATE INDEX "cycles_pricing_course_types_parent_idx" ON "cycles_pricing_course_types" USING btree ("parent_id");
+  CREATE INDEX "cycle_price_plan_items_order_idx" ON "cycle_price_plan_items" USING btree ("_order");
+  CREATE INDEX "cycle_price_plan_items_parent_id_idx" ON "cycle_price_plan_items" USING btree ("_parent_id");
+  CREATE INDEX "cycle_price_plans_order_idx" ON "cycle_price_plans" USING btree ("_order");
+  CREATE INDEX "cycle_price_plans_parent_id_idx" ON "cycle_price_plans" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "cycle_price_plans_locales_locale_parent_id_unique" ON "cycle_price_plans_locales" USING btree ("_locale","_parent_id");
+  CREATE INDEX "cycles_pricing_order_idx" ON "cycles_pricing" USING btree ("_order");
+  CREATE INDEX "cycles_pricing_parent_id_idx" ON "cycles_pricing" USING btree ("_parent_id");
+  CREATE UNIQUE INDEX "cycles_pricing_locales_locale_parent_id_unique" ON "cycles_pricing_locales" USING btree ("_locale","_parent_id");
   CREATE UNIQUE INDEX "cycles_slug_idx" ON "cycles" USING btree ("slug");
-  CREATE INDEX "cycles_programme_programme_programme_idx" ON "cycles" USING btree ("programme_programme_id");
+  CREATE INDEX "cycles_space_idx" ON "cycles" USING btree ("space_id");
+  CREATE INDEX "cycles_academic_year_idx" ON "cycles" USING btree ("academic_year");
+  CREATE INDEX "cycles_registration_registration_form_idx" ON "cycles" USING btree ("registration_form_id");
   CREATE INDEX "cycles_updated_at_idx" ON "cycles" USING btree ("updated_at");
   CREATE INDEX "cycles_created_at_idx" ON "cycles" USING btree ("created_at");
-  CREATE INDEX "cycles_rels_order_idx" ON "cycles_rels" USING btree ("order");
-  CREATE INDEX "cycles_rels_parent_idx" ON "cycles_rels" USING btree ("parent_id");
-  CREATE INDEX "cycles_rels_path_idx" ON "cycles_rels" USING btree ("path");
-  CREATE INDEX "cycles_rels_courses_id_idx" ON "cycles_rels" USING btree ("courses_id");
+  CREATE UNIQUE INDEX "season_start_year_space_idx" ON "cycles" USING btree ("season","start_year","space_id");
+  CREATE UNIQUE INDEX "cycles_locales_locale_parent_id_unique" ON "cycles_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "governance_person_idx" ON "governance" USING btree ("person_id");
   CREATE INDEX "governance_updated_at_idx" ON "governance" USING btree ("updated_at");
   CREATE INDEX "governance_created_at_idx" ON "governance" USING btree ("created_at");
@@ -1239,6 +1928,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "payload_locked_documents_rels_memberships_id_idx" ON "payload_locked_documents_rels" USING btree ("memberships_id");
   CREATE INDEX "payload_locked_documents_rels_media_id_idx" ON "payload_locked_documents_rels" USING btree ("media_id");
   CREATE INDEX "payload_locked_documents_rels_courses_id_idx" ON "payload_locked_documents_rels" USING btree ("courses_id");
+  CREATE INDEX "payload_locked_documents_rels_enrollments_id_idx" ON "payload_locked_documents_rels" USING btree ("enrollments_id");
   CREATE INDEX "payload_locked_documents_rels_programmes_id_idx" ON "payload_locked_documents_rels" USING btree ("programmes_id");
   CREATE INDEX "payload_locked_documents_rels_cycles_id_idx" ON "payload_locked_documents_rels" USING btree ("cycles_id");
   CREATE INDEX "payload_locked_documents_rels_governance_id_idx" ON "payload_locked_documents_rels" USING btree ("governance_id");
@@ -1274,31 +1964,84 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TABLE "memberships" CASCADE;
   DROP TABLE "memberships_locales" CASCADE;
   DROP TABLE "media" CASCADE;
-  DROP TABLE "courses_location" CASCADE;
+  DROP TABLE "courses_schedule_slots" CASCADE;
+  DROP TABLE "courses_schedule_slots_locales" CASCADE;
+  DROP TABLE "course_price_plan_items" CASCADE;
+  DROP TABLE "course_price_plans" CASCADE;
+  DROP TABLE "course_price_plans_locales" CASCADE;
+  DROP TABLE "courses_sessions_dates" CASCADE;
   DROP TABLE "courses_sessions_bibliography" CASCADE;
   DROP TABLE "courses_sessions_bibliography_locales" CASCADE;
+  DROP TABLE "courses_sessions_activities" CASCADE;
+  DROP TABLE "courses_sessions_activities_locales" CASCADE;
   DROP TABLE "courses_sessions" CASCADE;
   DROP TABLE "courses_sessions_locales" CASCADE;
   DROP TABLE "courses_bibliography" CASCADE;
   DROP TABLE "courses_bibliography_locales" CASCADE;
+  DROP TABLE "courses_location" CASCADE;
+  DROP TABLE "courses_teaching_languages" CASCADE;
   DROP TABLE "courses" CASCADE;
   DROP TABLE "courses_locales" CASCADE;
   DROP TABLE "courses_rels" CASCADE;
-  DROP TABLE "_courses_v_version_location" CASCADE;
+  DROP TABLE "_courses_v_version_schedule_slots" CASCADE;
+  DROP TABLE "_courses_v_version_schedule_slots_locales" CASCADE;
+  DROP TABLE "_course_price_plan_items_v" CASCADE;
+  DROP TABLE "_course_price_plans_v" CASCADE;
+  DROP TABLE "_course_price_plans_v_locales" CASCADE;
+  DROP TABLE "_courses_v_version_sessions_dates" CASCADE;
   DROP TABLE "_courses_v_version_sessions_bibliography" CASCADE;
   DROP TABLE "_courses_v_version_sessions_bibliography_locales" CASCADE;
+  DROP TABLE "_courses_v_version_sessions_activities" CASCADE;
+  DROP TABLE "_courses_v_version_sessions_activities_locales" CASCADE;
   DROP TABLE "_courses_v_version_sessions" CASCADE;
   DROP TABLE "_courses_v_version_sessions_locales" CASCADE;
   DROP TABLE "_courses_v_version_bibliography" CASCADE;
   DROP TABLE "_courses_v_version_bibliography_locales" CASCADE;
+  DROP TABLE "_courses_v_version_location" CASCADE;
+  DROP TABLE "_courses_v_version_teaching_languages" CASCADE;
   DROP TABLE "_courses_v" CASCADE;
   DROP TABLE "_courses_v_locales" CASCADE;
   DROP TABLE "_courses_v_rels" CASCADE;
+  DROP TABLE "enrollments" CASCADE;
+  DROP TABLE "enrollments_locales" CASCADE;
+  DROP TABLE "programmes_highlights" CASCADE;
+  DROP TABLE "programmes_highlights_locales" CASCADE;
+  DROP TABLE "programmes_components_course_types" CASCADE;
+  DROP TABLE "programmes_components" CASCADE;
+  DROP TABLE "programmes_components_locales" CASCADE;
+  DROP TABLE "programme_price_plan_items" CASCADE;
+  DROP TABLE "programme_price_plans" CASCADE;
+  DROP TABLE "programme_price_plans_locales" CASCADE;
+  DROP TABLE "programmes_testimonials" CASCADE;
+  DROP TABLE "programmes_testimonials_locales" CASCADE;
+  DROP TABLE "programmes_faqs" CASCADE;
+  DROP TABLE "programmes_faqs_locales" CASCADE;
   DROP TABLE "programmes" CASCADE;
   DROP TABLE "programmes_locales" CASCADE;
   DROP TABLE "programmes_rels" CASCADE;
+  DROP TABLE "_programmes_v_version_highlights" CASCADE;
+  DROP TABLE "_programmes_v_version_highlights_locales" CASCADE;
+  DROP TABLE "_programmes_v_version_components_course_types" CASCADE;
+  DROP TABLE "_programmes_v_version_components" CASCADE;
+  DROP TABLE "_programmes_v_version_components_locales" CASCADE;
+  DROP TABLE "_programme_price_plan_items_v" CASCADE;
+  DROP TABLE "_programme_price_plans_v" CASCADE;
+  DROP TABLE "_programme_price_plans_v_locales" CASCADE;
+  DROP TABLE "_programmes_v_version_testimonials" CASCADE;
+  DROP TABLE "_programmes_v_version_testimonials_locales" CASCADE;
+  DROP TABLE "_programmes_v_version_faqs" CASCADE;
+  DROP TABLE "_programmes_v_version_faqs_locales" CASCADE;
+  DROP TABLE "_programmes_v" CASCADE;
+  DROP TABLE "_programmes_v_locales" CASCADE;
+  DROP TABLE "_programmes_v_rels" CASCADE;
+  DROP TABLE "cycles_pricing_course_types" CASCADE;
+  DROP TABLE "cycle_price_plan_items" CASCADE;
+  DROP TABLE "cycle_price_plans" CASCADE;
+  DROP TABLE "cycle_price_plans_locales" CASCADE;
+  DROP TABLE "cycles_pricing" CASCADE;
+  DROP TABLE "cycles_pricing_locales" CASCADE;
   DROP TABLE "cycles" CASCADE;
-  DROP TABLE "cycles_rels" CASCADE;
+  DROP TABLE "cycles_locales" CASCADE;
   DROP TABLE "governance" CASCADE;
   DROP TABLE "governance_locales" CASCADE;
   DROP TABLE "articles_tags" CASCADE;
@@ -1358,21 +2101,50 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_users_roles";
   DROP TYPE "public"."enum_people_social_links_platform";
   DROP TYPE "public"."enum_memberships_role";
-  DROP TYPE "public"."enum_courses_location";
+  DROP TYPE "public"."enum_courses_schedule_slots_weekday";
   DROP TYPE "public"."enum_courses_sessions_bibliography_type";
+  DROP TYPE "public"."enum_courses_sessions_activities_kind";
   DROP TYPE "public"."enum_courses_bibliography_type";
+  DROP TYPE "public"."enum_courses_location";
+  DROP TYPE "public"."enum_courses_teaching_languages";
   DROP TYPE "public"."enum_courses_tier";
   DROP TYPE "public"."enum_courses_course_type";
+  DROP TYPE "public"."enum_courses_schedule_start_precision";
+  DROP TYPE "public"."enum_courses_registration_method";
+  DROP TYPE "public"."enum_courses_pricing_override_currency";
+  DROP TYPE "public"."enum_courses_session_unit";
   DROP TYPE "public"."enum_courses_status";
-  DROP TYPE "public"."enum__courses_v_version_location";
+  DROP TYPE "public"."enum__courses_v_version_schedule_slots_weekday";
   DROP TYPE "public"."enum__courses_v_version_sessions_bibliography_type";
+  DROP TYPE "public"."enum__courses_v_version_sessions_activities_kind";
   DROP TYPE "public"."enum__courses_v_version_bibliography_type";
+  DROP TYPE "public"."enum__courses_v_version_location";
+  DROP TYPE "public"."enum__courses_v_version_teaching_languages";
   DROP TYPE "public"."enum__courses_v_version_tier";
   DROP TYPE "public"."enum__courses_v_version_course_type";
+  DROP TYPE "public"."enum__courses_v_version_schedule_start_precision";
+  DROP TYPE "public"."enum__courses_v_version_registration_method";
+  DROP TYPE "public"."enum__courses_v_version_pricing_override_currency";
+  DROP TYPE "public"."enum__courses_v_version_session_unit";
   DROP TYPE "public"."enum__courses_v_version_status";
   DROP TYPE "public"."enum__courses_v_published_locale";
-  DROP TYPE "public"."enum_cycles_cycle_season";
-  DROP TYPE "public"."enum_cycles_cycle_mode";
+  DROP TYPE "public"."enum_enrollments_status";
+  DROP TYPE "public"."enum_enrollments_source";
+  DROP TYPE "public"."enum_programmes_components_course_types";
+  DROP TYPE "public"."enum_programmes_kind";
+  DROP TYPE "public"."enum_programmes_registration_method";
+  DROP TYPE "public"."enum_programmes_pricing_currency";
+  DROP TYPE "public"."enum_programmes_status";
+  DROP TYPE "public"."enum__programmes_v_version_components_course_types";
+  DROP TYPE "public"."enum__programmes_v_version_kind";
+  DROP TYPE "public"."enum__programmes_v_version_registration_method";
+  DROP TYPE "public"."enum__programmes_v_version_pricing_currency";
+  DROP TYPE "public"."enum__programmes_v_version_status";
+  DROP TYPE "public"."enum__programmes_v_published_locale";
+  DROP TYPE "public"."enum_cycles_pricing_course_types";
+  DROP TYPE "public"."enum_cycles_pricing_pricing_currency";
+  DROP TYPE "public"."enum_cycles_season";
+  DROP TYPE "public"."enum_cycles_registration_method";
   DROP TYPE "public"."enum_governance_role";
   DROP TYPE "public"."enum_articles_tier";
   DROP TYPE "public"."enum_articles_status";

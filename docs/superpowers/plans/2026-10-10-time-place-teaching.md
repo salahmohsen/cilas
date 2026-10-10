@@ -1751,6 +1751,8 @@ describe('time, place and teaching', () => {
           title: 'Probe Course',
           slug: 'probe-course',
           course_type: 'THEMATIC',
+          session_unit: 'session',
+          tier: 'owner',
           cycle: cycleId,
           // 4 March 2031 is a Tuesday.
           schedule: {
@@ -1819,14 +1821,14 @@ describe('time, place and teaching', () => {
       'enrollments',
       await payload.create({
         collection: 'enrollments',
-        data: { person: personId, course: courseId },
+        data: { person: personId, course: courseId, status: 'applied', source: 'admin' },
         overrideAccess: true,
       }),
     )
     await expect(
       payload.create({
         collection: 'enrollments',
-        data: { person: personId, course: courseId },
+        data: { person: personId, course: courseId, status: 'applied', source: 'admin' },
         overrideAccess: true,
       }),
     ).rejects.toThrow()
