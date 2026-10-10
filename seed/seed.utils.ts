@@ -195,7 +195,32 @@ export const requireIds = (map: IdMap, keys: string[]): number[] =>
 
 /* ================================================================== reset */
 
+/**
+ * The reset is a development convenience. Once a person has reviewed imported
+ * content it must survive, so refuse to wipe anything while reviewed
+ * documents exist (docs/schema.md, Archive import).
+ */
+export const assertNoReviewedContent = async (payload: Payload): Promise<void> => {
+  const reviewed: string[] = []
+  for (const collection of CONTENT_COLLECTIONS) {
+    const fields = payload.collections[collection]?.config.flattenedFields ?? []
+    if (!fields.some((f) => f.name === 'import_status')) continue
+    const { totalDocs } = await payload.count({
+      collection,
+      where: { import_status: { equals: 'reviewed' } },
+      overrideAccess: true,
+    })
+    if (totalDocs) reviewed.push(`${collection}: ${totalDocs}`)
+  }
+  if (reviewed.length) {
+    throw new Error(
+      `Refusing to reset: reviewed content would be lost (${reviewed.join(', ')}).`,
+    )
+  }
+}
+
 export const resetContent = async (payload: Payload): Promise<void> => {
+  await assertNoReviewedContent(payload)
   for (const collection of CONTENT_COLLECTIONS) {
     await payload.db.deleteMany({ collection, where: {} })
     console.log(`cleared ${collection}`)
