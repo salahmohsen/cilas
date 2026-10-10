@@ -1,4 +1,5 @@
 import config from '@payload-config'
+import type { Metadata } from 'next'
 import { draftMode } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -7,6 +8,7 @@ import React from 'react'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView } from './CourseView'
+import { seoDefaults } from '@/lib/seo'
 import type { Course } from '@/payload-types'
 
 type Params = { params: Promise<{ slug: string }> }
@@ -30,6 +32,34 @@ export async function generateStaticParams() {
   })
 
   return docs.map((doc) => ({ slug: doc.slug }))
+}
+
+/** Meta fields win; the course's own title, summary and cover fill any gaps. */
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  const { slug } = await params
+  const payload = await getPayload({ config })
+  const { docs } = await payload.find({
+    collection: 'courses',
+    where: { slug: { equals: slug } },
+    limit: 1,
+    depth: 1,
+    joins: false,
+  })
+  const course = docs[0]
+  if (!course) return {}
+
+  const fallback = seoDefaults('courses', course as unknown as Record<string, unknown>)
+  const meta = course.meta ?? {}
+  const image = typeof meta.image === 'object' && meta.image ? meta.image : course.cover_image
+  const imageUrl = typeof image === 'object' && image?.url ? image.url : undefined
+  const title = meta.title || fallback.title
+  const description = meta.description || fallback.description
+
+  return {
+    title,
+    description,
+    openGraph: { title, description, ...(imageUrl ? { images: [imageUrl] } : {}) },
+  }
 }
 
 export default async function CoursePage({ params }: Params) {
