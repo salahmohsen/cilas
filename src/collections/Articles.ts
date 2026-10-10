@@ -1,6 +1,7 @@
 import type {
   CollectionAfterChangeHook,
   CollectionBeforeChangeHook,
+  CollectionBeforeOperationHook,
   CollectionBeforeValidateHook,
   CollectionConfig,
 } from 'payload'
@@ -41,6 +42,22 @@ export const addSelfAsAuthor: CollectionBeforeValidateHook<Article> = ({
   return authors.includes(self) ? data : { ...data, authors: [...authors, self] }
 }
 
+const DRAFT_SAVE = 'articleDraftSave'
+
+/**
+ * Records whether this write is a draft save ("Save draft", `draft: true`).
+ * Payload decides that from the operation args before any hook runs, and
+ * beforeChange never sees it, so it is passed on through `req.context`.
+ * Mirrors Payload's own test: on update a draft write that sets `_status:
+ * 'published'` is a publish, not a draft save.
+ */
+export const recordDraftSave: CollectionBeforeOperationHook = ({ args, operation, req }) => {
+  if (operation !== 'create' && operation !== 'update') return
+  const { data, draft } = args as { data?: { _status?: unknown }; draft?: boolean }
+  req.context[DRAFT_SAVE] =
+    operation === 'create' ? Boolean(draft) : Boolean(draft) && data?._status !== 'published'
+}
+
 /**
  * Applies the review rules (src/lib/review.ts) to every write. Server calls
  * with no user (seeds, imports) are trusted like an admin.
@@ -57,6 +74,14 @@ export const applyReview: CollectionBeforeChangeHook<Article> = ({
   const from: ReviewState =
     operation === 'create' ? 'draft' : (originalDoc?.review?.status ?? 'draft')
   const to: ReviewState = data.review?.status ?? from
+
+  // A draft save writes only a version: the main document keeps its old
+  // review status and _status, while emails would announce the new one. An
+  // author could also keep editing a "submitted" article whose main doc still
+  // reads draft. So the review status only changes on a full save.
+  if (to !== from && req.context?.[DRAFT_SAVE]) {
+    throw new APIError('Change the review status with the main save button, not Save draft.', 400)
+  }
 
   const result = reviewPatch({
     from,
@@ -111,6 +136,7 @@ export const Articles: CollectionConfig = {
     defaultColumns: ['title', 'authors', 'review.status', 'tier'],
   },
   hooks: {
+    beforeOperation: [recordDraftSave],
     beforeValidate: [addSelfAsAuthor],
     beforeChange: [applyReview],
     afterChange: [notifyReview],
@@ -149,9 +175,12 @@ export const Articles: CollectionConfig = {
                 { label: 'Approved', value: 'approved' },
                 { label: 'Rejected', value: 'rejected' },
               ],
-              // A draft save only writes a version, so submitting must be a full save:
-              // choose Submitted, then save with the main button. It stays unpublished.
-              admin: { description: 'Ready for an editor? Choose Submitted, then save.' },
+              // A draft save only writes a version, so applyReview rejects one that
+              // changes this field: submit with the main button. It stays unpublished.
+              admin: {
+                description:
+                  'Ready for an editor? Choose Submitted, then save with the main button. Save draft cannot change this.',
+              },
               // A copy goes through review again.
               hooks: { beforeDuplicate: [() => 'draft'] },
             },
