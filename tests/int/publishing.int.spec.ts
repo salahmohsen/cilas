@@ -137,6 +137,7 @@ describe('publishing', () => {
       expect(copy._status).toBe('draft')
       expect(copy.published_date ?? null).toBeNull()
       expect(copy.featured ?? false).toBe(false)
+      expect(copy.tier).toBe('owner')
     })
 
     it('refuses a draft save that changes the review status', async () => {

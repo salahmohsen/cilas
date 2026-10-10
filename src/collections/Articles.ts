@@ -221,6 +221,8 @@ export const Articles: CollectionConfig = {
             { label: 'Public', value: 'public' },
           ],
           access: { create: canSetTier, update: canSetTier },
+          // A copy is a new piece: it goes back through review from owner-only.
+          hooks: { beforeDuplicate: [() => 'owner'] },
         },
         {
           name: 'published_date',
