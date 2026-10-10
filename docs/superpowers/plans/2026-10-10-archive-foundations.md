@@ -5,13 +5,13 @@
 **Goal:** Lay the ground for importing the old site:
 - every imported document records where it came from (`legacy_url`) and whether a person has checked it (`import_status`);
 - the dev reset can never wipe checked content;
-- the few pages missing from the ZIP are fetched from Wayback;
+- the few pages missing from the ZIP are fetched from the live mirror (cilas.lkssystems.com);
 - a committed `migration/manifest.json` catalogues every page and upload, with its kind and what it links to.
 
 **Architecture:**
 - **Pure helpers in `migration/lib/`:** page classification and upload-path resolution. Both are unit-tested.
 - **Two scripts in `migration/`:**
-  - `fetch-wayback.ts`: idempotent downloads into the gitignored `migration/raw/wayback/`.
+  - `fetch-mirror.ts`: idempotent downloads into the gitignored `migration/raw/mirror/`.
   - `ingest.ts`: parses every page with `jsdom` and writes the manifest.
 - **Later plans:** the next sub-plans (6.2 cycles and courses, 6.3 people, 6.4 course flows, 6.5 publishing and redirects) read the manifest instead of re-scanning the raw files.
 
@@ -56,7 +56,7 @@ Each later sub-plan is written just before it starts, using this manifest.
   - `migration/page-kinds.json` holds hand overrides for pages the rules get wrong.
   - Anything the rules don't place is `course`, because 2013–2018 course pages have free-form names.
 - **Upload links:**
-  - These forms resolve to a file under `uploads/`: relative `uploads/…`, root `/uploads/…`, absolute `ci-las.org/uploads/…`, Wayback-wrapped, and Weebly's `published/X.ext` (the ZIP stores that as `X_orig.ext`).
+  - These forms resolve to a file under `uploads/`: relative `uploads/…`, root `/uploads/…`, absolute `ci-las.org/uploads/…`, Wayback-wrapped, mirror-hosted, and Weebly's `published/X.ext` (the ZIP stores that as `X_orig.ext`).
   - Unresolvable links are kept, marked `missing`.
 - **Committed vs. generated:** `migration/manifest.json` and `migration/page-kinds.json` are committed. Raw files never are.
 
@@ -70,7 +70,7 @@ Each later sub-plan is written just before it starts, using this manifest.
 | `migration/lib/classify.ts` | create | `legacyUrlOf()`, `classifyPage()` |
 | `migration/lib/uploads.ts` | create | `resolveUpload()` |
 | `migration/page-kinds.json` | create | hand overrides |
-| `migration/fetch-wayback.ts` | create | download Wayback-only pages and assets |
+| `migration/fetch-mirror.ts` | create | download pages and assets the ZIP lacks from the live mirror |
 | `migration/ingest.ts` | create | write `migration/manifest.json` |
 | `migration/manifest.json` | generate | the catalogue |
 | `migration/README.md` | create | how to run the pipeline |
@@ -317,7 +317,7 @@ const files = new Set([
 ])
 
 describe('resolveUpload', () => {
-  it('accepts relative, rooted, absolute and Wayback-wrapped links', () => {
+  it('accepts relative, rooted, absolute and Wayback-wrapped and mirror-hosted links', () => {
     for (const href of [
       'uploads/1/9/1/0/19102967/syllabus.pdf',
       '/uploads/1/9/1/0/19102967/syllabus.pdf',
@@ -457,106 +457,31 @@ Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 
 ---
 
-### Task 5: Fetch what the ZIP lacks from Wayback
+### Task 5: Fetch what the ZIP lacks from the live mirror
 
 **Files:**
-- Create: `migration/fetch-wayback.ts`
+- Create: `migration/fetch-mirror.ts`
 
 - [ ] **Step 1: Write the script**
 
-```ts
-/**
- * Downloads the pages the April 2025 ZIP lacks (the 2025–26 cycles), and the
- * uploads those pages link to, into migration/raw/wayback/. Already-present
- * files are skipped, so it is safe to re-run.
- *
- *   npx tsx migration/fetch-wayback.ts migration/raw
- */
-import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import path from 'node:path'
-
-import { resolveUpload } from './lib/uploads'
-
-const raw = process.argv[2]
-if (!raw) throw new Error('Usage: npx tsx migration/fetch-wayback.ts <raw dir>')
-
-const zip = path.join(raw, 'weebly-zip-2025-04-23')
-const wayback = path.join(raw, 'wayback')
-
-// Pages captured on Wayback but missing from the ZIP (CDX listing, Oct 2026).
-const PAGES = [
-  'fall-cycle-2025.html',
-  'winter-cycle-2026.html',
-  'spring-cycle-2026.html',
-  'spring-semester-2026.html',
-  'spring-semester-labs-2026.html',
-  'workshopslabs.html',
-  'writing-the-self.html',
-]
-
-const snapshot = (url: string) => `https://web.archive.org/web/2026id_/${url}`
-
-const download = async (url: string, to: string): Promise<boolean> => {
-  if (existsSync(to)) return false
-  const res = await fetch(snapshot(url), { redirect: 'follow' })
-  if (!res.ok) {
-    console.warn(`skip ${url}: HTTP ${res.status}`)
-    return false
-  }
-  mkdirSync(path.dirname(to), { recursive: true })
-  writeFileSync(to, Buffer.from(await res.arrayBuffer()))
-  return true
-}
-
-const zipFiles = new Set<string>()
-const walk = (dir: string, rel = ''): void => {
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const relPath = rel ? `${rel}/${entry.name}` : entry.name
-    if (entry.isDirectory()) walk(path.join(dir, entry.name), relPath)
-    else zipFiles.add(relPath)
-  }
-}
-walk(path.join(zip, 'uploads'), 'uploads')
-
-const main = async () => {
-  let fetched = 0
-  for (const page of PAGES) {
-    if (await download(`https://www.ci-las.org/${page}`, path.join(wayback, 'pages', page))) fetched++
-  }
-
-  // Uploads the Wayback pages link to that the ZIP doesn't have.
-  for (const page of PAGES) {
-    const file = path.join(wayback, 'pages', page)
-    if (!existsSync(file)) continue
-    const html = readFileSync(file, 'utf8')
-    for (const [, href] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
-      const upload = resolveUpload(href, zipFiles)
-      if (!upload?.missing) continue
-      const to = path.join(wayback, upload.path)
-      if (await download(`https://www.ci-las.org/${upload.path}`, to)) fetched++
-    }
-  }
-  console.log(`fetched ${fetched} file(s)`)
-}
-
-main()
-```
+`migration/fetch-mirror.ts` crawls https://cilas.lkssystems.com/ (same Weebly paths; no sitemap) breadth-first from `/`, capped at 400 pages, one request at a time with a 200 ms delay.
+- ZIP pages are fetched only to discover links, and are never saved.
+- Pages the ZIP lacks are saved to `migration/raw/mirror/pages/`.
+- Uploads those pages link to and the ZIP lacks (via `resolveUpload`) are saved under `migration/raw/mirror/uploads/…`.
+- Files already on disk are skipped.
 
 - [ ] **Step 2: Run it**
 
-Run: `npx tsx migration/fetch-wayback.ts migration/raw`
-Expected:
-- all 7 pages exist under `migration/raw/wayback/pages/`;
-- uploads the ZIP lacked land under `migration/raw/wayback/uploads/…`;
-- a re-run prints `fetched 0 file(s)`.
+Run: `npx tsx migration/fetch-mirror.ts migration/raw`
+Expected: the pages the ZIP lacks (at least fall-cycle-2025, spring-cycle-2026, winter-cycle-2026, spring-semester-2026, spring-semester-labs-2026, workshopslabs, writing-the-self) land under `migration/raw/mirror/pages/`; a re-run saves 0.
 
 - [ ] **Step 3: Type-check, then commit**
 
 Run: `npx tsc --noEmit`, and expect no output. Then:
 
 ```bash
-git add migration/fetch-wayback.ts
-git commit -m "feat(import): fetch pages and uploads the ZIP lacks from Wayback
+git add migration/fetch-mirror.ts
+git commit -m "feat(import): fetch pages and uploads the ZIP lacks from the live mirror
 
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>"
 ```
@@ -589,7 +514,7 @@ const raw = process.argv[2]
 if (!raw) throw new Error('Usage: npx tsx migration/ingest.ts <raw dir>')
 
 const zip = path.join(raw, 'weebly-zip-2025-04-23')
-const wayback = path.join(raw, 'wayback')
+const mirror = path.join(raw, 'mirror')
 const overrides = JSON.parse(
   readFileSync(path.join(import.meta.dirname, 'page-kinds.json'), 'utf8'),
 ) as Record<string, PageKind>
@@ -601,19 +526,19 @@ const listFiles = (dir: string, rel = ''): string[] =>
   })
 
 const zipUploads = listFiles(path.join(zip, 'uploads'), 'uploads')
-const waybackUploads = (() => {
+const mirrorUploads = (() => {
   try {
-    return listFiles(path.join(wayback, 'uploads'), 'uploads')
+    return listFiles(path.join(mirror, 'uploads'), 'uploads')
   } catch {
     return []
   }
 })()
-const allUploads = new Set([...zipUploads, ...waybackUploads])
+const allUploads = new Set([...zipUploads, ...mirrorUploads])
 
 type Page = {
   legacy_url: string
   file: string
-  source: 'zip' | 'wayback'
+  source: 'zip' | 'mirror'
   kind: PageKind
   title: string
   links: string[]
@@ -648,7 +573,7 @@ const read = (source: Page['source'], dir: string): Page[] =>
 
 const zipPages = read('zip', zip)
 const known = new Set(zipPages.map((p) => p.file))
-const pages = [...zipPages, ...read('wayback', path.join(wayback, 'pages')).filter((p) => !known.has(p.file))]
+const pages = [...zipPages, ...read('mirror', path.join(mirror, 'pages')).filter((p) => !known.has(p.file))]
   .sort((a, b) => a.legacy_url.localeCompare(b.legacy_url))
 
 const referencedBy = new Map<string, string[]>()
@@ -659,11 +584,11 @@ const uploads = [...allUploads]
   .sort()
   .map((p) => ({
     path: p,
-    source: zipUploads.includes(p) ? 'zip' : 'wayback',
+    source: zipUploads.includes(p) ? 'zip' : 'mirror',
     referenced_by: referencedBy.get(p) ?? [],
   }))
 
-const manifest = { generated_from: 'weebly-zip-2025-04-23 + wayback', pages, uploads }
+const manifest = { generated_from: 'weebly-zip-2025-04-23 + cilas.lkssystems.com', pages, uploads }
 writeFileSync(path.join(import.meta.dirname, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
 
 const byKind = pages.reduce<Record<string, number>>((acc, p) => ({ ...acc, [p.kind]: (acc[p.kind] ?? 0) + 1 }), {})
@@ -677,7 +602,7 @@ If `import.meta.dirname` isn't available under `tsx` here, use `path.dirname(fil
 - [ ] **Step 2: Run it and check the kinds**
 
 Run: `npx tsx migration/ingest.ts migration/raw`
-Expected: about 209 pages (202 from the ZIP plus 7 from Wayback), and every kind except `publication` and `press` has several pages.
+Expected: about 209 pages (202 from the ZIP plus those the mirror adds), and every kind except `publication` and `press` has several pages.
 
 Then review each page classified as `course`. Print legacy URL, title and the first 200 characters of body text:
 
@@ -712,11 +637,11 @@ Turns the old Weebly site into CILAS content (docs/schema.md, Archive import; AD
 
 Raw files live in `raw/`, which git and Docker ignore:
 - `raw/weebly-zip-2025-04-23/`: the site export, the primary source.
-- `raw/wayback/`: pages and uploads the ZIP lacks, fetched by `fetch-wayback.ts`.
+- `raw/mirror/`: pages and uploads the ZIP lacks, fetched by `fetch-mirror.ts`.
 
 ## Stages
 
-1. `npx tsx migration/fetch-wayback.ts migration/raw`: download the missing pages and uploads.
+1. `npx tsx migration/fetch-mirror.ts migration/raw`: download the missing pages and uploads.
 2. `npx tsx migration/ingest.ts migration/raw`: write `manifest.json`, which lists every page with its kind, links and uploads.
 3. Extract and normalise per page kind: plans 6.2–6.5 add these stages.
 4. Seed: upsert by `legacy_url` as drafts marked "needs review", with one redirect per legacy URL.
@@ -843,12 +768,12 @@ At the top of `## Archive import (seed)`, add:
 **Built (plan 6.1):**
 - `legacy_url` and `import_status` on every imported collection.
 - The reset guard.
-- `migration/fetch-wayback.ts`, and the stage-1 `migration/ingest.ts` → `migration/manifest.json` (see `migration/README.md`).
+- `migration/fetch-mirror.ts`, and the stage-1 `migration/ingest.ts` → `migration/manifest.json` (see `migration/README.md`).
 
 Stages 2–4 come per content type in plans 6.2–6.5.
 ```
 
-Also correct the Wayback count in "Sources". The CDX listing shows 7 pages missing from the ZIP, not 86.
+Also correct the "Sources" count: the ZIP is primary, and the secondary source is the live mirror at cilas.lkssystems.com, which supplies the pages the ZIP lacks.
 
 - [ ] **Step 2: Commit**
 
