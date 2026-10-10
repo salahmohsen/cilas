@@ -9,8 +9,8 @@ import { APIError } from 'payload'
 import {
   canAuthor,
   canSetTier,
-  isAdminOrOwn,
   isAdminOrOwnAndDraft,
+  isAdminOrOwnVersions,
   isAdminOrOwnWhile,
   isAdminUser,
   ownsViaAuthors,
@@ -93,7 +93,7 @@ export const Articles: CollectionConfig = {
   slug: 'articles',
   access: {
     read: readTiers(ownsViaAuthors, { drafts: true }),
-    readVersions: isAdminOrOwn(ownsViaAuthors),
+    readVersions: isAdminOrOwnVersions(ownsViaAuthors),
     create: canAuthor,
     // Authors edit only while the article is with them, not once submitted.
     update: isAdminOrOwnWhile(ownsViaAuthors, {

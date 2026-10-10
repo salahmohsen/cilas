@@ -1,10 +1,11 @@
-import type { Access } from 'payload'
+import type { Access, Where } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import {
   canAuthor,
   isAdminOrOwn,
   isAdminOrOwnAndDraft,
+  isAdminOrOwnVersions,
   isAdminOrOwnWhile,
   ownsViaAuthors,
   ownsViaFellows,
@@ -113,6 +114,35 @@ describe('ownsViaAuthors', () => {
 
   it('owns nothing without a linked person', () => {
     expect(ownsViaAuthors(user(['member']))).toBe(false)
+  })
+})
+
+describe('isAdminOrOwnVersions', () => {
+  it('lets admins through', () => {
+    expect(run(isAdminOrOwnVersions(ownsViaFellows), user(['admin']))).toBe(true)
+  })
+
+  it('prefixes the ownership constraint for the versions table', () => {
+    expect(run(isAdminOrOwnVersions(ownsViaFellows), user(['member'], { person: 7 }))).toEqual({
+      'version.fellows': { contains: 7 },
+    })
+    expect(run(isAdminOrOwnVersions(ownsViaAuthors), user(['member'], { person: 7 }))).toEqual({
+      'version.authors': { contains: 7 },
+    })
+  })
+
+  it('prefixes inside and/or and maps id to parent', () => {
+    const owned = (): Where => ({ and: [{ id: { equals: 3 } }, { tier: { equals: 'owner' } }] })
+    expect(run(isAdminOrOwnVersions(owned), user(['member'], { person: 7 }))).toEqual({
+      and: [{ parent: { equals: 3 } }, { 'version.tier': { equals: 'owner' } }],
+    })
+  })
+
+  it('refuses anonymous and unlinked accounts', () => {
+    expect(run(isAdminOrOwnVersions(ownsViaFellows), null)).toBe(false)
+    expect(run(isAdminOrOwnVersions(ownsViaFellows), user(['fellow'], { person: null }))).toBe(
+      false,
+    )
   })
 })
 

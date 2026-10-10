@@ -1,7 +1,7 @@
 import {
   canSetTier,
-  isAdminOrOwn,
   isAdminOrOwnAndDraft,
+  isAdminOrOwnVersions,
   isAdminOrSuperAdminOrFellow,
   ownsViaFellows,
   readTiers,
@@ -58,7 +58,7 @@ export const Courses: CollectionConfig = {
   access: {
     read: readTiers(ownsViaFellows, { drafts: true }),
     // Without this, any signed-in account reads drafts via the versions endpoint.
-    readVersions: isAdminOrOwn(ownsViaFellows),
+    readVersions: isAdminOrOwnVersions(ownsViaFellows),
     create: isAdminOrSuperAdminOrFellow,
     update: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),
     delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),

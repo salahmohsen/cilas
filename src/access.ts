@@ -1,4 +1,5 @@
 import type { Access, FieldAccess, Where } from 'payload'
+import { appendVersionToQueryKey } from 'payload'
 import type { User } from '@/payload-types'
 
 /* ============================================================== primitives */
@@ -106,6 +107,21 @@ export const isAdminOrOwn =
     if (isAdminUser(req.user)) return true
     if (!req.user) return false
     return owned(req.user)
+  }
+
+/**
+ * `isAdminOrOwn` for `readVersions`. Payload applies that rule to the versions
+ * table, where every field sits under `version.` (`version.fellows`, not
+ * `fellows`), so an unprefixed constraint fails with "Cannot find field".
+ * `appendVersionToQueryKey` is Payload's own prefixer; it maps `id` to `parent`.
+ */
+export const isAdminOrOwnVersions =
+  (owned: Ownership): Access =>
+  ({ req }) => {
+    if (isAdminUser(req.user)) return true
+    if (!req.user) return false
+    const owns = owned(req.user)
+    return owns ? appendVersionToQueryKey(owns) : false
   }
 
 /** Who may write articles: community members, fellows, visiting students and admins. */
