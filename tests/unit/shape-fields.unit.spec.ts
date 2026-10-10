@@ -3,6 +3,8 @@ import { describe, expect, it } from 'vitest'
 
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
+import { CREDIT_ROLES, creditsField } from '@/fields/credits'
+import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { computeEndDate, scheduleField, timeRangeFields } from '@/fields/schedule'
@@ -260,5 +262,34 @@ describe('shared field pieces', () => {
       { order: 2 },
       {},
     ])
+  })
+})
+
+describe('credits and language', () => {
+  it('builds credits as role, label and people', () => {
+    const field = creditsField()
+    expect(field.name).toBe('credits')
+    expect(names(field.fields)).toEqual(['role', 'label', 'people'])
+  })
+
+  it('covers the roles the archive credits', () => {
+    expect(CREDIT_ROLES).toEqual([
+      'author',
+      'editor',
+      'translator',
+      'copy_editor',
+      'proofreader',
+      'supervisor',
+      'coordinator',
+      'art_director',
+      'cover_designer',
+      'illustrator',
+      'photographer',
+      'other',
+    ])
+  })
+
+  it('lists the languages content comes in', () => {
+    expect(LANGUAGE_OPTIONS.map((o) => o.value)).toEqual(['ar', 'en', 'de', 'fr', 'other'])
   })
 })
