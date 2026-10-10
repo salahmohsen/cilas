@@ -113,6 +113,13 @@ export const weekly = (
   sessions,
 })
 
+/** A one-off gathering on `date`, as a one-week schedule with one slot. */
+export const once = (date: string, start: string, end: string): ScheduleSeed => ({
+  start_date: date,
+  weeks: 1,
+  slots: [{ weekday: weekdayOf(date), start_time: start, end_time: end }],
+})
+
 /* ================================================== bibliography (shared) */
 
 /**

@@ -1215,6 +1215,26 @@ export interface Press {
 export interface Event {
   id: number;
   tier: 'owner' | 'community' | 'public';
+  event_type:
+    | 'talk'
+    | 'panel'
+    | 'book_discussion'
+    | 'reading_group'
+    | 'screening'
+    | 'performance'
+    | 'music'
+    | 'exhibition'
+    | 'open_day'
+    | 'workshop'
+    | 'residency'
+    | 'visit'
+    | 'other';
+  /**
+   * The event this one is part of.
+   */
+  series?: (number | null) | Event;
+  programme?: (number | null) | Programme;
+  course?: (number | null) | Course;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -1236,16 +1256,120 @@ export interface Event {
     };
     [k: string]: unknown;
   } | null;
-  event_type?: ('talk' | 'screening' | 'performance' | 'reading_group' | 'exhibition' | 'workshop') | null;
-  date?: string | null;
-  end_date?: string | null;
-  start_time?: string | null;
-  recurring?: boolean | null;
-  frequency?: ('weekly' | 'biweekly' | 'monthly') | null;
-  recurrence_until?: string | null;
-  location?: ('OFFLINE' | 'ONLINE') | null;
-  fellows?: (number | Person)[] | null;
-  registration_form?: (number | null) | Form;
+  schedule?: {
+    start_date?: string | null;
+    /**
+     * Week only keeps it off the calendar.
+     */
+    start_precision?: ('day' | 'week') | null;
+    weeks?: number | null;
+    /**
+     * Weekly meeting times, in Cairo time.
+     */
+    slots?:
+      | {
+          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
+          start_time: string;
+          end_time: string;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Worked out from the schedule.
+     */
+    end_date?: string | null;
+    /**
+     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
+     */
+    note?: string | null;
+  };
+  space?: (number | null) | Space;
+  /**
+   * Only when it is not at a CILAS space.
+   */
+  external_venue?: {
+    name?: string | null;
+    address?: string | null;
+    map_url?: string | null;
+  };
+  online_url?: string | null;
+  /**
+   * Time blocks within the day, in Cairo time.
+   */
+  agenda?:
+    | {
+        start_time: string;
+        end_time: string;
+        title: string;
+        id?: string | null;
+      }[]
+    | null;
+  speakers?:
+    | {
+        person: number | Person;
+        role?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  partners?:
+    | {
+        partner: number | Partner;
+        role?: ('sponsor' | 'co_host' | 'venue' | 'other') | null;
+        id?: string | null;
+      }[]
+    | null;
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    application_requirements?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    archived_registration_url?: string | null;
+  };
+  pricing?: {
+    min?: number | null;
+    /**
+     * Leave empty for a single price.
+     */
+    max?: number | null;
+    currency?: 'EGP' | null;
+    note?: string | null;
+    need_based_deductions?: boolean | null;
+    payment_plans?:
+      | {
+          label: string;
+          installments?:
+            | {
+                amount: number;
+                due_date?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -1918,20 +2042,95 @@ export interface PressSelect<T extends boolean = true> {
  */
 export interface EventsSelect<T extends boolean = true> {
   tier?: T;
+  event_type?: T;
+  series?: T;
+  programme?: T;
+  course?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
   description?: T;
-  event_type?: T;
-  date?: T;
-  end_date?: T;
-  start_time?: T;
-  recurring?: T;
-  frequency?: T;
-  recurrence_until?: T;
-  location?: T;
-  fellows?: T;
-  registration_form?: T;
+  schedule?:
+    | T
+    | {
+        start_date?: T;
+        start_precision?: T;
+        weeks?: T;
+        slots?:
+          | T
+          | {
+              weekday?: T;
+              start_time?: T;
+              end_time?: T;
+              label?: T;
+              id?: T;
+            };
+        end_date?: T;
+        note?: T;
+      };
+  space?: T;
+  external_venue?:
+    | T
+    | {
+        name?: T;
+        address?: T;
+        map_url?: T;
+      };
+  online_url?: T;
+  agenda?:
+    | T
+    | {
+        start_time?: T;
+        end_time?: T;
+        title?: T;
+        id?: T;
+      };
+  speakers?:
+    | T
+    | {
+        person?: T;
+        role?: T;
+        id?: T;
+      };
+  partners?:
+    | T
+    | {
+        partner?: T;
+        role?: T;
+        id?: T;
+      };
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        application_requirements?: T;
+        archived_registration_url?: T;
+      };
+  pricing?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+        currency?: T;
+        note?: T;
+        need_based_deductions?: T;
+        payment_plans?:
+          | T
+          | {
+              label?: T;
+              installments?:
+                | T
+                | {
+                    amount?: T;
+                    due_date?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
   updatedAt?: T;
   createdAt?: T;
 }

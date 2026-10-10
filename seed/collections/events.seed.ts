@@ -1,7 +1,7 @@
 import type { Payload } from 'payload'
 import { slugify } from '@/lib/slugify'
 import type { EventSeed, SeedContext } from '../seed.type'
-import { getOrCreateId, lexical, requireIds } from '../seed.utils'
+import { getOrCreateId, lexical, once, requireId } from '../seed.utils'
 
 export const eventsData: EventSeed[] = [
     {
@@ -11,32 +11,32 @@ export const eventsData: EventSeed[] = [
         title: 'Essay Discussion: On the Emergence of Pigeon Towers',
         event_type: 'talk',
         tier: 'public',
-        date: '2017-10-15',
-        location: 'OFFLINE',
-        fellows: ['surti.singh@cilas.test', 'robin.weiss@cilas.test'],
+        schedule: once('2017-10-15', '18:00', '20:00'),
+        space: 'Darb el-Labbana',
+        speakers: ['surti.singh@cilas.test', 'robin.weiss@cilas.test'],
         description:
             'Surti Singh and Robin Weiss discuss their essays on the anchoring principles of play and ignorance from "On the emergence of Pigeon Towers" (CILAS, 2018) at CILAS in Darb el-Labbana, Fall 2017. The discussion was audio-recorded; Teun Dekker and I-Kai Jeng joined via Skype from the Netherlands and Taiwan.',
     },
     {
         title: 'End-of-Year Exhibition',
-        event_type: 'exhibition',
+        event_type: 'open_day',
         tier: 'public',
-        date: '2026-06-05',
-        location: 'OFFLINE',
+        schedule: once('2026-06-05', '16:00', '21:00'),
+        space: 'Darb el-Labbana',
         description: 'Public showcase of CILASian work.',
     },
     {
         title: 'Film Screening: The Man Who Shot Liberty Valance',
         event_type: 'screening',
         tier: 'public',
-        date: '2026-05-03',
-        location: 'OFFLINE',
+        schedule: once('2026-05-03', '19:00', '22:00'),
+        space: 'Darb el-Labbana',
     },
 ]
 
 export const seedEvents = async (payload: Payload, ctx: SeedContext): Promise<void> => {
     for (const event of eventsData) {
-        const { title, description, fellows, ...rest } = event
+        const { title, description, space, speakers, ...rest } = event
         await getOrCreateId(payload, 'events', { title: { equals: title } }, () =>
             payload.create({
                 collection: 'events',
@@ -45,7 +45,8 @@ export const seedEvents = async (payload: Payload, ctx: SeedContext): Promise<vo
                     title,
                     slug: slugify(title),
                     description: description ? lexical(description) : null,
-                    ...(fellows ? { fellows: requireIds(ctx.people, fellows) } : {}),
+                    ...(space ? { space: requireId(ctx.spaces, space) } : {}),
+                    speakers: (speakers ?? []).map((email) => ({ person: requireId(ctx.people, email) })),
                 },
                 overrideAccess: true,
             }),

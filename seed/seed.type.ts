@@ -164,10 +164,16 @@ export type PressSeed = {
 
 /* ================================================================= events */
 
-export type EventSeed = Omit<Draft<Event>, 'description' | 'slug' | 'fellows'> & {
+export type EventSeed = {
+  title: string
+  event_type: NonNullable<Event['event_type']>
+  tier: Event['tier']
+  schedule: ScheduleSeed
   description?: string
-  /** User emails, resolved to user ids. */
-  fellows?: string[]
+  /** Space name, resolved to an id. */
+  space?: string
+  /** Fixture emails of the speakers' people. */
+  speakers?: string[]
 }
 
 /* =============================================================== partners */
