@@ -43,7 +43,7 @@ const isFree = async (payload: Payload, collection: CollectionSlug, slug: string
   (await payload.count({ collection, where: { slug: { equals: slug } }, overrideAccess: true })).totalDocs === 0
 
 /** `base`, or `base-2`, `base-3`… — the first slug no document in `collection` uses. */
-const freeSlug = async (payload: Payload, collection: CollectionSlug, base: string): Promise<string> => {
+export const freeSlug = async (payload: Payload, collection: CollectionSlug, base: string): Promise<string> => {
   const { docs } = await payload.find({
     collection,
     where: { slug: { like: base } },
@@ -66,7 +66,7 @@ const freeSlug = async (payload: Payload, collection: CollectionSlug, base: stri
  * courses with one title), it is used instead, numbered further if needed.
  * An update keeps the slug the document already has.
  */
-const upsert = async (
+export const upsert = async (
   payload: Payload,
   collection: CollectionSlug,
   where: Where,
@@ -145,6 +145,12 @@ export const importCourses = async (
     const { docs } = await payload.find({ collection: 'people', where: { name: { equals: f.name } }, limit: 1, depth: 0, overrideAccess: true })
     let id = docs[0]?.id
     if (!id) {
+      // A variant spelling with the same slug (e.g. "Alaa el-Bannan" for
+      // "Alaa El-Bannan") may hold this legacy URL already: it is unique.
+      const legacy_url = `${from}#${slugify(f.name)}`
+      const legacyTaken =
+        (await payload.count({ collection: 'people', where: { legacy_url: { equals: legacy_url } }, overrideAccess: true }))
+          .totalDocs > 0
       id = (
         await payload.create({
           collection: 'people',
@@ -152,7 +158,7 @@ export const importCourses = async (
             name: f.name,
             slug: await freeSlug(payload, 'people', slugify(f.name)),
             ...(f.bio ? { bio: rich(f.bio) } : {}),
-            legacy_url: `${from}#${slugify(f.name)}`,
+            ...(legacyTaken ? {} : { legacy_url }),
             import_status: 'needs_review',
           },
           overrideAccess: true,
