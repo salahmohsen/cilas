@@ -192,6 +192,8 @@ export type SeedContext = {
   programmes: IdMap
   /** Article-collection titles, resolved to ids. */
   articleCollections: IdMap
+  /** Space names, resolved to ids. */
+  spaces: IdMap
 }
 
 export const createSeedContext = (): SeedContext => ({
@@ -201,4 +203,5 @@ export const createSeedContext = (): SeedContext => ({
   courses: {},
   programmes: {},
   articleCollections: {},
+  spaces: {},
 })

@@ -31,6 +31,7 @@ await resetContent(payload)
 
 // Order matters: every seeder reads ids resolved by the ones above it.
 await seedUsers(payload, ctx)
+await seedSpaces(payload, ctx)
 await seedCycles(payload, ctx)
 await seedProgrammes(payload, ctx)
 await seedCourses(payload, ctx)
@@ -39,7 +40,6 @@ await seedGovernance(payload, ctx)
 await seedArticles(payload, ctx)
 await seedPress(payload)
 await seedEvents(payload, ctx)
-await seedSpaces(payload)
 await seedArticleCollections(payload, ctx)
 await seedSiteSettings(payload)
 

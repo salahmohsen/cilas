@@ -25,6 +25,15 @@ export const Spaces: CollectionConfig = {
         { label: 'Former', value: 'former' },
       ],
     },
+    { name: 'city', type: 'text', localized: true }, // names the space's cycles: "Spring 2026, Cairo"
+    {
+      type: 'row',
+      fields: [
+        { name: 'opened_year', type: 'number', min: 2012, max: 2100, admin: { width: '50%' } },
+        // Empty while in use.
+        { name: 'closed_year', type: 'number', min: 2012, max: 2100, admin: { width: '50%' } },
+      ],
+    },
     {
       label: 'Description',
       type: 'group',

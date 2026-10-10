@@ -288,6 +288,9 @@ export interface Space {
   generateSlug?: boolean | null;
   slug: string;
   state?: ('current' | 'former') | null;
+  city?: string | null;
+  opened_year?: number | null;
+  closed_year?: number | null;
   description?: {
     root: {
       type: string;
@@ -1258,6 +1261,9 @@ export interface SpacesSelect<T extends boolean = true> {
   generateSlug?: T;
   slug?: T;
   state?: T;
+  city?: T;
+  opened_year?: T;
+  closed_year?: T;
   description?: T;
   images?:
     | T
