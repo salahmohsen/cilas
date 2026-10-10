@@ -1,4 +1,5 @@
-import type { NamedGroupField } from 'payload'
+import type { NamedGroupField, TextFieldSingleValidation } from 'payload'
+import { text } from 'payload/shared'
 
 import { REGISTRATION_METHODS } from '@/lib/registration'
 import { httpUrl } from './validators'
@@ -32,8 +33,15 @@ export const registrationField = (): NamedGroupField => ({
     {
       name: 'url',
       type: 'text',
-      validate: (value: unknown) => (value ? httpUrl(value) : true),
-      admin: { condition: (_, sibling) => sibling?.method === 'external', placeholder: 'https://…' },
+      validate: ((value, options) => {
+        const base = text(value, options)
+        if (base !== true) return base
+        return value ? httpUrl(value) : true
+      }) satisfies TextFieldSingleValidation,
+      admin: {
+        condition: (_, sibling) => sibling?.method === 'external',
+        placeholder: 'https://…',
+      },
     },
     {
       name: 'deadline',

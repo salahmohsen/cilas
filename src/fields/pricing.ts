@@ -1,4 +1,5 @@
-import type { NamedGroupField } from 'payload'
+import type { NamedGroupField, NumberFieldSingleValidation } from 'payload'
+import { number } from 'payload/shared'
 
 import { notBelow } from './validators'
 
@@ -29,8 +30,13 @@ export const pricingField = ({
           name: 'max',
           type: 'number',
           min: 0,
-          validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
-            notBelow(value, siblingData.min, 'the minimum'),
+          // Payload's own number checks (min, max, required) first, then the range.
+          validate: ((value, options) => {
+            const base = number(value, options)
+            return base === true
+              ? notBelow(value, (options.siblingData as Record<string, unknown>).min, 'the minimum')
+              : base
+          }) satisfies NumberFieldSingleValidation,
           admin: { width: '35%', description: 'Leave empty for a single price.' },
         },
         {

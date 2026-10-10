@@ -145,15 +145,87 @@ describe('computeEndDate on update', () => {
 
   it('skips a cancelled last session from data.sessions', () => {
     const data = {
-      sessions: [{ order: 1, meetings: 1 }, { order: 2, meetings: 1, cancelled: true }],
+      sessions: [
+        { order: 1, meetings: 1 },
+        { order: 2, meetings: 1, cancelled: true },
+      ],
     }
     expect(run({ siblingData: {}, previousSiblingDoc, data })).toBe('2026-03-03')
   })
 
   it('falls back to originalDoc.sessions when data has none', () => {
     const originalDoc = {
-      sessions: [{ order: 1, meetings: 1 }, { order: 2, meetings: 1, cancelled: true }],
+      sessions: [
+        { order: 1, meetings: 1 },
+        { order: 2, meetings: 1, cancelled: true },
+      ],
     }
     expect(run({ siblingData: {}, previousSiblingDoc, data: {}, originalDoc })).toBe('2026-03-03')
+  })
+})
+
+describe('validate closures in the configs', () => {
+  // Mirrors how Payload calls validate: the field's own config plus siblingData and req.
+  const req = {
+    payload: { config: {} },
+    t: (key: string) => key,
+  }
+  const find = (fields: Field[], name: string): Field | undefined => {
+    for (const f of fields) {
+      if ('name' in f && f.name === name) return f
+      if (!('name' in f) && 'fields' in f) {
+        const hit = find(f.fields, name)
+        if (hit) return hit
+      }
+    }
+    return undefined
+  }
+  const check = (
+    field: Field | undefined,
+    value: unknown,
+    siblingData: Record<string, unknown>,
+  ) => {
+    if (!field || !('validate' in field) || typeof field.validate !== 'function') {
+      throw new Error('field has no validate')
+    }
+    const validate = field.validate as (v: unknown, o: unknown) => unknown
+    return validate(value, { ...field, siblingData, req })
+  }
+
+  const slots = find(scheduleField().fields, 'slots')
+  const endTime = find(slots && 'fields' in slots ? slots.fields : [], 'end_time')
+
+  it('end_time rejects an end before the start', () => {
+    expect(check(endTime, '18:00', { start_time: '19:00' })).toMatch(/after/)
+  })
+
+  it('end_time rejects a bad format and a missing value', () => {
+    expect(check(endTime, '9pm', { start_time: '19:00' })).toMatch(/HH:MM/)
+    expect(check(endTime, '', { start_time: '19:00' })).not.toBe(true)
+  })
+
+  it('end_time accepts a valid later time', () => {
+    expect(check(endTime, '21:00', { start_time: '19:00' })).toBe(true)
+  })
+
+  const max = find(pricingField().fields, 'max')
+
+  it('max below min is rejected', () => {
+    expect(check(max, 100, { min: 300 })).toMatch(/minimum/)
+    expect(check(max, 500, { min: 300 })).toBe(true)
+    expect(check(max, undefined, { min: 300 })).toBe(true)
+  })
+
+  it('max keeps the built-in number rules', () => {
+    expect(check(max, -500, {})).not.toBe(true)
+  })
+
+  const url = find(registrationField().fields, 'url')
+
+  it('registration url allows empty and rejects a bare domain', () => {
+    expect(check(url, '', {})).toBe(true)
+    expect(check(url, undefined, {})).toBe(true)
+    expect(check(url, 'cilas.net', {})).toMatch(/https/)
+    expect(check(url, 'https://cilas.net', {})).toBe(true)
   })
 })

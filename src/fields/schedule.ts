@@ -1,4 +1,5 @@
-import type { FieldHook, NamedGroupField } from 'payload'
+import type { FieldHook, NamedGroupField, TextFieldSingleValidation } from 'payload'
+import { text } from 'payload/shared'
 
 import { WEEKDAYS } from '@/lib/cairo-day'
 import { scheduleEndDate, type Schedule, type SessionDates } from '@/lib/schedule'
@@ -86,10 +87,18 @@ export const scheduleField = (): NamedGroupField => ({
               name: 'end_time',
               type: 'text',
               required: true,
-              validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) => {
+              // Payload's text checks (required, length) first, then the time rules.
+              validate: ((value, options) => {
+                const base = text(value, options)
+                if (base !== true) return base
                 const time = timeOfDay(value)
-                return time === true ? endAfterStart(value, siblingData.start_time) : time
-              },
+                return time === true
+                  ? endAfterStart(
+                      value,
+                      (options.siblingData as Record<string, unknown>).start_time,
+                    )
+                  : time
+              }) satisfies TextFieldSingleValidation,
               admin: { width: '20%', placeholder: '21:00' },
             },
             { name: 'label', type: 'text', localized: true, admin: { width: '30%' } },
@@ -111,7 +120,9 @@ export const scheduleField = (): NamedGroupField => ({
       name: 'note',
       type: 'textarea',
       localized: true,
-      admin: { description: 'One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".' },
+      admin: {
+        description: 'One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".',
+      },
     },
   ],
 })
