@@ -117,9 +117,11 @@ for (const upload of sorted) {
       }
       links = (JSON.parse(readFileSync(linksFile, 'utf8')) as unknown[]).length
 
+      const pngs = () => readdirSync(dir).filter((f) => /^page-\d+\.png$/.test(f))
+      if ((method === 'vision' || method === 'mixed') && pngs().length === 0) {
+        run('pdftoppm', ['-r', '150', '-png', found.file, path.join(dir, 'page')])
+      }
       if (method === 'vision') {
-        const pngs = () => readdirSync(dir).filter((f) => /^page-\d+\.png$/.test(f))
-        if (pngs().length === 0) run('pdftoppm', ['-r', '150', '-png', found.file, path.join(dir, 'page')])
         const ocrFile = path.join(dir, 'ocr.txt')
         if (!existsSync(ocrFile)) {
           const ordered = pngs().sort((a, b) => parseInt(a.slice(5), 10) - parseInt(b.slice(5), 10))
@@ -144,7 +146,7 @@ writeFileSync(path.join(here, 'flows.json'), `${JSON.stringify(entries, null, 2)
 
 const by = (m: string) => entries.filter((e) => e.method === m && e.source).length
 console.log(
-  `${entries.length} flow(s): text ${by('text')}, vision ${by('vision')}, docx ${by('docx')}, missing ${entries.filter((e) => !e.source).length}; ${entries.reduce((n, e) => n + e.links, 0)} link(s)`,
+  `${entries.length} flow(s): text ${by('text')}, mixed ${by('mixed')}, vision ${by('vision')}, docx ${by('docx')}, missing ${entries.filter((e) => !e.source).length}; ${entries.reduce((n, e) => n + e.links, 0)} link(s)`,
 )
 if (collisions.length) console.log(`id collisions disambiguated:\n${collisions.join('\n')}`)
 if (failures.length) console.log(`FAILURES:\n${failures.join('\n')}`)

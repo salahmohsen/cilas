@@ -21,7 +21,7 @@ if (!raw || !mode) {
 type Flow = {
   id: string
   source: 'zip' | 'mirror' | null
-  method: 'text' | 'vision' | 'docx'
+  method: 'text' | 'mixed' | 'vision' | 'docx'
   courses: string[]
 }
 
@@ -52,7 +52,7 @@ const promptFor = (f: Flow): string =>
     method: f.method,
     courses: f.courses.map((url) => titles.get(url) ?? url),
     text: readFileSync(path.join(flowDir(f.id), f.method === 'vision' ? 'ocr.txt' : 'text.txt'), 'utf8'),
-    images: f.method === 'vision' ? imagesOf(f.id) : [],
+    images: f.method === 'vision' || f.method === 'mixed' ? imagesOf(f.id) : [],
     links: existsSync(path.join(flowDir(f.id), 'links.json'))
       ? (JSON.parse(readFileSync(path.join(flowDir(f.id), 'links.json'), 'utf8')) as Array<{ page: number; url: string }>)
       : [],

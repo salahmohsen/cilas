@@ -40,7 +40,7 @@ export const flowPrompt = ({
   links = [],
 }: {
   id: string
-  method: 'text' | 'vision' | 'docx'
+  method: 'text' | 'mixed' | 'vision' | 'docx'
   courses: string[]
   text: string
   images: string[]
@@ -67,7 +67,9 @@ Rules:
 ${
   method === 'vision'
     ? `\nThis flow is in Arabic and its text layer is unreliable. Read every page image below with your Read tool; the OCR text that follows is only a helper (its tables are scrambled; trust the images):\n${images.map((p) => `- ${p}`).join('\n')}\n`
-    : ''
+    : method === 'mixed'
+      ? `\nThis flow is mostly English but quotes Arabic, and its text layer reverses Arabic words. Take every Arabic word from the page images below (Read each with your Read tool); take English from the text:\n${images.map((p) => `- ${p}`).join('\n')}\n`
+      : ''
 }
 ${method === 'vision' ? 'OCR text' : 'Flow text'}:
 """

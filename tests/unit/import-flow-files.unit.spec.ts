@@ -21,7 +21,9 @@ describe('flowId', () => {
 describe('methodFor', () => {
   it('reads Arabic PDFs by vision and the rest by text', () => {
     expect(methodFor('x.pdf', 0.5)).toBe('vision')
-    expect(methodFor('x.pdf', 0.2)).toBe('text')
+    expect(methodFor('x.pdf', 0.2)).toBe('mixed')
+    expect(methodFor('x.pdf', 0.01)).toBe('mixed')
+    expect(methodFor('x.pdf', 0.009)).toBe('text')
     expect(methodFor('x.pdf', 0)).toBe('text')
   })
 

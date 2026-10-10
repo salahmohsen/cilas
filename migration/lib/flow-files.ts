@@ -2,7 +2,7 @@ import path from 'node:path'
 
 import { slugify } from '../../src/lib/slugify'
 
-export type FlowMethod = 'text' | 'vision' | 'docx'
+export type FlowMethod = 'text' | 'mixed' | 'vision' | 'docx'
 
 /** The flow's id: the slug of its upload file name, without the extension. */
 export const flowId = (upload: string): string => {
@@ -19,7 +19,10 @@ export const flowId = (upload: string): string => {
 /** How a flow is read: Word as docx, Arabic PDFs by vision, other PDFs as text. */
 export const methodFor = (file: string, arabicShare: number): FlowMethod => {
   if (/\.docx?$/i.test(file)) return 'docx'
-  return arabicShare > 0.2 ? 'vision' : 'text'
+  if (arabicShare > 0.2) return 'vision'
+  // English flows quoting Arabic: the text layer reverses the Arabic, so the
+  // page images are needed for those words.
+  return arabicShare >= 0.01 ? 'mixed' : 'text'
 }
 
 /** Parses the `pdfinfo -url` table; mailto links are not sources. */
