@@ -18,6 +18,10 @@ export const env = createEnv({
         R2_SECRET_ACCESS_KEY: z.string().min(1),
         R2_ENDPOINT: z.url(),
         R2_PUBLIC_URL: z.url(),
+
+        // Optional: without it Payload logs emails to the console (fine in dev).
+        RESEND_API_KEY: z.string().min(1).optional(),
+        EMAIL_FROM_ADDRESS: z.email().default('noreply@ci-las.org'),
     },
 
     // Read by the admin live-preview iframe, which postMessages back to Payload.

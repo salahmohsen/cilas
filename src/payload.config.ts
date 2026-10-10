@@ -22,6 +22,7 @@ import { Spaces } from './collections/Spaces'
 import { Partners } from './collections/Partners'
 import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { payloadTheme } from 'payload-theme'
@@ -54,6 +55,14 @@ const storage = s3Storage({
 })
 
 export default buildConfig({
+  // System email only. Newsletter subscribers live in Resend Audiences (ADR 0005).
+  email: env.RESEND_API_KEY
+    ? resendAdapter({
+        apiKey: env.RESEND_API_KEY,
+        defaultFromAddress: env.EMAIL_FROM_ADDRESS,
+        defaultFromName: 'CILAS',
+      })
+    : undefined,
   admin: {
     user: Users.slug,
     importMap: {
