@@ -58,13 +58,13 @@ export const usersData: UserSeed[] = [
     name_ar: 'جورج بارتلت',
     bio: 'A writer and lecturer working across cinema and psychoanalysis.',
     bio_ar: 'چورچ بارتلت كاتب ومحاضِر بيشتغل في مجال السينما والتحليل النفسي.',
-    email: 'george.bartlett@cilas.test',
+    email: 'georgelouisbartlett@gmail.com',
     roles: ['fellow'],
   },
   {
     name: 'S. Farwah Rizvi',
     name_ar: 'فرحة رضوي',
-    email: 'farwah.rizvi@cilas.test',
+    email: 's.farwah.rizvi@gmail.com',
     bio: 'A storyteller, theatre pedagogue and cultural researcher bridging performance, education and interdisciplinary scholarship. Teaching Fellow & Artistic Scholar at CILAS; MA in Theatre Arts (Middlesex University, London), pursuing an MA in Folklore and Culture Studies at IGNOU. Creator of Neo-Dastangoi and the proponent of Emotional Archaeology; co-writer and co-producer of the award-winning documentary In A Dissent Manner (2022).',
     bio_ar:
       'راوية ومربية مسرحية وباحثة ثقافية تعمل عند تقاطع الأداء والتعليم والدراسة البينية؛ زميلة تدريس وفن، ومبتكرة «الداستانغي الجديد» ومنهج «علم الآثار العاطفي»، ومؤلفة مشاركة في الفيلم الحائز على جائزة In A Dissent Manner (2022).',
@@ -93,7 +93,7 @@ export const usersData: UserSeed[] = [
   {
     name: 'Susanne Sklar',
     name_ar: 'سوزان سكلر',
-    email: 'susanne.sklar@cilas.test',
+    email: 'susanne.sklar@gmail.com',
     bio: 'Has taught humanities — literature, religion and performance — in China, Russia, Sweden, the USA and the UK (at Oxford, where she received her doctorate). Published over twenty articles and the book Blake’s Jerusalem As Visionary Theatre; also a peace researcher, actress and social worker who created arts programmes for Chicago teenagers who had been homeless and abused.',
     bio_ar:
       'درّست العلوم الإنسانية — الأدب والدين وفنون الأداء — في الصين وروسيا والسويد والولايات المتحدة وبريطانيا (حيث نالت الدكتوراه من أكسفورد)، ونشرت أكثر من عشرين مقالًا وكتاب «Blake’s Jerusalem As Visionary Theatre»، وعملت بأبحاث سلام وفنون تناول الشباب المشردين في شيكاغو.',
@@ -102,7 +102,8 @@ export const usersData: UserSeed[] = [
   {
     name: 'Leon Conrad',
     name_ar: 'ليون كونراد',
-    email: 'leon.conrad@cilas.test',
+    email: 'leon@traditionaltutor.co.uk',
+    website: 'https://www.traditionaltutor.co.uk',
     bio: 'Founder of The Unknown Storyteller Project, founder/lead tutor at The Traditional Tutor, co-founder/lead trainer at The Academy of Oratory, and affiliate at the KSU Next Society Institute, Lithuania. Author of Story and Structure (2022, People’s Book Prize finalist) and Master the Art and Craft of Writing (2024). Grew up in Alexandria, Egypt.',
     bio_ar:
       'مؤسس مشروع الحكّاين المجهول («The Unknown Storyteller Project») وأكاديمية المنبر للخطابة، وأفلييت في معهد Next Society بجامعة الملك سعود؛ مؤلف كتابَي Story and Structure (2022) وMaster the Art and Craft of Writing (2024)، ونشأ في الإسكندرية حيث أنشأت تجارب الحكاية الشفوية شغفه مدى الحياة باللغة.',
@@ -129,7 +130,7 @@ export const usersData: UserSeed[] = [
   {
     name: 'Osama Amer',
     name_ar: 'أسامة عامر',
-    email: 'osama.amer@cilas.test',
+    email: 'osamaamer@aucegypt.edu',
     bio: 'A researcher and writer; won the Magda Al-Nowaihi award in Gender Studies (2025) for his AUC MA thesis in Arabic Literature & Language, “Negotiating the Canon: Arab Women Romantic Poets Jamila al-ʻAlayli and Zahra al-Hurr”. His short story «فرخة» won the Madalyn Lamont award in creative writing (2023). Interested in writing about the daily and the mundane.',
     bio_ar:
       'باحث وكاتب؛ فاز بجائزة ماجدة النواحي في دراسات الجندر (2025) عن رسالة الماجستير في الأدب العربي «التفاوض على الكانون: الشاعرات الرومانسيات جميلة العليلي وزهرة الحر» من الجامعة الأمريكية بالقاهرة، وفازت قصته القصيرة «فرخة» بجائزة مادلين لامونت في الكتابة الإبداعية (2023). مهتم بالكتابة عن اليومي والعادي.',
@@ -149,7 +150,7 @@ export const usersData: UserSeed[] = [
   {
     name: 'I-Kai Jeng',
     name_ar: 'إيكاي چانغ',
-    email: 'ikai.jeng@cilas.test',
+    email: 'qtaroj@gmail.com',
     bio: 'Received his PhD/MA in Philosophy and Classical Studies at Boston University; visiting fellow at CILAS for a trimester. Now in the Department of Philosophy, National Taiwan University, and a specialist in Greek philosophy — especially Plato on philosophical engagement in politics and the character of philosophical discourse.',
     bio_ar:
       'حاصل على الدكتوراه والماجستير في الفلسفة والدراسات الكلاسيكية من جامعة بوسطن، وكان زميل زيارته في CILAS لفصل دراسي. يعمل اليوم في قسم الفلسفة بجامعة تايوان الوطنية، ومتخصص في الفلسفة الإغريقية، خصوصًا أفلاطون.',
@@ -212,7 +213,7 @@ export const usersData: UserSeed[] = [
   {
     name: 'Karim-Yassin Goessinger',
     name_ar: 'كريم ياسين جوسينجر',
-    email: 'karim@cilas.test',
+    email: 'karim@ci-las.org',
     bio: 'Founder of CILAS.',
     bio_ar: 'مؤسس مركز CILAS.',
     roles: ['member'],
@@ -242,7 +243,7 @@ export const usersData: UserSeed[] = [
   {
     name: 'Hussein El-Hag',
     name_ar: 'حسين الحاج',
-    email: 'hussein.alhag@cilas.test',
+    email: 'sheikh.kamar@gmail.com',
     bio: 'Translation Lab supervisor and coordinator (إشراف وتنسيق), 2016–2018. Translator and reviewer on all five articles in "أعمال مختبر الترجمة" (CILAS, 2018).',
     bio_ar:
       'مشرف ومنسّق مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم ومراجع للمقالات الخمسة جميعها في «أعمال مختبر الترجمة» (CILAS، 2018).',
@@ -489,7 +490,13 @@ export const seedUsers = async (payload: Payload, ctx: SeedContext): Promise<voi
     const personId = await getOrCreateId(payload, 'people', { name: { equals: seed.name } }, () =>
       payload.create({
         collection: 'people',
-        data: { name: seed.name, slug: slugify(seed.name), bio: lexical(seed.bio) },
+        data: {
+          name: seed.name,
+          slug: slugify(seed.name),
+          bio: lexical(seed.bio),
+          website: seed.website ?? null,
+          social_links: seed.social_links ?? [],
+        },
         overrideAccess: true,
       }),
     )

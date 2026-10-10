@@ -1,3 +1,4 @@
+import type { SOCIAL_PLATFORMS } from '@/fields/social'
 import type {
   Article,
   Course,
@@ -47,6 +48,9 @@ export type UserSeed = {
   bio_ar: string
   roles: User['roles']
   password?: string
+  /** Public website, from the archive. */
+  website?: string
+  social_links?: Array<{ platform: (typeof SOCIAL_PLATFORMS)[number]; url: string }>
 }
 
 /* ====================================================== fields of study */

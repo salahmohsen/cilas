@@ -29,7 +29,7 @@ export const governanceData: GovernanceSeed[] = [
         role: 'advisor',
         advises_on: 'capstone projects and university partnerships (France, Italy)',
     },
-    { email: 'karim@cilas.test', role: 'trustee', board_role: 'Chairman' },
+    { email: 'karim@ci-las.org', role: 'trustee', board_role: 'Chairman' },
     { email: 'amani.elshimi@cilas.test', role: 'trustee', board_role: 'Secretary' },
     { email: 'ahmed.galal@cilas.test', role: 'trustee', board_role: 'Treasurer' },
 ]

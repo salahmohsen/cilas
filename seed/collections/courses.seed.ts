@@ -71,7 +71,7 @@ export const coursesData: CourseSeed[] = [
       'Melancholia in the City explores the diffuse sense of malaise pervading contemporary urban life, approaching depression through the lens of psychoanalysis as a social and structural experience shaped by how late capitalism hijacks unconscious desire. In dialogue with its participants, the workshop grounds these questions in the context of Cairo, and considers how melancholia might be understood not only as a symptom of exhaustion and loss, but also as a mode of critique, resistance, and the site of potential transformation.',
     location: ['OFFLINE'],
     cycle: 'fall-2025',
-    fellows: ['george.bartlett@cilas.test'],
+    fellows: ['georgelouisbartlett@gmail.com'],
     ...shortSeries(8, '2025-10-28', '18:00', '20:30'),
   },
   {
@@ -82,7 +82,7 @@ export const coursesData: CourseSeed[] = [
       'An 8-week seminar-practicum introducing Emotional Archaeology as a way of thinking and researching that centres emotional literacy, ethical presence, and Practice-as-Research. Participants learn to approach archives — from community libraries and personal collections to online blogs and cultural maps — as dynamic sites where memory, identity, and meaning accumulate and shift, and to ask not only what archives contain, but how they feel upon encounter and what they ask of us in return.',
     location: ['ONLINE'],
     cycle: 'fall-2025',
-    fellows: ['farwah.rizvi@cilas.test'],
+    fellows: ['s.farwah.rizvi@gmail.com'],
     ...shortSeries(8, '2025-10-19', '18:00', '20:30'),
   },
   {
@@ -120,7 +120,7 @@ export const coursesData: CourseSeed[] = [
       "A four-week class carefully exploring the poetry and art of Blake's Songs of Innocence and of Experience. Each poem is illuminated, flanked and framed by intriguing imagery and designs. We read Blake's poems aloud, discuss their designs, and do a bit of in-class writing, including at least one poetry game. The course culminates in a celebration in which you are invited to bring Arabic (or Persian) poetry akin to Blake's.",
     location: ['OFFLINE'],
     cycle: 'winter-2026',
-    fellows: ['susanne.sklar@cilas.test'],
+    fellows: ['susanne.sklar@gmail.com'],
     ...shortSeries(4, '2026-02-26', '18:00', '20:30'),
   },
   {
@@ -131,7 +131,7 @@ export const coursesData: CourseSeed[] = [
       "Story, narrative, and poetry are all, to paraphrase poet-essayist Robert Bringhurst, 'forms of knowing'. In this four-week course we draw on views of harmony (balancing concord and discord) to inform an approach to creative writing based on an immersion in 'the knowing', inspired by an integrated view of the classical liberal arts. Participants may work in English and/or Arabic; films, webcasts, video journals, artwork, social sculptures, or musical compositions are acceptable, as long as academic rigour and critical and creative thinking are evidenced in both process and outputs.",
     location: ['OFFLINE'],
     cycle: 'winter-2026',
-    fellows: ['leon.conrad@cilas.test'],
+    fellows: ['leon@traditionaltutor.co.uk'],
     ...shortSeries(4, '2026-02-21', '19:00', '21:30'),
   },
   {
@@ -353,7 +353,7 @@ export const coursesData: CourseSeed[] = [
       'نكتب يومياتنا ونقفل عليها في درج بعيد عن أعين من نعرف، ونكتب جوابًا لحبيب على ملف Word ثم نغلق الملف بدون حفظ. ماذا يقول كل هذا عن ذواتنا؟ ولماذا نخاف مما نكتب عن أنفسنا؟ يهدف هذا المعمل إلى طرح المزيد من التساؤلات عن كتابة الذات، ونوعها، وما تثيره بداخلنا؛ وكيف تكون هذه الكتابات امتدادًا لذواتنا: تعبيرًا عن هويتنا وجندرنا. كما يهدف إلى التجريب في تلك الأنواع من الكتابة — ملحوظاتنا المنسية، أو اعترافاتنا الغريبة، أو جواباتنا غير مرسلة، أو تفاصيلنا اليومية التي لم نظن أن أحدًا سيهتم بها — وإلى تذوق ألوان أدبية ذاتية، والاشتباك مع نصوص نقدية نسوية حول الكتابة الذاتية. We write our diaries and lock them in a drawer away from the eyes of those we know. What does all this say about ourselves? And why are we afraid of what we write about ourselves?',
     location: ['ONLINE'],
     cycle: 'summer-2026',
-    fellows: ['osama.amer@cilas.test'],
+    fellows: ['osamaamer@aucegypt.edu'],
     ...shortSeries(10, '2026-07-19', '19:00', '21:30'),
   },
 ]
