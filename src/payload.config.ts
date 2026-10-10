@@ -145,7 +145,7 @@ export default buildConfig({
     // to DROP tables on stdin, which silently destroys data when it runs
     // non-interactively (CI, vitest, any `getPayload` in a script) — and it
     // leaves no record of what changed.
-    push: true,
+    push: false,
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
