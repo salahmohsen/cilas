@@ -1,3 +1,5 @@
+import type { Payload } from 'payload'
+
 import { pathOf } from '@/lib/paths'
 
 /**
@@ -36,4 +38,18 @@ export const redirectTarget = (
   if (!ref || typeof ref.value !== 'object' || ref.value === null) return null
   const url = pathOf(ref.relationTo, ref.value as { slug?: string | null })
   return url ? { url, permanent } : null
+}
+
+/** Looks up a legacy path in the redirects collection. */
+export const findRedirect = async (
+  payload: Payload,
+  path: string,
+): Promise<{ url: string; permanent: boolean } | null> => {
+  const { docs } = await payload.find({
+    collection: 'redirects',
+    where: { from: { in: legacyCandidates(path) } },
+    depth: 1,
+    limit: 1,
+  })
+  return docs[0] ? redirectTarget(docs[0] as RedirectDoc) : null
 }

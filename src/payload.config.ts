@@ -24,10 +24,21 @@ import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { redirectsPlugin } from '@payloadcms/plugin-redirects'
+import { seoPlugin } from '@payloadcms/plugin-seo'
+import type {
+  GenerateDescription,
+  GenerateImage,
+  GenerateTitle,
+  GenerateURL,
+} from '@payloadcms/plugin-seo/types'
 import { s3Storage } from '@payloadcms/storage-s3'
 import { payloadTheme } from 'payload-theme'
 
+import { anyone, hasRole, isAdmin } from './access'
 import { env } from './env'
+import { pathOf } from './lib/paths'
+import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from './lib/seo'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -53,6 +64,19 @@ const storage = s3Storage({
     forcePathStyle: true, // Required for R2
   },
 })
+
+// The Generate buttons and the page metadata share seoDefaults().
+const seoFor = (collectionSlug: string | undefined, doc: Record<string, unknown>) =>
+  seoDefaults((collectionSlug ?? 'courses') as SeoCollection, doc ?? {})
+
+const generateTitle: GenerateTitle = ({ collectionConfig, doc }) =>
+  seoFor(collectionConfig?.slug, doc).title ?? ''
+const generateDescription: GenerateDescription = ({ collectionConfig, doc }) =>
+  seoFor(collectionConfig?.slug, doc).description ?? ''
+const generateImage: GenerateImage = ({ collectionConfig, doc }) =>
+  seoFor(collectionConfig?.slug, doc).image ?? ''
+const generateURL: GenerateURL = ({ collectionConfig, doc }) =>
+  `${env.NEXT_PUBLIC_SERVER_URL}${pathOf(collectionConfig?.slug ?? '', doc ?? {}) ?? ''}`
 
 export default buildConfig({
   // System email only. Newsletter subscribers live in Resend Audiences (ADR 0005).
@@ -125,5 +149,39 @@ export default buildConfig({
     migrationDir: path.resolve(dirname, 'migrations'),
   }),
   sharp,
-  plugins: [formBuilderPlugin({}), storage, payloadTheme({ accent: '#000' })],
+  plugins: [
+    formBuilderPlugin({}),
+    seoPlugin({
+      collections: [...SEO_COLLECTIONS],
+      uploadsCollection: 'media',
+      generateTitle,
+      generateDescription,
+      generateImage,
+      generateURL,
+    }),
+    redirectsPlugin({
+      collections: [
+        'courses',
+        'cycles',
+        'programmes',
+        'publications',
+        'articles',
+        'events',
+        'press',
+        'people',
+      ],
+      redirectTypes: ['301', '302'],
+      redirectTypeFieldOverride: { defaultValue: '301' },
+      overrides: {
+        // The default lets any signed-in account rewrite where old links go.
+        access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
+        admin: {
+          group: 'Site',
+          hidden: ({ user }) => !hasRole(user, 'admin', 'super_admin'),
+        },
+      },
+    }),
+    storage,
+    payloadTheme({ accent: '#000' }),
+  ],
 })
