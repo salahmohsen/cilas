@@ -38,11 +38,19 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 - Stored course-flow PDFs, which are never kept in media or R2.
 
 ## Archive import (seed)
+
+**Built (plan 6.1):**
+- `legacy_url` and `import_status` on every imported collection.
+- The reset guard.
+- `migration/fetch-mirror.ts`, and the stage-1 `migration/ingest.ts` → `migration/manifest.json` (see `migration/README.md`).
+
+Stages 2–4 come per content type in plans 6.2–6.5.
+
 - **Sources:**
   - The Weebly "Archive Site" ZIP (202 pages and their uploads, snapshot of 23 Apr 2025) is the primary source.
-  - The Wayback Machine fills in what the ZIP doesn't have: 86 pages including every 2025–26 cycle, 29 course-flow PDFs and 77 assets.
+  - The live mirror https://cilas.lkssystems.com/ fills in only what the ZIP lacks: 7 pages (the 2025–26 cycles, workshops/labs, Writing the Self) and 50 uploads. Redirects are for the real site, https://www.ci-las.org/.
   - An image linked as `published/X.ext` is found in the ZIP as `X_orig.ext`.
-  - Raw files live in `migration/raw/`, which is in `.gitignore` and `.dockerignore`. The ZIP is at `migration/raw/weebly-zip-2025-04-23/`, and the Wayback cache goes to `migration/raw/wayback/`. Only the manifest and the normalised JSON are committed.
+  - Raw files live in `migration/raw/`, which is in `.gitignore` and `.dockerignore`. The ZIP is at `migration/raw/weebly-zip-2025-04-23/`, and the mirror's pages and uploads go to `migration/raw/mirror/`. Only the manifest and the normalised JSON are committed.
 - **Stages:**
   1. ingest → `migration/manifest.json`
   2. extract to per-page JSON
