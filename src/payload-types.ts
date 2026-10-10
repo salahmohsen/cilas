@@ -72,6 +72,7 @@ export interface Config {
     memberships: Membership;
     media: Media;
     courses: Course;
+    enrollments: Enrollment;
     programmes: Programme;
     cycles: Cycle;
     governance: Governance;
@@ -92,6 +93,10 @@ export interface Config {
       courses: 'courses';
       governance: 'governance';
       memberships: 'memberships';
+      enrollments: 'enrollments';
+    };
+    courses: {
+      enrollments: 'enrollments';
     };
     cycles: {
       courses: 'courses';
@@ -103,6 +108,7 @@ export interface Config {
     memberships: MembershipsSelect<false> | MembershipsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     courses: CoursesSelect<false> | CoursesSelect<true>;
+    enrollments: EnrollmentsSelect<false> | EnrollmentsSelect<true>;
     programmes: ProgrammesSelect<false> | ProgrammesSelect<true>;
     cycles: CyclesSelect<false> | CyclesSelect<true>;
     governance: GovernanceSelect<false> | GovernanceSelect<true>;
@@ -232,6 +238,11 @@ export interface Person {
   };
   memberships?: {
     docs?: (number | Membership)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  enrollments?: {
+    docs?: (number | Enrollment)[];
     hasNextPage?: boolean;
     totalDocs?: number;
   };
@@ -502,6 +513,11 @@ export interface Course {
   fellows?: (number | Person)[] | null;
   syllabus_tentative?: boolean | null;
   session_unit: 'session' | 'week';
+  enrollments?: {
+    docs?: (number | Enrollment)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -749,6 +765,38 @@ export interface Form {
         id?: string | null;
       }[]
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments".
+ */
+export interface Enrollment {
+  id: number;
+  person: number | Person;
+  course: number | Course;
+  status: 'applied' | 'accepted' | 'confirmed' | 'completed' | 'withdrawn';
+  /**
+   * Which group they attend, e.g. "evening".
+   */
+  slot?: string | null;
+  assessment?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  source: 'registration_form' | 'admin' | 'backfill';
   updatedAt: string;
   createdAt: string;
 }
@@ -1144,6 +1192,10 @@ export interface PayloadLockedDocument {
         value: number | Course;
       } | null)
     | ({
+        relationTo: 'enrollments';
+        value: number | Enrollment;
+      } | null)
+    | ({
         relationTo: 'programmes';
         value: number | Programme;
       } | null)
@@ -1271,6 +1323,7 @@ export interface PeopleSelect<T extends boolean = true> {
   courses?: T;
   governance?: T;
   memberships?: T;
+  enrollments?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1449,9 +1502,24 @@ export interface CoursesSelect<T extends boolean = true> {
   fellows?: T;
   syllabus_tentative?: T;
   session_unit?: T;
+  enrollments?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "enrollments_select".
+ */
+export interface EnrollmentsSelect<T extends boolean = true> {
+  person?: T;
+  course?: T;
+  status?: T;
+  slot?: T;
+  assessment?: T;
+  source?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

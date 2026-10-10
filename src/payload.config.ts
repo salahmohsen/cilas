@@ -10,6 +10,7 @@ import { People } from './collections/People'
 import { Memberships } from './collections/Memberships'
 import { Media } from './collections/Media'
 import { Courses } from './collections/Courses'
+import { Enrollments } from './collections/Enrollments'
 import { Programmes } from './collections/Programmes'
 import { Cycles } from './collections/Cycles'
 import { Governance } from './collections/Governance'
@@ -75,6 +76,7 @@ export default buildConfig({
     Memberships,
     Media,
     Courses,
+    Enrollments,
     Programmes,
     Cycles,
     Governance,

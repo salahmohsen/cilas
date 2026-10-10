@@ -19,6 +19,7 @@ export const DEFAULT_PASSWORD = '03e8a7b597945379eda7388a'
  * governance and memberships require a person.
  */
 export const CONTENT_COLLECTIONS: CollectionSlug[] = [
+  'enrollments',
   'courses',
   'cycles',
   'programmes',

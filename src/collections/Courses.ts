@@ -284,6 +284,13 @@ export const Courses: CollectionConfig = {
       ],
       admin: { position: 'sidebar' },
     },
+    {
+      name: 'enrollments',
+      type: 'join',
+      collection: 'enrollments',
+      on: 'course',
+      admin: { allowCreate: true, defaultColumns: ['person', 'status', 'slot'] },
+    },
   ],
 
   admin: {
