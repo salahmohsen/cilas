@@ -985,6 +985,9 @@ export const Programmes: CollectionConfig = {
   slug: 'programmes',
   access: {
     read: publishedOrAdmin,
+    // Without this, Payload lets any signed-in account read drafts through
+    // the versions endpoint.
+    readVersions: isAdmin,
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,
@@ -1915,6 +1918,7 @@ In `docs/schema.md`:
 Spaces, cycles, programmes, courses and enrollments match the code (ADR 0002, ADR 0003). Still to do:
 - **Admin:** show a course session's computed dates as placeholders in its `dates[]` (needs a custom field component).
 - **Programmes:** `partners[]` → partners, once plan 4 adds the collection.
+- **Access:** courses and articles have no `readVersions` rule, so any signed-in account can read their drafts through the versions endpoint. Set it to match their edit rules (plan 4 reworks articles).
 - **Archive import (plan 6):** `legacy_url` and `import_status` on imported documents; unverified Bridge years (2020–21, 2023–24, 2024–25) as draft programmes; legacy trimesters mapped onto fall, winter and spring.
 ```
 
