@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone, isAdmin } from '@/access'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { httpUrl } from '@/fields/validators'
+import { importFields } from '@/fields/import'
 
 /** Coverage of CILAS by an outside outlet (CONTEXT.md). */
 export const Press: CollectionConfig = {
@@ -123,5 +124,6 @@ export const Press: CollectionConfig = {
       ],
     },
     { name: 'excerpt', type: 'textarea', localized: true },
+    ...importFields(),
   ],
 }

@@ -5,6 +5,7 @@ import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { slugField } from '@/fields/slug'
+import { importFields } from '@/fields/import'
 
 /**
  * A path through several cycles that people join as a cohort. Its courses are
@@ -121,5 +122,6 @@ export const Programmes: CollectionConfig = {
         { name: 'answer', type: 'richText', localized: true },
       ],
     },
+    ...importFields(),
   ],
 }

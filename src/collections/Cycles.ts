@@ -6,6 +6,7 @@ import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { academicYear, cycleTitle, SEASONS, type Season } from '@/lib/cycle'
 import { slugify } from '@/lib/slugify'
+import { importFields } from '@/fields/import'
 
 /**
  * Title, slug and academic year are derived, never typed (ADR 0003). The
@@ -143,5 +144,6 @@ export const Cycles: CollectionConfig = {
       on: 'cycle',
       admin: { allowCreate: false, defaultColumns: ['title', 'course_type', 'fellows'] },
     },
+    ...importFields(),
   ],
 }

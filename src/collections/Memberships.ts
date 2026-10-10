@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, isAdmin } from '@/access'
+import { importFields } from '@/fields/import'
 
 /**
  * A person's place in one programme's community. Every membership makes that
@@ -42,5 +43,6 @@ export const Memberships: CollectionConfig = {
     // e.g. "coordinates the field of Social Sciences"
     { name: 'title', type: 'text', localized: true },
     { name: 'note', type: 'textarea' },
+    ...importFields(),
   ],
 }

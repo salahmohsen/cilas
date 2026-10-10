@@ -4,6 +4,7 @@ import { anyone, isAdmin } from '@/access'
 import { creditsField } from '@/fields/credits'
 import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
+import { importFields } from '@/fields/import'
 
 /**
  * An edited collection of articles, often produced by a course or lab
@@ -85,5 +86,6 @@ export const Publications: CollectionConfig = {
         },
       ],
     },
+    ...importFields(),
   ],
 }

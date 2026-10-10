@@ -6,6 +6,7 @@ import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
+import { importFields } from '@/fields/import'
 
 const optionalUrl = (value: unknown) => (value ? httpUrl(value) : true)
 
@@ -151,5 +152,6 @@ export const Events: CollectionConfig = {
     },
     registrationField(),
     pricingField({ dbName: 'event_price' }),
+    ...importFields(),
   ],
 }

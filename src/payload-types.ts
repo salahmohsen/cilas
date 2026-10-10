@@ -255,6 +255,11 @@ export interface Person {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -335,6 +340,11 @@ export interface Space {
         id?: string | null;
       }[]
     | null;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -527,6 +537,11 @@ export interface Course {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -617,6 +632,11 @@ export interface Cycle {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -839,6 +859,11 @@ export interface Governance {
   term_from?: number | null;
   term_to?: number | null;
   order?: number | null;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -853,6 +878,11 @@ export interface Membership {
   role: 'student' | 'residential_fellow' | 'visiting_fellow';
   title?: string | null;
   note?: string | null;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1012,6 +1042,11 @@ export interface Programme {
         id?: string | null;
       }[]
     | null;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1039,6 +1074,11 @@ export interface Partner {
   kind: ('funder' | 'co_host' | 'outlet' | 'other')[];
   url?: string | null;
   logo?: (number | null) | Media;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1128,6 +1168,11 @@ export interface Article {
     hasNextPage?: boolean;
     totalDocs?: number;
   };
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1204,6 +1249,11 @@ export interface Publication {
   funders?: (number | Partner)[] | null;
   license?: ('cc_by_nc_sa' | 'cc_by_sa' | 'cc_by' | 'all_rights_reserved') | null;
   print_edition_url?: string | null;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1247,6 +1297,11 @@ export interface Press {
     id?: string | null;
   }[];
   excerpt?: string | null;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1420,6 +1475,11 @@ export interface Event {
         }[]
       | null;
   };
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1460,6 +1520,11 @@ export interface Newsletter {
     };
     [k: string]: unknown;
   } | null;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1718,6 +1783,8 @@ export interface PeopleSelect<T extends boolean = true> {
   governance?: T;
   memberships?: T;
   enrollments?: T;
+  legacy_url?: T;
+  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1731,6 +1798,8 @@ export interface MembershipsSelect<T extends boolean = true> {
   role?: T;
   title?: T;
   note?: T;
+  legacy_url?: T;
+  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1897,6 +1966,8 @@ export interface CoursesSelect<T extends boolean = true> {
   syllabus_tentative?: T;
   session_unit?: T;
   enrollments?: T;
+  legacy_url?: T;
+  import_status?: T;
   meta?:
     | T
     | {
@@ -2004,6 +2075,8 @@ export interface ProgrammesSelect<T extends boolean = true> {
         answer?: T;
         id?: T;
       };
+  legacy_url?: T;
+  import_status?: T;
   meta?:
     | T
     | {
@@ -2066,6 +2139,8 @@ export interface CyclesSelect<T extends boolean = true> {
         id?: T;
       };
   courses?: T;
+  legacy_url?: T;
+  import_status?: T;
   meta?:
     | T
     | {
@@ -2089,6 +2164,8 @@ export interface GovernanceSelect<T extends boolean = true> {
   term_from?: T;
   term_to?: T;
   order?: T;
+  legacy_url?: T;
+  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2139,6 +2216,8 @@ export interface ArticlesSelect<T extends boolean = true> {
       };
   related_articles?: T;
   publications?: T;
+  legacy_url?: T;
+  import_status?: T;
   meta?:
     | T
     | {
@@ -2178,6 +2257,8 @@ export interface PublicationsSelect<T extends boolean = true> {
   funders?: T;
   license?: T;
   print_edition_url?: T;
+  legacy_url?: T;
+  import_status?: T;
   meta?:
     | T
     | {
@@ -2215,6 +2296,8 @@ export interface PressSelect<T extends boolean = true> {
         id?: T;
       };
   excerpt?: T;
+  legacy_url?: T;
+  import_status?: T;
   meta?:
     | T
     | {
@@ -2320,6 +2403,8 @@ export interface EventsSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  legacy_url?: T;
+  import_status?: T;
   meta?:
     | T
     | {
@@ -2341,6 +2426,8 @@ export interface NewslettersSelect<T extends boolean = true> {
   issue_date?: T;
   cover_image?: T;
   body?: T;
+  legacy_url?: T;
+  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -2364,6 +2451,8 @@ export interface SpacesSelect<T extends boolean = true> {
         image?: T;
         id?: T;
       };
+  legacy_url?: T;
+  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2378,6 +2467,8 @@ export interface PartnersSelect<T extends boolean = true> {
   kind?: T;
   url?: T;
   logo?: T;
+  legacy_url?: T;
+  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }

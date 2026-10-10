@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone, isAdmin, isAdminUser, personOf } from '@/access'
 import { slugField } from '@/fields/slug'
 import { socialFields } from '@/fields/social'
+import { importFields } from '@/fields/import'
 
 /**
  * Everyone who appears on the site: fellows, CILASians, authors, advisors,
@@ -70,5 +71,6 @@ export const People: CollectionConfig = {
       on: 'person',
       admin: { allowCreate: true, defaultColumns: ['course', 'status'] },
     },
+    ...importFields(),
   ],
 }

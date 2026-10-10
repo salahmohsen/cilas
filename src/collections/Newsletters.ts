@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdmin, publishedOrAdmin } from '@/access'
 import { slugField } from '@/fields/slug'
+import { importFields } from '@/fields/import'
 
 /**
  * The archive of issues CILAS has sent. Subscribers live in Resend Audiences,
@@ -33,5 +34,6 @@ export const Newsletters: CollectionConfig = {
     },
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     { name: 'body', type: 'richText', localized: true },
+    ...importFields(),
   ],
 }

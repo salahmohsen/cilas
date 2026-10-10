@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { anyone, hasRole, isAdmin } from '../access'
+import { importFields } from '@/fields/import'
 
 /** Board of advisors and board of trustees, one row per person per term. */
 export const Governance: CollectionConfig = {
@@ -47,5 +48,6 @@ export const Governance: CollectionConfig = {
       ],
     },
     { name: 'order', type: 'number', admin: { position: 'sidebar' } },
+    ...importFields(),
   ],
 }

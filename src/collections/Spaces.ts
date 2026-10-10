@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
 import { anyone, isAdmin } from '../access'
+import { importFields } from '@/fields/import'
 
 export const Spaces: CollectionConfig = {
   slug: 'spaces',
@@ -46,6 +47,7 @@ export const Spaces: CollectionConfig = {
         },
       ],
     },
+    ...importFields(),
   ],
   admin: {
     useAsTitle: 'name',

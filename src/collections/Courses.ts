@@ -15,6 +15,7 @@ import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig } from 'payload'
 import type { Course } from '@/payload-types'
+import { importFields } from '@/fields/import'
 
 /**
  * `courses.fellows` lists people, but the `fellow` role lives on the account
@@ -294,6 +295,7 @@ export const Courses: CollectionConfig = {
       on: 'course',
       admin: { allowCreate: true, defaultColumns: ['person', 'status', 'slot'] },
     },
+    ...importFields(),
   ],
 
   admin: {

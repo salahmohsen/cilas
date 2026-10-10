@@ -25,6 +25,7 @@ import { toPersonIds } from '@/lib/fellow-role'
 import { notifyOn, reviewPatch, type ReviewState } from '@/lib/review'
 import { adminEmails, authorEmails, sendReviewEmail } from '@/lib/review-mail'
 import type { Article } from '@/payload-types'
+import { importFields } from '@/fields/import'
 
 /**
  * A non-admin's new article always lists them as an author, so they keep
@@ -291,5 +292,6 @@ export const Articles: CollectionConfig = {
         },
       ],
     },
+    ...importFields(),
   ],
 }

@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { anyone, isAdmin } from '@/access'
 import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
+import { importFields } from '@/fields/import'
 
 /** An outside organisation CILAS works with: funders, co-hosts, press outlets. */
 export const Partners: CollectionConfig = {
@@ -40,5 +41,6 @@ export const Partners: CollectionConfig = {
       admin: { placeholder: 'https://…' },
     },
     { name: 'logo', type: 'upload', relationTo: 'media' },
+    ...importFields(),
   ],
 }
