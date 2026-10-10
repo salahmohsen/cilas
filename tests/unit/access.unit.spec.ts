@@ -1,7 +1,14 @@
 import type { Access } from 'payload'
 import { describe, expect, it } from 'vitest'
 
-import { isAdminOrOwnAndDraft, ownsViaFellows, readTiers } from '@/access'
+import {
+  isAdminOrOwn,
+  isAdminOrOwnAndDraft,
+  ownsViaFellows,
+  ownsViaPerson,
+  publishedOrAdmin,
+  readTiers,
+} from '@/access'
 import type { User } from '@/payload-types'
 
 const user = (roles: User['roles'], extra: Record<string, unknown> = {}): User =>
@@ -60,5 +67,36 @@ describe('ownsViaFellows', () => {
 
   it('owns nothing without a linked person', () => {
     expect(ownsViaFellows(user(['fellow']))).toBe(false)
+  })
+})
+
+describe('publishedOrAdmin', () => {
+  it('lets admins read everything', () => {
+    expect(run(publishedOrAdmin, user(['admin']))).toBe(true)
+  })
+
+  it('shows everyone else only published documents', () => {
+    const published = { _status: { equals: 'published' } }
+    expect(run(publishedOrAdmin, null)).toEqual(published)
+    expect(run(publishedOrAdmin, user(['non_degree_seeking']))).toEqual(published)
+  })
+})
+
+describe('isAdminOrOwn(ownsViaPerson)', () => {
+  const rule = isAdminOrOwn(ownsViaPerson)
+
+  it('lets admins through', () => {
+    expect(run(rule, user(['admin']))).toBe(true)
+  })
+
+  it("limits a linked account to its person's rows", () => {
+    expect(run(rule, user(['non_degree_seeking'], { person: 7 }))).toEqual({
+      person: { equals: 7 },
+    })
+  })
+
+  it('refuses anonymous and unlinked accounts', () => {
+    expect(run(rule, null)).toBe(false)
+    expect(run(rule, user(['non_degree_seeking'], { person: null }))).toBe(false)
   })
 })

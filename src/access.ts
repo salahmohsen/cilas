@@ -57,6 +57,10 @@ export const ownsViaFellows: Ownership = (user) => {
   return person === null ? false : { fellows: { contains: person } }
 }
 export const ownsViaAuthor: Ownership = (user) => ({ author: { equals: user.id } })
+export const ownsViaPerson: Ownership = (user) => {
+  const person = personOf(user)
+  return person === null ? false : { person: { equals: person } }
+}
 
 /* =========================================================== access rules */
 
@@ -91,6 +95,19 @@ export const isAdminOrOwnAndDraft =
     // second object alone and drop ownership entirely.
     return { and: [owns, { _status: { equals: 'draft' } }] }
   }
+
+/** Admins see every row; a signed-in account only the rows it owns. */
+export const isAdminOrOwn =
+  (owned: Ownership): Access =>
+  ({ req }) => {
+    if (isAdminUser(req.user)) return true
+    if (!req.user) return false
+    return owned(req.user)
+  }
+
+/** For drafts-enabled collections with no tier: the public reads what is published. */
+export const publishedOrAdmin: Access = ({ req }) =>
+  isAdminUser(req.user) || { _status: { equals: 'published' } }
 
 /**
  * Read rule for a tiered document, keyed on the `tier` field:
