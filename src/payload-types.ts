@@ -689,16 +689,16 @@ export interface Membership {
  */
 export interface Programme {
   id: number;
+  kind: 'bridge' | 'women_studies' | 'residency';
+  cover?: (number | null) | Media;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
-  cycles?: (number | Cycle)[] | null;
-  self_directed_study?: boolean | null;
-  weekly_hours?: number | null;
-  admission_requirements?: {
+  tagline?: string | null;
+  overview?: {
     root: {
       type: string;
       children: {
@@ -713,12 +713,134 @@ export interface Programme {
     };
     [k: string]: unknown;
   } | null;
-  amount?: number | null;
-  installments?: number | null;
-  need_based_deductions?: boolean | null;
-  registration_form?: (number | null) | Form;
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * The semester cycles, in order.
+   */
+  cycles?: (number | Cycle)[] | null;
+  /**
+   * Each part's courses are its cycle's courses of these types.
+   */
+  components?:
+    | {
+        label: string;
+        description?: string | null;
+        cycle: number | Cycle;
+        course_types: ('CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT')[];
+        id?: string | null;
+      }[]
+    | null;
+  featured_courses?: (number | Course)[] | null;
+  /**
+   * A self-directed study period between the semesters.
+   */
+  self_directed_study?: boolean | null;
+  capacity?: number | null;
+  weekly_hours?: number | null;
+  schedule_note?: string | null;
+  requirements?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    application_requirements?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    archived_registration_url?: string | null;
+  };
+  pricing?: {
+    min?: number | null;
+    /**
+     * Leave empty for a single price.
+     */
+    max?: number | null;
+    currency?: 'EGP' | null;
+    note?: string | null;
+    need_based_deductions?: boolean | null;
+    payment_plans?:
+      | {
+          label: string;
+          installments?:
+            | {
+                amount: number;
+                due_date?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  testimonials?:
+    | {
+        quote: string;
+        attribution?: string | null;
+        person?: (number | null) | Person;
+        id?: string | null;
+      }[]
+    | null;
+  faqs?:
+    | {
+        question: string;
+        answer?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1173,19 +1295,85 @@ export interface CoursesSelect<T extends boolean = true> {
  * via the `definition` "programmes_select".
  */
 export interface ProgrammesSelect<T extends boolean = true> {
+  kind?: T;
+  cover?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
+  tagline?: T;
+  overview?: T;
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
   cycles?: T;
+  components?:
+    | T
+    | {
+        label?: T;
+        description?: T;
+        cycle?: T;
+        course_types?: T;
+        id?: T;
+      };
+  featured_courses?: T;
   self_directed_study?: T;
+  capacity?: T;
   weekly_hours?: T;
-  admission_requirements?: T;
-  amount?: T;
-  installments?: T;
-  need_based_deductions?: T;
-  registration_form?: T;
+  schedule_note?: T;
+  requirements?: T;
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        application_requirements?: T;
+        archived_registration_url?: T;
+      };
+  pricing?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+        currency?: T;
+        note?: T;
+        need_based_deductions?: T;
+        payment_plans?:
+          | T
+          | {
+              label?: T;
+              installments?:
+                | T
+                | {
+                    amount?: T;
+                    due_date?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
+  testimonials?:
+    | T
+    | {
+        quote?: T;
+        attribution?: T;
+        person?: T;
+        id?: T;
+      };
+  faqs?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -33,7 +33,7 @@ describe('people and memberships', () => {
       'programmes',
       await payload.create({
         collection: 'programmes',
-        data: { title: 'Probe Programme', slug: 'probe-programme' },
+        data: { kind: 'bridge', title: 'Probe Programme', slug: 'probe-programme' },
         overrideAccess: true,
       }),
     ).id

@@ -4,11 +4,11 @@ import type {
   Course,
   Event,
   Press,
-  Programme,
   SiteSetting,
   Space,
   User,
 } from '@/payload-types'
+import type { CourseType } from '@/fields/course-type'
 
 /**
  * Lexical node. `type` is a string, never `any` — the shape mirrors the
@@ -71,10 +71,20 @@ export type CycleSeed = {
 
 /* ============================================================ programmes */
 
-export type ProgrammeSeed = Omit<Draft<Programme>, 'admission_requirements' | 'cycles' | 'slug'> & {
-  admission_requirements?: string
-  /** Cycle labels, resolved to cycle ids. */
+export type ProgrammeSeed = {
+  kind: 'bridge' | 'women_studies' | 'residency'
+  title: string
+  /** Cycle keys like `fall-2025`, resolved to ids. */
   cycles: string[]
+  components: Array<{ label: string; cycle: string; course_types: CourseType[] }>
+  weekly_hours?: number
+  self_directed_study?: boolean
+  requirements?: string
+  pricing?: {
+    min: number
+    need_based_deductions?: boolean
+    payment_plans?: Array<{ label: string; installments: Array<{ amount: number }> }>
+  }
 }
 
 /* ================================================================ courses */
