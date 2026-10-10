@@ -1,0 +1,198 @@
+{
+  "sha256": "65c3c7beb032b035ceae7f83fb257a5ec8ccbdcf98228ef2acc61c72560cf144",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "year": "2013-2014",
+    "place": "cairo",
+    "people": [
+      {
+        "name": "Samar Al-Zuairy",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "holds a Bachelor's in Computer Sciences. She spent 18 months in software system implementation at Salis IT Services. Over the course of her work placement she discovered her passion for working closely with people, especially in an SME corporate environment that leaves room for positive change and encourages new ideas. In 2009, she moved into the field of sales and business development for an Egyptian medical insurance brokerage called Medmark Health and Life. Her main responsibility is the management of corporate key accounts. Samar has a curiousity to learn more about the world around her and hopes to learn more about herself in the process. She finds CILAS to be the ideal programme to aid her in discovering her true passions via its variety of liberal arts courses and friendly learning environment that is enthusiastic and dynamic.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1391093517.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Radwa Salem",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "is a passionate, young lady that has spent her life in Kuwait, USA and Egypt. She holds a BA in Finance from Misr International University. During her undergraduate years, she served as the President of the Economic and Social Council MIU Model United Nations for two years. She has published several essays, poems and an article in TeenStuff Magazine describing the struggle associated with moving from the US to Egypt. During her senior year at MIU, she joined INJAZ and created a company along with 20 other students. Her company won a cheque of 25000 EGP. Radwa has been volunteering as an English Teacher with the Better World Foundation and at Safe NGO. Most recently, Radwa has contributed to a research programme funded by the University of Amsteram. After graduating from CILAS Radwa went on to pursue a Master's degree at the Silver School of Social Work at New York University.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1390000740.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Noha Syam",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "has a BA in Statistics with a minor in Management from FESP at Cairo University. She was selected for a fellowship to study Economics in University of Chicago, USA. Noha is co-founder of the Sinai Talks Initiative that started in June 2012 and aims to give people from the Sinai the opportunity to represent themselves to the public and speak about their problems to the world. She visited different regions across the Sinai peninsula documenting visits and publishing about the situation in social media and newspapers. In September 2012, a conference on Sinai Talks was organized that was covered widely by media, and which numerous decision-makers, political and social interest groups attended. Noha was involved in all tasks related to organizing the event with an emphasis on fundraising for the event. Her interest in marginalised people motivated Noha to join CILAS.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1390000842.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mohamed Wahdan",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "obtained a degree in Electronics and Communications Engineering in 2007. After five years in engineering and management positions in the telecommunications sector, he decided to step outside of the corporate world and pursue a more fulfilling life conducive of self-reflection and filled with lifelong learning opportunities. Mohamed continues to work part-time as a freelance designer and marketing communication consultant for small-and-medium enterprises. He is passionate about travelling and world music; good movies and different food cultures. Mohamed spends most of his time outdoors, notably at sea activities and would love to live by the sea, someday. He now holds the position of Communication Manager at The Nile Project which seeks to foster the Nile's sustainability through intercultural dialogue. In addition, he works as a freelance business consultant to refugee artisans and handicraft makers at St. Andrews Refugee Services, StARS.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1391351014.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mohamed Aboelyazed",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "is a versatile chap, loves to quote and works as a Human Resources Business Partner with an Indian company in Egypt. He has been in the Fast Moving Consumer Goods (FMCG) business for four years now. He holds a BBA in Business Management from Helwan University. Additionally, he was awarded a scholarship from the Ford Foundation to pursue studies in planning and leadership at Cairo University. He has previously volunteered as a member at Maaan Foundation, AMIDEAST and AIESEC Egypt. In 2012 he represented Helwan University in the CFA Institute's Global Research Challenge at the American University in Cairo where his team won the “Most Proactive Team” award. He loves to pause and reflect on the widely-held beliefs as well as engage critically with the complex ideas. Aboelyazed continues to favour learning-by-imitation and believes in Aristotle's words 'the more you know, the more you know that you don't know.'",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1390000888.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mohamed Fayez",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "graduated with honors from the Electrical Power and Machines Department at Ain Shams University in Egypt with honors. As a student, he volunteered with different development organizations. In 2010, he worked with Alashanek Ya Balady on the development of Ezbet Abu Arn. In 2011, after the revolution he was elected president of the Higher Scientific Committee (HSC) of Ain Shams' student union. As president of the HSC he supervised the launch of the annual EGY Science Festival. Besides his great interest in green technology, Mohamed is eager to learn about energy management, policies and economics. He joined CILAS to develop an interdisciplinary perspective on environmental challenges before pursuing graduate studies. Mohamed now works in the development field gaining insight into the social and environmental challenges in Egypt.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1391092046.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Marwa Morgan",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "has been working as a street Photographer and a freelance photojournalist since 2008. Having obtained a Bachelor's degree in Pharmacy from Cairo University, Marwa chose instead to follow her passion for the arts and culture. She worked for renowned local and regional magazines, and currently works as a public relations manager at Townhouse Gallery - a leading art gallery in Cairo. Throughout her career, Marwa won several awards including the European Commission's Photography Award in 2008 and 2013, UNICEF MENA Photographer of the Year 2011 and INDIAFRICA Photography Award 2012. Her photos were exhibited in more than 30 local and international exhibitions. Marwa's passion for journalism and art urged her to pursue a degree in the liberal arts at CILAS as a preparation for her applications for graduate degrees in Documentary and Street Photography. Marwa now works as the Art and Culture editor at The Daily News Egypt.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/6742339.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Khadiga Mohamed",
+        "name_ar": null,
+        "group": "student",
+        "title": "Assistant Programme Director",
+        "bio": "was trained in Business at Cairo University. She has worked with Resala foundation as well as SIFE, as a fundraiser, and interned with Alashanek Ya Balady for Sustainable Development (AYB-SD) aiming to gain experience in the field of community development. Upon graduation Khadiga decided on pursuing training in the liberal arts at CILAS. She hopes to learn more about social and political thought and the natural sciences. Prior to her joing CILAS, Khadiga worked as an international account advisor for Vodafone UK alongside with completing human resources, leadership and development courses. She is a passionate reader, sketches and does photography. Constantly pursuing her interest, she completed a social media marketing course and keeps an active eye on new learning opportunities. Khadiga joined CILAS as Assistant Programme Director during the first trimester in 2014-2015.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1391093656.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Dalia Hashad",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "works as a Teaching Assistant at one of Cairo's private university's Faculty of Pharmacy. Dalia is fond of hikes and astrophysics. She is a member of Astrotrips - an initiative that organises hikes to remote places in Egypt from where to study the night sky. As a college student, Dalia founded \"EUREKA\" - a workshop series addressing the importance of critical thinking in constructing their ideas for problem-solving projects. She also volunteered at Alashanek Ya Balady teaching young girls different handicrafts which supported them financially to complete their education. Dalia also founded Nabd Foundation - an NGO which aims at providing innovative solutions for the problems facing the Egyptian society. She joined CILAS to develop a better understanding of the world and hopes to discover more about herself in the process.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1391093694.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Asmaa Kamaly",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "is a recent graduate in Urban and Regional Planning with an emphasis on environmental planning. Asmaa is particularly interested in urban upgrading. She considers urban planning a complex network of sciences and one of the most pressing issues in Egypt. During her study, she participated in various activities; working with NGOs and programs with different backgrounds and perspectives that make her appreciative of diversity and multiculturalism. Asmaa is a firm believer in the power of understanding and knowledge to reach any goal and solve any problem. She joined CILAS to learn more about the interdisciplinary program which will enrich her professional career as an urban planner. Asmaa is now pursuing graduate studies in urban design at the Universities of Cottbus, Cairo and Alexandria focusing on Cairo's historical districts.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1391094564.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Amira Rady",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "obtained a Bachelor's degree in Electronics and Communication Engineering from Helwan University. During her study she volunteered in a wide range of social activities tackling unemployment and local economic development. She worked as a technical support adviser and found a new passion in the field of sustainable development after joining GIZ Egypt as project coordinator on Green Business Services. Amira is eager to enrich her Engineering background with managerial experience to expand her vision from being technology-oriented to integrating technology and business strategies. At CILAS, she endeavours to develop her potential and interests, in addition to improving her personal skills and English proficiency.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1381319357.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Ahmed Magdy Rabie",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "joined CILAS with the aim of exploring himself and the world. Earlier this year he decided to quit architecture school and to dedicate his time to documentary film-making. Covering social issues through documentary film evoked his interest in human and social behaviors. He wishes to become capable of handling humanitarian issues with greater sensitivity in his film projects. In recent years Ahmed has participated in several development projects in and around Cairo. He has a special interest in one-on-one, interactive documentary projects. Ahmed has visited different cities across Egypt which strengthened his conviction in the goodness of mankind. He has learned to be more open-minded and seek out the strong contrasts in Cairo's human palette. Ahmed believes through art, music, film and observation we can change the world to the better. In other words, he would like to make anybody see the world and function in it in a happier way.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1381319405.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Abraham Liben",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "joined Addis Ababa University's (AAU) Faculty of Social Sciences for undergraduate studies in Social Work in September of 2003. In his second year of studies, AAU expelled him after participating in an event celebrating Oromo culture. Oromo students were demanding minority rights, which, in turn, escalated into clashes with the police. Subsequently, Abraham was detained for about a year. Upon his release Abraham was forced to leave Ethiopia due to his political affiliations. Since his arrival in Egypt in 2011, he has been interpreting testimonies of Ethiopian refugees for UNHCR and other organisations. He hopes to help Cairo's Ethiopian refugee community during and beyond his studies at CILAS. Abraham has repeatedly expressed his keen interest in understanding the legal implications of forced migration. Abraham sees CILAS as a mirror that reflects social interaction. He plans to pursue an undergraduate degree after his year at CILAS.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1391093357.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "AbdelHalim Hisham Abdallah",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "is a sports junkie and a citizen journalist who covered the Egyptian revolution from the frontlines. He co-founded a live streaming initiative called Ana Mubasher (I am live) in immediate response to the revolution. Halim completed undergraduate studies in Tour Guiding at Helwan University. During his university years he was a boxing champion and a member of several student bodies. He has worked in events management for a year after graduation organising concerts for Naseer Shamma and Fadel Shaker, amongst others. AbdelHalim joined CILAS right after completing his compulsory military service. Halim aspires to live as a wanderer seeking knowledge and hopes to have a positive impact in the fields of media, history and politics of the Middle East and Africa. He believes in JRR Tolkien's quote, \"not all those who wander are lost.\" He now works at the Agence France Press (AFP).",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1213420.jpg?263",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Raju Hittalamani",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "Media Lab Director",
+        "bio": "was Media Associate at the Indian Institute for Human Settlements (IIHS) in Bangalore prior to joining CILAS. He completed a graduate degree in Media and Cultural Studies at the School of Media and Cultural Studies at Tata Institute of Social Sciences in Mumbai. Raju is trained as a documentary film-maker and researcher in the field of media and cultural studies producing remarkable insight into the Indian public sphere, media representation of community identities and expressions of resistance. Previously he had been a visiting student at Sciences Po Paris where he followed coursework in International Affairs. Raju has worked in the field of education both with and at public and private schools in India. At CILAS, Raju serves as Media Lab Director and coordinates coursework in Arts and Culture.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1395441347_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "David Tholen",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "Assistant Programme Director",
+        "bio": "worked in London with the Centre of Turkey Studies (CTS) and contributed to the online newspaper ‘The Libya Intelligence Online’ prior to joing CILAS. He holds a graduate degree from the School of Oriental and African Studies (SOAS) in Near and Middle Eastern Politics. David is culturally and politically interested in phenomena and dynamics of the Middle East and North Africa, especially with regards to patterns of state-society interaction. Having spent his youth in Africa, and having had the opportunity to attend educational institutions that fostered critical thinking and social consideration, he is dedicated to contributing to a peaceful, just, and sustainable future. At CILAS, David serves as Assistant Programme Director and coordinates coursework in the Social Sciences.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1395441906_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Bas Paris",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "coordinates the thematic Green Economy course",
+        "bio": "holds a postgraduate degree in Environment and Sustainable Development from University College London, as well as a degree in Governance and Politics in Africa from the School of Oriental and African Studies. He has lived and worked in Africa, Europe, and North America, and has recently completed research in Peru, focusing on injustices created through socio-ecological transformation of the Lima coastline. At CILAS, Bas coordinates the thematic Green Economy course, and plans to to develop the CILAS rooftop garden.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1395442263_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      }
+    ]
+  }
+}

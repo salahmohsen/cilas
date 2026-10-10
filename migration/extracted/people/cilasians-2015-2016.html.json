@@ -1,0 +1,242 @@
+{
+  "sha256": "1645ca69edca9abf16efe96f0a363e1be3a6a9a94e353e0f4f1878100569b9c9",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "year": "2015-2016",
+    "place": "cairo",
+    "people": [
+      {
+        "name": "Eman Maarek",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "My name is Eman Maarek, I have completed my studies in political science in 2000. I had been working with diversified development agencies, acting roles that had to do with implementing and monitoring project activities which aimed at building capacities of youth, women, police officers, and head teachers in human rights. Throughout the last 14 years, I came to realize that I'm lacking something that is much needed to improve the impact of both me as a social worker and the project itself. So I went and obtained a post graduate degree in human rights and civil society but yet the incompatibility was still there. So I decided to be more picky and look up carefully for a kind of studies that fulfill my need to a macro understanding rather than readymade answers. Then I found this amazing place called CILAS perfectly providing a space for learning in totally unique ways that is almost equal to well known ranked colleges world wide.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/10959323-10155195339360626-8338015401957860093-n.jpg?1530819452",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Eman Abdelhamid Kamal",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "Eman, is my name. Reading, writing, walking, music, introvert, change, human, culture ,and storytelling are the major key words in my life. I grew up in a small village where nature was school and grandpa was my hero. I can divide my life into three main phases:\nFirst -the inquisitive nerd: I asked a lot of questions and did good at school. I loved Science and Chemistry a lot and that's how I joined the Faculty of Pharmacy, Cairo University. Second -the cultural shock rebellion: leaving my village and starting to explore the big city, only then I began the journey of self discovery. I found myself interested in social interaction and developmental activities, working and volunteering in this field was a very fulfilling experience. Being more involved in human interaction, I forgot about Chemistry of Science and was whole heartedly taken by the mysterious chemistry of humans. Third - the loving seeker: Knowing that pharmacy is not my thing, I started to search for my real passion. Books are my haven, and I love giving people voice through writing, so I tried but I always had a feeling that I need to learn a lot. Humanities was my biggest interest. I started to look for a scholarship outside Egypt for a more liberating education, then I came across CILAS application link, and that was it. Eureka! I feel blessed for the opportunity and here I am, learning, sharing, engaging, and giving back one day, I hope.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/4190580_1_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Nada Sallam",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "My name is Nada Sallam, and I work to bring about wide-scale change to communities around the Arab World through social entrepreneurship. I am part Egyptian, part Italian, and part Belgian, and have lived in Saudi Arabia, Canada, the Netherlands and Egypt. Despite this, I’ve often felt that my educational and professional experiences have lacked sufficient diversity. This is where CILAS comes in... With an opportunity to learn from and interact with people from a wide array of backgrounds, as well as to engage with theories from the East (non-Eurocentric and subaltern literatures – shout out to Anne), I believe I’m finally getting the enriching experience I’ve always looked for. On an aside, I really like basketball, and I REALLY like rap (think Mos Def, not Waka Flocka), so feel free to reach out if you’re interested in watching and/or listening session with me :)",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/5491476_1_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Sama Singer",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "I am Sama Singer, a big fan of Stanley Kubrick, chocolates, Haruki Murakami and Tom Waits. I finished studying Political Science in 2011 and currently doing my Masters in Political Sociology. I was an active member of many youth-driven NGOs and currently working in the field of media marketing at an NGO working the in the field of Social Entrepreneurship. If I am not working or studying, I attend acting and film-making classes to try to burn the extra calories I gain from chocolates or I escape the city with my diving gear and my books. I joined CILAS because I am always interested in new types of interactive learning and I believe that CILAS is and will be a unique learning experience for me other than any type of learning/education I received in the past. I am mainly interested in topics related to sub-altern studies, rewriting history, the relationship between arts and politics, and cultural identities.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/8527727_1_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Raniah Al Sayed",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "I'm Raniah. I'm 27 years old. I've gone through different phases in my life, the most important one is now and I'm happy that CILAS is part of it. One of the phases was all about emptiness and feeling lost all the time, that was the most difficult one. If I learnt only one thing, it would be that we are meant to be and feel lost because that's the best way for you to dig for answers and define who you are and why are you here. I love music and languages. Very soon I'll start a German language class and another one for violin. I've studied business administration and HR. I'm mad about history and intercultural stuff. I'm an ambivert, this when introvert and extrovert meet, according to Susan Cain.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/2976024_1_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "May Khaled",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "I’m an Egyptian young woman who started to look for knowledge and education and re-discover herself after the age of 23. I was born and raised in a small village near Kafrelshikh, in the Delta Region of Egypt, where everything is far away to reach. I studied English Literature at the same university for the same city. I was fascinated by other’s culture, how people could perceive art, knowledge, and languages in different ways. That’s how I joined American University of Cairo for a translation program. I began my own career in business at the age of 21. I volunteered as a fundraiser in TEDxkafrelshikh three years ago. Now, I’m the chairperson of the same organization. I also volunteered in Heya Masr, a program dedicated to educate young Egyptian girls in slums of Egypt. I participated in the side walk stories program to shed light on Egyptian women’s life in the big city, Cairo. Now I work in the field of marketing, where every idea can be sold in a way or another. At the same time I’m a mentee at Cherie Blair foundation for women. I’m going to start my own social enterprise by 2016 which will support Egyptian women in Egypt. I think that one of the most important things in my life is Voluntary work, it always supports and inspires me in different ways.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1793656_1_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Nesma Attiatalla",
+        "name_ar": null,
+        "group": "student",
+        "title": null,
+        "bio": "I’m a graphic designer and art-lover who lives in Cairo. Through my bachelor- and pre-master projects, I discovered my love for Egyptian culture. I started to appreciate the importance of knowing how people live, act, eat, dress and connect with one another. During my Premaster project I worked on reviving old Nubian culture. The outcome of my project was a collection of patterns that are inspired by the Motifs on the Nubian houses. Later on I experimented my patterns on fabrics with different techniques, such as embroidery, woodblock printing and stencil printing. This project was one of the eye opening experiences for me. I’ve been always interested in personal and professional opportunities to make a positive impact on my society. My dream for the future is to work in the culture section and focus on Egyptian culture. I want to make people aware of our rich culture, history and heritage.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/8892759_1_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Yvonne Buchheim",
+        "name_ar": null,
+        "group": "residential_fellow",
+        "title": "coordinates the field of study Arts and Culture",
+        "bio": "is interested in exploring the role of art within the everyday and engaging her audiences in unexpected ways through participation and observation. As an artist and academic she is passionate about observing the world through drawing. She grew up in socialist East-Germany. After the collapse of the Berlin Wall she went on to pursue an undergraduate degree in Communication Design in Munich and a Master’s of Fine Art at the University of Ulster in Belfast, Northern Ireland. Her enthusiasm for teaching developed through postgraduate studies in Teaching Higher Education as well as teaching Drawing and Applied Arts at the University of the West of England for ten years. In 2012 she moved to Cairo where she has taught at AUC and has pursued her interdisciplinary art practice in public and social projects. She has been awarded residencies and commissions in the UK, Ireland, France, Germany, USA, Iran, and Egypt. Most recently she completed the Spring Sessions Artist Residency in Amman, Jordan. At CILAS, Yvonne coordinates the field of study Arts and Culture.",
+        "email": "yvonnebuchheim88@gmail.com",
+        "photo": "uploads/1/9/1/0/19102967/_1443523700.png?250",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Karim-Yassin Goessinger",
+        "name_ar": null,
+        "group": "residential_fellow",
+        "title": "coordinates the field of study Natural Sciences and co-directs the yearlong study programme in the liberal arts",
+        "bio": "studied political philosophy, social anthropology and urban theory in the Netherlands, Brazil and France. He has worked with a range of development agencies in Latin America and the Middle East in fields including micro-finance, informal housing and local governance. In addition to his strong interest in social theories of space and political theory, Karim-Yassin is passionate about designing educational experiences. A Dalai Lama Fellow, he enjoys martial arts, language, world music and tea. After his graduate studies at Sciences Po Paris, he set out to create the Cairo Institute of Liberal Arts and Sciences (CILAS). As a fellow at CILAS, he coordinates the field of study Natural Sciences and co-directs the yearlong study programme in the liberal arts.",
+        "email": "karim@ci-las.org",
+        "photo": "uploads/1/9/1/0/19102967/___1425165666.png?250",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Maha Abdel Megeed",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "recently submitted her doctoral thesis titled ‘Khayālῑ Textuality as Historical Urgency: al-Muwayliḥῑ’s Ḥadῑth ‘ῑsa ’Ibn Hishām and the long 1890s’ for examination at the department of the Near and Middle East, SOAS, University of London. She completed her MA at King’s College London in the department of Comparative Literature. She graduated from AUC with a major in English and Comparative Literature and a minor in philosophy. Her research interests include the history of conceptual thought in Arabic, and the possibility of deploying it to re-think the history of capitalism and modernity. Her other obsessions include: delving into archives, going to plays, listening to music, and discovering old films though most of her time is spent getting lost in an attempt to go to any of these places.",
+        "email": "543928@soas.ac.uk",
+        "photo": "uploads/1/9/1/0/19102967/1448389834.png",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Hala Barakat",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "has a Ph.D. in Paleoecology from the University of Aix-Marseille III, France. She worked as a lecturer at Cairo University 1995-2000 and acted as deputy director at the Center for Documentation of Cultural and Natural Heritage (CULTNAT) affiliated to the Library of Alexandria. She was in charge of the documentation of the natural heritage program as well as supervising the photographic heritage, folkloric heritage and musical heritage programs at CULTNAT (2000-2012). In January 2013, Hala joined the Egyptian Initiative for Personal Rights (EIPR) as a part time researcher on the issues of “Right to Food” and “Food Sovereignty” in Egypt. She is also a founding member and former president of Nature Conservation Egypt (NCE) a non profit organization active in the field of conservation of endangered species and habitats and raising awareness to environmental issues in Egypt. Hala is also a certified Sivananda Yoga teacher and master. As a trained botanist, she has long had deep interest and knowledge in Naturopathy, Homeopathy and vegetarianism which complement her interest in yoga as a lifestyle.",
+        "email": "hala.barakat@gmail.com",
+        "photo": "uploads/1/9/1/0/19102967/1448360331.png",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "I-Kai Jeng",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is currently finishing his PhD in Philosophy and MA in Classics at Boston University. His dissertation \"Knowledge and Logos in Plato's Sophist\" discusses the role language plays in the process of learning. Previously he obtained his MA degree in Philosophy back in his hometown of Taipei from the National Taiwan University with a thesis on Max Scheler's phenomenology of emotions as the foundation of ethics. I-Kai also works as a freelance translator of academic works, including translations of Foucault's Fearless Speech and Norbert Elias's Über die Zeit into Chinese Mandarin. Being devoted to the Socratic spirit of philosophizing, he is always game for conversations about existentialism, the crisis of modernity, sociology, political philosophy, or questions of translation. When he has free time, he watches movies and plays tennis, takes pictures with his cameras, or practices paper folding (origami).",
+        "email": "qtaroj@gmail.com",
+        "photo": "uploads/1/9/1/0/19102967/1448361753.png?250",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Yasmin Khalafallah",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "recently obtained her Master’s Degree from UCL’s Development Planning Unit where she looked at the linkages between development theories and practices, with a focus on the political, social and economic factors underlying environmental conflicts. Before her Master's, Yasmin studied economics in Cairo and has previously worked as a research analyst on African economies. Her research interests are urban farming, climate change adaptation practices, urban resilience and bottom up development initiatives. She has field experience working with communities in Egypt, Peru and Bosnia & Herzegovina.",
+        "email": "ykhalafallah@aucegypt.edu",
+        "photo": "uploads/1/9/1/0/19102967/1448452074.png",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Dina Makram-Ebeid",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is an anthropologist who is passionate about poetry, cooking and social and ecological justice. She holds an MSc in Anthropology and Development (2007) and a PhD in Social Anthropology (2013) from the London School of Economics. Dina was a post-doctoral fellow at the Max Planck Institute for Social Anthropology and is a fellow at the Humboldt University in Berlin. Her long-term fieldwork was with workers in an Egyptian steel complex. Her recent research focuses on the emotional and affective aspects of labour and resistance. The intimate discussions she had with friends, comrades and strangers about the psychological states they experienced recently in Egypt inspired her to formulate her thematic course. Dina hopes that identifying political histories of pain and trauma will enable alternative possibilities for healing. This interest in mental health journeys thus encouraged her to explore creative and collective paths to healing. By continuing to merge anthropological work with art-based initiatives, Dina aspires to create media for people to connect, explore outlawed emotions and express the rich human experience.",
+        "email": "dinamakramebeid@hotmail.com",
+        "photo": "uploads/1/9/1/0/19102967/5728805.png?217",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Sara-Duana Meyer",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "has been a cultural producer, literary scholar, curator, bartender, gardener, and writer, among other things. Intrigued by interdisciplinary approaches and fascinated by the in-between, she has conceived, curated and managed various cultural and artistic projects in Europe and the MENA region and has taught literature, cultural theory, cultural management and visual studies in Germany, India, Iraq, and Egypt. Recently she has been focussing on writing about all of these topics and more. She has a thing for mega cities and urban culture and, being the hopeless optimist she is, strongly believes in the possibilities of resistance and art. She also believes in composting, animal rights, and soap bubbles, and teaches yoga.",
+        "email": "sara.duana.meyer@gmail.com",
+        "photo": "uploads/1/9/1/0/19102967/1284679.jpg?212",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Wiebe Ruijtenberg",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": "visiting fellow in the field of social sciences",
+        "bio": "graduated from the Research Master in the Social Sciences at the University of Amsterdam with a dissertation on gated communities in Cairo’s satellite cities. Using ethnography in his dissertation, he explored the ways in which residents shape their gated community, while being shaped by it at the same time. Wiebe’s research interests include notions of urban space, the process of identity formation, and the politics of culture. He is especially inspired by ethnography, as a research method, a form of art, and a way of seeing and writing the world. As a way of doing ethnography, Wiebe cycles around Cairo trying to sense and understand the city as he navigates it. Wiebe joins CILAS as a visiting fellow in the field of social sciences and will host the thematic course the urban experience: an ethnographic approach.",
+        "email": "wiebe.ruijtenberg@gmail.com",
+        "photo": "uploads/1/9/1/0/19102967/8487613.jpg?214",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Sara Salem",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a PhD candidate at the Institute of Social Studies, Erasmus University, in the Netherlands. She is working on the 2011 Egyptian revolution from the perspective of critical political economy, and uses Marxism as a lens through which to understand the shifts happening across the Middle East and Africa today. She is half Egyptian and half Dutch, and grew up in Zambia, a place she still considers home. Her hobbies include postcolonialism, feminism, Marxism, and other conspiracies, and when she isn’t reading you can find her either baking or enjoying a coffee.",
+        "email": "salem.m.sara@gmail.com",
+        "photo": "uploads/1/9/1/0/19102967/1448358406.png",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Dirk Wanrooij",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "was born in Yemen and grew up partly in Pakistan, partly in the Dutch country side. So far, he spent most of his adult life between Amsterdam and Cairo from where he has worked as a freelance journalist and writer. He has reported from Sudan, the Gaza strip, Jordan, Syria and Turkey for a variety of Dutch publications. In march 2015 he published his first book “Oproer, een kroniek van de Egyptische revolutie'. Dirk holds a BA in Dutch Literature and History and an MA in Middle-Eastern Studies. He is one of the founders of Ain Bicycles, a community centre for cyclists in Cairo where he builds bikes designed for the Egyptian streets.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1467385823_orig.png",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mai Alkhamissi",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a wannabe social theorist with a background in the anthropology of the state, labour, social and political theory, and affect theory. She received her Master of Arts in Anthropology and Cultural Politics from Goldsmiths, University of London where she wrote her thesis on the union of skilled handicrafts craftsmen in Egypt and both their struggle against, and work with, the state.\n\nShe is currently an anthropologist in a four-person team tasked with reforming Cairo University Hospitals (Kasr al-Ainy) where she spends her days informing people that no, actually, she is not a doctor.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/4355102_1_orig.png",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mina Adel Ibrahim",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "I finished my Master’s degree in Social Anthropology in 2014 from the Central European University (CEU) in Budapest. Currently, I am a post Master’s fellow at the American University in Cairo. As an anthropologist, I believe that my job is to listen and record the stories of people as they are, with all their fragmentations. My task is to delve into such inconsistencies without arranging and ordering them. I am also interested in the ambiguous aspects of our daily lives, everything we cannot label or fit into a bordered order. Beyond academia, to an extent, I love to experience new food and societies. My future dream is to spend few years, or even more, on a mountain in a South East Asian country.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1467386081_1_orig.png",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Ismail Fayed",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a writer and researcher based in Cairo. He has been writing and researching contemporary artists practices in Egypt since 2007. He was part of the Critics-In-Residence for the KunstenfestivaldesArts in Belgium, Arts-Lab Critic and Festival’s Blogger for “In Transit Festival- Haus Der Kulturen Der Welt”- Germany. He is currently the associate editor of \"Arab Art in the Twentieth Century: Primary Documents\" published by the Museum of Modern Art in New York (2017). His writing appeared in ArteEast, Nafas Art Magazine, Mada Masr and Ma3azef.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1189786-orig_orig.png",
+        "board_role": null,
+        "advises_on": null
+      }
+    ]
+  }
+}

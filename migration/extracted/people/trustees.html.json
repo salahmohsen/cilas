@@ -1,0 +1,44 @@
+{
+  "sha256": "eb3df20f2c5a08b102a7ec6d45750a9a1846790ab9223a61b1238699b286363c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "year": null,
+    "place": null,
+    "people": [
+      {
+        "name": "Karim-Yassin Goessinger",
+        "name_ar": null,
+        "group": "trustee",
+        "title": null,
+        "bio": "studied political philosophy and urban governance in the Netherlands, Brazil and France. He has worked with a range of development agencies in Latin America and the Middle East in fields including micro-finance, informal housing and local governance. In addition to his strong interest in social and political theory, Karim-Yassin is concerned with the intersection of post-secondary education and development work. After his graduate studies at Sciences Po Paris, he set out to create the Cairo Institute of Liberal Arts and Sciences (CILAS). He serves as Chairman of CILAS Board of Trustees.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1395225132.jpg",
+        "board_role": "Chairman",
+        "advises_on": null
+      },
+      {
+        "name": "Amani Elshimi",
+        "name_ar": null,
+        "group": "trustee",
+        "title": "Director of Undergraduate Research and Senior Instructor at the Department of Rhetoric and Composition at the American University in Cairo",
+        "bio": "is Director of Undergraduate Research and Senior Instructor at the Department of Rhetoric and Composition at the American University in Cairo. She is an active practitioner of engaging pedagogies, including community-based learning, undergraduate research, senior capstones, and project-based creative problem solving. She has twenty years experience in higher education teaching, faculty training, materials development, curriculum design, testing, and program administration. Between 2008-2011 she served as Director of Community-Based Learning at the Gerhart Center for Philanthropy and Civic Engagement, AUC and continues to serve as consultant to education-focused programs in civil society. Amani serves as Secretary of CILAS Board of Trustees.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1395225589.jpg",
+        "board_role": "Secretary",
+        "advises_on": null
+      },
+      {
+        "name": "Ahmed Galal",
+        "name_ar": null,
+        "group": "trustee",
+        "title": "Project Manager at Netsis Egypt and Head of Operations at Salis IT Services",
+        "bio": "works as Project Manager at Netsis Egypt and as Head of Operations at Salis IT Services. He has eight years of experience in the implementation of best practices in the field of Business & Operations. Ahmed has completed undergraduate studies in Computer Science at 6th of October University. He serves as Treasurer of CILAS Board of Trustees.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1382064064.jpg",
+        "board_role": "Treasurer",
+        "advises_on": null
+      }
+    ]
+  }
+}

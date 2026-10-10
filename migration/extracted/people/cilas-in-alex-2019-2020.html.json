@@ -1,0 +1,66 @@
+{
+  "sha256": "ecdd97abf6df75be7a890e9169085b0c0aa5a0db8782de3d6e103d369540a748",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "year": "2019-2020",
+    "place": "alexandria",
+    "people": [
+      {
+        "name": "Omar El-Rakhawy",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "Teaching Fellow in the Humanities and Arts",
+        "bio": "is an AUC graduate of philosophy and has a Leiden Master degree in religious studies. In his Master’s thesis, which was titled “Religion and its Counter-Tendencies: A Reflection on the Question of Religion”, he discuss different approaches to the question of religion, especially criticizing objective approaches, and particularly when these are suppressive to subjective considerations. In doing this, he relied on a comparative approach between figures and thinkers of different backgrounds, among them Kierkegaard, Derrida, and two Sufi figures who were equally singular in their own contexts, namely Ibn ‘Arabi and al-Niffari. At CILAS Alex, he will serve as Teaching Fellow in the Humanities and Arts.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/dsc-7868.jpg?1564598781",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mohamed El-Araby",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "Teaching Fellow in the Sciences",
+        "bio": "is a political science researcher who graduated from the Political Science Department at Cairo University. He recently received his MA in International Affairs from the American University in Cairo. He is currently a researcher at the Center for Strategic Studies at the Bibliotheca Alexandria. Prior to that, he was a researcher at the BA's Future Studies Unit, an intern at the Institute for Future Studies and Technology Assessment in Berlin, and a research fellow at the Institute for Future Studies in Beirut. He has written numerous studies and articles on regional policies and international security; now he is studying the reconstruction of the MENA region as part of a World Bank research project. In addition, Al-Araby has translated a number of books into Arabic dealing with Islamic movements, Islamic reform, and topics in future studies. At CILAS Alex, he will serve as Teaching Fellow in the Sciences.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/dsc-7820.jpg?1564598990",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mariam Soliman",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "co-facilitator for the Skills Lab",
+        "bio": "is a student of oriental languages at the faculty of arts Alexandria university, and a CILAS graduate. She's a translator, as well as writing illustrated stories for children. however, her preferred method of communication is visualized rather than verbalized. She is a firm believer in the capability of telling compelling stories through photographs, that is what she tries to portray through her passion for photography and through her film-making attempts. At CILAS Alex, She will serve as a co-facilitator for the Skills Lab.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/68353415-1155394244670579-5901965434768326656-n.jpg?1565359956",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Manar Imam",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "co-facilitator for the Skills Lab",
+        "bio": "is a CILAS Alex graduate from Aswan, Egypt. She is completing her degree in media management at the Arab Academy for Science, Technology & Maritime Transport. She is interested in theater and storytelling, specially documenting stories related to ethnicity and culture, and to create a link between them. At CILAS Alex, She will serve as a co-facilitator for the Skills Lab.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/img-20190808-wa0001.jpg?1565360343",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Hussein El-Hajj",
+        "name_ar": null,
+        "group": "fellow",
+        "title": "teaching fellow for the Skills Lab's theoretical accompaniment",
+        "bio": "is a cultural activist and researcher in the field of radical pedagogy and alternative higher education. From 2015 to 2017 he worked as a librarian at the Cairo Contemporary Image Collective. He is currently the coordinator of the Cairo Institute of Liberal Arts and Sciences in Alexandria (CILAS Alex) where he also teaches translation of the humanities and social sciences. He has published an Arabic-language poetry collection, Tuyuf / Spectres (2015). His published translations include A User's Guide to Demanding the Impossible by Laboratory of Insurrectionary Imagination (Yadawia for handmade books, 2018) and two online anthologies (2018) on alternative higher education in association with CILAS: On the Emergence of Pigeon Towers and a collection of collaborative student translations, Education as Translation. At CILAS Alex, he will serve as the teaching fellow for the Skills Lab's theoretical accompaniment.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/img-8789.jpg?1564599440",
+        "board_role": null,
+        "advises_on": null
+      }
+    ]
+  }
+}

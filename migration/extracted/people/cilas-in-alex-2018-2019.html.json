@@ -1,0 +1,99 @@
+{
+  "sha256": "4cb9d31e9321c56fa0a41687e710007759caaa829e81faba9079687124c9142c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "year": "2018-2019",
+    "place": "alexandria",
+    "people": [
+      {
+        "name": "Hussein El-Hajj",
+        "name_ar": null,
+        "group": "team",
+        "title": "Teaching Fellow in the Arts (and Humanities) and translation lab. coordinator at CILAS Alex",
+        "bio": "is from Gizah, Egypt. He is a graduate of the Faculty of Arts in the Department of English at Cairo University, and joined CILAS as a year-long student in 2014 before working there as a librarian and a coordinator of the translation lab. He works on himself to improve his craft as a translator, specifically in the social sciences and humanities. At CILAS Alex, he will serve as Teaching Fellow in the Arts (and Humanities) and translation lab. coordinator.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/hussein-el-hajj_2_orig.jpeg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Karim-Yassin Goessinger",
+        "name_ar": null,
+        "group": "team",
+        "title": "Teaching Fellow in the Sciences at CILAS Alex",
+        "bio": "was born and raised in Frankfurt am Main. In 2013, he founded CILAS. Karim has coordinated courses in the Humanities and Social Sciences at CILAS and at AUC. In his teaching, he combines philosophy and urbanism with post-development practices, such as Qi Gong, cooking and tea. Karim writes and speaks about \"pigeon towers\" as a metaphor for higher education. At CILAS Alex, he will serve as Teaching Fellow in the Sciences.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/8e9a9258_1.jpg?1532190005",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Kari Rosenfeld",
+        "name_ar": null,
+        "group": "team",
+        "title": "Artist in Residence at CILAS Alex",
+        "bio": "is from Houston, Texas. She worked as a fashion photographer and producer before studying analytic philosophy at the University of Texas. She has since worked as an artist using writing, video, and photography. She will serve as the Artist in Residence at CILAS Alex.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/22045757-10110473849283950-8336066975026997387-n_1.jpg?1531144608",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Batool El Hennawy",
+        "name_ar": null,
+        "group": "team",
+        "title": "Skills Lab facilitator at CILAS Alex",
+        "bio": "is from Cairo, Egypt. She is currently completing her degree in Fine Arts at Helwan University. She has worked at the Cairo Institute for Liberal Arts and Sciences (CILAS), as a co-fellow, pedagogical coordinator, and media lab director. She is interested in the transnational dimension of education and social justice with a particular focus on collective learning and storytelling as pedagogical forms. She will serve as a Skills Lab facilitator at CILAS Alex.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/36747175-277757266302547-5631981733252431872-n.jpg?1532189669",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Amir Zaky",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a journalist, writer and translator based in Cairo. From 2009 to 2018 he worked as an editor at numerous Egyptian print and digital publications including Egypt Independent, Al-Shorouk Newspaper, Al-Masry al-Youm Newspaper, The World of Books Magazine (‘Alam al-Kitab) and Platform Magazine (Al-Manassa) while also contributing many articles and translations to prominent cultural periodicals Literary News, Speak! and The Cities, among others. In 2019 he co-taught a translation workshop with Hussein El-Hajj at the Cairo Institute of Liberal Arts and Sciences (CILAS) Alexandria. His book-length translations include The Chomsky-Foucault Debate: On Human Nature (Dar al-Tanwir 2015) and Tariq Ali’s The Dilemmas of Lenin (Al-Kotob Khan, 2018). His translation of Slavoj Zizek’s The Year of Dreaming Dangerously (Dar al-Tanwir, 2013) won the Egyptian National Center for Translation’s Youth Award in 2014, and in 2018 he won the Sawiras Cultural Award for Emerging Writers for his Arabic language short story collection Suicide Line (Al- Kotob Khan, 2015). Zaky has been blogging about literature and translation since 2010 when he started his popular online zine BoringBooks.net.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/45049724-10155777566176027-4141740463654699008-n.jpg?1564596965",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mohamed Abdelkarim",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "had written his Master’s thesis of knowledge engagement at ECAV, Switzerland 2014, before he turned toward producing text-based performances, and become committed to performative practices across multidisciplinary research, concerning the perception of narrating, singing, dancing, detecting and doing. His practice engages with these actions through the focus on travel, locomotion, renegades history and picaresque literature, where a series of non-linear, serendipitous encounters with concepts, fictions, almost truth and what is known as historical facts, are gathered to form a script and an archive of events and stories. In this context, his practice aims at producing narratives and expose the way narratives are produced. As part of his performative practices, Abdelkarim established a project \"Tadbiqat\" as a performative project that brings together (and synthesises across) lectures, debates, group (close) readings, critical responses, and creative quests, alongside with organising performance nights under the title of \"Live Praxes.\"",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/49017705-2189792224373937-1328588252583559168-o.jpg?1564597377",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Gian Spina",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "born in São Paulo, Brazil. Write, Reads and works sometimes as an artist. Has taught in places as International Art Academy Palestine, Escola da Cidade (São Paulo) and the Ionion Center for Arts and Culture (Greece). Today he learns Arabic, speaks five other languages and is constructing an interdisciplinary body of work on the materialization of power in the public sphere. He was part of the residency program in Documenta 14 in Athens (2017) and recently at MMAG Foundation in Amman (2018). He lives now between Amman and Cairo and writes poetry on a daily basis. His work can be seen in http://gianspina.com/",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/49064839-2189791844373975-329358660855660544-n.png?1564597600",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "محمد العربي",
+        "name_ar": "محمد العربي",
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "باحث في العلوم السياسية، تخرج في قسم العلوم السياسية بجامعة القاهرة، حصل مؤخرًا على ماجستير الشؤون الدولية من الجامعة الأمريكية بالقاهرة. يعمل الآن باحثًا بمركز الدراسات الاستراتيجية بمكتبة الإسكندرية، وقبل ذلك كان باحثًا بوحدة الدراسات المستقبلية بالمكتبة ومتدربًا بمعهد الدراسات المستقبلية وتقييم التكنولوجيا في برلين وزميلاً للأبحاث في معهد الدراسات المستقبلية ببيروت. كتب العديد من الدراسات والمقالات التي تتناول السياسات الإقليمية والأمن الدولي والدراسات المستقبلية؛ والآن يدرس إعادة البناء في منطقة الشرق الأوسط وشمال أفريقيا ضمن مشروع بحثي تابع للبنك الدولي. بالإضافة إلى هذا، قام العربي بترجمة عددًا من الكتب إلى العربية التي تتناول الحركات الإسلامية والإصلاح الإسلامي وموضوعات في الدراسات المستقبلية.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/48995934-2189791457707347-6231806240062701568-o.jpg?1564597750",
+        "board_role": null,
+        "advises_on": null
+      }
+    ]
+  }
+}

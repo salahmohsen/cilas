@@ -1,0 +1,253 @@
+{
+  "sha256": "0b4bc7c49fd377abbf53eba1048f1b3a680c45511fe3c2b31f4ec726e67e19c9",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "year": "2017-2018",
+    "place": "cairo",
+    "people": [
+      {
+        "name": "Doaa Kaddah",
+        "name_ar": null,
+        "group": "residential_fellow",
+        "title": null,
+        "bio": "is interested in the ‘mess’ of our social realities that are excessively pouring out of the imposed order of things and peoples. She holds two Masters degrees in Educational Psychology from the Ludwig Maximilian University of Munich and in Sociology-Anthropology from the American University in Cairo. She completed her thesis on the controversial mobility and presence of the tukuks in the old districts of Maadi in Cairo. She loves sweet potatoes, dark chocolates, bananas and the fruitfulness of random encounters.",
+        "email": "doaakaddah@aucegypt.edu",
+        "photo": "uploads/1/9/1/0/19102967/20707986-1578045635548602-5695791733638615202-n_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Sama Waly",
+        "name_ar": null,
+        "group": "residential_fellow",
+        "title": null,
+        "bio": "completed her Masters of Fine Arts in Film, Video, New Media & Animation at the School of the Art Institute of Chicago. Her practice incorporates moving image, installation and performance art, and explores notions of hauntology, historiography, and a tension between order and chaos in urban and natural environments. Her work has been featured in various exhibitions in Cairo, Chicago and internationally. With a BA in Visual Arts and Arab & Islamic history from the American University in Cairo, she has worked with a range of cultural institutions in the fields of development, cinema, contemporary art and art history, and has published her writing in various online platforms. She is passionate about the history of culture in Egypt with a focus on the 19th and 20th centuries, her current essay, commissioned by MHWLN, is entitled \"Pan-Arabism post-Nasser: Egypt and the Union of Arab Plastic Artists (1972-1978)\". Since completing her masters, she developed an enthusiasm for advancing free, open access to knowledge as a fundamental right, and is grounding her daily practice as a researcher in this.",
+        "email": "swaly@saic.edu",
+        "photo": null,
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Bianca",
+        "name_ar": null,
+        "group": "residential_fellow",
+        "title": null,
+        "bio": "is a German gardening and food enthusiast. She comes from a family with a long history in agriculture and horticulture and grew up between vegetable fields. In Egypt she lived 4 years at the Sekem farm, where she learned about organic agriculture and the specific growing conditions in Egypt. Now she experiments on her own 100 sqm rooftop in Mohandessin and coordinates the Slow Food 10,000 Gardens in Africa project in Egypt that supports schools and communities to create food gardens. Bianca has a master degree in Green Economy from Bournemouth University and completed her BA in Philosophy and Economics at Bayreuth University. She is also a Lead Planner of Social Component: Quality Education Support Program I & II (QESP I & II) at GOPA Worldwide Consultants. Bianca’s purpose is to reconnect people in the city to nature by educating them about environment, gardening and healthy food and promoting sustainable urban gardening.",
+        "email": "bianca.fliss@gmail.com",
+        "photo": "uploads/1/9/1/0/19102967/published/10644841-10154767323395553-9119527181277456794-n-1.jpg?1510668144",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Ahmed Diaa",
+        "name_ar": null,
+        "group": "residential_fellow",
+        "title": null,
+        "bio": "is a PhD candidate in Middle Eastern Studies at Columbia University. He holds a Master’s degree in Middle Eastern Studies from Columbia University, and a Master’s degree in Political Theory from the American University of Beirut. He is interested in questions of state and subjectivity in the context of colonial modernity, in an attempt to understand our current political and social condition. Ahmed is also interested in literature and arts, and especially in theatre. He is also keen on stressing that he is the person on the right hand side of the picture, though he is sure the person on the left has a unique perspective on humanities.",
+        "email": null,
+        "photo": null,
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Robin Weiss",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "received her Ph.D. from DePaul University, and taught most recently at Mount Allison University in Canada, where she first began teaching Chinese philosophy, alongside ancient Greek philosophy. She specializes in ancient Greek and Roman Philosophy, and in Roman Stoicism in particular, where it relates to the connection between thought and action. She believes that Chinese philosophy can shed new light on these questions, and has, for this reason, increasingly incorporated Chinese philosophy into her courses at AUC. She is currently writing a book that explains the Stoics’ views on everything from pragmatism to utopianism, complicity to non-compliance, friendship to cosmopolitanism—and is doing her best to learn Chinese.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/24312693-1689742611045570-5260165924886471384-n_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Ismail Fayed",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is an independent writer and researcher based in Cairo he has been writing and researching contemporary artistic and cultural practices of the Middle East since 2007. He has contributed to local and international publications, including MoMA's upcoming volume on Modern Art in the Arab World: Primary Documents. His writings appeared in Muftah, Mada Masr, Nafas Art Magazine, ArteEast, Aperture and many others.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/24312781-1689742697712228-8092134050565131602-n.jpg?1530784261",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Mohammad Shawky Hassan",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a filmmaker living and working in Egypt. He studied philosophy, film directing and cinema studies at the American University in Cairo, The Academy of Cinematic Arts & Sciences and Columbia University. His films include It Was Related to Me (2011), On a Day like Today (2012) and And on a Different Note (2015), which premiered at the Berlinale Forum Expanded, and was acquired by the Museum of Modern Art (MoMA) in New York as part of its permanent collection. He was the film programs director at ArteEast, and the director of the Network of Arab Alternative Screens (NAAS) from 2011 till 2016. He is currently a HUSSLab fellow at the American University in Cairo, and is working on his new film project \"Lose Weight Now, Ask me How\".",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/24293941-1689742701045561-711907990978467459-n-1.jpg?1530784388",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Céline Burnand",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a Swiss artist and researcher living between Cairo and Berlin. She studied visual arts with a specialization in painting and drawing at the Haute Ecole d’Art et de Design (HEAD) in Geneva, and later graduated in art history, literature and history of cinema. After a few years of working and travelling in Switzerland and abroad (San Francisco, Paris, Madrid), she became interested in the potentiality of film to explore the world and social realities beyond the cluster of her studio. She graduated from the Master of Visual and Media anthropology in Berlin in 2017 with her film ‘Looking for a Rifa’i’ that focused on snake handlers in Egypt.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/24785345-1689742844378880-4038314332248184244-o.jpg?1530784520",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Rodrigo Gratacós Brum",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a Brazilian philosopher and filmmaker. He holds a MFA in Film, Video, New Media and Animation at the School of The Art Institute of Chicago and a MA in Philosophy at the Federal University of Rio de Janeiro. He is a member of Observatório-Móvel (observatoriomovel.com), an artist collective based in Florianópolis, and a member of Khôra, a research group on contemporary philosophy based in Rio de Janeiro. In 2018, he will be living in Cairo working on a documentary about the architect Hassan Fathi.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/24297512-1689742731045558-7600683369130640606-o.jpg?1530784636",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Yvonne Buchheim",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is an interdisciplinary artist and educator working in public and social contexts. She taught Visual Arts at the University of the West of England for ten years before moving to Cairo in 2012 where she continued with educational and art projects, often questioning the role of art within the everyday. She has exhibited widely and was awarded a monograph publication for her long term Song Archive Project. Yvonne has taught Fine Art at the American University of Cairo before joining the Cairo Institute of Liberal Arts and Sciences, where she coordinated the Arts and Culture field in 2015 - 16. In 2017 she co-curated Spring Sessions, a learning programme and artist residency in Amman, Jordan.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/24774747-1689742791045552-8684710665468485356-n.jpg?1530784767",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Sara Elkamel",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a freelance journalist and writer, born and raised in Cairo. After completing a Master of Arts in Journalism and Mass Communication (‘13) at the American University in Cairo’s School of Global Affairs and Public Policy, she relocated to New York, where she pursued a Master of Arts in Journalism (’15) at Columbia University’s Graduate School of Journalism. Also in New York, she was associate editor on The Huffington Post’s international team. Before then, she was reporting in Cairo — primarily on arts and culture — for local and international publications. Alongside her work in journalism, Elkamel has been pursuing her passion for poetry and creative writing; she has participated in various fiction and poetry workshops in Cairo and New York. Her writing has appeared in Ahram Online, The Guardian, The Huffington Post, GlobalPost, Guernica, Riwayya, and elsewhere.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/24785292-1690421717644326-4100321977240116957-o.jpg?1530785136",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Dalia Wahdan",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is an anthropologist who is deeply interested in the ‘urban’ particularly the perennial dialectics of man and nature. She holds a Ph.D. from Pune University, India and a Masters from the American University in Cairo. The Masters’ thesis was an examination of spatial inequities manufactured and sustained by the construction of new urban settlements in Egypt and the doctoral dissertation was a comparison of the privatization of road networks and their implications on physical mobility in the national capital region of Delhi and greater Cairo region. She is a firm believer in liberal learning and education and has taught at the Foundation for Liberal and Management Education (FLAME University) in India, at the Centre for the Study of Law and Governance of Jawaharlal Nehru University (India) and the School of Public Administration of the American University in Cairo. She loves to wander into landscapes and observe how humans imagine and possibly create spaces of freedom within and against their mortal predicaments.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/24991196-1693162744036890-4383998096063377050-n_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Ash Moniz",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a multi-disciplinary artist working primarily between the realms of performance, video, and installation. Moniz holds a BFA from OCAD University (Toronto, 2014), a scholarship at the Nanjing University of the Arts, and had participated in the Mass Alexandria Independent Studio Program in (Alexandria, 2016). Most of his recent projects, investigate the role of the nation-state within the politics of transportation logistics and citizenship, using actors, scripts, found footage, and interviews. Moniz has exhibited with galleries and museums internationally, such as Townhouse Gallery (Cairo), Sishang Museum (Beijing), Minsheng Museum (Shanghai), and Birch Contemporary (Toronto). He was the assistant curator of the AMNUA Museum in Nanjing in 2013/14, and the director of the Boxes|Zones Quarters residency/ exhibition in Casablanca in 2014. He has presented lectures and talks at the University of Ottawa, OCAD University in Toronto, Silent-Green Kulturquartier in Berlin and State of Concepts in Athens.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/24296424-1689743237712174-787318291848553539-n.jpg?1530784973",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Nadine El-Nabli",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is interested in the intersection between gender, sexuality and citizenship, as well as creative resistance in the Middle East and North Africa. She completed her M.A. in Gender & Sexuality at the School of Oriental and African Studies in London and her dissertation engaged with feminist and queer analyses of the intersection of nation, resistance and music, with a focus on the Lebanese band Mashrou’ Leila. Nadine has also worked on various human rights and humanitarian research projects relating to gender, sexuality, refugees and violence. Other things Nadine spends her time doing are dancing, collecting videos and caring for her friends and family.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/28168411-1775256625827501-7626150523280183671-n.jpg?1530785562",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Kareem Megahed",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "finished his masters in Political Economy at the University of Manchester in 2017. He holds a bachelor of Arts in Political Science and History from the American University in Cairo. His interests revolves around Marxist theory, subaltern studies, economic history, political economy and utilizing them for rereading modern Egyptian History. Previously, he worked as a teaching assistant in the department of Political Science in the American University in Cairo (AUC) in 2014, before joining the Economic and Business History Research Center(EBHRC) as a researcher. For two years, he dealt with oral narratives of individuals related to Egypt's business and economic community from the Nasserite era and onwards, in addition to narratives of the labour movement against privatization in the 2000. Megahed is also an avid football fan who enjoys seeing el-Ahly fans weeping and a meme enthusiast.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/28337256-1775237329162764-5557298597709500277-o.jpg?1530785703",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Omar El-Rakhawy",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "My name is Omar El-Rakhawy, an AUC graduate of philosophy and a Leiden Master’s student in religious studies. In my Master’s thesis, which was titled “Religion and its Counter-Tendencies: A Reflection on the Question of Religion”, I discuss different approaches to the question of religion, especially criticizing objective approaches, and particularly when these are suppressive to subjective considerations. In doing this, I relied on a comparative approach between figures and thinkers of different backgrounds, among them Kierkegaard, Derrida, and two Sufi figures who were equally singular in their own contexts, namely Ibn ‘Arabi and al-Niffari.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/editor/28378645-1775487239137773-2610618788338520375-n.jpg?1530785818",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Amira Elserafy",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is passionate about both teaching and gender studies in the Middle East and North Africa. She holds two Masters degrees in Teaching English to Speakers of Other Languages and Middle East Studies from the American University in Cairo. She completed her thesis on the political activism of women affiliated with the Muslim Brotherhood in urban Cairo between 2013-2016. In her research, she uses participant observation and interviews to explore notions of agency, Islamic feminism and political activism in relation to discourse about Middle Eastern women in Western scholarship. In addition to her interest in researching women’s activism in Egypt and the Middle East, she has a long teaching experience in both Egypt and the US.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/28238060-1775256922494138-2619577230442500091-o.jpg?1530786210",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Farida Makkar",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "joined the History Department at the American University in Cairo (AUC) in 2015 to teach courses on the history of modern education in Egypt and the modern history of the wider Middle East. She also works as a consultant for the Law and Society Research Unit at AUC focusing primarily on the relationship between law, knowledge production, culture and education. Farida holds an MSt in Modern Middle Eastern Studies from the University of Oxford. During her year at Oxford, she focused her research primarily on an Egyptian teacher training manual from 1914. Because of her interest in alternative education, she loves engaging with creative learning spaces and working with alternative institutions such as CILAS where fresh and meaningful learning experiences can be co-created and nurtured.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/28576422-1785029311516899-1202359086444707840-n.jpg?1530786305",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Shatha Elnakib",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "earned her Masters in Public Health from Columbia University. She is a researcher and practitioner working at the intersection of sexual, reproductive and migrant health. Shatha’s research interests are inspired by questions of health equity and reproductive justice. She has experience working with UN and international NGOs such as UNICEF, UNFPA, and the Population Council. Currently, she works for UNFPA Egypt as the humanitarian focal point where she coordinates sexual and reproductive health projects and interventions among refugees.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/28279134-1775476289138868-5520712600207102187-n_orig.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Hussein El Hajj",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": null,
+        "bio": "is a graduate of the Faculty of Arts in the Department of English at Cairo University. While at college, he began reciting poems, acting in plays and short movies, writing and translating poetry, articles, and short stories published in print and in online magazines, as well as keeping a personal blog. The transition from the arts to deep socio-political issues after the revolution was what brought him to CILAS in 2014.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/hussein-el-hajj_1_orig.jpeg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Doaa Shahin",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": "co-fellow for the natural science field of study at CILAS and director of the media lab",
+        "bio": "currently works as a co- fellow for the natural science field of study at CILAS and as a director of the media lab. She also works as a part-time translator for Huffington post. She had graduated from the faculty of mass communication and had worked in various journalistic institutions. She uses writing and photography as tools to express and communicate with herself and the other. Doaa is a person who never stops asking questions, and making weird connections. What makes her extremely curious nature embraceable is her chilled flexible attitude toward her wonderings. She is a philosophy enthusiast who brings abstract concepts and theories back to the everyday life and in relation to the human self. Doaa usually challenges her comfort zones. She is currently interested in exploring how our bodies can be a tool to express and connect, and how that could be different than using verbal language.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/28235001-1775505352469295-1849919328422706486-o.jpg?1530786867",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Alaa el-Bannan",
+        "name_ar": null,
+        "group": "visiting_fellow",
+        "title": "this year's Arts and Culture co-fellow, Space lab director",
+        "bio": "is this year's Arts and Culture co-fellow, Space lab director, and a previous CILAS student. She is currently working on developing her interdisciplinary art practice focusing on creative writing and drawing as a form. She studied media and mass communication, and had worked as a copywriter, an editor, and in the NGO sector for a while. Alaa's now interested in consciousness as a theme, and in experimentation as an approach. She believes in acceptance as a way to deal with the random, chaotic nature of reality, and believes in imagination as a way to expand her life experience. She refuses the distinction between reality and imagination as for her both are two faces of one thing and both feed each other. She daydreams and practices martial arts.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/published/21951095-10154676269196114-5272177370513011478-o.jpg?1530787018",
+        "board_role": null,
+        "advises_on": null
+      }
+    ]
+  }
+}

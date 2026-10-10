@@ -1,0 +1,66 @@
+{
+  "sha256": "c3af7bce3c605cb5ed3334f5e2aeef4d86e3e693154341844cda0de6124ef3e9",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "year": null,
+    "place": null,
+    "people": [
+      {
+        "name": "Michael Brint",
+        "name_ar": null,
+        "group": "advisor",
+        "title": "Uyeno-Tseng Professor of International Studies and Professor of Political Science at California Lutheran University",
+        "bio": "is the Uyeno-Tseng Professor of International Studies and Professor of Political Science at California Lutheran University. His many books and articles focus on the relationship between philosophy, politics, and the arts. A graduate of the University of California and Oxford University, Dr. Brint has been an award winning teacher at Oxford, Cambridge, Stanford, Princeton, University of Virginia, and Kenyon College. He currently directs the CLU-Oxford Study Abroad Program which happily takes him to Europe and the Mediterranean each fall. Michael will advise CILAS on curriculum design and university partnerships in the US and the UK.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1395187967.jpg",
+        "board_role": null,
+        "advises_on": "curriculum design and university partnerships in the US and the UK"
+      },
+      {
+        "name": "Teun Dekker",
+        "name_ar": null,
+        "group": "advisor",
+        "title": "Associate Professor of Political Philosophy and Vice-Dean of Academic Affairs at University College Maastricht",
+        "bio": "is Associate Professor of Political Philosophy and Vice-Dean of Academic Affairs at University College Maastricht, the international Liberal Arts and Sciences College of Maastricht University. He did his graduate work at Oxford University, and has held visiting research positions at Yale University and Amherst College. He teaches a variety of courses on the intersection of the humanities and social sciences, including History of Political Thought and Distributive Justice in Contemporary Political Philosophy. His research has examined desert-based theories of Social Justice, and he is currently engaged in a project that seeks to translate political discourse into philosophical argumentation, focusing on the debate about the proper payment of high public officials. Teun will advise CILAS on skills training and university partnerships in the Netherlands.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1382021586.jpg",
+        "board_role": null,
+        "advises_on": "skills training and university partnerships in the Netherlands"
+      },
+      {
+        "name": "Yen-Chi Fan",
+        "name_ar": null,
+        "group": "advisor",
+        "title": "Chair of the Applied English Department at I-Shou University in Taiwan",
+        "bio": "is Chair of the Applied English Department at I-Shou University in Taiwan where she has been teaching for over twenty years. She obtained her doctoral degree in Applied Linguistics and TESOL from the University of Leicester. Her research interests focus on collaborative learning, cross-cultural communication, discourse analysis, socio-cultural theory and its application. In addition to her teaching and research activities, Yen-Chi is contributes to several international journals either serving as editorial board member or helping review papers in the field of second language acquisition as well as second/foreign language learning and teaching.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1382021325.jpg",
+        "board_role": null,
+        "advises_on": null
+      },
+      {
+        "name": "Abdul Hayy Lammert Holdijk",
+        "name_ar": null,
+        "group": "advisor",
+        "title": "Associate Chair of the Department of Rhetoric and Composition at the American University in Cairo",
+        "bio": "is Associate Chair of the Department of Rhetoric and Composition at the American University in Cairo where he has taught for the past 32 years. He teaches courses in self development both in and outside the university which emphasize inter-disciplinary communication as well as Integral Theory, Voice Dialogue, and the Enneagram. He has extensive academic experience as a member of major curricular committees including the AUC’s Council on Academic Integrity. He has a strong personal interest in Sufism and comparative religion. He regularly lectures on these topics as well as complementary and alternative medicine, and is considered an expert in his own field of homeopathy. Abdul Hayy will advise CILAS on curriculum design and partnership with the American University in Cairo.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1382021750.jpg",
+        "board_role": null,
+        "advises_on": "curriculum design and partnership with the American University in Cairo"
+      },
+      {
+        "name": "Tommaso Vitale",
+        "name_ar": null,
+        "group": "advisor",
+        "title": "Associate Professor of Sociology at Sciences Po Paris",
+        "bio": "is Associate Professor of Sociology at Sciences Po Paris where he is also the scientific director of the biannual Master's programme “Governing the Large Metropolis”. Tommaso is member of the Centre d’études européennes (CEE) and contributes to the research programme “Cities are back in town”. He has published in several areas including Urban Sociology, Political Sociology, Cultural Sociology, and Public Policy Analysis. Tommaso is currently working on metropolitan governance and contention in a comparative perspective with a focus on minorities and 'unwanted groups'. In his work he examines the planning of social services at the local level, urban elites and governance of de-industrialization, networks and upward social mobility. Tommaso will advise CILAS on capstone projects and university partnerships in France and Italy.",
+        "email": null,
+        "photo": "uploads/1/9/1/0/19102967/1382021811.jpg",
+        "board_role": null,
+        "advises_on": "capstone projects and university partnerships in France and Italy"
+      }
+    ]
+  }
+}
