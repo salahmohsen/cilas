@@ -325,7 +325,11 @@ export const seedArticles = async (payload: Payload, ctx: SeedContext): Promise<
           title,
           slug: slugify(title),
           body: body ? lexical(body) : null,
-          author: [requireId(ctx.users, author_email)],
+          authors: [requireId(ctx.people, author_email)],
+          // Seeded articles are already published: approval publishes them at
+          // their tier (the seed runs without a user, so it is trusted).
+          requested_tier: rest.tier === 'public' ? 'public' : 'community',
+          review: { status: 'approved' },
         },
         overrideAccess: true,
       }),

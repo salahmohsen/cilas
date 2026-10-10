@@ -137,14 +137,17 @@ export type GovernanceSeed = {
 
 /* =============================================================== articles */
 
-export type ArticleSeed = Omit<Draft<Article>, 'body' | 'author' | 'slug'> & {
+export type ArticleSeed = Omit<
+  Draft<Article>,
+  'body' | 'authors' | 'slug' | 'review' | 'requested_tier'
+> & {
   /** String => one paragraph; array => one paragraph per entry. */
   body?: string | string[]
   /** Arabic title, written in a follow-up `locale: 'ar'` update. */
   title_ar: string
   /** Arabic body, written in the same follow-up `locale: 'ar'` update. */
   body_ar?: string | string[]
-  /** Resolved to a user id. */
+  /** Fixture email of the author's person. */
   author_email: string
 }
 

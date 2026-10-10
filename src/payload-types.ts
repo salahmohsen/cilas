@@ -1038,11 +1038,50 @@ export interface Article {
     };
     [k: string]: unknown;
   } | null;
+  authors: (number | Person)[];
   cover_image?: (number | null) | Media;
-  author: (number | User)[];
+  review: {
+    /**
+     * Ready for an editor? Choose Submitted, then save.
+     */
+    status: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
+    review_note?: string | null;
+  };
+  /**
+   * Who you would like to read it. An editor decides.
+   */
+  requested_tier?: ('community' | 'public') | null;
+  tier: 'owner' | 'community' | 'public';
   published_date?: string | null;
-  tier?: ('owner' | 'community' | 'public') | null;
   featured?: boolean | null;
+  credits?:
+    | {
+        role:
+          | 'author'
+          | 'editor'
+          | 'translator'
+          | 'copy_editor'
+          | 'proofreader'
+          | 'supervisor'
+          | 'coordinator'
+          | 'art_director'
+          | 'cover_designer'
+          | 'illustrator'
+          | 'photographer'
+          | 'other';
+        label?: string | null;
+        people: (number | Person)[];
+        id?: string | null;
+      }[]
+    | null;
+  translation?: {
+    original_language?: ('ar' | 'en' | 'de' | 'fr' | 'other') | null;
+    original_title?: string | null;
+    original_authors?: (number | Person)[] | null;
+    original_url?: string | null;
+    original_source?: string | null;
+    note?: string | null;
+  };
   tags?:
     | {
         tag?: string | null;
@@ -1050,10 +1089,9 @@ export interface Article {
       }[]
     | null;
   /**
-   * Manual override: editor-curated related articles. If empty, automated recommendations by tag overlap are used.
+   * Editor-curated. If empty, articles sharing tags are suggested.
    */
   related_articles?: (number | Article)[] | null;
-  'Article Collection'?: (number | ArticleCollection)[] | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1711,11 +1749,36 @@ export interface ArticlesSelect<T extends boolean = true> {
   generateSlug?: T;
   slug?: T;
   body?: T;
+  authors?: T;
   cover_image?: T;
-  author?: T;
-  published_date?: T;
+  review?:
+    | T
+    | {
+        status?: T;
+        review_note?: T;
+      };
+  requested_tier?: T;
   tier?: T;
+  published_date?: T;
   featured?: T;
+  credits?:
+    | T
+    | {
+        role?: T;
+        label?: T;
+        people?: T;
+        id?: T;
+      };
+  translation?:
+    | T
+    | {
+        original_language?: T;
+        original_title?: T;
+        original_authors?: T;
+        original_url?: T;
+        original_source?: T;
+        note?: T;
+      };
   tags?:
     | T
     | {
@@ -1723,7 +1786,6 @@ export interface ArticlesSelect<T extends boolean = true> {
         id?: T;
       };
   related_articles?: T;
-  'Article Collection'?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
