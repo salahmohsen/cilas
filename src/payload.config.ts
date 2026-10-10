@@ -17,6 +17,7 @@ import { Governance } from './collections/Governance'
 import { Articles } from './collections/Articles'
 import { Press } from './collections/Press'
 import { Events } from './collections/Events'
+import { Newsletters } from './collections/Newsletters'
 import { Spaces } from './collections/Spaces'
 import { Partners } from './collections/Partners'
 import { Publications } from './collections/Publications'
@@ -85,6 +86,7 @@ export default buildConfig({
     Publications,
     Press,
     Events,
+    Newsletters,
     Spaces,
     Partners,
   ],
