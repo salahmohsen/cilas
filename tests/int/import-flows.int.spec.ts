@@ -6,7 +6,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import config from '@/payload.config'
 import type { Course } from '@/payload-types'
 import { importCourses, type ArchiveCourse, type ArchiveCycle } from '../../migration/lib/import-courses'
-import { importFlows, NOTES_HEADING } from '../../migration/lib/import-flows'
+import { importFlows, NOTES_HEADING, NOTES_HEADING_AR } from '../../migration/lib/import-flows'
 import type { Syllabus } from '../../migration/lib/syllabus-schema'
 
 let payload: Payload
@@ -106,7 +106,11 @@ const find = async (name: string, locale: 'en' | 'ar' = 'en'): Promise<Course> =
   return docs[0]
 }
 const plain = (doc: unknown): string => JSON.stringify(doc ?? null)
-const headings = (c: Course): number => plain(c.description).split(NOTES_HEADING).length - 1
+// Either heading counts: Arabic flows get the Arabic one.
+const headings = (c: Course): number => {
+  const text = plain(c.description)
+  return text.split(NOTES_HEADING).length - 1 + text.split(NOTES_HEADING_AR).length - 1
+}
 
 const cleanup = async () => {
   for (const [collection, where] of [

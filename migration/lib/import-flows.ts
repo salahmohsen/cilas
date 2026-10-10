@@ -8,6 +8,23 @@ export type FlowEntry = { id: string; courses: string[] }
 
 /** The heading paragraph over a flow's notes in the course description. */
 export const NOTES_HEADING = 'Course flow notes'
+export const NOTES_HEADING_AR = 'ملاحظات مسار المقرر'
+
+/**
+ * Some PDFs store Arabic as display-only letter shapes (presentation forms).
+ * Map just those code points to ordinary letters; other text is untouched.
+ */
+export const fixArabicForms = (text: string): string =>
+  text.replace(/[\uFB50-\uFDFF\uFE70-\uFEFF]+/g, (run) => run.normalize('NFKC'))
+
+const fixStrings = <T>(value: T): T =>
+  (typeof value === 'string'
+    ? fixArabicForms(value)
+    : Array.isArray(value)
+      ? value.map(fixStrings)
+      : value && typeof value === 'object'
+        ? Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fixStrings(v)]))
+        : value) as T
 
 type Material = Syllabus['bibliography'][number]
 type Locale = 'en' | 'ar'
@@ -49,8 +66,9 @@ const textOf = (node: unknown): string => {
 /** The description with the flow's notes appended, or null when nothing changes. */
 const withNotes = (description: Lexical | null | undefined, notes: string | null, dir: 'ltr' | 'rtl'): Lexical | null => {
   if (!notes?.trim()) return null
-  if (description && textOf(description).includes(NOTES_HEADING)) return null
-  const block = lexical([NOTES_HEADING, ...paragraphs(notes)], dir)
+  const existing = description ? textOf(description) : ''
+  if (existing.includes(NOTES_HEADING) || existing.includes(NOTES_HEADING_AR)) return null
+  const block = lexical([dir === 'rtl' ? NOTES_HEADING_AR : NOTES_HEADING, ...paragraphs(notes)], dir)
   if (!description?.root) return block
   return { ...description, root: { ...description.root, children: [...description.root.children, ...block.root.children] } }
 }
@@ -90,7 +108,8 @@ export const importFlows = async (
   let sessions = 0
 
   for (const flow of flows) {
-    const syllabus = syllabi.get(flow.id)
+    const found = syllabi.get(flow.id)
+    const syllabus = found ? fixStrings(found) : undefined
     if (!syllabus) continue
     const locale: Locale = isMostlyArabic(allText(syllabus)) ? 'ar' : 'en'
     const dir = locale === 'ar' ? 'rtl' : 'ltr'
