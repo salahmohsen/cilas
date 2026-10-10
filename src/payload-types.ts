@@ -81,6 +81,7 @@ export interface Config {
     press: Press;
     events: Event;
     spaces: Space;
+    partners: Partner;
     forms: Form;
     'form-submissions': FormSubmission;
     'payload-kv': PayloadKv;
@@ -117,6 +118,7 @@ export interface Config {
     press: PressSelect<false> | PressSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
+    partners: PartnersSelect<false> | PartnersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -957,6 +959,7 @@ export interface Programme {
         }[]
       | null;
   };
+  partners?: (number | Partner)[] | null;
   testimonials?:
     | {
         quote: string;
@@ -989,6 +992,24 @@ export interface Programme {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners".
+ */
+export interface Partner {
+  id: number;
+  name: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  kind: ('funder' | 'co_host' | 'outlet' | 'other')[];
+  url?: string | null;
+  logo?: (number | null) | Media;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1226,6 +1247,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'spaces';
         value: number | Space;
+      } | null)
+    | ({
+        relationTo: 'partners';
+        value: number | Partner;
       } | null)
     | ({
         relationTo: 'forms';
@@ -1587,6 +1612,7 @@ export interface ProgrammesSelect<T extends boolean = true> {
               id?: T;
             };
       };
+  partners?: T;
   testimonials?:
     | T
     | {
@@ -1774,6 +1800,20 @@ export interface SpacesSelect<T extends boolean = true> {
         image?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "partners_select".
+ */
+export interface PartnersSelect<T extends boolean = true> {
+  name?: T;
+  generateSlug?: T;
+  slug?: T;
+  kind?: T;
+  url?: T;
+  logo?: T;
   updatedAt?: T;
   createdAt?: T;
 }

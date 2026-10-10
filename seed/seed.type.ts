@@ -160,6 +160,14 @@ export type EventSeed = Omit<Draft<Event>, 'description' | 'slug' | 'fellows'> &
   fellows?: string[]
 }
 
+/* =============================================================== partners */
+
+export type PartnerSeed = {
+  name: string
+  kind: Array<'funder' | 'co_host' | 'outlet' | 'other'>
+  url?: string
+}
+
 /* ================================================================= spaces */
 
 export type SpaceSeed = Omit<Draft<Space>, 'description' | 'slug'> & {
@@ -206,6 +214,8 @@ export type SeedContext = {
   articleCollections: IdMap
   /** Space names, resolved to ids. */
   spaces: IdMap
+  /** Partner names, resolved to ids. */
+  partners: IdMap
 }
 
 export const createSeedContext = (): SeedContext => ({
@@ -216,4 +226,5 @@ export const createSeedContext = (): SeedContext => ({
   programmes: {},
   articleCollections: {},
   spaces: {},
+  partners: {},
 })

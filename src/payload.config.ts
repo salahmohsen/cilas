@@ -18,6 +18,7 @@ import { Articles } from './collections/Articles'
 import { Press } from './collections/Press'
 import { Events } from './collections/Events'
 import { Spaces } from './collections/Spaces'
+import { Partners } from './collections/Partners'
 import { ArticleCollections } from './collections/Article-collections'
 import { SiteSettings } from './globals/SiteSettings'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
@@ -85,6 +86,7 @@ export default buildConfig({
     Press,
     Events,
     Spaces,
+    Partners,
   ],
   globals: [SiteSettings],
   localization: {

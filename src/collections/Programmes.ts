@@ -102,6 +102,7 @@ export const Programmes: CollectionConfig = {
     },
     registrationField(),
     pricingField({ dbName: 'programme_price' }),
+    { name: 'partners', type: 'relationship', relationTo: 'partners', hasMany: true },
     {
       name: 'testimonials',
       type: 'array',
