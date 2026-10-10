@@ -46,7 +46,9 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 
 - Cycles and courses (plan 6.2): 34 cycles and 290 courses imported as drafts for review. Course-flow uploads are kept as `flow_uploads` in `seed/data/archive/courses.json` for plan 6.4.
 
-Stages 2–4 for people, course flows and publishing come in plans 6.3–6.5.
+- People (plan 6.3): 10 Bridge programmes (7 cohort years plus 3 unverified drafts), 110 memberships, 8 governance rows. Name variants are merged through `migration/aliases.json`, and 68 duplicate people were pruned.
+
+Stages 2–4 for course flows and publishing come in plans 6.4–6.5.
 
 - **Sources:**
   - The Weebly "Archive Site" ZIP (202 pages and their uploads, snapshot of 23 Apr 2025) is the primary source.

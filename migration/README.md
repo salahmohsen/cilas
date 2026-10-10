@@ -33,3 +33,15 @@ Rules worth knowing:
 - Winter cycles count by their January year.
 - Cairo cycles whose page names no venue are placed by date: al-Ghuria up to 2016–17, Darb el-Labbana after.
 - Name variants of one person go in `aliases.json`.
+
+## People, cohorts, programmes and the board (plan 6.3)
+
+1. `npx tsx migration/extract-people.ts migration/raw --pending | --prompt <file> | --record <file> <answer.json>`: the nine people pages (cohorts 2013–20, advisors, trustees), extracted by agents as in 6.2.
+2. `npx tsx migration/people-candidates.ts` writes `review/people-candidates.md`, groups of names that may be one person. Confident merges go in `aliases.json` (`canonical: [variants]`); the rest are listed in `review/people.md`.
+3. `npx tsx migration/normalise-people.ts` writes `../seed/data/archive/{people,programmes,memberships,governance}.json`, and flags guesses in `review/people.md`.
+4. `npx tsx --env-file=.env migration/seed-people.ts` runs these steps, and is safe to re-run:
+   - re-normalises courses with the aliases;
+   - re-imports courses, so they point at canonical people;
+   - imports people, Bridge programmes (drafts), memberships and governance;
+   - prunes imported, unreviewed people that nothing references, stopping above 200.
+
