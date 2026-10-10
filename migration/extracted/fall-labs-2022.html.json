@@ -1,0 +1,85 @@
+{
+  "sha256": "fcaee4b6271e5ee996ea48064b904e2aa9ad1f150fd327104d0dd2a98fa565c1",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall labs 2022",
+        "season": "fall",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-09-18",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "FEMINIST PEDAGOGY LAB",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Naela",
+                "email": "nelly.elmehrek@gmail.com",
+                "bio": "Naela has been working in the education field for about ten years with the bulk of her experience in primary classroom settings. Naela holds a master’s degree in education and globalisation from the University of Oulu in Finland where she completed her thesis on sexual harassment prevention in schools with a focus on feminist pedagogy and teacher agency. Her current research interests involve feminist approaches to curricular planning, compassionate classroom communities and sustainability in learning environments."
+              }
+            ],
+            "schedule_text": "Thursdays 5:30 to 8 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": 12,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Here we explore how education manifesting in an institution, a curriculum, or a teacher weaves into a broader gendered social and cultural practice. Through a feminist lens, we look back at our schooling and tertiary education to record memories in retrospective diaries. We will explore different angles to how education can engage with gender through adopting pedagogies, nurturing relationships in learning spaces, actualizing teachers’ agency, and recognizing existing power and privileges. We will follow a reading circle format with readings divided amongst us in preparation for the session then discussed in rotational groups to then share core insights and commentary in a whole group. Throughout, we (can) work towards a final project that we enjoy individually, in pairs or small groups.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_course_flow_-_feminist_pedagogy_lab__2_.pdf"
+            ],
+            "register_url": "https://forms.gle/ciMfaifTtFWN5x6s8",
+            "own_page": null
+          },
+          {
+            "title": "Compost Lab: Materials of the everyday",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Sarah Maher",
+                "email": "sarah.m.youssef89@gmail.com",
+                "bio": "Sarah Maher has a degree in economics and a non-degree in liberal arts and sciences. Her practice involves writing, performing text, movement, swimming, crocheting, Dj'ing and organizing communal events. She has been part of a number of educational programs such as CILAS, Basata Ecolodge School, Dahshur Film Residence and Mass Alexandria. Her questions revolve around the different modes of knowing, the intersection between community and the institution and the never ending gap between experience and expression."
+              },
+              {
+                "name": "Marlies Van Coillie",
+                "email": "marliesltvancoillie@aucegypt.edu",
+                "bio": "Marlies Van Coillie is a dancer, knitter, nerd, aspirational pianist in her dreams, a cyborg as hobby, while carrying a Buraq and a submerged sea critter on her body. She has a BA and MA in Arabic and Islamic Studies at Ghent University, Belgium, and a MA in Gender and Women’s studies: Gendered Political Economies at AUC, Egypt. She situates her research within the New Materialisms debates. She collaborated in several art and research projects, exploring the relation between objects/things and other human becomings, despite an imagined universal hu-Man."
+              }
+            ],
+            "schedule_text": "Saturday 10:30 to 12:30pm",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "10:30",
+            "end_time": "12:30",
+            "weeks": 12,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "What stories does compost have to tell us? In skyrocketing, vertical, ever-shifting fast paced cities, pushing the compost at the edges of the world and eating up our senses, how to get in touch with the gestures presented by sprouts, embers, and other magical critters already enwrapped in the slow pace of the everyday? What are the practices we can do to synch with the rhythm of the compost heap? The lab is an attempt to be thrown together like vegetable food waste. It is intended to decompose our extractive knowledges and to generate embodied relational practices with a desire to connect to joy, pleasure, intuition, and our never-ending quest to understand. To be submerged into the world of the compost bin, both imaginal and real, is to create fictional stories. Therefore, the course is made up of a series of creative improvisational, experimental, and meditative workshops. From eating, to composting, to napping and dreaming, dancing and crocheting while reading and conversing. Processing the materials we encounter along the journey, the course will generate its own kind of compost in the form of a zine. The intent is to create a fictional story of the compost bin experience, whereby writing is not necessarily understood in a literal sense.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_compost_lab_sarah_maher_marlies_van_coillie.pdf"
+            ],
+            "register_url": "https://forms.gle/ciMfaifTtFWN5x6s8",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

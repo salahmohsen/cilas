@@ -1,0 +1,34 @@
+{
+  "sha256": "49f50b6d47b49173a3e227c8e64c1ba57162252764353ce637eef43afe3a01db",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "The Poetics of Ethnography",
+      "title_ar": "فن الإثنوغرافيا",
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Doaa KADDAH",
+          "email": null,
+          "bio": "Doaa KADDAH is interested in the ‘mess’ of our social realities that are excessively pouring out of the imposed order of things and peoples. She holds two Masters degrees in Educational Psychology from the Ludwig Maximilian University of Munich and in Sociology-Anthropology from the American University in Cairo. She completed her thesis on the controversial mobility and presence of the tukuks in the old districts of Maadi in Cairo. She loves sweet potatoes, dark chocolates, bananas and the fruitfulness of random encounters."
+        }
+      ],
+      "schedule_text": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "How, why and for whom exactly do we ‘research’ and write? Are we longing for connecting to what has been devoured by the responsibilities and hassles of our everyday? Or are we, in one way or the other, reproducing the very ‘stuff’ that we aim to disentangle from? Who has the epistemological authority to interpret our own experiences in the ‘field’ and why? Who sets the rules of writing creatively and to what extent should we take them seriously? How are we going to formulate the words to encompass the vivid experiences that we lived through? In this seminar, we explore together the politics of fieldwork and the poetics of anthropological writing.\n\nThis course is designed to be a blend between theory and practice. The theoretical aspect of this seminar relies on the work of authors such as Walter Benjamin, Michel-Rolph Trouillot, Michael Jackson (the anthropologist not the singer ), Edward Said and several other authors who produced contemporary ethnographical texts. The assigned texts serve as an introduction to the discipline of anthropology in an attempt to break the supposedly ‘inevitable’ authority that abstracts thought has over fieldwork\n\nThis course is ideal for those who benefit the most from a collaborative learning environment that is premised on personal experience and initiative. objective is to give each other constructive feedback on our work, where we will all be writers, readers and critics of ethnography!\n\nWhoever signs up for this course is required to conduct his/her own ethnographic fieldwork and textual research. At the beginning, students will be exposed to ethnography and anthropology through theories, which they will get to critically oversee through and after their fieldwork. This approach offers and encourages an authentic understanding of ethnography that manifests differently upon each scholar in the group.\n\nThis course is ideal for those who benefit the most from a collaborative learning environment that is premised on personal experience and initiative. That being said, fluidity in roles is one of this seminar’s essences, as we all will get to be writers, readers and critics of ethnography! We will commence with the assigned ethnographic texts and then with the work of each person in our group. The dynamics rely on constructive feedbacks that demonstrate our attempts to weave in, or simple negate, theory from the different experiential ethnographies.\n\nكيف بالتحديد نقوم بالبحث والكتابة؟ ولماذا؟ ولمن؟ هل نحُن لوصل بما تم التهامه من قبل مسؤليات حياتنا اليومية ومشاحنتها؟ أم أننا نحاول بشكل أو بآخر أن نعيد إنتاج ما كنا نهدف أن ننحل منه من البداية؟\n\nمن لديه السلطة المعرفية لتفسير خبراتنا في حقل البحث ولماذا؟ من يضع قوانين الكتابة الإبداعية ولأي مدى يجب علينا الإلتزام بتلك القوانين؟ كيف يمكننا أن نصوغ الكلمات لتشمل التجارب الحية التي نعشها؟ في هذا المساق نستكشف معًا سياسات البحث الميداني وفن الكتابة الكتابة الإنثروبولوجية\n\nهذا المساق مصمم كي يمزج ما بين النظرية والتطبيق. يعتمد الجانب النظري لهذا المساق على أعمال الكتاب مثل فالتر بنيامين، وميشيل رولف تروليو، ومايكل جاكسون (نقصد الأنثروبولوجي وليس المغني)، إدوارد سعيد، والعديد من الكتاب الآخرون أصحاب النصوص الإثنوغرافية المعاصرة. النصوص المقررة تقدم كمدخل إلى حقل الأنثروبولوجيا في محاولة لكسر النفوذ الحتمي المفترض للأفكار المجردة على البحث الميداني.\n\nيصبح هذا المساق مثاليًا لمن يستفيدون استفادة قصوى من بيئات التعلم التعاونية التي ترتكز على المبادرة والخبرة الشخصية. والهدف منه أن نعطي بعضنا البعض إفادة بناءة حول عملنا، حيث سيصبح جميعنا كتابًا إثنوغرافيين وقراءً ونقادًا لها. سوف نبدأ بالنصوص الإثنوغرافية المقررة ثم عمل كل مشارك في المجموعة. تعتمد الديناميات على الإفادات البناءة التي تعرض محاولتنا على نسج النظرية من الإثنوغرافيات التجريبية المختلفة أو فكها ببساطة.\n\nعلى من يتقدم لهذا المساق أن يقوم ببحثه الميداني اﻹثنوغرافي والنصي. في البدء، سيتعرض الطلاب إلى الإثنوغرافيا والأنثروبولوجيا من خلال نظريات سيراجعونها نقديًا من خلال بحثهم الميداني. وتقدم هذه المقاربة فهمًا حقيقيًا للإثنوغرافيا التي تأخذ أشكالًا مختلفة بالنسبة إلى كل باحث في المجموعة.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

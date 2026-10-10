@@ -1,0 +1,34 @@
+{
+  "sha256": "9195ec40280e6a76e155f77254b5d62947c651028985df3cd9180361098bf73f",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Libertarian Economics and Alternative Model-Building",
+      "title_ar": "البناء التخيلي للمجتمع: اﻹقتصادات التحررية وتصور النماذج البديلة",
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Hussein El-Hajj",
+          "email": null,
+          "bio": "Researcher and translator in humanities and social sciences. Hussein El-Hajj Graduated from the Department of English Literature in the Faculty of Arts at Cairo University in 2014, then finished his year-long program at CILAS in 2015. He started to translate articles about radical political theory since 2012 and is working now to edit a book out of these articles about the political theory of anti-work."
+        }
+      ],
+      "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": null,
+      "location": [],
+      "description": "عندما يتحدى المرء الحكمة المستقرة - القائلة بأن النظام اﻹقتصادي الراهن هو الوحيد الممكن - فإن أول رد فعل يحتمل أن يواجهه هو مطالبته بمخطط تفصيلي لكيفية عمل النظام البديل. من الناحية التاريخية يبدو هذا مضحكًا، فمنذ متى تأتّى للتحول اﻹجتماعي أن يحدث مطلقًا وفقًا لمخطط أي أحد؟ لكن ذلك ﻻ يعني أن الرؤى المثالية فيها ما يشينها، وﻻ حتى المخططات التفصيلية، فقد بنى العديد من المنظرين التحرريين نماذج اقتصادية بديلة للرأسمالية منذ القرن التاسع عشر وحتى اليوم وروجوا لها دون توقف، لكن السؤال اﻷهم هو: ما الذي يمكن أن نتعلمه حقًا من تلك النماذج والرؤى؟\n\nيهدف هذا المساق إلى التعرف على مختلف النماذج اﻹقتصادية البديلة من أقصى اليسار إلى أقصى اليمين في محاولة لتقييم تلك التجارب الفكرية من خلال مقارنتها ببعضها بعضًا، كما يقرأ تاريخ ابتكار تلك النماذج ويحلل آليات عملها التفصيلية بصورة نقدية عاملاً على تكوين سياسات اقتصادية واجتماعية صالحة للتطبيق في عالمنا اليوم. يناقش المساق التصورات التعاونية والجمعوية والمشاعية وكذلك الرأسمالية في ضوء نظرية الخريطة الإقتصادية السياسية ومحاولات تطبيقها التاريخية ساعيًا إلى فهم ما تنطوي عليه من خصائص اجتماعية وشروط إنسانية.\n\nنتوقع من المشاركين والمشاركات أن يقيموا نقاشات حول طبيعة النماذج اﻹقتصادية وخلفياتها الفلسفية ومناظرات حول البدائل الممكنة في المسائل اﻹقتصادية واﻹجتماعية في إطار رؤية أكثر شمولية للتوجهات السياسية المختلفة.\n\nWhen one challenges the conventional wisdom —that the current economic and political system is the only possible one—the first reaction you are likely to get is a demand for a detailed blueprint of how an alternative system would work. Historically, this is ridiculous. When has social change ever happened according to someone’s blueprint? But this does not mean that there is something wrong with utopian visions, nor detailed blueprints, for that many libertarian thinkers have built alternative models to capitalism from the 19th century up until this day, yet the main questions remains: what can we really learn from this models and visions?\n\nThis course aims to know more about different alternative economic models from the far-left to the far-right in an attempt to assess them by comparing them with each other, looking into the history of their innovation, and analyse their dynamics in a critical manner. The course will discuss the mutualist, collectivist, communist and also capitalist visions in the light of the political compass theory to understand the social characteristics and human conditions that they imply.\n\nWe expect from the participants to discuss the nature of these economic models and their philosophical backgrounds and debate for or against the possible alternatives that respond for current economic and social dilemmas in a more holistic approach towards different political tendencies.\n\n**Syllabus:**\n\nWeek 1: Orientation Day: Introduction to the Course and its Syllabus and Playing the Political Compass Game\n\nWeek 2: Types of Economic Anarchy\n\nWeek 3: What is a Mutualist Society?\n\nWeek 4: Old and New Collective Economies\n\nWeek 5: Are you Pro or Against Collectivism?\n\nWeek 6: Remembering Old Communism\n\nWeek 7: Commoning is the New Word\n\nWeek 8: Whatever Happened to Actually-existed Anarchies?\n\nWeek 9: Oxymoronic Libertarian, Geo-Libertarian, Distributism and Property-owning Democracy\n\nWeek 10: Synthesis Anarchy",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+      "own_page": null
+    }
+  }
+}

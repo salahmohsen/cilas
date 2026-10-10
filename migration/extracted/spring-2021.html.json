@@ -1,0 +1,125 @@
+{
+  "sha256": "30b894474dcf7696fb928a0eed28d3316020bff84a8c760359acb8464fe309e9",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring 2021",
+        "season": "spring",
+        "start_year": 2021,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Translation Lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Hussein EL-HAJJ",
+                "email": "sheikh.kamar@gmail.com",
+                "bio": "Hussein EL-HAJJ is from Giza. A graduate of the Faculty of Arts in the Department of English at Cairo University, he joined CILAS as a year-long student in 2014 before becoming CILAS' librarian and founding coordinator of the translation lab. He works on his craft as a translator, specifically in the social sciences and humanities. At CILAS, he has served as Teaching Fellow in the Arts and Humanities and as translation lab coordinator since 2015."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "translation is a fundamental human activity that occurs between languages, cultures, and forms of expression. Without translation, even the most erudite readers would have limited acquaintance with other cultures. CILAS translation lab invites anyone interested in exploring the multiple aspects of translation in a welcoming and instructive environment by approaching its full complexity as art and craft. CILAS invites students and alunmi interested in translating texts related to their studies and interests to join the lab. The purpose of the lab is to acquaint participants with the recurring questions, problems, and pleasures of the activity of translation. The primary focus of the workshop is to produce manuscripts ready for publication. If of sufficient quality, the resulting translations will be published on CILAS website.\n\nThe lab consists of group sessions and sessions dedicated to individual work. Weekly discussions around the work in progress allow the group to explore the microcosm of each text, as well as the wider issues of translation practice. Lab participants will explore in depth all elements of the text, from cultural nuances and historical context to linguistic concerns and punctuation. They will learn the basic tips for producing fine translations through weekly exercises and will gain experience through working on a collective translation along with their individual projects. This means that this lab combines roundtable discussions of general difficulties in translation with a survey of the academic field of translation studies. Topics include the task of translators and the ethics of translation.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/%D8%AE%D8%B7%D8%A9_%D9%85%D8%AE%D8%AA%D8%A8%D8%B1_%D8%A7%D9%84%D8%AA%D8%B1%D8%AC%D9%85%D8%A9_%D8%A7%D9%84%D8%B3%D8%A7%D8%A8%D8%B9.pdf"
+            ],
+            "register_url": null,
+            "own_page": null
+          },
+          {
+            "title": "Space Lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Vanessa LEHMANN",
+                "email": "vanessa.lehmann@gold.ac.uk",
+                "bio": "Vanessa LEHMANN is a researcher, editor and educator in the liberal arts and social sciences/humanities working on Egypt. For her PhD at Goldsmiths, University of London, she investigates urban and ecological changes in contemporary Egypt from the point of view of the desert looking at land reclamation schemes and new town developments in the desert, mining and resource extraction, the production of energy and goods as well as (political, economic and legal) infrastructures of the local desert economy, such as Special Economic Zones. She is coordinator of the space lab since 2020."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The refurbished space lab is dedicated to thinking about, with, through and from space; not necessarily outer-space, the universe or SpaceX’s planned Mars “conquests” even though all of them related to the lab's work. Our focus will be critical spatial inquiry. The idea is that if we think from the point of view of space, a number of relationships and issues will surface. This year’s focus will be “Living, researching and acting in the Anthropocene”. The lab invites its participants to explore of following spaces/sites: the Nile, the desert, the human body, the industrial zone or port, the neighbourhood and the agricultural field. Starting from these, a number of thematic issues will be unpacked, i.e. land rights, infrastructures, finance, labour, mapping, technologies of geo- or bio-engineering and we will see how they relate to and affect each other.\n\nContemporary debates such as those on the Anthropocene and climate justice will be introduced with a particular focus on research and environmentalism happening in Egypt while also placing these issues in their broader context. Methodological approaches will include New Materialism, psycho-geography, science-fiction writing, fieldwork-driven research as well as action-oriented participatory research. Outcome of the Space Lab will be an individual or group project in which you will be able to investigate an environmental/spatial issue or site in Egypt yourself. The format can be a text (academic or story), or a visual or audio collage (exhibition).",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": null
+          },
+          {
+            "title": "Media Lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Ali ATEF",
+                "email": "anthraligy@gmail.com",
+                "bio": "Ali ATEF is a doctoral candidate in anthropology at the University of Chicago currently researching the history of film in Egypt. His research interests are in film history, archives, visual anthropology, and movement and migration. He was previously a senior researcher at The American University in Cairo’s Social Research Centre, where he also taught anthropology of Arab societies. He has an MA in socio-cultural anthropology from Columbia University (2010). Ali cooks exquisitely and has been coordinating the media lab since 2020."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "Because the term ‘media’ has varying meanings and practices, CILAS Media Lab asks: how might we examine and shape our media practices in the world today to produce knowledge? With this question in mind, we are building a media lab in do-it-yourself (DIY) fashion based on the inquiries of the lab dancers (participants). The media lab questions both a) what media is and b) where it can take us in our journey to produce knowledge.\n\nThe lab's mission is to support participants’ inquiries into the practical, philosophical and socio-historical dynamics of contemporary media practices. Its offerings range from short DIY courses in film/photography to teaching modes of sensory inquiry. The media lab is designed to comprise a broad research agenda and collaborative ethos built on interdisciplinary research that bring together diverse fields of interest. Enrolled participants are welcome to bring their initiatives and projects to the media lab to produce audio, visual, audio-visual, or digital works. Technology, media and material culture do not exist in a vacuum but are active sites for lively socio-historical inquiry. In collaboration with CILAS’ other labs and courses, we are especially interested in thinking through the expression, documentation and representation of the neighborhood and larger city/spaces we are a part of and in conversation with.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/memory_and_history_-_text_and_image_practicum.pdf"
+            ],
+            "register_url": null,
+            "own_page": null
+          },
+          {
+            "title": "Pedagogy Lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Karim-Yassin GOESSINGER",
+                "email": "karim@ci-las.org",
+                "bio": "Karim-Yassin GOESSINGER serves as founding director of CILAS. As an educator and scholar-activist based in Cairo, Egypt, he combines his background in philosophy and urbanism with body-based practices, including Qi Gong and tea drinking. As an active member of the Ecoversities Alliance he uses art and decolonial pedagogies to denaturalize colonial frames of reference and material architectures that make up the social. Together with Jana, he coordinates the pedagogy lab."
+              },
+              {
+                "name": "Jana Hollá",
+                "email": "q.tocek@gmail.com",
+                "bio": "Jana Hollá holds a PhD in Anthropology from Charles University in Prague. Her academic interests refocused on the issues of identity and belonging in relation to interactions with the (culturally foreign) Other. Currently, Jana works as a trainer, group facilitator, consultant and educator. Originally from Slovakia, she moved to Cairo a decade and a half ago embracing the challenges and opportunities living abroad offers. She teaches at Ain Shams University and coordinates the pedagogy lab with Karim."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "Education (in the liberal arts) should be an “uncoercive re-arrangement of desires” oriented towards an “ethical relationship towards the Other – before will” (Spivak).\n\nIn the spring, the pedagogy lab returns to appreciate those qualities of education that are bemoaned by current standardized testing and measurement trends as defects to be overcome. Instead of arguing for education to become stronger, more secure, more predictable, and risk-free, we will consider the case for weak education as a practice that is slow, difficult, insecure, unpredictable, and full of risks and uncertainties.\n\nWith Geert Biesta and Vanessa Andreotti as our interlocutors, we will learn about both weak and post-colonial/decolonial thought in education. The Pedagogy Lab invites us to think about higher education, in particular, philosophically and in terms of ‘actionable’ curricula. Lab participants will discuss assigned readings and develop/design a small ‘core’ curriculum in Arabic and/or English that they will teach to adults in partnership with StARS and Beit Yakan once a week during the second half of the semester. Some of the questions we will raise and address include:\n\nHow is an education based on \"uncoercive rearrangement of desires\" different from “transformative” or “emancipatory” education?\n\nHow can a pedagogy of self-reflexivity, self-implication, dissensus, and discomfort support people to go beyond denial and feelings of shame, guilt, or deceit (Taylor, 2011)?\n\nHow can we learn from social breakdowns in ways that complicate conversations (Pinar, 2009) and that might open ourselves to ethical obligations (Zembylas, 2010) and to being taught by the world (Biesta, 2012)?\n\nHow can one ethically and professionally address problematic patterns that abound in educational approaches benevolently concerned with helping, fixing, defending, educating, assimilating, or giving voice to the Other (Andreotti, 2011)?\n\nHow can we promote a place- and community-based approach to liberal arts education away from an Ivory Tower and towards a more grounded Pigeon Tower?",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

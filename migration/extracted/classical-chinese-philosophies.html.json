@@ -1,0 +1,34 @@
+{
+  "sha256": "eabb566e6b77a2062e623e71e4484a808239951d5401c45a604144c842711132",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Classical Chinese Philosophies",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Robin Weiss",
+          "email": null,
+          "bio": "Robin Weiss received her Ph.D. from DePaul University, and taught most recently at Mount Allison University in Canada, where she first began teaching Chinese philosophy, alongside ancient Greek philosophy. She specializes in ancient Greek and Roman Philosophy, and in Roman Stoicism in particular, where it relates to the connection between thought and action. She believes that Chinese philosophy can shed new light on these questions, and has, for this reason, increasingly incorporated Chinese philosophy into her courses at AUC. She is currently writing a book that explains the Stoics’ views on everything from pragmatism to utopianism, complicity to non-compliance, friendship to cosmopolitanism—and is doing her best to learn Chinese."
+        }
+      ],
+      "schedule_text": "Wednesdays, 10:00 am to 1:00 pm, and 5:30 pm to 8:30 pm",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "Chinese philosophy is said to have begun with the debate between the thinkers Kongzi (Confucius) and Mozi (Mencius) in the 6th century B.C.E. – a period when China consisted of numerous independent states. It was a time known as the “hundred schools” period (bai jia zhen ming) – literally, the time when “a hundred schools competed to make themselves heard” – a fact attesting to the remarkable breadth of philosophical views put forward. In this course we will think deeply with seven of China’s most incisive, eloquent and influential thinkers belonging to the Confucian tradition, the Daoist, Mohist and Fajia schools, respectively.\n\nEarly Chinese philosophers defended tradition and proposed social reforms. They included educators, humanitarians, pragmatists, politicians, hermits, and mystics, who variously speculated about right and wrong, individual and society, nature and culture, knowledge and ignorance. The philosophers we will read held competing visions of the good life, some insisting on the right kind of society for human beings to flourish, others arguing that, in order to pursue the good life, we must allow ourselves to fall back into a preexisting harmony with Nature.\n\nArguably, the most important lesson to be learned from this rich and complex history is that (early) Chinese philosophy is not a single theory, thinker or tradition, but rather a diverse and lively conversation that has been going on for more than 2,500 years, and that continues to evolve in our time.\n\nWhy Apply:\n\nTo discuss “perennial questions” around Oolong and Pu’erh tea with two enthusiasts of Chinese philosophy and the art of tea\n\nTo read closely, and to listen closely (to podcasts), and to be exposed to a lively and ongoing conversation taking place in China\n\nTo learn how classical Chinese philosophies relate to the good life, as well as to ancient Chinese martial arts, such as Qi Gong and Taiji\n\nTentative Flow of the Course\n\nSession One: What Makes Chinese Philosophy Different than Western Philosophy? Chinese Philosophy Describes Human Nature and What We Can Do With It\n\nReading: The Concept of Man in Early China, by Munro McDonald\n\nIn-Class Activity: Talk by I-Kai Jeng on Chinese terminology (with focus on the concepts of ren, ‘humanity,’ and li, ‘ritual’)\n\nSession Two: What if Human Nature is Bad? Mozi’s Answer: A Hierarchically Structured Society and Impartiality\n\nReading: Mozi, Selections from The Mozi (p.54-107), with a special focus on Chapter Eight; “Honoring the Worthy”; Chapter Eleven, “Obeying One’s Superior; and Chapter; and Chapter Sixteen, “Impartial Caring.”\n\nSession Three: What if Humans Nature Tends to the Formation of Relationships? Confucius’ Answer: A Society Based on Reciprocal Relationships\n\nReading: Confucius, The Analects, p.1-54.\n\nSession Four: What if Human Nature is Human Nature is Good? Mengzi’s Answer: A Society Based on Fostering Inner Virtue\n\nReading: Mengzi, Selections from the The Mengzi, p.111-156, with a special focus on “Heart” (6A7); “Ox Mountain” (68A); “Seeds” (67A), “Human Nature is Like Cups and Bowls” (6A1); Human Nature is Like Water” (6A2).\n\nSession Five: What If If Human Desires Conflict? Xunzi’s Answer: Correctly Channeled Human Desires and and a Harmonious Society\n\nReading: Xunzi. Selections from The Xunzi, p.347-294.\n\nSession Six: What if Society Is the Problem? Zhuangzi’s Answer: A Return to Nature\n\nReading: Zhunagzi, “The Inner Chapters,” p.203-246.\n\nSession Seven: How are We To Act If Not According to Proscribed Norms? Zhuangzi’s Answer: Spontaneous Skill and “Listening with the Qi”\n\nReading: Zhunagzi, “The Inner Chapters,” p.203-246, especially “In the World of Men” and “Let it Be, Leave it Alone.”\n\nIn-Class Activity: finalization of a Questions Catalogue as method – to present to experts in Chinese philosophy at National Taiwan University (NTU).\n\nSession Eight: How Can We Discover the Truth Without Distorting It? Zhuangzi’s Answer: Avoiding the Traps of Language and Shifting Perspectives\n\nReading: Laozi, The Daodejing, p.157-202.\n\nIn-Class Activity: Guest lecture by Xiao Hu on the history and philosophy of ancient Chinese martial arts on the concept of qi (and/or guest lecture by expert on martial arts from Taiwanese Martial Arts in the United States).\n\nSession Nine: What is the Chinese Conception of Nature and the World? Laozi’s Answer: Nature is a Spontaneous Self-Ordering Principle\n\nReading: Laozi, The Daodejing, p.157-202.\n\nIn-Class Activity: Skype with experts in Chinese philosophy at NTU, and ask them questions from our catalogue.\n\nReadings are taken from the collection Readings in Classical Chinese Philosophy, edited by Philip. J. Ivanhoe and Bryan Van Norden.",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/CIQFumN6AMkDNN1K2",
+      "own_page": null
+    }
+  }
+}

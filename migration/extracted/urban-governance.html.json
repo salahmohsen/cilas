@@ -1,0 +1,32 @@
+{
+  "sha256": "f803237f5d050e1bd0e70914590c373207278a7617a7603884c472268b784482",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Emerging Modes of Urban Governance - The Urban Global South in Perspective",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Karim-Yassin GOESSINGER",
+          "email": "karim@ci-las.org",
+          "bio": "Karim-Yassin GOESSINGER studied political philosophy and urban governance in the Netherlands, Brazil and France. He has worked with a range of development agencies in Latin America and the Middle East in fields including micro-finance, informal housing and local governance. In addition to his strong interest in social and political theory, Karim-Yassin is passionate about designing educational experiences. A Dalai Lama Fellow, he enjoys martial arts, language, world music and tea. After his graduate studies at Sciences Po Paris, he set out to create the Cairo Institute of Liberal Arts and Sciences (CILAS). As a fellow at CILAS, he coordinates the field of study Social Sciences and co-directs the yearlong study programme in the liberal arts."
+        }
+      ],
+      "schedule_text": null,
+      "weekdays": [],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "description\n\nAs a result of rapid urbanisation, in 2008 - for the first time in history - more than half of the world's population became urban. Urban explosion - the expansion of cities - is expected to largely materialise in so-called developing countries, otherwise referred to as the urban global south. Poverty, informality and exclusion will consequently acquire an inevitably urban face. In this course we will study, amongst other things, the twin forces of globalisation and urbanisation. In an effort to make sense of this confusing concept of governance, we will examine the socio-economic and technological dynamism that has come to characterise the 21st century and that is expected to diffuse decision-making prerogatives and duties. The course introduces students to both the potentials and the shadow sides of cities in the developing world as well as instil in students a wise appreciation of the complexity of the global urban future. It does so by engaging with both academic literature in disciplines ranging from critical geography to urban anthropology and non-academic literature including fiction and journalistic writing; films depicting the living conditions, inequalities and realities of the urban global south; and plenty of anecdotes by the course coordinator.\n\nexpectations\n\nStudents are expected to engage with assigned readings and viewings. (Uninformed participation in post-discussions is not allowed).\nStudents are expected summarise three assigned readings or viewings (paper or film).\nStudents are expected to give one presentation in on the 'transformation' of a city in the global south over the past decade in groups of three.\nStudents are expected to visually document in form of a photo essay a walk through their neighbourhood.\n\nobjectives\n\nBecome acquainted with the concepts of the spatial turn and socio-spatial justice.\nLearn about the production of space, the right to the city and arrival cities.\nUnderstand how the twin forces of globalisation and urbanisation correlate.\nCritically assess the term urban global south.\nAnalyse how poverty, exclusion and violence in the urban are intertwined.\nDiscuss the analytical and practical meaning of conventional distinctions between formal/informal, legal/illegal, ordered/disordered.\nDevelop an understanding of the socio-economic and technological dynamism of the 21st century.\nGain insight into the decision-making process at the urban level and recognise the diffusion of decision-making power.\nBe introduced to the notions of 'insurgent citizenship' and 'rebel cities'.\nIdentify and mobilise city-specific resources.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

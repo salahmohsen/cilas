@@ -1,0 +1,102 @@
+{
+  "sha256": "b055249d589ccc3d098aeb63a2965b113b35ff88107af8d33636759e9720f258",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "First Semester 2019-2020",
+        "season": "fall",
+        "start_year": 2019,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Humanities and Arts",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "Omar El-Rakhawy",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The Humanities are the vast areas of research and study that comprise all human-centric disciplines, from philosophy, the oldest of disciplines, to history, anthropology, literature, art, ancient and modern languages, law, politics, and religious studies. Overall, the humanities deal with the question of our humanness, of what it means to be a human in general, but more importantly, today. The humanities, therefore, engage with and embody sets of values and principles and narratives, and are generally more philosophical than the social sciences, which try to stay closer to the scientific methodology as practiced by the hard/physical sciences. The difference, although some interests are common and even overlapping, is a methodological difference, something we will come to discuss in our sessions.\n\nThis course will be an overall introduction to the humanities through a focus on the theme of religion. The department of Religious studies utilizes an interdisciplinary approach of many humanities disciplines along with social sciences in an attempt to respond to, explain, and engage with the scientific, political, social, and intellectual questions about the nature of religion. As such, we will be reading texts from different humanities disciplines, passing through discussions about the enlightenment, science, religious authority, and historical narratives. We will explore these issues through readings in philosophy, literature, anthropology, and history.\n\nI find a lot of pleasure and reward in discussing big questions, and religion is one of those phenomena that pose the biggest questions of all, from the metaphysical questions about the nature of existence to the phenomenological observations of the religious life and religious experience to the historical details that illuminate narratives and counter-narratives, and finally the socio-political concerns with its many questions regarding law, justice, ethics, authority, tradition, modernity, etc. I find it very important and fruitful that we learn to talk about religion, or any other topic that concerns us as humans, in ways that may be new, different, and therefore illuminating.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/u/2/d/e/1FAIpQLSeubj3Ezr26zi6KnNfPr_b0hgybq9_VzHeoZy6aKy8yC20I_Q/viewform?usp=send_form",
+            "own_page": null
+          },
+          {
+            "title": "Natural and Social Sciences",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "Muhammad Al-Araby",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "Philosophy of science is the realm in which natural sciences, social sciences, and humanities can meet to expose the basic foundations of the human-being-in the world. As a philosophical inquiry into the nature of science and its “truth,” this field deals with the ultimate goals of scientific knowledge and practice. It has become an essential tool to understand human knowledge as a changing and active whole.\n\nThis core course is to present a panoramic history of modern science, it aims to explore the philosophical premises that differentiate it from the “Old Knowledge,” “Metaphysics” “Pseudoscience” and all other modes of human knowledge to ask what is science? And how humanities and social sciences can fit within its criteria. Focusing on the evolution of sociology of scientific knowledge and philosophy of science during the twentieth century, it aims at elaborating the main schools of science as a social activity. The course shall touch on positivism, post-positivism, and critical realism within the larger controversies of modernity and postmodernity. Throughout these debates, some lights will be shed on the ideas and arguments of figures like Karl Popper and Thomas Kuhn. The last part of the course will be a reflective exercise on the ever-present issues of ethics of scientific practices, the critique of scientific methods, language and scientific inquiry, and the role of economy and “power” in creating and sharpening the relations between scientific knowledge and social interests.\n\nBy the end of the course, the students shall be aware of the basic foundation of scientific knowledge. Also, they shall able to explore the current state of philosophy of science in the light of ongoing technological and ideological shifts and be able to question the validity of scientific truth, progress, objectivity, even the utility of science in creating a better world by using critical tools and multiple lenses.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/u/2/d/e/1FAIpQLSeubj3Ezr26zi6KnNfPr_b0hgybq9_VzHeoZy6aKy8yC20I_Q/viewform?usp=send_form",
+            "own_page": null
+          },
+          {
+            "title": "Skills Lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Mariam Soliman",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Manar Imam",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Hussein El-Hajj",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The skills lab run in parallel to the core curriculum. it starts from the organic towards the theoretical. dividing The lab into two parts, the practical and theoretical. Where students will be discussing theories stemming from practices and activities, in order to further reflect and understand the experimental part.\n\nAlthough we’re not researchers or artists, together we will engage with our surroundings in order to discover different ways of seeing and surviving, through a little bit of imagination and art. Documenting our findings along the way using visual art, sound mixing and storytelling.\n\nAn exhibition of our harvest is expected at the end of the semester. However, practices offered in this year’s skills lab is mainly “process-based” focused on social interaction and is aimed to provoke our different skills, and ways of expressing.\n\nMapping our journey through the streets of Alexandria, Our theme will be focused on seeking to understand how urban topology and aesthetic affects the city’s sense of identity, how it shapes and redefines our own identities, relationships and future.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/u/2/d/e/1FAIpQLSeubj3Ezr26zi6KnNfPr_b0hgybq9_VzHeoZy6aKy8yC20I_Q/viewform?usp=send_form",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

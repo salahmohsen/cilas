@@ -1,0 +1,36 @@
+{
+  "sha256": "12b69c6716f5655988574594ed1389dca733e1362ee05c688b3b9e9646c6df34",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "theorising the state in Africa",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sara SALEM",
+          "email": "salem.m.sara@gmail.com",
+          "bio": "Sara SALEM is a PhD candidate at the Institute of Social Studies, Erasmus University, in the Netherlands. She is working on the 2011 Egyptian revolution from the perspective of critical political economy, and uses Marxism as a lens through which to understand the shifts happening across the Middle East and Africa today. She is half Egyptian and half Dutch, and grew up in Zambia, a place she still considers home. Her hobbies include postcolonialism, feminism, Marxism, and other conspiracies, and when she isn’t reading you can find her either baking or enjoying a coffee."
+        }
+      ],
+      "schedule_text": "Wednesdays at CILAS starting January 6th, 2016, from 10 to 12:30 in the morning and from 5:30 to 8 in the evening",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-06",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "“the state” is a term we hear all the time: in the news, in personal conversations, on TV shows. We read about it in books and we come across it in official documents. It’s a term we should be able to define because it’s literally everywhere, and yet it continues to be one of the biggest enigmas in political thought. What exactly is “the state”?\n\nthe aim of this course is to show how different groups of people at different times have looked at the state in radically different ways. A lot of the focus has been on theories and definitions put forward by your typical political theorist: a male, European or American in origin, and likely to be an academic. In this course, the aim is to instead chart a people’s history of the state: how have groups most affected by the state understood it, challenged it, and resisted it? The aim is to show that the state is not a single entity, and that there is no “one state.” Instead, the state is made up of different layers.\n\nThere will be a strong postcolonial focus in this course, and the geographical context will be Africa. Africa is often understood as a continent without variations, and Egypt is often understood as existing outside of Africa. This course aims to situate Egypt within the African continent, as well as to show the strong differences between African countries as well as the historical experiences that connect them. A major aspect of this course is to imagine a pan-African project. Using Walter Mignolo’s concept of “border thinking” will allow us to think from the margins rather than from the center.\n\nwhat to expect\n\nDeconstruct and de-familiarize the concept of the state in order to approach it with fewer assumptions.\nUnderstand the power relations inherent in the state, the groups who benefit from the state and its effects and the historical development of the state in order to show that many other groups suffer from the current structure(s) of the modern state.\nLook at the state from the bottom-up by focusing on marginalized groups and the stories they tell about the state.\nCompare states in Africa to one another in order to better demonstrate the connections between and among African nations.\nUse “border thinking” (Walter Mignolo) to imagine a different Africa.\n\nwhy apply\n\nTo make the familiar unfamiliar by forgetting what we think of the state and society and starting again.\nTo break down the barriers between states and see the world as highly interconnected and dependent.\nTo understand the way power operates through the state in order to create us as subjects.\nTo understand the ways in which class, gender, race, religion and other social categories were historically constructed and how they intersect to produce us today.\nTo understand the connections between colonialism and the modern nation state in the African context.",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

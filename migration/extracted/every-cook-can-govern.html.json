@@ -1,0 +1,34 @@
+{
+  "sha256": "d064c86f9c3bbf97c5c690bf4beab5ccb53fed457ca65d1ddf21251fa59e947b",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Every cook can govern",
+      "title_ar": null,
+      "subtitle": "Reflections on the philosophy of democracy and its practice",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Hussein El-Hajj",
+          "email": null,
+          "bio": "is an activist and researcher in the field of alternative higher education. He is the founder/director of CILAS in Alexandria, where he is also teaching. His craft is translation, especially in the humanities and social sciences. In terms of research, Hussein works on alternative arts education in the Middle East, both in its historical and contemporary forms (El-Hajj 2017). He has contributed to “Another Roadmap School”, an international platform, hosted at the Zurich University of the Arts, that “provides open spaces for trans-regional exchange and learning in arts education as an engaged practice committed to social change”."
+        }
+      ],
+      "schedule_text": "Thursdays from 6:00 pm to 8:30 pm",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": "18:00",
+      "end_time": "20:30",
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "It might be that one of the simplest definitions of democracy is what the American president Abraham Lincoln once said that it is the “Government of the people, by the people, for the people”. It is also said that democracy is the fulfillment of complete collective authority in which the moment of election and voting is the moment that the citizen emancipate within his community, or as the French philosopher Rousseau once wrote: “In a democracy, people are free only at the moment of giving their votes. As for the rest of the time, they are the government’s slaves”. This hidden slavery in the representative organizations inspired the American poet Charles Bukowski to say, “The difference between democracy and dictatorship is that in democracies you vote first then you receive orders, but in dictatorships, you don’t waste your time voting.”\n\nThe one reason to reject establishing direct democracy from the perspective of most political thinkers remains that the masses cannot meet to govern all the time, it would be hard to imagine that the residents of a big city like Alexandria gather at one of its squares to vote on the decisions that affect their daily affairs as it used to happen in ancient Athens or what it is called a “city state”. And for that authority must be mandated, but once this happens, there is no more democracy, and here lays the democratic paradox.\n\nMore democracy or less democracy? This course is browsing the philosophy of democracy and its practice. We start with reading the various philosophical stances of the radical left on democracy, get introduced to its old and recent history, and analyze its patterns in contemporary societies contexts. This course is trying to deconstruct the many aspects of the concept of democracy as an entry for political philosophy and its sciences, and it ends with a non-dramatic act about the politics of democracy between centralism and de-centralism.\n\nCourse Readings:\nIn Defence of Anarchism by Robert Paul Wolff\nDebunking Democracy by Bob Black\nThe Democratic Mystification by Jacques Camatte\nPolitics without Politicians by Aki Orr\nEvery Cook Can Govern by C.L.R. James\nHatred of Democracy by Jacques Rancière\nDemorcatic Centralism debate (by V. Lenin and others)\nThe Tyranny of Structurelessness debate (by Jo Freeman and others)\nThe Democracy Project: A History, a Crisis, a Movement by David Graeber\nOn Conflict and Consensus by C. T. Lawrence Butler\nDebate: From Democracy to Freedom by CrimethInc. Ex-Workers’ Collective",
+      "flow_links": [],
+      "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+      "own_page": null
+    }
+  }
+}

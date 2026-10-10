@@ -1,0 +1,34 @@
+{
+  "sha256": "38f42ef594e1b7978c07f2d99ada9c50aefc4df4399a5d5986f893e5c0c7fdff",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Voice of the Artist",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sama Waly",
+          "email": "swaly@saic.edu",
+          "bio": "Sama Waly completed her Masters of Fine Arts in Film, Video, New Media & Animation at the School of the Art Institute of Chicago. Her practice incorporates moving image, installation and performance art, and explores notions of hauntology, historiography, and a tension between order and chaos in urban and natural environments. Her work has been featured in various exhibitions in Cairo, Chicago and internationally. With a BA in Visual Arts and Arab & Islamic history from the American University in Cairo, she has worked with a range of cultural institutions in the fields of development, cinema, contemporary art and art history, and has published her writing in various online platforms. She is passionate about the history of culture in Egypt with a focus on the 19th and 20th centuries, her current essay, commissioned by MHWLN, is entitled \"Pan-Arabism post-Nasser: Egypt and the Union of Arab Plastic Artists (1972-1978)\". Since completing her masters, she developed an enthusiasm for advancing free, open access to knowledge as a fundamental right, and is grounding her daily practice as a researcher in this."
+        }
+      ],
+      "schedule_text": "On Thursday mornings from 10:00 am to 2:30 pm and evenings from 5:30 pm to 8:30 pm",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "Focusing on Egypt and the Arabic speaking world, this course intends to explore the production and reception of artworks within the context of modernity, nation-building and post-colonialism in the 20th and 21st centuries. Class discussions will be informed by in-class analysis of artworks, and readings by prominent scholars in the history of art in the region.\n\nSchedule\n\nI. Fayoum Portraits & Islamic Arts\nWhat is “Islamic art” ? How and why was it replaced by Western art at the end of the 19th century in the muslim world? And why was there a resurgence in the late 20th century?\nReading: “Re-exploring Islamic Art: Modern and Contemporary Creation in the Arab World and Its Relation to the Artistic Past”, Silvia Naef. “The Status of Islamic Art in the 20th Century”, Wijdan Ali. “Infinity and Accident: Strategies of Enfoldment in Islamic Art and Computer Art”, Laura U. Marks.\n\nII. 1908: Founding fathers of Modern Art in Egypt: Mahmoud Moukhtar et. al.\nArtists: Mahmoud Moukhtar, Mahmous Sa’id, ...\nIs it Islamic? Is it Arab? From Islamic to Pharaonic imagery, and imagining the modern-nation state.\nReading: “Mahmoud Mukhtar: ‘The first sculptor from the land of sculpture’” Alexandra Dika Seggerman. “Modern Arab Art, Formation of Arab Aesthetics”, Book, pp. TBA, Nada Shabbout.\n\nIII. Photography & Social movements\nArtists: Van Leo, Arman, Hassia, Lee Miller, ...\nWhat links can we make between photography and the construction of national identities?\nReading: “A Social History of Early Arab Photography or a Prolegomenon to an Archaeology of the Lebanese Imago”, Stephen Sheehi. “The Third Citizen”, Akram Zaatari.\n\nIV. Arab Surrealisms (1937 and 1970s resurgence):\nArtists: Art et Liberté, Les Essayists, Ramsis Yunan, El Telmissany, et. al.\nSurrealist internationalism, back then, and yet again: Why? How? Where?\nReading: “The Nile of Surrealism”, Abdel Kader Al Janaby. Two manifestos of Surrealism (1937 - 1970s). “Egyptian Surrealism and Degenerate Art in 1939”, Don LaCoss.\n\nV. The infamous ‘Contemporary Art Group’\nArtists: Abdel Hadi El Gazzar, Hamid Nada, Gazbiya Sirry, Hassan Soliman, ...\nThe height of Egyptian modernism, mapping the foundations of art education and cultural institutions in Cairo.\nReading: “Art Education and the Emergence of Radical Art Movements in Egypt: The Surrealists and the Contemporary Arts Group, 1938–1951”, Patrick Kane. “Exceeding Realism: Utopian Modern Art on the Nile and Abdel Hadi Al-Gazzar’s Surrealistic Drawings”, Avinoam Shalem.\n\nVI. The Art & Life Group...followed an arts and crafts style:\nArtists: Hassan Fathy, Ghada Amer, ...\nWhat lies behind the dichotomy: traditional vs. modern?\nReading: “Tradition vs. Modernity: The Quest for a Cultural Identity”, Pablo Lafuente. “Modernity and Postcolonial Ambivalence” Okwui Enwezor. “Arts Writing in 20th century Egypt: Methodology, Continuity, and Change” Clare Davies.\n\nVII. “Contemporary Arab Representations = Sensational One Liner” — S.R.\nArtists:\nIn what contexts are our artworks exhibited? Received? Written about? Can one make an exhibition about a whole continent?\nReading: “Art and the Foreigner's Gaze: A Report on Contemporary Arab Representations” Pablo Lafuente. “A Conversation with Okwui Enwezor” Carol Becker and Okwui Enwezor.\nWatch: Sarah Rifky at the Future Curatorial (https://vimeo.com/122451970).\n\nVIII. Contemporary Art in Downtown Cairo\nMapping Contemporary Art in Cairo, in Downtown, what is the impact of space, architecture on art production?\nReading: “The Street and the Politics of Dissent” Asef Bayat. “The Arab Revolution Takes Back the Public Space” Nasser Rabbat.\nWatch: Lucy Ryzova on Downtown Cairo as contested space (https://vimeo.com/87547153).\n\nIX. Moving Image practice & The Senses\nNew Media arts, moving images: Is there an ‘Arab’ (Egyptian or Cairene) avant-garde?\nReadings: “What Can a Body Do? Answers from Trablus, Cairo, Beirut and Algiers” Laura Marks. “The Singular of Seeing [Al Marra Min al Nazar]” Akram Zaatari. “Cairo’s Avant Garde” Seth Thompson.\n\nX. Class Wrap Up\nStudent works presentations (Details TBA).",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/CIQFumN6AMkDNN1K2",
+      "own_page": null
+    }
+  }
+}

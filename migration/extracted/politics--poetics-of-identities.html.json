@@ -1,0 +1,36 @@
+{
+  "sha256": "b6f4b0ecd66e530755f5d66c4dc558d047ae1ea511f91cbfed14134134e83114",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Politics & Poetics of Identities",
+      "title_ar": null,
+      "subtitle": "On belonging and alienation in an age of uncertainty",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Anne Clement",
+          "email": "anne.clement@alum.utoronto.ca",
+          "bio": "Anne CLEMENT pursued a 'classe préparatoire aux grandes écoles' (hypokhâgne) in Reims to then enrol at Sciences Po Paris. After graduating from Sciences Po, she moved to Egypt to hone her Arabic language and work in the French section of Cairo University’s FESP. She subsequently completed a Master’s degree in Middle Eastern Studies at the National Institute of Oriental Languages and Civilisations (INALCO) in Paris and a Ph.D. in the same field at the University of Toronto. After three years of archival work in Cairo, she received a two year fellowship from the Weatherhead Center for International Affairs at Harvard University. In 2012, she was hired as assistant professor of history and international studies at North Carolina State University. Her passion for both the Middle East and alternative education eventually led her to join CILAS. Anne coordinates the field of study Culture and serves as Research Director at CILAS."
+        }
+      ],
+      "schedule_text": "Saturdays: early birds from 10:00 am to 12:30 pm, and night owls from 5:00 pm to 7:30 pm",
+      "weekdays": [
+        "sat"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2015-03-28",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "In this course, we will examine the complex processes of construction, performance, and representation of one’s multiple identities. We will look at hybrid, shifting, imagined, traveling, displaced, conflicting, fragmented, repressed and expressed identities. We will both deconstruct the politics and explore the poetics of identities. With this purpose in mind, we will question the various dimensions of one’s identity by critically examining the concepts of race & ethnicity, gender, class, nationality & citizenship, sect, and generation.\n\nIn order to do so, we will rely on both foundational texts in the field and literary and cinematographic materials. We will also reintroduce space and time in our reflection, by exploring the notion of context(s), playing on various scales of analysis (from the psychological/interpersonal to the societal level), and studying shifting conceptions of identity through different historical periods. We will focus more specifically on the notion of “coming of age” and the issues related to identity formation and sense of belonging/alienation among the youth in the so-called global South and beyond.\n\nFinally, this course will provide plenty of space and time for students to reflect on their own multiple identities, positionalities, and voices. Please note, however, that this short description merely constitutes a tentative flow for the course and that students’ participation will be solicited to help co-design a syllabus that closely addresses their matters of concern.\n\nExpectations\n\nParticipants are expected to submit weekly reactions to the readings, videos, artistic pieces in form of a written paragraph, a mind-map and/or a three-min pitch.\n\nParticipants are further expected to prepare a set of questions that can inform conversations with three guest speakers throughout the trimester.\n\nParticipants are expected to design and produce trimester-long individual or group projects (in the form of a research paper, a social media campaign, or a piece of art)\n\nWhy apply?\n\nTo increase the students’ awareness of the multiplicity, fluidity, and socially constructed nature of identities.\n\nTo develop their sensitivity to the complex dynamics of identity construction and negotiation.\n\nTo familiarise them with the concepts of performance, performativity and representation.\n\nTo encourage them to deconstruct the politics and explore the poetics of identity.\n\nTo engage critically with the course material and creatively relate it to their own lives and experiences.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

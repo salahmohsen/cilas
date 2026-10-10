@@ -1,0 +1,161 @@
+{
+  "sha256": "c2969dbb5a96f3829c7597b4e7bf75eff722edf7c393dcfa5d5df6ca042f4e7c",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Trimester three 2015-2016",
+        "season": "spring",
+        "start_year": 2016,
+        "start_date": "2016-03-27",
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "bicycle diaries",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "fridays 10:30 am to 12:30 pm",
+            "weekdays": [
+              "fri"
+            ],
+            "start_time": "10:30",
+            "end_time": "12:30",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "the goal of this course is to learn about cycling and urban mobility in theory and in practice. The practical part is two-fold. On the one hand we will acquire some basic mechanical skills and general knowledge of how a bicycle works, how it has developed and why it has been such a groundbreaking design object. On the other hand, we will try and ride out to various places in the city to experience Cairo on a bicycle to be able to discus the positives and negatives of two-wheeled transport in an urban environment from a firsthand perspective.\n\nIn the theoretical sessions we will delve into the question of urban mobility from the perspective of the bicycle. We will look critically at the dominance of motorised transport and the influence of the car-industry in urban design. We will study places where man-powered transportation has been integrated into the fabric of the city in countries of the global south. We will look at the causes and the effects behind the shift and will try to understand the dynamics behind some of the great success stories of urban cycling to answer the driving question of this course: how were these cities transformed into the bike-friendly places that they are today?",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "bicycle-diaries.html"
+          },
+          {
+            "title": "elites in history, society, and politics",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "wednesdays from 5:30 to 8 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Events are often studied from the perspective of “the people.” Elites, however, are just as much a part of the picture as the masses. Changes in elites—or the ruling class—can often explain why certain events happen and the patterns that society takes after these events.\n\nThis class focuses on the Egyptian context and aims to trace the formation of elites through time. Taking a historical, political and sociological perspective, the class goes back to the time of the Mamlukes and continues all the way up to the 1990s in order to trace how Egypt’s elites have changed over time.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "elites-in-history-society-and-politics.html"
+          },
+          {
+            "title": "change: a historical survey of oppression and resistance",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "tuesdays from 5:30 to 8 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Oppression has existed since the advent of human history. The other side of oppression is resistance and the emergence of liberatory politics and practices that counteract oppression. This course invites us to examine processes of change by looking at change not as as a static concept but as a fluid one that continues to emerge and reemerge across time and space.We will do so by examining liberatory politics that arose in the face of 4 different forms of bondage: slavery, labour, fascism and finally new forms of imperialism.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "change-a-historical-survey-of-oppression-and-resistance.html"
+          },
+          {
+            "title": "everyday piety from the margins",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "tuesdays from 5:30 to 8 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Studying religious practices from the margins is telling the fragmented-incoherent stories of what is out of order, uncertain, and unstable within the everyday piety of Muslims and Christians (and sometimes Jews!) in contemporary Egypt. In this course, we will mutually emphasise two main interrelated pillars while investigating the anxieties and the doubts that accompany folk religiosities. Firstly, we will visit the spaces where people struggle for the sacred means of piousness with institutionalised authorities. Secondly, we will pay close attention to those events when interfaith dialogues are raised and imagined, particularly when people question their own faith in addition to the belief systems of ‘others.’",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "everyday-piety-from-the-margins.html"
+          },
+          {
+            "title": "reading aesthetics: across time and space",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "wednesdays 10 am to 12:30 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "10:00",
+            "end_time": "12:30",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "What is art? How can we think about it? What are the different intellectual traditions that tried to elaborate a theoretical and philosophical understanding of it? In this course we are going to read and reflect on primary sources and secondary sources that try to understand what we know as art. We will consider possibilities of making connections between those ideas and percepts and our own context in the here and the now.\n\nThe term “aesthetics” dates back to Alexander Gottlieb Baumgarten (1714-1762) and it is German intellectual tradition that shapes the thinking around the term for centuries to come. However thinking about art, in what it is and how it is and what distinguishes it from any other human endeavour pre-dates Baumgarten use of the term. The contributions of many thinkers and philosophers over time enriched and problematised our understanding of how we understand art and how we relate to it.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "reading-aesthetics-across-time-and-space.html"
+          },
+          {
+            "title": "open canvas: thinking through drawing",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "mondays (morning from 10 to 12:30 pm and evening from 5:30 to 8 pm)",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The course investigates alternative forms of knowledge through the experience of drawing and reading in an attempt to explore and re-define body-mind relations. Participants will engage in the act of drawing as a way to bridge body and mind. As you learn how to draw, your mind observes and evaluates not only the unfolding outcome on paper but also reflects upon a process of acquiring new forms of (body) knowledge. Accompanying theoretical texts and discussions will further facilitate a process of self discovery by reflecting upon habitual and specific means of embracing knowledge. How do we learn? How do we know what we don’t know? Do you want to describe, explore, understand, discover or change something?",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "open-canvas-thinking-through-drawing.html"
+          },
+          {
+            "title": "tea with walter benjamin",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "mondays (mornings 10 to 12:30), sundays (Evenings 5:30 to 8)",
+            "weekdays": [
+              "mon",
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Walter Benjamin’s writings belong to the canon of Modern German and European philosophy. However, this course rests on the assumption that the legibility of Benjamin’s work is contingent on the time and place one chooses to engage with his writing.\n\nNow seems to be a good time; al-Ghuria a good place!\n\nIt is difficult to get ahold of Walter Benjamin. He is a highly unusual figure; an unconventional sociologist of sorts. Although Marxist in orientation, he was not exactly a mainstream Marxist. An aristocrat born into a rich Jewish family, Benjamin died as an impoverished refugee at the beginning of the Second World War. In the 1920s he began to support the Communist cause but didn’t cease to have a deep interest in high culture. He aimlessly wandered the streets of different European cities while translating French literature and fiercely critiquing state violence. One thing was clear to him, namely that there was something rotten in law.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "tea-with-walter-benjamin.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

@@ -1,0 +1,171 @@
+{
+  "sha256": "c8231a38f7059560955045e7cb011e03be920e20970b2ab562f00fcf0af72be4",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "summer 2021",
+        "season": "summer",
+        "start_year": 2021,
+        "start_date": null,
+        "deadline": "2021-07-06",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Human Flow: Migration and Refugee Encampment (at CILAS)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Shan Yang",
+                "email": "yangshan@aucegypt.edu",
+                "bio": "Shan YANG is an Andrew W. Mellon Post-MA Fellow for the 2019-2020 academic year at the American University in Cairo. Her training background resides in three domains: critical urbanism, critical political economy, and time and temporality. She currently teaches at the Cairo Institute of Liberal Arts and Sciences where she has started to offer courses since September 2019. She is currently working on a research project-Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": "19:00",
+            "end_time": "20:30",
+            "weeks": 8,
+            "start_date": "2021-07-12",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Migrations do not just happen - they are produced. Capitalist modernity requires massive displacement that seamlessly supports the free flow of labor in the context of globalization. Mobile subjects are being categorized, sorted and governed in and through the international legal order by initiatives dealing with trafficking, refugees, immigrant labor, sexual morality and border controls. The impact of these different initiatives on cross-border movements is mediated by gender, class, religion, sexual, and marital status. Together we will examine people’s lifeworlds - on the move, in transition, contained, encamped - and study citizenship, division of labor and developmentalism through a critical lens.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/summer_2021_syllabus_preliminary.pdf"
+            ],
+            "register_url": "https://forms.gle/9szW6UM9SmGuD5qv9",
+            "own_page": null
+          },
+          {
+            "title": "Memory/Haunting (online)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Nayera Abdelrahman",
+                "email": "nayera.ar@gmail.com",
+                "bio": "Nayera ABDELRAHMAN is a PhD candidate at Freie Universitat Berlin and fellow at Berlin Graduate School for Muslim Cultures and Societies. Her research project is questioning the concept of home through studying the 1967 forced migration in Suez Canal cities in Egypt."
+              },
+              {
+                "name": "Sara Salem",
+                "email": "salem.m.sara@gmail.com",
+                "bio": "Sara SALEM is an academic based in London who thinks about anticolonialism, archives, socialism and haunting in the Middle East and North Africa. Her recently published book is Anticolonial Afterlives in Egypt (Cambridge University Press)."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 8,
+            "start_date": "2021-07-13",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Sherif Younes, in his book “Protests of Resignation and Creation of Nasser’s Worship” (2005) argues that we can understand the majority of the Egyptian people as a ghost, omnipresent in the discourse of the political regime but without any real or tangible influence. This course thinks about haunting, ghosts and the feelings they invoke in the context of Egypt and the Middle East/North Africa. In this course, we aim to think through how a focus on haunting and feeling promises ways of capturing contradictions, impossibility, hope, defeat, and a whole range of political beliefs and practices that might slip out of view when we use a narrow definition of political, social and economic transformation.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/memory_haunting_sara_and_nayera_summer_cilas_.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/9szW6UM9SmGuD5qv9",
+            "own_page": null
+          },
+          {
+            "title": "Critical Theory and Social Change - Part II",
+            "title_ar": null,
+            "subtitle": "A Dying Colonialism (offline/online)",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmed Dardir",
+                "email": "add2131@columbia.edu",
+                "bio": "Ahmed DARDIR holds a PhD in Middle Eastern Studies from Columbia University. His research focuses on questions of power, state, subjectivity, identity, and colonialism. He is also interested in literature and theatre. Ahmed taught at CILAS as part of his responsibilities as fellow in the Humanities in the academic year 2017-2018. He gave an earlier incarnation of this course in the Spring of 2018 entitled “Weapon of Theory” borrowing from Amilcar Cabral."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 8,
+            "start_date": "2021-07-14",
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "Throughout the twentieth century, the anticolonial struggle constituted a major driving force of world history; it defined the political terrain, shaped the attempt to understand and re-imagine the world, constituted the moral force behind world revolution, and translated itself into major intellectual contribution in the fields of theory, literature, and arts. In this course we seek to analyze how anticolonial critique, postcolonial theory, and political theory at large, took shape under the conditions of the struggle between the forces of colonialism and anticolonialism. The course will examine a set of anticolonial revolts and the intellectual work they entailed and equip us with the critical tools to move between the colony and the metropole.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/critical_theory_and_social_change_-_part_ii.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/9szW6UM9SmGuD5qv9",
+            "own_page": null
+          },
+          {
+            "title": "Anthropology of the Future (online)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Alaa Attiah Mitwaly",
+                "email": "alaa.attiah@mail.utoronto.ca",
+                "bio": "Alaa Attiah MITWALY is PhD student at University of Toronto. She is interested in studying different modes of sovereignty, political horizons, and imaginations. Her research focusses on land and water relationships between sea water ways and underground waterways"
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 8,
+            "start_date": "2021-07-11",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "In thinking of the future as temporality, anthropologists wonder about the meaning of the future and its relationship to the past and the present. They also question how we think of time and how we inhabit it. For instance, some anthropologists challenge its linearity by proposing other alternative modes. In tackling the future as unrealized possibilities of the present, anthropologists study things like hope, alternatives, and dreams, and follow how the present’s infinite possibilities have been appropriated by certain power structures. Anthropologists question the way we predict the future and how it relates to our reading of the past and our inhabitation of the present. They ask how certain institutions impose their logic, whether accumulative or algorithmic, to promote certain futures over others.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/anthropology_of_the_future_course-am.pdf"
+            ],
+            "register_url": "https://forms.gle/9szW6UM9SmGuD5qv9",
+            "own_page": null
+          },
+          {
+            "title": "Soy pan, soy paz, soy más - انا خبز، انا سلام، انا ما بعد",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Phoebe Carter",
+                "email": null,
+                "bio": "Phoebe CARTER is a translator, writer, and PhD student in Comparative Literature at Harvard University. Born in Massachusetts, she was raised in a series of small towns around the US. She studied Latin American and Arabic literature in Ohio, Quito, and Amman and was a fellow at AUC’s Center for Arabic Study Abroad. She first came to CILAS as a student in 2020 for a course on Arab-Latinx Theory."
+              },
+              {
+                "name": "Karim-Yassin Goessinger",
+                "email": null,
+                "bio": "Karim-Yassin GOESSINGER is an educator and scholar-activist based in Giza. He is the founding director of CILAS and teaches in the Humanities and Social Sciences. In his pedagogical practice he brings the liberal arts into conversation with the martial and culinary arts. He writes about pigeons, tea and pedagogy, and is an active member of the Ecoversities Alliance."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 8,
+            "start_date": "2021-07-15",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "“I had to come all the way to Mexico to rediscover Palestine,” writes literary scholar Amal Eqeiq about her visit to the Mayan village of Chamula. The visible and invisible borders that separated ethnic populations, and the uneven infrastructure and resources on each side, created for her a “dramatic déjà-vu of internal colonialism” that brought her back to her native Palestine. What might we rediscover, notice, or see differently, when looking across the Atlantic from the Arab World to Latin America, and back? What contours, constellations and legacies can we trace between parts of the world infrequently considered side by side? The course highlights the cross-Atlantic historical, discursive, cultural and material resonances between Latin America and the Arab world as well as the anxieties that these resonances provoke. We will engage in border thinking to probe, among other things, the porosity of al-Andalous; trace the transatlantic trajectory of Yerba Mate and interrogate the architecture of occupation/separation in Mexico and Palestine through various texts, films, modes of inquiry and pedagogical approaches.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_proposal_-_tentative_flow_and_references.pdf"
+            ],
+            "register_url": "https://forms.gle/9szW6UM9SmGuD5qv9",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

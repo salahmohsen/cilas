@@ -1,0 +1,342 @@
+{
+  "sha256": "1ceff56590026d69334ee4d47db59f09ace8534acd739d2b29017f9349b70508",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Trimester three 2017-2018",
+        "season": "spring",
+        "start_year": 2018,
+        "start_date": "2018-04-01",
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Identity, Culture and Resistance",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Nadine El Nabil",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 1:00 pm and evenings from 5:00 pm to 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Employing intersectional feminist and cultural studies lenses, this interdisciplinary course aims to utilize art, creative production and cultural spaces to engage with themes about identity, such as language, gender, sexuality, nationalism, religion, race, desire, family and friendship. The course will be built on engagement with academic readings as well as creative sources from art and culture to explore these topics, with the underlying understanding that ‘text’ goes beyond written language and exists in all artifacts (oral storytelling, music, fashion, social media production, television (talent shows, talk shows, soap operas, game shows, mosalsalat), film, food, architecture, spoken word poetry, graffiti, photography, advertisements, and other mediums). Relying on lived realities, the self and the body, students will share their own experiences and bring in cultural artifacts and observations relevant to their lives as entry points to these discussions",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "identity-culture-and-resistance.html"
+          },
+          {
+            "title": "Libertarian Economics and Alternative Model-Building",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hussein Al Haj",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course aims to know more about different alternative economic models from the far-left to the far-right in an attempt to assess them by comparing them with each other, looking into the history of their innovation, and analyse their dynamics in a critical manner. The course will discuss the mutualist, collectivist, communist and also capitalist visions in the light of the political compass theory to understand the social characteristics and human conditions that they imply. We expect from the participants to discuss the nature of these economic models and their philosophical backgrounds and debate for or against the possible alternatives that respond for current economic and social dilemmas in a more holistic approach towards different political tendencies.\n\nيهدف هذا المساق إلى التعرف على مختلف النماذج الإقتصادية البديلة من أقصى اليسار إلى أقصى اليمين في محاولة لتقييم تلك التجارب الفكرية من خلال مقارنتها ببعضها بعضًا، كما يقرأ تاريخ ابتكار تلك النماذج ويحلل آليات عملها التفصيلية بصورة نقدية عاملاً على تكوين سياسات اقتصادية واجتماعية صالحة للتطبيق في عالمنا اليوم. يناقش المساق التصورات التعاونية والجمعوية والمشاعية وكذلك الرأسمالية في ضوء نظرية الخريطة الإقتصادية السياسية ومحاولات تطبيقها التاريخية ساعيًا إلى فهم ما تنطوي عليه من خصائص اجتماعية وشروط إنسانية.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "libertarian-economics-and-alternative-model-building.html"
+          },
+          {
+            "title": "Mafish Faiydah? A Case Study on Myth and Silenced Voices",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Kareem Megahed",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The main objective of this course is to encourage participants to reread history critically and to utilize a wide variety of sources to achieve that end. It is primarily designed to focus on Egypt's 1919 revolution as a case study through a group of alternative narratives and readings to those advanced by the nationalist approach. In other words, the course sheds the light on the circumstances/ developments leading to the events of 1919 and what followed it from unconventional perspectives. The 1919 revolution was chosen due to its importance as a classic case of Egyptian nationalism and how it came to affect (and shape) the Egyptian society up to 1952. Nevertheless, achieving this goal requires debating history as a discipline, schools of reading history and primary knowledge of Egypt's economic history before moving into the case of 1919.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "mafish-faiydah-a-case-study-on-myth-and-silenced-voices.html"
+          },
+          {
+            "title": "A pedagogical approach to sustainable architecture: historicizing and documenting the case of New Gourna",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sama Waly",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Rodrigo Brum",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course aims to materialise Fathy’s dream by reading and discussing the problematics of “Gourna: A Tale of Two Villages” with local inhabitants and builders currently working on the preservation of the model village. We will begin the course in Cairo, over the first nine weeks, to critique key issues in Fathy’s vision in its historical context, and plan our week-long module to be implemented in Gourna, Luxor. Once there, we will meet local participants daily, host collective readings of key passages, and activate the village with film screenings and other activities.\n\nThe course proposes a twofold vision, firstly to foster a discussion-based learning environment, to historicize and shed light on the crises of pedagogy and sustainable architecture in rural Egypt, and secondly to encourage creative strategies of documentation, using audiovisual means. Students can apply to the pedagogical track ( Group A ) or to the documentation track ( Group B ).",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "pedagogy-and-sustainable-architecture.html"
+          },
+          {
+            "title": "Physics for Poets",
+            "title_ar": "فيزياء من أجل الشعراء",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Alaa El-Bannan",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Doaa Shahin",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Physics for poets is a course initiating the break of barriers between Art and Science. It's a space to realize the interdisciplinary nature of life, science, philosophy and art practice, through exploring the creative relationships between art and science and how to communicate them artistically. We will read texts discussing theories and \"stories\" about physics and let the discussion take us to a metaphysical level where we understand how physics is a part of everyday life and our imagination. We'd like to go beyond what we know and take for granted, and discuss notions of possibilities, nothingness, and dimensions out of the context of equations and numbers and move them to the context of poetry and fiction.\n\nهو مبادرةٌ لإذابة الحدود بين الفن والعلم. إنه مساحةٌ للمزج بين المعارف المختلفة للحياة كالعلم والفلسفة والفن دون انفصالٍ بينها. سنحاول استكشاف العلاقات الخلّاقة بين الفن والعلم وكيف يمكن أن يتواصلا معاً. سنقرأ نصوصاً ونروي قصصاً عن نظريات الفيزياء، آملين أن تقودنا هذه النقاشات إلى مستوى ميتافيزيقي يساعدنا على فهم كيف أن الفيزياء متجذرة في مخيلاتنا وحياتنا اليومية. نرغب في تجاوز ما نعرفه ونعتبره مسلماً به، لمناقشة مفاهيم كالاحتمالات، اللاشيء والأبعاد خارج سياق المعادلات والأرقام والمضي بها إلى رحاب الشعر والخيال",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "physics-for-poets.html"
+          },
+          {
+            "title": "Social Determinants of Health",
+            "title_ar": "المحددات الاجتماعية للصحة",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Shatha ElNakib",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:30",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course will critically explore the fundamental drivers of health that arise from social conditions. Situated at the intersection of social, behavioral and life sciences, course material will interrogate the myriad ways in which culture, race/ethnicity, gender, poverty, and sexual orientation shape health outcomes and drive health disparities. Together, we will reflect on the extent to which social conditions contribute to ill-health and on the ways these social factors “get under the skin” to produce and maintain disease. As a theoretical foundation for the course, readings will introduce key conceptual frameworks and theories underpinning the social determinants of health, including ecological systems theories and Link and Phelan’s seminal work on “fundamental causes.” Afterwards, plausible mechanisms underlying health disparities will be presented. This will pave the way for focused discussions of the relationship between each of five social factors, namely socioeconomic status, gender, sexual orientation, race/ethnicity, immigration/displacement, and health.\n\nيستكشف هذا المساق بطريقة نقدية الدوافع الأساسية للصحة التي تصدر عن الظروف الاجتماعية. تستجوب مواد المساق المتقاطعة بين العلوم الاجتماعية والسلوكية وعلوم الحياة الطرق المتعددة التي تشكل بها الثقافة والعرق والنوع والمستوى الاجتماعي والتوجه الجنسي النتائج الصحية وتحرك مفارقاتها. سنفكر معًا في مدى مساهمة الظروف الاجتماعية في الصحة والمرض والطرق التي \"تخترق\" بها تلك العوامل الاجتماعية \"الجلد\" كي تنتج المرض وتصونه. تقدم قراءات المساق، بصفتها قاعدة نظرية لها، الإطر والنظريات المفاهيمية الأساسية الداعمة للمحددات الاجتماعية للصحة، والتي تتضمن نظريات النظم البيئية وأعمال لينك وفيلان المؤثرة حول \"الأسباب الأساسية\". بعد ذلك، سنقدم الآليات المعقولة التي تقوم عليها المفارقات الصحية، مما سيمهد الطريق إلى مناقشات مركزة حول العلاقة بين العوامل الاجتماعية الخمس: المستوى الاجتماعي، والتوجه الجنسي، والعرق، والهجرة والنزوح، والنوع الاجتماعي، والصحة.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "social-determinants-of-health.html"
+          },
+          {
+            "title": "The “Development of Underdevelopment”",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Dalia Wahdan",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course provides a general history of development thought and a critical political economy analysis of change on a world-wide scale that situates events such as the Gulf War, the fall of Berlin Wall, the Rio Conference and the rise of the BRICS (Brazil, Russia, India, China and South Africa) within their larger historical contexts and critiques prevalent concepts of progress, growth, and under- development in an attempt to pave the way for alternative imaginations of societal change. The course works towards nurturing a critical approach to socio-economic change and the ideas that informed consecutive ‘development’ paradigms since the twentieth century. Readings and course activities will present and assess those paradigms within their respective political and economy contexts and historical conditions.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "the-ldquodevelopment-of-underdevelopmentrdquo.html"
+          },
+          {
+            "title": "The food dilemma - navigating the diet jungle",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Bianca Fliss",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Eating has become a complex matter that is full of choices. Each choice has consequences that goes beyond our plate and each diet is a statement. In this course we will examine the implications (ethical, environmental, health, economic, social and political) and promises of different diets and food choices. The goal of the course is not to identify the \"best\" diet, but explore their pros, cons and implications and to help build informed opinions.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": null
+          },
+          {
+            "title": "The History of Modern Education in Egypt (1805-1970)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Farida Makar",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Everyone agrees that the state of our education is terrible, but few know precisely how it came into being. This course is an invitation to look more closely at our education system and to scrutinize it. Specifically, we analyze concepts such as nationalism, colonialism and modernity and the ways in which they affected the emergence of modern state-run schooling. We spend some time assessing the dynamics within the classroom thus looking at education as a field of negotiation, change and evolution. We explore how educational institutions have emerged since the mid 19th century and what alternative forms of resistance have arisen in reaction by looking at the works of leading pedagogues, philosophers and their most influential texts. In short, the course attempts to find logic in the place that seems to lack it the most: our education system.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "the-history-of-modern-education-in-egypt-1805-1970.html"
+          },
+          {
+            "title": "The Philosophy of Soren Kierkegaard",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Omar El-Rakhawi",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Saturday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Soren Kierkegaard is the most famous, if not the only significant Danish philosopher. He lived from 1813 to 1855 in a time when what we call “modernity” was on the visible rise in Denmark. He is most well known for being “the father of existentialism” and also a radically rebellious, yet devout Christian. We will engage his texts, in a more or less systematic fashion, slowly building up the picture of his world and his existence, and hopefully resounding with ours. Kierkegaard’s writing is provocative yet humorous, reflective yet ironic, and so the sessions will take on from this quality. We will be provoked, we will most definitely laugh at some obvious truth he points out humorously and ironically, and the purpose of the course will be to see these truths in our own individual and social lives, to draw a line between the text and our own realities.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "the-philosophy-of-soren-kierkegaard.html"
+          },
+          {
+            "title": "Portray: Women and Representation in the Middle East",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Amira Elserafy",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In this course we will examine the wide range of literature and media “representing” women in the Middle East and Muslim majority countries with a focus on the Arab world. We will be looking at both Western and Arab scholarship portraying “the Muslim/Arab/Middle Eastern woman” in the late 19th century and on to the so-called era of the War on Terror. We will be juxtaposing those images (after poking fun at them) with the discourse/art production of women from the region. In addition to providing the opportunity to further explore and contest notions such as agency, political activism and feminism, the course is meant to spur discussion on Middle Eastern women beyond the dichotomies (e.g. assertive/submissive, active/passive, feminist/misogynist …etc.) which draw on Orientalist and reductionist approaches to studying the Middle East. Consequently, we will be tackling the theme of Orientalism and the colonial legacy to challenge the reductionist portrayals that have been used to justify humanitarian and military intervention in the region.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "portray-women-and-representation-in-the-middle-east.html"
+          },
+          {
+            "title": "The Turn of Time: “Colonising Egypt” and the Social and Cultural Changes it Imposed",
+            "title_ar": "\"فترة من الزمن\": \"استعمار مصر\" وما أحدثه من تغيرات اجتماعية وثقافية",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 11:00 am to 2:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In this course we explore the social and cultural colonial changes that accompanied, predated, and outlasted the British occupation. This exploration will proceed through works of literature, newspaper clippings, and academic texts. Our discussion will start with and focus on Muhammad al-Muwaylihi’s brilliant narrative text Hadith ‘Isa ibn Hisham, written at the onset of the British occupation, tracing the changes that accompanied it, and sometimes credited for being the first Arabic novel. This course will use Hadith ‘Isa ibn Hisham as an opportunity to revisit cultural and social histories through a close reading of an exceptional work of literature.\n\nKnowledge of Arabic is pre-required.\n\nفي هذا المساق نقوم باستكشاف التغييرات الاجتماعية والثقافية والمؤسساتية التي أحدثها الاستعمار من خلال قراءة مجموعة من النصوص تتراوح ما بين الأدبي والأكاديمي. وسنعتمد بشكل أساسي على حديث عيسى بن هشام وبشكل أقل على تيموثي ميتشل استعمار مصر (والذي اتخذ من كتاب المويلحي مصدرًا للإلهام)، واللذين سنقرأهما تباعًا قراءةً متأنيةً متنوعةً مدار الفترة الدراسية. لن تقتصر مناقشتنا بالطبع على هذين النصين، ولكننا سنستخدمهما لاستكشاف مواضع الاستعمار كتابٍ على والتي ستأخذنا في رحلة بين مصادر أولية وثانوية، بين قصاصات من الجرائد القديمة جنبًا إلى جنب مع نصوص أكاديمية، بعضها يخص مصر، وبعضها يحلل الاستعمار كظاهرة عامة.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+            "own_page": "1601157815851577-16051606-15751604158616051606-1575158715781593160515751585-160515891585-160816051575-15711581158315791607-16051606-157815941610.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

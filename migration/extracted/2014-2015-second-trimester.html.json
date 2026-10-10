@@ -1,0 +1,217 @@
+{
+  "sha256": "47a3f849f658897943208339e065d4829641973c346278d8c41efb1947f04ccf",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Trimester two 2014-2015",
+        "season": "winter",
+        "start_year": 2015,
+        "start_date": "2015-01-03",
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Media, Power and Politics",
+            "title_ar": null,
+            "subtitle": "Exploring Contemporary Issues in Media Studies",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ayesha",
+                "email": "mualla.ayesha@gmail.com",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The course is divided into three sections and ten interrelated themes which all pose challenges to the study of media practices. The thematic focus of this course is the intersection of media, the public sphere, the market, globalisation and media control.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "media-power-and-politics.html"
+          },
+          {
+            "title": "Art and the City",
+            "title_ar": null,
+            "subtitle": "Artistic Representations and the Built Environment",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "René",
+                "email": "mail@reneboer.net",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Artistic representations and practices can improve our understanding of the built environment. From documentary film to the technique of ‘aimless wandering’, there are many ways to engage with urban space, i.e. the city. The city is more than just a physical phenomenon to be developed through architecture and planning. In addition to serving as a tool to perceive and understand the city, art can play an important role in changing the city and urban life. Artists and other stakeholders use and apply art in cities for various reasons, with different objectives and outcomes.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "art-and-the-city.html"
+          },
+          {
+            "title": "From Turtle Island to South Africa and Palestine",
+            "title_ar": null,
+            "subtitle": "On Colonialism and Post-Colonialism",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Anne",
+                "email": "anne.clement2014@gmail.com",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In November 2012, three First Nation women created the ongoing protest movement “Idle No More” in Saskatchewan, Canada to fight for the rights of Aboriginal peoples across Turtle Island (a term used since the 1970s by many Native activists to designate North America). A few weeks later, a coalition of organizations and activists fighting for the rights of the Palestinians expressed their profound solidarity with that initiative, emphasizing the “connections” between the experiences of both peoples. In the open letter published on that occasion, the collective also evoked the “historical links” between the Palestinian national liberation movement and the South African struggle to end the apartheid. The authors mentioned fundamental “similarities” both between the situations from which Palestinians and the majority of South Africans suffered and continue to suffer, and the means of resistance developed to fight back (such as the call for Boycott, Divestment and Sanctions launched by the Palestinian civil society in 2005).\n\nWhat are exactly these “historical links,” “connections,” and “similarities”? These are a few of the questions that this course will try to answer. In order to do so, we will look at the concepts of “Colonialism” and “Post-colonialism” through three different lenses: as specific historical experiences, as socio-spatial dynamics, and as bodies of literary and scientific works.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "on-colonialism-and-post-colonialism.html"
+          },
+          {
+            "title": "History of Education",
+            "title_ar": null,
+            "subtitle": "An Ever-Evolving and Over-Arching Process",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Farida",
+                "email": "makar.farida@gmail.com",
+                "bio": null
+              },
+              {
+                "name": "Nayera",
+                "email": "nayera.ar@gmail.com",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In this course we will look at education as an ever evolving and overarching process. Modern state-run schooling - the type that most of us have experienced as children and young adults - has altered the way in which we think and value education today. This particular understanding of what education is has shaped modern education systems across the world in the last 200 years.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "history-of-education.html"
+          },
+          {
+            "title": "Emerging Modes of Urban Governance",
+            "title_ar": null,
+            "subtitle": "The Urban Global South in Perspective",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Karim-Yassin",
+                "email": "karim@ci-las.org",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "As a result of rapid urbanisation, in 2008 - for the first time in history - more than half of the world's population became urban. Urban explosion - the expansion of cities - is expected to largely materialise in so-called developing countries, otherwise referred to as the urban global south. Poverty, informality and exclusion will consequently acquire an inevitably urban face. In this course we will study, amongst other things, the twin forces of globalisation and urbanisation.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "urban-governance.html"
+          },
+          {
+            "title": "Shaping Development Pathways",
+            "title_ar": null,
+            "subtitle": "On Evaluation Theory and Practice",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Nermine",
+                "email": "nerminewally@gmail.com",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Monitoring and evaluation (M&E) helps identify trends, measure change and capture knowledge. The field of monitoring and evaluation has gained remarkable momentum in Africa over the past years and has even informed the formulation of the Millennium Development Goals. It has subsequently informed commitments to track achievements of policies and programmes. Both beneficiaries and donors of international aid have increasingly been pressured by their partners and constituents to capture what works, how it works and for whom it works in a both rigorous and systematic way.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "monitoring-and-evaluation.html"
+          },
+          {
+            "title": "Nature-based Tourism",
+            "title_ar": null,
+            "subtitle": "A Green Economy Fairytale",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Pam",
+                "email": "pamlabib@gmail.com",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Tourism is one of the world’s largest industries and an important and hefty contributor to economies of non-industrialised countries. Over the last decade an increased understanding of its deleterious effects on people and place has preoccupied most discussions on tourism. Policy-makers, governments and different stakeholders have had to negotiate the tenuous relationship between the ecological and social pressures caused by tourism while maintaining and expanding an important contributor to wealth. Ideas and practices of nature-based tourism and community-based tourism emerged as a result of these dialogues which, in turn, were presented as viable modifications to other tourism models especially in light of ecosystem services. Nature-based tourism whilst heralded as the panacea that will resolve the tension between wealth accumulation and environmental protection is deeply embedded in the very same structures that shape and direct the demonised mass tourism model.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "nature-based-tourism.html"
+          },
+          {
+            "title": "Urban Resilience",
+            "title_ar": null,
+            "subtitle": "From Mitigation to Adaptation",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "René",
+                "email": "mail@reneboer.net",
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "As cities continue to grow, an increasing amount of people is exposed to various hazards related to the urban environment. ‘Urban resilience’ refers to the capacity of different stakeholders in a city, from the inhabitants of informal areas to the municipality’s policy makers, to respond to these hazards. In this course, students will develop an understanding of the possible impact of different hazards, from state violence to climate change, on cities.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "urban-resilience.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

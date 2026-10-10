@@ -1,0 +1,201 @@
+{
+  "sha256": "c600ef0407c4bbbfa6c60bc9bdd0744bcfa01f7fe7a4f5c1f0fd72199282b399",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall 2024",
+        "season": "fall",
+        "start_year": 2024,
+        "start_date": null,
+        "deadline": "2024-09-06",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Story as participative enquiry",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Leon",
+                "email": "leon@leonconrad.com",
+                "bio": "is the Founder of The Unknown Storyteller Project, Founder and Lead Tutor at The Traditional Tutor, Co-Founder and Lead Trainer at The Academy of Oratory, and Affiliate at the KSU Next Society Institute, Lithuania. My book, Story and Structure (2022) has won ten awards including the IPNE Nonfiction Book of the Year and was a finalist in The People's Book Prize. I grew up in Alexandria, Egypt (6-18) where I experienced a living oral tradition of storytelling. That formative experience inspired my life-long quest to explore the power that language has to enchant and inspire."
+              }
+            ],
+            "schedule_text": "Sundays, 5:30-8 pm, start date is September the 21st. First 4 sessions online and last 4 sessions offline.",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2024-09-21",
+            "location": [
+              "ONLINE",
+              "OFFLINE"
+            ],
+            "description": "Why does story as a phenomenon exist? How do we engage with the power of story in our lives? What is the link between story structure and poetic form? How can an appreciation of how story works help us better understand ourselves and how we think about ourselves? How can it inform our relationship to the societies and the larger cosmos in which we exist? And how can it help us address key problems we perceive in society and culture?\n\nCombining a deep appreciation of the classical liberal arts tradition, of story, and of poetry in their widest senses, this course draws on an approach to the analysis of story structure outlined in Story and Structure: A complete guide based on George Spencer-Brown’s Laws of Form. Using only six visually intuitive symbols, focusing on individual characters’ story lines and the key events in them, participants will learn how to trace the flow of story as manifest through spoken word traditions, prose, poetry, anecdotes and jokes in society and in traditional and social media.\n\nAs both participative creators and appreciators, participants will engage with what they learn about story in imaginatively practical personal quests to realise personal, communal and environmental flourishing.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/story_as_participative_enquiry__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/AV541BDfrrTwxxJBA",
+            "own_page": null
+          },
+          {
+            "title": "Meaning Between the Lines",
+            "title_ar": "مقصود لم ينطق",
+            "subtitle": "On Ideology and Discourse Analysis",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Sohayla",
+                "email": "sohaylaelfakahany@gmail.com",
+                "bio": "is a social researcher, medical anthropologist, and sexual and reproductive health and rights specialist, based in Cairo, Egypt. She is a research consultant at the American University of Beirut, and she is also a founding member of the East Mediterranean Federation of Sexual Health (EMFeSH). With her advocacy roles, she is focused on intersectionality, structural violence, and gender justice. Throughout her career, she worked on producing journal articles, technical reports, proposals, case studies, evaluation reports, and training manuals. Her research style merges theoretical and fieldwork approaches. She holds an M.A in Social Anthropology and a B.A in Political Science from the American University in Cairo."
+              }
+            ],
+            "schedule_text": "Hybrid, Mondays 5:30pm – 8:00pm, starting from the 23th of September",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2024-09-23",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "\"Discourse is not simply that which translates struggles or systems of domination, but is the thing for which and by which there is struggle; discourse is the power which is to be seized.\"\n\nMichel Foucault\n\nThis course introduces students to the field of Discourse Analysis, exploring its historical and contemporary approaches. Students will gain an understanding of the relationship between language, power, and society, and how to conduct discourse-based research. The course will also cover the basics of writing academic articles and reports.\n\nThe sessions are hybrid; some are face-to-face, and others are online.\n(You can attend online only if needed)\n\nSome of the specific topics that will be covered include:\nWhat is Discourse Analysis and what is its approach?\nWhat are Critical Discourse Analysis and Foucauldian Discourse Analysis?\nHow can we understand the ideological, social, and political implications of language use?\nWhat are the frameworks and tools used to conduct discourse-based research?\nHow to balance between theoretical frameworks and practical analysis?\nWhat is the role of discourse in shaping social identities, power relations, and ideologies?\n\nBy the end of the course, students will be able to:\nCover sufficient conceptual and background material on the selected topic.\nReflect on the literature directly related to theories of Discourse Analysis.\nCompare and contrast different research methods and tools in discourse analysis.\nUnderstand how to write academic articles and reports.\nConduct discourse analysis research on a topic of the student's choice.\n\nThis course is a great option for students who are interested in learning more about language, power, ideology, society, and the ways in which discourse shapes social realities. It is also a valuable introduction to the field of Discourse Analysis and discourse-based research.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow.pdf"
+            ],
+            "register_url": "https://forms.gle/AV541BDfrrTwxxJBA",
+            "own_page": null
+          },
+          {
+            "title": "Enlightenment to the Death of God: A Philosophical Journey",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mae",
+                "email": "mae.saafan@aucegypt.edu",
+                "bio": "is currently the Humanities and Social Sciences Supervisor in one of the leading EdTech companies in Egypt. She holds an MA in Philosophy from the American University in Cairo. For five years, she worked as a teaching and research assistant at the same university, a Freelance Translator, and a Journalist for different online and offline platforms. She co-founded Mubtadaa' (مبتدأ), an initiative for teaching humanities and social sciences to high school students in Arabic. Mae also was a student, co- fellow and lastly she served as the Philosophy residential fellow in CILAS bridge program last year."
+              }
+            ],
+            "schedule_text": "Offline, Wednesdays 6pm – 8:30pm, starting from the 25th of September",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2024-09-25",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course provides an in-depth exploration of the philosophical developments from the Age of Enlightenment to the existential crisis marked by Friedrich Nietzsche's proclamation of the \"Death of God.\"\n\nStudents will critically examine the evolution of ideas, societal shifts, and the cultural landscape that shaped Western thought during this transformative period.\n\nThe journey begins with the Enlightenment, an intellectual movement of the 17th and 18th centuries that championed reason, and individualism as means of understanding and improving human society.\n\nThe course culminates with Nietzsche's provocative proclamation of the \"Death of God\" and its implications for morality, religion, and human existence.\n\nWe then delve into the 20th-century philosophical landscape, exploring the rise of existentialism and the questioning of traditional beliefs and values, focusing on existential themes such as individual freedom, anxiety, and the search for meaning in a seemingly indifferent universe.\n\nThroughout the course, students will engage in critical analysis, and class discussions to develop their understanding of the intellectual, cultural, and philosophical shifts from the Enlightenment to the existential crisis of the 20th century.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/enlightenment_to_the_death_of_god__a_philosophical_journey-_cilas_fall_cycle.pdf"
+            ],
+            "register_url": "https://forms.gle/AV541BDfrrTwxxJBA",
+            "own_page": null
+          },
+          {
+            "title": "A Journey to the East",
+            "title_ar": null,
+            "subtitle": "Teachings from the East",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "ALexandros",
+                "email": "alexandros.manolakakis@student.uva.nl",
+                "bio": "is student of life and a pupil of Liberal Arts, driven by the ideals of the examined life. I do not merely embody my university’s values and the principles of academia but make it my vocation to continuously learn from, live by, and share them with others.\n\nI completed my Liberal Arts BA (with hons) at the University of Winchester, and I am currently undertaking a (research) Master’s in Philosophy at the University of Amsterdam.\n\nThroughout my educational journey, I have drawn from these ideals and principles to help establish – in both universities – the Agora society, a place for students with curious minds across disciplines to come together and ask questions, to share their ideas and thoughts with one another – to live the examined life"
+              }
+            ],
+            "schedule_text": "Online, Thursdays 6pm – 8:30pm, starting from the 26th of September",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2024-09-26",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "This course is an opportunity to introduce ourselves to and explore various ideas from Eastern cultures (such as Buddhism, Confucianism, Sufism, and perhaps aspects of Ancient Mesopotamia/Akkadian).\n\nThe structure of the course will first look at the ‘historical’ narratives of such figures as Buddha, Confucius, and Rumi, and then explore ideas and principles as have been articulated/manifested through art.\n\nThemes that will be explored are the i) principles behind Buddhist teachings, ii) Confucian humanism, and the attitudes of (Islamic) mysticism.\n\nThis approach will cover two thirds of the course; for the tail-end of the course, the idea is to explore a specific formulation (and perhaps rather esoteric expression) of said cultures: for example, the Mādhyamaka (Middle Way) school of thought from Buddhism and the notion of emptiness (śūnyatā); a conversation around Confucius’ ethical and political views through his Analects; a read of Rumi’s Masnavi or Attar’s The Conference of the Birds.\n\nAlternatively, students may choose to turn to Ancient Mesopotamia, to look at the history and (cultural) attitudes revolving around the recovery of The Epic of Gilgamesh. Or they may like to introduce another culture and discuss its cultural artifact/artistic manifestation (literature, painting/drawing, statute, etc.).",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/copy_of_a_journey_to_the_east_-_teaching_from_the_east.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/AV541BDfrrTwxxJBA",
+            "own_page": null
+          },
+          {
+            "title": "Text and Desire: A Literary Journey through the Senses",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa DARDIR",
+                "email": "ahmaddiaa@gmail.com",
+                "bio": "holds a PhD from Columbia University in Middle Eastern Studies and the highly esteemed position of “Sadīq CILAS.” His research focuses on questions of colonialism, subjectivity, and power. As a CILAS fellow, Ahmed has conducted and coordinated various courses and workshops in the Humanities combining Political Theory, History and Literature, including two workshops on Shakespeare. Ahmed is also a huge fan of theatre and has some experience in the field."
+              }
+            ],
+            "schedule_text": "Offline, Mondays 6 pm – 8:30 pm, starting from the 23th of September",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2024-09-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "What happens to us when we read? What senses do we activate? What is the relationship between text and pleasure, language and desire?\n\nThis course is a sensory journey through different kinds of literature, exploring how pleasure is mapped into the language and style of these texts. It is part crash course, part reading group, part writing and storytelling workshop, and part lab of group activities and text based games.\n\nTo set the tone for our exploration, we will start with the unique writings by Anaïs Nin, then explore desire and longing in a historical context with Shakespeare and/or Tracy Chevalier's writing, then explore some troubling themes in literature texts such as Lolita and Othello. We'll also explore sensuality and eroticism in both classical and modern in various Arabic texts at the centre of which there will by texts by Ibn Qayyim al-Juziyah and Nizar Qabbani and finally we will turn to Milan Kundera’s The Unbearable Lightness of Being.\n\nAlthough you may expect a healthy dose of eroticism, this is not a course in erotica per se. Or, if it is about Eros, it is also about Eros as the force of life, about the longing that inhabits the gap between language and meaning and animates any textual activity, about the beauty of language, the joy of reading, the playfulness of metaphors, the interplay of imagery, and all the senses that are invited to partake in the textual experience.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/text_and_desire__a_literary_journey_through_the_senses.pdf"
+            ],
+            "register_url": "https://forms.gle/AV541BDfrrTwxxJBA",
+            "own_page": null
+          },
+          {
+            "title": "Ecology between East and West: Philosophical and Theological Dialogues on Environmental and Animal Ethics",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Nabil Yasien Mohamed",
+                "email": "nabilyasienmohamed@gmail.com",
+                "bio": "is the author of Ghazālī’s Epistemology: A Critical Study of Doubt and Certainty (Routledge, 2023). He holds an M.A in Philosophy from the University of the Western Cape (UWC), an honours degree in Islamic Studies from the Islamic Peace College of South Africa (IPSA), a BA degree in Politics, Philosophy and Economics from the University of South Africa (UNISA), and a BSc Honours degree in Engineering from the University of Cape Town (UCT). Nabil has spent several years in Egypt studying Arabic and traditional Islamic studies. His research interests and publications include Ghazalian studies, classical Islamic Philosophy, contemporary Islamic thought, theology, epistemology, ethics and ecology."
+              }
+            ],
+            "schedule_text": "Offline, Saturdays 6pm – 8:30pm, starting from the 21st of September",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2024-09-21",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course, Ecology between East and West: Philosophical and Theological Dialogues on Environmental and Animal Ethics, will engage both the Western and Islamicate traditions. It will deal with Environmental Ethics in general, and Animal Ethics in particular.\n\nIn contemporary environmental ethics, the work of Peter Singer and Tom Regan has dominated the scene. The former gives primacy to the sentience of animals (Animal Liberation) and the latter to their intrinsic moral worth as beings that are “subject-of-a-life” (Animal Rights). Singer and Regan are Utilitarian and Deontological ethicists respectively. These two approaches attempt to overturn the anthropocentric ethics of the Judeo-Christian (Augustine, Aquinas etc.) and classical Western traditions (Descartes, Kant, Bentham etc.), and aim towards an ecocentric environmental ethics. In the course, we will critically appraise these watershed moments (from the classical to the contemporary) in Western Environmental ethics, and propose alternative paradigms.\n\nThe question of the nature and moral standing of animals is fundamental to the development of any environmental ethic. The moral concern of non-human animals in mainstream contemporary Islamic thought has been given insufficient attention. However, historically it has not gone ignored, discussions took place in the Islamic philosophical and theological traditions. The early philosophers (Ibn Sīna and Al-Farābi) and theologians (both Muʿtazilites and Ashʿarites), mainly discussed the ontological status of animals, but not much on animal welfare (it was mainly the domain of the jurists). Among the philosophers, such as Abū Bakr al-Rāzi (d. 935 CE), the Ikhwān al-Ṣafa, Ibn Tufayl (d. 1185 CE), and Ibn Miskawayh (d. 1030 CE), they discussed both the ontological status and moral standing of animals. In this course we will critically discuss their contribution to the discourse, and how it may advance a contemporary environmental ethic.\n\nWhat do we owe future generations? Remains a crucial question in environmental ethics and sustainable development. In this course, we evaluate how the economic structures of development, the problems of consumption and consumerism, the desacralisation of nature, the prism of logical positivism, contemporary ethics, and the tension between anthropocentrism and ecofascism, contribute to the ecological crisis and unsustainability. In this course, to address the ecological crisis, we will explore other paradigms within radical environmental ethics from deep ecology (Seyyed Hossein Nasr) to post-colonial approaches (Anna Gade).\n\nIn the Islamic tradition, both the anthropocentric and ecocentric elements exist and are not necessarily mutually exclusive. To reconcile the “impasse\" between anthropocentric and ecocentric environmental ethics, contemporary ethicists propose theocentric approaches to environmental ethics. Towards this vision, in the course we will discuss 1) Divine Command Theory, 2) the Higher Objectives of the Divine Law (maqāsid al-sharīʿa), and 3) Islamic Virtue Ethics as three instrumental elements that form a contemporary environmental ethic, and contribute to the discourse on sustainability and animal welfare.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/ecology_between_east_and_west_-_philosophical_and_theological_dialogues_on_environmental_and_animal_eth[.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/AV541BDfrrTwxxJBA",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

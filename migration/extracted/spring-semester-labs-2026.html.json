@@ -1,0 +1,110 @@
+{
+  "sha256": "829e7be6cedc6516b98b88db094d1cb73b6b2bda5bcca22bf2e90e860b7f51ba",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Semester Labs: 2026",
+        "season": "spring",
+        "start_year": 2026,
+        "start_date": "2026-04-25",
+        "deadline": "2026-04-17",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "معمل الترجمة",
+            "title_ar": "معمل الترجمة",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "سارة السباعي",
+                "email": null,
+                "bio": "سارة السباعي، مترجمة ومحررة وباحثة ذات خبرة طويلة في مجال العلوم الإنسانية والاجتماعية وبالأخص دراسات الجندر والتنمية. سبق لي العمل مع جهات متعددة على مشاريع مختلفة، من ضمنها الاتحاد الأوروبي وبرنامج الأمم المتحدة الإنمائي وأوكسفام واتحاد بلديات هولندا وعلشانك يا بلدي، ومن العمل في كل تلك الجهات المتعددة والمختلفة، نما لدي اهتمام أصيل بدور الترجمة في التبعية والدور الذي قد تلعبه في التحرر. حاصلة على ماجستير الجندر والتنمية من كلية الاقتصاد والعلوم السياسية بجامعة القاهرة."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-25",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "لماذا نترجم؟ وهل الترجمة مجرد ممارسة لغوية، أم عملية فكرية مليئة بالانحيازات والاختيارات عند كل منعطف؟ كيف تؤثر تصوراتنا عن اللغتين العربية والإنجليزية على الترجمة وجدواها؟ ما الذي يحتاجه المترجم من مهارات؟ هل نحتاج إلى مترجمين في عصر الذكاء الاصطناعي؟\n\nنحاول في مختبر الترجمة مناقشة هذه الأسئلة وغيرها عبر طرح تصور للترجمة يتجاوز كونها تلك العملية الآلية لاستبدال لغة بأخرى ومعايشة تجارب اشتبك فيها المترجمون والمترجمات مع النصوص لتوظيفها لخدمة القضايا التي يؤمنون بها. كما نتعرض لخصوصية المعاني وكيف يتحكم سياق النص وغرضه ووسيطه في اعتباراتنا أثناء الترجمة. ونحاول تجاوز مدرسة \"قل ولا تقل\" في العربية نحو نهج أكثر انضباطًا وأوسع أفقًا.\n\nوبالطبع، سنختبر معًا ما نتوصل إليه من أفكار عبر الممارسة العملية. سنتقاسم المهام في المختبر بحيث يترجم كل مشارك ومشاركة ورقة من الأوراق التي تُقرأ باستمرار في مساقات سيلاس المختلفة، ونقوم بالتعليق عليها وتحريرها سويًا أثناء الجلسات.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/مختبر_الترجمة_-_سارة_السباعي.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Creative Research Writing: Between Fact, Fiction, and Personal Truths",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Farida Gohar",
+                "email": null,
+                "bio": "Farida Gohar is a poet and anthropologist interested in experimenting with form to think through ideas of accessibility, interaction, and co-production. She graduated with an MA in anthropology from the American University in Cairo where she wrote her thesis on jazz music and musicians in Egypt. Farida is also a co-founder of the Cairo Poetry Collective where she runs experimental poetry workshops and open writing studios with her friends."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-25",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "My arrival at creative research writing is informed by two observations:\n\n1. There is an assumed distinction between academic research and writing practices and personal, creative ones.\n\n2. Academic research and writing practices are considerably impaired when divorced from personal, creative ones.\n\nTo attempt to reconcile both ‘types’ of writing, of approaching our work and the page, is to be faced with the dual demands of critical thinking and our imaginations. This, to me, is an incredibly exciting beckoning and if taken seriously, can be immensely expansive and not least of all, fun.\n\nHow would our articulation of our research findings be impacted if we approached it as writers of creative non-fiction rather than academics? How might an eye to poetry, to figurative language, rhythm, and musicality inform the kind of observations we make and how we interpret them? How can our chosen transcription methods alter our perception of the same interview? What would happen if we inserted our own experiential history and emotions into our academic writing, considered them equally profound and worked with them seriously?\n\nThese are some of the questions that we will attempt to address collectively by experimenting with different creative writing tools and forms and seeing how they can be configured within our research process and writing.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/[syllabus]_creative_research_writing___cilas.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Playing with the Archive: Staging the 1919 Uprising",
+            "title_ar": null,
+            "subtitle": "In collaboration with the Institute for De-Colonising Theory",
+            "course_type": "WORKSHOP",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa Dardir",
+                "email": null,
+                "bio": "Ahmed Diaa Dardir is the co-founder of the Institute for De-Colonising Theory (IDCtheory). His research deals with questions of power and subjectivity, especially in colonial/anticolonial and revolutionary /counterrevolutionary contexts. He holds a PhD in Middle East Studies from Columbia University. His forthcoming book is tentatively titled Licentious Topographies: Global Counterrevolution and Bad Subjectivity in Colonial and Postcolonial Egypt."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 6,
+            "start_date": "2026-04-26",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This workshop is a crash course through the archive of 1919, but it is also an experiment in storytelling, acting, improvisation, and dramatization.\n\nWhat happens when we treat an archival document not as a fixed retelling of facts, but as a draft of a script — open to interpretation, animated by multiple voices and shifting narrative viewpoints?\n\nAnd what happens when these documents pertain to the formative moment of 1919?\n\nWhat muted stories of resistance begin to emerge? What suppressed narratives can be restored through this method — and what critical insights can we gain about the archive itself, its silences, its biases, and its power to speak?\n\nIn this workshop we take a number of documents, all pertaining to the 1919 Revolution and its aftermath– a moment of mass mobilization, underground organization, protest, agitation, sabotage and all forms of peaceful and non-peaceful confrontations against the British occupation.\n\nTaking place against heavy British censorship, the historiography pertaining to the 1919 uprising suffers from a lacuna that can only be resolved, if partially, through recourse to the colonial records, where not only the empire’s reports are kept, but where also a large mass of the local pamphlets was expropriated. Although there have been various attempts (especially in Arabic language historiography) to retell the events from the point of view of the players who decided to record their testimonies, the larger body of primary documents is only accessible through the misrepresentations of the British colonial archives. We are doomed to refer to the colonial archives to (re)tell our anticolonial histories.\n\nBut, we treat colonial fiction as fiction. Through dramatization we dig up and seek to restore the repressed voices within this archive in order to retell the story from these repressed narrative points.\n\nThrough dramatizing these documents, we seek to investigate the biases of the colonial records, interrogate the players and their aims and methods, and recover (through a mix of research and well informed speculation, embedded in the documents and the scenes they tell and guided by the theatrical method) stories of resistance. How can this method complement other methods of archival and historical research? How can ‘educated guesses’ in the theatrical tradition guide students, scholars, and researchers in posing critical questions and challenging colonial hegemony over historical narratives?\n\nMore specific to 1919 Egypt, we also seek to contribute to troubling the myth of a “civil” revolution bound in the urban centres starring well behaved men and women- and the diametrically opposed myth of an uncivilized Egyptian horde engaged in irrational riots and destruction.\n\nThe aim nevertheless is not to adapt the document into a play (even though part of the exercise is to think as if we would), but to introduce dramatization as a useful classroom tool, and as a way for researchers to engage critically and creatively with primary documents\n\nThe workshop derives from the shared vision of the Institute for De-Colonising Theory (IDCtheory) and the Cairo Institute of Liberal Arts and Sciences (CILAS) to radically democratize the intellectual arena through participatory pedagogy and collective thinking and research– in less fancy terms: to make education and research accessible, engaging, and fun.\n\nTo make a more explicit reference to the theory: the workshop is informed by Jacques Derrida’s Archive Fever and Edward Said’s method of contrapuntal reading. It seeks to identify and interrogate the lacunae of the archive and through the productive reading of absences to harken to and re-enact repressed and muted voices.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/dramatizing_the_archive_-_cilas_proposal.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

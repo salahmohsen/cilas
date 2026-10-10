@@ -1,0 +1,171 @@
+{
+  "sha256": "450b9135cba12b434066c12fe44c27bda3999a8c6b9d435bd8a3e18b8b530ca4",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall 2021",
+        "season": "fall",
+        "start_year": 2021,
+        "start_date": null,
+        "deadline": "2021-09-15",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Sacred Landscapes, Violence, and Resistance – Examples from Kurdistan",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Benjamin RASSBACH",
+                "email": "benjamin.rassbach@riseup.net",
+                "bio": "loves stories of all kinds – be they handed down by tradition or made up by imaginative minds. The passion for religions, philosophies, politics and languages has brought him to many middle eastern countries, where he did academic research, long-term documentaries in collaboration with photographers - and sometimes sheep herding, gardening and hitch-hiking.He has completed a BA and an MA in both anthropology and science of religion, next to many years of courses in Arabic, Turkish and Persian."
+              }
+            ],
+            "schedule_text": "Mondays (offline) from 10 Am to 12 pm, starts 27th September, through 8 weeks",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "10:00",
+            "end_time": "12:00",
+            "weeks": 8,
+            "start_date": "2021-09-27",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Systems of symbols have widely been used to mark landscapes and lay claim on them. Such land-claims can be turned into an effective tool for governance by nation states or be used by political groups pursuing other aims. The course will inquire how religiously derived land claims can be understood as a form of resistance against the seemingly all-encompassing power of the nation state? How does the term religion \"work\" in this context? And how do secularist actors justify their claims within the same discursive space? As it has become obvious today that secularism is no less ideological than religion, it is worthwhilediscussing the theoretical considerations outlined here by taking into account anthropological, political and historical material from Kurdistan.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/sacred_landscapes_violence_and_resistance_–_examples_from_kurdistan.pdf"
+            ],
+            "register_url": "https://forms.gle/nQdGkNp9tyGGxuG78",
+            "own_page": null
+          },
+          {
+            "title": "Healing, Rituals, and Spirituality – An introduction to the Anthropology of Religion",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Sohayla El Fakahany",
+                "email": "sohaylaelfakahany@gmail.com",
+                "bio": "is a healing practitioner at heart and an academic by practice. Her MA thesis ‘Meanings of Mindfulness and Spiritual Awakening: Affliction and Holistic Healing in Contemporary Cairo’ analyzes spiritual practices and debates in conversation with medical, religious, and magical anthropology as they pertain to the growing interest in alternative and complementary healing in Egypt."
+              }
+            ],
+            "schedule_text": "Tuesdays (online) 6:30pm - 9pm, through 8 weeks, start date is September 21st",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:30",
+            "end_time": "21:00",
+            "weeks": 8,
+            "start_date": "2021-09-21",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Anthropology is the study of people, cultures, and the human condition. This course introduces the concepts of religion and spirituality with an anthropological, social, and cultural lens that focuses on rituals and healing. Our question does not focus on the synopsis of different religions in the world, it is rather an exploration and investigation of key facets of religio-spiritual practices. This includes rituals, magic and witchcraft, myth, history of religion, and spiritual healing. Our aim is to investigate how all of these concepts were created and recreated to form the spiritual beliefs and practices that are popular today.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/healing_rituals_and_spirituality_–_an_introduction_to.pdf"
+            ],
+            "register_url": "https://forms.gle/KAYZnpCJPbeuY2kX6",
+            "own_page": null
+          },
+          {
+            "title": "View My Desire: Psychoanalysis and Film",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Cassidy CRAWFORD",
+                "email": null,
+                "bio": "completed an undergraduate degree in International Studies at American University in 2014. After graduation, she spent winters teaching in Cairo and summers sailing Penobscot Bay as the first mate on a hundred-year-old schooner in Camden, Maine. She recently completed her Master’s degree in Psychosocial Studies from Birkbeck in London, UK. Her thesis was entitled ‘The Me Too movement: a psychoanalytic exploration of the limits of Law and possibilities beyond it.’ Her interests include Lacanian psychoanalysis, post-Lacanian feminist inquiries."
+              }
+            ],
+            "schedule_text": "Sunday nights (offline) from 6:30-8:30, movie night on Wednesday, starts 26th September, through 8 weeks",
+            "weekdays": [
+              "sun",
+              "wed"
+            ],
+            "start_time": "18:30",
+            "end_time": "20:30",
+            "weeks": 8,
+            "start_date": "2021-09-26",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course will examine psychoanalysis from two perspectives: first, as a theory of subjectivity, and second, as a method of reading text. We will begin with an introduction to Lacanian psychoanalytic concepts in order to establish a mutual understanding of the Lacanian split subject. This split in subjectivity means that the subject is a mystery even to herself, and that meaning is revealed accidentally; any attempt at authentic self-expression is necessarily thwarted by our alienation from the world of language and, therefore, from ourselves. In the clinic, the analyst treats the patient’s words as a text, looking for slips, contradictions, and excesses that can expose some truth unacknowledged by the subject. Our work in this course will be to read cinematic text the same way that an analyst reads psychic text; we will seek to uncover meaning “through isolating the point at which meaning fails” (Lacan and Contemporary Film). Through these readings, we will gain a deeper understanding of desire, fantasy, ideology, and even political possibility.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/psychoanalysis_and_film_prelim.pdf"
+            ],
+            "register_url": "https://forms.gle/KAYZnpCJPbeuY2kX6",
+            "own_page": null
+          },
+          {
+            "title": "Ab/Uses of the Erotic",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Omar ALSAYYED",
+                "email": "omarmalsayyed@gmail.com",
+                "bio": "is a doctoral student at NYU whose research interests include cultural theory, critical race and indigenous theory, queer/trans/feminist theory, and contemporary Palestinian cultural production."
+              }
+            ],
+            "schedule_text": "Mondays (offline) from 6 pm to 8 pm, starts 18th October, through 8 weeks",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": 8,
+            "start_date": "2021-10-18",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "How has the erotic been deployed as a colonial and racializing technology? How might the eroticscramble, however fleetingly and flimsily, the coherence of racialized and colonial relations?Lingering with this dialectic of ab/use, we consider how the erotic has been aesthetically andtheoretically taken up—not despite but precisely because of the violence that haunts it.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/ab_uses_of_the_erotic_course_flow__8_.pdf"
+            ],
+            "register_url": "https://forms.gle/KAYZnpCJPbeuY2kX6",
+            "own_page": null
+          },
+          {
+            "title": "العمل:اناء الليل وأطراف النهار",
+            "title_ar": null,
+            "subtitle": "قراءات ومشاهدات عن العمل",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "علي حسين العدوي",
+                "email": "ali.aladawy@gmail.com",
+                "bio": "(مواليد 1985),مقيم فني وباحث ومحرر وكاتب وناقد للصور المتحركة والممارسات الفنية الحضرية والتاريخ الثقافي. نظم عدة برامج عروض أفلام وندوات مثل «سيرج دانيه … تحية و استعادة» (٢٠١٧) و«هارون فاروقي: جدل الصور… عن الصور التى تكشف/تحجب صوراً أخرى» (٢٠١٨). نظم أيضا بالتعاون مع بول كاتا، معرض «فن التوهان في المدن: برشلونة والإسكندرية» (٢٠١٧) وهو أحد مؤسسي مجلة «ترايبود» الالكترونية لنقد الأفلام والصور المتحركة (٢٠١٥ – ٢٠١٧) وكان أحد محرري منصة «ترى البحر» الالكترونية والمطبوعة للممارسات الفنية والحضرية في الإسكندرية (٢٠١٥ – ٢٠١٨)."
+              }
+            ],
+            "schedule_text": "أونلاين يوم الأربعاء من 7 ل 10 مساء بتوقيت القاهرة، على مدار ثمانية أسابيع، بداية من 13 أكتوبر",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "19:00",
+            "end_time": "22:00",
+            "weeks": 8,
+            "start_date": "2021-10-13",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "منذ أكثر من ثلاثين عاما، انتقلت الرأسمالية من الإنتاج الصناعي والتجاري إلى المرحلة \"النيوليبرالية\" من أجل تحقيق أرباح سريعة بحيث اعتمد الإنتاج بالأساس على اقتصاد الخدمات والإستثمار العقاري والسياحة والدعاية والإعلان والتسويق والاتصالات واقتصاديات المعرفة وتكنولوجيا المعلومات والبرمجيات والاقتصاد المالي المصرفي القائم على البنوك ونظام الإئتمان. بعد ذلك، تم تصدير الصناعات إلى الصين وبعض دول الجنوب النامية وبدأ جدل قوي مستمر حتى الآن حول نظريات \"القيمة\" والتسعير الجديدة وكيفية إنتاج الأرباح ومفاهيم العمل المختلفة مثل العمل المعرفي والذهني والعمل المنزلي وإشكالية \"تأنيث العمل\" بشكل يزعزع بتحدي كبير الصورة النمطية للعمل \"العامل الذي يرتدي أفرول أزرق ويعمل على ماكينة في مصنع\". في مصر، يخرج العمل من الساعات المحددة والمؤسسات المغلقة ليحتل حياتنا كلها لنتحول الى جيوش من العمالة الحرة المؤقتة التي تعمل بشكل دائري لانهائي.. آناء الليل وأطراف النهار.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/العمل_اناء_الليل_وأطراف_النهار.pdf"
+            ],
+            "register_url": "https://forms.gle/KAYZnpCJPbeuY2kX6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

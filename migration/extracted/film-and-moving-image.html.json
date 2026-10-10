@@ -1,0 +1,34 @@
+{
+  "sha256": "2d0be8ede7aa52b1c542a5909f82859f2935e4402b7b487135e3502a4cb90803",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Film and Moving Image",
+      "title_ar": "الفيلم والصورة المتحركة",
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Ali Atef ABDELKADER",
+          "email": null,
+          "bio": "Ali Atef ABDELKADER is a doctoral candidate in anthropology at the University of Chicago currently researching the history of film in Egypt. His research interests are in film history, archives, visual anthropology, and movement and migration. He was previously a senior researcher at The American University in Cairo’s Social Research Centre, where he also taught anthropology of Arab societies in the university’s Anthropology unit at the Sociology, Anthropology, Pyschology, Egyptology department. He has an MA in socio-cultural anthropology from Columbia University (2010).\n\nعلى عاطف عبد القادر هو مرشح لدرجة الدكتوراه في الأنثروبولوجيا في جامعة شيكاغو ويبحث حاليًا في تاريخ الفيلم في مصر. تتركز اهتماماته البحثية حول تاريخ الأفلام وأرشيفاتها والأنثروبولوجيا البصرية والحركة والهجرة. وقد عمل سابقًا كباحث في مركز البحوث الإجتماعية بالجامعة الأمريكية بالقاهرة حيث درس أنثروبولوجيا المجتمعات العربية في شعبة الأنثروبولوجي في الجامعة. وهو حاصل على درجة الماجستير في الأنثروبولوجيا الإجتماعية والثقافية من جامعة كولومبيا في عام 2010."
+        }
+      ],
+      "schedule_text": "Tuesday mornings from 10:00 am to 12:30 pm, and Tuesday evenings from 5:30 pm to 8:00 pm.",
+      "weekdays": [
+        "tue"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": null,
+      "location": [],
+      "description": "course description\n\nThe course is designed to introduce the qualities of film and the perspectives they might offer us. Through the study of selected films, short readings, lectures and discussion, this course will introduce the specific elements of film. In each session, we will read critical responses to a film we watch. Alongside our readings and screening, we will examine the film’s aesthetic techniques—from movement, montage, sound to narrative and point to view, to scale and color. We will ask how has film been understood, shaped by, and constrained by aesthetic and social practice? By the end of each session, we will have examined in-depth one film’s qualities, perspectives, and socio-historical significance. Over the course of this 10-week course, we will closely analyse audiovisual forms to explore the range of questions, issues and methods appropriate to understanding the broad history of film—major technological developments, aesthetic techniques, artistic movements, genres, and works.\n\nThis course seeks to develop skills in perception, comprehension, and interpretation when dealing with film and other moving image media. Most importantly, the course aims to foster in students the ability to translate this understanding into verbal expression, both oral and written (creative projects are also encouraged). You will have opportunities to generate your own analysis of films and to share them with members of the group. By the end of his course, you should have a solid understanding of how film can be interpreted or “read” through close analysis.\n\nرؤية عامة\n\nهذا المساق مصمم كي يقدم لطلابه صفات الأفلام والرؤى التي قد توفرها لنا. من خلال دراسة أفلام مختارة وقراءات قصيرة، ومحاضرات ومناقشة، سيقدم المساق عناصر محددة عن الأفلام. سنقرأ عروضًا نقدية حول الأفلام التي نشاهدها في كل محاضرة. وسنختبر التقنيات الجمالية للأفلام إلى جانب القراءة والمشاهدة: من الحركة والمونتاج والصوت إلى السرد ووجهة النظر وحتى الألوان. سيوجهنا السؤال: كيف يتم فهم الأفلام وتشكيلها وتكثيفها بالممارسات الإجتماعية والجمالية؟ سنكشف واحدة من صفات الفيلم ووجهة نظر صانعها والأهمية الإجتماعية التاريخية في نهاية كل محاضرة. على مدى عشرة أسابيع، سنحلل عن قرب الأشكال الصوتية المرئية كي نكتشف طيف الأسئلة والقضايا والمناهج الملائمة لفهم التاريخ الواسع للأفلام - التطورات التكنولوجية الكبيرة والتنقيات الجمالية والحركات الفنية والتصنيفات والأعمال.\n\nيسعى هذا المساق إلى تطوير المهارات في الرؤية والفهم والتفسير عندما نتعامل مع الأفلام والوسائط البصرية المتحركة الأخرى. والأهم من ذلك، يهدف المساق إلى تعزيز قدرة طلابه في ترجمة هذا الفهم إلى تعبير كلامي سواء كان شفاهيًا أو مكتوبًا (مرحب بالمشاريع الإبداعية أيضًا). ستتاح لكم الفرصة في خلق تحليلاتكم الخاصة للأفلام ومشاركتها مع أعضاء آخرين من المجموعة. في نهاية المساق، سيصبح لديكم فهم قوي عن كيف يمكنهم تأويل الأفلام أو قراءتها من خلال تحليل عميق.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

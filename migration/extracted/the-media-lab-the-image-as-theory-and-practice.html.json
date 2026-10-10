@@ -1,0 +1,39 @@
+{
+  "sha256": "177a78385f7db0590a7279f39d6c85b9cd89a4655befa33f4a2e24521910b5cf",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "The Media Lab: The Image as Theory and Practice",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "LAB",
+      "fellows": [
+        {
+          "name": "Kari Rosenfeld",
+          "email": null,
+          "bio": "Kari ROSENFELD is from Houston, Texas. She worked as a fashion photographer and producer before studying analytic philosophy at the University of Texas. She has since worked as an artist using writing, video, and photography. She serves as the Artist in Residence at CILAS Alex."
+        },
+        {
+          "name": "Gian Spina",
+          "email": null,
+          "bio": "Born in São Paulo, Brazil. Write, Reads and works sometimes as an artist. Has taught in places as International Art Academy Palestine, Escola da Cidade (São Paulo) and the Ionion Center for Arts and Culture (Greece). Today he learns Arabic, speaks five other languages and is constructing an interdisciplinary body of work on the materialization of power in the public sphere. He was part of the residency program in Documenta 14 in Athens (2017) and recently at MMAG Foundation in Amman (2018). He lives now between Amman and Cairo and writes poetry on a daily basis. His work can be seen in http://gianspina.com"
+        }
+      ],
+      "schedule_text": "Sundays: early birds 10:00-13:00 and night owls 17:00-20:00, provided no fewer than five participants sign up per class.",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The Media Lab is a visual arts practice based course focused on photography with workshops on video, performance, and poetry. Each class will address three aspects of a visual arts practice: theory, history, and craft. This course will be a practice based course on how we use theory. We will look at the the history of photography as a contemporary art and will address the different ways in which photography can be used as a visual medium. It will focus on how art and theory can become not just frameworks for one another but interact. The lab will directly address the issues created by this separation of art and theory and apply it to the creation of work that pushes against this separation by radically and intentionally questioning the traditional notions of formality. Half of each class will be directed at craft. We will take cues and inspiration from looking at history and theory, then we will put these ideas into practice with small projects each class that each focus on one particular element of the photographic craft. In the second half of the semester the Media Lab will guide students through a focused project that will culminate in a group art show at the end of the semester allowing students the opportunity to think about creating work to be displayed.\n\nWe recommend this course for anyone wanting to experiment with new ways of seeing and making art. While this course is focused on photography, it will include workshops in poetry, film, and performance in order to expand the possibilities of a visual arts practice. We also recommend this course be taken in conjunction with “Why Do I Love You? (The Structures of the Beautiful)”.",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/aFWvCKOZZ2ZRMOq72",
+      "own_page": null
+    }
+  }
+}

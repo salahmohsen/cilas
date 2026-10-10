@@ -1,0 +1,36 @@
+{
+  "sha256": "946aa8199a95d87c64c7de64b24e7b7b52c3f247477adcca8478834917b51164",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Power and Space",
+      "title_ar": null,
+      "subtitle": "Critical approaches to the built environment",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Dalia Wahdan",
+          "email": null,
+          "bio": "Dalia Wahdan is an anthropologist who is deeply interested in the ‘urban’ particularly the perennial dialectics of man and nature. She holds a Ph.D. from Pune University, India and a Masters from the American University in Cairo. The Masters’ thesis was an examination of spatial inequities manufactured and sustained by the construction of new urban settlements in Egypt and the doctoral dissertation was a comparison of the privatization of road networks and their implications on physical mobility in the national capital region of Delhi and greater Cairo region. She is a firm believer in liberal learning and education and has taught at the Foundation for Liberal and Management Education (FLAME University) in India, at the Centre for the Study of Law and Governance of Jawaharlal Nehru University (India) and the School of Public Administration of the American University in Cairo. She loves to wander into landscapes and observe how humans imagine and possibly create spaces of freedom within and against their mortal predicaments.\n\nداليا وهدان: عالمة أنثروبولوجية منغمسة في البيئة الحضرية واستمتع باﻹشتباك مع طريقة خلق السلطة والفاعلين للمساحة والتحكم فيها وملائمتها، وفي أحيانٍ أخرى عن طريق مشاهدتها عن بعد. أتعلم وأشارك ما فهمته مع طلابي وصناع السياسات واﻵخرين في الفصول الدراسية والوزارات واللقاءات اﻹجتماعية."
+        }
+      ],
+      "schedule_text": "On Wednesday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Anthropologists and architects often use the term built environment to refer to the man-made habitats which we humans create and within which we conduct our daily lives such as streets and roads, dwellings, schools, hospitals, green spaces and common spaces. The term has grown to comprise physical infrastructure such as waste disposal and sanitation networks and has even expanded to include what is known as real estate developments.\n\nThis course examines how anthropologists, architecture historians and critical geographers have grabbled with built environments from the early concepts of ‘primitive’ or ‘vernacular’ built forms to the twenty-first ‘real estate’ renditions. It nudges participants to critically engage with sets of readings and documentaries that analyse the interplay of religion, power, economy, ideologies and culture in the production and consumption of built environments. We shall even critically examine the very concept of ‘environment’ and its post-colonial genealogies.\n\nThe built environment is not static. It is a dynamic habitus. Thus our class discussions and activities need to reflect such dynamism. Through experiential learning and much reflexive thinking, the course introduces participants to a broad range of perspectives: from the ecological, the modernist, the socio-technical systems approach, to the built environment as real estate capital. Readings and documentaries will draw from diverse locations from the Global South such as Brazil, India, Tanzania, Dubai and Egypt.\n\nObjective of the Course:\n\nBy the end of this course you will be able to\n\n1. Discern the ideological underpinnings of the term ‘environment’ in diverse discourses\n\n2. Explain the dynamic relationship between built environment and power\n\n3. Use diverse anthropological approaches to analyse built environments comprising their aesthetic, social, economic and technological dimensions\n\n4. Discuss individual and collective agency in shaping and appropriating built environments\n\n5. Go beyond typologies and dichotomies in understanding the built environment\n\nCourse Outline\n\nWeek 1, 2: Genealogy of the concept ‘environment’. Steps towards developing a critical approach to the built environment. Revisiting dichotomies: e.g. primitive versus modern, colonial versus post-colonial, vernacular versus capital architecture.\n\nWeek 3, 4: Social Life of Things – The Ecological System’s Approach. Religion, monuments and colonial built forms – India, Sub-Saharan Africa, Egypt.\n\nWeek 5, 6: Modernist “IDEAL” built environments e.g. Walter Gropius’ Bauhaus, Garden Cities and development corridors: Chandigarh, New Delhi, New Settlements.\n\nWeek 7, 8: Time-Space Compression and early Ideas of socio-technical systems. Starchitects and seductive landscapes of consumption, affective built environments and the vertical city.\n\nWeek 9, 10: Self-built environments and engineering the future including informal built environment in contrast to micro-biopolitics and energy-efficient settlements e.g. BedZed. Neoliberal built environments: What is “real” about Real Estate?\n\nActivities and Assessments\n\nA. Readings and Class Discussion 15%\n\nB. Acquisition and Documentation of primary data 30%\n\nC. Comparative analytical essays in diverse formats e.g. photos essays, spatial representations such as maps or architectural designs 30%\n\nD. Comparative analysis of development plans 25%",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/CIQFumN6AMkDNN1K2",
+      "own_page": null
+    }
+  }
+}

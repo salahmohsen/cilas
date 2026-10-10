@@ -1,0 +1,34 @@
+{
+  "sha256": "887272b3b08bf0e02dab77063c1a881af403e6a4a0890fb00a62d18e846184c1",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Encountering the State",
+      "title_ar": null,
+      "subtitle": "Anthropological Perspectives",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Ahmed Bakr",
+          "email": null,
+          "bio": "recently finished his MA in Sociology and Social Anthropology from Central European University. He has worked as a translator and news editor but is now mostly an enthusiastic explorer of the field of anthropology. He is interested in questions related to power, capitalism, and the state. He also has a taste for Marxist memes."
+        }
+      ],
+      "schedule_text": "Sundays evenings from 6:00 pm to 8:30 pm",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": "18:00",
+      "end_time": "20:30",
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The question of what is the state and how it operates has always been central to social sciences as much as the state itself has been central to living in modern societies. However, political anthropology had traditionally steered away from these discussions, as it studied societies that had been deemed ‘pre-modern’ and, thus, organized around ‘kinship’– as opposed to the modern state. As the world entered the era of globalization and neoliberal capitalism, the nature and role of the state have been once again called into question. The growing field of anthropology of the state has brought a new perspective to studying the state.\n\nThe anthropology of the state benefited from modern social theory, and particularly from the Marxist and Foucauldian traditions, in addition to the works of political anthropologists who broke with tradition to explore the colonial state relations that the ‘pre-modern’ societies had been engaging with. Ethnography has proven to be a great tool to explore the questions of state activity through the everyday encounters of social actors and the conflicting imaginaries of the state that they develop based on them. This course aims to showcase the development of the anthropological study of the state and guide the participants through examining different ethnographic inquiries into state activity.",
+      "flow_links": [],
+      "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+      "own_page": null
+    }
+  }
+}

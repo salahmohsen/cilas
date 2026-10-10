@@ -25,14 +25,25 @@ const SPACES = {
   'al-manshiya': 'al-Manshiya',
 } as const
 
-/** The space a cycle met in: as the page says, else Alexandria by name, else a flagged default. */
+/**
+ * The space a cycle met in: as the page says, else Alexandria by name, else
+ * the Cairo space of its time. The archive shows CILAS began in al-Ghuria
+ * (still there in spring 2016) and was in Darb el-Labbana by January 2018;
+ * the Pigeon Towers foreword (late 2017) speaks of al-Ghuria in the past.
+ * So academic years up to 2016–17 are al-Ghuria, later ones Darb el-Labbana;
+ * that date-based choice is flagged for review.
+ */
 export const spaceOf = (
   hint: string | null,
   file: string,
   title: string,
+  season?: string,
+  start_year?: number,
 ): { space: string; guessed: boolean } => {
   if (hint && hint in SPACES) return { space: SPACES[hint as keyof typeof SPACES], guessed: false }
   if (/alex/i.test(file) || /alex/i.test(title)) return { space: 'al-Manshiya', guessed: false }
+  const academicStart = start_year === undefined ? undefined : season === 'fall' ? start_year : start_year - 1
+  if (academicStart !== undefined && academicStart <= 2016) return { space: 'al-Ghuria', guessed: true }
   return { space: 'Darb el-Labbana', guessed: true }
 }
 
@@ -78,4 +89,17 @@ export const isMostlyArabic = (text: string): boolean => {
   const letters = text.match(/\p{L}/gu) ?? []
   const arabic = letters.filter((c) => /\p{Script=Arabic}/u.test(c)).length
   return letters.length > 0 && arabic / letters.length > 0.5
+}
+
+/**
+ * Splits a description into its English and Arabic paragraphs, so each lands
+ * in its own locale. A paragraph belongs to the language most of its letters
+ * are in.
+ */
+export const splitLocales = (text: string): { en: string; ar: string } => {
+  const paras = text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+  return {
+    en: paras.filter((p) => !isMostlyArabic(p)).join('\n\n'),
+    ar: paras.filter((p) => isMostlyArabic(p)).join('\n\n'),
+  }
 }

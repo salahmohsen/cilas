@@ -1,0 +1,34 @@
+{
+  "sha256": "8239039d6b17f4356a40a0004165c265d1fdc64f76789f6af8290357d2dcf566",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "The Art of the Flâneur",
+      "title_ar": null,
+      "subtitle": "Aimlessly wandering through Cairo's neighbourhoods",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Ayesha Mualla",
+          "email": "mualla.ayesha@gmail.com",
+          "bio": "Ayesha MUALLA obtained a Master's degree in Media and Cultural Studies from Tata Institute of Social Sciences (TISS), Mumbai after graduating from St. Xavier’s College, Mumbai. Ayesha has worked as a Research Fellow at TISS, Hyderabad. She also had a short stint with journalism contributing to Deccan Chronicle and Tehelka magazine. Ayesha joins CILAS with three years of experience with the Ministry of Higher Education in Oman serving as faculty member at the College of Applied Sciences, Nizwa. Her research areas include Art, Popular Culture, Identity and Social Media. A keen photographer, she tries to capture the unexplored in her frames and discover spaces through photo walks. As a fellow at CILAS she coordinates the field of study Arts and directs CILAS' Media Lab."
+        }
+      ],
+      "schedule_text": "Mondays: early birds 10:00-12:30 and night owls 17:00-19:30, provided no fewer than five participants sign up per class. The course runs for 10 weeks, March 23rd through May 25th, 2015.",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2015-03-23",
+      "location": [],
+      "description": "description\n\nThis course is meant to analyse urban space and the concept of the flânerie. Flânerie, the art of the flâneur, means strolling, loitering, sauntering with no fixed intent. The course invites participants to discover new ways of navigating the urban landscape. We will begin by exploring the notion of aimless wandering and procrastination by looking at the literary writings of Charles Baudelaire, Walter Benjamin, Charles Dickens, and Virgina Wolf.\n\nIn this course we will examine the relationship between wandering and wondering. Urban life is characterised by moments of idlesness such as when stuck in traffic, waiting to cross the streets, anticipating a bus, or standing in a queue. Through the writings of Egyptian-born French writer Albert Cossery, we will explore notions of time and leisure in Cairo. For example, what does it mean to loose track of time and wander without destination? Egypt embodies a unique aesthetic of time. How does sitting at an ahwa, smoking shisha, playing tawla or having shai symbolize this particular context?\n\nMichel de Certeau's seminal work 'Walking in the City' will allow us to engage with the physical act of walking. According to de Certeau it is the city-walker that bring city to life. The city provides pen and paper and it is the people, namely the pedestrians who provide the story. Pedestrians and hawkers tell urban stories in their movements and these stories are woven into the urban fabric. We will further engage with situationist Guy Debord and learn about his idea of mediation as altering urban experiences. We will further re-imagine the flâneur as a flâneuse , i.e. a female flâneur, as Indian feminists are re-claiming public space.\n\nexpectations\n\nParticipants are expected to have an appreciation for literature and a passion for walking around Cairo.\n\nParticipants are expected to have access to a pair of comfortable shoes; iPods are not required.\n\nParticipants should not expect to lose weight or any form of health benefits.\n\nHowever, participants can expect a Cairene tan.\n\nwhy apply?\n\nTo re-discover the art and aesthetics of walking and particularly flânerie.\n\nTo examine the relationship between aimless wandering and navigating Cairo’s urban landscape.\n\nTo re-imagine the flâneur as a flâneuse , i.e. a female flâneur and collectively reclaim a safe and accessible public space.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

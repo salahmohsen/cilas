@@ -1,0 +1,312 @@
+{
+  "sha256": "147e5e5d4fe4923cd71ed3eb113d76498d698ac30298ce52f6c0b33eef4f93a2",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Trimester two 2016-2017",
+        "season": "winter",
+        "start_year": 2017,
+        "start_date": "2017-01-15",
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "An Invitation to Collaborate Across Differences",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Jana HOLLÀ",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "What’s a monocultural society? Or for that matter a multicultural one? What is meant by ethnocentrism? Or for that matter by Eurocentrism?\n\nThis course invites you to explore your relationship with the (cultural) “Other”. Our exploration will climb two stages: you will be introduced to the basic theoretical frameworks and key elements that constitute Cross Cultural Communication and Intercultural Learning, followed by a survey of practical application.\n\nIt is often said that to be able to know the Other, we need to know ourselves first. We will study the topics of identity, self- and other-awareness, perception, and belonging: the age-old ”us” vs ”them” paradigm that inevitably leads to stereotypes and prejudice. The process of acculturation presents yet another major theme and will serve as a conceptual bridge to studying ethnocentrism.\n\nفي مجتمعاتنا التي يغلب عليها أحادية الثقافة، نتربى على أن \"طريقتنا- في التفكير والفعل- هي أفضل طريقة\"، هذا وإن وُجدت أصلاً طرق أخرى يقبلها المجتمع. هل يمكن لمثل هذا السلوك أن يصمد فى وجه عالم معولم؟ البداية من هنا، كم أصبحت القاهرة ذات ثقافة أحادية حقًا؟\n\nيأتي هذا المساق إلى النور ليلقى الضوء على علاقاتنا مع \"الآخر أو المختلف ثقاقياً \" كقضية أساسية عند تقديم حقل الدراسات الثقافية المتداخلة. تنقسم رحلتنا إلى جزئيتين: تقديم أساسيات الإطار النظرى والمحاور الرئيسية التي تشكل التعلم المتداخل ثقافياً، متبوعة بالتطبيقات العملية.\n\n\"من أجل معرفة الآخر يجب أن نعرف من نكون أولاً\" هذا يمثل الفرضية التي يرتكز عليها الجزء الأول. لذلك سنتعمق في مواضيع تتعلق بالهوية، والإدراك بالذات وبالآخر، ووجهات النظر، والانتماء: المسلسل الأزلى \"نحن\" في مقابل \"هم\" الذي يؤدي حتماً إلى الصور النمطية والأفكار المسبقة. بطبيعة الأمر, تمثل الثقافة وعملية اكتساب موضوع رئيسي بالإضافة إلى كونهم مقدمة إلى \"المركزية العرقية\".",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "an-invitation-to-collaborate.html"
+          },
+          {
+            "title": "Black Swans: On Making Sense of Mess",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Manar HAZZAA",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm till 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In 2007 economist-philosopher Nassim N. Taleb, a former trader and risk analyst, published his Book The Black Swan: The Impact of the HIGHLY IMPROBABLE. In his book, Taleb is “skeptical about confirmation”. He explains the black swan logic as one that “makes what you don’t know far more relevant than what you do know”. Taleb’s Black Swans are events with three qualities: “rarity, extreme impact, and retrospective predictability”, his theory was received with, both, welcome and deride.\n\nThis course revolves around the theory of Black Swan Events. The course engages with the concept of an “event” while playing with Taleb’s Black Swans logic. Together we will raise questions, such as, why do we need to study events? What are different types of events? What are the characteristics that define Black Swan Events, and why do they deserve our attention?\n\nفي عام ٢٠٠٧ نشر “نسيم نيقولا طالب” كتابه الملحمي البجعة السوداء. يتساءل طالب في كتابه عن اليقين ويشرح المنطق وراء مفهوم البجعة السوداء كمفهوم “يجعل من الذي لا نعرفه ذو صلة أكثر من الذي نعرفه”. لأحداث البجعات السوداء مميزات ثلاثة: “الندرة، التأثير القوي، التنبؤ بأثر رجعي”، استقبلت نظريته بالترحيب والسخرية.\n\nيتمحور المساق حول “أحداث البجعة السوداء” ويتشابك مع فكرة “الحدث” بالحوار مع منطق البجعة السوداء الخاص بـ”طالب”. سوف نطرح أسئلة خلال هذا المساق، على سبيل المثال: لماذا نحتاج لدراسة “الأحداث”؟ ما هي أنواع الأحداث المختلفة؟ ما هي الأوصاف التي تحدد أحداث البجعة السوداء؟ ولماذا تستحق اهتمامنا؟",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "black-swans.html"
+          },
+          {
+            "title": "The Single Individual: Quality Time with Soren Kierkegaard",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Omar EL-RAKHAWI",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wendesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In this course we will read, interpret, and discuss the writings of Danish philosopher Soren Kierkegaard in provoking, reflective, yet relaxed sessions over tea and coffee. In a context where people all over the globalizing world are facing existential questions with regards to socio-political and religious authorities, Kierkegaard foregrounds as a thinker who is relevant to ea\n\nفي هذا المساق، سوف نقرأ ونفسر ونناقش كتابات الفيلسوف الدنماركي سورين كيركجارد في محاضرات هادئة لكن محفزة حول الأشربة النهارية والمسائية. ماذا نقدم؟ إلى الآن يبدو مبالغًا فيه وكأنه مثل جيمس بوند. وماذا عن قهوة نهارية وشايًا مسائيًا؟ في عالمٍ حيث يواجه الناس من جميع أنحاء العالم المعولم أخطارًا وجودية وأسئلة من حولهم؟ يتقدم كيركجارد كمفكر ذو ارتباط عميق بكل واحدٍ منا في سعينا نحو السعادة وبحثنا عن المعنى واختبار الواقع.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "quality-time-with-kierkegaard.html"
+          },
+          {
+            "title": "We are what we eat: A critical approach to food consumption in Egypt",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hala BARAKAT",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The course explores issues related to food and its history, production and consumption in Egypt. Starting from questioning traditional concepts of food heritage to testing existing food systems and opening up to alternative ways of sourcing, preparing and eating our food to discovering and inventing sustainable food systems adapted to urban life\n\nيستكشف المساق القضايا المتعلقة بالطعام وتاريخه وإنتاجه وإستهلاكه في مصر. بدءً من مساءلة المفاهيم التقليدية حول تراث الطعام مرورًا بإختبار أنظمة الطعام الموجودة وفتح طرق بديلة لتوفير الطعام وتحضيره وأكله إلى اكتشاف وخلق أنظمة طعام مستدامة تلائم الحياة الحضرية.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "we-are-what-we-eat.html"
+          },
+          {
+            "title": "Bringing the Gut Home: on movement and memory",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Radwa ETMAN",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Batool ELHENNAWY",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In this course we will attempt to experience moving with intention, where this movement can be bodily, emotional, or a mix between both. Together we will look into the role of intention in movement that leads to discovery or remembrance.\n\nAsking questions like “why do we have the tendency to be drawn to what is not “seen”?”, we will uncover the role of the subconscious in our daily decisions, where a change of perspective and shifting of focus can lead to great discoveries about oneself and hence, others.\n\nفي هذا المساق سنحاول ان نختبر الحركة بنية مسبقة واضحة، حيث يمكن ان تكون هذه الحركة جسدية او حسية او مزيج بين الاثنين. معاً سوف ننظر في دور النية في الحركة التي تؤدي للتذكر و الاكتشاف. مع تساؤلات مثل: “لماذا لدينا ميول تجاه الغير مرأي (الغير ملموس)؟ سوف نكشف الستار عن دور \"ما دون الوعي\" في قراراتنا اليومية حيث التغير في المنظور و تبديل نقاط التركيز يمكنه ان يؤدي إلى العديد من الإكتشافات عن الذات و بالتالي عن الآخرين. يحث نقاشاتنا اختبارات عن هذا التغير في المنظور ذاته و التي منها يحدث في حياتنا بشكل يومي في خلال رحلاتنا المبنية على الاستكشاف المتبادل، و لكن في بعص الاحيان تقطعها حواجز خفية",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "bringing-the-gut-home.html"
+          },
+          {
+            "title": "Biomimicry: Nature's genius inspiring solutions all around us",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sara EL SAYED",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Tuesday mornings from 10:00 am to 12:30 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "10:00",
+            "end_time": "12:30",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Ever wondered how can we live on planet earth, in a way that is more sustainable and more in-tune with nature? Biomimicry offers this perspective, it is the field of study that gives you the tools to learn how to deeply look and interpret nature to empower humans to create more sustainable design. The core idea is that nature has already solved many of the problems we are grappling with. Animals, plants, and microbes are the consummate engineers. After billions of years of research and development, failures are fossils, and what surrounds us is the secret to survival.\n\nهل تعجبت كيف لنا أن نعيش على سطح كوكب الأرض بطريقة أكثر استدامة وأكثر انسجامًا مع الطبيعة؟ محاكاة الطبيعة تعطينا هذه الرؤية، فهي الحقل الدراسي الذي يعطيك أدوات كي تتعلم كيف تنظر وتفسر الطبيعة بعمق لتعطي النفوذ للبشر من أجل خلق تصميم أكثر استدامة. والفكرة الجوهرية هي أن الطبيعة قد حلت قبل الآن الكثير من المشكلات التي نصارعها، وما الحيوانات والنباتات والميكروبات إلا مهندسين مهرة. بعد بلايين السنوات من البحث والتطور، ليست الإخفاقات سوى حفريات وما يحيط بنا هو سر البقاء.\n\nسوف تستكشف في هذه الدورة روح محاكاة الطبيعة، أي فلسفته واتصاله بالطبيعة، وكيفية ملاحظة الطبيعة وعملية تصميم المحاكاة والأدوات الضرورية للتعلم من الطبيعة. تهدف الدورة إلى جذب جمهور متداخل التخصصات، لأنه فقط من خلال اجتماع الناس الذين يبدلون التخصصات نصبح قادرين على ابتكار عالم مستدام بحق.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "biomimicry.html"
+          },
+          {
+            "title": "The Palestinian Narrative in Modern Arabic Literature",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Nourhan TEWFIK",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Taught in Arabic, with a few English texts. On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course offers an overview of Palestinian literature, with a special focus on the Palestinian novel and its development since the second half of the 20th century. With the establishment of the state of Israel in 1948, the brutal annihilation of the Palestinian people, their land and their collective memory began, resulting in a ‘nakba’ which saw the displacement of thousands of Palestinians. For their part, Palestinian novelists were adamant to write against these processes of uprootedness and erasure, employing storytelling as a tool of resistance against the Zionist settler-colonial project. They were also grappling with their status as refugees in diaspora, a new “minority” inside Israel, or as Palestinians living under Israeli occupation in the “Occupied Palestinian Territories” as of 1967.\n\nيقدم المساق عرضًا للأدب الفلسطيني، مع تركيز خاص على الرواية الفلسطينية وتطورها في النصف الثاني من القرن العشرين. منذ بدء التشتيت العنيف للشعب الفلسطيني وأرضه وذاكرته الجماعية مع تأسيس دولة إسرائيل في 1948 والذي أدى إلى نكبة تهجير آلاف الفلسطينيين، والروائيون الفلسطينيون من جانبهم يصرون على الكتابة ضد عمليات محو الذاكرة وتخريبها عن طريق توظيف الحكي كأداة للمقاومة ضد المشروع الإستيطاني الصهيوني، كما اشتبكوا مع وضعهم كلاجئين في المنافي، أو كأقلية جديدة داخل إسرائيل، أو كفلسطينيين يعيشون تحت الإحتلال الإسرائيلي في مناطق 1967.\n\nتأتي الرواية الفلسطينية داخل ذلك السياق كي تقدم واحدة من أهم ثيماتها، وهي \"الحفاظ على الذاكرة الفلسطينية الجماعية\". لكن الكتاب الفلسطينيون، يشاركون بالتوازي في إلهام المقاومة وتوثيق نضال الشعب الفلسطيني وصموده في مواجهة العدو الصيهوني مثلما يطرحون نقد للمجتمع الفلسطيني ذاته أكثر من مجرد كونهم يعيدون سرد القصص عن معنى الوطن.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "the-palestinian-narrative.html"
+          },
+          {
+            "title": "Sound Thinking: A Seminar of Auditory Praxis",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Louly SEIF",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Sound is ubiquitous. To evade the visual, we simply close our eyes, but to escape the sonic space is nearly impossible. Cairo is a thought-provoking sonic cacophony of an average of 87 decibels; a threatening threshold to the ear. How can we think the auditory of this city and how do we produce it, negotiate it and navigate it? The seminar is an invitation to think the world through the ear. What can we learn from sound? Using an eclectic combination of lectures, experiential learning and different modes of student participation, the course will attempt to attune the aesthetic, political and social through the modulations of the auditory.\n\nالصوت في كل مكان. نتهرب من البصري ببساطة بغلق اعيننا و لكن الهروب من المساحة الصوتية شيء شبه مستحيل. القاهرة مساحة صوتية متنافرة النغمات مثيرة للتفكير, بمتوسط ٨٧ ديسيبيل و هو مقدار خطير على الأذن. كيف يمكننا التفكير في سمعيات هذه المدينة و كيف نشارك في انتاجها، نتفاوض حولها، والسير خلالها؟ هذه الحلقة الدراسية دعوة للتفكير في العالم من خلال الأذن. ماذا يمكننا ان تعلم من الصوت؟ بإستخدام تشكيلة انتقائية من المحاضرات، التعليم التجريبي، و اساليب مختلفة من المشاركة الطلابية، هذه الدورة بدورها محاولة لمناغمة الجمالي، و السياسي، و الإجتماعي من خلال التعديلات الصوتية.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "sound-thinking.html"
+          },
+          {
+            "title": "Film and Moving Image",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ali Atef ADBELKADER",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The course is designed to introduce the qualities of film and the perspectives they might offer us. Through the study of selected films, short readings, lectures and discussion, this course will introduce the specific elements of film. In each session, we will read critical responses to a film we watch. Alongside our readings and screening, we will examine the film’s aesthetic techniques—from movement, montage, sound to narrative and point to view, to scale and color. We will ask how has film been understood, shaped by, and constrained by aesthetic and social practice? By the end of each session, we will have examined in-depth one film’s qualities, perspectives, and socio-historical significance. Over the course of this 10-week course, we will closely analyse audiovisual forms to explore the range of questions, issues and methods appropriate to understanding the broad history of film—major technological developments, aesthetic techniques, artistic movements, genres, and works.\n\nهذا المساق مصمم كي يقدم لطلابه صفات الأفلام والرؤى التي قد توفرها لنا. من خلال دراسة أفلام مختارة وقراءات قصيرة، ومحاضرات ومناقشة، سيقدم المساق عناصر محددة عن الأفلام. سنقرأ عروضًا نقدية حول الأفلام التي نشاهدها في كل محاضرة. وسنختبر التقنيات الجمالية للأفلام إلى جانب القراءة والمشاهدة: من الحركة والمونتاج والصوت إلى السرد ووجهة النظر وحتى الألوان. سيوجهنا السؤال: كيف يتم فهم الأفلام وتشكيلها وتكثيفها بالممارسات الإجتماعية والجمالية؟ سنكشف واحدة من صفات الفيلم ووجهة نظر صانعها والأهمية الإجتماعية التاريخية في نهاية كل محاضرة. على مدى عشرة أسابيع، سنحلل عن قرب الأشكال الصوتية المرئية كي نكتشف طيف الأسئلة والقضايا والمناهج الملائمة لفهم التاريخ الواسع للأفلام - التطورات التكنولوجية الكبيرة والتنقيات الجمالية والحركات الفنية والتصنيفات والأعمال.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "film-and-moving-image.html"
+          },
+          {
+            "title": "Egyptian Nationalism from 1919 to Present",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Rim NAGUIB",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 12:30 pm and Wednesday evenings 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "thu",
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "How has Egypt been imagined as a modern nation-state? how did Egyptian intellectuals and the educated middle class draw borders of nationhood, including and excluding various groups in the process? and what changes did Egyptian nationalism undergo with the achievement of complete political independence from Britain at mid-century, and beyond?",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "egyptian-nationalism-from-1919-to-present.html"
+          },
+          {
+            "title": "Postcolonialism, Modernity and Politics",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Nader OSAMA",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The foundations and legitimacy of European social theory has been shaken. Thinkers from different backgrounds have questioned the alleged universalism of social theory’s central philosophical orientations and categories — such as civil society, the state, modernity, right, citizenship, secularism, or even capitalism. It is claimed that the philosophical foundation of social theory in Enlightenment universalism is only European hegemony in disguise, the bedrock over which capitalist modernity in its different manifestations rests. This marks both an epistemological and political critique of social theory’s capacity of being genuinely global, inclusive and transformative.\n\nاهتزت أسس النظرية الإجتماعية الأوروبية وشرعتيها منذ أن تساءل المفكرون من مختلف الخلفيات حول كونية التصنيفات الفلسفية للنظرية الإجتماعية واتجاهاتها كالمجتمع المدني والدولة والحداثة والحقوق والمواطنة والعلمانية وحتى الرأسمالية. يدعي المفكرون أن الأسس الفلسفية للنظرية الإجتماعية في عصر التنوير الكوني ليست إلا مجرد هيمنة أوروبية متخفية بل أنها الأساس الصلب الذي تستند عليه كل التجليات المختلفة للحداثة الرأسمالية. وهذا ما يميز النقدان المعرفي والسياسي من قدرة النظرية الإجتماعية على أن تصبح عالمية وشمولية وقادرة على التطور بشكل أصيل.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": "postcolonialism.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

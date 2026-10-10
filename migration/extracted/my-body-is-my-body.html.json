@@ -1,0 +1,39 @@
+{
+  "sha256": "e7612c4ccc6db3fc784caf563d4f7d0273409255d98597866358a966327fb0d6",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "My Body is my Body",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sara ELKAMEL",
+          "email": null,
+          "bio": "Sara ELKAMEL is a freelance journalist and writer, born and raised in Cairo. After completing a Master of Arts in Journalism and Mass Communication ('13) at the American University in Cairo’s School of Global Affairs and Public Policy, she relocated to New York, where she pursued a Master of Arts in Journalism ('15) at Columbia University’s Graduate School of Journalism. Also in New York, she was associate editor on The Huffington Post’s international team. Before then, she was reporting in Cairo — primarily on arts and culture — for local and international publications. Alongside her work in journalism, Elkamel has been pursuing her passion for poetry and creative writing; she has participated in various fiction and poetry workshops in Cairo and New York. Her writing has appeared in Ahram Online, The Guardian, The Huffington Post, GlobalPost, Guernica, Riwayya, and elsewhere."
+        },
+        {
+          "name": "Yvonne BUCHHEIM",
+          "email": null,
+          "bio": "Yvonne BUCHHEIM is an interdisciplinary artist and educator working in public and social contexts. She taught Visual Arts at the University of the West of England for ten years before moving to Cairo in 2012 where she continued with educational and art projects, often questioning the role of art within the everyday. She has exhibited widely and was awarded a monograph publication for her long term Song Archive Project. Yvonne has taught Fine Art at the American University of Cairo before joining the Cairo Institute of Liberal Arts and Sciences, where she coordinated the Arts and Culture field in 2015 - 16. In 2017 she co-curated Spring Sessions, a learning programme and artist residency in Amman, Jordan."
+        }
+      ],
+      "schedule_text": null,
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": "17:30",
+      "end_time": "20:00",
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "In this course, we will use our bodies as a starting point for creative practice. We start off with the assumption that at some point in our lives, we have been exiled from our bodies — accidentally or by force. To bridge that assumed estrangement, we will begin to probe our relationships to our physical bodies through employing both visual and writing tools. Participants will write and make art about, with, and perhaps on, their bodies.\n\nThis course promotes an interdisciplinary approach to creative inquiry and practice in the attempt to explore the notion of exile from one’s own body. Assigned theoretical texts are designed to inform the production of creative work, whereby discussion and feedback are a crucial part of the journey. We will also be examining artwork and writing by local and international artists. We will be translating ideas back and forth between visual expression and written language, and we will experiment with a range of practices including embodied writing, image-making and performance.\n\nTentative course flow:\n\n1. Introduction to embodied writing/image-making.\n\n2. The body and public space.\n\n3. Studio writing/image-making.\n\n4. The body and failure.\n\n5. Studio writing/image-making.\n\n6. The body’s relationship to the mind.\n\n7. Studio writing/image-making.\n\n8. The body in exile.\n\n9. Studio writing/image-making.\n\n10. Bodies and objects.\n\nTheory: Bell Hooks, Judith Butler, Sara Ahmed, Kathy Acker, Nawal Al Saadawi, Silvia Federici, Susan Sontag, and others.\n\nArt/literature: Amal Kenawy, Sadik Alfraji, Guy-Mannes Abbott, Marlene Dumas, Shirin Neshat, Hayv Kahraman, Mona Hatoum, Forensic Architecture Collective, Carrie Mae Weems, Ghada Amer, Ellen Gallagher, Joumana Haddad, Ocean Vuong, Kaveh Akbar, Waguih Ghali.\n\nWhy apply\n\nTo explore local and international art and literature that employ the body as a theme.\n\nTo use theory as a springboard from which to explore ideas, through writing and image-making.\n\nTo explore your physical and non-physical body and mind relationship.\n\nTo produce work in various mediums, including text, drawing, and photography.\n\nTo create, share and receive feedback about creative work in a collective setting.",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/CIQFumN6AMkDNN1K2",
+      "own_page": null
+    }
+  }
+}

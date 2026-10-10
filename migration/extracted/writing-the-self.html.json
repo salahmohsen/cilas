@@ -1,0 +1,36 @@
+{
+  "sha256": "85dd4e182dfec549e0b912ec20d1891b97752b57680b09c7b37812993792242e",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Writing the Self",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "LAB",
+      "fellows": [
+        {
+          "name": "Osama Amer",
+          "email": null,
+          "bio": "Osama Amer is a researcher and writer. He won the Magda Al-Nowaihi award in Gender Studies (2025) for his MA thesis in Arabic Literature & Language titled \"Negotiating the Canon: Arab Women Romantic Poets Jamila al-ʿAlayli and Zahra al-Hurr,\" from the AUC. His short story \"فرخة\" won Madalyn Lamont award in creative writing (2023). He is interested in writing about the daily and the mundane."
+        }
+      ],
+      "schedule_text": "Date to start: the 19th of July. Period: 10 weeks long, Saturdays at 7 pm. Deadline: the 11th of July.",
+      "weekdays": [
+        "sat"
+      ],
+      "start_time": "19:00",
+      "end_time": null,
+      "weeks": 10,
+      "start_date": null,
+      "location": [],
+      "description": "Workshop/Lab Description\n\nنكتب يومياتنا ونقفل عليها في درج بعيد عن أعين من نعرف، ونكتب جوابًا لحبيب على ملف Word ثم نغلق الملف بدون حفظ، ونفتح الموبايل في المواصلات لنكتب مشهدًا رأيناه ونود أن نحتفظ به. ماذا يقول كل هذا عن ذواتنا؟ ولماذا نخاف مما نكتب عن أنفسنا؟ ربما يكون هناك شيء ما مخفي في أعماقنا )أو خارجنا( ال نريد ألحد أن يراه، وربما ال نريد أن نراه نحن مجددًا. في الوقت الذي نبدأ فيه تلك الكتابة، ربما ال نعرف ماذا سنكتب وماذا ستكشف تلك الكتابة، لكننا نثير شعو ًرا لم يكن موجودًا قبل أن نفتح هذا الملف.\n\nيهدف هذا المعمل إلى طرح المزيد من التساؤلات عن كتابة الذات، ونوعها، وما تثيره بداخلنا. وكيف تكون هذه الكتابات امتداد لذاتنا: تعبير عن هويتنا، وجندرنا. كما يهدف إلى التجريب في تلك الأنواع من الكتابة التي قد تكون ملحوظاتنا المنسية، أو اعترافاتنا الغريبة، أو جواباتنا غير مرسلة، أو تفاصيلنا يومية لم نظن أن أحدًا سيهتم بها. كما يهدف إلى تذوق ألوان أدبية ذاتية وفتح نقاش حولها. وأي ًضا الاشتباك مع نصوص نقدية نسوية حول الكتابة الذاتية وتطورها وما تظهره أو تخفيه من ذواتنا ومن عالمنا.\n\nWe write our diaries and lock them in a drawer away from the eyes of those we know. We write a letter to a lover in a Word document and then close the file without saving it. We open our mobile phones on public transport to write about a scene we saw and want to keep. What does all this say about ourselves? And why are we afraid of what we write about ourselves? Perhaps there is something hidden deep within us (or outside of us) that we don't want anyone to see, and perhaps we don't want to see it again. When we begin writing, we may not know what we will write or what it will reveal, but we stir up a feeling that wasn't there before we opened this file.\n\nThis lab aims to raise further questions about self-writing, its genre, and what it evokes within us. Is what we write an extension of ourselves: our identity and gender. It also aims to experiment with these types of writing, which may include our forgotten notes, our strange confessions, our unsent letters, or our daily details that we never thought anyone would care about. It also aims to savor various forms of literature and open a discussion about them. It also aims to engage with feminist critical texts about self-writing, its development, and what it reveals or conceals about ourselves and our world.",
+      "flow_links": [
+        "uploads/1/9/1/0/19102967/writing_the_self_summer_2025_lab.pdf"
+      ],
+      "register_url": "https://forms.gle/t8AiicMnKsjDBRbr7",
+      "own_page": null
+    }
+  }
+}

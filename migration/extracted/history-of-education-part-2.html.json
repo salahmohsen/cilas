@@ -1,0 +1,39 @@
+{
+  "sha256": "708c01d780c76a13d1b58ee112cec9640e1b2a009b5dbb9d63b733b33927663e",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "History of Modern Education in Egypt",
+      "title_ar": null,
+      "subtitle": "1960-2000",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Farida MAKAR",
+          "email": "makar.farida@gmail.com",
+          "bio": "Farida MAKAR obtained a graduate degree in Modern Middle Eastern Studies from the University of Oxford. In her Master's thesis she looked at teacher training in Egypt at the turn of the 20th century. As an undergraduate at AUC, she double-majored in political science and history focusing primarily on the history of formal education in Egypt. Farida has conducted research on nationalism in Egyptian textbooks throughout the twentieth century. She is interested in the interplay between nationalism and education, methods of self-organisation, alternative education, music and socio-economic rights. She is naturally drawn to anything remotely related to modern Egyptian history or earrings. Farida returns to CILAS as visiting fellow in the field of study Culture to coordinate the thematic course History of Education."
+        },
+        {
+          "name": "Nayera ABDEL RAHMAN",
+          "email": "nayera.ar@gmail.com",
+          "bio": "Nayera ABDEL RAHMAN studied in the French section of the Faculty of Economics and Political Sciences at Cairo University. She pursued further study in Political Sociology at the Sorbonne in Paris where she obtained a Master's degree in 2013. In her thesis she looked at the 'associative actions' taken to promote education in Egypt between 2000 and 2011. Nayera co-founded of Education Square - a social initiative aiming at providing space for education practitioners in Egypt to network, share knowledge, collaborate and promote creative solutions to educational problems. She is a firm believer in bottom-up approaches to development. Her research interests are alternative education, social activism, youth and historical approaches. Nayera is joining CILAS as visiting fellow in the field of study Culture to coordinate the thematic course History of Education."
+        }
+      ],
+      "schedule_text": "Offered by Farida MAKAR and Nayera ABDEL RAHMAN on Tuesday mornings and/or evenings. Early birds: 10 am to 12:30 pm; night owls: 5 pm to 7:30 pm; provided that no less than five participants sign up per class. Runs 10 weeks, March 21st through May 23rd, 2015.",
+      "weekdays": [
+        "tue"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2015-03-21",
+      "location": [],
+      "description": "Teacher: ''What do you know about Logic, Morsi?''\nStudent: \"I know that if I hit another person on the head he loses all his logic. Is this logic or isn't it logic, you educated school person?''\n- Madrasat al-Mushaghbin\n\nEveryone agrees that the state of our education is horrendous but few know precisely how it came into being. This course is an invitation to look more closely at our education system and scrutinise it. We will pick up on earlier conversations related to nationalism, modernity and colonialism and their relationship to education. This time, greater emphasis will be placed on the intricacies of Egypt's education system and the dynamics within the classroom. We will spend time pondering over how educational institutions have worked since the 1960s and what alternative forms of resistance have emerged in reaction to it.\n\nParticularly, we will look at policy issues, educational trends, bureaucracy, the international community and the broader 20th century discourse on education. In short, we will try to find logic in the place that seems to lack it the most.\n\nexpectations\n\nStudents are expected to actively engage with assigned readings; attend 80% of the classes; and participate lively. Participation is a broad concept that can take many forms including words, art, music, etc.\nStudents are expected to work with primary historical material; a special emphasis will be placed on weekly assignments which must be completed and submitted.\nNote that the History of Modern Education Part 1 is not a pre-requisite for this course.\n\nwhy apply?\n\nTo develop an understanding and working knowledge of primary historical material.\nTo advance our knowledge about the main trends and debates regarding education today.\nTo understand the world of 'alternatives'.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

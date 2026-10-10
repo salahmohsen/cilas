@@ -1,0 +1,41 @@
+{
+  "sha256": "5f153a5d108fc8431ee79fc22c41fa00bf8f84969154226789111366c649d283",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Physics for Poets",
+      "title_ar": "فيزياء من أجل الشعراء",
+      "subtitle": "a writing lab",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Alaa El-Bannan",
+          "email": null,
+          "bio": null
+        },
+        {
+          "name": "Doaa Shahin",
+          "email": null,
+          "bio": null
+        }
+      ],
+      "schedule_text": "On Monday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "What is time? How does Einstein's theory of relativity affect our perception? Do we exist as separate entities or are we a part of a whole? Is existence based on the notions of negatives and positives? Can we transcend theses opposites? How can particles' behavior give us clues to decipher life? Can we communicate without any means of communication? What if we don't have a moon? What if we have two moons?\n\nWould you answer these questions . . . through a poem?\n\nEvery day we engage in acts of anti –entropy, resisting the randomness of life. Physics explains this randomness and art helps us communicate it. Gathering the bits and pieces of existence and ourselves, through writing, we'll deal with the infinite possibilities of reality.\n\nPhysics for poets is a course initiating the break of barriers between Art and Science. It's a space to realize the interdisciplinary nature of life, science, philosophy and art practice, through exploring the creative relationships between art and science and how to communicate them artistically. We will read texts discussing theories and \"stories\" about physics and let the discussion take us to a metaphysical level where we understand how physics is a part of everyday life and our imagination. We'd like to go beyond what we know and take for granted, and discuss notions of possibilities, nothingness, and dimensions out of the context of equations and numbers and move them to the context of poetry and fiction.\n\nDeclaration:\n\nWe are not physicists. This course is an experiment and a personal challenge for us; who come from a non-scientific background yet are open enough to science as a personal theme that doesn't only lie in books and complex terminologies. We believe that science is not exclusive to scientists, neither is creative writing exclusive to right-brained people. We are here to bridge between both disciplines and both sides of the brain, hoping to experience what it means to be a whole.\n\nWhy apply?\n\nTo read about/discuss physics not as rigid equations and dull theories but as a source to question the meaning of existence and for poetic inspiration.\n\nTo unleash your imagination and use it as a tool to create meaning out of randomness.\n\nTo develop your writing skills and your ability to use writing as a tool to express, feel, understand and connect.\n\nTo gain different ways of seeing\n\nTo connect the dots and find the links between scientific theories, philosophy and art, between analytical/ rational thinking, imagination, intuition and emotions.\n\nمساق \"فيزياء من أجل الشعراء\" هو مبادرةٌ لإذابة الحدود بين الفن والعلم. إنه مساحةٌ للمزج بين المعارف المختلفة للحياة كالعلم والفلسفة والفن دون انفصالٍ بينها. سنحاول استكشاف العلاقات الخلّاقة بين الفن والعلم وكيف يمكن أن يتواصلا معاً. سنقرأ نصوصاً ونروي قصصاً عن نظريات الفيزياء، آملين أن تقودنا هذه النقاشات إلى مستوى ميتافيزيقي يساعدنا على فهم كيف أن الفيزياء متجذرة في مخيلاتنا وحياتنا اليومية. نرغب في تجاوز ما نعرفه ونعتبره مسلماً به، لمناقشة مفاهيم كالاحتمالات، اللاشيء والأبعاد خارج سياق المعادلات والأرقام والمضي بها إلى رحاب الشعر والخيال",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/DwvukeubWrC53voe2",
+      "own_page": null
+    }
+  }
+}

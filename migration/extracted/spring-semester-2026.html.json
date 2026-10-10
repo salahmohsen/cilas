@@ -1,0 +1,261 @@
+{
+  "sha256": "bd7aa68ce991de1cfd38c06b2e8e5cdb61bb57c2e30640d29361ca7dfb889a20",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring semester 2026",
+        "season": "spring",
+        "start_year": 2026,
+        "start_date": null,
+        "deadline": "2026-04-17",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "مقدمة في التاريخ الاجتماعي للتراث الإسلامي",
+            "title_ar": "مقدمة في التاريخ الاجتماعي للتراث الإسلامي",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "يامن نوح",
+                "email": null,
+                "bio": "يامن نوح هو باحث دكتوراة بجامعة برلين متخصص في الدراسات الإسلامية. درس الأنثروبولوجيا في جامعة القاهرة ما بين عامي 2012 و2016، ثم التحق ببرنامج ماجستير الدراسات العربية والإسلامية بالجامعة الأمريكية بالقاهرة عام 2018، وتخرج منه عام 2023، مقدما رسالة بعنوان \"مدرسة القضاء الشرعي: إصلاح المحاكم الشرعية والتحديث القانوني في مصر\" وهي مترجمة ومنشورة باللغة العربية عن مؤسسة نهوض للدراسات والبحوث. تتركز اهتماماته البحثية في عدة موضوعات، منها تاريخ القضاء الشرعي، وتحولات الفكر الإسلامي في العصر الحديث، وتاريخ القانون والقضاء في مصر في القرنين التاسع عشر والعشرين. نشط يامن كمحاضر ومدرب على المستوى الإقليمي بالشراكة مع عدة مؤسسات، منها المنبر الدولي للحوار الإسلامي بلندن، والرابطة العربية للتربويين التنويريين بعمان، والتي يشغل كذلك منصب عضو بمجلس أمنائها، ومعهد القاهرة للفنون والعلوم الحرة (CILAS). وله عدد من الأوراق البحثية المنشورة بالعربية والإنجليزية."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-27",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "تقدم هذه الدورة فرصة للتعرف بشكل بانورامي على تاريخ تطور أهم الأفكار في التراث الإسلامي السني. وتقدم هذه الدورة قراءة فريدة بحيث تقرأ الأفكار في سياقها الاجتماعي التاريخي، وفي سياق تطوراتها اللاحقة وتأثيرها على الواقع المعاصر. تمثل هذه الدورة مقدمة لمن يرغب في التعرف على أهم العلوم في التراث الإسلامي من الناحية التاريخية، كعلم الكلام والفقه والحديث والتصوف وغيرها من المدارس الفكرية في تاريخ الإسلام. تعتمد الدورة أسلوب القراءة التفاعلية للنصوص وإثارة النقاش والأسئلة حولها، مع توفير أرضية تاريخية لفهم سياق النص المطروح للمناقشة.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_outline_-مقدمة_في_التاريخ_الاجتماعي_للتراث_الإسلامي.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Global Esotericism: Spirits, Cults, and a History of Magic",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Mariam Elashmawy",
+                "email": null,
+                "bio": "Mariam Elashmawy is a PhD fellow in Arabic Studies at Freie Universitat Berlin. She is also the executive editor of Alif: Journal of Comparative Poetics. Her research focuses on the history of esotericism, intellectual history, and periodical studies."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-28",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "What if magic never really disappeared? What if our modern world, with all its science, technology, and rationality, is still haunted by the occult, the mystical, and the unseen? In this experimental history seminar, we’ll travel across Europe, North America, the Arab world, and Asia to explore how esoteric currents shaped the 19th and 20th centuries. From séances in American parlors to tantric practices in India, to spiritist societies in Egypt’s 52 republic, we’ll rethink the history of modernity through the lens of re-enchantment, and trace why the haunting and the “spooky” has always caught our imagination.\n\nThis is a course about “weird” things, but also about how we make sense of science, belief, and the boundaries of truth. This course invites you to think differently, read deeply into primary sources, and question what you thought you knew about religion, history, and modern life. No single background is expected or required; artists, skeptics, mystics, scientists, and everyone in between is more than welcome.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/global_esotericism_syllabus_final.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Abstract Systems, Concrete Lives",
+            "title_ar": null,
+            "subtitle": "Selected Readings in Modern and Contemporary Humanities",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hisham Fahmy",
+                "email": null,
+                "bio": "Hisham Fahmy is the teaching fellow of philosophy and poetry in this year’s Bridge Program at CILAS. He holds a B.A. in Political Science and Economics from Cairo University (2016) and an M.A. in Arabic Philosophy and Logic from the American University in Cairo (2025). Alongside his teaching at CILAS and the American University in Cairo, he is a writer, translator, and public speaker. And in his spare time, you will most probably find him happiest by the sea!"
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-30",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course examines key moments in how modern thinkers, shaped by a distinctive relation to nature, came to approach certain aspects of the human lived experience (e.g., collective life and its “ordering”) through an abstract posture influenced by modern science and its ideals. It then traces how this abstract posture was progressively questioned, opening the way to new modes of thought in the humanities attentive to concrete dimensions of the human condition. Rather than offering a comprehensive survey, the course adopts a schematic and synoptic orientation, through a series of selected readings and figures.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/hisham_fahmy_-_cilas_26-_abstract_systems_concrete_lives.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Materialities of Empire",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Lies T. Defever",
+                "email": null,
+                "bio": "Lies T. Defever studied anthropology and architecture in Amsterdam and Paris, and has a deep love for history. She mostly researches what architecture and construction projects tell us about changing power relations, and writes about how we can understand imperia and their histories through their material connections. Her work sits at the intersection of political and material anthropology on the one hand and critical architecture theory and history on the other. Occasionally she presents her photography work on construction"
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-28",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "What can looking at materialities teach us about changing political empires?\n\nGlobal history is characterized by changing and competing empires. What material impact these empires have on political realities and daily lives is a central inquiry for both political historians and anthropologists. This course reverses the question: how does matter shape these political realities, how does it change the course of empires and global history?\n\nAfter diving into both the definitions of ‘empire’ and ‘materialities’, this course will address a multitude of geographies, both contemporary and historical - from the installation of telegraph lines in the Ottoman Empire to cement in mandate Palestine and 21th century data-centers in Ireland. A material approach to political history brings new perspectives on how empires take shape and change. Following materials allows for tying local specificities to global development and vice versa, and weaving a complex web of global politics to navigate.\n\nThe goal of this course is to thus to both develop an understanding of the theoretical fields that deal with materialities, political realities and global history, and develop a research attitude that attunes to detail to gain unexpected insights and analysis. At the end of the course, the students will be able to use the theoretical background to read global history from their immediate surroundings.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/materialities_of_empire.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Reclaiming the Ancient: Poetry, Memory, and Living Traditions",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Iman Nagy",
+                "email": null,
+                "bio": "Iman Nagy is a landscape archaeologist, field researcher, and cultural historian whose work explores the deep connections between ancient societies and the environments they inhabited. Iman is a specialist in inscribed landscapes, with more than fifteen years of experience across North Africa, the Mediterranean, and Southeast Asia her research integrates archaeology, anthropology, and historical ecology. She has a strong background in ancient languages and comparative ancient literature, allowing her to engage closely with early texts alongside material landscapes, seeing them as inseparable. Her fieldwork spans Egypt, Sudan, Ethiopia, Morocco, Tunisia, Algeria, the Canary and Madeira Islands, the Philippines, Cambodia, South Africa and Yemen. Iman is PhD Candidate, instructor and field researcher at the University of California, Los Angeles."
+              }
+            ],
+            "schedule_text": "Hybrid (online and offline) for the first 6 weeks, then online for the rest of the course",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-29",
+            "location": [
+              "HYBRID",
+              "ONLINE"
+            ],
+            "description": "This lab explores ancient poetic and philosophical traditions as living expressions of human thought, rather than distant or static artifacts. We will engage texts from ancient Egypt, Mesopotamia, and South and Southeast Asia, approaching them through relational, context-based, and critical frameworks.\n\nRather than reading these traditions through later European categories or disciplinary boundaries, the course emphasizes how poetry and philosophy often emerge together as intertwined modes of thinking. These traditions will be understood as ways of asking questions about existence, selfhood, ethics, and the cosmos, expressed through narrative, dialogue, metaphor, and performance. Students will learn to situate texts within their archaeological and historical contexts while also recognizing their continued resonance in contemporary identities and practices.\n\nThe course begins by critically examining how the “ancient world” has been constructed within modern scholarship. From this foundation, we will move toward approaches that foreground relationality, continuity, and multiplicity, engaging ancient texts as forms of thought rather than objects of distance.\n\nEach session combines discussion with creative engagement. Students will respond to poetic and philosophical forms through writing and reflection, exploring how these texts articulate enduring human questions and how they continue to shape ways of understanding the world.\n\nThe course culminates in a final project that reinterprets ancient traditions through a relational and critical lens.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/10finalreclaiming_the_ancient__poetry_memory_and_living_traditions.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "History and/in Anthropology?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Bahi Ashraf",
+                "email": null,
+                "bio": "Bahi Ashraf is an Anthropologist that holds an M.A. in Sociology-Anthropology and a B.A. both in Psychology and Sociology from the American University in Cairo. His interests include psychoanalysis, anthropology of history, and African postcolonial theory. He is currently the research assistant at Cairo Papers, the American University in Cairo’s long-standing refereed journal of public scholarship from within and about the middle east."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-28",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Why history and why anthropology? What could the historian be if not a scribe of the worlds that humans live in, and what is the anthropologist if not an archivist of social forms of life? This course asks these questions in order to figure out the ways in which the tradition of anthropological inquiry draws from and makes use of history as a portal into the social. In the course of 10-12 weeks we will try to understand this relationship as well as explore its relevance to matters of contemporary importance.\n\nSince the end of World War II and the advancement of a new global order, built on the backbone of post-war American influence, the global landscape of social imagination has changed and shifted. With the advent and failure of the independence movements of the 1960s and 70s, this landscape became ever more important to the interpretation of these post-colonial social worlds. History and memory become crucial elements of understanding the post-WWII world. I propose in this course to use the emergence of ‘Trauma” from a sociological perspective, to investigate the intersections of anthropology and history.\n\nTrauma is a historical and temporal concept. When we say that “someone” is traumatized, we identify this condition by a) locating some event in the past as “traumatic” and its continued existence in the present as a vital force as “traumatizing”. In order to think this through as anthropologists, we ask how collectivities, communities, societies, etc. remember and narrate, the conditions of production and the practices of remembrance and the ways in which people live with and make use of the past.\n\nThe course will be divided into three units that attempt to provide us with the answer to a couple of main questions that we will set together at the beginning of each unit.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/history_anthropology_cilas_2nd_term_2026__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "What Is This Community?",
+            "title_ar": "إيه المجتمع ده؟",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ghosoun Ismail",
+                "email": null,
+                "bio": "Ghosoun Ismail holds a Master’s degree in Independent School Leadership from Teachers College, Columbia University, and a Master’s degree in Sociology and Anthropology from the American University in Cairo. She has extensive experience as an researcher and educator. Her work focuses on education systems, social inequality, and the relationship between schooling, class, and belonging in Egypt. She has led and managed multiple education initiatives, authored policy reports, and designed learning programs that bridge theory, practice, and lived experience."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-27",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course invites students to explore the diversity of communities in Egypt through a case-based, exploratory approach grounded in ethnographic readings and visual materials. Rather than treating “community” as a fixed or self-evident concept, the course approaches it as something to be examined, unpacked, and questioned through sustained engagement with different social contexts.\n\nEach session focuses on a specific community—such as urban neighborhoods, rural societies, Bedouin groups, or industrial labor settings—and guides students through a repeated analytical process. Across these cases, students examine how communities are structured, how they reproduce themselves over time, and how individuals navigate everyday life within them. Attention is given to social organization, survival strategies, internal hierarchies, and the ways communities understand and represent themselves.\n\nBy returning to the same set of questions each week, the course builds a cumulative analytical lens that allows students to trace patterns, differences, and tensions across diverse forms of social life in Egypt. This iterative method emphasizes close observation, discussion, and reflection, encouraging students to move beyond surface-level description toward a more critical understanding of how communities function and sustain themselves.\n\nWhile the course prioritizes exploration over abstract theorization, it gradually opens space for questioning the apparent stability of communities and the assumptions that underpin them. Students are encouraged to reflect on what appears fixed or natural within different contexts, and to consider the conditions under which communities might be otherwise.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_title_what_is_this_community_____cilas_spring_2026__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "The Science of the Letter",
+            "title_ar": null,
+            "subtitle": "Repetition and Time in Psychoanalysis",
+            "course_type": "WORKSHOP",
+            "fellows": [
+              {
+                "name": "George Bartlett",
+                "email": null,
+                "bio": "George Bartlett is a writer and lecturer working across cinema and psychoanalysis."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 12,
+            "start_date": "2026-04-29",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This workshop uses psychoanalysis to understand repetition and the experience of time.\n\nWhy do certain patterns return in a person’s life, often with increasing intensity? How is experience organised in the present, where repetition seems both structural and unavoidable? Can clinical and theoretical work intervene in how repetition is lived today? What does it mean to think about freedom in relation to repetition under contemporary conditions of acceleration and constraint?\n\nWe will explore these questions over 12 weeks to develop key concepts progressively. No prior background in psychoanalysis is required.\n\nWe begin from the concept of the letter, which refers to the material dimension of language. The unconscious is structured like a language, Lacan says. The letter names the point at which language is inscribed on the body, producing effects that exceed conscious meaning.\n\nMeanwhile, with Freud’s notion of the “timeless” unconscious we do not find an absence of time, but a structure in which what is inscribed always returns and reorganises the present. Subjective time is therefore discontinuous, non-chronological. It is shaped by repetition, delay, and retroactive transformation.\n\nAlongside Freud and Lacan, the workshop will engage with philosophical and theoretical approaches to time, repetition, and difference, including Kant, Heidegger, Derrida, Deleuze, Badiou, and others.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_science_of_the_letter__tracing_temporality_in_psychoanalysis_.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

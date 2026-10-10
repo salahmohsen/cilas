@@ -1,0 +1,172 @@
+{
+  "sha256": "e2f74e20093280a39093fcb11351db0e45849b30fe19a77c453079266fae57cd",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "winter 2022",
+        "season": "winter",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-01-05",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Killjoy: A Guide to Everyday Feminism",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ramah Aleryan",
+                "email": "raleryan13@gmail.com",
+                "bio": "Ramah Aleryan is a feminist from Ismailia. Trained as a sociologist at Colorado College her work adopts a feminist perspective to look at displacement, exile and belonging. Her thesis is titled “Centering Syrian Voices: Shifting the narrative of the “Refugee Crisis””. She is passionate about storytelling through using different media such as audio, video, performance, photography and writing."
+              }
+            ],
+            "schedule_text": "Start date: second week of January, Thursday at 6 pm.",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "In the past few years discourses around feminism centered on the rise of rape/harrasment survivors’ testmonials have spread on social media. The use of the term “feminism” has become wide-spread and a mining field for different memes with the stereotype of the loud angry feminist, typically a woman, at its forefront. This resurgence begs the question, \"what is feminism?\" Is it merely the equality between genders? What is it like to be a feminist in everyday life? In this course, we will explore various meanings of feminism and what structures the life of an everyday feminist? Sara Ahmed’s “killjoy” feminist term will guide us through thiscourse with readings connected to issues of disablity, intersectionality, masculinity, emotions,and solidarity, among others. We will cultivate a feminist sensibility and attune ourselves to different contexts, privileges and backgrounds. We will also locate Egyptian feminism and its histories in relation to other movements in the Global South and relate Middle Eastern forms of feminist organising to Western feminist movements.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/LMTRhRZPCTvhsUdA9",
+            "own_page": null
+          },
+          {
+            "title": "Egypt's Surrealists, the Avant-Garde and the Sixties Generation",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Malak Abdelkhalek",
+                "email": "malak.akhalek@gmail.com",
+                "bio": "Malak Abdelkhalek has recently completed her MA in Comparative Literature at King’s College London. Her research languages are Arabic, French, and English. Her dissertation titled ‘The Centres and Peripheries of Surrealism: France, Egypt, and the Spaces in Between’ provided a re-reading of Surrealism as a transnational movement, and demonstrated that Egyptian surrealists based in Egypt and in France brought the movement to closer to its intended end, therefore repositioning the importance placed on European and French Surrealisms in comparison to Egyptian Surrealism. This dissertation encompasses many of Malak’s research interests - the avant garde, gender, colonialism, and post-colonialism."
+              }
+            ],
+            "schedule_text": "Start date: second week of January, Mondays (offline) and Wednesdays (online), at 6 pm.",
+            "weekdays": [
+              "mon",
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "This course will explore the different iterations of the avant-garde in Egypt across the 20th Century, their historical specificity, and political orientations. Avant-Garde artistic and literary movements in Egypt stand out because of the importance domestic and international politics played to shape them. Common themes within avant-garde literature such as disfiguration, deformation, sexuality, and death were taken further by adding a political dimension, often geared towards leftist ideology such as marxism, socialism, and anarchism, to a trend that started as a way to reflect disappointment in the face of socio-political unrest in Europe. However, in Europe the artistic works focused less on the politics and more on the feelings of despair surrounding war and the resulting loss. In fact, avant-garde theorists in Europe argued to look inward, which created an individualistic artistic style. This course will focus on the two major avant-garde movements in Egypt, Art and Liberty, which was the name of the Surrealist group in Egypt, and the Sixties Generation, which produced a different style of avant-garde works and was not associated with a pre-established movement like Surrealism. We will be looking at the different languages used within those movements, notably Arabic, French, and English, as well as the different media and genres that were used within those movements, such as poetry, the novel, the short story, theatre, film, painting, etc.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/egypt_and_the_avant-garde__surrealism_the_sixties_generation_politics_and_beyond_course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/LMTRhRZPCTvhsUdA9",
+            "own_page": null
+          },
+          {
+            "title": "Community Wellbeing and Resilience; Introduction to Community Psychology",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Rasha Salem",
+                "email": "rashasalem@aucegypt.edu",
+                "bio": "34 years old. My passion is to bring together like-minded professionals and academics to critique, discuss and learn about community empowerment and well-being. I have been working with communities on different social development programs for the past 10 years. Currently, I am a freelance Trainer and Youth Mentor and a new student in the field of Acting . I have worked with numerous international and local NGOs. I started as a researcher and most recently took the Projects management and Programming Design Experience. Throughout my experiences, I focused on working with sensitive communities such as Unaccompanied and Separated youth and Adolescents and Sexual and Gender-Based Violence Survivors. Academically, I pursued my studies on Refugee and Migrants, Community Psychology and currently seeking to continue my studies on Effective Management for impact-driven prevention and intervention programs."
+              },
+              {
+                "name": "Yasmine Osama",
+                "email": null,
+                "bio": "with Yasmine Osama is the course Instructional Designer. Yasmine has developed an expertise in community empowerment throughout a wide range of projects with youth, adolescents, and communities with special needs. Yasmine is a monitoring and evaluation specialist with experience in data management, research, and instructional designing. Yasmine is currently seeking her education Computational Social Science Master’s degree in Cairo University."
+              }
+            ],
+            "schedule_text": "Start date: second week of January (hybrid), Wednesday or Monday at 6 pm.",
+            "weekdays": [
+              "mon",
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "HYBRID"
+            ],
+            "description": "During the last few years, mental health started to be an essential topic. Mental Health is not discussed only in theory or as a luxury but rather as a necessity to thrive and pursue meaning and purpose in life. Saying so, we usually connect Mental Health to individuals but in this course, we will highlight a collective sense of Mental Health, Community Mental Health, and Well-Being. We will discuss both theories and practice. In this course, we will be discussing different aspects of community psychology. We will learn about the methods of creating conditions that are empowering , rather than encouraging dependence. We will be discussing scientific-based programming where we can analyze how community well-being is tackled , enhanced, or even harmed. From the lens of the community of practice, we will critique the impact of different programs and policies. Finally, we will discuss how can we nurture the notion of community mental health both from a practical lens and also from an analytical lens.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_flow_-_community_wellbeing_and_resilience__introduction_to_community_psychology_.pdf"
+            ],
+            "register_url": "https://forms.gle/LMTRhRZPCTvhsUdA9",
+            "own_page": null
+          },
+          {
+            "title": "The Politics of Language and Alphabets: History, Power, and Community",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Olga Verlato",
+                "email": "ov308@nyu.edu",
+                "bio": "Olga Verlato is a PhD candidate in History and Middle Eastern and Islamic Studies at New York University. Her research explores the history of language ideology and multilingualism in modern Egypt, at the intersection of imperialism, Mediterranean migration, and nationalist politics. She has also written about early modern Arabic printing in the Italian peninsula during the Renaissance, social infrastructures and mobility in the nineteenth century through the study of Egyptian popular songs, and the history of Italian schools in Egypt at the turn of the twentieth century."
+              }
+            ],
+            "schedule_text": "Start date: second week of January, Sundays (online), at 6-8 pm.",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "What lies behind the languages and alphabets we use? Although they may appear as mundane and neutral means of communication, languages and scripts have functioned, historically and today, as powerful social, cultural, and political tools. Since the nineteenth century, imperialist ventures used languages as instruments of control and domination, while nationalist politicians and activists increasingly saw them as means of collective identification and anticolonial resistance. Meanwhile, local and diasporic communities put forth alternative language ideologies that challenged dominant notions of language “purity,” mother tongue, and the connection of language and national identity, fostering instead multilingualism, local connections, or forms of international alliance. This course examines some of the key ideas about language and language practices that emerged from the nineteenth century to today. Each week will focus on a case study, which we will “read with” a theoretical, artistic, or literary resource. The case studies are organized in chronological order and include, for example, the 1928 Turkish alphabet reform, post-colonial Arabization in North Africa, twentieth-century political activism around regional languages in India, and the relation between English, the Latin script, and new technologies today. The accompanying resources will include works of philosophy, art, pedagogy, and literature.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_politics_of_language_and_alphabets_course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/LMTRhRZPCTvhsUdA9",
+            "own_page": null
+          },
+          {
+            "title": "Wisdom in Despair",
+            "title_ar": null,
+            "subtitle": "Living Your Existential Crisis Through the Lens of Literary Fiction",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Lena Naassana",
+                "email": "lena.naassana@gmail.com",
+                "bio": "Lena Naassana is a creative entrepreneur with a diverse background in publishing, media and development. Born in New York to a multicultural and multilingual family of mixed Czech-Syrian descent, Lena grew up in Cairo, leaving to read English literature at Oxford University. After graduating, she worked as a documentary filmmaker and photographer with local and international nonprofits and NGOs. In 2017, she moved to Prague to study film and photography, later moving to London to begin an MA in Comparative Literature at the School of Oriental and African Studies. In 2020, Lena moved back to Cairo to co-found El Batron, a music label and creative consultancy supporting young talents in the rising trap and mahragan scenes. As chief Creative Strategist of El Batron, Lena oversees all of the label’s creative output as well as the visual identities of El Batron’s roster of music artists. In parallel, continues to pursue interdisciplinary artistic projects grappling with themes of exile, alienation and nostalgia."
+              }
+            ],
+            "schedule_text": "Start date: second week of January, Tuesdays (offline) at 6 pm.",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "An existential crisis is once the most universal and individual of experiences. Where do we look and what do we seek in times of despair? Can literature offer companionship, wisdom, consolation?\n\nWe read to know we are not alone, to seek a deeper understanding of ourselves— a need which surfaces acutely in periods of crisis. In such a time, the pursuit of meaning becomes an absolute priority.\n\nAlthough reading is the most solitary of exercises, it is fundamentally a move towards connection. We read in search of an understanding of our place in the universe; we read because literature offers what Harold Bloom describes “the only secular transcendence we can ever attain”.\n\nThis course looks at points of crisis in the lives of a vast range of literary characters. From Odysseus, homesick and forlorn on a lone Greek island, to Gregor Samsa’s nightmarish transformation into a horrible insect; from mythology to science fiction, from Japanese to Czech literature, our rich reading list spans genres, centuries and continents in the effort to explore the universality of human crisis and despair. Throughout, we look to literature as a guide and companion in our quest to live more soulfully as we search for acceptance, understanding and healing.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/LMTRhRZPCTvhsUdA9",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

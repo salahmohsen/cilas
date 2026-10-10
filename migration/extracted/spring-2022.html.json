@@ -1,0 +1,146 @@
+{
+  "sha256": "6e4fad43596834d7fd31413dbf89e7c0ac610aa10c5bda69bf36e8c25107dd94",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring 2022",
+        "season": "spring",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-01-31",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "مختبر الترجمة الثامن: ترجمة العلوم الاجتماعية والفلسفة",
+            "title_ar": "مختبر الترجمة الثامن: ترجمة العلوم الاجتماعية والفلسفة",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "حسين الحاج",
+                "email": "sheikh.kamar@gmail.com",
+                "bio": "مترجم ومحرر. أدار مختبر الترجمة في معهد القاهرة للعلوم واﻵداب الحرة (سيلاس) لست أعوام متتالية، يعمل محررًا في موقعي ترجمان وكتب مملة وميسرًا لبرنامج بهنا الوكالة للبحث والترجمة. صدر له ديوان نصوص \"طيوف\" بالعامية المصرية (2015)، كما صدر له ترجمة كتاب \"12 أطروحة حول تغيير العالم\" لجون هولواي (2021)، وكتيب \"الدليل في طلب المستحيل\" لجافن جريندون وجون جوردن (2018). أصدر على موقع سيلاس كتابا مُحررًا حول التعليم العالي البديل تحت عنوان \"حول نشوء أبراج الحمام\"، وكتاب آخر يجمع ترجمات طلاب مختبر الترجمة الذي درسه في المعهد بين أعوام 2016 و2018 تحت عنوان \"الترجمة بصفتها تعليمًا\"."
+              },
+              {
+                "name": "أحمد السروجي",
+                "email": "el.serougui@gmail.com",
+                "bio": "مترجم وباحث، وحاصل على ليسانس قانون مصري وفرنسي من جامعة القاهرة وسوربون باريس 1، كما ينهي حاليا درجة الماجستير في قسم الأنثروبولوجيا في الجامعة الأمريكية في القاهرة. عمل مطور محتوى في مؤسسة التعبير العربي الرقمي (أضف) حيث حرر مناهج مدارس أضف في الحوسبة، والتعبير البصري، والموسيقى والسينما، والفيديو ضمن أنشطة مشروع تمكين الشباب رقميا. يسّر سروجي معمل الترجمة والكتابة بسكة معارف لعاميين متتاليتين، وفي هذا السياق، أدار ورشة الترجمة الجماعية، والتي ترجم خلالها المشاركون نصوص نظرية مختارة مزمع إصدارها في كتاب –من تحريره- تحت عنوان \"تحت الأسفلت شاطئ\" بداية عام 2022"
+              }
+            ],
+            "schedule_text": "الخميس من 6 ل 8 مساء (online and offline), start week is 13 February",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "يمثل هذا المختبر مساحة للتجريب في نقل المعرفة المنتجة أكاديميًا الصادرة بلغات أجنبية في مجالي الفلسفة والعلوم الاجتماعية. ثمة صعوبات وتحديات كثيرة تحيط بترجمة النصوص النظرية النقدية إلى اللغة العربية، ومن ثم تدعو ورشة ترجمة الفلسفة والعلوم الاجتماعية المهتمين بالترجمة النظرية والراغبين في الاشتباك مع نصوص أكاديمية وتأملها من خلال الترجمة لإنتاج نصوص مُترجمة من خلال العمل الفردي والجماعي. تركز الورشة على مقاربة الترجمة الجماعية باعتبارها وسيلة فعّالة للاشتباك مع النصوص النقدية وذلك لما تتيحه من مساحة للمشاركين لتبادل وجهات النظر والخبرات العملية والنظرية في التصرف الترجمي، كما أنها فرصة لكسر النسق المهيمن في مجال الترجمة القائم على فرد المترجم أو المترجمة.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/ورشة_الترجمة_في_الفلسفة_والعلوم_الاجتماعية،_سير_المساق.pdf"
+            ],
+            "register_url": "https://forms.gle/AizZiU1PS4RVuNXq8",
+            "own_page": null
+          },
+          {
+            "title": "On Stupidity: The Trouble with Systematic Thinking",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Farida Youssef",
+                "email": "fyoussef93@aucegypt.edu",
+                "bio": "Farida Youssef is the 2021-2022 Residential Fellow at CILAS in charge of the Poetic and Philosophical Inquiry course in the Liberal Arts strand. Key to her work and interests are art criticism, spatial theory and 20th century history of philosophy. In 2017, she obtained an MA from University College London. Her thesis focused on the interplay of space, aesthetics and dramaturgy in Rancière’s thought and Marivaux’s plays. In 2018, she was a Merut Fellow at the British Museum where she contributed to the Modern Egypt Project, by approaching archeology through the lens of contemporary philosophy."
+              }
+            ],
+            "schedule_text": "Thursday 10:30-1:30 pm and Thursday 5:30-8pm, offline; the start date is 24th of February",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2022-02-24",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Flaubert said “Stupidity lies in wanting to draw a conclusion.” By this he meant any attempt to reach a conclusion stops the act of thinking when there remains something to be thought. Qualifying something as systematic also points to providing a framework that can explain problems and speedily reach conclusions. This form of reasoning, at times closely associated with rationality, is opposed to stupidity. The task of this course will be to question the grounds on which this opposition stands. Therefore, we will study four portraits of systematic thinkers to show that, as Flaubert said, the stupidity lies in the conclusion. These portraits, which include the bourgeois, the bureaucrat, the fanatic and the copyist, present a commonality: they assume their intelligence. Yet, there is stupidity in their acts. We will see that by closely examining stupidity alongside rationality, different facets to thinking and more importantly learning rise to the surface. Stupidity, unthinking or unlearning, become equally matters of concern. There might, after all, be merits to stupidity, unthinking and unlearning! Readings will mainly be borrowed from philosophy and literature as we focus on Nietzsche, Flaubert, Musil and Arendt amongst others. An important guiding inquiry that the course will be returning to is that of knowledge acquisition on the one hand and that of thought generation on another. Through these portraits, we will look at what it means to “make sense,” and the problem with common sense. Based on discussions relevant to that question, the Pedagogy LAB will be producing a dictionary of stupidity. The dictionaries we are accustomed to are trusted sources of correct and “intelligent” information. Here our aim will be a dictionary written from the standpoint of stupidity, one that goes against common sense. This will be an opportunity to consider more seriously how the nonsystematic manifests itself in knowledge production.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/farida_youssef_pedagogy_lab_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/AizZiU1PS4RVuNXq8",
+            "own_page": null
+          },
+          {
+            "title": "The Space Lab: Navigating the Larger African Urban World",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Shan Yang",
+                "email": "yangshan@aucegypt.edu",
+                "bio": "Shan Yang is an Andrew W. Mellon Post-MA Fellow for the 2019-2020 academic year at the American University in Cairo. She received MA (2019) at AUC specializing in critical urbanism, political economy, and time and temporality. Her recent research project Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers was conducted in Beijing, Shenzhen and Guangzhou. She spent the second half of her 20s living in Cairo and Beirut. Now her life is taking root in Africa with a new project Life in Speculative Times: Debt-Financed Infrastructure Scramble in East Africa."
+              }
+            ],
+            "schedule_text": "Thursday 6-8pm, offline; the start date is the 17th of February",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-17",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "What kind of urban lives are in Africa? The question, on the face of it, is a poignant one. The common assumptions prevail that Africa is a rural continent. African cities exemplify a truncated modernization. This Space Lab engages debates in urban studies with a focus on African cities. It questions the colonially-mediated modern conceptual frameworks that undergird mainstream imaginations of urban life. It invites participants to investigate the intimate connection that emerges between the development of capitalism and urbanization. Through navigating the larger African urban world, we will explore the ongoing reconfigurations in urban Africa as a social laboratory: the production of gendered, raced, classed subjectivities, housing, land, infrastructure, sound and street life, violence, and social movements.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_space_lab-_navigating_the_larger_african_urban_world_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/AizZiU1PS4RVuNXq8",
+            "own_page": null
+          },
+          {
+            "title": "Reading Feminism/Writing To Live",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Amuna",
+                "email": "wagneramuna@gmail.com",
+                "bio": "Amuna is a writer, filmmaker and Lover of the Arts. She studied International Relations and Arabic at the School of Oriental and African Studies, University of London, with a special interest in decolonising processes and the politics of gender. In her art, Amuna explores the many ways through which we heal ourselves and others: ancestry, identity, pleasure activism, feminist spiritualities, and creative knowledge production. Amuna is the co-founder and Editor-In-Chief of Kandaka, a website that imagines feminist futures at the intersection of art, pleasure, and activism. She has published articles and poetry on Amaka Studio, Egyptian Streets, Skin Deep, Meeting of Minds, shado mag, Rosa Mag and sweetthangzine."
+              }
+            ],
+            "schedule_text": "Mondays 6-8pm, Hybrid; start week is 13th February",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "“these words they have egos and things to prove themselves, don’t they? we plant them & as they bloom we become intoxicated by their fragrance — so much so that reality shifts.” - Alok\n\nReading Feminism/Writing To Live explores the power of language, rhythm and imagination. It is both a Creative Writing lab and a close-reading course. We indulge in the words of novelists and poets, to conjure up energy and courage for our own writing endeavours. What do stories tell us about the state of the world? Maybe more importantly: can we survive, even alter, this state through writing words? In this course, we hone our appreciation of aesthetics, both through creating and consuming, consulting and advising (ourselves and each other). In writing poetry and prose, we imagine past and future, unravel taboo and power, and sometimes craft an escape through a fantastical feminist gate. The weekly readings serve as prompts which we will interrogate in class through creative writing exercises. If your brain was a place, what would it look like? If your ancestor gave you life advice, what would they say? Do you dare to put your every word on trial for its life, can you bear to pull out your tongue and read yourself against the silence? I invite you to adventure into dystopia, utopia, love, and hope by creating words and watching them become worlds.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/reading_feminism_writing_to_live.pdf"
+            ],
+            "register_url": "https://forms.gle/AizZiU1PS4RVuNXq8",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

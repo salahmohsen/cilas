@@ -2,7 +2,7 @@ import type { CollectionSlug, Payload, Where } from 'payload'
 
 import { slugify } from '../../src/lib/slugify'
 import { lexical } from '../../seed/seed.utils'
-import { isMostlyArabic } from './normalise-courses'
+import { isMostlyArabic, splitLocales } from './normalise-courses'
 
 export type ArchiveCycle = {
   key: string
@@ -169,7 +169,8 @@ export const importCourses = async (
         location: c.location,
         fellows,
         schedule: c.schedule,
-        description: rich(c.description),
+        // English paragraphs here; Arabic ones go to the `ar` locale below.
+        description: rich(splitLocales(c.description).en),
         ...(c.register_url ? { registration: { archived_registration_url: c.register_url } } : {}),
         legacy_url: c.legacy_url,
         import_status: 'needs_review',
@@ -177,7 +178,11 @@ export const importCourses = async (
       },
       { draft: true, fallbackSlug: `${slug}-${cycleYears.get(c.cycle as string)}` },
     )
-    if (c.title_ar) {
+    // The Arabic locale: an Arabic title (given, or the title itself when it
+    // is Arabic) and the description's Arabic paragraphs.
+    const titleAr = c.title_ar ?? (isMostlyArabic(c.title) ? c.title : null)
+    const descriptionAr = splitLocales(c.description).ar
+    if (titleAr || descriptionAr) {
       const current = (await payload.findByID({ collection: 'courses', id, depth: 0, draft: true, overrideAccess: true })) as {
         import_status?: string | null
       }
@@ -185,7 +190,10 @@ export const importCourses = async (
         await payload.update({
           collection: 'courses',
           id,
-          data: { title: c.title_ar },
+          data: {
+            ...(titleAr ? { title: titleAr } : {}),
+            ...(descriptionAr ? { description: rich(descriptionAr) } : {}),
+          },
           locale: 'ar',
           draft: true,
           overrideAccess: true,

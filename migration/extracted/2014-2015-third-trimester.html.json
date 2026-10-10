@@ -1,0 +1,276 @@
+{
+  "sha256": "df6296adbde4382bcdadca5b28396f10ec0f827fe54d9386335997b3209cfeb9",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Trimester three 2014-2015",
+        "season": "spring",
+        "start_year": 2015,
+        "start_date": "2015-03-21",
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Exploring al-Ghuria's Histories",
+            "title_ar": null,
+            "subtitle": "Towards a critical consciousness of the writing and reading of Egyptian histories",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Alia MOSSALAM",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Nayera ABDEL RAHMAN",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course will engage with the many silences and erasures that exist in academic, nationalist and military histories. Each week we will experiment with a different entry point into historical events - Archival material, Oral History, News-Papers, Poetry, Literature, and Architecture - and explore the nature of each historical research methodology, its politics, and the worlds they reveal and deny us. We will use these methodologies to re-explore the history of the al-Ghuria community.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "exploring-al-ghurias-histories.html"
+          },
+          {
+            "title": "Anarchist Recipes",
+            "title_ar": null,
+            "subtitle": "Uncovering hidden food injustices",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Pam LABIB",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Bassem KHALIFA",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Humans have always organised themselves socially and spatially around food and its production. Towns and cities, roads and infrastructure, traditions and festivals have emerged and been shaped by our most fundamental need to eat. Over the last two hundred years - facilitated by technologies of transport - urban dwellers have become more distanced from sources of food.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "anarchist-recipes.html"
+          },
+          {
+            "title": "Embracing the Void",
+            "title_ar": null,
+            "subtitle": "On space and bodies",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "René BOER",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Karim-Yassin GOESSINGER",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course was conceived by a subversive urbanologist and a romantic pragmatist in the living room of a political ecologist. Its conception was sparked by an appreciation for silence, absence and emptiness; and the acknowledgement of the constitutive role of these 'voids', notably in language, philosophy and architecture. The course engages with the aesthetics and implications of these voids, in particular in relation to the spatial presence of ‘the body’. In the first half of the course we will examine the concept of the instrumental body as well as numerous interpretations of the ‘void’. We will emphasise the productive character of absence and how it provides space for our imagination.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "embracing-the-void.html"
+          },
+          {
+            "title": "Public Policy Making & Design Thinking",
+            "title_ar": null,
+            "subtitle": "On the changing nature of public goods",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Karim-Yassin GOESSINGER",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The independent, progressive media outlet Mada Masr recently asked five social theorists who the 'people' are. The piece was subtitled 'A conversation on the assemblages (and the archives) of the people'. Participants of this course are invited to a conversation on the public, issues and assemblages. Together we will explore and assess the validity of both an abstract, general entity that performs public acts, such as Rousseau's general will or Hegel's world spirit, as well as a concrete bunch of public policy makers who make decisions on the basis of scientific evidence and sectoral expertise.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "public-policy-making--design-thinking.html"
+          },
+          {
+            "title": "The Art of the Flâneur",
+            "title_ar": null,
+            "subtitle": "Aimlessly wandering through Cairo's neighbourhoods",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ayesha MUALLA",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course is meant to analyse urban space and the concept of the flânerie. Flânerie, the art of the flâneur, means strolling, loitering, sauntering with no fixed intent. The course invites participants to discover new ways of navigating the urban landscape. We will begin by exploring the notion of aimless wandering and procrastination by looking at the literary writings of Charles Baudelaire, Walter Benjamin, Charles Dickens, and Virgina Wolf.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "the-art-of-the-flacircneur.html"
+          },
+          {
+            "title": "Walk like an Egyptian Philosopher",
+            "title_ar": null,
+            "subtitle": "Examining justifications for tolerance",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Anne MISHKIND",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Interaction among people with differing ideas, beliefs, and practices is an everyday reality in our increasingly globalised, urbanised, and digitised world. Many agree that tolerance and toleration, on both an individual and socio-political level, are necessary for healthy navigation of our complex landscapes. Toleration, however, is an elusive and paradoxical value; it is not always clear why and to what extent we should tolerate ideas and beliefs that, by definition, we think are wrong.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "walk-like-an-egyptian-philosopher.html"
+          },
+          {
+            "title": "Politics & Poetics of Identities",
+            "title_ar": null,
+            "subtitle": "On belonging and alienation in an age of uncertainty",
+            "course_type": "THEMATIC",
+            "fellows": [],
+            "schedule_text": "Offered on Saturday mornings and/or evenings.",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In this course, we will examine the complex processes of construction, performance, and representation of one’s multiple identities. We will look at hybrid, shifting, imagined, traveling, displaced, conflicting, fragmented, repressed and expressed identities. We will both deconstruct the politics and explore the poetics of identities. With this purpose in mind, we will question the various dimensions of one’s identity by critically examining the concepts of race & ethnicity, gender, class, nationality & citizenship, sect, and generation.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "politics--poetics-of-identities.html"
+          },
+          {
+            "title": "Heritage Revisited",
+            "title_ar": null,
+            "subtitle": "Beyond the tourist gaze",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "René BOER",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Cairo's extensive urban and architectural heritage is under severe pressure. From Downtown's deteriorating urban blocks to Al-Ghuria's crumbling monuments, there is a need to address the lack of attention to history's physical presence in Cairo's urban fabric. This course aims to stimulate critical thinking on Cairo's urban and architectural heritage, in particular by delving into a wide range of contemporary, global debates. Through the analysis of case-studies from around the world, we will discuss the relation between heritage and important issues such as modernity and globalisation, memory and identity, and urban life and development.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "heritage-revisited.html"
+          },
+          {
+            "title": "History of Modern Education in Egypt",
+            "title_ar": null,
+            "subtitle": "1960-2000",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Farida MAKAR",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Nayera ABDEL RAHMAN",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Everyone agrees that the state of our education is horrendous but few know precisely how it came into being. This course is an invitation to look more closely at our education system and scrutinise it. We will pick up on earlier conversations related to nationalism, modernity and colonialism and their relationship to education. This time, greater emphasis will be placed on the intricacies of Egypt's education system and the dynamics within the classroom. We will spend time pondering over how educational institutions have worked since the 1960s and what alternative forms of resistance have emerged in reaction to it. Particularly, we will look at policy issues, educational trends, bureaucracy, the international community and the broader 20th century discourse on education. In short, we will try to find logic in the place that seems to lack it the most.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "history-of-education-part-2.html"
+          },
+          {
+            "title": "Morality & World Affairs",
+            "title_ar": null,
+            "subtitle": "Re-considering the role of the state in global politics",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Shaimaa MAGUED",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In 2010, a Turkish NGO that has close ties with the ruling party sent a humanitarian convoy to a Gaza under Israeli siege. Eleven people were killed by Israel’s Special Forces when they attacked the convoy in international waters. This incident raises questions of morality in the study of International Relations IR. Morality has been accounted for by different IR theories yet jeopardised in practice. The pursuit of materialistic self-interest informed state practice instead.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+            "own_page": "morality--world-affairs.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "sha256": "f94a218fe4aabf907d1a397c4cc22457b4dab6ecc5f282ce418e834bf7c8f415",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Minorities and the City",
+      "title_ar": "اﻷقليات والمدينة",
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Menatullah HENDAWI",
+          "email": null,
+          "bio": "MennatuAllah HENDAWI is a passionate urban planner and designer who aims to inspire development by connecting research with reality. MennatuAllah is a full-time assistant lecturer in the department of Urban Planning and Design at Ain Shams University (ASU) in Cairo, Egypt. She is also a part-time research assistant in 10 Tooba institute for Applied Research on the Built Environment where she works on interrogating strategies of urban planning and policies in Egypt. In addition, Mennatullah is volunteering as consultant to BENAA foundation, an NGO for enabling Egyptian youth. MennatuAllah graduated in 2012 from Ain shams university with a BSc. in Architectural Engineering, Urban Planning and Design department. In 2015, she finished MSc. Integrated Urbanism and Sustainable Design Program (IUSD), A double degree Master’s program between Ain Shams University and Stuttgart university in Germany. Her Master thesis was about Connecting Urban Policy Making and Implementation, Case of Maspero in Cairo. MennatuAllah is certainly interested in how communities can be enabled. She is concerned with what triggers sustained and regenerated development on both national and local levels. She intend to study and practice urban planning as a developmental discipline through a multidisciplinary lens. In general her research and work is related to: Socio-spatial justice, urban planning, urban policies, planning processes, community empowerment, enablement, history, design, academia and sustainable development."
+        },
+        {
+          "name": "Hend EL GHAZALY",
+          "email": null,
+          "bio": "Hend EL GHAZALY is co-fellow in Cairo Institute of Liberal Arts and Sciences(CILAS), she helps in teaching “Post-Colonialism,Modernity and Politics” course. She is a co-director in the Research and Translation labs in the same institute. She published a co-authored academic paper \"Is there civic learning environment in Faculty of Economics and political Science?\" in “the civic role of Arab universities conference”-April 2016 organized by Issam Fares policy institute and the Lebanese Association for Educational Studies in American university in Beirut. She is interested in the Urban as she sees it as a physical manifestation of power relations, and believes that it's a product of and produces social interactions. She likes to observe the movement and interactions of people with the streets, each other, and transportation, in their everyday life. She has participated in the \"Urbanism and Social Justice\" workshop organized by 10 Tooba organization for applied research on the urban environment. She was interested in giving a presentation on the politics of mobility in the city at the end of the lecture. She is a Political Science graduate from Cairo University in 2015 and had a degree in Liberal Arts from CILAS in 2016. She likes to listen to Ali Al Haggar songs and gatherings at Abdeen garden."
+        }
+      ],
+      "schedule_text": "On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm and 8:00 pm",
+      "weekdays": [
+        "tue"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "Spatial conditions reflect social, political, economic, and cultural norms in a city. This course intends to shed light on the concept of minorities and their role in city development, by looking at minorities from deeper perspectives: the marginalised, the disabled, the disadvantaged and the vulnerable.\n\nThis will be pursued by looking at and linking theories with reality through raising questions like: How do minorities inhabit and reflect their identity in the city? What is beyond spatially observed minorities? What is their role in creating their own spaces? How are they represented in the city? What are their attempts to be integrated and included, and what is the role of the state and other actors in this?\n\nDuring the course the status quo of minorities in Egypt will be discussed as well as their role in development. In addition, how can minority groups be included in city development will be explored to Interrogate policies and practices in Egypt with regard to minorities, vulnerable, disadvantaged and marginalised groups.\n\nThe course tackles topics like: socio-spatial relationships, city development, inclusion, and justice with a special focus on the Egyptian context. The course also opens a door for discussion on the future of minorities in Egypt.\n\nتعكس الظروف المكانية العادات اﻹقتصادية والسياسية واﻻقتصادية والثقافية في المدينة. يهدف هذا المساق إلى أن يلقي الضوء على مفهوم اﻷقليات ودورهم في تطور المدينة عن طريق النظر من منظور اعمق إلى اﻷقليات كالمهمشين واصحاب الحالات الخاصة والضعفاء وغيرهم.\n\nسيتم هذا من خلال النظر في وربط النظريات بالواقع من خلال مناقشة أسئلة مثل: كيف تسكن الأقليات وتعكس هويتهم في المدينة؟ ما هو وراء الأقليات الملحوظة مكانيا؟ ما هو دورهم في خلق مساحات خاصة بهم؟ كيف يتم تمثيلهم في المدينة؟ ما هي محاولاتهم للاندماج ودور الدولة والفاعلين الآخرين في ذلك؟\n\nسنناقش في أثناء المساق حالة اﻷقليات في مصر كما سنناقش دورهم في التنمية. باﻹضافة إلى استكشاف كيف يمكن للجماعات اﻷقلية أن تستوعب في تطوير المدينة لإعادة النظر في الممارسات والسياسات في مصر المرتبطة بالجماعات واﻷقليات المهمشة والضعيفة والمحرومة.\n\nيتبع المساق موضوعات مثل: العلاقات اﻹجتماعية المكانية وتطور المدينة والعدالة مع تركيز خاص على السياق المصري. ويفتح المساق باب المناقشة على مستقبل اﻷقليات في مصر\n\nمقاصد المساق التعليمية:\n\nمعرفية:\n\nمعرفة حالة اﻷقليات في مصر على مدار الزمن\n\nفهم الرابط بين التنمية وإدماج اﻷقليات\n\nإدراك آثار الممارسات والسياسات الموجهة بالقيمة اﻹقتصادية\n\nمهارات ذهنية عامة وخاصة:\n\nخلق توصيات لربط السياسات بالتنمية المستدامة والعدالة اﻹجتماعية في مصر وشرح أثر السياسة الموجهة بالقيمة اﻹقتصادية في تطور المدينة\n\nتطوير مهارات التفكير النقدي واﻹبداعي\n\nتطوير مهارات العرض والكتابة ورسم الخرائط\n\nمشاركة اﻷفكار والتواصل مع اﻵخرين",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

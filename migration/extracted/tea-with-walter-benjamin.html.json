@@ -1,0 +1,37 @@
+{
+  "sha256": "2ce507b1cf0f410966b13ed28181b6627d4fa2a21329eb13614694b6bd3054e4",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "tea with walter benjamin",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "SHORT",
+      "fellows": [
+        {
+          "name": "Karim-Yassin Goessinger",
+          "email": null,
+          "bio": "Karim-Yassin Goessinger founded the Cairo Institute of Liberal Arts and Sciences (CILAS) in 2013. He currently serves as Programme Co-Director. Karim studied political philosophy and urban governance in the Netherlands, Brazil and France, and has worked with a range of development agencies in Latin America and the Middle East in fields including micro-finance, informal housing, and local governance. In addition to his strong interest in social and political theory, he is concerned with the intersection of post-secondary education and development work."
+        }
+      ],
+      "schedule_text": "Mondays 10:00-12:30 (mornings) and Sundays 17:30-20:00 (evenings).",
+      "weekdays": [
+        "mon",
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Walter Benjamin’s writings belong to the canon of Modern German and European philosophy. However, this course rests on the assumption that the legibility of Benjamin’s work is contingent on the time and place one chooses to engage with his writing.\n\nNow seems to be a good time; al-Ghuria a good place!\n\nIt is difficult to get ahold of Walter Benjamin. He is a highly unusual figure; an unconventional sociologist of sorts. Although Marxist in orientation, he was not exactly a mainstream Marxist. An aristocrat born into a rich Jewish family, Benjamin died as an impoverished refugee at the beginning of the Second World War. In the 1920s he began to support the Communist cause but didn’t cease to have a deep interest in high culture. He aimlessly wandered the streets of different European cities while translating French literature and fiercely critiquing state violence. One thing was clear to him, namely that there was something rotten in law.\n\nThis course invites you to slow down, have tea and discuss excerpts on different topics left behind by Benjamin as well as commentaries written about his legacy. The idea is to spend some quality time with an exceptional essayist and philosopher in an old, run-down building in Islamic Cairo when things seem to be falling apart.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

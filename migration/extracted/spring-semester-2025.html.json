@@ -1,0 +1,200 @@
+{
+  "sha256": "622957e909dbf11763ad1988811e448c5284f2a7d2ee9aeccb8742a758d92d71",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring semester 2025",
+        "season": "spring",
+        "start_year": 2025,
+        "start_date": null,
+        "deadline": "2025-01-02",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "The Whole Land is Sulfur and Salt",
+            "title_ar": null,
+            "subtitle": "God and the religious-existential struggle of our modern life",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hisham",
+                "email": "Hisham.alfarrash@gmail.com",
+                "bio": "Hisham is a writer, translator, and an aspiring teacher with a background in political science and philosophy. He holds a bachelor’s in political science, focusing on Carl Schmitt’s religious-existential experience, and a master’s in philosophy, specializing in Arabic language, Islamic theology, and metaphysics, particularly the work of Ismāʿīl Gelenbevī. Hisham has published numerous articles and translated Eric Voegelin's work into Arabic for the first time. He has hosted public talks across Egypt since 2018 and worked as a teaching assistant in philosophy at the American University in Cairo (2019-2023). Hisham also taught two courses at CILAS before! In his free time, he enjoys films, sports, TV, or bothering friends and taxi drivers. Follow him on Instagram: @Hisham_alfarrash."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-22",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The experience with the world as a corrupt wasteland that humanity alone can and must transform into a new, better place is a relatively recent experience, for it has started taking concrete shape only in the 16th-century Europe. From this point on, voices have echoed the sentiments of the likes of Belinsky, the 19th-century Russian Socialist who proclaimed his belief that:\n\n“… there will come a time [on earth] when … there will be no … duty and obligation … there will be no rich nor poor, neither kings nor subjects… But it is absurd to imagine that this could happen by itself, with the aid of time, without violent changes, without bloodshed. Men … must forcibly be led to happiness. And of what significance is the blood of thousands compared to the degradation and suffering of millions.”\n\nIn this course, we will delve deeper into this experience, focusing particularly on its religious-existential roots. We will use, as our guiding example, the legend of \"The Grand Inquisitor,\" a short story within Fyodor Dostoevsky’s The Brothers Karamazov. Here, we encounter a relevant confrontation where a Grand Inquisitor, tasked with burning those who do not follow the Church at the stake for a new, better world, is interrogating Jesus himself!",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/hisham_-_course_25_-_breakdown.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "Christian-Muslim relations in Egypt",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sara Allam Shaltout",
+                "email": "ss520@st-andrews.ac.uk",
+                "bio": "Sara Allam Shaltout is a PhD candidate at the university of St Andrews, UK. She obtained an MSc of Theology and Religious studies with Merit from Edinburgh University and an MA in the Middle East studies from the American University in Cairo. She has more than 12 Years of experience in journalism and communication as she published widely in Christian Muslim relations, church, and the state in Egypt and minorities in the Middle East. She also is a poet, who published three collections of Arabic poetry."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-21",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Christian-Muslim relations in Egypt are deeply rooted in the country’s history and are influenced by state policies, religious institutions, and global political events. This course adopts an interdisciplinary approach to explore the evolution and current state of these relations, with a focus on their social, political, and cultural dimensions.\n\nStudents will examine topics such as the historical foundations of the Egyptian Millet system, the dynamics of church-state relations, and the socio-legal challenges surrounding religious practices, such as church building. Special attention will be given to the roles of women and gender, the influence of religious media, and how Christian-Muslim relations in Egypt intersect with broader geopolitical issues, including the Arab-Israeli conflict.\n\nThrough lectures, discussions, case studies, and potential fieldwork, students will develop a nuanced understanding of how religious identity, state power, and sociopolitical contexts shape interfaith dynamics in Egypt today.\n\nCourse Aim:\n\nThe course aims to equip students with a comprehensive understanding of the historical, political, and social factors shaping Christian-Muslim relations in contemporary Egypt. By engaging with themes such as religious identity, gender dynamics, legal frameworks, and global conflicts, students will critically analyze interfaith relations within Egypt’s complex sociopolitical landscape. The course also fosters skills in interdisciplinary research, critical thinking, and cross-cultural analysis.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_christian_-muslim_relations.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "مقدمة في التاريخ الاجتماعي للتراث الإسلامي",
+            "title_ar": "مقدمة في التاريخ الاجتماعي للتراث الإسلامي",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "يامن نوح",
+                "email": "yamen_nouh@aucegypt.edu",
+                "bio": "يامن نوح هو طبيب أسنان وباحث متخصص في الدراسات الإسلامية. درس الأنثروبولوجيا في جامعة القاهرة ما بين عامي 2012 و2016، ثم التحق ببرنامج ماجستير الدراسات العربية والإسلامية بالجامعة الأمريكية بالقاهرة عام 2018، وتخرج منه عام 2023، مقدما رسالة بعنوان \"مدرسة القضاء الشرعي: إصلاح المحاكم الشرعية والتحديث القانوني في مصر.\" تتركز اهتماماته البحثية في عدة موضوعات، منها تاريخ القضاء الشرعي، وتحولات الفكر الإسلامي في العصر الحديث، وتاريخ القانون والقضاء في مصر في القرنين التاسع عشر والعشرين. نشط يامن كمحاضر ومدرب على المستوى الإقليمي بالشراكة مع عدة مؤسسات، منها المنبر الدولي للحوار الإسلامي بلندن، والرابطة العربية للتربويين التنويريين بعمان، والتي يشغل كذلك منصب عضو بمجلس أمنائها، وله عدد من الأوراق البحثية المنشورة بالعربية والإنجليزية."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-21",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "تقدم هذه الدورة فرصة للتعرف بشكل بانورامي على تاريخ تطور أهم الأفكار في التراث الإسلامي السني. وتقدم هذه الدورة قراءة فريدة بحيث تقرأ الأفكار في سياقها الاجتماعي التاريخي، وفي سياق تطوراتها اللاحقة وتأثيرها على الواقع المعاصر. تمثل هذه الدورة مقدمة لمن يرغب في التعرف على أهم العلوم في التراث الإسلامي من الناحية التاريخية، كعلم الكلام والفقه والحديث والتصوف وغيرها من المدارس الفكرية في تاريخ الإسلام. تعتمد الدورة أسلوب القراءة التفاعلية للنصوص وإثارة النقاش والأسئلة حولها، مع توفير أرضية تاريخية لفهم سياق النص المطروح للمناقشة.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_outline_-مقدمة_في_التاريخ_الاجتماعي_للتراث_الإسلامي.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "Confronting Modernity: Art, Politics, Religion and Science",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Omar El Rakhawy",
+                "email": "orakhawy@gmail.com",
+                "bio": "Omar El Rakhawy is a philosophy scholar with a varied academic background. He earned his undergraduate degree in philosophy from the American University in Cairo between 2007 and 2011, where he learned about the history of continental philosophy. He then went on to pursue a master's degree in religious studies, focusing on philosophy, at Leiden University in the Netherlands.\n\nEl Rakhawy's research interests include the connections between knowledge, religion, and science. He is particularly intrigued by the differences and tensions that arise between various types of knowledge, especially in the context of religion and science. He also has a strong interest in Sufism and how it relates to philosophical concepts. Additionally, his exploration of the concept of the \"self\" has led him to delve into the philosophy of psychology and psychiatry."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-19",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Confronting Modernity: Art, Politics, Religion, and Science invites students to explore the intricate and often contentious relationship between modernity and its various dimensions. This course delves into how modernity shapes our understanding of art, politics, religion, and science, prompting critical reflections on contemporary society.\n\nThrough a carefully curated selection of foundational texts, we will engage with influential thinkers such as Martin Heidegger, Walter Benjamin, Michel Foucault, and Frantz Fanon. We will investigate key themes, including the impact of technology on human experience, the commodification of art in the age of mechanical reproduction, and the dynamics of power and surveillance in modern governance.\n\nAs we navigate these complex ideas, we will also confront critiques of modernity itself, examining alternative perspectives that challenge prevailing narratives. From John Zerzan's reflections on postmodernism to Ian Almond's exploration of Sufism and deconstruction, this course encourages students to question assumptions and clarify the meaning of modernity in their own lives.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/confronting_modernity_syllabus.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "الشريعة والمحاكم والإستعمار في مصر: تاريخ المحاكم الشرعية في النصف الأول من القرن العشرين",
+            "title_ar": "الشريعة والمحاكم والإستعمار في مصر: تاريخ المحاكم الشرعية في النصف الأول من القرن العشرين",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "يامن نوح",
+                "email": "yamen_nouh@aucegypt.edu",
+                "bio": "يامن نوح هو طبيب أسنان وباحث متخصص في الدراسات الإسلامية. درس الأنثروبولوجيا في جامعة القاهرة ما بين عامي 2012 و2016، ثم التحق ببرنامج ماجستير الدراسات العربية والإسلامية بالجامعة الأمريكية بالقاهرة عام 2018، وتخرج منه عام 2023، مقدما رسالة بعنوان \"مدرسة القضاء الشرعي: إصلاح المحاكم الشرعية والتحديث القانوني في مصر.\" تتركز اهتماماته البحثية في عدة موضوعات، منها تاريخ القضاء الشرعي، وتحولات الفكر الإسلامي في العصر الحديث، وتاريخ القانون والقضاء في مصر في القرنين التاسع عشر والعشرين. نشط يامن كمحاضر ومدرب على المستوى الإقليمي بالشراكة مع عدة مؤسسات، منها المنبر الدولي للحوار الإسلامي بلندن، والرابطة العربية للتربويين التنويريين بعمان، والتي يشغل كذلك منصب عضو بمجلس أمنائها، وله عدد من الأوراق البحثية المنشورة بالعربية والإنجليزية."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "11:00",
+            "end_time": "13:30",
+            "weeks": null,
+            "start_date": "2025-01-22",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "تقدم هذه الدورة فرصة للتعرف على تاريخ المحاكم الشرعية التي كانت موجودة في مصر حتى منتصف القرن العشرين، بوصفها مدخلا هاما لاستكشاف جوانب مختلفة من الحياة الاجتماعية والثقافية والسياسية في مصر خلال هذه الفترة الهامة. وتقدم هذه الدورة تاريخ المحاكم الشرعية ضمن إطار أوسع يحاول فهم تاريخ النظام القانوني والقضائي في مصر، وتحولاته الكبرى في القرن التاسع عشر، وصلة هذه التحولات القانونية بالتحولات الاجتماعية والسياسية والاقتصادية التي مرت بها مصر خلال تلك الفترة، وأثر تلك التحولات جميعا على واقعنا المعاصر.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/الشريعة_والمحاكم_والإستعمار_في_مصر.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "What is the State? An anthropological inquiry",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed Bakr",
+                "email": "ulrich2010@gmail.com",
+                "bio": "Ahmed Bakr is a journalist and, occasionally, an anthropologist. A CILAS graduate in 2018, he completed his Master’s degree in Sociology and Social Anthropology at Central European University. Ahmed is interested in questions of power, capital, imperialism, and state. He likes photography, cats, discussing media he’s watching, and leftist memes. He currently works at Mada Masr."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-25",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The question of what is the ‘State’ and how it operates has always been central to social sciences as much as the state itself has been central to living in modern societies. Social scientists, activists and radicals have for decades disagreed widely on the nature, role, and even existence of this thing called the state. And, as the world entered the era of globalization and neoliberal capitalism in the late 20th century, these questions came back to front.\n\nAnthropology, a field once most preoccupied with the study of supposed ‘pre-modern, traditional’ societies, brings in a new perspective to studying the state. Through the lenses of ethnography and social theory – particularly the Marxist and Foucauldian traditions – the anthropology of the state explores state activities as a manifestation of global and local power relations by looking through the everyday encounters citizens have with the ‘state,’ and the conflicting imaginaries of the state that they develop based on them.\n\nThe goal of this course is to learn the different perspective anthropology of the state brings to understanding the state, examine different case studies into different aspects of state activity, and reflect on how we encounter the state in our daily lives.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/encountring_the_state_-_updated_syllabus_2024-2025__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

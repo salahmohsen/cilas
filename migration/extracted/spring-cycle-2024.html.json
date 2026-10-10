@@ -1,0 +1,170 @@
+{
+  "sha256": "e6291bc446950fb5f2ff573627402da9d55e302312d9970a513d47f41c4cb718",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring cycle 2024",
+        "season": "spring",
+        "start_year": 2024,
+        "start_date": null,
+        "deadline": "2024-04-02",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Film Theory (Contemporary)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mohamed Hani",
+                "email": "mohamedhani2583@gmail.com",
+                "bio": "Mohamed Hani earned his MA degree in adult learning and global change from Linkoping University in Sweden in 2022. He works as a learning and development consultant, writer, and a translator. He published a short story collection in 2021, and an Arabic translation of Truman Capote’s short stories collection. As for film discipline, he published several film critic essays on Almanassa and Medina platforms. His essays are usually a thematic analysis of filmmakers’ works against film theory. He is mainly interested in the evolution of film language, and development of film art from a formalistic perspective."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-20",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Film theory is the study of general patterns used to create and articulate film language. It differs from film history and film analysis. Film history is concerned with the study of major milestones in the progress of the filmmaking industry; and film analysis is the study of film against aesthetics, semiotics, socio-political aspects… etc.\n\nGenerally, film theory is divided into two main eras: Classic, and Contemporary film theory. Classic film theory started at the beginning of the twentieth century. Theorists were focused on the answers to the questions “Is cinema an art?” and “How is cinema different from other arts?” Contemporary theorists took over from the century’s sixties, after the establishment of the film as a defined significant art. Their study was a deeper one on how film language works, and the ideologies behind filmmaking.\n\nOur course focus will be on Contemporary film theory. We will study the philosophy behind film language. How film forms meaning? We will relate such reading to Structuralism and the French 60s humanities scholars. Then we will explore questions about how cinema is used, and the suspicion around its ideologies. This part can be identified as a critical study of Cinema.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow_reading_and_watching_list.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/n7BjyEfztY1GXiUw6",
+            "own_page": null
+          },
+          {
+            "title": "On Motherhood: Between Gendered Identities and Tools of Resistance",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Nahla Mansour",
+                "email": "nhm14@mail.aub.edu",
+                "bio": "Dedicated researcher Nahla Mansour, a MEPI scholar and honoree graduate of AUB in Media Studies, is currently pursuing a master's in Sociology. With a keen focus on gender, media, and societal dynamics, Nahla's academic journey has led her to explore the role of political parody in media, particularly through a semester at the University of Pennsylvania. Nahla's research interests pivot around gendered subjectivity, power dynamics, and the politics of the body. With an extensive background as a research assistant, she has critically engaged with questions of modernity, colonialism, and knowledge production."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-21",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "As motherhood has been the haunting ghost in women’s life, it surely has constructed their self-image and directed their gender performance. Mothering has been sold to the world as the sacred mission that cannot be questioned or challenged. Yet, in real life, motherhood is not an easy experience and its impact on selfhood is complex. As such, it is crucial to trace and deconstruct the centrality of this experience in the formation of the gendered selfhood. How has this experience gained its complexity on a social level? What can it tell and convey about gender performance and sexuality? And most importantly how was it used to bargain and maneuver within social structures?\n\nIn this course, we will maneuver between different academic pieces attempting to trace mothering and motherhood as a social tool that formulates and constructs the gendered subjectivity.\n\nAs we visit different scholarly works, we will be able to unravel gendered structures and attempt to make sense of the world around us through grounding our knowledge with an academic theoretical framework that tackles gender as analytical categories. Throughout the course, we will see how motherhood was extracted from the private realm and pushed to the public realm by states and political systems to serve a national agenda. Moreover, we will trace how agency is pivotal when we talk about gendered subjectivity. Finally, we are going to unpack how motherhood and gender performance was crafted to serve as a tool of resistance.\n\nWhat to Expect:\n\nThis course is a discussion-based seminar. You are expected to be fully present and show the best you can to make the discussion fruitful and insightful. This course does not only aim to deconstruct the long-lived rigid image about motherhood but also to equip you with tools of critical thinking and academic writing. Generally, you will be asked to do the readings, in addition to providing a short reflection on the assigned readings. The flow of readings are divided into 3 categories: first is the theoretical framework which will anchor our knowledge about gender studies through unpacking notions like agency, power and negotiation of private and public spheres. The second category will include the core readings that will guide our discussions about motherhood and gender performativity. The last category will include thematic readings and case studies to enrich our discussion and gain a detailed picture about the topic.\n\nبينما تمثل اﻷمومة شبحًا مطاردًا في حياة النساء، فإنها بالتأكيد تشكل صورتهن الذاتية وتوجه أداءهن الجندري. لقد بيعت فكرة اﻷمومة إلى العالم باعتبارها مهمة مقدسة لا يمكن مساءلتها. لكن اﻷمومة في الواقع ليست تجربة سهلة وتأثيرها على شعورنا بذواتنا معقد. وبالتالي، من الضروري أن نتقفى ونفكك مركزية هذه التجربة في تشكيل الهوية الجندرية. كيف اكتسبت هذه التجربة تعقيدها على المستوى الاجتماعي؟ ماذا يمكن أن تخبرنا وتنقل لنا عن أداء الجندر والجنسانية؟ والسؤال اﻷهم: كيف استخدمت للتفاوض والتحايل في البنى الاجتماعية؟\n\nنجول في هذا المساق بين مختلف الدراسات اﻷكاديمية في محاولة لاقتفاء اﻷمومة هوية ونشاطًا بصفتها أداة اجتماعية تُشكل الذات الجندرية وتبنيها.\n\nوبينما نقرأ هذه الدراسات، سنتمكن من كشف البنى الجندرية وفهم العالم حولنا عبر تأصيل معرفتنا الشخصية بإطار نظري أكاديمي يعالج الجندر بصفته تصنيفًا تحليلاً. من خلال المساق، سنرى الطريقة التي انتزعت بها الدولة والنظم السياسية اﻷمومة من المجال الخاص ودفعت بها إلى المجال العام من أجل خدمة اﻷجندة القومية. واﻷكثر من ذلك، سنتتبع مدى محورية الفاعلية عند الحديث عن الهوية الجندرية، وأخيرًا، سنحلل الطريقة التي يعمل أداء الجندر واﻷمومة كأداة للمقاومة.\n\nماذا يجب أن تتوقع\n\nهذا المساق هو سيمنار مقام على المناقشة، نتوقع أن تحضره كاملاً وأن تبذل ما بوسعك كي تجعل النقاش مثمرًا وعميقًا. لا يهدف هذا المساق إلى تفكيك الصورة الصارمة المعمرة حول اﻷمومة فقط، بل أيضًا تزويدك بأدوات للتفكير النقدي والكتابة اﻷكاديمية. وبشكل عام، يُطلب منك أن تقرأ قراءات المساق باﻹضافة إلى تقديم انطباع قصير حول القراءات المقررة. ينقسم مسار القراءات إلى ثلاثة تصنيفات: اﻷول هو اﻹطار النظري الذي سيرسي معرفتنا عن دراسات النوع الاجتماعي من خلال تحليل أفكار مثل الفاعلية والسلطة والمفاوضة بين المجالين العام والخاص، والثاني سيتضمن القراءات اﻷساسية التي ستقود نقاشاتنا حول اﻷمومة واﻷدائية الجندرية، وأما اﻷخير، فسيتضمن قراءات نوعية ودراسات حالة من أجل إثراء نقاشاتنا واكتساب صورة مفصلة حول الموضوع.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/on-motherhood_-between-gendered-identities-and-tools-of-resistance.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/n7BjyEfztY1GXiUw6",
+            "own_page": null
+          },
+          {
+            "title": "حتى لا تكون بومر: عايزين من الفن إيه؟",
+            "title_ar": "حتى لا تكون بومر: عايزين من الفن إيه؟",
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "مي عامر",
+                "email": "maiabdulraheem@yahoo.com",
+                "bio": "تقدم المساق مي عامر باحثة نسوية في مجال الدراسات الثقافية، حصلت على الدكتوراه عام 2022 عن أطروحة بحثية تناولت تحليل جندري لأنواع الأغاني المعاصرة في مصر، كما حصلت على الماجستير عن أطروحة تناولت أنماط اللغة الاجتماعية في تيار الأغاني الشعبية المعاصر ( المهرجانات)عام 2014.\n\nمي تخرجت من كلية الآداب قسم الاعلام جامعة المنصورة عام 2008، بعدها حصلت على دبلومة النقد الفني بأكاديمية الفنون 2009، ثم تقدمت لاستكمال دراستها العليا في قسم الاعلام والثقافة بكلية الدراسات العليا للطفولة جامعة عين شمس.\n\nتقوم مي بتدريس الانثربولوجيا العمرانية في كلية الهندسة بالجامعة الفرنسية بمصر، كما تستأنف عمها كمديرة مشروع مطبخ دوار القائم على المزج بين الاكلات المصرية والسورية من خلال الطبخ المشترك بين الطباخات المصريات والسوريات."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "العلاقة بين الفن والمجتمع علاقة شائكة، ربما نرى عملا فنيا متواضعا يخلق أو يعزز أنماط ثقافية بعينها ، وربما نجد عملا فنيا اخر يمكن وصفه بالجيد يحبطه المجتمع ولا يتجاوب معه.\n\nكمستهلكين للفن والمواد الثقافية المختلفة تدور في بالنا عشرات الأسئلة حول الفن الجيد والردئ، حول دور المجتمع تجاه استقبال الفن، حول دور الفن تجاه أزمات المجتمع، هل علينا أن ندرس الفن لتحسين ذائقتنا؟ ، وهل على الفن دور في مناقشة قضايانا والتعبير عنها؟ كيف نتعامل مع ظاهرة محمد رمضان؟ هل يفسد أولادنا ؟ كيف نرقص على المهرجانات؟ ونحزن على ضياع الذوق العام في الموسيقى؟ كيف يتغير المشهد بظهور حاد وجمعى لكل هؤلاء التيك توكرز؟ كيف نرى الاتى اتى مونتو اتي شانتر ماي هورتي .. انتش و اجري\n\nبالعربية في هذا المساق سنحاول معا فهم علاقتنا الجمالية والطبقية في التعاطي مع الفنون والمواد الثقافية بالاستعانة ببعض القراءات في مجال الدراسات الثقافية، كما سنناقش باستفاضة كيف ننقدها في سياقها الاجتماعي، ستخصص كل جلسة لنوع من أنواع المواد الثقافية، الغناء، الدراما، السينما، الادب، الإعلان، والرامج التليفزيونية",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/حتى_لا_تكون_بومر.docx__2_.pdf"
+            ],
+            "register_url": "https://forms.gle/n7BjyEfztY1GXiUw6",
+            "own_page": null
+          },
+          {
+            "title": "Sailing the Grey: Perspectives on piracy and pirates",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Menna Fahmy",
+                "email": "m.menna.shaban@gmail.com",
+                "bio": "Menna Fahmy wanted to be a pirate since she was seven, she was told she couldn’t so many times that she took it upon herself to understand why that is. After a brief albeit intense affair with journalism, she now works in tech.\n\nDrawing from a diverse range of interests and a lifelong fascination with mythology, history and pirates, she aims to discover the threads of piracy's story, intricately woven into the rich tapestry of the Mediterranean's past (or to simply get a ship, abandon all material possessions and go find out what it means to make the sea a home)."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-22",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Pirates have always existed in a gray area, sailing both within and outside of established systems, continuously demonized and idolized, hunted and protected. They seemed to be everywhere and nowhere in particular, always on the fringe of society.\n\nAs we delve into stories, primary sources, historical accounts, and cultural representations, we will question the portrayal of pirates as mere outlaws and explore the socio-political, economic, and cultural factors that shaped their existence and pursuits. We will look at their motivations, tactics, and the impact of piracy on maritime trade, colonial powers, and global politics.\n\nThroughout the course, we will explore questions like, How and why has the image of pirates in the collective changed across history? What drives the duality of their actions? What is Puracy exactly? How do pirates challenge traditional notions of law and governance? How have Western narratives of piracy shaped our perception of outlawry and the open sea? Were Barbary pirates savage slavers? And what commonalities can we find between modern piracy and its historical counterparts?\n\nIn our quest to challenge conventional narratives and shed light on the intricate dualities that define piracy, we aim to gain a more nuanced understanding of these notorious individuals beyond the narratives we take for granted.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/sailing_the_grey__course_flow.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/n7BjyEfztY1GXiUw6",
+            "own_page": null
+          },
+          {
+            "title": "“Us” and “Them”? : Social Psychology and Psychoanalysis in Conversation",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Hazem Ehab",
+                "email": "hazemehab24@gmail.com",
+                "bio": "Hazem Ehab graduated with a Bsc. in Political Science from the Faculty of Economics and Political Science, Cairo University, in 2015, and holds an MA in Political Philosophy from Pompeu Fabra University in Spain. I submitted my PhD thesis in Humanities at Pompeu Fabra University in December 2023, which focuses on the political ontology of Maurice Merleau-Ponty.\n\nHis research interests include phenomenology, hermeneutics, psychoanalysis, film and music studies, and political philosophy. In general He adopts an interdisciplinary research agenda which tries to work its way in-between those disciplines. Aside from academia, he is interested in different aspects of photography and filmmaking - having worked from time to time on independent small-scale film projects- and music."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-25",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Through the last ten years the world we live in can be characterized at best as unstable. Regimes and orders of thought, government, technology, lifestyles, art and space have been in a continuous motion of rapid changes and dislocations. Trends on social media platforms can be the best example of such phenomenon where groups of different kinds are formed and later shattered, from sports to politics to music genres to art, thought, and ways of life. Quick affiliations and conflicts emerge in real life, insecurity, anxiety and aggression coupled with the stress of contemporary everyday life under a global capitalist system mark the confusions that haunts our societies and communities, and made clear since covid-19 pandemic. Together we will embark on a journey through basic themes in psychology and psychoanalysis in order to explore how groups are formed, and how we engage with each other as social beings. Through critically engaging with the readings and audio-visual material, we as a group will attempt to open discussions about what we mean when we simply use the words “us” and “them”",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/us-and-them_-psychology-and-group-formation-draft.pdf"
+            ],
+            "register_url": "https://forms.gle/n7BjyEfztY1GXiUw6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

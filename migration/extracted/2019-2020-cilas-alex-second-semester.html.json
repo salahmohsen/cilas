@@ -1,0 +1,212 @@
+{
+  "sha256": "d6b4ff6e03ec509e54a01e124b3f40681bb0f164509b4f3cd0667dbfaaec5fa6",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Second semester 2019-2020 (Alex)",
+        "season": "winter",
+        "start_year": 2020,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "مختبر البحث الأول - مستقبلات ما بعد رأسمالية: الحياة والسياسة",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "محمد العربي",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "يعني هذا المختبر البحثي ببحث هذه الاحتماليات التي قد تتخذها الحياة في عالم ما بعد الرأسمالية. وهو يركز على السياسة باعتبارها الساحة التي تنعكس عليها هذه الاحتمالات. فيسعي إلى الإجابة على التساؤلات عن الكيفية التي تغير بها التكنولوجيا النظريات السياسية الأساسية عن العدالة والحرية والديمقراطية والأخلاق. كذلك سيحاول النظر في الكيفية التي سترد بها الحكومات والبنى الاجتماعية والشركات على هذه التحولات. وبالتالي، سيكون من الضروري مناقشة تأثير قراراتهم على حياتنا اليومية. وسيقدم أيضًا المفاهيم الجديدة التي تظهر مع الجدل حول مستقبل الرأسمالية.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+            "own_page": "research-lab-post-captialism.html"
+          },
+          {
+            "title": "مختبر البحث الثاني - التأريخ الشفهي: أحياء الإسكندرية",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "نايري عبد الشافي",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "يأتي المختبر تحت عنوان \"أحياء الإسكندرية\" وتهدف بالأساس لتسجيل قصص وتجارب سكندرية عن الأحياء المختلفة وخصوصيتها التاريخية والثقافية. من خلال المختبر سيتم تدريب المشاركين على تعلم كيفية تصميم وتنفيذ مشروع تأريخ شفهي من البداية إلى النهاية. وتعلم كيفية استخدام الأجهزة المختلفة في تسجيل القصص وخلق أرشيف للتسجيلات واستكشاف أشكال مختلفة لتوثيق وإنتاج تلك القصص. ويختتم المختبر بعرض تفاعلي للأعمال المنتجة.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+            "own_page": "alexandrian-oral-history.html"
+          },
+          {
+            "title": "مختبر الوسائط - كيف تريد أن تُرى؟: ملاحظات على صورتنا الذاتية المتشظية",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "نادية منير",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "تتورط الصورة الفوتوغرافية والفيديو في صياغة هويتنا وصورتنا الذاتية أمام ما نطلق عليه أعراف المجتمع وسياسات الرقابة. كل ما نراه يوميا يتدفق علينا كالسيل ليشكل مفهومنا عن أنفسنا والآخرين، سواء كنا جزءاً منه أو حاولنا / ادعينا الابتعاد عنه. تخلق تلك اللعبة الافتراضية، من مشاهدتي لك ومشاهدتك لي، عثرة بين أجسادنا وسلوكنا أمام الكاميرا، ينتج عنه عنفا قد يصعب تميزه ورفضه. إذا كانت ذاتنا قصة نحكيها للآخرين، فإنه لا يمكن التفكير في أنفسنا دون التفكير في الآخرين ليس فقط لحكمهم علينا بل لما تفرضه علاقتنا بهم. سوف نناقش كيف وصلت صورتنا إلي هذه الدرجة من التعقيد؟ وكيف تقف ضدنا أحيانا؟ وكيف تمر بين الدوائر المختلفة بين ما هو عام ومباح وما هو خفي وسري؟",
+            "flow_links": [],
+            "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+            "own_page": "how-do-you-want-to-be-seen.html"
+          },
+          {
+            "title": "مختبر الترجمة: أنت وأنا ونظرية الترجمة",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "حسين الحاج",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "أن تترجم نظريات الترجمة كي تتعلم ممارسة الترجمة ونظرياتها، فهذا أمر يشبه الوقوف بين مرآتين: تبدي عدد من الصور اللانهائية لك. فماذا يمكن أن يحدث لو أصبحت هذه التجربة جماعية؟ تتحول عملية تعلم ممارسة الترجمة في الدورة السادسة من مختبر الترجمة في معهد القاهرة للعلوم واﻵداب الحرة في اﻷسكندرية إلى ما يشبه الاستبطان التجريبي حول النشاط ذاته. يُعرف الاستبطان بنظر المرء في أفكاره ومشاعره حول قضية ما، وهكذا نفعل بخصوص الترجمة، ننظر جماعيًا في أفكارنا ومشاعرنا حول طرق ممارستها بينما نترجم نظرياتها، ﻷن الترجمة ليست مجرد عمل ذهني، بل هي انفعال شعوري باللغات والكلمات التي نقرأها ونكتبها.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+            "own_page": "you-me-and-translation-theory.html"
+          },
+          {
+            "title": "Pedagogical Lab: An Act of Re-imagination and Reclamation of what matters in education",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Nariman Mostafa",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "The lab is a collective exploration into how we can re-imagine, re-create \"alternative\" \"education\" models/spaces/communities, be it basic or higher education spaces. It is an attempt to \"reclaim\" our \"indigenous wisdom\" and find it within ourselves and our personal stories first. What does the \"alternative\" means, and \"alternative\" to what? How can education be our pathway for \"emancipation\"? How can stories from our lives as well as from different parts of the world help us create the meanings and forms we need for \"education'? We question the roles and performances involved in any \"education\" process like that of \"teacher\" and \"student\" all throughout.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/u8drZbAfj2CjSwACA",
+            "own_page": "pedagogy-lab.html"
+          },
+          {
+            "title": "جنون الشباب: مقدمة في الدراسات السينمائية",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "نور الصافوري",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "هذا المساق يمثل مقدمة في الدراسات السينمائية ومحاولة لمشاهدة أفلام ونشر نصوص تأخذ ثقافتنا السينمائية إلى مساحات جديدة. تعكس اختيارات الأفلام التي يحتويها المنهج اهتمام بتمثيل الشباب في الأفلام المصرية عبر حقب زمنية مختلفة. ويتناول المنهج من خلال التحليل النقدي بعض أهم التيارات في النظريات السينمائية.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+            "own_page": "youth-madness.html"
+          },
+          {
+            "title": "Encountering the State: Anthropological Perspectives",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed Bakr",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "The question of what is the state and how it operates has always been central to social sciences as much as the state itself has been central to living in modern societies. However, political anthropology had traditionally steered away from these discussions, as it studied societies that had been deemed 'pre-modern' and, thus, organized capitalist 'kinship'– as opposed to the modern state. As the world entered the era of globalization and neoliberal capitalism, the nature and role of the state have been once again called into question. This course aims to showcase the development of the anthropological study of the state and guide the participants through examining different ethnographic inquiries into state activity.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+            "own_page": "encountering-the-state.html"
+          },
+          {
+            "title": "Every cook can govern: Reflections on the philosophy of democracy and its practice",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hussein El-Hajj",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Weekly session of two and a half to three class hours.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 11,
+            "start_date": null,
+            "location": [],
+            "description": "More democracy or less democracy? This course is browsing the philosophy of democracy and its practice. We start with reading the various philosophical stances of the radical left on democracy, get introduced to its old and recent history, and analyze its patterns in contemporary societies contexts. This course is trying to deconstruct the many aspects of the concept of democracy as an entry for political philosophy and its sciences, and it ends with a non-dramatic act about the politics of democracy between centralism and de-centralism.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/dzkPJYmGNJXME7zc7",
+            "own_page": "every-cook-can-govern.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

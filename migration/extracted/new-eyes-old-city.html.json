@@ -1,0 +1,36 @@
+{
+  "sha256": "9a98ccaa30c27dcb1cc82114864739a5832a48981a72c3f2f062dc5d5ac058f7",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "new eyes, old city",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Yvonne BUCHHEIM",
+          "email": null,
+          "bio": "Yvonne BUCHHEIM is interested in exploring the role of art within the everyday and engaging her audiences in unexpected ways through participation and observation. As an artist and academic she is passionate about observing the world through drawing. She grew up in socialist East-Germany. After the collapse of the Berlin Wall she went on to pursue an undergraduate degree in Communication Design in Munich and a Master’s of Fine Art at the University of Ulster in Belfast, Northern Ireland. Her enthusiasm for teaching developed through postgraduate studies in Teaching Higher Education as well as teaching Drawing and Applied Arts at the University of the West of England for ten years. In 2012 she moved to Cairo where she has taught at AUC and has pursued her interdisciplinary art practice in public and social projects. She has been awarded residencies and commissions in the UK, Ireland, France, Germany, USA, Iran, and Egypt. Most recently she completed the Spring Sessions Artist Residency in Amman, Jordan. At CILAS, Yvonne coordinates the field of study Arts and Culture."
+        }
+      ],
+      "schedule_text": "Wednesdays: 10:00-12:30 or 17:30-20:00 (morning or evening sessions).",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-06",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Have you ever wanted to look at the world with new eyes? This creative course explores the idea of everyday environment visually. Our everyday world is made up of objects, which we navigate in our daily routines. The course will focus on the social fabric of Cairo and invites you to examine your personal relationship to the city.\n\nTo photograph is to be human as well as a basic form of expression and communication. People everywhere make images; we use photographs to document our daily lives, to celebrate important moments and to communicate certain ideas. Image making is a global language. It succeeds where verbal or text based communication fails. Photographs allow us to understand our surroundings and our role within society.\n\nThe simple act of taking a photograph can open up a discourse on society to reveal our personal position within a culture. Does the everyday provide a platform for conformity, or is it a place where conformity is resisted? How do we negotiate our roles in a society on an every day basis? This course will probe the boundaries of everyday assumptions to create new ways of seeing. The study of the everyday will be enriched by writings by key visual culture thinkers such as Jacques Rancière, John Berger and Ben Highmore.\n\nwhat to expect\n\nParticipants are expected to submit a selection of photographs each week related to the outlined topic.\n\nParticipants are further expected to engage with weekly assigned readings and voice their opinion in-class discussions.\n\nParticipants are expected to produce a trimester-long individual or group project in the form of still or moving imagery.\n\nParticipants need to have access to a camera, this can be as high/low quality as you wish. Occasionally you will be asked to print out images.\n\nwhy apply\n\nTo gain a new awareness of the everyday and see your surrounding with different eyes\n\nTo improve your ability to draw from observation and be able to communicate what you see and think\n\nTo understand the context of images through discussion on art theory, philosophy and anthropology\n\nTo discuss the nature of photography as a visual representation of the everyday\n\nTo creatively understand the role of the self within the social fabric of Cairo",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

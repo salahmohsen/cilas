@@ -1,0 +1,36 @@
+{
+  "sha256": "cf68646cc7ab35a498e26dd0a1dcba2499a0a4af88ba52b09bd839f4aa1e7edc",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "3eish, 7orreya, 3edala igtima3eya",
+      "title_ar": null,
+      "subtitle": "bread, freedom, social justice",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Hala BARAKAT",
+          "email": "hala.barakat@gmail.com",
+          "bio": "has a Ph.D. in Paleoecology from the University of Aix-Marseille III, France. She worked as a lecturer at Cairo University 1995-2000 and acted as deputy director at the Center for Documentation of Cultural and Natural Heritage (CULTNAT) affiliated to the Library of Alexandria. She was in charge of the documentation of the natural heritage program as well as supervising the photographic heritage, folkloric heritage and musical heritage programs at CULTNAT (2000-2012). In January 2013, Hala joined the Egyptian Initiative for Personal Rights (EIPR) as a part time researcher on the issues of “Right to Food” and “Food Sovereignty” in Egypt. She is also a founding member and former president of Nature Conservation Egypt (NCE) a non profit organization active in the field of conservation of endangered species and habitats and raising awareness to environmental issues in Egypt. Hala is also a certified Sivananda Yoga teacher and master. As a trained botanist, she has long had deep interest and knowledge in Naturopathy, Homeopathy and vegetarianism which complement her interest in yoga as a lifestyle."
+        }
+      ],
+      "schedule_text": "Sundays at CILAS starting January 3, 2016, 10 to 12:30 in the morning or 5:30 to 8 in the evening",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-03",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "In this course, we will explore the issues of Right to Food and Food Sovereignty within the Egyptian context. These concepts will be discussed with the backdrop of Egypt’s history of food production, introduction of plant and animal species and food heritage. Along this line of thought, we will delve further into more complex and urgent issues such as consumers and farmers rights, fair trade, intellectual property rights, GMOs, food subsidy and sustainable food systems.\n\nWe shall also try to pinpoint the current trends in food consumption in Egypt and how these are shaping the future of agriculture and food production in general. Thereby exploring the rise in organic and aquaponic farms, vegan and vegetarian tendencies, healthy foods fads, food movements, farmers markets, “new age” restaurants and social media groups. Participants will be encouraged to contribute through their own observations of various food trends.\n\nThe course will end with a cooking class – an all “Egyptian” meal.\n\nwhat to expect\n\nParticipants are expected to actively engage with all course material. They are expected to visit sites of interest: museums, markets, restaurants and food shops, read indicated parts of relevant books, watch movies, take photographs of food items, products, keep a record of impressions, observations, questions and bring them to class.\n\nParticipants will choose an issue, question, food item to explore through various media discussed in class and present their findings in a form they choose.\n\nParticipants are expected to contribute and share reflections and experiences.\n\nwhy apply\n\nTo raise questions, discuss and try to come up with some answers to:\n\nWhat is “Right to food” when everyone is already eating?\n\nHow does “food sovereignty” fit into the Egyptian context?\n\nIs there an Egyptian “food heritage”?\n\nWhat is the food we eat? Where does it come from? Where did it originally come from? What happened till we have come to the current food on our table ?\n\nWhat is going on in so far as food quality, quantity, variety, trends and fads?\n\nAs far as food production and consumption is concerned: can we shape, better control or take things into our hands, as a state, individuals, urban and rural food producers?",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

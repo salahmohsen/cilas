@@ -1,0 +1,140 @@
+{
+  "sha256": "ebb782c392a3c7b07e0a18b740f0fba30fb6bb12e8838971347b945cc82697bd",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Cycle 2026",
+        "season": "spring",
+        "start_year": 2026,
+        "start_date": null,
+        "deadline": "2026-04-17",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Heroism and Modernity",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Karim El Dalil",
+                "email": null,
+                "bio": "Karim El Dalil is a scriptwriter who worked as a writer and head writer in a number of writing rooms for projects in film and TV. He is also a lecturer researching and studying film history, and works as a film curator and programmer."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-26",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Heroism and modernity Course aims to explore anthropological, philosophical and theological changes experienced by modern man at the decisive moment of transition from mythical age to the modern age. when natural empirical science begins to replace traditional metaphysical explanations of the world, we cease to believe in the myth of creation. There’s seemingly no foundation any longer for the meaning and value of things, including ethical values, good and evil. Through conversations and discussions, we will be exploring an array of readings, ranging from philosophical analysis and commentary on literature and films that breakdown and illustrate the progression of the hero figure throughout history.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/heroism_and_modernity_workflow.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Buddhist Psychology",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mahāviveka",
+                "email": null,
+                "bio": "Mahāviveka was born in Giza, Egypt, 1983. He spent five years as a lay practitioner learning Sanskrit and Pāli, as well as exploring Mahayana and Theravāda Buddhism in India, Thailand, Sri Lanka, Myanmar, Cambodia, and Malaysia; after which he received his higher ordination as a Theravāda monk in 2017 in the Burmese Shwegyin Nikaya. He's since authored two books titled \"Motivation and Effort in Buddhist Soteriology\" (2019) and \"The Buddha as Messiah\" (2025), along with several essays including \"Pāli Rhetoric in Translation\", \"Issues with Pāli Literature and its Translation\", and \"A Buddhist Perspective on the Psychology of Prejudice\". He's delivered several talks on Buddhism, including in the Sitagu International Buddhist Academy in Myanmar, and at the Royal University of Phnom Penh, Cambodia. He's currently continuing an ongoing project of producing the first translation of the Buddhist Pāli Canon in Arabic."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-28",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course intends to cover the psychological aspects of the Buddhist Doctrine. Our main focus will be to explore in depth and as much extensively as possible, both the origins and developments of the autochthonous Indian experience of mind-examination, in both its tenets and practices, as they were ingeniously discovered and formulated by early Indian meditators and contemplative practitioners. The course will begin by demonstrating the principle of Buddhist pyrhonism as an epistemology in which conventional and ultimate truths are sharply distinguished, with the latter believed to be reachable fundamentally via the individual experience rather than abstract conceptualization.\n\nThe experience with which Buddhist psychology is most concerned is, dukkha, which covers the vast expanse beginning at circumstantial forms of psychological pain and affliction, and extends further to deeper forms including the conditionality regulating mental and emotional habits, impulses, compulsions and responses, and finally reaching down to the dread characteristic of the 'unconscious'. We will explore how Buddhist Sanskrit and Pāli texts give a detailed description of these, and how they further prescribe a path of experiential practice that enables the individual practitioner transcend this dukkha as a universal and fundamental human condition.\n\nThe course will cover such characteristic and unique Buddhist practices of spiritual and psychological transcendence, including meditation, tranquillity, mindfulness, Buddhist morality, self-awareness, intuitive observation, motivation and effort, and renunciation, which Buddhist texts frequently explain by juxtaposing and contrasting against their worldly, mundane opposites. This will give us a grand and clear picture of what constitutes \"mental health\" in terms of Buddhist psychology, and which we will view also in light of what modern Western psychology proposes in terms of therapeutic intervention.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/buddhist_psychology_course_description_with_a_reading_list_and_bio.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "المكان في الأدب الحديث",
+            "title_ar": "المكان في الأدب الحديث",
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "ياسر عبد اللطيف",
+                "email": null,
+                "bio": "ياسر عبد اللطيف كاتب وشاعر ومترجم من مصر\n\nتخرج في قسم الفلسفة بجامعة القاهرة عام 1994، وعمل بالصحافة التلفزيونية والخبرية حتى عام 2009. أصدر خمسة كُتب قصصية وأربع مجموعات شعرية ، وترجم إلى العربية عددًا من الكلاسيكيات الأدبية عن الفرنسية والإنجليزية.\n\nحصل على جائزة ساويرس الأولى فئة شباب الكتاب عن روايته \"قانون الوراثة\" عام ٢٠٠٥، وحصل على نفس الجائزة فئة كبار الكتاب عن مجموعته القصصية \"يونس في أحشاء الحوت عام ٢٠١٣.\n\nترُجمت بعض أعماله القصصية والشعرية إلى الإنجليزية والفرنسية والإسبانية والألمانية والإيطالية. وشارك الكاتب في برنامج الكُتاب العالمي IWP بجامعة أيوا بالولايات المتحدة الأمريكية عام 2009. كما شارك في عدد من الفعاليات الثقافية والمهرجانات الأدبية بفرنسا وإسبانيا زكولومبيا وألمانيا ومالطا وهولندا وكوريا الجنوبية وكرواتيا وكندا والإمارات العربية المتحدة.\n\nأدار عددًا من ورش الكتابة الإبداعية بدار الكتب خان في القاهرة وموقع خط ٣٠ ببرلين وبجامعة آيوا بالولايات المتحدة.\n\nيشرف على تحرير موقع راديو المعادي الحر الإليكتروتي\n\nيعيش ويعمل ككاتب ومترجم حرّ بين القاهرة ومدينة إدمنتون بكندا."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 8,
+            "start_date": "2026-04-25",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "يندُر طرح السؤال عن علاقة الأدب بالجغرافيا، إلا في إطار دراسة الوظيفة التأريخية والاجتماعية للأدب. لكن للجغرافيا علاقة بالأدب، ومدارس الأدب الحديث على وجه الخصوص تفوق تلك النظرة الاستعمالية. فما هي تلك الأدوار وكيف يمكن أن نأخذها في اعتبارنا عند ممارسة الكتابة الأدبية. سواء شعرًا أم نثرًا. سردًا قصصيًا أو غير قصصي. بداية من سؤال اللغة، التي لا يمكن عزلها عن الجغرافيا البشرية، ومرورًا بسؤال الشكل الأدبي، وليس انتهاء بدور المكان في الأدب الذي تعاظم في العصر الحديث. كيف يطبع المكان الأدب بطابعه، بوعي أو دون وعي من الكاتب؟ وكيف يظهر هذا الأثر وما مدى عمق علاقته بنظرة الكاتب إلى العالم.\n\nالمكان هو وعاء الخبرة الإنسانية، وهو لا يكون ثابتا أبدًا طالما هناك حدث يدور. فالحدث يفترض الزمن، ولا زمن بلا حركة. رفع فن القص أهمية المكان، مع حرية الحركة المتاحة للسرد لدفع الأحداث في مواقع مختلفة، وهو ما لم يكن بنفس السلاسة في الكتابة للمسرح سابقًا. ومن هنا القناعة بمحورية المكان في فنون الأدب الحديث، سواء شعرًا أم نثرًا. سردًا قصصيًا أو غير قصصي، مقارنةً بالعناصر التي كانت تتكئ عليها الدراما المسرحية: كالشخوص المنحوتين بدقة والحبكة والصراع... أحيانًا يكون الافتتان بمكان معين هو المحرِّك الأساسي للنص. والافتتان به لا يعني أنّه جميل في حد ذاته، ولكن قوة ما أو شخصية للمكان وعلاقة مركبة معه هي ما يدفع لمعالجته بالكتابة.\n\nفي حلقة دراسية من ثماني جلسات نحاول أن نستكشف علاقة الجغرافيا بالأدب؛ ودور المكان المتعاظم في الأدب الحديث، ولماذا اكتسب هذا العنصر أهميته ليتخذ موقع الصدارة مزيحًا عناصر ومفاهيم أخرى لطالما نظر إليها باعتبارها عناصر أساسية في بناء النص الأدبي. مع قراءات تطبيقية لأعمال أدبية من زاوية النظر تلك",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/المكان_في_الأدب_الحديث.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          },
+          {
+            "title": "Modernity and the Ecological Crisis: Why We Can’t Help but Destroy the World",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmad Mahana",
+                "email": null,
+                "bio": "Ahmad Mahana is an MA candidate of the Sociology-Anthropology degree program at the American University in Cairo. With a regional focus on Saint Catherine, South Sinai, Ahmad’s work deploys ethnographic fieldwork methods to explore the ecological and sociological networks involved in reproducing the region’s sacred landscape. By considering both human and nonhuman actors as ethnographic subjects, his work aims to deconstruct modern dualisms of nature-culture by presenting alternative modes of being in and of the world inspired by contemporary Bedouin sociality, Islamic cosmology, and desert ecologies."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2026-04-30",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Throughout the span of human history, no period has ever alienated humankind from the natural world as much as the modern era. In it, the advent of scientific discovery, the Industrial Revolution, and technological advancement have achieved a dual effect—one that simultaneously furthered the cause of human progress while accelerating the rate of planetary destruction. While these material conditions have certainly deepened the rift between humanity and nature, the origin of this division precedes our desire to consume the planet of its resources and returns to a fundamental belief that modern humans are morally, physically, and spiritually detached from their natural environment.\n\nIn this course, students will learn to identify the material, social, and philosophical processes that define Modernity and how they continue to contribute to the worsening condition of the ecological crisis. Using a multidisciplinary approach, this course will call into question the very assumptions that underpin Modernity’s conception of nature as an objective domain with no intrinsic meaning or value beyond its exploitation, and demonstrate the inevitable destruction that such a worldview inflicts upon the world. While the course does aim to deconstruct the essence of the modernist project, students will also be given the opportunity to discover and explore the wide array of methods proposed by a variety of scholars to conceptualize and realize the possibility of a different world(s).",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/proposal_for_spring_semester_ahmed.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/uKvkh98nUk3mQ2vw6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

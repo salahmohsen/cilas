@@ -1,0 +1,34 @@
+{
+  "sha256": "3f41603ad41bc9c42f40406b499e8c3d6f679efac5983a40d0da0975e37a759a",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Heritage Revisited",
+      "title_ar": null,
+      "subtitle": "Beyond the tourist gaze",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "René BOER",
+          "email": "mail@reneboer.net",
+          "bio": "René Boer holds a Master's degree in Urban Studies from University College London's Urban Laboratory. He works as an urban and architectural researcher in Cairo and is affiliated with the Amsterdam-based research foundation Failed Architecture; and various urban social movements. His work focuses on grass root urban practices, architecture's urban afterlife and artistic representations of the built environment. In the past, he has worked as a freelance journalist for a number of media outlets in Syria, Lebanon and the Palestinian Territories. He has also been associated with the urban research collectives Citymine(d) in Barcelona, ICAHD in Ramallah/Jerusalem and Archis/Volume in Amsterdam. René serves as visiting fellow in the fields of study Arts and Natural Sciences."
+        }
+      ],
+      "schedule_text": "Offered by René BOER on Wednesday mornings and/or evenings. Early birds: 10 am to 12:30 pm; night owls: 5 pm to 7:30 pm; provided that no less than five participants sign up per class. Runs 10 weeks, March 25th through May 27th, 2015.",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2015-03-25",
+      "location": [],
+      "description": "Cairo's extensive urban and architectural heritage is under severe pressure. From Downtown's deteriorating urban blocks to Al-Ghuria's crumbling monuments, there is a need to address the lack of attention to history's physical presence in Cairo's urban fabric. This course aims to stimulate critical thinking on Cairo's urban and architectural heritage, in particular by delving into a wide range of contemporary, global debates. Through the analysis of case-studies from around the world, we will discuss the relation between heritage and important issues such as modernity and globalisation, memory and identity, and urban life and development. This course aims to create awareness about the role of the 'heritage industry' and its often dogmatic perspectives. By questioning the interpretation of 'heritage' as a top-down instrument to enforce protection, we will explore different ways in which Cairo's history can be safeguarded without turning the city into a museum. Finally, the course aims to expand 'heritage' beyond the touristic imagination, by including lesser-known examples such as post-independence social housing or the city's post-modern architecture.\n\nexpectations\n\nParticipants are expected to attend no less than 80% of classes; be on time and share thoughts.\n\nwhy apply?\n\nTo develop a critical understanding of important debates on heritage.\nTo formulate innovative solutions to pressing heritage issues.\nTo explore case studies worldwide from the comfort of a CILAS class room.\nTo broaden your heritage horizon beyond the guidebook clichés.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

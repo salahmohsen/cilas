@@ -1,0 +1,140 @@
+{
+  "sha256": "58df049dababecca87e40c879439af94a33dcb1f8982dcc6a29af3b097cf3f70",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Cycle 2023",
+        "season": "spring",
+        "start_year": 2023,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Narrating Nubia: Literature, Memory, and (Ecological) Space",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Bushra Hashem",
+                "email": "bhashem@aucegypt.edu",
+                "bio": "Bushra Hashem earned her first MA degree in English and Comparative Literature from the American University in Cairo in 2022. Her thesis entitled \"The Flow of (Re)Memory in African American and Nubian Egyptian Literature\" explored the work of space, memory, and ecology in Toni Morrison's novel Beloved and selected Nubian short stories by Yahya Mukhtar and Haggag Oddoul. She is interested in understanding how diapsoric peoples remember and cherish their cultures and how this is connected to space, time, the body, and the environment. Currently, she is writing her second MA thesis in Arabic and Islamic studies and will soon join the University of Oslo to continue her Ph.D. in Arabic Literature and Cultural studies."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2023-03-01",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Nubian culture is entangled with memories of loss and longing. The Nubian indigenous peoples lived by the Nile river for hundreds of years before the systematic flooding of their homeland over the course of the 19th Century due to the establishment of the Aswan Dam and the High Dam, after which they became a diasporic people who will never reunite with their beloved homeland. Nonetheless, Nubians continued to practice many of the rituals that united them and tried vehemently to maintain the bond they had with their culture. Grandmothers kept telling their myths and legends, the weddings remained intertwined with the sounds of the tambourine and the scents of musk and incense, and the people kept recreating the communal spaces they cherished south of the Nile. Through surveying Nubian literature, this course will explore the Nubian culture and how it has been sustained through mnemonic practices, such as storytelling, dance, and music. It will discuss its place in Egyptian culture, as well as the ecological aftermath of their displacement. We will read several short stories, supplemented by ethnographic accounts, theoretical texts, and archival activities, and engage in critical discussions about memory, culture, indigeneity, and displacement.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/narrating_nubia_-_proposed_course_flow.docx"
+            ],
+            "register_url": "https://forms.gle/NGsxbmQm7CwxYKVj8",
+            "own_page": null
+          },
+          {
+            "title": "حياة واحدة لا تكفي: حلقة بحثية عن النوم والأحلام",
+            "title_ar": "حياة واحدة لا تكفي: حلقة بحثية عن النوم والأحلام",
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "محمد عبد العظيم",
+                "email": "modi1st@yahoo.com",
+                "bio": "كاتب نشر مقالات نقدية وتغطيات صحفية حول الأدب والسينما والدراما، والقصص القصيرة، في عدة من صحف ومجلات مصرية وعربية. صدرت له مجموعة قصص بعنوان \"ليس للجنة فرع أخر\" عن الجزويت للنشر والإعلام 2020، تخرج من مدرسة المشورة بمركز الجزويت بعد دراسة علم النفس لمدة عامين، منسق برنامج التكوين الصحفي، ومؤسس عدة صالونات أدبية وثقافية وسينمائية، مثل صالون زمرة الثقافي، ونادي الجزويت للكتاب"
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "21:00",
+            "weeks": null,
+            "start_date": "2023-02-28",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "هذا مساق عن حقيقة نوم الإنسان، وكيف يحدث ذلك؟ وكيف نحلم؟ متتبعا الأحلام وتأثيرها في التاريخ، والجهود العلمية لفهم الأحلام وتفسيرها، وهل يمكننا أن نتحكم في أفكار العقل الباطن وإعادة توجيهها أو زرع أفكار جديدة، معتمدا على عدة مراجع متنوعة من الدراسات والكتب وأفلام السينما والإبداع الأدبي\n\nبينما يقوم الباحثون بالبحث في المراجع عن سر هذا الحدث اليومي، يرافق ذلك مجموعة من الأنشطة حول تفسير أحلامنا، كيف نزاوج بين العقل الواعي والعقل الباطن، الدخول إلى الذات عبر تمرينات التنفس اليوجي، تسجيل الأحلام ومحاولة تفسيرها، نعرج على جوانب ربما تكون غير علمية في موضوع النوم لها طرافتها وفائدتها، سواء أكانت تتصل بالتاريخ أو علم الاجتماع أو الأدب، والسينما",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/حلقة-حياة-واحدة-لا-تكفي__2_.docx"
+            ],
+            "register_url": "https://forms.gle/NGsxbmQm7CwxYKVj8",
+            "own_page": null
+          },
+          {
+            "title": "The Performing Body: Theories on Dance and Performance",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Salma Abdel Salam",
+                "email": "smh648@nyu.edu",
+                "bio": "Salma Abdel Salam is a dance artist and researcher based in Cairo. She holds a BA in Sociology from AUC in 2012, an MA in Performance Studies from NYUTish 2015, and is a graduate of the Cairo Contemporary Dance Center’s professional dance program 2015. From 2012-2014 she worked as a researcher assistant at AUC and Women Memory Forum. In 2016 she co-founded the dance collective nasa4nasa. Since its inception nasa4nasa has presented works in Next Festival, MDT, Gwangju Biennale, ImpulsTanz, Festival de Marseille, Gypsum Gallery, D-Caf, and Judson. Parallel to her choreographic practice, Salma teaches Performance Studies, Dance History, and movement-based workshops. She has taught at the American University in Cairo and the Cairo Contemporary Dance Center, ImpulsTanz, and independently through her teaching platform. Salma performed with Benoit LaChambre, Tino Sehgal, Yoshiko Chuma, Karima Mansour, and Mohamed Shafik among others. Her writing has been published by Ibraaz, ICI Paris, and Mada Masr, and she is currently working on a book project about Egyptian Dancer Farida Fahmy."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2023-02-27",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course will examine the body as a generator of political possibilities and alternative narratives, highlighting the body as a continuous performing entity. In this class students will learn to define performativity and performance through the lens of: ritual, everyday life, politics and social constructs. Using the critical theory we acquire in the first section of the course, students will then begin to learn about the history of modern dance and its development into contemporary dance, linking movement to social movements. Ultimately students will uncover the political potential of dance as a tool for opposition, and the re-imagination of heteronormative structures. Students will physically use their bodies to explore the writings we encounter in class, dedicating a large portion of learning to movement investigation and experimentation.\n\nWho is this class for?\n\nThis class is suited for anyone with an interest/background in Critical Theory, Dance Studies, and Social Sciences (Anthropology, Sociology). It is suited for dancers and non-dancers, who are interested in learning about the genealogy of Modern and Contemporary dance movements. Finally, this course is suited for learners who are eager to learn through and with the body.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_syllabus.pdf"
+            ],
+            "register_url": "https://forms.gle/NGsxbmQm7CwxYKVj8",
+            "own_page": null
+          },
+          {
+            "title": "Thinking Migration: Political Realism in the Age of International Migration Law",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Marouan",
+                "email": "marouan.moussa@parisnanterre.fr",
+                "bio": "Marouan holds a Master’s degree in Social and Human Sciences from the Paris-Nanterre University, and is specialized in Philosophy of Law. He has presented two dissertations, one set in the context of the Lippmann-Dewey debate and the question of expertise; the other on Carl Schmitt and the concept of legitimacy. Originally a Computer Science graduate, his passion for philosophy eventually got the best of him. This pushed him to establish the ‘Meeting Point of Civilizations’ NGO, with a focus on promoting philosophy among the general public in Egypt. In addition to academic philosophy and offering numerous courses in the field, he is actively involved in Applied Philosophy as a way of self-discovery, through the revival of the Socratic method. This is inspired by the works of Pierre Hadot and draws on the methodology of Oscar Brenifier’s Institute of Philosophical Practices. The project took a more concrete shape in 2015 with the launching of “Falsafa bel Baladi”, the first platform exclusively dedicated to Public Philosophy in Egypt. Marouan currently works as an advisor in the field of migration and conducts related conceptual research. He coordinates the “Thinking Migration” task force in the GIZ’s Migration Portfolio. His PhD thesis will focus on migration and international law."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2023-03-02",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course explores the philosophical underpinnings of migration, specifically the political and legal factors that shape the movements of people, their premises, and the responses thereof. It will focus on “political realism” and its conceptual basis, as one of the major influences of migration policies, leading to what one could call a “migration realism”.\n\nPolitical realism has long been a subject of debate in normative political theory, with some arguing it has little to offer in terms of new perspectives, and others criticizing it on the grounds that it threatens the international legal order. Such viewpoints often forbid new avenues for thought: a political-realist take on the concept of migration can actually provide critical insights as regards international migration law, and help call into question its commonly held assumptions. In that regard, there have been significant political-realist contributions to the current discourse on migration, some challenging very convincingly the link between moral principles and normativity: these contributions can become excellent tools to uncover the political powers that often creep under normative facades.\n\nThis course will include discussions on historical examples, short documentaries, as well as an analysis of the current debates and challenges in the field of migration. Participants will exercise their minds and share their thoughts on concepts such as nationalism, liberal nationalism, cosmopolitanism, state sovereignty, the free movement of people across national borders, as well as the \"state of exception\", exploring how exceptional situations lead to legally unsanctioned restrictions on migration.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/2023_thinking_and_rethinking_migration_-_course_description.pdf"
+            ],
+            "register_url": "https://forms.gle/Nnbx35yJm6CJbbr56",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

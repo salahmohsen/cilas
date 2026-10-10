@@ -1,0 +1,37 @@
+{
+  "sha256": "3435697f82f4907cc6eb79b4a132440d544b192c8eedd9fce5ba89888e0122a4",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "History of Education",
+      "title_ar": null,
+      "subtitle": "An Ever-Evolving and Over-Arching Process",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Nayera ABDEL RAHMAN",
+          "email": "nayera.ar@gmail.com",
+          "bio": "Nayera ABDEL RAHMAN studied in the French section of the Faculty of Economics and Political Sciences at Cairo University. She pursued further study in Political Sociology at the Sorbonne in Paris where she obtained a Master's degree in 2013. In her thesis she looked at the 'associative actions' taken to promote education in Egypt between 2000 and 2011. Nayera co-founded of Education Square - a social initiative aiming at providing space for education practitioners in Egypt to network, share knowledge, collaborate and promote creative solutions to educational problems. She is a firm believer in bottom-up approaches to development. Her research interests are alternative education, social activism, youth and historical approaches. Nayera is joining CILAS as visiting fellow in the field of study Culture to coordinate the thematic course History of Education."
+        },
+        {
+          "name": "Farida MAKAR",
+          "email": "makar.farida@gmail.com",
+          "bio": "Farida MAKAR obtained a graduate degree in Modern Middle Eastern Studies from the University of Oxford. In her Master's thesis she looked at teacher training in Egypt at the turn of the 20th century. As an undergraduate at AUC, she double-majored in political science and history focusing primarily on the history of formal education in Egypt. Farida has conducted research on nationalism in Egyptian textbooks throughout the twentieth century. She is interested in the interplay between nationalism and education, methods of self-organisation, alternative education, music and socio-economic rights. She is naturally drawn to anything remotely related to modern Egyptian history or earrings. Farida returns to CILAS as visiting fellow in the field of study Culture to coordinate the thematic course History of Education."
+        }
+      ],
+      "schedule_text": null,
+      "weekdays": [],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "description\n\nIn this course we will look at education as an ever evolving and overarching process. Modern state-run schooling - the type that most of us have experienced as children and young adults - has altered the way in which we think and value education today. This particular understanding of what education is has shaped modern education systems across the world in the last 200 years. This is perhaps why most countries have adopted an education system that is compulsory in nature, public, free and standardised. Throughout the 19th and 20th centuries, this particular type of schooling came to exist in the Egyptian context. We will explore together precisely how this came into being. Specifically, we will analyse concepts such as nationalism, colonialism and modernity and the ways in which they affected the emergence of the modern state-run education system. We will engage with writings of Egyptian educators to explore how they viewed the emergence of this system and the ways they sought to improve it. In other words, the course will look at education as a field of negotiation, change and evolution.'\n\nexpectations\n\nStudents are expected to complete the assigned readings.\nStudents are expected to write two essays during the course.\nStudents are expected to be present during field trips.\n(Students are encouraged to develop research proposals related to the topics discussed which could be presented using a medium of their choice (paper, blog, photos, film, workshop,etc.).\n\nobjectives\n\nIntroduce students to the basic principles of historical scholarship.\nDevelop the ability to analyse primary historical texts and other primary sources.\nFamiliarise students with prominent pedagogues, educators and philosophers of education.\nEngage with influential historical texts and classical writing on understandings of education.\nDemonstrate an understanding of the interplay between nationalism, colonialism and the modern state-run education system.\nApproach and assess education as an evolving and overarching process.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

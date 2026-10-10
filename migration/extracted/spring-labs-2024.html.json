@@ -1,0 +1,110 @@
+{
+  "sha256": "5caa2c35585b23082b02b536eb4a3d8fd80d4bc0ec37ba805ccad815125fa00f",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Labs 2024",
+        "season": "spring",
+        "start_year": 2024,
+        "start_date": "2024-04-20",
+        "deadline": "2024-04-05",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "A Picture is Worth a Thousand Words - Reading and Writing the Photographic Image",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Yasmine Hussein",
+                "email": "Yasmine.Hussein11@gmail.com",
+                "bio": "Yasmine Hussein is a researcher and artist. She obtained her bachelor's degree from Sorbonne University (Paris IV), a master's degree from l’Ecole Pratiques des Hautes Etudes in Paris, and a Master of Arts and Archaeology from the University of Alexandria. She worked as a researcher at the Bibliotheca Alexandrina and currently holds the position of Research Unit Manager at an independent research center. Over the past 15 years, she has worked on numerous research projects and publications, such as \"Sacred Places and Popular Practices Across the Mediterranean\" (2010) and \"Alexandria Past and Present\" (2020), in addition to several articles in foreign and Egyptian journals. She has also delivered numerous lectures and workshops and laboratories in the fields of arts, heritage, and the environment. As a visual artist, she has participated in several solo and group exhibitions and has curated exhibitions at the Bibliotheca Alexandrina, Darb 1718, and has displayed her work in Egypt, France, Tunisia, Canada, and Greece."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-05-02",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The photographic image plays a pivotal role in our modern era, an age in which image and media culture have become more dominant than ever. Given this powerful influence, it has become necessary to regard the image as a form of discourse that goes hand in hand with other modes of utterance, or as the widely-known old saying goes; one picture is worth a thousand words. The image carries its own language, filled with symbols and meanings that require us to delve deeply to decipher its mysteries, and to grasp its significance within its cultural and social context. The process of interpreting these scenes depends on tracing the methods of expression and communication used and understanding the relationship between the depicted elements —the people, places, events—and on comprehending the system of signs that renders these images multilayered in their interpretation.\n\nCapturing an image is a deliberate act and an artistic one that reflects the photographer's awareness of all aspects of the captured scene and its production mechanisms. The viewer, in turn, deciphers this work according to their own modes of interpretation where both the photographer and the viewer draw on their cultural and interpretive backgrounds that affect their understanding of the image.\n\nThe lab aims to enable participants to explore and analyze the stories behind the photos, which allows them to gain a deeper understanding of photos as historical and cultural sources (reading), and to enhance their ability to create and express themselves through photos (writing).\n\nThrough various exercises, observation walks, weekly readings, group discussions, and interviews with artists and researchers, participants will delve into the cultural, historical and social aspects of the image, and will acquire skills in understanding the visual elements in collective storytelling. Participants will develop their own projects, using their personal, family, or research photo archives to extract and interpret the hidden stories and meanings behind images, culminating in an exhibition of their projects.\n\nThis lab offers an opportunity to reconsider history and the silent narratives encapsulated by photos, thus creating a space for interpreting and creating new stories through visual culture.\n\nوصف مختبر: الصورة بألف كلمة - قراءة وكتابة الصورة الفوتوغرافية\n\nتلعب الصورة الفوتوغرافية دورًا محوريًا في عصرنا الحديث، عصر أصبحت فيه ثقافة الصورة والوسائط أكثر هيمنة من أي وقت مضى. لذا أصبح من الضروري اعتبار الصورة كشكل من أشكال الخطاب يوازي الخطاب اللغوي، خاصةً عندما نتذكر المقولة المشهرة؛ صورة واحدة تساوي ألف كلمة. تحمل الصورة لغتها الخاصة، المليئة بالرموز والمعاني التي تتطلب منا الغوص بعمق لفك شفرات ألغازها، ولفهم مغزاها ضمن سياقها الثقافي والاجتماعي. تعتمد عملية تفسير هذه المشاهد على تتبع أساليب التعبير والتواصل المستخدمة وفهم العلاقة بين العناصر المصورة —الأشخاص، الأماكن، الأحداث— وعلى إدراك نظام الإشارات الذي يجعل هذه الصور متعددة الطبقات في تأويلها.\n\nالتقاط صورة هو فعل متعمد وفني يعكس وعي المصور بجميع جوانب المشهد الملتقط وآليات إنتاجه. يقوم المشاهد بدوره بفك تشفير هذا العمل وفقًا لمفاهيمه وتأويلاته الشخصية، حيث يستند كل من المصور والمشاهد إلى خلفياتهما الثقافية والتأويلية التي تؤثر في فهمهما للصورة.\n\nيهدف المختبر إلى تمكين المشاركين من استكشاف وتحليل القصص المخبأة خلف الصور مما يمكّنهم من فهم أعمق للصور كمصادر تاريخية وثقافية (قراءة)، وتعزيز قدرتهم على الإبداع والتعبير عن أنفسهم من خلال الصور (كتابة).\n\nمن خلال مجموعة متنوعة من التمارين، جولات الملاحظة، القراءات الأسبوعية، المناقشات الجماعية، والمقابلات مع فنانين وباحثين، سيتعمق المشاركون في الجوانب الثقافية والتاريخية والاجتماعية للصورة، وسيكتسبون مهارات في فهم العناصر البصرية في سرد القصص الجماعي. سيطور المشاركون مشاريعهم الخاصة، باستخدام أرشيفات الصور الشخصية، العائلية، أو البحثية لاستخراج وتفسير القصص والمعاني المخفية وراء الصور، ما ينتهي بمعرض لعرض مشاريعهم.\n\nيقدم هذا المختبر فرصة لإعادة النظر في التاريخ والسرديات الصامتة التي تحتجزها الصور، مخلقةً بذلك مساحة لتفسير وخلق قصص جديدة من خلال الثقافة البصرية.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/lab_flow.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/wvZuaCxiSdLPABsf8",
+            "own_page": null
+          },
+          {
+            "title": "Pedagogy Lab: Philosophy of the Teacher. Power of the Teacher & the Teacher-student Relationship",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Alexandros",
+                "email": "alexandros.manolakakis@student.uva.nl",
+                "bio": "Alexandros is student of life and a pupil of Liberal Arts, driven by the ideals of the examined life. I do not merely embody my university’s values and the principles of academia but make it my vocation to continuously learn from, live by, and share them with others.\n\nI completed my Liberal Arts BA (with hons) at the University of Winchester, and I am currently undertaking a (research) Master’s in Philosophy at the University of Amsterdam.\n\nThroughout my educational journey, I have drawn from these ideals and principles to help establish – in both universities – the Agora society, a place for students with curious minds across disciplines to come together and ask questions, to share their ideas and thoughts with one another – to live the examined life."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-05-02",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "In his Metaphysics, Aristotle writes, “it is owing to their wonder that men both now begin and at first began to philosophize” (1984, pp. Met: Book I (A), § 2, 982b12-982b13), and in this course, philosophy of the teacher will lead us down to the difficult path of asking some hard questions about the identity of the teacher.\n\nThe course is structure so us to enable us to think about the contradictions that appear in both the theory and practice of teaching, and ways in which we might begin to understand these contradictions.\n\nPaideia (education) is claimed to be an experience by which one learns, but this experience – as any experience for that matter – does not exist/take place in a vacuum, and it is festered with ambiguity and contradictions.\n\nThe purpose here will be to let ourselves explore and discuss, to ‘experience’ these contradictions, so we may begin to better understand them and the principles at play.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/philosophy_of_the_teacher_-_power_of_the_teacher___the_teacher-student_relationship.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/wvZuaCxiSdLPABsf8",
+            "own_page": null
+          },
+          {
+            "title": "معمل (الجندر): ما فعله بنا الجندر",
+            "title_ar": "معمل (الجندر): ما فعله بنا الجندر",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "مي عامر",
+                "email": "maiabdulraheem@yahoo.com",
+                "bio": "تيسر المعمل مي عامر باحثة نسوية في مجال الدراسات الثقافية، حصلت على الدكتوراه عام 2022 عن أطروحة بحثية تناولت تحليل جندري لأنواع الأغاني المعاصرة في مصر، كما حصلت على الماجستير عن أطروحة تناولت أنماط اللغة الاجتماعية في تيار الأغاني الشعبية المعاصر ( المهرجانات)عام 2014.\n\nمي تخرجت من كلية الآداب قسم الاعلام جامعة المنصورة عام 2008، بعدها حصلت على دبلومة النقد الفني بأكاديمية الفنون 2009، ثم تقدمت لاستكمال دراستها العليا في قسم الاعلام والثقافة بكلية الدراسات العليا للطفولة جامعة عين شمس.\n\nتقوم مي بتدريس الانثربولوجيا العمرانية في كلية الهندسة بالجامعة الفرنسية بمصر، كما تستأنف عمها كمديرة مشروع مطبخ دوار القائم على المزج بين الاكلات المصرية والسورية من خلال الطبخ المشترك بين الطباخات المصريات والسوريات."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-20",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "ماذا حدث لنا وللعالم في لحظة معرفة جنسنا؟ سقطت علينا الاف الأدوار والتوقعات المصاغة جندريا من قبل المجتمع والمعدة للفصل والتمييز بين الرجال والنساء، ولان تلك الأدوار محكمة بشدة فان لها صداها في كل مكان الشارع، المدرسة، الجامعة، العلاقات الاسرية ، علاقات العمل، الازمات المجتمعية المحلية ، الازمات العالمية الكبرى.\n\nفي هذا المساق سنتعرف معا على مفهوم الجندر، والطرق التي يتشكل بها ويتجذر بحيث يكون بديهي في الاذهان ثابت ومتكرر في الممارسة، كما سنطرح الأسئلة حول تأثراته ليس فقط على قيمنا ومعتقداتنا واتجاهاتنا، بل وعلى أجسادنا وسلوكياتنا، معا سنبنى بداخل كل واحد فينا منظورا حساسا لقراءة الظواهر الاجتماعية والثقافية والاقتصادية والسياسية من منظور جندري، ونتعرف على أهم النظريات التي طورت المفهوم وعمقت أدوات التحليل من خلاله، من خلال الاشتباك مع مفاهيم اللون والعرق والطبقة والدين.\n\nسينتهي المعمل بإنتاج كل دارس/ دارسة لمشروع مرئي أو مسموع أو مقروء قائم على تحليل ظاهرة من منظور جندري، وستساعدهم الميسرة بشكل نظري وعملي في تطوير الأدوات التي تمكنهم من القراءة والتحليل.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/معمل_الجندر-1.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/wvZuaCxiSdLPABsf8",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

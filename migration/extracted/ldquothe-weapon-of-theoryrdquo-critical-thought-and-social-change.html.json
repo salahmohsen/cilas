@@ -1,0 +1,34 @@
+{
+  "sha256": "2dd38820a87b9bed7b4e9f914c6c36818848e587b1668f05e4bda5f6fa9ee0ac",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "“The Weapon of Theory”: Critical Thought and Social Change",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Ahmed Diaa Dardeer",
+          "email": null,
+          "bio": "Ahmed Diaa is a PhD candidate in Middle Eastern Studies at Columbia University. He holds a Master’s degree in Middle Eastern Studies from Columbia University, and a Master’s degree in Political Theory from the American University of Beirut. He is interested in questions of state and subjectivity in the context of colonial modernity, in an attempt to understand our current political and social condition. Ahmed is also interested in literature and arts, and especially in theatre. He is also keen on stressing that he is the person on the right hand side of the picture, though he is sure the person on the left has a unique perspective on humanities."
+        }
+      ],
+      "schedule_text": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "How does political and social theory respond to change? What can theory tell us about social change? Conversely, what can moments of upheaval, revolution, and political and social change tell us about the theories they were attached to? Is there an intellectual history for revolution and counterrevolution?\n\nIn this course we will read texts of political and social theory in the light of the political and social events that shaped them, from the French Revolution of 1848 to the Egyptian uprising of 2011. We will study both revolutionary and counterrevolutionary representations. This effort will attempt to historicize these theories and understand them in the light of the specific histories that shaped them. In addition, we will explore what it entails to take these theories out of their historical contexts and apply them to others: what then is modified, revised, and/or preserved? In short this course is an exercise of putting theory in context and out of context.\n\nWhile most of the assigned texts are theoretical texts, students are encouraged to research the historical context and compile a chronology of events. This also will be covered in class discussions.\n\nThe course will be supplemented by optional movie nights and read-along sessions\n\n**Why Apply:**\n\nTo get a grasp on schools of critical theory and radical thought in light of the social and political movements they were attached to.\n\nTo theorize change, revolt, and revolution.\n\nTo think of our present condition in the light of various theoretical schools and frameworks.\n\nTo interrogate the various theoretical schools and frameworks in light of our present condition.\n\n**Tentative Flow (subject to change as per class discussions):**\n\nMarx as a Political Analyst: Revolutionary Marxism and the Events of 1848\n\nKarl Marx, Manifesto of the Communist Party\n\nKarl Marx, The 18th Brumaire of Louis Bonaparte\n\nThe Paris Commune: The Birth of Revolutionary and Counterrevolutionary Thought\n\nThe Commune and Revolutionary Theory\n\nKarl Marx, Civil War in France\n\nPolitical Cartoons: https://www.marxists.org/history/france/paris-commune/images/caricatures/index.htm\n\nRace and Gender in the anti-Commune Discourse\n\nNeil Hertz, “Medusa’s Head: Male Hysteria under Political Pressure.”\n\nGuy Gullickson, Unruly Women of Paris (excerpts)\n\nJanet Beizer, Ventriloquized Bodies: Narratives of Hysteria in 19th Century France (excerpts).\n\nRebels and ‘Arabis: The ‘Urabi Revolt\n\nExcerpts from the ‘Urabi Press (in Arabic)\n\nExcerpts from the anti-‘Urabi Press (in both Arabic and English. French excerpts also available)\n\nThe Russian Revolution and Leninist Philosophy\n\nVladimir Lenin, What Is to Be Done?\n\nVladimir Lenin, Materialism and Empirico Criticism\n\nVladimir Lenin, State and Revolution\n\n(Prompts will include communist and Leninist anthems sung by Arab artists)\n\nThe Leninist Tradition Beyond the Russian Revolution\n\nAntonio Gramsci, Selections from the Prison Notebooks (excerpts)\n\nLouis Althusser, Lenin and Philosophy (excerpts)\n\nDecolonization, anti-Colonial Revolts, and Post-Colonial Theory\n\nFrantz Fanon, A Dying Colonialism\n\nFrantz Fanon, Wretched of the Earth (excerpts)\n\nAmilcar Cabral, “The Weapon of Theory.”\n\nThe Palestinian Revolution and the Culture of Resistance\n\nCartoons by Naji al-‘Ali\n\nقرارات الدورة الرابعة للمجلس الوطني الفلسطيني 1968\n\nقرارات الدورة الخامسة للمجلس الوطني الفلسطيني 1969\n\nغسان كنفاني، عائد إلى حيفا\n\nمحمود درويش، مختارات\n\nإلياس خوري، الجبل الصغير\n\n1968 and the ‘Post-structuralist’ Revolution\n\nMichel Foucault, “Truth and Power.” (Interview)\n\nMichel Foucault, “Useless to Revolt?”\n\nThe Invisible Committee, The Coming Insurrection\n\n2011 and Beyond: Is there an Intellectual History for the Arab Revolts?\n\nرضوى عاشور، أثقل من رضوى\n\nمحمد عبد القهار، غارب\n\nNote: Students are Encouraged to bring their own readings to this session.\n\nOpen Discussion, Wrapping Up, Final Projects",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/CIQFumN6AMkDNN1K2",
+      "own_page": null
+    }
+  }
+}

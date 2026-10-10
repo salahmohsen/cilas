@@ -1,0 +1,34 @@
+{
+  "sha256": "f830690466047841a82df32ff7914792e1a5542d98816dda9554b52d2e342260",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "literary representations of the urban global south",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sara-Duana MEYER",
+          "email": "sara.duana.meyer@gmail.com",
+          "bio": "Sara-Duana MEYER has been a cultural producer, literary scholar, curator, bartender, gardener, and writer, among other things. Intrigued by interdisciplinary approaches and fascinated by the in-between, she has conceived, curated and managed various cultural and artistic projects in Europe and the MENA region and has taught literature, cultural theory, cultural management and visual studies in Germany, India, Iraq, and Egypt. Recently she has been focussing on writing about all of these topics and more. She has a thing for mega cities and urban culture and, being the hopeless optimist she is, strongly believes in the possibilities of resistance and art. She also believes in composting, animal rights, and soap bubbles, and teaches yoga."
+        }
+      ],
+      "schedule_text": "On Mondays from 10 to 12:30 in the morning or 5:30 to 8 in the evening",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-11",
+      "location": [],
+      "description": "Since the 19th century, the city and urban life have been a perpetual topos in literary and sociological texts. The city can be read and told by walking, seeing, exploring and writing. However, the image of the city has changed over the years, and with it the modes and possibilities of literary representation. We will explore questions of dimensionality, texture and identity, following a route that leads from the London of the 19th century to contemporary postcolonial city literature.\n\nToday we speak of global cities, urban nodes in the landscape of global networks rather than of centres and margins. Metropolises like Cairo and Mumbai are not only relocated into the global network of economics and media but also within the once exclusively European tradition of the city novel. With the help of postcolonial literature we will ask what it means to live multilayered, trans-local identities. By means of creative writing we will develop our very own ways of re-enacting the city through text.\n\n**what to expect**\n\nAs the topic suggest, we will read a lot in this course, both theoretical and fictional texts.\n\nParticipants are expected to prepare the texts for the sessions and make themselves familiar with the theoretical concepts that we talk about.\n\nParticipants should be prepared to go on exploratory strolls throughout the city.\n\nBefore the beginning of the course, participants will be asked to go on a couple of walks by themselves with a set of questions they will be supplied with beforehand.\n\nAs we put emphasis on creative writing, participants will also be asked to make themselves familiar with literary texts and writing beyond the course.\n\nWrite.\n\n**why apply**\n\nTo follow the traces of colonial imperialism globally to re-establish our very personal, translocal relations with the city of Cairo through individual experience and writing.\n\nTo discuss some of the key concepts of postcolonial theory, and by means of creative writing find your own ways of translating the city into text.",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

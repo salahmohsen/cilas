@@ -1,0 +1,110 @@
+{
+  "sha256": "679923c99861b14c37a76e518ae41cd0c837ed1b49cfee77f3aa51fd7ac322ab",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Winter 2023-2024",
+        "season": "winter",
+        "start_year": 2023,
+        "start_date": null,
+        "deadline": "2023-12-28",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Film Theory workshop",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "WORKSHOP",
+            "fellows": [
+              {
+                "name": "Mohamed Hani",
+                "email": "mohamedhani2583@gmail.com",
+                "bio": "Mohamed Hani earned his MA degree in adult learning and global change from Linkoping University in Sweden in 2022. He works as a learning and development consultant, writer, and a translator. He published a short story collection in 2021, and an Arabic translation of Truman Capote’s short stories collection. As for film discipline, he published several film critic essays on Almanassa and Medina platforms. His essays are usually a thematic analysis of filmmakers’ works against film theory. He is mainly interested in the evolution of film language, and development of film art from a formalistic perspective."
+              }
+            ],
+            "schedule_text": "Offline. The workshop starts on the 13th of January, on Saturdays at 5:30 pm.",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "17:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Film theory is the study of general patterns used to create and articulate film language. It differs from film history and film analysis. Film history is concerned with the study of major milestones in the progress of the filmmaking industry; and film analysis is the study of film against aesthetics, semiotics, socio-political aspects… etc. Generally, film theory is divided into two main eras: Classic, and Contemporary film theory. Classic film theory started at the beginning of the twentieth century. Theorists were focused on the answers to the questions “Is cinema an art?” and “How is cinema different from other arts?” Contemporary theorists took over from the century’s sixties, after the establishment of the film as a defined significant art. Their study was a deeper one on how film language works, and the ideologies behind filmmaking.\n\nOur workshop focus will be on Classic film theory. We will study the two main waves defining film as an art: Formalists and Realists. Formalists are theorists who thought of film as an art that transfers reality, while Realists found film an art that represents it. Therefore, the question we will be able to answer after our course will be “How can we define Cinema?”\n\nLearning outcomes\n\nUnderstanding film theory allows viewers to find new levels of meaning within film\n\nIdentify various aesthetic aspects of film theory.\n\nIdentify, describe, and evaluate epistemological aspects of film theory.\n\nAnalyze films to understand them and their place in society better.\n\nFilm theory is valuable to everyone who enjoys film, but it also helps people who create films. Screenwriters, directors, producers, and other creatives can make more informed choices after learning the power of different film elements.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/film_theory.docx__2_.pdf"
+            ],
+            "register_url": "https://forms.gle/et1eqhr6TPM6bW467",
+            "own_page": null
+          },
+          {
+            "title": "Visual philosophy Lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Isaona",
+                "email": "isaona.kh@gmail.com",
+                "bio": "Isaona holds a Master’s degree in Political Theory from the University of Amsterdam and has been mainly working as a teacher both in secondary and in higher education. She has always been interested in philosophy and spirituality talks, as well as she enjoys guiding and facilitating group discussions. She has been practicing horizontal teaching methods that value the fun and self-discovery aspects of philosophy. By experimenting philosophical artistic crossovers she calls visual philosophy, she lately explores the endless potential of visual arts inspired by philo concepts."
+              }
+            ],
+            "schedule_text": "Offline. The lab starts the 18th of January, on Thursdays at 5:30 pm.",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "17:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Let’s turn the introspective power of philosophy into art!\n\nVisual philosophy is an experimental concept of crossover between philosophy reflection and artistic production. This class invites you to join a collective talk about basic philosophy notions. We will study the foundations of each philosophical notion, discuss it, and find in which ways they apply to our individual and collective realities. The goal is then to transfer our understanding of it into colors, shapes and textures. It is a class about building a bridge from your unique thought structure to your unique way to visualize the logic you just built while thinking. This class requires no technical skills at all, only the desire to explore the within, get inspired and inspire.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/visual_philosophy_cilas_-_curriculum.pdf"
+            ],
+            "register_url": "https://forms.gle/et1eqhr6TPM6bW467",
+            "own_page": null
+          },
+          {
+            "title": "Historical Perspectives on Medicine in the Modern Middle East course",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Theo J. Rossi",
+                "email": "theodosia.rossi@gmail.com",
+                "bio": "Theo J. Rossi is a doctoral student at the University of Cambridge, where she examines the neglected history of mental healthcare in khedival Cairo (1805-1884), drawing on Arabic medical textbooks and journals, as well as archival government sources. She aims to demonstrate that khedival mental healthcare was characterized by dynamic institutional and discursive shifts, the study of which can provide new insights into how the Egyptian state developed, how modern medicine emerged in the Middle East, and how psychiatry coalesced as a global discipline. Theo holds a certificate from the Center for Arabic Study Abroad (CASA), a master’s from the University of Oxford, and a bachelor’s from the University of Chicago."
+              }
+            ],
+            "schedule_text": "Offline. The course starts 15th of January, on Mondays at 5:30 pm.",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "17:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "What can we learn about the Middle East through the study of medicine? In recent years, scholars of the region have increasing plumbed the histories of hospitals, doctors, and patients to provide novel perspectives on topics such as cultural exchange, religion, state power, and colonialism. This course will provide students with an overview of new scholarship in the history and historiography of medicine, while also affording them a chance to delve into several of the field’s canonical works. Through guided discussions of the assigned texts, students will gain an understanding of core concepts in the history of medicine, develop their own insights, and build toward presenting a small independent research project by the end of term.\n\nDiscussion questions may include (but are certainly not limited to): How has medicine historically been used to enact and/or resist state power? Is it modern medicine inherently colonial? What political roles can and should doctors play? How is modern medicine opposed to and/or compatible with Islamic ethics? Is it possible to write the history of medicine from the patient’s perspective? And lastly, how does medicine emerge from and mediate cultural encounters between East and West? Students are also strongly encouraged to bring their own questions into class.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_course_flow___2023.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/et1eqhr6TPM6bW467",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

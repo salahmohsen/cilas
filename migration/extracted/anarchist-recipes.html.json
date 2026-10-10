@@ -1,0 +1,41 @@
+{
+  "sha256": "56dc1755ab281eee0b5ea66fb16fb91bf8e92d92ac7298f3e2a12bc7700f03d6",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Anarchist Recipes",
+      "title_ar": null,
+      "subtitle": "Uncovering hidden food injustices",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Pam LABIB",
+          "email": "pamlabib@gmail.com",
+          "bio": "completed graduate studies in environmental science at the Yale School of Forestry & Environmental Studies. Her mind has boggled with questions about who we are in relation to the world around us - questions that are contextualised in the worlds we imagine of birds, dolphins, coral reefs and sea turtles. Pam has employed both experiential and inquiry-based methodologies in her teaching. At CILAS she will adopt phenomenological and relevance approach to education incorporating reflexive ethnographic approaches to uncover nuances of power relations when it comes to the worlds we inhabit and imagine. As a fellow at CILAS, Pam coordinates coursework in the field of study Natural Sciences and serves as Space Director."
+        },
+        {
+          "name": "Bassem KHALIFA",
+          "email": "bassemkhalifa@gmail.com",
+          "bio": "is an environmentalist, foodie and, unexpectedly, social entrepreneur. In 2013, he started a production house called ma7sool that focuses on food, heritage, and the environment. Its flagship project was to produce a travel-adventure documentary series on the diverse food heritage of Egypt. Bassem went on to co-found ma7ali, a locally sourced deli and grocery, to promote good, clean, fair, local food. He is a member of Slow Food Cairo and the Bozoor Balady campaign to promote food sovereignty. Bassem obtained a Master’s degree in Environmental Management from Yale University. Between his undergraduate degree in Computer Science and graduate school, he worked in institutional capacity building, adult learning, socio-economic development, and taught in high school. He will be coordinating the thematic course Anarchist Recipes together with Pam."
+        }
+      ],
+      "schedule_text": "Saturdays 1 pm to 5 pm, 10 weeks, March 28 to May 30, 2015, hosted at Nafas School Agroculinary Arts and Sciences in Maadi (minimum five participants)",
+      "weekdays": [
+        "sat"
+      ],
+      "start_time": "13:00",
+      "end_time": "17:00",
+      "weeks": 10,
+      "start_date": "2015-03-28",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "description\n\nHumans have always organised themselves socially and spatially around food and its production. Towns and cities, roads and infrastructure, traditions and festivals have emerged and been shaped by our most fundamental need to eat. Over the last two hundred years - facilitated by technologies of transport - urban dwellers have become more distanced from sources of food.\n\nThe divide between those involved in the production of food and those who consume it has never been bigger. This divide begs questions regarding the nature of this divide and how we can bridge it. We have become disconnected from our food to the extent that we know little about how it's grown, what goes into it, who the people involved in its production are and what happens to our bodies as a result of that.\n\nThis course will use food, its acquisition and preparation as a vehicle to learn about ecological, nutritional and social issues related to food. The course is student-led and employs both a phenomenological and emergent approach in the exploration of topics. Participants will be invited to raise questions relevant to them, set frames to search and select ingredients to cook with collaboratively.\n\nEvery meal prepared during the respective classes will be a reflection of the journey of collective inquiry into how we can connect - at the most fundamental level of sustaining our life, through deeper understanding - with our bodies, the planet and each other. Recipes developed in this course will be compiled into a publication on the socio-ecological aspects of our ingredients.\n\nexpectations\n\nParticipants are expected to attend no less than 80% of classes.\n\nParticipants are expected to contribute to the creation of a recipes publication from planning to printing.\n\nParticipants are expected to identify themes for exploration and submit short weekly reflections.\n\nwhy apply?\n\nTo understand the relationship between food production and consumption patterns and its socio-ecological impacts.\n\nTo practically explore specific issues surrounding food in Cairo.\n\nTo acquire organisational, culinary skills.\n\nTo build culinary vocabulary.\n\nTo develop kitchen hygiene and safety practices.\n\nTo learn about farming, gardening and food cultivation.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

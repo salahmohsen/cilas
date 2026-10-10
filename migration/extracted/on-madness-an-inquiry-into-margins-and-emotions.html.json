@@ -1,0 +1,36 @@
+{
+  "sha256": "ea973113f7b0d32d851ec6023e28607d456e02eac02df89f2ef639d3cce23516",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "on madness: an inquiry into margins and emotions",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Dina MAKRAM-EBEID",
+          "email": "dinamakramebeid@hotmail.com",
+          "bio": "Dina MAKRAM-EBEID is an anthropologist who is passionate about poetry, cooking and social and ecological justice. She holds an MSc in Anthropology and Development (2007) and a PhD in Social Anthropology (2013) from the London School of Economics. Dina was a post-doctoral fellow at the Max Planck Institute for Social Anthropology and is a fellow at the Humboldt University in Berlin. Her long-term fieldwork was with workers in an Egyptian steel complex. Her recent research focuses on the emotional and affective aspects of labour and resistance. The intimate discussions she had with friends, comrades and strangers about the psychological states they experienced recently in Egypt inspired her to formulate her thematic course. Dina hopes that identifying political histories of pain and trauma will enable alternative possibilities for healing. This interest in mental health journeys thus encouraged her to explore creative and collective paths to healing. By continuing to merge anthropological work with art-based initiatives, Dina aspires to create media for people to connect, explore outlawed emotions and express the rich human experience."
+        }
+      ],
+      "schedule_text": "Mondays: 11:00-13:30 or 18:00-20:30 (morning or evening sessions).",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2016-01-04",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Living through times of revolution forced us to contemplate the place of emotions in public life and the diverse psychological states that come with deeply turbulent every- day lives. Margins is a theme that runs through the course. Together we will explore how margins are drawn and contribute to dichotomies that govern our emotional life- the sane/ insane, normal/abnormal, public/private, personal/political, mad/creative. Looking at representations of madness both by “insider” and “outsider” artists, we let those who occupy the margins tell us about our very societies.\n\nThe course is inspired by enquiries such as that of Sara Ahmed’s (The Cultural Politics of Emotion), of Ann Cvetkovich (Depression: A public feeling; An Archive of Feelings) and by queer theory’s attention to affects, margins and failures. This means that we locate experiences of the psyche within wider socio-politics. For example, we ask why certain mental disorders are more prominent at certain points, how they are articulated in gendered terms and are connected to political histories of exploitation and rebellion.\n\nThe theme of healing journeys deepens our understanding of the body-psyche- politics relation. We look at diverse institutional, behavioural, creative and spiritual histories of healing and the attempts to reclaim madness itself. During the course we will use a variety of audio visual media in addition to texts. Poetry - spoken word or poetry installations particularly- is focal to this course’s mode of enquiry. Our 10 week long sessions offer the opportunity to reflect and connect together in a protective environment while working out how the personal can be political.\n\nwhat to expect\n\nTo attend at least 80% of the classes\n\nTo be open to bringing personal experiences to a safe trusted group\n\nTo be protective of yourself and others by identifying triggers and safe ways of responding to them\n\nTo contribute to formulating research questions and research directions\n\nTo commit to weekly exercises beyond the classroom\n\nwhy apply\n\nTo understand how some of your emotional experiences connect to wider socio-political histories\n\nTo learn about the connection between trauma, the body and emotions\n\nTo enjoy expressing emotions through a creative medium in a collective setting\n\nTo enquire about the history of madness and the diverse trajectories of healing\n\nTo reflect on writing histories of revolution from the perspective of the affective and emotional",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

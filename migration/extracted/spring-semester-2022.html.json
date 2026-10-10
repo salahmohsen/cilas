@@ -1,0 +1,415 @@
+{
+  "sha256": "25cb0035f771817f9b6a36d3083f8adbceb2cca799a7c3b2ee3c72fa26c0af12",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring semester 2022",
+        "season": "spring",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-01-31",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Why do we obey?: Ideology in Daily Life",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa Dardir",
+                "email": "add2131@columbia.edu",
+                "bio": "Ahmed Diaa Dardir holds a PhD in Middle East Studies from Columbia University. He has taught and facilitated many workshops at CILAS and holds the highly esteemed position of “Sadīq CILAS.” :)"
+              },
+              {
+                "name": "Cassidy Crawford",
+                "email": "cassidyacrawford@gmail.com",
+                "bio": "Cassidy CRAWFORD completed an undergraduate degree in International Studies at American University in 2014, and a Master’s degree in Psychosocial Studies from Birkbeck in London, UK. She recently taught a CILAS course on Lacanian Psychoanalysis and Film Theory entitled View My Desire: Psychoanalysis and Film."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-02",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "How does authority re-produce itself in our everyday lives? What is ideology? How does ideology shape our attitudes, perceptions, and every day interactions? What can the works of Louis Althusser, Slavoj Zizek, Jacques Lacan, and other theorists of ideology tell us about ourselves and our world(s)?\n\nThis course will interrogate various phenomena, from mundane everyday phenomena like naming and holidays, to grand political phenomena like authority and patriarchy.\n\nThe reading material will aim to accumulate critical tools that are fitted for this inquiry. Each week, we will look at one of these phenomena through a critical lens borrowed from one or more of the texts we will be reading. Our aim is to allow the inquiry to determine the theoretical framework and not the other way round.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/ideology_course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "How do we talk about Death?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ismail Fayed",
+                "email": "ismailmfayed@yahoo.com",
+                "bio": "Ismail Fayed is a writer, critic and educator based in Cairo. He has worked with key regional institutions and platforms (Mada Masr, Contemporary Image Collective, Cairo Institute for Liberal Arts and Sciences...etc) and internationally (The Museum of Modern Art in New York). His interests span a broad range of contemporary artistic practices ranging from visual arts, to performing arts, to contemporary Arabic literature. In 2016 he co-founded the History and Cultural Memory Forum, a series of seminars and publications examining the realities of the Arab world post-2011. He was the associate editor for the MoMA's publication, Modern Art in the Arab World: Primary Documents (2018) and has contributed to numerous publications such as ArteEast, Aperture, Nafas Art Magazine, Nachtkritik, Mada Masr, Ma3azef, Manshoor, among many others."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "17:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2022-02-06",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Nothing can be more unsettling than pondering one’s mortality. Death is ubiquitous, and yet never really spoken about. It remains a powerful taboo. And although we are definitely better off than our ancestors were, two hundred years ago, death can still find ways to rattle us and disrupt our lives, the current pandemic being a case in point. In this course, we try to look at the “history of death” and the fundamental questions that death raises about who we are and what we do. Through using philosophical, anthropological and scientific methods and approaches, we collectively try to develop a language that would allow us to begin to think about it. Using a feminist lens that centres gender as a dividing line in the experience of life and death, the course will privilege feminist experience and contribution to understanding death as a phenomenon. Participants will be invited to build on their subjective experiences and broader cultural milieu to engage with and enrich the debate and deepen class discussions and course reflections.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/how_do_we_talk_about_death_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Archives of Memory and Forgetting in the Middle East",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Amy Fallas",
+                "email": "amyfallas@ucsb.edu",
+                "bio": "Amy Fallas is a Salvadoran-Costa Rican writer, editor, and historian. She received her MA in History at Yale University and is a PhD Candidate in History at UC Santa Barbara. Her research explores the role of ethnic and religious minorities in twentieth century Egypt and El Salvador at the multidisciplinary intersection of modern Middle East history, archival studies, religious studies, and Latin-East connections (Latin America and Middle East). She is currently a research fellow at the American Research Center in Egypt (ARCE) based in Cairo for the 2021-2022 year."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-06",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Milan Kundera tells us in his Book of Laughter and Forgetting that “The struggle of man against power is the struggle of memory against forgetting.” This observation– that how and why we collectively remember is intimately connected to struggle and power– is the guiding theme of this class. We will examine this struggle from historical, political, personal, and contemporary perspectives in literature, architecture, anthropology, museum and archives studies and more. We will look at accidental forms of erasure, instances of mis-remembering, and outright destruction and fabrication in the archive as well as in museums, public spaces, family collections, and other institutions of collective and personal memory.\n\nWhile this course will focus on the modern Middle East and Egypt in particular, we will bring in examples from Latin America, Africa, and Asia to provide comparative context and demonstrate the role of colonial and postcolonial states in shaping historical memory. Our discussions will draw from the readings as well as music, film, art, photography, your opinions, and more. Throughout the course, we will not only consider the mechanisms of power that censor narratives of the past but we will also look to memory as a source of personal and communal empowerment and solidarity.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/_archives_of_memory_and_forgetting_in_the_middle_east_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Anthropology of Religion: History of Religion and Rituals",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sohayla",
+                "email": "sohaylaelfakahany@gmail.com",
+                "bio": "Sohayla is a healing practitioner at heart and an academic by practice. Since completing her Anthropology MA at AUC, she is drawn to details in everyday life and in academia, which has directed much of her research. Her MA thesis (Meanings of Mindfulness and Spiritual Awakening: Affliction and Holistic Healing in Contemporary Cairo) analyzes spiritual practices and debates in conversation with medical, religious, and magical anthropology as they pertain to the growing interest in alternative and complementary healing in Egypt. During her research, she conducted ethnographic fieldwork with healing practitioners, those seeking healers, as well as engaging with online healing and fortune telling applications and services. Her interest in her research has pushed her to pursue her own path towards becoming a healing practitioner, earning her several certifications, making her a tarot reader, crystal healer and a Reiki practitioner. Besides her love for learning, studying and details, Sohayla also has an immense appreciation for teaching and connecting with people."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:30",
+            "end_time": "21:00",
+            "weeks": null,
+            "start_date": "2022-02-08",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "“Anthropology demands the open-mindedness with which one must look and listen, record in astonishment, and wonder that which one would not have been able to guess.” – Margaret Mead\n\nAnthropology is the study of people, cultures, and the human condition. This course introduces the concepts of religion and spirituality with an anthropological, historical, social, and cultural lens that focuses on rituals and healing. Our question does not focus on the synopsis of different religions in the world, it is rather an exploration and investigation of the history of religio-spiritual practices. This includes rituals, magic and witchcraft, myth, and the history of religion and spiritual healing. Our aim is to investigate how all of these concepts are created and recreated to form the spiritual beliefs and practices that are popular today.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_-_history_of_religion_and_rituals_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Muddying Waters: Race, Class and Gender",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Shan Yang",
+                "email": "yangshan@aucegypt.edu",
+                "bio": "Shan Yang is an Andrew W. Mellon Post-MA Fellow for the 2019-2020 academic year at the American University in Cairo. She received MA (2019) at AUC specializing in critical urbanism, political economy, and time and temporality. Her recent research project Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers was conducted in Beijing, Shenzhen and Guangzhou. She spent the second half of her 20s living in Cairo and Beirut. Now her life is taking root in Africa with a new project Life in Speculative Times: Debt-Financed Infrastructure Scramble in East Africa."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-14",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This seminar examines the topical feminism on-the-ground within an intersectional framework of race, class and gender. It unpacks “women’s question” in a fluid time and space. Through tracing the complexities in representation, culture, economic subjugation and colonial power relationship, participants will explore difficult issues and debates surrounding female circumcision, microfinance, women’s empowerment, sex worker rights, caregiving, domestics work, queer politics and women’s activism in today’s neoliberal times. Classes will be structured around literature reading, film screening, story-telling, and other creative ways to unfold conversations.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/muddying_waters-_race_class_and_gender_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "The Social Under our skin. Who Else is in our Body?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Farah Hallaba",
+                "email": "farah.hallaba@hotmail.com",
+                "bio": "Farah Hallaba obtained her MA in Social Anthropology and Visual Ethnography from University of Kent. She started انثروبولوجي بالعربي in 2019, aiming to publicize anthropology in an accessible way and in Arabic. She has been doing short engaging online videos and collaborative workshops since then. Currently Farah is a resident fellow at CILAS teaching Ethnographic Studies"
+              }
+            ],
+            "schedule_text": "Sunday 5:30-8 pm and Sunday 11:30 am-1:30 pm (hybrid)",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "This course put forth the body as a methodology to understand critical and complex social realities. Looking at the body and embodiment, this course aims to anthropologically understand what is under our skin? By asking this question we sophisticate our relationship with “our” bodies. Does our body know our culture and our class? How do our bodies reproduce power structures, are disciplined and experience pain? How can bodily violence such as torture and bodily discipline such as hunger-strikes help us understand wider structural violence and resistance? What does it mean for our bodies to enter networks of exchange? How can we spatially analyze social webs by looking at different spaces our bodies occupy and by looking at our bodies as spaces? Expanding from traditional notions of the body , we will think about and culturally contextualize emotions, vulnerability, agency and faith; and even further by questioning ‘memory’ and how our bodies could be an archive to the cultural and the social.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow_-_body_and_anthropology.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Feminist Phenomenology: The Body and the World",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Jasmin Makhlouf",
+                "email": "jasminemohee@gmail.com",
+                "bio": "Jasmin Makhlouf is an Assistant Lecturer in Political Science at the British University in Egypt (BUE). She has a B.Sc. in Political Science from the BUE, and an M.A. in Philosophy from the American University in Cairo (AUC). Her research interests fall in three main areas: Continental Philosophy, Feminist Theory, and Psychoanalysis.She specializes in phenomenology, with a focus on subjectivity, intersubjectivity, and consciousness. Jasmin is particularly interested in the intersection of Phenomenology and Feminist Theory, with a special interest inresearch around embodiment, revolution, body autonomy, and sexuality."
+              }
+            ],
+            "schedule_text": "Saturday 10-12 am at CILAS (morning) and/or Saturday 6-8 pm online (evening, hybrid)",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2022-02-12",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "The body is the most familiar and natural thing we perceive. It is through the body that we first become aware of our surroundings. We experience the world around uswithand throughour bodies, and as we exist in the world, we soon realize that our body is not just for us to perceive but also to be perceived by others; the way others perceive and understand our bodies, dictatehow we are treated as the color of our skin, gender, clothes, and disabilities all impact us in a world where the body is mostly understood as an object.This is where our journey starts. The course is structured in a way that provides an introduction to phenomenology, with a focus on the feminist turn. The course takes special interest in the relationship of the body and embodiment to queerness, technology, and race guided by the writings of Beauvoir, Fisher, Young, and Heïnamaa, amongst others.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/feminist_phenomenology_-_the_body_and_the_world_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Intimate Archives: On Feminist Movements & Emotions",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sally AlHaq",
+                "email": "sallyalhaq@gmail.com",
+                "bio": "Sally AlHaq is a Cairo-based writer, editor, researcher, and the co-founder ofIkhtyar African Feminist Collective; a hub for women writers and scholars. Sally works on building feminist literature that mirrors the intersection of gender, sexuality, and technology through intimate narratives in Arabic. She is at her happiest in the sun, around trees, cats, and stubborn (but) kind people whose existence makes the world a better place and exposes the boredom of patriarchy."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "This is a poetic investigation, and the subject is ourselves. Archives, when combined with movements, become a documentation of those who rebelled; when combined with intimacy, they lose their coldness and distance. In Intimate Archives: On Feminist Movements and Emotions, we explore political feelings. We get introduced to political feminist movements in the global south, from the pañuelo verde in Latin America to Palestinian movement. We study feminist movements’ literature with a focus on Arabic-speaking countries such as Egypt, Lebanon, Western Sahara, and Palestine, creating a map of alternative voices that questioned and dared to exist and transform lives. In this course, we create a repository of public feelings as we ask and discuss: what does it mean to live feminist lives? What happens to the heart in queer cruising? What does it mean to love, and to love politically? We will have the space to analyze loneliness, despair, depression and ‘bad’ feelings in relation to systems of oppression. From our analyses, we will explore hope as a means of resistance and as an invitation to choose healing and care.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/intimate_archives_on_feminist_movements___emotions_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "In Love with Music? Journey in the world of Music",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Qais Raja",
+                "email": "Qais.rajaa@gmail.com",
+                "bio": "Qais Raja is a professional musician, song writer, audio engineer and music producer from Jordan.\n\nQais is renowned for being the guitarist and percussionist of the Jordanian rock bands Jadal and Albaitil Ashwai. With more than 10 years experience in music writing and production, Qais is known for his authentic approach in writing , where he fuses folkloric music elements from many parts of the world with rock, synth wave and reggae."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course offers a musical analytical journey around some parts of the world. As we travel sonically from one place to another, we will try to culturally, politically, and spiritually contextualize the music, beats and instruments. We will do a lot of in-class music analysis and train our ears and senses to imagine narratives of colonization, identity, nationalism, philosophy, religion and nature-human relations. We will use multimedia resources to prompt discussions that could help us sonically map and contextualize music.\n\nTowards the end of the course flow, we will look at movement. The music of people on the move - roads and waves- as well as the movement of the body as it syncs with music. As we conclude, we will try to understand the philosophy of improvisation in musical arts.\n\nThe flow of this course is designed for people who do music or are interested in music; where there will be a lot of practical in-class music analysis, films, podcasts and possible music jam sessions! Melody and discussions that will inspire us and add to our music literacy.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow_-_music_journey.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Power, Public Feelings, and Popular Culture",
+            "title_ar": "\"الرؤية هباب\"",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Reem Badr",
+                "email": "reembadr@aucegypt.edu",
+                "bio": "Reem Badr is a cultural anthropologist interested in popular culture, affect, and the interplay of public and private. Her recently completed MA from the American University in Cairo probed the changing scene of colloquial Egyptian poetry in the last decade, and many of its novel offshoots like Egyptian rap and trap music."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Is Marwan Pablo’s Denamet a treatise on alienation? Can we read Mohamad Samy’s notorious Ramadan series Nasl il Aghrab as a critical commentary on the befuddled nature of contemporary power?\n\nThis course is an invitation to engage with the social worlds we inhabit through the lens of popular culture. By looking at everything from Egyptian rap songs to television series and online vlogs, we will attempt to take popular culture seriously, both as a site where power is negotiated and deployed, and where feelings are publicly constituted, fostered, or condemned. Throughout the course, we will combine our experiences as viewers/ consumers of the various artefacts with works of anthropological and philosophical theory in an effort to understand the complex fields of power, and the convoluted emotional webs that make up our present.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/_الرؤية_هباب__flow_.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Contesting the visual/visible: the image as critical and creative method",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Darren Spirk",
+                "email": "darren.spirk@gmail.com",
+                "bio": "Darren Spirk is from the US and has been living in Cairo since 2016. He completed his MA in Gender and Women’s Studies in the Middle East/North Africa at the American University in Cairo in 2020, where his thesis applied critical theory from visual culture and urban studies to intervene into anthropological discourses on the image. He is currently working on combining his theoretical interests with an applied photography and film practice that aims to explore visual refusal as a praxis for thinking beyond progressive politics of visibility."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "11:30",
+            "end_time": "13:30",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "A growing number of contemporary theorists and artists ask us to question our understanding of art history and the material conditions of image-making by rejecting the singular narrative presented to us through western modernity. As an exploratory course that bridges critical readings on the image with a wide array of complementary artistic practices, this course asks the following questions: How do we acknowledge the violences of colonial expansion, global imperialism, and the mid-Atlantic slave trade as formative not only to the history of art but its ongoing circulation today? What changes might these perspectives bring to how we look at and study images, how we create and distribute them, and even how we might approach technologies such as the camera? Relatedly, what types of artistic projects have emerged from such sites of inquiry, and how might we reformulate affinitive conceptions of art and creativity in conjunction with a critical-theoretical and/or radical-political mindset? This course is ideal for both students who are visual artists themselves and those interested in studying visual culture, and it also culminates in a final creative project that offers students the opportunity to apply the course material in ways meaningful to them.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_course_-_darren_spirk_course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "اللغة والحِجاج القانوني في مشاهد المحاكمات في السينما المصرية - نظرة على السخرية",
+            "title_ar": "اللغة والحِجاج القانوني في مشاهد المحاكمات في السينما المصرية - نظرة على السخرية",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "فادي عوض",
+                "email": "fadyawad95@gmail.com",
+                "bio": "فادي عوض السعيد، مدرس مساعد في قسم الأداب واللغات والثقافات بجامعة كونيكتيكت بالولايات المتحدة. يعمل منذ ٢٠١٩ على مشروع للدكتوراه في الأدب المقارن حول السخرية من لغة القانون في مشاهد المحاكمات بين السينما المصرية والفرنسية. حصل على درجة الماجستير في الدراسات الأدبية العربية من جامعة السوربون الفرنسية عام ٢٠١٨، وكان موضوع أطروحته عن الحجاج حول موقع الشريعة في الدستور المصري عام ٢٠١١. قبل التدريس في كونيكتيكت، درّس في دار المعلمين العليا، ومعهد العلوم السياسية، ومعهد اللغات الشرقية في باريس. وقبلها، درّس في الجامعة الأمريكية والمركز الثقافي الفرنسي بالقاهرة. عمل أيضًا محررا في فرانس ٢٤، ونسّق مشروع قاموس انتخابي لدى البرنامج الإنمائي للأمم المتحدة، وأدار النشر في دار التنوير ودار الشروق. نشر عددًا من الترجمات الأدبية، وعددًا من المقالات بصحف عربية وفرنسية."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "إذا كان المفترض بالقانون أن يكون تعبيرًا عن اتفاق اجتماعي، فكيف تكون ممارسته اللغوية مغلقةً إلى درجة أن تصير حِكرًا على أهلها؟ وإذا كان القانون في النهاية حقلًا لغويًا خاصًا، فما مكان لغته من الممارسة اللغوية العامة؟ أليست المحاكمة هنا بما فيها من حجاج بين المجتمع والقانون هي المجال اللغوي الأمثل لالتقاء لغة الأخير بلغة الأول بما يثبت قدرتهما على التفاهم من ناحية وينقض تلك القدرة من ناحية أخرى؟ وإذا ساقتنا الأسئلة إلى هذه النقطة، فهل يمكن اعتبار المحاكمات السينمائية مجالا لغويًا يضيف طبقة تحليلية كاشفة إلى طبيعة العلاقة بين هذين المستويين اللغويين، أعني \"لغة/ات المجتمع\" و\"لغة القانون\"؟ وإذا اعتبرنا المحاكمات السينمائية كذلك، فكيف للنظر إليها من زاوية السخرية أن يلقي الضوء على تشابكات تلك العلاقة اللغوية؟ وفي الحالة المصرية، حيث لا يمكن تجنب اختلاف \"الفصحى\" و\"العامية\"، ألا ينبغي السؤال حول مكان هذا الاختلاف من تلك التشابكات؟ إذن، لابد أولا من فهم معنى السخرية، ولا بد ثانيا من استطلاع لمعنى الحِجاج، ولا بد ثالثا من استقصاء حول تطور العلاقة بين الأطراف الثلاثة (اللغة والقانون والسينما) في مصر الحديثة.\n\nبناء على هذه النظرة، يحاول هذا المساق الدراسي أن يحكي ويناقش ثلاث حكايات؛ تدور الأولى حول تاريخ تمثيل القانون في مشاهد المحاكمة في السينما المصرية منذ أربعينيات القرن الماضي وحتى نهايته. وتدور الحكاية الثانية حول معنى الحُجة، وتُناقش تطور الدراسات التي تناولت الممارسة اللغوية الحِجاجية منذ نهاية الخمسينيات من القرن الماضي وحتى الآن. أما الحكاية الثالثة - وهي الرابط الذي يجمع بين السابقتين - فتدور حول معنى السخرية والفرق بين النظر إليها أولا كمحسّن بلاغي \"بديعي\" على طريقة النظرية الأدبية، والنظر إليها ثانيًا كممارسة جدلية على طريقة الفلاسفة، والنظر إليها ثالثا كنمط من أنماط الحجج على طريقة الدراسات الحجاجية.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/لغة_السينما_ولغة_القانون،سير_المساق_cilas._فادي_عوض_السعيد.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          },
+          {
+            "title": "Who Taught You to Feel Happy?",
+            "title_ar": null,
+            "subtitle": "On Pleasurable Feminism",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Mariam",
+                "email": "diefallahmariam@gmail.com",
+                "bio": "Mariam is a feminist doula and writer. She is a strong advocate for better sexual and reproductive health and rights for women and is a passionate believer in pleasure as a form of activism. Her work has been published in Jadaliyya, Jeem, Asymptote Blog, and Egypt Migrations. In her free time, you will find her dancing, cuddling with her three cats, or studying Spanish."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-02-13",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "Considering pleasure as both a fundamental right and a form of feminist activism, this course is inspired by adrienne maree brown’s book Pleasure Activism: The Politics of Feeling Good. Using the framework presented in the book, together, we will explore what it means to feel satisfied and content in our bodies, and how we can make feminism a fulfilling and pleasurable act of justice. Each week, we will discuss diverse themes, from childbirth and ageing, to anger, consent, and healing. These themes are designed to assemble a toolbox that guides you through your journey to become a pleasure activist. Within the context of the current patriarchal, capitalist, ableist systems we live in, this course rejects pain as ‘a natural/normal woman experience.’ Instead, it hopes to move us a step closer towards feeling and healing in our bodies, all while manifesting the joyful feminist futures we envision.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/who_taught_you_to_feel_happy_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/bbT56D9C3Gajy2Uy5",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "sha256": "9d274579ba8bfd14baace2c2486664619da295476c9a7c961d7a56eb247e0895",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Monitoring and Evaluation",
+      "title_ar": null,
+      "subtitle": "Shaping Development Pathways - On Evaluation Theory and Practice",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Nermine WALLY",
+          "email": "nerminewally@gmail.com",
+          "bio": "Nermine WALLY holds a BA in Political Economy from the American University in Cairo and a MA in Public Affairs from the Sciences Po Paris. She is a policy professional with more than a decade of experience in gender issues, poverty mitigation and participatory initiatives. As Programme Officer with the UN in Egypt her portfolio focuses on reporting, monitoring and evaluating key initiatives linked to the World Food Progra. Nermine has also served as President for the African Evaluation Association, a pan-African organisation dedicated to strengthening evaluation theory and practice in Africa. From 2010 to 2013 she served as Secretary for the International Organisation on Cooperation for Evaluation (IOCE) and is a founding member of both the Egyptian Evaluation Network and the Middle East and North Africa Evaluation Network. Nermine joins CILAS as visiting fellow offering a course on evaluation theory and practice."
+        }
+      ],
+      "schedule_text": null,
+      "weekdays": [],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "intro\n\nMonitoring and evaluation (M&E) helps identify trends, measure change and capture knowledge. The field of monitoring and evaluation has gained remarkable momentum in Africa over the past years and has even informed the formulation of the Millennium Development Goals. It has subsequently informed commitments to track achievements of policies and programmes. Both beneficiaries and donors of international aid have increasingly been pressured by their partners and constituents to capture what works, how it works and for whom it works in a both rigorous and systematic way. Donors and governments alike are expected to utilise the findings emerging from evaluation in their decision making process to justify resource mobilisation. This said, evaluation theory and practice have evolved at an unprecedentedly fast pace which has surfaced both opportunities and challenges with regards to what constitutes the ethical basis for a good evaluation practice. Development practitioners need to make choices on what methods of evaluation to use. They must ensure that their evaluation is both relevant and sensitive to the local context. How does one extract, verify and analyse data ethically? And what can you do in the absence of relevant data to assess a programme's performance?\n\ndescription\n\nThe course provides an overview of the evaluation structure in the field of development, building on practical examples and case studies from specific countries and regional initiatives in Africa and the global south more generally. Students will be introduced to the concepts of monitoring and evaluation with the help of comparable notions stipulated by different regions and institutions, notably the United Nations Evaluation Group. A particular emphasis will be placed on the progress made towards the Millennium Development Goals (MDGs), its monitoring framework, the Aid Effectiveness agenda and its set of indicators, as well as the Sustainable Development Goals (SDG) which are expected to succeed the MDGs in 2015. Students will be exposed to the interlinkages and dynamics of the evaluation field and the decision making process in international development/assistance.\n\nexpectations\n\nStudents are expected to complete assigned readings and participate in class discussions.\n\nStudents are expected to complete a client-oriented assignment.\n\nStudents are expected to prepare for and attend a conference with the course coordinator during the trimester.\n\nobjectives\n\nDevelop a thorough understanding of how to manage an evaluation.\n\nBe able to define and formulate what is to be evaluated.\n\nKnow how to frame the boundaries of an evaluation.\n\nDistinguish and describe the activities, outcomes and the impact of a policy or programme.\n\nIdentify causes for particular outcomes and impacts.\n\nSynthesise data from one or more evaluations.\n\nReport and support findings.\n\nBecome acquainted with the field of M&E in Africa.\n\nEngage with and conduct evidence-based research.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

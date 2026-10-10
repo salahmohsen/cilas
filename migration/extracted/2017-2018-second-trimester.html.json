@@ -1,0 +1,337 @@
+{
+  "sha256": "c4057564d061293ff1b8a2bff2a5239e2e00879e989030c8eda4a4be95481b58",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Trimester two 2017-2018",
+        "season": "winter",
+        "start_year": 2018,
+        "start_date": "2018-01-07",
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Can We Talk About Love?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ismail Fayed",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 1:00 pm and evenings from 5:00 pm to 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Following two years of continued personal and less personal losses, I was confronted with the idea of how can we come to understand love in our global, counter-global, post-human, post-politics world, specifically the context of Egypt in the aftermath of successive waves of neoliberalization, post-independence trauma, Isalmization and de-Islamization,...etc. This course was inspired by a reading group spearheaded by a friend on how to come to terms with ideas that are infinitely abstract and yet immediately personal and everyday-like. In a time where capitalist logic reaches its apex in transforming our bodies, our minds, our ideas, our emotions and our very span of attention into complex modes of objectification and consumption, how can we come to understand concepts like, attraction, attachment, fidelity, amity and care, and so on. This course raises more questions than tries to answer them and it is entirely premised on the seamless mingling of the inter-subjective and the intellectual. Over the time-frame of the course participants will continuously oscillate between articulating a subjective experience and ideas and at the same time engaging with a wide variety of texts and media, ranging from St. Augustine to Egyptian “romantic” pocket-book series, Zuhur.\n\nThe course’s main objective is part therapeutic, part intellectual exploration and part critical reflection on the possibilities of love in a time and space like ours.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "can-we-talk-about-love.html"
+          },
+          {
+            "title": "Growing food and wellbeing: gardening in the city",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Bianca Fliß",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 1:00 pm and evenings from 5:00 to 8:00 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Increased awareness about healthy food and a desire to engage with nature, even within the city encourage more and more people to grow their own food. But how to start?\n\nThis course will enable students to start their own vegetable garden on their balcony, rooftop or backyard. Students will get hands on knowledge, tips and tricks for growing vegetables in on the balcony or rooftop. Besides of the practical experience, we will also reflect on the effects of gardening on body, mind and soul, the history of food production in the city and the roots of the growing urban gardening movement as well as recent developments such as high-tech gardening and urban homesteading.\n\nWe will also explore the history of gardens in Egypt and visit Al-Ahzar park as a modern garden with many historic elements and as well as edible landscapes and explore foraging in the city. The course will be approximately 50% practice, and 25% theoretical gardening knowledge and 25% reflection.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "growing-food-and-wellbeing-gardening-in-the-city.html"
+          },
+          {
+            "title": "In Preparation of a movie",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Rodrigo Brum",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:00 to 8:00 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Inspired by Roland Barthes' The Preparation of the Novel, this course intends to explore the first movements someone needs to make in order to start a movie project. Through wanderings, notations, drawings, rehearsals, and proposals, each student will prepare a range of materials to support their ideas in order to start shooting. There is no need for any previous knowledge related to movie-making since it is an introductory course. Neither is our goal to apply a method. Our task is to create a space for work where each student will find the tools to develop their own method in the direction of making a movie. We will also analyze movies that are related to our question and filmmakers' processes.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "in-preparation-of-a-movie.html"
+          },
+          {
+            "title": "Archive Fever: Appropriation in Contemporary Art",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Mohammed Shawky Hassan",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday mornings from 10:00 am to 1:00 pm and evenings from 5:00 to 8:00 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The archive is not merely a repository of official records. It is an omnipresent linguistic and discursive system, a law of what can and cannot be said and a vast shapeless empire of images, sounds, documents and other material traces. Contemporary art has long been a sphere for excavating the archive, not just in search of alternative historical narratives or for filling the gaps left by official archives, but rather for disturbing the alleged factuality of the archive, challenging the illusion of its completeness, questioning the basis of its constitution and destabilizing its authority. With the expansion of the archive from its conventional narrow interpretation as the collection of “official records” to include all forms of cultural production and personal accounts, hundreds of artists sought to produce a counter memory relying on the archive as malleable raw material available for them to deconstruct, recycle and manipulate. But while appropriation is mostly recognized for its critical subversive potential, how far can this potential go if archive-based art - by its very nature - constantly positions itself in relation to the archive itself, perpetually dwelling within its aesthetic and reacting to its narratives?",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "archive-fever-appropriation-in-contemporary-art.html"
+          },
+          {
+            "title": "My Body is My Body",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sara ELKAMEL",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Yvonne BUCHHEIM",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "In this course, we will use our bodies as a starting point for creative practice. We start off with the assumption that at some point in our lives, we have been exiled from our bodies — accidentally or by force. To bridge that assumed estrangement, we will begin to probe our relationships to our physical bodies through employing both visual and writing tools. Participants will write and make art about, with, and perhaps on, their bodies.\n\nThis course promotes an interdisciplinary approach to creative inquiry and practice in the attempt to explore the notion of exile from one’s own body. Assigned theoretical texts are designed to inform the production of creative work, whereby discussion and feedback are a crucial part of the journey. We will be translating ideas between visual expression and written language, and we will experiment with a range of practices including embodied writing, image-making and performance.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "my-body-is-my-body.html"
+          },
+          {
+            "title": "Visual Anthropology: Film as a tool for research",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Céline Burnand",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:00 pm to 8:00 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Visual anthropology is a rather young discipline that offers creative methods that can cross the borders and limitations of traditional anthropology in order to question representations and to rethink our and other’s roles, values, norms, rituals, mythologies, and media practices in the age of digital modernities. This class will provide examples of visual and media anthropological researches in order to discuss the different strategies of the filmmakers and the issues raised by their choices. The course will lay down fundamental tools and ideas through screenings of films and discussions and will give practical insights through a research exercise. Students will choose a topic of enquiry they would like to explore through the spectrum of visual anthropology over the span of the class.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "visual-anthropology-film-as-a-tool-for-research.html"
+          },
+          {
+            "title": "“The Weapon of Theory”: Critical Thought and Social Change",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa Dardir",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 1:00 pm and evenings from 5:00 pm to 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "How does political and social theory respond to change? What can theory tell us about social change? Conversely, what can moments of upheaval, revolution, and political and social change tell us about the theories they were attached to? Is there an intellectual history for revolution and counterrevolution?\n\nIn this course we will read texts of political and social theory in the light of the political and social events that shaped them, from the French Revolution of 1848 to the Egyptian uprising of 2011. We will study both revolutionary and counterrevolutionary representations. This effort will attempt to historicize these theories and understand them in the light of the specific histories that shaped them. In addition, we will explore what it entails to take these theories out of their historical contexts and apply them to others: what then is modified, revised, and/or preserved? In short this course is an exercise of putting theory in context and out of context.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "ldquothe-weapon-of-theoryrdquo-critical-thought-and-social-change.html"
+          },
+          {
+            "title": "Roles and Rituals: Performativity in Contemporary Arts and Society",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ash Moniz",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This 10 week course investigates the ways in which humans perform (both voluntarily and involuntarily) in daily life, in legal settings, and cultural contexts. Through analysing contemporary art practices, performance studies theories, and political/legal scenarios, we will investigate the norms, traditions, and power structures around different actions gestures. Starting off with an introduction to the general ideas, the course will gradually move towards the question of what performativity means now, in the context of constant surveillance, consumption, virtual citizenships, and algorithmic control. Towards the end of the course, we will aim to actively self-reflect on the the roles and positions of the classroom setting, by participating in collaborative performative experiments (role-play, workshops, performative games, and learning experiments).",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "roles-and-rituals-performativity-in-contemporary-arts-and-society.html"
+          },
+          {
+            "title": "Classical Chinese Philosophies",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Robin Weiss",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Early Chinese philosophers defended tradition and proposed social reforms. They included educators, humanitarians, pragmatists, politicians, hermits, and mystics, who variously speculated about right and wrong, individual and society, nature and culture, knowledge and ignorance. The philosophers we will read held competing visions of the good life, some insisting on the right kind of society for human beings to flourish, others arguing that, in order to pursue the good life, we must allow ourselves to fall back into a preexisting harmony with Nature.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "classical-chinese-philosophies.html"
+          },
+          {
+            "title": "Reading Michael D. Jackson in Darb El-Labanna",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Doaa Kaddah",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Reading the work of Michael D. Jackson at CILAS, – an alternative space which supposedly challenge hegemonic practices- is an invitation to think critically and alternatively to what it means to give primacy to the immediacy to our lived experiences. Furthermore, it is space where we are mindful and critical of this “rush”. This course is not in any way an invitation to propose the eradication of the role of theory- as if it is possible?- from our lives. Instead, it is an invitation to acknowledge these previously mentioned gaps through the inspiring and poetically articulated work of Michael D. Jackson. In these moments of time and space, where personal and political events are intertwined, creating a flux of uncertainty and anxiety, we read together words that reminds us of our sense of agency. Who knows, maybe our attempts to carve out our space in the midst of these structural impositions are situated within the very same ‘gaps’ we rush to cover?",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": null
+          },
+          {
+            "title": "Voice of the Artist",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sama Waly",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 2:30 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Focusing on Egypt and the Arabic speaking world, this course intends to explore the production and reception of artworks within the context of modernity, nation-building and post-colonialism in the 20th and 21st centuries. Class discussions will be informed by in-class analysis of artworks, and readings by prominent scholars in the history of art in the region.\n\nThe course is modeled as an art history/critique seminar. Throughout the semester, students will have the opportunity to enrich their vocabulary and knowledge of Arab and Egyptian art production in the 20th and 21st centuries, as well as discuss and critique collectively each student's personal projects. The course aims to help students develop a constructive critical language in response to each others' as well as historical artworks. Together we'll explore pertinent questions posed by artists and art historians, so as to discover — both as a collective and individually — our own critical voices.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "voice-of-the-artist.html"
+          },
+          {
+            "title": "Power and Space: Critical approaches to the built environment",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Dalia Wahdan",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Anthropologists and architects often use the term built environment to refer to the man-made habitats which we humans create and within which we conduct our daily lives such as streets and roads, dwellings, schools, hospitals, green spaces and common spaces. The term has grown to comprise physical infrastructure such as waste disposal and sanitation networks and has even expanded to include what is known as real estate developments.\n\nThis course examines how anthropologists, architecture historians and critical geographers have grabbled with built environments from the early concepts of ‘primitive’ or ‘vernacular’ built forms to the twenty-first ‘real estate’ renditions. It nudges participants to critically engage with sets of readings and documentaries thatanalyse the interplay of religion, power, economy, ideologies and culture in the production and consumption of built environments. We shalleven critically examine the very concept of ‘environment’ and its post-colonial genealogies.\n\nThe built environment is not static. It is a dynamic habitus. Thus our class discussions and activities need to reflect such dynamism. Through experiential learning and much reflexive thinking, the course introduces participants to a broad range of perspectives: from the ecological, the modernist, the socio-technical systems approach, to the built environment as real estate capital. Readings and documentaries will draw from diverse locations from the Global South such as Brazil, India, Tanzania, Dubai and Egypt.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "power-and-space-critical-approaches-to-the-built-environment.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

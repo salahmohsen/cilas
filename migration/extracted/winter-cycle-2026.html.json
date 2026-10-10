@@ -1,0 +1,170 @@
+{
+  "sha256": "03d497ad89f1c97eddd9d66b825653f219609d55af73561297f56003cd21de7a",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Winter Cycle 2026",
+        "season": "winter",
+        "start_year": 2026,
+        "start_date": null,
+        "deadline": "2026-01-31",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Seeing with the Eyes of your Heart: William Blake, Poet & Painter",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Susanne Sklar",
+                "email": null,
+                "bio": "Susanne Sklar has enjoyed teaching humanities - literature, religion, and performance - throughout the world - in China, Russia, Sweden, the USA, and the UK (at Oxford where she received her doctorate). She's published over twenty articles as well as a book, Blake's Jerusalem As Visionary Theatre. Additionally, Susanne has been a peace researcher and activist, an actress - and a social worker, creating arts programs for Chicago teenagers who'd been homeless and abused."
+              }
+            ],
+            "schedule_text": "Offline. Starts on the 26th of February, on Thursdays, from 6 to 8:30 pm, for four weeks.",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 4,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The great poet and philosopher, Ibn Arabi, saw divinity with the eyes of his heart. The English poet and painter, William Blake, can inspire you do likewise. Scholars in Pakistan, England, and Iran have compared Blake to Ibn Arabi as well as Rumi and Hafez. Blake's Songs of Innocence and of Experience are deceptively simple, but they enable us to see the unity of being, the joy of divine love, and the goodness in all created things.\n\nThis four week class carefully explores the poetry and art of Blake's Innocence and Experience. Each poem is illuminated, flanked and framed by intriguing imagery and designs. We'll read Blake's poems aloud, discuss their designs (with the help of slides) and do a bit of in-class writing, including at least one poetry game. Our short course culminates in a celebration in which you'll be invited to bring Arabic (or Persian) poetry akin to Blake's. (If you are a poet or an artist and can bring your own work that will be a delight!) Seeing with the eyes of the heart is not confined to just one culture or tradition. When artists and poets 'converse' with one another their wisdom and beauty can be amplified.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/seeing_with_the_eyes_of_your_heart___william_blake_poet___painter_.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/sv1s9NwF9r7Rc3of6",
+            "own_page": null
+          },
+          {
+            "title": "Writing lab: Seeing the mystery of space; walking the music of time",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Leon Conrad",
+                "email": null,
+                "bio": "Leon Conrad is Founder of The Unknown Storyteller Project, Founder/Lead Tutor at The Traditional Tutor, Co-Founder/Lead Trainer at The Academy of Oratory, and Affiliate at the KSU Next Society Institute, Lithuania. My book, Story and Structure (2022), was a finalist in The People's Book Prize. I grew up in Alexandria, Egypt (6-18) where formative experiences of oral storytelling inspired my life-long quest to explore the power that language has to enchant and inspire. This lab project is based on fun exercises from my latest book, Master the Art and Craft of Writing: 150+ fun games to liberate creativity (2024)"
+              }
+            ],
+            "schedule_text": "Offline. Starts on the 21st of February, on Saturdays, 7:00 to 9:00 or 9:30 pm, for four weeks.",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "19:00",
+            "end_time": null,
+            "weeks": 4,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Story, narrative, and poetry are all, to paraphrase poet-essayist Robert Bringhurst, ‘forms of knowing’. It isn’t so much that we know them but that they know. Knowing in the sense of ‘knowing freed from the agenda of possession and control – knowing in the sense of stepping in tune with being, hearing and echoing the music and heartbeat of being’.\n\nI invite you to enter the knowing of story, of narrative, of poetry; to explore stories, narratives, poetry; place; time; sacred and secular; self and society. Explore the ‘minute particulars’ of being (as the poet and artist William Blake put it) and the wonder and mystery of being that is around us and within us.\n\nIn this Four-week course, we will draw on views of harmony (balancing concord and discord) to inform our approach to creative writing based on an immersion in ‘the knowing’. The approach will be inspired by an integrated and integrative view of the classical Liberal Arts.Participants may work in English and/or Arabic. Films, webcasts, video journals, artwork, social sculptures, or musical compositions are acceptable, as long as academic rigour, and critical and creative thinking are evidenced both in the creative process and in the final outputs.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/writing_lab__seeing_the_mystery_of_space__walking_the_music_of_time__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/sv1s9NwF9r7Rc3of6",
+            "own_page": null
+          },
+          {
+            "title": "Who Are “We”? Class, Identity, and the Struggle of Belonging",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ghosoun Ismail",
+                "email": null,
+                "bio": "Ghosoun Ismail holds a Master’s degree in Independent School Leadership from Teachers College, Columbia University, and a Master’s degree in Sociology and Anthropology from the American University in Cairo. She has extensive experience as an researcher and educator. Her work focuses on education systems, social inequality, and the relationship between schooling, class, and belonging in Egypt. She has led and managed multiple education initiatives, authored policy reports, and designed learning programs that bridge theory, practice, and lived experience."
+              }
+            ],
+            "schedule_text": "Offline. Starts on the 25th of February, on Wednesdays, 6 to 8:30 pm, for eight weeks.",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 8,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course is a workshop-style seminar where participants come together to think collectively about social class and identity from an anthropological perspective. Rather than focusing only on abstract theory, the course connects key ideas to everyday life and to the social and political challenges of the present.\n\nWe begin by exploring how social class has been understood in the social sciences, drawing on foundational approaches that link class to economic conditions, social status, and culture. These perspectives help us ask critical questions about how value, work, and social hierarchies are created and sustained. At the same time, the course examines the limits of these approaches and considers why they often fall short of capturing the complexity of class today.\n\nFrom there, the course turns to identity as a broader framework within which social class operates. Identity shapes how people understand themselves, how they draw boundaries between “us” and “others,” and how they experience belonging across different social spaces. Examining class and identity together highlights how deeply intertwined they are, and why neither can be fully understood in isolation.\n\nThe discussion then expands to questions of colonialism, power, and representation, exploring how these forces have shaped ideas of class and identity over time. We examine how societies have been represented through unequal power relations, and how communities living under domination have struggled to redefine themselves and reclaim their sense of self. These histories help explain why questions of identity and belonging remain so contested today.\n\nAlongside theoretical discussions, the course incorporates ethnographic studies that bring these ideas into conversation with lived realities. With particular attention to research from Egypt, we explore how class, identity, gender, and power intersect in everyday life, often in ways that challenge fixed or simplified categories.\n\nThroughout the course, dialogue and shared exploration are central. Participants are encouraged to bring their own experiences and observations into the discussion, connecting course materials to the social world around them. By the end of the course, the aim is not only to understand social class and identity as analytical concepts, but to reflect on them as lived realities that shape who we are and the communities to which we belong.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/who_are_“we”__class_identity_and_the_struggle_of_belonging_.pdf"
+            ],
+            "register_url": "https://forms.gle/1pwSqqrChYhdjGvT7",
+            "own_page": null
+          },
+          {
+            "title": "Decolonization as Metaphor",
+            "title_ar": null,
+            "subtitle": "Indigeneity, Self-determination & the Limit of Human Rights",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Zeina Ali",
+                "email": null,
+                "bio": "Zeina Ali is an academic with degrees in both political science and international human rights law and justice, holding respective BA and MA degrees from the American University in Cairo. While her formal training is legal and political, her intellectual practice is shaped by sustained engagement with anthropology, history, and comparative religions, fields concerned with how humans relate to the intangible, including time, power, meaning, and law. Her work exists at the nexus of critical legal studies, post-structuralist thought, and other radical traditions that question the assumed neutrality of legal and political frameworks. Her MA thesis examined the limits of human rights 2 law through questions of Indigenous sovereignty and incommensurability, a line of inquiry that continues to inform her current work on law, suffering, social media activism, and the evolving language of global justice movements. In the classroom, she approaches learning as a collective, careful practice—thinking together, reading closely, listening generously, and allowing uncertainty to do its work."
+              }
+            ],
+            "schedule_text": "Offline. Starts on the 25th of February, on Sundays, 6 to 8:30 pm, for eight weeks.",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 8,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "“Decolonization” has become one of the most powerful words in contemporary political and intellectual life; invoked to name ethical commitment, institutional reform, personal awakening, and global solidarity. This course asks what happens when decolonization travels as a metaphor, especially within the moral and legal vocabularies of human rights. What does decolonization demand? What happens when it is reduced to a metaphor for inclusion, reform, or “better” politics? What forms of violence, sovereignty, and history become visible through human rights law? What forms are (purposely) misrecognized, domesticated, or rendered unintelligible?\n\nThe course offers a focus on Indigenous peoples in the United States not as a detour from Middle Eastern, African, or Asian decolonial thought, but as a way to clarify what “decolonization” names when it is treated as a struggle over land, jurisdiction, and settler-state legitimacy. Indigeneity has re-emerged at the forefront of global and academic conversations, raising a question that the universal language of human rights often struggles to answer: how does a legal order built on liberal individualism and state sovereignty perceive a peoplehood grounded in enduring relationships to land, environment, and collective life-relationships that can appear “foreign” to Western disciplines and to the ‘rationality’ of modern law? The United States offers an especially instructive site for this inquiry because it is one of the earliest and most consolidated examples of the settler state as we know it, and because its institutions have developed infamously sophisticated techniques for ‘defanging’, translating, and containing indigenous political claims. Studying this context helps sharpen our analysis of the limits of human rights law: precisely at the point where indigeneity becomes most difficult for legal recognition to fully register.\n\nDrawing from critical legal studies, post-structuralist critique, indigenous and anti-colonial thought, and adjacent debates in anthropology and history, we will examine human rights not as a neutral instrument but as a framework that organizes reality: producing particular ideas of the human, the political, the victim, the state, evidence, remedy, and justice. We will examine how the international human rights project, shaped by liberal universalism and anchored in the legitimacy of the state, tends to recognize indigenous peoples only under specific conditions: when sovereignty is translated into administrable forms, when land becomes “culture,” and when political autonomy is reframed as participation within existing state structures.\n\nAt the center of the course is a problem that repeatedly surfaces in indigenous and anti-colonial struggles: the possibility that certain political demands are not merely unmet by law, but structurally incommensurable with the frameworks meant to recognize them. We will explore why calls for Indigenous sovereignty, jurisdiction, and land can become unintelligible—or only partially intelligible—within an international order committed to preserving the authority of the settler-state. Through close engagement with debates around United Nations Declaration for the Rights of Indigenous People (UNDRIP), recognition regimes, and settler-state governance practices, the course traces how emancipatory claims are often translated into more “acceptable” forms, such as cultural rights, without resolving the underlying conflict over sovereignty. We will sit with the problem of incommensurability; moments where legal recognition does not simply “fail” but may be structurally unable to meet demands grounded in indigenous sovereignty, refusal, land, or liberation struggles that exceed the horizons of reform.\n\nParticipants will grapple with a difficult set of questions: When does rights language enable meaningful protection, and when does it operate as a technology of containment? What happens when self-determination is reformulated into claims that the law can comfortably administer? And what kinds of political imagination are required when justice cannot be secured through recognition by the very institutions that structure the harm?",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_syllabus_--_zeina_ali.pdf"
+            ],
+            "register_url": "https://forms.gle/1pwSqqrChYhdjGvT7",
+            "own_page": null
+          },
+          {
+            "title": "Beyond the Binary: Bridging the Gap Between Nature and Culture",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmad Mahana",
+                "email": null,
+                "bio": "Ahmad Mahana is an MA candidate of the Sociology-Anthropology degree program at the American University in Cairo. With a regional focus on Saint Catherine, South Sinai, Ahmad’s work deploys ethnographic fieldwork methods to explore the ecological and sociological networks involved in reproducing the region’s sacred landscape. By considering both human and nonhuman actors as ethnographic subjects, his work aims to deconstruct modern dualisms of nature-culture by presenting alternative modes of being in and of the world inspired by contemporary Bedouin sociality, Islamic cosmology, and desert ecologies."
+              }
+            ],
+            "schedule_text": "Offline. Starts on the 24th of February, on Tuesdays, 6 to 8:30 pm, for eight weeks.",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 8,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "“The relationship between Nature and Culture is the key intellectual problem of the 21st century”\n\nJohanthan Bates\n\nThroughout the span of human history, no period has ever alienated humankind from the natural world as much as the modern era. In it, the advent of scientific discovery, the Industrial Revolution, and technological advancement have achieved a dual effect—one that simultaneously furthered the cause of human progress while accelerating the rate of planetary destruction. While these material conditions have certainly deepened the rift between society and nature, the origin of this division precedes our desire to exploit the planet of its resources and returns to a fundamental belief that nature is the antagonist of human culture.\n\nIn this course, students will learn to trace the origins of the nature-culture binary and understand its impacts in shaping contemporary human-environmental relations. By peering through the lens of environmental anthropology, this course aims to provide students with the theoretical tools necessary to critique and explore the discipline’s various proposals to ultimately bridge the gap between us and our perennial home.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/beyond_the_binary.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/1pwSqqrChYhdjGvT7",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "sha256": "b38ebd6456bbe214016fc46bf3a9383d1833c617cae072056fe2d1757f8b1a7b",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "On placemaking",
+      "title_ar": "حول خلق المكان : اﻹنتاج اﻹجتماعي للفضاء",
+      "subtitle": "and the social production of space",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Karim-Yassin GOESSINGER",
+          "email": "karim@ci-las.org",
+          "bio": "My name is Karim-Yassin GOESSINGER. Born and schooled in Frankfurt, Germany, I was raised by an Austrian father with strong ties to Vienna and an Egyptian mother with even stronger ties to Cairo. After attending a liberal arts college in the Netherlands, a Catholic University in Rio de Janeiro and the Institute of Political Studies in Paris, and working with a range of development agencies, notably in Latin America and on Africa, I decided to try my luck at synthesising my higher educational and professional experiences in what resulted in the creation of the Cairo Institute of Liberal Arts and Sciences CILAS. This synthesis was informed by my mostly joyous academic training in political philosophy, social anthropology and urban sociology, and my predominantly disillusioning insights into the development world. CILAS now operates as a scholarly cooperative guided by the principles of play, radical equality, ignorance, post-disciplinarity and diversity. I've served as founding director and teaching fellow at CILAS with a short gig with the Sociology Unit at the American University in Cairo."
+        }
+      ],
+      "schedule_text": "Wednesdays: 10:00-12:30 (mornings) or 17:30-20:00 (evenings).",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "Placemaking represents a comeback for community. The iterative actions and collaborations inherent in the making of places nourish communities and empower people.\n\nThe so called spatial turn in the social sciences continues to provide us with some of the most compelling theoretical insight into the use of land, the production of space and the making of place. Attempts to humanize the process of spatial planning and design have evolved with the re-emergence of the importance of place and post-colonial discourse. This course brings to light the potential inherent to engaging creative, collaborative and ecological practices within placemaking processes and reminds us of their importance in combating the negative impacts of planetary urbanisation, anthropocentric climate change and social justice and cohesion.\n\nBroader philosophical definitions such as ‘retrospective world-building’, the creation of a meaningful humanly authored world, ‘daily acts of renovating, maintaining, and representing the places that sustain us’ and ‘to create a sense of belonging through place’ probe the relationship between professionals, residents and the practice of placemaking. What placemaking knowledges and projects are there to learn from? How might practices and processes of placemaking from non-Western countries, Indigenous practices, feminist practices and others inform our efforts to make places and create spaces?\n\nWe will engage with the writings and projects of social theorists of space, urban anthropologists and planners, critical geographers and radical cartographers.\n\nWhat to expect\n\nPart of this course will be two outdoor activities in and around Cairo and presentations on placemaking practices.\n\nيعبر خلق المكان عن عودة الجماعة اﻷهلية. كما أن اﻷفعال التكرارية والمشاركات متضمنة في خلق أماكن تحيي الجماعات اﻷهلية وتعاضد الناس.\n\nيستمر التحول المسمى بالمكاني في العلوم اﻹجتماعية في تقديم بعض من الرؤي النظرية اﻷكثر جاذبية في استخدام العقار وخلق الفضاء والمكان. تطورت محاولات أنسنة عملية التخطيط والتصميم المكاني مع عودة إشراق أهمية المكان والخطاب ما بعد اﻹستعماري. يسلط هذا المساق الضوء على اﻹمكانية المتضمنة في ضم الممارسات اﻹبداعية والتعاونية والبيئية إلى عمليات خلق المكان وتذكرنا بأهميتها في مواجهة اﻵثار السلبية للتحضر الكوني والتغير المناخي والعدالة اﻹجتماعية والتجانس.\n\nتتحسس العلاقة بين الخبراء والسكان وممارسة خلق المكان مفاهيم فلسفية عامة مثل \"بناء العالم بأثر رجعي\" وخلق عالم ذو معنى إنساني و\"الأفعال اليومية من تجديد وصيانة وتمثيل الأماكن التي نبقى فيها\" و\"خلق إحساس بالانتماء من خلال المكان\". ما هي مشروعات خلق المكان ومعارفها التي يمكن أن نتعلم منها؟ كيف يمكن لممارسات خلق المكان وعملياته من البلدان غير الغربية وممارسات السكان الأصليين والنسوية وغيرها أن تفيد جهودنا في خلق الأماكن والفضاءات؟\n\nسنشتبك في هذا المساق مع كتابات ومشروعات المنظرين اﻹجتماعيين للفضاء والمخططين العمرانيين وعلماء اﻷنثروبولوجيا الحضرية وعلماء الجغرافيا النقدية ورسامي الخرائط الراديكاليين.\n\nماذا نتوقع؟\n\nجزء من أنشطة المساق سيتضمن نشاطين خارجيين في القاهرة وحولها وعروض في ممارسات خلق المكان",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+      "own_page": null
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "sha256": "e8f4e2038351af3d7194533aa8f7277473461b20ba1a72eedcececc348c597d8",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": null
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "sha256": "b406e594f7ab8e25f0804e3ec5f509c235c0b00b434d3f6a09ffb880f36db809",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Semester 2024 (Cairo)",
+        "season": "spring",
+        "start_year": 2024,
+        "start_date": null,
+        "deadline": "2024-04-05",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "تاريخ المحاكم الشرعية في النصف الأول من القرن العشرين",
+            "title_ar": "تاريخ المحاكم الشرعية في النصف الأول من القرن العشرين",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "يامن نوح",
+                "email": "yamen_nouh@aucegypt.edu",
+                "bio": "هو طبيب أسنان وباحث متخصص في الدراسات الإسلامية. درس الأنثروبولوجيا في جامعة القاهرة ما بين عامي 2012 و2016، ثم التحق ببرنامج ماجستير الدراسات العربية والإسلامية بالجامعة الأمريكية بالقاهرة عام 2018، وتخرج منه عام 2023، مقدما رسالة بعنوان \"مدرسة القضاء الشرعي: إصلاح المحاكم الشرعية والتحديث القانوني في مصر.\" تتركز اهتماماته البحثية في عدة موضوعات، منها تاريخ القضاء الشرعي، وتحولات الفكر الإسلامي في العصر الحديث، وتاريخ القانون والقضاء في مصر في القرنين التاسع عشر والعشرين. نشط يامن كمحاضر ومدرب على المستوى الإقليمي بالشراكة مع عدة مؤسسات، منها المنبر الدولي للحوار الإسلامي بلندن، والرابطة العربية للتربويين التنويريين بعمان، والتي يشغل كذلك منصب عضو بمجلس أمنائها، وله عدد من الأوراق البحثية المنشورة بالعربية والإنجليزية."
+              }
+            ],
+            "schedule_text": "Offline, every Sunday at 6 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-21",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "تقدم هذه الدورة فرصة للتعرف على تاريخ المحاكم الشرعية التي كانت موجودة في مصر حتى منتصف القرن العشرين، بوصفها مدخلا هاما لاستكشاف جوانب مختلفة من الحياة الاجتماعية والثقافية والسياسية في مصر خلال هذه الفترة الهامة. وتستخدم هذه الدورة تقنية تفاعلية لدراسة عدة نماذج من قضايا المحاكم الشرعية، وذلك عن طريق التمثيل المسرحي الجماعي لهذه القضايا، مع إدارة نقاشات تفاعلية حولها.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/يامن.pdf"
+            ],
+            "register_url": "https://forms.gle/Seoj5E61bNSECfA26",
+            "own_page": null
+          },
+          {
+            "title": "International Law: An Autopsy",
+            "title_ar": null,
+            "subtitle": "Political Realism and The Next Global Legal Order",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Marouan",
+                "email": "marouan.moussa@parisnanterre.fr",
+                "bio": "holds a Master’s degree in Social and Human Sciences from the Paris-Nanterre University, and is specialized in Philosophy of Law. He has presented two dissertations, one set in the context of the Lippmann-Dewey debate and the question of expertise; the other on Carl Schmitt and the concept of legitimacy.\n\nOriginally a Computer Science graduate, his passion for philosophy eventually got the best of him. This pushed him to establish the ‘Meeting Point of Civilizations’ NGO, with a focus on promoting philosophy among the general public in Egypt, and the project took a more concrete shape in 2015 with the launching of “Falsafa bel Baladi”, the first platform exclusively dedicated to Public Philosophy in Egypt.\n\nIn addition to academic philosophy and offering numerous courses in the field, Marouan is actively involved in “applied philosophy” as a way to self-discovery, through the revival of the Socratic method. This is inspired by the works of Pierre Hadot and draws on the methodology of Oscar Brenifier’s Institute of Philosophical Practices.\n\nMarouan currently teaches philosophy in a private school and has previously worked as an advisor for the GIZ in the field of migration. His upcoming PhD thesis focuses on new geopolitical spaces and the potential future shape of the global legal order."
+              }
+            ],
+            "schedule_text": "Offline, every Tuesday at 6 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "In an era where an increasing number of nations are brazenly flouting international law, Carl Schmitt's seminal work The Nomos of the Earth gains new relevance as we grapple with the implications of what more and more looks like the eve of a profound shift. Albeit radical, the idea that international law is dead, at least as we know it, cannot be characterized as fringe thinking anymore. Accordingly, participants will delve into the intricate interplay between Schmitt's political realism and contemporary challenges to the international legal framework. By scrutinizing Schmitt's insights through the lens of today's geopolitical landscape, participants will gain a deeper understanding of the complexities surrounding the advanced state of erosion of international law, and its potential replacement by a new paradigm.\n\nDrawing from Schmitt's concept of the \"Nomos,\" which presides over international law, this course explores how the global legal order has already gone through successive paradigm shifts. Key topics include the resurgence of nationalist ideologies, the return to the warring-states model in international relations, and the general decay of multilateral institutions. Participants will critically assess the implications of these developments on the future of international law and explore potential pathways towards a new global legal order. By confronting the challenges posed by Schmitt's provocative insights, participants will cultivate a nuanced understanding of the evolving dynamics of global governance and the imperatives of political realism in shaping the next age of geopolitics.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow__international_law._an_autopsy._-_course_description__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/Seoj5E61bNSECfA26",
+            "own_page": null
+          },
+          {
+            "title": "Anthropology and Storytelling Along the Water’s Edge",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Soha",
+                "email": "somohsen2023@gmail.com",
+                "bio": "is currently a PhD Candidate in Sociocultural Anthropology at the University of California, Davis. She completed her Master's degree at the American University in Cairo in 2018, and in her past life, she worked in publishing. All along, she has maintained a strong passion for story-telling, friends-making, cake-baking, and cats. Her current work looks at the representations of Mediterranean ecologies in Egyptian cultural production.\n\nسهى حاليا مرشحة لدرجة الدكتوراه في الأنثروبولوجيا الاجتماعية والثقافية في جامعة كاليفورنيا، ديفيس. حصلت على درجة الماجستير في الجامعة الأمريكية بالقاهرة عام 2018، وعملت في حياتها السابقة في مجال النشر. طوال الوقت، حافظت على شغفها القوي برواية القصص، وتكوين الأصدقاء، وخبز الكعك، وتربية القطط. ويتناول عملها الحالي تمثيلات بيئة البحر الأبيض المتوسط في الإنتاج الثقافي المصري."
+              }
+            ],
+            "schedule_text": "Offline, every Wednesday at 5 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-05-01",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "They can be opaque or crystal clear, familiar or mysterious, haunting, joyful, dreamy, muddy, bounded or endless; waterbodies are excellent sites for exploring the relationship between humans, and their various conceptions of culture and nature.\n\nWaterscapes both enact and witness different histories and imaginations in their perpetual interaction with land. At the same time, they figure as key players in discourses of the political, economic, environmental, and social worlds. Bodies of water in Egypt are particularly rich; seas, rivers, and lakes, all of which played a significant role not only in the foundation of the cities that we inhabit today but continue to impact our everyday lives as at once sources of life, sites of memory, zones of connectivity and movement, territories of danger, spectacles of beauty, and more.\n\nAnthropology of water is a relatively recent yet incredibly vast field that deals with the inexhaustible variation of water’s semiotic, historical, political and material forms, and in this course we will take this multiplicity as our starting point. Throughout the course, we will investigate a number of topics related to ecological, historical, poetic, material, scientific, and sociocultural aspects of waterscapes. The course draws on readings that interrogate the boundaries between fact and fiction, theory and practice. Our readings will not be limited to the discipline of anthropology, instead, they will include discussions from studies of ecology, media, geography, science, and technology as well as literature and poetry.\n\nBy the end of the course, students are expected to complete a paper dealing with their chosen “body of water” in Egypt. We will workshop the texts/ projects on weekly basis. During the 2nd half of each class, the group will come together as a “writing collective”, fostering a community of mutual support. Each person will read their work aloud while the other listen attentively, taking notes to offer creative concepts/ connections that come up in and across the readings. After 4 readings, we will discuss the four pieces together, then move on to the following four, and so on.\n\nWe will proceed through a series of exercises and workshops as we think about ethnography as a form of writing, a method of witnessing, and as storytelling. Your writings, though non-fiction, will be creative in its effort to evoke and speculate on worlds that are human but also more than human, real but also imagined, present but every-so- temporarily. Ethnography, ultimately, is a descriptive and evocative form of writing that engages ways of living in complex assemblages of forms, forces, tenses, bodies, practices, sensibilities, structures and materialities.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow-_writing_water_cilas__2_.pdf"
+            ],
+            "register_url": "https://forms.gle/Seoj5E61bNSECfA26",
+            "own_page": null
+          },
+          {
+            "title": "Dionysus and the Devil: Occultism, Witchcraft, and other “mysteries”",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa DARDIR",
+                "email": "ahmaddiaa@gmail.com",
+                "bio": "holds a PhD from Columbia University in Middle Eastern Studies and the highly esteemed position of “Sadīq CILAS.” His research focuses on questions of colonialism, subjectivity, and power. As a CILAS fellow, Ahmed has conducted and coordinated various courses and workshops in the Humanities combining Political Theory, History and Literature, including two workshops on Shakespeare. Ahmed is also a huge fan of theatre and has some experience in the field.\n\nأحمد ضياء هو أحد مؤسسي معهد The Institute for De-Colonising Theory - IDCtheory –IDCtheory. حصل على درجة الدكتوراه من جامعة كولومبيا في دراسات الشرق الأوسط واللقب المرموق \"صديق سيلاس\". تركز أبحاثه على مسائل الاستعمار والذاتية والسلطة. بصفته زميلًا في سيلاس، قام أحمد بإجراء وتنسيق العديد من الدورات وورش العمل في العلوم الإنسانية التي تجمع بين النظرية السياسية والتاريخ والأدب. أحمد أيضًا من أشد المعجبين بالمسرح ولديه بعض الخبرة في هذا المجال."
+              }
+            ],
+            "schedule_text": "Offline, every Monday at 6 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-22",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Between the autumn of 1996 and the spring of 1997, Egypt witnessed a “Satanic panic.” The allegation that Heavy Metal concerts served as a cover up for Satanist rituals soon turned into a moral scare followed by a wave of arrests—and by an iconically nonsensical set of television and movie scenes about the ‘devil worshipers’. This was an echo of a moral panic that gripped the west in the 1980s and that revolved around occultism, Satanism, youth culture, and, among other things, heavy metal music. News reports, horror movies, religious sermons (with the newborn phenomenon of televangelism) and pocket novels all mongered the fear that beyond society’s gaze the youth are engaging in satanic rituals. The themes through which this satanic scare was imagined were not new. In fact the history of how “Satanism” and “Occultism” was imagined provides an interesting example of how certain “tropes” are relayed from one epoch to another. In Greco-Roman antiquity similar motifs animated the fantasies concerning the rituals known as the Dionysian or Bacchic mysteries, the orgia (from which the contemporary word orgy is driven). The same motifs returned in the medieval imagination of cults of witchcraft. In this course we study the histories and representations of the orgies of Dionysus, the frenzy of the witches, and the cults of Satanism (in order or out of order, depending on the class preference).\n\nThrough these snapshots of pop-culture, we will study not only the transmission of cultural and literary themes and motifs, but more importantly how power imagines what lies beyond its gaze. We will investigate the political role played by the otherwise mundane representations of the deviant and the transgressive. We will see how racism,sexism, orientalism, and other dominant prejudices all shaped and crystallized around representations of, and the moral panics surrounding, Dionysian and Satanic cults.\n\nThis course involves a certain level of student participation and research.\n\nWe will be reading together the introduction of a book titled Satanic Panic (awesome book btw!) The book relates the phenomenon of the Satanic Panic in the 1980s to various other social phenomena. Students then will be asked to pick a chapter of their interest, and prepare a presentation that looks into the themes and questions raised by the chapter and how to relate them to other contexts (for example to other moral panics, to more recent historical examples, etc.)\n\nCourse Objectives\n\nIn addition to learning about the interesting, sometimes scandalous, sometimes dark, but always informative history of Dionysian and Satanic cults, by the end of this course students will also learn\n\n- How to think of motifs that recur throughout history.\n\n- Some of the historical, political, literary, and psychoanalytic tools that conceptualize this recurrence\n\n- To read “cultural texts” like films, newspapers reports, and low brow literature side by side with serious academic historical and theoretical texts\n\n- How to relate pop culture to larger questions of gender, race, class, power, surveillance, and discipline\n\n- To compare, contrast, and relate to one another different snapshots from different times and societies (similar to what the anthropologists call the diachronic method)\n\n- To analyze voyeuristic modes of power and how they imagine and seek to discipline what transpires beyond their gaze",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/dionysus_and_the_devil_occultism_witchcraft_and_other_“mysteries”.pdf"
+            ],
+            "register_url": "https://forms.gle/Seoj5E61bNSECfA26",
+            "own_page": null
+          },
+          {
+            "title": "Unveiling Heidegger: Exploring Truth, Art, Technology, and Metaphysics",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sherif",
+                "email": "sherifkhalil92@gmail.com",
+                "bio": "is currently finishing his MA in philosophy at AUC. For seven years, he worked as a teaching and research assistant at the same university and as a translator. Sherif was also a student at CILAS. Together with his beloved wife, Mae, he served as the Philosophy residential fellow in CILAS this year.\n\nيقوم شريف حالياً بإنهاء درجة الماجستير في الفلسفة بالجامعة الأمريكية بالقاهرة. عمل لمدة سبع سنوات كمساعد تدريس وبحث في نفس الجامعة وكمترجم. كان شريف أيضا طالبًا في سيلاس. وسيعمل مع زوجته الحبيبة مي كزميل فلسفة مقيم في سيلاس هذا العام."
+              }
+            ],
+            "schedule_text": "Offline, every Tuesday at 6 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "In this course, we will aim at closely reading four of the most important essays written by arguably the most important philosopher in the 20th century, Martin Heidegger, tackling the following subjects: Truth, Art, Technology, and Metaphysics.\n\nIn each of his essays, Heidegger takes us on a fascinating journey in which he subtly dismantles the commonplace views about the subject and offers his profound/poetic analysis instead. (Be reminded that, as a student in this class, you will always be asked to bring in your own views and encouraged to disagree with his arguments)\n\nAlthough such topics seem to be distinct from each other and each is interesting enough on its own, what might even be more interesting – and, of course, demanding – is that we will aim at spotting the unity within multiplicity; that is, towards the end of the course, we will try to find out the unifying thread that essentially gathers such topics.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/unveiling_heidegger.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/Seoj5E61bNSECfA26",
+            "own_page": null
+          },
+          {
+            "title": "Medical Anthropology and Doing Social Research: Amplifying Voices and Putting Theory into Practice",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sohayla",
+                "email": "sohaylaelfakahany@gmail.com",
+                "bio": "is an experienced social researcher, medical anthropologist, and sexual and reproductive health and rights specialist, based in Cairo, Egypt. She is a research consultant at the American University of Beirut, and she is also a founding member of the East Mediterranean Federation of Sexual Health (EMFeSH). With her advocacy roles, she is focused on intersectionality, structural violence, and gender justice. Throughout her career, she worked on producing journal articles, technical reports, proposals, case studies, evaluation reports, and training manuals. Her research style merges theoretical and fieldwork approaches. She holds an M.A in Social Anthropology and a B.A in Political Science from the American University in Cairo."
+              }
+            ],
+            "schedule_text": "Hybrid, every Monday at 5:30 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "17:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2024-04-22",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "“In every community there is work to be done. In every nation, there are wounds to heal. In every heart there is the power to do it.”\n\nMarianne Williamson\n\nThis course introduces students to the field of medical anthropology, exploring its historical and contemporary approaches. Students will gain an understanding of the social and cultural determinants of health and illness, and how to conduct person-centered social research. The course will also cover the basics of writing academic articles and reports.\n\nSome of the specific topics that will be covered include:\n\n• What is medical anthropology and what is its approach?\n\n• What is medical anthropology and what is its contemporary approach?\n\n• How can we understand the social and cultural determinants of health and illness?\n\n• What is the difference between qualitative and quantitative research methods?\n\n• What are the frameworks and the tools used to conduct person-centered social research?\n\n• How to balance between voices from the field and theory?\n\n• What is the role of humanitarian aid in today’s world?\n\nBy the end of the course, students will be able to:\n\n• Cover sufficient conceptual and background material on the selected topic.\n\n• Reflect on the literature directly related to theories of medical anthropology.\n\n• Compare and contrast between different research methods and tools.\n\n• Understand how to write academic articles and reports.\n\n• Conduct social research on a topic of the student's choice.\n\nThis course is a great option for students who are interested in learning more about health, culture, development, and society. It is also a valuable introduction to the field of medical anthropology and social research.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/sohayla_-_cilas_syllabus_spring_24__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/Seoj5E61bNSECfA26",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

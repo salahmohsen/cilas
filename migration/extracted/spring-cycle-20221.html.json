@@ -1,0 +1,261 @@
+{
+  "sha256": "95d28d8248c4cae1657bba0ded138414a8463ec8c9a0e8d8ff0bc4deb9f3c040",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring 2022",
+        "season": "spring",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-05-11",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Is she tough enough?",
+            "title_ar": null,
+            "subtitle": "Womanizing leadership, #bossladies",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Maïa Bouatouch-Legrand",
+                "email": "maia.bouatouch.legrand@gmail.com",
+                "bio": "Maïa Bouatouch-Legrand is an independent researcher who enjoys observing, brainstorming, teaching, learning and discovering. Trained as a qualified lawyer, she has a hybrid background in law and political science as well as in sociology. She has specific interests in gender studies, migrations, labor and globalization. Her work experiences in international cooperation took her around the world and eventually to Egypt, where she stayed longer than expected. She recently became addicted to bird watching, which she recommends warmly."
+              }
+            ],
+            "schedule_text": "Thursdays 11am-1pm, offline, except for the last two classes (online)",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "11:00",
+            "end_time": "13:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "Frowning eyebrows. “Is she tough enough for the job?” What do Margaret Thatcher, Beyoncé and Sheryl Sandberg have in common?\n\nGender mainstreaming policies, parity requirements in boards and women in entrepreneurship programs have significantly increased over the past few years, with a consensus on the fact that women should have more opportunities to actually lead. Nonetheless, women do remain a minority in leadership positions across both private and public organizations around the globe. How do gender, labor, independence and hierarchies interplay?\n\nLooking at a global phenomenon with a focus on Egypt, I offer an exploration of the figure of the “womanized” leader, drawing from coaches programs, international organizations’ literature as well as academic writings from Arlie Hochschild, Judith Baxter and others. How about us starting with trying to define labor and leadership? Let us Lean in !",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/is_she_tough_enough.pdf"
+            ],
+            "register_url": "https://forms.gle/3wQjEPeQN9qXHzL66",
+            "own_page": null
+          },
+          {
+            "title": "The Threshold of Fire: Incendiarism, Hysteria, and Civilization",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa Dardir",
+                "email": "add2131@columbia.edu",
+                "bio": "Ahmed Diaa Dardir holds a PhD in Middle East Studies from Columbia University. He has taught and facilitated many workshops at CILAS and holds the highly esteemed position of “Sadīq CILAS.”"
+              }
+            ],
+            "schedule_text": "Sundays 6-8pm, online",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Fire is imagined as the first invention of “man.” It inaugurates humanity into technology, it fuels civilization, and arms its march and its ability to defend itself.\n\nIt is also imagined as a destructive force, something that flows out of control, defies logic and subverts order, a licentious form that is reminiscent of, according to the predominant modernistprejudices, primitive populations, children, and women.\n\nThis course is about how, in the hegemonic western thought, there exists a hierarchy between two kinds of fire: the first rational, regimented (in firearms and steam engines), and productive; the fire of the modern state, of western superpowers, and of the white man, mirroring the dominant understandings of civilization and masculinity. The other irrational, licentious, hysterical, and destructive, mirroring the dominant imagination of primtivity and hysteria, the fire of non-Europeans, of women, and of revolutionary crowds.\n\nThrough the lens of fire, this course examines the hierarchical dichotomies that are central to western—and more broadly modern— thought: the state vs. revolution (or the crowd), the civilized vs. the savage, the proper vs. the licentious, the sane vs. the hysterical, and the masculine vs. the feminine.\n\nTo trouble this modernist/Western typology of fire, and of human forms, we will pay special attention to how fire is represented at the frontlines of the colonial encounter, at the frontlines between revolution and counterrevolution, and the frontlines between sexist discourses and women reclaiming their bodies and agencies. This archive will hopefully allow us to both deconstruct the hegemonic narrative and look at the ways whereby subaltern groups have internalized, appropriated, or wholeheartedly subverted this hegemony.\n\nMy aim is to counterpoise the course’s theory-heavy content with a hands on experience with archival material. This will turn some of our sessions into a virtual research workshop, and an experiment with deconstructing and reconstructing narrative.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/fire_course.pdf"
+            ],
+            "register_url": "https://forms.gle/3wQjEPeQN9qXHzL66",
+            "own_page": null
+          },
+          {
+            "title": "Making the Strange Familiar & the Familiar Strange",
+            "title_ar": null,
+            "subtitle": "Investigating the Social behind Spiritualityand the Unseenthrough Anthropological Fieldwork",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sohayla EL FAKAHANY",
+                "email": "sohaylaelfakahany@gmail.com",
+                "bio": "Sohayla EL FAKAHANY is a healing practitioner at heart and an academic by practice. Her MA thesis ‘Meanings of Mindfulness and Spiritual Awakening: Affliction and Holistic Healing in Contemporary Cairo’ analyzes spiritual practices and debates in conversation with medical, religious, and magical anthropology as they pertain to the growing interest in alternative and complementary healing in Egypt."
+              }
+            ],
+            "schedule_text": "Hybrid (Online and Offline), 6 sessions and a presentation day; meetings: Tuesdays 6:30pm – 9:30pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:30",
+            "end_time": "21:30",
+            "weeks": 6,
+            "start_date": null,
+            "location": [
+              "HYBRID"
+            ],
+            "description": "Anthropology is the study of people, cultures, and the human condition. This course introduces the study of anthropology in a practical hands-on manner. It’s all about “making the strange familiar and the familiar strange”. The participants will be encouraged to engage in discussions about anthropology as a field, otherness, rapport, access, among other important facets of conducting social qualitative research. They will also be engaging practically with writing fieldnotes, conducting participant observation and interviews, and editing their work to come up with a mini ethnography. This all will be covered with the theme: Spirituality and the Unseen by investigating rituals, activities, and experiences that are considered spiritual.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/sohayla_-_fieldwork_course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/3wQjEPeQN9qXHzL66",
+            "own_page": null
+          },
+          {
+            "title": "Towards a History of Islamicate Print",
+            "title_ar": null,
+            "subtitle": "Revolution and Continuity between Colonialism, Religion, and Gender",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Mariam Elashmawy",
+                "email": "maryemashmawi@gmail.com",
+                "bio": "Mariam Elashmawy is a doctoral student in Arabic studies at Freïe Universität Berlin. She has a MA in Arabic Studies with a specialization in Middle East history from the American University in Cairo. She is currently the managing editor at Alif: Journal of Comparative Poetics. Her research interests focus on print and manuscript culture, intellectual Islamic history, and Sufism."
+              }
+            ],
+            "schedule_text": "Offline, Wednesdays 6-8 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Scholarship on the advent of printing ever since Elizabeth Eisenstein's path breaking work on the Gutenberg print shop, has focused its preliminary lens on the technological potential and capacity of movable type print. Eistenstein’s revolutionary framework of print received its fair share of criticism in the field, notably from Anthony Grafton and Adrian Johns. They contested Eistenstein’s approach to analyzing the effects of print as simply the force of technological development uprooting the very basis of society, leading to the proliferation of movements in early modern Europe. Elizabeth Eisenstein’s work and the subsequent scholarship on print has impacted ideas about the role of print in Islamicate societies. As a result, the considerable gap in timing between the adoption in Europe in the fifteenth century, and its adoption in the early nineteenth- century in the Ottoman empire posed questions for scholars such as why the Ottoman Empire had withheld the adoption of printing in its own part of the world. We aim to examine this notion of decline theory when it comes to print together, as well as shift the question from why print was adopted so late to ask ourselves how and in what ways it was adopted.\n\nThis course proposes an understanding of printing that contextualizes a set of broader societal systems and actors that shaped the Islamicate experience of print. Rather than reiterating the framing of printing as a technological, revolutionary drive forward from script to print, I set out during this course, through in-class discussions, the course-long assignment, and the primary sources we engage with, to understand the role that people–such as editors, patrons, and scholars– played in shaping printing initiatives. As a burgeoning enterprise during the late nineteenth- century, publishing houses in the Islamicate world began to circulate texts as a response to intellectual, economic, and social demands for texts in society. What was this demand for the texts in print mirroring in society? How did publishing initiatives meet such growing calls? how was print used to engage with discourse on religion, modernity, gender, and colonialism? And most importantly, who were the actors and communities central to publishing and book production during this period?",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_elashmawy_course_flow.pdf"
+            ],
+            "register_url": null,
+            "own_page": null
+          },
+          {
+            "title": "The Whatness of Cinematic Urbanism",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Taher Abdel-Ghani",
+                "email": "tahmahmoud@msa.edu.eg",
+                "bio": "Taher Abdel-Ghani is an architect, an urban researcher, an award winning independent filmmaker, an assistant lecturer at the Architecture department at MSA University, and an advisory member on Public Space for City Space Architecture. His research focuses on the analytical representation of cities in cinema, the intervention of art in public spaces, and socio-spatial narratives of urban space. His academic publications induces an interdisciplinary approach of cinematic urbanism with other fields, such as Sociology and Education. He also serves as a reviewer and editor on a few academic platforms and co-chairs the AESOP 2022 Annual Congress in Estonia. Additionally, his short films have been screened across Europe and USA. His 2019 short documentary, Cold Dissent, has won the Best Short Film award at the 5th Biennale Spazio Pubblico Festival in Rome. His 2020 short film, Prosody: An Ode to the City, was nominated for the Audience Award at the 1st City Space Architecture Film Festival in Bologna."
+              }
+            ],
+            "schedule_text": "Mondays 6-8pm, offline",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The aim of this course is to fuel further curiosity in discovering and understanding cities through cinematic images; to use films as tools to analyze the spatial relationships between society and its surrounding urban scenery. The main idea is not mere camera movement and angles, rather it is the underlying narrative that reveals hidden elements of our cities and societies. The course will explore the very essence of cinematic urbanism through an in-depth analysis of the word ‘representation’. Classes will involve reading and analyzing theoretical texts, as well as watching some snippets of Egyptian movie scenes. Participants will be able to trace the changes in how Egyptian cinema portrayed the city. They will be able to come up with an intellectual blueprint for identifying and analyzing socio-spatial narratives through film images.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_preliminary_course_outline.pdf"
+            ],
+            "register_url": "https://forms.gle/3wQjEPeQN9qXHzL66",
+            "own_page": null
+          },
+          {
+            "title": "Approaching Performativity and Culture in Modern Egypt",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Beshouy Botros",
+                "email": "beshouy.botros@yale.edu",
+                "bio": "Beshouy Botros is a social and cultural historian of the modern Middle East and collaborative art-maker interested in questions of sexual and racial alterity, histories of science and medicine, and comparative/ connected studies of imperialism. Before starting their PhD in History at Yale University Beshouy worked as a social worker for a refugee resettlement agency and completed an MA in Gender and Women’s studies at Utrecht University. In addition to their scholarship Beshouy maintains an active performance practice. They continue to curate programs at the Arab Film and Media Institute. Grounded in queer and women of color feminisms and driven by a commitment to affirmative critique, Beshouy hopes to facilitate creative, critical, and egalitarian seminars."
+              }
+            ],
+            "schedule_text": "Saturdays 6-8pm, offline; starts June 5th",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-06-05",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course considers how culture is constituted as an object of analysis. By working to connect cultural commodities, artifacts, artisanal crafts, and other literal objects, with literary and historical representations of and by twentieth century Egyptian cultural icons, (Taha Hussein, Leila Mourad and others), and contemporary performance artists in Cairo, we will scavenge for methodologies, theoretical approaches, and sources that trouble the simple dichotomies of folk and haute culture and authentically local and cosmopolitan visions. We will consider how different scholars (mostly historians and literary theorists) have sketched out the meanings of culture and cultural agents as more than simply epiphenomenal. Because cultural changes or movements have often been described and studied as responses to shifting political and economic structures, it has been difficult to approach culture as a productive domain of struggle. The second dichotomy we will seek to undo is that between purely materialist and aesthetic understandings of culture.\n\nAlongside our class discussions, students will be encouraged to present on cultural objects of their own choosing/making by bringing in crafts/films/songs/performance pieces they are working through as cultural critics or creative practitioners or simply things they like. We will also plan for a series of class trips to exhibits, shows, and artists’ studios. My hope is that we can plan a project, (a workshop, a performance, a small booklet of the material we’ve shared) or that students can work in smaller groups to plan projects, that seek to reimagine Egyptian cultural futurities. Ultimately my intention is for this course to give us a deeper sense of our responsibilities and functions as cultural consumers and cultural agents.",
+            "flow_links": [
+              "https://docs.google.com/document/d/1-6TyVhAWTYUW5zlzvU-4OTxU03i9neqXIx9LGEmwEJg/edit"
+            ],
+            "register_url": "https://forms.gle/3wQjEPeQN9qXHzL66",
+            "own_page": null
+          },
+          {
+            "title": "Intercessing with artistic research",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Côme Ledésert",
+                "email": "c.ledesert@gmail.com",
+                "bio": "Dr. Côme Ledésert is a filmmaker, holder of two Master degrees in Urban Studies at Sciences Po, Paris, France and in Visual and Media Anthropology at Freie Universität, Berlin, Germany. He completed his PhD in artistic research from the University of Westminster, London, UK, under the supervision of Professor Joshua Oppenheimer, Oscar- nominated filmmaker (The Act of Killing, The Look of Silence). His research interests are interdisciplinary, at the intersection of Film and Performance Studies, Philosophy, Psychiatry and Anthropology. He is a practitioner of art/science research, experimenting new models of working dealing with performative nonfiction filmmaking strategies, mental health narratives and long durational performance art."
+              }
+            ],
+            "schedule_text": "Tuesday mornings 10:00-12:00, online",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "10:00",
+            "end_time": "12:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "\"Intercessing with artistic research” is an interdisciplinary class that offers insights into minor performative artistic research strategies. While continuously asking what else artistic research can do, the class explores the multiplicities of processes operating in the periphery of doing research and making art. How can research and art still provoke and reveal minor performance in an era of social media and image consumption? “Intercessing with artistic research” is a journey through nondisciplinary thinking, beyond the notion of human as we know it. Starting with questions about human capacities and ethics in research, the class becomes a proposition to think beyond the human mind and body and invent gestures that are not yet.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow_intercessing_flow_with_artistic_research_-_c._ledésert.pdf"
+            ],
+            "register_url": "https://forms.gle/3wQjEPeQN9qXHzL66",
+            "own_page": null
+          },
+          {
+            "title": "The Shadow of Carl Schmitt",
+            "title_ar": null,
+            "subtitle": "On Questions of Legality and Legitimacy",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Marouan",
+                "email": "marouan.moussa@parisnanterre.fr",
+                "bio": "Marouan holds a Master’s degree in Social and Human Sciences from the Paris-Nanterre University, and is specialized in Philosophy of Law. He has presented two dissertations, one set in the context of the Lippmann-Dewey debate and the question of expertise; the other on Carl Schmitt and the concept of legitimacy.\n\nOriginally a Computer Science graduate, his passion for philosophy eventually got the best of him. This pushed him to establish the ‘Meeting Point of Civilizations’ NGO, with a focus on promoting philosophy among the general public in Egypt. In addition to academic philosophy and offering numerous courses in the field, he is actively involved in Applied Philosophy as a way of self-discovery, through the revival of the Socratic method. This is inspired by the works of Pierre Hadot and draws on the methodology of Oscar Brenifier’s Institute of Philosophical Practices. The project took a more concrete shape in 2015 with the launching of “Falsafa bel Baladi”, the first platform exclusively dedicated to Public Philosophy in Egypt.\n\nMarouan currently works as an advisor in the field of migration and is actively involved in related conceptual research. He leads the “Thinking Migration” task force in the GIZ’s Migration Portfolio. He will start his PhD thesis this year, with a focus on migration and international law. A strategist by nature and a tactician by trade, he seeks to harmonize both worlds, to benefit the people he works with and his community at large."
+              }
+            ],
+            "schedule_text": "Thursdays 6-8pm, offline",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course revolves around one of the most controversial — albeit unavoidable — political thinkers of the twentieth century: Carl Schmitt. To the beginner, the name of Carl Schmitt suggests, after a few readings, a worrisome and outrageous thought, with shock-phrases such as “the sovereign is he who decides on the exception” and “the concept of the state presupposes the concept of the political”. However, a more diffuse concept is systematically found at the root of Carl Schmitt's theoretical wanderings: Legitimacy.\n\nUsing the enormous legacy of debates Carl Schmitt has left in his wake, from Hans Kelsen to Giorgio Agamben, students will get a unique opportunity to explore this concept and its extremely tense relationship to that of legality. From the factual limits of the Rule of Law to the most burning issues of International Law, students will develop a greater capacity to appreciate the pitfalls and blindspots of constitutive power, especially considering the current challenge of populism around the world.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/2022_the_shadow_of_carl_schmitt__on_questions_of_legality_and_legitimacy_-_course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/3wQjEPeQN9qXHzL66",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

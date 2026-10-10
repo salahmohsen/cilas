@@ -1,0 +1,34 @@
+{
+  "sha256": "3ecaeef27379e2bd1ac87b4fe8ace426c4f465ae10edb42576278a8dc3615df9",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "el rihla: literature and re-thinking Egypt's histories",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Maha ABDEL MEGEED",
+          "email": "543928@soas.ac.uk",
+          "bio": "recently submitted her doctoral thesis titled ‘Khayālῑ Textuality as Historical Urgency: al-Muwayliḥῑ’s Ḥadῑth ‘ῑsa ’Ibn Hishām and the long 1890s’ for examination at the department of the Near and Middle East, SOAS, University of London. She completed her MA at King’s College London in the department of Comparative Literature. She graduated from AUC with a major in English and Comparative Literature and a minor in philosophy. Her research interests include the history of conceptual thought in Arabic, and the possibility of deploying it to re-think the history of capitalism and modernity. Her other obsessions include: delving into archives, going to plays, listening to music, and discovering old films though most of her time is spent getting lost in an attempt to go to any of these places."
+        }
+      ],
+      "schedule_text": "from 10 to 12:30 in the morning or from 5:30 to 8 in the evening",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-07",
+      "location": [],
+      "description": "The course asks what it means to think, narrate, and produce knowledge of history. Do these ideas, narratives, and the produced knowledge affect how we collectively shape history? We explore these questions in our journey from the 25th of January revolution in 2011 to the ‘urabi revolution in 1881. El-Rihla between these two moments is far from linear; we travel through layers of history rather than on a straight line.\n\nThe focus is not on the sequence of events, but on how they have been thought, narrated, known, and remembered. In other words, we will look at how history continues to shape the present. Literature offers a way to engage this question of ‘how?’ In exploring the relationship between 2011 and 1881 through literature, we will survey some of the major debates on history, memory, and the possibility of ‘change’.\n\nIbn Shalabi, the protagonist of Rihalat al-Turshagi el-Halwagi, guides us on our journey through layers of history, as we shall discover in our very first class. He introduces us to figures like, Ahmad ‘Urabi, Taqi el-Din al-Maqrizi, Abd al-Rahman ibn Khaldun, Jacques Derrida, Dipesh Chakrabarty, Walter Benjamin, and finally to al-nas.\n\nwhat to expect\n\nBi-weekly reaction (in a medium of your choice) to our discussions\nAt the end of the course, as a class, visit the sites of Ibn Shalabi’s journey through the different layers of history\nRead literary and critical texts in Arabic and English\nWrite a research paper (on an agreed upon topic), which can be used as a writing sample for graduate studies applications.\nIndividually write a creative piece inspired by the discussions of history, memory, and change in class OR;\nIn a group, write and perform a short scene from an envisioned ‘historical’ drama.\n\nwhy apply\n\nDiscover ‘classical’ and more recent discussions of history in both Arabic and European critical traditions.\nExplore literary texts, literary theory, and debates concerning history.\nRead on theories of collective and connective memory.\nCritically encounter some of the major trends in thinking modern Egyptian history.\nExplore how experiences of the present can be approached as knowledge-producing offering modes of rethinking the past and contributing to ongoing world debates on conceptualizing history.",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "sha256": "cfca04df150abf0ab28297341e4b949e639d4ed906b315b67bffb2df022c826a",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Pedagogy and Sustainable Architecture",
+      "title_ar": null,
+      "subtitle": "A pedagogical approach to sustainable architecture: historicizing and documenting the case of New Gourna",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sama Waly",
+          "email": "swaly@saic.edu",
+          "bio": "Sama Waly completed her Masters of Fine Arts in Film, Video, New Media & Animation at the School of the Art Institute of Chicago. Her practice incorporates moving image, installation and performance art, and explores notions of hauntology, historiography, and a tension between order and chaos in urban and natural environments. Her work has been featured in various exhibitions in Cairo, Chicago and internationally. With a BA in Visual Arts and Arab & Islamic history from the American University in Cairo, she has worked with a range of cultural institutions in the fields of development, cinema, contemporary art and art history, and has published her writing in various online platforms. She is passionate about the history of culture in Egypt with a focus on the 19th and 20th centuries, her current essay, commissioned by MHWLN, is entitled \"Pan-Arabism post-Nasser: Egypt and the Union of Arab Plastic Artists (1972-1978)\". Since completing her masters, she developed an enthusiasm for advancing free, open access to knowledge as a fundamental right, and is grounding her daily practice as a researcher in this."
+        },
+        {
+          "name": "Rodrigo Gratacós Brum",
+          "email": "rgratacosbrum@saic.edu",
+          "bio": "Rodrigo Gratacós Brum is a Brazilian philosopher and filmmaker. He holds a MFA in Film, Video, New Media and Animation at the School of The Art Institute of Chicago and a MA in Philosophy at the Federal University of Rio de Janeiro. He is a member of Observatório-Móvel (observatoriomovel.com), an artist collective based in Florianópolis, and a member of Khôra, a research group on contemporary philosophy based in Rio de Janeiro. In 2018, he will be living in Cairo working on a documentary about the architect Hassan Fathi."
+        }
+      ],
+      "schedule_text": "On Thursday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Course Description:\n\nEgyptian architect Hassan Fathy (1900 - 1989) is internationally renowned, although not without his critics, as a pioneer in sustainable architecture. His rise to fame came mainly as a result of the publication of a book, wherein Fathy recounted his experience of designing the model village of New Gourna in Luxor following a commission by the Egyptian Department of Antiquities. The first edition of the book “Gourna: A Tale of Two Villages ” was published in Cairo, in 1969. It was translated a year later to French under the title “Construire avec le peuple” (“To build with the people”) . In 1973, a second edition was issued by University of Chicago Press and entitled “Architecture for the Poor: An Experiment in Rural Egypt” . An arabic translation finally appeared in 1993, taking on the title ‘Umaret Al-Fuqara’ (ءاﺮﻘﻔﻟا ةرﺎﻤﻋ).\n\n“As my proposals chiefly concern the peasant, my book is dedicated to him. I wish that it could have been addressed exclusively to him, and hope the time will soon come when he will be able to read and judge it [...]”, writes Fathy in the preface.\n\nThis course aims to materialise Fathy’s dream by reading and discussing the problematics of “Gourna: A Tale of Two Villages” with local inhabitants and builders currently working on the preservation of the model village. We will begin the course in Cairo, over the first nine weeks, to critique key issues in Fathy’s vision in its historical context, and plan our weeklong module to be implemented in Gourna, Luxor. Once there, we will meet local participants daily, host collective readings of key passages, and activate the village with film screenings and other activities.\n\nThe course proposes a twofold vision, firstly to foster a discussion-based learning environment, to historicize and shed light on the crises of pedagogy and sustainable architecture in rural Egypt, and secondly to encourage creative strategies of documentation, using audiovisual means. Students can apply to the pedagogical track (Group A) or to the documentation track (Group B).\n\nGroup A will read and discuss key concepts pertaining to Fathy’s proposal for a sustainable architectural solution in rural Egypt. Discussions and readings will be mainly in Arabic.\n\nGroup B will prepare strategies for audiovisual documentation, in preparation to shoot and record the Luxor module. Discussions and readings will be mainly in English.\n\nThe class is open to those interested in sustainable design, audiovisual documentation, and their relation to alternative pedagogical models. We encourage architects, artists, social workers, academics, and amateurs, from Egypt and abroad, to apply.\n\nIMPORTANT:\n\nStudents must be available during the travel dates to Luxor (check the schedule below).\n\nStudents are required to sign a Release Form, indicating that they agree to be filmed for the purpose of documenting the course and perhaps be included in a documentary film (co-directed by Sama & Rodrigo), to be submitted on the first day of classes.\n\nBibliography:\n\n(Hassan Fathy, Gourna: A Tale of Two Villages, 1969, Cairo) 1993, Cairo ءاﺮﻘﻔﻟا ةرﺎﻤﻋ ﻲﺤﺘﻓ ﻦﺴﺣ\n\n(Hassan Fathy, The Story of Utopia) c.1940s, Beirut. ﺎﯿﺑﻮﻃﻮﯾ ﺔﺼﻗ \"ﻲﺤﺘﻓ ﻦﺴﺣ\"\n\nPaulo Freire, Pedagogy of the Oppressed, 2005, Continuum Publishing (NYC), pp. TBA\n\nAhmed Ezzat Abdel-Kerim, Tareekh Al-Ta’leem fi masr (History of Education in Egypt), ﻲﻓ ﻢﯿﻠﻌﺘﻟا ﺦﯾرﺎﺗ ,ﻢﯾﺮﻜﻟاﺪﺒﻋ تﺰﻋ ﺪﻤﺣأ ﺮﺼﻣ Cairo: The General Organisation for Cultural Palaces, 2011. pp. TBA\n\nHana Taragan, Architecture in Fact and fiction: the case of the New Gourna village in Upper Egypt, Muquarnas, 1996\n\nTimothy Mitchell, Rule of Experts Egypt, Techno-Politics, Modernity, University of California Press, 2002, Ch. 6 “Heritage and Violence”\n\nFilmography:\n\n“الجبل” (The Mountain) by Khalil Shawqi, Egypt, Arabic, 1965 (Based on the novella by Fathi Ghanim (b. 1923))\n\n“المومياء” (The Mummy) by Shady Abdelsalam, Egypt, Arabic 1969\n\n“وصية رجل حكيم في شئون القرية والتعليم” (Advice from a wise man on rural education), directed by Daoud Abdel Sayed, Egypt, Arabic, 1976.\n\n“لا يكفي أن يكن الله مع الفقراء” directed by Bourhan Alaouié, 1978 (Il ne suffit pas que Dieu soit avec les Pauvres / It’s not enough for God to be with the Poor), France, French (English or Arabic subtitles).",
+      "flow_links": [
+        "https://drive.google.com/file/d/1DT_HuHyMNwcB1nOF2OrA9tPpFVqCtPrT/view?usp=sharing"
+      ],
+      "register_url": "https://goo.gl/forms/uudUw3S6qC2kVbPY2",
+      "own_page": null
+    }
+  }
+}

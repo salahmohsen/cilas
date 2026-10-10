@@ -1,0 +1,170 @@
+{
+  "sha256": "17cd96d255dc181f5b66e092c66ed33861aa14724616bcca064a2bbe4595a57b",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall cycle 2025 (online/offline short courses)",
+        "season": "fall",
+        "start_year": 2025,
+        "start_date": null,
+        "deadline": "2025-09-30",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "فلسفة \"تربية المقهورين\" عند پاولو فريري",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "شادي جمال",
+                "email": null,
+                "bio": "شادي جمال، من مواليد الإسكندرية، عمل معلماً للفيزياء والرياضيات لمدة أحد عشر عاماً في كلية سان مارك بالإسكندرية. يواصل حالياً دراسته للماجستير في علم الاجتماع بتخصص الشبكات والمجتمعات، جامعة تولوز٢ بفرنسا. ناشط في المجتمع المدني المصري في مجالات التعليم والبحث والعلوم الاجتماعية والتربوية، وله عدة مقالات منشورة في هذه المجالات. صدر له في عام ٢٠٢٣ كتاب بعنوان دليل تعليم القراءة والكتابة – رحلة اكتشاف مع تقنيات مخرجات الخطر. كما فاز عام ٢٠٢٤ بمنحة أحمد بهاء الدين الثقافية في دورتها الرابعة عشرة عن كتابه «التعليم النقدي» في إطار موضوع «التعليم ومستقبل التنمية»."
+              }
+            ],
+            "schedule_text": "Thursdays, 6 pm to 8:30 pm.",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "تستعرض هذه الدورة فلسفة الفيلسوف والمربي البرازيلي، باولو فريري، المعروفة باسم «تربية المقهورين»، ومن خلالها نسعى للإجابة عن أسئلة جوهرية: من هم المقهورون؟ وما معنى تربيتهم؟ وكيف يمكن أن تتحقق هذه التربية في واقعنا المعيش وممارساتنا نحن بمختلف تخصصاتنا واهتماماتنا؟\n\nتركز الدورة على المزج بين البعد التطبيقي والنظري؛ إذ تتضمن ممارسة تمارين عملية وتنفيذ مشاريع عمل تهدف إلى فهم الفلسفة وممارستها في الحياة اليومية، إلى جانب قراءة متعمقة لكتاب «تربية المقهورين» ودراسته في سياق تحليل نماذج من الواقع المصري.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/برنامج_الدورة__6_أسابيع_.pdf"
+            ],
+            "register_url": "https://forms.gle/61r3cZdph2P7B8YY8",
+            "own_page": null
+          },
+          {
+            "title": "Melancholia in the City",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "George Bartlett",
+                "email": null,
+                "bio": "George Bartlett is a writer and lecturer working across cinema and psychoanalysis.\n\nچورچ بارتلت كاتب ومحاضِر بيشتغل في مجال السينما والتحليل النفسي."
+              }
+            ],
+            "schedule_text": "Tuesdays, 6 pm to 8:30 pm.",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Melancholia in the City explores the diffuse sense of malaise pervading contemporary urban life, approaching depression through the lens of psychoanalysis as a social and structural experience shaped by how late capitalism hijacks unconscious desire. In dialogue with its participants, the workshop will ground these questions in the context of Cairo, and consider how melancholia might be understood not only as a symptom of exhaustion and loss, but also as a mode of critique, resistance, and the site of potential transformation.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/melancholia_in_the_city.pdf"
+            ],
+            "register_url": "https://forms.gle/qZndnsYBhqH2BUmc8",
+            "own_page": null
+          },
+          {
+            "title": "Intimate Excavations: Emotional Archaeology as Research Method",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "S. Farwah Rizvi",
+                "email": null,
+                "bio": "S. Farwah Rizvi is a storyteller, theatre pedagogue, & cultural researcher whose work bridges performance, education, and interdisciplinary scholarship. A Teaching Fellow & Artistic Scholar at the Cairo Institute of Liberal Arts & Sciences, she is also pursuing an M.A. in Folklore and Culture Studies at IGNOU, & holds an M.A. in Theatre Arts from Middlesex University, London.\n\nFarwah’s practice is rooted in Practice-as-Research (PaR), focusing on oral storytelling, embodied pedagogy, & memory-based inquiry— especially within marginalised, community-driven, & decolonial contexts. She is the creator of Neo-Dastangoi, a contemporary reimagining of the Dastangoi tradition, & the proponent of Emotional Archaeology, a research methodology that blends phenomenology, aesthetics, & autoethnography.\n\nHer work spans performance, literature, & film, including co-writing & co-producing the award-winning indie documentary In A Dissent Manner (2022). Through international residencies & interdisciplinary collaborations, she continues to explore how space, identity, & memory intersect. As an educator, she fosters reflective, multimedia engagement with the world— encouraging students to see learning as both rigorous & intimately personal."
+              }
+            ],
+            "schedule_text": "Sundays, 6 pm to 8:30 pm.",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 8,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Inspired by the autoethnographic method, I’m reaching out personally to invite you to join **Intimate Excavations: Emotional Archaeology as Research Method**, my second course at CILAS.\n\nThis course stands independently, but grows organically from my earlier offering, Performing Stories with Neo-Dastangoi. Where that course used storytelling and performance to animate political memory in urban space, this one turns inward — toward a more intimate, research-driven engagement with place, emotion, and the archive.\n\nEmotional Archaeology is a methodology I’ve been developing since my postgraduate work.\n\nIt weaves together phenomenology, aesthetic analysis, digital culture, and autoethnography to explore overlooked or everyday spaces as repositories of lived memory. The aim is not only to study archives— whether physical, oral, spatial, or digital— but to ask how they feel upon encounter, and what they ask of us in return. This 8-week seminar-practicum introduces Emotional Archaeology as a way of thinking and researching that centres emotional literacy, ethical presence, and Practice-as-Research. Participants will learn to approach archives— from community libraries and personal collections to online blogs and cultural maps— as dynamic sites where memory, identity, and meaning accumulate and shift.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/1._course_invite_flow_dbl__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/qZndnsYBhqH2BUmc8",
+            "own_page": null
+          },
+          {
+            "title": "Unravelling Oedipus: Wanderings of the Myth in Literature and Theory",
+            "title_ar": "تفكك أوديب: تجوالات الأسطورة بين الأدب والنظريات",
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Evelyn Richardson",
+                "email": null,
+                "bio": "إيڤلين ريتشاردسون حاصل على دكتوراه في الأدب المقارن من جامعة شيكاغو، حيث عمل أيضًا مدرّسًا في قسم الآداب لمدة سنتين. يعمل حاليًا مدرّسًا خاصًّا للغتين اللاتينية واليونانية القديمة.\n\nEvelyn Richardson has a PhD in Comparative Literature from the University of Chicago, where he also spent two years as a humanities teaching fellow. He currently works as a private tutor of Latin and ancient Greek."
+              }
+            ],
+            "schedule_text": "Saturdays, 6 pm to 8:30 pm.",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "متناولةً مسائل الفاعلية والحرية، الهوية والمعرفة بالنفس، العقل والحق، الوعي واللامرئي، تُعدّ أسطورة أوديب من أكثر القصص التي تم إعادة تأليفها وتأويلها في الأدب العالمي، وقد شاركت هذه القصة المرعبة في تركيب عدد ملحوظ من النظريات ذات النفوذ ما بين النظريات عن الرغبة واللاوعي، كذلك عن التراجيديا أو المأساة سوآء كصيغة أدبية أو كنمط تجربة من التجارب الإنسانية، كما عن النظام الاجتماعي عند البشر وأسس الثقافة والحضارة بشكل عام. في هذه الدورة سنحاول أن نفهم ما هو الذي جعل أوديب شخصية جذبت انتباه مؤلفين ومفكرين لها عبر العصور، وسنفكر في سؤال كيف يمكنها أن تخاطبنا في أيامنا هذا.\n\nسوف نبدأ النقاشات بتناول مسألة نشوء هذه القصة الغريبة، فسنقرأ عدة نسخ مبكرة لها من اليونان كما سنطالع قصصا شعبية من أماكن أخرى. من بين النصوص اليونانية القديمة سنتعمق في قراءة المسرحيتين التي ألفهما سوفوكليس عن أوديب، أي \"أوديب ملكا\" المشهورة و\"أوديب عند كولونوس\" التي هي أقل شهرة. إلى جانب هاتين، سنقرأ نصوص نظرية متعلقة بهما من بينها أعمال لأرسطو، ونيتشه، وليفي-ستراوس، وريني چيرار، وبالطبع فرويد. هذه النصوص ستساعدنا أن نتفهم أعماق الأسطورة وأيضا أن نتأمل في المسائل التي تطرحها بشكل عام ومتجاوزا حدود القصة.\n\nفي النصف الثاني من الدورة سنلتفت إلى أعمال أدبية وفنية تدور حول أوديب من القرن العشرين، وإلى قراءات نظرية أخرى. هذه الأعمال ستحتوي \"الملك أوديب\" (١٩٤٩) لتوفيق الحكيم و\"كوميديا أوديب\" (١٩٧٠) لعلي سالم، وفلمين للمخرجين بيير باولو بازوليني وتوشيو ماتسوموتو. في نهاية الدورة يوجد جلستان اختياريتين يتناولان رواية \"الوصمة البشرية\" لفيليب روث، التي تقلب أسطورة أوديب بشكل معقد إلى سياق الولايات المتحدة في أواخر القرن العشرين.\n\nكمشروع نهائي سيكون للمشاركين في هذه الدورة الاختيار ما بين إنتاج عمل إبداعي وبين كتابة مقالة ردّا على مواد الدورة.\n\nمعظم القراءات ستكون متاحة باللغة العربية، والمساهمة في النقاشات يمكنها أن تكون بالعربي أو الإنجليزي حسب الاختيار الشخصي.\n\nAddressing themes of agency and freedom, self-knowledge and identity, reason and truth, consciousness and the unseen, the myth of Oedipus is among the most reworked and reimagined in world literature. This disturbing story has served as a cornerstone in the construction of influential theories of desire and the unconscious, of tragedy both as a literary form and a structure of experience, and of social order, culture, and civilization. In this course we will try to understand what has made Oedipus such a compelling figure for writers and thinkers across history, and consider how the myth might yet speak to us today.\n\nWe will begin by thinking about how the strange tale may have emerged. This will involve reading early versions of it from ancient Greece, as well as comparable folktales from beyond Greece. Amongst the early Greek texts, we will read both of Sophocles’ Oedipus plays in depth: Oedipus Tyrannos and the less well-known Oedipus at Colonus. Alongside these, we will read an array of theoretical texts, including works by Aristotle, Nietzsche, Lévi-Strauss, Réné Girard, and, of course, Freud. These will help us to understand the depths of the myth, but also to think more broadly about the issues it raises beyond the confines of the myth.\n\nIn the second half of the course, we will turn to adaptations of the Oedipus story from the twentieth century, accompanied by further theoretical readings. The artistic works to be discussed will include Tawfiq al-Hakim’s Oedipus the King (1949), and Ali Salem’s Comedy of Oedipus (1970), and films by Pier Paolo Pasolini and Toshio Matsumoto. There will be two optional additional sessions devoted to Philip Roth’s novel The Human Stain (2000), a complex reworking of the Oedipus myth set in late-twentieth-century America.\n\nAs a final project, participants will have the option of producing a creative project or writing an essay in response to the course materials.\n\nMost the readings for this course will be available in Arabic. Participation in the discussions may be in Arabic or English according to individual preference.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/oedipus_course_proposal_cilas.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/qZndnsYBhqH2BUmc8",
+            "own_page": null
+          },
+          {
+            "title": "Writing Capitalism",
+            "title_ar": "كتابة الرأسماليَّة",
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "مينا ناجي",
+                "email": null,
+                "bio": "مينا ناجي، كاتب ومترجم مصري. أحدث أعماله \"ليس عزاءً، بل ضوءًا: في استلهام فكر وفلسفة سيمون فاي\" (2025). وقد ترجم كتاب \"عن بلاغة العاميَّة\" (2024) للشاعر دانتي أليجييري، وكتاب \"ضد الابتزاز المزدوج\" (2022) للفيلسوف سلافوي جيجك، الذي حاز على جائزة الدولة التشجيعيّة.\n\nبجانب تلك الأعمال، نشر مينا قصّصًا، ونصوصًا شعريّة، ومقالات، ودراسات، وترجمات متنوعة في العديد من الصحف والمجلات والمواقع، وكتب سيناريوهات عدد من الأفلام القصيرة. ومنذ نهاية عام 2022، أقام 7 دورات من ورشة الكتابة الإبداعيّة غير الخياليّة Creative Nonfiction تجمع بين الشق النظري والعملي."
+              }
+            ],
+            "schedule_text": "Mondays, 6 pm to 8:30 pm.",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "نحن نعيش في قلب الرأسماليَّة، شئنا أم أبينا، فهي الهواء الذي نتنفسه والماء الذي نسبح فيه.. كيف يمكن الكلام عن \"كل شيء\" وفي نفس الوقت \"لا شيء محدد\"؟\n\nلا يمكن حصر الرأسماليَّة في ظواهر معينة، ولا يمكن فصلها أيضًا عن الظواهر التي تتجلى لنا يوميًا ونعيش من خلالها؛ لا يمكن رصد كل تأثيراتها التي تتغلغل داخلنا وداخل حياتنا. ليس من فرط تشعُّبها وعمقها فحسب، بل لأنها أيضًا تشكِّل وتؤطر طريقة تفكيرنا نفسها، ورؤيتنا إلى أنفسنا والعالم حولنا.\n\nمع ذلك، ليس أمامنا سوى المحاولة، سوى السعي نحو الإمساك بالهواء وحصر الماء، وأداتنا في ذلك هي الكتابة، الكتابة الواعية نظريًا والحرَّة لغويًا، التي ربما تتمكَّن من خلق مساحة ما للنظر من خارج أو من داخل.\n\nينقسم مساق \"كتابة الرأسماليَّة\" إلى شق نظري وشق عملي. يتكوَّن الشق النظري من 4 جلسات يتم فيهم مناقشة قراءات وأفلام تتعلق بالحياة في ظل الرأسماليَّة المعاصرة. أما الشق العملي، وهو أيضًا 4 جلسات، فهو كتابة وتطوير ومناقشة مشروع نَص إبداعي حر عن الحياة في ظل الرأسماليَّة المعاصرة، باللغة العربيَّة أو الإنجليزيَّة.\n\nيتم اختيار المشاركين عن طريق تقديم نَص إبداعي (قصة، قصائد شعر، نَص حر) على ألا يقل التقديم عن 500 كلمة.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_course_-_mina_nagy.pdf"
+            ],
+            "register_url": "https://forms.gle/Cyg4eWESJwVez3JV9",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

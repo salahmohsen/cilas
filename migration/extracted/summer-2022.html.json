@@ -1,0 +1,232 @@
+{
+  "sha256": "27496b06d2ed3cf61829afd359fe1e0963d816b9bc3e3e53ac64c5beea5d0ae4",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Summer 2022",
+        "season": "summer",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-07-15",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Reading Films: A Rudimentary Guide to Cinema and the Moving Image",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Iman Afify",
+                "email": "imafify@aucegypt.edu",
+                "bio": "Iman Afify graduated with a bachelor’s degree in film and media studies and minoring in linguistics and translation, and then taking diplomas in museum management and heritage preservation, to then have a master’s degree in social anthropology and currently working as a researcher and archivist in Sard Centre for History and Social Research, we believe it is safe to say that Iman’s interests and passions for learning and exploring have no limits. She is particularly curious about the moving-image, living archives, and matters of collective memory and perception, and the question of time. In her free time, you can find her in a hidden corner binge-reading Greek Mythology and Fanfiction."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "19:00",
+            "end_time": "21:00",
+            "weeks": 6,
+            "start_date": "2022-07-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "“[The cinema] is an instrument of poetry, with all that that word can imply of the sense of liberation, of subversion of reality, of the threshold of the marvellous world of the subconscious, of nonconformity with the limited society that surrounds us.”\n-Luis Buñuel.\n\nHave you ever watched a film and couldn’t describe how you felt because of it? Did a film ever leave you in awe? When watching a film, do you leave your mind at home, or does the film make you more and more conscious of your cognitive processes? Does reality inspire films, or does cinema alter reality? When was the last time you lived a film, with all your senses, and not just watched it? Are you watching the film in the right way? These are all questions we are going to tackle and play with during our 6-session seminar about the aesthetic and affective elements of film. Through this course, we will learn together how films can alter our perception of time, reality, dreams, psychology, and the likes. We will read films through philosophical and phenomenological frameworks of Deleuze, Tarkovsky, Rancière, Kuleshov, and others, and understand how different conceptual frameworks can also influence our understanding of films and cinemagoing.\n\nOh, and by the way, there is no right way to watch a film.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/filmsyllabus_propsal.pdf"
+            ],
+            "register_url": "https://forms.gle/t9oPfsoQnibfrn9D8",
+            "own_page": null
+          },
+          {
+            "title": "What is the State? An anthropological inquiry",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmed Bakr",
+                "email": "Bakr_Ahmed@alumni.ceu.edu",
+                "bio": "Ahmed Bakr is a journalist, translator and occasionally an anthropologist. A CILAS graduate in 2018, he completed his MA in Sociology and Social Anthropology at Central European University, and is interested in questions related to power, capitalism, and state activity. He also has a taste for leftist memes."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-07-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The question of what is the ‘State’ and how it operates has always been central to social sciences as much as the state itself has been central to living in modern societies. Social scientists, activists and radicals have for decades disagreed widely on the nature, role, and even existence of this thing called the state. And, as the world entered the era of globalization and neoliberal capitalism in the late 20th century, these questions came back to front.\n\nAnthropology, a field once most preoccupied with the study of supposed ‘pre-modern, traditional’ societies, brings in a new perspective to studying the state. Through the lenses of ethnography and social theory – particularly the Marxist and Foucauldian traditions – the anthropology of the state explores state activities as a manifestation of global and local power relations by looking through the everyday encounters citizens have with the ‘state,’ and the conflicting imaginaries of the state that they develop based on them.\n\nThe goal of this course is to learn the different perspective anthropology of the state brings to understanding the state, examine different case studies into different aspects of state activity, and reflect on how we encounter the state in our daily lives.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_proposal.pdf"
+            ],
+            "register_url": "https://forms.gle/t9oPfsoQnibfrn9D8",
+            "own_page": null
+          },
+          {
+            "title": "Magic and Modernity: The Spell of Our Structures",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Amina Dessouki",
+                "email": "aminadessouki@aucegypt.edu",
+                "bio": "Amina Dessouki holds a masters degree in Anthropology from The American University in Cairo. She works on issues related to development, gender, water, and the urban. She has specific interests in alternative medicine, the circulation of indigenous knowledges, decolonial thinking and practice. Children’s books are her most consoling source of wisdom, she believes they are works of existential philosophy in disguise."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-07-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The course will challenge the conventional notion of equating modernity with disenchantment, through looking at the ways in which the secular and the sacred go hand in hand. We will examine how reason does not eliminate “superstition\" but piggybacks upon it; chance and serendipity lie at the core of technological life and the bureaucratic world; mechanism produces vitalism. To put it another way, we will explore the ways in which our institutions produce magic; we will historically trace the tale of modernity’s rupture from the premodern past, through looking at the enchantments of urbanization, industrialization, globalization as well as various forms of rationalization.\n\nModernity is primarily about our capacity as rational and logical human beings to have mastery over nature and technically perfect the human condition; Yet, our attempts to bring perfection, always bring about violence. Worlds that have certainty and clarity are always violent worlds, as Camus says: “the evil in the world comes almost always from ignorance, and goodwill can cause as much damage as ill-will...people are more often good than bad, though in fact that is not the question...they are more or less ignorant and this is what one calls vice or virtue, the most appalling vice being the ignorance that thinks it knows everything” (Camus:1991, 194). It is in our nature as human beings to scramble for certainty whenever we recognize that everything around us is in a constant flux, we try to rationally plan our days, our lives, with the hope of finding stability so we can stand straight and be at ease. As a result, the knowledge we produce aims at fixing things within concepts of thought, to hold them to account, and to make them to some degree predictable. But, we are running after world that is manifesting in ways that are fleeting, continuously trying to pin it down with our grammar and categories of understanding. This course will hopefully enable us to create a space for hesitation; by the end, we will attempt to think/imagine/become otherwise through challenging the inherited categories we so comfortably inhabit; chief of which is the tale of magic’s exit from the henceforth law-governed-world.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_22_summer_course.pdf"
+            ],
+            "register_url": "https://forms.gle/t9oPfsoQnibfrn9D8",
+            "own_page": null
+          },
+          {
+            "title": "Other Worlds are Possible: Quotidian Prefigurations",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Fernando Revelo La Rotta",
+                "email": "frevelolarotta@uchicago.edu",
+                "bio": "Fernando Revelo La Rotta is currently an anthropology doctoral student at the University of Chicago. Prior to his time at the University of Chicago, he worked as a high school teacher and college counselor at a community-based school for refugees and migrants in Cairo. He has also earned a master’s degree in Gender and Women Studies in the Middle East and North Africa from the American University in Cairo."
+              }
+            ],
+            "schedule_text": "Offline, Tuesdays 18:00-20:00, except for the first week, which is online.",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-07-23",
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "The concept of prefiguration encapsulates the project of creating a new or alternative society from within the current configuration of the world. Prefiguration functions as a theory in action, or the creation of an otherwise or alternative world that emerges from how one lives one’s life. Therefore, prefiguration stands in contrast to dominant conceptualizations of social change. It challenges the “revolutionary event” as the focal point (and goal) of social change by removing the temporal distinction between the process in the present and its aims in the future. In prefigurative politics, the process and the aims become intertwined recursively in the present.\n\nPrefiguration also allows for goals to be open and multiple—always on the horizon and in constant motion. It seeks to develop new ways of being without predetermining the outcome. Prefiguration also focuses on the micro-level, positing that the imagination and enactment of new forms of sociality and relationality are the foundations of social change. It marks an investment in the potential of the unknown punctuated by a dissatisfaction with the status quo.\n\nAs a result, this course begins and proceeds with the prefigurative assumptions that other worlds are possible and that glimpses of them exist in our everyday, including social movements, collective survival strategies, and our aesthetic and artistic practices. In this course, we will explore historical and contemporary manifestations of prefigurative politics and practices, including the alter-globalization movement, mutual aid projects, alternative kinship, and reimaginations of care. These “case studies” will provide us the opportunity to reflect on prefigurative practices and politics, including the obstacles and conflicts that arise in prefigurative projects of worldbuilding and the affective bonds these projects foster and engender. Throughout the course, we will also be attuned to the prefigurative glimpses of collective potentiality already being enacted and imagined in our daily lives.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/other_worlds_are_possible_course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/t9oPfsoQnibfrn9D8",
+            "own_page": null
+          },
+          {
+            "title": "YOU KNOW YOU WANT IT: REPRESENTATION OF DESIRE AND NORMALIZATION OF RAPE CULTURE IN EGYPTIAN CINEMA",
+            "title_ar": null,
+            "subtitle": "(POP CULTURE)",
+            "course_type": "WORKSHOP",
+            "fellows": [
+              {
+                "name": "Salma El Tarzi",
+                "email": "salmaeltarzi@gmail.com",
+                "bio": "Salma El Tarzi (b. 1978) is a Cairo-based filmmaker, visual artist and essayist. Since her graduation from the High Institute of Cinema in 1999, where she studied cartoon animation, she has worked across several fields within the film and television industries, including direction, production, dubbing and writing. Her independent directorial debut, Do You Know Why? (2004), a short documentary film about young models working in television advertising, won the Rotterdam Arab Film Festival Silver Award that year. She has since continued working in commercial cinema, predominantly as a producer, while simultaneously pursuing a career as an independent documentary filmmaker. In 2013, she directed her first feature-length documentary, Underground/On The Surface, which explores the local subculture of electro-shaabi music (also known as Mahraganat) and won the 2013 Dubai International Film Festival award for best directing. That year, she returned to painting and drawing after a 14-year-long hiatus, culminating in the completion of a co-authored nonfiction Women of Tahrir, a graphic novel on institutional and societal gender-based violence during the first years of the 2011 uprising in Egypt (to be released in 2022). She has since authored another autobiographical artist book, Mohawala Letazakor Waghy An Attempt to Remember My face that was launched in February 2020, in parallel to an ongoing research project about the representation of desire and normalization of rape culture in mainstream Egyptian cinema: Yatama Wa Honna El Raghebat They refuse but they want. The first iteration of the latter work-in-progress was a video installation shown as part of the Goethe-Institut Cairo's feminist arts festival Tashweesh in November 2018, published in Mada Masr and turned into a short video essay for JEEM platform in 2019. The final iteration is a book to be released in 2023."
+              }
+            ],
+            "schedule_text": "Offline, Mondays 18:00-20:00.",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-07-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This workshop combines discursive and practical practices, where participants will get introduced to this project and its methodology, and will collectively reflect on the questions of representation of desire & the female sexuality, Image & agency, and the normalization of rape culture, through the example of Egyptian Pop Culture of the current moment. This process will include examining films, music videos, social media influencers activities, sexual violence and rape cases, as well as public reactions, moralistic outrage, policing the female body and THE STATE.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/t9oPfsoQnibfrn9D8",
+            "own_page": null
+          },
+          {
+            "title": "PLAY THE CITY! - The case of Historic Cairo",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mohamed W.Fareed",
+                "email": "mw.fareed@gmail.com",
+                "bio": "Throughout his five-year study of architecture in Helwan university, Egypt. Mohamed W.Fareed participated in several international workshops and competitions, Heritage conservation was and still his main focus since he started his internship with Megawra built environment collective in 2018, where he worked closely with Dr May al-Ibrashy in several conservation projects in old Cairo. His research and field experiences include projects such as: Old shali restoration, wekalat qaytbay adaptive reuse and Bulaq historic quarter documentation.\n\nAfter graduation in 2020, He Finished my pre-master course in Helwan University, in which he started to gain knowledge about academic writing and scientific thinking. In the last two years, he tried his best to boost my academic experiences with active participation in ICOMOS various working groups, international conferences and academic publications. In addition to that, he is currently studying for an online post graduate diploma for urban heritage strategies from Erasmus University Rotterdam (I.H.S)."
+              }
+            ],
+            "schedule_text": "Offline, Saturdays and Mondays 18:00-20:00.",
+            "weekdays": [
+              "sat",
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2022-07-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Over the last few years, technological developments have allowed new possibilities for fostering civic participation and engagement, as testified by various smart city experiments. In this framework, game elements are diffusely mobilized in order to develop responsible and active citizens with the aim of tackling urban problems. Gamification may be effective in nudging citizens and promoting various forms of participation, but fundamental ethical and political questions have to be addressed. This course develops the argument by interpreting gamification in light of the classic conceptualization of social justice proposed by David Harvey, arguing that participation through gamification could potentially benefits historic Cairo as a designated WHS since 1979. Cairo hosts a variety of historically significant districts and monuments, ranging from the ruins of al-Fustat, the Fatimid nucleus of Medieval Cairo, the citadel and surrounding Mamluk palaces, to its urban domestic architecture, mausoleums, bazaars, its Nilometre and other inventions related to human use and mastery of the River Nile.\n\nPLAY THE CITY! Has the objective of promoting innovative and creative ideas for the co-design of inclusive, cohesive, and sustainable public spaces within the old city, through the use of serious games. Participation of citizens in the design of the public space is recognized as fundamental to build inclusive, cohesive and sustainable public space. Games have been proposed since the 1960s as means to facilitate participatory processes by enabling cooperative environments to shape and support citizens’ interaction. The change led by Information and Communication technologies opens the debate on how advanced technologies, from Board /card games, video games to Virtual and Augmented Reality can help to open the process of co-creation to new audiences, enhancing citizen participation, both with respect to the design and space usage.\n\nPLAY THE CITY! Course is articulated into 4 main Themed urban serious games targeted at exploring the process of development and use of innovative ideas and games for public space co-design within the historic city. All participants are invited to contribute their own experience and research – it will be interesting to compare cases from old Cairo to similar situations in other parts of the world. Our aim here is to create an environment where students want to contribute to not only help solidify what they’ve learnt, but also to help others out with a new vision for the old city and re-experience it in a manner that they might not have experience before.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/play_the_city__-_the_case_of_historic_cairo.pdf"
+            ],
+            "register_url": "https://forms.gle/t9oPfsoQnibfrn9D8",
+            "own_page": null
+          },
+          {
+            "title": "The Death of the Political?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmed Elbasyouny",
+                "email": "aelbasyo@iu.edu",
+                "bio": "Ahmed Elbasyouny is a PhD Fellow at the Center for Constitutional Democracy at Indiana University Maurer School of Law. He holds an LLM degree in comparative constitutional law and a BA in political science, and he works in the field of constitutional design and policy advice."
+              }
+            ],
+            "schedule_text": "Online, Sundays 18:00-20:00.",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": 6,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Saramago’s (2006) Seeing, offers a precise visualization of the current political plight that number of scholars have noticed and predicted. In an imagined country, during counting the ballots of the general elections, the city administrators found out that the populace have spoiled their votes. As a result, party elites were worried and decided to repeat the election. Yet, the turnout was worse. one minister referred to the crisis as conspiracy against democracy, in turn, the government declared a state of emergency in their attempt to uncover the mastermind behind ‘’the antidemocratic plot’’ (Wilson and Swyngedouw, 2014) Finally, the government decided to leave the citizens and move to a different place in anticipation of a resulting chaos; however, everything ran normally in the city the other day. In everyday life, we notice evidence that suggests the decline of politics as we know it. From public distrust towards political institutions, expressed hatred against politics from both citizenry and elite (politicians as well), decline in political participation, low membership in political parties, to the technicalization of political problems, and others. This course investigates the relationship between the crisis of representative democracy and the death of politics (at which politics is shifted from a space of “contestation and agnostic engagement” to a space of consensus). Scholars have noted during the past decade that representative democracies are experiencing an age of ‘depoliticization’ (Flinders and Wood, 2014; Hay, 2007) or ‘post-politics’ (Mouffe, 2005; Rancière, 2005). From a history of ideas perspective, several terms have been employed to capture this post-politics moment, including: “apolitics”, “anti-politics”, “non-political politics”, “subpolitics”, “post-politics”, “depoliticization”, and “post-democracy”. This course is of a metapolitical nature. It opens a discussion on the very essence of politics (i.e., the Political) and relates it to the very future and survival of democracy. The course comes in six sessions each covers a different theme.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_death_of_the_political_course.pdf"
+            ],
+            "register_url": "https://forms.gle/cpMmPVipqduxZxYQ6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

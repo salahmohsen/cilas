@@ -1,0 +1,36 @@
+{
+  "sha256": "7e3d867a4d7f83ae93a557c4e66f7cc062319ec5b0097cd9ff5978475d5272d8",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Performing Fiction",
+      "title_ar": "أداء الخيال لا يكفى دون المغامرة السرنديبية",
+      "subtitle": "not enough without serendipity quest",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Mohamed Abdelkarim",
+          "email": null,
+          "bio": "After he had written his Master’s thesis of knowledge engagement at ECAV, Switzerland 2014, Mohamed Abdelkarim turned toward producing text-based performances, and become committed to performative practices across multidisciplinary research, concerning the perception of narrating, singing, dancing, detecting and doing.\n\nHis practice engages with these actions through the focus on travel, locomotion, renegades history and picaresque literature, where a series of non-linear, serendipitous encounters with concepts, fictions, almost truth and what is known as historical facts, are gathered to form a script and an archive of events and stories. In this context, his practice aims at producing narratives and expose the way narratives are produced.\n\nAs part of his performative practices, Abdelkarim established a project \"Tadbiqat\" as a performative project that brings together (and synthesis across) lectures, debates, group (close) readings, critical responses, and creative quests, alongside with organizing performance nights under the title of \"Live Praxes.\""
+        }
+      ],
+      "schedule_text": "Fridays: early birds from 10 am to 1:00 pm, and night owls from 5 pm to 8:00 pm",
+      "weekdays": [
+        "fri"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "“While watching a great dance film, I witnessed a dancer enter a painting. Taking into account that human bodies cannot do this, was that movement metaphorical or symbolic or oneiric? It was none of these. It struck me as a fact, an aesthetic fact”\n\n[Jalal Toufic, The dancer’s two bodies]\n\nThe course aims to create a space for experimentation and imagination. Standing on the hypothesis of fiction as a reality, and being skeptical towards reality as a value - If reality does exist, fiction isn’t alternative but it is the other reality - Questioning if serendipity is a spontaneous act or intentional act? - Is we call reality can be misleading? Is it possible to create other realities that are parallel to the dominant reality? Taking and treating all information equally.\n\nIn this course, we will practice the action of “Fictioning” through serendipitous methods, looking at several artistic practices, readings, poems and screenings that are related to the action of “fictioning” and the philosophy of serendipity. We will practice and examine how we can create our own fiction - fictioning ourselves to end up with the other realities.\n\nThe course is divided into three parts, starts on “serendipity and literature”, the second part on “fictioning”, and the last part “performing”: Performing can be textual either written and spoken alongside other practices related to objecthood and living as a practice.\n\nThe course involves readings by Simon O'Sullivan, Deleuze, Guattari, Jalal Toufic, Walid Raad and The encyclopedia of fictional artists.\n\nيهدف المساق الى خلق مساحه للتجريب والتخيل. تقف علي فرضية \"التعامل مع الخيال كواقع آخر\" والتشكك في الواقع السائد كقيمة - إذا كان الواقع موجوداً ، فالخيال ليس بديلاً بل هو الواقع الآخر.\n\nوالتساؤل عما إذا كانت الصدفة \"السرنديبية\" عملاً عفويًا أو عملاً متعمداً؟ - هل مفردة الواقع يمكن أن تكون مفردة مضللة؟ هل من الممكن خلق واقع أخر (متخيل) موازي للواقع السائد؟ هل نستطيع العمل على ما يسمى واقع وما يسمى خيال على قدم المساواة.\n\nفي هذا المساق، سوف نمارس عمل \"الخيال\" من خلال أساليب الصدفة \"العمل السرنديبي\"، بجانب النظر في عدة ممارسات فنية ، قراءات ، وقصائد ومشاريع ارتبطت بعمل \"الخيال\" وفلسفة الصدفة. سوف نمارس ونفحص كيف يمكننا خلق خيالنا و جعل انفسنا خيال على أمل ان ينتهى بنا الحال في واقع آخر.\n\nينقسم المساق إلى ثلاثة أجزاء ، يبدأ بعلاقة \"الصدفة \"العمل السرنديبي والأدب\" ، والجزء الثاني عن الخيال وممارساته ، والجزء الأخير في الآداء النصي المكتوب والمنطوق جنبا إلى جنب مع ممارسات أخرى متعلقة بالجماد (الاشياء) و العيش كممارسة.\n\nتتضمن الدورة قراءات كتبها سيمون أوسوليفان ، دولوز وغوتاري ، جلال توفيق ، وليد رعد وموسوعة الفنانين الخياليين.",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/IpKyEgCUY73sJZuB2",
+      "own_page": null
+    }
+  }
+}

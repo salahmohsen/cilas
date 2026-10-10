@@ -1,0 +1,34 @@
+{
+  "sha256": "460e2d9a70c551982e55d5ffd6b1926f9dc6a5faa5950a8cd0d2eebd21e3e2bf",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Walk like an Egyptian Philosopher",
+      "title_ar": null,
+      "subtitle": "Examining justifications for tolerance",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Anne MISHKIND",
+          "email": "annemishkind@gmail.com",
+          "bio": "Anne MISHKIND is passionate about education as a holistic transformative process, and as a means to increase opportunity, economic mobility, and meaningful participation in the political process. As an undergraduate at NYU's Gallatin School she concentrated in philosophy; a graduate student at the University of Cambridge she studied political thought and intellectual history. Anne is interested in the role of education in shaping shared social and cultural values, political identity, and a common sense of political purpose. Her past experience includes education policy analysis, working with at-risk middle and high school students, and teaching basic education courses for adults. In addition to her role as visiting fellow at CILAS, she works as an education policy analyst at the American Institutes for Research, focusing on issues of equity and access for low-income, minority, and first-generation college students in the US."
+        }
+      ],
+      "schedule_text": "Thursdays, morning and/or evening: 10:00-12:30 (early birds) and 17:00-19:30 (night owls), provided no fewer than five participants sign up per class. Runs for 10 weeks, March 26 through May 28, 2015.",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2015-03-26",
+      "location": [],
+      "description": "description\n\nInteraction among people with differing ideas, beliefs, and practices is an everyday reality in our increasingly globalised, urbanised, and digitised world. Many agree that tolerance and toleration, on both an individual and socio-political level, are necessary for healthy navigation of our complex landscapes. Toleration, however, is an elusive and paradoxical value; it is not always clear why and to what extent we should tolerate ideas and beliefs that, by definition, we think are wrong.\n\nIn this course, we will explore the nature and limits toleration and the contexts in which it is expressed, practiced, tested, and transformed. We will look at various justifications for toleration through the work of thinkers including John Locke, John Stuart Mill, Baruch Spinoza, Bernard Williams, Charles Taylor, John Rawls, Susan Mendus, Jeremy Waldron, David Heyd, and Carlos Frankel.\n\nThroughout the course we will examine current and historical examples of toleration and evaluate the extent to which theory and practice can and do inform one another. We will ask questions such as, how is toleration taught in formal education settings? What do immigration policies say about institutionalized practices of toleration? What types of speech should be tolerated and to what degree can the boundaries be tested?\n\nStudents will develop argumentative ability through classroom debate. As a final project, students will be asked to present a framework for grounding toleration in principled practice based on their own experience and context.\n\nexpectations\n\nParticipants are expected to attend no less than 80% of classes with a readiness to engage in philosophical debate.\n\nParticipants are further expected to engage with assigned reading, viewings and write short, weekly response papers.\n\nParticipants are expected to present a framework both orally and in writing for grounding toleration in principled practice based on their experience and context.\n\nwhy apply?\n\nTo familiarise yourself with pragmatic, moral, and meta-ethical arguments for toleration.\n\nTo analyse the relationship between toleration and pluralism, multiculturalism, relativism, social norms, equality, religion, education, and autonomy.\n\nTo examine tolerance as an attitude, character trait, or personal virtue vs. toleration as a socio-political value or institutional arrangement.\n\nTo discuss various forms that toleration can take such as resignation, indifference, social acceptance, curiosity, and enthusiasm for people different than ourselves.\n\nTo discuss toleration in relation to race, class, and gender.\n\nTo develop the ability to argue both sensibly and sensitively.\n\nTo identify theories of toleration at play in current events.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

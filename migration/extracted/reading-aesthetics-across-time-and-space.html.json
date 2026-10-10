@@ -1,0 +1,34 @@
+{
+  "sha256": "ae3fcd8ecd602802310ec61014d9790c4b7ec2bf800fae68d034c3b1caef37e5",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Reading Aesthetics: Across Time and Space",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Ismail Fayed",
+          "email": null,
+          "bio": "Ismail Fayed is a writer and researcher based in Cairo. He has been writing and researching contemporary artists practices in Egypt since 2007. He was part of the Critics-In-Residence for the KunstenfestivaldesArts in Belgium, Arts-Lab Critic and Festival’s Blogger for “In Transit Festival- Haus Der Kulturen Der Welt”- Germany. He is currently the associate editor of \"Arab Art in the Twentieth Century: Primary Documents\" published by the Museum of Modern Art in New York (2017). His writing appeared in ArteEast, Nafas Art Magazine, Mada Masr and Ma3azef."
+        }
+      ],
+      "schedule_text": "Wednesdays, morning from 10 to 12:30 pm and evening from 5:30 to 8 pm",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "What is art? How can we think about it? What are the different intellectual traditions that tried to elaborate a theoretical and philosophical understanding of it? In this course we are going to read and reflect on primary sources and secondary sources that try to understand what we know as art. We will consider possibilities of making connections between those ideas and percepts and our own context in the here and the now.\n\nThe term “aesthetics” dates back to Alexander Gottlieb Baumgarten (1714-1762) and it is German intellectual tradition that shapes the thinking around the term for centuries to come. However thinking about art, in what it is and how it is and what distinguishes it from any other human endeavour pre-dates Baumgarten use of the term. The contributions of many thinkers and philosophers over time enriched and problematised our understanding of how we understand art and how we relate to it. At the same time the monopolisation of the debates on art by Western thinkers and intellectuals risks inhibiting our own experience of what it means to us and how can we think about it.\n\nThe course is divided into weekly sessions with primary texts by key thinkers and philosophers and accompanying texts that gives context and maps the ideas of each thinker in relation to the general understanding of art and aesthetics. Participants are going to read the texts, reflect on them and formulate their own questions and reactions to the texts in a weekly paper that shows their own personal engagement with the texts and their ideas.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

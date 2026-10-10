@@ -1,0 +1,28 @@
+{
+  "sha256": "997f7458019bc5debf86bc8df860d3acf683a64cb34f4a3ca9869e04160f1b2d",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Urban Culture",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [],
+      "schedule_text": null,
+      "weekdays": [],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "",
+      "flow_links": [
+        "uploads/1/9/1/0/19102967/course_outline_uc.doc"
+      ],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "sha256": "22432fce4d344bd90f3ff6b1e08f1f7bc01b1f13294ffe9a216c40d498c31d30",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Urban Resilience - From Mitigation to Adaptation",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "René BOER",
+          "email": "mail@reneboer.net",
+          "bio": "René BOER holds a Master's degree in Urban Studies from University College London's Urban Laboratory. He works as an urban and architectural researcher in Cairo and is affiliated with the Amsterdam-based research foundation Failed Architecture; and various urban social movements. His work focuses on grass root urban practices, architecture's urban afterlife and artistic representations of the built environment. In the past, he has worked as a freelance journalist for a number of media outlets in Syria, Lebanon and the Palestinian Territories. He has also been associated with the urban research collectives Citymine(d) in Barcelona, ICAHD in Ramallah/Jerusalem and Archis/Volume in Amsterdam. René joins CILAS as visiting fellow in the fields of study Arts and Natural Sciences, and will coordinate the thematic courses Art and the City, and Urban Resilience."
+        }
+      ],
+      "schedule_text": null,
+      "weekdays": [],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "description\n\nAs cities continue to grow, an increasing amount of people is exposed to various hazards related to the urban environment. ‘Urban resilience’ refers to the capacity of different stakeholders in a city, from the inhabitants of informal areas to the municipality’s policy makers, to respond to these hazards. In this course, students will develop an understanding of the possible impact of different hazards, from state violence to climate change, on cities. The various dimensions of the concept of resilience and the difference between adaptation and mitigation will be discussed extensively. Furthermore, this course will focus on possible strategies to improve urban resilience and on a wide range of issues and controversies that influence the design of these strategies. Students will develop a toolkit that enables them to identify an urban hazard, research its different dimensions and develop a strategy to improve urban resilience with regard to this specific hazard.\n\nexpectations\n\nStudents are expected to select and summarise three (newspaper) articles on a specific type of urban hazard.\nStudents are expected to produce a risk analysis and strategy paper consisting of the identification of a specific urban hazard in Cairo, an analysis of the risks involved and an outline of possible strategies responding to his hazard. (Ideas and drafts will be discussed in the second half of the course).\n\nobjectives\n\nUnderstand the various dimensions of the concept of resilience.\nAnalyse how cities and urban life are threatened by different hazards.\nLearn how cities are classified by their most characteristic and threatening hazard.\nExamine how hazards can pose serious risks to people’s lives and livelihoods\nDiscover how different stakeholders can use different strategies to respond to these hazards.\nDistinguish between adaptation and mitigation.\nIdentify which new technologies can improve resilience.\nBe able to develop a strategy to improve urban resilience",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

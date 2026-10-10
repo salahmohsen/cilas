@@ -1,0 +1,34 @@
+{
+  "sha256": "e44de8413d98258544aadd60e16065ad686bc899b8c8e12f37fb7bb773efca4f",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "reading Plato's Republic in Cairo",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "I-Kai JENG",
+          "email": null,
+          "bio": "I-Kai JENG is currently finishing his PhD in Philosophy and MA in Classics at Boston University. His dissertation \"Knowledge and Logos in Plato's Sophist\" discusses the role language plays in the process of learning. Previously he obtained his MA degree in Philosophy back in his hometown of Taipei from the National Taiwan University with a thesis on Max Scheler's phenomenology of emotions as the foundation of ethics. I-Kai also works as a freelance translator of academic works, including translations of Foucault's Fearless Speech and Norbert Elias's Über die Zeit into Chinese Mandarin. Being devoted to the Socratic spirit of philosophizing, he is always game for conversations about existentialism, the crisis of modernity, sociology, political philosophy, or questions of translation. When he has free time, he watches movies and plays tennis, takes pictures with his cameras, or practices paper folding (origami)."
+        }
+      ],
+      "schedule_text": "Wednesdays at CILAS starting January 6th, 2016, from 10 to 12:30 in the morning or from 5:30 to 8 in the evening",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-06",
+      "location": [],
+      "description": "Whoever desires to make the world a better place sooner or later encounters the tension between theory and practice, between ideal and reality. One might desire to unify the two: to make theory that is more in line with practice. But are impractical theories bad? Plato says no. In his Republic, which investigates what the best or ideal society is, he argues that only useless theories are useful, and that the ideal society is relevant even when it is not realisable.\n\nThree questions immediately arise. Why does Plato resist the unification of theory and practice? Is the best society the same for every place and every time? Finally, are present-day conditions more favourable than in Plato's time for unifying theory with practice? This course will be a collective encounter with the Republic in light of the theory-practice problematic.\n\nThe two great themes in this work are justice and philosophy, or broadly speaking, the ideals and realities in politics and education. What is the relation between politics and education? Is education for the sake of better citizens? Can there be good education in a corrupt country, or good politics despite bad education? Since we are ourselves participating in education, the course is reflexive in spirit: an exercise in clarifying our own deepest longings and ideals.\n\nwhat to expect\n\nEveryone, myself included, will write one one-pager per week on an assigned topic, discuss it, and edit them in class.\n\nBring your sense of humour to the discussion because one cannot understand Plato without it!\n\nActivate your imagination: there will be stage-directing, role-playing, and drawing.\n\nwhy apply\n\nTo understand the question of justice and the nature of politics.\n\nTo become familiar with the arguments for and against the classical view of education.\n\nTo equip oneself with a preliminary framework for analysing political affairs.\n\nTo grasp the metaphysical and psychological foundations of Western political thought.\n\nTo question, interrogate, and reflect on the role of knowledge in society.",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

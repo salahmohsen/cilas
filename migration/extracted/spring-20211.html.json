@@ -1,0 +1,148 @@
+{
+  "sha256": "4ae9a67abeca68df08c2fd848dec5d620e34aa79180ad6cb029e14359baa97a9",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring 2021",
+        "season": "spring",
+        "start_year": 2021,
+        "start_date": null,
+        "deadline": "2021-04-20",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Politics and Technics: Infrastructure, Colonialism, Warfare",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Rana BAKER",
+                "email": "ranabaker91@gmail.com",
+                "bio": "Rana BAKER is PhD candidate at Columbia University, Department of Middle Easterm, South Asian and African Studies. She is interested in the study of infrastructure and environmental resources as micro-sites of political contestation in colonial and post-colonial contexts. Her current research focuses on the \"techno-politics\" of the Egyptian railways including the relationship between the railways and emergence of land as an object of development."
+              }
+            ],
+            "schedule_text": "Starting April 25th from 3:30 pm to 5:30 pm for eight consecutive weeks",
+            "weekdays": [],
+            "start_time": "15:30",
+            "end_time": "17:30",
+            "weeks": 8,
+            "start_date": "2021-04-25",
+            "location": [],
+            "description": "Is infrastructure political? Can infrastructure colonise, dispossess, and act as an instrument of warfare? We tend to think of infrastructure as useful objects, but can we think of them as built ideologies? Historically, infrastructural projects have been regarded as necessary preconditions of modern and efficient states. So much so that malfunctioning sewers and perennial power cuts have come to invoke images of starved and underdeveloped countries. However, the question of whether infrastructure itself fuels underdevelopment is rarely asked. This course proposes a new way of thinking about infrastructure. By studying the histories of various infrastructural projects in the Middle East, we will critically assess their role as sites of political contestation rather than as “neutral technologies.” Infrastructure has been used by colonial states to exploit the natural resources of colonised territories and to control the populations they ruled. At the same time, infrastructure is crucial in the formation of radical political movements and rich traditions of political struggle. Yet, not all infrastructure is the same. By paying attention to the material qualities and specific history of each form of infrastructure we study, we will be able to understand how different forms of infrastructure enable and foreclose different political possibilities.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/technics_and_politics__revised_.pdf"
+            ],
+            "register_url": "https://forms.gle/Zck2JbMc7R52QkoXA",
+            "own_page": null
+          },
+          {
+            "title": "Critical Theory and Social Change - Part I",
+            "title_ar": null,
+            "subtitle": "The Age of Great Revolutions",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed DARDIR",
+                "email": "add2131@columbia.edu",
+                "bio": "Ahmed DARDIR holds a PhD in Middle Eastern Studies from Columbia University. His research focuses on questions of power, state, subjectivity, identity, and colonialism. He is also interested in literature and theatre. Ahmed taught at CILAS as part of his responsibilities as fellow in the Humanities in the academic year 2017-2018. He gave an earlier incarnation of this course in the Spring of 2018 entitled “Weapon of Theory” borrowing from Amilcar Cabral."
+              }
+            ],
+            "schedule_text": "Starting May 19th from 5:30 pm to 7:30 pm for six consecutive weeks",
+            "weekdays": [],
+            "start_time": "17:30",
+            "end_time": "19:30",
+            "weeks": 6,
+            "start_date": "2021-05-19",
+            "location": [],
+            "description": "What can moments of upheaval, revolution, and political and social change tell us about the theories they were attached to? What can theory tell us about social change? How does political and social theory respond to change? Is there an intellectual history for revolution and counterrevolution? This course aims to provide a survey of the great political, social, and intellectual revolutions that shaped the nineteenth and early twentieth century and set the tone for the years that followed. It aims to ground the major philosophical interventions of the century (notably Hegel and Marx) in revolutionary practice. It is in fact astonishing how theories that seem obscure and undecipherable become clear and lucid once read in the light of the history that shaped them.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/critical_theory_and_social_change-_final.pdf"
+            ],
+            "register_url": "https://forms.gle/Zck2JbMc7R52QkoXA",
+            "own_page": null
+          },
+          {
+            "title": "Meaningful Conversation with (a) Quran",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Radwa SALEM",
+                "email": "rsalem90@gmail.com",
+                "bio": "Radwa SALEM first joined CILAS in 2013 transitioning from her undergraduate studies in finance to going on to pursue a graduate degree in social work at NYU. In 2014, she began studying the Quran in light of the Risale-i-Nur collection. Since 2017, she has been facilitating weekly discussions called Meaningful Conversations (MC). The aim of MC is to allow space to inquire about one's inner world and discuss with others how one can 'become' a manifestation of mercy from within and with creation. Her interests are the Quran, social work and meaningful conversation."
+              }
+            ],
+            "schedule_text": "Starting April 28th from 7:30 pm to 9:30 pm for ten consecutive weeks",
+            "weekdays": [],
+            "start_time": "19:30",
+            "end_time": "21:30",
+            "weeks": 10,
+            "start_date": "2021-04-28",
+            "location": [],
+            "description": "'Read in the Name of Your Lord' is stated to be the first revealed quranic verse. The question is how do I read in the name of my Lord? This class is an exploration in reading Quranic verses. We will be using the methodology proposed in the collection Risale-i-Nur (the Epistle of Light). In this collection, we see that the methodology used suggests that there are three Qurans: (wo)man, the universe and the Book. Together, we will be using the readings, the universe, the Quran and ourselves to answer the question of: How can the quran become an existential, personal, meaningful read? The class is open to anyone curious about the Quran. We will use the tools of observation, inquiry, reasoning and reflection. Most importantly, we will use our questions, our feelings, and our experiences.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/meaningful_conversation_with__a__quran.pdf"
+            ],
+            "register_url": "https://forms.gle/Zck2JbMc7R52QkoXA",
+            "own_page": null
+          },
+          {
+            "title": "Singing the Nile",
+            "title_ar": null,
+            "subtitle": "Tracing renderings of the Nile from epistemological reference to lyrical geography",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Alia MOSSALLAM",
+                "email": "aliamossallam@gmail.com",
+                "bio": "Alia MOSSALLAM is interested in songs that tell stories and stories that tell of popular struggles behind the better-known events that shape world history. She is a EUME fellow of the Alexander von Humboldt Foundation in Berlin, writing a book on the visual and musical archiving practices of the builders of the Aswan High Dam and Nubian communities displaced by it. Some of her writings can be found in The Journal of Water History, The History Workshop Journal, the LSE Middle East Paper Series, Jadaliyya, Ma’azif, Bidayat and Mada Masr. An experimental pedagogue, she has written a short-story “Rawi” with 60 Pages and founded the site-specific public history project “Ihky ya Tarikh”. Alia has taught at the American University in Cairo, CILAS, and the Freie Universität in Berlin."
+              }
+            ],
+            "schedule_text": "Starting April 30th from 3 pm to 5 pm for seven consecutive weeks",
+            "weekdays": [],
+            "start_time": "15:00",
+            "end_time": "17:00",
+            "weeks": 7,
+            "start_date": "2021-04-30",
+            "location": [],
+            "description": "The course explores the different ways the Nile has been told through ancient text, songs, poetry, memoirs, films and political archive, particularly in Egypt, and in conversation with other contexts. We will chart the changing relationship with the river in a historical chronology from blessing to danger, from myth to high modernist subject and from future to historical flow. What has the Nile represented for its communities as a source of knowledge? What kind of fluid popular historiography has its flow inspired? From ancient Egyptians to Nubian communities, peasants, hydroelectric technicians, and the lands that thirst for it? How has it been articulated through lyrical geography and as epistemological reference? Most importantly, how can the river emerge as protagonist and not merely as silent medium of our stories? The course material will consist of both primary resources and theoretical readings.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/Zck2JbMc7R52QkoXA",
+            "own_page": null
+          },
+          {
+            "title": "Debt: A Transdisciplinary Exploration",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hengameh (Henny) ZIAI",
+                "email": "hengameh.ziai@columbia.edu",
+                "bio": "Hengameh (Henny) ZIAI received her PhD from Columbia University Department of Middle Eastern, South Asian and African Studies Department. She works on critical political economy and histories of resistance in Sudan under Ottoman-Egyptian rule. Firmly committed to transgressing disciplinary boundaries, her works lies at the intersection of Middle East and African Studies, and engages postcolonial theory, critical political economy, and Islamic studies. She has a minor obsession with discovering rare archives and is passionate about (trying) to cook Iranian food."
+              }
+            ],
+            "schedule_text": "Starting April 29th from 3:30 pm to 5:30 pm for seven consecutive weeks",
+            "weekdays": [],
+            "start_time": "15:30",
+            "end_time": "17:30",
+            "weeks": 7,
+            "start_date": "2021-04-29",
+            "location": [],
+            "description": "Debt has acquired such a centrality in our lives that some argue that homoeconomicus, the ‘economic man’ of liberal theory, has been displaced by a wholly new figure: the ‘indebted man.’ Is our indebtedness a new phenomenon, a function of increasingly global regimes of neoliberal governance? Is it merely a product of late capitalism? What is the relationship between government debt and individual debt? Or between debt, space, and time? Is debt itself a form of colonialism? The question of debt has been engaged from multiple disciplinary vantage points.\n\nAnthropologists have long shown that debt is Janus-faced, a double-edged sword that at times serves as the basis of sociality, community, and autonomy (as in the gift economy), while at others times generating exploitation, individualism, and violence (especially when debt is quantified in money). When does it switch from one to the other?",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_-_course_proposal_-_debt.pdf"
+            ],
+            "register_url": "https://forms.gle/Zck2JbMc7R52QkoXA",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

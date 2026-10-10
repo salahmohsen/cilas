@@ -1,0 +1,35 @@
+{
+  "sha256": "ce903b117f70ca8c0e76fb0c784902afce998509bea991ba7cb73fe27f85d36b",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Falling",
+      "title_ar": "السقوط",
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sandra FRUEBING",
+          "email": null,
+          "bio": "Sandra FRUEBING studied Product Design at the Royal College of Art in London where she graduated in 2013. She worked with a range of different design studios in London and throughout Europe before she moved to Cairo to teach in the product design foundation course at the German University. Besides her teaching commitment Sandra participates in a range of extra curriculum activities. She takes part in international residencies and works locally on community projects. In her own practice she explores themes as falling, walking, utopias and considers society and culture as a product of their circumstances.\n\nدرست ساندرا فروبنج تصميم المنتجات بالكلية الملكية للفنون في لندن حيث تخرجت في 2013. عملت مع مختلف استوديوهات التصميم في لندن ثم أوروبا قبل أن تنتقل إلى القاهرة لتدرس أسس تصميم المنتجات في الجامعة اﻷلمانية. وتشارك ساندرا في العديد من اﻷنشطة اﻹضافية إلى جانب إلتزامها بالتدريس، حيث عملت على مشاريع مجتمعية على مستوى محلي وشاركت في إقامات فنية عالمية. وهي تستكشف موضوعات تخصها مثل السقوط والمشي واليوتوبيا وتعتبر المجتمع والثقافة جزءً من الظروف المحيطة بهم."
+        }
+      ],
+      "schedule_text": "Wednesday mornings from 10:00 am to 12:30 pm, and Tuesday evenings from 5:30 pm to 8:00 pm.",
+      "weekdays": [
+        "tue",
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The act of falling is simple. Falling is what happens when you are off balance; it makes your body drop and loose control and often provides amusement for spectators. Defined as a downward movement from a higher to a lower level, to hang down, to drop away, to show disappointment, to lose one’s balance and collapse, to be captured or to decrease, to ‘fall’ conjures a multitude of images and associations.\n\nFalling is typically perceived as a negative phenomenon and associated with failing. However, learning happens through failing. The course will not only consider the physical act of falling but will examine how it is seen in society, how it connects to our social order, to standards, to football and comedy. We will look at the philosophical side of a dropping object and loosing control and see how amusement parks and popular culture make us enjoy a sudden change in altitude.\n\nWhat to expect from the course:\n\nThe course will\n\ndiscuss various ideas, backgrounds\n\nbe very open for discussion\n\nconnecting the seemingly unconnected\n\ninclude performance, photography, and experimental elements\n\nhost a group discussion by students and fellow on equal levels\n\nemploy practical and theoretical work\n\nWhy join:\n\nto learn about the connection between art, design, and society\n\nto learn about aesthetics\n\nto develop a new research methodology\n\nto develop a personal project as a student enrolled in the course\n\nto together with experts of different backgrounds\n\nحركة السقوط حركة بسيطة. السقوط هو ما يحدث عندما يفقد الشخص اتزانه؛ هو يُفقد الجسم تحكمه و يجعله آيلاً للوقوع، و كثيراً يرسم البسمة على وجوه المشاهدين. \"السقوط\" يوحى بالعديد من الصور و الروابط؛ يُفسر كحركة من أعلى إلى أسفل، و كحالة التعليق، و كالتساقط، و أحياناً يأتي بمعنى فقدان التوازن و الانهيار، أو إظهار الخيبة، أو الانحدار. المعاني كثيرة و الكلمة واحدة.\n\nالسقوط عادة يؤخذ كظاهرة سلبية و يتم ربطه بالفشل، على الرغم من أن التعلم يحدث جراء الفشل. هذا المساق لن يقتصر على السقوط من الناحية الجسمانية لكن أيضاً سنتفقد كيف ينظر المجتمع لهذه الظاهرة، وعلاقتها بالنظام الاجتماعي و بالمعايير، علاقتها بكرة القدم و الكوميديا. سنأخذ منظوراً فلسفياً لسقوط الأشياء و فقدان التحكم، و سنرى كيف أن الملاهى و الثقافة الشعبية تجعلنا نستمتع بالتغير المفاجئ فى الأرتفاع.\n\nماذا نتوقع من هذا المساق؟\n\nهذا المساق سوف:\n\nيناقش العديد من الأفكار والخلفيات\n\nيكون مساحة للنقاش المفتوح\n\nوصل ما يبدو غير موصول\n\nيحتوي على عناصر أدائية و فوتوغرافية و تجريبية\n\nيدير نقاش جماعي مبنى على المساواة بين الزميل الأكاديمي و الطلاب\n\nيوظف العناصر العملية و النظرية للعمل\n\nلماذا ننضم؟\n\nكي تتعرف على العلاقة بين الفن، و التصميم، و المجتمع\n\nكي تتعرف على الجماليات\n\nكي تنمي منهجية بحثية جديدة\n\nكي تعمل مع خبراء من خلفيات متعددة\n\nكي تقوم بالعمل على مشروعك الخاص",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+      "own_page": null
+    }
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "sha256": "9ca26afb6bc9ce2465366ca2968d5d723a17cd7cf36ae10f484c7d8e8f3d12e4",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Semester: Labs 2025",
+        "season": "spring",
+        "start_year": 2025,
+        "start_date": "2025-01-18",
+        "deadline": "2025-01-02",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "اللعب بالأرشيف: معمل بحثي إبداعي",
+            "title_ar": "اللعب بالأرشيف: معمل بحثي إبداعي",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa Dardir",
+                "email": "ahmaddiaa@gmail.com",
+                "bio": "Ahmed Diaa Dardir holds a PhD from Columbia University in Middle Eastern Studies and the highly esteemed position of “Sadīq CILAS.” His research focuses on questions of colonialism, subjectivity, and power. As a CILAS fellow, Ahmed has conducted and coordinated various courses and workshops in the Humanities combining Political Theory, History and Literature, including two workshops on Shakespeare. Ahmed is also a huge fan of theatre and has some experience in the field."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-20",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "ماذا يخبئ الأرشيف؟ ماذا يختزن في بطنه وماذا يخفي ويمحو ويشوه؟ ما هي الانحيازات التي تحدد ما يقال وما لا يقال؛ ما يؤرشف وما يطويه النسيان؟ وهل يحوي، إلى جانب الحقائق التاريخية، عناصر ملهمة للخيال؟ كيف يمكن أن يصبح الأرشيف مصدرا للعمل الإبداعي؟ وكيف يمكن للقراءة الإبداعية أن تجابه انحيازات السردية السائدة أو تصلح ما أفسده الأرشيف؟ كيف يمكننا الاستفادة من كل هذا من أجل \"مسرحة\" الأرشيف وكيف تقدم هذه المسرحة أشكالا جديدة للقراءة والتأمل؟\n\nعندما نقرأ المصادر الأولية لأي حدث تاريخي، سواء كانت هذه المصادر مقالات صحفية، أو مصادر غير تقليدية، أو مذكرات لأشخاص عاينوا الأحداث وشاركوا فيها، فإننا نواجه كذلك الفراغات المتروكة سهوا أو عمدا؛ نستكشف بالذات ما تسكته السرديات السائدة أو تتغاضى عنه، كما نستكشف الصمت الناتج عن التحيزات أو حذف أصوات المستضعفين، كما نقابل انحيازات السلطة المعرفية التي تحتكر الحق في التدوين والتوثيق.\n\nوهنا يأتي دور الممارسة الإبداعية لملء هذه الفجوات ولتحدي هذه التحيزات.\n\nكيف يمكن، مثلا، أن نعيد الحياة للشخصيات المجموعات التي شاركت في الثورة العرابية من خلال التقارير البريطانية ومن خلال قصاصات الجرائد المنحازة ضد عرابي أو معه؟ كيف يمكن أن نستعيد فصول العمل السري في ثورة 1919 ونحن نقرأ التقارير التي كتبت في ظل رقابة بريطانية صارمة؟ كيف نستنبط تفاصيل الحراك السياسي والاجتماعي في فلسطين في فترة ما قبل النكبة ونحن نقرأ التقارير عن ثورة 1936؟ كيف يمكن أن نعيد تخيل تفاصيل عملية فيينا الغامضة إذا جمعنا الروايات المختلفة التي لا تلامس كلها سوى جانب بسيط من الحقيقة؟",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/اللعب_بالأرشيف__معمل_بحثي_إبداعي.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "مختبر الترجمة",
+            "title_ar": "مختبر الترجمة",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "سارة السباعي",
+                "email": "ssebaye@gmail.com",
+                "bio": "سارة السباعي، مترجمة ومحررة وباحثة ذات خبرة طويلة في مجال العلوم الإنسانية والاجتماعية وبالأخص دراسات الجندر والتنمية. سبق لي العمل مع جهات متعددة على مشاريع مختلفة، من ضمنها الاتحاد الأوروبي وبرنامج الأمم المتحدة الإنمائي وأوكسفام واتحاد بلديات هولندا وعلشانك يا بلدي، ومن العمل في كل تلك الجهات المتعددة والمختلفة، نما لدي اهتمام أصيل بدور الترجمة في التبعية والدور الذي قد تلعبه في التحرر. أعمل حاليًا كباحثة في وحدة دراسات المرأة بكلية الاقتصاد والعلوم السياسية بجامعة القاهرة."
+              },
+              {
+                "name": "مصطفى طه",
+                "email": "Mostafa.taha.salam@gmail.com",
+                "bio": "مصطفى طه، مترجم ومحرر ذو خبرة في مجالات وأنواع مختلفة من المحتوى. خلال السنوات الماضية، عملت مع عدد من المنافذ الإعلامية والدوريات ومنتديات الأبحاث البارزة، منها منتدى الشرق وسبرينجر نيتشر وللعلم وهافنجتون بوست ونولدج سيتي. وحاليا أعمل محررا لأخبار الاقتصاد والأعمال لدى إنتربرايز."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "12:00",
+            "end_time": "15:00",
+            "weeks": null,
+            "start_date": "2025-01-25",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "لماذا نترجم؟ وهل الترجمة هي مجرد ممارسة لغوية، أم عملية فكرية مليئة بالانحيازات والاختيارات عند كل منعطف؟ كيف تؤثر تصوراتنا عن اللغتين العربية والإنجليزية على الترجمة وجدواها؟ ما الذي يحتاجه المترجم من مهارات؟ هل نحتاج إلى مترجمين في عصر الذكاء الاصطناعي؟\n\nنحاول في مختبر الترجمة مناقشة هذه الأسئلة وغيرها عبر طرح تصور للترجمة يتجاوز كونها تلك العملية الآلية لاستبدال لغة بأخرى ومعايشة تجارب اشتبك فيها المترجمون والمترجمات مع النصوص لتوظيفها لخدمة القضايا التي يؤمنون بها. كما نتعرض لخصوصية المعاني وكيف يتحكم سياق النص وغرضه ووسيطه في اعتباراتنا أثناء الترجمة. ونحاول تجاوز مدرسة \"قل ولا تقل\" في العربية نحو نهج أكثر انضباطًا وأوسع أفقًا.\n\nوبالطبع، سنختبر معًا ما نتوصل إليه من أفكار عبر الممارسة العملية.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/مقترح_مختبر_الترجمة_-_سارة_السباعي_ومصطفى_طه.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "البنيان الفلسفي وأدواته: الفلسفة من خلال اللغة (معمل بحثيّ)",
+            "title_ar": "البنيان الفلسفي وأدواته: الفلسفة من خلال اللغة (معمل بحثيّ)",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "إسلام سعد",
+                "email": "engeslam.saad@yahoo.com",
+                "bio": "باحث ومترجم مصري ينشغل بقضايا الحداثة في العالَم الإسلامي وفلسفة الدين؛ له ترجمات في نظرية المعرفة، وفلسفة الدين، والحوار بين الأديان، والعلاقة بين العلم والدين. عمل مترجمًا في \"المعهد الدولي للدراسات القرآنية IIQS\"، ومترجمًا وباحثًا في كلٍّ من \"مؤسسة الحرية للجميع LibForAll Foundation\"، و\"مركز القيم الحضارية المشتركة CSCV\". صدرت له ترجمات، منها: \"الأدلة والبحث – نحو إعادة البناء في الإبستمولوجيا\"، للفيلسوفة البريطانية سوزان هاك؛ و\"تنويعات التجربة الدينية\"، للفيلسوف الأمريكي ويليام جيمس، بالاشتراك مع علي رضا؛ و\"الإبستمولوجيا – مقدمة معاصرة في نظرية المعرفة\"، للفيلسوف الأمريكي روبرت أودي؛ و\"الدين وأصل الكون والحياة\"، للفيلسوف الأمريكي كيلي جيمس كلارك، و\"هل يمكن للمسلم أن يَكون تطوريًا\"، للفيلسوف التركي جانر تسلمان، بالإضافة إلى ترجمات أخرى ليورجن هابرماس، ومارك ويب، وغيرهم.."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-19",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "سنسعى في هذا المقرَّر الدراسي إلى الاشتغال على عدة محاور: يتعلق المحور الأول بسؤال \"ما المعرفة ؟\"، وما هي مصادرها؟ وكيف نستطيع الحكم على مدى جودة الأدلة التي تمكننا من الحكم على اعتقاداتنا فنعرف أنها صادقة أم لا. كما سنتعرض إلى \"الإبستمولوجيا \"، أي نظرية المعرفة (والتسويغ)\"، وسنَدْرِس الإبستمولوجيا القديمة والحديثة؛ وبطبيعة الحال، لا يمكننا الحديث عن المعرفة دون التعرُّض إلى \"الشَكِ\" و\"النزعة الشَّكِيَّة\". ويسعى ثاني هذه المحاور، وبعد أن نكون قد انتهينا من \"معرفة المعرفة\" وطرق تكوُّنها، إلى صقل أدواتنا الفلسفية، فنبدأ بمعرفة أهم هذه الأدوات، وتطبيقها على قضايا ومسائل يفكر فيها الطلاب. أما ثالث هذه المحاور فيبدأ بفلسفة اللغة والسؤال عن أصل اللغة وتطورها. وفي هذا السياق، سنشتغل على \"اللغة الدينية\" باعتبارها نموذجًا للتعامل مع لغة \"خاصة\"، وسندرس مثالًا تطبيقها على ما يُسَمَّى بـ \"احتمالات الدلالة\". ثم نختتم المقرر بمُقارَبَة نظرية/تطبيقيّة، من خلال الاشتغال على النصوص الفلسفية بلغتين (العربية والإنجليزية). وهذا يستلزم بالضرورة ممارَسَة الترجمة، فنبدأ من أساسيات لغوية لا غنى لأي دارس جاد عن معرفتها، ثم سنعمل معًا على نصوص فلسفية متعددة من جهة مستوى تحليلها، ومن جهة الكتابة عنها باللغتين، ثم ممارَسَة الترجمة.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_outline.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          },
+          {
+            "title": "A Picture is Worth a Thousand Words - Reading and Writing the Photographic Image",
+            "title_ar": "الصورة بألف كلمة - قراءة وكتابة الصورة الفوتوغرافية",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Yasmine Hussein",
+                "email": "Yasmine.Hussein11@gmail.com",
+                "bio": "Yasmine Hussein is a researcher and artist. She obtained her bachelor's degree from Sorbonne University (Paris IV), a master's degree from l’Ecole Pratiques des Hautes Etudes in Paris, and a Master of Arts and Archaeology from the University of Alexandria. She worked as a researcher at the Bibliotheca Alexandrina and currently holds the position of Research Unit Manager at an independent research center. Over the past 15 years, she has worked on numerous research projects and publications, such as \"Sacred Places and Popular Practices Across the Mediterranean\" (2010) and \"Alexandria Past and Present\" (2020), in addition to several articles in foreign and Egyptian journals. She has also delivered numerous lectures and workshops and laboratories in the fields of arts, heritage, and the environment. As a visual artist, she has participated in several solo and group exhibitions and has curated exhibitions at the Bibliotheca Alexandrina, Darb 1718, and has displayed her work in Egypt, France, Tunisia, Canada, and Greece."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "17:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": "2025-01-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The photographic image plays a pivotal role in our modern era, an age in which image and media culture have become more dominant than ever. Given this powerful influence, it has become necessary to regard the image as a form of discourse that goes hand in hand with other modes of utterance, or as the widely-known old saying goes; one picture is worth a thousand words. The image carries its own language, filled with symbols and meanings that require us to delve deeply to decipher its mysteries, and to grasp its significance within its cultural and social context. The process of interpreting these scenes depends on tracing the methods of expression and communication used and understanding the relationship between the depicted elements —the people, places, events—and on comprehending the system of signs that renders these images multilayered in their interpretation.\n\nCapturing an image is a deliberate act and an artistic one that reflects the photographer's awareness of all aspects of the captured scene and its production mechanisms. The viewer, in turn, deciphers this work according to their own modes of interpretation where both the photographer and the viewer draw on their cultural and interpretive backgrounds that affect their understanding of the image.\n\nThe lab aims to enable participants to explore and analyze the stories behind the photos, which allows them to gain a deeper understanding of photos as historical and cultural sources (reading), and to enhance their ability to create and express themselves through photos (writing).\n\nThrough various exercises, observation walks, weekly readings, group discussions, and interviews with artists and researchers, participants will delve into the cultural, historical and social aspects of the image, and will acquire skills in understanding the visual elements in collective storytelling. Participants will develop their own projects, using their personal, family, or research photo archives to extract and interpret the hidden stories and meanings behind images, culminating in an exhibition of their projects.\n\nThis lab offers an opportunity to reconsider history and the silent narratives encapsulated by photos, thus creating a space for interpreting and creating new stories through visual culture.\n\nتلعب الصورة الفوتوغرافية دورًا محوريًا في عصرنا الحديث، عصر أصبحت فيه ثقافة الصورة والوسائط أكثر هيمنة من أي وقت مضى. لذا أصبح من الضروري اعتبار الصورة كشكل من أشكال الخطاب يوازي الخطاب اللغوي، خاصةً عندما نتذكر المقولة المشهرة؛ صورة واحدة تساوي ألف كلمة. تحمل الصورة لغتها الخاصة، المليئة بالرموز والمعاني التي تتطلب منا الغوص بعمق لفك شفرات ألغازها، ولفهم مغزاها ضمن سياقها الثقافي والاجتماعي. تعتمد عملية تفسير هذه المشاهد على تتبع أساليب التعبير والتواصل المستخدمة وفهم العلاقة بين العناصر المصورة —الأشخاص، الأماكن، الأحداث— وعلى إدراك نظام الإشارات الذي يجعل هذه الصور متعددة الطبقات في تأويلها.\n\nالتقاط صورة هو فعل متعمد وفني يعكس وعي المصور بجميع جوانب المشهد الملتقط وآليات إنتاجه. يقوم المشاهد بدوره بفك تشفير هذا العمل وفقًا لمفاهيمه وتأويلاته الشخصية، حيث يستند كل من المصور والمشاهد إلى خلفياتهما الثقافية والتأويلية التي تؤثر في فهمهما للصورة.\n\nيهدف المختبر إلى تمكين المشاركين من استكشاف وتحليل القصص المخبأة خلف الصور مما يمكّنهم من فهم أعمق للصور كمصادر تاريخية وثقافية (قراءة)، وتعزيز قدرتهم على الإبداع والتعبير عن أنفسهم من خلال الصور (كتابة).\n\nمن خلال مجموعة متنوعة من التمارين، جولات الملاحظة، القراءات الأسبوعية، المناقشات الجماعية، والمقابلات مع فنانين وباحثين، سيتعمق المشاركون في الجوانب الثقافية والتاريخية والاجتماعية للصورة، وسيكتسبون مهارات في فهم العناصر البصرية في سرد القصص الجماعي. سيطور المشاركون مشاريعهم الخاصة، باستخدام أرشيفات الصور الشخصية، العائلية، أو البحثية لاستخراج وتفسير القصص والمعاني المخفية وراء الصور، ما ينتهي بمعرض لعرض مشاريعهم.\n\nيقدم هذا المختبر فرصة لإعادة النظر في التاريخ والسرديات الصامتة التي تحتجزها الصور، مخلقةً بذلك مساحة لتفسير وخلق قصص جديدة من خلال الثقافة البصرية.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/lab_flow.docx__1_.pdf"
+            ],
+            "register_url": "https://forms.gle/kesfPxSiMxP2j6M37",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

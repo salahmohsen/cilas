@@ -1,0 +1,343 @@
+{
+  "sha256": "72f4b9b7b6993992b5734981e003a1f00f5901f3715f2b5aa48b908ce14d8468",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Trimester three 2016-2017",
+        "season": "spring",
+        "start_year": 2017,
+        "start_date": "2017-04-09",
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Philosophy of Education: On Becoming a Humanistic Educator",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Riham AZIZ",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The moment that we are born, we are classified as humans, yet we rarely find a simple answer to the never asked questions: What is to be a human? Are there any traits that distinguish us among all other creatures? Are they innate or learnt?\n\n\"On Becoming a Human: On Becoming a Humanistic Educator\" is a course that addresses the above mentioned questions. The course follows inquiry based approach in order to avoid providing participants with ready- tailored answers. Each participant is responsible to start a journey of unlearning, relearning and knowing who s/he is. In order to reach that, participants will be asked dig deeply for their own definition of truth via asking as many questions as they can.\n\nنحن نولد و يتم تصنيفنا أننا بشر، لكن هل نحمل سمات الإنسانية؟ هل للغنسانية سمات تميزنا عما يحيط بنا من كائنات حية. هل نحن الكائنات الأعلي في تراتبية سلم الكائنات، هل تفوقنا المزعوم هذا يرجع إلى امتلاكنا المعرفة الحقة بحقيقة جوهرنا الإنساني؟\n\nيسعي مساق \"أن تصبح إنساناً: أن تصبح مربياً إنسانياً\" إلي تسليط الضوء في البدء عن الذات الإنسانيةن كيف يمكنك اكتشاف ذاتك كإنسان، كيف يمكنك التعرّف علي كل ثقوب روحك السوداء، كيف يمكنك أن تمنح نفسك إعادة الولادة تارة أخرى وأنت تحمل وعياً لما تريده حقاً. يطرح المساق عدداّ من التساؤلات عن ذاتنا الحقيقية، عن ذواتنا المزيفة أو ما نظن انها كذلك. يعيد المساق التأمل في كل ما لا تمنحه لنا الحياة من وقت او جهد لنفهم لمذا نعاني اليوم،و لما نشعر أننا بالرغم من كل شيء محيط بنا و يبدو أنه يجعلنا أقرب، إلا أننا في واقع الأمر نشعر بعزلة شديد، نشعر باغتراب يلازمنا باختلاف الأعمار و الأجناس.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "philosophy-of-education.html"
+          },
+          {
+            "title": "The foundation of knowledge: From al-Kindī to al-Fārābī.",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Guillaume DE VAULX",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "What is the basis of knowledge? What is our first knowledge? What is the science we have to begin with and proceed to all the sciences?\n\nThe question of origin (where does it come from?) and foundation (what is it built on?) is a classical question coming from Meno(Plato’s dialogue) which had great developments in classical Arabic philosophy with a religious issue: what comes first, science or revelation?, an historical issue: how to transfer science from a learned nation to an ignorant one?, an epistemological issue: how to discover what never appears in front of our eyes? a sociological issue: everyone pretends to be a scholar, but who is a real one?, and pedagogical issue: how can we help pupils to access to a knowledge they ignore?\n\nما هي أسس المعرفة؟ وما هي معارفنا الأولى؟ وما هو العلم الذي نبدأ به ونلج به إلى كل العلوم؟\n\nالسؤال حول الأصول (من أين تأتي المعرفة؟) والأسس (على ماذا تبنى؟) هو سؤال قديم من مينو (في محاورات أفلاطون) التي تطورت تطورًا كبيرًا في الفلسفة العربية الكلاسيكية في مسألة دينية: ما الأول: العلم أم الوحي؟ ومسألة تاريخية: كيف ننقل العلم من أمة متعلمة إلى أمة جاهلة؟ ومسألة معرفية: كيف نكتشف ما لا يظهر أمام أعيننا؟ ومسألة اجتماعية: كل الناس يدعون أنهم علماء، لكن من هو العالم الحقيقي؟ ومسألة تربوية: كيف نساعد طلابنا للوصول إلى معرفة يجهلونها؟",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "the-foundation-of-knowledge.html"
+          },
+          {
+            "title": "Visions of the Arab: Between Orientalism & Orientalism in Reverse",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Alaa BADR",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The Arab identity is elusive at best and disfigured at worst. what is an Arab? What constitutes his identity? It is Pan-Arabism? Islamism? The Arabic language itself? These are all questions Arab thinkers have asked and answers vary, ranging from the most religious to the completely secular.\n\nIt seems that much of the political and social turmoil is grounded in the confusion which surrounds the Arab identity. With a colonial period spanning decades, most Arab thought production is a reaction to the colonizer, “an other,” rather than an endogenous reflection on their own “Arabity.” As such, the Colonial period was a strong disruptive force in this process of self-reflection.\n\nالهوية العربية عصية على الفهم في أفضل الأحوال ومشوهة في أسوأها. من العرب؟ ما الذي يؤسس هويتهم؟ هل هي العروبة أم الإسلامية أم اللغة العربية نفسها؟ كل هذه الأسئلة سألها المفكرون العرب وأجابوا عليها إجابات متنوعة ومتراوحة بين الدينية المتشددة والعلمانية الشاملة.\n\nويبدو أن كثير من هذا الإضطراب السياسي والإجتماعي متأصل في الإلتباس المحيط بالهوية العربية. أكثر الفكر العربي هو بالأحرى رد فعل على \"الآخر\" المستعمر عن كونه إسقاط داخلي لعروبيتهم الخاصة على امتداد عقود الإستعمار. كما مثلت فترة الإستعمار مرحلة شديدة التخريب في عملية الإسقاط الذاتي تلك.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "visions-of-the-arab.html"
+          },
+          {
+            "title": "Past, Memory(ies) and Identity(ies)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Mayada MADBOULY",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Mohamed YEHIA",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The outbreak digital era and the- so-called –Uprising in Egypt pushed many scholars to question several concepts such as History, memory, nationalism and identity to name a few. The availability of the information on the internet and the multiplicity of research resources proposed other narrations and other versions than the official narration. In this sense, this course will highlight an academic field less studied in Egypt: the collective memory and its formation. This course is not interested in the historiography as much as it aims to enhance the storytelling of historical events that form the collective memory of each group and how the past is politically used through official discourses, songs, movies, etc.\n\nانفراجة العصر الرقمى و الحراك الذى عاشته مصر دفع العديد من الأكاديميين لإعادة النظر فى العديد المفاهيم مثل التاريخ، و الذاكرة، و القومية، والهوية, توافر المعلومات على شبكات النت و تعدد مصادر الأبحاث ساعدت على الإشارة إلى سرديات أخرى، مختلفة عن تلك التي تُروجها الأصوات الرسمية. على هذا النهج، هذا المساق سيسلط الضوء على حقل دراسى مهضوم حقه فى مصر، ألا و هو \"الذاكرة الجماعية و تكوينها\". هذا المساق لا يركز على علم كتابة التاريخ بقدر ما هو يسعى إلى إرثاء ثقافة حكى الأحداث التاريخية التي تشكل الذاكرة الجماعية لمختلف الطوائف، كما نتطرق إلى كيفية أستغلال الماضى بشكل سياسى من خلال الخطابات الرسمية، و الأغانى، و الأفلام، و الخ...",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "past-memoryies-identityies.html"
+          },
+          {
+            "title": "Falling",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sandra FREUBING",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 12:30 pm and Tuesday evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "wed",
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "The act of falling is simple. Falling is what happens when you are off balance; it makes your body drop and loose control and often provides amusement for spectators. Defined as a downward movement from a higher to a lower level, to hang down, to drop away, to show disappointment, to lose one’s balance and collapse, to be captured or to decrease, to ‘fall’ conjures a multitude of images and associations.\n\nحركة السقوط حركة بسيطة. السقوط هو ما يحدث عندما يفقد الشخص اتزانه؛ هو يُفقد الجسم تحكمه و يجعله آيلاً للوقوع، و كثيراً يرسم البسمة على وجوه المشاهدين. \"السقوط\" يوحى بالعديد من الصور و الروابط؛ يُفسر كحركة من أعلى إلى أسفل، و كحالة التعليق، و كالتساقط، و أحياناً يأتي بمعنى فقدان التوازن و الانهيار، أو إظهار الخيبة، أو الانحدار. المعاني كثيرة و الكلمة واحدة.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "falling.html"
+          },
+          {
+            "title": "Poetry and Short Prose: Memory That Moves",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sara EL KAMEL",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "This course is for passionate writers seeking an opportunity to spend more time on their writing. The course will take the shape of a generative workshop; it will not focus on teaching writing, but rather on establishing a creative environment in which participants can further explore their minds and written work.\n\nIn this course, we will be thinking a lot about memory. Taking inspiration from theories of memory and trauma, we will consider how our writing can confront the erasure of violent or uncomfortable pasts, and shift our perception of the present. Drawing on practices of performance and activism, we will explore ways to activate our ideas and bring them off the page.\n\nWe will write every week. With the help of a series of writing prompts, we will be making new poems and short texts, in and out of class, and we will routinely share and discuss our work.\n\nهذا المساق للكتاب الشغوفين بالكتابة الذين يبحثون عن فرصة لقضاء وقت أطول مع كتابتهم، وسوف يتخذ شكل الورشة الإبداعية، لكن لن تركز على تعليم الكتابة، بل على تأسيس بيئة إبداعية حيث يمكن للمشاركين أن يستكشفوا عقولهم والعمل المكتوب أكثر.\n\nفي هذا المساق، سنفكر في الذاكرة كثيرًا مستلهمين نظريات المتعلقة بالذاكرة والصدمة النفسية، كما سنتباحث حول كيف يمكن لكتابتنا أن تواجه ماضٍ مزعج، وتغير وجهة نظرنا للحاضر، وسنتكشف طرقًا لتنشيط أفكارنا واستخراجها على الأوراق اعتمادًا على ممارسات الأدائية والنشاط السياسي.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "poetry-and-prose.html"
+          },
+          {
+            "title": "On the art of manliness",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Karim-Yassin GOESSINGER",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Monday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Manliness or masculinity -- especially in the Middle East -- remains understudied. Masculinity is fluid and hence difficult to describe and comprehend. Few have inquired into how men groom themselves, feel about being single, getting old, sick, bald or overweight. What is the relationship between embodiment and masculinity? How do men negotiate different social expectations that aim to define their bodies and masculine selves? What do men and women think constitutes “a real men”? Our focus in this course will be on performance, identity and representation of manliness.\n\nلا يزال مفهوم الرجولة أو الذكورة يخضع للدراسة خاصة في الشرق الأوسط. فهو مفهوم سائل ومن ثم يصعب وصفه واستيعابه. لقد استقصى البعض عن كيفية إعداد الرجال لأنفسهم، كيف يشعرون تجاه كونهم عزاب؟ كيف يختبرون التقدم في السن والمرض والصلع والوزن الزائد؟ وما هي العلاقة بين التجسيد والذكورة؟ كيف يفاوض الرجال التوقعات الاجتماعية التي تهدف إلى وضع تصور محدد لأجسادهم وذواتهم الذكورية؟ ما الذي يعتقده الرجال والنساء في تشكل ما يسمى بالرجل الحقيقي؟ سيكون تركيزنا في هذا المساق على أداء الرجولي وهويتها وتمثيلها؟",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "art-of-manliness.html"
+          },
+          {
+            "title": "To Stand With the Dreamers: On Utopia",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Ahmed MONGEY",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "\"The most tragic form of loss isn't the loss of security; it's the loss of the capacity to imagine that things could be different.\"\n\nErnst Bloch\n\nThis course offers an overview to Utopia and Utopianism. The word Utopia was coined by Thomas Moore in his 1516 novel “Utopia”, to describe a “perfect” ideal city that the novel takes place, and etymologically It means the good place that is no place or the good place that doesn’t exist. This word went to become a literature genre, reflecting good places (utopias) and bad places (dystopia). Utopianism on the other hand can be defined as social dreaming, or the dreams and imaginations of a society or the concept/idea of utopia and its pursuit for the good place.\n\n\"اكثر الخسائر مأساوية ليس فقدان الأمن، بل هي فقدان القدرة على تخيل أن الأمور يمكن أن تكون مختلفة\".\n\nيقدم هذا المساق نظرة عامة عن اليوتوبيا واليوتيوبية. يوتوبيا كلمة كان قد صاغها توماس مور في كتابه \"يوتوبيا\" الصادر عام 1516، لوصف مدينة مثالية تجري فيها احداث الرواية، و اشتقاق الجملة من اليونانية يعني مكان جيد غير موجود. ذهبت هذه الكلمة لتصبح نوع ادبي، يعكس أماكن جيدة (اليوتوبيا) وأماكن سيئة (الديستوبيا). من جهة آخرى يُمكن تعريف اليوتوبية بأنها الحلم الاجتماعي، او الاحلام و الخيال الذي يجمع مجتمع ما، او الفكرة وراء السعي نحو \"اليوتوبيا\".",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "to-stand-with-the-dreamers.html"
+          },
+          {
+            "title": "Oral History Theory & Practice: Family, Community and Migration Histories in the Khalifa Neighborhood",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Rahma BAVELAAR",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Oral history interviewing is an important tool in the historian and anthropologist’s methodological repertoire. Oral historians have played a particularly important role in recovering histories ‘from below’, through collecting the stories of ‘subaltern’ or marginalized communities, nuancing and challenging dominant narratives of the powerful, and documenting the stories of people whose voices are ignored or silenced in the historical archives of nations, public institutions and history textbooks.\n\nIn this hands-on course, you will be trained in all the stages of conceptualizing, preparing for and carrying out an oral history project. Our class project - which we will complete in the course of the term - will focus on migration and family histories in the Khalifa neighborhood, the historical quarter beneath the CILAS balconies.\n\nحوارات التاريخ الشفهي هي أداة مهمة في العدة المنهجية للمؤرخ والأنثروبولوجي. لعب المؤرخون الشفاهيون دورًا مهمًا محددًا في إستعادة التواريخ من أسفل، من خلال جمع قصص التابع والجماعات المهمشة، ويتحدون السرديات المهيمنة للقوى الفاعلة ويحددونه، ويوثقون قصص الناس الذين تم تجاهل أصواتهم أو أسكتت في الأرشيفات التاريخية للأمم والمؤسسات العامة وكتب التاريخ الدراسية.\n\nفي هذا المساق العملي، سنتدرب في كل مراحل على تكوين المفاهيم والاستعداد لتنفيذ مشروع تاريخ شفهي. مشروع الفصل الدراسي -الذي سيكتمل في أثناء المساق- سيركز على الهجرة وتاريخ العائلات في حي الخليفة الذي يقبع في الجانب التاريخي تحت شرفات معهد القاهرة للدراسات الحرة في الآداب والعلوم",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "oral-history.html"
+          },
+          {
+            "title": "On placemaking, land, and the production of space",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Karim-Yassin GOESSINGER",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Wednesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Placemaking represents a comeback for community. The iterative actions and collaborations inherent in the making of places nourish communities and empower people.\n\nThe so called spatial turn in the social sciences continues to provide us with some of the most compelling theoretical insight into the use of land, the production of space and the making of place. Attempts to humanize the process of spatial planning and design have evolved with the re-emergence of the importance of place and post-colonial discourse. This course brings to light the potential inherent to engaging creative, collaborative and ecological practices within placemaking processes and reminds us of their importance in combatting the negative impacts of planetary urbanisation, anthropocentric climate change and social justice and cohesion.\n\nيعبر خلق المكان عن عودة الجماعة الأهلية. كما أن الأفعال التكرارية والمشاركات متضمنة في خلق أماكن تحيي الجماعات الأهلية وتعاضد الناس.\n\nيستمر التحول المسمى بالمكاني في العلوم الإجتماعية في تقديم بعض من الرؤي النظرية الأكثر جاذبية في استخدام العقار وخلق الفضاء والمكان. تطورت محاولات أنسنة عملية التخطيط والتصميم المكاني مع عودة إشراق أهمية المكان والخطاب ما بعد الإستعماري. يسلط هذا المساق الضوء على الإمكانية المتضمنة في ضم الممارسات الإبداعية والتعاونية والبيئية إلى عمليات خلق المكان وتذكرنا بأهميتها في مواجهة الآثار السلبية للتحضر الكوني والتغير المناخي والعدالة الإجتماعية والتجانس.",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "on-placemaking.html"
+          },
+          {
+            "title": "The Poetics of Ethnography",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Doaa KADDAH",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "How, why and for whom exactly do we ‘research’ and write? Are we longing for connecting to what has been devoured by the responsibilities and hassles of our everyday? Or are we, in one way or the other, reproducing the very ‘stuff’ that we aim to disentangle from? Who has the epistemological authority to interpret our own experiences in the ‘field’ and why? Who sets the rules of writing creatively and to what extent should we take them seriously? How are we going to formulate the words to encompass the vivid experiences that we lived through? In this seminar, we explore together the politics of fieldwork and the poetics of anthropological writing.\n\nكيف بالتحديد نقوم بالبحث والكتابة؟ ولماذا؟ ولمن؟ هل نحُن لوصل بما تم التهامه من قبل مسؤليات حياتنا اليومية ومشاحنتها؟ أم أننا نحاول بشكل أو بآخر أن نعيد إنتاج ما كنا نهدف أن ننحل منه من البداية؟\n\nمن لديه السلطة المعرفية لتفسير خبراتنا في حقل البحث ولماذا؟ من يضع قوانين الكتابة الإبداعية ولأي مدى يجب علينا الإلتزام بتلك القوانين؟ كيف يمكننا أن نصوغ الكلمات لتشمل التجارب الحية التي نعشها؟ نستكشف معًا في هذا المساق سياسات البحث الميداني وفن الكتابة الإنثروبولوجية",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "the-poetics-of-ethnography.html"
+          },
+          {
+            "title": "Minorities and the City",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Menatullah HENDAWI",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Hend EL GHAZALY",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm and 8:00 pm",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 10,
+            "start_date": null,
+            "location": [],
+            "description": "Spatial conditions reflect social, political, economic, and cultural norms in a city. This course intends to shed light on the concept of minorities and their role in city development, by looking at minorities from deeper perspectives: the marginalised, the disabled, the disadvantaged and the vulnerable.\n\nThis will be pursued by looking at and linking theories with reality through raising questions like: How do minorities inhabit and reflect their identity in the city? What is beyond spatially observed minorities? What is their role in creating their own spaces? How are they represented in the city? What are their attempts to be integrated and included, and what is the role of the state and other actors in this?\n\nتعكس الظروف المكانية العادات الإقتصادية والسياسية والاقتصادية والثقافية في المدينة. يهدف هذا المساق إلى أن يلقي الضوء على مفهوم الأقليات ودورهم في تطور المدينة عن طريق النظر من منظور اعمق إلى الأقليات كالمهمشين واصحاب الحالات الخاصة والضعفاء وغيرهم.\n\nسيتم هذا من خلال النظر في وربط النظريات بالواقع من خلال مناقشة أسئلة مثل: كيف تسكن الأقليات وتعكس هويتهم في المدينة؟ ما هو وراء الأقليات الملحوظة مكانيا؟ ما هو دورهم في خلق مساحات خاصة بهم؟ كيف يتم تمثيلهم في المدينة؟ ما هي محاولاتهم للاندماج ودور الدولة والفاعلين الآخرين في ذلك؟",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+            "own_page": "minorities-and-the-city.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

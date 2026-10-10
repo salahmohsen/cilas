@@ -1,0 +1,111 @@
+{
+  "sha256": "80abef3c4d25c943031c5509c055ead1cbb3d50c0276aa7783ea27d194131256",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Labs 2023",
+        "season": "spring",
+        "start_year": 2023,
+        "start_date": "2023-02-05",
+        "deadline": "2023-01-27",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Translation Lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Mostafa Taha",
+                "email": "mostafa.taha.salam@gmail.com",
+                "bio": "Mostafa Taha, a translator/editor with more than 6 years of experience. During those years, I translated and reviewed articles and research papers in diverse fields like politics, economics, science, social sciences, Tech, etc. I also managed several translation projects, and worked with multiple prominent media outlets, journals and research forums, like Alsharq forum, Springer Nature, Scientific American, Huffington Post, and Knowledge city. Currently I lead the Arabic scientific review team at Nagwa.com."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2023-02-05",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "What journey does a text make from one language to another? What happens in a translator’s mind when translating? How can the translator get the reader to the intended destination, while also helping him enjoy the trip? Why do translators either glorify or express contempt for Machine translation?\n\nWhen we think of translation, what comes to mind usually is this ‘magical teleportation’ of ideas between languages, or the idea that it is merely a substitution of words and phrases with others in a different alphabet, but what happens along the way is seldom thought about or reflected upon. Join us in our translation lab this semester to experience that journey, and find out which misconceptions about translation can get in the way of delivering a message to the reader.\n\nWe will explore the different stages a translation goes through, the different ways to think about quality and technology, and we will work together to produce a neat translation in the process.\n\nما هي الرحلة التي يمر بها أي نص حين ينتقل من لغةٍ إلى الأخرى؟ وفيمَ يفكر المترجم أثناء الترجمة؟ كيف يمكن للمترجم إذن أن يصحب القارئ إلى وجهته المقصودة، ويُمتِّعه بالرحلة في الوقت ذاته؟ ولماذا يُمجِّد البعض من أدوات الترجمة الآلية بينما يزدريها الآخرون؟\n\nحين نفكر في الترجمة، ما نتخيله عادةً هو ذلك 'الانتقال اللحظي السحري' للأفكار بين اللغات، أو أنَّها تتلخص في استبدال الكلمات والعبارات بأخرى مكتوبة بأبجديةٍ مختلفة. لكنَّنا نادرًا ما نتفكر في الطريق الذي تمر به الأفكار. انضم إلينا في مختبر الترجمة هذا العام لنمضي معًا في تلك الرحلة، ونعرف التصورات المغلوطة عن الترجمة التي يمكن أن تعوقك عن إيصال رسالتك إلى القارئ.\n\nسنستكشف في المختبر المراحل المختلفة التي تمر بها الترجمة، والطرق المختلفة التي يمكن أن نفكر بها في جودتها، وفي أدواتها التكنولوجية. وسننتج معًا ترجمةً متقنة خلال ذلك.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/flow.pdf"
+            ],
+            "register_url": "https://forms.gle/EcN4f5xxALr9fkzN8",
+            "own_page": null
+          },
+          {
+            "title": "Space lab: Un-building: Urbanization and the Geographies of Extraction",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Salma Abouelhossein",
+                "email": "sabouelhossein@gmail.com",
+                "bio": "Salma Abouelhossein is a PhD candidate in urban studies and planning at Harvard university. She is broadly interested in the changing geographies and ecologies of capitalist urbanization, postcolonial development planning, and ‘the hinterland question’ in urban studies. Her PhD project studies the history of sugar towns in the south of Egypt and their sugarcane producing agrarian hinterlands. Discussing what she (tentatively) calls “anticolonial hinterlands”, the research shows how planning the agrarian hinterland was central to postcolonial development planning and its decolonization project during the 1950s and 1960s - and how the afterlives of these anticolonial hinterlands continue to shape contemporary market-led urbanization."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2023-02-05",
+            "location": [
+              "OFFLINE",
+              "HYBRID"
+            ],
+            "description": "This lab explores how urbanization transforms the earth by (re)centering the “hinterland” question in the study of urbanization and cities. Together we will seek to develop a processual and metabolic understanding of urbanization in which we connect the dynamics of city-building to the (often-concealed) cascade of non-city geographies, such as: sites of extraction, industrial agriculture, deforestation, logistics, population displacement and waste disposal - that are deeply entangled in the violent dynamics of capitalist urban expansion. We will ask how do cities, and city-building processes, involve the continuous remaking of (nonhuman) environments and landscapes beyond the actual boundaries of the city. In what ways are such transformations ecologically destructive? And most importantly, for whom?\n\nFocusing particularly on “extractivism”; this lab will explore the extractive nature of late-capitalist urban expansion and its construction industry. Studying a number of specific building materials in the Egyptian construction industry– such as granite, glass, concrete, steel, etc. – we will explore some of the different sites of extraction, supporting infrastructural and logistical networks, and value chains that are implicated in recent urban expansion processes, as well as the human and non-human lifeworlds entangled within these processes. The lab will include several seminar-like discussions, guest speakers, and a group project that will culminate into a series of investigations of supply chains of different construction materials.\n\nProject description:\n\nGroups of 2-3 participants.\n\nEach group will pick a specific construction material by the fourth week of the course to focus their research on. The projects can focus on different sites of extraction, infrastructures, value chains, and/or can follow some of the entanglements of specific human or non-human work/energy flows. The final output can be a written paper or a multimedia project. In the latter approach, lab participants can choose a mode of communication that differs from written essays, such as a map, visual essay, a podcast, etc. Final projects will be presented during the final week of classes.\n\nInterested participants can continue to develop their projects during the summer along with the course instructor for a final exhibition and/or publication that is part of a longer “urbanization and ecology” research project.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/spacelab23_flow_abouelhussein.pdf"
+            ],
+            "register_url": "https://forms.gle/EcN4f5xxALr9fkzN8",
+            "own_page": null
+          },
+          {
+            "title": "Writing lab: Cairo Poetics (The City as a Poem)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Asmaa Abdellatif",
+                "email": "asmaa.m.abdellatiff@gmail.com",
+                "bio": "Asmaa Abdellatif is a MA student at Cairo University. Her research sits at the intersection of poetry, technology, and cultural studies. In addition to her studies, Asmaa works as a writer and communications manager. With a fierce passion for the written word, she delves deep into the human experience, exploring the complexities of love, loss, and the search for meaning. Her work has been featured in different literary magazines including the Digital Poet, Bayt Al Fann, and WordSpill. When Asmaa is not working, she is exploring arts or penning her next verse. A true wanderer, Asmaa's soul is constantly seeking new ways to express herself and connect with the world around her."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2023-02-05",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "\"Welcome to the Poetry Lab! This course delves into the intersection of poetry and urban studies, examining the ways in which poets have employed the city as a wellspring of inspiration and as a locus of artistic expression. Over the duration of the semester, we will explore the diverse cultural, social, and political histories of Cairo through a series of discussions, workshops, and excursions. Participants will have the chance to engage with the works of established urban poets, as well as to craft their own original poems inspired by the city. While our primary focus will be Cairo, we will also explore the unique character and poetry of other urban environments. We will also contemplate the role of digital media in contemporary urban poetry, investigating the ways in which poets use social media, websites, and other online platforms to publish their work and interact with audiences.\n\nBy the end, participants will collaborate to create a digital collective of poems and art inspired by Cairo, which will be exhibited at the end of the semester and showcased during a poetry night. The course will be primarily delivered in English and Arabic, so a basic knowledge of both languages is necessary although it is sufficient if you excel in one of them over the other. Join us on a journey to uncover Cairo's hidden depths, open to aspiring writers of all levels and backgrounds.”",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/poetry_and_writing_lab23_tentative_flow_-__asmaa_abdellatif.pdf"
+            ],
+            "register_url": "https://forms.gle/EcN4f5xxALr9fkzN8",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

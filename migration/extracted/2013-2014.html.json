@@ -1,0 +1,222 @@
+{
+  "sha256": "c03c7f9157f114400fc5685764a40fe87aed9cb0dd6a191a52179ea9352a7875",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Third trimester 2013-2014",
+        "season": "spring",
+        "start_year": 2014,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Identities",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "Farida Makar",
+                "email": null,
+                "bio": "Meet Farida Makar. She has recently joined us aboard CILAS. Farida shall coordinate the field of study Culture at CILAS. Prior to joining CILAS, Farida has conducted research on Egyptian textbooks and looked at nationalist discourses. She also contributed to the Egypt Road Map Programme at the Cairo Institute for Human Rights Studies. Farida obtained a graduate degree in Modern Middle Eastern Studies from Oxford University. In her Master's thesis she looked at teacher training in Egypt at the turn of the 20th century. An undergraduate at AUC, she double-majored in political science and history focusing primarily on the history of formal education in Egypt. Farida is interested in the interplay between nationalism and education, methods of self-organization, alternative education, and socio-economic rights."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The course looks at identity as a performance. Since childhood we are expected to perform in certain ways. In the course we examine where these expectations stem from. In particular, we re-visit ongoing debates and ideas about national identity, class and caste, masculinity and femininity, the transition from adolescence to adulthood to coming of age, to name a few. Most people imagine and identify with a national community. How imagined is this community really? We also look at how identity affects economic outcomes and ask questions about these outcomes. What if you are unable to afford a home, or own any form of property for that matter? We shall discuss the institution of marriage to try and understand how one's pre-marital identity is affected by marriage. As we move along it will be interesting to look at how people have formed new identities in the absence of a 'caring' state. We shall look at how identity relates to space, notably the occupation of spaces. In a second part, the course looks at the Middle East, Egypt and Cairo in particular to reflect on how identities are expected and performed in this part of the world. The course approaches the idea of identity through selected foundational reading and audio-visuals which provide insight and tools to think critically about identities.\n\nObjectives:\nTo familiarize students with the concept of performativity\nTo be able to identify a sense of allegiance to a wider community whether it is the nation, the neighbourhood or the street\nTo acquaint students with prominent thinkers who shaped the debate on identity\nTo debate the nature, roots and different layers of identity\nTo evaluate fixed identity roles and behaviours in modern day society",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          },
+          {
+            "title": "History of Education",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Farida Makar",
+                "email": null,
+                "bio": "Meet Farida Makar. She has recently joined us aboard CILAS. Farida shall coordinate the field of study Culture at CILAS. Prior to joining CILAS, Farida has conducted research on Egyptian textbooks and looked at nationalist discourses. She also contributed to the Egypt Road Map Programme at the Cairo Institute for Human Rights Studies. Farida obtained a graduate degree in Modern Middle Eastern Studies from Oxford University. In her Master's thesis she looked at teacher training in Egypt at the turn of the 20th century. An undergraduate at AUC, she double-majored in political science and history focusing primarily on the history of formal education in Egypt. Farida is interested in the interplay between nationalism and education, methods of self-organization, alternative education, and socio-economic rights."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "Everyone agrees that the state of our education system is dreadful. But not many have tried to identify how it is that we landed here. What ideas have shaped our education system? Are there perhaps deeper questions that we should be asking about modern education and its ability to fulfill our learning needs? This course looks at the history of modern education - with a particular focus on Egypt - to try to identify how this system evolved from its early days in the 19th century to the modern day phenomenon we have all experienced first hand. To tackle this, we will read some influential texts that have shaped the discourse on education and that have aided the establishment of modern schooling world-wide. As we move along it will be interesting to look more closely at the Egyptian context by putting ourselves in the shoes of those who were in charge of the education system in its early period. Here, we will ask ourselves does our sense of allegiance to a wider national community affect our education system? Is a national education system a form of resistance to colonial powers? How did school look like early on? How did teacher training take place? We will also look at whether the absence of good quality state run education results in any alternatives . Who else takes care of education? What other alternatives to state-run formal schooling did people turn to in the past and today?\n\nObjectives:\nTo familiarise students with the concept of compulsory state run schooling and its origins\nTo learn about the relationship between nationalism and education; and the impact of political change on schooling\nTo be able to sketch out the trajectory of modern education in Egypt from the 19th century onwards\nTo acquaint students with prominent thinkers who have shaped the debate on education both world-wide and in Egypt\nTo be able to discuss pedagogical methods",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          },
+          {
+            "title": "Civil Society",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "David Tholen",
+                "email": null,
+                "bio": "Meet David Tholen. He has designed and coordinated the courses Social and Political Thought and Governance in the 21st Century. David has also served as Assistant Programme Director making sure everything falls into its right place. He grew up in Burkina Faso, Mozambique and Tanzania before moving to Wales to attend Atlantic College together with Bas who you will meet below. David is a graduate in the liberal arts and has pursued a Master's degree from the School of Oriental and African Studies in London. He knows his Middle Eastern politics, notably Turkey's, rather well. David has been writing CILAS' newsletters, coordinates community service in collaboration with StARS Refugee Services and is co-editor of CILAS Journal. Last but definitely least, he is passionate about spicy foul, books and tailored cotton trousers."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "What is this seemingly important thing called civil society? In order to gain a solid understanding of civil society, in this course we go back to its modern day roots. Indeed, we get up from our seats, pick up our garden tools and head to the garden. Together, we sit and dig. Funny thing is, most people don’t seem to know what carrots really look like. It is therefore not surprising that what we find looks and feels very different than what ‘packaged civil society’ looks like on supermarket shelves. After establishing origins, the course continues the explorative adventure by looking into some salient issues that surround civil society. We shall look at the importance of law and media in ‘growing carrots’, as well as visiting different ‘gardens’ in Egypt, Turkey and Gaza.\n\nObjectives:\nTo introduce students to the writings of Gramsci and Habermas\nTo understand the different actors of civil society and their role\nTo examine the role of media and law\nTo play with this idea of 'uncivil civil society'\nTo be familiar with local case studies",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          },
+          {
+            "title": "Turkey: Egypt's Future",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "David Tholen",
+                "email": null,
+                "bio": "Meet David Tholen. He has designed and coordinated the courses Social and Political Thought and Governance in the 21st Century. David has also served as Assistant Programme Director making sure everything falls into its right place. He grew up in Burkina Faso, Mozambique and Tanzania before moving to Wales to attend Atlantic College together with Bas who you will meet below. David is a graduate in the liberal arts and has pursued a Master's degree from the School of Oriental and African Studies in London. He knows his Middle Eastern politics, notably Turkey's, rather well. David has been writing CILAS' newsletters, coordinates community service in collaboration with StARS Refugee Services and is co-editor of CILAS Journal. Last but definitely least, he is passionate about spicy foul, books and tailored cotton trousers."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "In the aftermath of the Arab spring many were quick in their assertions that the new regimes should adopt the so-called ‘Turkish Model’. The need to emulate Turkey appeared left, right and centre in the media. Even politicians seemed to echo this popular call. Turkey has transformed itself over the past two decades. Continuing economic growth has been tremendous and the Kurdish separatist struggle appears reconciled. How was a country characterised by a weak democracy, an intractable ‘civil war’, a weak economy and dominated by a military regime able to transform itself? Indeed, Turkey seems to be a success story. But is it really so successful? Especially those parts of the story that seem glossy and new we cannot afford to not think about. As we turn over the glossy cover page, what do we read as we have a look at the table of contents? Militant nationalism hiding behind a democratic facade? Imprisonment of regime critical journalists? Let us read together.\n\nObjectives:\nTo acquaint students with Turkey's modern history\nTo critically reflect on the Turkish state and secularism\nTo discuss the Kurdish question\nTo understand the specificities of Turkish political Islam and the role of the military\nTo make sense of the concept of a deep state",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          },
+          {
+            "title": "Waste",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "Bas Paris",
+                "email": null,
+                "bio": "Meet Bas Paris. He has coordinated the field of Natural Sciences at CILAS since the beginning of the second trimester. Bas completed two Master's degrees in London at SOAS and UCL, respectively. As a graduate student, Bas looked at the history and politics of Africa as well as the environment. He has a particular interest in agriculture and urban farming. Bas hopes to witness CILAS-grown tomatoes and has contributed to the re-invention of CILAS as a learning environment. He grew up in Ghana and Tanzania, and appreciates reggae music, exotic foods and Greek islands. At CILAS, he has assumed the role of Research Director."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The world is experiencing a crisis of waste. Growing populations, changing lifestyles and consumption habits are leading to the creation of alarmingly high levels of waste. Generally waste is referred to as unwanted materials or things. At the same time we can imagine the usefulness and potential re-usability of certain types of waste. Both of these perceptions are created by the everyday economic and political systems we live in. Oppositely, in the natural world, the concept of waste does not exist; instead all the outcomes (waste) of processes are productive inputs into other processes. For instance, a waste product from a plant (leaves) provides an essential and productive input into other organisms and the soil. This course explores how as a society we interact with waste and how we can move from one perception that sees waste as unwanted to another where all waste is reused. It is likely that to achieve the latter perception we need to radically redesign our waste systems and arguably the societies we live in.\n\nParticipants in the course will gain the following:\nTo examine the processes that lead to different perceptions of waste\nTo approach waste artistically\nTo assess how man-made waste effects natural systems\nTo learn about methods of managing and recycling waste\nTo visualise flows of waste",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          },
+          {
+            "title": "Africa since Independence",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Bas Paris",
+                "email": null,
+                "bio": "Meet Bas Paris. He has coordinated the field of Natural Sciences at CILAS since the beginning of the second trimester. Bas completed two Master's degrees in London at SOAS and UCL, respectively. As a graduate student, Bas looked at the history and politics of Africa as well as the environment. He has a particular interest in agriculture and urban farming. Bas hopes to witness CILAS-grown tomatoes and has contributed to the re-invention of CILAS as a learning environment. He grew up in Ghana and Tanzania, and appreciates reggae music, exotic foods and Greek islands. At CILAS, he has assumed the role of Research Director."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "Africa, the second largest continent in the world and arguably the most diverse and dynamic is often overlooked and dismissed. In its recent history and until the present day the continent is in many ways the fastest changing in the world. In the future these changes are likely to have an increasingly meaningful impact on its inhabitants and the world at large. Despite this, the diversity of the continent almost renders it meaningless to talk about Africa in general As such, this course provides an overview and insights into the most important ideologies, events and transitions that the continent has undergone since gaining independence and what this means for the future of the continent. Specifically the course investigates the creation and changing nature of African development, governance and societies, this allows us to situate Africa in the global arena and consider the future of the continent.\n\nObjectives:\nTo acquaint students with Martin Meredith and Crawford Young's concept of the state of Africa\nTo familiarise students with different national development programmes and their underlying values\nTo understand the working of patrimonial governance\nTo debate the relationship between ethnicity and nationality\nTo engage with promising initiatives to break with the past",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          }
+        ]
+      },
+      {
+        "label": "Upcoming trimester 2013-2014 (Digital Media and World Cinema)",
+        "season": null,
+        "start_year": null,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Digital Media",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "Raju Hittalamani",
+                "email": null,
+                "bio": "Meet Raju Hittalamani. He has designed and coordinated courses in the fields of Arts and Culture at CILAS. Raju has earned a Master's degree in Culture and Media Studies from Tata Institute of Social Sciences in Mumbai, India. Originally from the state of Karnataka in South India, he spent some time at Sciences Po Paris on a visiting fellowship. Raju somehow ended up in Cairo. Rumour has it he embarked on the wrong plane. In any case, he has been directing CILAS Media Lab. He launched CILAS Channel on YouTube where you will find the guest lectures hosted at CILAS and student testimonials, i.e. students sharing their thoughts on CILAS, amongst other things."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The world is online; so are we directly, or indirectly. Tremendous changes in technology have changed the world we live in many ways. The course critically engages with the internet, new media and digital technologies, and the roles they play in contemporary society, culture, business, politics, the arts and everyday life. Our online and offline worlds integrate and at times disintegrate in myriad ways. In this context it becomes important to explore the limits and possibilities of technology in dealing with the challenges faced by respective societies and the world at large. Throughout the course we look at the interplay between emerging media technologies and culture, information, communication, knowledge, identities and power. We shall try and understand the factors that determine how new technologies are created, travel and are consumed by specific cultures. The course looks at - amongst others - the following themes: World Wide Web, Digital Culture, social media, online identities, virtual communities, theories of technology and culture, digital research, digital counter-culture, digital resistances and digital culture in the 21st century. The course encourages the use of the diverse interpretive and representational media: academic texts, documentary and feature films, literary writings, web sites and other media.\n\nObjectives:\nTo introduce the concept of digital culture\nTo explore how the internet has shaped communication\nTo provide a theoretical framework to understand media communication, internet and culture\nTo investigate virtual communities, identities and resistances\nTo understand the phenomenon of social media and its relation to other media",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          },
+          {
+            "title": "World Cinema",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Raju Hittalamani",
+                "email": null,
+                "bio": "Meet Raju Hittalamani. He has designed and coordinated courses in the fields of Arts and Culture at CILAS. Raju has earned a Master's degree in Culture and Media Studies from Tata Institute of Social Sciences in Mumbai, India. Originally from the state of Karnataka in South India, he spent some time at Sciences Po Paris on a visiting fellowship. Raju somehow ended up in Cairo. Rumour has it he embarked on the wrong plane. In any case, he has been directing CILAS Media Lab. He launched CILAS Channel on YouTube where you will find the guest lectures hosted at CILAS and student testimonials, i.e. students sharing their thoughts on CILAS, amongst other things."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "Do you like watching films and talking about them? Then this course is for you. Cinema dominates our lives in ways like no other art form does. Cinema has come a long way as a collective of inventions, some of which were intentional and others that were accidental. The course tries to trace development of cinema from its early days of static images to the current status as an advanced entertainment industry. The course sheds light on two primary themes: the evolution of cinema as an art and the diverse nature of world cinema. The first theme charts the evolution of cinema starting from still images, through the phases of Silent Cinema, Sound Cinema and Modern Cinema. The associated technical and artistic changes cinema has gone through will be explored through selected films. The second theme of world cinema would explore the films made in different parts of the world and how they have shaped and are shaping cinema through their content, forms and techniques. The theme shall be explored through films from Hollywood, European films, Asian films and African films. The course is centred on the screening of selected films as part of the sessions and some selected readings followed by discussions. The course will culminate in the organisation of a film festival!\n\nObjectives:\nTo introduce the evolution of cinema from its early days to today\nTo explore how cinema evolved as an art form\nTo learn about the diversity of cinema though films from around the world\nTo discuss the industrial nature of cinema, studios and economics of entertainment\nTo be able to critically appreciate film as a cultural entity",
+            "flow_links": [],
+            "register_url": "https://docs.google.com/forms/d/1mJyxFRWJWo7TAraW3pCSMkEiwmtEyG-loBYvLg18uDs/viewform",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

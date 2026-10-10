@@ -1,0 +1,36 @@
+{
+  "sha256": "411f87ae6216aa2acf15934b36472537293952823e7df80eb5799ba0b07a29c0",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Postcolonialism, Modernity and Politics",
+      "title_ar": "ما بعد الكولونيالية والحداثة والسياسة",
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Nader Osama",
+          "email": null,
+          "bio": "Nader OSAMA I received my MSc in Sociology (Contemporary Social Thought) in 2016 from the London School of Economics and Political Science (LSE), and a BA in Economics, with a minor in Anthropology, from the American University in Cairo (AUC) in 2015. I am interested in critical social and political thought, as well as political and historical sociology, with a regional focus on Egypt and the Middle East. For my MSc dissertation, I studied the social and political theories of transparency and secrecy through an engagement with the recent history of Egypt’s political economy, asking how secrecy is produced as a public effect and the limitations of neoliberal models of governance. This is part of a general interest in theories of expertise and neoliberal governmentality. I am also interested in questions around human rights, violence and social justice.\n\nنادر أسامة أنجز دراساته العليا في علم إجتماع (الفكر الإجتماعي المعاصر) في جامعة لندن للإقتصاد والعلوم السياسية في 2016 وحصل على درجة الليسانس في الإقتصاد (مع تخصص فرعي في علم الإنسان) من الجامعة الأمريكية في القاهرة في 2015. يهتم بالفكر النقدي السياسي والإجتماعي، وكذلك أيضًا بعلم الإجتماع السياسي والتاريخي مركزًا تركيزًا إقليميًا على مصر والشرق الأوسط. درس في أطروحة دراساته النظريات الإجتماعية والسياسية للشفافية والسرية من خلال الإشتباك مع تاريخ الإقتصاد السياسي لمصر في الوقت الحالي بدافع السؤال حول كيف تنتج السرية كتأثير عام وحدود النماذج النيوليبرالية في الحكم، وكل هذا جانب من اهتمام أعم بالنظريات في الخبرة والحكم النيوليبرالي والأسئلة حول حقوق الإنسان والعنف والعدالة الإجتماعية."
+        }
+      ],
+      "schedule_text": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Course description\n\nThe foundations and legitimacy of European social theory has been shaken. Thinkers from different backgrounds have questioned the alleged universalism of social theory’s central philosophical orientations and categories — such as civil society, the state, modernity, right, citizenship, secularism, or even capitalism. It is claimed that the philosophical foundation of social theory in Enlightenment universalism is only European hegemony in disguise, the bedrock over which capitalist modernity in its different manifestations rests. This marks both an epistemological and political critique of social theory’s capacity of being genuinely global, inclusive and transformative.\n\nIn this course, we read different engagements with this central problematic, with a particular interest in interventions by non-European or Arab thinkers. We start by conceptually mapping the postcolonial challenge and its relation to social theory, attempting to identify both its insights and limitations. We will explore the different ways those problems have been posed and evaluate different strategic attempts at overcoming them — for example, by suggesting alternative, global, cosmopolitan, subaltern or connected modernities. This reading, however, will be both historical and political, animated by a concern for thinking through and beyond the postcolonial challenge in order to address contemporary political questions emerging from the Arab world and beyond.\n\nرؤية عامة\n\nاهتزت أسس النظرية الإجتماعية الأوروبية وشرعتيها منذ أن تساءل المفكرون من مختلف الخلفيات حول كونية التصنيفات الفلسفية للنظرية الإجتماعية واتجاهاتها كالمجتمع المدني والدولة والحداثة والحقوق والمواطنة والعلمانية وحتى الرأسمالية. يدعي المفكرون أن الأسس الفلسفية للنظرية الإجتماعية في عصر التنوير الكوني ليست إلا مجرد هيمنة أوروبية متخفية بل أنها الأساس الصلب الذي تستند عليه كل التجليات المختلفة للحداثة الرأسمالية. وهذا ما يميز النقدان المعرفي والسياسي من قدرة النظرية الإجتماعية على أن تصبح عالمية وشمولية وقادرة على التطور بشكل أصيل.\n\nفي هذا المساق، نقرأ اشتباكات مختلفة مع هذه الإشكالية المركزية، مع اهتمام خاص في دور المفكرين غير الأوروبيين والعرب. نبدأ من رسم خريطة مفاهيمية للتحدي الما بعد كولونيالي وعلاقته بالنظرية الإجتماعية في محاولة للتعرف على رؤاه وحدوده. سنتكشف الطرق المختلفة التي طرحتها تلك المشكلات ونقيم المحاولات الإستراتيجية المختلفة للتغلب عليها كاقتراح حداثات كونية أو كوزموبولتانية أو تابعة أو متصلة بديلة. سيحرك هذه القراءة الإهتمام بالتفكير من خلال التحدي الما بعد كولونيالي والمتجاوز له على المستويين التاريخي والسياسي كي يتجاوب مع الأسئلة السياسية المعاصرة التي ظهرت في العالم العربي وحوله.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "sha256": "3e325b74a63ae77cc84fd84fa386c9b9a513b61cb34b513b63e34826641886cb",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall 2021 (CILAS Alexandria)",
+        "season": "fall",
+        "start_year": 2021,
+        "start_date": null,
+        "deadline": "2021-09-20",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Oral History Lab: Alexandria’s Quarters",
+            "title_ar": "مختبر التأريخ الشفهي: أحياء الإسكندرية",
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Nairy AbdElShafy",
+                "email": null,
+                "bio": "is a social and educational activist who is passionate about social work and civic engagement. She loves food and finds joy in travelling. She believes in the importance of pondering life and trying to understand the impact of small things on our learning journey.\n\nNairy has worked and volunteered over ten years in informal education and cultural exchange projects involving children, adults and refugees. Pursuing her passion about oral history and story documentation, she worked on documenting narratives about movement and identity among Nubians, Syrian and Palestinian refugee communities in Egypt.\n\nNairy holds a Master of Arts In oral history from Columbia University and a Bachelor of Science in political science from Cairo University."
+              }
+            ],
+            "schedule_text": "بدءً من الرابع من أكتوبر ولتسع أسابيع متتالية، أيام الاثنين من الساعة الخامسة إلى الساعة الثامنة مساءًا",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "17:00",
+            "end_time": "20:00",
+            "weeks": 9,
+            "start_date": "2021-10-04",
+            "location": [],
+            "description": "يعتبر التأريخ الشفهي منهج بحثي مختلف حيث يرتكز على تجربة الفرد ووجهة نظره في الحياة. وهو أداة لتسجيل التاريخ والتجارب من خلال المحادثات \"الشفهية\". فيستخدم التأريخ الشفهي المقابلات لتوثيق القصص والسرد الشفوي مباشرة من الأفراد. ويساعدهم على اختيار كيفية توثيق وعرض قصصهم كما يرونها، بناءا على خلفياتهم وفهمهم لتجاربهم. فتكون تلك القصص -في أغلب الأحيان- ذاتية ومعبرة عن رؤى ووجهات نظر الرواة\n\nيجري المختبر البحثي \"أحياء الإسكندرية\" ويهدف بالأساس لتسجيل قصص وتجارب سكندرية عن الأحياء المختلفة وخصوصيتها التاريخية والثقافية. من خلال المختبر سيتم تدريب المشاركين على تعلم كيفية تصميم وتنفيذ مشروع تأريخ شفهي من البداية إلى النهاية. وتعلم كيفية استخدام الأجهزة المختلفة في تسجيل القصص وخلق أرشيف للتسجيلات واستكشاف أشكال مختلفة لتوثيق وإنتاج تلك القصص. وتختتم ورشة العمل بعرض تفاعلي للأعمال المنتجة كما سيعمل المشاركون أيضا على إنتاج كتابات مختلفة ليتم إدراجها في دليل عمل عن التأريخ الشفهي\n\nOral history is a unique research method that relies on recording individuals' experiences and their points of view in life. It is a tool to record history and experiences through \"oral\" conversations. It relies on encounters to transcribe stories and oral narration from individuals directly, and it helps them choose how to document and exhibit their own stories according to their backgrounds and comprehension. These stories are often subjective and expressive of narrators' views.\n\nThe lab mainly aims to record Alexandrian experiences and stories from different quarters reflecting their cultural and historical idiosyncrasy. Students will learn how to design and execute an oral history project from A to Z and how to use different devices to record stories, create an archive of recordings as well as explore various ways of documenting and producing such stories. The lab culminates in an interactive exhibition as well as an oral history manual that will include students' texts.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/B2986UfoaCazzkcw6",
+            "own_page": null
+          },
+          {
+            "title": "Ethnography and the Politics of Storytelling",
+            "title_ar": "الإثنوغرافيا وسياسات الحكي",
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mina Ibrahim",
+                "email": null,
+                "bio": "is completing his doctoral dissertation in anthropology. He uses oral history, novels, and movies of all kinds in his work. He recently co-founded a research center in the Cairene neighborhood of Shubra called SARD with the intention of inviting people into the circles of academia, teaching, and research. He loves the seaside, flowers and soccer, perceiving them as his alternative pathways."
+              }
+            ],
+            "schedule_text": "بدءً من السادس من أكتوبر ولتسع أسابيع متتالية، أيام اﻷربعاء من الساعة الخامسة إلى الساعة الثامنة مساءًا",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:00",
+            "end_time": "20:00",
+            "weeks": 9,
+            "start_date": "2021-10-06",
+            "location": [],
+            "description": "لماذا نكتب اﻹنثوغرافيا؟ ولمن؟ وما القوى التي نخاطبها أثناء كتابتنا اﻹثنوغرافية؟ في هذا المساق، سنقرأ شهادات إثنوغرافية تغطي قضايا متنوعة في مصر خصوصًا وفي العالم العربي عمومًا. وبذلك سنشتبك مع مدرستين فكريتين تتعلقا بالسؤال الواسع حول أسباب الكتابة واﻷشخاص المنتقدين عندما نرسي حججنا\n\nالمدرسة اﻷولى هي المدرسة المتصلة باﻹرث الاستعماري للرجل اﻷبيض الذي ما زال يتحكم سياسيًا وثقافيًا واقتصاديًا وينتج صور حول \"اﻵخر\". هذه المدرسة تولي انتباهًا لوجهات النظر الغربية (الاستشراقية) المهيمنة حول الشرق اﻷوسط. ومن ثم، الباحثون الذين ينتمون إلى هذه المدرسة يضعون على عاتقهم مسؤولية التركيز على أنماط المقاومة والعيش التي لا تتفق مع الفهم الغربي العلماني للشرق اﻷوسط باعتباره قامعًا ومتخلفًا عن الحداثة بصورة جوهرية\n\nالمدرسة الثانية هي للباحثين الذين يموضعون حججهم داخل أطر نظرية تخاطب أنماط المقاومة ضد القوى الاجتماعية والسياسية غير الغربية اﻷخرى. أعضاء هذه المدرسة يشددون أنه بينما قد يكون بعض المتحدثين معهم نقديين للغرب وخطاباته المهيمنة، يهتم اﻵخرون بالصراعات المختلفة التي ليست بالضرورة مرتبطة بالغرب وبتخيلاته عن الناس في الشرق اﻷوسط والمنطقة العربية. في هذا المساق، نضع اهتمامات تلك المدرستين في الاعتبار بينما نفكر عن التأثيرات الملاحقة للكتابة عن التحرر الوطني والمقاومة المناهضة للاستعمار والصحوات الدينية وحقوق اﻷقليات والكويريين والاقتصادات البديلة. بينما نفكر عن الطريقة التي تخاطب بها تلك القصص التصورات الغربية المهيمنة عن شعوب الشرق اﻷوسط والعالم العربي، نستوعب التمثيلات السياسية والاجتماعية (الصحيحة والمغلوطة) من خلال اﻷدبيات \"النقدية\" والكتابات اﻷكاديمية والعمل النشاطي\n\nنطرح بعض اﻷسئلة في هذا المساق مثل: هل من المقبول أن نقبل قوة مهيمنة بينما نحاول التخلص من أخرى؟ هل للمقاومة تعريفات متعددة؟ هل حقيقة أن موقع عملنا الميداني يختلف عن الموقع الذي يمول بحثنا يؤثر على النتائج؟ ما معنى أن نقوم ببحثنا بلغة بينما نستعمل لغة أخرى أثناء الكتابة؟ إلى أي مدى نحن مسؤولون عما نشاركه ونترجمه من عملنا مع المتحدثين إلينا؟\n\nWhy do we write ethnography? And for whom? What are the forces that we address while writing? In this course, we will read ethnographic accounts that cover various issues in Egypt in specific and the Middle East in general. In doing so, we will grapple with two schools of thought that relate to the broader questions of why we write and whom we criticize when we set our arguments:\n\nFirst, there is the school that is connected to the white man’s colonial legacy that politically, culturally, and economically still controls and produces images about the “other.” This school gives attention to hegemonic (i.e., orientalist) Western perceptions about the Middle East. Hence, scholars who belong to this school put on their shoulders the responsibility to highlight modes of resistance and living that do not fit into the Western secularist understanding of the Middle East as essentially repressive and non-modern.\n\nSecond, there are the scholars who situate their arguments within theoretical frameworks that address modes of resistance against other non-Western social and political forces. Members of this school emphasize that while some of their interlocutors might be critical of the West and its hegemonic discourses, others care about different struggles that are not necessarily linked to the West and to its imagination of the people of the Middle East and the Arab regions.\n\nIn this course, we put the concerns of these two schools in consideration while thinking about the haunting effects of writing about nationalist liberation, anticolonial resistance, religious revivals, minority rights, queer rights, and alternatives economies. While thinking about how these stories counter and speak to hegemonic Western perceptions about peoples of the Middle East and the Arab world, we also make sense of their political and social (mis-)representations via ‘critical’ literature, academic writings, and activist work.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/B2986UfoaCazzkcw6",
+            "own_page": null
+          },
+          {
+            "title": "Science in the Middle East: A Socio-historical Perspective",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Omar Salama",
+                "email": null,
+                "bio": "holds a Bachelor of Science degree in physics and mathematics from Alexandria University. He completed the 2018/2019 CILAS year-long program in liberal arts in Alexandria. He taught mathematics and science in Egypt and abroad. If there is one thing Omar best personifies, it is curiosity. He is always interested in learning new things and meeting new people. His ever-growing range of interests include science, art and humanities."
+              }
+            ],
+            "schedule_text": "Starting October 3rd from 5pm to 8pm for nine consecutive Sundays",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "17:00",
+            "end_time": "20:00",
+            "weeks": 9,
+            "start_date": "2021-10-03",
+            "location": [],
+            "description": "يحاول هذا المساق استكشاف تاريخ العلم في الشرق الأوسط منذ فترة ما يطلق عليه العصر الذهبي للإسلام حتى العصر الحديث. إن المقاربة التي يتبناها المساق لدراسة هذا التاريخ تنتمي بشكل رئيسي إلى علم الاجتماع لكنها تتقاطع أيضًا مع الفلسفة وتحليل الخطاب. يهتم المساق بمحاولة الإجابة عن سؤال أساسي وهو لماذا ظهر العلم الحديث في الغرب وليس في الشرق الأوسط على الرغم من وجود نشاط علمي قوي ما بين القرنين الثامن والرابع عشر في المنطقة. سوف يتم تحليل التيارات الفكرية السائدة في فترات مختلفة وكيفية تفاعلها مع العلم بالإضافة إلى أشكال تطورها. يستكشف المساق طريقة استيعاب الخطابات الرئيسية العلم بينما كانت تتأثر به من خلال التفاوض حول المعاني ونقل المفاهيم والنظريات العلمية إلى سياقات جديدة\n\nNever has a vaccine ever been developed as fast as the COVID-19 vaccines have recently been. Ironically, only what can match this unprecedented scientific breakthrough is the unprecedented hesitancy and rejection that the vaccines were met with in different countries, most notably the United States. It is crises like this pandemic that highlight the woes of a humanity already unable to tackle an even more ominous crisis such as climate change due to many of the very reasons public health measures and vaccination have recently become divisive.\n\nFor science to cause or intensify polarization is neither new nor characteristic of a particular culture. However, it is more challenging to approach science from the viewpoint of social sciences where there seems to be a gap between science and society. Such gap in most Middle Eastern countries is best reflected in both poor science education and lagging scientific research. It is crucial to examine the aspects of the interplay between science and different structures and arrangements in the region over decades and centuries to understand the current moment.\n\nThis course explores the history of science and more generally knowledge in the Middle East from the Golden Age of Islam to the modern era. The approach to this history is mainly sociological but intersects with philosophy and discourse analysis. A main concern of the course is to understand why modern science emerged in the west and not in the region, although it had witnessed a robust scientific activity from the eighth century to the fourteenth century. Students will explore not only what challenges existing institutions found science to pose but also how they reacted. Intellectual orthodoxies and how they interacted with science will be studied as well as how they have evolved as a result. Another central emphasis is how major discourses absorbed science, and were influenced themselves through processes of negotiating meanings and re-contextualizing scientific concepts and theories.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/B2986UfoaCazzkcw6",
+            "own_page": null
+          },
+          {
+            "title": "حياة واحدة لا تكفي: حول النوم والأحلام وزرع الأفكار",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "محمد عبد العظيم",
+                "email": null,
+                "bio": "كاتب نشر مقالات نقدية وتغطيات صحفية حول الأدب والسينما والدراما، ونشر عشرات من القصص القصيرة، في عدة من صحف ومجلات مصرية وعربية. صدرت له مجموعة قصص بعنوان \"ليس للجنة فرع أخر\" عن الجزويت للنشر والإعلام 2020، تخرج من مدرسة المشورة بمركز الجزويت بعد دراسة علم النفس لمدة عامين، حضر برنامج التكوين الصحفي بمركز الجزويت، وأسس عدة صالونات أدبية وثقافية وسينمائية، مثل صالون زمرة الثقافي، ونادي الجزويت للكتاب"
+              }
+            ],
+            "schedule_text": "بدءً من الثاني من أكتوبر ولتسع أسابيع متتالية، أيام السبت من الساعة الخامسة إلى الساعة الثامنة مساءًا",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "17:00",
+            "end_time": "20:00",
+            "weeks": 9,
+            "start_date": "2021-10-02",
+            "location": [],
+            "description": "هذا مساق عن حقيقة نوم الإنسان، وكيف يحدث ذلك؟ وكيف نحلم؟ متتبعا الأحلام وتأثيرها في التاريخ، والجهود العلمية لفهم الأحلام وتفسيرها، وهل يمكننا أن نتحكم في أفكار العقل الباطن وإعادة توجيهها أو زرع أفكار جديدة، معتمدا على عدة مراجع متنوعة من الدراسات والكتب وأفلام السينما والإبداع الأدبي\n\nبينما يقوم الباحثون بالبحث في المراجع عن سر هذا الحدث اليومي، يرافق ذلك مجموعة من الأنشطة حول تفسير أحلامنا، كيف نزاوج بين العقل الواعي والعقل الباطن، الدخول إلى الذات عبر تمرينات التنفس اليوجي، تسجيل الأحلام ومحاولة تفسيرها، نعرج على جوانب ربما تكون غير علمية في موضوع النوم لها طرافتها وفائدتها، سواء أكانت تتصل بالتاريخ أو علم الاجتماع أو الأدب، وفي الجديد من الأبحاث التي تدور بصفة أساسية في نطاق العلوم الطبيعية\n\nثمة أدوار مساعدة في توزيع المهام داخل المساق، مثل الدليل: وهو أكثر المشاركين معرفة مسبقة بتفسير الأحلام، ويطلع على كتب التفسير ومنها: قاموس الأحلام للدكتور رمزي النجار، وموسوعة تفسير الأحلام لميلر، وبعد دراسة كتاب تفسير الأحلام لفرويد، سيكون الدليل في تفسير الأحلام التي تم تسجيلها من قبل المشاركين في بنك الأحلام، بحيث يسهل الوصول لمفاتيح التفسير. وكذلك هناك مدير لبنك الأحلام، وهو الشخص الذي تجمع عنده أحلام شخصية للمشاركين يودون مشاركتنا بها، أو بعض الأحلام الهامة التي ترد في المراجع",
+            "flow_links": [],
+            "register_url": "https://forms.gle/B2986UfoaCazzkcw6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

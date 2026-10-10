@@ -1,0 +1,34 @@
+{
+  "sha256": "50baf6b844b565b2a86ed064a8e9229c915621a8ece8af0dec66c5f571e29a2f",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "We are what we eat",
+      "title_ar": "نحن والطعام: مدخل نقدي لإستهلاك الطعام في مصر",
+      "subtitle": "A critical approach to food consumption in Egypt",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Hala Barakat",
+          "email": "hala.barakat@gmail.com",
+          "bio": "Hala BARAKAT has a Ph.D. in Paleoecology from the University of Aix-Marseille III, France. She worked as a lecturer at Cairo University 1995-2000 and acted as deputy director at the Center for Documentation of Cultural and Natural Heritage (CULTNAT) affiliated to the Library of Alexandria. She was in charge of the documentation of the natural heritage program as well as supervising the photographic heritage, folkloric heritage and musical heritage programs at CULTNAT (2000-2012). In January 2013, Hala joined the Egyptian Initiative for Personal Rights (EIPR) as a part time researcher on the issues of “Right to Food” and “Food Sovereignty” in Egypt. She is also a founding member and former president of Nature Conservation Egypt (NCE) a non profit organization active in the field of conservation of endangered species and habitats and raising awareness to environmental issues in Egypt. Hala is also a certified Sivananda Yoga teacher and master. As a trained botanist, she has long had deep interest and knowledge in Naturopathy, Homeopathy and vegetarianism which complement her interest in yoga as a lifestyle.\n\nهالة بركات حاصلة على الدكتوراه في علم الحفريات. وعملت كمحاضرة في جامعة القاهرة بين عامي 1995 و2000. كما عملت كنائب مدير مركز توثيق التراث الطبيعي والحضاري التابع لمكتبة الإسكندرية ومسئولة عن برنامج توثيق التراث الطبيعي والإشراف على برنامج التراث الفوتوغرافي والفلكلوري والموسيقي في المركز (2000 - 2012). في يناير 2013، انضمت هالة للمبادرة المصرية للحقوق الشخصية كباحثة بدوام جزئي على قضايا الحق في الطعام في مصر. كذلك هي عضو مؤسس ورئيس سابق لمنظمة الجمعية المصرية لحماية الطبيعة، وهي منظمة غير هادفة للربح تعمل في مجال الحفاظ على الأجناس المعرضة للإنقراض ورفع الوعي بالقضايا البيئية في مصر.\n\nهالة بركات أيضًا مرشدة ومعلمة يوجا السيفاناندا، وتحوز معرفة واهتمامًا كعالمة نباتات في المعالجة التجانسية والمداواة الطبيعية والأكل النباتي الذي يكملان اهتمامها في اليوجا كأسلوب حياة. والآن تدير وتعطي دروسًا في \"استوديو روحانا\" بالقاهرة وما زالت في تقديم الإستشارات البيئية والبحث في قضايا الطعام."
+        }
+      ],
+      "schedule_text": "Mondays: mornings 10:00 am to 12:30 pm and evenings 5:30 pm to 8:00 pm (Arabic: ايام الإثنين في الصباح من ١٠:٠٠ صباحاً إلى ١٢:٣٠ ظهراً و في المساء من ٥:٣٠ إلي ٨:٠٠ مساءاً).",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "course description\n\nThe course explores issues related to food and its history, production and consumption in Egypt. Starting from questioning traditional concepts of food heritage to testing existing food systems and opening up to alternative ways of sourcing, preparing and eating our food to discovering and inventing sustainable food systems adapted to urban life…\n\nDuring the course we shall discuss:\n\nHistory of food production in Egypt and “Egyptian” Food heritage\n\nConsumer awareness: what to eat? where to buy? what do we need to know about our food? who can help? how to assess information?\n\nSeasonal foods\n\nCook your own food. Make your own food. Grow your own food\n\nSustainable food systems\n\nThrough exchange, discussions, research and practical play, we shall be able to answer questions (and come up with some new ones) related to...\n\nWhat is the food we eat? Where does it come from? Where did it originally come from? What happened till we have come to the current food available on our table?\n\nIs there an Egyptian “food heritage”?\n\nAs far as food production and consumption is concerned: can we shape, better control or take things in our hands? as individuals, consumers and urban food producers?\n\nParticipants are expected to actively engage with all course material.\n\nThey are expected to do their own online and offline research to enrich the discussions during the sessions.\n\nThey are expected to visit sites of interest: museums, markets, restaurants and food shops, search and read relevant books, watch movies, take photographs of food items, products, keep a record of impressions, observations, questions and bring them to class.\n\nThey are expected to be hands on with cooking, preparing and growing their food.\n\nرؤية عامة\n\nيستكشف المساق القضايا المتعلقة بالطعام وتاريخه وإنتاجه وإستهلاكه في مصر. بدءً من مساءلة المفاهيم التقليدية حول تراث الطعام مرورًا بإختبار أنظمة الطعام الموجودة وفتح طرق بديلة لتوفير الطعام وتحضيره وأكله إلى اكتشاف وخلق أنظمة طعام مستدامة تلائم الحياة الحضرية.\n\nنناقش خلال الدورة:\n\nتاريخ إنتاج الطعام في مصر وتراث الطعام المصري\n\nتوعية المستهلك: ماذا نأكل؟ من أين نشتريه؟ وما الذي نحتاج إلى معرفته عن أكلنا؟ ومن يستطيع المساعدة؟ وكيف نقيم المعلومة؟\n\nاﻷطعمة الموسمية\n\nكيف تطبخ طعامك، وتصنع طعامك، وتزرع طعامك\n\nأنظمة الطعام المستدامة\n\nمن خلال التبادل والمناقشة والبحث والتطبيق العملي، سنستطيع اﻹجابة على الأسئلة (ونستخرج بعض الأسئلة الجديدة) المتعلقة بـ:\n\nما الطعام الذي نأكله؟ من أين يأتي؟ وما هي أصوله؟ وهل هناك تراث للطعام المصري؟ وعلى قدر اهتمامنا بإنتاج الطعام واستهلاكه: هل يمكن أن نتحكم فيه بأنفسنا بشكل أفضل؟ كأفراد مستهلكين ومنتجين حضريين له؟\n\nنتوقع من المشاركين عمل أبحاثهم الخاصة اعتمادًا على شبكة اﻻنترنت والمراجع الورقية كي يثروا النقاشات خلال المحاضرات ونتوقع أيضًا زيارتهم ﻷماكن ذات أهمية كالمتحاف واﻷسواق والمطاعم ومحلات بيع الطعام والبحث عن مراجع (قراءات وأفلام) مرتبطة بالمساق وقراءتها ومشاهدتها وتصوير مأكولات متنوعة وتسجيل انطباعتهم وملاحظاتهم وأسئلتهم والقدوم بها إلى الفصل. وأخيرًا وليس آخرًا من الضروري أن يشاركوا في طبخ وتحضير وزرع طعامهم.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

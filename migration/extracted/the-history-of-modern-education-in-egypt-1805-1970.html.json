@@ -1,0 +1,34 @@
+{
+  "sha256": "41b335e287bdd250feb148cfc035663fa190c4d6533cf9ccf05d21f95a8a7955",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "The History of Modern Education in Egypt (1805-1970)",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Farida Makar",
+          "email": "makar.farida@gmail.com",
+          "bio": "Farida MAKAR obtained a graduate degree in Modern Middle Eastern Studies from the University of Oxford. In her Master's thesis she looked at teacher training in Egypt at the turn of the 20th century. As an undergraduate at AUC, she double-majored in political science and history focusing primarily on the history of formal education in Egypt. Farida has conducted research on nationalism in Egyptian textbooks throughout the twentieth century. She is interested in the interplay between nationalism and education, methods of self-organisation, alternative education, music and socio-economic rights. She is naturally drawn to anything remotely related to modern Egyptian history or earrings. Farida returns to CILAS as visiting fellow in the field of study Culture to coordinate the thematic course History of Education."
+        }
+      ],
+      "schedule_text": "Wednesdays: mornings 10:00-13:00 and evenings 17:30-20:30.",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "\"The History of Modern Education in Egypt 1805-1970)\nTeacher: \"What do you know about Logic, Morsi?\"\nStudent: \"I know that if I hit another person on the head he loses all his logic. Is this logic or isn't it logic, you educated schoolteacher?\"\n-Madrasat al-Mushaghbin (play)\n\nEveryone agrees that the state of our education is terrible, but few know precisely how it came into being. This course is an invitation to look more closely at our education system and to scrutinize it. Specifically, we analyze concepts such as nationalism, colonialism and modernity and the ways in which they affected the emergence of modern state-run schooling. We spend some time assessing the dynamics within the classroom thus looking at education as a field of negotiation, change and evolution.\n\nWe explore how educational institutions have emerged since the mid 19th century and what alternative forms of resistance have arisen in reaction by looking at the works of leading pedagogues, philosophers and their most influential texts.\n\nIn short, the course attempts to find logic in the place that seems to lack it the most: our education system.\n\n\"المدرسة: تعرف إيه عن المنطق يا مرسي؟\nالطالب :أعرف إنى لما أضرب واحد على نافوخه يقع مايحطش منطق.. هوّ دا المنطق، ولا مش هوّ؟\"\n~ مسرحية \"مدرسة المشاغبين\"\n\nيتفق الجميع على أن حالة التعليم في مصر متردية، لكن القليل يعلم كيف أتى إلى الوجود تحديدًا. من أجل ذلك يدعونا هذا المساق إلى النظر عن قرب في نظام تعليمنا بنظرة فاحصة، وخصوصًا أننا سنحلل مفاهيم مثل القومية والاستعمارية والحداثة والطرق التي أثرت بها تلك المفاهيم على نشوء المدارس الحكومية الحديثة. سنمضي بعض الوقت في تقييم الديناميكيات داخل الفصول الدراسية بينما ننظر إلى التعليم بصفته حقلاً للتفاوض والتغيير والتطور.\n\nسوف نستكشف كيف نشأت المؤسسات التعليمية منذ منتصف القرن التاسع عشر وما هي أشكال المقاومة البديلة التي هبت ردًا عليها من خلال النظر في أعمال المربيين الرائدين والفلاسفة المؤثرة.\n\nباختصار، يحاول المساق أن يجد المنطق في المكان الذي يبدو أنه يفتقر إليه تمامًا، وهو نظامنا التعليمي.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeAvRCTj-kLjSWPW7v8WWxH8PaLWSjgSBFjKysPxUP1ockamQ/viewform?usp=sf_link",
+      "own_page": null
+    }
+  }
+}

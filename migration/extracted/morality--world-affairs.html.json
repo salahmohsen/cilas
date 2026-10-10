@@ -1,0 +1,34 @@
+{
+  "sha256": "241b319e029f010390aed28a5cd0b64895d0a5a04e04a824c8a295c3ec7a3b2b",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Morality & World Affairs",
+      "title_ar": null,
+      "subtitle": "Re-considering the role of the state in global politics",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Shaimaa MAGUED",
+          "email": "shaimaamagued@yahoo.com",
+          "bio": "Shaimaa MAGUED is lecturer at the Faculty of Economics and Political Science, Cairo University. Previously she served as Research Fellow at the Center of Migrations and Refugees Studies at the American University of Cairo (AUC) in 2012. Shaimaa obtained a PhD degree from SciencesPo Aix in France in International Relations after pursuing post-graduate studies at Sciences Po Paris. She was awarded a 'Building Next Scholars’ Fulbright scholarship as well as a French Government Scholarship to pursue her studies. Her research interests and publications look at Middle East politics, Political Islam, Egyptian Foreign Policy, Turkish politics, Turkish-Arab relations and the Arab Uprising. Shimaa has been affiliated with the French Institute of Anatolian Studies (IFEA) in Istanbul, the CEDEJ in Cairo and the National Security Department at the Arab League in Cairo. A visiting fellow at CILAS in the Social Sciences, Shaimaa will be coordinating the thematic course Rethinking Morality in International Relations."
+        }
+      ],
+      "schedule_text": "Mondays: early birds 10:00-12:30 and night owls 17:00-19:30 (morning and/or evening sessions; each class runs only if at least five participants sign up).",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2015-03-23",
+      "location": [],
+      "description": "In 2010, a Turkish NGO that has close ties with the ruling party sent a humanitarian convoy to a Gaza under Israeli siege. Eleven people were killed by Israel’s Special Forces when they attacked the convoy in international waters. This incident raises questions of morality in the study of International Relations IR. Morality has been accounted for by different IR theories yet jeopardised in practice. The pursuit of materialistic self-interest informed state practice instead.\n\nThis course introduces participants to Turkish foreign policy. The latter is understood by theorists as a revisionist practice that identifies normative deficiencies in the foundations of our contemporary World Order. It challenges the dominant Western approach and formulates a morality-based international code of conduct. Since 2002, the Turkish foreign policy has presented a paradigmatic alternative to global legal order.\n\nThe course examines Turkish foreign policy as an authentic attempt towards the integration of moral values into international practice. Such an examination will require participants to deconstruct the concept of 'strategic depth'. In an effort to engage with national narratives of history, cultural consciousness of Turkish diplomacy and the elite worldview, together we will shed light on the different dimensions of moral practice in Turkey's foreign policy.\n\nexpectations\n\nParticipants are expected to study the basic tenets of the different IR theories ranging from the dominant to the interpretative and critical ones.\n\nParticipants are expected to identify moral international practices.\n\nParticipants are further expected to engage with case studies critically.\n\nwhy apply?\n\nTo think about times and spaces in the formulation of morality.\n\nTo be able to make connections between identity formation and moral practice.\n\nTo learn about non-western approaches to deconstructing and reconstructing about morality.\n\nTo reconsider the balance between interests and morals in interstate relations.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

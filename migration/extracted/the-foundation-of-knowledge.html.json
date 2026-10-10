@@ -1,0 +1,34 @@
+{
+  "sha256": "2a6c311e8a915288e596011f7fbe5df215673890999951f1a786afb19e2bca74",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "The foundation of knowledge",
+      "title_ar": "أسس المعرفة: من الكندي إلى الفارابي",
+      "subtitle": "From al-Kindī to al-Fārābī.",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Guillaume de Valux",
+          "email": null,
+          "bio": "Guillaume DE VAULX has completed his PhD at Sorbonne University on Islamic philosophy (Rasâ’il ikhwân al-safâ – On Totality), he is now an associated scholar at SPHERE (a lab for history of sciences in Paris VII-University) and he works with IDEO (Dominican Institute for Oriental Studies in Cairo). Guillaume has been teaching philosophy for more than ten years in secondary schools in both Alexandria and Cairo. He is modestly trying to be an urban farmer.\n\nجيوم حاصل على دكتوراة من جامعة السربون في الفلسفة اﻹسلامية (رسائل إخوان الصفا - حول الكلية) وهو حاليًا باحث في(مختبر للعلوم التاريخية في جامعة باريس السابعة) ويعمل في المعهد الدومنيكي للدراسات الشرقية بالقاهرة. درّس ويليام الفلسفة ﻷكثر من عشر سنوات في المدارس الثانوية في القاهرة واﻷسكندرية، ولديه محاولات متواضعة في أن يصبح مزارعًا حضريًا."
+        }
+      ],
+      "schedule_text": "Sundays: mornings 10:00-12:30 and evenings 17:30-20:00.",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "What is the basis of knowledge? What is our first knowledge? What is the science we have to begin with and proceed to all the sciences?\n\nThe question of origin (where does it come from?) and foundation (what is it built on?) is a classical question coming from Meno(Plato’s dialogue) which had great developments in classical Arabic philosophy with a religious issue: what comes first, science or revelation?, an historical issue: how to transfer science from a learned nation to an ignorant one?, an epistemological issue: how to discover what never appears in front of our eyes? a sociological issue: everyone pretends to be a scholar, but who is a real one?, and pedagogical issue: how can we help pupils to access to a knowledge they ignore?\n\nThis course offers exploring the question of foundation of knowledge through studying Arab philosophers from al-Kindī (died before 870) to al-Fārābī (died in 950). We are used to consider them Aristotelian philosophers and rationalists defenders of prophecy, which is almost wrong. Arithmetician Pythagorean philosophers faced empiricist as logician Aristotelian thinkers. As some of them defended that prophecy is the origin of science, others that it’s an image of science, while others said that’s all fake. Philosophical activity reflected the huge diversity of the Abbasid empire.\n\nWhat to expect?\n\n-Methodology of philosophy (what is a philosophy? what is a concept? What is a problem?)\n\n-Methodology of philosophical texts analysis\n\n-An insight in Classical Arabic Philosophy\n\nما هي أسس المعرفة؟ وما هي معارفنا اﻷولى؟ وما هو العلم الذي نبدأ به ونلج به إلى كل العلوم؟\n\nالسؤال حول اﻷصول (من أين تأتي المعرفة؟) واﻷسس (على ماذا تبنى؟) هو سؤال قديم من مينو (في محاورات أفلاطون) التي تطورت تطورًا كبيرًا في الفلسفة العربية الكلاسيكية في مسألة دينية: ما اﻷول: العلم أم الوحي؟ ومسألة تاريخية: كيف ننقل العلم من أمة متعلمة إلى أمة جاهلة؟ ومسألة معرفية: كيف نكتشف ما ﻻ يظهر أمام أعيننا؟ ومسألة اجتماعية: كل الناس يدعون أنهم علماء، لكن من هو العالم الحقيقي؟ ومسألة تربوية: كيف نساعد طلابنا للوصول إلى معرفة يجهلونها؟\n\nيسبر هذا المساق أغوار سؤال أسس المعرفة من خلال دراسة الفلاسفة العرب من الكندي (المتوفي قبل عام 870 ميلادية) إلى الفارابي (المتوفي في عام 950 ميلادية)، والذين ننظر إليهم باعتبارهما فلاسفة أرسطيين ومدافعين عقلانيين عن النبوة وهو ما كاد أن يكون خطأ. واجه الفلاسفة الفيثاغورثيون الرياضيون اﻹستقرائيين باعتبارهم مفكرين أرسطيين منطقيين. بينما دافع بعضًا منهم عن النبوة كأصل للعلم، وآخرون دافعوا بأنه صورة للعلم، بينما قال آخرون أن ذلك كله زائف. عكس هذا النشاط الفلسفي التنوع الواسع للعصر العباسي.\n\nما الذي نتوقعه؟\n\nمنهاجية في الفلسفة (ما هي الفلسفة؟ وما مفهومها؟ وما مشكلاتها؟)\n\nمنهاجية تحليل النصوص الفلسفية\n\nرؤية في الفلسفة العربية الكلاسيكية",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+      "own_page": null
+    }
+  }
+}

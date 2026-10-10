@@ -1,0 +1,356 @@
+{
+  "sha256": "1bf512769ab96f9768587997bdf71e132d6052cc6683a8828ea5b681fdaf555c",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring semester 2021",
+        "season": "spring",
+        "start_year": 2021,
+        "start_date": "2021-02-06",
+        "deadline": "2021-01-27",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "“I curse my own child but I hate whoever says Amen”",
+            "title_ar": null,
+            "subtitle": "A History of the Family in the Modern Middle East",
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Yosra Sultan",
+                "email": "yosra.sultan@gmail.com",
+                "bio": "Yosra SULTAN is a PhD candidate at New York University in the joint program in History and Middle East Studies. She is a feminist, mother, and a native of Cairo. Her research focuses on the history of discourses on childhood, medicine and family life in late 19th and early 20th century Egypt. She also loves children’s literature and has two Arabic children’s books forthcoming."
+              }
+            ],
+            "schedule_text": "Sunday mornings (10:00-12:30) and Saturday evenings (17:30-20:00)",
+            "weekdays": [
+              "sat",
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "Our personal family histories and the lived experiences of growing up as part of a family shape our values, aspirations, economic fortunes, preferences and aversions and touch the very core of who we are and how we interact with the world. The family is so conspicuous a social institution that we often take it for granted as a natural formation. In this course, we will explore how this powerful form of social organisation has ruled the lives of Middle Eastern men, women and children, and has been shaped by their choices and visions. We will investigate how the institution that we recognise today as the modern family has come into being in the context of regional variations of capitalism, colonialism, modern state formation, nationalism and the women’s movement. Together we will read a variety of primary documents such as newspaper articles, published manuscripts, autobiographies, family photos, court records, and medical literature from the modern Middle East to explore how the family was discursively and materially created and made to appear as a natural phenomenon. We will ground these investigations of primary material with secondary readings from the increasingly sophisticated field of Middle East family history, and the more established discipline of family history in the modern world.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/history-family-me.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "Religion and politics: What sort of justice after secularisation?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Marie-Nil Chounet",
+                "email": "marienil.chounet@gmail.com",
+                "bio": "Marie-Nil CHOUNET is a former student of the École normale supérieure (ENS Ulm) and the École nationale d'administration (ENA) in France. She graduated in philosophy, sociology and law from the Sorbonne Université and the École des hautes études en sciences sociales (EHESS). Her research thesis was on Henri Bergson's philosophy of religion. She has also taught French civilization at Yale University. Marie-Nil is now a judge in Paris."
+              }
+            ],
+            "schedule_text": "Sunday mornings (10:00-12:30) and Tuesday evenings (17:30-20:00)",
+            "weekdays": [
+              "sun",
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "Secularisation, which has gradually identified itself with the project of \"European modernity\", can be defined as a process which emancipates societies from the constraints that religious institutions exert on them. The secularisation of modern societies, which is related to a process of rationalisation, would thus make it possible to separate religion from the modern state and to confine religion to the private sphere. In this course we will study how this theory of secularisation has been criticised by intellectuals, believers and non-believers alike, who did not define themselves as anti-modern but thought following different approaches that religion could not be detached from the political desire for justice. Together we will reflect on the borders of religion and politics in the colonial and post-colonial world, and how the process of secularisation has revealed the contingent and non-universal character of this partition opening up ways to the pursuit of justice.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/religion-and-politics.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "Africa urbanising",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Shan Yang",
+                "email": "yangshan@aucegypt.edu",
+                "bio": "Shan YANG is a Post-MA Fellow for the 2019-2020 academic year at HUSSLab after obtaining an MA at the American University in Cairo. Her MA Comprehensive Examination covered three domains: political economy, time and temporality and the urban. She is currently working on a research project-Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers. She obtained her Bachelor's degree (2012) and first MA (2015) at Fudan University in Shanghai."
+              }
+            ],
+            "schedule_text": "Tuesday mornings (10:00-12:30) and Monday evenings (17:30-20:00)",
+            "weekdays": [
+              "mon",
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "This course engages debates in contemporary neoliberal urbanism with a particular focus on African cities. It questions the colonially-mediated modern conceptual frameworks that undergird the field of urban studies. It suggests to rethink the intimate connection between the development of capitalism and urbanisation. Together we will explore the ongoing reconfigurations of the urban as social laboratory: the production of gendered, racialised, classed subjectivities, housing, land, networks, livelihoods, power, violence and social movements in the everyday life of urban dwellers.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/urban_africa_-_preliminary_syllabus_for_2021_spring_cilas.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "An Introduction to Popular Egyptian Cinema: Youth!",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Nour El Safoury",
+                "email": "nsafoury@gmail.com",
+                "bio": "Nour EL SAFOURY is an independent editor and film critic. Her writing has been published in retrospective and exhibition catalogs as well as in “Al-Film Magazine,” and “Mada Masr.” She is the editor of Esmat, a publishing list that takes as a source of inspiration fictional characters and the feelings they invoke in us—loss, longing, infatuation, gratitude, love. Esmat is an ongoing collaboration with designer Shahd El Sabbagh. Nour holds a M.A. in Film Studies from King’s College London and a B.A. in Film and Media Studies from Johns Hopkins University."
+              }
+            ],
+            "schedule_text": "Saturday mornings (10:00-12:30) and Tuesday evenings (17:30-20:00)",
+            "weekdays": [
+              "sat",
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "Looking at popular Egyptian cinema from the post-1952 period until the turn of the millennium, this course aims to situate a selected number of films socio-historically and aesthetically. Participants will gain fluency in the film’s unique language, both from a historical and a genre viewpoint. Classes will alternate between weeks where we closely read and situate films within their time period and weeks where we critique theoretical texts that analyse film form and language. Thematically, course participants will trace changes in Egyptian cinema’s portrayal of young people. By the end of the course, they will be able to describe and analyse formal choices made by filmmakers, understand a film form’s relationship to content, identify major social shifts that impacted narratives in contemporary Egyptian cinema.\n\nNote that for this course speaking knowledge of Arabic is needed as most of the films we'll watch do not have English subtitles. The readings will be in English and course discussions will—as needed—mix between the two.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/introduction_to_popular_egyptian_cinema.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "ا\"ألفين سنة ويفضل كلامي جميل\": تاريخ شعر العامية المصرية في القرن العشرين وحتى اليوم",
+            "title_ar": "ا\"ألفين سنة ويفضل كلامي جميل\": تاريخ شعر العامية المصرية في القرن العشرين وحتى اليوم",
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "حسين الحاج",
+                "email": "sheikh.kamar@gmail.com",
+                "bio": "حسين الحاج مترجم وكاتب ومحرر بموقعي كتب مملة وترجمان. حصل على درجة الليسانس من كلية اﻵداب قسم اللغة اﻹنجليزية بجامعة القاهرة ودرس في معهد القاهرة للعلوم واﻵداب الحرة (سيلاس) متخصصًا في التربية والتاريخ ودراسات ما بعد الاستعمار. ساهم في تأسيس فرع المعهد في اﻹسكندرية (سيلاس اﻹسكندرية) حيث درّس اﻹنسانيات والترجمة. صدر له ديوان نثري بالعامية المصرية \"طيوف\" عام 2015 وكتيب مترجم بعنوان \"الدليل في طلب المستحيل\" عام 2019 عن دار يدوية لفنون صناعة الكتاب"
+              }
+            ],
+            "schedule_text": "Monday mornings (10:00-12:30) and Monday evenings (17:30-20:00)",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "تُؤْثَر عن أمير الشعراء أحمد شوقي عبارة تقول «أخشى على العربية من بيرم». ورغم أن بيرم التونسي لم يكن شاعر العامية الوحيد في مصر، إلا أنه ترك بصمة في الشعر المصري أثرت بعمق في المجتمع المصري حينذاك وفي ولادة أجيال جديدة من شعراء العامية المصرية، حتى قال اﻷديب يحيى حقي عن رباعيات صلاح جاهين، \"لم يهدد أحد اللغة الفصحى كما هددها صلاح\". وعلى الرغم من أن هذه الخشية تحولت في بعض اﻷحيان إلى كراهية وعداء في فترات تصاعد المد القومي العربي وفترات انحساره، لكنها لم تؤثر مطلقًا على شعبية شعر العامية المصرية، بل إن التحولات التي مر بها الشعر العامي المصري في القرن العشرين ما بين زجل وتفعيلة ونثر تشبه كثيرًا التحولات التي مرت على الشعر الفصيح أيضًا، مما لا يدع مجالاً للشك أنه مر بمراحل تطور ونضوج جيل بعد جيل. اليوم نرى النصوص التراثية مثل \"رسالة الغفران\" للمعري تعاد كتابتها مرة أخرى بالعامية، ومسرحيات شكسبير تترجم نثرًا وشعرًا إلى العامية. يستدعي كل ذلك قراءة في تاريخ اﻷدب العامي المصري ككل بما فيها الروايات التي كتبت بالعامية المصرية كما الترجمات كي نرسم جدولاً زمنيًا يكشف لنا ما تنطوي عليه محطات هذا التاريخ حتى يومنا هذا",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/_ألفين_سنة_ويفضل_كلامي_جميل___تاريخ_شعر_العامية_المصرية_في_القرن_العشرين.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "Thoughts on food/Food for thoughts",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hala Barakat",
+                "email": "hala.barakat@gmail.com",
+                "bio": "Hala BARAKAT is a dedicated food researcher. She has worked as a lecturer at Cairo University 1995-2000 and acted as deputy director at the Center for Documentation of Cultural and Natural Heritage (CULTNAT) affiliated to the Library of Alexandria. She was in charge of the documentation of the natural heritage program as well as supervising the photographic heritage, folkloric heritage and musical heritage programs at CULTNAT (2000-2012). In January 2013, Hala joined the Egyptian Initiative for Personal Rights (EIPR) as a part time researcher on the issues of “Right to Food” and “Food Sovereignty” in Egypt."
+              }
+            ],
+            "schedule_text": "Monday mornings (10:00-12:30) and Saturday evenings (17:30-20:00)",
+            "weekdays": [
+              "sat",
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "This course looks at food in perspective. We will explore various themes related to food, including the global history of foods and food heritage, food documentation and the roles foods play in rituals. The politics and the future of food will be critically examined with the help of case studies. The main focus will be on the Egyptian context but more global perspectives will also be considered. Topics include the concept of food heritage; food documentation from prehistory to cyberspace; food as a ritual, offerings and ceremony; food art and design; the right to food; food as a commodity; food as a weapon, food wars and trade agreements; food sovereignty and food subsidy; and the future of food production and consumption.",
+            "flow_links": [],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "Keys to Reading Ibn ‘Arabī",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Saliha Farid Abdelkhalek",
+                "email": "saliha.philosophy@gmail.com",
+                "bio": "Saliha Farid Abdelkhalek studied Philosophy and Political Science at the American University in Cairo, Creative Writing at the University of Edinburgh, and Philosophy and Contemporary Critical Theory at Middlesex University. She completed her Ph.D. thesis entitled “Being, Reification, and Ritual: The Esoteric Paradigm of Ibn ‘Arabī” at the Institute of Arabic and Islamic Studies at the University of Exeter. Her areas of interests are philosophy of religion, mysticism, philosophy of selfhood and consciousness, medieval Islamic Philosophy, religion, Islamic Studies with a focus on Sufism."
+              }
+            ],
+            "schedule_text": "Saturday mornings (10:00-12:30) and Sunday evenings (17:30-20:00)",
+            "weekdays": [
+              "sat",
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "This course introduces students to Ibn ‘Arabī, the Andalusian Muslim mystic of the 12th/13th century (1165-1240), who is considered the Grand Sheikh of the living Sufi tradition, and author of the possibly, largest Muslim Esoteric Encyclopaedia al-Futūḥat al-Makkīya (The Meccan Openings). Anyone who comes in contact with the writings of Ibn ‘Arabī’, will soon discover the difficulty involved in reading and deciphering them; how Illusive, profound and mysterious they are. Understanding the framework and context in which Ibn ‘Arabī wrote, the backdrop of the religious tradition and the philosophical concepts and language that were inherited and at times, purposefully employed, make his texts much more accessible to students. Hence, this course combines central themes in Sufism and philosophy, designed to help students navigate Ibn ‘Arabī’s primary texts and access layers of meaning, paving the dip into the “ocean without a shore”.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/reading_ibn_arabi_.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "An Introduction to New Materialisms: Bodies, Objects, and Movement",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Marlies Van Coillie",
+                "email": "marliesltvancoillie@aucegypt.edu",
+                "bio": "Marlies VAN COILLIE is a dancer, nerd, PowerPoint designer, and cyborg, and carries a Buraq on her body. She is enchanted by Egyptian mawalid (moulid festivals). Her MA thesis traces the (im)material life of things and objects in the festivals in relation to public art production. Her research has involved her in an art-research project Tawtam in collaboration with visual artist Ammar Abo Bakr. She obtained an BA and MA in Arabic and Islamic Studies from Ghent University and completed an MA in Gender and Women’s Studies in MENA at The American University in Cairo."
+              }
+            ],
+            "schedule_text": "Tuesday mornings (10:00-12:30) and Sunday evenings (17:30-20:00)",
+            "weekdays": [
+              "sun",
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "This course invites us to unlearn the notion of ‘the hu-Man’. It asks how stories of materials can make the hu-Man story leak. How can our relation to materials speak of other becomings- of becoming animal, insect, a cyborg, a Buraq or art? How can the human itself become a leakage rather than a category? The course is an invitation to inhabit our bodies openly, relationally and in movement. The course conceptualises bodily and material becomings wherein the binary of human and nonhuman cannot hold a grip of reality. The academic literature, different artwork and experimental bodywork that the course engages are situated within new materialism.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/courseproposal_marliesvancoillie_cilas_spring2021.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "Broken Harmonies: Music and Philosophy in the 20th Century",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hazem Massoud",
+                "email": "hazemehab24@gmail.com",
+                "bio": "Hazem MASSOUD holds an MA in Political Philosophy from Pompeu Fabra University in Spain. He is currently working on his PhD thesis in Humanities at Pompeu Fabra University which focuses on the political ontology of Maurice Merleau-Ponty. His research interests include phenomenology, hermeneutics, ontology, film theory, political philosophy, psychology, and music theory. Besides academia, he is takes photos, makes independent small-scale films and is a self-taught musician."
+              }
+            ],
+            "schedule_text": "Saturday mornings (10:00-12:30) and Monday evenings (17:30-20:00)",
+            "weekdays": [
+              "sat",
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "This course attempts to account for the transformations that occurred in philosophy and music in the 20th century which signaled the disintegration of the metaphysical foundations of modernity both in thought and praxis. The philosophical turn in the 20th century which can be labeled as an “interpretative turn” has posed the questioning of, deconstruction and weakening metaphysical foundations of the philosophical tradition as the task of thinking. This took place through numerous schools of thought and trajectories; from critical phenomenology, to genealogy and poststructuralism, and from Frankfurt School’s critical theory to postcolonial studies, even to performance studies, where the universality of a unified principle that used to guide philosophy has been replaced with a multiplicity that ushered a post-foundational era. For music it was no less different, the rise of atonal music, jazz, electronic music and the exposure to world music from outside the west all helped in decentering the western perception on music and harmony as the guiding principle and opened up new possibilities both for our perception of things and for the new configurations between things, actions and sounds. The course critically engages with readings in an attempt to read these transformations in philosophy through music.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/hazem_massoud_-_broken_harmonies__music_and_philosophy_in_the_20th_century.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "Good Feminist, Bad Feminist, Happy Feminist",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Mariam Diefallah",
+                "email": "diefallahmariam@gmail.com",
+                "bio": "Mariam DIEFALLAH is a feminist doula, childbirth educator, and writer. She is a strong advocate for better sexual and reproductive health and rights for women in the MENA region, and a passionate believer in pleasure as a form of activism. In her free time, Mariam is either dancing, cuddling with her three cats, or pretending to study Spanish. You can follow her on Instagram @mariamdiefallah"
+              }
+            ],
+            "schedule_text": "Tuesday mornings and evenings",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "Considering pleasure as both a fundamental right and a form of activism, the course 'Good Feminist, Bad Feminist, Happy Feminist' is inspired by adrienne maree brown’s book Pleasure Activism: The Politics of Feeling Good . Using the framework presented in the book, together, we will wonder and discuss what it means to feel satisfied and content under systems of oppression, and how we can make feminism a fulfilling and pleasurable act of justice. Each week, we will discuss a different theme, including anger, profanity, intimacy, and witchcraft. These themes are designed to assemble a toolbox that guide one through their journey to become a pleasure activist. Within the context of the current patriarchal, capitalist, ableist systems we live in, this course rejects pain as ‘a natural/normal woman experience.’ Instead, it hopes to move us a step closer towards feeling and healing, and - to quote adrienne maree brown - “being life moving towards life,” all the while manifesting the joyful, accountable, feminist movements and futures we envision.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/course_proposal_-_mariam_diefallah.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          },
+          {
+            "title": "Unhomely Times: On Fear and Dwelling in Modern Life",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Hisham Fahmy",
+                "email": null,
+                "bio": "Hisham Fahmy is a writer, lecturer and translator of philosophy. He obtained a degree in political science and is currently pursuing a graduate degree in philosophy. Hisham has published in both English and Arabic on issues of Continental philosophy, Literary Crticism, Islamic philosophy, political theory, and anthropology. He has given lectures on Carl Schmitt, Eric Voegelin, Theodor Adorno, Martin Heidegger, and Michel Foucault."
+              }
+            ],
+            "schedule_text": "Tuesday mornings and evenings",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-02-06",
+            "location": [
+              "HYBRID"
+            ],
+            "description": "Whenever we are confronted with an event that can change the course of our lives, fear and trembling befall us. Two paths usually present themselves in such moments: either to run away from the event, or to address it. Philosophy is the latter – it is addressing those events with questions that, if answered, would make us lead a better life. Today, however, we tend to run away, and consequently we often to push philosophy aside. This course asks why do we tend to run away from these events, and why would anyone need to address them. The main argument of this course is that as modern subjects, we tend to run away because we do not have a “home” - a reference point to which we could return to take a breath, and to then regroup ourselves to be able to look at these events.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/unhomely_times-_hisham_-_spring_2021.pdf"
+            ],
+            "register_url": "https://forms.gle/Ht5EgMuMiZxVbPFVA",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

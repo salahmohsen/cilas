@@ -1,0 +1,112 @@
+{
+  "sha256": "245c3c66f038218e6317299fa9d4e449475c4227b1101f06a5ad83cedf0de0c8",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall 2021 labs",
+        "season": "fall",
+        "start_year": 2021,
+        "start_date": "2021-09-12",
+        "deadline": "2021-08-31",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "the space lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Shan YANG",
+                "email": "yangshan@aucegypt.edu",
+                "bio": "is a Post-MA Fellow for the 2019-2020 academic year at HUSSLab after obtaining an MA at the American University in Cairo. Her MA Comprehensive Examination covered three domains: political economy, time and temporality and the urban. She is currently working on a research project-Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers. She obtained her Bachelor's degree (2012) and first MA (2015) at Fudan University in Shanghai."
+              }
+            ],
+            "schedule_text": "Sunday mornings and Monday evenings at CILAS",
+            "weekdays": [
+              "sun",
+              "mon"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-09-12",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "In this lab we will engage debates in contemporary neoliberal urbanism with a particular focus on the global south. It questions the colonially-mediated modern conceptual frameworks that undergird the urban studies field. It suggests to rethink the intimate connection between the development of capitalism and urbanisation. The space lab explores the ongoing reconfigurations of the urban as social laboratory: the production of gendered, raced, classed subjectivities, housing, land, networks, livelihoods, power, violence and social movements in the everyday life of dwelling.\n\nMeanwhile, the space lab will provide three trajectories for creative experimentation: autonomous space building (like CILAS and its neighborhood), urban gentrification, social housing and resettlement.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_space_lab_-_syllabus_fall_2021_-_shan_yang.pdf"
+            ],
+            "register_url": "https://forms.gle/9xwxFos8Nk2TXa89A",
+            "own_page": null
+          },
+          {
+            "title": "the media lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Nour EL SAFOURY",
+                "email": "nsafoury@gmail.com",
+                "bio": "is an editor, teacher and film critic. She is editor and co-manager of Esmat—Publishing List together with designer Shahd El Sabbagh. Her writing has appeared in retrospective and exhibition catalogs as well as in Al-Film Magazine, and Mada Masr. Her current research interests are history of film publications, film archives and archival activation, and the intersections between film and other art forms. She holds a M.A. in Film Studies from King’s College London and a B.A. in Film and Media Studies from Johns Hopkins University."
+              }
+            ],
+            "schedule_text": "Wednesday evenings at CILAS with field trips on other days",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:30",
+            "end_time": "20:00",
+            "weeks": 12,
+            "start_date": "2021-09-12",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The media lab this fall uncovers the networks through which cultural objects such as posters, magazines, books, films, commercials, and songs circulate in the contemporary urban fabric of Cairo. To narrow down the scope, the lab will focus on the circulation of objects that form part of film culture(s). As researchers of media in Cairo, this course engages the city and takes inspiration from it to analyse the power dynamics that reinforce present circuits of media distribution, the relationship between formal and informal networks of distribution and circulation and the nature and challenges presented by the World Wide Web as a growing site for the distribution of cultural productions.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/media-lab-fall-2021.pdf"
+            ],
+            "register_url": "https://forms.gle/9xwxFos8Nk2TXa89A",
+            "own_page": null
+          },
+          {
+            "title": "the pedagogy lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Karim-Yassin GOESSINGER",
+                "email": null,
+                "bio": "serves as founding director of CILAS. As an educator and scholar-activist based in Cairo, Egypt, he combines his background in philosophy and urbanism with body-based practices. An active member of the Ecoversities Alliance, he uses art and creative pedagogies to denaturalize colonial frames of reference and material architectures that make up the social. He writes about pigeons, pedagogy and tea."
+              }
+            ],
+            "schedule_text": "Tuesday at CILAS and Tuesday evenings online and offline (at CILAS)",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": "2021-09-12",
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "What is ‘radical education’? In this fall’s pedagogy lab, we will explore different associations we may have with the term \"radical\" and will consider the historical, social and conceptual dimensions of the term. We will focus particularly on the negative and positive connotations of the word “radical”, and the distinctions that can be made between these ideas and connected ideas such as “reform”, “revolution” and “progress”. We will engage with the work of the Brazilian educator and theorist Paulo Freire and the tradition of Critical Pedagogy to consider the central themes in Freire’s work: the oppressed/oppressor relationship; critical consciousness; humanization; dialogue and liberation, and the intellectual roots of Freire’s thought. We will focus on the ways that Freire’s work has been developed by theorists and practitioners outside the context of adult education in Latin America, notably critiques of Freire by Feminist theorists and by Critical Race scholars.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_pedagogy_lab_–_fall_2021-kyg.pdf"
+            ],
+            "register_url": "https://forms.gle/9xwxFos8Nk2TXa89A",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

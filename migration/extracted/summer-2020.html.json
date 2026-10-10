@@ -1,0 +1,132 @@
+{
+  "sha256": "9211b34014b82610ac3b210404184b5a6cf78a783c1dc1fb0e3604cab0b6803a",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "summer 2020",
+        "season": "summer",
+        "start_year": 2020,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Migration: Belonging, Dwelling and Laboring",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Shan Yang",
+                "email": null,
+                "bio": "Shan YANG is a Post-MA Fellow for the 2019-2020 academic year at HUSSLab after obtaining an MA at the American University in Cairo. Her MA Comprehensive Examination covered three domains: political economy, time and temporality and the urban. She is currently working on a research project-Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers. She obtained her Bachelor's degree (2012) and first MA (2015) at Fudan University in Shanghai."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 10,
+            "start_date": "2020-06-25",
+            "location": [],
+            "description": "Migrations do not just happen - they are produced. Capitalist modernity requires massive displacement that seamlessly supports the free flow of labor in the context of globalization. Yet mobile subjects are categorized, sorted and governed in and through the international legal order by initiatives dealing with trafficking, refugees, border controls, terrorism, and sexual morality. The impact of these different initiatives on cross-border movements is mediated by gender, class, religion, sexual, and marital status. In this seminar, we will take a close look at how people - on the move, in the transition, contained, encamped or deported- really live, how the social are reassembled, and how practices of belonging, dwelling and laboring are negotiated in the everyday.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/syllabus_cilas_summer-_migration.pdf"
+            ],
+            "register_url": "https://forms.gle/oSuV6AKYuupuVUkg9",
+            "own_page": null
+          },
+          {
+            "title": "Time for U/Dystopia? Reflecting on Power, Politics and Global Crisis",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmed Dardir",
+                "email": null,
+                "bio": "Ahmed DARDIR holds a PhD in Middle Eastern Studies from Columbia University. His research focuses on questions of power, state, subjectivity, identity, and colonialism. He is also interested in literature and theatre. Ahmed taught at CILAS as part of his responsibilities as its Humanities fellow in the academic year 2017- 2018 and as a visiting fellow since. He is most excited about his return to CILAS."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 6,
+            "start_date": "2020-07-08",
+            "location": [],
+            "description": "Questions of Utopia and Dystopia return forcefully in the context of the current world crisis. Will the Covid 19 pandemic expose, at last, the failures of the hegemonic global system, and lead to new modes of organization that transcend individualism and defy capitalism and colonialism? Or will it lead to the solidification of the old world order, now armed with new and renovated techniques of surveillance, fear-mongering, and mass control?\n\nIn this course we will use our current moment to reflect on a number of literary texts that defined the genre(s) of Utopia/Dystopia, and use them to reflect back on our present and on the various Utopian and Dystopian scenarios the future may be hiding for us.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/time_for_dystopia-ad-summer.pdf"
+            ],
+            "register_url": "https://forms.gle/oSuV6AKYuupuVUkg9",
+            "own_page": null
+          },
+          {
+            "title": "how do we talk about death?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ismail Fayed",
+                "email": null,
+                "bio": "Ismail FAYED is a writer, critic and educator based in Cairo. He has worked with key regional institutions and platforms (Mada Masr, Townhouse Gallery, Contemporary Image Collective,...etc) and internationally (The Museum of Modern Art in New York). His interests span a broad range of contemporary artistic practices ranging from visual arts, to performing arts, to contemporary Arabic literature. In 2016 he co-founded the History and Cultural Memory Forum a series of seminars and publications examining the realities of the Arab world post-2011."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 7,
+            "start_date": "2020-06-29",
+            "location": [],
+            "description": "Death is seen as the great equalizer, no one can escape it and like birth, it is essentially individual. In 'how do we talk about death?' we will try to look at death's inherently subjective experience and at the same time inevitable universality. Attempting to overcome modern taboos around death (contemporary culture's obsession with youthfulness and longevity), the course will share with the participants a multi-perspective take on death, from history, anthropology, philosophy,...etc in collective exercise of sharing and discussion. Ultimately creating meaningful lexicons and terms, through these conversations and discussions, that give nuance to our perceptions and understanding of death in the here and now.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/how-to-talk-about-death-if-summer.pdf"
+            ],
+            "register_url": "https://forms.gle/oSuV6AKYuupuVUkg9",
+            "own_page": null
+          },
+          {
+            "title": "On the decline of the Ivory Tower & the emergence of Pigeon Towers",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Karim-Yassin Goessinger",
+                "email": null,
+                "bio": "Karim-Yassin GOESSINGER is founding director of CILAS. As an educator, he combines his background in philosophy and urbanism with body-based practices, including Qi Gong and tea drinking. An active member of the Ecoversities Alliance, he uses art and decolonial pedagogies to denaturalize colonial frames of reference and material architectures that make up the social."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 8,
+            "start_date": "2020-06-30",
+            "location": [],
+            "description": "The Ivory Tower, or its literal counterpart the modern/colonial university, is terminally ill. Perhaps now with COVID-19 – an equally pervasive illness – it's time to do away with it and call upon a new figure to guide our efforts to re-image higher education. The Pigeon Tower comes to mind as a potential new figure. Together we will review two historical diagnosis of the ills of the modern/colonial university as articulated in the early 20th and in the 1960s and 70s before analyzing two contemporary student movements from the global south.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/tentative-flow-ivory-to-pigeon-tower-kyg-summer.pdf"
+            ],
+            "register_url": "https://forms.gle/oSuV6AKYuupuVUkg9",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "sha256": "352ac415d08a8e6885b1ab8415af9a480aa78a1f3c20cc5fead7e5231e05e905",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall cycle 2022",
+        "season": "fall",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-09-18",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "The Modern and the Mediterranean: The Age of Enlightenment in Europe and the Middle East",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mateo Arevalo",
+                "email": "mateo.arevalo.botero@gmail.com",
+                "bio": "Mateo Arevalo studied Modern European History at the University of St Andrews and went on to receive a Masters degree in Modern History at the University of Oxford, specialising in the Enlightenment and eighteenth-century intellectual history in the Atlantic World."
+              }
+            ],
+            "schedule_text": "Mondays 10-12pm, offline, except for the first class will be online.",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "10:00",
+            "end_time": "12:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "One might say that the Enlightenment changed everything. It is credited with fashioning the intellectual foundations of modernity, bringing reason and science to the forefront of public life, hastening the end of the ancien regime, pioneering constitutional government, sparking the American and French Revolutions along with modern nationalism, and much more. It has also been accused of thoughtlessly demolishing traditional societies, diminishing religious life, rationalising the imposition of European imperialism and colonialism upon the globe, and bringing about many of the ills of life as we know it. So which is it?\n\nThis course would seek to establish a balanced, critical assessment of what, exactly, the Enlightenment meant in the decades after it first appeared in print, along with its far-reaching influence across the centuries. Following trends in global history, this class would attempt to “de-centre” the Enlightenment from its typical European moorings and investigate what it meant for the inhabitants of Cairo and Alexandria, Istanbul and Baghdad. Intellectual, cultural, and social interchange and transformation in Europe and the Middle East in the eighteenth and nineteenth centuries will be examined. The first half of the course will cover primarily the intellectual foundations in Europe of the diffuse movement called the Enlightenment, and the second half will migrate across the Mediterranean to see how Egypt and the wider Ottoman world contributed, responded, and reacted to les lumières during an era when the world was turned upside down.\n\nThrough careful analysis of primary texts, historical interpretation, and competing interpretative frameworks, this class would seek to arrive at a deeper, multilayered understanding of this complex epoch; that will perhaps shed insight into the birth pains of the modern world, what was gained, and what was lost.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_modern_and_the_mediterranean.pdf"
+            ],
+            "register_url": "https://forms.gle/vA84TYYm6qvAbG5W8",
+            "own_page": null
+          },
+          {
+            "title": "CITY & CINEMA",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Hend Aly",
+                "email": "hendaly@aucegypt.edu",
+                "bio": "Hend Aly is an urban researcher and a consultant for the UN-Habitat. She has held various position in international organisations, governmental institution and civil society. She holds two post-graduate degrees in political science and urban studies. In her research, she is interested in bringing the political and the urban closer together to better understand the city. She has previously published on urban inequalities and citizenship, neo-liberal urbanism, authoritarianism, new cities, urban branding, urban governance and urban activism. Her research covers diverse cities including Cairo, Brussels, Vienna, Copenhagen, Madrid, Belgrade, Tirana, and new cities namely, NEOM. Her current research focuses on migration integration in an urban context."
+              }
+            ],
+            "schedule_text": "Wednesdays from 6-8pm, Hybrid.",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "HYBRID"
+            ],
+            "description": "City and the cinema have always been interlinked. While the cinema represents an image of the city, its people and spaces, it simultaneously plays a major role in the production of its space. The relation between the city and the Egyptian cinema, dates to its early days. When Naguib el-Rehani in Salama fi Khair (1937) mocked the urban elite, Ismail Yassin in al-Attaba el-khadra (1959), days after arriving from the village bought one of Cairo’s most vital squares. Al Houb Fouk Hadba el-Haram (1986) and al-Souraa La Tazeed Aaan Sefr (1992) follow the suffering of Athar elHakim and Ahmed Zaki and Abla Kamel and Ahmed Bedier to find a house and practice their basic rights of marriage and housing. The city and urban life represented the childhood dream of Shukri Sarhan in Ibn el-Nile (1951) which turned into a disaster when it came true, while for Ahmed Zaki, and his family in elBeih el-Bawab (1987) moving to the city was a way to make a living which started with a harsh welcome but eventually provided him with the city’s endless opportunities. Bushra’s 678 (2010) daily commutes in the public bus reflected the suffering of Egyptian women facing harassment, while the public tram provided the child Doha Amir in Hayah aw Mout (1954) safe transport across Cairo to find the medication of her dying father, Emad Hamdy. This class dives deep into the city and its representation in the cinema. Employing a critical approach of contemporary urban political and economic landscapes, it familiarises the students with the main debates within academia and includes the movies as a lens to look at the broader questions on urban studies. Every week we will explore one of the urban spaces, starting from the railway station to public spaces, neighbourhoods, public transport, universities and waterfronts. We will focus every week on a different space, covering a broad range of issues which we encounter in our everyday life within these spaces. We will read and discuss housing, mobility, rural-urban migration, informality, segregation, inequality, citizenship, poverty, etc. After week one, which will function as an introductory class, each class will be composed of two parts. In the first part we discuss the readings and engage with academic debates, while in the second part a student/students will give a presentation on the space of the week, followed by a discussion.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_city_and_the_cinema_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/vA84TYYm6qvAbG5W8",
+            "own_page": null
+          },
+          {
+            "title": "Women's Writing and the Literary Canon",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Osama Amer",
+                "email": "osamaamer@aucegypt.edu",
+                "bio": "Osama Amer is a researcher, creative writer and a translator. He is currently doing his MA in Arabic Studies specializing in Arabic Language & Literature at the American University in Cairo (AUC) in the Arab and Islamic Civilizations department. His main academic interests are Modern Arabic Literature and its intersections with Gender Studies."
+              }
+            ],
+            "schedule_text": "Wednsdays 6-8 PM, offline.",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "How many women authors have you read in school? How many women are present on the recommended shelf in your local bookstore? Literary Canon refers to the body of works traditionally perceived as masterpieces of literature that are also taught in universities and high schools. As a patriarchal construct, the Canon marginalizes women and admits a few women under certain conditions. In the case of Arabic Literature, these conditions relate to 1) nationalism, 2) responding to masculine aesthetics, and 3) committing to designated gendered traditions such as rithāʾ elegies. Accompanying the rise of nationalism in the twentieth century, women's writings, which could be categorized as national works, were more likely to be canonized. On the other hand, women writers challenged the Canon, expanded the boundaries of literary genres, and created feminist aesthetics.\n\nIn addition to discussing how the Arabic literary Canon works, this course offers a counter-feminist canon through its readings. We are going to understand why a woman author could be canonized while others are not. Furthermore, we will investigate why specific works were marginalized while others are considered masterpieces by the same author. Above all, we are going to enjoy reading poems, short stories and novels written by women.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/feminist_literary_canon..docx.pdf"
+            ],
+            "register_url": "https://forms.gle/vA84TYYm6qvAbG5W8",
+            "own_page": null
+          },
+          {
+            "title": "Vocabularies of Grief",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mariam Boctor",
+                "email": "mariam.i.boctor@gmail.com",
+                "bio": "Kuzbara Collective is a writing, research, and cooking/baking partnership between Mariam Boctor and Nour Kamel interested in food, our bodies, ecologies, the land, heritage, and alternative knowledges, based in Cairo, Egypt. Together they have created and facilitated several writing workshops and subsequent publications on food, bodies, ritual, and care. Mariam is a writer, translator and researcher with a background in pharmacy, herbal medicine and public health. They have worked as a curator and researcher on Botoun and A Lifetime of Wind with the Contemporary Image Collective. Her writing has appeared in The Outpost and Mada Masr amongst others. Nour is a writer, editor, and baker. Their chapbook ‘Noon’ is part of the New-Generation African Poets series and their writing can be found in Anomaly, Rusted Radishes, 20.35 Africa, Mizna, and World Literature Today, amongst others. Kamel was shortlisted for the Brunel University International African Poetry Prize in 2020 and writes about identity, language, gender, oppression, family and food."
+              },
+              {
+                "name": "Nour Kamel",
+                "email": "nourkibra@gmail.com",
+                "bio": "Kuzbara Collective is a writing, research, and cooking/baking partnership between Mariam Boctor and Nour Kamel interested in food, our bodies, ecologies, the land, heritage, and alternative knowledges, based in Cairo, Egypt. Together they have created and facilitated several writing workshops and subsequent publications on food, bodies, ritual, and care. Mariam is a writer, translator and researcher with a background in pharmacy, herbal medicine and public health. They have worked as a curator and researcher on Botoun and A Lifetime of Wind with the Contemporary Image Collective. Her writing has appeared in The Outpost and Mada Masr amongst others. Nour is a writer, editor, and baker. Their chapbook ‘Noon’ is part of the New-Generation African Poets series and their writing can be found in Anomaly, Rusted Radishes, 20.35 Africa, Mizna, and World Literature Today, amongst others. Kamel was shortlisted for the Brunel University International African Poetry Prize in 2020 and writes about identity, language, gender, oppression, family and food."
+              }
+            ],
+            "schedule_text": "Tuesdays from 6-8pm, Hybrid.",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:00",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "HYBRID"
+            ],
+            "description": "As the world slowly attempts to emerge from the shadow of COVID-19, we find ourselves still trying to navigate living within waves of loss. None of us, it seems, have been left untouched by the turmoil of the past few years - and yet, life continues, as it always has. In the aftermath of personal, political, and communal experiences that can’t be named, we search for meaning and solace. What we experience is monumental, but we are not left alone in the folds of history. In this hybrid reading & writing course, sessions will involve looking at various literature and media on grief in search of the words that can lead us to collectively hold and communicate our grief(s). The elements - our constant companions older than our sorrow or the language to describe it - will be the thematic basis for guiding and grounding us over the weeks. Through discussions, care rituals, and writing exercises, we hope to co-create with participants a wake in which we can come together to formulate and honor our individual and collective vocabularies of grief.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/vocabularies_of_grief__2_.pdf"
+            ],
+            "register_url": "https://forms.gle/vA84TYYm6qvAbG5W8",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

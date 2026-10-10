@@ -5,6 +5,7 @@ import {
   courseLegacyUrl,
   cycleFromFile,
   isMostlyArabic,
+  splitLocales,
   scheduleOf,
   spaceOf,
 } from '../../migration/lib/normalise-courses'
@@ -56,6 +57,13 @@ describe('spaceOf', () => {
     expect(spaceOf(null, 'spring-2021.html', '')).toEqual({ space: 'Darb el-Labbana', guessed: true })
     expect(spaceOf('online', 'summer-2021.html', '')).toEqual({ space: 'Darb el-Labbana', guessed: true })
   })
+
+  it('places undated-venue Cairo cycles by academic year: al-Ghuria to 2016–17, then Darb el-Labbana', () => {
+    expect(spaceOf(null, '2015-2016-third-trimester.html', '', 'spring', 2016)).toEqual({ space: 'al-Ghuria', guessed: true })
+    expect(spaceOf(null, '2016-2017-third-trimester.html', '', 'spring', 2017)).toEqual({ space: 'al-Ghuria', guessed: true })
+    expect(spaceOf(null, 'x.html', '', 'fall', 2017)).toEqual({ space: 'Darb el-Labbana', guessed: true })
+    expect(spaceOf(null, '2017-2018-second-trimester.html', '', 'winter', 2018)).toEqual({ space: 'Darb el-Labbana', guessed: true })
+  })
 })
 
 describe('courseLegacyUrl', () => {
@@ -105,5 +113,18 @@ describe('names and script', () => {
   it('detects mostly-Arabic text', () => {
     expect(isMostlyArabic('تفكك أوديب: تجوالات الأسطورة')).toBe(true)
     expect(isMostlyArabic('Unravelling Oedipus')).toBe(false)
+  })
+})
+
+describe('splitLocales', () => {
+  it('puts English and Arabic paragraphs in their own locales, in order', () => {
+    expect(splitLocales('Intro.\n\nمقدمة.\n\nMore.\n\nالمزيد.')).toEqual({
+      en: 'Intro.\n\nMore.',
+      ar: 'مقدمة.\n\nالمزيد.',
+    })
+  })
+
+  it('leaves a locale empty when the text has none of it', () => {
+    expect(splitLocales('مقدمة فقط.')).toEqual({ en: '', ar: 'مقدمة فقط.' })
   })
 })

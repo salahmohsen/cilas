@@ -1,0 +1,36 @@
+{
+  "sha256": "1a66a1235c01bbef57c4b5bf04e692cfaa6db886a93197b9992bb6697fa80552",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Poetry and Short Prose",
+      "title_ar": "الشعر والنثر القصير: الذاكرة المـ(ـتـ)ـحركة",
+      "subtitle": "Memory That Moves",
+      "course_type": "WORKSHOP",
+      "fellows": [
+        {
+          "name": "Sara ELKAMEL",
+          "email": null,
+          "bio": "Sara ELKAMEL is a freelance journalist and writer, born and raised in Cairo. After completing a Master of Arts in Journalism and Mass Communication ('13) at the American University in Cairo’s School of Global Affairs and Public Policy, she relocated to New York, where she pursued a Master of Arts in Journalism ('15) at Columbia University’s Graduate School of Journalism. Also in New York, she was associate editor on The Huffington Post’s international team. Before then, she was reporting in Cairo — primarily on arts and culture — for local and international publications. Alongside her work in journalism, Elkamel has been pursuing her passion for poetry and creative writing; she has participated in various fiction and poetry workshops in Cairo and New York. Her writing has appeared in Ahram Online, The Guardian, The Huffington Post, GlobalPost, Guernica, Riwayya, and elsewhere.\n\nسارة الكامل صحفية حرة وكاتبة مقيمة بالقاهرة. بعد أن حصلت على درجة الماجستير في اﻵداب في الصحافة واﻹعلام في الجامعة اﻷمريكية بالقاهرة في 2013، انتقلت لنيويورك للتقدم للحصول على ماجستير آداب في الصحافة في مدرسة جامعة كولومبيا للصحافة. عملت كمحررة ضمن فريق هافينغتون بوست إنترناشونال أثناء إقامتها بنيويورك. قبل ذلك، عملت كمراسلة في القاهرة للصحف المحلية والعالمية، تحديدًا في مجال الفن والثقافة. ظلت سارة باﻹضافة إلى عملها الصحفي تلاحق شغفها في الشعر والكتابة اﻹبداعية، واشتركت في ورش كتابة نثرية وشعرية متعددة في القاهرة ونيويورك. نشرت كتاباتها في اﻷهرام أون ﻻين، والجارديان، وهافينغتون بوست، جلوبال بوست وغيرها."
+        }
+      ],
+      "schedule_text": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "This course is for passionate writers seeking an opportunity to spend more time on their writing. The course will take the shape of a generative workshop; it will not focus on teaching writing, but rather on establishing a creative environment in which participants can further explore their minds and written work.\n\nIn this course, we will be thinking a lot about memory. Taking inspiration from theories of memory and trauma, we will consider how our writing can confront the erasure of violent or uncomfortable pasts, and shift our perception of the present. Drawing on practices of performance and activism, we will explore ways to activate our ideas and bring them off the page.\n\nWe will write every week. With the help of a series of writing prompts, we will be making new poems and short texts, in and out of class, and we will routinely share and discuss our work.\n\nWe will also dedicate time to reading and analyzing existing poetry and short prose, with a focus on works by writers of color: emerging and established. In addition to reviewing a range of texts, we will look at photography, film, street actions and other projects that have documented, memorialized, and interpreted historical events: both personal and collective.\n\nThroughout the course, we will attempt to critically explore such questions as: What is the relationship between language and memory? What is the relationship between different art practices and memory? What can language do to memory? What can memory do to language?\n\nWhile we will be writing regularly, we will each work towards producing a substantial final project. This can be carried out in text-form or any other chosen art (or non-art) form. We will plan an event or exhibit to showcase the outcome* of the course. *Most likely, the “outcome” of the course will continue to unfold in our writing practice and lives in general.\n\nAbove all, the course is meant to draw on our individual experiences and learning goals. Each participant will be invited to help shape the course and submit ideas for reading material, writing prompts, and exploratory questions.\n\nهذا المساق للكتاب الشغوفين بالكتابة الذين يبحثون عن فرصة لقضاء وقت أطول مع كتابتهم، وسوف يتخذ شكل الورشة الإبداعية، لكن لن تركز على تعليم الكتابة، بل على تأسيس بيئة إبداعية حيث يمكن للمشاركين أن يستكشفوا عقولهم والعمل المكتوب أكثر.\n\nسنفكر في هذا المساق في الذاكرة كثيرًا مستلهمين نظريات المتعلقة بالذاكرة والصدمة النفسية، كما سنتباحث حول كيف يمكن لكتابتنا أن تواجه ماضٍ مزعج، وتغير وجهة نظرنا للحاضر، وسنتكشف طرقًا لتنشيط أفكارنا واستخراجها على اﻷوراق اعتمادًا على ممارسات اﻷدائية والنشاط السياسي.\n\nستصبح الكتابة مهمتنا اﻷسبوعية. وبمساعدة مجموعة من محفزات الكتابة، سنبدع قصائد جديدة ونصوص قصيرة، داخل وخارج الفصل، وسنتشارك أعمالنا ونناقشها معًا.\n\nكذلك سنخصص وقتًا لقراءة وتحليل الشعر والنثر القصير المتاح، مع التركيز على أعمال الكتاب الصاعدين وال، باﻹضافة إلى عرض مجموعة واسعة من النصوص، سنلقي نظرة جماعية وفردية على صور فوتوغرافية وأفلام ومشروعات أخرى وثقت اﻷحداث التاريخية وحفظتها وفسرتها.\n\nأثناء المساق، سنحاول أن نستكشف بصورة نقدية أسئلة مثل: ما العلاقة بين اللغة والممارسات الفنية المختلفة والذاكرة؟ وما التأثير الذي يمكن للغة أن تتركه على الذاكرة والعكس؟\n\nبينما سنكتب بصورة دورية، سيعمل كل منّا على إنتاج مشروعًا حيث يمكن تنفيذه في شكل نص أو أي شكل فني (أو غير فني) آخر. وسنخطط للفعالية أو معرض كي نعرض مخرج المساق. (غالبًا سيكتشف المخرج لنا أثناء تمريناتنا في الكتابة وفي حياتنا عمومًا)\n\nوفوق كل شيء، يهدف المساق إلى أن يصل بين خبراتنا الشخصية وأهدافه. سيدعى كل مشارك إلى المساعدة في تشكيل المساق واقتراح أفكار لمواد القراءة، ومحفزات الكتابة واﻷسئلة الاستكشافية.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+      "own_page": null
+    }
+  }
+}

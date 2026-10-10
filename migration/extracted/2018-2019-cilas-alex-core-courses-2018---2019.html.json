@@ -1,0 +1,110 @@
+{
+  "sha256": "63f3845f4ecd2d769c04acde792e429e9b30f2ca7c9446b5929d32890f37bf06",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "First Semester 2018-2019",
+        "season": "fall",
+        "start_year": 2018,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "On Political Ideologies and Artistic Practices",
+            "title_ar": "حول اﻷيدولوجيات السياسية والممارسات الفنية",
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "Hussein El-Hajj",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Batool El-Hennawy",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Saturdays and Sundays",
+            "weekdays": [
+              "sat",
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "If any saying was to be true about the 20th century, it would be that it was a century of ideologies and great narratives, and it might be said now that the 21st century is about the death of ideologies and the end of great narratives. Although we can find that ideologies did not really go extinct, but are transformed into a more liquid state, and maybe looking at them in their past solid state could help us understand their state of liquidity that flows into our daily lives today.\n\nThis course is designed to take us on a journey to explore many of the political ideologies that dominated the 20th century in philosophy, arts, and visual culture, and aims to offer access to a range of approaches to an interdisciplinary study of theory and practice of these three fields using the lens of literature, visual arts and cinema. The course critically engages cultural tendencies like feminism and racism, art movements like surrealism and futurism, and philosophical schools like utilitarianism and libertarianism, to understand the social characteristics and historical conditions that the modernist project imply.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": null
+          },
+          {
+            "title": "Modern Science - Its Promises and Limitations",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "CORE",
+            "fellows": [
+              {
+                "name": "Karim-Yassin Goessinger",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Saturdays and Sundays",
+            "weekdays": [
+              "sat",
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The core course in the Sciences takes a close a look at the promises and limitations of modern science. It does so by adopting historical, philosophical and sociological lenses on modern science. We will begin our journey by outlining the conventional accounts of Islamic Science, discussing their shortcomings and engaging with an alternative narrative of Islamic Science to develop an appreciation of the originality of Islamic scientific thought. From there we will turn our attention to the early modern age, or European Renaissance, and the birth of modern science. Together with Shapin and Shaffer and their book Leviathan and the Air-Pump we will reflect on the so called Scientific Revolution and the inherent conflict between inductive/experimental and deductive/theoretical reasoning represented by the figures of Boyle and Hobbes. We will deepen this analysis by examining two competing theories of substance -- in reality -- as proposed by Descartes and Spinoza. We will focus on Descartes' dualism and its relation to Spinoza's metaphysics. Moving on we will look at the emergence of the much acclaimed notion of objectivity in the mid-nineteenth century and discuss how the epistemic ideal of objectivity differs from its alternatives of (1) truth-to-nature, and (2) trained judgment. The last third of the course is dedicated to a classic in the field of ecology, namely Dave Abrams' The Spell of the Sensuous, to inquire into human language and perception in a more-than-human world, and Amitav Ghosh's The Great Derangement, engaging in a conversation about climate change and the unthinkable with one of the most astute living novelists. Throughout the course we will write reflection or response papers to help us get to the bottom of the burning issues discussed. The objective of the course is to develop a personal critique of the promises and limitations of modern science in light our changing climate.",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": null
+          },
+          {
+            "title": "Skills Lab: monoculture broke my heart",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Batool El-Hennawy",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Kari Rosenfeld",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Fridays",
+            "weekdays": [
+              "fri"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The skills lab is typically a place for experimentation and testing. It is designed to run in parallel to the core curriculum, to interact with ideas about and studies of art, culture, humanities, and political ecology.\n\nThe word skills is used in reference to the method of work. Skills can be borrowed, shared, and lent. The skills lab helps students discover their research, scholarly, and/or artistic methods of practice by trying out different components of post-colonial discourse and values.\n\nDuring the core curriculum, both critical and innovative ways of thinking about global issues are introduced to the students. The skills lab is a chance to explore \"practitioner to subject\" relationship through the sweet scale of locality, continuity, and trans-nationality.\n\nWhat does it mean to put ideas into practice? Either through making or breaking frameworks? Most importantly, what does it feel like? and what does it create as a social occurrence and an everyday contribution?",
+            "flow_links": [],
+            "register_url": null,
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

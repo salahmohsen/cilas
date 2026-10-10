@@ -1,0 +1,36 @@
+{
+  "sha256": "c2af2a2ff2bb700ad1b04c1db41d6fe19e0787447f510101d5b0d0162e6976cb",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "the death of Nature",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Yasmin Khalafallah",
+          "email": null,
+          "bio": "Yasmin KHALAFALLAH recently obtained her Master’s Degree from UCL’s Development Planning Unit where she looked at the linkages between development theories and practices, with a focus on the political, social and economic factors underlying environmental conflicts. Before her Master's, Yasmin studied economics in Cairo and has previously worked as a research analyst on African economies. Her research interests are urban farming, climate change adaptation practices, urban resilience and bottom up development initiatives. She has field experience working with communities in Egypt, Peru and Bosnia & Herzegovina."
+        }
+      ],
+      "schedule_text": "Saturdays, from 10:00 to 13:00, at CILAS and beyond, starting January 9th, 2016.",
+      "weekdays": [
+        "sat"
+      ],
+      "start_time": "10:00",
+      "end_time": "13:00",
+      "weeks": null,
+      "start_date": "2016-01-09",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "The enlightenment and rise of capitalism have brought about a change in our relationship with nature. Francis Bacon, celebrated father of modern science advocated the control of nature for human use. Nature was to be predicted and controlled. This created a rift between nature and humans and we started placing ourselves outside of nature.\n\nConsequently, we removed the restrictions on the exploitation of nature and our production systems came to rely on excessive input of materials. Nature’s circular metabolism was disrupted by our linear production systems producing more and more waste or entropy. We now find ourselves facing multiple risks and crises ranging from climate change and global warming to food shortages and problems with waste disposal.\n\nThe first part this course aims to explore how we reached that point. We will critically examine the changing notions of progress and complexity drawing from systems theory and political ecology. We will move on to critically assess how current risks and crises are being coped with on different levels. Special focus will be placed on the community level. Together we will look at different everyday practices undertaken to negotiate long-term risks.\n\nWe will ask whether mitigating these risks enough. Ideas, such as biomimicry and organic farming aim to achieve a transition towards a more sustainable use of resources. An exercise in backcasting will allow us to envision a more sustainable future while forcing us to ask important questions such as: What are we trying to sustain? What do the current sustainability and going green efforts really mean? What are their hidden costs?\n\nwhat to expect\n\nYou are expected to come to classes with an open mind.\n\nYou are expected to read/watch/listen and engage with assigned study material.\n\nYou are expected to attend fieldtrips and hands-on workshops on waste recycling and urban gardening.\n\nwhy apply\n\nTo better understand the conditions and processes that have created a rift in our relationship with nature.\n\nTo investigate the risks and implications of this rift, particularly in relation to food systems, waste disposal and water scarcity.\n\nTo explore how different communities deal with the risks they are faced with and engage the concepts of vulnerability and resilience.\n\nTo critically assess the current efforts to reanimate nature and to “go green”.",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

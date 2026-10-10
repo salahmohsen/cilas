@@ -1,0 +1,36 @@
+{
+  "sha256": "0f96ff205613def63035bfdbaaeec414a443bd52a6bc3f36d6867705ae0df920",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "on gender and difference",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sabrina LILLEBY",
+          "email": "sabrina.lilleby@gmail.com",
+          "bio": "Sabrina LILLEBY recently completed graduate studies in Gender Studies at the American University in Cairo with a specialization in Gendered Political Economies. Her thesis meditated on the labouring lives of migrants employed as domestic workers in Cairo and was an attempt at re-thinking a range of naturalised ideas about the domestic work market in the city. A xenophile by nature, Sabrina has previously studied Political Science in Canada and China. She was born in the cold north of Norway. Her research interests involve migration, gender, labor, the state and affect theory. However, the red thread that runs through all of her thinking is social change, as she tries to understand how we may come together as a multitude. Nurturing an equal love for theory and ethnography, Sabrina prefers to study the world in the intersection between the two. As a fellow at CILAS, she teaches in the Social Sciences."
+        }
+      ],
+      "schedule_text": "Mondays: 10:00-12:30 or 17:30-20:00 (morning or evening sessions).",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-04",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Gender as a category of difference, and particularly woman as a subjectivity, is all the rage these days in the media, development industry, as well as in state discourse. However, gender as a social classification is rarely explored further and we often speak about gendered subjects as unified identities outside of time and space. Not only are genders presented to us as stable categories, but the power relationships that give rise to our gendered subjectivities remain hidden.\n\nIn this course we seek to go beyond the simplified narratives routinely presented to us and instead place gender within a temporal and spatial framework. We want to understand nuances, particularities and subtle differences in a world where everyone is already always a gendered subject. We will delve into the academic literature in gender studies to examine everyday life in the global south.\n\nwhat to expect\n\nStudents are expected to come to class with an open heart and an open mind.\n\nStudents are expected to come to class having completed the weekly reading/viewing/listing ready to engage in thoughtful discussion.\n\nwhy apply\n\nTo develop a deeper and more complex understanding of the relationship between gender and other forms of difference such as class, race, sexuality and nationality.\n\nTo critically engage with the debates about the relationships between power, capital and difference in the social.\n\nTo appreciate the radical suggestion within gender studies that our everyday experiences should interweave with social and political theory.",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

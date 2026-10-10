@@ -1,0 +1,170 @@
+{
+  "sha256": "58ccef9d161bd5059272cc33565d70104dd4ca0c2998564e1a954e9887bca75d",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring cycle 2024-2025",
+        "season": "spring",
+        "start_year": 2025,
+        "start_date": null,
+        "deadline": "2025-01-02",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Paradoxes of the Heart: Tragedy Between Love & Desire",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "George Louis Bartlett",
+                "email": "georgelouisbartlett@gmail.com",
+                "bio": "George Louis Bartlett is a writer from Birmingham, England, and a psychoanalyst in formation. He has an MA in Screenwriting from the London Film School and an MSc in Psychoanalysis from Birkbeck. He is also the Founding Editor of film journal Scenes. He was most recently an Associate Lecturer in Screenwriting and Film at Queen Mary University of London."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-23",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Tragedy, as per Aristotle’s Poetics, is the name to which we give a structure that provides a representation of desire; its dialectics and its deadlocks, and that which produces an effect of catharsis in the audience. The link between tragedy and psychoanalysis can be traced to the very text forming Freud’s founding myth: Oedipus Rex, the exemplary text of Aristotle’s Poetics. Lacan, meanwhile, goes further in taking up Sophocles’ Antigone and Shakespeare’s Hamlet to show how tragedy represents par excellence desire as an ethical category and emerges “at the forefront of our experiences as [psychoanalysts].”\n\nLove, on the other hand, runs counter to what Lacan formulated as the ethical act of desire, and appears as a schism in the daily life and work of the subject. Love is often disruptive, obsessive, narcissistic… Yet love, in its many manifestations as a paradigm of sublimation, plays a crucial role in the structure of tragedy, and may in certain conditions be elevated from the labyrinth of narcissism to the level of the sublime.\n\nThrough Lacan’s conceptualizations of love and desire, and their representations in tragedy, we aim to explore how love reaches its full potential in loss, catharsis, and the impossible. Weekly readings, film viewings, and group discussions will aim to situate psychoanalysis within the structure of tragedy, raising research questions on love and desire in the lives and creative practices of participants.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/paradoxes_tentativeflow.pdf"
+            ],
+            "register_url": "https://forms.gle/gJ6i8AHiq2A1BsRx5",
+            "own_page": null
+          },
+          {
+            "title": "Beauty Will Save the World",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Susanne Sklar",
+                "email": "susanne.sklar@gmail.com",
+                "bio": "Susanne Sklar has enjoyed teaching humanities - literature, religion, and performance - throughout the world - in China, Russia, Sweden, the USA, and at Oxford in the UK. She's published many articles as well as a book, Blake's Jerusalem As Visionary Theatre. She engaged in aesthetic diplomacy in the former Soviet Union, and saw the lives of homeless and abused teens transformed by art, culture, and creative intelligence in the USA. Beauty can save worlds."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": 6,
+            "start_date": "2025-02-11",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "How can beauty save the world? This six week interactive discussion class may unleash the possibility of such transformation. Beauty can change perception, inspiring respect, and surprising responses to difficult situations. Sometimes beauty is dangerous. As we enter into 'beauty' we'll be as imaginative as we are analytical, guided by the wisdom of a variety of writers, thinkers, and activists, such as: Solzhenitsyn, Simone Weil, Dostoyevsky, John Keats, Aristophanes, William Blake, Langston Hughes, and Native American Elders. You're encouraged to bring examples of Egyptian and/or Arabic beauty to each class, enhancing luminous discussion, and informing your final project. Our class culminates in a 'Beauty Salon' wherein you'll each present an imaginative scenario -a story, a poem, artwork, a video, a plan - in which beauty alters and transforms a person, a community, a place, a country, or the whole world. Beauty is at the heart of Utopian thinking that's needed now.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/cilas_flow.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/gJ6i8AHiq2A1BsRx5",
+            "own_page": null
+          },
+          {
+            "title": "The Anthropology of Wounds: A medical humanities and urban ethnography approach",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ayah Abo-Basha",
+                "email": "ayahabasha@gmail.com",
+                "bio": "Ayah Abo-Basha is a writer, researcher, and medical anthropologist. Her work extends from her research on caregiving relationships and fieldwork tracing Palestinian prisoners’ hunger-strikes. She is interested in the questions posed when we unravel the “outside of” status of people with carceral experiences and/or mental illness and position them – the wounds they carry with them, the worlds they refuse, and the worlds they (re)make– as constitutive of the social we all inhabit. Her ethnographic approach attends to the wounds inhered within our bodies and within our urban landscapes. She is invested in forms of collective knowledge production with anthropologists, artists, and healthcare practitioners. Ayah studied medical anthropology at Princeton University after completing a post-MA visiting fellowship at the University of Witwatersrand’s City Institute in Johannesburg. She holds an MA in anthropology from the American University in Cairo and a BA in anthropology from Washington University in St. Louis."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-25",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "This course will build towards an anthropological understanding of wounds through an interrogation of the relationship between social theory, medical humanities, and urban studies. We will trace the relationship between the wounds inhered within our bodies and the wounds inhered in urban landscapes and reflect on the possibilities of approaching wounds as containers for past-present histories. What might such an understanding of wounds tell us about the worlds that our wounded bodies and wounded cities refuse and of the worlds that they (re)make? How do we theorize our wounds by way of ethnographic research? And how might this approach to wounds inform the ways in which knowledge production, artistic practices, and communal caregiving can be reinvented?\n\nWeekly discussions will incorporate assigned materials from Cairo and Palestine-inspired visual, musical, and literary arts as well as medical humanities, urban studies, contemporary social theory, intellectual history, and the histories of modern medicine in North Africa and Southwest Asia. This course will also offer the class an opportunity to read canonized texts in contemporary social theory with an attunement to their relationship to psychiatry. Many revisited texts in contemporary social theory—whether by Fanon, Deleuze and Guattari, Lacan, Foucault, and others—are inextricable from the intellectual environment that (co)produced the radical psychiatry and institutional psychotherapy movements. Together, we will consider the questions that emerge when we revisit this relationship.\n\nAn underlying thematic throughout the course is the relationship between art, anthropology, and community-oriented clinical practices. We will consider their enmeshments as well as their shared methodologies, theoretical concerns, and political stakes. To this end, as we build towards our final projects, we will encourage one another to explore methodologies of collective knowledge production—with academics, artists, and healthcare practitioners.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/_3__cilas_course_syllabus_abo-basha_spring_25___1_.pdf"
+            ],
+            "register_url": "https://forms.gle/gJ6i8AHiq2A1BsRx5",
+            "own_page": null
+          },
+          {
+            "title": "Performing Stories with Neo-Dastangoi: Politics, Society, & Art in the Urban Fabric",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "S. Farwah Rizvi",
+                "email": "s.farwah.rizvi@gmail.com",
+                "bio": "S. Farwah Rizvi is a storyteller, cultural researcher & performance artist dedicated to merging traditional art forms & aesthetics with contemporary multimedia. She created Neo-Dastangoi, a modern reinterpretation of the Dastangoi storytelling tradition & is the proponent of Emotional Archaeology through her artistic-research practise. Her work explores how space, identity, and memory intersect through performance, film, & literature. She also co-produced, & co-wrote the award-winning indie documentary In A Dissent Manner. As an educator, Farwah encourages students to engage authentically with their surroundings, blending visual and verbal storytelling with personal insight to create a deeply immersive and reflective learning experience."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": "20:30",
+            "weeks": null,
+            "start_date": "2025-01-22",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Performing Stories with Neo-Dastangoi: Politics, Society, & Art in the Urban Fabric offers an immersive exploration into the intersections of politics, society, and artistic expression through the lens of Neo-Dastangoi, a modern revival of the ancient Urdu storytelling tradition, Dastangoi. Traditionally, Dastangoi captivated audiences through oral narratives of fantastical worlds and heroic adventures, blending poetry, history, and imagination. Neo-Dastangoi reimagines this practice for contemporary times, integrating multimedia, performance, and social commentary to address the complexities of today’s world. Central to this course is the philosophical framework of phenomenology, which examines how human experiences are shaped by the spaces we inhabit. By applying this lens, students will investigate how stories— rooted in specific social, cultural, and political contexts— transform urban spaces into stages where power dynamics, identities, and memories are played out. Through this approach, students will uncover how performance-making and storytelling serve as potent tools of resistance, cultural preservation, and social engagement. We will delve into the political struggles, social identities, and artistic innovation reflected in Cairo’s urban fabric. Through field trips to prominent and marginal spaces, multimedia documentation, and weekly performance workshops, students will capture the narratives embedded in the city's architecture, streets, and people. Guided by local and global case studies, they will explore how political landscapes, social histories, and artistic forms intertwine in everyday spaces.\n\nBy the end of the course, students will create their own Neo-Dastan performances, engaging critically with Cairo’s layered political and social realities, while exploring the transformative power of art. This course invites students with a passion for storytelling, regardless of their academic background, to explore how narratives shape the world around us.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/1._course_invite_flow_dbl__neo-dastangoi_.pdf"
+            ],
+            "register_url": "https://forms.gle/gJ6i8AHiq2A1BsRx5",
+            "own_page": null
+          },
+          {
+            "title": "Writing lab",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Leon Conrad",
+                "email": "leon@traditionaltutor.co.uk",
+                "bio": "I am Founder of The Unknown Storyteller Project, Founder/Lead Tutor at The Traditional Tutor, Co-Founder/Lead Trainer at The Academy of Oratory, and Affiliate at the KSU Next Society Institute, Lithuania. My book, Story and Structure (2022), was a finalist in The People's Book Prize. I grew up in Alexandria, Egypt (6-18) where formative experiences of oral storytelling inspired my life-long quest to explore the power that language has to enchant and inspire. This lab project is based on fun exercises from my latest book, Master the Art and Craft of Writing: 150+ fun games to liberate creativity (2024)."
+              }
+            ],
+            "schedule_text": null,
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:30",
+            "end_time": "20:30",
+            "weeks": 6,
+            "start_date": "2025-02-09",
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "How can we best harness word magic to inspire, inform, educate, and entertain?\n\nOr does language ‘language’ us?\n\nDo different languages (Arabic and English, for example) shape our thoughts differently?\n\nIn this writing lab, we will apply aspects of language (sounds, words, rhythm), to discover creative ways of approaching characterisation, description, and action, through a variety of writing genres and styles.\n\nThis six-week writing lab is designed to build on ideas covered in a previous CILAS class (Story as participative enquiry) but attendance on that course is not a prerequisite for joining this one. Taking inspiration from the shu-ha-ri approach to Japanese martial arts training, the exercises in this writing lab are designed to invite you to play by the rules; break away from the rules; and ultimately, transcend the rules to achieve a state of flow.\n\nAs both creators and appreciators, participants will engage with what they learn about writing in imaginatively practical personal quests to realise personal, communal, and universally nurturing work.\n\nParticipants may work in English and/or Arabic. Films, webcasts, video journals, artwork, social sculptures, or musical compositions are acceptable providing academic rigour and critical and creative thinking are evident as part of the creative process.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/writing_lab_-_leon.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/gJ6i8AHiq2A1BsRx5",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

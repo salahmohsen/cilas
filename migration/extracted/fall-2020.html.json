@@ -1,0 +1,236 @@
+{
+  "sha256": "25ab22bd01f2159299222565731c1b521d7cc709abc1667d6cd4c9b10448e4ff",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Fall 2020",
+        "season": "fall",
+        "start_year": 2020,
+        "start_date": null,
+        "deadline": "2020-09-24",
+        "space_hint": "online",
+        "courses": [
+          {
+            "title": "Race and Shakespeare",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ahmed Diaa DARDIR",
+                "email": null,
+                "bio": "has a PhD from Columbia University in Middle Eastern Studies. His research focuses on questions of colonialism, subjectivity, and power. As a CILAS fellow, Ahmed has conducted and coordinated various courses and workshops in the Humanities combining Political Theory, History and Literature, including two workshops on Shakespeare. Ahmed is also a huge fan of theatre and has some experience in the field. In this course he wants to look at Shakespeare’s plays as drafts for performances and as sketches for theatrical spectacles, rather than as finalised “great works of literature!”"
+              }
+            ],
+            "schedule_text": "starting September 26th from 5pm to 7pm for eight consecutive Saturdays",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 8,
+            "start_date": "2020-09-26",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Shakespeare's plays weave a spectacular, though at times uncomfortable tapestry of diverse skin colours, tongues and ethno-religious backgrounds. In performance, this has lent itself to interpretations that uphold as well as subvert white supremacy. It is both the subversions and the possibilities for anti-racist (re)imaginings that we will inquire into in this course. Together we will move beyond the question of whether Shakespeare was racist, to viewing his plays through the eyes of Europe’s other. An anti-racist interpretation of Shakespeare can start from within his plays, by privileging the viewpoint of the plays’ non-European and subaltern characters. It can also start from outside the Shakespearean script, through putting on non-white spectatorial and directorial lenses. We will experiment with both.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/race_and_shakespeare_-_fall_2020.pdf"
+            ],
+            "register_url": "https://forms.gle/XDQPEciugWozHLNz9",
+            "own_page": null
+          },
+          {
+            "title": "Can We Talk about Love?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Ismail FAYED",
+                "email": null,
+                "bio": "is a writer, critic and educator based in Cairo. He has worked with key regional institutions and platforms (Mada Masr, Townhouse Gallery, Contemporary Image Collective,...etc) and internationally (The Museum of Modern Art in New York). His interests span a broad range of contemporary artistic practices ranging from visual arts, to performing arts, to contemporary Arabic literature. In 2016 he co-founded the History and Cultural Memory Forum - a series of seminars and publications examining the realities of the Arab world post-2011."
+              }
+            ],
+            "schedule_text": "starting September 30th from 5pm to 7pm for nine consecutive Wednesdays",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 9,
+            "start_date": "2020-09-30",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "An annual tradition since 2018, ‘Can we talk about love?’ is a critical attempt to try to have a meaningful conversation about ‘love’. The course looks at a wide range of texts encompassing philosophy, psychology and literature, both in Arabic and English to not only understand ‘love’ as a phenomenon but also in an effort to together develop terms and ideas to be able to have a conversation about it. In a time where capitalist logic reaches its apex in transforming our bodies, our minds, our ideas, our emotions and our very span of attention into complex modes of objectification and consumption, how can we come to understand concepts like: attraction, attachment, fidelity, amity and care, and so on.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/can_we_talk_about_love_-_fall_2020.pdf"
+            ],
+            "register_url": "https://forms.gle/XDQPEciugWozHLNz9",
+            "own_page": null
+          },
+          {
+            "title": "Villains, Misfits and Tricksters of the Middle East",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mina IBRAHIM",
+                "email": null,
+                "bio": "is struggling to complete his doctoral dissertation. He loves flowers and will soon open a small flower shop that has a coffee machine and a bookshelf by the Mediterranean in Alexandria. Mina researches negated places, objects, and people that interrupt our senses and affects. He uses oral history and movies of all kinds in his work. He recently co-founded a research center in the Cairene neighbourhood of Shubra with the intention of inviting people into the circles of academia, teaching, and research. Mina coordinates a project about cultures and histories of prisons in the Middle East which is linked to the flower shop in Alexandria."
+              }
+            ],
+            "schedule_text": "starting September 29th from 5pm to 7pm for ten consecutive weeks on Tuesdays",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 10,
+            "start_date": "2020-09-29",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "In this course we adopt the perspective of people who are dominantly constructed as villains and bad guys, or in theological terms as subjects who are dominantly considered as sinners, and therefore not considered good representatives of the 'victimhood discourse' and its politics that have shaped debates around justice and morality, especially since WWII and with a particular focus on the Middle East. The course will address two gaps in the hegemonic victimhood discourses. The first gap centres the sinful, the outcast, and the misfit in an effort to examine their role in the making of societies in the Middle East. It looks at the political, social, and economic exclusion of these figures in an effort to interrogate their communal and citizenship rights. The second gap is concerned with the 'stumbling' personal stories that are full of the predominantly negated practices of the misfits that interrupt the making of hegemonic victimhood discourses.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/misfit_of_the_middle_east_-_fall_2020.pdf"
+            ],
+            "register_url": "https://forms.gle/XDQPEciugWozHLNz9",
+            "own_page": null
+          },
+          {
+            "title": "The light we must destroy?",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Hisham FAHMY",
+                "email": null,
+                "bio": "is a writer, lecturer and translator of philosophy. He graduated with a political science degree and is currently pursuing a graduate degree in philosophy. Hisham has published in both English and Arabic on issues of Islamic philosophy, political theory, and anthropology. He also has given numerous lectures on philosophy in general and political philosophy in particular – especially on the work of Carl Schmitt, Eric Voegelin, Theodor Adorno, Martin Heidegger, and Michel Foucault. He currently works as a teaching assistant of philosophy at the American University in Cairo and is a graduate of the Cairo Institute of Liberal Arts and Sciences (2018)."
+              }
+            ],
+            "schedule_text": "starting September 25th from 5pm to 7pm for ten consecutive weeks on Fridays",
+            "weekdays": [
+              "fri"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 10,
+            "start_date": "2020-09-25",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "What is philosophy today and what do we need it for? This course provides an introduction to the turn against “philosophy” that has shaped the philosophical debate since the 20th century philosopher Friedrich Nietzsche. Together, we shall see why this turn is considered fundamental if one wants to critically engage in any fruitful reading of the most influential thinkers of the 20th century. The course surveys the following three topics: the problem(s) of western philosophy and metaphysics; the limits of our language and the importance of art; and the political consequences of these issues – especially in thinking about utopia/dystopia and pedagogy. Combined the three topics bring into perspective the significance of many of the thinkers that we are going to read, like Nietzsche, Heidegger, Foucault, and Derrida, for today.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/the_light_we_must_destroy__-_fall_2020.pdf"
+            ],
+            "register_url": "https://forms.gle/XDQPEciugWozHLNz9",
+            "own_page": null
+          },
+          {
+            "title": "Visual in/Justice",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mennatullah HENDAWY",
+                "email": null,
+                "bio": "is a Research Associate and PhD Candidate in Urban Design at TU Berlin. She serves as Visiting Researcher at the Leibniz Institute for Research on Society and Space in Erkner, Germany and as affiliated Assistant Lecturer at the Department of Urban Planning and Design in Ain Shams University in Cairo. Mennatullah works on the intersection of urban planning, mediatisation and justice, and is fascinated by the way knowledge, power, and agency man(i)-fest in and co-construct cities and the public sphere"
+              }
+            ],
+            "schedule_text": "starting October 1st from 5pm to 7pm for five consecutive Thursdays",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 5,
+            "start_date": "2020-10-01",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "In today's highly mediatized world, images of the city in popular media neither represent the majority of citizens’ lived experiences nor their perceptions of the future. The misrepresentation of urban conditions in media creates processes of visibility and invisibility of the city among not only the general public but also among urban experts who are implicated in the production of these city images. In turn, this affects and facilitates the marginalization, disablement and further exclusion of vulnerable groups from services and infrastructure. In cities worldwide, vulnerable groups form the majority of the population. In this course we will explore the corresponding visual (mis-)representation of socio-spatial conditions with the help of the notion 'Visual in/Justice'.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/visual_in-justice_-_fall_2020.pdf"
+            ],
+            "register_url": "https://forms.gle/XDQPEciugWozHLNz9",
+            "own_page": null
+          },
+          {
+            "title": "Romanticism in Philosophy and Music: Beethoven, AbdelWahab and Pink Floyd",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Hazem MASSOUD",
+                "email": null,
+                "bio": "obtained a Bachelor's degree in Political Science from Cairo University and an MA in Political Philosophy from Pompeu Fabra University in Barcelona. He is currently writing his PhD thesis in the Humanities with Pompeu Fabra University focusing on the political ontology of Maurice Merleau-Ponty. His research interests include phenomenology, hermeneutics, ontology, film theory, political philosophy, psychology, and music theory. Outside of academia, he is passionate about photography and filmmaking, having worked on independent small-scale film projects, and is a self-taught musician."
+              }
+            ],
+            "schedule_text": "starting September 27th from 5pm to 7pm for seven consecutive Sundays",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 7,
+            "start_date": "2020-09-27",
+            "location": [
+              "ONLINE",
+              "OFFLINE"
+            ],
+            "description": "The course aims at exploring the relation between philosophy and music through Romanticism - the movement that appeared roughly by the beginning of the 19th century in Europe and exerted considerable influence on all aspects of art, literature, and thought until the beginning of the 20th century. Together we are going to take a look at what constitutes Romanticism, its philosophical roots and elaborations, and Romantic music as was given birth to by the late works of Mozart and Haydn as well as the works of Beethoven and Schubert, reaching its end at the beginning of the 20th century with the works of Strauss and Mahler. We then move to take a closer look at the influence of Western Romantic on modern Arabic music, taking the works of Mohamed Abdel Wahab as a trajectory from which to listen to how Romanticism influenced his approach fusing Arabic and Western musical elements. From there we tune into mid-sixties art and progressive rock represented by the early works of Pink Floyd - the most popular band of progressive rock - and will see how Romanticism impacted their music and approach. In addition to the online classes, participants (residing in Cairo) are invited to listening sessions of the musical works we are going to discuss on CILAS' rooftop.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/philosophy_and_music_-_fall_2020.pdf"
+            ],
+            "register_url": "https://forms.gle/XDQPEciugWozHLNz9",
+            "own_page": null
+          },
+          {
+            "title": "On violence",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Nader ANDRAWOS",
+                "email": null,
+                "bio": "is a social and political theorist, currently completing his PhD at the London School of Economics. He is generally interested in “critique,” its history, traditions, practices and limitations. His current research project looks at the intellectual and legal history of human rights. He is planning to continue exploring the history of citizenship and the reception of republicanism in Arab thought. On the side he is interested in political theology, political economy and speculations about the future of our world system."
+              },
+              {
+                "name": "Ismail FAYED",
+                "email": null,
+                "bio": "is a writer, critic and educator based in Cairo. He has worked with key regional institutions and platforms (Mada Masr, Townhouse Gallery, Contemporary Image Collective,...etc) and internationally (The Museum of Modern Art in New York). His interests span a broad range of contemporary artistic practices ranging from visual arts, to performing arts, to contemporary Arabic literature. In 2016 he co-founded the History and Cultural Memory Forum a series of seminars and publications examining the realities of the Arab world post-2011."
+              }
+            ],
+            "schedule_text": "starting October 5th from 5pm to 7pm for eight consecutive Mondays",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "17:00",
+            "end_time": "19:00",
+            "weeks": 8,
+            "start_date": "2020-10-05",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "At a time when there are a lot of questions on what constitutes the phenomenon of violence, whether inflicted by the experiences of the everyday, or by the structures and institutions of the state or in the “virtual” world, this course provides a historical and contemporary overview to the main intellectual traditions that tried to define, outline and even critique violence, showing how complex and contested the concept of violence is. The course will address, among other questions: how can violence be defined? Is it ever justified? Is all violence the same? What are the different ends of violence? Why does it seem to be a fundamental part of any society? Has it increased or decreased historically? The course will adopt a multidisciplinary lens to critically examine the phenomenon of violence.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/on_violence_-_fall_2020.pdf"
+            ],
+            "register_url": "https://forms.gle/XDQPEciugWozHLNz9",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

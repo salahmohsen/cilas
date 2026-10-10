@@ -1,0 +1,35 @@
+{
+  "sha256": "42047e226b115515871e750a35d8e91dea5b6dadf6c6ed253646ba4f22755ad3",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "everyday piety from the margins",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Mina Abdel Ibrahim",
+          "email": null,
+          "bio": "I finished my Master’s degree in Social Anthropology in 2014 from the Central European University (CEU) in Budapest. Currently, I am a post Master’s fellow at the American University in Cairo. As an anthropologist, I believe that my job is to listen and record the stories of people as they are, with all their fragmentations. My task is to delve into such inconsistencies without arranging and ordering them. I am also interested in the ambiguous aspects of our daily lives, everything we cannot label or fit into a bordered order. Beyond academia, to an extent, I love to experience new food and societies. My future dream is to spend few years, or even more, on a mountain in a South East Asian country."
+        }
+      ],
+      "schedule_text": "thursdays (morning from 10 to 12:30 pm) tuesdays (evening from 5:30 to 8 pm)",
+      "weekdays": [
+        "tue",
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "Studying religious practices from the margins is telling the fragmented-incoherent stories of what is out of order, uncertain, and unstable within the everyday piety of Muslims and Christians (and sometimes Jews!) in contemporary Egypt.\n\nIn this course, we will mutually emphasize two main interrelated pillars while investigating the anxieties and the doubts that accompany folk religiosities. Firstly, we will visit the spaces where people struggle for the sacred means of piousness with institutionalized authorities. Secondly, we will pay a very close attention to those events when interfaith dialogues are raised and imagined, particularly when people question their own faith in addition to the belief systems of ‘others.’\n\nWe will spend time reading about the popular interconfessional Moulid Festivals, which have historically gone through many controversial disciplinary policies and ‘reformation’ processes to separate members of different faith communities form each other. Moreover, we will devote some sessions to understand how the problematic meaning of unseen phenomena such as miracles and Saints’ apparitions for Christians together with dreams for Muslims are socially and politically negotiated among different religious groups but also within the same group. Last but not least, we will examine how other minute practices such as prayers, charity work, and religious songs are remarkably entangled with drawing and transgressing boundaries between Muslims and Christians, and how they exist as critical incidents within wider socioeconomic conjunctures.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

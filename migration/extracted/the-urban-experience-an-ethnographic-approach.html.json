@@ -1,0 +1,36 @@
+{
+  "sha256": "a9e247ad4444930b1826c16792363b5a474a330daf919ae1d2cb33c7d13ed709",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "the urban experience: an ethnographic approach",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Wiebe RUIJTENBERG",
+          "email": null,
+          "bio": "Wiebe RUIJTENBERG graduated from the Research Master in the Social Sciences at the University of Amsterdam with a dissertation on gated communities in Cairo’s satellite cities. Using ethnography in his dissertation, he explored the ways in which residents shape their gated community, while being shaped by it at the same time. Wiebe’s research interests include notions of urban space, the process of identity formation, and the politics of culture. He is especially inspired by ethnography, as a research method, a form of art, and a way of seeing and writing the world. As a way of doing ethnography, Wiebe cycles around Cairo trying to sense and understand the city as he navigates it. Wiebe joins CILAS as a visiting fellow in the field of social sciences and will host the thematic course the urban experience: an ethnographic approach."
+        }
+      ],
+      "schedule_text": "Sundays at CILAS starting January 3rd, 2016, from 10 to 12:30 in the morning or from 5:30 to 8 in the evening",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": "2016-01-03",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "The city is a complex and ever-changing multiplicity of material objects and human bodies coming together in time and space. This course explores how people use and manoeuver this urban complexity, how they make sense of it, ascribe meaning to it, and integrate it into their discourses. The course explores how people interact with the multitude of objects and bodies they encounter as they move their own bodies through urban space.\n\nA focus on these everyday practices and interactions allows for an in-depth analysis of how such practices and interactions are shaped by the urban environment, and, in turn, shape and reshape that urban environment. The course takes an ethnographic approach to the city. This means that through this the course we will seek to understand the city through experiencing it. Participants will be introduced to ethnographies of cities, including New York, Sao Paolo, Cairo and Nicosia.\n\nParticipants are encouraged to share their own past and present urban experiences to deepen the discussion. In addition, participants are expected to carry out their own preliminary fieldwork. This could include conducting observations and/or interviews. The fieldwork findings will be discussed in class and should be used in the final assignment.\n\nwhat to expect\n\nParticipants are expected to critically engage with the city.\nParticipants should actively look for a link between the readings and their own urban experiences.\nParticipants will carry out a case study of their own in which they apply insights from the course\n\nwhy apply\n\nTo develop a deep knowledge of the complex and multifaceted city.\nTo get familiar with ethnography both as a practice and as a theory of knowledge\nTo gain experience in carrying out fieldwork.",
+      "flow_links": [],
+      "register_url": "http://goo.gl/forms/roFmA6G4Fp",
+      "own_page": null
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "sha256": "6eacae484bbbb78769bf2e9c4d5874963555028000e0cc75ef2e0a49383886a5",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "The Single Individual",
+      "title_ar": "الفرد الوحيد: وقت ثمين برفقة سورين كيركجارد",
+      "subtitle": "Quality time with Soren Kierkegaard",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Omar El-Rakhawy",
+          "email": null,
+          "bio": "My name is Omar El-Rakhawy, an AUC graduate of philosophy and a Leiden Master’s student in religious studies. In my Master’s thesis, which was titled “Religion and its Counter-Tendencies: A Reflection on the Question of Religion”, I discuss different approaches to the question of religion, especially criticizing objective approaches, and particularly when these are suppressive to subjective considerations. In doing this, I relied on a comparative approach between figures and thinkers of different backgrounds, among them Kierkegaard, Derrida, and two Sufi figures who were equally singular in their own contexts, namely Ibn ‘Arabi and al-Niffari.\n\nأدعى عمر الرخاوي ، خريج الجامعة الأمريكية بالقاهرة وحاصل على درجة الماجستير في الدراسات الدينية من جامعة لايدن. في أطروحتي المعنونة \"الدين والتيارات المضادة له: انعكاسات على سؤال الدين\" ناقشت المقاربات المختلفة لسؤال الدين مع تقديم نقد للمقاربات الموضوعية وخصوصًا عندما تخضع تلك المقاربات إلى اعتبارات ذاتية. اعتمدت في ذلك على الأسلوب المقارن بين مفكرين وشخصيات من خلفيات مختلفة بينهم كيركجارد ودريدا ورموز صوفية كابن عربي والنفري اللذان كانوا متفردين في سياقاتهم."
+        }
+      ],
+      "schedule_text": "On Wednesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "Course description\n\nIn this course we will read, interpret, and discuss the writings of Danish philosopher Soren Kierkegaard in provoking, reflective, yet relaxed sessions over tea and coffee. In a context where people all over the globalizing world are facing existential questions with regards to socio-political and religious authorities, Kierkegaard foregrounds as a thinker who is relevant to each of us as individuals.\n\nHis profound criticism of state and church as the main representations of his society’s mass orientation, made him an unrelenting thinker of the “individual”, which forms the basis of his philosophy. His thinking and his philosophy intentionally begin from everyday human situations and states such as despair, fear, and angst. As such Kierkegaard has a strong abhorrence to speculative thinking and system building, which according to him is completely uninterested in the “poor existing individual” as he puts it.\n\nMost of Kierkegaard’s writings are written in a style that is not intended to explain a concept, but to evoke a response or feeling. He invites us to turn inward, and become subjective. As such, there is a lot of enjoyment in reading Kierkegaard besides the intellectual, social, and personal provocations of his thought.\n\nWhat to expect:\n\nExpect appealing and perhaps revealing conversations around ethics, politics, religion, and philosophy, and the attempt to relate these to the context(s) of our own lives.\n\nThese topics will not be approached from the “general” angle, but from each single individual taking the course.\n\nThat is, a discussion on ethics will be concerned with “decision”, “choice”, “will”. Just as a discussion on politics or religion, will be around the authority given to different epistemologies (theories of knowledge).\n\nConcerning philosophy, Kierkegaard makes us ask, what is the purpose of philosophy, or what question should philosophy attempt answering? If one has fears or anxiety from a loss at what to do or should be done, Kierkegaard’s writings is a terrific landscape in which to navigate these kinds of emotions, states, and ambiguous viewpoints.\n\nThere will of course be a lot of very exciting readings, and occasional writings in response to texts and discussions.\n\nWhy take the course?\n\nShould you be a person who is particularly interested in religion, particularly from a psychological angle, Kierkegaard is speaking to you. If you happen to be a person who cares little about religion, but has an interest in existential philosophy, Kierkegaard is the father of this movement and is definitely worth discovering.\n\nرؤية عامة\n\nفي هذا المساق، سوف نقرأ ونفسر ونناقش كتابات الفيلسوف الدنماركي سورين كيركجارد في محاضرات هادئة لكن محفزة حول الأشربة النهارية والمسائية. ماذا نقدم؟ إلى الآن يبدو مبالغًا فيه وكأنه مثل جيمس بوند. وماذا عن قهوة نهارية وشايًا مسائيًا؟ في عالمٍ حيث يواجه الناس من جميع أنحاء العالم المعولم أخطارًا وجودية وأسئلة من حولهم؟ يتقدم كيركجارد كمفكر ذو ارتباط عميق بكل واحدٍ منا في سعينا نحو السعادة وبحثنا عن المعنى واختبار الواقع.\n\nأصبح كيركجارد بنقده لدولة وكنيسة مجتمعه مفكرًا شديد الصرامة في معنى \"الفرد\" الذي يشكل قاعدة فلسفته. طبقًا لكيركجارد، فإنه لا يمكن للفرد أن يتحقق إلا خارج مجتمعه. يتأصل فكره وفلسفته في مواقف الإنسان اليومية حيث يراقب الكآبة والخوف والرعدة. كتبت أغلب كتابات كيركجارد بأسلوب لا يقصد به شرح معنى ولكن خلق استجابة أو شعور، ويدعونا إلى العودة ربما إلى الداخل وأن نصبح ذاتيين. هناك الكثير من المتعة في قراءة كيركجارد إلى جانب المحفزات الفكرية والإجتماعية والشخصية لفلسفته.\n\nأسباب للإنضمام:\n\nإذا كنت شخصًا يهتم بالدين وعلم النفس بوجه خاص وأشكال السلطة التي تحددهما بناءً على اعتبارات ذاتية، فكيركجارد يتوجه بحديثه إليك. وإذا كنت تهتم ولو قليلاً بالدين، لكنك تهتم أيضًا بالفلسفات الوجودية، فكيركجارد هو الأب المؤسس لتلك الحركة وهي تستحق الإكتشاف حقًا.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

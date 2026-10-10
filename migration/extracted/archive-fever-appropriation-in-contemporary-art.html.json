@@ -1,0 +1,34 @@
+{
+  "sha256": "4ed1feaeaab9038b4e86b5925fbc47691e20c61b1bbf567ffbd8038320ebf1ef",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Archive Fever",
+      "title_ar": null,
+      "subtitle": "Appropriation in Contemporary Art",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Mohamed Shawky Hassan",
+          "email": null,
+          "bio": "is a filmmaker living and working in Egypt. He studied philosophy, film directing and cinema studies at the American University in Cairo, The Academy of Cinematic Arts & Sciences and Columbia University. His films include It Was Related to Me (2011), On a Day like Today (2012) and And on a Different Note (2015), which premiered at the Berlinale Forum Expanded, and was acquired by the Museum of Modern Art (MoMA) in New York as part of its permanent collection. He was the film programs director at ArteEast, and the director of the Network of Arab Alternative Screens (NAAS) from 2011 till 2016. He is currently a HUSSLab fellow at the American University in Cairo, and is working on his new film project \"Lose Weight Now, Ask me How\".\n\nمحمد شوقي حسن مخرج أفلام يعيش ويعمل في مصر، درس الفلسفة والإخراج والدراسات السينمائية بالجامعة الأمريكية بالقاهرة، وأكاديمية فنون وتكنولوجيا السينما وكلية الفنون بجامعة كولومبيا. تتضمن أفلامه بلغني أيها الملك السعيد ٢٠١١، وفي مثل هذا اليوم ٢٠١٢ وعلى صعيد آخر ٢٠١٥، حيث عرضت في منتدى برلين الموسع، وضمها متحف الفن الحديث بنيويورك (موما) ضمن مجموعته الدائمة. عمل محمد شوقي حسن كمدير برامج اﻷفلام في آرتي إيست ومديرًا لشبكة الشاشات العربية البديلة (ناس) من 2011 إلى 2016. وهو اﻵن زميل في قسم العلوم اﻹنسانية واﻹجتماعية في الجامعة اﻷمريكية بالقاهرة، ويعمل حاليًا على مشروع فيلمه الجديد، \"اخسر وزنك اﻵن، واسألني عن الطريقة\"."
+        }
+      ],
+      "schedule_text": "Mondays, 10:00 am to 12:30 pm, or 5:30 pm to 8:00 pm",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The archive is not merely a repository of official records. It is an omnipresent linguistic and discursive system, a law of what can and cannot be said and a vast shapeless empire of images, sounds, documents and other material traces. Contemporary art has long been a sphere for excavating the archive, not just in search of alternative historical narratives or for filling the gaps left by official archives, but rather for disturbing the alleged factuality of the archive, challenging the illusion of its completeness, questioning the basis of its constitution and destabilizing its authority. With the expansion of the archive from its conventional narrow interpretation as the collection of “official records” to include all forms of cultural production and personal accounts, hundreds of artists sought to produce a counter memory relying on the archive as malleable raw material available for them to deconstruct, recycle and manipulate. But while appropriation is mostly recognized for its critical subversive potential, how far can this potential go if archive-based art - by its very nature - constantly positions itself in relation to the archive itself, perpetually dwelling within its aesthetic and reacting to its narratives?\n\nThis course will be divided into three parts, the first of which aims at unpacking the notion of the archive itself and understanding the political, historical and philosophical underpinnings for its pivotal role in the construction of historical knowledge, and the control of memory, language and discourse. In the second part of the course, we will survey the various appropriation strategies used by artists across several disciplines over the last five decades, with a specific focus on Egypt and the Arab-speaking region. The third and last part of the course will be dedicated to questioning the limitations of the archive as a mediator between past experiences and their account in historical discourse, and critically examining the extent to which archive-based art truly and fundamentally threatens the ubiquitous power of the archive.\n\nWe will engage with a diverse set of texts by Jean Baudrillard, Walter Benjamin, Jorge Luis Borges, David Crimp, Guy Debord, Jacques Derrida, Okwui Enwezor, Hal Foster, Michel Foucault, Sigmund Freud, Graham Harman, Samia Mehrez, Marcel Proust, Paul Ricoeur, Gayatri Chakravorty Spivak, Walid Raad, Virginia Woolf and Akram Zaatari. Texts will be put in conversation with artworks by the Atlas Group, Christian Boltanski, Marcel Duchamp, Holis Frampton, Jean-luc Godard, Susan Hiller, Ilya Kabakov, Huda Lutfi, Maha Mamoun, Gerhard Richter, Jayce Salloum & Elia Suleiman, Laila Soliman, Rania Stephan, Sublime Frequencies, Andy Warhol and Ala Younis, among others. By the end of the course, participants should have developed their own relationship to the concept of the archive, as well as a nuanced theoretical framework to approaching archive-based art. They are also welcome to start or develop their own projects throughout the course period.",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/CIQFumN6AMkDNN1K2",
+      "own_page": null
+    }
+  }
+}

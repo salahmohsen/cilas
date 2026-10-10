@@ -1,0 +1,34 @@
+{
+  "sha256": "1fb7ff41eccd445dc7bfa3b098993a17d19f04a849a5a4af1b432ea4bafbb892",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Why do I Love You? (The Structures of The Beautiful)",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Kari ROSENFELD",
+          "email": null,
+          "bio": "Kari ROSENFELD is from Houston, Texas. She worked as a fashion photographer and producer before studying analytic philosophy at the University of Texas. She has since worked as an artist using writing, video, and photography. She serves as the Artist in Residence at CILAS Alex."
+        }
+      ],
+      "schedule_text": "Sundays, mornings and/or evenings: 10:00 am to 1:00 pm (early birds) and 5:00 pm to 8:00 pm (night owls), provided no fewer than five participants sign up per class.",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "\"Why do I Love You? (The Structures of The Beautiful)\" is a theoretical course aimed at understanding why we think the things that are beautiful are beautiful and what this has to do with art. The Enlightenment lead to a strict categorization of the beautiful as an autonomous “aesthetic” realm. This course will look at the development of the “autonomous aesthetic realm” to understand this strict categorization and then look at how institutional, neurological, and conceptual structures have contributed the development to this imaginary realm of autonomous art. We will look at how social, historical, and political context, the development of philosophy, our neurological constitution, and history have affected the way this mysterious sense of beauty moves inside of us. The course will look at the development of the museum and curatorial practices, the big western thinkers on art and beauty, “The Fate of Art” by J. W. Bernstein, the effect of of class structures on desire, post-colonial theory, and at what neuroscience has revealed to us about the way the brain understands love and want. Through the semester we will explore the question: can art show us what is really beautiful?\n\nWe recommend this course to anyone interested in learning more about the history of art, the development of aesthetic theory, and those interested in proposing alternatives to the structures of art as they see it. We also recommend that this course be taken in conjunction with the Media Lab.",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/aFWvCKOZZ2ZRMOq72",
+      "own_page": null
+    }
+  }
+}

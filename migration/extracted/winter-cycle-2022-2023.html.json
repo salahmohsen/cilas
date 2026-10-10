@@ -1,0 +1,170 @@
+{
+  "sha256": "a9da987e7532d9b3f5e6365c01ef5d9d2d4ed916d9526214af1bbdfe8c107ac8",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Winter Cycle 2022-2023",
+        "season": "winter",
+        "start_year": 2022,
+        "start_date": null,
+        "deadline": "2022-12-23",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Women’s Writing and the Literary Canon",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Osama Amer",
+                "email": "osamaamer@aucegypt.edu",
+                "bio": "Osama Amer is a researcher, creative writer and a translator. He is currently doing his MA in Arabic Studies specializing in Arabic Language & Literature at the American University in Cairo (AUC) in the Arab and Islamic Civilizations department. His main academic interests are Modern Arabic Literature and its intersections with Gender Studies"
+              }
+            ],
+            "schedule_text": "Offline. The course starts the first week of January, on Tuesdays at 6pm.",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "\"وكتاباتنا الإبداعية بالتالي تختلف عن كتابات الرجل الذي ينتمي لنفس المجتمع الذي أنتمي إليه، قد تتساوى فنيًا، وقد تتميز، وقد تختلف، ولكنها في كل الحالات تختلف، فلم كان من الصعب علينا الإقرار بهذا الاختلاف؟\" لطيفة الزيات\n\n\"عندما كنت أتساءل لماذا لا توجد شاعرة عربية حديثة أنتمي إليها، لم أسمع بها [سنية صالح] عندما كنت أفكر.\" إيمان مرسال\n\nBackground\n\nHow many women authors have you read in school? How many women are present on the recommended shelf in your local bookstore? Literary Canon refers to the body of works traditionally perceived as masterpieces of literature that are also taught in universities and high schools. As a patriarchal construct, the Canon marginalizes women and admits few women under certain conditions. In the case of Arabic Literature, these conditions could relate to 1) nationalism, 2) responding to masculine aesthetics, and 3) committing to designated gendered traditions such as rithāʾ elegies. Accompanying the rise of nationalism in the twentieth century, women's writings, which could be categorized as national works, were more likely to be canonized. On the other hand, women writers challenged the Canon, expanded the boundaries of literary genres, and created feminist aesthetics.\n\nThe Course\n\nIn addition to discussing how the literary Canon works, this course offers a counter-feminist canon through its readings. We are going to understand why a woman author could be canonized while others are not. Furthermore, we will investigate why specific works were marginalized while others are considered masterpieces by the same author. Above all, we are going to enjoy reading poems, short stories and novels written by women.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/womens_writing_flow.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/dxGAtUbNJQCVj3ai6",
+            "own_page": null
+          },
+          {
+            "title": "On the culture of irony",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Coen",
+                "email": "coenvankessel@hotmail.com",
+                "bio": "Coen holds a degree in Philosophy and Arabic from the University of Amsterdam and the Netherlands-Flemish Institute in Cairo (NVIC). He is interested in (post-)Kantian philosophy and the way in which (unconscious) philosophical assumptions influence everyday life and the organisation of different communities."
+              }
+            ],
+            "schedule_text": "Offline. The course starts the first week of January, on Thursdays at 6pm.",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Irony is everywhere. You’ll find it in your guilty pleasure sitcom, in a political discussion you overhear in a café, or in the commercial of your favorite cereal brand (Temmy’s!). The internet is flooded with memes, which often contain multiple ironic layers. Hence, if one agrees with the Danish philosopher Søren Kierkegaard, who wrote that “a life that may be called human begins with irony”, we seem to be, like, well, living in one of the best of all possible worlds.\n\nThis course offers the opportunity to engage with irony’s myriad forms and disguises. For in spite of its ubiquity in contemporary culture, irony remains a notoriously difficult concept to comprehend. We will not only discuss how an ironic pose is rooted in philosophical assumptions about the relationship between consciousness and material reality, but also draw inspiration from Plato, Spongebob and Egyptian television. And what to think of social media such as TikTok, where even serious issues such as mental health are ironized?",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/on_the_culture_of_irony_course_flow-_winter22.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/dxGAtUbNJQCVj3ai6",
+            "own_page": null
+          },
+          {
+            "title": "Noticing Care",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Rana Elzoheiry",
+                "email": "rana.elzoheiry@gmail.com",
+                "bio": "Rana Elzoheiry is an educational designer and researcher based in Cairo. She regularly contributes to the research and design of informal educational initiatives in the humanities, social sciences, and sexual and reproductive health. Her educational practice is guided by critical and liberatory pedagogies, and she is committed to designing learning experiences that focus on learning how to create more caring and socially-just communities. She earned her MA in Education from McGill University and currently works full-time as a Project Coordinator at Tahayyuz Alliance."
+              }
+            ],
+            "schedule_text": "Offline. The course starts the first week of January, on Mondays at 6pm.",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "Giving and receiving care is an essential part of how we nurture and sustain each other’s well-being. We likely experience acts of care in our everyday lives; in the hot meals that our loved ones make us, in the sense of safety we feel when we are held by our friends, in the bravery of activists who continue to fight for our freedoms. Care takes place in the intimacy of our homes, and in the less private spheres of our schools, hospitals, workplaces, on the streets, and on the internet.\n\nYet, the enduring presence of care in our lives may sometimes render it invisible. The mental, emotional, and material labor that we invest, or that our caretakers invest, is not always seen, valued, or acknowledged.\n\nThis course is an invitation for us to learn to notice together the role of care in our lives: How are we cared for? How do we take care of ourselves and others? Every week, we will engage in discussion about a form of care that we experience, and reflect on the kind of labor it involves. We will explore different forms of care such as motherhood, friendship, activism, teaching and mentorship, and online community support, among others. We will ask questions about our own personal stories of care, the contradictory emotions and tensions that we go through when we give/receive care, how different forms of care are valued (culturally, socially and economically), and the ways in which class and gender influence our perceptions of care labor.",
+            "flow_links": [
+              "https://docs.google.com/document/d/1O5rMRkfnn8LvUDKdTm6zGFTqUUgiOtUPNMP8Apx3Jvs/edit"
+            ],
+            "register_url": "https://forms.gle/dxGAtUbNJQCVj3ai6",
+            "own_page": null
+          },
+          {
+            "title": "Thinking Privilege in Global Perspective",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Noha",
+                "email": "nroushdy@gmail.com",
+                "bio": "Noha is a Cairo-based cultural anthropologist with fifteen years of experience conducting qualitative and ethnographic research on issues of gender, social class, and nationalism between academia and civil society. She started her graduate training in anthropology at the American University in Cairo, where she received her MA in 2010, and moved on to earn her doctorate from Boston University in 2021. Noha’s work looks at the reproduction, reconfiguration, and negotiation of colonial cultural hierarchies as class and gender practices in contemporary Egypt. In the past eight years, she has been studying the socialization of elite Egyptian youth in and around Cairo’s international schools. Beyond scholarship, Noha is also an avid reader of literary fiction, a podcast enthusiast, and an amateur artisan-bread baker."
+              }
+            ],
+            "schedule_text": "Online. The course starts the first week of January, on Wednesdays at 6:30pm.",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:30",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "What is privilege? And how does privilege look like? Is privilege a home address? A body? Or a passport? And how might we make sense of privilege-in context in an increasingly unequal transnational world?\n\nWhile many trace social inequality to poverty, exclusion, and multiple forms and experiences of economic and social marginalization, in this course we will interrogate the various articulations of privilege that regulate, reproduce, and give meaning to systems of social differentiation and the workings of power in the contemporary world. Participants in this course will get the opportunity to learn about and discuss contemporary social scientific approaches to understanding social class, dominance, and social stratification, and explore how eliteness has been produced, imagined, and contested through scholarship, literature, and film. Through ethnographies, social science and literary texts, we will pay particular attention to the tensions and contradictions of elite belonging in the Global South and examine how configurations of Global South eliteness intersect with issues of coloniality/postcoloniality, race, gender, ethnicity, and national belonging. The aim of the course is to invite students to adopt a multi-scalar approach (local, national, transnational and historical) in thinking about the production/reproduction of privilege, to consider “studying up” a viable approach to understanding the workings of exclusion/inequality and to critically assess their own entanglement of structures/practices that reproduce privilege.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/_thinking_privilege_in_global_perspective_course_flow_winter22.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/dxGAtUbNJQCVj3ai6",
+            "own_page": null
+          },
+          {
+            "title": "Hashtag Heritage",
+            "title_ar": null,
+            "subtitle": "Understanding cultural heritage is the age of social media",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Mohamed Fareed",
+                "email": "mw.fareed@gmail.com",
+                "bio": "Mohamed Fareed is an architect and researcher with two years of experience. He hold a Bachelor degree of Architecture Design from Helwan University in Egypt (2020) and a Post-Graduate Diploma in \"Urban Heritage strategies\" From Erasmus University Rotterdam (I.H.S) in Netherlands (2022).In addition to that, He is currently studying for MSc in “Conservation Management of Cultural Heritage” in University of Sharjah, UAE, supported by ICCROM scholarship.\n\nHis fields of professional and academic experiences are centered on the Re-interpretation of cultural heritage in the Middle East through digitization. He has participated in several international conferences, workshops and academic publications. Moreover, He is an active member in various working groups and scientific committees in ICOMOS."
+              }
+            ],
+            "schedule_text": "Online. The course starts the first week of January, on Sundays at 7pm.",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "19:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "This course explores how social media reframes our understanding and experience of heritage. Through the idea of ‘participatory culture’ the course begins to examine how social media can be brought to bear on the encounter with heritage and on the socially produced meanings and values that individuals and communities ascribe to it.\n\nTo highlight the specific changes produced by social media, the course is structured around three major themes:\n\nSocial Practice. New ways of understanding and experiencing heritage are emerging as a result of novel social practices of collection, representation, and communication enabled and promoted by social media.\n\nPublic Formation. In the presence of widely available social technologies, peer to-peer activities such as information and media sharing are rapidly gaining momentum, as they increasingly promote and legitimate a participatory culture in which individuals aggregate on the basis of common interests and affinities.\n\nSense of Place. As computing becomes more pervasive and digital networks extend our surroundings, social media and technologies support new ways to engage with the people, interpretations and values that pertain to a specific territorial setting.\n\nFinally, this course aims to provide participants with a critical framework to understand how the participatory culture fostered by social media changes the way in which we experience and think of heritage.\n\nSO PREPARE YOUR SOCIAL MEDIA ACCOUNTS TO EXPLORE AND EXPERIENCE CULTURAL HERITAGE LIKE NEVER BEFORE!",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/hashtag_heritage_course_flow_winter22.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/dxGAtUbNJQCVj3ai6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

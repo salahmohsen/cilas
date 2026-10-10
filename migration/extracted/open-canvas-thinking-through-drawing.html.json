@@ -1,0 +1,34 @@
+{
+  "sha256": "64a2b98b74d9de86c08b7e46028c7a357e23be31b8e6a229ed6c51b47f3df9d4",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Open Canvas",
+      "title_ar": null,
+      "subtitle": "Thinking through Drawing",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Yvonne BUCHHEIM",
+          "email": null,
+          "bio": "Yvonne BUCHHEIM is a resident fellow in CILAS coordinating the field of study Arts and Culture. She is interested in exploring the role of art within the everyday and engaging her audiences in unexpected ways through participation and observation. As an artist and academic she is passionate about observing the world through drawing. Her enthusiasm for teaching developed through postgraduate studies in Teaching Higher Education as well as teaching Drawing and Applied Arts at the University of the West of England for ten years. In 2012 she moved to Cairo where she has taught at AUC and has pursued her interdisciplinary art practice in public and social projects."
+        }
+      ],
+      "schedule_text": "Mondays: 10:00-12:30 (morning) or 17:30-20:00 (evening).",
+      "weekdays": [
+        "mon"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The course investigates alternative forms of knowledge through the experience of drawing and reading in an attempt to explore and re-define body-mind relations. Participants will engage in the act of drawing as a way to bridge body and mind.\n\nAs you learn how to draw, your mind observes and evaluates not only the unfolding outcome on paper but also reflects upon a process of acquiring new forms of (body) knowledge. Accompanying theoretical texts and discussions will further facilitate a process of self discovery by reflecting upon habitual and specific means of embracing knowledge. How do we learn? How do we know what we don’t know? Do you want to describe, explore, understand, discover or change something?\n\nThe act of learning how to draw will invite a process of inquiry into how we grasp, learn and memorise different forms of knowledge. We will experiment with a variety of visual exercises to reflect upon learning and body knowledge with an emphasis on experiential drawing rather than qualitative outcomes. Learning how to draw involves overcoming your mind and trusting your body to connect seeing, understanding and tactile movement. Through advanced hand-eye coordination 3-dimensional reality is being translated into 2- dimensional expressions. In response we will open up a discussion on analysis and interpretation of data to create meaning and become aware of how we learn.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

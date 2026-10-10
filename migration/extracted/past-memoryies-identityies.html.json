@@ -1,0 +1,39 @@
+{
+  "sha256": "fdeb1659c392499aff76fd1586285bfd50647ebc142991fff8638a983ffe132d",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Past, Memory(ies) and Identity(ies)",
+      "title_ar": "الماضي، الذاكرة والهويات",
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Mayada MADBOULY",
+          "email": null,
+          "bio": "Mayada MADBOULY is PhD candidate in Labex « Les passés dans le présent », ISP in Université Paris Ouest Nanterre la Défense in France. She is interested in migration, social movements, collective memory and collective action led by ethnic minorities in urban spaces. Her master degree was in Comparative Political Sociology at the same university where she submitted a thesis on Nubian youthful identity: \"Les Nubiens du Caire au carrefour de l'identité : une (en)quête de la nubianité et reformulation de l'égyptianité\". She obtained her BA from the department of political science in the faculty of economic and political sciences, Cairo University where she submitted a thesis on how Egyptian movies constructed a social image about slums inhabitants in Egypt."
+        },
+        {
+          "name": "محمد يحيى",
+          "email": null,
+          "bio": "محمد يحيي خريج كلية الصيدلة جامعة قناة السويس. بعد التخرج حصل علي زمالة لازورد من مركز جيرهات للعطاء المجتمعي فى الجامعة الأمريكية. شغفه الرئيسي هو التاريخ اﻹجتماعي وبالتحديد تاريخ التابع. باﻹضافة إلي الدراسات النقدية فى المجتمع المدنى. عمل مساعد زميل فى معهد القاهرة اﻵداب والعلوم الحرة وباحث مساعد في مبادرة احكي يا تاريخ."
+        }
+      ],
+      "schedule_text": "Sundays: 10:00-12:30 (mornings) or 17:30-20:00 (evenings).",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The outbreak digital era and the- so-called –Uprising in Egypt pushed many scholars to question several concepts such as History, memory, nationalism and identity to name a few. The availability of the information on the internet and the multiplicity of research resources proposed other narrations and other versions than the official narration. In this sense, this course will highlight an academic field less studied in Egypt: the collective memory and its formation. This course is not interested in the historiography as much as it aims to enhance the storytelling of historical events that form the collective memory of each group and how the past is politically used through official discourses, songs, movies, etc.\n\nThis course will focus on three main groups of actors: the state, the different social groups and the individuals. The interaction between the narrations of the three groups of actors will help us to re-explore at the end of the course which story is presented, how and to what extent the narration of each group contested the other one. Firstly, it will analyze how the state constructed a \"unified\" social Identity based on some historical events (more specifically the construction of the High Dam and the 6th October war), its Past (the Pharaohs, the Islamic and the khedival era to name a few) and its public figures (Om Khalthoum, Nasser, Mahmoud Mokhtar, etc.). We propose to understand this process through the museumification (field visits to the historical museums), commemoration (street names, sites and official holidays) material archives (official historical book, discourses and touristic products sold in different touristic sites), oral and audiovisual archives (songs and publicity).\n\nSecondly, it will help the participants to re-explore the collective memory of some of Egypt's social groups (ethnic, religious and political) and how it is transmitted through generations (can we talk about Nubian neighborhoods in Cairo? The Nubian social image used in movies and literature versus Nubian collective memory tahjir, Jews in Egypt, art and politics during the Egyptian uprising). At last but not least, inspired by the auto-analysis and the reflexivity in the French sociology, we will invite the participants to share how their identifications are co-constructed by the intersection of their souvenirs, familial memory and the different collective memories transmitted/lived to/by them.\n\nThe course will be based on a theoretical part, but also on a practical part based on official discourses, songs analysis and field visits to museums (if it is possible some field visits to the Canal cities).\n\nانفراجة العصر الرقمى و الحراك الذى عاشته مصر دفع العديد من الأكاديميين لإعادة النظر فى العديد المفاهيم مثل التاريخ، و الذاكرة، و القومية، والهوية, توافر المعلومات على شبكات النت و تعدد مصادر الأبحاث ساعدت على الإشارة إلى سرديات أخرى، مختلفة عن تلك التي تُروجها الأصوات الرسمية. على هذا النهج، هذا المساق سيسلط الضوء على حقل دراسى مهضوم حقه فى مصر، ألا و هو \"الذاكرة الجماعية و تكوينها\". هذا المساق لا يركز على علم كتابة التاريخ بقدر ما هو يسعى إلى إرثاء ثقافة حكى الأحداث التاريخية التي تشكل الذاكرة الجماعية لمختلف الطوائف، كما نتطرق إلى كيفية أستغلال الماضى بشكل سياسى من خلال الخطابات الرسمية، و الأغانى، و الأفلام، و الخ…\n\nهذا المساق سيركز على ثلاث فاعلين أساسيين: الدولة،والفئات الاجتماعية المختلفة، والأفراد. التداخل بين سرديات الثلاثة سيساعدنا فى نهاية المساق على إعادة اكتشاف أى من السرديات تُعرض علينا، كما ستوضح لنا كيف و إلى أي مدى تتنافس سرديات الفاعلين الثلاثة مع بعضهم بعض. أولاً، المساق سيحلل كيف شكلت الدولة هوية اجتماعية \"موحدة\" على حس أحداث تاريخية (على وجه التحديد تشييد السد العالى و حرب أكتوبر)، و على ماضيها (على سبيل المثال الفراعنة، و الحقبة الإسلامية و الخديوية)، كما على الشخصيات العامة ( أم كلثوم، و عبد الناصر، و محمود مختار، وآخرين). نسعى لفهم هذا التطور من خلال المتحفة (رحلات ميدانية المتاحف التاريخية)، و عملية تخليد الذكرى (أسماء شوارع، و مزارات، و أجازات رسمية)، و الأرشيفات (الكتب التاريخية الرسمية، والخطاب السياحى و المنتجات السياحية)، و الأرسيفات الشفوية و المرئية و المسموعة (الأغانى و الدعاية). ثانياً، المساق سيساعد المشاركين على إعادة اكتشاف الذاكرة الجماعية الخاصة ببعض الطوائف الاجتماعية المصرية",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/e/1FAIpQLSeC_heTrWde5Q1dOTgd6Ywqlxc8wsUvMbaXKXYhgNrct-nYkg/viewform?c=0&w=1",
+      "own_page": null
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "sha256": "33a0048e3d8b3bc2da0437c06becc748e9f6f4a17a3791da54fcc1dfcded08bd",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Change",
+      "title_ar": null,
+      "subtitle": "A Historical Survey of Oppression and Resistance",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Mai Alkhamissi",
+          "email": null,
+          "bio": "Mai Alkhamissi is a wannabe social theorist with a background in the anthropology of the state, labour, social and political theory, and affect theory. She received her Master of Arts in Anthropology and Cultural Politics from Goldsmiths, University of London where she wrote her thesis on the union of skilled handicrafts craftsmen in Egypt and both their struggle against, and work with, the state.\n\nShe is currently an anthropologist in a four-person team tasked with reforming Cairo University Hospitals (Kasr al-Ainy) where she spends her days informing people that no, actually, she is not a doctor."
+        }
+      ],
+      "schedule_text": "Tuesdays, 10:00 am to 12:30 pm, and 5:30 pm to 8:00 pm",
+      "weekdays": [
+        "tue"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "Oppression has existed since the advent of human history. The other side of oppression is resistance and the emergence of liberatory politics and practices that counteract oppression. This course invites us to examine processes of change by looking at change not as as a static concept but as a fluid one that continues to emerge and reemerge across time and space.\n\nWe will do so by examining liberatory politics that arose in the face of 4 different forms of bondage: slavery, labour, fascism and finally new forms of imperialism.\n\nWe start by discussing freedom by looking at slavery and the quest to abolish it from the slave rebellion lead by Spartacus until the last recorded legal slave market in Saudi Arabia in 1964.\n\nWe will then move to a newer, subtler form of bondage; wage labour, by studying the first strikes in Ancient Egypt through Marx’s contributions on the labour movement and unionism around the world.\n\nOur next stop will be looking at fascism where we will read Hannah Arendt and the Frankfurt school’s analysis of the anti-fascist movement during World War Two to look at how groups fought against and defeated the fascist movement in Europe.\n\nWe finally end with a close reading of Michael Hardt and Antonio Negri’s Empire which we will use to explore new forms of cross border imperialism and the potentiality of liberatory politics in our current day.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

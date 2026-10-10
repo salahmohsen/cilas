@@ -1,0 +1,232 @@
+{
+  "sha256": "8b1c9bc666fdd96837b0899a20a49756704c6a7e3da1ade165af84d600ac0ad5",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Spring Semester 2023 (Cairo, hybrid)",
+        "season": "spring",
+        "start_year": 2023,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "The Anthropology of Music",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sophie Frankford",
+                "email": "sophie.frankford@gmail.com",
+                "bio": "is an anthropologist currently based in Cairo as a Postdoctoral Fellow at CEDEJ. After an undergraduate degree in Music and an MPhil in Middle Eastern Studies, she completed a PhD in Anthropology at the University of Oxford. Her thesis was an ethnography of Egyptian shaʿbi music, considering how the style relates to broader issues of class and urban space. It was based on 21 months of fieldwork including one year spent working as a violinist in various shaʿbi bands."
+              }
+            ],
+            "schedule_text": "Mondays at 6 pm, hybrid at CILAS",
+            "weekdays": [
+              "mon"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "HYBRID"
+            ],
+            "description": "How is music related to people’s identities and beliefs, and how does sound shape people’s sense of place and belonging? How does music-making connect to broader social, cultural and economic processes?\n\nIn this course we will explore varied global musical styles, including Senegalese sabar, Indian hip hop, Egyptian shaʿbi, and western classical. We will consider these musics in their broader social and cultural contexts, thinking about how they are produced and consumed, and to what effect.\n\nDrawing on a selection of recent ethnographies, we will learn how anthropologists and (ethno)musicologists, by paying attention to music and sound, have shed new light on key anthropological themes like gender, class, and migration. We will listen carefully, to the music itself and to how people talk about music. We will also think about how to explore sound from an anthropological perspective, using methods like musical apprenticeships, sound walks, and shared listening. Applying what we learn to our immediate contexts, we will consider the challenges and rich benefits of lending an ethnographic ear to the world around us.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/frankford_2023_the_anthropology_of_music_course_flow__cilas_.pdf"
+            ],
+            "register_url": "https://forms.gle/ZJ8mATidEwSihNry6",
+            "own_page": null
+          },
+          {
+            "title": "Meaningful Conversations with the Prophets",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Radwa SALEM",
+                "email": null,
+                "bio": "is a returning student and fellow of CILAS. She first joined CILAS in 2013 thinking it was a transitional period from her finance undergraduate school to her social work graduate school. In 2014, she began studying the Quran in light of the Risale-i-Nur collection. Since 2017, she has been facilitating her weekly discussions that she calls Meaningful Conversations. The aim of MC is to allow space to inquire about one's inner world and discuss with others how one can 'become' a manifestation of mercy from within and with creation. Her interests are the Quran, social work and logotherapy."
+              }
+            ],
+            "schedule_text": "Sundays at 6 pm or 10:30 am, offline or online (based on the number of students) at CILAS",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "Who cares if Jonah was inside a whale? What does it matter than Cain killed Abe? Why did Adam eat from the tree? Are these just historical stories for bedtime? This class is an exploration of the methodology of reading prophetic stories in the Quran. We will be using the methodology used in the Risale-i-Nur (the Epistle of Light). How am I to read the story and how is it related to me? The methodology used by Said Nursi suggests that prophetic stories can help us learn about ourselves and our lives. The story does not speak to Muslims or believers, but rather to anyone who is interested in learning about him/herself, his/her life and his/her lord. We will use tools of the methodology of observation, inquiry, reasoning, and reflection. Most importantly, we will be using our questions, our feelings, and our experiences.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/meaningful_conversation_with_the_prophets23_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/Z7tsLVHaBF7XNEco7",
+            "own_page": null
+          },
+          {
+            "title": "Keys to read Abū Ḥāmid al-Ghazali",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Nabil Yasien Mohamed",
+                "email": "nabilyasienmohamed@gmail.com",
+                "bio": "holds an M.A in Philosophy from the University of the Western Cape (UWC), an honours degree in Islamic Studies from the Islamic Peace College of South Africa (IPSA), a BA degree in Politics, Philosophy and Economics from the University of South Africa (UNISA), and a BSc Honours degree from the University of Cape Town (UCT). Nabil has spent several years in Egypt studying Arabic and traditional Islamic studies. His research interests include Ghazalian studies, classical Islamic Philosophy, contemporary Islamic thought, theology, epistemology, and ethics."
+              }
+            ],
+            "schedule_text": "Thursdays at 6 pm, online",
+            "weekdays": [
+              "thu"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": "2023-02-26",
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Abū Ḥāmid al-Ghazālī (d. 1111), known by the honorific title, the “Proof of Islam,” was one of the foremost scholars and authorities in the Muslim world. The epistemology of a paradigmatic figure like al-Ghazālī is central to Islamic intellectual thought, but also speaks to our modern world. In this course we embark on a study of doubt (shakk) and certainty (yaqīn) in Ghazālī’s epistemology. Ghazālī was no dogmatist or religious zealot, but a scholar with a critical spirit who relentlessly struggled in pursuit of truth and certainty. In this course we look at Ghazālī’s attitude to philosophical demonstration and Sufism as a means to certainty. In early scholarship surrounding Ghazālī, it was assumed that he was a vehement adversary to philosophy and a recluse Sufi. He has often been blamed as the one who single-handedly offered the death-blow to philosophy in the Muslim world. On the other hand, in much of contemporary scholarship, Ghazālī has been understood to give preference to philosophy as the ultimate means to certainty, undermining the place of Sufism. Ghazālī is an enigma to many, and continues to invite much discourse. Much of previous scholarship has either focused on Ghazālī as a Sufi or a philosopher; in this course we embark on a parallel approach in which we acknowledge each discipline in its right place within Ghazālī’s epistemology. We analyse Ghazālī’s approach to acquiring certainty, his methodological scepticism, his foundationalism, his attitude to authoritative instruction (taʿlim), and the place of philosophical demonstration and Sufism in his epistemology. This course will acquaint students with Ghazālī’s life and thought, and help navigate the primary literature surrounding his oeuvre.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/keys_to_read_abū_Ḥāmid_al-ghazali.pdf"
+            ],
+            "register_url": "https://forms.gle/ZJ8mATidEwSihNry6",
+            "own_page": null
+          },
+          {
+            "title": "Everything You Wanted to Know About Climate Change But Were Afraid to Ask",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Arevalo",
+                "email": "mateo.arevalo.botero@gmail.com",
+                "bio": "studied Modern European History at the University of St Andrews and went on to receive a Masters degree in Modern History at the University of Oxford."
+              }
+            ],
+            "schedule_text": "Tuesdays at 7 pm or 10:30 am, offline at CILAS except for the last four weeks which will be online",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE",
+              "ONLINE"
+            ],
+            "description": "Understanding a world systems problem as complex, multilayered, and fundamentally chaotic as climate change may seem a tall order. Even so, it appears to be a civic duty for those of us concerned about the fate of the earth, our species, and the biosphere over the next century and more. This course will attempt to demystify and deconstruct this “wicked problem”, through the analysis of different sectors of the economy such as energy, manufacturing, and agriculture. Emphasis will be placed on the analysis of actionable, tractable strategies to combat climate change effectively that can be implemented by individuals or organizations. Students will come out of the course with an enhanced understanding of a slow-motion crisis unfolding in real-time, that is both planet-wide and deeply personal; while striving for a more granular understanding of potential projects or policy prescriptions that may contribute, however modestly, to treating the issue.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/climatechange23_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/Z7tsLVHaBF7XNEco7",
+            "own_page": null
+          },
+          {
+            "title": "Inhabit: Belonging to Bodies and Lands",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Deema Kaedbey",
+                "email": "deema@alwarsha.org",
+                "bio": "became very interested in eco-feminism and indigenous feminism around 2009. And she has been equally obsessed with history, especially the history of feminism in Lebanon. These two interests have always informed each other in her work. They were interconnected through her years completing a PhD in Women’s, Gender and Sexuality Studies from Ohio State University (2014) and in her current position as director of the Knowledge Workshop (KW), a feminist organization in Beirut. In 2022, KW published a book on eco-feminism in Lebanon called What Remains: Eco-Feminist Pursuits."
+              }
+            ],
+            "schedule_text": "Saturdays 17:30-19:30, online",
+            "weekdays": [
+              "sat"
+            ],
+            "start_time": "17:30",
+            "end_time": "19:30",
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "Inhabit is an online course that will examine eco-feminist and indigenous feminist perspectives on body, land, and home through texts from multiple genres and disciplines, and from different communities across the world. Through collective discussions, writing, and engaging with the various texts, this course will look into the frameworks and practices of how the places we inhabit are theorized, whether they are through the materiality of bodies and lands, the communal, as well as inhabiting through memories, imagination, and histories.\n\nThe course will use both English and Arabic, in texts and discussions.\n\nThe objectives of the course include:\n\nLearning about indigenous feminist and eco-feminist frameworks\n\nExploring themes around land, bodies, home and belonging from different parts of the world from indigenous and eco feminist perspectives\n\nExperimenting with how indigenous and eco-feminist concepts related to body, land, memory and home relates to our personal and collective perceptions",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/description_inhabit.pdf"
+            ],
+            "register_url": "https://forms.gle/Z7tsLVHaBF7XNEco7",
+            "own_page": null
+          },
+          {
+            "title": "Magic and Modernity: The Spell of Our Structures",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Amina Dessouki",
+                "email": "aminadessouki@aucegypt.edu",
+                "bio": "holds a masters degree in Anthropology from The American University in Cairo. She works on issues related to development, gender, water, and the urban. She has specific interests in alternative medicine, the circulation of indigenous knowledges, decolonial thinking and practice. Children’s books are her most consoling source of wisdom, she believes they are works of existential philosophy in disguise."
+              }
+            ],
+            "schedule_text": "Wednesdays at 6 pm, offline",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "The course will challenge the conventional notion of equating modernity with disenchantment, through looking at the ways in which the secular and the sacred go hand in hand. We will examine how reason does not eliminate “superstition\" but piggybacks upon it; chance and serendipity lie at the core of technological life and the bureaucratic world; mechanism produces vitalism. To put it another way, we will explore the ways in which our institutions produce magic; we will historically trace the tale of modernity’s rupture from the premodern past, through looking at the enchantments of urbanization, industrialization, globalization as well as various forms of rationalization.\n\nModernity is primarily about our capacity as rational and logical human beings to have mastery over nature and technically perfect the human condition; Yet, our attempts to bring perfection, always bring about violence. Worlds that have certainty and clarity are always violent worlds, as Camus says: “the evil in the world comes almost always from ignorance, and goodwill can cause as much damage as ill-will...people are more often good than bad, though in fact that is not the question...they are more or less ignorant and this is what one calls vice or virtue, the most appalling vice being the ignorance that thinks it knows everything” (Camus:1991, 194). It is in our nature as human beings to scramble for certainty whenever we recognize that everything around us is in a constant flux, we try to rationally plan our days, our lives, with the hope of finding stability so we can stand straight and be at ease. As a result, the knowledge we produce aims at fixing things within concepts of thought, to hold them to account, and to make them to some degree predictable. But, we are running after world that is manifesting in ways that are fleeting, continuously trying to pin it down with our grammar and categories of understanding. This course will hopefully enable us to create a space for hesitation; by the end, we will attempt to think/imagine/become otherwise through challenging the inherited categories we so comfortably inhabit; chief of which is the tale of magic’s exit from the henceforth law-governed-world.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/magic_and_modernity23_flow.pdf"
+            ],
+            "register_url": "https://forms.gle/ZJ8mATidEwSihNry6",
+            "own_page": null
+          },
+          {
+            "title": "Being Displaced in the City: An Anthropological Approach",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Alexandra Schindler",
+                "email": "alex.k.schindler@gmail.com",
+                "bio": "is a cultural anthropologist specializing in the topic of migration in the Middle East, and Egypt specifically. She received her undergraduate degree from Dartmouth College in the U.S. in 2010 and her Masters degree from the American University in Cairo in Gender and Women’s Studies in 2012. She received her PhD from the CUNY Graduate Center in New York City in Cultural Anthropology in 2021. Her dissertation explores the themes of mobility and temporality in contemporary Alexandria and is entitled “Living in Permanent Transience: An Ethnography of Contemporary Alexandria.” Alexandra has taught courses in Anthropology in New York City and Alexandria."
+              }
+            ],
+            "schedule_text": "Sundays at 6 pm, online",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "This course uses ethnographic texts to study the contemporary experience of displacement in cities. Studies of the refugee experience often assume the refugee camp as the quintessential space of displacement, while migration studies assumes as its object of study “economic” migrants living in cities. This arbitrary divide between refugee studies and migration studies as academic disciplines has encouraged the theory that refugees and economic migrants are in fact two distinct categories of people on the move, while the reality is that refugees often end up to cities (rather than camps) for economic reasons and economic migrants are often fleeing their home countries because of state violence or political instability. Urban studies, on the other hand, rarely centers the migrant experience as essential to understanding contemporary cities. Schiller and Çaglar (2018) argue that we cannot understand how contemporary cities are made without attention to the lives of migrants in cities and conversely, we cannot understand migrants experiences in urban spaces without attention to the effects of city life on their everyday experiences. This course asks what cities and their residents’ lives look like when we consider (im)mobile peoples and urban spaces in the same geographical and temporal framework.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/beingdisplaced23_flow_-schindler.pdf"
+            ],
+            "register_url": "https://forms.gle/ZJ8mATidEwSihNry6",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

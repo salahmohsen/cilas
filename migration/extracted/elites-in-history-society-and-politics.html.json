@@ -1,0 +1,34 @@
+{
+  "sha256": "e545c79539041df9344d4ebe9682660600adc793360588b4fae3b593528b049f",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "elites in history, society, and politics",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Sara Salem",
+          "email": null,
+          "bio": "is a PhD candidate at the Institute of Social Studies, Erasmus University, in the Netherlands. She is working on the 2011 Egyptian revolution from the perspective of critical political economy, and uses Marxism as a lens through which to understand the shifts happening across the Middle East and Africa today. She is half Egyptian and half Dutch. She grew up in Zambia, a place she still considers home. Her hobbies include postcolonialism, feminism, Marxism, and other conspiracies, and when she isn’t reading you can find her either baking or enjoying a coffee."
+        }
+      ],
+      "schedule_text": "wednesdays from 5:30 to 8 pm",
+      "weekdays": [
+        "wed"
+      ],
+      "start_time": "17:30",
+      "end_time": "20:00",
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "Events are often studied from the perspective of “the people.” Elites, however, are just as much a part of the picture as the masses. Changes in elites—or the ruling class—can often explain why certain events happen and the patterns that society takes after these events.\n\nThis class focuses on the Egyptian context and aims to trace the formation of elites through time. Taking a historical, political and sociological perspective, the class goes back to the time of the Mamlukes and continues all the way up to the 1990s in order to trace how Egypt’s elites have changed over time. This goes beyond only looking at individuals in power, or how they come to or lose their positions. It also means looking at the economic and political transformations that give certain elites power over others, and the different ideologies elites tie themselves to in order to legitimize their actions. The class will also look at elites from a social perspective: how do elites create and spread certain values and norms through society? Do social norms and values change as elites change, or are they more stable? These three perspectives—the historical, the political, and the sociological—allows for a deep and contextualized understanding of how elites change over time.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

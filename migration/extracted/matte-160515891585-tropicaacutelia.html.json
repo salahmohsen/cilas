@@ -1,0 +1,34 @@
+{
+  "sha256": "43b3bf159928354cad666037db5a199624b536d7102ba4bb39b32ef607b62ee9",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Matte مصر Tropicália",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Gian Spina",
+          "email": null,
+          "bio": "Gian Spina - Born in São Paulo, Brazil. Write, Reads and works sometimes as an artist. Has taught in places as International Art Academy Palestine, Escola da Cidade (São Paulo) and the Ionion Center for Arts and Culture (Greece). Today he learns Arabic, speaks five other languages and is constructing an interdisciplinary body of work on the materialization of power in the public sphere. He was part of the residency program in Documenta 14 in Athens (2017) and recently at MMAG Foundation in Amman (2018). He lives now between Amman and Cairo and writes poetry on a daily basis. His work can be seen in http://gianspina.com"
+        }
+      ],
+      "schedule_text": "On Thursdays: early birds from 10 am to 1:00 pm AND night owls from 5 pm to 8:00 pm, provided that no less than five participants sign up per class",
+      "weekdays": [
+        "thu"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The course has as the main focus a collective learning. It is an experiment in itself, practicing openness, care and listening, with a total engagement with ourselves and the conversations which will happen. To exercise this philosophy of decolonization we will practice and study different subjects and contexts, attempting to find intersections between Latin America and the Arab World. The central theme will be the Tropicália movement from Brazil, which is relevant until today no only due to the ways it created dialogue between disciplines but as well as its close relationship with today’s Egypt.\n\nThe poets were making sculpture and discussing translation, the filmmakers were engaged with politics and social-history, the artists interacted with the relationship between the body, space, and experience. These profound relations and modes of inquiry greatly influenced the political change that was happening at the time. We will be also questioning the impact of these modes of resistance in the Brazilian as well as the Egyptian case and their impacts in both contexts.\n\nThe activities will have different approaches, varying from text readings, films screenings, experiencial exercises, presentations made by the students as well as guests(regarding the themes currently discussed). An important part of the activities will be to relate the subjects discussed with the surrounding, with the outside. In other words: how does the discussed concepts materialize themselves in the public sphere and the daily life. This part will start after the third week so we can create bounds and develop it collectively. During the course we will be looking on texts and films by: Lygia Clark, Suely Rolnik, Glauber Rocha, Helio Oiticica Etc’s.\n\n**Why apply**\n\nTo engage with critical thinking and social-historical facts on Latin America.\n\nTo engage with manifestations of tri-continental relationships, specifically between Latin-America and the Arab world.\n\nTo address important topics of today’s époque as colonization, historiography, narratives, as well as formulate ways of acting, thinking, and existing within those new perspectives.\n\n**What to expect**\n\nSharing and creating knowledge through readings, screenings, presentations, and exercises\n\nBrazilian guests coming and sharing their thoughts, ideas and time\n\nBuilding an understanding of the materialization of concepts in the public sphere, in the outside.\n\nCollectively honoring each other’s time and rediscovering meanings of respecting this valuable thing\n\n**Bibliography and Material**\n\n**Texts**\n\nThe Anthropophagic Manifesto - Oswald de Andrade\n\nAesthetic of Hunger/ Aesthetic of the Dreaming - Glauber Rocha\n\nLygia Clark’s Return to the Museum - Suely Rolnik\n\nSentimental Cartographies - Suely Rolnik\n\nBeyond the Favela, the Rua and the Museum: Reading Hélio Oiticica and Artur Barrio from Decoloniality. - María Helena Lucero\n\nPedagogy of Freedom - Paulo Freire\n\nBrazilian Art Under Dictatorship: Antonio Manuel, Artur Barrio, and Cildo - Claudia Calirman\n\nThe Falling Sky - Davi Kopenawa Yanomami\n\nIndigenous Perspectivism - Eduardo Viveiros de Castro\n\nHélio Oiticica and Neville D'Almeida Block-Experiments in Cosmococa - Max Jorge Hinderer Cruz\n\nOrientalism and the Exhibitionary Order - Timothy Mitchell\n\nQueer Phenomenology - Sara Ahmed\n\nThe Idea of Latin America - Walter Mignolo\n\n**Films / Videos**\n\nEntranced Earth - Glauber Rocha\n\nBlack God, White Devil - Glauber Rocha\n\nTropicália - Marcelo Macedo\n\nHelio Oiticica - O Filme - Cezar Oiticica\n\nThe World of Ligia Clark - Eduardo Clark\n\nLife is a Blow - Fabiano Maciel",
+      "flow_links": [],
+      "register_url": "https://goo.gl/forms/h5dSQ1sZRBcQXL7I3",
+      "own_page": null
+    }
+  }
+}

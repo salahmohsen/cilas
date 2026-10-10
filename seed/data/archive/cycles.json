@@ -1,0 +1,267 @@
+[
+  {
+    "key": "spring-2014-al-Ghuria",
+    "season": "spring",
+    "start_year": 2014,
+    "space": "al-Ghuria",
+    "legacy_url": "/2013-2014.html#spring-2014"
+  },
+  {
+    "key": "winter-2015-al-Ghuria",
+    "season": "winter",
+    "start_year": 2015,
+    "start_date": "2015-01-03",
+    "space": "al-Ghuria",
+    "legacy_url": "/2014-2015-second-trimester.html"
+  },
+  {
+    "key": "spring-2015-al-Ghuria",
+    "season": "spring",
+    "start_year": 2015,
+    "start_date": "2015-03-21",
+    "space": "al-Ghuria",
+    "legacy_url": "/2014-2015-third-trimester.html"
+  },
+  {
+    "key": "winter-2016-al-Ghuria",
+    "season": "winter",
+    "start_year": 2016,
+    "start_date": "2015-12-27",
+    "space": "al-Ghuria",
+    "legacy_url": "/2015-2016-second-trimester.html"
+  },
+  {
+    "key": "spring-2016-al-Ghuria",
+    "season": "spring",
+    "start_year": 2016,
+    "start_date": "2016-03-27",
+    "space": "al-Ghuria",
+    "legacy_url": "/2015-2016-third-trimester.html"
+  },
+  {
+    "key": "winter-2017-al-Ghuria",
+    "season": "winter",
+    "start_year": 2017,
+    "start_date": "2017-01-15",
+    "space": "al-Ghuria",
+    "legacy_url": "/2016-2017-second-trimester.html"
+  },
+  {
+    "key": "spring-2017-al-Ghuria",
+    "season": "spring",
+    "start_year": 2017,
+    "start_date": "2017-04-09",
+    "space": "al-Ghuria",
+    "legacy_url": "/2016-2017-third-trimester.html"
+  },
+  {
+    "key": "winter-2018-Darb el-Labbana",
+    "season": "winter",
+    "start_year": 2018,
+    "start_date": "2018-01-07",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/2017-2018-second-trimester.html"
+  },
+  {
+    "key": "spring-2018-Darb el-Labbana",
+    "season": "spring",
+    "start_year": 2018,
+    "start_date": "2018-04-01",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/2017-2018-third-trimester.html"
+  },
+  {
+    "key": "fall-2018-al-Manshiya",
+    "season": "fall",
+    "start_year": 2018,
+    "space": "al-Manshiya",
+    "legacy_url": "/2018-2019-cilas-alex-core-courses-2018---2019.html"
+  },
+  {
+    "key": "winter-2019-al-Manshiya",
+    "season": "winter",
+    "start_year": 2019,
+    "space": "al-Manshiya",
+    "legacy_url": "/2018-2019-cilas-alex-thematic-courses-and-labs.html"
+  },
+  {
+    "key": "fall-2019-al-Manshiya",
+    "season": "fall",
+    "start_year": 2019,
+    "space": "al-Manshiya",
+    "legacy_url": "/2019-2020-cilas-alex-core-courses.html"
+  },
+  {
+    "key": "winter-2020-al-Manshiya",
+    "season": "winter",
+    "start_year": 2020,
+    "space": "al-Manshiya",
+    "legacy_url": "/2019-2020-cilas-alex-second-semester.html"
+  },
+  {
+    "key": "spring-2023-Darb el-Labbana",
+    "season": "spring",
+    "start_year": 2023,
+    "space": "Darb el-Labbana",
+    "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html"
+  },
+  {
+    "key": "spring-2024-Darb el-Labbana",
+    "season": "spring",
+    "start_year": 2024,
+    "deadline": "2024-04-05",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html"
+  },
+  {
+    "key": "fall-2020-Darb el-Labbana",
+    "season": "fall",
+    "start_year": 2020,
+    "deadline": "2020-09-24",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/fall-2020.html"
+  },
+  {
+    "key": "fall-2021-al-Manshiya",
+    "season": "fall",
+    "start_year": 2021,
+    "deadline": "2021-09-20",
+    "space": "al-Manshiya",
+    "legacy_url": "/fall-2021-cilas-alex.html"
+  },
+  {
+    "key": "fall-2021-Darb el-Labbana",
+    "season": "fall",
+    "start_year": 2021,
+    "start_date": "2021-09-12",
+    "deadline": "2021-08-31",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/fall-2021.html"
+  },
+  {
+    "key": "fall-2024-Darb el-Labbana",
+    "season": "fall",
+    "start_year": 2024,
+    "deadline": "2024-09-06",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/fall-cycle-2024.html"
+  },
+  {
+    "key": "fall-2025-Darb el-Labbana",
+    "season": "fall",
+    "start_year": 2025,
+    "deadline": "2025-09-30",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/fall-cycle-2025.html"
+  },
+  {
+    "key": "fall-2022-Darb el-Labbana",
+    "season": "fall",
+    "start_year": 2022,
+    "deadline": "2022-09-18",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/fall-cycle-courses-2022.html"
+  },
+  {
+    "key": "spring-2021-Darb el-Labbana",
+    "season": "spring",
+    "start_year": 2021,
+    "space": "Darb el-Labbana",
+    "legacy_url": "/spring-2021.html"
+  },
+  {
+    "key": "spring-2022-Darb el-Labbana",
+    "season": "spring",
+    "start_year": 2022,
+    "deadline": "2022-01-31",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/spring-2022.html"
+  },
+  {
+    "key": "spring-2025-Darb el-Labbana",
+    "season": "spring",
+    "start_year": 2025,
+    "deadline": "2025-01-02",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/spring-cycle-2024-2025.html"
+  },
+  {
+    "key": "spring-2026-Darb el-Labbana",
+    "season": "spring",
+    "start_year": 2026,
+    "deadline": "2026-04-17",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/spring-cycle-2026.html"
+  },
+  {
+    "key": "summer-2020-Darb el-Labbana",
+    "season": "summer",
+    "start_year": 2020,
+    "space": "Darb el-Labbana",
+    "legacy_url": "/summer-2020.html"
+  },
+  {
+    "key": "summer-2021-Darb el-Labbana",
+    "season": "summer",
+    "start_year": 2021,
+    "deadline": "2021-07-06",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/summer-2021.html"
+  },
+  {
+    "key": "summer-2022-Darb el-Labbana",
+    "season": "summer",
+    "start_year": 2022,
+    "deadline": "2022-07-15",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/summer-2022.html"
+  },
+  {
+    "key": "winter-2020-Darb el-Labbana",
+    "season": "winter",
+    "start_year": 2020,
+    "deadline": "2020-12-22",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/winter-2020.html"
+  },
+  {
+    "key": "winter-2022-Darb el-Labbana",
+    "season": "winter",
+    "start_year": 2022,
+    "deadline": "2022-01-05",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/winter-2022.html"
+  },
+  {
+    "key": "winter-2024-Darb el-Labbana",
+    "season": "winter",
+    "start_year": 2024,
+    "deadline": "2023-12-28",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/winter-2023-2024.html"
+  },
+  {
+    "key": "winter-2023-Darb el-Labbana",
+    "season": "winter",
+    "start_year": 2023,
+    "deadline": "2022-12-23",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/winter-cycle-2022-2023.html"
+  },
+  {
+    "key": "winter-2025-Darb el-Labbana",
+    "season": "winter",
+    "start_year": 2025,
+    "deadline": "2024-11-19",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/winter-cycle-2024-2025.html"
+  },
+  {
+    "key": "winter-2026-Darb el-Labbana",
+    "season": "winter",
+    "start_year": 2026,
+    "deadline": "2026-01-31",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/winter-cycle-2026.html"
+  }
+]

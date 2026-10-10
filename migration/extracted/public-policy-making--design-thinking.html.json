@@ -1,0 +1,36 @@
+{
+  "sha256": "c70faf278a6b09af2150093a7664ba5e6759e0552ee2ea2f0be4d2221530397d",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Public Policy Making & Design Thinking",
+      "title_ar": null,
+      "subtitle": "On the changing nature of public goods",
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Karim-Yassin Goessinger",
+          "email": "karim@ci-las.org",
+          "bio": "Karim-Yassin GOESSINGER studied political philosophy and urban governance in the Netherlands, Brazil and France. He has worked with a range of development agencies in Latin America and the Middle East in fields including micro-finance, informal housing and local governance. In addition to his strong interest in social and political theory, Karim-Yassin is passionate about designing educational experiences. A Dalai Lama Fellow, he enjoys martial arts, language, world music and tea. After his graduate studies at Sciences Po Paris, he set out to create the Cairo Institute of Liberal Arts and Sciences (CILAS). As a fellow at CILAS, he coordinates the field of study Social Sciences and co-directs the yearlong study programme in the liberal arts."
+        }
+      ],
+      "schedule_text": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:00 pm to 7:30 pm",
+      "weekdays": [
+        "sun"
+      ],
+      "start_time": null,
+      "end_time": null,
+      "weeks": 10,
+      "start_date": "2015-03-22",
+      "location": [
+        "OFFLINE"
+      ],
+      "description": "The independent, progressive media outlet Mada Masr recently asked five social theorists who the 'people' are. The piece was subtitled 'A conversation on the assemblages (and the archives) of the people'. Participants of this course are invited to a conversation on the public, issues and assemblages. Together we will explore and assess the validity of both an abstract, general entity that performs public acts, such as Rousseau's general will or Hegel's world spirit, as well as a concrete bunch of public policy makers who make decisions on the basis of scientific evidence and sectoral expertise.\n\nParticipants will in a first part be introduced to Bruno Latour's notion of Dingpolitik and the philosophy behind it, namely object-oriented philosophy. The latter suggests that in order to study the social we must account for both human and non-human actors. We will go on to inquire into the nature of public goods with the help of Nobel laureate Elinor Ostrom. Once a public good is identified and successfully advocated for, how do we effectively implement a policy to protect this good? We shall turn to Paul Sabatier for a critical look at policy implementation.\n\nWe will go on to shed light on the urban context and the shift in public service provision from managerialism to entrepreneurialism. Good old David Harvey has some leads to offer on this shift. Entrepreneurs are often asked how it is they will bring about systemic change. Participants are here invited to dig into the literature on leverage points, systems analysis and complexity theory as it was formulated at Stanford University in the late 90s. We will then turn to Clay Shirky and his idea of the cognitive surplus and the role of social media in mobilising civil society.\n\nThe last part of the course consists in a critical assessment of the social entrepreneur which we will explore through the writing of Alex Nicholls. Participants are then introduced to the term design thinking which is increasingly widely propagated and employed. We will ask what it means to employ desing thinking and extract some underlying assumptions made by enthusiasts with the help of Lucy Kimbell. We shall end the course with a study of Tony Fry's book Design as Politics and discuss whether the very act of designing is political; and whether we all ought to become design thinkers.\n\nExpectations\n\nParticipants are expected to be familiar with the conventional -isms (basic political ideas).\n\nParticipants are expected to be on time and engage with all readings as the course tells a story.\n\nParticipants are advised to attend in the morning, if available, as the material is intellectually quite demanding.\n\nWhy apply?\n\nTo participate in a theoretically-informed conversation on the public.\n\nTo recognise non-humans or objects as actors of society.\n\nTo inquire into the nature of public goods and assess the implementation of public policies.\n\nTo study the shift from managerialism to entrepreneurialism and the conception of the entrepreneurial (wo)man.\n\nTo understand your designer friends better and find them less weird.",
+      "flow_links": [],
+      "register_url": "https://docs.google.com/forms/d/1M0VYKpCcMqzNKAuLMFLXIwL3llHCExGTZdedO2j226c/viewform?usp=send_form",
+      "own_page": null
+    }
+  }
+}

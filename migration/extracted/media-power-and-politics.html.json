@@ -1,0 +1,32 @@
+{
+  "sha256": "b9734d638180bb1c1d866070d200bbc4f6c3c210fe27f227d1f6a16a40c40e41",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Media, Power and Politics - Exploring Contemporary Issues in Media Studies",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Ayesha MUALLA",
+          "email": "mualla.ayesha@gmail.com",
+          "bio": "Ayesha MUALLA obtained a Master's degree in Media and Cultural Studies from Tata Institute of Social Sciences (TISS), Mumbai after graduating from St. Xavier’s College, Mumbai. Ayesha has worked as a Research Fellow at TISS, Hyderabad. She also had a short stint with journalism contributing to Deccan Chronicle and Tehelka magazine. Ayesha joins CILAS with three years of experience with the Ministry of Higher Education in Oman serving as faculty member at the College of Applied Sciences, Nizwa. Her research areas include Art, Popular Culture, Identity and Social Media. A keen photographer, she tries to capture the unexplored in her frames and discover spaces through photo walks. As a fellow at CILAS she coordinates the field of study Arts and directs CILAS' Media Lab."
+        }
+      ],
+      "schedule_text": null,
+      "weekdays": [],
+      "start_time": null,
+      "end_time": null,
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "description\n\nThe course is divided into three sections and ten interrelated themes which all pose challenges to the study of media practices. The thematic focus of this course is the intersection of media, the public sphere, the market, globalisation and media control. The first part introduces the politics of broadcasting, deregulation and changing media landscapes. Considering the interplay of media ownership and state censorship, we will examine how propaganda emerges in contemporary global debates. The second part of the course discusses the relationship between politics, advertising, consumerism and public relations. We will raise key questions concerning shifting media strategies and economic policies; the way people engage with media and how media engages with people. The final section of the course looks at media depictions of crime, deviance and the representation of the developing world in media narratives.\n\nexpectations\n\nStudents are expected to attend weekly film screenings outside of class based on each theme.\n\nStudents are expected to produce a short (ten-minute long) video documentary in groups exploring the ‘Arab Street’ using regular cameras or phones, handheld and with basic edits.\n\nStudents are expected to conduct media research on a contemporary case study based on a theme of their choice; OR create a photo essay based on a poem, academic text or a song based on a chosen theme.\n\n(Students are encouraged to keep a scrapbook project/media diary in an attempt to document the learning process throughout the course, as well as to compile their mind maps into a book and to enrich their mind maps with newspaper clippings, doodles, pictures, texts and so on).\n\nobjectives\n\nDemonstrate understanding of the impact of selected issues in media communication.\n\nAnalyse the role of media networks, the public sphere and activism.\n\nComprehend the role of media producers and their effects on media content.\n\nExplain how the media industry can manufacture and promote topical issues.\n\nUnderstand the role of advertising, consumerism and public relations.\n\nEngage in contemporary debates around different tools of propaganda.\n\nDiscuss conflicts relating to the production and distribution of media images in the context of development, poverty and crime.\n\nAppreciate factors that can influence a culture of resistance as means to subvert mass media.\n\nDevelop basic cinematic skills and editing techniques.\n\nCollaboratively conceptualise a script for a short documentary film.",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}

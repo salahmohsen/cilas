@@ -1,0 +1,208 @@
+{
+  "sha256": "15dbf51eebe6f024d58ee05141853234fad0652d81e93e40d44bbe14ad350b5b",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Second semester 2018-2019 (Alex)",
+        "season": "winter",
+        "start_year": 2019,
+        "start_date": null,
+        "deadline": null,
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Research Lab: A Critical Introduction into Futures Studies",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Muhammad ALARABY",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Classes are scheduled either in the morning from 10 am to 1 pm or in the evening from 5 pm to 8 pm; students commit to one of the two tracks.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "This lab is an introduction to futures studies with focus on its critical premises and notions that can sharpen our knowledge of socio-political reality/ realities and to hammer out visions for the possible future/ futures. The lab, therefore, will be discussing the various perspectives of futures studies and the world views they imply in addition to the essential relations between the futuristic thinking and history, philosophy and science. Furthermore, the lab will contain an applied training on the method of scenario planning as a primary application of the art of making the future and rebuilding the reality through constructed collective discussions.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/RBA94wcH5tMlPdvm2",
+            "own_page": "the-research-lab-a-critical-introduction-into-futures-studies.html"
+          },
+          {
+            "title": "The Media Lab: The Image as Theory and Practice",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "Gian SPINA",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Kari ROSENFELD",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Classes are scheduled either in the morning from 10 am to 1 pm or in the evening from 5 pm to 8 pm; students commit to one of the two tracks.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "The Media Lab is a visual arts practice based course focused on photography with workshops on video, performance, and poetry. Each class will address three aspects of a visual arts practice: theory, history, and craft. This course will be a practice based course on how we use theory. We will look at the the history of photography as a contemporary art and will address the different ways in which photography can be used as a visual medium. It will focus on how art and theory can become not just frameworks for one another but interact.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/RBA94wcH5tMlPdvm2",
+            "own_page": "the-media-lab-the-image-as-theory-and-practice.html"
+          },
+          {
+            "title": "مختبر سيلاس للترجمة: الدورة الرابعة في اﻹسكندرية",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "LAB",
+            "fellows": [
+              {
+                "name": "حسين الحاج",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "أمير زكي",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Classes are scheduled either in the morning from 10 am to 1 pm or in the evening from 5 pm to 8 pm; students commit to one of the two tracks.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [],
+            "description": "\"لا يمكن لأحد أن يترجم شيئًا لا يفهمه، ولا يمكن لأحد ألا يتعلم شيئًا مما يترجمه\"\n\nالترجمة نشاط إنساني يحدث بين اللغات والثقافات وأشكال التعبير، ويكتسب أهميته من حيث أنه بدون الترجمة تصبح معرفة أكثر القراء اطلاعًا بالثقافات اﻷخرى من العلوم واﻵداب والفنون محدودة. لذلك يهتم مختبر الترجمة بمعهد القاهرة للعلوم واﻵداب الحرة (سيلاس) في دورته الرابعة في اﻹسكندرية باستكشاف الجوانب المتعددة من نشاط ترجمة العلوم اﻹنسانية والاجتماعية في بيئة تعليمية تعاونية من خلال معالجة تعقيداتها بصفتها فنًا وحرفة. ويهدف المختبر إلى تعريف المشاركين على اﻷسئلة المتكررة أثناء ممارسة الترجمة، كما أيضًا على مشكلاتها ولذاتها.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/RBA94wcH5tMlPdvm2",
+            "own_page": "16051582157815761585-15871610160415751587-1604160415781585158016051577.html"
+          },
+          {
+            "title": "Why do I Love You? (The Structures of The Beautiful)",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Sheila ZAGO",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "Kari ROSENFELD",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Classes are scheduled either in the morning from 10 am to 1 pm or in the evening from 5 pm to 8 pm; students commit to one of the two tracks. Three class hours per week.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": null,
+            "location": [],
+            "description": "\"Why do I Love You? (The Structures of The Beautiful)\" is a theoretical course aimed at understanding why we think the things that are beautiful are beautiful and therefore what we determine as worthy of the title of art. The Enlightenment lead to a strict categorization of the beautiful as an autonomous \"aesthetic\" realm. This course will look at the development of the \"autonomous aesthetic realm\" to understand this strict categorization and then look at how institutional structures such as museums and the practice of curation have contributed the development to this imaginary realm of autonomous art.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/RBA94wcH5tMlPdvm2",
+            "own_page": "why-do-i-love-you-the-structures-of-desire.html"
+          },
+          {
+            "title": "المترجم فاعلًا: مقدمة في دراسات الترجمة",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "أمير زكي",
+                "email": null,
+                "bio": null
+              },
+              {
+                "name": "حسين الحاج",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Classes are scheduled either in the morning from 10 am to 1 pm or in the evening from 5 pm to 8 pm; students commit to one of the two tracks. Three class hours per week.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": null,
+            "location": [],
+            "description": "نعرف جميعًا أن مترجم الآداب والعلوم الإنسانية والاجتماعية ينبغي أن يكون متسلحًا بعلم وفير، ومعرفة تامة باللغة الأصلية واللغة المستهدفة، وثقافة واسعة تخص النص الذي يعمل عليه، وقراءة واسعة لآداب اللغتين، ومعرفة بعلوم اللغة والاجتماع والفلسفة. ولكن منذ التسعينيات من القرن العشرين وهذه الثقافة المطلوبة صار لها فرع معرفي يحمل اسم \"دراسات الترجمة\". ودراسات الترجمة مجال أكاديمي عابر للتخصص ظهر في أوروبا والولايات المتحدة، واعتمد على أعمال أقدم من منظرين من الجنوب – من أمريكا اللاتينية بشكل خاص. يشتبك المجال بالعمل الفكري في تخصصات الأدب المقارن واللغويات والتاريخ والأنثروبولوجيا، والدراسات ما بعد الكولونيالية والثقافية. تقدم دراسات الترجمة الإطار النظري الذي يجب على المترجم، أثناء ممارسته العملية، أن يكون على دراية به. تطرح \"دراسات الترجمة\" أسئلة وتبحث عن إجابات عن كل القضايا التي تشغل بال المترجم في ممارسته العملية.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/RBA94wcH5tMlPdvm2",
+            "own_page": "1575160416051578158515801605-160115751593160415751611.html"
+          },
+          {
+            "title": "Performing Fiction not enough without serendipity quest",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Muhammad ABD El-KARIM",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Classes are scheduled either in the morning from 10 am to 1 pm or in the evening from 5 pm to 8 pm; students commit to one of the two tracks. Three class hours per week.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": null,
+            "location": [],
+            "description": "The course aims to create a space for experimentation and imagination. Standing on the hypothesis of fiction as a reality, and being skeptical towards reality as a value - If reality does exist, fiction isn’t alternative but it is the other reality - Questioning if serendipity is a spontaneous act or intentional act? - Is we call reality can be misleading? Is it possible to create other realities that are parallel to the dominant reality? Taking and treating all information equally.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/RBA94wcH5tMlPdvm2",
+            "own_page": "performing-fiction.html"
+          },
+          {
+            "title": "Matte مصر Tropicália",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "THEMATIC",
+            "fellows": [
+              {
+                "name": "Gian SPINA",
+                "email": null,
+                "bio": null
+              }
+            ],
+            "schedule_text": "Classes are scheduled either in the morning from 10 am to 1 pm or in the evening from 5 pm to 8 pm; students commit to one of the two tracks. Three class hours per week.",
+            "weekdays": [],
+            "start_time": null,
+            "end_time": null,
+            "weeks": 12,
+            "start_date": null,
+            "location": [],
+            "description": "The course has as the main focus a collective learning. It is an experiment in itself, practicing openness, care and listening, with a total engagement with ourselves and the conversations which will happen. To exercise this philosophy of decolonization we will practice and study different subjects and contexts, attempting to find intersections between Latin America and the Arab World. The central theme will be the Tropicália movement from Brazil, which is relevant until today no only due to the ways it created dialogue between disciplines but as well as its close relationship with today’s Egypt.",
+            "flow_links": [],
+            "register_url": "https://goo.gl/forms/RBA94wcH5tMlPdvm2",
+            "own_page": "matte-160515891585-tropicaacutelia.html"
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

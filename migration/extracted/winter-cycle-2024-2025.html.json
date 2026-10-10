@@ -1,0 +1,110 @@
+{
+  "sha256": "c34655b759ec74e3a564a53d75bb0c7ea53f9d53b17a802336494e70ef9bb176",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [
+      {
+        "label": "Winter Cycle 2024-2025",
+        "season": "winter",
+        "start_year": 2024,
+        "start_date": null,
+        "deadline": "2024-11-19",
+        "space_hint": null,
+        "courses": [
+          {
+            "title": "Oppressed voices: An Introduction to Subaltern Studies and Hidden Histories",
+            "title_ar": "أصوات مقموعة",
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Wafaa ElSaid",
+                "email": "wafaaelsaid@aucegypt.edu",
+                "bio": "Wafaa ElSaid is A passionate political researcher, culture editor, film critic, and creative writer, Wafaa has built a dynamic career bridging arts and academia. With a BA in political science and public administration from Cairo University's Faculty of Economics and Political Sciences and an MA in politics from the same institution, Wafaa is currently pursuing a second MA in Middle East Studies at the American University in Cairo. Known for thought-provoking insights into philosophy, cinema, and political theory, Wafaa also shares cultural commentary through a YouTube podcast, Al-Rhizome. Their work uniquely merges intellectual rigor with creative storytelling, making complex ideas accessible and compelling for diverse audiences."
+              }
+            ],
+            "schedule_text": "Offline. Starting date is the 4th of December, on Wednesdays at 6 pm.",
+            "weekdays": [
+              "wed"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "“History is at the very heart of knowledge and experience and at the very heart of history are the common people who must be heard.” – Antonio Gramsci\n\n“Let us now move to consider the margins (one can just as well say the silent, silenced center) …” - Gayatri Spivak\n\nCourse Overview:\n\nStep into a world of history that’s often overshadowed but never silenced. Oppressed or Voices from Below course dives into the lives, struggles, and resistances of those left out of the dominant narratives: the subaltern. This course is your gateway to understanding how marginalized groups across time have shaped societies from the peripheries.\n\nFrom the colonial peasant in India to everyday Egyptians under Mohamed Ali Pacha rule, we’ll explore stories that bring history to life from the ground up. Through interactive debates, engaging role-play, and hands-on source analysis, you'll uncover the ways subalterns have carved out their own spaces, subtly resisted oppression, and preserved their identities.\n\nWhether you're passionate about social justice, history, or simply curious to know \"what's been left unsaid,\" this course challenges you to rethink the past—and who gets to tell it.\n\nJoin us: to rediscover history through a new lens and see how hidden voices the power has to transform how we understand the world today.\n\nBy the end of this course, students can expect:\n\n1. Understanding of Subaltern Theory\n\nStudents will gain a foundational understanding of subaltern studies, including key theorists like Gramsci, Spivak, and the Subaltern Studies Collective.\n\n2. Critical Analysis of Historical Narratives\n\nStudents will develop skills in “reading against the grain” to critically examine traditional historical narratives and uncover marginalized perspectives.\n\n3. Application of Methodologies\n\nStudents will become familiar with subaltern methodologies such as oral history, ethnography, and archival reinterpretation, learning to apply these methods to analyze marginalized voices.\n\n4. Exploration of Case Studies\n\nThrough case studies, students will examine how subaltern perspectives are reflected in historical and cultural contexts, including examples from Egyptian and postcolonial histories.\n\n5. Engagement with Popular Culture\n\nStudents will explore how subaltern voices shape popular culture, gaining insight into how marginalized groups use cultural expression to resist and reshape dominant narratives.\n\nThese outcomes encourage a comprehensive and nuanced approach to subaltern studies, equipping students with both theoretical knowledge and practical analysis skills.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/أصوات_مقموعة-_wafaa_elsaid’s_-_cilas_2024.pdf"
+            ],
+            "register_url": "https://forms.gle/3PbUyBPD6x8kUNKB7",
+            "own_page": null
+          },
+          {
+            "title": "Gender Studies in Ancient Egypt",
+            "title_ar": null,
+            "subtitle": null,
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "Courtney McRae Crawford",
+                "email": "courtneymcrae@aucegypt.edu",
+                "bio": "Courtney McRae Crawford earned her MA in Egyptology from the American University in Cairo (AUC). Her thesis focused on the cultural concept of childhood in ancient Egypt by analyzing child burials. She has interned at the Egyptian Museum of Antiquities and the Denver Museum of Nature and Science. She has also conducted fieldwork in Luxor and Aswan; Colorado and North Dakota, USA; and Isimila and Laetoli, Tanzania. She recently co-curated the Urban Spaces in Cairo temporary exhibit at the Grand Egyptian Museum. She is interning with the Egyptology archives at the Rare Books Library and Special Collections at AUC."
+              }
+            ],
+            "schedule_text": "Offline. Starting date is the 1st of December, on Sundays at 6 pm.",
+            "weekdays": [
+              "sun"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "OFFLINE"
+            ],
+            "description": "This course will focus on the ancient Egyptian concept of gender and how it influenced their society. Gender was important in ancient Egyptian culture, and it was represented in art, religion, and social roles. Men, women, and children held significance in day-to-day life but in different aspects. Although ancient Egypt was a patriarchal society, women held more status than other ancient cultures. Women were able to make money, perform certain religious activities, and in a few cases rule as kings. Also, the religion focused heavily on gender roles and each god/goddess played a different aspect in the mythology.\n\nThrough this course, students will learn about the different roles between men and women in Egyptian society and how gender affects religion and mythology. Additionally, students will learn about the cultural idea of childhood and how children played a vital role in Egyptian life. After this course, students can identify gender differences in art, religious activities, and myths and how they shaped life in ancient Egypt.\n\nThis course requires no background knowledge of ancient Egypt. If students are interested, an artistic creation of a member of ancient Egyptian society can be presented after the course.\n\nLearning outcomes:\n\nIdentify gender roles in ancient Egyptian society and religion\n\nAnalyze ancient Egyptian art and text to identify gender representation\n\nCreate an artistic representation of the ancient Egyptian concept of gender",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/gender_studies_syllabus.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/3PbUyBPD6x8kUNKB7",
+            "own_page": null
+          },
+          {
+            "title": "Ecology, Education, and the Human",
+            "title_ar": null,
+            "subtitle": "Lessons from a Life in a Burning Wolrd",
+            "course_type": "SHORT",
+            "fellows": [
+              {
+                "name": "ALexandros",
+                "email": "alexandros.manolakakis@student.uva.nl",
+                "bio": "I am student of life and a pupil of Liberal Arts, driven by the ideals of the examined life. I do not merely embody my university’s values and the principles of academia but make it my vocation to continuously learn from, live by, and share them with others.\n\nI completed my Liberal Arts BA (with hons) at the University of Winchester, and I am currently undertaking a (research) Master’s in Philosophy at the University of Amsterdam. Throughout my educational journey, I have drawn from these ideals and principles to help establish – in both universities – the Agora society, a place for students with curious minds across disciplines to come together and ask questions, to share their ideas and thoughts with one another – to live the examined life"
+              }
+            ],
+            "schedule_text": "Online. Starting date is the 3rd of December, on Tuesday at 6 pm.",
+            "weekdays": [
+              "tue"
+            ],
+            "start_time": "18:00",
+            "end_time": null,
+            "weeks": null,
+            "start_date": null,
+            "location": [
+              "ONLINE"
+            ],
+            "description": "There has been a long and varied conversation regarding climate change; the subject of climate change has been approached through a material, political, logistical, etc. lens.\n\nIn this course we will discuss climate change through an interdisciplinary manner: we will look into the psychological, political, ecology movements and conversations concerning Nature and the Human, the Gaia Hypothesis, as well as Anthropocene or the proper nomenclature, and the Figure of Gaia and her implications.\n\nThe idea is to attempt to engage with the complex issue of climate change and ecology as a whole, so we can better understand ourselves, the Human, and our part within this complex system – within Life.",
+            "flow_links": [
+              "uploads/1/9/1/0/19102967/ecology_education_and_the_human.docx.pdf"
+            ],
+            "register_url": "https://forms.gle/3PbUyBPD6x8kUNKB7",
+            "own_page": null
+          }
+        ]
+      }
+    ],
+    "course": null
+  }
+}

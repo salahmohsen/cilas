@@ -1,0 +1,34 @@
+{
+  "sha256": "41ecb398fa92ef4c46fdb3605ed84ed8d20b435f0349ca5f438366809720152f",
+  "model": "claude-code:haiku",
+  "version": "4",
+  "data": {
+    "cycles": [],
+    "course": {
+      "title": "Bicycle Diaries",
+      "title_ar": null,
+      "subtitle": null,
+      "course_type": "THEMATIC",
+      "fellows": [
+        {
+          "name": "Dirk WANROOIJ",
+          "email": null,
+          "bio": "Dirk WANROOIJ was born in Yemen and grew up partly in Pakistan, partly in the Dutch country side. So far, he spent most of his adult life between Amsterdam and Cairo from where he has worked as a freelance journalist and writer. He has reported from Sudan, the Gaza strip, Jordan, Syria and Turkey for a variety of Dutch publications. In march 2015 he published his first book “Oproer, een kroniek van de Egyptische revolutie'. Dirk holds a BA in Dutch Literature and History and an MA in Middle-Eastern Studies. He is one of the founders of Ain Bicycles, a community centre for cyclists in Cairo where he builds bikes designed for the Egyptian streets."
+        }
+      ],
+      "schedule_text": "Fridays, 10 am to 12:30 pm",
+      "weekdays": [
+        "fri"
+      ],
+      "start_time": "10:00",
+      "end_time": "12:30",
+      "weeks": null,
+      "start_date": null,
+      "location": [],
+      "description": "The goal of this course is to learn about cycling and urban mobility in theory and in practice. The practical part is two-fold. On the one hand we will acquire some basic mechanical skills and general knowledge of how a bicycle works, how it has developed and why it has been such a groundbreaking design object.\n\nOn the other hand, we will try and ride out to various places in the city to experience Cairo on a bicycle to be able to discus the positives and negatives of two-wheeled transport in an urban environment from a firsthand perspective.\n\nIn the theoretical sessions we will delve into the question of urban mobility from the perspective of the bicycle. We will look critically at the dominance of the motorised transport and the influence of the car-industry in urban design. We will study places where man-powered transportation has been integrated into the fabric of the city in countries of the global south.\n\nWe will look at the causes and the effects behind the shift. We will try to understand the dynamics behind some of the great success stories of urban cycling to answer the driving question of this course: how were these cities transformed into the bike-friendly places that they are today?",
+      "flow_links": [],
+      "register_url": null,
+      "own_page": null
+    }
+  }
+}
