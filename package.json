@@ -53,6 +53,7 @@
     "zod": "^4.6.5"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.132.1",
     "@eslint/eslintrc": "^3.3.7",
     "@playwright/test": "1.58.2",
     "@tailwindcss/postcss": "^4.3.3",
