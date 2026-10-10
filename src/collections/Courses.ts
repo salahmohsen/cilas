@@ -5,6 +5,11 @@ import {
   ownsViaFellows,
   readTiers,
 } from '@/access'
+import { bibliographyField } from '@/fields/bibliography'
+import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
+import { pricingField } from '@/fields/pricing'
+import { registrationField } from '@/fields/registration'
+import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig } from 'payload'
@@ -87,15 +92,7 @@ export const Courses: CollectionConfig = {
       label: 'Course Type',
       type: 'select',
       required: true,
-      options: [
-        {
-          label: 'Core Course',
-          value: 'CORE',
-        },
-        { label: 'Thematic Course', value: 'THEMATIC' },
-        { label: 'Lab', value: 'LAB' },
-        { label: 'Workshop', value: 'WORKSHOP' },
-      ],
+      options: [...COURSE_TYPE_OPTIONS],
       admin: {
         position: 'sidebar',
       },
@@ -137,6 +134,101 @@ export const Courses: CollectionConfig = {
       fields: [{ name: 'description', type: 'richText', localized: true }],
     },
     {
+      label: 'Notes',
+      type: 'collapsible',
+      admin: { initCollapsed: true },
+      fields: [
+        { name: 'facilitator_note', type: 'textarea', localized: true },
+        { name: 'content_warning', type: 'textarea', localized: true },
+      ],
+    },
+    scheduleField(),
+    registrationField(),
+    pricingField({
+      name: 'pricing_override',
+      label: 'Price override',
+      dbName: 'course_price',
+    }),
+    {
+      // Unnamed: `sessions` must stay top-level, because the schedule's
+      // end-date hook reads `data.sessions` (plan 2).
+      label: 'Syllabus',
+      type: 'collapsible',
+      fields: [
+        {
+          name: 'sessions',
+          type: 'array',
+          labels: { singular: 'Session', plural: 'Sessions' },
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                { name: 'order', type: 'number', admin: { width: '15%' } },
+                {
+                  name: 'session_title',
+                  type: 'text',
+                  localized: true,
+                  admin: { width: '55%' },
+                },
+                {
+                  name: 'meetings',
+                  type: 'number',
+                  min: 0,
+                  admin: { width: '15%', description: 'Default: one week of slots.' },
+                },
+                { name: 'cancelled', type: 'checkbox', admin: { width: '15%' } },
+              ],
+            },
+            { name: 'description', type: 'richText', localized: true },
+            {
+              name: 'dates',
+              type: 'array',
+              admin: {
+                description:
+                  "Only when this session's dates differ from the schedule. These replace them.",
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'date',
+                      type: 'date',
+                      required: true,
+                      admin: { width: '40%', date: { pickerAppearance: 'dayOnly' } },
+                    },
+                    ...timeRangeFields('30%'),
+                  ],
+                },
+              ],
+            },
+            bibliographyField(),
+            {
+              name: 'activities',
+              type: 'array',
+              fields: [
+                {
+                  name: 'kind',
+                  type: 'select',
+                  required: true,
+                  options: [
+                    { label: 'Discussion', value: 'discussion' },
+                    { label: 'Field visit', value: 'field_visit' },
+                    { label: 'Exercise', value: 'exercise' },
+                    { label: 'Screening', value: 'screening' },
+                    { label: 'Presentation', value: 'presentation' },
+                    { label: 'Other', value: 'other' },
+                  ],
+                },
+                { name: 'description', type: 'textarea', localized: true },
+              ],
+            },
+          ],
+        },
+        bibliographyField('Course bibliography (all sessions)'),
+      ],
+    },
+    {
       name: 'location',
       type: 'select',
       hasMany: true,
@@ -150,19 +242,20 @@ export const Courses: CollectionConfig = {
       },
     },
     {
-      label: 'Tuition',
-      type: 'group',
-      fields: [
-        { name: 'amount', type: 'number' },
-        {
-          name: 'based_deductions_available',
-          type: 'checkbox',
-          label: 'Need-based deductions available',
-        },
+      name: 'teaching_languages',
+      type: 'select',
+      hasMany: true,
+      options: [
+        { label: 'Arabic', value: 'ar' },
+        { label: 'English', value: 'en' },
       ],
-      admin: {
-        position: 'sidebar',
-      },
+      admin: { position: 'sidebar' },
+    },
+    {
+      name: 'language_note',
+      type: 'text',
+      localized: true,
+      admin: { position: 'sidebar', placeholder: 'Readings in Arabic, discussion in either' },
     },
     {
       name: 'fellows',
@@ -174,97 +267,22 @@ export const Courses: CollectionConfig = {
       },
     },
     {
-      name: 'registration_form',
-      type: 'relationship',
-      relationTo: 'forms',
-      admin: {
-        position: 'sidebar',
-      },
+      name: 'syllabus_tentative',
+      type: 'checkbox',
+      label: 'Syllabus may change',
+      admin: { position: 'sidebar' },
     },
     {
-      label: 'Syllabus',
-      type: 'group',
-      fields: [
-        {
-          name: 'sessions',
-          type: 'array',
-          label: 'Session-by-session',
-          fields: [
-            { name: 'order', type: 'number' }, // sort key
-            { name: 'session_title', type: 'text', label: 'Session Title' },
-            {
-              name: 'Date and Time',
-              type: 'group',
-              admin: { position: 'sidebar' },
-              fields: [
-                { name: 'date', type: 'date' },
-                {
-                  name: 'start_time',
-                  label: 'Start Time',
-                  type: 'date',
-                  admin: {
-                    width: '50%',
-                    date: { pickerAppearance: 'timeOnly', displayFormat: 'h:mm a' },
-                  },
-                },
-                {
-                  name: 'end_time',
-                  label: 'End Time',
-                  type: 'date',
-                  admin: {
-                    width: '50%',
-                    date: { pickerAppearance: 'timeOnly', displayFormat: 'h:mm a' },
-                  },
-                },
-              ],
-            },
-            { name: 'description', type: 'richText', localized: true },
-            {
-              name: 'bibliography',
-              type: 'array',
-              fields: [
-                {
-                  name: 'type',
-                  type: 'select',
-                  required: true,
-                  options: [
-                    { label: 'Reading', value: 'reading' },
-                    { label: 'Watch', value: 'watch' },
-                    { label: 'Listen', value: 'listen' },
-                    { label: 'Prompt', value: 'prompt' },
-                    { label: 'Other', value: 'other' },
-                  ],
-                },
-                { name: 'title', type: 'text', localized: true, index: true },
-                { name: 'href', type: 'text' }, // youtube / vimeo / article url
-                { name: 'note', type: 'text', localized: true }, // author, year, pages; primary vs secondary reading
-              ],
-            },
-          ],
-        },
+      // The label sessions get: "Week 3" or "Session 3".
+      name: 'session_unit',
+      type: 'select',
+      required: true,
+      defaultValue: 'session',
+      options: [
+        { label: 'Session', value: 'session' },
+        { label: 'Week', value: 'week' },
       ],
-    },
-    {
-      name: 'bibliography',
-      type: 'array',
-      label: 'Course Bibliography (all sessions)',
-      fields: [
-        {
-          name: 'type',
-          type: 'select',
-          required: true,
-          options: [
-            { label: 'Reading', value: 'reading' },
-            { label: 'Watch', value: 'watch' },
-            { label: 'Listen', value: 'listen' },
-            { label: 'Prompt', value: 'prompt' },
-            { label: 'Other', value: 'other' },
-          ],
-        },
-        { name: 'title', type: 'text', localized: true, index: true },
-        { name: 'href', type: 'text' }, // youtube / vimeo / article url
-        { name: 'note', type: 'text', localized: true }, // author, year, pages; primary vs secondary reading
-      ],
+      admin: { position: 'sidebar' },
     },
   ],
 

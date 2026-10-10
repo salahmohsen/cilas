@@ -106,12 +106,17 @@ export type SessionSeed = Omit<SessionDraft, 'description' | 'bibliography'> & {
   bibliography?: MaterialSeed[]
 }
 
+export type ScheduleSeed = NonNullable<Draft<Course>['schedule']>
+
 export type CourseSeed = Omit<
   Draft<Course>,
-  'description' | 'sessions' | 'fellows' | 'cycle' | 'slug'
+  'description' | 'sessions' | 'fellows' | 'cycle' | 'slug' | 'schedule' | 'session_unit'
 > & {
   description?: string
   sessions?: SessionSeed[]
+  schedule?: ScheduleSeed
+  /** Defaults to `session`. */
+  session_unit?: Course['session_unit']
   /** User emails, resolved to user ids. */
   fellows: string[]
   /** Cycle key like `fall-2025`, resolved to a cycle id. */

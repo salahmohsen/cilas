@@ -1,6 +1,9 @@
 import React from 'react'
 
 import { RichTextField } from '@/components/RichTextField'
+import { priceLabel, pricingFor } from '@/lib/pricing'
+import { registrationStatus } from '@/lib/registration'
+import { expandSchedule, sessionsInOrder, type Meeting } from '@/lib/schedule'
 import type { Course } from '@/payload-types'
 
 /**
@@ -16,6 +19,12 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
   const cover = course.cover_image && typeof course.cover_image === 'object' ? course.cover_image : null
   const cycle = course.cycle && typeof course.cycle === 'object' ? course.cycle : null
   const cycleLabel = cycle?.title ?? null
+  const sessions = sessionsInOrder(course.sessions ?? [])
+  const meetings = expandSchedule(course.schedule, course.sessions)
+  const firstMeeting = meetings.find((m) => !m.cancelled)
+  const price = priceLabel(pricingFor(course, cycle))
+  const registration = registrationStatus(course.registration, cycle?.registration)
+  const unit = course.session_unit === 'week' ? 'Week' : 'Session'
 
   return (
     <article className="mx-auto w-full max-w-4xl py-16">
@@ -52,32 +61,25 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
             <dd>{cycleLabel}</dd>
           </>
         ) : null}
-        {course.sessions?.length ? (
+        {firstMeeting ? (
           <>
-            <dt className="text-xs tracking-widest uppercase opacity-50">Sessions</dt>
+            <dt className="text-xs tracking-widest uppercase opacity-50">Starts</dt>
+            <dd>{dayLabel(firstMeeting.date)}</dd>
+          </>
+        ) : null}
+        {price ? (
+          <>
+            <dt className="text-xs tracking-widest uppercase opacity-50">Price</dt>
             <dd>
-              {course.sessions.length}
-              {(() => {
-                // The earliest scheduled session, since there is no separate
-                // course-level start date any more.
-                const first = course.sessions
-                  .map((s) => s['Date and Time']?.date)
-                  .filter(Boolean)
-                  .sort()[0]
-                return first ? ` — from ${new Date(first).toLocaleDateString()}` : ''
-              })()}
+              {price}
+              {pricingFor(course, cycle)?.need_based_deductions
+                ? ' — need-based deductions available'
+                : ''}
             </dd>
           </>
         ) : null}
-        {course.amount ? (
-          <>
-            <dt className="text-xs tracking-widest uppercase opacity-50">Tuition</dt>
-            <dd>
-              {course.amount}
-              {course.based_deductions_available ? ' — need-based deductions available' : ''}
-            </dd>
-          </>
-        ) : null}
+        <dt className="text-xs tracking-widest uppercase opacity-50">Registration</dt>
+        <dd>{registration === 'open' ? 'Open' : 'Closed'}</dd>
       </dl>
 
       {course.bibliography?.length ? (
@@ -90,53 +92,38 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
         </Section>
       ) : null}
 
-      {course.sessions?.length ? (
+      {sessions.length ? (
         <Section title="Syllabus">
           <ol className="space-y-4">
-            {course.sessions.map((session, i) => (
-              <li key={session.id ?? i}>
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                  <p className="font-medium">
-                    {session.session_title ?? `Session ${session.order ?? i + 1}`}
-                  </p>
-                  {session['Date and Time']?.date ? (
-                    <p className="text-sm opacity-60">
-                      <time dateTime={session['Date and Time'].date ?? undefined}>
-                        {new Date(session['Date and Time'].date).toLocaleDateString(undefined, {
-                          weekday: 'short',
-                          day: 'numeric',
-                          month: 'short',
-                        })}
-                      </time>
-                      {formatTime(
-                        session['Date and Time']?.start_time,
-                        session['Date and Time']?.end_time,
-                      ) && (
-                        <>
-                          {' · '}
-                          {formatTime(
-                            session['Date and Time']?.start_time,
-                            session['Date and Time']?.end_time,
-                          )}
-                        </>
-                      )}
+            {sessions.map((session, i) => {
+              const own = meetings.filter((m) => m.session === i + 1)
+              return (
+                <li key={session.id ?? i}>
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <p className="font-medium">
+                      {unit} {i + 1}
+                      {session.session_title ? ` · ${session.session_title}` : ''}
+                      {session.cancelled ? ' (cancelled)' : ''}
                     </p>
-                  ) : null}
-                </div>
-                {session.description ? (
-                  <div className="opacity-70">
-                    <RichTextField className="prose-sm" data={session.description} />
+                    {own.length ? (
+                      <p className="text-sm opacity-60">{own.map(meetingLabel).join(', ')}</p>
+                    ) : null}
                   </div>
-                ) : null}
-                {session.bibliography?.length ? (
-                  <ul className="mt-1 text-sm opacity-70">
-                    {session.bibliography.map((material, j) => (
-                      <li key={material.id ?? j}>{renderEntry(material)}</li>
-                    ))}
-                  </ul>
-                ) : null}
-              </li>
-            ))}
+                  {session.description ? (
+                    <div className="opacity-70">
+                      <RichTextField className="prose-sm" data={session.description} />
+                    </div>
+                  ) : null}
+                  {session.bibliography?.length ? (
+                    <ul className="mt-1 text-sm opacity-70">
+                      {session.bibliography.map((material, j) => (
+                        <li key={material.id ?? j}>{renderEntry(material)}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </li>
+              )
+            })}
           </ol>
         </Section>
       ) : null}
@@ -161,16 +148,15 @@ const renderEntry = (entry: BibEntry): string => {
   return `${label} — ${body}`
 }
 
-/** `"18:00"`, `"2026-04-26T18:00:00.000Z"` or a Date, all mean 6pm. */
-const toTimeLabel = (value: string | null | undefined): string | null => {
-  if (!value) return null
-  const match = /T(\d{2}:\d{2})/.exec(value) ?? /^(\d{2}:\d{2})/.exec(value)
-  return match ? match[1] : null
-}
+/** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
+const dayLabel = (day: string): string =>
+  new Date(`${day}T00:00:00Z`).toLocaleDateString('en-GB', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
+  })
 
-const formatTime = (start?: string | null, end?: string | null): string | null => {
-  const from = toTimeLabel(start)
-  const to = toTimeLabel(end)
-  if (from && to) return `${from}–${to}`
-  return from ?? to
-}
+/** "Tue 3 Mar, 18:00–20:30" */
+const meetingLabel = (m: Meeting): string =>
+  `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`

@@ -1,10 +1,12 @@
 import type { CollectionSlug, Payload, Where } from 'payload'
+import { weekdayOf } from '@/lib/cairo-day'
 import type {
   IdMap,
   LexicalChild,
   LexicalJSON,
   MaterialSeed,
   MaterialType,
+  ScheduleSeed,
   SessionSeed,
   UserSeed,
 } from './seed.type'
@@ -91,34 +93,23 @@ export const link = (title: string, href: string, note?: string): MaterialSeed =
   material('other', title, note, href)
 
 /* ================================================================ courses */
-const stampTime = (iso: string, hhmm: string): string =>
-  `${iso}T${hhmm}:00.000Z`
-
-const addDays = (iso: string, days: number): string => {
-  const d = new Date(`${iso}T00:00:00.000Z`)
-  d.setUTCDate(d.getUTCDate() + days)
-  return d.toISOString().slice(0, 10)
-}
-
 /**
- * Expands a recurring course into per-session rows. Each session owns its
- * timing in the `'Date and Time'` group; sessions land seven days apart from
- * `firstDate`, and shift the clock every seven days must not drift across DST,
- * hence the UTC-only keying.
+ * A course that meets once a week from `firstDate`, one session per week. The
+ * schedule is the pattern; dates come from `expandSchedule()` (ADR 0002).
  */
 export const weekly = (
   firstDate: string,
   start: string,
   end: string,
-  sessions: Array<Omit<SessionSeed, "'Date and Time'">>,
-): SessionSeed[] =>
-  sessions.map((s, i) => {
-    const date = addDays(firstDate, i * 7)
-    return {
-      ...s,
-      'Date and Time': { date, start_time: stampTime(date, start), end_time: stampTime(date, end) },
-    }
-  })
+  sessions: SessionSeed[],
+): { schedule: ScheduleSeed; sessions: SessionSeed[] } => ({
+  schedule: {
+    start_date: firstDate,
+    weeks: sessions.length,
+    slots: [{ weekday: weekdayOf(firstDate), start_time: start, end_time: end }],
+  },
+  sessions,
+})
 
 /* ================================================== bibliography (shared) */
 

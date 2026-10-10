@@ -325,7 +325,7 @@ export interface Space {
 export interface Course {
   id: number;
   tier: 'owner' | 'community' | 'public';
-  course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP';
+  course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT';
   cycle: number | Cycle;
   cover_image?: (number | null) | Media;
   title: string;
@@ -352,20 +352,96 @@ export interface Course {
     };
     [k: string]: unknown;
   } | null;
-  location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
-  amount?: number | null;
-  based_deductions_available?: boolean | null;
-  fellows?: (number | Person)[] | null;
-  registration_form?: (number | null) | Form;
+  facilitator_note?: string | null;
+  content_warning?: string | null;
+  schedule?: {
+    start_date?: string | null;
+    /**
+     * Week only keeps it off the calendar.
+     */
+    start_precision?: ('day' | 'week') | null;
+    weeks?: number | null;
+    /**
+     * Weekly meeting times, in Cairo time.
+     */
+    slots?:
+      | {
+          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
+          start_time: string;
+          end_time: string;
+          label?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Worked out from the schedule.
+     */
+    end_date?: string | null;
+    /**
+     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
+     */
+    note?: string | null;
+  };
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    application_requirements?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+    archived_registration_url?: string | null;
+  };
+  pricing_override?: {
+    min?: number | null;
+    /**
+     * Leave empty for a single price.
+     */
+    max?: number | null;
+    currency?: 'EGP' | null;
+    note?: string | null;
+    need_based_deductions?: boolean | null;
+    payment_plans?:
+      | {
+          label: string;
+          installments?:
+            | {
+                amount: number;
+                due_date?: string | null;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
   sessions?:
     | {
         order?: number | null;
         session_title?: string | null;
-        'Date and Time'?: {
-          date?: string | null;
-          start_time?: string | null;
-          end_time?: string | null;
-        };
+        /**
+         * Default: one week of slots.
+         */
+        meetings?: number | null;
+        cancelled?: boolean | null;
         description?: {
           root: {
             type: string;
@@ -381,12 +457,30 @@ export interface Course {
           };
           [k: string]: unknown;
         } | null;
+        /**
+         * Only when this session's dates differ from the schedule. These replace them.
+         */
+        dates?:
+          | {
+              date: string;
+              start_time: string;
+              end_time: string;
+              id?: string | null;
+            }[]
+          | null;
         bibliography?:
           | {
               type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
               title?: string | null;
               href?: string | null;
               note?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        activities?:
+          | {
+              kind: 'discussion' | 'field_visit' | 'exercise' | 'screening' | 'presentation' | 'other';
+              description?: string | null;
               id?: string | null;
             }[]
           | null;
@@ -402,6 +496,12 @@ export interface Course {
         id?: string | null;
       }[]
     | null;
+  location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
+  teaching_languages?: ('ar' | 'en')[] | null;
+  language_note?: string | null;
+  fellows?: (number | Person)[] | null;
+  syllabus_tentative?: boolean | null;
+  session_unit: 'session' | 'week';
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1248,24 +1348,74 @@ export interface CoursesSelect<T extends boolean = true> {
   summary?: T;
   epigraph?: T;
   description?: T;
-  location?: T;
-  amount?: T;
-  based_deductions_available?: T;
-  fellows?: T;
-  registration_form?: T;
+  facilitator_note?: T;
+  content_warning?: T;
+  schedule?:
+    | T
+    | {
+        start_date?: T;
+        start_precision?: T;
+        weeks?: T;
+        slots?:
+          | T
+          | {
+              weekday?: T;
+              start_time?: T;
+              end_time?: T;
+              label?: T;
+              id?: T;
+            };
+        end_date?: T;
+        note?: T;
+      };
+  registration?:
+    | T
+    | {
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        application_requirements?: T;
+        archived_registration_url?: T;
+      };
+  pricing_override?:
+    | T
+    | {
+        min?: T;
+        max?: T;
+        currency?: T;
+        note?: T;
+        need_based_deductions?: T;
+        payment_plans?:
+          | T
+          | {
+              label?: T;
+              installments?:
+                | T
+                | {
+                    amount?: T;
+                    due_date?: T;
+                    id?: T;
+                  };
+              id?: T;
+            };
+      };
   sessions?:
     | T
     | {
         order?: T;
         session_title?: T;
-        'Date and Time'?:
+        meetings?: T;
+        cancelled?: T;
+        description?: T;
+        dates?:
           | T
           | {
               date?: T;
               start_time?: T;
               end_time?: T;
+              id?: T;
             };
-        description?: T;
         bibliography?:
           | T
           | {
@@ -1273,6 +1423,13 @@ export interface CoursesSelect<T extends boolean = true> {
               title?: T;
               href?: T;
               note?: T;
+              id?: T;
+            };
+        activities?:
+          | T
+          | {
+              kind?: T;
+              description?: T;
               id?: T;
             };
         id?: T;
@@ -1286,6 +1443,12 @@ export interface CoursesSelect<T extends boolean = true> {
         note?: T;
         id?: T;
       };
+  location?: T;
+  teaching_languages?: T;
+  language_note?: T;
+  fellows?: T;
+  syllabus_tentative?: T;
+  session_unit?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;

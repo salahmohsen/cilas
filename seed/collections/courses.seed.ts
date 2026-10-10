@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
 import { slugify } from '@/lib/slugify'
-import type { CourseSeed, SeedContext, SessionSeed } from '../seed.type'
+import type { CourseSeed, SeedContext } from '../seed.type'
 import { getOrCreateId, lexical, reading, requireIds, watch, weekly } from '../seed.utils'
 
 /** Expands `count` weekly sessions for a course whose flow PDF was not published. */
@@ -10,7 +10,7 @@ const shortSeries = (
   start: string,
   end: string,
   theme?: string,
-): SessionSeed[] =>
+): ReturnType<typeof weekly> =>
   weekly(firstDate, start, end, Array.from({ length: count }, (_, i) => ({
     order: i + 1,
     session_title: theme && i === 0 ? theme : `Session ${i + 1}`,
@@ -61,7 +61,7 @@ export const coursesData: CourseSeed[] = [
     location: ['ONLINE'],
     cycle: 'fall-2025',
     fellows: ['shadi.jamal@cilas.test'],
-    sessions: shortSeries(6, '2025-10-23', '18:00', '20:30'),
+    ...shortSeries(6, '2025-10-23', '18:00', '20:30'),
   },
   {
     course_type: 'WORKSHOP',
@@ -72,7 +72,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'fall-2025',
     fellows: ['george.bartlett@cilas.test'],
-    sessions: shortSeries(8, '2025-10-28', '18:00', '20:30'),
+    ...shortSeries(8, '2025-10-28', '18:00', '20:30'),
   },
   {
     course_type: 'THEMATIC',
@@ -83,7 +83,7 @@ export const coursesData: CourseSeed[] = [
     location: ['ONLINE'],
     cycle: 'fall-2025',
     fellows: ['farwah.rizvi@cilas.test'],
-    sessions: shortSeries(8, '2025-10-19', '18:00', '20:30'),
+    ...shortSeries(8, '2025-10-19', '18:00', '20:30'),
   },
   {
     course_type: 'THEMATIC',
@@ -96,7 +96,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'fall-2025',
     fellows: ['evelyn.richardson@cilas.test'],
-    sessions: shortSeries(8, '2025-10-25', '18:00', '20:30'),
+    ...shortSeries(8, '2025-10-25', '18:00', '20:30'),
   },
   {
     course_type: 'WORKSHOP',
@@ -108,7 +108,7 @@ export const coursesData: CourseSeed[] = [
     location: ['ONLINE'],
     cycle: 'fall-2025',
     fellows: ['mina.nagy@cilas.test'],
-    sessions: shortSeries(8, '2025-10-20', '18:00', '20:30'),
+    ...shortSeries(8, '2025-10-20', '18:00', '20:30'),
   },
 
   /* === winter cycle 2026 — offline, until 31 January deadline === */
@@ -121,7 +121,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'winter-2026',
     fellows: ['susanne.sklar@cilas.test'],
-    sessions: shortSeries(4, '2026-02-26', '18:00', '20:30'),
+    ...shortSeries(4, '2026-02-26', '18:00', '20:30'),
   },
   {
     course_type: 'LAB',
@@ -132,7 +132,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'winter-2026',
     fellows: ['leon.conrad@cilas.test'],
-    sessions: shortSeries(4, '2026-02-21', '19:00', '21:30'),
+    ...shortSeries(4, '2026-02-21', '19:00', '21:30'),
   },
   {
     course_type: 'THEMATIC',
@@ -144,7 +144,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'winter-2026',
     fellows: ['ghosoun.ismail@cilas.test'],
-    sessions: shortSeries(8, '2026-02-25', '18:00', '20:30'),
+    ...shortSeries(8, '2026-02-25', '18:00', '20:30'),
   },
   {
     course_type: 'THEMATIC',
@@ -156,7 +156,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'winter-2026',
     fellows: ['zeina.ali@cilas.test'],
-    sessions: shortSeries(8, '2026-02-25', '18:00', '20:30'),
+    ...shortSeries(8, '2026-02-25', '18:00', '20:30'),
   },
   {
     course_type: 'THEMATIC',
@@ -167,7 +167,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'winter-2026',
     fellows: ['ahmad.mahana@cilas.test'],
-    sessions: shortSeries(8, '2026-02-24', '18:00', '20:30'),
+    ...shortSeries(8, '2026-02-24', '18:00', '20:30'),
   },
 
   /* === spring cycle 2026 — semester two === */
@@ -181,7 +181,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'spring-2026',
     fellows: ['karim.eldalil@cilas.test'],
-    sessions: weekly('2026-04-26', '18:00', '20:30', [
+    ...weekly('2026-04-26', '18:00', '20:30', [
       {
         order: 1,
         session_title: 'The End of History',
@@ -248,7 +248,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'spring-2026',
     fellows: ['mahaviveka@cilas.test'],
-    sessions: shortSeries(8, '2026-04-28', '18:00', '20:30'),
+    ...shortSeries(8, '2026-04-28', '18:00', '20:30'),
   },
   {
     course_type: 'THEMATIC',
@@ -260,7 +260,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'spring-2026',
     fellows: ['yasser@cilas.test'],
-    sessions: shortSeries(8, '2026-04-25', '18:00', '20:30'),
+    ...shortSeries(8, '2026-04-25', '18:00', '20:30'),
   },
   {
     course_type: 'THEMATIC',
@@ -273,7 +273,7 @@ export const coursesData: CourseSeed[] = [
     location: ['OFFLINE'],
     cycle: 'spring-2026',
     fellows: ['ahmad.mahana@cilas.test'],
-    sessions: weekly('2026-04-30', '18:00', '20:30', [
+    ...weekly('2026-04-30', '18:00', '20:30', [
       {
         order: 1,
         session_title: 'Nature, Society, and the Anthropocene: An Introduction',
@@ -354,13 +354,13 @@ export const coursesData: CourseSeed[] = [
     location: ['ONLINE'],
     cycle: 'summer-2026',
     fellows: ['osama.amer@cilas.test'],
-    sessions: shortSeries(10, '2026-07-19', '19:00', '21:30'),
+    ...shortSeries(10, '2026-07-19', '19:00', '21:30'),
   },
 ]
 
 export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<void> => {
   for (const course of coursesData) {
-    const { title_ar, description, sessions, fellows, cycle, ...rest } = course
+    const { title_ar, description, sessions, schedule, session_unit, fellows, cycle, ...rest } = course
 
     const id = await getOrCreateId(payload, 'courses', { title: { equals: course.title } }, () =>
       payload.create({
@@ -372,6 +372,8 @@ export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<v
           description: description ? lexical(description) : null,
           fellows: requireIds(ctx.people, fellows),
           cycle: requireIds(ctx.cycles, [cycle])[0],
+          schedule,
+          session_unit: session_unit ?? 'session',
           sessions: (sessions ?? []).map(({ description, bibliography, ...s }) => ({
             ...s,
             description: description ? lexical(description) : null,
