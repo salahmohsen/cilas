@@ -37,12 +37,15 @@ export const flowPrompt = ({
   courses,
   text,
   images,
+  links = [],
 }: {
   id: string
   method: 'text' | 'vision' | 'docx'
   courses: string[]
   text: string
   images: string[]
+  /** The document's link annotations; the text shows only their anchor text. */
+  links?: Array<{ page: number; url: string }>
 }): string => `You are turning one CILAS course flow (a syllabus document) into structured sessions. The flow belongs to: ${courses.join('; ')}.
 Flow: ${id}
 
@@ -56,7 +59,11 @@ Rules:
 - description: the rest of the unit's own text (aims, questions, notes), paragraphs separated by a blank line; "" if nothing is left.
 - bibliography: general or course-wide readings not tied to one unit.
 - notes: anything else worth keeping (assessment, expectations) verbatim; null if none.
-- Every link in the flow must appear as some material's href.
+- Every link in the flow must appear as some material's href.${
+  links.length
+    ? `\n\nThe document's links (its text and images show only the underlined words, not these addresses). Attach each to the material on that page it belongs to, as its href; every one must be used:\n${links.map((l) => `- page ${l.page}: ${l.url}`).join('\n')}`
+    : ''
+}
 ${
   method === 'vision'
     ? `\nThis flow is in Arabic and its text layer is unreliable. Read every page image below with your Read tool; the OCR text that follows is only a helper (its tables are scrambled; trust the images):\n${images.map((p) => `- ${p}`).join('\n')}\n`

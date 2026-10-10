@@ -7,7 +7,7 @@
  * Input comes from prepare-flows.ts. The prompt (and so the hash) includes the
  * page-image paths, not the image bytes: they are derived from the PDF.
  */
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { agentPrompt, isCurrent, recordAnswer } from './lib/agent-extract'
@@ -53,6 +53,9 @@ const promptFor = (f: Flow): string =>
     courses: f.courses.map((url) => titles.get(url) ?? url),
     text: readFileSync(path.join(flowDir(f.id), f.method === 'vision' ? 'ocr.txt' : 'text.txt'), 'utf8'),
     images: f.method === 'vision' ? imagesOf(f.id) : [],
+    links: existsSync(path.join(flowDir(f.id), 'links.json'))
+      ? (JSON.parse(readFileSync(path.join(flowDir(f.id), 'links.json'), 'utf8')) as Array<{ page: number; url: string }>)
+      : [],
   })
 
 const flowNamed = (id: string): Flow => {
