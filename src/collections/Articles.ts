@@ -99,12 +99,17 @@ export const applyReview: CollectionBeforeChangeHook<Article> = ({
   return { ...data, ...result.patch }
 }
 
-/** Emails admins on submission and authors on a decision. */
+/**
+ * Emails admins on submission and authors on a decision. Only for writes made
+ * by a signed-in account: trusted server writes (seed, archive import) are
+ * silent, and a caller can also opt out with `context.skipReviewEmail`.
+ */
 export const notifyReview: CollectionAfterChangeHook<Article> = async ({
   doc,
   previousDoc,
   req,
 }) => {
+  if (!req.user || req.context?.skipReviewEmail) return doc
   const state: ReviewState = doc.review?.status ?? 'draft'
   const audience = notifyOn(previousDoc?.review?.status ?? 'draft', state)
   if (!audience) return doc
