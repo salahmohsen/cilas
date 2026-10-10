@@ -1,30 +1,44 @@
-import type { CollectionConfig, CollectionBeforeValidateHook, FieldHook } from 'payload'
+import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
-import { slugField } from '@/fields/slug'
+import { anyone, isAdmin } from '@/access'
+import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
+import { pricingField } from '@/fields/pricing'
+import { registrationField } from '@/fields/registration'
+import { academicYear, cycleTitle, SEASONS, type Season } from '@/lib/cycle'
 import { slugify } from '@/lib/slugify'
-import { anyone, isAdmin } from '../access'
-
-const buildTitle: FieldHook = ({ value, data }) => {
-  const cycle = data?.cycle
-  if (cycle?.season && cycle?.year) {
-    return `${cycle.season.charAt(0).toUpperCase()}${cycle.season.slice(1)} ${cycle.year}`
-  }
-  return value
-}
 
 /**
- * The built-in slug field generates inside a field `beforeChange` hook, which
- * races the sibling slug field's `required` validation (fields traverse in
- * parallel), and `title` itself is only known server-side. Deriving the slug
- * here in collection `beforeValidate` runs ahead of both.
+ * Title, slug and academic year are derived, never typed (ADR 0003). The
+ * place in the title is the space's city, so it needs a lookup.
  */
-const buildSlug: CollectionBeforeValidateHook = ({ data }) => {
-  if (data && !data.slug && data.title) {
-    data.slug = slugify(data.title)
+export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
+  data,
+  originalDoc,
+  req,
+}) => {
+  if (!data) return data
+  const merged = { ...originalDoc, ...data }
+  const season = merged.season as Season | undefined
+  const start_year = merged.start_year as number | undefined
+  if (!season || !start_year) return data
+
+  const spaceId = typeof merged.space === 'object' ? merged.space?.id : merged.space
+  const space = spaceId
+    ? await req.payload
+        .findByID({ collection: 'spaces', id: spaceId, depth: 0, req })
+        .catch(() => null)
+    : null
+
+  const title = cycleTitle({ season, start_year, place: space?.city || space?.name })
+  return {
+    ...data,
+    title,
+    slug: slugify(title),
+    academic_year: academicYear({ season, start_year, start_date: merged.start_date }),
   }
-  return data
 }
 
+/** One intake of courses in a season, start year and space (CONTEXT.md). */
 export const Cycles: CollectionConfig = {
   slug: 'cycles',
   access: {
@@ -33,63 +47,91 @@ export const Cycles: CollectionConfig = {
     update: isAdmin,
     delete: isAdmin,
   },
+  admin: {
+    useAsTitle: 'title',
+    defaultColumns: ['title', 'academic_year', 'start_date'],
+  },
+  defaultSort: '-start_date',
+  hooks: {
+    beforeValidate: [deriveCycleIdentity],
+  },
   fields: [
+    { name: 'title', type: 'text', admin: { readOnly: true } },
     {
-      name: 'title',
+      name: 'slug',
       type: 'text',
-      admin: {
-        hidden: true,
-      },
-      hooks: {
-        beforeValidate: [buildTitle],
-      },
+      unique: true,
+      index: true,
+      admin: { readOnly: true, position: 'sidebar' },
     },
-    slugField({ useAsSlug: 'title' }),
     {
-      label: 'Cycle',
-      name: 'cycle',
-      type: 'group',
+      type: 'row',
       fields: [
         {
           name: 'season',
           type: 'select',
-          options: ['fall', 'winter', 'spring', 'summer'].map((s) => ({ label: s, value: s })),
+          required: true,
+          options: SEASONS.map((value) => ({
+            label: value.charAt(0).toUpperCase() + value.slice(1),
+            value,
+          })),
+          admin: { width: '33%' },
         },
-        { name: 'year', type: 'number' },
         {
-          name: 'mode',
-          type: 'select',
-          options: [
-            { label: 'Offline', value: 'OFFLINE' },
-            { label: 'Online', value: 'ONLINE' },
-            { label: 'Hybrid', value: 'HYBRID' },
-          ],
+          name: 'start_year',
+          type: 'number',
+          required: true,
+          min: 2012,
+          max: 2100,
+          admin: { width: '33%' },
+        },
+        {
+          name: 'space',
+          type: 'relationship',
+          relationTo: 'spaces',
+          required: true,
+          admin: { width: '34%' },
         },
       ],
     },
     {
-      label: 'Programme',
-      type: 'group',
-      name: 'programme',
+      type: 'row',
       fields: [
         {
-          name: 'programme',
-          type: 'relationship',
-          relationTo: 'programmes',
+          name: 'start_date',
+          type: 'date',
+          admin: { width: '50%', date: { pickerAppearance: 'dayOnly' } },
+        },
+        {
+          name: 'academic_year',
+          type: 'text',
+          index: true,
+          admin: { width: '50%', readOnly: true },
         },
       ],
     },
+    registrationField(),
     {
-      label: 'Courses',
-      type: 'group',
+      name: 'pricing',
+      type: 'array',
+      admin: { description: 'One price per group of course types.' },
+      fields: [
+        {
+          name: 'course_types',
+          type: 'select',
+          hasMany: true,
+          required: true,
+          options: [...COURSE_TYPE_OPTIONS],
+        },
+        pricingField({ dbName: 'cycle_price' }),
+      ],
+    },
+    {
       name: 'courses',
-      fields: [{ name: 'courses', type: 'relationship', relationTo: 'courses', hasMany: true }],
+      type: 'join',
+      collection: 'courses',
+      on: 'cycle',
+      admin: { allowCreate: false, defaultColumns: ['title', 'course_type', 'fellows'] },
     },
   ],
-  hooks: {
-    beforeValidate: [buildSlug],
-  },
-  admin: {
-    useAsTitle: 'title',
-  },
 }

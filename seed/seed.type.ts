@@ -60,16 +60,13 @@ export type FieldOfStudySeed = {
 
 /* ================================================================ cycles */
 
-/**
- * Create-shaped on purpose: `Draft<Cycle>` allows `| null` on optional fields,
- * which makes TS resolve `payload.create` to its `draft: true` overload.
- * `courses` is omitted too — the cycle -> courses back-link is filled by the
- * course seeder.
- */
 export type CycleSeed = {
   season: 'fall' | 'winter' | 'spring' | 'summer'
-  year: number
-  mode: 'OFFLINE' | 'ONLINE' | 'HYBRID'
+  start_year: number
+  /** Space name, resolved to an id. */
+  space: string
+  start_date: string
+  deadline: string
 }
 
 /* ============================================================ programmes */

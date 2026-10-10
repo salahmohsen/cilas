@@ -93,6 +93,9 @@ export interface Config {
       governance: 'governance';
       memberships: 'memberships';
     };
+    cycles: {
+      courses: 'courses';
+    };
   };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
@@ -410,59 +413,77 @@ export interface Course {
 export interface Cycle {
   id: number;
   title?: string | null;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  cycle?: {
-    season?: ('fall' | 'winter' | 'spring' | 'summer') | null;
-    year?: number | null;
-    mode?: ('OFFLINE' | 'ONLINE' | 'HYBRID') | null;
-  };
-  programme?: {
-    programme?: (number | null) | Programme;
-  };
-  courses?: {
-    courses?: (number | Course)[] | null;
-  };
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "programmes".
- */
-export interface Programme {
-  id: number;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  cycles?: (number | Cycle)[] | null;
-  self_directed_study?: boolean | null;
-  weekly_hours?: number | null;
-  admission_requirements?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
+  slug?: string | null;
+  season: 'fall' | 'winter' | 'spring' | 'summer';
+  start_year: number;
+  space: number | Space;
+  start_date?: string | null;
+  academic_year?: string | null;
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    application_requirements?: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
         version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  amount?: number | null;
-  installments?: number | null;
-  need_based_deductions?: boolean | null;
-  registration_form?: (number | null) | Form;
+      };
+      [k: string]: unknown;
+    } | null;
+    archived_registration_url?: string | null;
+  };
+  /**
+   * One price per group of course types.
+   */
+  pricing?:
+    | {
+        course_types: ('CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT')[];
+        pricing?: {
+          min?: number | null;
+          /**
+           * Leave empty for a single price.
+           */
+          max?: number | null;
+          currency?: 'EGP' | null;
+          note?: string | null;
+          need_based_deductions?: boolean | null;
+          payment_plans?:
+            | {
+                label: string;
+                installments?:
+                  | {
+                      amount: number;
+                      due_date?: string | null;
+                      id?: string | null;
+                    }[]
+                  | null;
+                id?: string | null;
+              }[]
+            | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  courses?: {
+    docs?: (number | Course)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
 }
@@ -659,6 +680,43 @@ export interface Membership {
   role: 'student' | 'residential_fellow' | 'visiting_fellow';
   title?: string | null;
   note?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "programmes".
+ */
+export interface Programme {
+  id: number;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  cycles?: (number | Cycle)[] | null;
+  self_directed_study?: boolean | null;
+  weekly_hours?: number | null;
+  admission_requirements?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  amount?: number | null;
+  installments?: number | null;
+  need_based_deductions?: boolean | null;
+  registration_form?: (number | null) | Form;
   updatedAt: string;
   createdAt: string;
 }
@@ -1135,25 +1193,51 @@ export interface ProgrammesSelect<T extends boolean = true> {
  */
 export interface CyclesSelect<T extends boolean = true> {
   title?: T;
-  generateSlug?: T;
   slug?: T;
-  cycle?:
+  season?: T;
+  start_year?: T;
+  space?: T;
+  start_date?: T;
+  academic_year?: T;
+  registration?:
     | T
     | {
-        season?: T;
-        year?: T;
-        mode?: T;
+        method?: T;
+        form?: T;
+        url?: T;
+        deadline?: T;
+        application_requirements?: T;
+        archived_registration_url?: T;
       };
-  programme?:
+  pricing?:
     | T
     | {
-        programme?: T;
+        course_types?: T;
+        pricing?:
+          | T
+          | {
+              min?: T;
+              max?: T;
+              currency?: T;
+              note?: T;
+              need_based_deductions?: T;
+              payment_plans?:
+                | T
+                | {
+                    label?: T;
+                    installments?:
+                      | T
+                      | {
+                          amount?: T;
+                          due_date?: T;
+                          id?: T;
+                        };
+                    id?: T;
+                  };
+            };
+        id?: T;
       };
-  courses?:
-    | T
-    | {
-        courses?: T;
-      };
+  courses?: T;
   updatedAt?: T;
   createdAt?: T;
 }

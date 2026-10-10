@@ -15,10 +15,7 @@ import type { Course } from '@/payload-types'
 export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
   const cover = course.cover_image && typeof course.cover_image === 'object' ? course.cover_image : null
   const cycle = course.cycle && typeof course.cycle === 'object' ? course.cycle : null
-  const cycleLabel =
-    cycle?.cycle?.season && cycle.cycle.year
-      ? `${cycle.cycle.season.charAt(0).toUpperCase()}${cycle.cycle.season.slice(1)} ${cycle.cycle.year}`
-      : null
+  const cycleLabel = cycle?.title ?? null
 
   return (
     <article className="mx-auto w-full max-w-4xl py-16">

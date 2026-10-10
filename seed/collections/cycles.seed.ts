@@ -1,35 +1,37 @@
 import type { Payload } from 'payload'
-import type { Cycle } from '@/payload-types'
-import type { CycleSeed, Draft, SeedContext } from '../seed.type'
-import { getOrCreateId } from '../seed.utils'
+import type { CycleSeed, SeedContext } from '../seed.type'
+import { getOrCreateId, requireId } from '../seed.utils'
 
 /**
- * Academic year 2025–2026: every season the old site ran course cycles in —
- * fall semester of the bridge, the winter short-cycle, the spring semester,
- * and the summer round. Seasons are keyed by the calendar year they start in.
+ * Academic year 2025–2026 at Darb el-Labbana: one intake per season, each
+ * holding every course type it offered (ADR 0003). Keyed `season-year`.
  */
 export const cyclesData: CycleSeed[] = [
-  { season: 'fall', year: 2025, mode: 'HYBRID' },
-  { season: 'winter', year: 2026, mode: 'OFFLINE' },
-  { season: 'spring', year: 2026, mode: 'OFFLINE' },
-  { season: 'summer', year: 2026, mode: 'ONLINE' },
+  { season: 'fall', start_year: 2025, space: 'Darb el-Labbana', start_date: '2025-10-19', deadline: '2025-10-10' },
+  { season: 'winter', start_year: 2026, space: 'Darb el-Labbana', start_date: '2026-02-21', deadline: '2026-01-31' },
+  { season: 'spring', start_year: 2026, space: 'Darb el-Labbana', start_date: '2026-04-25', deadline: '2026-04-15' },
+  { season: 'summer', start_year: 2026, space: 'Darb el-Labbana', start_date: '2026-07-19', deadline: '2026-07-10' },
 ]
 
 export const seedCycles = async (payload: Payload, ctx: SeedContext): Promise<void> => {
-  for (const { season, year, mode } of cyclesData) {
-    const key = `${season}-${year}`
-    const title = `${season[0].toUpperCase()}${season.slice(1)} ${year}`
-    const id = await getOrCreateId(payload, 'cycles', { title: { equals: title } }, () =>
-      payload.create({
-        collection: 'cycles',
-        // `slug` is derived from `title` by collection hooks; `title` itself is
-        // written here so a later run's idempotency query can find the season.
-        // Cast: the draft-typed overload is for draft-enabled collections, and
-        // Cycles has none — the payload types force this detour for
-        // all-optional collections.
-        data: { title, cycle: { season, year, mode } } as Draft<Cycle>,
-        overrideAccess: true,
-      }),
+  for (const { season, start_year, space, start_date, deadline } of cyclesData) {
+    const key = `${season}-${start_year}`
+    const id = await getOrCreateId(
+      payload,
+      'cycles',
+      { and: [{ season: { equals: season } }, { start_year: { equals: start_year } }] },
+      () =>
+        payload.create({
+          collection: 'cycles',
+          data: {
+            season,
+            start_year,
+            space: requireId(ctx.spaces, space),
+            start_date,
+            registration: { method: 'form', deadline },
+          },
+          overrideAccess: true,
+        }),
     )
 
     ctx.cycles[key] = id

@@ -359,8 +359,6 @@ export const coursesData: CourseSeed[] = [
 ]
 
 export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<void> => {
-  const courseIdsByCycle = new Map<string, number[]>()
-
   for (const course of coursesData) {
     const { title_ar, description, sessions, fellows, cycle, ...rest } = course
 
@@ -395,18 +393,6 @@ export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<v
     }
 
     ctx.courses[course.title] = id
-    courseIdsByCycle.set(cycle, [...(courseIdsByCycle.get(cycle) ?? []), id])
     console.log('course:', course.title)
-  }
-
-  // Back-link cycles.courses, so the calendar view can walk cycle -> courses.
-  for (const [label, courseIds] of courseIdsByCycle) {
-    const cycleKey = label as keyof typeof ctx.cycles
-    await payload.update({
-      collection: 'cycles',
-      id: ctx.cycles[cycleKey],
-      data: { courses: { courses: courseIds } },
-      overrideAccess: true,
-    })
   }
 }
