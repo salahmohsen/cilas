@@ -2,8 +2,11 @@ import type { Access } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import {
+  canAuthor,
   isAdminOrOwn,
   isAdminOrOwnAndDraft,
+  isAdminOrOwnWhile,
+  ownsViaAuthors,
   ownsViaFellows,
   ownsViaPerson,
   publishedOrAdmin,
@@ -98,5 +101,53 @@ describe('isAdminOrOwn(ownsViaPerson)', () => {
   it('refuses anonymous and unlinked accounts', () => {
     expect(run(rule, null)).toBe(false)
     expect(run(rule, user(['non_degree_seeking'], { person: null }))).toBe(false)
+  })
+})
+
+describe('ownsViaAuthors', () => {
+  it("owns through the account's person", () => {
+    expect(ownsViaAuthors(user(['member'], { person: 7 }))).toEqual({
+      authors: { contains: 7 },
+    })
+  })
+
+  it('owns nothing without a linked person', () => {
+    expect(ownsViaAuthors(user(['member']))).toBe(false)
+  })
+})
+
+describe('canAuthor', () => {
+  it.each(['member', 'fellow', 'non_degree_seeking', 'admin', 'super_admin'] as const)(
+    'lets a %s write articles',
+    (role) => {
+      expect(run(canAuthor, user([role]))).toBe(true)
+    },
+  )
+
+  it('refuses anonymous visitors', () => {
+    expect(run(canAuthor, null)).toBe(false)
+  })
+})
+
+describe('isAdminOrOwnWhile', () => {
+  const editable = { 'review.status': { in: ['draft', 'changes_requested'] } }
+  const rule = isAdminOrOwnWhile(ownsViaAuthors, editable)
+
+  it('lets admins through', () => {
+    expect(run(rule, user(['admin']))).toBe(true)
+  })
+
+  it('refuses anonymous visitors', () => {
+    expect(run(rule, null)).toBe(false)
+  })
+
+  it('keeps ownership AND the review condition for an author', () => {
+    expect(run(rule, user(['member'], { person: 7 }))).toEqual({
+      and: [{ authors: { contains: 7 } }, editable],
+    })
+  })
+
+  it('refuses an account with no person', () => {
+    expect(run(rule, user(['member']))).toBe(false)
   })
 })

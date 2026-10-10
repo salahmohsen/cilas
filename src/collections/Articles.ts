@@ -4,7 +4,7 @@ import {
   isAdminOrOwnAndDraft,
   isAdminUser,
   isAuthenticated,
-  ownsViaAuthor,
+  ownsViaAuthors,
   readTiers,
 } from '@/access'
 import { slugField } from '@/fields/slug'
@@ -152,10 +152,10 @@ export const Articles: CollectionConfig = {
     ],
   },
   access: {
-    read: readTiers(ownsViaAuthor, { drafts: true }),
+    read: readTiers(ownsViaAuthors, { drafts: true }),
     create: isAuthenticated,
-    update: isAdminOrOwnAndDraft(ownsViaAuthor),
-    delete: isAdminOrOwnAndDraft(ownsViaAuthor),
+    update: isAdminOrOwnAndDraft(ownsViaAuthors),
+    delete: isAdminOrOwnAndDraft(ownsViaAuthors),
   },
   versions: {
     drafts: true,

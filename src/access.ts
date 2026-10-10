@@ -56,7 +56,10 @@ export const ownsViaFellows: Ownership = (user) => {
   const person = personOf(user)
   return person === null ? false : { fellows: { contains: person } }
 }
-export const ownsViaAuthor: Ownership = (user) => ({ author: { equals: user.id } })
+export const ownsViaAuthors: Ownership = (user) => {
+  const person = personOf(user)
+  return person === null ? false : { authors: { contains: person } }
+}
 export const ownsViaPerson: Ownership = (user) => {
   const person = personOf(user)
   return person === null ? false : { person: { equals: person } }
@@ -103,6 +106,23 @@ export const isAdminOrOwn =
     if (isAdminUser(req.user)) return true
     if (!req.user) return false
     return owned(req.user)
+  }
+
+/** Who may write articles: community members, fellows, visiting students and admins. */
+export const canAuthor: Access = ({ req }) =>
+  hasRole(req.user, 'member', 'fellow', 'non_degree_seeking', 'admin', 'super_admin')
+
+/**
+ * Admins edit anything; an owner only while the document also matches
+ * `while` (e.g. an article still with its author, not yet submitted).
+ */
+export const isAdminOrOwnWhile =
+  (owned: Ownership, where: Where): Access =>
+  ({ req }) => {
+    if (isAdminUser(req.user)) return true
+    if (!req.user) return false
+    const owns = owned(req.user)
+    return owns ? { and: [owns, where] } : false
   }
 
 /** For drafts-enabled collections with no tier: the public reads what is published. */
