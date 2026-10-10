@@ -77,7 +77,7 @@ export interface Config {
     cycles: Cycle;
     governance: Governance;
     articles: Article;
-    'article-collections': ArticleCollection;
+    publications: Publication;
     press: Press;
     events: Event;
     spaces: Space;
@@ -102,6 +102,9 @@ export interface Config {
     cycles: {
       courses: 'courses';
     };
+    articles: {
+      publications: 'publications';
+    };
   };
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
@@ -114,7 +117,7 @@ export interface Config {
     cycles: CyclesSelect<false> | CyclesSelect<true>;
     governance: GovernanceSelect<false> | GovernanceSelect<true>;
     articles: ArticlesSelect<false> | ArticlesSelect<true>;
-    'article-collections': ArticleCollectionsSelect<false> | ArticleCollectionsSelect<true>;
+    publications: PublicationsSelect<false> | PublicationsSelect<true>;
     press: PressSelect<false> | PressSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
@@ -1092,16 +1095,25 @@ export interface Article {
    * Editor-curated. If empty, articles sharing tags are suggested.
    */
   related_articles?: (number | Article)[] | null;
+  publications?: {
+    docs?: (number | Publication)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "article-collections".
+ * via the `definition` "publications".
  */
-export interface ArticleCollection {
+export interface Publication {
   id: number;
+  kind: 'essay_collection' | 'translation_booklet' | 'research' | 'other';
+  cover_image?: (number | null) | Media;
+  year_from?: number | null;
+  year_to?: number | null;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -1109,7 +1121,7 @@ export interface ArticleCollection {
   generateSlug?: boolean | null;
   slug: string;
   subtitle?: string | null;
-  description?: {
+  intro?: {
     root: {
       type: string;
       children: {
@@ -1124,8 +1136,38 @@ export interface ArticleCollection {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * A signed essay, so it is an article.
+   */
+  foreword?: (number | null) | Article;
+  /**
+   * In reading order.
+   */
   articles?: (number | Article)[] | null;
-  cover_image?: (number | null) | Media;
+  credits?:
+    | {
+        role:
+          | 'author'
+          | 'editor'
+          | 'translator'
+          | 'copy_editor'
+          | 'proofreader'
+          | 'supervisor'
+          | 'coordinator'
+          | 'art_director'
+          | 'cover_designer'
+          | 'illustrator'
+          | 'photographer'
+          | 'other';
+        label?: string | null;
+        people: (number | Person)[];
+        id?: string | null;
+      }[]
+    | null;
+  produced_by?: (number | Course)[] | null;
+  funders?: (number | Partner)[] | null;
+  license?: ('cc_by_nc_sa' | 'cc_by_sa' | 'cc_by' | 'all_rights_reserved') | null;
+  print_edition_url?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1271,8 +1313,8 @@ export interface PayloadLockedDocument {
         value: number | Article;
       } | null)
     | ({
-        relationTo: 'article-collections';
-        value: number | ArticleCollection;
+        relationTo: 'publications';
+        value: number | Publication;
       } | null)
     | ({
         relationTo: 'press';
@@ -1786,22 +1828,39 @@ export interface ArticlesSelect<T extends boolean = true> {
         id?: T;
       };
   related_articles?: T;
+  publications?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "article-collections_select".
+ * via the `definition` "publications_select".
  */
-export interface ArticleCollectionsSelect<T extends boolean = true> {
+export interface PublicationsSelect<T extends boolean = true> {
+  kind?: T;
+  cover_image?: T;
+  year_from?: T;
+  year_to?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
   subtitle?: T;
-  description?: T;
+  intro?: T;
+  foreword?: T;
   articles?: T;
-  cover_image?: T;
+  credits?:
+    | T
+    | {
+        role?: T;
+        label?: T;
+        people?: T;
+        id?: T;
+      };
+  produced_by?: T;
+  funders?: T;
+  license?: T;
+  print_edition_url?: T;
   updatedAt?: T;
   createdAt?: T;
 }

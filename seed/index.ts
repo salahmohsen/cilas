@@ -13,7 +13,7 @@ import { seedPress } from './collections/press.seed'
 import { seedEvents } from './collections/events.seed'
 import { seedSpaces } from './collections/spaces.seed'
 import { seedPartners } from './collections/partners.seed'
-import { seedArticleCollections } from './collections/article-collections.seed'
+import { seedPublications } from './collections/publications.seed'
 import { seedSiteSettings } from './collections/site-settings.seed'
 
 process.loadEnvFile('.env')
@@ -42,7 +42,7 @@ await seedGovernance(payload, ctx)
 await seedArticles(payload, ctx)
 await seedPress(payload)
 await seedEvents(payload, ctx)
-await seedArticleCollections(payload, ctx)
+await seedPublications(payload, ctx)
 await seedSiteSettings(payload)
 
 await payload.destroy()

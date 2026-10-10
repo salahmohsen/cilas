@@ -24,7 +24,7 @@ export const CONTENT_COLLECTIONS: CollectionSlug[] = [
   'cycles',
   'programmes',
   'governance',
-  'article-collections',
+  'publications',
   'articles',
   'press',
   'events',

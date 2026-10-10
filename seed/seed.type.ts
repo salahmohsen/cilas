@@ -1,9 +1,9 @@
 import type {
   Article,
-  ArticleCollection,
   Course,
   Event,
   Press,
+  Publication,
   SiteSetting,
   Space,
   User,
@@ -177,21 +177,25 @@ export type SpaceSeed = Omit<Draft<Space>, 'description' | 'slug'> & {
   description?: string
 }
 
-/* ==================================================== article collections */
+/* ============================================================ publications */
 
-export type ArticleCollectionSeed = Omit<
-  Draft<ArticleCollection>,
-  'description' | 'subtitle' | 'articles' | 'cover_image' | 'slug'
+export type PublicationSeed = Omit<
+  Draft<Publication>,
+  'intro' | 'subtitle' | 'articles' | 'cover_image' | 'slug' | 'funders' | 'foreword'
 > & {
   /** Plain text; converted to Lexical by the seeder. */
-  description?: string | string[]
+  intro?: string | string[]
   subtitle?: string
   /** English titles of the member articles, resolved to ids by the seeder. */
   articles?: string[]
+  /** Partner names, resolved to ids. */
+  funders?: string[]
+  /** The first article doubles as the foreword. */
+  foreword?: boolean
   /** Written in a follow-up `locale: 'ar'` update. */
   title_ar?: string
   subtitle_ar?: string
-  description_ar?: string | string[]
+  intro_ar?: string | string[]
 }
 
 /* ========================================================== site settings */
@@ -213,8 +217,8 @@ export type SeedContext = {
   cycles: IdMap
   courses: IdMap
   programmes: IdMap
-  /** Article-collection titles, resolved to ids. */
-  articleCollections: IdMap
+  /** Publication titles, resolved to ids. */
+  publications: IdMap
   /** Space names, resolved to ids. */
   spaces: IdMap
   /** Partner names, resolved to ids. */
@@ -227,7 +231,7 @@ export const createSeedContext = (): SeedContext => ({
   cycles: {},
   courses: {},
   programmes: {},
-  articleCollections: {},
+  publications: {},
   spaces: {},
   partners: {},
 })

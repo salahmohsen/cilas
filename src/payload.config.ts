@@ -19,7 +19,7 @@ import { Press } from './collections/Press'
 import { Events } from './collections/Events'
 import { Spaces } from './collections/Spaces'
 import { Partners } from './collections/Partners'
-import { ArticleCollections } from './collections/Article-collections'
+import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { s3Storage } from '@payloadcms/storage-s3'
@@ -82,7 +82,7 @@ export default buildConfig({
     Cycles,
     Governance,
     Articles,
-    ArticleCollections,
+    Publications,
     Press,
     Events,
     Spaces,

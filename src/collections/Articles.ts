@@ -235,6 +235,13 @@ export const Articles: CollectionConfig = {
           hasMany: true,
           admin: { description: 'Editor-curated. If empty, articles sharing tags are suggested.' },
         },
+        {
+          name: 'publications',
+          type: 'join',
+          collection: 'publications',
+          on: 'articles',
+          admin: { allowCreate: false },
+        },
       ],
     },
   ],
