@@ -67,7 +67,8 @@ const expandPattern = (schedule: Schedule): Meeting[] => {
   return meetings.sort(byWhen)
 }
 
-const inOrder = (sessions: SessionDates[]): SessionDates[] =>
+/** Sessions by `order`; unset orders follow, in array order. */
+export const sessionsInOrder = <T extends SessionDates>(sessions: T[]): T[] =>
   sessions
     .map((session, index) => ({ session, index, key: session.order ?? Infinity }))
     .sort((a, b) => (a.key === b.key ? a.index - b.index : a.key - b.key))
@@ -89,7 +90,7 @@ export const expandSchedule = (
   const meetings: Meeting[] = []
   let cursor = 0
 
-  inOrder(sessions).forEach((s, index) => {
+  sessionsInOrder(sessions).forEach((s, index) => {
     const session = index + 1
     const take = Math.max(0, Math.floor(s.meetings ?? perWeek)) || 0
     const share = pattern.slice(cursor, cursor + take)

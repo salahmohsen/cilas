@@ -1,10 +1,13 @@
 import type { Field, FieldHookArgs } from 'payload'
 import { describe, expect, it } from 'vitest'
 
+import { bibliographyField } from '@/fields/bibliography'
+import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
-import { computeEndDate, scheduleField } from '@/fields/schedule'
+import { computeEndDate, scheduleField, timeRangeFields } from '@/fields/schedule'
 import { endAfterStart, httpUrl, notBelow, timeOfDay } from '@/fields/validators'
+import { sessionsInOrder } from '@/lib/schedule'
 
 describe('validators', () => {
   it('timeOfDay accepts 24-hour HH:MM only', () => {
@@ -227,5 +230,35 @@ describe('validate closures in the configs', () => {
     expect(check(url, undefined, {})).toBe(true)
     expect(check(url, 'cilas.net', {})).toMatch(/https/)
     expect(check(url, 'https://cilas.net', {})).toBe(true)
+  })
+})
+
+describe('shared field pieces', () => {
+  it('lists the five course types', () => {
+    expect(COURSE_TYPE_OPTIONS.map((o) => o.value)).toEqual([
+      'CORE',
+      'THEMATIC',
+      'LAB',
+      'WORKSHOP',
+      'SHORT',
+    ])
+  })
+
+  it('builds a bibliography array of materials', () => {
+    const field = bibliographyField()
+    expect(field.name).toBe('bibliography')
+    expect(names(field.fields)).toEqual(['type', 'title', 'href', 'note'])
+  })
+
+  it('shares start and end time fields', () => {
+    expect(names(timeRangeFields())).toEqual(['start_time', 'end_time'])
+  })
+
+  it('orders sessions the same way expandSchedule numbers them', () => {
+    expect(sessionsInOrder([{ order: 2 }, {}, { order: 1 }])).toEqual([
+      { order: 1 },
+      { order: 2 },
+      {},
+    ])
   })
 })

@@ -1,4 +1,4 @@
-import type { FieldHook, NamedGroupField, TextFieldSingleValidation } from 'payload'
+import type { Field, FieldHook, NamedGroupField, TextFieldSingleValidation } from 'payload'
 import { text } from 'payload/shared'
 
 import { WEEKDAYS } from '@/lib/cairo-day'
@@ -27,6 +27,32 @@ export const computeEndDate: FieldHook = ({ siblingData, previousSiblingDoc, dat
     { ...previousSiblingDoc, ...siblingData } as Schedule,
     (data?.sessions ?? originalDoc?.sessions) as SessionDates[] | undefined,
   )
+
+/** Cairo wall-clock start and end, shared by slots and moved session dates. */
+export const timeRangeFields = (width = '20%'): Field[] => [
+  {
+    name: 'start_time',
+    type: 'text',
+    required: true,
+    validate: timeOfDay,
+    admin: { width, placeholder: '19:00' },
+  },
+  {
+    name: 'end_time',
+    type: 'text',
+    required: true,
+    // Payload's text checks (required, length) first, then the time rules.
+    validate: ((value, options) => {
+      const base = text(value, options)
+      if (base !== true) return base
+      const time = timeOfDay(value)
+      return time === true
+        ? endAfterStart(value, (options.siblingData as Record<string, unknown>).start_time)
+        : time
+    }) satisfies TextFieldSingleValidation,
+    admin: { width, placeholder: '21:00' },
+  },
+]
 
 /**
  * How something meets: a start date, a number of weeks and weekly slots in
@@ -76,31 +102,7 @@ export const scheduleField = (): NamedGroupField => ({
               options: WEEKDAYS.map((value) => ({ label: WEEKDAY_LABELS[value], value })),
               admin: { width: '30%' },
             },
-            {
-              name: 'start_time',
-              type: 'text',
-              required: true,
-              validate: timeOfDay,
-              admin: { width: '20%', placeholder: '19:00' },
-            },
-            {
-              name: 'end_time',
-              type: 'text',
-              required: true,
-              // Payload's text checks (required, length) first, then the time rules.
-              validate: ((value, options) => {
-                const base = text(value, options)
-                if (base !== true) return base
-                const time = timeOfDay(value)
-                return time === true
-                  ? endAfterStart(
-                      value,
-                      (options.siblingData as Record<string, unknown>).start_time,
-                    )
-                  : time
-              }) satisfies TextFieldSingleValidation,
-              admin: { width: '20%', placeholder: '21:00' },
-            },
+            ...timeRangeFields(),
             { name: 'label', type: 'text', localized: true, admin: { width: '30%' } },
           ],
         },
