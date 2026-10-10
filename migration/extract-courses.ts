@@ -7,6 +7,9 @@
  *   npx tsx migration/extract-courses.ts migration/raw --prompt <file>
  *   npx tsx migration/extract-courses.ts migration/raw --record <file> <answer.json>
  * `--record` validates the answer against the schema before caching it.
+ *   npx tsx migration/extract-courses.ts migration/raw --restamp-monolingual
+ * re-certifies existing answers for single-language pages after a prompt
+ * change that only affects bilingual pages; bilingual ones stay pending.
  *
  * With ANTHROPIC_API_KEY set, it can instead call the API for every page:
  *   npx tsx --env-file=.env migration/extract-courses.ts migration/raw --api [--only a.html,b.html]
@@ -93,6 +96,32 @@ const main = async () => {
     )
     const n = data.course ? 1 : data.cycles.reduce((s, c) => s + c.courses.length, 0)
     console.log(`${page.file}: recorded, ${n} course(s)`)
+    return
+  }
+
+  if (mode === '--restamp-monolingual') {
+    // Both scripts in quantity means a bilingual page.
+    const bilingual = (text: string) => {
+      const letters = text.match(/\p{L}/gu) ?? []
+      const arabic = letters.filter((c) => /\p{Script=Arabic}/u.test(c)).length
+      const share = letters.length ? arabic / letters.length : 0
+      return share > 0.15 && share < 0.85
+    }
+    let restamped = 0
+    for (const page of todo) {
+      const file = path.join(outDir, `${page.file}.json`)
+      if (!existsSync(file) || isCurrent(page)) continue
+      const prompt = promptFor(page)
+      if (bilingual(prompt)) continue
+      const cached = JSON.parse(readFileSync(file, 'utf8')) as { model: string; data: unknown }
+      const data = CoursePage.parse(cached.data)
+      writeFileSync(
+        file,
+        `${JSON.stringify({ sha256: shaOf(cached.model, prompt), model: cached.model, version: PROMPT_VERSION, data }, null, 2)}\n`,
+      )
+      restamped++
+    }
+    console.log(`restamped ${restamped} single-language page(s)`)
     return
   }
 
