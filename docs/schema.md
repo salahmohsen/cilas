@@ -11,77 +11,20 @@ Conventions:
 
 ## Shared shapes
 
-`schedule`, `registration` and `pricing` are built as field builders in `src/fields/`, with their logic in `src/lib/` (ADR 0002). Courses, cycles and programmes use them. Events adopt them in plan 4: give their `pricingField()` a short `dbName`, and drop events' top-level `registration_form` in the same migration (it shares the `registration_form_id` column).
-
-**`credits[]`** (articles, publications)
-- `role`: author | translator | editor | illustrator | photographer | other
-- `label`
-- `people[]` → people
+`schedule`, `registration` and `pricing` are built as field builders in `src/fields/`, with their logic in `src/lib/` (ADR 0002). Courses, cycles, programmes and events use them. `credits[]` (`src/fields/credits.ts`) is shared by articles and publications.
 
 ## Time and place, programmes, teaching
 
 Spaces, cycles, programmes, courses and enrollments match the code (ADR 0002, ADR 0003). Still to do:
 - **Admin:** show a course session's computed dates as placeholders in its `dates[]` (needs a custom field component).
-- **Programmes:** `partners[]` → partners, once plan 4 adds the collection.
-- **Access:** courses and articles have no `readVersions` rule, so any signed-in account can read their drafts through the versions endpoint. Set it to match their edit rules (plan 4 reworks articles).
 - **Archive import (plan 6):** `legacy_url` and `import_status` on imported documents; unverified Bridge years (2020–21, 2023–24, 2024–25) as draft programmes; legacy trimesters mapped onto fall, winter and spring.
 
-## Partners
+## Partners and publishing
 
-People, users, governance and memberships match the code (ADR 0001).
-
-**`partners`**
-- name, logo, url, kind (funder | co_host | outlet | other)
-
-## Publishing
-
-**`articles`**: drafts enabled.
-- `tier`: admins only
-- `requested_tier`: set by the author
-- `review`
-  - draft → submitted → changes_requested → approved | rejected
-  - `review_note`
-  - Approval sets `tier`, `_status` and `published_date` together.
-  - Authors and admins are emailed when the status changes.
-- Authors: users with member, fellow or non_degree_seeking roles, and admins. An author can't publish their own article.
-- `credits[]`
-- `translation` group (original language, original article/url, translator credit)
-
-**`publications`** (renamed from `article-collections`)
-- `kind`, `title`, `slug`, `subtitle`, `intro`, `cover_image`
-- `year_from`, `year_to`
-- `credits[]`
-- `foreword` → articles
-- `articles[]`
-- `produced_by[]` → courses
-- `funders[]` → partners
-- `license`, `print_edition_url`
-
-**`press`**
-- `kind`
-- `title` (not localized)
-- `language`
-- `outlet` → partners
-- `authors`: people or free text
-- `published_date`, `date_precision`
-- `links[]` {`language`, `url`, `archived_url`}
-- `excerpt`
-
-**`events`**
-- `tier`, title, description, `event_type` (extended list)
-- `schedule`
-- `space` → spaces, or `external_venue`, plus `online_url`
-- `agenda[]`
-- `speakers[]` {`person`, `role`}
-- `partners[]` {`partner`, `role`}
-- `series`
-- `programme` / `course` links
-- `registration`, `pricing`
-
-**`newsletters`** (ADR 0005)
-- An archive of sent issues: title, date, body.
-- Subscribers are kept in Resend Audiences, not in Payload.
-- A transactional email adapter in the Payload config sends review notifications.
+People, users, governance and memberships match the code (ADR 0001). Partners, articles (with review), publications, press, events and newsletters match the code (ADR 0005). Still to do:
+- **Newsletter sign-up:** a public form that posts to the Resend Audience API (frontend work).
+- **Press links:** a periodic check that marks dead links so the page falls back to `archived_url`.
+- **Article submission UI:** authors submit by choosing Submitted and using the main save button; a dedicated Submit button belongs with the frontend.
 
 ## Plugins
 All pinned to the same version as the other `@payloadcms` packages.
