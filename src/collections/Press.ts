@@ -90,6 +90,8 @@ export const Press: CollectionConfig = {
     {
       name: 'links',
       type: 'array',
+      // Payload skips minRows on an empty array unless the field is required.
+      required: true,
       minRows: 1,
       admin: { description: 'One per language the piece appeared in.' },
       fields: [

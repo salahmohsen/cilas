@@ -1047,7 +1047,7 @@ export interface Article {
   cover_image?: (number | null) | Media;
   review: {
     /**
-     * Ready for an editor? Choose Submitted, then save.
+     * Ready for an editor? Choose Submitted, then save with the main button. Save draft cannot change this.
      */
     status: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
     review_note?: string | null;
@@ -1198,14 +1198,12 @@ export interface Press {
   /**
    * One per language the piece appeared in.
    */
-  links?:
-    | {
-        language?: ('ar' | 'en' | 'de' | 'fr' | 'other') | null;
-        url: string;
-        archived_url?: string | null;
-        id?: string | null;
-      }[]
-    | null;
+  links: {
+    language?: ('ar' | 'en' | 'de' | 'fr' | 'other') | null;
+    url: string;
+    archived_url?: string | null;
+    id?: string | null;
+  }[];
   excerpt?: string | null;
   updatedAt: string;
   createdAt: string;
