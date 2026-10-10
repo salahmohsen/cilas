@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 /** Bump when the prompt or schema changes, so cached extractions re-run. */
-export const PROMPT_VERSION = '2'
+export const PROMPT_VERSION = '3'
 
 const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable()
 const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable()
@@ -71,7 +71,7 @@ Rules:
 - course_type: CORE for core-curriculum courses; LAB for labs; WORKSHOP for workshops; THEMATIC for thematic or semester courses; SHORT for stand-alone short courses in offline/online cycles.
 - Times are 24-hour "HH:MM" in Cairo time ("5:30-8 pm" → 17:30 and 20:00). Weekdays as sat, sun, mon, tue, wed, thu, fri. Dates as YYYY-MM-DD.
 - location: OFFLINE (in person), ONLINE, HYBRID; several if the course mixes them.
-- description: the course's own description, copied verbatim (keep the original language), paragraphs separated by a blank line. Exclude fellow bios, schedules and registration text.
+- description: the course's own description, copied verbatim (keep the original language), paragraphs separated by a blank line. Include every section about the course itself: overview, "what to expect", "why apply", objectives or outcomes, workload, topics, who it is for. Keep a section's heading as its own paragraph. Exclude only fellow bios, dates/times/venue lines, prices and registration instructions.
 - fellows: who teaches or coordinates the course, with their bio text and email if the page gives them. Use the person's full name if it appears anywhere on the page (heading, bio, signature, image caption); otherwise the name exactly as written. Never invent a surname.
 - If only a start time is given, leave end_time null; never assume a duration.
 - flow_links: links to the course's flow, syllabus or outline document (uploads/… paths), as written.
