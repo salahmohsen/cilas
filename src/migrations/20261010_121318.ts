@@ -5,7 +5,9 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
    CREATE TYPE "public"."_locales" AS ENUM('en', 'ar');
   CREATE TYPE "public"."enum_users_roles" AS ENUM('super_admin', 'admin', 'fellow', 'member', 'non_degree_seeking');
   CREATE TYPE "public"."enum_people_social_links_platform" AS ENUM('facebook', 'x', 'youtube', 'instagram', 'linkedin');
+  CREATE TYPE "public"."enum_people_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_memberships_role" AS ENUM('student', 'residential_fellow', 'visiting_fellow');
+  CREATE TYPE "public"."enum_memberships_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_courses_schedule_slots_weekday" AS ENUM('sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri');
   CREATE TYPE "public"."enum_courses_sessions_bibliography_type" AS ENUM('reading', 'watch', 'listen', 'prompt', 'other');
   CREATE TYPE "public"."enum_courses_sessions_activities_kind" AS ENUM('discussion', 'field_visit', 'exercise', 'screening', 'presentation', 'other');
@@ -18,6 +20,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_courses_registration_method" AS ENUM('form', 'external', 'closed');
   CREATE TYPE "public"."enum_courses_pricing_override_currency" AS ENUM('EGP');
   CREATE TYPE "public"."enum_courses_session_unit" AS ENUM('session', 'week');
+  CREATE TYPE "public"."enum_courses_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_courses_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__courses_v_version_schedule_slots_weekday" AS ENUM('sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri');
   CREATE TYPE "public"."enum__courses_v_version_sessions_bibliography_type" AS ENUM('reading', 'watch', 'listen', 'prompt', 'other');
@@ -31,6 +34,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum__courses_v_version_registration_method" AS ENUM('form', 'external', 'closed');
   CREATE TYPE "public"."enum__courses_v_version_pricing_override_currency" AS ENUM('EGP');
   CREATE TYPE "public"."enum__courses_v_version_session_unit" AS ENUM('session', 'week');
+  CREATE TYPE "public"."enum__courses_v_version_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum__courses_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__courses_v_published_locale" AS ENUM('en', 'ar');
   CREATE TYPE "public"."enum_enrollments_status" AS ENUM('applied', 'accepted', 'confirmed', 'completed', 'withdrawn');
@@ -39,38 +43,46 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_programmes_kind" AS ENUM('bridge', 'women_studies', 'residency');
   CREATE TYPE "public"."enum_programmes_registration_method" AS ENUM('form', 'external', 'closed');
   CREATE TYPE "public"."enum_programmes_pricing_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum_programmes_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_programmes_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__programmes_v_version_components_course_types" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT');
   CREATE TYPE "public"."enum__programmes_v_version_kind" AS ENUM('bridge', 'women_studies', 'residency');
   CREATE TYPE "public"."enum__programmes_v_version_registration_method" AS ENUM('form', 'external', 'closed');
   CREATE TYPE "public"."enum__programmes_v_version_pricing_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum__programmes_v_version_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum__programmes_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__programmes_v_published_locale" AS ENUM('en', 'ar');
   CREATE TYPE "public"."enum_cycles_pricing_course_types" AS ENUM('CORE', 'THEMATIC', 'LAB', 'WORKSHOP', 'SHORT');
   CREATE TYPE "public"."enum_cycles_pricing_pricing_currency" AS ENUM('EGP');
   CREATE TYPE "public"."enum_cycles_season" AS ENUM('fall', 'winter', 'spring', 'summer');
   CREATE TYPE "public"."enum_cycles_registration_method" AS ENUM('form', 'external', 'closed');
+  CREATE TYPE "public"."enum_cycles_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_governance_role" AS ENUM('advisor', 'trustee');
+  CREATE TYPE "public"."enum_governance_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_articles_credits_role" AS ENUM('author', 'editor', 'translator', 'copy_editor', 'proofreader', 'supervisor', 'coordinator', 'art_director', 'cover_designer', 'illustrator', 'photographer', 'other');
   CREATE TYPE "public"."enum_articles_review_status" AS ENUM('draft', 'submitted', 'changes_requested', 'approved', 'rejected');
   CREATE TYPE "public"."enum_articles_requested_tier" AS ENUM('community', 'public');
   CREATE TYPE "public"."enum_articles_tier" AS ENUM('owner', 'community', 'public');
   CREATE TYPE "public"."enum_articles_translation_original_language" AS ENUM('ar', 'en', 'de', 'fr', 'other');
+  CREATE TYPE "public"."enum_articles_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_articles_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__articles_v_version_credits_role" AS ENUM('author', 'editor', 'translator', 'copy_editor', 'proofreader', 'supervisor', 'coordinator', 'art_director', 'cover_designer', 'illustrator', 'photographer', 'other');
   CREATE TYPE "public"."enum__articles_v_version_review_status" AS ENUM('draft', 'submitted', 'changes_requested', 'approved', 'rejected');
   CREATE TYPE "public"."enum__articles_v_version_requested_tier" AS ENUM('community', 'public');
   CREATE TYPE "public"."enum__articles_v_version_tier" AS ENUM('owner', 'community', 'public');
   CREATE TYPE "public"."enum__articles_v_version_translation_original_language" AS ENUM('ar', 'en', 'de', 'fr', 'other');
+  CREATE TYPE "public"."enum__articles_v_version_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum__articles_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__articles_v_published_locale" AS ENUM('en', 'ar');
   CREATE TYPE "public"."enum_publications_credits_role" AS ENUM('author', 'editor', 'translator', 'copy_editor', 'proofreader', 'supervisor', 'coordinator', 'art_director', 'cover_designer', 'illustrator', 'photographer', 'other');
   CREATE TYPE "public"."enum_publications_kind" AS ENUM('essay_collection', 'translation_booklet', 'research', 'other');
   CREATE TYPE "public"."enum_publications_license" AS ENUM('cc_by_nc_sa', 'cc_by_sa', 'cc_by', 'all_rights_reserved');
+  CREATE TYPE "public"."enum_publications_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_press_links_language" AS ENUM('ar', 'en', 'de', 'fr', 'other');
   CREATE TYPE "public"."enum_press_kind" AS ENUM('coverage', 'interview', 'talk', 'op_ed');
   CREATE TYPE "public"."enum_press_language" AS ENUM('ar', 'en', 'de', 'fr', 'other');
   CREATE TYPE "public"."enum_press_date_precision" AS ENUM('day', 'month', 'year');
+  CREATE TYPE "public"."enum_press_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_events_schedule_slots_weekday" AS ENUM('sat', 'sun', 'mon', 'tue', 'wed', 'thu', 'fri');
   CREATE TYPE "public"."enum_events_partners_role" AS ENUM('sponsor', 'co_host', 'venue', 'other');
   CREATE TYPE "public"."enum_events_tier" AS ENUM('owner', 'community', 'public');
@@ -78,11 +90,16 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE TYPE "public"."enum_events_schedule_start_precision" AS ENUM('day', 'week');
   CREATE TYPE "public"."enum_events_registration_method" AS ENUM('form', 'external', 'closed');
   CREATE TYPE "public"."enum_events_pricing_currency" AS ENUM('EGP');
+  CREATE TYPE "public"."enum_events_import_status" AS ENUM('needs_review', 'reviewed');
+  CREATE TYPE "public"."enum_newsletters_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_newsletters_status" AS ENUM('draft', 'published');
+  CREATE TYPE "public"."enum__newsletters_v_version_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum__newsletters_v_version_status" AS ENUM('draft', 'published');
   CREATE TYPE "public"."enum__newsletters_v_published_locale" AS ENUM('en', 'ar');
   CREATE TYPE "public"."enum_spaces_state" AS ENUM('current', 'former');
+  CREATE TYPE "public"."enum_spaces_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_partners_kind" AS ENUM('funder', 'co_host', 'outlet', 'other');
+  CREATE TYPE "public"."enum_partners_import_status" AS ENUM('needs_review', 'reviewed');
   CREATE TYPE "public"."enum_forms_confirmation_type" AS ENUM('message', 'redirect');
   CREATE TYPE "public"."enum_redirects_to_type" AS ENUM('reference', 'custom');
   CREATE TYPE "public"."enum_redirects_type" AS ENUM('301', '302');
@@ -131,6 +148,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"slug" varchar NOT NULL,
   	"photo_id" integer,
   	"website" varchar,
+  	"legacy_url" varchar,
+  	"import_status" "enum_people_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -149,6 +168,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"programme_id" integer NOT NULL,
   	"role" "enum_memberships_role" DEFAULT 'student' NOT NULL,
   	"note" varchar,
+  	"legacy_url" varchar,
+  	"import_status" "enum_memberships_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -337,6 +358,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"pricing_override_need_based_deductions" boolean,
   	"syllabus_tentative" boolean,
   	"session_unit" "enum_courses_session_unit" DEFAULT 'session',
+  	"legacy_url" varchar,
+  	"import_status" "enum_courses_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"_status" "enum_courses_status" DEFAULT 'draft'
@@ -525,6 +548,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"version_pricing_override_need_based_deductions" boolean,
   	"version_syllabus_tentative" boolean,
   	"version_session_unit" "enum__courses_v_version_session_unit" DEFAULT 'session',
+  	"version_legacy_url" varchar,
+  	"version_import_status" "enum__courses_v_version_import_status",
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
   	"version__status" "enum__courses_v_version_status" DEFAULT 'draft',
@@ -685,6 +710,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"pricing_max" numeric,
   	"pricing_currency" "enum_programmes_pricing_currency" DEFAULT 'EGP',
   	"pricing_need_based_deductions" boolean,
+  	"legacy_url" varchar,
+  	"import_status" "enum_programmes_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"_status" "enum_programmes_status" DEFAULT 'draft'
@@ -826,6 +853,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"version_pricing_max" numeric,
   	"version_pricing_currency" "enum__programmes_v_version_pricing_currency" DEFAULT 'EGP',
   	"version_pricing_need_based_deductions" boolean,
+  	"version_legacy_url" varchar,
+  	"version_import_status" "enum__programmes_v_version_import_status",
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
   	"version__status" "enum__programmes_v_version_status" DEFAULT 'draft',
@@ -921,6 +950,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"registration_url" varchar,
   	"registration_deadline" timestamp(3) with time zone,
   	"registration_archived_registration_url" varchar,
+  	"legacy_url" varchar,
+  	"import_status" "enum_cycles_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -943,6 +974,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"term_from" numeric,
   	"term_to" numeric,
   	"order" numeric,
+  	"legacy_url" varchar,
+  	"import_status" "enum_governance_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -991,6 +1024,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"translation_original_title" varchar,
   	"translation_original_url" varchar,
   	"translation_original_source" varchar,
+  	"legacy_url" varchar,
+  	"import_status" "enum_articles_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"_status" "enum_articles_status" DEFAULT 'draft'
@@ -1056,6 +1091,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"version_translation_original_title" varchar,
   	"version_translation_original_url" varchar,
   	"version_translation_original_source" varchar,
+  	"version_legacy_url" varchar,
+  	"version_import_status" "enum__articles_v_version_import_status",
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
   	"version__status" "enum__articles_v_version_status" DEFAULT 'draft',
@@ -1112,6 +1149,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"foreword_id" integer,
   	"license" "enum_publications_license",
   	"print_edition_url" varchar,
+  	"legacy_url" varchar,
+  	"import_status" "enum_publications_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -1164,6 +1203,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"outlet_id" integer,
   	"published_date" timestamp(3) with time zone,
   	"date_precision" "enum_press_date_precision" DEFAULT 'day',
+  	"legacy_url" varchar,
+  	"import_status" "enum_press_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -1277,6 +1318,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"pricing_max" numeric,
   	"pricing_currency" "enum_events_pricing_currency" DEFAULT 'EGP',
   	"pricing_need_based_deductions" boolean,
+  	"legacy_url" varchar,
+  	"import_status" "enum_events_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -1303,6 +1346,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"slug" varchar,
   	"issue_date" timestamp(3) with time zone,
   	"cover_image_id" integer,
+  	"legacy_url" varchar,
+  	"import_status" "enum_newsletters_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"_status" "enum_newsletters_status" DEFAULT 'draft'
@@ -1323,6 +1368,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"version_slug" varchar,
   	"version_issue_date" timestamp(3) with time zone,
   	"version_cover_image_id" integer,
+  	"version_legacy_url" varchar,
+  	"version_import_status" "enum__newsletters_v_version_import_status",
   	"version_updated_at" timestamp(3) with time zone,
   	"version_created_at" timestamp(3) with time zone,
   	"version__status" "enum__newsletters_v_version_status" DEFAULT 'draft',
@@ -1356,6 +1403,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"state" "enum_spaces_state",
   	"opened_year" numeric,
   	"closed_year" numeric,
+  	"legacy_url" varchar,
+  	"import_status" "enum_spaces_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -1381,6 +1430,8 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   	"slug" varchar NOT NULL,
   	"url" varchar,
   	"logo_id" integer,
+  	"legacy_url" varchar,
+  	"import_status" "enum_partners_import_status",
   	"updated_at" timestamp(3) with time zone DEFAULT now() NOT NULL,
   	"created_at" timestamp(3) with time zone DEFAULT now() NOT NULL
   );
@@ -1988,11 +2039,13 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "people_social_links_parent_id_idx" ON "people_social_links" USING btree ("_parent_id");
   CREATE UNIQUE INDEX "people_slug_idx" ON "people" USING btree ("slug");
   CREATE INDEX "people_photo_idx" ON "people" USING btree ("photo_id");
+  CREATE UNIQUE INDEX "people_legacy_url_idx" ON "people" USING btree ("legacy_url");
   CREATE INDEX "people_updated_at_idx" ON "people" USING btree ("updated_at");
   CREATE INDEX "people_created_at_idx" ON "people" USING btree ("created_at");
   CREATE UNIQUE INDEX "people_locales_locale_parent_id_unique" ON "people_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "memberships_person_idx" ON "memberships" USING btree ("person_id");
   CREATE INDEX "memberships_programme_idx" ON "memberships" USING btree ("programme_id");
+  CREATE UNIQUE INDEX "memberships_legacy_url_idx" ON "memberships" USING btree ("legacy_url");
   CREATE INDEX "memberships_updated_at_idx" ON "memberships" USING btree ("updated_at");
   CREATE INDEX "memberships_created_at_idx" ON "memberships" USING btree ("created_at");
   CREATE UNIQUE INDEX "person_programme_idx" ON "memberships" USING btree ("person_id","programme_id");
@@ -2035,6 +2088,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "courses_cover_image_idx" ON "courses" USING btree ("cover_image_id");
   CREATE UNIQUE INDEX "courses_slug_idx" ON "courses" USING btree ("slug");
   CREATE INDEX "courses_registration_registration_form_idx" ON "courses" USING btree ("registration_form_id");
+  CREATE UNIQUE INDEX "courses_legacy_url_idx" ON "courses" USING btree ("legacy_url");
   CREATE INDEX "courses_updated_at_idx" ON "courses" USING btree ("updated_at");
   CREATE INDEX "courses_created_at_idx" ON "courses" USING btree ("created_at");
   CREATE INDEX "courses__status_idx" ON "courses" USING btree ("_status");
@@ -2077,6 +2131,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_courses_v_version_version_cover_image_idx" ON "_courses_v" USING btree ("version_cover_image_id");
   CREATE INDEX "_courses_v_version_version_slug_idx" ON "_courses_v" USING btree ("version_slug");
   CREATE INDEX "_courses_v_version_registration_version_registration_for_idx" ON "_courses_v" USING btree ("version_registration_form_id");
+  CREATE INDEX "_courses_v_version_version_legacy_url_idx" ON "_courses_v" USING btree ("version_legacy_url");
   CREATE INDEX "_courses_v_version_version_updated_at_idx" ON "_courses_v" USING btree ("version_updated_at");
   CREATE INDEX "_courses_v_version_version_created_at_idx" ON "_courses_v" USING btree ("version_created_at");
   CREATE INDEX "_courses_v_version_version__status_idx" ON "_courses_v" USING btree ("version__status");
@@ -2122,6 +2177,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "programmes_cover_idx" ON "programmes" USING btree ("cover_id");
   CREATE UNIQUE INDEX "programmes_slug_idx" ON "programmes" USING btree ("slug");
   CREATE INDEX "programmes_registration_registration_form_idx" ON "programmes" USING btree ("registration_form_id");
+  CREATE UNIQUE INDEX "programmes_legacy_url_idx" ON "programmes" USING btree ("legacy_url");
   CREATE INDEX "programmes_updated_at_idx" ON "programmes" USING btree ("updated_at");
   CREATE INDEX "programmes_created_at_idx" ON "programmes" USING btree ("created_at");
   CREATE INDEX "programmes__status_idx" ON "programmes" USING btree ("_status");
@@ -2158,6 +2214,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_programmes_v_version_version_cover_idx" ON "_programmes_v" USING btree ("version_cover_id");
   CREATE INDEX "_programmes_v_version_version_slug_idx" ON "_programmes_v" USING btree ("version_slug");
   CREATE INDEX "_programmes_v_version_registration_version_registration__idx" ON "_programmes_v" USING btree ("version_registration_form_id");
+  CREATE INDEX "_programmes_v_version_version_legacy_url_idx" ON "_programmes_v" USING btree ("version_legacy_url");
   CREATE INDEX "_programmes_v_version_version_updated_at_idx" ON "_programmes_v" USING btree ("version_updated_at");
   CREATE INDEX "_programmes_v_version_version_created_at_idx" ON "_programmes_v" USING btree ("version_created_at");
   CREATE INDEX "_programmes_v_version_version__status_idx" ON "_programmes_v" USING btree ("version__status");
@@ -2188,12 +2245,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "cycles_space_idx" ON "cycles" USING btree ("space_id");
   CREATE INDEX "cycles_academic_year_idx" ON "cycles" USING btree ("academic_year");
   CREATE INDEX "cycles_registration_registration_form_idx" ON "cycles" USING btree ("registration_form_id");
+  CREATE UNIQUE INDEX "cycles_legacy_url_idx" ON "cycles" USING btree ("legacy_url");
   CREATE INDEX "cycles_updated_at_idx" ON "cycles" USING btree ("updated_at");
   CREATE INDEX "cycles_created_at_idx" ON "cycles" USING btree ("created_at");
   CREATE UNIQUE INDEX "season_start_year_space_idx" ON "cycles" USING btree ("season","start_year","space_id");
   CREATE INDEX "cycles_meta_meta_image_idx" ON "cycles_locales" USING btree ("meta_image_id","_locale");
   CREATE UNIQUE INDEX "cycles_locales_locale_parent_id_unique" ON "cycles_locales" USING btree ("_locale","_parent_id");
   CREATE INDEX "governance_person_idx" ON "governance" USING btree ("person_id");
+  CREATE UNIQUE INDEX "governance_legacy_url_idx" ON "governance" USING btree ("legacy_url");
   CREATE INDEX "governance_updated_at_idx" ON "governance" USING btree ("updated_at");
   CREATE INDEX "governance_created_at_idx" ON "governance" USING btree ("created_at");
   CREATE UNIQUE INDEX "governance_locales_locale_parent_id_unique" ON "governance_locales" USING btree ("_locale","_parent_id");
@@ -2204,6 +2263,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "articles_tags_parent_id_idx" ON "articles_tags" USING btree ("_parent_id");
   CREATE UNIQUE INDEX "articles_slug_idx" ON "articles" USING btree ("slug");
   CREATE INDEX "articles_cover_image_idx" ON "articles" USING btree ("cover_image_id");
+  CREATE UNIQUE INDEX "articles_legacy_url_idx" ON "articles" USING btree ("legacy_url");
   CREATE INDEX "articles_updated_at_idx" ON "articles" USING btree ("updated_at");
   CREATE INDEX "articles_created_at_idx" ON "articles" USING btree ("created_at");
   CREATE INDEX "articles__status_idx" ON "articles" USING btree ("_status");
@@ -2222,6 +2282,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_articles_v_parent_idx" ON "_articles_v" USING btree ("parent_id");
   CREATE INDEX "_articles_v_version_version_slug_idx" ON "_articles_v" USING btree ("version_slug");
   CREATE INDEX "_articles_v_version_version_cover_image_idx" ON "_articles_v" USING btree ("version_cover_image_id");
+  CREATE INDEX "_articles_v_version_version_legacy_url_idx" ON "_articles_v" USING btree ("version_legacy_url");
   CREATE INDEX "_articles_v_version_version_updated_at_idx" ON "_articles_v" USING btree ("version_updated_at");
   CREATE INDEX "_articles_v_version_version_created_at_idx" ON "_articles_v" USING btree ("version_created_at");
   CREATE INDEX "_articles_v_version_version__status_idx" ON "_articles_v" USING btree ("version__status");
@@ -2243,6 +2304,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "publications_cover_image_idx" ON "publications" USING btree ("cover_image_id");
   CREATE UNIQUE INDEX "publications_slug_idx" ON "publications" USING btree ("slug");
   CREATE INDEX "publications_foreword_idx" ON "publications" USING btree ("foreword_id");
+  CREATE UNIQUE INDEX "publications_legacy_url_idx" ON "publications" USING btree ("legacy_url");
   CREATE INDEX "publications_updated_at_idx" ON "publications" USING btree ("updated_at");
   CREATE INDEX "publications_created_at_idx" ON "publications" USING btree ("created_at");
   CREATE INDEX "publications_meta_meta_image_idx" ON "publications_locales" USING btree ("meta_image_id","_locale");
@@ -2260,6 +2322,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "press_links_order_idx" ON "press_links" USING btree ("_order");
   CREATE INDEX "press_links_parent_id_idx" ON "press_links" USING btree ("_parent_id");
   CREATE INDEX "press_outlet_idx" ON "press" USING btree ("outlet_id");
+  CREATE UNIQUE INDEX "press_legacy_url_idx" ON "press" USING btree ("legacy_url");
   CREATE INDEX "press_updated_at_idx" ON "press" USING btree ("updated_at");
   CREATE INDEX "press_created_at_idx" ON "press" USING btree ("created_at");
   CREATE INDEX "press_meta_meta_image_idx" ON "press_locales" USING btree ("meta_image_id","_locale");
@@ -2288,12 +2351,14 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE UNIQUE INDEX "events_slug_idx" ON "events" USING btree ("slug");
   CREATE INDEX "events_space_idx" ON "events" USING btree ("space_id");
   CREATE INDEX "events_registration_registration_form_idx" ON "events" USING btree ("registration_form_id");
+  CREATE UNIQUE INDEX "events_legacy_url_idx" ON "events" USING btree ("legacy_url");
   CREATE INDEX "events_updated_at_idx" ON "events" USING btree ("updated_at");
   CREATE INDEX "events_created_at_idx" ON "events" USING btree ("created_at");
   CREATE INDEX "events_meta_meta_image_idx" ON "events_locales" USING btree ("meta_image_id","_locale");
   CREATE UNIQUE INDEX "events_locales_locale_parent_id_unique" ON "events_locales" USING btree ("_locale","_parent_id");
   CREATE UNIQUE INDEX "newsletters_slug_idx" ON "newsletters" USING btree ("slug");
   CREATE INDEX "newsletters_cover_image_idx" ON "newsletters" USING btree ("cover_image_id");
+  CREATE UNIQUE INDEX "newsletters_legacy_url_idx" ON "newsletters" USING btree ("legacy_url");
   CREATE INDEX "newsletters_updated_at_idx" ON "newsletters" USING btree ("updated_at");
   CREATE INDEX "newsletters_created_at_idx" ON "newsletters" USING btree ("created_at");
   CREATE INDEX "newsletters__status_idx" ON "newsletters" USING btree ("_status");
@@ -2301,6 +2366,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "_newsletters_v_parent_idx" ON "_newsletters_v" USING btree ("parent_id");
   CREATE INDEX "_newsletters_v_version_version_slug_idx" ON "_newsletters_v" USING btree ("version_slug");
   CREATE INDEX "_newsletters_v_version_version_cover_image_idx" ON "_newsletters_v" USING btree ("version_cover_image_id");
+  CREATE INDEX "_newsletters_v_version_version_legacy_url_idx" ON "_newsletters_v" USING btree ("version_legacy_url");
   CREATE INDEX "_newsletters_v_version_version_updated_at_idx" ON "_newsletters_v" USING btree ("version_updated_at");
   CREATE INDEX "_newsletters_v_version_version_created_at_idx" ON "_newsletters_v" USING btree ("version_created_at");
   CREATE INDEX "_newsletters_v_version_version__status_idx" ON "_newsletters_v" USING btree ("version__status");
@@ -2314,6 +2380,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "spaces_images_parent_id_idx" ON "spaces_images" USING btree ("_parent_id");
   CREATE INDEX "spaces_images_image_idx" ON "spaces_images" USING btree ("image_id");
   CREATE UNIQUE INDEX "spaces_slug_idx" ON "spaces" USING btree ("slug");
+  CREATE UNIQUE INDEX "spaces_legacy_url_idx" ON "spaces" USING btree ("legacy_url");
   CREATE INDEX "spaces_updated_at_idx" ON "spaces" USING btree ("updated_at");
   CREATE INDEX "spaces_created_at_idx" ON "spaces" USING btree ("created_at");
   CREATE UNIQUE INDEX "spaces_locales_locale_parent_id_unique" ON "spaces_locales" USING btree ("_locale","_parent_id");
@@ -2321,6 +2388,7 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "partners_kind_parent_idx" ON "partners_kind" USING btree ("parent_id");
   CREATE UNIQUE INDEX "partners_slug_idx" ON "partners" USING btree ("slug");
   CREATE INDEX "partners_logo_idx" ON "partners" USING btree ("logo_id");
+  CREATE UNIQUE INDEX "partners_legacy_url_idx" ON "partners" USING btree ("legacy_url");
   CREATE INDEX "partners_updated_at_idx" ON "partners" USING btree ("updated_at");
   CREATE INDEX "partners_created_at_idx" ON "partners" USING btree ("created_at");
   CREATE UNIQUE INDEX "partners_locales_locale_parent_id_unique" ON "partners_locales" USING btree ("_locale","_parent_id");
@@ -2602,7 +2670,9 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."_locales";
   DROP TYPE "public"."enum_users_roles";
   DROP TYPE "public"."enum_people_social_links_platform";
+  DROP TYPE "public"."enum_people_import_status";
   DROP TYPE "public"."enum_memberships_role";
+  DROP TYPE "public"."enum_memberships_import_status";
   DROP TYPE "public"."enum_courses_schedule_slots_weekday";
   DROP TYPE "public"."enum_courses_sessions_bibliography_type";
   DROP TYPE "public"."enum_courses_sessions_activities_kind";
@@ -2615,6 +2685,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_courses_registration_method";
   DROP TYPE "public"."enum_courses_pricing_override_currency";
   DROP TYPE "public"."enum_courses_session_unit";
+  DROP TYPE "public"."enum_courses_import_status";
   DROP TYPE "public"."enum_courses_status";
   DROP TYPE "public"."enum__courses_v_version_schedule_slots_weekday";
   DROP TYPE "public"."enum__courses_v_version_sessions_bibliography_type";
@@ -2628,6 +2699,7 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum__courses_v_version_registration_method";
   DROP TYPE "public"."enum__courses_v_version_pricing_override_currency";
   DROP TYPE "public"."enum__courses_v_version_session_unit";
+  DROP TYPE "public"."enum__courses_v_version_import_status";
   DROP TYPE "public"."enum__courses_v_version_status";
   DROP TYPE "public"."enum__courses_v_published_locale";
   DROP TYPE "public"."enum_enrollments_status";
@@ -2636,38 +2708,46 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_programmes_kind";
   DROP TYPE "public"."enum_programmes_registration_method";
   DROP TYPE "public"."enum_programmes_pricing_currency";
+  DROP TYPE "public"."enum_programmes_import_status";
   DROP TYPE "public"."enum_programmes_status";
   DROP TYPE "public"."enum__programmes_v_version_components_course_types";
   DROP TYPE "public"."enum__programmes_v_version_kind";
   DROP TYPE "public"."enum__programmes_v_version_registration_method";
   DROP TYPE "public"."enum__programmes_v_version_pricing_currency";
+  DROP TYPE "public"."enum__programmes_v_version_import_status";
   DROP TYPE "public"."enum__programmes_v_version_status";
   DROP TYPE "public"."enum__programmes_v_published_locale";
   DROP TYPE "public"."enum_cycles_pricing_course_types";
   DROP TYPE "public"."enum_cycles_pricing_pricing_currency";
   DROP TYPE "public"."enum_cycles_season";
   DROP TYPE "public"."enum_cycles_registration_method";
+  DROP TYPE "public"."enum_cycles_import_status";
   DROP TYPE "public"."enum_governance_role";
+  DROP TYPE "public"."enum_governance_import_status";
   DROP TYPE "public"."enum_articles_credits_role";
   DROP TYPE "public"."enum_articles_review_status";
   DROP TYPE "public"."enum_articles_requested_tier";
   DROP TYPE "public"."enum_articles_tier";
   DROP TYPE "public"."enum_articles_translation_original_language";
+  DROP TYPE "public"."enum_articles_import_status";
   DROP TYPE "public"."enum_articles_status";
   DROP TYPE "public"."enum__articles_v_version_credits_role";
   DROP TYPE "public"."enum__articles_v_version_review_status";
   DROP TYPE "public"."enum__articles_v_version_requested_tier";
   DROP TYPE "public"."enum__articles_v_version_tier";
   DROP TYPE "public"."enum__articles_v_version_translation_original_language";
+  DROP TYPE "public"."enum__articles_v_version_import_status";
   DROP TYPE "public"."enum__articles_v_version_status";
   DROP TYPE "public"."enum__articles_v_published_locale";
   DROP TYPE "public"."enum_publications_credits_role";
   DROP TYPE "public"."enum_publications_kind";
   DROP TYPE "public"."enum_publications_license";
+  DROP TYPE "public"."enum_publications_import_status";
   DROP TYPE "public"."enum_press_links_language";
   DROP TYPE "public"."enum_press_kind";
   DROP TYPE "public"."enum_press_language";
   DROP TYPE "public"."enum_press_date_precision";
+  DROP TYPE "public"."enum_press_import_status";
   DROP TYPE "public"."enum_events_schedule_slots_weekday";
   DROP TYPE "public"."enum_events_partners_role";
   DROP TYPE "public"."enum_events_tier";
@@ -2675,11 +2755,16 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "public"."enum_events_schedule_start_precision";
   DROP TYPE "public"."enum_events_registration_method";
   DROP TYPE "public"."enum_events_pricing_currency";
+  DROP TYPE "public"."enum_events_import_status";
+  DROP TYPE "public"."enum_newsletters_import_status";
   DROP TYPE "public"."enum_newsletters_status";
+  DROP TYPE "public"."enum__newsletters_v_version_import_status";
   DROP TYPE "public"."enum__newsletters_v_version_status";
   DROP TYPE "public"."enum__newsletters_v_published_locale";
   DROP TYPE "public"."enum_spaces_state";
+  DROP TYPE "public"."enum_spaces_import_status";
   DROP TYPE "public"."enum_partners_kind";
+  DROP TYPE "public"."enum_partners_import_status";
   DROP TYPE "public"."enum_forms_confirmation_type";
   DROP TYPE "public"."enum_redirects_to_type";
   DROP TYPE "public"."enum_redirects_type";

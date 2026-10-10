@@ -460,6 +460,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_people_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -502,6 +515,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "people_legacy_url_idx": {
+          "name": "people_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -674,6 +702,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_memberships_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -716,6 +757,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "memberships_legacy_url_idx": {
+          "name": "memberships_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -2694,6 +2750,19 @@
           "notNull": false,
           "default": "'session'"
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_courses_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -2774,6 +2843,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_legacy_url_idx": {
+          "name": "courses_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -4767,6 +4851,19 @@
           "notNull": false,
           "default": "'session'"
         },
+        "version_legacy_url": {
+          "name": "version_legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_import_status": {
+          "name": "version_import_status",
+          "type": "enum__courses_v_version_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "version_updated_at": {
           "name": "version_updated_at",
           "type": "timestamp(3) with time zone",
@@ -4893,6 +4990,21 @@
           "columns": [
             {
               "expression": "version_registration_form_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_courses_v_version_version_legacy_url_idx": {
+          "name": "_courses_v_version_version_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "version_legacy_url",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -6784,6 +6896,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_programmes_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -6849,6 +6974,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "programmes_legacy_url_idx": {
+          "name": "programmes_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -8454,6 +8594,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_legacy_url": {
+          "name": "version_legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_import_status": {
+          "name": "version_import_status",
+          "type": "enum__programmes_v_version_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "version_updated_at": {
           "name": "version_updated_at",
           "type": "timestamp(3) with time zone",
@@ -8559,6 +8712,21 @@
           "columns": [
             {
               "expression": "version_registration_form_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_programmes_v_version_version_legacy_url_idx": {
+          "name": "_programmes_v_version_version_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "version_legacy_url",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -9679,6 +9847,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_cycles_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -9751,6 +9932,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "cycles_legacy_url_idx": {
+          "name": "cycles_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -10020,6 +10216,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_governance_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -10047,6 +10256,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "governance_legacy_url_idx": {
+          "name": "governance_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -10518,6 +10742,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_articles_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -10568,6 +10805,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "articles_legacy_url_idx": {
+          "name": "articles_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -11295,6 +11547,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_legacy_url": {
+          "name": "version_legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_import_status": {
+          "name": "version_import_status",
+          "type": "enum__articles_v_version_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "version_updated_at": {
           "name": "version_updated_at",
           "type": "timestamp(3) with time zone",
@@ -11385,6 +11650,21 @@
           "columns": [
             {
               "expression": "version_cover_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_articles_v_version_version_legacy_url_idx": {
+          "name": "_articles_v_version_version_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "version_legacy_url",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -12077,6 +12357,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_publications_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -12134,6 +12427,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "publications_legacy_url_idx": {
+          "name": "publications_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -12836,6 +13144,19 @@
           "notNull": false,
           "default": "'day'"
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_press_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -12863,6 +13184,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "press_legacy_url_idx": {
+          "name": "press_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -14072,6 +14408,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_events_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -14174,6 +14523,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "events_legacy_url_idx": {
+          "name": "events_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -14479,6 +14843,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_newsletters_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -14529,6 +14906,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "newsletters_legacy_url_idx": {
+          "name": "newsletters_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -14721,6 +15113,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "version_legacy_url": {
+          "name": "version_legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version_import_status": {
+          "name": "version_import_status",
+          "type": "enum__newsletters_v_version_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "version_updated_at": {
           "name": "version_updated_at",
           "type": "timestamp(3) with time zone",
@@ -14811,6 +15216,21 @@
           "columns": [
             {
               "expression": "version_cover_image_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "_newsletters_v_version_version_legacy_url_idx": {
+          "name": "_newsletters_v_version_version_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "version_legacy_url",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -15214,6 +15634,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_spaces_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -15235,6 +15668,21 @@
           "columns": [
             {
               "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "spaces_legacy_url_idx": {
+          "name": "spaces_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -15481,6 +15929,19 @@
           "primaryKey": false,
           "notNull": false
         },
+        "legacy_url": {
+          "name": "legacy_url",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "import_status": {
+          "name": "import_status",
+          "type": "enum_partners_import_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
         "updated_at": {
           "name": "updated_at",
           "type": "timestamp(3) with time zone",
@@ -15523,6 +15984,21 @@
             }
           ],
           "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "partners_legacy_url_idx": {
+          "name": "partners_legacy_url_idx",
+          "columns": [
+            {
+              "expression": "legacy_url",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -20019,6 +20495,14 @@
         "linkedin"
       ]
     },
+    "public.enum_people_import_status": {
+      "name": "enum_people_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum_memberships_role": {
       "name": "enum_memberships_role",
       "schema": "public",
@@ -20026,6 +20510,14 @@
         "student",
         "residential_fellow",
         "visiting_fellow"
+      ]
+    },
+    "public.enum_memberships_import_status": {
+      "name": "enum_memberships_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum_courses_schedule_slots_weekday": {
@@ -20142,6 +20634,14 @@
       "values": [
         "session",
         "week"
+      ]
+    },
+    "public.enum_courses_import_status": {
+      "name": "enum_courses_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum_courses_status": {
@@ -20268,6 +20768,14 @@
         "week"
       ]
     },
+    "public.enum__courses_v_version_import_status": {
+      "name": "enum__courses_v_version_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum__courses_v_version_status": {
       "name": "enum__courses_v_version_status",
       "schema": "public",
@@ -20340,6 +20848,14 @@
         "EGP"
       ]
     },
+    "public.enum_programmes_import_status": {
+      "name": "enum_programmes_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum_programmes_status": {
       "name": "enum_programmes_status",
       "schema": "public",
@@ -20382,6 +20898,14 @@
       "schema": "public",
       "values": [
         "EGP"
+      ]
+    },
+    "public.enum__programmes_v_version_import_status": {
+      "name": "enum__programmes_v_version_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum__programmes_v_version_status": {
@@ -20437,12 +20961,28 @@
         "closed"
       ]
     },
+    "public.enum_cycles_import_status": {
+      "name": "enum_cycles_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum_governance_role": {
       "name": "enum_governance_role",
       "schema": "public",
       "values": [
         "advisor",
         "trustee"
+      ]
+    },
+    "public.enum_governance_import_status": {
+      "name": "enum_governance_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum_articles_credits_role": {
@@ -20500,6 +21040,14 @@
         "de",
         "fr",
         "other"
+      ]
+    },
+    "public.enum_articles_import_status": {
+      "name": "enum_articles_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum_articles_status": {
@@ -20567,6 +21115,14 @@
         "other"
       ]
     },
+    "public.enum__articles_v_version_import_status": {
+      "name": "enum__articles_v_version_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum__articles_v_version_status": {
       "name": "enum__articles_v_version_status",
       "schema": "public",
@@ -20621,6 +21177,14 @@
         "all_rights_reserved"
       ]
     },
+    "public.enum_publications_import_status": {
+      "name": "enum_publications_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum_press_links_language": {
       "name": "enum_press_links_language",
       "schema": "public",
@@ -20660,6 +21224,14 @@
         "day",
         "month",
         "year"
+      ]
+    },
+    "public.enum_press_import_status": {
+      "name": "enum_press_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum_events_schedule_slots_weekday": {
@@ -20737,12 +21309,36 @@
         "EGP"
       ]
     },
+    "public.enum_events_import_status": {
+      "name": "enum_events_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
+    "public.enum_newsletters_import_status": {
+      "name": "enum_newsletters_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum_newsletters_status": {
       "name": "enum_newsletters_status",
       "schema": "public",
       "values": [
         "draft",
         "published"
+      ]
+    },
+    "public.enum__newsletters_v_version_import_status": {
+      "name": "enum__newsletters_v_version_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum__newsletters_v_version_status": {
@@ -20769,6 +21365,14 @@
         "former"
       ]
     },
+    "public.enum_spaces_import_status": {
+      "name": "enum_spaces_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
+      ]
+    },
     "public.enum_partners_kind": {
       "name": "enum_partners_kind",
       "schema": "public",
@@ -20777,6 +21381,14 @@
         "co_host",
         "outlet",
         "other"
+      ]
+    },
+    "public.enum_partners_import_status": {
+      "name": "enum_partners_import_status",
+      "schema": "public",
+      "values": [
+        "needs_review",
+        "reviewed"
       ]
     },
     "public.enum_forms_confirmation_type": {
@@ -20824,6 +21436,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "2ffd9cb9-9401-4b91-ba9e-b4c2d8d068f8",
+  "id": "fde72717-c8b1-4cab-9d96-46efecba48fc",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }
