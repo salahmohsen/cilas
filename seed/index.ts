@@ -40,7 +40,7 @@ await seedCourses(payload, ctx)
 await linkFellows(payload, ctx) // validates that course fellows were seeded
 await seedGovernance(payload, ctx)
 await seedArticles(payload, ctx)
-await seedPress(payload)
+await seedPress(payload, ctx)
 await seedEvents(payload, ctx)
 await seedPublications(payload, ctx)
 await seedSiteSettings(payload)

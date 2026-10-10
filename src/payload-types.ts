@@ -1177,16 +1177,34 @@ export interface Publication {
  */
 export interface Press {
   id: number;
-  organisation: string;
-  article_url: string;
-  logo?: (number | null) | Media;
-  article_title?: string | null;
+  kind: 'coverage' | 'interview' | 'talk' | 'op_ed';
+  title: string;
+  language?: ('ar' | 'en' | 'de' | 'fr' | 'other') | null;
+  outlet?: (number | null) | Partner;
   /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   * A person with a profile, or just a name.
    */
-  generateSlug?: boolean | null;
-  slug?: string | null;
+  authors?:
+    | {
+        person?: (number | null) | Person;
+        name?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   published_date?: string | null;
+  date_precision?: ('day' | 'month' | 'year') | null;
+  /**
+   * One per language the piece appeared in.
+   */
+  links?:
+    | {
+        language?: ('ar' | 'en' | 'de' | 'fr' | 'other') | null;
+        url: string;
+        archived_url?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  excerpt?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1869,13 +1887,28 @@ export interface PublicationsSelect<T extends boolean = true> {
  * via the `definition` "press_select".
  */
 export interface PressSelect<T extends boolean = true> {
-  organisation?: T;
-  article_url?: T;
-  logo?: T;
-  article_title?: T;
-  generateSlug?: T;
-  slug?: T;
+  kind?: T;
+  title?: T;
+  language?: T;
+  outlet?: T;
+  authors?:
+    | T
+    | {
+        person?: T;
+        name?: T;
+        id?: T;
+      };
   published_date?: T;
+  date_precision?: T;
+  links?:
+    | T
+    | {
+        language?: T;
+        url?: T;
+        archived_url?: T;
+        id?: T;
+      };
+  excerpt?: T;
   updatedAt?: T;
   createdAt?: T;
 }

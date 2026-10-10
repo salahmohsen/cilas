@@ -24,13 +24,3 @@ export const slugField: typeof payloadSlugField = (args = {}) =>
     },
     ...args,
   })
-
-/**
- * Press items are external coverage: they carry an `article_url` rather than a
- * page of their own, `organisation` repeats across many entries (which would
- * collide on the unique index) and `article_title` is optional. So the slug is
- * derived from the article title when there is one, and left optional so a
- * press entry without a title can still be saved.
- */
-export const optionalSlugField: typeof payloadSlugField = (args = {}) =>
-  slugField({ useAsSlug: 'article_title', required: false, ...args })

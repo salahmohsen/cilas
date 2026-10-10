@@ -2,7 +2,6 @@ import type {
   Article,
   Course,
   Event,
-  Press,
   Publication,
   SiteSetting,
   Space,
@@ -153,7 +152,15 @@ export type ArticleSeed = Omit<
 
 /* ================================================================== press */
 
-export type PressSeed = Draft<Press>
+export type PressSeed = {
+  title: string
+  /** Partner name, resolved to an id. */
+  outlet: string
+  url: string
+  published_date: string
+  date_precision?: 'day' | 'month' | 'year'
+  language?: 'ar' | 'en' | 'de' | 'fr' | 'other'
+}
 
 /* ================================================================= events */
 
