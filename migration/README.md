@@ -16,3 +16,20 @@ Raw files live in `raw/`, which git and Docker ignore:
 `page-kinds.json` corrects the kind for pages the file-name rules misjudge. Edit it, then re-run the ingest.
 
 Reviewed content is protected: `pnpm db:seed` refuses to reset while any document is marked reviewed.
+
+## Cycles and courses (plan 6.2)
+
+Extraction runs page by page through Claude Code agents on a Claude subscription (no API key):
+- `npx tsx migration/extract-courses.ts migration/raw --pending` lists pages that are new or changed.
+- `--prompt <file>` prints a page's prompt. An agent answers it, then `--record <file> <answer.json>` checks the answer against the schema and saves it to `extracted/`.
+- After a prompt change that only matters for bilingual pages, `--restamp-monolingual` re-certifies the single-language ones.
+- With an `ANTHROPIC_API_KEY`, `--api` does the whole run itself instead.
+
+Then:
+1. `npx tsx migration/normalise-courses.ts` writes `../seed/data/archive/{cycles,courses}.json`, plus `review/courses.md` listing every guess or gap.
+2. `npx tsx --env-file=.env migration/seed-courses.ts` upserts them as drafts marked "needs review". Running it again is safe, and reviewed documents are never overwritten.
+
+Rules worth knowing:
+- Winter cycles count by their January year.
+- Cairo cycles whose page names no venue are placed by date: al-Ghuria up to 2016–17, Darb el-Labbana after.
+- Name variants of one person go in `aliases.json`.

@@ -44,7 +44,9 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 - The reset guard.
 - `migration/fetch-mirror.ts`, and the stage-1 `migration/ingest.ts` → `migration/manifest.json` (see `migration/README.md`).
 
-Stages 2–4 come per content type in plans 6.2–6.5.
+- Cycles and courses (plan 6.2): 34 cycles and 290 courses imported as drafts for review. Course-flow uploads are kept as `flow_uploads` in `seed/data/archive/courses.json` for plan 6.4.
+
+Stages 2–4 for people, course flows and publishing come in plans 6.3–6.5.
 
 - **Sources:**
   - The Weebly "Archive Site" ZIP (202 pages and their uploads, snapshot of 23 Apr 2025) is the primary source.

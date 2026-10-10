@@ -39,12 +39,31 @@ const paragraphs = (text: string): string[] => text.split(/\n\s*\n/).map((p) => 
 const rich = (text: string) =>
   text.trim() ? lexical(paragraphs(text), isMostlyArabic(text) ? 'rtl' : 'ltr') : null
 
+const isFree = async (payload: Payload, collection: CollectionSlug, slug: string): Promise<boolean> =>
+  (await payload.count({ collection, where: { slug: { equals: slug } }, overrideAccess: true })).totalDocs === 0
+
+/** `base`, or `base-2`, `base-3`… — the first slug no document in `collection` uses. */
+const freeSlug = async (payload: Payload, collection: CollectionSlug, base: string): Promise<string> => {
+  const { docs } = await payload.find({
+    collection,
+    where: { slug: { like: base } },
+    limit: 1000,
+    depth: 0,
+    select: { slug: true },
+    overrideAccess: true,
+    draft: true,
+  })
+  const taken = new Set(docs.map((d) => (d as { slug?: string }).slug))
+  if (!taken.has(base)) return base
+  for (let n = 2; ; n++) if (!taken.has(`${base}-${n}`)) return `${base}-${n}`
+}
+
 /**
  * Creates the document, or updates it when the import made it and nobody has
  * reviewed it since. Reviewed documents are never touched again.
  *
- * `fallbackSlug` is for a create only: when the slug's unique index rejects
- * the first attempt (two archived courses with one title), it is tried once.
+ * `fallbackSlug` is for a create only: when the slug is taken (two archived
+ * courses with one title), it is used instead, numbered further if needed.
  * An update keeps the slug the document already has.
  */
 const upsert = async (
@@ -62,14 +81,16 @@ const upsert = async (
     await payload.update({ collection, id: existing.id, data: options.fallbackSlug ? rest : data, overrideAccess: true, draft: options.draft } as Parameters<Payload['update']>[0])
     return existing.id
   }
-  const create = (body: Record<string, unknown>) =>
-    payload.create({ collection, data: body, overrideAccess: true, draft: options.draft } as Parameters<Payload['create']>[0])
-  try {
-    return (await create(data)).id as number
-  } catch (error) {
-    if (!options.fallbackSlug) throw error
-    return (await create({ ...data, slug: options.fallbackSlug })).id as number
+  // A taken slug falls back to `fallbackSlug` (the title plus its year), then
+  // to the first free numbered variant of whichever was chosen.
+  let body = data
+  if (typeof data.slug === 'string') {
+    const preferred =
+      options.fallbackSlug && !(await isFree(payload, collection, data.slug)) ? options.fallbackSlug : data.slug
+    body = { ...data, slug: await freeSlug(payload, collection, preferred) }
   }
+  const doc = await payload.create({ collection, data: body, overrideAccess: true, draft: options.draft } as Parameters<Payload['create']>[0])
+  return doc.id as number
 }
 
 /** Imports archived cycles and courses as drafts marked "needs review". */
@@ -129,7 +150,7 @@ export const importCourses = async (
           collection: 'people',
           data: {
             name: f.name,
-            slug: slugify(f.name),
+            slug: await freeSlug(payload, 'people', slugify(f.name)),
             ...(f.bio ? { bio: rich(f.bio) } : {}),
             legacy_url: `${from}#${slugify(f.name)}`,
             import_status: 'needs_review',
