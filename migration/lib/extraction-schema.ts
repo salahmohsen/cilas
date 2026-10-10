@@ -1,7 +1,7 @@
 import * as z from 'zod'
 
 /** Bump when the prompt or schema changes, so cached extractions re-run. */
-export const PROMPT_VERSION = '1'
+export const PROMPT_VERSION = '2'
 
 const time = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/).nullable()
 const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable()
@@ -72,7 +72,8 @@ Rules:
 - Times are 24-hour "HH:MM" in Cairo time ("5:30-8 pm" → 17:30 and 20:00). Weekdays as sat, sun, mon, tue, wed, thu, fri. Dates as YYYY-MM-DD.
 - location: OFFLINE (in person), ONLINE, HYBRID; several if the course mixes them.
 - description: the course's own description, copied verbatim (keep the original language), paragraphs separated by a blank line. Exclude fellow bios, schedules and registration text.
-- fellows: who teaches or coordinates the course, with their bio text and email if the page gives them.
+- fellows: who teaches or coordinates the course, with their bio text and email if the page gives them. Use the person's full name if it appears anywhere on the page (heading, bio, signature, image caption); otherwise the name exactly as written. Never invent a surname.
+- If only a start time is given, leave end_time null; never assume a duration.
 - flow_links: links to the course's flow, syllabus or outline document (uploads/… paths), as written.
 - own_page: the link to the course's own page (often "continue reading"), as written; null if none.
 - space_hint: the venue if named: "darb el-labbana", "al-ghuria", "al-manshiya" (Alexandria), or "online" if the whole cycle is online.
