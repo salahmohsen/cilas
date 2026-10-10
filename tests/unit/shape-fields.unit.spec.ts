@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { CREDIT_ROLES, creditsField } from '@/fields/credits'
+import { importFields } from '@/fields/import'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
@@ -291,5 +292,17 @@ describe('credits and language', () => {
 
   it('lists the languages content comes in', () => {
     expect(LANGUAGE_OPTIONS.map((o) => o.value)).toEqual(['ar', 'en', 'de', 'fr', 'other'])
+  })
+})
+
+describe('importFields', () => {
+  it('adds a hidden, unique legacy URL and an import status', () => {
+    const [legacy, status] = importFields()
+    expect(names([legacy, status])).toEqual(['legacy_url', 'import_status'])
+    expect(legacy).toMatchObject({ type: 'text', unique: true, index: true, admin: { hidden: true } })
+    expect(status).toMatchObject({ type: 'select', admin: { position: 'sidebar' } })
+    expect(
+      (status as { options: Array<{ value: string }> }).options.map((o) => o.value),
+    ).toEqual(['needs_review', 'reviewed'])
   })
 })
