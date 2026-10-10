@@ -11,28 +11,10 @@ Conventions:
 
 ## Shared shapes
 
-**`schedule`** (courses, events). See ADR 0002.
-- `start_date`
-- `start_precision`: `day` | `week`
-- `weeks`
-- `slots[]` {`weekday`, `start_time`, `end_time`, `label`}, in Africa/Cairo wall-clock time
-- `end_date`: computed by a hook
-- `note` (localized): one-off exceptions, e.g. "hybrid for the first 6 weeks, then online"
-- A single shared `expandSchedule()` produces every date shown anywhere. Only `day`-precision items appear on the calendar.
-
-**`registration`** (cycles, courses, events, programmes)
-- `method`: `form` (→ forms) | `external` (url) | `closed`
-- `deadline`
-- `application_requirements` (rich text)
-- `archived_registration_url` (hidden)
-- Whether registration is open is computed from the deadline. A course uses its own deadline if it has one, otherwise its cycle's.
-
-**`pricing`**
-- `min`, `max`
-- `currency`: EGP
-- `note`
-- `need_based_deductions` (bool)
-- `payment_plans[]` {`label`, `installments[]` {`amount`, `due_date`}}
+`schedule`, `registration` and `pricing` are built as field builders in `src/fields/` (`scheduleField()`, `registrationField()`, `pricingField()`), with their logic in `src/lib/schedule.ts` and `src/lib/registration.ts` (ADR 0002). Collections adopt them in plans 3 and 4. When wiring them in:
+- `schedule.end_date` is computed by the field's own hook, which counts the document's top-level `sessions`. So keep `sessions` top-level on courses, and add no collection hook for it.
+- Every `pricingField()` in a collection with drafts takes a short, distinct static `dbName` (e.g. `course_price`), or Postgres index names collide at 63 characters and Payload refuses to boot.
+- `registration.form` uses the column `registration_form_id`, the same one as the old top-level `registration_form` on courses and events. Remove the old field in the same migration.
 
 **`credits[]`** (articles, publications)
 - `role`: author | translator | editor | illustrator | photographer | other
