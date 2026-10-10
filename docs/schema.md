@@ -27,10 +27,11 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 - **Article submission UI:** authors submit by choosing Submitted and using the main save button; a dedicated Submit button belongs with the frontend.
 
 ## Plugins
-All pinned to the same version as the other `@payloadcms` packages.
-- `plugin-redirects`: the seeder creates one redirect per legacy URL, and admins can edit them without a deploy.
-- `plugin-seo`: on courses, cycles, programmes, publications, articles, events and press. Localized, and filled in automatically from title, summary and cover.
-- `plugin-search`: postponed until the frontend has a search page.
+
+`plugin-redirects` and `plugin-seo` match the code, pinned to the other `@payloadcms` packages' version. Still to do:
+- **Pages:** `src/lib/paths.ts` knows only `/study/<slug>`. Each new frontend route adds its collection there, which also makes redirects and SEO preview URLs reach it.
+- **Archive import (plan 6):** one redirect per legacy URL (`from` is unique, so one row per old path).
+- **Search:** `plugin-search` is postponed until the frontend has a search page.
 
 ## Removed
 - `fields-of-study` and every reference to it.
