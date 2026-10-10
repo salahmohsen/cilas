@@ -23,6 +23,8 @@ const notExtracted: string[] = []
 const linkGaps: { id: string; urls: string[] }[] = []
 const countChecks: { id: string; markers: number; sessions: number }[] = []
 const empty: string[] = []
+// No unit markers the check recognises (tables, Roman numerals): check by eye.
+const unmarked: string[] = []
 
 for (const f of flows) {
   if (!f.source) {
@@ -45,9 +47,10 @@ for (const f of flows) {
 
   const text = readFileSync(path.join(flowDir(f.id), f.method === 'vision' ? 'ocr.txt' : 'text.txt'), 'utf8')
   const markers = unitMarkers(text)
+  const meetings = syllabus.sessions.reduce((n, s) => n + (s.meetings ?? 1), 0)
   if (syllabus.sessions.length === 0) empty.push(f.id)
-  else if (sessionMismatch(markers, syllabus.sessions.length))
-    countChecks.push({ id: f.id, markers, sessions: syllabus.sessions.length })
+  else if (markers === 0) unmarked.push(f.id)
+  else if (sessionMismatch(markers, meetings)) countChecks.push({ id: f.id, markers, sessions: meetings })
 }
 
 const list = (items: string[]) => (items.length ? items.map((i) => `- ${i}`).join('\n') : '_none_')
@@ -67,7 +70,11 @@ ${linkGaps.length ? linkGaps.map((g) => `- ${g.id}\n${g.urls.map((u) => `  - ${u
 
 ## Session count to check
 
-${list(countChecks.map((c) => `${c.id}: ${c.markers} marker(s), ${c.sessions} session(s)`))}
+${list(countChecks.map((c) => `${c.id}: ${c.markers} marker(s), ${c.sessions} meeting(s)`))}
+
+## No unit markers found (check by eye)
+
+${list(unmarked)}
 
 ## Empty syllabi
 
@@ -76,5 +83,5 @@ ${list(empty)}
 mkdirSync(path.join(here, 'review'), { recursive: true })
 writeFileSync(path.join(here, 'review', 'flows.md'), report)
 console.log(
-  `${flows.length} flow(s): ${missingFiles.length} missing file(s), ${notExtracted.length} not extracted, ${linkGaps.length} with links not captured, ${countChecks.length} session count(s) to check, ${empty.length} empty`,
+  `${flows.length} flow(s): ${missingFiles.length} missing file(s), ${notExtracted.length} not extracted, ${linkGaps.length} with links not captured, ${countChecks.length} session count(s) to check, ${unmarked.length} without markers, ${empty.length} empty`,
 )

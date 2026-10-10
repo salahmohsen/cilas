@@ -32,5 +32,10 @@ export const unitMarkers = (text: string): number => {
 }
 
 /** True when the counts differ by more than one, or markers exist but sessions don't. */
-export const sessionMismatch = (markers: number, sessions: number): boolean =>
-  Math.abs(markers - sessions) > 1 || (markers > 0 && sessions === 0)
+/**
+ * Whether the syllabus's meetings (a session spanning "weeks 5–7" counts 3)
+ * differ by more than one from the units the text numbers. With no markers
+ * found, the flow can't be checked this way, so it isn't flagged.
+ */
+export const sessionMismatch = (markers: number, meetings: number): boolean =>
+  markers > 0 && (Math.abs(markers - meetings) > 1 || meetings === 0)

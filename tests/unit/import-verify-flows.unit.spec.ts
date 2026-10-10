@@ -64,4 +64,8 @@ describe('sessionMismatch', () => {
   it('flags markers with no sessions', () => {
     expect(sessionMismatch(1, 0)).toBe(true)
   })
+
+  it('does not flag a flow with no markers to compare against', () => {
+    expect(sessionMismatch(0, 9)).toBe(false)
+  })
 })
