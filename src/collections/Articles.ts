@@ -4,13 +4,13 @@ import type {
   CollectionBeforeOperationHook,
   CollectionBeforeValidateHook,
   CollectionConfig,
+  Where,
 } from 'payload'
 import { APIError } from 'payload'
 
 import {
   canAuthor,
   canSetTier,
-  isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
   isAdminOrOwnWhile,
   isAdminUser,
@@ -122,6 +122,9 @@ export const notifyReview: CollectionAfterChangeHook<Article> = async ({
   return doc
 }
 
+/** Review states in which the article is still with its author. */
+const WITH_AUTHOR: Where = { 'review.status': { in: ['draft', 'changes_requested'] } }
+
 /** A piece of writing by members of the community, published after review. */
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -129,11 +132,10 @@ export const Articles: CollectionConfig = {
     read: readTiers(ownsViaAuthors, { drafts: true }),
     readVersions: isAdminOrOwnVersions(ownsViaAuthors),
     create: canAuthor,
-    // Authors edit only while the article is with them, not once submitted.
-    update: isAdminOrOwnWhile(ownsViaAuthors, {
-      'review.status': { in: ['draft', 'changes_requested'] },
-    }),
-    delete: isAdminOrOwnAndDraft(ownsViaAuthors),
+    // Authors edit or delete only while the article is with them, not once
+    // submitted. `_status` alone would let them delete a submitted article.
+    update: isAdminOrOwnWhile(ownsViaAuthors, WITH_AUTHOR),
+    delete: isAdminOrOwnWhile(ownsViaAuthors, WITH_AUTHOR),
   },
   versions: { drafts: true },
   admin: {
