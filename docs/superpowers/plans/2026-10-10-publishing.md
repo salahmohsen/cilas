@@ -50,16 +50,19 @@ These fill gaps the spec leaves open. Where the grilling session (Q10, Q11, Q17â
 - **Every other review state forces `_status: draft`.** So `approved` is the only way to publish, and moving an approved article back to another state unpublishes it.
 - **Re-saving an approved article** leaves `_status` as Payload set it, so an admin can still save a draft of edits.
 - **Server-side calls with no user** (seeds, imports) are trusted like an admin.
-- **Submitting is a full save, not a draft save.** Payload's draft saves only write a version, so the access rule (which reads the main document) would not see the new review state. The hook keeps the article unpublished either way.
+- **A draft save may not change the review status.** Payload decides a draft save from the operation args before any hook runs, and a draft save writes only a version. The main document keeps its old review state and `_status`, so the latest version and the main document would disagree: an approval saved as a draft would email "published" while the article stayed unpublished, and an author's draft-save submit would leave the main document at `draft`, still editable. A `beforeOperation` hook records the draft save in `req.context`, and `applyReview` rejects one that changes the review status with a 400 ("use the main save button").
+- **A duplicate starts review again.** A create always reviews from `draft`, because on create `originalDoc` is the duplicate source. Duplicating resets `review.status` to `draft`, and clears `review_note`, `published_date` and `featured`, through field `beforeDuplicate` hooks.
 
 **Article access**
-- **Who can write articles:** `member`, `fellow`, `non_degree_seeking` and admins.
+- **Who can write articles:** `member`, `fellow`, `non_degree_seeking` and admins. A non-admin also needs a linked person, since an article is owned through its authors.
+- **Who can delete:** the same as edit. Admins always; an author only while the review is `draft` or `changes_requested`.
 - **When an author can edit:** only while the review is `draft` or `changes_requested`. Once submitted, the article is locked to them.
 - **New articles:** a non-admin's own person is added to `authors` automatically, so they never lock themselves out.
 
 **Notification emails**
 - Submitted: to every admin and super admin.
-- Approved, changes requested, or rejected: to the accounts linked to the authors, including the admin's note.
+- Approved, changes requested, or rejected: to the accounts linked to the authors. The admin's note goes out only with changes requested or rejected, since it stays on the article afterwards.
+- **Server writes are silent.** Only a write by a signed-in account sends mail. A write with no user (the seed, the archive import) sends nothing, and any caller can opt out with `context: { skipReviewEmail: true }`.
 - A failed send is logged and never fails the save.
 
 **Credits and article shapes**
@@ -92,7 +95,7 @@ These fill gaps the spec leaves open. Where the grilling session (Q10, Q11, Q17â
 
 **Newsletters** have drafts, the public reads published issues, and `readVersions` is limited to admins.
 
-**Versions endpoint:** `readVersions` is now set on courses (admins plus the course's fellows), articles (admins plus authors), programmes and newsletters (admins only).
+**Versions endpoint:** `readVersions` is now set on courses (admins plus the course's fellows), articles (admins plus authors), programmes and newsletters (admins only). Payload applies `readVersions` to the versions table, where fields sit under `version.`, so the ownership rules go through `isAdminOrOwnVersions`, which prefixes them with Payload's `appendVersionToQueryKey`.
 
 **Email sender:** `EMAIL_FROM_ADDRESS` defaults to `noreply@ci-las.org`.
 
