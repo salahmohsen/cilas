@@ -13,6 +13,7 @@ describe('resolveUpload', () => {
       'uploads/1/9/1/0/19102967/syllabus.pdf',
       '/uploads/1/9/1/0/19102967/syllabus.pdf',
       'https://www.ci-las.org/uploads/1/9/1/0/19102967/syllabus.pdf',
+      'https://cilas.lkssystems.com/uploads/1/9/1/0/19102967/syllabus.pdf',
       'https://web.archive.org/web/2025id_/https://www.ci-las.org/uploads/1/9/1/0/19102967/syllabus.pdf',
     ]) {
       expect(resolveUpload(href, files)).toEqual({
