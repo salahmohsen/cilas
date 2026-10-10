@@ -47,11 +47,15 @@ export const addSelfAsAuthor: CollectionBeforeValidateHook<Article> = ({
  */
 export const applyReview: CollectionBeforeChangeHook<Article> = ({
   data,
+  operation,
   originalDoc,
   req,
 }) => {
   const trusted = !req.user || isAdminUser(req.user)
-  const from: ReviewState = originalDoc?.review?.status ?? 'draft'
+  // On create, `originalDoc` is the duplicate source (if any), not this
+  // article's history. A new article always starts from draft.
+  const from: ReviewState =
+    operation === 'create' ? 'draft' : (originalDoc?.review?.status ?? 'draft')
   const to: ReviewState = data.review?.status ?? from
 
   const result = reviewPatch({
@@ -148,11 +152,14 @@ export const Articles: CollectionConfig = {
               // A draft save only writes a version, so submitting must be a full save:
               // choose Submitted, then save with the main button. It stays unpublished.
               admin: { description: 'Ready for an editor? Choose Submitted, then save.' },
+              // A copy goes through review again.
+              hooks: { beforeDuplicate: [() => 'draft'] },
             },
             {
               name: 'review_note',
               type: 'textarea',
               access: { create: canSetTier, update: canSetTier },
+              hooks: { beforeDuplicate: [() => null] },
             },
           ],
         },
@@ -183,12 +190,14 @@ export const Articles: CollectionConfig = {
           name: 'published_date',
           type: 'date',
           access: { create: canSetTier, update: canSetTier },
+          hooks: { beforeDuplicate: [() => null] },
         },
         {
           name: 'featured',
           type: 'checkbox',
           label: 'Feature on home page',
           access: { create: canSetTier, update: canSetTier },
+          hooks: { beforeDuplicate: [() => false] },
         },
       ],
     },
