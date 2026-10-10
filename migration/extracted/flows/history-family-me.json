@@ -1,0 +1,72 @@
+{
+  "sha256": "649ef60fda483054350a9a153387a8875fc5b71281dbf6f47dd47737de1784fd",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Institution of the Family as an object of historical inquiry",
+        "description": "1.1. Overview of the Field of Family History\n\n1.2. Historiography of Family History in the Middle East",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Premodern family structures/ The family in the premodern Islamic Middle East",
+        "description": "2.1. Premodern Families: A global perspective\n\n2.2. The Family in Islamic Writings and Texts",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Western Colonialism and the Family",
+        "description": "3.1. The Bourgeois Metropolitan Family\n\n3.2. Case Studies from the Middle East",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The Family and the Formation of the Modern State",
+        "description": "4.1. The Emergence of “population” as an object of governance\n\n4..2. The Post-Colonial State and the Family",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Nationalisms, Anti-colonialisms, and the Family",
+        "description": "5.1. “Modernizing” and “Liberating” the Muslim Family\n\n5.2. Motherhood and Childhood as anticolonial projects",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Primary Source Assignment on History of the Egyptian Family",
+            "note": "Given during the Ramadan break.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The Family and Modern Science",
+        "description": "6.1. Producing Knowledge about Families in Modern Egypt /Medicalizing gender and the family",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "6.2 Presentation of Final Reflection Paper: How can we study the history of the Family/ What can history of the Family tell us about broader historical processes."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Yosra Sultan\nCILAS SPRING 2021\nTentative Course Flow\n\n“I curse my own child but I hate whoever says amen”: A History of the Family in the Modern Middle East"
+  }
+}

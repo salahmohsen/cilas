@@ -1,0 +1,142 @@
+{
+  "sha256": "5d76e4bfdbde8fd3586e1d84d1646a16f3e02b11888ec95d07b3f5cb690e369f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Principles of biomimicry and what is Nature?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Introductions – materials for class"
+          },
+          {
+            "kind": "discussion",
+            "description": "Socratic questioning"
+          },
+          {
+            "kind": "other",
+            "description": "short lecture"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "I-sites and learning about the Genius of place",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "In the field exploration – learning to nature journal"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "What is nature? What is human nature connection? are we part of nature? Are we above nature?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Socratic questioning"
+          },
+          {
+            "kind": "exercise",
+            "description": "short activities"
+          },
+          {
+            "kind": "other",
+            "description": "lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "discussions"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Discussing Life Principles",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Short game"
+          },
+          {
+            "kind": "other",
+            "description": "lecture"
+          },
+          {
+            "kind": "exercise",
+            "description": "activity"
+          },
+          {
+            "kind": "field_visit",
+            "description": "nature walk"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Biomimicry Design Process",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Lecture"
+          },
+          {
+            "kind": "exercise",
+            "description": "design charette"
+          },
+          {
+            "kind": "discussion",
+            "description": "discussion"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Project work",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Short deliverables and presentations"
+          },
+          {
+            "kind": "discussion",
+            "description": "discussions"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Final presentation of projects by students",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course Syllabus: Discovering Biomimicry\n\nSchedule: Weekly 4 – 6pm Cairo time; Thursday / Monday\nInstruction: Sara El-Sayed\nEmail: sara@dayma.org\n\nDescription and Course objectives: Nature is our best mentor and model for a more sustainable future. Biomimicry is the study of nature-inspired design, but it’s not just about looking at the shape of a flower, it is a methodology to attain sustainable designs in all sectors, engineering, business, medicine and more. This course is an seven-week long course designed to inspire you to begin to think like a biomimic, regardless of your field or career. Each class will be two hours, with a mix of lecture, discussion, nature explorations, activities research and project work\n\nThe objectives are:\n- Identify the core philosophy and key elements of biomimicry\n- Learn from nature-inspired design.\n- Begin to see life for the genius design partner it is\n\nInstructor’s Biography: El-Sayed is pursuing a Ph.D. in food system sustainability, specifically on regenerative food practices in arid regions, she is also a researcher at The Biomimicry Centre, with a focus on Life's Principles. She is co-founder of Nawaya, a social enterprise working as a catalyst to transition small scale farmer communities in Egypt into more sustainable ones through education and research. She is co-founder of Dayma an LLC responsible for outdoor Environmental Education, teaching young adults about Biomimicry and local Egyptian communities. She is an avid traveler, nature lover, and enjoys tasting foods, cooking and interacting with people through food experiences. Sara is on the board of Slow Food, an international movement that started in Italy aiming to safeguard local food cultures and traditions and does so by promoting Good, Clean, and Fair food for all."
+  }
+}

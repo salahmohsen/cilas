@@ -1,0 +1,316 @@
+{
+  "sha256": "65b381ec73321efe21f9720763b3afb943067673f5a6e093f71e8a3fc46e8ef0",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Have we always been enchanted? Introduction to global esotericism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Myth of Disenchantment: Magic, Modernity, and the Birth of the Human Sciences",
+            "note": "Jason Ananda Josephson-Storm. Introduction. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Golden Bough",
+            "note": "James George Frazer. [1890]. Selections. Primary source.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Magic and the Human Sciences: The Myth of Disenchantment",
+            "note": "Forbidden Histories Podcast. Media.",
+            "href": "https://www.youtube.com/watch?v=DMv45EDkWmI"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Origins of the Occult",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Esotericism and the Academy: Rejected Knowledge in Western Culture",
+            "note": "Wouter Hanegraaff. Introduction and selections from Chapter 1. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Secret Doctrine",
+            "note": "Helena Blavatsky. [1880]. Selections. Primary source.",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Wouter Hanegraaff on Western Esotericism",
+            "note": "The Religious Studies Project Podcast. Media.",
+            "href": "https://www.religiousstudiesproject.com/podcast/wouter-hanegraaff-on-western-esotericism/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Fox Sisters and Modern Spiritualism in North America: Between Spectacle and Hoax?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Career of the Fox Sisters",
+            "note": "Arthur Conan Doyle. In The History of Spiritualism (Chapter 5). Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Report on the Fox Sisters’ Incident",
+            "note": "[1888]. Selections. Primary source.",
+            "href": "https://www.loc.gov/item/10034905/"
+          },
+          {
+            "type": "watch",
+            "title": "The Ghost Hoax that Fooled America",
+            "note": "YouTube video essay. Media.",
+            "href": "https://www.youtube.com/watch?v=2ZtXv2YDudg&pp=ygUndGhlIGZveCBzaXN0ZXJzIGFuZCBtb2Rlcm4gc3Bpcml0dWFsaXNt"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "French Spiritism and Allan Kardec: Esotericism as Self-Help Books?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Laboratories of Faith",
+            "note": "John Warne Monroe. Introduction and Selections. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Spirits Books",
+            "note": "Allan Kardec. [1857]. Selections. Primary source.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Mysteries of Paris: French Spiritism and Allan Kardec",
+            "note": "Documentary. Media.",
+            "href": "https://www.youtube.com/watch?v=XXmYSbO14JA&pp=ygUfdG91cm5lcyB0YWJsZXMgZnJlbmNoIHNwaXJpdGlzbQ%3D%3D"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Esotericism and Empire",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Theosophy, Race, and the Study of Esotericism",
+            "note": "Julian Strube. Journal of the American Academy of Religion, pp. 1180–1189. Secondary source.",
+            "href": "https://doi.org/10.1093/jaarel/lfab109"
+          },
+          {
+            "type": "reading",
+            "title": "Conjuring Asia",
+            "note": "Chris Goto-Jones. Chapter 3: “Orientalist Magic”. Secondary source.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Esotericism and the Arab World I",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Arabic Influences on Early Modern Occult Philosophy",
+            "note": "Liana Saif. Palgrave Macmillan UK, 2015. Selections. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rasāʾil Ikhwān al-Ṣafāʾ (Epistle on Magic) and Shams al-Maʿārif",
+            "note": "Excerpts; focus on cosmology and talismanic logic. Primary source.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Islamic Occultic Sciences and the Picatrix",
+            "note": "Let’s Talk Religion, interview with Liana Saif. Media.",
+            "href": "https://www.youtube.com/watch?v=TTpzLqoO6yM&pp=ygUuTGlhbmEgc2FpZiBhcmFiaWMgaW5mbHVlbmNlIG9uIG9jY3VsdCBzY2llbmNlcw%3D%3D"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Esotericism and the Arab World II",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Is There Such a Thing as Islamic Esotericism?",
+            "note": "Mark Sedgwick. In Hermes Explains: Thirty Questions about Western Esotericism, ed. Marco Pasi, Peter Forshaw, and Wouter Hanegraaff (Amsterdam University Press, 2019), 216–24. Secondary source.",
+            "href": "https://doi.org/10.1017/9789048542857.026"
+          },
+          {
+            "type": "reading",
+            "title": "‘What Is Islamic Esotericism?,’",
+            "note": "Liana Saif. Correspondences 7, no. 1 (2019): 1–59. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "'Ala atlal al-madhhab al-madi [On the Ruins of Materialism, 1921]",
+            "note": "Muhammad Farid Wajdi. Selections. Primary source.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Fakir and Holy Men",
+            "note": "Interview with Raphael Cormack for his book Holy Men of the Electromagnetic Age [2025]. Media.",
+            "href": "https://www.youtube.com/watch?v=l2wZt25vcnM&pp=ygUvcmFwaGFlbCBjb3JtYWNrIGhvbHkgbWVuIG9mIHRoZSBlbGVjdHJvbWFnbmV0aWM%3D"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Tantra, Global Esotericism, and Sexuality",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Global Tantra",
+            "note": "Julian Strube. Selections. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Global Tantra",
+            "note": "Media link (New Books Network).",
+            "href": "https://newbooksnetwork.com/global-tantra"
+          },
+          {
+            "type": "reading",
+            "title": "The Serpent Power",
+            "note": "Arthur Avalon. [1919]. Introduction. Primary source.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Esotericism and Gender",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Valentine de Saint-Point, Ricciotto Canudo, F. T. Marinetti: Eroticism, Violence and Feminism from Prewar Paris to Colonial Cairo",
+            "note": "Lucia Re. Quaderni d’italianistica 24, no. 2 (August 28, 2023): 37–69. Secondary source.",
+            "href": "https://doi.org/10.33137/q.i..v24i2.9220"
+          },
+          {
+            "type": "reading",
+            "title": "al-kontessa Valentine de Saint-Point",
+            "note": "Translation of “al-kontessa Valentine de Saint-Point” in al-Risala journal. Primary source.",
+            "href": "https://ar.wikisource.org/wiki/%D9%85%D8%AC%D9%84%D8%A9_%D8%A7%D9%84%D8%B1%D8%B3%D8%A7%D9%84%D8%A9/%D8%A7%D9%84%D8%B9%D8%AF%D8%AF_283/%D8%A7%D9%84%D9%83%D9%88%D9%86%D8%AA%D8%B3_%D9%81%D8%A7%D9%84%D9%86%D8%AA%D9%8A%D9%86_%D8%AF%D9%8A_%D8%B3%D8%A7%D9%86_%D8%A8%D9%88%D8%A7"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Postwar Esotericism, Decadence of the West, and Rise of the East",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Against the Modern World: Traditionalism and the Secret Intellectual History of the Twentieth Century",
+            "note": "Mark Sedgwick. Oxford UP, 2004. Selections. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Crisis of the Modern World",
+            "note": "René Guénon. [1927]. Selections. Primary source.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Al-’Arif Bi-Allah Abdel Halim Mahmud",
+            "note": "Clips from the Egyptian TV series. Media.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Esotericism and the Nation State",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Virgin Made Visible: Intercessory Images of Church Territory in Egypt",
+            "note": "Angie Heo. Comparative Studies in Society and History 54, no. 2 (2012): 361–91. Secondary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Muhammad Hasanin Haykal’s article in Ahram on unveiling the spiritist circle in Nasser’s confidants",
+            "note": "Primary source.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Asharat asqida’",
+            "note": "Ali ‘Abd al-Jalil. Selections. Primary source.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Conclusions and Final Project Presentations",
+        "description": "",
+        "meetings": 2,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Final Project Presentations. Projects will be presented during the final week of class."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Global Esotericism: Spirits, Cults, and a History of Magic. Instructor: Mariam Elashmawy. Email: maryemashmawi@gmail.com\n\nCourse Description: What if magic never really disappeared? What if our modern world, with all its science, technology, and rationality, is still haunted by the occult, the mystical, and the unseen? In this experimental history seminar, we’ll travel across Europe, North America, the Arab world, and Asia to explore how esoteric currents shaped the 19th and 20th centuries. From séances in American parlors to tantric practices in India, to spiritist societies in Egypt’s 52 republic, we’ll rethink the history of modernity through the lens of re-enchantment, and trace why the haunting and the “spooky” has always caught our imagination. This is a course about “weird” things, but also about how we make sense of science, belief, and the boundaries of truth.\n\nEngagement and Encouragement: This course invites you to think differently, read deeply into primary sources, and question what you thought you knew about religion, history, and modern life. No single background is expected or required; artists, skeptics, mystics, scientists, and everyone in between is more than welcome.\n\nPresentations: Each student will be asked to lead the discussion (based on the assigned reading of the week) to open the space up for class discussion. This will also aid students during in-class collective readings of primary sources selected by the instructor. A collective reading and engagement with primary sources in class trains students to analyze and read different historical documents as well as situate them in contemporary discussions about politics, gender, history, etc. Presentations rubric: Clarity of secondary source’s argument; Background and contextualization; Engagement with assigned primary source of the week; Overall effort and presentation.\n\nWeekly Reflections: The instructor will set up a forum for weekly reflection. At the end of each week, each student is expected to write their main takeaway from the week’s discussion, and their reflection on the primary and secondary sources. You can respond to others, comment on a local or global event (past or present), or draw parallels between what we tackled in class and personal anecdotes. Think of this as a space in which you “write in order to think”. You don’t always have to present something polished to be read, sometimes you need to write to think through what you take in around you. It can be as short or as long as you want; it simply has to be thought-provoking. Weekly reflections rubric: Promptness of uploading the reflection; Engagement with class discussion; Clear attempt at thinking through primary and secondary sources; Drawing connections between inside and outside of the classroom.\n\nFinal Project: Explore a theme, movement, or idea from the course through one of the following formats: a research project using primary and secondary sources on an esoteric topic of your choice; a fictitious historical narrative exploring an imagined esoteric encounter or society; a personal reflection that ties in experiences with esoteric, spiritual, or occult traditions to course themes; a visual or mapping project tracing the networks or symbolism of an esoteric tradition; a digital exhibit or video essay explaining a concept, group, or figure in global esotericism. All formats require a 500-word reflection explaining your process, use of sources, and relation to course themes. Projects will be presented during the final week of class. Final project rubric: Engagement with course themes and materials; Creativity and originality; Clarity and coherence; Reflective analysis (500-word statement); Overall effort and presentation.\n\nAll readings and media links will be posted in the shared drive folder."
+  }
+}

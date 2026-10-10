@@ -1,0 +1,245 @@
+{
+  "sha256": "0d9017cf6d08486255f8d001d823261af0277bfc1a9fc2769cd5ee8a5ff4476b",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Performance of Everyday Life",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Presentation Of Self In Everyday Life",
+            "note": "Goffman, E. (1956). University of Edinburgh Social Science Research Center, pp. 8-9, 70, 73.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The archive and the repertoire: performing cultural memory in the Americas",
+            "note": "Taylor, D. (2003). Durham: Duke University Press, pp 19-21, 16.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Performance studies: an introduction",
+            "note": "Schechner, R. (2006). New York: Routledge, pp 28-30.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bodies that matter: on the discursive limits of \"sex\"",
+            "note": "Butler, J. (1993). New York: Routledge, p 12.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "How to do things with words",
+            "note": "Austin, J. L., Urmson, J. O., & Sbisà, M. (1975). Cambridge, MA: Harvard University Press, p. 6 (speech act, performative utterance).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Unmarked: the politics of performance",
+            "note": "Phelan, P. (1993). London: Routledge, pp. 146, 148.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Body as Tool",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Techniques of the Body",
+            "note": "Mauss, Marcel. Economy and Society: 70-88.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Outline of a Theory of Practice",
+            "note": "Bourdieu, Pierre. Cambridge, U.K.: Cambridge University Press, 1977, pp. 72-74, 85-90.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Volatile Bodies: Towards a Corporeal Feminism",
+            "note": "Elizabeth Grosz. Bloomington: Indiana University Press, 1994), page 47-51.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "What is an Apparatus",
+            "note": "Agamben, Giorgio, 2009. Recommended reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Biopolitics of Performance",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Discipline and Punish the Birth of the Prison",
+            "note": "Foucault, Michel. Translated by Alan Sheridan. 2nd ed. New York: Random House, (1977): 135-149, 170-176.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Necropolitics",
+            "note": "Achille Mbembe. Public Culture 15 no.1 (2003): 11-40.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Choreopolice and Choreopolitics: or, the task of the dancer",
+            "note": "Lepecki, A. (2013). TDR/The Drama Review, 57(4), page 20.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Exhausting dance: performance and the politics of movement",
+            "note": "Lepecki, A. (2006). New York: Routledge, page 1-13, 86-106, 106-122.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Dance as Movements",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Democracy's body: Judson Dance Theater, 1962-1964",
+            "note": "Banes, S. (1983). Ann Arbor, MI: UMI Research Press, pp. 26-42, 80-83.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dance: documents of contemporary art",
+            "note": "Lepecki, A. (2012). London: Whitechapel Gallery, pp 44-47, 59 (Yvonne Rainer), 61 (Trisha Brown).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dance Finds a Home in Museums",
+            "note": "Sheets, H.M. (2015, January 22). The New York Times.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Power of \"Co-“in Contemporary Dance",
+            "note": "Larisa Crunteanu. Revista Arta.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On the Marionette Theatre",
+            "note": "Kleist, H. Recommended reading.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Class Discussion"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Becoming",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A thousand plateaus: capitalism and schizophrenia (Body without Organs)",
+            "note": "Deleuze, G., & Guattari, F. (1987). Minneapolis: University of Minnesota Press, pp. 150-151, 153, 157, 164.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A thousand plateaus: capitalism and schizophrenia (Becoming Intense Becoming Animal)",
+            "note": "Deleuze, G., & Guattari, F. (1987). Minneapolis: University of Minnesota Press, pp. 238, 257-258.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "When species meet",
+            "note": "Haraway, D. J. (2008). Minneapolis: University of Minnesota Press, p. 3.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A cyborg manifesto: science, technology, and socialist-feminism in the late twentieth century",
+            "note": "Haraway, D. J. (2009), p. 3.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Volatile Bodies: Towards a Corporeal Feminism",
+            "note": "Elizabeth Grosz. Bloomington: Indiana University Press, 1994), page 166, 173.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Becoming II",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The theatre and its double",
+            "note": "Artaud, A. (1981). pp. 36, 41, 63, 93-94.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Plucking Off the Darkness of the Flesh",
+            "note": "Hijikata, Tatsumi. TDR: The Drama Review, Volume 44, Number 1 (T165) Spring 2000, pp. 51, 53.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dance: documents of contemporary art",
+            "note": "Lepecki, A. (2012). London: Whitechapel Gallery, pp. 107-109.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cruising Utopia the then and there of Queer Futurity",
+            "note": "Muñoz, José E. New York and London: New York University Press, 2009, page 91-113.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On The Act",
+            "note": "Lygia Clark.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "The Performing Body: Theories of Performance and Dance. Time: Monday 6:30pm. Instructor: Salma Abdel Salam. E-mail: smh648@nyu.edu.\n\nThis class will examine the body as a generator of political possibilities, alternative narratives and subversive tactics, highlighting the body as continuous performing entity. In this class students will learn to define performativity and performance through the lens of: ritual, everyday life, politics and social constructs. Using the critical theory we acquire in the first section of the course, students will then begin to learn about the history of modern dance and its development into contemporary dance, linking movement to social movements. Ultimately students will uncover the political potential of dance as tool for opposition, re-imagination and heteronormative defiance. They will physically use their bodies to explore the writings we encounter in class. Each session will be divided into two parts. Part one of each session will be used to discuss the readings. Part two will be dedicated to visual material from dance history as well as physical exercises allowing us to examine the topics further.\n\nBy the end of this course, students will be able to:\n- To define performance\n- To define dance\n- To define performativity and performance through the lens of: ritual, everyday life, politics, theatre and social constructs\n- To explore the relationship between movement and philosophy\n- To examine the connectivity of dance with social sciences and philosophy\n- To practically use the body to explore and interact with the theory using scores, tasks and improvisation\n\nIntroduce the works of:\n- Isadora Duncan\n- Martha Graham\n- Mary Wigman\n- Merce Cunningham\n- Judson Church Movement\n- Adrian Piper\n- William Pope L\n- Hijikata Tatsumi\n- Helio Oitcia\n- Lygia clark\nand more during class discussions"
+  }
+}

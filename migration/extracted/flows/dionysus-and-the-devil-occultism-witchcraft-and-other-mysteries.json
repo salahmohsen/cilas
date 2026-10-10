@@ -1,0 +1,191 @@
+{
+  "sha256": "f04e5cf010a3f215bb2cee8762eaab986c2c1fb1ce80697c4cb468cbf5d0af08",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "General Introduction",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Bacchae",
+            "note": "Euripides; full play",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Aeneid",
+            "note": "Virgil; excerpts",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Orientalism",
+            "note": "Edward Said; excerpts",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The God of the Witches",
+            "note": "Margret Alice Murray",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Maenads, Martyrs, Monastics",
+            "note": "Ross Kraemer",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "Look at: 1- the definition of “Baphomet” in any dictionary; 2- Francisco Goya’s paintings The Witches’ Sabbath (1798) and The Witches’ Sabbath or the Great He-Goat (circa 1823); The movie The Witch: A New England Folktale, and come prepared to discuss them.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Definition of “Baphomet”",
+            "note": "in any dictionary",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "The Witches’ Sabbath",
+            "note": "Francisco Goya, 1798",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "The Witches’ Sabbath or the Great He-Goat",
+            "note": "Francisco Goya, circa 1823",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Witch: A New England Folktale",
+            "note": "movie",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "come prepared to discuss them"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "(we may move this to the second session if students chose to)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Introduction,” Satanic Panic: Pop-Cultural Paranoia in the 1980s",
+            "note": "Kier-La Janisse",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Newspaper clippings",
+            "note": "Ruz al-Yusuf, 1996-7",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Film discussions",
+        "description": "Films TBA",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Films (TBA)",
+            "note": "to be announced",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Film discussions (Films TBA)"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "Student Presentations",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Student Presentations"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Student Presentations",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Student Presentations"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course groupings in the flow: I- The Dionysian Mystery in Antiquity (weeks 1-3); II- Witchcraft, possession and the devil (weeks 4-5); III- The Mystery and the Occult: The modern satanic panic (weeks 6-10). Week numbers as given; week 1 is listed as General Introduction.\n\nCourse description: Between the autumn of 1996 and the spring of 1997, Egypt witnessed a “Satanic panic.” The allegation that Heavy Metal concerts served as a cover up for Satanist rituals soon turned into a moral scare followed by a wave of arrests—and by an iconically nonsensical set of television and movie scenes about the ‘devil worshipers’. This was an echo of a moral panic that gripped the west in the 1980s and that revolved around occultism, Satanism, youth culture, and, among other things, heavy metal music. News reports, horror movies, religious sermons (with the newborn phenomenon of televangelism) and pocket novels all mongered the fear that beyond society’s gaze the youth are engaging in satanic rituals. The themes through which this satanic scare was imagined were not new. In fact the history of how “Satanism” and “Occultism” was imagined provides an interesting example of how certain “tropes” are relayed from one epoch to another. In Greco-Roman antiquity similar motifs animated the fantasies concerning the rituals known as the Dionysian or Bacchic mysteries, the orgia (from which the contemporary word orgy is driven). The same motifs returned in the medieval imagination of cults of witchcraft. In this course we study the histories and representations of the orgies of Dionysus, the frenzy of the witches, and the cults of Satanism (in order or out of order, depending on the class preference).\n\nThrough these snapshots of pop-culture, we will study not only the transmission of cultural and literary themes and motifs, but more importantly how power imagines what lies beyond its gaze. We will investigate the political role played by the otherwise mundane representations of the deviant and the transgressive. We will see how racism,sexism, orientalism, and other dominant prejudices all shaped and crystallized around representations of, and the moral panics surrounding, Dionysian and Satanic cults.\n\nThis course involves a certain level of student participation and research.\n\nWe will be reading together the introduction of a book titled Satanic Panic (awesome book btw!) The book relates the phenomenon of the Satanic Panic in the 1980s to various other social phenomena. Students then will be asked to pick a chapter of their interest, and prepare a presentation that looks into the themes and questions raised by the chapter and how to relate them to other contexts (for example to other moral panics, to more recent historical examples, etc.)\n\nCourse Objectives: By the end of this course students will learn:\n- How to think of motifs that recur throughout history.\n- Some of the historical, political, literary, and psychoanalytic tools that conceptualize this recurrence\n- To read “cultural texts” like films, newspapers reports, and low brow literature side by side with serious academic historical and theoretical texts\n- How to relate pop culture to larger questions of gender, race, class, power, surveillance, and discipline\n- To compare, contrast, and relate to one another different snapshots from different times and societies (similar to what the anthropologists call the diachronic method)\n- To analyze voyeuristic modes of power and how they imagine and seek to discipline what transpires beyond their gaze\n\nTentative Course Flow (subject to change according to the course of our discussion)."
+  }
+}

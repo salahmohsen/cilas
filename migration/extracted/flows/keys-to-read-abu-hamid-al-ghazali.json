@@ -1,0 +1,84 @@
+{
+  "sha256": "ababe1137ad456bc790eb90f778bb4818c951897f4df5ef3b720c4bb67d0dd55",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Al-Ghazālī on Disciplining the Soul and on Breaking the Two Desires: Books XXII and XXIII of the Revival of the Religious Sciences",
+        "note": "Ghazālī, Abū Ḥāmid al-. Translated by Timothy Winter. Cambridge: Islamic Text Society, 1995.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "al-Munqidh min al-ḍalāl",
+        "note": "Ghazālī, Abū Ḥāmid al-. Beirut: Dar al-Minhāj, 2019.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Appendix II: Faḍāʾiḥ al-bāṭīniya wa al-faḍāil al-mustaẓhiriyya",
+        "note": "Ghazālī, Abū Ḥāmid al-. In Freedom and Fulfillment: An Annotated Translation of Al-Ghazālī's al-Munqidh min al-ḍalāl and Other Relevant Works of Al-Ghazālī, translated by Richard J Mccarthy, 175–286. Boston: Twayne Publishers, 1980.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Appendix III: Qiṣtās al-mustaqīm",
+        "note": "Ghazālī, Abū Ḥāmid al-. In Freedom and Fulfillment: An Annotated Translation of Al-Ghazālī's al-Munqidh min al-Ḍalāl and Other Relevant Works of Al-Ghazālī, translated by Richard J Mccarthy, 287–332. Boston: Twayne Publishers, 1980.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Kitāb Al-ʿilm",
+        "note": "Ghazālī, Abū Ḥāmid al-. Damascus: Dār Saʿdi al-dīn, 2009.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Letter to a Disciple (Ayyuhāʾl-walad): bilingual English-Arabic edition translated with an Introduction & Notes",
+        "note": "Ghazālī, Abū Ḥāmid al-. Translated by Tobias Mayer. Cambridge: Islamic Texts Society, 2005.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Mīzān al-ʿamal",
+        "note": "Ghazālī, Abū Ḥāmid al-. Edited by Sulayman Dunya. Cairo: Darul Maʿarif, 1964.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Risāla al-laduniyya",
+        "note": "Ghazālī, Abū Ḥāmid al-. In Majmuʿāt al-rasāʿil al-Imām al-Ghazālī, 239–53. Cairo: Al-maktaba al-tawfiqiyya, n.d.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Incoherence of the Philosophers: A parallel English-Arabic text",
+        "note": "Ghazālī, Abū Ḥāmid al-. Translated by Michael Marmura. Provo: Brigham Young University Press, 2000.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Marvels of the Heart: Translation of Kitāb sharḥ ʿajāʾib al-qalb, book 21 of the Iḥyāʾ ʿulūm al-dīn",
+        "note": "Ghazālī, Abū Ḥāmid al-. Translated by Walter James Skellie. Louisville: Fons Vitae, 2010.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Niche of Lights (Mishkāt al-anwār): A parallel English-Arabic text translated, introduced and annotated",
+        "note": "Ghazālī, Abū Ḥāmid al-. Translated by David Buchman. Provo: Brigham Young University Press, 1998.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Wonders of the Heart",
+        "note": "Ghazālī, Abū Ḥāmid al-. Translated by Walter James Skellie. Kuala Lumpur: Islamic Book Trust, 2007.",
+        "href": null
+      }
+    ],
+    "notes": null
+  }
+}

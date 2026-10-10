@@ -1,0 +1,231 @@
+{
+  "sha256": "a6b71ebc149d6980627196f5c94918789f8af9a0e09fa41ddfc0819365891a87",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Identification",
+        "description": "How do we come to see ourselves as subjects?\n\nWhat is the Lacanian mirror stage in developmental terms?\n\nWhat is the ego in relation to the subject?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The mirror-stage as formative of the I function as revealed in psychoanalytic experience",
+            "note": "Lacan, J. (2006). In B. Fink (Trans.), Écrits (pp 75-81). New York & London: W.W Norton.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Freud and Lacan",
+            "note": "Althusser.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Authority",
+        "description": "How does authority call upon us?\n\nHow does Ideology pervade our daily lives and our conceptions of ourselves?\n\nWhat was Althusser’s contribution to ideology critique?\n\nWhat is identification in Lacanian terms and how does this relate to the function of ideology?\n\nWhy do we obey?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ideology and ideological state apparatuses",
+            "note": "Althusser, L. (1971). In L. Althusser (Ed.), Lenin and philosophy and other essays. New York: Monthly Review Press.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Zero Dark Thirty",
+            "note": "2012, film.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Populist Reason",
+            "note": "Laclau.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "the Sublime Object",
+        "description": "In what way does Zizek depart from the Althusserian notion of ideology?\n\nHow is ideology tied to desire and fantasy?\n\nWhat is the relationship between desire and the Other?\n\nHow is the subject an answer to the Real?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Sublime Object of Ideology",
+            "note": "Zizek, S (1989).",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Film Screening",
+            "note": "TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Desire",
+        "description": "In what way is desire constructed?\n\nWhat does capitalism get right about our desire?\n\nIn what ways is desire a political phenomenon?\n\nDoes desire escape power? Or does it become part of power’s relay network?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Capitalism and Desire: The Psychic Cost of Free Markets",
+            "note": "McGowan, Todd. 2016.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Populist Reason (cont’d)",
+            "note": "Laclau.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Sublime Object of Ideology (cont’d)",
+            "note": "Zizek, S (1989).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Race and Colonialism",
+        "description": "What is the psychology of colonization?\n\nHow does the colonial experience shape the psyche of the colonizer and the colonized?\n\nWhat is the role of identification in colonial domination?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Critical Psychology of the Postcolonial",
+            "note": "Hook, D (2008).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Black Skin, White Masks",
+            "note": "Fanon, F (1967).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Patriarchy and Feminism",
+        "description": "How does patriarchy become normalized?\n\nWhat is the political function of feminist critique?\n\nHow does patriarchy and other modes of authority lend support to each other?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Feminine Sexuality",
+            "note": "Rose, J and Mitchell, J (1985).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Psychoanalysis and Feminism",
+            "note": "Mitchell.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Naming",
+        "description": "How is naming political?\n\nWhat role does naming play in placing us within social and political structures?\n\nWhat if we had no names?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Through the Looking Glass and What Alice Found There",
+            "note": "Carroll.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ideology and ideological state apparatuses (cont’d)",
+            "note": "Althusser, L. (1971). In L. Althusser (Ed.), Lenin and philosophy and other essays. New York: Monthly Review Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Medical Power, Biopower, and the Power over Life and Death",
+        "description": "What is the productive side of power?\n\nHow does power produce pleasures, goods, and life?\n\nHow does power ostracize the deviant and the abnormal?\n\nHow did Foucault and the anti-psychiatry movement oppose psychology and psychoanalysis? Is there a way to reconcile Foucault’s theories with a psychoanalytical framework?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "History of Sexuality, v.1",
+            "note": "Foucault, M.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Abnormal",
+            "note": "Foucault.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "The Seduction of Technology",
+        "description": "To what extent have technology and cybernetics become part of our consciousness? What revisions can this technological turn offer to extant theories of subjectivity, identification, and desire?\n\nHow does technology make us complicit with power?\n\nWhat modes of domination and violence are being sanitized and/or hidden behind shiny screens and slick keyboards?\n\nWhy do we trust the algorithm?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "To Be Continued: An Interview on Seriality",
+            "note": "Cited without author.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Thousand Plateaus",
+            "note": "Deleuze and Guattari (excerpts).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Californian Ideology",
+            "note": "Richard Barbrook and Andy Cameron.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Yes, There Are More Facebook Papers. Yes, It's a Lot.",
+            "note": "Cited without author.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Promised Land",
+            "note": "Obama (excerpts).",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Why do we obey?: Ideology in Daily Life\na CILAS course proposal by Ahmed Diaa Dardir and Cassidy Crawford\n\nPreliminary Schedule (subject to change according to the flow of class discussions)"
+  }
+}

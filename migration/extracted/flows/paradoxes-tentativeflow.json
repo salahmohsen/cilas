@@ -1,0 +1,76 @@
+{
+  "sha256": "d1126de585ccc0acc55601a80c57aaf9ab571482992250b69a2bcf09f21829dc",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Unconscious and its Subject",
+        "description": "Objective: Explore the foundational concept of the unconscious as invented by Freud and re-articulated by Lacan, tracing its development and its implications through to contemporary practice and academia.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Real, Symbolic, Imaginary",
+        "description": "Objective: Explore Lacan's tripartite model of the Real, Symbolic, and Imaginary as fundamental registers of human experience.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Desire and Jouissance",
+        "description": "Objective: Explore the structure of desire as the desire of the Other, as well as the difference between desire and jouissance.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Tragedy & The Ethics of Desire",
+        "description": "Objective: Explore the intersection between psychoanalysis and tragedy, tracing how tragedy, as understood by Aristotle and elaborated on by Lacan, provides a structure for understanding the dynamics of desire.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Labyrinths of Love 1",
+        "description": "Objective: Explore cultural, historical, and psychoanalytic conceptualisations of love as a complex interplay between the Imaginary, the Symbolic, and the Real.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Labyrinths of Love 2",
+        "description": "Objective: Investigate how love opposes desire and in the structure of tragedy may transcend its narcissitic dimension to reach the level of the sublime.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The Act, Tragedy, and Sublime Love",
+        "description": "Objective: Explore the psychoanalytic concept of the Act as distinct from the passage à l'acte and acting out, with a focus on how the Act in tragedy represents the risk of breaking all symbolic ties and losing love, revealing the ethical dimension of desire.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Psychoanalysis in Egypt",
+        "description": "Objective: Explore the history and contemporary place of psychoanalysis in Egypt, tracing its introduction during the colonial period, its dialogue with Islamic thought, and its adaptation to local cultural and intellectual contexts.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Flow title: Paradoxes of the Heart: Tentative Workshop Flow. The reading/watch list is marked \"TBC\" for every week, so no materials are recorded."
+  }
+}

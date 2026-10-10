@@ -1,0 +1,149 @@
+{
+  "sha256": "14f4c174d3d9525228ede926f4b865a397409472f727c45ed0d52ab60455624f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Moralism and realism in migration",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The many sources of normativity in migration",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "At the root of the political: territory, space, borders",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Colonialism: a trojan horse in the philosophy of migration",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Self-determination: affirming leads to denying",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "On the compatibility of nationalist and cosmopolitan perspectives",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "What makes migration norms peremptory?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Behind the curtain of morality: limit-situations and exceptions",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Bernard Williams, In the Beginning Was the Deed: Realism and Moralism in Political Argument",
+        "note": "Princeton University Press, 2005",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carl Schmitt, The Concept of the Political",
+        "note": "trans. George Schwab, The University of Chicago Press, 2007",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carl Schmitt, The Nomos of the Earth in the International Law of the Jus Publicum Europaeum",
+        "note": "trans. G. L. Ulmen, Telos Press Publishing, 2006",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "David Miller, On Nationality",
+        "note": "Oxford University Press, 1995",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Jens Bartelson, The Critique of the State",
+        "note": "Cambridge University Press, 2004",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Martha C. Nussbaum, The Cosmopolitan Tradition: A Noble but Flawed Ideal",
+        "note": "The Belknap Press of Harvard University Press, 2019",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Raymond Geuss, Philosophy and Real Politics",
+        "note": "Princeton University Press, 2008",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Between Borders: American Migrant Crisis",
+        "note": "Documentary",
+        "href": "https://www.youtube.com/watch?v=rxF0t-SMEXA"
+      },
+      {
+        "type": "watch",
+        "title": "Life in the Shadow of US-Mexico border Wall",
+        "note": "Documentary",
+        "href": "https://www.youtube.com/watch?v=r9Gd-axMMbM"
+      },
+      {
+        "type": "watch",
+        "title": "Death on the Border",
+        "note": "Documentary",
+        "href": "https://www.youtube.com/watch?v=MJoL7E4uvuU"
+      },
+      {
+        "type": "watch",
+        "title": "Inside The World’s Deadliest Migrant Route",
+        "note": "Documentary",
+        "href": "https://www.youtube.com/watch?v=l5kIbQRjJHk"
+      },
+      {
+        "type": "watch",
+        "title": "'Get away from the target': rescuing migrants from the Libyan coast guard",
+        "note": "Documentary",
+        "href": "https://www.youtube.com/watch?v=Y7CuTxZnjXk"
+      }
+    ],
+    "notes": "Course Summary (verbatim): This course explores the philosophical underpinnings of migration, specifically the political and legal factors that shape the movements of people, their premises, and the responses thereof. It will focus on “political realism” and its conceptual basis, as one of the major influences of migration policies, leading to what one could call a “migration realism”.\n\nPolitical realism has long been a subject of debate in normative political theory, with some arguing it has little to offer in terms of new perspectives, and others criticizing it on the grounds that it threatens the international legal order. Such viewpoints often forbid new avenues for thought: a political-realist take on the concept of migration can actually provide critical insights as regards international migration law, and help call into question its commonly held assumptions. In that regard, there have been significant political-realist contributions to the current discourse on migration, some challenging very convincingly the link between moral principles and normativity: these contributions can become excellent tools to uncover the political powers that often creep under normative facades.\n\nThis course will include discussions on historical examples, short documentaries, as well as an analysis of the current debates and challenges in the field of migration. Participants will exercise their minds and share their thoughts on concepts such as nationalism, liberal nationalism, cosmopolitanism, state sovereignty, the free movement of people across national borders, as well as the \"state of exception\", exploring how exceptional situations lead to legally unsanctioned restrictions on migration.\n\nNo per-week readings, activities or descriptions are given in the flow; the sessions carry only their titles. The documentaries and core bibliography are recorded as course-wide bibliography."
+  }
+}

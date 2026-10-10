@@ -1,0 +1,213 @@
+{
+  "sha256": "8ac972f98a4c5690190d8522e4a362091e6eefcf6965cb2dd1584b5d4b782d0f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction: How do we define Archives? What is Intimacy?",
+        "description": "Introducing the concept of archives and investigating how feelings, emotions, and desires are assumed to be private and personal experiences, and their influence on politics and notions of social belonging and intimacy.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Digital Archives: What Archives do we Already have?",
+        "description": "Discussing our digital footprint as already existing archives.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "I asked Tinder for my data. It sent me 800 pages of my deepest, darkest secrets.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Our Personal/Bodily Archives I",
+        "description": "Investigating the body as an archive.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Feminist Killjoy",
+            "note": "Sara Ahmed",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A poem",
+            "note": "Audre Lorde",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Our Personal/Bodily Archives II",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Promise of Happiness",
+            "note": "Sara Ahmed",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Alphabet of Feeling Bad",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest Speaker TBA"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "On Love, Intimacy and Longing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cruel Optimism",
+            "note": "Lauren Berlant, introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A poem",
+            "note": "Mary Oliver",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Writing on love"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "What Happens to the Heart?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cruising Utopia",
+            "note": "José Esteban Muñoz",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Twenty-One Love Poems",
+            "note": "Adrienne Rich",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "What did our Feminist Elders do with their ‘bad ’Feelings?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "This Bridge is Called my Back",
+            "note": "Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest Speaker TBA"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "On Contemporary Feminist Movements I",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Letters from Memory",
+            "note": "أرشيف المرأة والذاكرة",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Participants present a contemporary movement of their choice."
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "On Contemporary Feminist Movements II",
+        "description": "Learnings from different campaigns with a focus on the abortion campaign and decolonizing feminist knowledge production efforts.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest Speaker TBA"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Can We be Hopeful?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Wayward Lives, Beautiful Experiments: Intimate Histories of Riotous Black Girls, Troublesome Women and Queer Radicals",
+            "note": "Saaidiya Hartman. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "What Feminist Politics do to our Love, Friendship and Partnerships?",
+        "description": "Exploring the act of writing letters in relation to movements.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Concluding Remarks",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Intimate Archives: On Feminist Movements & Emotions\n\nCourse Flow\n\n1. Personal Archives (Weeks 1 to 6)\n2. Movements Archives (Weeks 7 to 12)\n\nOne-Week Break (between Week #6 and Week #7)."
+  }
+}

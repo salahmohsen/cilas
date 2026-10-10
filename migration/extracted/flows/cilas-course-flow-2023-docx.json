@@ -1,0 +1,179 @@
+{
+  "sha256": "04d5fe4111380ae09f9478eec6f48517b280787ec8c8990d96ef8a15110d3401",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Hospitals",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Origins of the Islamic Hospital: Myth and Reality",
+            "note": "Michael W. Dols, Bulletin of the History of Medicine 61, no. 3 (1987): 367–90.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Lesson of the Hospitals",
+            "note": "Michel Foucault, in The Birth of the Clinic: An Archaeology of Medical Perception, trans. A.M. Sheridan (Abingdon: Routledge Classics, 2003).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Doctors",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Civilization and Syphilization: A Doctor and His Disease in Colonial Morocco",
+            "note": "Hannah-Louise Clark, Bulletin of the History of Medicine 87, no. 1 (2013): 86-114.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Doctors without Empires, in Ungovernable Life: Mandatory Medicine and Statecraft in Iraq",
+            "note": "Omar Dewachi (Stanford: Stanford University Press, 2017).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Patients",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Patient’s View: Doing Medical History from Below",
+            "note": "Roy Porter, Theory and Society 14, no. 2 (March 1985): 175–98.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tending ADHD, Shifting Moralities, and Generational Perceptions, in Prozak Diaries: Psychiatry and Generational Memory in Iran",
+            "note": "Orkideh Behrouzan (Stanford: Stanford University Press, 2016).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Medicine as an art of the contact zone",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Arts of the Contact Zone",
+            "note": "Mary Louise Pratt, Profession (1991): 33-40.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Professional Medical Discourse on Sex Differences and Sexuality in Egypt, 1827-1928, in Medicine and Morality in Egypt: Gender and Sexuality in the Nineteenth and Early Twentieth Centuries",
+            "note": "Sherry Sayed Gadelrab (London and New York: I.B. Tauris & Co., 2016).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Medicine and Islam",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Medicine, Enlightenment, and Islam, in In Quest of Justice: Islamic Law and Forensic Medicine in Modern Egypt",
+            "note": "Khaled Fahmy (Oakland: University of California Press, 2018).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Psychiatrist and the Imam, in Knot of the Soul: Madness, Psychoanalysis, Islam",
+            "note": "Stefania Pandolfo (Chicago: University of Chicago Press, 2017).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Medicine and state power",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Nationalism, Authoritarianism, and Medical Mobilization in Post-revolutionary Egypt",
+            "note": "Soha Bayoumi and Sherine Hamdy, Culture, Medicine, and Psychiatry 47 (2023): 37-61.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Conquest of Smallpox: Variolation and Vaccination, in Lives at Risk: Public Health in Nineteenth-Century Egypt",
+            "note": "LaVerne Kuhnke (Berkeley: University of California Press, 1990).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Medicine and colonialism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Spaces of Experimentation, Sites of Contestation: Doctors, Patients, and Treatments, in Colonial Madness: Psychiatry in French North Africa",
+            "note": "Richard Keller (Chicago and London: The University of Chicago Press, 2007).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Colonial Clinic in Conflict: Towards a Medical History of the Palestinian Great Revolt, 1936-1939",
+            "note": "Chris Sandal-Wilson, Culture, Medicine, and Psychiatry 47 (2023): 12-36.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Student presentations",
+        "description": "The instructor will work with each student individually from Weeks Five-Seven, offering guidance on how to choose a compelling topic and conduct effective research.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Each student will give a 10-minute presentation on a topic of their choosing, followed by a Q&A session with the class."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "other",
+        "title": "Citadel Hospital, Cairo, 1915",
+        "note": "Cover image. Credit: Australian Army Museum of Western Australia.",
+        "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0"
+      }
+    ],
+    "notes": "Historical Perspectives on Medicine in the Modern Middle East. Theo Rossi, CILAS Winter 2023.\n\nCourse Description: What can we learn about the Middle East through the study of medicine? In recent years, scholars of the region have increasing plumbed the histories of hospitals, doctors, and patients to provide novel perspectives on topics such as cultural exchange, religion, state power, and colonialism. This course will provide students with an overview of new scholarship in the history and historiography of medicine, while also affording them a chance to delve into several of the field’s canonical works. Through guided discussions of the assigned texts, students will gain an understanding of core concepts in the history of medicine, develop their own insights, and build toward presenting a small independent research project by the end of term.\n\nDiscussion questions may include (but are certainly not limited to): How has medicine historically been used to enact and/or resist state power? Is it modern medicine inherently colonial? What political roles can and should doctors play? How is modern medicine opposed to and/or compatible with Islamic ethics? Is it possible to write the history of medicine from the patient’s perspective? And lastly, how does medicine emerge from and mediate cultural encounters between East and West? Students are also strongly encouraged to bring their own questions into class.\n\nInstructor Bio: Theo J. Rossi is a doctoral student at the University of Cambridge, where she examines the neglected history of mental healthcare in khedival Cairo (1805-1884), drawing on Arabic medical textbooks and journals, as well as archival government sources. She aims to demonstrate that khedival mental healthcare was characterized by dynamic institutional and discursive shifts, the study of which can provide new insights into how the Egyptian state developed, how modern medicine emerged in the Middle East, and how psychiatry coalesced as a global discipline. Theo holds a certificate from the Center for Arabic Study Abroad (CASA), a master’s from the University of Oxford, and a bachelor’s from the University of Chicago.\n\nNote: PDF versions of all readings will be provided over email by the instructor."
+  }
+}

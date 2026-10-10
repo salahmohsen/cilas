@@ -1,0 +1,288 @@
+{
+  "sha256": "7f205b637c164534002d41eb3f224d1055a39772ce03b767e8ad0a0236e9d20b",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "From Freud to Lacan — The Unconscious",
+        "description": "Objective: Explore the foundational psychoanalytic concept of the unconscious as invented by Freud and re-articulated by Lacan, tracing its development and its implications through to contemporary practice.\n\nQuestions/Topics:\n● What is the unconscious? (Historical, cultural, scientific exploration)\n● From Freud to Lacan (Freud’s invention, post-Freudian detours and Lacan’s ‘Return’)\n● The unconscious structured like a language (Signifier/Signified, Metaphor and Metonymy)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Unconscious",
+            "note": "Freud, 1915",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Instance of the Letter in the Unconsicous",
+            "note": "Lacan, Ecrits",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Lacan’s Seminar XI on the Unconscious (Four Fundamental Concepts)",
+            "note": "Lacan, Seminar XI",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "What Does Psychoanalysis Have To Do With Psychology?",
+            "note": "LACANONLINE.COM",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "What Does Lacan Say About… The Signifier?",
+            "note": "LACANONLINE.COM",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "The Hysteric’s Question",
+            "note": null,
+            "href": "https://shorturl.at/tVPdy"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Desire and Jouissance",
+        "description": "Objective: Explore the structure of desire as the desire of the Other. Desire as a question posed to the Other.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "What Does Lacan Say About… Jouissance?",
+            "note": "LACANONLINE.COM",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "A Tour of Lacan’s Graph of Desire",
+            "note": null,
+            "href": "https://shorturl.at/MbRm2"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Real, Symbolic, Imaginary",
+        "description": "Objective: Explore Lacan's tripartite model of the Real, Symbolic, and Imaginary as fundamental registers of human experience. Explore their interplay in shaping the subject’s identity, psychic structure, and encounters with desire and love.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from Lacan’s Seminar XI: The Four Fundamental Concepts of Psychoanalysis (on the Real, Symbolic, and Imaginary)",
+            "note": "Lacan, Seminar XI",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Tragedy & The Ethics of Desire",
+        "description": "Objective: Explore the intersection between psychoanalysis and tragedy, tracing how tragedy, as understood by Aristotle and elaborated on by Lacan, provides a structure for understanding the dynamics of desire.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from Aristotle’s Poetics",
+            "note": "Aristotle",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Lacan’s Seminar VII (Ethics)",
+            "note": "Lacan, Seminar VII",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Antigone",
+            "note": "1961, George Tzavellas",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Hamlet",
+            "note": "1948, Laurence Olivier",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Zizek’s Pervert’s Guide to Cinema",
+            "note": "Zizek",
+            "href": "https://shorturl.at/PAgOA"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Labyrinths of Love",
+        "description": "Objective: Explore cultural, historical, and psychoanalytic conceptualisations of love as a complex interplay between the Imaginary, the Symbolic, and the Real. Investigate how love binds and ruptures the subject’s psychic world and how it functions as an intrusion of the Real.\n\nLove as Imaginary, Love as Symbolic, and Love in the Real\n\n“When one loves it has nothing to do with sex.” (Lacan 1998: 25)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from Lacan’s Seminar XX (On Femenine Sexuality, The Limits of Love and Knowledge)",
+            "note": "Lacan, Seminar XX",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Lacan’s Seminar VIII (Transference)",
+            "note": "Lacan, Seminar VIII",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Lover’s Discourse (selected sections)",
+            "note": "Roland Barthes",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Lacan on Love",
+            "note": "Bruce Fink",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Lacan’s Psychoanalytic Way of Love",
+            "note": null,
+            "href": "https://shorturl.at/bkI36"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Love as Sublime against the Tragedy of Desire",
+        "description": "Objective: Investigate how love opposes desire and, in its tragic element, may transcend its narcissitic dimension to reach the level of the sublime.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Cinematic Sinthome",
+        "description": "Objective: Explore cinema and the act of filmmaking as a sinthome—a unique mode of binding jouissance and navigating the subject’s relation to the real. Analyse how cinema may operate as a site where the fragmentation of meaning is both exposed and sutured, creating a singular solution to the impasses of desire.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts Lacan’s Seminar XXIII",
+            "note": "Lacan, Seminar XXIII",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Psychoanalysis in Egypt & Research Questions",
+        "description": "Objective: Explore the history and contemporary place of psychoanalysis in Egypt.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Ethics of Psychoanalysis Today",
+            "note": "Eric Laurent",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Psychoanalysis in Egypt: A problem of Non-Accession",
+            "note": "Robert K. Beshara and Raja Ben Slama",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Arabic Freud: Psychoanalysis and Islam in Modern Egypt",
+            "note": "Omnia El Shakry",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Psychoanalysis in Egypt between an ambitious past and an uncertain future",
+            "note": "Hussein Abdel Kader & Robert K. Beshara",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Egyptian Oedipus: Remembering psychoanalyst Moustapha Safouan",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "watch",
+        "title": "Like an open sky",
+        "note": "Mariana Otero",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Shame",
+        "note": "Course watchlist",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Don’t Look Now",
+        "note": "Course watchlist",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Antigone",
+        "note": "1961, George Tzavellas",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Hamlet",
+        "note": "1948, Laurence Olivier",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "El",
+        "note": "1953, Luis Buñuel",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Cairo Station",
+        "note": "1958, Youssef Chahine",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Beau Travail",
+        "note": "Course watchlist",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Melancholia",
+        "note": "Course watchlist",
+        "href": null
+      }
+    ],
+    "notes": null
+  }
+}

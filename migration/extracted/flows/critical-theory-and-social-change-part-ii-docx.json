@@ -1,0 +1,215 @@
+{
+  "sha256": "29cf62beaf70257ad187f5b44aad1dde9174b7e915d03f71743a66de95d9a93e",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Anti-Colonialism in Egypt; the case of the ‘Urabi and the 1919 Revolts",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from the press of the time",
+            "note": "will be provided",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Genesis of the Palestinian Revolution",
+        "description": "Ghassan Kanafani, (students can choose from a selection of novels, short stories, and critical essays in the original format and in translation. Kanafani’s works will be discussed against the backdrop of Palestinian history since early Zionist colonization until the 1967 war).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ghassan Kanafani: novels, short stories and critical essays",
+            "note": "student choice from a selection; original format and in translation",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Revolution in the Tricontinent",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Dying Colonialism",
+            "note": "Frantz Fanon",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Message to the Tricontinental.",
+            "note": "Che Guevara",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Weapon of Theory.",
+            "note": "Amilcar Cabral",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Trials and Tribulations of National Consciousness.",
+            "note": "Frantz Fanon",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "I am Prepared to Die.",
+            "note": "Nelson Mandela",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The Case of Frantz Fanon",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Black Skin White Masks",
+            "note": "Fanon",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Violence.",
+            "note": "Fanon",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Palestine in Literature",
+        "description": "Students are encouraged to choose works of literature that deal with the Palestinian question. Suggestions from Palestinian novels, theatre, and poetry will be provided, both in the original and in translation.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Palestinian novels, theatre and poetry on the Palestinian question",
+            "note": "student choice; suggestions provided, in the original and in translation",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Imaging Palestine, Envisioning the Struggle",
+        "description": "This session aims to move beyond literature that represents the Palestinian struggle to how Palestine became a battle cry for world liberation; how the Palestinian cause became a linchpin for the (armed and unarmed) anti-imperialist and anti-capitalist struggle worldwide.\n\nThe themes of the discussion may include: the uprising in South Oman (Known as the Revolution of Dhufar), solidarity networks worldwide, the phenomenon of “urban guerillas” in Europe, the Civil War in Lebanon, the Islamic Revolution in Iran, and so on.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Prisoner of Love",
+            "note": "Jean Genet; suggested literature, not limited to this list",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Ici et Ailleurs",
+            "note": "Jean Luc Godard, Pierre Gorin, and Anne-Marie Miéville (film); suggested",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Wardah",
+            "note": "Sun’allah Ibrahim (novel); suggested",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Red Army Faction: A Documentary Study",
+            "note": "J. Smith and André Moncourt; suggested",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Asrar al-Sunduq al-Aswad",
+            "note": "Ghassan Charbel (a collection of essays and interviews); suggested",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Political cartoons",
+            "note": "Naji al-‘Ali; suggested",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "The themes of the discussion may include: the uprising in South Oman (Known as the Revolution of Dhufar), solidarity networks worldwide, the phenomenon of “urban guerillas” in Europe, the Civil War in Lebanon, the Islamic Revolution in Iran, and so on."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "1968: Here and Elsewhere",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Blue Lorries",
+            "note": "Radwa Ashur (Farag)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Hikayat Thawrah: Hanoi al-‘Arab & al-Karamah",
+            "note": "2 episodes of a documentary series",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "The Road to 2011",
+        "description": "This is meant to be an open discussion. Reading material may be provided if need be. Students are welcome to come up with their own suggestions.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reading material for The Road to 2011",
+            "note": "may be provided if need be; students may suggest their own",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "This is meant to be an open discussion."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "other",
+        "title": "critical_theory_and_social_change-_final.pdf",
+        "note": "course flow PDF linked from page 1; course-wide, not tied to one unit",
+        "href": "http://www.ci-las.org/uploads/1/9/1/0/19102967/critical_theory_and_social_change-_final.pdf"
+      }
+    ],
+    "notes": "This course is open for everyone. Having taken part I of the course (“Critical Theory and Social Change: I- the Age of Great Revolutions”) is NOT a prerequisite for taking this course. Duration: eight weeks.\n\nUnits as numbered in the flow: I- Early Anticolonial Movements in the Arab World (tentatively 2 sessions); II- The Theory and Practice of Anti-Imperialism (tentatively 2 sessions); III- The Palestinian Revolution and the Culture of Resistance (tentatively 2 sessions); IV- 1968: Here and Elsewhere (tentatively 1 session); V- The Road to 2011 (tentatively 1 session).\n\nN.B: We acknowledge that colonialism started neither in the late nineteenth century nor in the Arab World, and that the colonization of the Americas 4-5 centuries earlier has shaped and continues to shape the modern world. For the confines of space and time, however, we start our inquiry in the Arab world in the late nineteenth/early twentieth century. Hopefully there will be other courses on the colonization of the Americas and the invention of the modern world.\n\nTentative Flow (subject to change according to the participants’ interest and the flow of the discussion)."
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "sha256": "1dc281e01ee61c0ac72a94037af655c126c3078097484eb7de53e776fa49f04d",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introducing Utopia",
+        "description": "No assigned readings; excerpts from Thomas More’s Utopia and from Karl Marx’s critique of Utopian socialism will be introduced in session.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from Thomas More’s Utopia",
+            "note": "Introduced in session; not an assigned reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Karl Marx’s critique of Utopian socialism",
+            "note": "Introduced in session; not an assigned reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Utopia and the Subversion Thereof",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Tempest",
+            "note": "William Shakespeare.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Utopia",
+            "note": "Thomas More. Suggested reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Of the Cannibals",
+            "note": "Michel de Montainge. Suggested reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Is One Man’s Utopia the Other Man’s (or Woman’s) Dystopia?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Robinson Crusoe",
+            "note": "Daniel Defoe.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Dystopia and Power",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Brave New World",
+            "note": "Aldous Huxley.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Dystopia and Biopower",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "V for Vendetta",
+            "note": "Alan Moore.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Our Future Utopia, Our Future Dystopia",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from commentaries and opinion pieces",
+            "note": "TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course description (verbatim): Questions of Utopia and Dystopia return forcefully in the context of the current world crisis. Will the Covid 19 pandemic expose, at last, the failures of the hegemonic global system, and lead to new modes of organization that transcend individualism and defy capitalism and colonialism? Or will it lead to the solidification of the old world order, now armed with new and renovated techniques of surveillance, fear-mongering, and mass control?\n\nIn this course we will use our current moment to reflect on a number of literary texts that defined the genre(s) of Utopia/Dystopia, and use them to reflect back on our present and on the various Utopian and Dystopian scenarios the future may be hiding for us.\n\nThe course will start of by quickly examining Thomas Moore’s Utopia before moving to William Shakespeare’s The Tempest, a text which playfully subverts the nascent utopian genre and brilliantly exposes its authoritarian and colonialist underpinnings. The course will then move to various utopic and dystopic texts, ending with the graphic novel and film versions of V for Vendetta, which predict the dystopic potentials of global natural-political crises like the one we live in. Finally, the course will shift to discussing a number of journalistic and theoretical commentaries that sought to expose the utopic and dystopic potentials of our present moment.\n\nThe discussions will be punctuated and interrupted with excerpts from contemporary news flashes and headlines, in order to prompt the reflection on our present from the standpoint of the studied text.\n\nThe literary, theoretical, and journalistic texts will not provide any answers, but will offer us some questions, some insight, and a lot of interesting discussions.\n\nCourse aims (verbatim): Introducing the literary genres of Utopia and Dystopia. Using literature to reflect on our present and future. Exploring and discussing the themes of power, surveillance, and biopolitics; our intention, however, is to allow the theoretical discussion to spring from our discussion of the literary texts—texts by Foucault, Agamben, or others may be suggested as the flow of our discussion dictates. Providing a theoretical and literary framework for discussing the possibilities of the future of our world.\n\nThis course is open for everyone. No background in theory or literature is required. The instructor will work on providing any necessary background material and the course will be structured in a manner that allows participants to bring in their various backgrounds and enrich each others’.\n\nClarifications (verbatim): This is not a literature course and the instructor is not specialized in English or comparative literature. Students who come from a literature background are therefore encouraged to provide their own input and add their own expertise. The course, however, is more about exploring political and social phenomena through literary texts, and less about pure literature. While the concept of Utopia has been creatively deployed in queer theory, and while interested participants are welcome to creatively reflect on the texts from any standpoint they wish, this will not be the focus of our course.\n\nThe flow's session V names only Alan Moore's V for Vendetta; the film version mentioned in the course description is not listed as a separate item."
+  }
+}

@@ -1,0 +1,190 @@
+{
+  "sha256": "a48000e2a5e3a412c52b39e91472910b575249373f01d926d1ef0560292b9d00",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "عن نسوية كتابة الحياة",
+        "description": "نستهدف في الأسبوع الأول للتعارف والتفاعل حول خبراتنا في الكتابة عن ذواتنا. كما نهدف إلى تقديم كتابة الذات والدخول يسيرًا إلى محتوى المعمل. سنقرأ نص د. هالة كمال \"من \"السيرة الذاتية\" إلى \"كتابة الحياة\"\" ونشتبك مع نسوية كتابة الذات.\n\nكما سنقرأ جزءًا من كتاب إبراهيم أصلان.\n\nWeek 1: On the Feminism of Life Writing\n\nIn the first week, we aim to familiarize ourselves and interact with our writing experiences about ourselves. We also aim to introduce self-writing. We will read Dr. Hala Kamal's text \"From 'Autobiography' to 'Life Writing'\" and engage with the feminism of self-writing. We will also read an excerpt from Ibrahim Aslan's book.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "هالة كمال. \"من \"السيرة الذاتية\" إلى \"كتابة الحياة\"\". ألف: مجلة البلاغة المقارنة. عدد 40.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "جزءًا من كتاب إبراهيم أصلان",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "عن رحلاتنا اليومية",
+        "description": "سنستكمل قراءة إبراهيم أصلان في الأسبوع الثاني، وسنركز على رحلاتنا نحن اليومية: إلى العمل، إلى الجامعة، إلى سيلاس. عما نشاهده ويشاهدنا، وكيف نرى تلك المشاهد. سنكتب عن رحلاتنا اليومية ونتحدث عن تفاصيلها وماذا يعني أن نرى نفس المشهد بعيون مختلفة. سنتحدث عن رومانسية التفاصيل وجديتها، وعن المسائل الكبيرة خلف المشاهد الصغيرة.\n\nWeek 2: About our daily trips\n\nWe will continue reading Ibrahim Aslan in the second week, focusing on our daily journeys: to work, to university, to Cilas. We will focus on what we see and what sees us, and how we see those scenes. We will write about our daily journeys, discussing their details and what it means to see the same scene through different eyes. We will talk about the romance and seriousness of the details, and the big issues behind the small scenes.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "إبراهيم أصلان",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "جولة ميدانية",
+        "description": "سنتجول ونتفاعل مع القاهرة، ونأخذ أوقاتًا مستقطعة لنكتب ماذا يحدث، وأيضًا نرتاح. سنتدرب على إعادة كتابة ما نراه بعيون بعضنا البعض، ونناقش كيف سيغير هذا مما رأيناه في أول مرة كتبنا. في تدريبات هذا اليوم سنلعب لعبة نتفاعل فيها مع كتابات بعضنا البعض، نستكمل فيها ما نراه، ونعيد كتابته. كما سنستعمل جولتنا في التجهيز للجلسات القادمة.\n\nWeek 3: Field Trip\n\nWe will walk around and interact with Cairo, taking time out to write down what's happening and also rest. We will practice rewriting what we see through each other's eyes and discuss how this changes what we saw the first time we wrote. In exercises, we will play a game in which we interact with each other's writing, completing and rewriting what we see. We will also use our walk to prepare for future sessions.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "سنتجول ونتفاعل مع القاهرة، ونأخذ أوقاتًا مستقطعة لنكتب ماذا يحدث، وأيضًا نرتاح."
+          },
+          {
+            "kind": "exercise",
+            "description": "في تدريبات هذا اليوم سنلعب لعبة نتفاعل فيها مع كتابات بعضنا البعض، نستكمل فيها ما نراه، ونعيد كتابته."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "بيت العيلة",
+        "description": "سنبدأ الجزء الثاني من هذا المعمل بقراءة أجزاء مختارة من أقفاص فارغة لفاطمة قنديل، ونبدأ مناقشاتنا حول خصوصية كتاباتنا، وأريحيتنا في مشاركة ما نكتبه مع أي غريب. كما سنكتب عن بيوتنا التي تربينا فيها. سنتدرب على وصفنا للأشياء التي نتعلق بها، وعلاقاتنا بالبيوت كمساحات طمأنينة وخوف ومساحات تفاوض لوجودنا.\n\nWeek 4: Family House\n\nWe will begin the second part of this lab by reading selected excerpts from Fatima Qandil's Empty Cages, and begin our discussions about the privacy of our writing and our comfort in sharing it with any stranger. We will also write about the homes in which we were raised. We will practice describing the things we cling to and our relationships with homes as spaces of reassurance, fear, and negotiation of our existence.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "أقفاص فارغة",
+            "note": "فاطمة قنديل. در الكتب خان. 2021.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "يوميات",
+        "description": "سنستكشف في هذا الأسبوع تجاربنا السابقة مع كتابة اليوميات، وما تشعرنا به وما نكتشفه عن نفسنا أثناء كتابتنا ليوميات. سنناقش أيضًا الدور الذي تلعبه اليوميات بشكل تقليدي في الأدب والميديا، وسنحاول فهم الدور النسوي لهذا النوع من الكتابة. سنبدأ بلعب لعبة لكتابة اليوميات. ستستهدف هذه اللعبة تخييل كتابة اليوميات ووضعنا في عباءات أخرى نكتب من خلفها.\n\nWeek 5: Journaling\n\nThis week, we will explore our past experiences with journaling, how it makes us feel, and what we discover about ourselves while writing. We will also discuss the role diaries traditionally play in literature and media, and attempt to understand the feminist role of this type of writing. We will begin by playing a journaling game. This game aims to imagine diary writing and place us in other cloaks from which to write",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "سنبدأ بلعب لعبة لكتابة اليوميات."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "اكتب خطابًا لصديقك الفرنسي",
+        "description": "في هذا الأسبوع سنحاول اللعب بأرشيفنا الشخصي/ العائلي وما قد يحتويه من خطابات. سنتناقش عما نكشفه من ذواتنا في الخطابات، وعن الإيتيكيت الخاص بنا حينما نكتب شيئًا كهذا. سنقرأ \"ايميل من أسامة الدناصوري\" في ديوان إيمان مرسال حتى أتخلى عن فكرة البيوت وجزءًا من كتاب إرث الحكاية لنسمة جويلي. وسنحضر إلى المعمل خطابًا من أرشيفنا الشخصي/ العائلي. سنلعب بمن يقرأ ما نكتب، ونحاول تتبع أنفسنا بتغيير معطيات \"المرسل/ المرسل إليه/\"\n\nWeek 6: Write a letter to your French friend.\n\nWe'll explore our personal/family archives and the letters they might contain. We'll discuss what we reveal about ourselves in letters, and our etiquette when writing such things. We'll read \"An Email from Osama El-Danasouri\" from Iman Mersal's \"Until I Give Up on the Idea of Houses\" and a portion of Nesma Joueili's \"The Legacy of the Story.\" We'll also bring a letter from our personal/family archives to the lab. We'll experiment with who reads what we write, and try to track ourselves by changing the \"sender/recipient\" in our letters.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "\"ايميل من أسامة الدناصوري\" في ديوان إيمان مرسال حتى أتخلى عن فكرة البيوت",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "إرث الحكاية",
+            "note": "نسمة جويلي. دار الشروق. 2014. (جزء من الكتاب)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "نحن أشياء؟",
+        "description": "سنبدأ الجزء الثالث والأخير من هذا المعمل بقراءة في كتاب Object-oriented feminism، ونتناقش عن تحولنا لأشياء في النظام الرأسمالي العالمي، وعن علاقتنا بالأشياء في حياتنا. سيكون هذا الأسبوع فرصة جيدة لتحدي مفاهيمنا التقليدية عن الذات وماهيتها.\n\nWeek 7: We are things?\n\nWe will begin the third and final part of this lab by reading a book Object-oriented feminism. We will discuss becoming objects in the global capitalist system, and our relationship to the objects in our lives. This week will be a good opportunity to challenge our traditional notions of self.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Object-oriented feminism",
+            "note": "Katherine Behar, ed. University of Minnesota Press, 2016",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "أشيائي الرخيصة الثمينة",
+        "description": "في هذا الأسبوع سنتعامل مع أرشيفنا الشخصي المادي وما قمنا بحمايته منذ طفولتنا من ألعاب ومقتنيات. سنتناقش بعمق عن علاقتنا بتلك الأشياء التي سنختار إحداها لتكون ضيفتنا في الجلسة. سنقرأ مختارات من مجموعة حسام فخر: أم الشعور، ونتناقش حول علاقة الراوي بأشيائه. سنتدرب في هذا الأسبوع على الكتابة على لسان الأشياء وتقمص أصواتها التي نتخيلها.\n\nWeek 8: My Cheap Precious Things\n\nThis week, we will engage with our personal physical archives and the toys and belongings we have protected since our childhood. We will discuss in-depth our relationship with these objects, one of which we will choose to be our guest in the session. We will read selections from Hossam Fakhr's collection: \"Mother of Feeling\" and discuss the narrator's relationship with his objects. This week, we will practice writing in the language of objects and embodying their imagined voices.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "أم الشعور",
+            "note": "حسام فخر. مختارات فصول. 1988.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "الورق والكمبيوتر والآلة الكاتبة",
+        "description": "سنتناقش في هذا الأسبوع عن الأدوات التي نكتب بها وعن علاقتنا بها وكيف يغير هذا من تعبيرنا عن ذواتنا. سنكتب أيضًا عن علاقتنا بما كتبناه بعد أن نكتبه. ونسترجع جولتنا في القاهرة وما حصلنا عليه من هذه الجولة من مواد.\n\nWeek 9: Paper, Computer, and Typewriter\n\nThis week, we will discuss the tools we write with, our relationship with them, and how this changes our self-expression. We will also write about our relationship with what we've written after we've written it. We will also reflect on our tour of Cairo and the materials we learned from it.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "لماذا كتبنا ما كتبنا؟",
+        "description": "سيكون الأسبوع الأخير من هذا المعمل جلسة نقاش حرة حول ما فعلناه في هذا المعمل، وما تعلمناه في أثناء الكتابة وعنها وعن ذواتنا. سنتناقش أيضًا حول استمرارية الأنشطة التي بدأناها في المعمل وكيفية تحويلها إلى عادات. سنتحاور أيضًا حول أفكارنا عن مشاركة ما كتبناه في المعمل خارجه.\n\nWeek 10: Why did we write what we wrote?\n\nThe final week of this lab will be a free discussion session about what we did in this lab and what we learned while writing, about writing, and about ourselves. We will also discuss the sustainability of the activities we started in the lab and how to turn them into habits. We will also discuss our thoughts on sharing what we wrote in the lab outside of it.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "سيكون الأسبوع الأخير من هذا المعمل جلسة نقاش حرة حول ما فعلناه في هذا المعمل، وما تعلمناه في أثناء الكتابة وعنها وعن ذواتنا."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "وردية ليل",
+        "note": "إبراهيم أصلان. الهيئة المصرية العامة للكتاب. 1999.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "\"هذه المسائل الكبيرة\". شيء من هذا القبيل.",
+        "note": "إبراهيم أصلان. دار الشروق. 2007. ص 28- 31.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Dina Heshmat. “Tracking Down Anticolonial Feminist Militants in the Archive.”",
+        "note": "Journal of Middle East Women's Studies, vol. 21 no. 1, 2025, p. 115-121",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Felicity Nussbaum. “Toward Conceptualizing Diary.”",
+        "note": "Studies in Autobiography, ed. James Olney, New York_ Oxford University Press, 1988, 128-40.",
+        "href": null
+      }
+    ],
+    "notes": "For English, please scroll below.\n\nنكتب يومياتنا ونقفل عليها في درج بعيد عن أعين من نعرف، ونكتب جوابًا لحبيب على ملف Word ثم نغلق الملف بدون حفظ، ونفتح الموبايل في المواصلات لنكتب مشهدًا رأيناه ونود أن نحتفظ به. ماذا يقول كل هذا عن ذواتنا؟ ولماذا نخاف مما نكتب عن أنفسنا؟ ربما يكون هناك شيء ما مخفي في أعماقنا (أو خارجنا) لا نريد لأحد أن يراه، وربما لا نريد أن نراه نحن مجددًا. في الوقت الذي نبدأ فيه تلك الكتابة، ربما لا نعرف ماذا سنكتب وماذا ستكشف تلك الكتابة، لكننا نثير شعورًا لم يكن موجودًا قبل أن نفتح هذا الملف.\n\nيهدف هذا المعمل إلى طرح المزيد من التساؤلات عن كتابة الذات، ونوعها، وما تثيره بداخلنا. وكيف تكون هذه الكتابات امتداد لذاتنا: تعبير عن هويتنا، وجندرنا. كما يهدف إلى التجريب في تلك الأنواع من الكتابة التي قد تكون ملحوظاتنا المنسية، أو اعترافاتنا الغريبة، أو جواباتنا غير مرسلة، أو تفاصيلنا يومية لم نظن أن أحدًا سيهتم بها. كما يهدف إلى تذوق ألوان أدبية ذاتية وفتح نقاش حولها. وأيضًا الاشتباك مع نصوص نقدية نسوية حول الكتابة الذاتية وتطورها وما تظهره أو تخفيه من ذواتنا ومن عالمنا.\n\nلن يجبرنا هذا المعمل على الكتابة بشكل معين أو لغة معينة، بل سنحاول تقليل تلك القيود قدر الممكن. لا نهدف إلى إرضاء قارئ أو ناشر معين، بل نود التجريب، والتساؤل، والمناقشة. لكن على الجانب الآخر يتطلب هذا المعمل جهدًا ومساحة نقدمها جميعًا أمام آرائنا العجيبة، وذواتنا. وأيضًا وقتًا نبذله فيما نتفق عليه من قراءة وكتابة خارج المعمل.\n\nيتكون هذا المعمل من ثلاثة أجزاء مقسمين على عشرة أسابيع. الجزء الأول عن الحياة اليومية، والجزء الثاني عن الخصوصية، والجزء الثالث عن الأشياء. يتصل الثلاثة أجزاء وينفصلون في نقاشاتنا الدائمة.\n\nيتخلل هذا المعمل الكثير من تدريبات الكتابة والنقاشات حولها وحول القراءات، كما سنقوم بجولة ميدانية نكتب فيها وعنها.\n\nWe write our diaries and lock them in a drawer away from the eyes of those we know. We write a letter to a lover in a Word document and then close the file without saving it. We open our mobile phones on public transport to write about a scene we saw and want to keep. What does all this say about ourselves? And why are we afraid of what we write about ourselves? Perhaps there is something hidden deep within us (or outside of us) that we don't want anyone to see, and perhaps we don't want to see it again. When we begin writing, we may not know what we will write or what it will reveal, but we stir up a feeling that wasn't there before we opened this file.\n\nThis lab aims to raise further questions about self-writing, its genre, and what it evokes within us. Is what we write an extension of ourselves: our identity and gender. It also aims to experiment with these types of writing, which may include our forgotten notes, our strange confessions, our unsent letters, or our daily details that we never thought anyone would care about. It also aims to savor various forms of literature and open a discussion about them. It also aims to engage with feminist critical texts about self-writing, its development, and what it reveals or conceals about ourselves and our world.\n\nThis lab won't force us to write in a certain style or language, but rather, we will try to minimize those restrictions as much as possible. We don't aim to please a particular reader or publisher; rather, we want to experiment, question, and discuss. On the other hand, this lab requires effort and space from all of us to share our own strange opinions and selves. It also requires time spent on reading and writing inside and outside the lab.\n\nThis lab consists of three parts, divided over ten weeks. The first part is about daily life, the second part is about privacy, and the third part is about objects. The three parts connect and separate in our ongoing discussions.\n\nThis lab includes a lot of writing exercises and discussions about writing and readings, and we will also take a field trip to write in it and about it.\n\nLab readings:"
+  }
+}

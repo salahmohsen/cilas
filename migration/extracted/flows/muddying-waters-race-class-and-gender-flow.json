@@ -1,0 +1,222 @@
+{
+  "sha256": "49df2019dd346d633d51d3037de615cc23b016905c6cf709dbb927a5db002dc5",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Bodies on Display",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "The Life and Times of Sara Baartman",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Skin bleaching scandal in South Africa.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Imperial Eyes",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Africa Observed: Discourses of the Imperial Imagination",
+            "note": "Comaroff, Jean and John. (1991) 1997. In Perspectives on Africa. Roy Grinker and Christopher Steiner (eds). Pp. 689-703.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Circumcision on Screen",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Moolaade",
+            "note": "(2004), Director Ousmane Sembène.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "A Handful of Ash",
+            "note": "(2013), Directors Shara Amin and Nabaz Ahmed",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Sexual Science and Power",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Ain’t I A Woman Too?”: Challenging Myths of Sexual Dysfunction in Circumcised Women",
+            "note": "Ahmadu, F. (2007). In Transcultural Bodies (pp. 278-310). Rutgers University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Negotiating Rights and Culture",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Gender Crusades: The Female Circumcision Controversy in Cultural Perspective",
+            "note": "Boddy, J. (2007). In Transcultural bodies (pp. 46-66). Rutgers University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Female Circumcision in Africa and Beyond: The Anthropology of a Difficult Issue",
+            "note": "Talle, A. (2007). In Transcultural Bodies (pp. 91-106). Rutgers University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "“Anti-Trafficking”",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "(Sex Workers Cry) Rights Not Rescue in Cambodia",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "“Poverty-reduction”",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Demystifying micro-credit: the Grameen Bank, NGOs, and neoliberalism in Bangladesh",
+            "note": "Karim, L. (2008). Cultural dynamics, 20(1), 5-29.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Funding “Women’s Empowerment”",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Capitalizing on bare life: sovereignty, exception, and gender politics",
+            "note": "Fluri, J. (2012). Antipode, 44(1), 31-50.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Circuits of Migrating and Laboring",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Secret Slaves of the Middle East",
+            "note": "Filipino domestic workers",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Unpaid Work and Reproduction of Capitalist World",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Revolution at point zero: Housework, reproduction, and feminist struggle",
+            "note": "Federici, S. (2020). PM press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Neoliberal Co-optation of Activism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Engendering powers in neoliberal times in Latin America: Reflections from the left on feminisms and feminisms",
+            "note": "Castro, M. G. (2001). Latin American Perspectives, 28(6), 17-37.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Pinkwashed: Are young gays selling out to capitalism?”",
+            "note": "Faye, S. (2015)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Radical Care",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Radical care: Survival strategies for uncertain times",
+            "note": "Hobart, H. I. J. K., & Kneese, T. (2020). Social Text, 38(1), 1-16.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beyond Resilience: Trans Coalitional Activism as Radical Self-Care",
+            "note": "Edelman, E. A. (2020). Social Text, 38(1), 109-130.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Part headings in the flow, in order: Part I Gender, Race and Colonialism; Part II Transcultural Bodies; Part III Women, Salvation and Empowerment; Part IV Women and Capitalism (“A Women’s Work is Never Done!”); Part V Gender, Activism and Care (“To Be Queer is to Love All”)."
+  }
+}

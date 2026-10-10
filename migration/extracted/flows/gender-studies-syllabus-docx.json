@@ -1,0 +1,264 @@
+{
+  "sha256": "c1dd09ab9d8d1f8ef6a98ff19e47e9689319c0e0964f7d1535ae6af3ffa085ae",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Study of Gender in Ancient Egypt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Moving Beyond Gender Bias",
+            "note": "Ayad, M. (2022). In Women in ancient Egypt: revisiting power, agency, and autonomy, ed. Ayad, M. 1-26. The American University in Cairo Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gender in ancient Egypt: Norms, ambiguities, and sensualities",
+            "note": "Matić, U. (2016). Near Eastern Archaeology, 79(3), 174-183.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gender, Pharaonic Egypt",
+            "note": "Sabbahy, L. (2013). The Encyclopedia of Ancient History, 2876–2878.",
+            "href": "https://fount.aucegypt.edu/faculty_journal_articles/5093"
+          },
+          {
+            "type": "reading",
+            "title": "Rufus the Cineadus, &, The 'pivot of authenticity': representing ancient Roman sexuality in fiction",
+            "note": "Walton, Sarah. (2014). 487-492, Dissertation, University of Hull.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gendered Spaces at Wah-Sut: The fictional tale of Princess Reniseneb through an archaeological lens",
+            "note": "Optional. Crawford, C. (2024). (In process of publication)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Men in Ancient Egypt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Boasting about hardness: constructions of Middle Kingdom masculinity",
+            "note": "Parkinson, R. B. (2008). In Sex and Gender in Ancient Egypt. ‘Don your wig for a joyful hour’, ed. Conney, K. and Graves-Brown, C. 115-142.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Instruction of Any",
+            "note": "Lichtheim, M. (2006). In Ancient Egyptian Literature: The New Kingdom. 135-145. University of California Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Instruction of Ptahhotep",
+            "note": "Lichtheim, M. (2006). In Ancient Egyptian Literature: The Old and Middle Kingdoms. 61-76. University of California Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Women in Ancient Egypt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Did women do things in ancient Egypt?",
+            "note": "Brown, C. (2008). In Sex and Gender in Ancient Egypt: Don your wig in a joyful manner, ed. Conney, K. and Graves-Brown, C. 157-177. Swansea.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dancing for Hathor: Women in ancient Egypt",
+            "note": "Brown, C. (2010). Chapter 2; 18-20, 22-24, 29, Chapter 4, 61-65, Chapter 5, 79.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Women in the economic domain: first to sixth dynasties",
+            "note": "Kelly, S. A. (2022). In Women in ancient Egypt: revisiting power, agency, and autonomy, ed. Ayad, M. 165-185. The American University in Cairo Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Women in ancient Egypt",
+            "note": "Optional. Watterson, B. (2011). Chapters 2 and 3, 31-50.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Childhood in Ancient Egypt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The ancient Egyptian conception of children and childhood",
+            "note": "Harrington, N. (2020). In Children in Antiquity, ed. Beaumont, L., Dillon, M., and Harrington, N. 11-25. Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Growing up in Ancient Egypt",
+            "note": "Janseen, R. and Janseen, J. (1990). Chapters 4 and 5, 26-54.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "What is a child? The conception of childhood viewed primarily through the funerary culture from the Predynastic era to the Middle Kingdom",
+            "note": "McRae Crawford, C. (2022). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain. Chapter 3, 38-52.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Growing up in Ancient Egypt",
+            "note": "Optional. Janseen, R. and Janseen, J. (1990). Chapters 7 and 8, 90-114.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Gender in Religion",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Gender and the Religion of Ancient Egypt",
+            "note": "Onstine, S. (2010). Religion Compass, 4(1), 1-11.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Goddesses",
+            "note": "Graves-Brown, C. (2019). In Dancing for Hathor: Women in ancient Egypt. 161-170.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Seth and Horus",
+            "note": "Lichtheim, M. (2006). In Ancient Egyptian Literature: The New Kingdom. 213-223. University of California Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Destruction of Mankind",
+            "note": "Lichtheim, M. (2006). In Ancient Egyptian Literature: The New Kingdom. 197-200. University of California Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Sexuality in Ancient Egypt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Erotic Papyrus of Turin",
+            "note": "Antelme, R., and Rossini, S. (2001). In Sacred Sexuality in ancient Egypt: The Erotic Secrets of the Forbidden Papyrus. 150-161. Inner Traditions.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sexuality in Ancient Egypt: Pleasures, Desires, Norms, and Representations",
+            "note": "Matic, U. (2024). In The Cambridge World History of Sexualities, ed. Wiesner-Hanks, M. and Kuefler. Cambridge University Press. 22-42.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Queer Egyptologies of Niankhkhnum and Khnumhotep",
+            "note": "Reeder, G., Cooney, K., and Graves-Brown, C. (2008). In Sex and Gender in Ancient Egypt. ‘Don your wig for a joyful hour’, ed. Cooney, K. and Graves-Brown, C. 143-155.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Gender and Royalty",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Dancing for Hathor: Women in ancient Egypt",
+            "note": "Brown, C. (2019). Chapter 2, 23, Chapter 7, 129-133, 144-159.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hatshepsut: Transcending Gender in Ancient Egypt",
+            "note": "Diamond, K. A. (2020). Gender & History, 32(1) 168-188.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Obelisk Inscription of Hatshepsut",
+            "note": "Lichtheim, M. (2006). In Ancient Egyptian Literature: The New Kingdom. 25-28. University of California Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "(De) queering Hatshepsut: binary bind in archaeology of Egypt and kingship beyond the corporeal",
+            "note": "Optional. Matić, U. (2016). Journal of archaeological method and theory, 23, 810-831.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Gender roles in religion",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rites and Rituals",
+            "note": "Ayad, M. F. (2009). In God's Wife, God's Servant: The God's Wife of Amun (ca. 740–525 BC). 34-115. Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dancing for Hathor: Women in ancient Egypt",
+            "note": "Brown, C. (2019). Chapter 2, 25-27, Chapter 5, 85-98.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Theology, Priests, and Worship in Ancient Egypt",
+            "note": "Velde, H. (1995). In Civilizations of the Ancient Near East, ed. Sasson, J. and Baines, J. 3, 1731-1749.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Gender Studies in Ancient Egypt\nWinter 2024-2025, CILAS\n\nAll texts will be provided by the instructor."
+  }
+}

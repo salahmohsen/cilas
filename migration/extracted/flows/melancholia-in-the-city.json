@@ -1,0 +1,60 @@
+{
+  "sha256": "2a5bada90e71d03814fbf08f5842d887c3feccda1ad35e2b9f65bf2d431e82a3",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Freud: Mourning and Melancholia",
+        "description": "We begin with Freud’s distinction between mourning and melancholia, asking how loss becomes inscribed in subjectivity.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Lacan: Desire, Depression, and the Capitalist Discourse",
+        "description": "Lacan reframes depression as a structural and even ethical impasse, tied to capitalism’s injunction to enjoy.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Kristeva: Language, Loss, and the Black Sun",
+        "description": "Kristeva illuminates melancholia as a collapse of symbolic mediation, where language falters in the face of loss.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Fisher & Han: Capitalist Realism and Burnout",
+        "description": "Neoliberalism turns exhaustion and despair into systemic conditions, shaping depression as the defining affect of our age.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Resistance: Melancholia Against Capitalist Time",
+        "description": "Writers like Berardi ask whether melancholia can function as refusal, critique, or disruption of productivity.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Ethics and Sublimation: Living With Depression",
+        "description": "We close by considering whether sublimation, creativity, and responsibility can transform depression into new ways of relating.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Melancholia in the City - Six-week CILAS Workshop, led by George Bartlett.\n\nMelancholia in the City explores the diffuse sense of malaise pervading contemporary urban life, approaching depression through the lens of psychoanalysis as a social and structural experience shaped by how late capitalism hijacks unconscious desire. In dialogue with its participants, the workshop will ground these questions in the context of Cairo, and consider how melancholia might be understood not only as a symptom of exhaustion and loss, but also as a mode of critique, resistance, and the site of potential transformation."
+  }
+}

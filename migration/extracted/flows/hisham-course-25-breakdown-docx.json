@@ -1,0 +1,274 @@
+{
+  "sha256": "21cfe8f7bd235753bcbaa048164be0b043f4c5a0559cd574fb724aa3928f3aad",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Breaking the Glass!",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "We could watch a short film or a series of clips, followed by a friendly discussion to introduce the course and get to know each other."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Meeting Dostoevsky’s Grand Inquisitor.",
+        "description": "The fellow is mostly going to lead the discussion here.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter One, in Political Apocalypse: A Study of Dostoevsky’s Grand Inquisitor",
+            "note": "Ellis Sandoz. Pages: 5-38.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Short excerpts (source not named in the flow)",
+            "note": "Listed in the reading column under Week Two, after the Sandoz chapter.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In-Class discussion of Dostoevsky's Legend in its historical context to prepare for reading the story itself."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "A First Reading of the legend of “The Grand Inquisitor”",
+        "description": "Although we would read most of the legend in the class in this session, it would be better if it was read before the class as well.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Grand Inquisitor",
+            "note": "Dostoevsky, chapter 5, in: Part II, Book V, The Brothers Karamazov. Pages: 127-137 (around 10 pages).",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "We will read together the story briefly to familiarize ourselves with it and begin posing our questions."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "“Gnosticism” as a key to understand the Grand Inquisitor: the dissatisfaction with the world (I)",
+        "description": "The fellow is mostly going to lead the discussion here in class. But for better discussion, the readings should be read beforehand, especially that of Hans Jonas.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Gnostic Mass Movements of Our Times",
+            "note": "Eric Voegelin. In Ersatz Religion. Pages: 59-60.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Epilogue: Gnosticism, Existentialism, and Nihilism",
+            "note": "Hans Jonas. In The Gnostic Religion. Pages: 320-331.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Here, we will begin developing tools to understand the religious-existential experience of the Grand Inquisitor, as our guiding example, starting with an exploration of Gnosticism and its first and second key characteristics."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "“Gnosticism” as a key to understand the Grand Inquisitor: Worldly Salvation (II)",
+        "description": "The fellow is mostly going to lead the discussion here in class.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Gnostic Mass Movements of Our Times",
+            "note": "Eric Voegelin. In Ersatz Religion. Pages: 59-60.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Short excerpts from Marx; Lenin; Belinsky, and maybe others",
+            "note": "We are going to read them in class.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We will focus here on the third and fourth characteristics of Gnosticism, i.e., the salvation from the world within the world, as a key to understand the Inquisitor’s experience, as our guiding example."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "“Gnosticism” as a key to understand the Grand Inquisitor: Knowledge of Being (III)",
+        "description": "The fellow is mostly going to lead the discussion here in class.\n\nMaybe: a brief discussion of Heidegger.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Gnostic Mass Movements of Our Times",
+            "note": "Eric Voegelin. In Ersatz Religion. Pages: 59-60 and 68-73.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Short excerpts from Descartes; Marx; and maybe on Elon Musk",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We will focus here on the fifth and the sixth characteristics of Gnosticism, i.e., The ability of the human to know how the salvation can take place, as a key to understand the Inquisitor’s experience, as our guiding example."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Pneumo-pathology: The Stupidity of the Inquisitor (1)",
+        "description": "The fellow is mostly going to lead the discussion here in class. But for better results, the readings should be read beforehand.\n\nNote: this is probably the longest reading of the entire course, i.e., 18 pages, so we are going to read it over two sessions, where the fellow is to lead the discussion in both.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "First and Second Reality…, in Hitler and the Germans",
+            "note": "Eric Voegelin. Pages: 239-257.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Short excerpts from Robert Musil’s Man without Qualities; Cervantes’s Don Quixote; from the Islamic history",
+            "note": "If needed.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Here, we augment our understanding of the Inquisitor’s experience, as our guiding example, by introducing to Gnosticism three new, interrelated concepts: pneumo-pathology, first/second realities, and “higher\" stupidity."
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Pneumo-pathology: The Stupidity of the Inquisitor (2)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "First and Second Reality…, in Hitler and the Germans",
+            "note": "Eric Voegelin. Pages: 239-257.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Voegelin on Gnosticism, Modernity, and the Balance of Consciousness",
+            "note": "Linda Raeder. Optional.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Continue the discussion of the previous session. There is here an article by Linda Rader recommended here, which the fellow already translated in into Arabic. It serves as a way of summary to the whole discussion of Voegelin thus far. Reading it is optional, though."
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "Back to the Legend: The Inquisitor (I)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Grand Inquisitor",
+            "note": "Dostoevsky, chapter 5, in: Part II, Book V, The Brothers Karamazov. Pages: 127-137.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Here, we go back to the Legend itself. We, as a class, are to focus on the inquisitor and try to understand him based on the web of our concepts we thus far have dwelt on, i.e., Gnosticism, Pneumo-pathology, first/second realities, and stupidity."
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Back to the Legend: The Inquisitor (II)",
+        "description": "We here might introduce the reading of Ellis Sandoz to see how someone else can apply the said concepts to the inquisitor. – We are to decide on this together, though, when time comes.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Grand Inquisitor",
+            "note": "Dostoevsky, chapter 5, in: Part II, Book V, The Brothers Karamazov. Pages: 127-137.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We, as a class, continue our discussion of the Inquisitor."
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": "Back to the Legend: Jesus",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Grand Inquisitor",
+            "note": "Dostoevsky, chapter 5, in: Part II, Book V, The Brothers Karamazov. Pages: 127-137.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "This is our last stand with the “Legend,” and we are to discuss here the figure of Jesus Christ and his behavior throughout the legend."
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": "Closing session",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "We may watch a long film, followed by a discussion based on the themes we discussed in the course. – the Film is to be decided, of course!"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "“The Whole Land is Sulfur and Salt”: God and the religious-existential struggle of our modern life.\n\nThe Breakdown of the Course and the Readings: This course spans 12 weeks, with one session per week. Each session will be about 2.5 hours long, excluding the breaks, which make the entire session to be about 3 hours long. The sessions will be held in person, i.e., offline, at the Cairo Institute of Liberal Arts and Sciences, unless otherwise specified.\n\nHow to approach the course? The topic of this course, as said, is the modern experience with the world as a corrupt wasteland that humanity alone can and must transform. This topic can be approached from various aspects, such as historical, economic, and purely philosophical aspects. However, in this course, only the religious-existential aspects are going to be isolated, for they are the least studied ones, even though they are extremely important. In order to approach the said topic from this aspect, we need a key, though, which is to be found in the work of the Austrian philosopher Eric Voegelin, who provides a host of concepts that can help us understand the religious-existential “roots” of this modern experience, such as his concept of “Gnosticism,” and his “pneumo-pathology.” However, this is still not enough, for this experience is a vastly shared one. Hence, we are to take a guiding example in which this experience is to be clearly found, e.g., Dostoevsky’s Grand Inquisitor, and then we are to apply the concepts we take from Voegelin on this example in order to eventually get a better understanding of the religious-existential roots of this experience, which is our goal. As for the pedagogical modality of the course, it is mainly the discussion-based learning. The fellow is to introduce the context of Dostoevsky’s “the Grand Inquisitor” and the host of concepts developed by Eric Voegelin, and then the fellow is to encourage all the class to engage in a thorough discussion of the Legend that involves multiple readings.\n\nWhat to expect: 1) A discussion of the following questions: A.) What is the experience that we are interested in, in this course, exactly, that is, the modern experience with the world as a corrupted, hostile wasteland that man alone can and must transform? B.) What religious-existential reasons could account for experiencing the world in this way? C.) Could it have anything to do with one’s attitude towards God? D.) Is it an isolated experience, or has it become a shared one across the globe? E.) What possible practical consequences could this experience of the world lead to? F.) Is such an experience dangerous or something to be welcomed? G.) If it is dangerous, why so? And, h.) What could be done, if any, in the face of such an experience? 2) Multiple readings of the legend of the “Grand Inquisitor” by Dostoevsky as a prime, guiding example to understand the said experience. – The legend is 10 in pages. 3) Reading some, short work(s) by original thinkers, especially Eric Voegelin, in order to find a key to approaching both the said questions and the Legend. 4) Reading some, short excerpts from various thinkers to illuminate our discussions, like Descartes, Pascal, Hobbes, Bacon, Marx, Nietzsche, Belinsky, Heidegger, Lenin, Schmitt and others. 5) The readings are mostly in English. 6) If found, a translation into Arabic is to be provided for the relevant, translated reading(s) – the “Legend” is already translated, so expect its translation to be available. 7) The discussion is mostly in Arabic, unless otherwise indicated or asked. 8) The exact pages of the readings are to be sent as PDFs before the beginning of the course itself via email; and if not, the said pages are to then be sent at least a week before each session. 9) The longest reading of the entire course is 18 pages long, and we are going to cover it across two classes, where the discussion is going to be led by the fellow.\n\nWhat not to expect: 1) Since this course takes as a given both the existence of a “God” and the possibility of maintaining an existential relation with Him, whether negatively or positively, a discussion to prove both of these givens is not to be expected at all. 2) Since we are going to read about figures, like Marx, other than the Grand Inquisitor, who is our primary guiding example, a fuller discussion of these “side” figures should not be expected."
+  }
+}

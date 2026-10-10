@@ -1,0 +1,264 @@
+{
+  "sha256": "997bf1a0e20ee4674620c74ade22acea3a84cf360e700f65295f00a7638d1d58",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "ON THE CITY",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "What Is Critical Urban Theory?",
+            "note": "Core reading. Brenner, Neil. City 13, no. 2–3 (2009): 198–207.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cinema and the City",
+            "note": "Core reading. Salmi, Hannu. In The Oxford Handbook of Cities in World History, edited by Peter Clarke, 1790–1825. Oxford, UK: Oxford University Press, 2013.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cinema, Cities and Urbanization",
+            "note": "Additional reading. Millington, Gareth. In Urbanization and the Migrant in British Cinema, by Gareth Millington, 19–44. London: Palgrave Macmillan UK, 2016.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "City and the Film",
+            "note": "Additional reading. Qasem, Mahmoud. Arab Press Agency, 2018.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "RAILWAY",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Urban Ideals and the Design of Railroad Stations",
+            "note": "Core reading. Chappell, Sally A. Kitt. Technology and Culture 30, no. 2 (1989): 354-375.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Permeability and Isolation: A Comparative Urban Life Study of Inner- City Railway Stations and Their Node Precincts in China",
+            "note": "Additional reading. He, Shan. Athens Journal of Architecture 2, no. 2 (2016): 107–30.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Railroad Space and Railroad Time",
+            "note": "Additional reading. Schivelbusch, Wolfgang. New German Critique, no. 14 (1978): 31-40.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tokyo Station City: The Railway Station as Urban Place",
+            "note": "Additional reading. Zacharias, John, Tianxin Zhang, and Naoto Nakajima. Urban Design International 16, no. 4 (2011): 242–51.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "HOUSE/SHELTER",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cities for People, Not for Profit",
+            "note": "Core reading. Brenner, Neil, Peter Marcuse, and Margit Mayer. City 13, no. 2–3 (2009): 176–84.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Urban Roots of Financial Crises: Reclaiming the City for Anti-Capitalist Struggle",
+            "note": "Additional reading. Harvey, David. Socialist Register 48 (2012): 1–35.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Egypt’s Housing Crisis: The Shaping of Urban Space",
+            "note": "Additional reading. Shawkat, Yahia. Cairo New York: The American University in Cairo Press, 2020.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "PUBLIC TRANSPORT",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Creating Inequality in Accessibility: The Relationships between Public Transport and Social Housing Policy in Deprived Areas of Santiago de Chile",
+            "note": "Core reading. Martínez, Cristhian Figueroa, Frances Hodgson, Caroline Mullen, and Paul Timms. Journal of Transport Geography 67 (February 2018): 102–9.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Social Exclusion: What Can Public Transport Offer?",
+            "note": "Core reading. Stanley, Janet, and Karen Lucas. Research in Transportation Economics 22, no. 1 (2008): 36–40.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Transport Accessibility and Social Exclusion: A Better Way to Evaluate Public Transport Investment",
+            "note": "Additional reading. Suescún, Juan Pablo Bocarejo, and Daniel Ricardo Oviedo Hernández. 25. Lisbon, 2010.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "PUBLIC SPACE",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Wall, An Increasing Phenomenon in Cairo: Main Reasons and Potential Implications",
+            "note": "Core reading. Elnaggar, Yosra G., Yasser M. Moustafa, and Ayman F. Wanas. In Architecture and Urbanism: A Smart Outlook, edited by Shaimaa Kamel, Hanan Sabry, et. al, 269–87. Cham: Springer International Publishing, 2020.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "What Is Inclusive and Accessible Public Space?",
+            "note": "Core reading. Pineda, Victor Santiago. The Journal of Public Space 7, no. 2 (2022): 5–8.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Commodification of the Egyptian New Capital: A Semio-Foucauldian Landscape Analysis",
+            "note": "Additional reading. Fawzy, Rania Magdi. Space and Culture, 9 February 2021.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Myth of a Safe Public Space",
+            "note": "Additional reading. Hemeid, Bedour. 9. TU Delft, 2018.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Leisure, Public Space and Quality of Life in the Urban Environment",
+            "note": "Additional reading. Lloyd, Kathleen, and Christopher Auld. Urban Policy and Research 21, no. 4 (December 2003): 339–56.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "NEIGHBOURHOOD",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Unequal Citizens: Between the Gated and the Informal in Cairo",
+            "note": "Core reading. Aly, Hend. In Urban Inequalities, edited by Italo Pardo and Giuliana B. Prato, 73–91. Palgrave Studies in Urban Anthropology. Cham: Palgrave Macmillan, 2021.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Informal Social Pact: The State and the Urban Poor in Cairo",
+            "note": "Core reading. Harders, Cilja. In Politics from Above, Politics from Below: The Middle East in the Age of Economic Reform, edited by Eberhard Kienle, 191-213. London: Saqi.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Prospects of Gentrification in Downtown Cairo: Artists, Private Investment and the Neglectful State",
+            "note": "Additional reading. Elshahed, Mohamed. In Global Gentrifications, edited by Loretta Lees, Hyun Bang Shin, and Ernesto López-Morales, 121–42. Bristol University Press, 2015.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Re-Presenting The Egyptian Informal Urbanism In Films Between 1994 And 2014",
+            "note": "Additional reading. Mofeed, R., and N. Elgendy. International Scholarly and Scientific Research & Innovation 10, no. 6 (2 May 2016): 2044–50.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "MARKETS AND MALLS",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Changing Consumer Cultures of Modern Egypt: Cairo’s Urban Reshaping",
+            "note": "Core reading. Abaza, Mona. Theory, Culture & Society, 18, no 5 (2006): 97–122.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Domesticating the Street: The Contested Spaces of the High Street and the Mall",
+            "note": "Core reading. Jackson, Peter. In Images of the Street: Planning, Identity, and Control in Public Space, edited by Nicholas Fyfe, 173–88. London; New York: Routledge, 1998.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Counterpublics in Saudi Shopping Centres, Beach Resorts, and Gated Communities",
+            "note": "Additional reading. Maneval, Stefan. Middle East-Topics & Arguments 12, no. 1 (2019): 76-86.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Urban Markets as a “Corrective” to Advanced Urbanism: The Social Space of Wet Markets in Contemporary Singapore",
+            "note": "Additional reading. Mele, Christopher, Megan Ng, and May Bo Chim. Urban Studies 52, no. 1 (2015): 103–20.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "UNIVERSITY",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "From the Urban University to Universities in Urban Society",
+            "note": "Core reading. Addie, Jean-Paul D. Regional Studies 51, no. 7 (3 July 2017): 1089–99.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Universities’ Urban Impact in the Neo-Liberal Context",
+            "note": "Additional reading. Razavivand Fard, Haniyeh. In Neo-Liberalism and the Architecture of the Post Professional Era, edited by Hossein Sadri, 299–317. The Urban Book Series. Cham: Springer International Publishing, 2018.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gated University Campus and Its Implications for Socio-Spatial Inequality: Evidence from Students’ Accessibility to Local Public Transport",
+            "note": "Additional reading. Sun, Cheng, Jianquan Cheng, Aiwen Lin, and Mingjun Peng. Habitat International 80 (2018): 11–27.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Opening essay (verbatim): City and the cinema have always been interlinked. While the cinema represents an image of the city, its people and spaces, it simultaneously plays a major role in the production of its space. The relation between the city and the Egyptian cinema, dates to its early days. When Naguib el-Rehani in Salama fi Khair (1937) mocked the urban elite, Ismail Yassin in al-Attaba el-khadra (1959), days after arriving from the village bought one of Cairo’s most vital squares. Al Houb Fouk Hadba el-Haram (1986) and al-Souraa La Tazeed Aaan Sefr (1992) follow the suffering of Athar el-Hakim and Ahmed Zaki and Abla Kamel and Ahmed Bedier to find a house and practice their basic rights of marriage and housing. The city and urban life represented the childhood dream of Shukri Sarhan in Ibn el-Nile (1951) which turned into a disaster when it came true, while for Ahmed Zaki, and his family in el-Beih el-Bawab (1987) moving to the city was a way to make a living which started with a harsh welcome but eventually provided him with the city’s endless opportunities. Bushra’s 678 (2010) daily commutes in the public bus reflected the suffering of Egyptian women facing harassment, while the public tram provided the child Doha Amir in Hayah aw Mout (1954) safe transport across Cairo to find the medication of her dying father, Emad Hamdy.\n\nCourse description (verbatim): This class dives deep into the city and its representation in the cinema. Employing a critical approach of contemporary urban political and economic landscapes, it familiarises the students with the main debates within academia and includes the movies as a lens to look at the broader questions on urban studies. Every week we will explore one of the urban spaces, starting from the railway station to public spaces, neighbourhoods, public transport, universities and waterfronts. We will focus every week on a different space, covering a broad range of issues which we encounter in our everyday life within these spaces. We will read and discuss housing, mobility, rural-urban migration, informality, segregation, inequality, citizenship, poverty, etc.\n\nFormat (verbatim): After week one, which will function as an introductory class, each class will be composed of two parts. In the first part we discuss the readings and engage with academic debates, while in the second part a student/students will give a presentation on the space of the week, followed by a discussion.\n\nInstructor bio (verbatim): Hend Aly is an urban researcher and a consultant for the UN-Habitat. She has held various position in international organisations, governmental institution and civil society. She holds two post-graduate degrees in political science and urban studies. In her research, she is interested in bringing the political and the urban closer together to better understand the city. She has previously published on urban inequalities and citizenship, neo-liberal urbanism, authoritarianism, new cities, urban branding, urban governance and urban activism. Her research covers diverse cities including Cairo, Brussels, Vienna, Copenhagen, Madrid, Belgrade, Tirana, and new cities namely, NEOM. Her current research focuses on migration integration in an urban context. Email: hendaly@aucegypt.edu"
+  }
+}

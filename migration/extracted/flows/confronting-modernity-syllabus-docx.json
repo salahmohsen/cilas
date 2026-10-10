@@ -1,0 +1,250 @@
+{
+  "sha256": "82dd248e43b3b6d328edf8251dc66e845aa6c30ed2a87cbeb9588a326cae86f1",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Question Concerning Technology",
+        "description": "Topics: Technology as a mode of revealing; the essence of technology; critique of technological thinking.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Martin Heidegger",
+            "note": "Reading for Session 1.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Origin of the Work of Art / Building, Dwelling, Thinking",
+        "description": "Topics: The relationship between art and truth; the significance of dwelling; architecture as a reflection of human existence.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Martin Heidegger",
+            "note": "Reading for Session 2.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Art in the Age of Mechanical Reproduction",
+        "description": "Topics: The impact of mechanical reproduction on art; authenticity and aura; changes in perception and experience.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Walter Benjamin",
+            "note": "Reading for Session 3.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Governmentality / Disciplinary Power",
+        "description": "Topics: The concept of governmentality; mechanisms of power; surveillance and control in modern societies.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Michel Foucault",
+            "note": "Reading for Session 4.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Wretched of the Earth (and other segments)",
+        "description": "Topics: Colonialism and decolonization; violence and liberation; identity and culture in postcolonial contexts.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Wretched of the Earth (and other segments)",
+            "note": "Frantz Fanon.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The Society of the Spectacle",
+        "description": "Topics: The spectacle as a social relation; critique of consumer culture; implications for politics and society.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Society of the Spectacle",
+            "note": "Guy Debore.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Communicative Rationality",
+        "description": "Topics: The role of communication in rational discourse; public sphere and democracy; critique of instrumental reason.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Jürgen Habermas",
+            "note": "Reading for Session 7.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Language Games",
+        "description": "Topics: Meaning as use; the role of context in language; implications for philosophy and communication.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ludwig Wittgenstein",
+            "note": "Reading for Session 8.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Concepts We Live By",
+        "description": "Topics: Metaphor in language and thought; how concepts shape our understanding of reality.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "George Lakoff and Mark Johnson",
+            "note": "Reading for Session 9.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "The Catastrophe of Postmodernism",
+        "description": "Topics: Critique of postmodernism; technology and alienation; alternatives to modernity.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "John Zerzan",
+            "note": "Reading for Session 10.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "The Two Sources of Morality and Religion",
+        "description": "Topics: Intuition vs. intellect; the role of religion in moral development; critique of mechanistic views of life.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Henri Bergson",
+            "note": "Reading for Session 11.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Madness and Civilization - Wouters and Foucault",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Madness and Civilization",
+            "note": "Michel Foucault.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Wouter Kusters",
+            "note": "Reading for Session 12.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 13,
+        "title": "Prince of Networks: “We Have Never Been Modern”",
+        "description": "Topics: Historical perspectives on madness; critique of modernity through networks; implications for sociology and anthropology.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "We Have Never Been Modern",
+            "note": "Bruno Latour.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Grahamm Harman",
+            "note": "Reading for Session 13 (listed as \"Readings: Grahamm Harman, Bruno Latour\").",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "The Postmodern Condition",
+        "note": "Jean Lyotard. Extra accompanying text.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Philosophical Investigations",
+        "note": "Ludwig Wittgenstein. Extra accompanying text.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Wretched of the Earth",
+        "note": "Frantz Fanon. Extra accompanying text.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "We Have Never Been Modern",
+        "note": "Bruno Latour. Extra accompanying text.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Sufism and Deconstruction",
+        "note": "Ian Almond. Extra accompanying text.",
+        "href": null
+      }
+    ],
+    "notes": "Course Title: Confronting Modernity: Art, Politics, Religion and Science. Fellow: Omar Rakhawy.\n\nCourse Description:\nConfronting Modernity: Art, Politics, Religion, and Science invites students to explore the intricate and often contentious relationship between modernity and its various dimensions. This course delves into how modernity shapes our understanding of art, politics, religion, and science, prompting critical reflections on contemporary society.\n\nThrough a carefully curated selection of foundational texts, we will engage with influential thinkers such as Martin Heidegger, Walter Benjamin, Michel Foucault, and Frantz Fanon. We will investigate key themes, including the impact of technology on human experience, the commodification of art in the age of mechanical reproduction, and the dynamics of power and surveillance in modern governance.\n\nAs we navigate these complex ideas, we will also confront critiques of modernity itself, examining alternative perspectives that challenge prevailing narratives. From John Zerzan's reflections on postmodernism to Ian Almond's exploration of Sufism and deconstruction, this course encourages students to question assumptions and clarify the meaning of modernity in their own lives.\n\nCourse Objectives:\nBy the end of this course, students will:\n- Develop a critical understanding of modernity's impact through reflections on art, politics, religion, and science.\n- Engage with key philosophical texts that add to our conceptual vocabulary..\n- Foster skills in critical analysis, discussion, and written expression regarding complex ideas related to modernity.\n\nAssessment Methods:\nAssessment will be based on participation in discussions, written reflections on readings, and a final research paper exploring a topic related to modernity.\n\nThe flow numbers its sessions 1-12 and 14 (there is no Session 13 heading); they are recorded as 13 sessions in order."
+  }
+}

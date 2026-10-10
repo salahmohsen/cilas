@@ -1,0 +1,250 @@
+{
+  "sha256": "03cad383703c45a82f23a0a4c1ba4d0f8699fc8f748f0298d6301c80ce6cff7f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Prelude",
+        "description": "Establishing the central themes of the course, its guiding questions, and its learning modalitiy.\n\nSuggested reading(s): None before the session.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Greeks",
+        "description": "An exploration of how ancient Greek thinkers approached the course's core problem, providing a conceptual background for subsequent discussions.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Natural Science and Hermeneutics: The Concept of Nature in Ancient Philosophy",
+            "note": "Hans-Georg Gadamer, in Proceedings of the Boston Area Colloquium in Ancient Philosophy, 1, 1985, pp. 39-52.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Basic Principles of Classical Political Philosophy",
+            "note": "Leo Strauss. Chicago: University of Chicago Press, 1961.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Nature in the Modern Experience",
+        "description": "An examination of how the modern experience of nature departs from the ancient one, setting the stage for new forms of thought.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Discourse on Method",
+            "note": "René Descartes. Trans. John Veitch. Illinois: La Salle, 1899. (Short selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Meditations on First Philosophy",
+            "note": "Descartes. Trans. John Veitch. Lancaster: Lancaster University, 1901. (Short selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Prose of John Milton",
+            "note": "John Milton. New York: Anchor Books, 1967. (Short selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Philosophy of Francis Bacon",
+            "note": "Benjamin Farrington. Liverpool: Liverpool University Press, 1964. (Short selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mathematical Principles of Natural Philosophy",
+            "note": "Isaac Newton. Trans. Andrew Motte. New York: Daniel Adee, 1846. (Short selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Modern Abstraction in Thinking the Collective Human Life: The First Wave",
+        "description": "An exploration of how modern abstraction in relation to our main themes takes its early form in the work of Thomas Hobbes.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Leviathan",
+            "note": "Thomas Hobbes. Oxford: The Clarendon Press, 1929. (Selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "From Humanism to Hobbes",
+            "note": "Quentin Skinner. Cambridge: Cambridge University Press, 2018. (Selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Modern Abstraction in Thinking the Collective Human Life: The Second Wave",
+        "description": "An analysis of how abstraction becomes formalized through the rise of social sciences as a modern academic discipline.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Modern Social Sciences",
+            "note": "In: Cambridge History of Sciences, eds. Theodore Porter and Dorothy Ross. Cambridge: Cambridge University Press, 2008. (Selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Crises in Abstraction",
+        "description": "A discussion of how abstraction is critically problematized in Marxism and the phenomenological tradition.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Problem of Form: Recovery of the Concrete in Contemporary Phenomenological Marxism",
+            "note": "Ian Angus, pp. 32–52, in: Marxism and Phenomenology, eds. Bryan Smith and Richard Westerman. London: Lexington Books. (Selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Institutions and Passivity",
+            "note": "Maurice Merleau-Ponty. Trans. Leonard Lawlor and Heath Massey. Illinois: Northwestern University Press, 2010. (Selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The Decision!",
+        "description": "A discussion of the concrete approach to the “political” by Carl Schmitt.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Concept of the Political: The Extended Version",
+            "note": "Carl Schmitt. Trans. George Schwab. Chicago: The University of Chicago, 2007. (Selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Political Theology",
+            "note": "Carl Schmitt. Trans. George Schwab. Chicago and London: University of Chicago Press, 2005. (Selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Power",
+        "description": "An exploration of Michel Foucault’s account of power alongside his later work on ethics and technologies of the self.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Power/Knowledge",
+            "note": "Michel Foucault. Ed. Colin Gordon. Trans. Colin Gordon, Leo Marshall, John Mepham, and Kate Soper. New York: Pantheon Books, 1980. (Selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Birth of Biopolitics",
+            "note": "Michel Foucault. Ed. Michel Senellart. Trans. Burchell. Hampshire: Palgrave Macmillan, 2008. (Selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Technologies of the Self",
+            "note": "Michel Foucault. Eds. Huck Gutman, Patrick Hutton and Luther Martin. Massachusetts: The University of Massachusetts Press, 1988. (Selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Feminist Interventions",
+        "description": "An exploration of feminist interventions in the “humanities,” focusing on the work of Judith Butler.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Performative Acts and Gender Constitution: An Essay in Phenomenology and Feminist Theory",
+            "note": "Judith Butler. Theater Journal, Vol. 40(4), 1988, pp. 519–531. (Selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gender Trouble",
+            "note": "Judith Butler. New York and London: Routledge, 1999. (Selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "The Narrating Voice",
+        "description": "An inquiry into narrative and voice as concrete modes beyond abstraction.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Relating Narratives",
+            "note": "Adriana Cavarero. Trans. Paul Kottman. London and New York: Routledge, 2000. (Selections.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "For More Than One Voice",
+            "note": "Adriana Cavarero. Trans. Paul Kottman. Stanford: Stanford University Press, 2005. (Selections.)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "The Aesthetic",
+        "description": "A discussion of how art becomes a center for attention in the “concrete turn” on which the course has been focusing thus far.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Work of Art in the Age of Mechanical Reproduction",
+            "note": "Walter Benjamin, in: Illuminations, Ed. Hanna Arendt. Trans. Harry Zohn. New York: Schocken Books, 1968.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Buffer Session",
+        "description": "This is a session to be used either as a concluding session, or as an extra session, if the group decides to a.) expand on any of the themes, b.) add another theme, or c.) perform a certain class activity [e.g., a revision session, a writing session, watching a film, etc.]\n\nSuggested reading(s): To be Decided.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Notes\n1. The course is mainly offline.\n2. From session 9 onward, the topics, figures, and/or readings remain open to reconsideration if the group, as a whole, sees a reason to redirect or refine them.\n3. Readings are assigned as a working framework and may be updated where necessary.\n4. The course relies on sustained, active engagement from all participants.\n\nBio\nHisham Fahmy is the teaching fellow of philosophy and poetry in this year’s Bridge Program at CILAS. He holds a B.A. in Political Science and Economics from Cairo University (2016) and an M.A. in Arabic Philosophy and Logic from the American University in Cairo (2025). Alongside his teaching at CILAS and the American University in Cairo, he is a writer, translator, and public speaker. And in his spare time, you will most probably find him happiest by the sea!"
+  }
+}

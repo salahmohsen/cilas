@@ -1,0 +1,296 @@
+{
+  "sha256": "5323a53f0f59c6da5134fc450156f82657e1c3dadd0a61145cb158fbadfc2bae",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Beginnings",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Plato’s Symposium, The Cambridge edition, edited by Frisbee C. C. Sheffield",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Irving Singer, The Nature of Love, Vol. 1: Plato to Luther",
+            "note": "Optional",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Religious and Moral Grounding",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ch. 2 and 6 in Simon May, Love: A History, Yale University Press, 2011",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Part I and II in Hannah Arendt, Love and Saint Augustine, Chicago University Press, 1996",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "C.S. Lewis, The Four Loves, Hartcourt, 1960 (Part III, IV, V, VI)",
+            "note": "Optional Reading",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "https://www.youtube.com/watch?v=m4hI638mskQ",
+            "note": "Optional; alternative to the C.S. Lewis reading (“or watch:”)",
+            "href": "https://www.youtube.com/watch?v=m4hI638mskQ"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Invention of Romance:",
+        "description": "Arabic resonances:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Part I in Irving Singer's The Nature of Love Vol. 2: Courtly and Romantic Love (1984)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "نبيل فاروق، النبع الجاف، سلسلة زهور",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "سلامة موسى، الحب في التاريخ: رأي العرب في الحب، جميل وبثينة، يزيد وحبابة، كثير وعزة، قيس ولبنى، صبيحة وابن أبي عامر، ابن زيدون وولادة",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Shakespeare’s Romeo and Juliet",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ch. 8 and 9 in Simon May's Love: A History",
+            "note": "Optional",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Love as knowledge",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘Introduction’ from Irving Singer, ‘Meaning in Life: The Pursuit of Love’, MIT Press, 2010",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ch. 2, in Harry G. Frankfurt, Reasons for Love (2006)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Conclusion, from Linnel Secomb, Philosophy and Love: From Plato to Popular Culture, Edinburgh University Press, 2007",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Arabic-Islamic formulations",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter 33, 'Love in Islamic Philosophy', Ali Altaf Mian, in The Routledge Handbook of Philosophy 2019",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction in Joseph N. Bell’s Love Theory in Later Hanbalite Islam (1978)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "طوق الحمامة في الأُلفَةِ والأُلَّاف، لابن حزم: االفصول: 1،4،5،7،14،15،20،21",
+            "note": "chapters 1,4,5,7,14,15,20,21",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "(English translation) http://www.imagomundi.com.br/espiritualidade/hazm_ring_dove.pdf",
+            "note": "English translation of The Ring of the Dove (Ibn Hazm)",
+            "href": "http://www.imagomundi.com.br/espiritualidade/hazm_ring_dove.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "مصارع العشاق، لأبو جعفر بن محمد",
+            "note": "Optional",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "رسالة في ماهية العشق، لابن سينا",
+            "note": "Optional",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Modern and Contemporary Iterations: Love under Capitalism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ch. 7, ‘The Reasons for Passion’ in Eva Illouz, Consuming Romantic Utopia pp.208-246",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ch. 3, Romantic Webs in Eva Illouz, Cold Intimacies: The Making of Emotional Capitalism",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapter 1, ‘Falling In and Out of Love’ from Zygmunt Bauman, Liquid Love, Polity, 2003",
+            "note": "Optional",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Love is just an emotion?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter 2 \"What Emotions are\" in Peter Goldie's, \"The Emotions: A Philosophical Exploration\", Oxford University Press, 2002",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapter 4, 'Explaining Emotions', from Amelie O. Rorty (ed.), Explaining Emotion, University of California Press, 1980",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "What Can Science Tell Us?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "A Neuroscience Love Song",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=VbFchFe1Nfo"
+          },
+          {
+            "type": "watch",
+            "title": "Your Brain in Love and Lust - by Scientific American",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=G4NfXEuF_cs"
+          },
+          {
+            "type": "watch",
+            "title": "What is Love? - SciShow",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=hrR-6Vwle1I"
+          },
+          {
+            "type": "watch",
+            "title": "Wendy Suzuki, Lecture on The Neurobiology of Love",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=w4lgvxjSVXw&t=50s"
+          },
+          {
+            "type": "reading",
+            "title": "S. Zeki, The Neurobiology of Love",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapter 2: Gravitation is not responsible for People Falling in Love from Berit Brogaard, ‘On Romantic Love: Simple Truth about a Complex Emotion’, Oxford University Press, 2015",
+            "note": "Optional Reading",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Love and the question of the ethical",
+        "description": "Review and final assessment",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Love, Ethics and Responsibility (from Linnell Secomb, Philosophy and Love)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ch.7 in Troy Jollimore, Love's Vision (2011)",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Participants to share their reflections on their entire experience with the course as well as a personal/theoretical engagement they feel inspired to share"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "In what is becoming an annual tradition since it was first taught in 2018, ‘Can we talk about love?’ is a critical attempt to try to have a meaningful conversation about ‘love’. The course tries to look at a wide range of texts encompassing philosophy, psychology, literature, both in Arabic and English to not only understand ‘love’ as phenomenon but to try develop the terms and the ideas to be able to have such a conversation.\n\nThis course was inspired by a reading group spearheaded by a friend on how to come to terms with ideas that are seemingly abstract and yet immediately personal and experienced in our everyday life. In a time where capitalist logic reaches its apex in transforming our bodies, our minds, our ideas, our emotions and our very span of attention into complex modes of objectification and consumption, how can we come to understand concepts like: attraction, attachment, fidelity, amity and care, and so on. This course raises more questions than tries to answer them and it is entirely premised on the seamless mingling of the inter-subjective and the intellectual.\n\nOver the time-frame of the course participants will continuously oscillate between articulating a subjective experience and ideas and at the same time engaging with a wide variety of texts and media, ranging from St. Augustine to Egyptian “romantic” pocket-book series, Zuhur.\n\nThe course’s main objective is part therapeutic, part intellectual exploration and part critical reflection on the possibilities of love in a time and space like ours."
+  }
+}

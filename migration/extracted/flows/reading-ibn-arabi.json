@@ -1,0 +1,180 @@
+{
+  "sha256": "1beac3e05b68f60543aa8d428a01110d95590428e86e12d2e59a081552c47ed9",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Marginalized epistemologies",
+        "description": "a) The Islamic Intellectual Tradition\nb) Knowledge by presence vs. (absolute) constructivism\nc) The concept and language- can there be something we can’t speak about? (apophasis)\nd) Mystical experience: Can I be nothing?\ne) Embodied knowledge – ritual as a way of knowing and embodying knowledge\nf) Discursive vs. non-discursive thinking\ng) Understanding Divine Duality vs. Cartesian Duality:\nh) Eastern and western phenomenology and existentialism",
+        "meetings": 3,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction: The Intellectual Tradition in Islam",
+            "note": "The Tao of Islam- Murata, p.1",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Revelation, Intellect and Reason in the Quran",
+            "note": "Sufi Essays- Nasr, pp- 52-56",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mysticism versus Philosophy",
+            "note": "Ibn al-Arabi’s Barzakh- Salman Bashier, pp.59-74",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sections: Mistrust in thinking, Elimination of Discursive thinking, The A-thinking thinking",
+            "note": "Towards a Philosophy of Zen Buddhism Izutsu pp.147-160",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Divine Duality, p. 49-76",
+            "note": "The Tao of Islam- Murata.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Readings on Neoplatonism",
+        "description": "",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Matter as Cosmic Instrument”",
+            "note": "Theurgy and the Soul- Shaw, p.31",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Theurgy as Demiurgy”",
+            "note": "Theurgy and the Soul- Shaw, p. 50",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“The Paradox of Embodiment”",
+            "note": "Theurgy and the Soul- Shaw, p.110",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Ritual and the Human Hierarchy”",
+            "note": "Theurgy and the Soul- Shaw, p.162",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Ritual as Cosmogony”",
+            "note": "Theurgy and the Soul- Shaw, p.173",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Sufism (of Ibn ‘Arabi): The Framework",
+        "description": "a) What is Sufism?\nb) The Cosmic Order\nc) Fanā and baqā\nd) Divine Love\ne) The heart (as intellect)\nf) Master-Disciple Relationship and the Chain (Sheikh-Mureed-Silsila)\ng) Servitude/servanthood\nh) The Divine Names\ni) The perfect human being\nj) God, the human being and the world\nk) Correspondence theory",
+        "meetings": 3,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "What is Sufism?",
+            "note": "The Shambala Guide to Sufism- Ernst, pp. 1-31",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Seventh-century Sufism and the School of Ibn ‘Arabi",
+            "note": "Sufi Essays, Nasr, pp.97-103",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The three realities",
+            "note": "The Tao of Islam- Murata, p.23-45",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Heart",
+            "note": "The Tao of Islam, p.289-316",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Heart as a Subtile Organ, The Science of the Heart",
+            "note": "Alone with the Alone- Corbin, pp. 221-245",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Sufis Orders",
+            "note": "The Shambala Guide to Sufism- Ernst, 120-146",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Names of God, Meditation, and Mystical Experience",
+            "note": "The Shambala Guide to Sufism- Ernst, pp.81-119",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Perfect Man",
+            "note": "Ibn al-Arabi’s Barzakh- Bashier, pp.113-128",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Creation as Theophany",
+            "note": "Alone with the Alone- Corbin, p.184",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The two dimensions of Beings",
+            "note": "Alone with the Alone- Corbin, p. 207",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cosmic Correspondence",
+            "note": "Murata- The Tao of Islam, p. 14",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Ibn ‘Arabī: The Literalist, Traditionalist, Controversialist",
+        "description": "l) Introduction to Ibn Arabi\nm) The Merciful approach – forgiving Pharaoh?\nn) Waḥdat al wujūd – pantheism?\no) gradation of being— does a shadow really exist?\np) Literalist approach – traditionalist or blasphemous?\nq) Servanthood, the perfect human being, the feminine and masculine\nr) Sharia as onto-cosmic (Neoplatonic order)\ns) Ritual as the vehicle and embodiment of divine manifestation (Neoplatonic theurgy)",
+        "meetings": 4,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ibn ‘Arabī, his life and work",
+            "note": "The Sufis of Andalusia, p. 29-49",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course: Keys to Reading Ibn ‘Arabī. Semester: February 2021. Instructor: Dr. Saliha Farid Abdelkhalek.\n\nCourse description\n\nThis course is designed to introduce students to Ibn ‘Arabī, the Andalusian Muslim mystic of the 12th/13th century (1165-1240), who is considered the Grand Sheikh of the living Sufi tradition, and author of the possibly, largest Muslim Esoteric Encyclopaedia al-Futūḥat al-Makkīya (The Meccan Openings). Anyone who comes in contact with the writings of Ibn ‘Arabī’, will soon discover the difficulty involved in reading and deciphering them; how Illusive, profound and mysterious they are. Thus, understanding the framework and context in which Ibn ‘Arabī wrote, the backdrop of the religious tradition and the philosophical concepts and language that were inherited and at times, purposefully employed, make his texts much more accessible to students. Hence, this course entitled “Keys to Reading Ibn ‘Arabī”, combines central themes in Sufism and philosophy, designed to help students navigate Ibn ‘Arabī’s primary texts and access some layer of meaning, paving the dip into the “ocean without a shore”."
+  }
+}

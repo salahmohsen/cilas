@@ -1,0 +1,207 @@
+{
+  "sha256": "f8704e0ccddb1118b11be31f0cb2d01e56535de16d1a3eef821cea24852a0f6c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Vision of Global Cairo",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Cairo has started to become ugly”: why Egypt is building a new capital city",
+            "note": "Michaelson, R. (2018, May 8). The Guardian.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Origins of Modern Cairo",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Tale of two cities: the origins of modern Cairo",
+            "note": "Abu-Lughod, Janet. Comparative Studies in Society and History 7.4 (1965): 429-457.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Myth of Cairo’s Ashwa’iyyat",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Understanding Cairo: The logic of a city out of control",
+            "note": "Sims, D. (2012). Oxford University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The Housing Crisis",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Egypt’s Housing Crisis. The Shaping of Urban Space",
+            "note": "Shawkat, Yahia, and David Sims. (2020). American University in Cairo Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Neoliberal Interventions",
+        "description": "",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "High Class Shanty Towns (Dakar, Senegal)",
+            "note": "African Cities Reader III, pp 22-26.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Urban Sahara from the Sky: how Global Capitalism Fixes the Dunes (Nouakchott, Muaritania)",
+            "note": "African Cities Reader III, pp 19-21.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "This Sea Shall Be Uprooted (Lagos, Nigeria)",
+            "note": "African Cities Reader III, pp 27-35.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "City Building in Post-Conflict, Post-Socialist Luanda: Burying the past with phantasmagorias of the future (Luanda, Angola)",
+            "note": "African Cities Reader III, pp 121-133.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dispossessed Vigils: Mourning and Regeneration in Inner-City Johannesburg (Johannesburg, South Africa)",
+            "note": "African Cities Reader III, pp 134-147.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "African Urbanism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Invisible Urbanism in Africa",
+            "note": "Rao, V., DeBoeck, F., and Simone, A. (2007). Perspecta, 39, 78-91.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Right to the City",
+            "note": "Harvey, D. (2008). New Left Review 53: 23-53.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Space Production",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Social Space, in The Production of Space, ch. 2, pp 68-168",
+            "note": "Lefebvre, H (1991).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Gender and Fears",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Urban neoliberalism, urban insecurity and urban violence: Exploring the gender dimensions",
+            "note": "Kern, L. and Mullings, B. (2013). In Rethinking Feminist Interventions into the (citation as printed in the flow; the entry is cut off in the source).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Sounds and Infrastructure",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Street Sounds: Listening to Everyday Life in Modern Egypt",
+            "note": "Fahmy, Z. (2020). Stanford University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Precarity and Urban Revolt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The street and ‘the slum’: Political form and urban life in Egypt’s revolt",
+            "note": "Abourahme, N. (2013). City 17.6: 716-728.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Crisis and Urban Future",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ruinous city, ruinous time future suspended and the science fiction of the present",
+            "note": "Abourahme, N. (2014). City, 18(4-5), 577-582.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course header (verbatim): The Space Lab: Navigating the Larger African Urban World. Shan Yang, Teaching Fellow, Cairo Institute of Liberal Arts and Sciences. Email: yangshan@aucegypt.edu\n\nPart headings (verbatim): Part I A Problematic Urban Reality (sessions 1–4). Part II Reconfiguring African Cities (sessions 5 & 6 to 8). Part III Politics of Urban Intersection (sessions 9–12). In the numbering used here, session 5 & 6 is a single session with 2 meetings, so the flow's sessions 7–12 are numbered 6–11.\n\nSource note: the Session 9 (flow numbering) citation is cut off in the source after “Rethinking Feminist Interventions into the”, and is copied as printed."
+  }
+}

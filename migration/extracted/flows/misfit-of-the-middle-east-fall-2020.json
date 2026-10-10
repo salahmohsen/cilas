@@ -1,0 +1,197 @@
+{
+  "sha256": "6444f6fd1ee49a534e57bd17a036d3269fd5786b2fefe72ed9825aca30a0bd5b",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction- Why Villains and Misfits",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Empire of Trauma: An Inquiry into the Condition of Victimhood",
+            "note": "Didier Fassin & Daniel Rechtman.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Eshtebak",
+            "note": "Mohamed Diab. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Ruins, Rubble, and Abandoned",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rubble",
+            "note": "Gaston Gordillo.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "In the Last Days of ‘The Triangle’",
+            "note": "Mada Masr. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Dirty, Impure, and Stinky",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Purity & Danger",
+            "note": "Mary Douglas.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Massacre",
+            "note": "Monika Borgmanna and Lokman Slim. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Evils, Satan, and the Fallen Humanity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Adrift on the Nile",
+            "note": "Naguib Mahfouz.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Chitchat on the Nile",
+            "note": "Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Criminals, Mad, and Incarcerated Subjects",
+        "description": "Reading TBD",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "El-Barei’’",
+            "note": "Atef El-Tayyib. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Bitches, Whore, and Sluts",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bad Girls of the Arab World",
+            "note": "Nadia Yaqub and Rula Quawas.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Syrian Refugees turning to Sex to Survive",
+            "note": "BBC. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Addiction of Alcohol and Drugs",
+        "description": "Reading TBD",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "El-Keif",
+            "note": "Ali Abdel Khalek. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Beggars, Street Children, and Homeless",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Managing Egypt’s Poor and the Politics of Benevolence, 1800-1952",
+            "note": "Mine Ener.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Al-Motasawwil",
+            "note": "Ahmed El Sab’awy. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "The Age of the Sarsagiyya",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Age of the Effendiyya: Passages to Modernity in National-Colonial Egypt",
+            "note": "Lucie Ryzova.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "El-Almany",
+            "note": "Alaa ElSherif. Film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Conclusions and Final Remarks",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Villains, Misfits, and Tricksters of the Middle East (Fall 2020).\n\nWhat does it mean to attend a course about societies from the perspective of people who are dominantly constructed as villains and bad guys, or in theological terms the subjects who are dominantly considered as sinners, who are not considered as good representatives of the victimhood language and politics that have controlled the global aspects of justice and morality specifically since WWII?\n\nThis course focuses on the ruins of the constructed and invented civilizations and their entailed languages, histories, faiths, and identities. Ruins are usually regarded as the unwanted piles of dust, rocks, and cement following the destruction of a building, a city, or even a whole country. They are useless and valueless material leftovers, which are usually thrown away far from well-structured and well-organized gardens, houses, universities, and streets. Nevertheless, the work of Walter Benjamin in specific offered another perspective to investigate the rubble and its presumed negativity. Writing against historicity and its linearity, this course will shed light on how rubble disturbs and stumbles the fetishization of how civilizations and their hegemonic ideas are built.\n\nIn this regard, this course will try to investigate two interrelated problematics in academia and public life: The first is a gap between the centrality of sinful, the outcast, and the misfit and the to the making of societies in the Middle East on one hand, and the political, social, and economic exclusion of these figures while debating the communal and citizenship rights of the people on the other hand. The second problematic has to do with stumbling personal stories that are full of the predominantly negated practices of the misfits, who interrupt the making of the hegemonic victimhood discourses."
+  }
+}

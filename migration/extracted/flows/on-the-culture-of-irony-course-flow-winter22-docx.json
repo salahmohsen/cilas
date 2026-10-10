@@ -1,0 +1,210 @@
+{
+  "sha256": "9001d7fbc79d83366fb212b2e73cdfb8827013ca5f946f342e697a8d3a0e9a92",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction and everyday understanding(s) of irony",
+        "description": "Content: course outline; why irony is interesting; sukhriya; irony, sarcasm, satire; irony as philosophy; what is philosophy.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Dictionaries",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Alanis Morissette – Ironic",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=Jne9t8sHpUc"
+          },
+          {
+            "type": "reading",
+            "title": "Rasha Hilwe article",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Bassem Yousef",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Assignment: Bring an example of irony you’ve encountered to next week’s class.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Irony’s myriad forms",
+        "description": "Content: verbal, situational, cosmic and dramatic irony; the difficulty or impossibility of defining irony; objective and subjective irony.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The story of Solomon and the Angel of Death",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Spongebob – Hide and then what happens",
+            "note": null,
+            "href": "https://www.megacartoons.net/hide-and-then-what-happens/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Socrates",
+        "description": "Content: the Socratic problem; Socratic/complex irony; the art of living; irony as a pose.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Apology",
+            "note": "Plato.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Socrates: Ironist and Moral Philosopher",
+            "note": "Gregory Vlastos.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Chinese Restaurant",
+            "note": "Seinfeld.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Romantic irony I",
+        "description": "Content: romanticism; paradox of consciousness; the finite and the infinite.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Angel of Death",
+            "note": "Al-Ma’arri, poem.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Incomprehensibility and Fragments 42, 108",
+            "note": "Friedrich Schlegel.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Romantic irony II",
+        "description": "Content: irony as negativity; sincerity.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On the Concept of Irony",
+            "note": "Søren Kierkegaard.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chic Ironic Bitterness",
+            "note": "Robert J. McGill jr.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Irony and the Internet",
+        "description": "Content: Poe’s law; irony punctuation; alternating caps.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Damn I Didn’t Know Y’all Was Sad? I Thought It Was Just Memes”: Irony, Memes and Risk in Internet Depression Culture",
+            "note": "Lucie Chateau.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Finding Ola",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Cynicism and false consciousness",
+        "description": "Content: irony and cynicism; indifference; escape from irony.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Critique of Cynical Reason",
+            "note": "Peter Sloterdijk.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Rick and Morty",
+            "note": "Excerpts from S03E09 and S03E10.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Assignment: 2000 word essay.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Reflection",
+        "description": "Content: the future of irony; post-irony.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ironic Life",
+            "note": "Richard J. Bernstein.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "David Foster Wallace on irony",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Cairo Institute of Liberal Arts and Sciences, 2022/2023. Course flow. Instructor: Coen van Kessel."
+  }
+}

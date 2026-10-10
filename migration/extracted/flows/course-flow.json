@@ -1,0 +1,186 @@
+{
+  "sha256": "429fcb6e58c0b3d1e914eb2591737ff389fc0645d8d89e82b81c1f0edfbd67da",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to the project and the workshop",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "the introduction of my research",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "John Burger’s introduction to Ways Of Seeing: The nude",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We will reflect on the meaning of desire and how it is constructed and reproduced. We will discuss representation of desire and the difference between fantasy and normalization."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Desire, pleasure, and spectatorship",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In this session we will learn about phallocentricity in psychoanalysis and compare Laura Mulvey, Bell Hooks, and Judith Butler’s different positions from THE GAZE and reflect on the actual relevance of these theories to our local context and personal experiences of spectatorship and pleasure."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Female sexuality and the forbidden fruit",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Beer El Herman",
+            "note": "1969",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Shabab Imraa",
+            "note": "1956",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Ayn Al Maffar",
+            "note": "1977",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "a selection of censorship reports",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In this session, we will discuss how female desire and sexuality is being represented. In this session, we will also examine the sexualization of film posters and titles."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Representation of rape",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Heya Fawda",
+            "note": "2007",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Bab El Hadid",
+            "note": "1958",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Halawet Roh",
+            "note": "2014",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In this session we will discuss how rape and sexual violence are being typically represented in Egyptian cinema and how the rapist is portrayed. We will reflect on the narrative and visual representations of rape."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Representation of homosexuality and other “deviances”",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In this session, we will examine how patriarchal discourses in mainstream cinema view any form of desire other than that of the Heteronormative cis male as a deviance and an analogy for corruption. We will examine representations of gays and lesbians through different films from different eras as well as representation of kink and fetishes. We will reflect on the role these negative representations play in the creating an atmosphere that celebrates toxic masculinity and normalizes rape culture."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Desire, society, and the state",
+        "description": "1- The creation of the femme fatal in Egyptian cinema post July 1952\n\n2- Clean Cinema Wave post Golf War\n\n3- The sentencing of the tiktok Girls and the image of sexuality",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In this session, we will try to close the circle and trace the influence of society and state on shaping our collective understanding of desires represented in cinema and vice versa. We will examine three significant moments in the history of cinema and subsequently pop culture:"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "On love and violence",
+        "description": "1- The narrative of love and desire represented in romantic comedies",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Ashan Teby Teouly La",
+            "note": "music video by Tameem Younis, described in the flow as problematic",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Bent El Guiran",
+            "note": "mega hit song by Hassan Shakoush",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In this session, we will reflect on how patriarchal society understands love and desire, how this is reflected in cinema and pop culture. The session will focus on three examples:"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "Participants will be invited to make their own contributions if they chose to. These contributions could be in the form of a question for discussion, a small presentation, or a text/video/audio of their creation.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "This final session is dedicated to open discussions and collective reflections on what we have discussed during the course."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "THIS COURSE INVOLVES WORKING WITH MATERIAL THAT MIGHT CONTAIN SEXUAL VIOLENCE.\n\nThis course is based on Salma El Tarzi’s art research project, “Yataman Wa Honna El Raghebat”, ongoing since 2018.\n\nTHE COURSE: This workshop combines discursive and practical practices, where participants will get introduced to this project and its methodology, and will collectively reflect on the questions of representation of desire & the female sexuality, Image & agency, and the normalization of rape culture, through the example of Egyptian Pop Culture of the current moment. This process will include examining films, music videos, social media influencers activities, sexual violence and rape cases, as well as public reactions, moralistic outrage, policing the female body and THE STATE.\n\nTENTATIVE COURSE FLOW: This workshop is intended to be held in person but it can be modified if online option is more convenient for Cilas.\n\nNumber of sessions: 8 sessions held once a week\nSession duration: 2:30 Hrs. in person or 2 Hrs. on Zoom"
+  }
+}

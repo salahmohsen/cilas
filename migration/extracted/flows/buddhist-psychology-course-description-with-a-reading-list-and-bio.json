@@ -1,0 +1,181 @@
+{
+  "sha256": "4647dfbd9dab1b9759ac8d649af6695c551ab799802598ba04170d9af6d2a086",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Motivation and Effort in Buddhist Soteriology",
+            "note": "Mahaviveka.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Middle Length Discourses (Majjhima Nikaya)",
+            "note": "Translated by Bhihhhu Ñāṇamoli and Bhikkhu Bodhi.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Without and Within",
+            "note": "Ajahn Jayasaro.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Motivation and Effort in Buddhist Soteriology",
+            "note": "Mahaviveka.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Seen in Their True Light",
+            "note": "Ajahn Jayasaro.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Middle Length Discourses (Majjhima Nikaya)",
+            "note": "Translated by Bhihhhu Ñāṇamoli and Bhikkhu Bodhi.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mindfulness, Precepts and Crashing in the Same Car",
+            "note": "Ajahn Jayasaro.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Connected Discourses (Samyutta Nikaya)",
+            "note": "Translated by Bhikkhu Bodhi.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Toward a Psychology of Awakening",
+            "note": "John Welwood.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Connected Discourses (Samyutta Nikaya)",
+            "note": "Translated by Bhikkhu Bodhi.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Toward a Psychology of Awakening",
+            "note": "John Welwood.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "selected readings from the Teachings of Ajahn Chah",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A map of the journey",
+            "note": "Sayadaw U Jotika.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Middle Length Discourses (Majjhima Nikaya)",
+            "note": "Translated by Bhihhhu Ñāṇamoli and Bhikkhu Bodhi.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction to the Long Discourses (Digha Nikaya)",
+            "note": "Translated by Maurice Walshe.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Map of the mind",
+            "note": "by Sayadaw U Jotika.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Long Discourses (Digha Nikaya)",
+            "note": "Translated by Maurice Walshe.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Teachings of Ajahn Maha Bua",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "other",
+        "title": "Mahaviveka: website",
+        "note": "Author's website, given after the instructor bio.",
+        "href": "https://mahaviveka.wordpress.com/mebs/"
+      }
+    ],
+    "notes": "Course description: This course intends to cover the psychological aspects of the Buddhist Doctrine. Our main focus will be to explore in depth and as much extensively as possible, both the origins and developments of the autochthonous Indian experience of mind-examination, in both its tenets and practices, as they were ingeniously discovered and formulated by early Indian meditators and contemplative practitioners. The course will begin by demonstrating the principle of Buddhist pyrhonism as an epistemology in which conventional and ultimate truths are sharply distinguished, with the latter believed to be reachable fundamentally via the individual experience rather than abstract conceptualization.\n\nThe experience with which Buddhist psychology is most concerned is, dukkha, which covers the vast expanse beginning at circumstantial forms of psychological pain and affliction, and extends further to deeper forms including the conditionality regulating mental and emotional habits, impulses, compulsions and responses, and finally reaching down to the dread characteristic of the 'unconscious'. We will explore how Buddhist Sanskrit and Pāli texts give a detailed description of these, and how they further prescribe a path of experiential practice that enables the individual practitioner transcend this dukkha as a universal and fundamental human condition.\n\nThe course will cover such characteristic and unique Buddhist practices of spiritual and psychological transcendence, including meditation, tranquillity, mindfulness, Buddhist morality, self-awareness, intuitive observation, motivation and effort, and renunciation, which Buddhist texts frequently explain by juxtaposing and contrasting against their worldly, mundane opposites. This will give us a grand and clear picture of what constitutes \"mental health\" in terms of Buddhist psychology, and which we will view also in light of what modern Western psychology proposes in terms of therapeutic intervention.\n\nFinally we shall place much attention to the remarkable discovery of the \"unconscious\" in Buddhist psychology. We shall explore how the experience of deep meditation has allowed the ancient Indian practitioner to uncover and witness first-hand certain unfathomable hidden strata of the psyche that otherwise never appear in normal everyday conscious states. The Buddhist discovery and examination of the unconscious remains one of the most significant and profound aspects of Buddhist psychology, and we shall explore how this corresponds and interacts with the contributions of psychoanalysis and Jungian analysis.\n\nInstructor bio (as extracted; the source text contains garbled characters in its first sentences, copied as-is): Mphākikehp lpi rorn in Giop, Egnpj, 1983. He ipenj fike nepri pi p lpn prpcjijioner studying Sanskrit and Pāli, pi lell pi emploring Mphpnpnp pnq Therpkpqp Buddhism in India, Thailand, Sri Lanka, Myanmar, Cambodia, and Malaysia; after which he received his higher ordination as a Theravada monk in 2017 in the Burmese Shwegyin Nikaya. He's since authored two books titled \"Motivation and Effort in Buddhist Soteriology\" (2019) and \"The Buddha as Messiah\" (2025), along with several essays including \"Pāli Rhetoric in Translation\", \"Issues with Pāli Literature and its Translation\", and \"A Buddhist Perspective on the Psychology of Prejudice\". He's delivered several talks on Buddhism, including in the Sitagu International Buddhist Academy in Myanmar, and at the Royal University of Phnom Penh, Cambodia. He's currently continuing an ongoing project of producing the first jrpnilpjion of jhe Buqqhiij Pāli Cpnon in Arpric."
+  }
+}

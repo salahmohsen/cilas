@@ -1,0 +1,180 @@
+{
+  "sha256": "ea740b15b44dc24ce628f401e79d493ec211657a307bc6f75138e569c8bf3cea",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction and overview. The art of inspiration; techniques of enchantment.",
+        "description": "We need inspiration. Where does it come from? Can we ‘exercise the creative muscles’? Can technique help us? Is there a ‘bottom-up’ as well as a ‘top-down’ approach?\n\nSession 1 will include a thematic overview of the course, and an icebreaker exercise. We will engage in some writing games and share the results. We will also discuss how to incorporate the ideas which result into a larger-scale project that participants can choose to work on.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Warm-ups and plans. Do they serve a purpose for you? What is ‘the stuff that dreams are made of’?",
+            "note": "Prompt ideas",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Individual writing exercises (inspiration); application to own work.",
+            "note": "‘Play away’ games (out of class)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Drawing inspiration from Chazal (sens-plastique), Blake (fourfold vision), Keats (negative inspiration)."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Descriptions and settings. Shaping space-time. Narrator voice.",
+        "description": "If our job is to create a mood for the reader that speaks relationally to their emotions, values, and powers of reason, how can we move beyond character-based drama to explore the power of setting, time, and narratorial voice to provide an emotional backdrop or provide emotional colour to our writing?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Action. Description. Feeling. How will you balance them?",
+            "note": "Prompt ideas",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Individual writing exercise (5-part emotional framework); application to own work.",
+            "note": "‘Play away’ games (out of class)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "White room exercise; moving narrator exercise."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "The ebb and flow of story: Can story structure inform our understanding of the common ground of narratives?",
+        "description": "Exploring dynamic story structures … feeling where you need suspense and surprise. Is the dynamic genre-specific? Are there equivalents in Arab literature to Dan Brown’s style of writing?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Drawing inspiration from oral storytelling techniques, how can you explore scenes in stories from new perspectives, and how can that inspire you to work with and go beyond the confines of the possible to innovate within tradition?",
+            "note": "Prompt ideas",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Individual writing exercise (based on dynamic Revelation structure); application to own work.",
+            "note": "‘Play away’ games (out of class)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Revelation structure; Chinese circular structure"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Relational dialogue: Internal monologue, external conversations; the language of the natural world.",
+        "description": "Speech is based on language, but language itself goes deeper. What is the language of the heart that drives stories forward, resolves problems, provokes character-based crises, leads to breakthroughs, or results in tragic outcomes?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "What emotional story lines flow through a story? When we weave with emotion, how can we create patterns of beauty, however terrible?",
+            "note": "Prompt ideas",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Individual writing exercise (emotional conversations); application to own work.",
+            "note": "‘Play away’ games (out of class)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Mapping emotional story lines; Playing with the emotional flow of plants, fluids, stone"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Sound and silence: Harness the inner power of language.",
+        "description": "Coming full circle. Channelling inspiration. Seeking transcendent flow.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "What can we learn from the ancient Egyptian approach to rhetoric which is based on the wisdom of the heart? What does mystical poetry have to teach us? What can we learn from the temple teachings of Bharata Muni?",
+            "note": "Prompt ideas",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Individual writing exercise (voice and story); application to own work.",
+            "note": "‘Play away’ games (out of class)",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Compare and contrast the effectiveness of the presence of heightened forms of pattern in two or three narrative interpretations of the same story and summarise your findings either in a narrative form which follows a single cycle of the Chinese Circular Structure or in a visual form inspired by and which honours the traditions from which quincuxial Coptic tapestry designs come (these were often found in burial sites, decorating pillows used to support the head of the deceased).",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Evocation and inspiration. Transparency and transmission. Rhetoric and rhythm."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Share your story: creative project presentation.",
+        "description": "Session 6 will be an open-ended session. The content and flow will emerge from the needs and desires of those present in relation to their writing.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Share your story: creative project presentation. Open-ended session."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Odyssey: Dynamic learning journey",
+        "note": "Co-authored with David Pinto. Link on page 3 of the document; the approach is described in this book.",
+        "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system"
+      },
+      {
+        "type": "reading",
+        "title": "Woven storytelling: Coptic tapestries",
+        "note": "Link on page 3; cited in session 5 (Coptic tapestry designs). Title taken from the address, not the visible link text.",
+        "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/"
+      },
+      {
+        "type": "other",
+        "title": "Shared Google Drive file",
+        "note": "Link on page 3. Its visible text and the unit it belongs to could not be identified from the extraction.",
+        "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing"
+      }
+    ],
+    "notes": "How can we best harness word magic to inspire, inform, educate, and entertain?\nOr does language ‘language’ us?\nDo different languages (Arabic and English, for example) shape our thoughts differently?\n\nIn this writing lab, we will apply aspects of language (sounds, words, rhythm), to discover creative ways of approaching characterisation, description, and action, through a variety of writing genres and styles.\n\nThis six-week writing lab is designed to build on ideas covered in a previous CILAS class (Story as participative enquiry) but attendance on that course is not a prerequisite for joining this one. Taking inspiration from the shu-ha-ri approach to Japanese martial arts training, the exercises in this writing lab are designed to invite you to play by the rules; break away from the rules; and ultimately, transcend the rules to achieve a state of flow.\n\nAs both creators and appreciators, participants will engage with what they learn about writing in imaginatively practical personal quests to realise personal, communal, and universally nurturing work.\n\nParticipants may work in English and/or Arabic. Films, webcasts, video journals, artwork, social sculptures, or musical compositions are acceptable providing academic rigour and critical and creative thinking are evident as part of the creative process.\n\n2) A tentative course/lab/workshop flow, including the weekly topics and (preliminary) assigned material (reading, viewing, exercises, etc.) for 6-8 weeks, one session per week. (you can find previous course flow samples on the website)\n\nProposed course outline (flexible - may change according to the individual needs and interests of participants enrolled)\n\nSessions 2–5 will start with an opportunity to share thoughts about the larger-scale project. They will then introduce the theme for the session. Participants will engage in writing games relating to that theme, share the results with others, and discuss how they might apply the techniques and learning points to their larger-scale projects.\n\nThere is potential to deliver this via an Odyssey Grid (a non-linear, inspirational approach to delivering eductional content in an emergent game-based process). The approach is outlined in Odyssey: Dynamic learning journey which I co-authored with David Pinto.\n\nThis course is conceived as a two-way opportunity for participative engagement with writing drawing on the classical liberal arts as an integrated and integrative organon (tool for learning and self-realisation). The aim is for the interaction between everyone involved to facilitate a collaborative pedagogy of discovery. I hope this two-way process will help everyone involved (including myself) to advance our understanding ourselves and how best we might serve the societies in which we find ourselves by exploring and learning more about the topics outlined as we progress through the course. My plan outlines potential topics for pre-discussion and post-discussion. I welcome suggestions from others to submit work in a format they feel comfortable presenting in (film, webcast, video journal, artwork, social sculpture, musical composition, etc) as long as academic rigour, critical and creative thinking, emotional engagement and reflective practices are evident as part of the creative process. I am flexible enough to source material in different formats (eg audio, music, film) and from different cultural contexts and periods in addition to the visual, oral, social, digital, and text-based source material already included in the draft outline submitted here."
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "sha256": "12ab51e202f3e35337c0809b13427834669caa394e4b8fbc4d58743caa83db73",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Put Every Word On Trial For Its Life",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "All Language Is Created",
+            "note": "Alok V Menon.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Our Lives Are The Art",
+            "note": "Alok V Menon.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Our Natural State is Water",
+            "note": "Alok V Menon.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Pull Out Your Tongue",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Your Silence Will Not Protect You",
+            "note": "Audre Lorde.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Poetry Is Not A Luxury",
+            "note": "Audre Lorde.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Writer’s Block",
+            "note": "Alok V Menon.",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Have You Heard George’s Podcast: Writer’s Block",
+            "note": "Optional.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Spoken Word",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "listen",
+            "title": "QUEEN",
+            "note": "Janelle Monae and Erykah Badu.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Poetry: How does it feel now?",
+            "note": "Akua Naru.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Spiritual Word",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "No Easter Sunday for Queers",
+            "note": "Koleka Putuma.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Swear Word",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "No Roses From My Mouth",
+            "note": "Stella Nyanzi.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Radical Rudeness",
+            "note": "Stella Nyanzi.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Ancestral Word",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Homegoing (Excerpt)",
+            "note": "Yaa Gyasi.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Daydreaming yourself into existence",
+            "note": "Alok V Menon.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Dystopia",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Skinned",
+            "note": "Lesley Nneka Arimah.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Utopia",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Friendship Is Romance",
+            "note": "Alok V Menon.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sultana’s Dream",
+            "note": "Rokeya Sakhawat Hossain.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Home",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The God of Small Things (Except)",
+            "note": "Arundhati Roy.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Borders",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mohini Can Scream",
+            "note": "Radhika Jani.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Love",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Falling in Love With Ideas of People",
+            "note": "Alok V Menon.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Hope",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "In Search of Our Mother’s Garden",
+            "note": "Alice Walker.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  }
+}

@@ -1,0 +1,230 @@
+{
+  "sha256": "e795d048578e111adb985e18e9a6b287be550badc452a0851d72ad5e54f81119",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Anthropology of Music: The Role of Sounds, Stories, and Songs in Human Social Life",
+            "note": "Sean O’Neill. 2017. Ethnology, Ethnography and Cultural Anthropology. Read Part 1: General Introduction (pages 1-6).",
+            "href": "https://www.eolss.net/sample-chapters/c04/E6-20D-68-14.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "Ten Ways to Listen",
+            "note": "Joella Bitter. 2022. Anthropology News.",
+            "href": "https://www.anthropology-news.org/articles/ten-ways-to-listen/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Music, dance, and gender",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Sabar Dancing in Senegal",
+            "note": "YouTube video, 10 minutes.",
+            "href": "https://www.youtube.com/watch?v=RTDC7hJEqT4"
+          },
+          {
+            "type": "reading",
+            "title": "Cool play: emotionality in dance as a resource in Senegalese urban women’s associations",
+            "note": "Hélène Neveu Kringelbach. 2007. In The Emotions: A Cultural Reader, ed. H. Wulff. Oxford: Berg.",
+            "href": "http://neveukringelbach.org/papers/Book_NeveuKringelbach2007.pdf"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Music and technology",
+        "description": "Read one or both:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "No Dead Air! The iPod and the Culture of Mobile Listening",
+            "note": "Michael Bull. 2004. Leisure Studies 24(4): 343-355.",
+            "href": "http://asounder.org/resources/bull_nodeadair.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "Spotify and the Democratisation of Music",
+            "note": "Tom Hodgson. 2021. Popular Music 40(1): 1-17.",
+            "href": "https://www.cambridge.org/core/journals/popular-music/article/spotify-and-the-democratisation-of-music/3C232D4AA12F522BF297EB1CCA0C7E02#article"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Music and protest",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bangkok is Ringing: Sound, Protest, and Constraint",
+            "note": "Benjamin Tausig. 2019. (Chapters TBA)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Music and class",
+        "description": "Read one or both:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘McDonald’s Music’ Versus ‘Serious Music’: How Production and Consumption Practices Help to Reproduce Class Inequality in the Classical Music Profession",
+            "note": "Anna Bull and Christina Scharff. 2017. Cultural Sociology 11(3): 283-301.",
+            "href": "https://www.researchgate.net/publication/319240417_'McDonald's_Music'_Versus_'Serious_Music'_How_Production_and_Consumption_Practices_Help_to_Reproduce_Class_Inequality_in_the_Classical_Music_Profession"
+          },
+          {
+            "type": "reading",
+            "title": "El Sistema as a Bourgeois Social Project: Class, Gender, and Victorian Values",
+            "note": "Anna Bull. Art, Criticism, and Theory for Music Education 15(1).",
+            "href": "https://pure.port.ac.uk/ws/portalfiles/portal/4667782/El_Sistema_as_a_Bourgeois_Social_Project.pdf"
+          },
+          {
+            "type": "watch",
+            "title": "BBC Proms 2011: National Youth Orchestra play Romeo and Juliet",
+            "note": "YouTube video, 2 minutes.",
+            "href": "https://www.youtube.com/watch?v=CueoUhu-Spw"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Music and urban space",
+        "description": "Read one or both:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Towards a Sonic Ecology of Urban Life: Ethnography and Sound Perception in Cairo",
+            "note": "Vincent Battesti and Nicolas Puig. 2020. Senses and Society 15(2): 170-191.",
+            "href": "https://hal.archives-ouvertes.fr/hal-02890453/document"
+          },
+          {
+            "type": "reading",
+            "title": "Egyptian Shaʿbi Music and Struggles over City Space",
+            "note": "Sophie Frankford.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Music and globalization",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music and the Global Order",
+            "note": "Martin Stokes. 2004. Annual Review of Anthropology 33: 47-72.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Music and migration",
+        "description": "Read one or both:\n\nIf you read the Hemmasi, video TBA.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Migrant Life, and Scenes of a “Mexican South”",
+            "note": "Alex E. Chávez. 2015. Southern Cultures 21(3).",
+            "href": "https://www.southerncultures.org/article/southern-borderlands-music-migrant-life-and-scenes-of-a-mexican-south/"
+          },
+          {
+            "type": "reading",
+            "title": "Tehrangeles Dreaming: Intimacy and Imagination in Southern California’s Iranian Pop Music",
+            "note": "Farzaneh Hemmasi. 2020. Durham and London: Duke University Press. (Chapter TBA)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "vincent velazquex, Huapango Arribeño",
+            "note": "If you read the Chavez, watch some of this YouTube video.",
+            "href": "https://www.youtube.com/watch?v=QkViWn9iOH"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Race, religion, and authenticity in hip hop",
+        "description": "Read one or more:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Muslim Cool: Race, Religion and Hip Hop in the United States",
+            "note": "Su’ad Abdul Khabeer. 2016. New York: New York University Press. (Chapters TBA)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ciphers, ‘hoods and digital DIY studios in India: Negotiating aspirational individuality and hip hop collectivity",
+            "note": "Ethiraj Gabriel Dattatreyan and Jaspal Naveel Singh. 2020. Global Hip Hop Studies 1(1): 25-45.",
+            "href": "https://intellectdiscover.com/docserver/fulltext/ghhs/1/1/ghhs.1.1.25.pdf?expires=1672516103&id=id&accname=guest&checksum=2922D2FC926CCEA2ACF3174690934E19"
+          },
+          {
+            "type": "reading",
+            "title": "Modalities of Space, Time and Voice in Palestinian Hip-Hop Narratives",
+            "note": "Ilana Webster-Kogen. In Travelling towards Home: Mobilities and Homemaking, ed. Nicola Frost and Tom Selwyn.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Music and the environment",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Song Walking: Women, Music and Environmental Justice in an African Borderland",
+            "note": "Angela Impey. 2018. Chicago and London: The University of Chicago Press. (Chapters TBA)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Review and wrap up",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "The Anthropology of Music\nTentative Course Flow, CILAS 2023\nSophie Frankford"
+  }
+}

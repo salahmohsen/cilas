@@ -1,0 +1,335 @@
+{
+  "sha256": "49913cb2cbb61eb6754508e9d1be1774a5dccfa679ec9d6e53e3d1df92f5e150",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Rules of Engagement",
+        "description": "Introduction to the course. Engaging questions like: what do we mean by popular culture? Why choose popular culture as a lens? How do we do that?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Notes on Deconstructing the Popular",
+            "note": "Stuart Hall",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Interpreting culture(s) After television",
+            "note": "Lila Abu Lughod",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Ideology and the Family: The Cultivation of Righteousness",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On the Family as a Realized Category",
+            "note": "Pierre Bourdieu",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Selected parts of Yawmiyat Wanis, يوميات ونيس",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Videos from Youtube Channel Yawmiyat Hamdy w Wafa’, يوميات حمدي ووفاء",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Problematic Place of Patriarchs: Nostalgia and Longing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Future of Nostalgia",
+            "note": "Svetlana Boym",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Of Fathers, Homelesness, and Dead Bodies",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Playlist of 2020 rap songs by Marwan Moussa, Abyusif, Afroto, and others",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Women on Screen: Fear",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reading the Romance",
+            "note": "Janice Radway",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Selected parts of Ila Ana, إلا أنا",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Leh La’, ليه لأ",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Romance",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Long Live the Patriarchy: Love in the Time of ‘Abd al-Wahhab",
+            "note": "Walter Armbrust",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Of Poetry, Politics, and Revolution",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Marwan Moussa’s ‘months’ songs",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Abyusif’s album Habek Bors, حبك برص",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Spectacles: Envy",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Society of the Spectacle",
+            "note": "Gyu Debord",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Mohamed Ramadan’s il Malek, الملك",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Parts of Nasl il Aghrab, نسل الأغراب",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The Aesthetic of Opulence and the Irresistibility of Suffering",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Marwan Pablo’s Free",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Wegz’s Keda w Keda, كدة وكدة",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Selection of episodes from online show Moze’ il Share’, مذيع الشارع",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Creative Writing Exercise: World Building"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "New and Social Media: Paranoia",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "You People will Never be Safe",
+            "note": "Franco ‘Bifo’ Berardi",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Selected parts of Haza il Masa’, هذا المساء",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Selected parts of il Nadara il Beda, النضارة البيضا",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Righteousness Revisited: Neo-religiosity Online",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Ethical Soundscape",
+            "note": "Charles Hirschkind",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Selected parts of il Sohba, الصحبة",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Amir Monir’s il Sa’a Sab’a, الساعة سبعة",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Manufactured Authenticity and Strategic Vulnerability",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘Now How You Sound’: Considering a Different Philosophical Praxis",
+            "note": "Devonya Havis",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Lindsey Ellis’ Youtube: Manufacturing Authenticity (for Fun and Profit)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Selections from Hadia Ghaleb’s Instagram videos",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Edutainment: The Place of Knowledge",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Selected parts of Bina Itifa’, بيننا اتفاق",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Snippets from Egyptian online science content",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Il Ro’ya Hbab: Life Making in Times of Despair",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Uprising: on Poetry and Finance",
+            "note": "Franco ‘Bifo’ Berardi",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Marwan Pablo’s Denamit, ديناميت",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Marwan Pablo’s live video on the ABZ case",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  }
+}

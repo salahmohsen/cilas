@@ -1,0 +1,281 @@
+{
+  "sha256": "a23d59df6a164ec852340baaba10115f0a267ded65fd0c0b084ec7cde208fce1",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to the lab",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reciprocal Landscapes: Stories in Material Movement.",
+            "note": "Hutton, Jane Elizabeth. London ; New York: Routledge, Taylor & Francis Group, 2020.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "egy-map.com",
+            "note": "Check the following websites. Title taken from the address; the visible link text was not in the extracted text.",
+            "href": "https://egy-map.com/"
+          },
+          {
+            "type": "other",
+            "title": "beyond_cement_0.pdf (publicworksstudio.com)",
+            "note": "Check the following websites. Title taken from the address; the visible link text was not in the extracted text.",
+            "href": "https://publicworksstudio.com/sites/default/files/beyond_cement_0.pdf"
+          },
+          {
+            "type": "other",
+            "title": "design-earth.org/exhibitions",
+            "note": "Check the following websites. Title taken from the address; the visible link text was not in the extracted text.",
+            "href": "https://design-earth.org/exhibitions/"
+          },
+          {
+            "type": "other",
+            "title": "feralatlas.org",
+            "note": "Check the following websites. Title taken from the address; the visible link text was not in the extracted text.",
+            "href": "https://www.feralatlas.org/"
+          },
+          {
+            "type": "other",
+            "title": "youtube.com/@wizy82/videos",
+            "note": "Check the following websites. Title taken from the address; the visible link text was not in the extracted text.",
+            "href": "https://www.youtube.com/@wizy82/videos"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Urbanization and the transformation of the earth",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The natural history of urbanization",
+            "note": "Mumford, Lewis. In William T. Thomas ed., Man’s Role in the Changing Face of the Earth. Chicago: University of Chicago Press, 1956, 382-400.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Operational Landscapes: Hinterlands of the Capitalocene.",
+            "note": "Brenner, Neil, and Nikos Katsikis. Architectural Design 90, no. 1 (2020): 22–31.",
+            "href": "https://doi.org/10.1002/ad.2521"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Ecology II: Anthropocene / Capitalocene / Plantationocene",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction: Anthropocene or Capitalocene? Nature, History, and the Crisis of Capitalism.",
+            "note": "Moore, Jason W. In Anthropocene or Capitalocene? Nature, History, and the Crisis of Capitalism, 1–13. Oakland, CA: PM Press, 2016.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Plantationocene: A Lusotropical Contribution to the Theory.",
+            "note": "Wolford, Wendy. Annals of the American Association of Geographers, February 11, 2021, 1–18. (optional)",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Reflections on the Plantationocene: a conversation with Donna Haraway and Anna Tsing",
+            "note": "Podcast.",
+            "href": "https://open.spotify.com/episode/3kq7lIJpoGEtl2M9VlexR4?si=64b0bc851c49456c"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Ecology I: Metabolism and unequal ecological exchange",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Marx’s Theory of Metabolic Rift: Classical Foundations for Environmental Sociology.",
+            "note": "Foster, John Bellamy. American Journal of Sociology 105, no. 2 (September 1999): 366–405.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Environmental Crises and the Metabolic Rift in World-Historical Perspective.",
+            "note": "Moore, Jason W. Organization & Environment 13, no. 2 (June 2000): 123–57.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Underdeveloping the Amazon: Extraction, Unequal Exchange, and the Failure of the Modern State.",
+            "note": "Bunker, Stephen G. Chicago: University of Chicago Press, 1988. (Chapters 1 and 2)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Alternative perspectives",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Critique of Urbanization: Selected Essays.",
+            "note": "Brenner, Neil. Bauwelt Fundamente 156. Gütersloh : Basel: Bauverlag ; Birkhäuser, 2017. (Selected sections: p. 186 – 223)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Metabolic Urbanization: The Making of Cybrog Cities.",
+            "note": "Swyngedouw, E. In In the Nature of Cities: Urban Political Ecology and the Politics of Urban Metabolism, edited by Nik Heynen, Maria Kaika, and E. Swyngedouw, 21–40. Questioning Cities Series. London ; New York: Routledge, 2006.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cities or Urbanization?",
+            "note": "Harvey, David. City 1, no. 1–2 (January 1996): 38–61.",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Anti-capitalist chronicles",
+            "note": "Podcast by David Harvey. Listen to: ‘Dumping Surplus Capital’ and ‘The Urbanization of China’.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The urbanization of capital",
+            "note": "David Harvey. In The Urban Experience. Baltimore: John Hopkins University Press, 1989, 17-58. Alternatively to the podcast above.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Reflections and Projects discussion 1",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Reflections and Projects discussion 1"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Nature’s metropolis",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Nature’s Metropolis: Chicago and the Great West.",
+            "note": "Cronon, William. 3. print. New York: Norton, 1992.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest speaker: About Concrete (TBC)"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Staying with the trouble",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Mushroom at the End of the World: On the Possibility of Life in Capitalist Ruins.",
+            "note": "Tsing, Anna Lowenhaupt. Princeton, NJ: Princeton University Press, 2015.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "feralatlas.org",
+            "note": "Check out (Week 8). Title taken from the address; the visible link text was not in the extracted text.",
+            "href": "https://www.feralatlas.org/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Planetary Mine",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Planetary Mine: Territories of Extraction under Late Capitalism.",
+            "note": "Arboleda, Martín. Brooklyn: Verso Books, 2020.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Food",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Food Regimes and Agrarian Questions.",
+            "note": "McMichael, Philip. Agrarian Change & Peasant Studies 2. Halifax: Fernwood Publishing, 2013.",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "يد خفية #14: السيادة على الغذاء",
+            "note": "Podcast. Title rebuilt by hand from the reversed Arabic text layer (not checked against the page image); verify before use.",
+            "href": "https://open.spotify.com/episode/7dB2Tlj1Ki0ExjHVwjvRDF?si=IwmRK6GVSl2l6bjRrqgrSw"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest speaker: TBC"
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": "Geographies of Waste",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Geographies of Trash.",
+            "note": "Ghosn, Rania, and El Hadi Jazairy. New York ; Barcelona: Actar Publishers, 2015.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Un-building: Urbanization and the Geographies of Extraction, by Salma Abouelhossein. Space lab. The flow describes the lab's structure as tentative.\n\nPart headings in the flow: 'Part 1: Theoretical foundations' comes after Week 1 and before Week 2. 'Part II: Developing our Tools of Investigation' comes after Week 6 and before Week 7.\n\nThe Week 10 podcast title is rebuilt from a reversed Arabic text layer and was not checked against a page image (none was listed for this flow). The Week 1 and Week 8 website titles are taken from their addresses because the visible link text was not in the extracted text."
+  }
+}

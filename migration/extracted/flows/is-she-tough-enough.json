@@ -1,0 +1,81 @@
+{
+  "sha256": "63a33522ad91d6d8a253f7e0a749032e6687e01cd05b35ef20de4365fd2bde1c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "women, men and labor, what kind of working partners ?",
+        "description": "-Towards some definition of labor\n-Exploring the gendered division of labor",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Embodying leadership. How might gender matter ?",
+        "description": "-Whats is leadership about\n-What features for what leader",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "glass ceiling or soft fabric ? Barriers to female top level careers",
+        "description": "-Why and how such a ceiling\n-Looking at ‘glass breaking’ strategies and policies",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Rethinking leadership : towards a renewed paradigm",
+        "description": "-Horizontality, humanity, otherness... : new foundations for new leaderships ?\n-Comparing leadership in different contexts",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "the promotion of female leadership at the time of globalization-1",
+        "description": "From assisting to empowering\n-Gender, labor and globalization\n-Tracing the roots of women empowerment, from DAWN to the ILO",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The promotion of female leadership at the time of globalization-2",
+        "description": "From supporting local community leaders to training global bossladies\n-Women empowerment programs in action\n-Tracking some recipe for global bossladies",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Looking for boss ladies ! Confronting theory to lived and perceived realities",
+        "description": "-Findings after encounters with bossladies\n-Feedback from students’ investigations",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Concluding brainstorming : on some insight to improve relevant policies",
+        "description": "-Take aways and ways forward",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Concluding brainstorming : on some insight to improve relevant policies"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "\"Is she tough enough?\"\nWomanizing leadership, #bossladies\n\nDescription:\n\nFrowning eyebrows. “Is she tough enough for the job?” What do Margaret Thatcher, Beyoncé and Sheryl Sandberg have in common?\n\nGender mainstreaming policies, parity requirements in boards and women in entrepreneurship programs have significantly increased over the past few years, with a consensus on the fact that women should have more opportunities to actually lead. Nonetheless, women do remain a minority in leadership positions across both private and public organizations around the globe. How do gender, labor, independence and hierarchies interplay?\n\nLooking at a global phenomenon with a focus on Egypt, I offer an exploration of the figure of the “womanized” leader, drawing from coaches programs, international organizations’ literature as well as academic writings from Arlie Hochschild, Judith Baxter and others. How about us starting with trying to define labor and leadership? Let us Lean in !"
+  }
+}

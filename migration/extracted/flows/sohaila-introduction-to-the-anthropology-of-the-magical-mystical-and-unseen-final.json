@@ -1,0 +1,223 @@
+{
+  "sha256": "11beacb717d753889c283ea3007b3bf45d21bca5c89aaed5eb92be1ef15eb306",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is Anthropology and how to conduct ethnographic fieldwork",
+        "description": "Part One: The Craft of Anthropology\n\nDecember 21st",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Investigating Culture: An Experiential Introduction to Anthropology",
+            "note": "Delaney, C and Kaspin, D. Chapter 1: Disorientation and Orientation. John Wiley & Sons, Incorporated. 1-32",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Anthropology: Comparison and Context",
+            "note": "Eriksen, Thomas H. 2010. In Small Places, Large Issues: An Introduction to Social and Cultural Anthropology.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Thick Description: Toward an Interpretive Theory of Culture",
+            "note": "Geertz, Clifford. 2000 [1973] In The Interpretation of Culture.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Anthropology of Religion and Magic",
+        "description": "December 28th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Anthropology of Religion",
+            "note": "Bowie, Fiona (2002) ‘Theories and Controversies’ (Chapter 1). Oxford: Blackwell Publishers (Blackboard).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Magic, Witchcraft and the Otherworld: An Anthropology",
+            "note": "Greenwood, S. (2000) Introduction.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Fieldnote of something unexplainable that happened to you or someone you know",
+            "note": "Assignment. Due Saturday, January 2nd.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Living with the invisibles",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The witching Tree",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Seance reflections",
+            "note": "Recommended film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Rituals and Spirituality",
+        "description": "Part Two: The Mystical and The Modern\n\nJanuary 4th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Religion and Ritual",
+            "note": "Eriksen, Thomas H. 2010. (Chapter 14) Small Places, Large Issues an Introduction to Social and Cultural Anthropology. 3rd ed. Anthropology, Culture, and Society. New York: Pluto Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Problem of Ritual Efficacy",
+            "note": "Sax, W, Quack, J and Weinhold, J. (2010). Oxford University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The Disenchantment of the World: The mystical and modern debate",
+        "description": "January 11th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Purity and Danger: An Analysis of Concepts of Pollution and Taboo",
+            "note": "Douglas, M. (2002). Florence, United Kingdom: Routledge. (pp. 1-7; 95-115)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Savage Mind",
+            "note": "Levi-Strauss, C. (1962). (1-34)",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Interview assignment about an individuals’ perception of rituals",
+            "note": "Assignment. Due Saturday, January 16th.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Gods and Satans",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Man Who Made Witchcraft",
+            "note": "Pagan Documentary. Recommended film.",
+            "href": "https://www.youtube.com/watch?v=M56-6XA3h2M"
+          },
+          {
+            "type": "watch",
+            "title": "Witches fly there",
+            "note": "Recommended film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "What does the Future Hold? On Uncertainty",
+        "description": "Part Three: New Age and Modern Spiritualism\n\nJanuary 18th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Existential uncertainty and religion",
+            "note": "Chapter 17, in The Science of Religion, Spirituality, and Existentialism. 2020. Pages 243-259.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Consuming Spirituality: The Pleasure of Uncertainty.",
+            "note": "Deirdre Shaw and Jennifer Thomson. 2013. European Journal of Marketing 47 (3–4): 557–573.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Spiritual and Alternative Healing: Spirituality as a Service.",
+        "description": "Sunday, January 24th - reschedule for Jan 25th holiday",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Consuming the Self: New Age Spirituality as “Social Product” in Consumer Society",
+            "note": "Rindfleish, J. (2005). Consumption Markets and Culture.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Revisiting the spiritual supermarket: does the commodification of spirituality necessarily devalue it?",
+            "note": "Redden, G. (2016). Culture and Religion, 17:2, 231-249.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Reflection on the portrayal of magic in pop culture/social media.",
+            "note": "Assignment. Due and presented with creative project on Monday, February 1st.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "(Un)Well",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Heal",
+            "note": "Recommended film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Magic, Spirituality, and the Everyday: Presentations of creative projects",
+        "description": "Monday, February 1st",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Student presentations (creative project on how spirituality is included in people’s everyday)"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Introduction to the Anthropology of the Magical, Mystical and Unseen\nSohaila Khaled El Fakahany\nWinter 2020\n\nCourse Description\n\n“The fate of our times is characterized by rationalization and intellectualization and, above all, by the disenchantment of the world” – Max Weber\n\nEgypt is a place where traditional spiritual healing methods that include ‘superstitious’ beliefs and rituals are still popular, in recent years new modalities like energy healing have also become popular and available. However, it’s very common for spiritual and other healing practitioners to be cast as ignorant and the practices as fraudulent. Despite this, today it is common that people are religiously observant, think of themselves as modern and cosmopolitan, and still practice yoga, have tarot readings and seek the help of a crystal healer. In that sense, there’s an extent of hybridization between what is believed to be the mystical and the modern when it comes to spiritual healing in contemporary Egypt. It can be said that this seeming contradiction has come about as a result of the enlightenment project, which had sought to put humans as masters of the world. It was perceived as an act of rationalist liberation that would help them improve their living conditions. The rise of the nation-state led to the colonization of not only policies and laws, but also the bodies and ideas of the colonized communities. Consequently, the enlightenment project resulted in the disenchantment of knowledge and the world became, and still is, a place where myths are viewed as the opposite of modernity."
+  }
+}

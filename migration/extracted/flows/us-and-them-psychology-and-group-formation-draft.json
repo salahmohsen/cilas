@@ -1,0 +1,317 @@
+{
+  "sha256": "bd703f1e12ab6e6e7d2ee4bebac6c9399818f5a3e9f71168c31b455ff851ad47",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "introduction to social psychology",
+        "description": "- What is social psychology and why is it crucial?\n- Main themes and currents\n- What can we do with social psychology?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Dai Jones and Jonathan Elcock - Histories and Theories of Psychology",
+            "note": "Chapter 7",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "introduction to psychoanalysis",
+        "description": "- What is psychoanalysis?\n- Main currents and contributions\n- How can we start a conversation between social psychology and psychoanalysis?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Introduction and Chapter 1",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Personality and Subjectivity",
+        "description": "- What is a subject?\n- Social influence\n- Questioning our motivations",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 7",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Chapter 2",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "ideology",
+        "description": "- What is Ideology?\n- The need for belief\n- Is there an end to Ideology?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Jost et. al - Political Ideologies",
+            "note": "",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Routledge Handbook of Psychoanalysis",
+            "note": "Chapter 15",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Handbook of Psychoanalytic Political Theory",
+            "note": "Chapter 6",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "interpersonal relations and dynamics",
+        "description": "- Communicating and acting out\n- Questioning Power and Authority\n- Stigma and Prejudice",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Routledge Handbook of Psychoanalysis",
+            "note": "Chapter 9",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 6",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Chapter 5",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sara Mills - Michel Foucault",
+            "note": "Chapter 2",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "intergroup relations and dynamics",
+        "description": "- Fear and Anxiety\n- Groups in times, spaces and contexts\n- The concept of the political",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 9",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Carl Schmitt - The Concept of the Political",
+            "note": "Pp. 19 - 45",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Noelle Mcafee - Fear of Breakdown",
+            "note": "Chapter 3",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Handbook of Psychoanalytic Political Theory",
+            "note": "Chapter 18",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "culture and critical psychology",
+        "description": "- Belonging to a culture\n- Nationalism and Colonialism\n- Imagined Communities",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Chapter 6",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Benedict Anderson - Imagined Communities",
+            "note": "Introduction and Chapter 1",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 8",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pramod K. Nayar - Frantz Fanon",
+            "note": "Chapter 3",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "presentations and recap",
+        "description": "- Questioning our affiliations\n- Presentations",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Presentations"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Pamela Thurschwell - Sigmund Freud",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Essential Social Psychology",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Richard Schacht - Alienation",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Noelle Mcafee - Fear of Breakdown",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Erving Goffman - Stigma",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Dai Jones and Jonathan Elcock - Histories and Theories of Psychology",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Frantz Fanon - Black Skins, White Masks",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Routledge Handbook of Psychoanalytic Political Theory",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Routledge Handbook of Psychoanalysis in Social Sciences and Humanities",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Handbook of Critical Psychology",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Achille Mbembe - Society of Enmity",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Renata Salecl - On Anxiety",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Vincent F. Rocchio - Cinema of Anxiety",
+        "note": "Bibliography (course list)",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "The Godfather",
+        "note": "Course-wide film (Additional Readings)",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Dogville",
+        "note": "Course-wide film (Additional Readings)",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Blackkklansman",
+        "note": "Course-wide film (Additional Readings)",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "The Conformist",
+        "note": "Course-wide film (Additional Readings)",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Pink Floyd - The Dark Side of the Moon",
+        "note": "Course-wide music (Additional Readings)",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Pink Floyd - Animals",
+        "note": "Course-wide music (Additional Readings)",
+        "href": null
+      }
+    ],
+    "notes": "Course description (verbatim): Through the last ten years the world we live in can be characterized at best as unstable. Regimes and orders of thought, government, technology, lifestyles, art and space have been in a continuous motion of rapid changes and dislocations. Trends on social media platforms can be the best example of such phenomenon where groups of different kinds are formed and later shattered, from sports to politics to music genres to art, thought, and ways of life. Quick affiliations and conflicts emerge in real life, insecurity, anxiety and aggression coupled with the stress of contemporary everyday life under a global capitalist system mark the confusions that haunts our societies and communities, and made clear since covid-19 pandemic. Together we will embark on a journey through basic themes in psychology and psychoanalysis in order to explore how groups are formed, and how we engage with each other as social beings. Through critically engaging with the readings and audio-visual material, we as a group will attempt to open discussions about what we mean when we simply use the words “us” and “them”\n\nCourse flow (verbatim): As an introductory course to the subject matter, we will focus on a few readings as compulsory while having additional optional readings. The course is discussion based so it’s advisable to read the compulsory material in order for a discussion to be fruitful. In addition to readings, we will watch films, listen to podcasts and music, and of course all suggestions are welcomed. By the last session, each participant will have a presentation on a topic of his own choice using what we learned together.\n\nThe flow does not say which readings are compulsory and which are optional. Bibliography items are the flow's own Bibliography list, and the films and music come from its Additional Readings section."
+  }
+}

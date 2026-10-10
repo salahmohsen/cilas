@@ -1,0 +1,229 @@
+{
+  "sha256": "f17cfe295100c974108182dbead77e8312ed015a30d7cd97d48c30e4739ca98d",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "On Mise-en-Scene",
+        "description": "This is a light introductory session to lure you into the lion’s den. We will discuss what a mise-en-scene is, how its composition affects the tonality and sequence of the plot, and how it influences the spectator’s perception on different matters.\n\nAssignment: In no more than 350 words define the themes, key concepts, what you loved and hated about the film and why. Take a look at the syllabus, prepare questions and points of discussion for class.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mise-en-Scène",
+            "note": "Lewis, Jon. 2017. In Essential cinema: an introduction to film analysis with MLA Update Card. Boston, Mass: Cengage Learning. 54-83.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Wes Anderson's ambivalent film style: the relation between mise-en-scène and emotion",
+            "note": "Lee, Sunhee. 2016. New Review of Film and Television Studies. 14 (4): 409-439.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Imaginary and the ‘Good Object’ in the Cinema and the Theory of the Cinema",
+            "note": "Metz, Christian. 2000. In The imaginary signifier: psychoanalysis and the cinema. Bloomington, Ind: Indiana Univ. Press. 03-17. Optional.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Darjeeling Limited",
+            "note": "Anderson, Wes. 2010. The Criterion collection.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We will discuss what a mise-en-scene is, how its composition affects the tonality and sequence of the plot, and how it influences the spectator’s perception on different matters."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "On Montage (Time Pressure)",
+        "description": "In this session, we will begin to take our first steps towards the cinematic deep dive of film theory. Starting with time, we will look at the cinema poet’s (Andrei Tarkovsky) own theory of time, or Time Pressure, as he called it, and see how he applied it through his own films.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Film Image",
+            "note": "Tarkovsky, Andrey. 1986. In Andrey Tarkovsky: Sculpting in Time: Reflections on the Cinema. London: Bodley Head. 104-123.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Time and the Film Aesthetics of Andrei Tarkovsky",
+            "note": "Totaro, Donato. 1992. Canadian Journal of Film Studies. 2 (1): 21-30.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Memories of Mirror",
+            "note": "Skakov, Nariman. 2013. In The cinema of Tarkovsky: labyrinths of space and time. London: I. B. Tauris. 100-140. Optional.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Mirror",
+            "note": "Tarkovsky, Andrei. 1975. Mosfilm.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "On Montage (Affective Editing)",
+        "description": "How does a film’s sequence come together as a jigsaw to tell a story? How does this sequence affect us as spectators and influence our emotions and senses? In this week’s readings and film screening, we will explore the senses through the affective techniques of film montage.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Affect",
+            "note": "Colman, Felicity. 2020. In Deleuze and cinema: the Film Concepts. 79-88.",
+            "href": "https://doi.org/10.5040/9781501351099?locatt=label:secondary_bloomsburyCollections"
+          },
+          {
+            "type": "reading",
+            "title": "The Auditory Kuleshov Effect: Multisensory Integration in Movie Editing",
+            "note": "Baranowski, Andreas M, and H Hecht. 2017. Perception. 46 (5): 624-631.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Rear Window",
+            "note": "Hitchcock, Alfred. 1954. Patron Inc.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "On Montage (Database Narratives and Cinema as a Visual-Archive)",
+        "description": "“Database narrative”, is a mnemonic methodology and term coined by the new media theorist Lev Manovich to describe the meeting of two apparently incompatible media forms: database associated with information management, and narrative associated with literature and cinema. The databases can be the foundation of anachronistic narratives, and narratives can behave like formalistically informed databases, resulting in a better understanding of the moving-image collections curated and displayed to audiences, and can be used to further study and explore different time periods within various social, cultural, and political contexts. In this archival fever session, we will learn more about cinema and films as moving-image archives, and how montage can influence and inform our understanding of different life events.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Archive fever: A Freudian impression",
+            "note": "Derrida, J., & Prenowitz, E. (1996). Chicago : University of Chicago Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Memory and Intermediality in Artists' moving Image",
+            "note": "Durcan, S. (2021). Cham, Switzerland : Palgrave Macmillan.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Performing Moving Images: Access, Archives and Affects",
+            "note": "Siewert, S. (2020). Amsterdam University Press.",
+            "href": "https://doi.org/10.2307/j.ctv1b9f6d1"
+          },
+          {
+            "type": "reading",
+            "title": "The Experience Machine",
+            "note": "Sutton, G. (2015). The MIT Press.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Inconsolable Memories",
+            "note": "Douglas, S. (2005). United States. (Excerpt)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Montage (On Dreams)",
+        "description": "There are moments in life where we cannot discern between dreams and reality. The cinematic realm is the perfect medium to create such indiscernibility, especially when reflecting on themes such as psychanalysis, autobiography, and lucidity.\n\nAssignment: Create a mini collage of the representation of your most recent dream, or the dream you most remember.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Film and Dream: The Knowledge and the Subject",
+            "note": "Metz, Christian. 2000. In The imaginary signifier: psychoanalysis and the cinema. Bloomington, Ind: Indiana Univ. Press. 101-108.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Meshes of muteness: Maya Deren’s languages",
+            "note": "Cooper, Sarah. 2018. Screen. 59 (4): 523-530.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Meshes of the afternoon",
+            "note": "Deren, Maya, and Hammid, Alexander. 1943.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "On the Emancipation of the Cinemagoer",
+        "description": "Can you as a spectator think on your own? Are you always spoon-fed with the certain narratives imposed on you? Who is the controller of the narrative: the filmmaker, the elite, the state, all of them? How do we, as spectators break free from the social and ideological constraints imposed on the cinematic frame, or better yet, can we ever?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Spectatorship and Film Theory: The Wayward Spectator (chapters: “The Ideological Unconscious and the Heteronomous Subject”; “The Future of Disillusion: Emancipation as a Knowledge Effect”; “Freud’s Horse”)",
+            "note": "Comanducci, Carlo. 2018. Cham: Springer International Publishing :Imprint: Palgrave Macmillan. 25-36",
+            "href": "https://link.springer.com/book/10.1007/978-3-319-96743-1"
+          },
+          {
+            "type": "reading",
+            "title": "Aesthetic Separation, Aesthetic Community",
+            "note": "Rancière, Jacques, and Gregory Elliott. 2021. In The Emancipated Spectator. London: Verso. 45-70.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ars gratia Artis: Minnelli’s Poetics",
+            "note": "Rancière, Jacques, and John Howe. 2019. In The Intervals of Cinema. London: Verso. 71-84. Optional.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "They Live",
+            "note": "Carpenter, John. 1988. Alive Films.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "On Farewells and Goodbyes",
+        "description": "“Fortunately, somewhere between chance and mystery lies imagination, the only thing that protects our freedom, despite the fact that people keep trying to reduce it or kill it off altogether.” - Luis Buñuel (again).\n\nThe big finale. We will have an essay reading ceremony, where each of us will present their film analysis essay, written in whichever form preferred. It should be no less than 1500 words, using the ideas and concepts tackled and discussed throughout class. It doesn’t need to be strictly academic, and using your creative imagination is heavily encouraged. Have fun!",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Writing about Film",
+            "note": "Lewis, Jon. 2017. In Essential cinema: an introduction to film analysis with MLA Update Card. Boston, Mass: Cengage Learning. 282-309.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "We will have an essay reading ceremony, where each of us will present their film analysis essay, written in whichever form preferred."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Tuesdays, 19:00-20:30. Summer 2022. 6-session seminar on the aesthetic and affective elements of film, plus a final essay session. Session dates: 1st 26/07; 2nd 02/08; 3rd 09/08; 4th 16/08; 5th 30/08; 6th 06/09; 7th 13/09.\n\nCourse description: “[The cinema] is an instrument of poetry, with all that that word can imply of the sense of liberation, of subversion of reality, of the threshold of the marvellous world of the subconscious, of nonconformity with the limited society that surrounds us.” - Luis Buñuel. Have you ever watched a film and couldn’t describe how you felt because of it? Did a film ever leave you in awe? When watching a film, do you leave your mind at home, or does the film make you more and more conscious of your cognitive processes? Does reality inspire films, or does cinema alter reality? When was the last time you lived a film, with all your senses, and not just watched it? Are you watching the film in the right way? These are all questions we are going to tackle and play with during our 6-session seminar about the aesthetic and affective elements of film. Through this course, we will learn together how films can alter our perception of time, reality, dreams, psychology, and the likes. We will read films through philosophical and phenomenological frameworks of Deleuze, Tarkovsky, Rancière, Kuleshov, and others, and understand how different conceptual frameworks can also influence our understanding of films and cinemagoing. Oh, and by the way, there is no right way to watch a film.\n\nBriefing: Our sessions will focus on the different elements of film. We will start with understanding what constitutes a frame and how frame composition is achieved. From there, we will move into the cinematic time; what makes films different than reality and how non-linearity can greatly affect a narrative. This will open the way for montage, and how it is an important tool to use in order to stitch together the stories we want to tell from our own desired perspectives. In order to combine the concept of non-linearity and the unorthodox methods of montage that some filmmakers use, we will delve deeper into our psyche and try to have a glimpse at how our inner minds, through our dreams, can be projected onto the big screen. Finally, how does cinema and the different visual arts inform our psyche and being? Are we constructed by the state through its media outlets, including cinema? Can we break free? What can the moving-image tell us about chronological societal events? Is film the way to gain this freedom? In the final session, we will discuss the concept of being an emancipated spectator; someone who thinks on their own and can view the films in whichever ways they like. This will also come in handy when writing the final film analysis essays.\n\nWhat You Expect from Me (Course Objectives): Understanding films from different perspectives and viewpoints; Understanding the different conceptual frameworks that tackle filmmaking; Cultivating the ability to analyse and discuss films in both verbal and written forms; Identifying different elements of cinema other than formalist techniques; Paving the way to critical thinking through focusing on the details within the cinematic frame.\n\nWhat I Expect from You: Preparedness for class by doing the readings, preparing points of discussion and questions. Interaction in class. This class is an example of what an interactive learning experience looks like. We are both learning with each other along the way. Having an ongoing, open discussion in class will make the whole experience more informative and entertaining. You are here to learn something new, so speak up, be loud and proud about your thoughts and ideas no matter what they are, as long as they are within the realm of cinema."
+  }
+}

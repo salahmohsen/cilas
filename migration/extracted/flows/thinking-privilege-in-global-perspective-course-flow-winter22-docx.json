@@ -1,0 +1,155 @@
+{
+  "sha256": "bfda5cee01e2884deb03332b6d3c3b549bdf17015ffafe27419be306d722a6cc",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Up the Anthropologist: Perspectives Gained from Studying Up",
+            "note": "Nader, Laura. 1972. In Reinventing Anthropology, edited by Dell H. Hymes, 284–311. New York: Pantheon Books.",
+            "href": "https://files.eric.ed.gov/fulltext/ED065375.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "The Sociology of Elites",
+            "note": "Khan, Shamus Rahman. 2012. Annual Review of Sociology 38: 361–77.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Privilege: inherited or aspired?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Sum of Small Things: A Theory of the Aspirational Class",
+            "note": "Curried-Halkett, Elizabeth (2017). Chapters TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Ease of Privilege",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Privilege: The Making of an Adolescent Elite at St. Paul’s School",
+            "note": "Khan, Shamus Rahman. 2011. Princetion and Oxford: Princeton University Press. Chapters TBA.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Money, Morals, and Manners: The Culture of the French and the American Upper-Middle Class",
+            "note": "Lamont, Michele. 1994. Chicago: University of Chicago Press. Chapters TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "National Modernity and the Cultural Production of the Global South elite",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Elites or Middle Classes? Lessons from Transnational Research for the Study of Social Stratification in Africa",
+            "note": "Lentz, Carola. 2015. In Working Papers of the Department of Anthropology and African Studies. Gutenberg Universitaet.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Barra and Zaman: Reading Egyptian Modernity in Shadi Abdel Salam’s The Mummy",
+            "note": "Rakha, Youssef. 2020. Palgrave Macmillan.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Race of Privilege",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Parenting Empires: Class, Whiteness, and the Moral Economy of Privilege in Latin America",
+            "note": "Ramos-Zayas, Anay Y. 2020. Durham: Duke University Press. Chapters TBA.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Distinction, Exclusivity and Whiteness: Elite Nigerian Parents and the International Education Market",
+            "note": "Ayling, Pere. 2019. Springer. Chapters TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Gendered Privilege",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "If an Egyptian Cannot Speak English",
+            "note": "Naga, Noor. 2022. Minneapolis MN: Graywolf Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Very Important People: Status and Beauty in the Global Party Circuit",
+            "note": "Mears, Ashley. 2020. Princetion and Oxford: Princeton University Press. Chapters TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "National Privilege",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Western Privilege: Work, Intimacy, and Postcolonial Hierarchies in Dubai",
+            "note": "Le Renard, Amelie. 2021. Stanford, CA: Stanford University Press. Chapters TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Review and Final Reflections",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Header (verbatim): Thinking Privilege in Global Perspective by Noha Roushdy. Tentative Course Flow.\n\nThe ERIC PDF address was printed directly under the Nader (1972) citation in Week 1 and is attached to that reading."
+  }
+}

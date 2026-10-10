@@ -1,0 +1,36 @@
+{
+  "sha256": "0d348ff53a4aa160f2efdb09848502c002368798bc93a2d0d0d71d3a9a1845ec",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Printed Matter Circulation.",
+        "description": "In the first sequence, course participants trace the movement of print cultures around cinema by turning to the networks through which film and TV publications, press ads, press books and posters circulate today in flea markets, in bookstores, newspapers, online, in public spaces and cultural institutions.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Film Circulation.",
+        "description": "In the second, we turn to our contemporary film circulation cultures that comprise film festivals, TV stations, USB sticks and harddrive exchanges, torrent sites, online platforms and to a lesser degree film clubs.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Song Circulation.",
+        "description": "In the third and shortest sequence, we turn to music cultures that develop around films by considering the distribution and circulation of film songs and soundtracks in the form of cassette tapes, CDs, and most recently as audio/visual tracks on online music platforms.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course description: The Media Lab this Fall uncovers the networks through which cultural objects such as posters, magazines, books, films, commercials, and songs circulate in the contemporary urban fabric of Cairo. To narrow down the scope, this course will focus on the circulation of objects that form part of film culture(s). As researchers of media in Cairo, this course engages the city and takes inspiration from it to analyze the power dynamics that reinforce present circuits of media distribution, the relationship between formal and informal networks of distribution and circulation and the nature and challenges presented by the World Wide Web as a growing site for the distribution of cultural productions.\n\nIn this course you will move through the city, its archives and flea markets to map networks of circulation and meet the people who make cultural objects—old and new—move and live on. We will use tools from ethnography, in-depth interviews, historical and archival research methods, close reading and discourse analysis.\n\nThis course is organized in three sequences, which are: Printed Matter Circulation; Film Circulation; Song Circulation.\n\nThis course encourages you to maintain a collecting practice. Participants are also encouraged to work individually and in groups to test innovative ways to communicate their insights and research journey with a public audience. There will be a public presentation of research findings during this course.\n\nParticipants need to be present in Cairo as we will go on field visits.\n\nA basic to intermediate reading and speaking knowledge of Arabic will be useful. If you have questions about language requirements, please get in touch!"
+  }
+}

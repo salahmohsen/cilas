@@ -1,0 +1,238 @@
+{
+  "sha256": "62ad04dac3de37a084eac56bc591e2b0b39fb8c1f56184026f2fe8dba7d2ed6e",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Orientation + Is legitimacy a matter of validity or credibility?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview from the moderator"
+          },
+          {
+            "kind": "exercise",
+            "description": "Socratic exercise (one main exercise per session)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Round table on the exercise and the concepts we went through"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Is legitimacy the same as authority?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview from the moderator"
+          },
+          {
+            "kind": "exercise",
+            "description": "Socratic exercise (one main exercise per session)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Round table on the exercise and the concepts we went through"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Is a state of exception a matter of legality or legitimacy?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview from the moderator"
+          },
+          {
+            "kind": "exercise",
+            "description": "Socratic exercise (one main exercise per session)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Round table on the exercise and the concepts we went through"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "What comes first, legitimacy or sovereignty?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview from the moderator"
+          },
+          {
+            "kind": "exercise",
+            "description": "Socratic exercise (one main exercise per session)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Round table on the exercise and the concepts we went through"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Can we legitimize legality?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview from the moderator"
+          },
+          {
+            "kind": "exercise",
+            "description": "Socratic exercise (one main exercise per session)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Round table on the exercise and the concepts we went through"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Who safeguards international law?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview from the moderator"
+          },
+          {
+            "kind": "exercise",
+            "description": "Socratic exercise (one main exercise per session)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Round table on the exercise and the concepts we went through"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Case study: legitimacy and the Outer Space Treaty",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview from the moderator"
+          },
+          {
+            "kind": "exercise",
+            "description": "Socratic exercise (one main exercise per session)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Round table on the exercise and the concepts we went through"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Carl Schmitt, Legality and Legitimacy",
+        "note": "excerpts",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carl Schmitt, Political Theology",
+        "note": "excerpts",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carl Schmitt, The Concept of the Political",
+        "note": "excerpts",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carl Schmitt, The Guardian of the Constitution",
+        "note": "excerpts",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carl Schmitt, The Nomos of the Earth",
+        "note": "excerpts",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hans Blumenberg, The legitimacy of the modern age",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hans Kelsen, What is Justice?",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hans Kelsen, Peace through Law",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Max Weber, Politics as a Vocation",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Max Weber, Law in Economy and Society",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Max Weber, The Three Types of Legitimate Rule",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Jürgen Habermas, Legitimation Crisis",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Giorgio Agamben, State of Exception",
+        "note": null,
+        "href": null
+      }
+    ],
+    "notes": "Flow lists Session 07 twice. The second entry, verbatim: \"Session 07: Case study: legitimacy and the Nomos of Cyberspace.\" Recorded session 7 with the first title; the Nomos of Cyberspace alternative is not recorded as a separate session.\n\nCourse Summary (verbatim): This course revolves around one of the most controversial — albeit unavoidable — political thinkers of the twentieth century: Carl Schmitt. To the beginner, the name of Carl Schmitt suggests, after a few readings, a worrisome and outrageous thought, with shock-phrases such as “the sovereign is he who decides on the exception” and “the concept of the state presupposes the concept of the political”. However, a more diffuse concept is systematically found at the root of Carl Schmitt's theoretical wanderings: Legitimacy. Using the enormous legacy of debates Carl Schmitt has left in his wake, from Hans Kelsen to Giorgio Agamben, students will get a unique opportunity to explore this concept and its extremely tense relationship to that of legality. From the factual limits of the Rule of Law to the most burning issues of International Law, students will develop a greater capacity to appreciate the pitfalls and blindspots of constitutive power, especially considering the current challenge of populism around the world.\n\nThe method (verbatim): The interactive and DBL nature of the sessions will rely to a great extent on the “Socratic Exercises” methodology. Using the medium of philosophical texts, dilemmas and questions, it consists in exercising one's mind on an unusual target: oneself and one’s arguments as one delivers them in public. Rooted in questioning and alterity, the aim is to move away from one’s “center” and observe dispassionately one’s ideas and arguments being analyzed by fellow participants. The “other” then becomes a mirror who helps one refine these ideas, letting them gain in clarity and strength. In the process, philosophical and logical skills are improved by learning to: identify and express important questions; present coherent propositions and objections; problematize and pinpoint the crux in a given question; uncover and analyze concepts; distinguish between concepts; determine presuppositions; reformulate propositions, etc.\n\nTentative flow (verbatim): Each session revolves around one main Socratic exercise, preceded by an overview from the moderator and followed by a round table on both the exercise and the concepts we went through. The resources for the exercises — including the philosophical skills being worked on — are to a good extent tentative: participants may and are encouraged to suggest alternatives.\n\nLanguage: This course will be held in English, with flexibility for people who prefer to express themselves in Arabic (by agreement of all participants). All texts will be provided."
+  }
+}

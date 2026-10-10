@@ -1,0 +1,248 @@
+{
+  "sha256": "7a46450534bade1c01c84983897fc147fe767a7c2d25fc1ea304e93103825d57",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is Anthropology",
+        "description": "22/04\n\nWhat is Anthropology?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction: Disorientation and Orientation in In Investigating Culture: An Experiential Introduction to Anthropology",
+            "note": "Delaney and Kaspin. (2017).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Anthropology: Comparison and Context",
+            "note": "Eriksen, Thomas H. (2010). In Small Places, Large Issues: An Introduction to Social and Cultural Anthropology.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "What is Medical Anthropology? A Biocultural Approach",
+        "description": "29/04 - (Online)\n\nMedical Anthropology as a field.\n\nWhat is a biocultural approach to research?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Medical Anthropology: A biocultural Approach",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction in The Routledge Handbook of Medical Anthropology",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Body in Anthropology",
+        "description": "06/05 –> 09/05\n\n*Rescheduled Sham El Nesim -> Thurs 9",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Our Bodies, Our Selves",
+            "note": "Delaney and Kaspin. (2017). In Investigating Culture: An Experiential Introduction to Anthropology. Listed as one option (OR) with Gendering Medicine.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gendering Medicine",
+            "note": "Listed as one option (OR) with Our Bodies, Our Selves.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Is Female to Male as Nature Is to Culture?",
+            "note": "Ortner, S. (1974).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Egg and the Sperm: How Science Has Constructed a Romance Based on Stereotypical Male-Female Roles.",
+            "note": "Martin, E. (1991).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Understanding the Social behind Development?",
+        "description": "13/05\n\nWhat is social research?\n\nWhat is the difference between qualitative research and quantitative research?\n\nWhat are some social research framework and methodological tools?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter 2: Thinking Like a Researcher",
+            "note": "Bhattacherjee, A. (2012). In Social Science Research: Principles, Methods, and Practices.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Qualitative v/s. Quantitative Research- A Summarized Review",
+            "note": "Ahmad, S. et al. (2019).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Assignment 1: Create a brief literature review using a specific conceptual framework.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Doing Social Research in the Arab World",
+        "description": "20/05\n\nWhat are the frameworks and the tools used to conduct person-centered social research? (Interviews and Focus Group Discussions)\n\nHow do you conduct social research in the Arab world?\n\nProject Introduction",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Interviews and focus groups in qualitative research: an update for the digital age",
+            "note": "Gill, P., Baillie, J.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction: Origins, Approach, and an Arab Sensibility in Social Science Research in the Arab World and Beyond",
+            "note": "Tessler. (2022).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Assignment 2: Prepare for pitching your projects.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Amplifying Voices and Project Brainstorming",
+        "description": "27/05\n\nHow do we write reports and amplify voices but still merge them with theory.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Navigating Egyptian Youth’s Coming of Age: Voices of Experiences and Voices of Experts on SRHR",
+            "note": "Report example on merging theory with fieldwork.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Assignment 3: Conduct a semi-structured interview on any topic of your choosing.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Project pitch and workshop."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Youth and Women’s Health in Conservative Settings",
+        "description": "03/06\n\nYouth health in the Arab region\n\nArab Women’s health and what it means in the world of development.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reproductive health of Arab young people.",
+            "note": "DeJong J, El-Khoury G. BMJ.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "An Overview of Women’s Health in the Arab World",
+            "note": "AlQuaiz, A.J.M., Kazi, A. (2021). In Handbook of Healthcare in the Arab World. Springer.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Assignment 4: Write an autoethnographic piece on a memory where you had medical questions but were not able to find answers.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Refugee Health",
+        "description": "10/06",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Cost of Being Palestinian in Lebanon",
+            "note": "Sawsan Abdulrahim & Marwan Khawaja (2011).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Navigating Intersectional Realities: On Syrian Refugee Women’s Sexual and Reproductive Health and Rights in Lebanon",
+            "note": "Sohayla El-Fakahany, Emile Whaibeh, Lina Abou Habib, Faysal El-Kak. 2023.",
+            "href": "https://www.wits.ac.za/media/wits-university/faculties-and-schools/commerce-law-and-management/research-entities/scis/documents/2_SRHR%20Lebanon_Intersectionality%20report.pdf"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Humanitarian Settings and Intervention",
+        "description": "17/06 -> 24/06 (Online)\n\n(Rescheduled for Eid Al-Adha)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Assignment 6: Finalize projects for Exhibition.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Talk by Samir El Hawary, visiting lecturer of International and Public Affairs in Colombia University on humanitarian aid and development. Focus Areas: Humanitarianism, Peacebuilding, Development, Complex Emergencies, Forced Displacement"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Exhibition and Presentations",
+        "description": "(Thursday 27/06 – 8PM)\n\n(Date to be discussed)",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Students present their projects to their classmates, fellows, and invitees."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Medical Anthropology and Doing Social Research: Amplifying Voices and Putting Theory into Practice. Spring 2024.\n\nThis course introduces students to the field of medical anthropology, exploring its historical and contemporary approaches. Students will gain an understanding of the social and cultural determinants of health and illness, and how to conduct person-centered social research. The course will also cover the basics of writing academic articles and reports.\n\nThe sessions are hybrid; some are face-to-face, and others are online. (You can attend online only if needed)\n\nMeetings: Mondays 5:30pm – 8:00pm\n\nSome of the specific topics that will be covered include:\n• What is medical anthropology and what is its approach?\n• What is medical anthropology and what is its contemporary approach?\n• How can we understand the social and cultural determinants of health and illness?\n• What is the difference between qualitative and quantitative research methods?\n• What are the frameworks and the tools used to conduct person-centered social research?\n• How to balance between voices from the field and theory?\n• What is the role of humanitarian aid in today’s world?\n\nBy the end of the course, students will be able to:\n• Cover sufficient conceptual and background material on the selected topic.\n• Reflect on the literature directly related to theories of medical anthropology.\n• Compare and contrast between different research methods and tools.\n• Understand how to write academic articles and reports.\n• Conduct social research on a topic of the student's choice.\n\nCourse structure: Part 1: Anthropological Approaches (Weeks 1–3); Part 2: Social Research (Weeks 4–6); Part 3: Marginalization as a Developmental Social Category (Weeks 7–10).\n\nThe flow's instructor biography and contact details were not recorded.\n\nAssignment 5 is not listed in the flow (Assignments 1–4 and 6 are)."
+  }
+}

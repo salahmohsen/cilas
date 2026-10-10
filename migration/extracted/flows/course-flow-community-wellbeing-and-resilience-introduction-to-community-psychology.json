@@ -1,0 +1,76 @@
+{
+  "sha256": "ac57b5257784fe7f1b2af193c1ccf7f465ad08b9714dfb8f750232c703e0b700",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to Community Wellbeing and Resilience Concepts, theories, and the different frameworks.",
+        "description": "We will visit a few definitions in community psychology, anthropology, positive psychology, and sociology. Our focus will be the Egyptian Context. Additionally, We will deeply discuss our experiences and expectations from the class. We will re-shape our curriculum to match and build upon our group's experiences and aspirations from the class.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Understanding Community Needs and Assets; impact, approaches, and techniques.",
+        "description": "We will learn and discuss the importance of understanding communities; empowering assessment methodologies and innovative ways to avoid community burdening.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Prevention & Intervention Programming: concepts, design, and case studies.",
+        "description": "We will read, discuss and reflect on how development programs are designed to enhance and/or harm community resilience. We will compare the theory and practice and practical challenges",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Prevention & Intervention Programming: Project Design Presentations, Reflections, and Feedback.",
+        "description": "We will take some time to develop programs ourselves, discuss with members from the community of practice and reflect together again comparing between theory and practice.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Evaluations, Learning & Accountability.",
+        "description": "How to assess and discuss ways of encouraging strength-based evaluation methodologies, impact-driven learning, engagement of communities.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Principles of Community Psychology",
+        "description": "While choosing to work with communities and contribute to the improvement of its’ well-being, there are principles that shape your contribution and guide you to ensure that your decisions and contributions are building community resilience and well-being, rather than building community dependence.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Inclusion and Diversity community dynamics: youth, adolescents & children, women, and religious minorities.",
+        "description": "What is inclusion and how to foster diversity, what is its impact on community wellbeing and resilience? From the lens of a community of practice, how do we foster and/or discourage inclusion and diversity?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Stakeholders Engagement and Community Resilience: a deep analysis of the Ecological Theory of Change and discussion about micro and macro levels of coordination.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "The class will be offline for the first meeting, followed by online classes and offline gatherings depending on the need and agreement of the group.\n\nThroughout the weeks our group will:\n- Reflect on a wide range of sectors throughout our discussions, building on our groups’ interests and fields: education, economic development, psycho-social support, emergency response, fostering dialogue, youth development, and art.\n- Discuss different topics mentioned above comparing refugee/migrant communities with hosting communities and nationals in Egypt.\n- Develop our reflections from both a theoretical lens and also we will put a good emphasis on practice and reflect using a practical lens looking at community wellbeing from the perspective of community workers, leaders, artists, academics, researchers, consultants."
+  }
+}

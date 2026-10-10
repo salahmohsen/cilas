@@ -1,0 +1,221 @@
+{
+  "sha256": "4220b78a60c268b974aa49b01690febdd5f1769c043dbb2a55e9e873de6fdc23",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "After reading another cluster of six - we take a short break.\n\nNow we look closely at Blake's visual designs.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Who are you?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Do you have a favourite poet?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Are there any patterns?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Does that influence our analysis of at least three more poems?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We begin with introductions."
+          },
+          {
+            "kind": "presentation",
+            "description": "I'll then talk briefly about the life and work of William Blake."
+          },
+          {
+            "kind": "exercise",
+            "description": "Together we'll read aloud a cluster of the very short Songs of Innocence."
+          },
+          {
+            "kind": "exercise",
+            "description": "Before carefully analysing four of them, we'll do a bit of class writing."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "After the break, we enter into Experience.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "How do nature, culture, and the divine intermingle?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How important is empathy?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What is the value of Innocence?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Can you see with the eyes of your heart?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What has changed?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "We continue our Innocence journey, reading aloud."
+          },
+          {
+            "kind": "exercise",
+            "description": "We play a poetry game, creating group poems before returning to Blake."
+          },
+          {
+            "kind": "exercise",
+            "description": "Carefully, we explore at least four poems."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Infant Joy",
+            "note": "William Blake. Companion poem to 'Infant Sorrow'.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Infant Sorrow",
+            "note": "William Blake. Companion poem to 'Infant Joy'.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Chimney Sweeper",
+            "note": "William Blake. Companion poem.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Lamb",
+            "note": "William Blake. Companion poem to 'The Tyger'.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Tyger",
+            "note": "William Blake. Companion poem to 'The Lamb'.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How do the 'companion poems' ('Infant Joy'/'Infant Sorrow'; 'The Chimney Sweeper[s]; 'The Lamb' & 'The Tyger') interrelate?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Can you be in a state of Innocence when in Experience?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We continue in Experience."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "Translation can be enjoyable.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Auguries of Innocence",
+            "note": "William Blake.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How does poetic beauty deepen perception?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How can your favourite poetry be 'in conversation' with William Blake's?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In our first hour we continue in Experience."
+          },
+          {
+            "kind": "exercise",
+            "description": "We read, write creatively, and critically analyse. Then we regain innocent wisdom in Blake's \"Auguries of Innocence.\""
+          },
+          {
+            "kind": "other",
+            "description": "After the break, we feast poetically."
+          },
+          {
+            "kind": "exercise",
+            "description": "You'll each be asked to read a short Arabic poem, perhaps one you have written."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Songs of Innocence and of Experience",
+        "note": "William Blake. Hard copy provided; full colour illuminations online.",
+        "href": null
+      }
+    ],
+    "notes": "CILAS Course Description 2026\n\nThe great poet and philosopher, Ibn Arabi, saw divinity with the eyes of his heart. The English poet and painter, William Blake, can inspire you do likewise. Scholars in Pakistan, England, and Iran have compared Blake to Ibn Arabi as well as Rumi and Hafez. Blake's Songs of Innocence and of Experience are deceptively simple, but they enable us to see the unity of being, the joy of divine love, and the goodness in all created things.\n\nThis four week class carefully explores the poetry and art of Blake's Innocence and Experience. Each poem is illuminated, flanked and framed by intriguing imagery and designs. We'll read Blake's poems aloud, discuss their designs (with the help of slides) and do a bit of in-class writing, including at least one poetry game. Our short course culminates in a celebration in which you'll be invited to bring Arabic (or Persian) poetry akin to Blake's. (If you are a poet or an artist and can bring your own work that will be a delight!) Seeing with the eyes of the heart is not confined to just one culture or tradition. When artists and poets 'converse' with one another their wisdom and beauty can be amplified.\n\nCourse Flow\n\nYou'll be provided with copies of Blake's text (hard copy) and the full colour illuminations (online). We'll read from projected images, and listen to musical renditions of a few. Because of Ramadan we'll have snacks during class. Poetry can be a feast!\n\n\"Only from the heart can you touch the sky.\" (Rumi)"
+  }
+}

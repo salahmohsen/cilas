@@ -1,0 +1,210 @@
+{
+  "sha256": "26f356571a945d5bca3ab9c19d9629ae32d6e7e15c6960339a79e7ff085788b0",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The End of History",
+        "description": "Introduction to the end of History concept, the economic and political and also the psychological and its effect on storytelling.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The End of History",
+            "note": "Frances Fukuyama.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The end of history Illusion",
+            "note": "Daniel Gilbert.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction to Hegel’s history of philosophy",
+            "note": "The Methods of history: Original, Reflective and philosophic History and Reason in history.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Past and future",
+            "note": "Hannah Ardent: Tradition and Modern Age.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Hegelian Heroes",
+        "description": "Hegel’s definition of the dramatic and heroism in view of Hegel’s philosophy of history.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Hegel’s Theory of Tragic Heroes: The Historical progress of subjectivity",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hegel’s History of Philosophy",
+            "note": "Art and sciences putting an end to the middle ages. Freedom, the individual and the state.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Past and future",
+            "note": "Hannah Ardent (The Concept of History: Ancient and Modern).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The consumption of Heroes",
+        "description": "The Transition for Mythical to Modern Heroes.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Philosophy by other means",
+            "note": "Robert Pippin (The status of literature in Hegel’s phenomenology of the spirit: on the lives of concepts).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Autopoiesis and (Prosaic) Heroism: Of Gods and Overmen (and Giant Insects)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Past and Future",
+            "note": "Hannah Ardent (What is Freedom?).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Gay sciences",
+            "note": "Nietzsche (book 3, book 5).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The Western Hero",
+        "description": "A reading of the western genre as a new mythmaking device, and the western hero as a modern mythmaking individual.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Western as a genre of cultural mobility",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hollywood Westerns and the American Myth",
+            "note": "Robbert Pippin (Who cares who shot liberty valance? The Heroic and the Prosaic in The Man Who Shot Liberty Valance.)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Man Who Shot Liberty Valance",
+            "note": "John Ford. Viewing.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Noir Hero",
+        "description": "The Noir Hero represents a stark contrast to the hero of the mythical age. Cynical, Nihilistic and armed with information, the noir hero represents an important development of heroes in the modern age.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Tarrying with the negative",
+            "note": "Slavoj Zizek (Cogito: the void called subject).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mass culture Modernism: Guilt and subjectivity in film noir",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Death becomes her: visual representations of women in film noir",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ouf of the Shadows: class and labor in film noir",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Past and future",
+            "note": "Hannah Ardent (The Gap between past and future).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "End of History Storytelling",
+        "description": "By the 1990s, Many films like Fight club and the matrix featured the story of a disillusioned man who abandons a comfortable lifestyle, rebelling against the status quo in search of truth, purpose, and fulfillment. This new wave of storytelling marked an important shift in storytelling marked by the End of History.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The problem of escape in film noir",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Television as an aesthetic medium",
+            "note": "David Thorburn.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Matrix and Philosophy",
+            "note": "The Paradox of Real: Response to Neo-Fiction by Sarah E. Worth.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Confronting the Rise of the Social: Hannah Ardent, Fight club and the late modern world",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Past and future",
+            "note": "Hannah Ardent (The crisis in culture).",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Heroism and Modernity\n\nCourse aims: Heroism and Modernity Course aims to explore anthropological, philosophical and theological changes experienced by modern man at the decisive moment of transition from mythical age to the modern age. When natural empirical science begins to replace traditional metaphysical explanations of the world, we cease to believe in the myth of creation. There’s seemingly no foundation any longer for the meaning and value of things, including ethical values, good and evil. Through conversations and discussions, we will be exploring an array of readings, ranging from philosophical analysis and commentary on literature and films that breakdown and illustrate the progression of the hero figure throughout history.\n\nInstructor: Karim El Dalil is a scriptwriter who worked as a writer and head writer in a number of writing rooms for projects in film and TV. He is also a lecturer researching and studying film history, and works as a film curator and programmer."
+  }
+}

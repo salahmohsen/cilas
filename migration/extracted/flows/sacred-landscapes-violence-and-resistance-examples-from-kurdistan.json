@@ -1,0 +1,116 @@
+{
+  "sha256": "804905c8a4f09ec5a4df11cc7d204690fdace113adaca88f564a15f27e73f77d",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Religion and Politics in Kurdistan, a general overview.",
+        "description": "Majority/minority – relational categories.\n\n\"No Friends but the Mountains\" - Geography of Kurdistan and some historical background.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "A short history of Kurdish national ambitions.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "How have religious identities and symbols been part of Kurdish nationalism?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Kurdish Alevis in Dersim – The Düzgün Baba mountain and the Munzur Springs",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Yezidis in Iraq – Sherfedin and the Forty Men",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Sacred spaces in Kurdistan – Muslim, Alevi, Yezidi and other cases.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "How can the difference between a mosque and a shrine be theorized?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How does oral tradition relate to the sacralisation of landscapes?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Can a sacred place be founded, or can it only be found?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Kurdish nationalist approaches to religion – anti-colonial Marxism turned Democratic Confederalism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Are the Kurds originally Zoroastrians? And why is does this question matter?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The genocide conducted by the \"Islamic State\" against the Yezidis",
+        "description": "Yezidis and Kurdish politics in Shingal, northern Iraq\n\nShingal and the question of authenticity – political conflicts discussed in religious terms",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Summarising und discussing the implications for other regions we are familiar with",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "In which sense can we think of religion as a form of governance and in which sense can it be understood as a form of resistance?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "First, we will look at the changing strategies and theories proposed by Kurdish rebel movements since the early 2000s, later with the defense of Kobanê and the subsequent recapture of much of the so-called Islamic State's territories the Kurdish Movement was acclaimed by large parts of the global left. The region is a traditional home for various minority groups that claim to be its original inhabitants. By stating to have been present in region since ancient times, these groups usually seek to differentiate themselves from Turkish, Arab or Persian national land claims, denouncing them as illegitimate. But apart from the large Kurdish nationalist movements which are historically grounded in the Sunni Muslim milieu, there are a number of religious, or ethno-religious, minorities which are historically connected to the Kurdish cultural sphere. These groups defend their own land claims not only against the nation states on whose territory they officially live, but also against Sunni Kurdish political and religious interference.\n\nThe course will introduce the Yezidis of northern Iraq as well as the Alevis of Dersim in eastern Turkey to explain some of these complex issues. Other closely related groups, such as the Ahl-e Haqq/Yarsan/Kaka'i or the Shabak will be included in the discussion. The course will also provide some basic insights into the main Kurdish national movements, their history and their aims. As it doesn't seem fruitful to reify any of these groups as imaginative unities we will focus on the issue of religious and national land claims by various groups in the region instead of attempting to shape holistic images of them.\n\nFor a CILAS student this course might be a valuable opportunity to discuss a variety of questions around anti-imperialist political movements in the Middle East, taking into account their history and the wider post-colonial context. The particular challenges that leftist Kurdish groups and parties are facing might also be of considerable interest for the comparative study of political movements in the Arab world: How do these groups attempt to build up a large following without resorting to nationalist and religious propaganda? And how do they deal with conflicting claims by other minority groups?\n\nIt will hopefully become clear that religion is - apart from many other things - an essentially political category. Apart from discussing some historical developments as well as the empirical situation, the course will try to apply a number of theoretical approaches which might help to make sense of the material. Among them: Theories on memory developed by Walter Benjamin, Dipesh Chakrabarty, Aleida Assmann among others, theories on sacred space as a political category by David Chidester, Manuel Vasquez and J.Z. Smith and others, theories on secularism by Ali Hussein Agrama and theories on similarity, mimesis and conflict by Simon Harrison and Michael Taussig.\n\nAll participants are very warmly invited to contribute from their own experience and research – it will surely be interesting to compare cases from Kurdistan to similar situations in other parts of the world, or to suggest other theoretical approaches to the same topics. Please contact me in advance so we can discuss how to possibly include your suggestions into the program."
+  }
+}

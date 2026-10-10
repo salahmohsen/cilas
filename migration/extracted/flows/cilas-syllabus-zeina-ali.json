@@ -1,0 +1,235 @@
+{
+  "sha256": "741fb40768b1aadb54bf02b005a5e55860a32c1a5157841cf7bef001ad2db429",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Course introduction & the birth of “rights-talk”",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Foreword: History of Human Rights as Political Intervention in the Present",
+            "note": "Martti Koskenniemi, in Pamela Slotte and Miia Halme-Tuomisaari (eds.) Revisiting The Origins Of Human Rights (Cambridge University Press, 2015) pp. ix–xviii.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "UNDRIP and the advent of indigenous rights in international law",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Elusive Promise of Indigenous Development: Rights, Culture, Strategy",
+            "note": "Karen Engle, 7 (2010).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "JUSTICE AND THE POLITICS OF DIFFERENCE",
+            "note": "Danielle Allen, Introduction, 3 225-226 (REV-Revised ed. 1990).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Indigenous Rights in the Age of the UN Declaration",
+            "note": "Elvira Pulitano, 13 (2012).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The character of indigineity, advocacy, and “recognition”",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Should We Have a Universal Concept of “Indigenous Peoples” Rights’?: Ethnicity and Essentialism in the Twenty-First Century",
+            "note": "John R. Bowen, 16 ANTHROPOLOGY TODAY 13 (2000).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "RECOGNITION, SOVEREIGNTY STRUGGLES, AND INDIGENOUS RIGHTS IN THE UNITED STATES",
+            "note": "Introduction, Amy E. Den Ouden & Jean M. O'Brien eds., 11 (2013).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Indigenous Self-Determination, Culture, and Land: A Reassessment in Light of the 2007 UN Declaration on the Rights of Indigenous Peoples",
+            "note": "Siegfried Wiessner, in INDIGENOUS RIGHTS IN THE AGE OF THE UN DECLARATION 38 (Elvira Pulitano ed., 1 ed. 2012).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Taking the road more traveled? Cultural rights vis a vis self-deteremination",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Articulating Indigenous Statehood: Cherokee State Formation and Implications for the UN Declaration on the Rights of Indigenous Peoples",
+            "note": "Clint Carroll, in INDIGENOUS RIGHTS IN THE AGE OF THE UN DECLARATION 47 (Elvira Pulitano ed., 1 ed. 2012).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Talking up Indigenous Peoples’ Original Intent in a Space Dominated by State Interventions",
+            "note": "Irene Watson & Sharon Venne, in INDIGENOUS RIGHTS IN THE AGE OF THE UN DECLARATION 91 (Elvira Pulitano ed., 1 ed. 2012).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Politics of International Indigenous Rights",
+            "note": "Andrew Erueti, 578 (2020).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Vine Deloria Jr. and the Discourse on Tribal Self-Determination: Independence beyond the Reservation System",
+            "note": "David Martínez, in LIFE OF THE INDIGENOUS MIND 14 (2019).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Liberalism, law, and the invention of the Other",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Liberal Legalism: Law, Culture and Identity",
+            "note": "Shiraz Dossa, THE EUROPEAN LEGACY 83 (1999).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Conflict as a Vocation.",
+            "note": "William Rasch, in SOVEREIGNTY AND ITS DISCONTENTS 14 (2004).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Impossible justice and rights-talk as ‘liberation’",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Beyond Redistribution: Honneth, Recognition Theory and Global Justice",
+            "note": "Renante D. Pilapil, 21 CRITICAL HORIZONS 36 (2020).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "SETTLER COLONIALISM, RACE, AND THE LAW : WHY STRUCTURAL RACISM PERSISTS",
+            "note": "NATSU TAYLOR SAITO, 36 (2020).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Custer’s Sins: Vine Deloria Jr. and the Settler-Colonial Politics of Civic Inclusion",
+            "note": "David Myer Temin, 46 POLITICAL THEORY 361 (2018).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Talking Human Rights: How Social Movement Activists Are Constructed and Constrained by Human Rights Discourse",
+            "note": "David Landy, 28 INTERNATIONAL SOCIOLOGY 413 (2013).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Justice as recognition",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Recognition or Redistribution?",
+            "note": "Axel Honneth, 18 THEORY, CULTURE & SOCIETY 45 (2001).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Recognition of NAGPRA: A Human Rights Promise Deferred",
+            "note": "Joanne Barker, in RECOGNITION, SOVEREIGNTY STRUGGLES, AND INDIGENOUS RIGHTS IN THE UNITED STATES 96 (Amy. E. Den Ouden & Jean M. O'Brien eds., 2013).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Affective Justice: The Racialized Imaginaries of International Justice",
+            "note": "Kamari Maxine Clarke, 42 POLAR 246 (2019).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Strategic essentialism, performance, and the ‘noble savage’",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "An Introduction to Healing in an Age of Indigenous Human Rights",
+            "note": "Dian Million, 1. in THERAPEUTIC NATIONS: HEALING IN AN AGE OF INDIGENOUS HUMAN RIGHTS 3 (2013).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "THE INDIGENOUS PARADOX: RIGHTS, SOVEREIGNTY, AND CULTURE IN THE AMERICAS",
+            "note": "JONAS BENS, 198 (2020).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "At the Crossroads of Autonomy and Essentialism: Indigenous Peoples in International Environmental Politics.",
+            "note": "Marjo Lindroth & Heidi Sinevaara-Niskanen, 7 INTERNATIONAL POLITICAL SOCIOLOGY 275-276 (2013).",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "other",
+        "title": "And still she’s dreaming",
+        "note": "Faten Abu Bakr, oil and acrylic on canvas. Cover image.",
+        "href": "https://fatenabubakr.com/2025/08/11/and-shes-still-dreaming/"
+      },
+      {
+        "type": "reading",
+        "title": "A Tragedy of Incommensurability: Indigenous Rights and the Limits of Human Rights Law",
+        "note": "Zeina Ali. Master’s thesis, The American University in Cairo, 2025. AUC Knowledge Fountain.",
+        "href": "https://fount.aucegypt.edu/etds/2547"
+      }
+    ],
+    "notes": "Decolonization as Metaphor: Indigeneity, Self-determination & the Limit of Human Rights. Zeina Ali. CILAS, Spring 2026.\n\nEpigraphs: “The master’s tools will never dismantle the master’s house.” Audre Lorde. “Liberation does not come as a gift from anybody.” Adolfo Gily.\n\nCourse description\n\n“Decolonization” has become one of the most powerful words in contemporary political and intellectual life; invoked to name ethical commitment, institutional reform, personal awakening, and global solidarity. This course asks what happens when decolonization travels as a metaphor, especially within the moral and legal vocabularies of human rights. What does decolonization demand? What happens when it is reduced to a metaphor for inclusion, reform, or “better” politics? What forms of violence, sovereignty, and history become visible through human rights law? What forms are (purposely) misrecognized, domesticated, or rendered unintelligible?\n\nThe course offers a focus on Indigenous peoples in the United States not as a detour from Middle Eastern, African, or Asian decolonial thought, but as a way to clarify what “decolonization” names when it is treated as a struggle over land, jurisdiction, and settler-state legitimacy. Indigeneity has re-emerged at the forefront of global and academic conversations, raising a question that the universal language of human rights often struggles to answer: how does a legal order built on liberal individualism and state sovereignty perceive a peoplehood grounded in enduring relationships to land, environment, and collective life-relationships that can appear “foreign” to Western disciplines and to the ‘rationality’ of modern law? The United States offers an especially instructive site for this inquiry because it is one of the earliest and most consolidated examples of the settler state as we know it, and because its institutions have developed infamously sophisticated techniques for ‘defanging’, translating, and containing indigenous political claims. Studying this context helps sharpen our analysis of the limits of human rights law: precisely at the point where indigeneity becomes most difficult for legal recognition to fully register.\n\nDrawing from critical legal studies, post-structuralist critique, indigenous and anti-colonial thought, and adjacent debates in anthropology and history, we will examine human rights not as a neutral instrument but as a framework that organizes reality: producing particular ideas of the human, the political, the victim, the state, evidence, remedy, and justice. We will examine how the international human rights project, shaped by liberal universalism and anchored in the legitimacy of the state, tends to recognize indigenous peoples only under specific conditions: when sovereignty is translated into administrable forms, when land becomes “culture,” and when political autonomy is reframed as participation within existing state structures.\n\nAt the center of the course is a problem that repeatedly surfaces in indigenous and anti-colonial struggles: the possibility that certain political demands are not merely unmet by law, but structurally incommensurable with the frameworks meant to recognize them. We will explore why calls for Indigenous sovereignty, jurisdiction, and land can become unintelligible—or only partially intelligible—within an international order committed to preserving the authority of the settler-state. Through close engagement with debates around United Nations Declaration for the Rights of Indigenous People (UNDRIP), recognition regimes, and settler-state governance practices, the course traces how emancipatory claims are often translated into more “acceptable” forms, such as cultural rights, without resolving the underlying conflict over sovereignty. We will sit with the problem of incommensurability; moments where legal recognition does not simply “fail” but may be structurally unable to meet demands grounded in indigenous sovereignty, refusal, land, or liberation struggles that exceed the horizons of reform.\n\nParticipants will grapple with a difficult set of questions: When does rights language enable meaningful protection, and when does it operate as a technology of containment? What happens when self-determination is reformulated into claims that the law can comfortably administer? And what kinds of political imagination are required when justice cannot be secured through recognition by the very institutions that structure the harm?\n\nLearning outcomes\n1. Conceptualize decolonization with analytical precision by distinguishing decolonization as a material-historical political project from its circulation as a metaphor within institutional, academic, and advocacy contexts.\n2. Critically evaluate international human rights law as a liberal legal order by identifying its constitutive assumptions (e.g., universality, individual rights-bearing subjecthood, state sovereignty/legitimacy) and explaining how these assumptions shape the field of possible political claims.\n3. Analyze the politics of recognition and legal legibility by assessing how demands are translated into rights claims, what is gained through that translation, and what forms of sovereignty, relationality, and historical experience may be narrowed or rendered unintelligible.\n4. Assess indigenous rights frameworks and advocacy strategies (including debates around self-determination and cultural rights) by examining their strategic utility alongside their structural constraints within an international order oriented toward preserving settler-state authority.\n5. Develop and defend an independent argument about the limits of rights-based politics by applying course concepts (especially incommensurability and containment) to specific legal/political cases and articulating the implications for imagining justice beyond recognition-centered frameworks.\n\nAbout your instructor\n\nZeina Ali is an academic with degrees in both political science and international human rights law and justice, holding respective BA and MA degrees from the American University in Cairo. While her formal training is legal and political, her intellectual practice is shaped by sustained engagement with anthropology, history, and comparative religions, fields concerned with how humans relate to the intangible, including time, power, meaning, and law. Her work exists at the nexus of critical legal studies, post-structuralist thought, and other radical traditions that question the assumed neutrality of legal and political frameworks. Her MA thesis examined the limits of human rights law through questions of Indigenous sovereignty and incommensurability, a line of inquiry that continues to inform her current work on law, suffering, social media activism, and the evolving language of global justice movements. In the classroom, she approaches learning as a collective, careful practice—thinking together, reading closely, listening generously, and allowing uncertainty to do its work."
+  }
+}

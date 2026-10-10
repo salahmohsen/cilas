@@ -1,0 +1,222 @@
+{
+  "sha256": "5753624b324e1ba130ef517995f4679ace929ba03de142464e76024ee12c5804",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is the State?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The billions of euros deal reshaping Egypt-EU relations",
+            "note": "Mada Masr, 2024. Mada Masr",
+            "href": "https://mada38.appspot.com/www.madamasr.com/en/2024/06/26/feature/economy/the-billions-of-euros-deal-reshaping-egypt-eu-relations/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Marx and the State",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The 18th Brumaire of Louis Bonaparte",
+            "note": "Marx, Karl. 2010 (1852), excerpts, pp. 5-11, 60-4",
+            "href": "https://www.marxists.org/archive/marx/works/download/pdf/18th-Brumaire.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "Ideology and ideological state apparatuses. Lenin and philosophy and other essays",
+            "note": "Althusser, Louis. 1971",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Marxist Inquiries",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Notes on the Difficulty of Studying the State (1977)",
+            "note": "Abrams, Philip. 1988. Journal of Historical Sociology 1 (1), 58–89.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Why Does the Emperor Need the Yakuza? Prolegomenon to a Marxist Theory of the Japanese State",
+            "note": "Ollman, Bertell. 2001. New Left Review.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Foucault and Power",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Lecture Four (on Governmentality).",
+            "note": "Foucault, Michel. 2007. in Security, Territory, Population: Lectures at the Collège de France 1977–1978. Houndmills, Basingstoke, Hampshire [UK]: Macmillan, 87-114.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Facing Power — Old and New Insights.",
+            "note": "Wolf, Eric. 1990.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Governmentality and Bureaucracy 1: Boundaries of the State",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Limits of the State: Beyond Statist Approaches and their Critics",
+            "note": "Mitchell, Timothy. 1991. American Political Science Review 85 (1), 77-96.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Blurred Boundaries: The Discourse of Corruption, the Culture of Politics, and the Imagined State.",
+            "note": "Gupta, Akhil. 1995. American Ethnologist 22(2), 375-402.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Governmentality and Bureaucracy 2: Bureaucratic Practice",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Reign of Terror of the Big Cat.",
+            "note": "Mathur, Nayanika. 2016. in Paper Tiger: Law, Bureaucracy and the Developmental State in Himalayan India. Cambridge and Delhi: Cambridge University Press, 140-64.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction.",
+            "note": "Herzfeld, Michael. 1992. in The Social Production of Indifference: Exploring the Symbolic Roots of Western Bureaucracy. Chicago: University of Chicago Press, 1-16.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Globalizing the State",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Anthropology of the State in the Age of Globalization",
+            "note": "Trouillot, Michel-Rolph. 2001. Current Anthropology 42 (1), 125–38.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Spatializing States: Toward an Ethnography of Neoliberal Governmentality.",
+            "note": "Ferguson, James, and Akhil Gupta. 2002. American Ethnologist 29 (4), 981–1002.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Politics of Family Planning in Egypt.",
+            "note": "Ali, Kamran A. 1996. Anthropology Today, 12(5), 14-19. Additional reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "State and Development: The Vision of the State",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Development in the Age of Neoliberalism.",
+            "note": "Li, Tania Murray. 2007. in The Will to Improve: Governmentality, Development, and the Practices of Politics. Durham, NC [et al.]: Duke University Press, 230-69.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Nature and Space.",
+            "note": "Scott, James. 1998. in Seeing like a State: How Certain Schemes to Improve the Human Condition Have Failed. New Haven: Yale University Press, 11-52.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "State and Development 2: Infrastructure",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Enchantments of Infrastructure.",
+            "note": "Harvey, Penny, and Hannah Knox. 2012. Mobilities 7 (4), 521–36.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Globalization and the Spatial Fix.",
+            "note": "Harvey, David. 2001. Geographische Revue 2 (3), 23–31.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Hope For/Against the State",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Hope For/Against the State: Gridding in a Besieged Sarajevo Suburb",
+            "note": "Jansen, Stef. 2014. Ethnos 79 (2), 238–60.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beyond the War of Words: Cautious Resistance and Calculated Conformity.",
+            "note": "Scott, James C. 1985. In Weapons of the Weak: Everyday Forms of Peasant Resistance (pp. 241-303). Yale University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "What is the State? An anthropological inquiry. Ahmed Bakr.\n\nDescription: The question of what is the ‘State’ and how it operates has always been central to social sciences as much as the state itself has been central to living in modern societies. Social scientists, activists and radicals have for decades disagreed widely on the nature, role, and even existence of this thing called the state. And, as the world entered the era of globalization and neoliberal capitalism in the late 20th century, these questions came back to front.\n\nAnthropology, a field once most preoccupied with the study of supposed ‘pre-modern, traditional’ societies, brings in a new perspective to studying the state. Through the lenses of ethnography and social theory – particularly the Marxist and Foucauldian traditions – the anthropology of the state explores state activities as a manifestation of global and local power relations by looking through the everyday encounters citizens have with the ‘state,’ and the conflicting imaginaries of the state that they develop based on them.\n\nThe goal of this course is to learn the different perspective anthropology of the state brings to understanding the state, examine different case studies into different aspects of state activity, and reflect on how we encounter the state in our daily lives."
+  }
+}

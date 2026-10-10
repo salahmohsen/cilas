@@ -1,0 +1,367 @@
+{
+  "sha256": "ffb932e146b89bb39e10117c01f7def70e9d9027badd265e33951780aa30a616",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Future, Time, and Temporality",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bryant, Rebecca, and Daniel M. Knight. The Anthropology of the Future",
+            "note": "Cambridge University Press, 2019. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hodges, Matt. “Rethinking Time's Arrow.”",
+            "note": "Anthropological Theory, vol. 8, no. 4, 2008, pp. 399–429. doi:10.1177/1463499608096646.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bear, Laura. “Doubt, Conflict, Mediation: the Anthropology of Modern Time.”",
+            "note": "Journal of the Royal Anthropological Institute, vol. 20, 2014, pp. 3–30. doi:10.1111/1467-9655.12091",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Munn, Nancy D. “The Cultural Anthropology of Time: A Critical Essay.”",
+            "note": "Recommended. Annual Review of Anthropology, vol. 21, no. 1, 1992, pp. 93–123. doi:10.1146/annurev.an.21.100192.000521.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gell, Alfred. The Anthropology of Time: Cultural Constructions of Temporal Maps and Images.",
+            "note": "Recommended. Berg, 1996.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Clifford Geertz. “Person, Time, and Conduct in Bali: An Essay in Cultural Analysis.”",
+            "note": "Recommended. Man, vol. 2, no. 1, 1967, p. 153. doi:10.2307/2798709.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Future, The other, and Temporal hierarchies",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Fabian, Johannes. Time and the Other: How Anthropology Makes Its Object.",
+            "note": "Columbia University Press, 2002. Introduction and conclusion.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Trouillot, Michel-Rolph. “Anthropology and the Savage Slot: The Poetics and Politics of Otherness.”",
+            "note": "Global Transformations, 2003, pp. 7–28. doi:10.1007/978-1-137-04144-9_2.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Futures and the post-colonial politics",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Scott, David. Refashioning Futures: Criticism after Post coloniality.",
+            "note": "Princeton University Press, 1999. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pursley, Sara. Familiar Futures: Time, Selfhood, and Sovereignty in Iraq.",
+            "note": "Stanford University Press, 2019. Introduction and chapter 4.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "ظل الكارثه الطويل: ثمان ملاحظات حول ضرورة تجاوز المستقبل",
+            "note": "by هيثم الورداني. (Title reconstructed from PDF text.)",
+            "href": "https://www.medinaportal.com/karetha"
+          },
+          {
+            "type": "reading",
+            "title": "Salem, Sara. Anticolonial Afterlives in Egypt: The Politics of Hegemony.",
+            "note": "Recommended. Cambridge University Press, 2020.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bou Baker, Heba. For the war yet to come.",
+            "note": "Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Future methodologies",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Salazar, Juan Francisco. Anthropologies and Futures: Researching Emerging and Uncertain Worlds.",
+            "note": "Bloomsbury Academic, 2019. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Maruyama, Magoroh, and Arthur M. Harkins. Cultures of the Future.",
+            "note": "De Gruyter Mouton, 2011. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sandison, Alan, and Robert Dingley. Histories of the Future: Studies in Fact, Fantasy and Science Fiction.",
+            "note": "St. Martin's Press, 2000. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Appadurai, Arjun. The Future as Cultural Fact: Essays on the Global Condition.",
+            "note": "New York, 2013. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Harjo, Laura. Spiral to the Stars Mvskoke Tools of Futurity.",
+            "note": "UA press, 2019. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Guerriero, Silas. Divination Practices.",
+            "note": "Encyclopedia of Latin American Religions, 2015.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Future, Governance, and Finance capital",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mitchell, Timothy. “Economentality: How the Future Entered Government.”",
+            "note": "Critical Inquiry, vol. 40, no. 4, 2014, pp. 479–507. doi:10.1086/676417.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Maurer, Bill. “Repressed Futures: Financial Derivatives’ Theological Unconscious.”",
+            "note": "Money and Calculation, 2010, pp. 148–173. doi:10.1057/9780230298019_8.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bahng, Aimee. Migrant Futures: Decolonizing speculation in financial times.",
+            "note": "Duke University Press, 2018.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Future and reasoning",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Asad, Talal. Secular Translations: Nation State, Modern Self, and Calculative Reason.",
+            "note": "Columbia University Press, 2018. Introduction, conclusion.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mbembe, Achille. Critique of Black Reason.",
+            "note": "Duke University Press, 2017. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Halpern, Orit. Beautiful Data: a History of Vision and Reason since 1945.",
+            "note": "Duke University Press, 2015. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Amoore, Louise. Cloud Ethics: Algorithms and the Attributes of Ourselves and Others.",
+            "note": "Duke University Press, 2020. Introduction.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "We will choose from this list",
+        "description": "Choose from the three groups below.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Günel, Gökçe. Spaceship in the Desert: Energy, Climate Change, and Urban Design in Abu Dhabi.",
+            "note": "A- Future cities, sci-fi and space entrepreneurship. Duke University Press, 2019. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Valentine, David. “Exit Strategy: Profit, Cosmology, and the Future of Humans in Space.”",
+            "note": "A- Future cities, sci-fi and space entrepreneurship. Anthropological Quarterly, vol. 85, no. 4, 2012, pp. 1045–1067. doi:10.1353/anq.2012.0073.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Liu, Xiao. Information Fantasies: Precarious Mediation in Post socialist China.",
+            "note": "A- Future cities, sci-fi and space entrepreneurship. University of Minnesota Press, 2019. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bernstein, Anya. The Future of Immortality: Remaking Life and Death in Contemporary Russia.",
+            "note": "A- Future cities, sci-fi and space entrepreneurship. Princeton University Press, 2019. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Graeber, David. Revolutions in Reverse: Essays on Politics, Violence, Art, and Imagination.",
+            "note": "B- Utopia and apocalypse. Autonomedia, 2012.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Larrinaga, Carlos. “The Utopia of Rules. On Technology, Stupidity, and the Secret Joys of Bureaucracy.”",
+            "note": "B- Utopia and apocalypse. Social and Environmental Accountability Journal, vol. 36, no. 3, 2016, pp. 209–210. doi:10.1080/0969160x.2016.1235401.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Latour, Tsing & Strengers et al. “Anthropologists Are Talking – About Capitalism, Ecology, and Apocalypse.”",
+            "note": "B- Utopia and apocalypse. Ethnos, vol. 83, no. 3, 2018, pp. 587–606. doi:10.1080/00141844.2018.1457703.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Noble, Richard. Utopia: Documents of Contemporary Art.",
+            "note": "B- Utopia and apocalypse. MIT Press, 2009.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Crapanzano, Vincent. Imaginative Horizons: An Essay in Literary-Philosophical Anthropology.",
+            "note": "C- Black futures, revolutions, and otherwise horizons. University of Chicago Press, 2004. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gordillo, Gastón. “World Revolution Z.”",
+            "note": "C- Black futures, revolutions, and otherwise horizons. Libcom.org, 2012. libcom.org/library/world-revolution-z-gast%C3%B3n-gordillo.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Yusoff, Kathryn. A Billion Black Anthropocenes or None.",
+            "note": "C- Black futures, revolutions, and otherwise horizons. University of Minnesota Press, 2018. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Le Guin, Ursula. the ones who walk away from Omelas.",
+            "note": "C- Black futures, revolutions, and otherwise horizons. (Name as written in the flow: Ursual.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Buck-Morss, Susan. Dream worlds and catastrophe.",
+            "note": "C- Black futures, revolutions, and otherwise horizons. MIT Press, 2000. Introduction.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "What otherwise futures could be?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Harvey, David. Spaces of Hope.",
+            "note": "Univ. of California Press, 2008. Conclusion.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Povinelli, Elizabeth. “After the Last Man: Images and Ethics of Becoming Otherwise.”",
+            "note": "e-Flux, 2012. The flow gives www.e-flux.com/journal/after-the-last-man-images-and-ethics-of-becoming-otherwise/.",
+            "href": "http://www.e-flux.com/journal/after-the-last-man-images-and-ethics-of-becoming-otherwise/"
+          },
+          {
+            "type": "reading",
+            "title": "Barad, K. “On Touching--The Inhuman That Therefore I Am.”",
+            "note": "Differences 23, no. 3 (2012): 206-23. doi:10.1215/10407391-1892943.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Adnan, Etel. The Cost for Love We Are Not Willing to Pay = Der Preis Der Liebe, Den Wir Nicht Zahlen Wollen.",
+            "note": "Ostfildern, Germany: Hatje Cantz, 2011.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Roy, Arhundti. The end of imagination.",
+            "note": "2016. Selections.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Mittermaier, Amira. Dreams That Matter: Egyptian Landscapes of the Imagination.",
+        "note": "Recommended. University of California Press, 2011.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Shore, Chris, and Marilyn Strathearn. “Reproducing the Future: Anthropology, Kinship and the New Reproductive Technologies.”",
+        "note": "Recommended. Man, vol. 28, no. 2, 1993, p. 401. doi:10.2307/2803459.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Wilder, Gary. Freedom Time: Negritude, Decolonization, and the Future of the World.",
+        "note": "Recommended. Duke press, 2015.",
+        "href": null
+      }
+    ],
+    "notes": "Anthropology of the Future (online). The flow asks: Why should we – in the present – study and engage with the future? And if we do study it, how should we go about it? It frames three modes of study: future as temporalities, future as possibilities, and future as ideological objects.\n\nThis class has three aims (verbatim): The first is to go through the main methodological and theoretical questions of the anthropology of the future. The second is to learn together how to read the temporal politics of certain texts through unpacking the texts’ audiences, political projects, and temporal hierarchies, and to answer the primary question: who exactly is this text written for whose future is it directed toward? Thirdly and lastly, to hope to build on our current moment’s anxieties, conspiracies, and uncertainties about the future and to think of other futures that can materialize.\n\nReading list note (verbatim): Don’t panic, we will not read everything included here! We will make our own list from these readings depending on our common interests. Some will be required, and the rest will be recommended for your own reference. We will end the course by writing final reflections on the course or the questions that stimulated us most throughout the weeks.\n\nThe flow's header says \"ten weeks\" but numbers only eight weeks; eight sessions recorded. Week 7 is a choice among three groups (A, B, C); all are kept as materials with their group in the note. Week 3's medinaportal link is written as \"/https://www.medinaportal.com/karetha\" in the flow; recorded here without the leading slash. Week 3 title is reconstructed from PDF text."
+  }
+}

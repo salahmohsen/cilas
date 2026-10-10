@@ -1,0 +1,415 @@
+{
+  "sha256": "2829f8f51e5b1a7976d8c261559fc6f554dd362c11188a32c3ab7f7878bee224",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Welcome to Neo-Dastangoi & Cairo’s ‘Living’ Spaces",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction to Neo-Dastangoi",
+            "note": "Compulsory; handout",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Tilism-e-Hoshruba (translated by Musharraf Ali Farooqi)",
+            "note": "Compulsory",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Sara Kazmi’s Radical Re-tellings of Hir: Gender & The Politics of Voice in Postcolonial Punjabi Poetry",
+            "note": "Compulsory",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Selections from Naguib Mahfouz’s On Art, Literature & History",
+            "note": "Compulsory; exploring his use of poetry and prose to critique Egyptian society",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Laila Majnu (2018)",
+            "note": "Compulsory; selected scenes, by Sajid Ali, written by Imtiaz Ali",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sara Kazmi’s article Radical Re-tellings of Hir: Gender & The Politics of Voice in Postcolonial Punjabi Poetry",
+            "note": "Optional; full article",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Laila Majnu (2018)",
+            "note": "Optional; full film",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshop: Introductory performance exercises focusing on storytelling through body language and voice."
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise: Each student tells a 5-minute story based on an ordinary Cairo space."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: The evolution of Dastangoi and how space becomes a character in storytelling."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Memory, Space & Identity through Phenomenology",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Yi-Fu Tuan’s Space and Place (Introduction)",
+            "note": "Compulsory; the phenomenology of space and how it shapes human experience",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Naguib Mahfouz’s On Art, Literature & History (selected essays)",
+            "note": "Compulsory; how Mahfouz views Cairo and its social fabric",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Local Egyptian oral storytelling traditions",
+            "note": "Listed in unit reading",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Edward S. Casey’s The Fate of Place: A Philosophical History",
+            "note": "Optional; excerpts",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Naguib Mahfouz: Passage of a Century",
+            "note": "Optional; documentary",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshop: Creating performances inspired by personal memories of significant spaces."
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise: Reflective journaling on a memorable Cairo space. Students reflect on spaces that hold social or cultural significance to them."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: How storytelling preserves social identity, using Cairo’s marginalized communities and oral traditions as examples. How do spaces shape personal and collective identity? The juxtaposition of the individual with society, the ‘micro,’ & ‘macro.’ From the ‘mundane’ to the ‘monumental – the personal being the political."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Visual Poetics in Film & Storytelling",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Tarkovsky’s Sculpting in Time (excerpts on space and time in film)",
+            "note": "Compulsory",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "A Short Story (2022)",
+            "note": "Compulsory; by Bi Gan; class viewing at session start",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Kaili Blues (2015)",
+            "note": "Compulsory; selected scenes, by Bi Gan",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Mirror (1979)",
+            "note": "Compulsory; selected scenes, by Tarkovsky",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Politics of Cultural Practice by Rustom Bharucha (excerpts)",
+            "note": "Optional",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Kaili Blues",
+            "note": "Optional; full film",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Stalker",
+            "note": "Optional; full film",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshop: Storyboarding scenes using visuals and minimal text inspired by film."
+          },
+          {
+            "kind": "screening",
+            "description": "Viewing: The Mirror (Tarkovsky) and A Short Story (Bi Gan)"
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise: Create a silent visual performance based on a Cairo street scene."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: Exploring the “dreamscape” in film and performance."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Field Trip — Exploring Cairo’s Spaces",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Kamran Rastegar’s Surviving Images: Cinema, War, and Cultural Memory in the Middle East (excerpts)",
+            "note": "Compulsory; context on how urban spaces and political histories shape narratives",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Yacoubian Building (2006)",
+            "note": "Optional; by Marwan Hamed",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Activity: Field trip through spaces like Tahrir Square, Garbage City, and Islamic Cairo, documenting political, social, and artistic layers."
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise: Audio-visual documentation of the trip."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: Capturing stories from the city through space, architecture, and people. How these spaces narrate the city’s political and social histories."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Poetry in Performance — Agha Shahid Ali & Vishal Bhardwaj",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Agha Shahid Ali’s At the Ghat of the Only World",
+            "note": "Compulsory; full poem; reflecting on the role of space and identity in poetry",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Works by Egyptian poets like Ahmed Fouad Negm",
+            "note": "Listed in unit reading",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Haider (2018)",
+            "note": "Compulsory; full film",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Poetry by Ahmed Fouad Negm",
+            "note": "Optional; an Egyptian perspective on poetry as resistance and political commentary",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Poetry by Faiz Ahmed Faiz",
+            "note": "Optional; Indian-Pakistani revolutionary poet, comparative approach",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshop: Translating poetry into performance, focusing on rhythm, emotion, and body language. Translating political and social themes into performance using poetry."
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise: Perform a short scene inspired by the poetry of Agha Shahid Ali."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: How poets reflect political and social realities, and how poetry influences performance-making. How does poetry inform the structure of storytelling in both film and live performance?"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Urban Scenography — The City as Stage & Frame",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Articles on Urban Scenography and Performance",
+            "note": "Compulsory; selected from academic journals; how public spaces serve as stages for social and political narratives",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Politics of Cultural Practice by Rustom Bharucha (excerpts)",
+            "note": "Compulsory; applying performance theory to urban and public spaces",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Square (2017)",
+            "note": "Optional; selected scenes, by Ruben Östlund",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshop: Improvisation and spatial storytelling exercises using the documented material from the field trip."
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise: Students design performance pieces that reflect their interpretations of Cairo’s urban spaces. Use elements of the city to build a performative story & bring Cairo within the studio/stage/performance space."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: The city as a stage for political and social expression—using Cairo’s public spaces as examples. How can we think of the city itself as a narrative structure?"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Crafting the Neo-Daastan — From Idea to Performance",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selections from The Postcolonial City and its Subjects by Rashmi Varma",
+            "note": "Compulsory; how cities serve as sites of political and social contestation",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Kaveh Safa’s articles on Transmedia Storytelling",
+            "note": "Compulsory; excerpts",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Chamkila (2024)",
+            "note": "Compulsory; by Imtiaz Ali",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Gully Boy (2019)",
+            "note": "Optional; clips, by Zoya Akhtar",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshop: Performance-making, focusing on creating a cohesive narrative using audio-visual material, poetry, and body movement. Students begin finalising their performance pieces."
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise: Develop a 10-minute Neo-Daastan performance based on Cairo’s spaces."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: How performance can reflect and challenge political and social realities. How have students’ understandings of space, identity, and memory evolved throughout the course."
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Final Performances & Reflections",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from Performing the City by Paula Serafini",
+            "note": "Optional; how performance and urban spaces intersect",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Naguib Mahfouz’s On Art, Literature & History (selected essays)",
+            "note": "Optional; the role of Cairo’s public spaces in artistic and political life",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Review of students’ own documentation and materials from the course",
+            "note": "Optional; in preparation of/as part of final performances",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshop: Rehearsing and refining the Neo-Daastan performances with peer feedback."
+          },
+          {
+            "kind": "presentation",
+            "description": "Activity: Final performances and group reflection."
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion: The significance of space and performance in shaping memory and identity, how storytelling serves as a vehicle for political and social dialogue."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "other",
+        "title": "Long Table Etiquette",
+        "note": "by Split Britches; the discussion model for every session",
+        "href": "https://www.split-britches.com/long-table"
+      }
+    ],
+    "notes": "Discussion-Based Learning Approach (verbatim): In this course, discussion-based learning will be at the heart of every session. By incorporating the Long Table Etiquette by Split Britches I will begin each class by facilitating group discussions based on the readings, films, or field experiences, encouraging students to share their reflections, & their interpretations of how political, social, & artistic elements shape the urban spaces around them. These discussions (which will blur the lines between authentic engagement & documented performance) will then inform weekly performance workshops, where students will be applying insights from the dialogue to create live performances, improvisational scenes, or multimedia storytelling pieces. By weaving critical analysis with active, creative experimentation, I aim to foster a learning environment where ideas and art are in constant conversation. Peer feedback will be essential to refine these performances, emphasizing collective learning. This course will follow a discussion-based learning approach by fostering active engagement with both the theoretical/material & personal experiences. The goal is to help students explore the intersections between political and social narratives and their artistic expression.\n\nLearning Objectives (verbatim, as written in the flow):\n1. Understand the Historical and Contemporary Significance of Dastangoi: Gain knowledge of Dastangoi as a traditional storytelling form and its evolution into Neo-Dastangoi as a modern performance practice. Explore how Neo-Dastangoi serves as a tool for political, social, and artistic expression.\n2. Apply Phenomenological Concepts to Storytelling: Understand and apply the philosophical framework of phenomenology, particularly the relationship between space, identity, and human experience. Analyze how urban spaces shape personal and collective narratives.\n3. Critically Analyze Political and Social Narratives in Performance: Examine how storytelling and performance are used as tools for resistance, cultural preservation, and social commentary. Reflect on how political struggles, social identities, and artistic movements are intertwined with urban spaces, using Cairo as a primary case study.\n4. Create Performances That Engage with Urban Spaces: Develop the ability to document and interpret urban spaces through audio-visual methods, drawing out the political and social histories embedded within. Use Cairo’s urban fabric as a stage to craft original Neo-Daastan performances that reflect and challenge political and social realities.\n5. Blend Theory with Practice: Synthesize theoretical readings on space, identity, and performance with creative expression, producing performances that are both insightful and culturally resonant. Use performance-making workshops to translate ideas from readings and discussions into live storytelling, integrating multimedia and movement.\n6. Collaborate and Reflect in a Participatory Learning Environment: Engage in peer feedback and collaborative discussions, using the Long Table Etiquette model to foster non-hierarchical dialogue and shared learning. Reflect critically on the learning process and the intersections of personal, political, and artistic narratives through journaling, group discussion, and performance.\n\nLearning Outcomes (verbatim, as written in the flow):\n1. Created a Final Neo-Daastan Performance: Produced an original performance that integrates political and social themes within a narrative framework, using multimedia tools and urban spaces as inspiration.\n2. Demonstrated a Deep Understanding of Space, Identity, and Memory: Showed proficiency in applying phenomenological theories to analyze how personal and collective identities are shaped by the spaces they inhabit.\n3. Engaged Critically with Cairo’s Urban Fabric: Documented and analyzed the political, social, and artistic layers within Cairo’s urban spaces, connecting these insights to their performance work.\n4. Contributed to Collaborative Learning: Actively participated in group discussions, feedback sessions, and collaborative performance-making, contributing to a collective understanding of the course material.\n5. Explored Artistic and Cultural Innovation: Explored how traditional and contemporary art forms, including Neo-Daastangoi, can be used to engage with contemporary issues such as political resistance, social identity, and cultural preservation.\n\nThese objectives and outcomes ensure that students are not only engaged with the theory and history of storytelling but are also empowered to translate these insights into their own creative work, using Cairo as a living canvas for performance."
+  }
+}

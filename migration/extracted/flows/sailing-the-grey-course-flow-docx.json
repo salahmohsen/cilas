@@ -1,0 +1,210 @@
+{
+  "sha256": "26ac9cc5b587e13ba285ddd998a309dc84cf049d786c91fdc230fe645ee52f7f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Pirate.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter 1: Piracy in the eastern mediterranean",
+            "note": "Leonidas Mylonakis.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapter 2: Enemy of all mankind",
+            "note": "Steven Johnson.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapter 4: Enemy of all mankind",
+            "note": "Steven Johnson.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Life Aboard Pirate Vessels.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "An-arrgh-chy: The Law and Economics of Pirate Organization",
+            "note": "Leeson.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapter 4: Between the devil and the deep blue sea",
+            "note": "Marcus Rediker.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Calculus of Piratical Consent: The Myth of the Myth of Social Contract",
+            "note": "Leeson.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Makings of a Pirate.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Somalia’s “Pirate Cycle”: The Three Phases of Somali Piracy",
+            "note": "Edward R. Lucas, 2013.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Colonial Origins of Theorizing Piracy’s Relation to Failed States",
+            "note": "Jennifer L. Gaynor.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "من الجزائريين إلى اليمنيين: مجاهدو البحار ومحاصرة الاستعمار",
+            "note": "أحمد الدبش.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Mujahiddi al-bahr, Maritime terrorism, jihad or piracy?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Epilogue: Piracy in the eastern mediterranean",
+            "note": "Leonidas Mylonakis.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Holy Warriors, Rebels, and Thieves",
+            "note": "Joshua M. White.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "مذكرات خير الدين بربروس",
+            "note": "حبنا للبحر فوق كل حب, الفقراء يترقبون طريقنا, نلنا دعاء السلطان, الحرب مع أسبانيا.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Piracy between Money, Empires and Religion",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "OTHELLO TURNS TURK",
+            "note": "Daniel Vitkus.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "القرصنة البحرية : دراسة فقهية مقارنة",
+            "note": "محمد بن عبدالعزيز اليمني, 2012.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapter 6: Captain Kid and the war against pirates",
+            "note": "Robert Ritchie.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Women of the Waves.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter 4: Seafaring Women",
+            "note": "David Cordingly.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Women and the Gendered Roles of Somali Piracy",
+            "note": "Brittany Gilmer.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "From Outlaw to Icon: The Legacy of Pirates in Pop Culture.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Section 4, chapter 2- The golden Age of piracy",
+            "note": "david head.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Parrots and Pieces of Eigh’: Recent Trends in Pirate Studies",
+            "note": "Claire Jowitt.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "The sovereign and the sea-wolf : State and strangers.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "CRIME AND LACK OF PUNISHMENT",
+            "note": "Thomas K. Heebøll-Holm.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The horror of the ’enemy of humanity’ – on pirates, terrorists and states",
+            "note": "Mikkel Thorup.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  }
+}

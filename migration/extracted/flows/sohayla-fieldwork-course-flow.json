@@ -1,0 +1,274 @@
+{
+  "sha256": "70cd1ef18abbc0270b4bc719f3babf21c7dd2ba38c66f2a7d3a4befaf75bb98f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is Anthropology?",
+        "description": "Tuesday May 17th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter 1: Disorientation and Orientation in Investigating Culture: An Experiential Introduction to Anthropology",
+            "note": "Delaney, C and Kaspin, D. John Wiley & Sons, Incorporated.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "An introduction to the discipline of anthropology",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=J5aglbgTEig"
+          },
+          {
+            "type": "watch",
+            "title": "Anthropology bel 3araby - What is anthropology?",
+            "note": "Alternative to the video above (Or).",
+            "href": "https://www.youtube.com/watch?v=qDpQv1rEv9U"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In class Activity: What is culture?"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Participant Observation and Fieldnotes",
+        "description": "Tuesday May 24th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Shane the Lone Ethnographer",
+            "note": "Read together with Walsh, David. 2000. Doing ethnography. In Seale, Clive (ed.) (AND).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Doing ethnography",
+            "note": "Walsh, David. 2000. In Seale, Clive (ed.). Read together with Shane the Lone Ethnographer (AND).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Small talk",
+            "note": "Alternative (OR) to the readings above.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Thick Description",
+            "note": "Alternative (OR) to the readings above.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "What is Ethnography?",
+            "note": "To watch in class.",
+            "href": "https://www.youtube.com/watch?v=aOBh8haj4E0"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In class Activity: Listen and Analyze the song “Tom’s Diner” and write a fieldnote."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Reading Ethnographies",
+        "description": "Tuesday May 31st\n\nChoose and read one of the introductions in:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Witchcraft, Oracles, and Magic among the Azande",
+            "note": "Evans-Pritchard. Religion/Spirituality/The Unseen: choose one introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Magic, Witchcraft and the Otherworld: An Anthropology",
+            "note": "Greenwood. Religion/Spirituality/The Unseen: choose one introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Spectacle and Sacrifice",
+            "note": "David Johnson. Religion/Spirituality/The Unseen: choose one introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Not Quite Shamans",
+            "note": "Morten Axel Pedersen. Religion/Spirituality/The Unseen: choose one introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Miracles and Extraordinary Experience in Northern Kenya",
+            "note": "Bilinda Straight. Religion/Spirituality/The Unseen: choose one introduction.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "In class activity: Mini presentation on the ethnography on spirituality you chose to read."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Auto-ethnography on spirituality and the Objectivity Debate",
+        "description": "Tuesday June 7th\n\nHow to make the personal/spiritual academic/professional",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Giving an Account of oneself",
+            "note": "Butler (2003). Alternative (OR) to The ethnographic I.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The ethnographic I",
+            "note": "Carolyn Ellis (2004). Alternative (OR) to Giving an Account of oneself.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "From Skeptic to Practitioner",
+            "note": "In Meanings of Mindfulness and Spiritual Awakening Affliction and Healing in Contemporary Cairo. Read in addition (AND) to the reading above.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Project proposal due.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In class activity: Write a fieldnote on a spiritual experience and share it."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "Rescheduled Sunday June 12th",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Ethnographic Workshop for projects."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Conducting Interviews",
+        "description": "Tuesday June 21st",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ethnography",
+            "note": "Brewer, John. 2000. In Bryman, Alan (ed.).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Activity for next class: Conduct a mini semi-structured interview with someone on spirituality.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Editing and Proofreading",
+        "description": "Tuesday June 28th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Craft of Editing: Anthropology's Prose and Qualms",
+            "note": "Moeran, B. (2011).",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In class activity: Share interviews insights"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Presentations Day",
+        "description": "SATURDAY JULY 2nd",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Presentations Day: SATURDAY JULY 2nd"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Live and die like a man",
+        "note": "Farha Ghannam. Recommended ethnography (Gender).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Veiled Sentiments",
+        "note": "Lila Abu-Lughod. Recommended ethnography (Gender).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "When Men are Women",
+        "note": "John Wood. Recommended ethnography (Gender).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Off the Books: The Underground Economy of the Urban Poor.",
+        "note": "Sudhir Venkatesh. Recommended ethnography (Economy).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Ethnography reading guide (sfcollege.libguides.com)",
+        "note": "Listed under Readings Recommendations (More ethnographies). The visible link text was not in the extracted text, so this title is the address's host and path.",
+        "href": "https://sfcollege.libguides.com/ethnography-reading-guide"
+      },
+      {
+        "type": "reading",
+        "title": "Ethnography course page (unl.edu)",
+        "note": "Listed under Readings Recommendations (More ethnographies). The visible link text was not in the extracted text, so this title is the address's host and path.",
+        "href": "https://www.unl.edu/rhames/courses/212/ethnography.htm"
+      }
+    ],
+    "notes": "Making the Strange Familiar & the Familiar Strange: Investigating the Social behind Spirituality and the Unseen through Anthropological Fieldwork (A Hybrid Practical Course). Spring 2022.\n\nCourse: Hybrid (Online and Offline) - 6 Sessions and a Presentation day. Meetings: Tuesdays 6:30pm – 9:30pm. Session 5 was rescheduled to Sunday June 12th.\n\nCourse Description: Anthropology is the study of people, cultures, and the human condition. This course introduces the study of anthropology in a practical hands-on manner. It’s all about “making the strange familiar and the familiar strange”. The participants will be encouraged to engage in discussions about anthropology as a field, otherness, rapport, access, among other important facets of conducting social qualitative research. They will also be engaging practically with writing fieldnotes, conducting participant observation and interviews, and editing their work to come up with a mini ethnography. This all will be covered with the theme: Spirituality and the Unseen by investigating rituals, activities, and experiences that are considered spiritual.\n\nCourse Objectives: Questions covered: What is anthropology as a field and mode of knowledge and practice. How to read and analyze ethnographies. How to conduct ethnographic fieldwork on spirituality. (Participant observation and fieldnotes) How to conduct semi-structured interviews. How to make the personal academic/professional. (Auto-ethnography on spiritual experiences) How do we use our ethnographic eye to try and understand our everyday lives?\n\nThis course will help participants: Get introduced to ethnographic reading and writing. Understand and use participant observation as a tool to investigate the social. Write fieldnotes. Understand how to make personal experiences academic. Learn how to edit your work. Conduct ethnographic fieldwork/mini ethnography on spirituality, the focus is the student’s choice.\n\nThe flow's contact details were not recorded."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "sha256": "8d3e1595b6553034bcb36dd01f6e129ef3fb7d04d32e1b12175aae39afa9143f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Jonah’s Supplication",
+        "description": "Understanding the methodology of reading a prophetic story",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Flashes/The First Flash",
+            "note": "Said, Nursi. (erisale.com)",
+            "href": "http://erisale.com/index.jsp?locale=en#content.en.203.17"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Adam",
+        "description": "Adam lived in Paradise until he ate from the tree. In my life, what is paradise and where is the tree? Adam was then taught all the Names. What are the Names? Am I taught them too? How am I different than the angels?",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Quran",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Cain and Abe",
+        "description": "“If you chose to kill me, I will not kill you”, Abe told Cain as he was being killed. What does this mean to me? Am I Cain or Abe? If someone is about to hurt, shall I become like Abe and fear God?",
+        "meetings": 3,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The therapist and the soul",
+            "note": "Elizabeth Lukas.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Quran",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Noah",
+        "description": "Noah’s people were described as arrogance.\n\nWhat is arrogance and how am I arrogant? What about Noah is relevant to me?\n\nWhat is the ship?",
+        "meetings": 3,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Quran",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Personal Reflections of a prophet of your choice",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  }
+}

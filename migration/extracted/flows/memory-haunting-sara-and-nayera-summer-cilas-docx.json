@@ -1,0 +1,215 @@
+{
+  "sha256": "027e914e23012f3bbbee6bf461f6b83de4f681f103b64b5c08349ba4e8668cb9",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Why ghosts and how do they appear?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Western academia and its ghosts",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Thinking against the ghost as a metaphor",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Travelling with ghosts; absences, archives and methodologies",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Feeling knowledge",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Political disappointment",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Space and violence",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Conclusion",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "The Stillborn: Notebooks of a Woman from the Student-Movement Generation in Egypt",
+        "note": "Salih, A., 2017. Seagull Books.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Ghosts of my life: Writings on depression, hauntology and lost futures",
+        "note": "Fisher, M., 2014. John Hunt Publishing.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Silencing the past: Power and the production of history",
+        "note": "Trouillot, M.R., 1995. Beacon Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Memory for Forgetfulness: August, Beirut, 1982",
+        "note": "Darwish, M., 2013. University of California Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Nubia Still Exists: On the Utility of the Nostalgic Space",
+        "note": "Agha, M., 2019. Humanities, 8(1), 1-12.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Specters of Marx: The state of the debt, the work of mourning and the new international",
+        "note": "Derrida, J., 2012. Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Ghostly matters: Haunting and the sociological imagination",
+        "note": "Gordon, A.F., 2008. University of Minnesota Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "How to Mend: Motherhood and its Ghosts",
+        "note": "Mersal, I. 2019. MIT Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Ghosts of war in Vietnam",
+        "note": "Kwon, H., 2008. Cambridge: Cambridge University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Jinnealogy: Everyday life and Islamic theology in post-Partition Delhi",
+        "note": "Taneja, A.V., 2013. HAU: Journal of Ethnographic Theory, 3(3), pp.139-165.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Knot of the soul: madness, psychoanalysis, Islam",
+        "note": "Pandolfo, S., 2018. University of Chicago Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hikāyāt sha‛ b-stories of peoplehood: Nasserism, popular politics and songs in Egypt, 1956-1973",
+        "note": "Mossallam, A., 2012. Doctoral dissertation, The London School of Economics and Political Science (LSE).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Remembering the 1977 Bread Riots in Suez: Fragments and Ghosts of Resistance",
+        "note": "Soliman, N.A., 2021. International Review of Social History, 66(S29), pp.23-40.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Haunted histories: Nasserism and the promises of the past",
+        "note": "Salem, S., 2019. Middle East Critique, 28(3), pp.261-277.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "On time: Technology and temporality in modern Egypt",
+        "note": "Barak, O., 2013. University of California Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الزحف المقدس: مظاهرات التنحي وتشكل عبادة ناصر",
+        "note": "Younis, S., 2012. Al Tanwir.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "أصوات الغائبين: أفكار لإصلاح التفكير",
+        "note": "Al-Haj Saleh, Y., 2020. AlJumhuriya.net.",
+        "href": "https://www.aljumhuriya.net/ar/content/%D8%A3%D8%B5%D9%88%D8%A7%D8%AA-%D8%A7%D9%84%D8%BA%D8%A7%D8%A6%D8%A8%D9%8A%D9%86-%D8%A3%D9%81%D9%83%D8%A7%D8%B1-%D9%84%D8%A5%D8%B5%D9%84%D8%A7%D8%AD-%D8%A7%D9%84%D8%AA%D9%81%D9%83%D9%8A%D8%B1"
+      },
+      {
+        "type": "other",
+        "title": "Archive of Forgetfulness",
+        "note": "Archive of Forgetfulness.",
+        "href": "https://archiveofforgetfulness.com/"
+      },
+      {
+        "type": "reading",
+        "title": "Fī athar ʻInāyāt al-Zayyāt (al-Ṭabʻah al-ūlá)",
+        "note": "Mirsāl, Ī., 2019. al-Kutub Khān lil-Nashr wa-al-Tawzīʻ. Films/novels list.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Awan Al Kitaf",
+        "note": "Al Wirdany, M., 2002. al-Hilal. Films/novels list.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Makan lel Hob",
+        "note": "Saeid Marzouk, 1972. Films/novels list.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Hikayat Al Gharib",
+        "note": "Ina’am Mohamed Ali, 1992. Films/novels list.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "A’arak Al Balah",
+        "note": "Radwan Kashef, 1999. Films/novels list.",
+        "href": null
+      }
+    ],
+    "notes": "Memory/Haunting - Concerning Ghostly Matters. July - September 2021.\n\nSherif Younes, in his book “Protests of Resignation and Creation of Nasser’s Worship” (2005) argues that we can understand the majority of the Egyptian people as a ghost, omnipresent in the discourse of the political regime but without any real or tangible influence. This course thinks about haunting, ghosts and the feelings they invoke in the context of Egypt and the Middle East/North Africa. In this course, we aim to think through how a focus on haunting and feeling promises ways of capturing contradictions, impossibility, hope, defeat, and a whole range of political beliefs and practices that might slip out of view when we use a narrow definition of political, social and economic transformation.\n\nHaunting has multiple genealogies, including work on the aftermath of conflict in East Asia, the afterlives of enslavement in the Americas, and work on the defeat of communism and the spectre that emerges from it. In her book Ghostly Matters (2008), Avery Gordon eloquently shows us how following the sounds, pictures and appearances of ghosts allow us to decode the un-seen and un-narrated social, political and economic dimensions of contemporary inequality and violence. The viscerality of haunting and the ghosts of past revolutions also bring to life the question of feeling. Lately, scholars, writers and activists have paid increasing attention to emotions, feelings, sensory experiences and, more broadly, affect across the Middle East and North Africa. The course thinks with and through these experiences in order to explore forms of history-telling that are “rich with emotional knowledges,” (Million 2009).\n\nThe course reflects on the following questions: How might we understand the appearance and disappearance of “ghosts” and what might they signify? How might we follow, converse or study these ghosts, methodologically and analytically? How might theories of affect and feeling help in understanding the appearance of ghosts and how they are experienced by a variety of people? How might affective experiences be connected to acts of remembering, acts of forgetting and the limits of the imagination around political struggle? How might we trace the intangible ways in which feelings, states and emotive experiences shape political and economic processes? How can we use haunting as an alternative way of knowledge production, and how might this build on calls to de-centre Western epistemologies and ontologies?\n\nTiming: Tuesdays 17.00 - 19.00; eight weeks. July 15 - September 15.\n\nThe eight sessions above follow the flow's numbered Tentative flow list. The flow does not assign readings, films or activities to individual sessions, so the preliminary reading list and films/novels list are recorded as bibliography."
+  }
+}

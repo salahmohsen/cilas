@@ -1,0 +1,185 @@
+{
+  "sha256": "8aa4a221364ca3c7458b9bfbaebf5cf6e64bb319269fc5351d9ed86737422c22",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is Enlightenment?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Ethics, aspirations, and Enlightenment sociability.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Scientific Revolution and Concepts of Science.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Religion and Enlightenment in Europe.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Religion and Enlightenment in the Muslim World.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Progress, Imperialism, and Invasion in eighteenth century Egypt.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The nineteenth century response: Muhammed Ali, and Islamic Modernism.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Counter Enlightenments across the Mediterranean, and other critiques of the Enlightenment.",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "An Answer to the Question: What Is Enlightenment?",
+        "note": "Kant, Immanuel (1784), in Schmidt, James. What Is Enlightenment?: Eighteenth-Century Answers and Twentieth-Century Questions. University of California Press, 1996.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Measure of Enlightenment",
+        "note": "Heilbron, J. L. In Frängsmyr, Tore, J. L. Heilbron, and Robin E. Rider. The Quantifying Spirit in the Eighteenth Century.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Reclamation of the Freedom of Thought from the Princes of Europe, Who Have Oppressed It Until Now",
+        "note": "Fichte, Johann Gottlieb (1793).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "True and False Political Enlightenment",
+        "note": "Moser, Friedrich Karl von (1792).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "On Freedom of Thought and of the Press: For Princes, Ministers, and Writers",
+        "note": "Klein, Ernst Ferdinand (1784).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Philosophy of the Enlightenment",
+        "note": "Cassirer, Ernst. Edited by James P. Pettegrove. Translated by Fritz C. A. Koelin. Princeton University Press, 1968.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Enlightenment in Global History: a Historiographical Critique",
+        "note": "Conrad, Sebastian. The American Historical Review, Volume 117, Issue 4, October 2012, Pages 999–1027. Accessed: 21 August 2022.",
+        "href": "https://doi.org/10.1093/ahr/117.4.999"
+      },
+      {
+        "type": "reading",
+        "title": "Seeing Like a State: How Certain Schemes to Improve the Human Condition Have Failed",
+        "note": "Scott, James C. Yale University Press, 1998.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Islamic Roots of Capitalism: Egypt, 1760–1840",
+        "note": "Peter Gran (Austin, Tex., 1979).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Napoleon in Egypt",
+        "note": "Irene A. Bierman, ed. (Reading, 2003).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Napoleon's Egypt: Invading the Middle East",
+        "note": "Juan Cole (New York, 2007).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "An Imam in Paris: Account of a Stay in France by an Egyptian Cleric (1826-1831)",
+        "note": "Newman, Daniel L. Saqi Essentials, 2012.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Enlightenment against Empire",
+        "note": "Sankar Muthu (Princeton, N.J., 2003).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Three Critics of the Enlightenment: Vico, Hamann, Herder",
+        "note": "Berlin, Isaiah. Edited by Henry Hardy. First ed. Princeton University Press, 2000, pp. 255-358.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The World We Want: How and Why the Ideals of the Enlightenment Still Elude Us",
+        "note": "Robert B. Louden (Oxford, 2007).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Postcolonial Enlightenment: Eighteenth-Century Colonialism and Postcolonial Theory",
+        "note": "Daniel Carey and Lynn Festa, eds. (Oxford, 2009).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Europeanization of the World: On the Origins of Human Rights and Democracy",
+        "note": "John M. Headley (Princeton, N.J., 2008).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Religion and the Enlightenment: From Descartes to Kant",
+        "note": "Byrne, James M. (1996).",
+        "href": null
+      }
+    ],
+    "notes": "The flow's course outline lists eight numbered topics (sessions 1–8) but does not map the Selected Readings to individual sessions, so all of them are placed in the course bibliography.\n\nCourse description (verbatim): One might say that the Enlightenment changed everything. It is credited with fashioning the intellectual foundations of modernity, bringing reason and science to the forefront of public life, hastening the end of the ancien regime, pioneering constitutional government, sparking the American and French Revolutions along with modern nationalism, and much more. It has also been accused of thoughtlessly demolishing traditional societies, diminishing religious life, rationalising the imposition of European imperialism and colonialism upon the globe, and bringing about many of the ills of life as we know it. So which is it?\n\nThis course would seek to establish a balanced, critical assessment of what, exactly, the Enlightenment meant in the decades after it first appeared in print, along with its far-reaching influence across the centuries. Following trends in global history, this class would attempt to “de-centre” the Enlightenment from its typical European moorings and investigate what it meant for the inhabitants of Cairo and Alexandria, Istanbul and Baghdad. Intellectual, cultural, and social interchange and transformation in Europe and the Middle East in the eighteenth and nineteenth centuries will be examined. The first half of the course will cover primarily the intellectual foundations in Europe of the diffuse movement called the Enlightenment, and the second half will migrate across the Mediterranean to see how Egypt and the wider Ottoman world contributed, responded, and reacted to les lumières during an era when the world was turned upside down.\n\nThrough careful analysis of primary texts, historical interpretation, and competing interpretative frameworks, this class would seek to arrive at a deeper, multilayered understanding of this complex epoch; that will perhaps shed insight into the birth pains of the modern world, what was gained, and what was lost.\n\nBiography (verbatim): Mateo Arevalo studied Modern European History at the University of St Andrews and went on to receive a Masters degree in Modern History at the University of Oxford, specialising in the Enlightenment and eighteenth-century intellectual history in the Atlantic World."
+  }
+}

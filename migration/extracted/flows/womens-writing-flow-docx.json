@@ -1,0 +1,150 @@
+{
+  "sha256": "648399520ed57489503bce20a0b471cde7e94fc508c2458961435b6a4d7b4403",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction: Why we read what we read?",
+        "description": "In the first week, we will discuss our reading choices and what influences what we read in school or in our free time. We will also introduce the concepts of Canon and marginalization in Arabic literature.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Treason Our Text: Feminist Challenges to the Literary Canon",
+            "note": "by Lillian S. Robinson",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Latifa al-Zayyat: The dilemma of nationalism",
+        "description": "We are going to explore the world of Latifa al-Zayyat and discuss why her novel al-Bab al-Maftuh the Open Door was canonized. We will discuss her works in order to understand her literary journey and complicated relationship with the Nasser regime.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "صاحب البيت",
+            "note": "لطيفة الزيات",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Fluri ‘Abd al-Malik: Romanticism in the sixties",
+        "description": "What is romanticism, and how Arab women poets had influenced the Arabic romantic movement? We are going to introduce romanticism as a literary movement and the marginalization of women poets who belonged to the literary movement.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "ديوان صدى أحلامي",
+            "note": "فلوري عبد الملك. مختارات.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "المرأة والشعر العاطفي",
+            "note": "جميلة العلايلي",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Women writing Elegies",
+        "description": "We are going to explore the classical Arabic tradition of elegies written by women in the pre-modern period. Al-Khansa, as a case study, will be demonstrated and read alongside the canonization of her work. We will question whether she was the only pre-modern Arab woman author?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "مختارات من رثاء الخنساء",
+            "note": "",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "تقاليد الرثاء في القصيدة النسوية",
+            "note": "فاطمة المحسن",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Modernity and Elegies",
+        "description": "How do modern elegies differ from classical ones? Did ‘how and who’ women mourn in their poems change from what we read in the previous week? This week we are going to read modern Arabic literature elegies by Fadwa Tuqan, Gamila al‘Alayili and Nazik al-Malaika.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Self-Writing",
+        "description": "We will discuss the literary genres of self-writing (autobiographies, diaries, letters…) and try to understand why they differ from novels and short stories. We will investigate how aesthetically different self-writing is from other plot-driven literary genres.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "على الهامش، حكايات من الصعيد الجواني",
+            "note": "زهرة عبد الله",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Guest Speaker: Zahraa Abdellah, Author."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Feminist Aesthetics",
+        "description": "Do women write differently? This week will focus on women's claimed literary genres and aesthetics. We will continue our discussion about self-writing aesthetics in an attempt to find common themes of women writing, if there are any. We are going to mobilize feminist literary theory text by Anne Rosalind Jones.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Writing the Body: Toward an Understanding of l’écriture feminine”",
+            "note": "Anne Rosalind Jones",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Ideas for the final project.",
+            "note": "Assignment",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Conclusions and Final Projects Presentations",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "In our final discussion, we are going to survey what we read, wrote and concluded."
+          },
+          {
+            "kind": "presentation",
+            "description": "Presentations are expected to illustrate individual projects about marginalized women authors. Students are encouraged to find unconventional texts such as orally transmitted texts, diaries and letters."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Epigraphs at the top of the flow (verbatim, Arabic): \"وكتاباتنا الإبداعية بالتالي تختلف عن كتابات الرجل الذي ينتمي لنفس المجتمع الذي أنتمي إليه، قد تتساوى فنيًا، وقد تتميز، وقد تختلف، ولكنها في كل الحالات تختلف، فلم كان من الصعب علينا الإقرار بهذا الاختلاف؟\" لطيفة الزيات\n\n\"عندما كنت أتساءل لماذا لا توجد شاعرة عربية حديثة أنتمي إليها، لم أسمع بها [سنية صالح] عندما كنت أفكر.\" إيمان مرسال\n\nBackground (verbatim): How many women authors have you read in school? How many women are present on the recommended shelf in your local bookstore? Literary Canon refers to the body of works traditionally perceived as masterpieces of literature that are also taught in universities and high schools. As a patriarchal construct, the Canon marginalizes women and admits few women under certain conditions. In the case of Arabic Literature, these conditions could relate to 1) nationalism, 2) responding to masculine aesthetics, and 3) committing to designated gendered traditions such as rithāʾ elegies. Accompanying the rise of nationalism in the twentieth century, women's writings, which could be categorized as national works, were more likely to be canonized. On the other hand, women writers challenged the Canon, expanded the boundaries of literary genres, and created feminist aesthetics.\n\nThe Course (verbatim): In addition to discussing how the literary Canon works, this course offers a counter-feminist canon through its readings. We are going to understand why a woman author could be canonized while others are not. Furthermore, we will investigate why specific works were marginalized while others are considered masterpieces by the same author. Above all, we are going to enjoy reading poems, short stories and novels written by women.\n\nThe flow lists no links. Week 5 names modern elegy authors but no specific works, so they appear in that unit's description."
+  }
+}

@@ -1,0 +1,240 @@
+{
+  "sha256": "e7ff1706220a1bb0217e009a0f9b66e417cd334e47d2b85aab7c44ebd4c5ab97",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction: A Philosophical Critique of Modernity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Dialectic of Enlightenment",
+            "note": "Adorno & Horkheimer. (1-34; 173-174)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Myth of Disenchantment: Magic, Modernity, and the Birth of the Human Sciences",
+            "note": "Jason Josephson Storm. (1-16)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Meeting of Myth and Science",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Critique of Black Reason",
+            "note": "Mbembe. (1-37)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion: Deconstructing the modern binary of “the savage mind” and “the civilized mind” - Naturalizing the fantasy of whiteness - the world of words and signs"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Modernity and Subjectivity: The Making of Modern Subjects",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Making of Indebted Man",
+            "note": "Lazzarato, Mauricio. (13-37)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Problem with Work",
+            "note": "Weeks, Kathi. (Introduction)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bullshit Jobs",
+            "note": "Graeber, David. (Introduction)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion: Faith in Money, Economic Production and the Production of Subjectivities - Why is it that we are constantly asked to defer our present in the service of this thing called the economy? What is a national economy? What does it measure, value, or represent?"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "The Modern Colonizing Our Day: Creative Activity and Alienation",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Economic and Philosophical Manuscripts of 1844",
+            "note": "Marx, Karl. (Chapter: Estranged Labor)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Work of Art in the Age of Mechanical Reproduction",
+            "note": "Benjamin, Walter.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion: Progress, Mass Production/Commodification, Authenticity, The Human experience after the Radio, Telephone, Cinema - What makes us human? How do we fulfill our species essence under capitalism?"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "The Modern Colonizing Our Minds: Time, Perception, Memory",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bergson, Deleuze and the Becoming of Unbecoming",
+            "note": "Grosz, Elizabeth. Parallax 11 (2):4-13.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Machines to Crystallize Time: Bergson",
+            "note": "Lazzarato, Maurizio. Theory, Culture & Society 24 (6):93-122.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Multiplicity of Conscious States. The Idea of Duration",
+            "note": "Bergson, Henri. In Time and Free Will. New York: Dover. Pp. 75-139. Suggested extra reading.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion: Intelligence vs. Intuition / Past, Present, Future/ How do we want to understand the immateriality of the world we are living? How have techniques of governance of and through time by state, capital, power at large shaped our very conception of the ordinary and the everyday? Of the possible and the potential, of the now and the then and that which was? Of duration and intensity, slowness and speed of time? Have we been limited in our imagining of time to the modern parameters disciplining our bodies and minds?"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "The Affective Turn: Synthesizing the Mind/Body Duality",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Mana of Mass Society",
+            "note": "Mazzarella, William. (1-33; 137-173)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Politics of Affect",
+            "note": "Massumi, Brian. (Introduction)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Wave in The Mind (Being Taken For Granite)",
+            "note": "LeGuin, Ursula.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Why bodies matter",
+            "note": "Judith Butler. Gender Trouble Conference (Youtube).",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion: The fallacy of “I think therefore I am” / Visceral Forces and Intensities that move us / Non- conscious experiences of intensity that cannot be realized in language / The stuff of the soul and the consciousness that live in the interstices of knowledge / Moving away from the linguistic turn, which was centered around the idea that language is the primary way we understand the world"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Materiality and Immateriality: The World of The Senses",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Being Alive",
+            "note": "Ingold, Tim. (Introduction)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Thousand Plateaus",
+            "note": "Deleuze & Guattari. (Body Without Organs)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Affective Spaces, Melancholic Objects: Ruination and the Production of Anthropological Knowledge",
+            "note": "Yael Navaro-Yashin.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion: Animating Nature / Non-Human Agency / Alternative perspectives on the body (not as a discreet entity but as a dynamic field of relations dependent and interdependent)"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Leakages of the Modern: Imagination, Resistance",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Soul of Man Under Socialism",
+            "note": "Wilde, Oscar.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Revolution in Reverse",
+            "note": "Graeber, David. (63-98, 102-121)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Freedom",
+            "note": "Nelson, Maggie. (Selections)",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  }
+}

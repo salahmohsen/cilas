@@ -1,0 +1,277 @@
+{
+  "sha256": "748baf876dba9a72bf8bcc120cb8be3a1dcd141ca3090a7a136a795443556985",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "Meeting each other\n\nLooking back: how much do we remember? ‘Retrospective diaries’\n\nCourse flow and group norms\n\nReading circles and reading journals\n\nLooking forward: discussing the final project",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The social side of education",
+        "description": "Theory and social change\n\nThe violence of education\n\nPrivileges and intersectionality in learning spaces",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Norms and representation",
+        "description": "Curriculum as a discourse\n\nThe null curriculum, what isn’t being said?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The ‘culture’",
+        "description": "Gendered by design, what did we believe about ourselves from being at school?\n\nImplicit curriculum, what’s the culture around teaching?\n\nSuccessful girls",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Feminist pedagogy in theory",
+        "description": "Feminist pedagogy as critical pedagogy and relation to others\n\nDemocratic participation and emancipation",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Feminist pedagogy in action",
+        "description": "Integrating feminism in teaching: four orientations\n\nCentering women with non-neutrality: voice and content\n\nUnique classrooms, unique goals",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Education: a woman’s world?",
+        "description": "Teacher identities and agency\n\nCaring relations in learning spaces",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Looking into different settings",
+        "description": "The children, adolescents and adults classrooms",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": null,
+        "description": "(space to work on projects, dive into group’s interest and/or invite a guest)",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Beyond the institution",
+        "description": "Digital pedagogy\n\nAllyship and activism as co-education",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Education utopias",
+        "description": "Towards compassion with compassion\n\nMoral education?\n\nEducation and hope",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Closing session",
+        "description": "Project presentations, course feedback and reflections from reading journals",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Teaching in environments of resistance: Toward a critical, feminist, and antiracist pedagogy",
+        "note": "Bell, S., Morrow, M. & Tastsoglou, E. (1999). In Mayberry, M. & Rose, E. C. (Eds) Meeting the challenge: innovative feminist pedagogies in action (pp. 23-46). Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Examining gender and classroom teaching practices",
+        "note": "Carinci, S. (2007). In Gender Identity, Equity, and Violence: Multidisciplinary Perspectives Through Service Learning.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Introduction — feminist pedagogies in action: Teaching beyond Disciplines",
+        "note": "Crawley, S. L., Lewis, J. E. & Mayberry, M. (2008). Feminist Teacher, 19(1), 1-12.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Uncovering Our Feminist Pedagogy: A co/autoethnography",
+        "note": "Coiaa, L. & Taylor, M. (2013). Studying Teacher Education. 9 (1). 3–17.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Re/theorising gender: female masculinity and male femininity in the classroom?",
+        "note": "Francis, B. (2010). Gender and Education. 22 (5). 477-490.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Teaching for social justice education: the intersection between identity, critical agency, and social justice education",
+        "note": "Francis, D. & Le Roux, A. (2011). South African Journal of Education. 31. 299-311.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Editorial introduction: gender and sexuality taking up space in schooling",
+        "note": "Fields, J. & Payne, E. (2016). Sex Education. 16 (1). 1-7.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The null curriculum: Its theoretical basis and practical implications",
+        "note": "Flinders, D. J., Noddings, N. & Thornton, S. J. (1986). Curriculum Inquiry. 16 (1). 33-42.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Women in teaching: Participation, power and possibility",
+        "note": "Gaskell, J. & Mullen, A. L. (2006). In Skelton, C., Francis, B. & Smulyan, L. (Eds.) The Sage Handbook of Gender and Education (pp. 453-468). Sage Publications.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The second side of education: Prosocial development",
+        "note": "Higgins-D’Alessandro, A. (2012). In Brown, P. M., Corrigan, M. W. & Higgins-D'Alessandro, A. (Eds) Handbook of Prosocial Education.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Feminist education for critical consciousness",
+        "note": "hooks, b. (2000). In Feminism is for everybody: Passionate politics (pp. 19-24). South End Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Paulo Freire",
+        "note": "hooks, b. (1994). In Teaching to transgress: Education as the practice of freedom (pp. 45-58). Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Crossing borders and changing pedagogies: From Giroux and Freire to feminist theories of education",
+        "note": "Jackson, S. (1997). Gender and Education. 9 (4). 457-468.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Just us, just discussing: imagined homogeneities in the Gender Studies classroom",
+        "note": "Karlsson, L. (2015). Gender and Education. 27 (6). 654-665.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Text and discourse in education: An introduction to critical discourse analysis",
+        "note": "Luke, A. (1995). Review of Research in Education. 21.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The relevance of theory to the safe schools movement",
+        "note": "McEvoy, A. (1999). Education and Urban Society. 31(3). 275-285.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The promise of freedom and the regulation of gender — feminist pedagogy in the 1970s",
+        "note": "Mcleod, J. (1998). Gender and Education. 10 (4). 431–445.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The hidden curriculum: An overview",
+        "note": "Meighan, R. & Siraj-Blatchford, I. (1997). In A Sociology of Educating (3 ed.) (pp. 65-76). London, United Kingdom: Cassell.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Caring: A feminine approach to ethics & moral education",
+        "note": "Noddings, N. (1984). University of California Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "You can’t criticize what you don’t understand: Teachers as social change agents in neo-liberal times",
+        "note": "O’Sullivan, M. (2008). Brock Education. 17.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Digital feminist pedagogy and post-truth misogyny",
+        "note": "Ringrose, J. (2018). Teaching in Higher Education. 23 (5). 647-656.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Successful girls? Complicating post-feminist, neoliberal discourses of educational achievement and gender equality",
+        "note": "Ringrose, J. (2007). Gender and Education. 19 (4). 471-489.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Anarchic Thinking",
+        "note": "Stenstad, G. (1988). Hypatia, 3(2), 87–100.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Teach feminist: Pedagogy, politics, and process in women’s studies",
+        "note": "Uppal, J. & English, H. (2005). Cultural Studies - Critical Methodologies. 5 (1). 30-44.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Education and hope",
+        "note": "Vlieghe, J. (2019). Ethics and Education.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Freire and a feminist pedagogy of difference",
+        "note": "Weiler, K. (1991). Harvard Educational Review. 61 (4). 449-475.",
+        "href": "https://doi.org/10.17763/haer.61.4.a102265jl68rju84"
+      },
+      {
+        "type": "reading",
+        "title": "Out of the Ruins: Feminist Pedagogy in Recovery",
+        "note": "Weiner, G. (2006). In Skelton, C., Francis, B. & Smulyan, L. (Eds.) The Sage Handbook of Gender and Education (pp. 79-92). SAGE Publications.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hidden Curriculum of Violence: Affect, Power, and Policing the Body",
+        "note": "Wozolek, B. (2020). Educational Studies. 56 (3). 269-285.",
+        "href": null
+      }
+    ],
+    "notes": "FEMINIST PEDAGOGY LAB. CILAS, Fall 2022.\n\nAbout: Here we explore how education manifesting in an institution, a curriculum, or a teacher weaves into a broader gendered social and cultural practice. Through a feminist lens, we look back at our schooling and tertiary education to record memories in retrospective diaries. We will explore different angles to how education can engage with gender through adopting pedagogies, nurturing relationships in learning spaces, actualizing teachers’ agency, and recognizing existing power and privileges.\n\nWe will follow a reading circle format with readings divided amongst us in preparation for the session then discussed in rotational groups to then share core insights and commentary in a whole group.\n\nThroughout, we (can) work towards a final project that we enjoy individually, in pairs or small groups."
+  }
+}

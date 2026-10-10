@@ -1,0 +1,216 @@
+{
+  "sha256": "9bcb156d4c817403d0e0919fa007ac6824630f858195870a8c339accce7d5dbc",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Letting grief in",
+        "description": "Starting from a place of acceptance, we will call out to our grief and let it into our space. We will look at the various shapes it can take guided by our words, emotions, and the elements to come.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "كيف نحزن كعرب؟",
+            "note": "حامد فتحي",
+            "href": "https://raseef22.net/article/132093-%D9%83%D9%8A%D9%81-%D9%86%D8%AD%D8%B2%D9%86-%D9%83%D8%B9%D8%B1%D8%A8%D8%9F-%D8%B9%D9%86-%D9%85%D8%B9%D8%A7%D9%86%D9%8A-%D8%A7%D9%84%D8%AD%D9%8F%D8%B2%D9%86-%D9%88%D8%A3%D9%86%D9%88%D8%A7%D8%B9%D9%87"
+          },
+          {
+            "type": "reading",
+            "title": "‘#6 Places We Go When We’re Hurting’",
+            "note": "in Atlas of the Heart by Brene Brown",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Living Dyingly’",
+            "note": "in The Art of Death by Edwidge Danticat",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "‘Mouse of Silver’",
+            "note": "The Midnight Gospel (season 1, episode 8)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "What we lose with the water",
+        "description": "Through water we mourn once sacred relationships between people and bodies of water interrupted by violence. We will look at ancestral and intergenerational grief associated with forced expulsion and displacement to ask: what does the water remember and how do we carry these memories?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘A Separated Man’",
+            "note": "in Dongola / دنقلا by Idris Ali",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Rifqa’",
+            "note": "in Rifqa by Mohammed El-Kurd",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘The First Water is the Body’",
+            "note": "in Postcolonial Love Poems by Natalie Diaz",
+            "href": "https://orionmagazine.org/article/women-standing-rock/"
+          },
+          {
+            "type": "reading",
+            "title": "“في بطن الحوت”",
+            "note": "رواند عيسى (Arabic line in the same reading list; no link given)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Mohammad Saved From The Waters",
+            "note": "directed by Safaa Fathy",
+            "href": "https://cultureunplugged.com/documentary/watch-online/play/54314/Mohammad-Saved-from-the-Waters"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Claiming the fire",
+        "description": "What ignites, what trembles fiery in the belly, what are the losses that burn with anger and anguish engulfing us when we grieve? Through honoring complex and stigmatized grief, we look at how anger can be reframed to breed communal hope and change.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘The Things We Lost in the Fire’",
+            "note": "by Mariana Enriquez",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Grief | Dear Eugene’",
+            "note": "in Dear Senthuran by Akwaeke Emezi",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘The Uses Of Anger: Women Responding To Racism’",
+            "note": "by Audre Lorde",
+            "href": "https://www.blackpast.org/african-american-history/speeches-african-american-history/1981-audre-lorde-uses-anger-women-responding-racism/"
+          },
+          {
+            "type": "reading",
+            "title": "مواجهة النساء: استخدام الغضب للعنصرية",
+            "note": "Arabic title printed on the same line as the English title of Audre Lorde’s essay",
+            "href": "https://www.ikhtyar.org/wp-content/uploads/2015/03/%D8%A7%D8%B3%D8%AA%D8%AE%D8%AF%D8%A7%D9%85-%D8%A7%D9%84%D8%BA%D8%B6%D8%A8.pdf"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Breathing through it all",
+        "description": "As the whole world continues on seemingly unperturbed, we relearn how to keep breathing despite the losses we endure. But this living, breathing connection with all other grieving things reminds us we do not exist alone in grief.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selections from Obit",
+            "note": "by Victoria Chang",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘preface: a guide to undrowning’ and ‘three: remember’",
+            "note": "from Undrowned: Black Feminist Lessons from Marine Mammals by Alexis Pauline Gumbs",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘A Geopoetics of Dust’",
+            "note": "by Aya Nassar",
+            "href": "https://disembodiedterritories.com/A-Geopoetics-of-Dust"
+          },
+          {
+            "type": "watch",
+            "title": "Dick Johnson is Dead",
+            "note": "directed by Kirsten Johnson (documentary)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Returning to the earth",
+        "description": "The earth is witness to our rituals of grief and processes of mourning as time and again we return to it. Where are we seen and held, and where are we denied? How can we (re)write and (re)imagine traditions to hold space for ourselves?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“تصبحين على خير”",
+            "note": "علاء خالد",
+            "href": "https://alketaba.com/%D9%85%D8%AE%D8%AA%D8%A7%D8%B1%D8%A7%D8%AA-%D9%85%D9%86-%D8%AF%D9%8A%D9%88%D8%A7%D9%86-%D8%AA%D8%B5%D8%A8%D8%AD%D9%8A%D9%86-%D8%B9%D9%84%D9%89-%D8%AE%D9%8A%D8%B1/"
+          },
+          {
+            "type": "reading",
+            "title": "‘Pyre’",
+            "note": "by Amitava Kumar",
+            "href": "https://granta.com/pyre/"
+          },
+          {
+            "type": "reading",
+            "title": "‘Tchaikovsky’s Pulse / تشايكوفسكي ينبض’",
+            "note": "by Sarah Ibrahim Elraghy in Our Bodies Breathe Underwater",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Where do old lesbians go to die?’",
+            "note": "by Supernova in Mada Masr",
+            "href": "https://mada32.appspot.com/www.madamasr.com/en/2020/02/17/opinion/u/where-do-old-lesbians-go-to-die/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "A disruption in time",
+        "description": "Grief has no concept of time, it follows no rules, and it haunts the heart like a ghost. But these same things apply to love. We cycle through grief across time, visiting memories and how letting love in means accepting grief too.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘How to walk the road of mourning / كيف تمشي في طريق الحداد’",
+            "note": "in How to Mend: Motherhood and Its Ghosts by Iman Mersal",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Loss: Loving into Life and Death’",
+            "note": "in all about love by bell hooks",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Chapters 2 & 25 from Blue Nights",
+            "note": "by Joan Didion",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Wait’",
+            "note": "by Galway Kinnell",
+            "href": "https://poets.org/poem/wait"
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Flow header (verbatim): Vocabularies of Grief; Mariam Boctor & Nour Kamel; Tuesdays 6-9pm, hybrid course (in-person & online).\n\nCourse description (verbatim): As the world slowly attempts to emerge from the shadow of COVID-19, we find ourselves still trying to navigate living within waves of loss. None of us, it seems, have been left untouched by the turmoil of the past few years - and yet, life continues, as it always has. In the aftermath of personal, political, and communal experiences that can’t be named, we search for meaning and solace. What we experience is monumental, but we are not left alone in the folds of history.\n\nIn this hybrid reading & writing course, sessions will involve looking at various literature and media on grief in search of the words that can lead us to collectively hold and communicate our grief(s). The elements - our constant companions older than our sorrow or the language to describe it - will be the thematic basis for guiding and grounding us over the weeks. Through discussions, care rituals, and writing exercises, we hope to co-create with participants a wake in which we can come together to formulate and honor our individual and collective vocabularies of grief.\n\nBios and course photo are in the flow (Kuzbara Collective; Bird Garden with Intestinal Self Portrait by Samira Abbassy (2003)).\n\nLink handling: the flow text shows only underlined words. Its link addresses were attached as follows. The raseef22 address appears twice in the link list for the same Week 1 Arabic title, and the blackpast and ikhtyar addresses are also listed more than once; each address is used. The Week 2 and Week 3 Arabic title links were placed by reading the page images."
+  }
+}

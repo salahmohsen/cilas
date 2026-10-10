@@ -1,0 +1,240 @@
+{
+  "sha256": "ee16e31e475288fb33e0cb63f450f669dd30362473069fdc6b1f9bf00b01ed8e",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Intro: Towards a History of Death",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Brief History of Death",
+            "note": "Ch. 1, 2 and 3. Douglas Davies, Wiley-Blackwell, 2005.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Charting Death's Evolution and Life's Extension",
+            "note": "Chapter 2, in Stanley Shostak, The Evolution of Death: Why We Are Living Longer, State University of New York, 2006.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Ethnographic Perspectives: Rituals, Customs and Social Constructs",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On Motherhood and Violence",
+            "note": "Iman Mersal, Makhzin, Issue 2: Feminisms, September 2015.",
+            "href": "http://www.makhzin.org/issues/feminisms/on-motherhood-and-violence"
+          },
+          {
+            "type": "reading",
+            "title": "Death Without Weeping: The Violence of Everyday Life in Brazil",
+            "note": "Chapter 8: (M)Other Love: Culture, Scarcity, and Maternal Thinking, Nancy Scheper-Hughes, University of California Press, 1992.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Bureaucratic Professionalization of Funeral Rites in Tehran’s Behesht-e Zahra Cemetery",
+            "note": "Zohreh Bayatrizi and Hajar Ghorbani, from Across Cultures: Death and Dying in Non-Western Cultures (2019).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Philosophizing about Death",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Feminist Philosophers Turn Their Thoughts to Death",
+            "note": "Samantha Brennan (2006), in Samantha Brennan and Robert J. Stainton (eds.), Philosophy and Death: Introductory Readings, Broadview Press, 2009.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Death",
+            "note": "Thomas Nagel (1979), in Samantha Brennan and Robert J. Stainton (eds.), Philosophy and Death: Introductory Readings, Broadview Press, 2009.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Philosophizing about Death Cont’d",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Antigone and the Deadly Desire for Sameness: Reflections on Origins and Death",
+            "note": "Vigdis Songe-Møller, Ch. 9, in Birth, Death and Femininity: Philosophies of Embodiment (2019).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Sexed Self and the Mortal Body",
+            "note": "Sara Heinamaa, Ch. 4, in Birth, Death and Femininity: Philosophies of Embodiment (2019).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Being Towards Death",
+            "note": "Sara Heinamaa, Ch. 5, in Birth, Death and Femininity: Philosophies of Embodiment (2019).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Making Sense of Death",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Death (Central Problems of Philosophy)",
+            "note": "Geoffrey Scarre, Ch. 4 and Ch. 7, McGill-Queen's University Press, 2007.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Death and Philosophy",
+            "note": "Ch. 1, in Death and Philosophy, Jeff Malpas and Robert C. Solomon (eds.).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Death and Authenticity",
+            "note": "Optional: Ch. 11.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Asking the Hard Questions",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Problems of Post-Mortem Identity",
+            "note": "Ch. 2, in R.W.K. Paterson, Philosophy and the Belief in a Life After Death, Palgrave, 1995.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Concept of the Afterlife",
+            "note": "Ch. 6, in R.W.K. Paterson, Philosophy and the Belief in a Life After Death, Palgrave, 1995.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Religious Perspectives",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Death and Dying in Comparative Philosophical Perspective",
+            "note": "Chapter 1, Introduction, by Timothy D. Knepper, in Timothy D. Knepper, Lucy Bregman, and Mary Gottschalk (eds), Death and Dying in Comparative Philosophy of Religion, 2019.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Ritualization of Death and Dying: The Journey from the Living Living to the Living Dead in African Religions",
+            "note": "Ch. 8, in Death and Dying in Comparative Philosophy of Religion, 2019.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Religious Perspectives Cont’d",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Hour of Death: The Classic History of Western Attitudes Toward Death over the Last One Thousand Years",
+            "note": "Philippe Aries, Ch. 3 and 4, Vintage Books, 2008.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Islamic Understanding of Death and Resurrection",
+            "note": "Ch. 2, in Jane Idelman Smith and Yvonne Yazbeck Haddad, Oxford University Press, 2002.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Plagues, Epidemics and Understanding of Death",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Responses to Plague",
+            "note": "Ch. 5, in Frank M. Snowden, Epidemics and Society: From the Black Death to the Present, Yale University Press, 2019.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Plague in Medieval Islamic Society",
+            "note": "Ch. 11, in Joseph Byrne, Daily Life During the Black Death, Greenwood Press, 2006.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Contemporary Perspectives",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Eternity Calling: Modernity and the Revival of Death and the Afterlife",
+            "note": "Raymond L. M. Lee, in Helaine Selin and Robert M. Rakoff (eds), Death Across Cultures: Death and Dying in Non-Western Cultures, Springer, 2019.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Biopolitics and the Philosophy of Death",
+            "note": "Ch. 5, Paolo Palladino, Bloomsbury, 2016.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "How do we talk about Death?\n\nWe usually don’t think or meditate on death in our modern culture, with its obsession with youthfulness and longevity, there is a taboo around death. Aside from religious convictions about the inevitability of death, we don’t think much about death in our everyday life unless we encounter it personally, as when someone we know dies or collectively as in a state of war or, like now, during a global pandemic. It is then that death becomes what it always is, an essential experience for all living things. Death then goes from the personal, individual experience to something that has to be managed, monitored, combated and even legalized (as with euthanasia, for example). When is it legal to end someone’s life, or when to punish those whose actions resulted in the death of someone.\n\nDeath as many would say is essentially an individual experience, it's inevitable, irreplaceable and terminal. No one escapes it, no one that has died has “come back from the dead” (long after they died, and not just with clinical and medical support/intervention when their vital functions are affected). And yet we lack the terms to be able to talk about it, how to understand it and understand our history in dealing with it and what can the inevitability of death mean for us, practically, philosophically but also ethically.\n\nIn this course, we will try to explore the general contours of death as a phenomenon, we will look at historical, anthropological, scientific, religious and philosophical sources that tried to examine and understand death, and what that says about the human experience. The course will centre a feminist understanding and conception of death and its meaning. Despite the fact that death is the great equalizer, gendered notions of death persist in ways that most of us would still find difficult to fathom.\n\nThrough discussion and reflection, the participants collectively with the instructor would develop their own lexicon and terms in understanding and dealing with death. A central aspect of the course, that the participants relate what they read to their own subjective experience and are then able to have a meaningful engagement with the readings on hand and with their own everyday experience on the other."
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "sha256": "085444ea3d92b2dff83d17cbaa61605ba4e290b674fe6a38c4c2d7b6b46db427",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Tempest",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Afterlives of The Tempest",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Tempest",
+            "note": "A Play by Aimé Cesaire.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ariel",
+            "note": "Essay by José Enrique Rodó.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Caliban: Notes towards a Discussion of Culture in Our America",
+            "note": "Journal article by multiple authors.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Othello",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Shakespeare and the Other: Race, Desire, and (Post-)Colonial Psychology",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Black Skin, White Masks",
+            "note": "Frantz Fanon (selections).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Prospero and Caliban",
+            "note": "Octave Manoni (selections).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Titus Andronicus",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "Depending on the previous discussions, the last two sessions will discuss one or more of the following themes:\n\n- The intersectionality of gender and race in Shakespeare’s plays.\n- The Self and the Other in text\n- The Self and the Other in performance\n- The historical understanding of selfhood and otherness in Shakespeare’s world\n- How Shakespeare can help us reflect on our own understanding of selfhood and otherness and its racialization.\n\nThe plays we will read in these sessions will be determined by the course of our discussion. Among the candidates are:\n\n- Hamlet\n- Antony and Cleopatra\n- Henry IV pt. 2\n- Pericles, Prince of Tyre\n- The Merchant of Venice",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Rationale and Detailed Course Description:\n\nShakespeare’s plays paint a spectacular, though at times uncomfortable tapestry of diverse skin colors and ethno-religious backgrounds: A Moor in Venice, a Goth in Rome, an Egyptian Queen putting the fate of the Roman Empire at risk, an indigenous ‘savage’ on an enchanted island enslaved by European settlers, and the list goes on.\n\nIn other words, the lens for an anti-racist reading of the plays is already present, though not necessarily privileged, in Shakespeare’s world of complex and rich characters and conflicting destinies. At a time when questions of race and neocolonialism are at the forefront of news headlines, and Shakespeare is being used by both racists and antiracists, this course reflects on this uneasy legacy.\n\nInstead of dwelling on or rebuking Shakespeare’s putative racism, we will take a look at the complex articulations of race, racism, and the experience otherness in Shakespeare’s plays. Our main questions will be how we can read the Shakespearean text from the point of view of its own subaltern characters, and how we can re-read, re-imagine, and re-invent Shakespeare through non-Eurocentric and anti-racist eyes. This course will thus attempt to perform an anti-racist, postcolonial, reading that simultaneously takes place from within and from without the text. From within the text, we will attempt to read The Tempest from the point of view of Caliban, Ariel, and Miranda, Othello from the point of view of its eponymous protagonist, Titus Andronicus from the points of view of Tamora and Aaron, in short, to read Shakespeare’s plays from the points of view of their embedded others— an exercise both in character analysis and in postcolonial/race theory (and, depending on the course of the discussion, in postcolonial feminism). From outside the text, we will imagine and utilize the critical lens of non-European directors, actors, spectators, and students who encounter Shakespeare as part of their colonial education. We will also read these plays in conjunction with theoretical works that deal with race, colonialism, and (post)colonial psychology (see sessions 3 and 5 below for more details). Our purpose, however, will be to make the theoretical and academic debates subservient to the creative process, and not vice versa.\n\nAs much as this is a course in postcolonial and race studies, it is a workshop in character development, plot analysis, dramaturgy, and the creative interpretation and adaptation of the Western canon. No prior knowledge of these plays, debates, theories, or techniques is required.\n\nTentative Course Flow (subject to change depending on the class discussions).\n\nAttention: The course will deal with a number of disturbing themes including genocide, racism, sexism, Islamophobia, anti-Semitism, and racial, colonial, and sexual violence. In the sixth session we will be reading Titus Andronicus, a play notorious for its depiction of gore, mutilation, rape, and cannibalism. While students will be given the choice to opt out of this session, the discussion of the histories of race and colonialism is ultimately bound to touch upon disturbing and potentially triggering themes."
+  }
+}

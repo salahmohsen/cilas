@@ -1,0 +1,294 @@
+{
+  "sha256": "d892409db433d8a98d67b94de3b5f02fb3cc910e578e627ccfa60b2eee42c34c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Dogma of Development",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On the Experience of Moral Confusion",
+            "note": "Graeber, David. 2011. In Debt: The First 5,000 Years. New York: Melville House: pp 1-20. The flow says 'Available here.' but the link address is not in the extracted text.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Populations and Political Society",
+            "note": "Chatterjee, Partha. 2004. In The politics of the Governed: Reflections on Popular Politics in Most of the World. New York: Columbia University Press: pp 27-51.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Modes of Production, History and Unequal Development",
+            "note": "Amin, Samir. 1985. Science & Society 49 (2): 194-207.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Object of Development",
+            "note": "Mitchell, Timothy. 2002. In Rule of Experts. Berkeley: University of California Press. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Dogma of Development",
+            "note": "Jones, Toby Craig. 2010. In Desert Kingdom: How Oil and Water Forged Modern Saudi Arabia. Cambridge: Harvard University Press: pp: 54-89. Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Unequal Access to Light: Electric Networks",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Stealing Power",
+            "note": "Allan, Diana. 2014. In Refugees of the Revolution: Experiences of Palestinian Exile. Stanford: Stanford University Press: pp 101-135.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Radiance of the Jewish National Home: Technocapitalism, Electrification, and the Making of Modern Palestine.",
+            "note": "Meiton, Frederik. 2015. Comparative Studies in Society and History 57(4): 975-1006.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Power Cuts, Protests, and Institutions: A Brief History of Electricity in Beirut.",
+            "note": "Abu-Rish, Ziad. 2014. Jadaliyya. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Wired",
+            "note": "Shamir, Ronen. 2013. In Current Flow: The Electrification of Palestine. Stanford: Stanford University Press: pp 78-103. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Structures of Power: Electrification in Colonial India",
+            "note": "Sunila S. Kale. 2014. Comparative Studies of South Asia, Africa and the Middle East 34(3): 454-475. Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "En(c)abling Empire: Telegraphic Communication",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Transimperial Strategies for an Intercontinental Empire",
+            "note": "Minawi, Mostafa. 2016. In The Ottoman Scramble for Africa. Stanford: Stanford University Press: pp 99-15.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Destructions",
+            "note": "Beckert, Sven. 2014. In Empire of Cotton: A Global History. New York: Alfred A. Knopf: pp 312-339.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Imperial Telecommunications Network",
+            "note": "Headrick, Daniel. In The Tentacles of Progress: Technology Transfer in the Age of Imperialism 1850-1940. Oxford: The University of Oxford Press. Read pp 97-126 only. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Two Double Standards",
+            "note": "Barak, On. 2013. In On Time: Technology and Temporality in Modern Egypt. Berkeley: University of California Press. Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Conquering Water: Canals, Dams, and Irrigation Projects",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Can the Mosquito Speak?",
+            "note": "Mitchell, Timothy. 2002. In Rule of Experts. Berkeley: University of California Press: pp 19-53.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Watering the Earth",
+            "note": "Mikhail, Alan. 2012. In Nature and Empire in Ottoman Egypt. Cairo: The American University in Cairo Press: pp 38-81.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Suez Company’s Concession in Egypt 1854-1956: Modern Infrastructure and Local Economic Development.",
+            "note": "Piquet, Caroline. 2004. Enterprise & Society 5 (1): 107-127. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "River Imperialism",
+            "note": "Tvedt, Terje. 2004. In The River Nile in the Age of the British: Political Ecology and the Quest for Economic Power. London: I.B. Tauris. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Suez Canal and World Shipping, 1869-1914",
+            "note": "Max Fletcher, 1958. In The Journal of Economic History 18(4). Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Good Dams and Bad Dams: Environmental Criteria for Site Selection of Hydroelectric Projects.",
+            "note": "Ledec, George & Quintero, Juan David. 2003. World Bank. Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Imperial Competition and Labour Action: Railways",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Labor Protests, Trade Unions, and Nationalist Politics 1940-1955",
+            "note": "Sikainga, Ahmad. 2002. In City of Steel and Fire: A Social History of Atbara, Sudan’s Railway Town. New York: Oxford University Press: pp 97-118.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Railway Workers of Palestine I",
+            "note": "Lockman, Zachary. 1996. In Comrades and Enemies: Arab and Jewish Workers in Palestine. Berkeley: University of California Press: pp 111-147.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Railway Question in the Ottoman Egyptian Crisis of 1850-1852.",
+            "note": "Rivlin, Helen Anne B. 1961. Middle East Journal 15 (4): 365-388. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Railway Workers of Palestine II",
+            "note": "Lockman, Zachary. 1996. In Comrades and Enemies: Arab and Jewish Workers in Palestine. Berkeley: University of California Press. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Labor Activism 1899-1914",
+            "note": "Beinin, Joel and Lockman, Zachary. 1987. In Workers on the Nile. Focus on the section titled “Struggle at the ‘Anabir”: pp 72-76. Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Coal to Oil: Pipelines",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Machines of Democracy and Sabotage",
+            "note": "Mitchell, Timothy. 2013. In Carbon Democracy: Political Power in the Age of Oil. London: Verso: pp 144-172.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "How we Organized Strike that Paralyzed Shah’s regime",
+            "note": "An Iranian Oil Worker. 1980. In Oil and Class Struggle, ed. Nore and Turner: 293-301.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Outsourcing: Energy and Empire in the Age of Coal, 1820–1911.",
+            "note": "Barak, On. 2015. International Journal of Middle East Studies 47(3): 425-445. Recommended.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Black Gold Coast and The Wages of Oil",
+            "note": "Jones, Toby Craig. 2010. In Desert Kingdom: How Oil and Water Forged Modern Saudi Arabia. Cambridge: Harvard University Press. Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Concrete Warfare: Walls",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Walking Through Walls",
+            "note": "Weizman, Eyal. 2007. In Hollow Land: Israel’s Architecture of Occupation. New York: Verso: pp 185-220.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Best of All Possible Walls",
+            "note": "Weizman, Eyal. 2011. In The Least of All Possible Evils: Humanitarian Violence from Arendt to Gaza. New York: Verso: pp 65-96.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Boom",
+            "note": "Ramos, Stephen. 2010. In Dubai Amplified: The Engineering of a Port Geography. Burlington: Ashgate: pp 77-95. Recommended.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Garbage Politics",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cairo’s Contested Garbage: Sustainable Solid Waste Management and the Zabaleen’s Right to the City.",
+            "note": "Fahmi, Wael & Sutton, Keith. 2010. Sustainability 2 (6): 1765-1783.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Occupational Hazards.",
+            "note": "Stamatopoulou-Robbins, Sophia. 2014. Comparative Studies of South Asia, Africa and the Middle East 34 (3): 476-496.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Garbage Politics",
+            "note": "Abu-Rish, Ziad. 2015. In Middle East Report 45.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Politics and Technics: Infrastructure, Colonialism, Warfare. Rana Baker.\n\nCourse Description: Is infrastructure political? Can infrastructure colonise, dispossess, and act as an instrument of warfare? We tend to think of infrastructure as useful objects, but can we think of them as built ideologies? Historically, infrastructural projects have been regarded as necessary preconditions of modern and efficient states. So much so that malfunctioning sewers and perennial power cuts have come to invoke images of starved and underdeveloped countries. However, the question of whether infrastructure itself fuels underdevelopment is rarely asked. This course proposes a new way of thinking about infrastructure. By studying the histories of various infrastructural projects in the Middle East, we will critically assess their role as sites of political contestation rather than as “neutral technologies.” Infrastructure has been used by colonial states to exploit the natural resources of colonised territories and to control the populations they ruled. At the same time, infrastructure is crucial in the formation of radical political movements and rich traditions of political struggle. Yet, not all infrastructure is the same. By paying attention to the material qualities and specific history of each form of infrastructure we study, we will be able to understand how different forms of infrastructure enable and foreclose different political possibilities.\n\nEach week’s readings will be devoted to one infrastructural project. We study the production of political power along railway tracks, electrical wires, oil pipelines, and telegraphic cables among other technical and infrastructural apparatuses. We situate our study of infrastructure not in development economics, but in the social and political fabric of which it is part. Development economics was itself a product of specific techno-political processes investigated in this course. Under each form of infrastructure, we will examine cases from countries including Egypt, Iran, Sudan, Palestine, and Lebanon. This will allow us to draw comparisons and to understand how the specific socio-political and historical context of each country shaped the politics that emerged around its infrastructure.\n\nCourse Objectives: Theoretically, students will learn to study historical processes not in a teleological manner, but as historically and materially situated. Students will examine the role of infrastructure in the making of politics, including questions of colonialism and modern warfare. Students will study how infrastructure was capitalised on by labour and liberation movements to precipitate the emergence of democratic politics and revolutionary demands.\n\nThe Week 1 'Available here.' link has no address in the extracted text, so no href was recorded for it. The flow contains no links."
+  }
+}

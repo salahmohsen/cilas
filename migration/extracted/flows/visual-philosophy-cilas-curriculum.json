@@ -1,0 +1,126 @@
+{
+  "sha256": "35096107157d2ed5f0bdda6ff9a39fe0f06607dec9f331290784906cac19a815",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introductory session",
+        "description": "Introducing ourselves... but who is your self?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Being and nothingness, on the concept of authenticity and bad faith",
+            "note": "Reference suggestion (text): by Sartre (1943)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Inside out",
+            "note": "Reference suggestion (movie): Pixar Animation Studios",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Counsciousness",
+        "description": "Examinating the meaning of counsciousness\n\nAre my senses shaping my counsciousness? My thoughts, my emotions? Is it a feeling?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The wax example from Meditation II",
+            "note": "Reference suggestion (text): by René Descartes (1641)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Desire",
+        "description": "Are desires an endless race after satisfaction?\n\nWould you wake up and move everyday if you had no desire to satisfy?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The World as Will and Representation, Volume I, on the liberation power of contemplation",
+            "note": "Reference suggestion (text): by Arthur Schopenhauer (1818)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Requiem for a dream",
+            "note": "Reference suggestion (movie)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Freedom",
+        "description": "Have you ever experienced life synchronicities?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Determinism vs Free Will: Crash Course Philosophy #24",
+            "note": "Reference suggestion (YouTube video)",
+            "href": "https://www.youtube.com/watch?v=vCGtkDzELAI"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Love",
+        "description": "Unique, pure, infinite, unconditionnal or rational... what is happening when you love?\nwhat is happening when you’re loved?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The myth of the Androgynous from Banquet, on the origin of love",
+            "note": "Reference suggestion (text): by Plato (-IVth century)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ethics, part III, on love and joy",
+            "note": "Reference suggestion (text): by Spinoza (1677)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Meta session",
+        "description": "Retrospection time\n\nLooking back, thinking the creative process",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Free sessions",
+        "description": "Collective choice of a topic to tackle",
+        "meetings": 2,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Collective artistic production"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Flow header: Visual philosophy; Isaona Kherrour; isaona.kh@gmail.com; CILAS, Cairo Institute of Liberal Arts and Science; Winter semester 2023.\n\nCourse description (verbatim): Let’s turn the introspective power of philosophy into art!\n\nVisual philosophy is an experimental concept of crossover between philosophy reflection and artistic production. This class invites you to join a collective talk about basic philosophy notions. We will study the foundations of each philosophical notion, discuss it, and find in which ways they apply to our individual and collective realities. The goal is then to transfer our understanding of it into colors, shapes and textures. It is a class about building a bridge from your unique thought structure to your unique way to visualize the logic you just built while thinking. This class requires no technical skills at all, only the desire to explore the within, get inspired and inspire.\n\nFormat (verbatim): 8 sessions of 2h30 class, each class divided in three parts: discussion, production, sharing time.\n\nThe flow counts sessions I to VIII; sessions VII and VIII are one unit, recorded here as one session with meetings = 2."
+  }
+}

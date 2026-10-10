@@ -1,0 +1,198 @@
+{
+  "sha256": "d85f5d30002357d226c9b0c25f8e325af1e520ff40132dad500488e736074d7c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction: How violent are we?",
+        "description": "We will begin our course by a general overview of the history of violence. More specifically, we will look at the question of whether violence has historically been rising or declining. Of course, the very notion of a wide-scope “history of violence” is contested. How can violence even be defined, let alone measured and compared across very different times and places? Should we even try to make such comparisons, or is this merely an attempt to justify the status quo?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Better Angels of Our Nature: CH. 1 A Foreign Country",
+            "note": "Steven Pinker. Ch. 2 The Pacification Process, optional.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hype for the Best",
+            "note": "Samuel Moyn. The New Republic.",
+            "href": "https://newrepublic.com/article/147391/hype-best"
+          },
+          {
+            "type": "reading",
+            "title": "The Politics of Collective Violence",
+            "note": "Further reading. Charles Tilly, chapters 2 and 3.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Violence and the State",
+        "description": "The state is traditionally, and infamously, described as a “monopoly on the legitimate means of violence.” What does that mean? Are all states founded on war? Can the state be “pacified”? Is war necessary for founding political orders? How does the state legitimate its violence? How does violence define the relationship between the state and its subjects? The readings will take into account Arab intellectuals take on what the Arab nation-state as well has contributed to the debate around violence and the state (exemplified in the essay by Syrian intellectual Yassin al-Haj Saleh).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Violence: A New Approach",
+            "note": "Michel Wievorka. Chapter 2, “Violence and the State” (pp. 27-42).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "علاقات التعذيب السياسية: التعذيب ونمط إنتاج السلطة في «سورية الأسد»",
+            "note": "Cited with the visible link text “link”; no address was given in the flow.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Defense of Violence",
+        "description": "Violence was defended as a necessary means of rebellion and revolution by many major movements across the 20th century. No one defended the necessity of collective violence more than the French thinker Georges Sorel. Sorel has been very influential to both progressive and reactionary political movements, because he emphasized the role of violence in bringing about social change. Now, is collective violence necessary for change? How and why is violence defended as a means of change? Why do political actors differentiate violent means from nonviolent ends? Can this distinction be sustained in practice? How can violent means be subordinated to nonviolent ends?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reflections on Violence",
+            "note": "Main reading. Georges Sorel. Ch. 4, The Ethics of Violence.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Concerning Violence",
+            "note": "Further reading. Franz Fanon. In the Wretched of the Earth.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Nonviolent Resistance",
+        "description": "There’s a long “pacifist” or “nonviolent” tradition that refused all political violence; revolutionary or otherwise. This tradition was informed by Buddhism, Hinduism, Christian Anarchism, and American Transcendentalism. It has been remarkably influential for political movements in the 20th century: such as the American civil rights movement, the Indian independence movement, the anti-Vietnam protests, and conscientious objectors against war. Why do pacifists object to all violence? How do they imagine to bring about change? Is nonviolent resistance a secular or religious ideal? How does it respond to the argument that “violent means” are necessary?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Letter to a Hindu",
+            "note": "Main reading. Leo Tolstoy. 18 pages.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Civil Disobedience",
+            "note": "Main reading. Henry Thomas Thoreau. 28 pages.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Strides Toward Freedom",
+            "note": "Main reading. Martin Luther King Jr. Chapter 6: “Pilgrimage to Nonviolence” (pp. 77-96).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Critique of Violence",
+        "description": "In contrast to pacifist objection to violence, there are other thinkers who have a more realistic approach to violence as a constant in social life, but who also propose that violence must not have the final word on our political imagination. Thinkers like Arendt and Kant force us to consider what gets suppressed in the debate around “violent means”: authority, power, and rightfulness.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On Violence",
+            "note": "Main reading. Hannah Arendt. Try to read as much as you can, it’s about 80 pages.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Perpetual Peace",
+            "note": "Further reading. Immanuel Kant. In Political Writings (38 pages).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Violence and the Everyday",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Life and Words",
+            "note": "Veena Das.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Feminist Responses to Violence",
+        "description": "How does gender define perceptions and experiences of violence and do women receive and experience violence differently or even more “violently”? This session will look at feminist intellectuals examining the modern theory of the state as an extension of and legitimation of private forms of violence that sustain a status quo that reinforces those patterns of coercion and repression across the private and public divide.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Toward a Feminist Theory of the State",
+            "note": "Catherine MacKinnon (1991). Chs. 8-10.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "استباحة النساء في المجال العالم (الجزء الأول والثاني)",
+            "note": "هند محمود وداليا عبد الحميد، 2014.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Violence and the Sacred",
+        "description": "Historically, violence and religion always went side by side. Think of sacrificial rituals, for example. Does this mean that there is something “sacred” or “transcendental” to violence? Perhaps that violence is essential to the undoing of our natural view of the world and points towards the eternal? Does violence give meaning to life? And if we acknowledge that violence may be more “sacred” than we usually recognize; what do we do with this knowledge?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Violence and the Sacred",
+            "note": "Rene Girard. Chapters 1 and 2 (68 pages).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Suicide Bombing",
+            "note": "Further reading. Talal Asad (2007).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Civilization and its Discontents",
+            "note": "Optional, under “The Psychic Life of Violence (Nietzsche and Freud)”. Sigmund Freud.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On The Genealogy of Morals",
+            "note": "Optional, under “The Psychic Life of Violence (Nietzsche and Freud)”. Nietzsche, in The Nietzsche Reader (pp. 390-437).",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course overview, verbatim: At a time when there are a lot of questions on what constitutes the phenomenon of violence, whether inflicted by the experiences of the everyday, or by the structures and institutions of the state or whether its even more “virtual”, this course offers a historical and contemporary overview to the main intellectual traditions that tried to define, outline and even critique violence, showing how complex and profoundly contested of a concept it is.\n\nThe course will tackle such questions as: how can violence be defined? Is it ever justified? Is all violence the same? What are the different ends of violence? Why does it seem to be a fundamental part of any society? Has it increased or decreased historically?\nSurveying a diverse set of readings ranging from history, psychology, philosophy,..etc the course will provide a multidisciplinary lens to critically examine a multitude of perspectives and theoretical frameworks to broaden and develop the analytical tools and intellectual approaches we have in understanding such an abstruse phenomenon."
+  }
+}

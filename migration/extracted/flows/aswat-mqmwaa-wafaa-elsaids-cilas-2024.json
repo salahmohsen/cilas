@@ -1,0 +1,174 @@
+{
+  "sha256": "48f3bb1bd88b47b4ba16e75e2eb822f877e7f441d43a1f26394e6a8d8f6f00d8",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to Subaltern Studies",
+        "description": "Topics: Origins of Subaltern Studies, Antonio Gramsci’s concept of “subaltern,” and the Subaltern Studies Group.\n\nAssignment: 1- Read selected excerpts from Selected Subaltern Studies by Ranajit Guha. 2- Read excerpts from Prison Notebooks by Antonio Gramsci",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ranajit Guha, Selected Subaltern Studies",
+            "note": "Assignment; selected excerpts",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Antonio Gramsci, Prison Notebooks",
+            "note": "Assignment; excerpts",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Overview lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Class discussion on initial impressions. Introduce students to the course’s goals and key questions."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Theories of Power and Marginalization",
+        "description": "Topics: Concepts of hegemony, cultural dominance, and marginalization; Gramsci’s cultural hegemony in depth.\n\nAssignment: 1- Read Gayatri Spivak’s Can the Subaltern Speak?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Gayatri Spivak, Can the Subaltern Speak?",
+            "note": "Assignment",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Small-group discussions on examples of cultural hegemony today, followed by a class debate on how power structures maintain dominance."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "\"Can the Subaltern Speak?\" and Agency",
+        "description": "Topics: Exploring Spivak’s arguments about voice, representation, and the challenges of capturing subaltern perspectives.\n\nAssignment: Reflection paper on the ethics of representing subaltern voices.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Debate game based on Spivak’s question; students argue for or against the idea that subaltern voices can be heard authentically."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Methods for Studying the Subaltern",
+        "description": "Topics: Oral history, ethnography, and “reading against the grain” in historical sources.\n\nAssignment: Research a primary source (e.g., a historical document, song, or folk tale) related to a marginalized group.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Source analysis workshop where students examine historical documents and identify gaps or missing voices."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Everyday Forms of Resistance",
+        "description": "Topics: Subtle and symbolic resistance.\n\nAssignment: Read and present to the class a case study on everyday resistance, such as peasant revolts or colonial satire.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "James C. Scott, “weapons of the weak”",
+            "note": "Excerpts",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Simulation game where students brainstorm subtle acts of resistance; follow up with a discussion on the power of “hidden transcripts.”"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Case Study – Subaltern Voices in Modern Egypt under British Colonialism",
+        "description": "Topics: Examination of subaltern responses to British colonial rule in Egypt, particularly from the perspectives of peasants, workers, and women. Key events include the 1919 Revolution and the influence of grassroots resistance in the independence movement.\n\nAssignment: Write a short reflection or comparison between subaltern responses in Egypt and another colonized society studied in the course and present to the class.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from All Pacha’s men by Khaled Fahmy",
+            "note": "Reading",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Ordinary Egyptians: Creating the Modern Nation through Popular Culture by Ziad Fahmy",
+            "note": "Reading",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Strikes, Riots and Laughter: Al-Himamiyya Village’s Experience of Egypt’s 1919 Peasant Insurrection by Alia Mossallam",
+            "note": "Reading. The flow's link for this section is recorded here; check it against the source (see notes).",
+            "href": "http://eprints.lse.ac.uk/106501/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Primary Source Analysis: Students examine sources like Egyptian nationalist songs, folk poetry, and oral histories documenting the experiences of everyday Egyptians under colonial rule."
+          },
+          {
+            "kind": "exercise",
+            "description": "Role-Playing Simulation: Students role-play different subaltern groups (e.g., urban workers, rural peasants) reacting to British policies like land confiscations, forced labor, or conscription during World War I."
+          },
+          {
+            "kind": "discussion",
+            "description": "Debrief: Group discussion on the role of subaltern resistance in shaping Egyptian national identity and how subaltern perspectives differ from elite-driven nationalist narratives."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Subalternity in a Global Context",
+        "description": "Topics: Expanding subaltern studies beyond South Asia; subalternity in the Middle East, Africa, and Latin America.\n\nAssignment: Research and prepare a brief on one region outside of South Asia with a focus on subaltern voices.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Story Mapping project where students present on subaltern experiences from different regions; place these stories on a shared map and discuss patterns."
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "The Legacy of Subaltern Studies and Course Reflection",
+        "description": "Topics: Review of subaltern studies’ impact on historiography, including its critiques and evolution.\n\nFinal Assignment: Write a reflection or essay on how subaltern studies has changed their understanding of history, using specific course examples.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Gallery Walk where students showcase the stories, sources, and subaltern histories they’ve researched; conclude with a reflection on how the course has shifted their perspectives on history."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course: Oppressed voices: An Introduction to Subaltern Studies and Hidden Histories (Arabic header: أصوات مقموعة). Instructor: Wafaa ElSaid. CILAS – Winter 2024. On Wednesdays at 5:30 pm. The sessions are offline; they are face-to-face.\n\nCourse Overview (verbatim, first paragraph): Step into a world of history that’s often overshadowed but never silenced. Oppressed or Voices from Below course dives into the lives, struggles, and resistances of those left out of the dominant narratives: the subaltern. This course is your gateway to understanding how marginalized groups across time have shaped societies from the peripheries.\n\nMy teaching approach (verbatim, first sentence): In this course, I will prioritize discussion-based learning to foster an environment where students actively engage with the material and each other’s perspectives.\n\nThe flow gives two identical link addresses on page 5 (http://eprints.lse.ac.uk/106501/). Their material is not named in the flow text; they were attached to the Mossallam reading in Session 6 as the nearest match on that page. Confirm this placement against the source PDF."
+  }
+}

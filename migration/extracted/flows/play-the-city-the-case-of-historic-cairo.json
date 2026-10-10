@@ -1,0 +1,158 @@
+{
+  "sha256": "b5ea1400bcf88c9b0f6820dff92851935be1b9b4a6267a00667ba5536bd5d42a",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "-Introduction to definitions and principles of urban gamification, gamification elements, serious games and its applications\n\n-International case studies for gamification application on historic cities.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Theme 1:Environmental Awarness",
+        "description": "-Focussing on the implications and understanding of environmental Impact on our day to day engagement with public space.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "GAME 1: THE URBAN CLEANER. Clean Games are collection of ecological strategic quests which aims to empower people to see the problems of urban environmental pollution of their historic city through the game. This game is not a substitute for public utilities, this is a means to raise people’s consciousness through the game. When a person picks up a bottle someone had left on the ground he is unlikely to leave trash himself. This will also be a good example for his friends and family members of colleagues who will learn about the Clean Games and the new experience they give from someone they know and trust. The same kind of thing happens when people separate and sort different types of garbage in-game. How it works: Players participate the game in teams from 2 to 4 people.At the game start they get equipment and go to collect garbage. Teams get points for each bag of garbage when they bring it to collection points. At the collection point special «Buyer» evaluates bags according to the game rules. If players remove large accumulations of trash, they can create a mark on the geolocation through our mobile app and get extra points. The result is an interactive onlinemap."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Theme 2: Collective Design",
+        "description": "-Fostering collective creativity to identify challenges in the use of public space and respond to these through citizen engagement.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "GAME 2: THE URBAN CATALYST. The game aims at facilitating a discussion oriented to design feasible, low-cost and replicable solutions to address problems related to the removal of urban obstacles and architectural barriers. The activity is structured as a role-playing game based on use of cards and inspired by Tactical Urbanism approach. Each participant is assigned a character-card to be played which describes the character’s needs and in some cases provides a time constraint to consider for the proposals development. The characters to be interpreted refer to the stakeholders who usually work in our cities with different roles and rules in the design of public space (e.g.architects, municipality technicians, administrators, inhabitants, experts of Architectural Heritage and Landscape, etc.). A set of tool-cards to be used for the development of the final solution is also assigned to every team. Each toolcard has a different cost and timing and in addition, some of them are given empty to invite participants identifying new possible unexplored tools."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Theme 3: Storytelling & Learning",
+        "description": "-Emphasising the possibility of learning from the public space we inhabit and deepening our understanding of the underlying cultural and social complexity and values of these spaces",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "GAME 3: THE URBAN STORY. This is an educational, self-guided game and an indirect participatory design tool that encourages urban Exploration of the neighborhood by having markers distributed in different locations for users to seek and find. Using these markers users are able to unlock chapters of the game and each chapter has a different lesson about the historic city and what it contains."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Theme 4: Decision Making",
+        "description": "-Prioritising the urgency of concerns related to public space and facilitating the actuation of a response to these.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "GAME 3: THE URBAN DECISION MAKER. The goal of the game is to set a sustainable scenario for the historic city of Cairo in which all stakeholders (played by course participants) can participate actively in a future action plan to achieve SDGS of Cairo 2030."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Summarising und discussing the implications of gamification and its various applications on the future of the historic city? will it really help or is it just a new trend?!"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "The gameful city",
+        "note": "Alfrink, K. (2014). In S. P. Walz & S. Detering (Eds.), The gameful world: Approaches, issues, applications (pp. 527–560). London: The Mit Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The hackable city: A research manifesto and design toolkit",
+        "note": "Ampatzidou, C., Bouw, M., van de Klundert, F., de Lange, M., & de Waal, M. (2015). Amsterdam: Amsterdam Creative Industries Publishing.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Play-tactics of the ‘Internationale Situationniste’",
+        "note": "Andreotti, L. (2000, October). 91, 37–58.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Cultural geography and videogames",
+        "note": "Ash, J., & Gallacher, L. A. (2011). Geography Compass, 5(6), 351–368.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Steps to an ecology of mind",
+        "note": "Bateson, G. (1972). Chicago, IL: Chicago University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Why gamification is bullshit",
+        "note": "Bogost, I. (2014). In S. P. Walz & S. Detering (Eds.), The gameful world: Approaches, issues, applications (pp. 65–79). London: The Mit Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Les jeux et les homines",
+        "note": "Caillois, R. (1958). Paris: Gallimard (English edition: Man, play and games. Urbana and Chicago: University of Illinois Press, 2001).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Living labs and vacancy in the neoliberal city",
+        "note": "Cardullo, P., Kitchin, R., & Di Feliciantonio, C. (2018). Cities, 73, 44–50.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The right to infrastructure: A prototype for open source urbanism",
+        "note": "Corsín Jiménez, A. (2014). Environment and Planning D: Society and Space, 32(2), 342–362.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "L’invention du quotidian. Vol. 1: Arts de faire",
+        "note": "De Certeau, M. (1980). Paris: Gallimard (English edition: The practice of everyday life. Berkeley and Los Angeles: University of California Press, 1984).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The playful city: Using play and games to foster citizen participation",
+        "note": "de Lange, M. (2015). In A. Skaržauskienė (Ed.), Social technologies and collective intelligence (pp. 426–434). Vilnius: Mykolas Romeris University.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "From game design elements to gamefulness: Defining ‘gamification’",
+        "note": "Deterding, S., Dixon, D., Khalad, R., & Nacke, L. (2011). In 11th proceedings of the 15th international academic mindtrek conference. Retrieved from http://gamification-research.org/2012/04/defininggamification. Accessed on 31 July, 2017.",
+        "href": "http://gamification-research.org/2012/04/defininggamification"
+      }
+    ],
+    "notes": "PLAY THE CITY! - The case of Historic Cairo. Course introduction, verbatim: Over the last few years, technological developments have allowed new possibilities for fostering civic participation and engagement, as testified by various smart city experiments. In this framework, game elements are diffusely mobilized in order to develop responsible and active citizens with the aim of tackling urban problems. Gamification may be effective in nudging citizens and promoting various forms of participation, but fundamental ethical and political questions have to be addressed. This course develops the argument by interpreting gamification in light of the classic conceptualization of social justice proposed by David Harvey, arguing that participation through gamification could potentially benefits historic Cairo as a designated WHS since 1979.Cairo hosts a variety of historically significant districts and monuments, ranging from the ruins of al-Fustat, the Fatimid nucleus of Medieval Cairo, the citadel and surrounding Mamluk palaces, to its urban domestic architecture, mausoleums, bazaars, its Nilometre and other inventions related to human use and mastery of the River Nile.\n\nPLAY THE CITY! Has the objective of promoting innovative and creative ideas for the co-design of inclusive, cohesive, and sustainable public spaces within the old city, through the use of serious games .Participation of citizens in the design of the public space is recognized as fundamental to build inclusive, cohesive and sustainable public space. Games have been proposed since the 1960s as means to facilitate participatory processes by enabling cooperative environments to shape and support citizens’ interaction. The change led by Information and Communication technologies opens the debate on how advanced technologies, from Board /card games, video games to Virtual and Augmented Reality can help to open the process of co-creation to new audiences, enhancing citizen participation, both with respect to the design and space usage.\n\nPLAY THE CITY! Course is articulated into 4 main Themed urban serious games targeted at exploring the process of development and use of innovative ideas and games for public space co-design within the historic city. All participants are invited to contribute their own experience and research – it will be interesting to compare cases from old Cairo to similar situations in other parts of the world. Our aim here is to create an environment where students want to contribute to not only help solidify what they’ve learnt, but also to help others out with a new vision for the old city and re-experience it in a manner that they might not have experience before.\n\nWeek 6 (no title): Summarising und discussing the implications of gamification and its various applications on the future of the historic city? will it really help or is it just a new trend?! The Selected Bibliography is course-wide and is recorded under bibliography."
+  }
+}

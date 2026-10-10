@@ -1,0 +1,531 @@
+{
+  "sha256": "53a4dc2bd1c418e50911403b23f5527f4e51a92833134ff4ad27a0cac00f49a6",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Legacies of al-Andalus - On porosity in a frontier society",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reconquest Colonialism and Andalusi Narrative Practice in the “Conde Lucanor”",
+            "note": "Wacks, D. (2006). The John Hopkins University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Formations of Colonialist Discourse",
+            "note": "Shohat and Stam ( ). From Unthinking Eurocentrism.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Border thinking and Vulnerability as a Knowing Otherwise in E-International Relations",
+            "note": "Icaza, R. (2017). Accessible here.",
+            "href": "https://www.e-ir.info/2017/06/09/border-thinking-and-vulnerability-as-a-knowing-otherwise/"
+          },
+          {
+            "type": "listen",
+            "title": "Episode 5: Legacies of al-Andalus",
+            "note": "Ottoman History Podcast. Accessible here.",
+            "href": "https://www.ottomanhistorypodcast.com/2020/11/andalus.html"
+          },
+          {
+            "type": "other",
+            "title": "Caspar Vopel’s map of the \"Amerasian continent",
+            "note": "Looking at the map.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Transatlantic fetishes from Conquest to Present - The Curious Case of Yerba Mate",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Yerba Mate Myths, Markets, and Meanings from Conquest to Present",
+            "note": "Folch, C. (2010). Cambridge University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Mate” tea a long-time Lebanese hit",
+            "note": "Hussein, S. (2018). Accessible here.",
+            "href": "https://yourmiddleeast.com/2014/03/11/mate-tea-a-long-time-lebanese-hit/"
+          },
+          {
+            "type": "reading",
+            "title": "مكونات شراب المتة السوري",
+            "note": "نورا شيشاني (٢٠١٩). من هنا.",
+            "href": "https://mawdoo3.com/%D9%85%D9%83%D9%88%D9%86%D8%A7%D8%AA_%D8%B4%D8%B1%D8%A7%D8%A8_%D8%A7%D9%84%D9%85%D8%AA%D8%A9_%D8%A7%D9%84%D8%B3%D9%88%D8%B1%D9%8A"
+          },
+          {
+            "type": "reading",
+            "title": "متة من علي ويكيبيديا من هنا",
+            "note": null,
+            "href": "https://ar.wikipedia.org/wiki/%D9%85%D8%AA%D8%A9"
+          },
+          {
+            "type": "watch",
+            "title": "Yerba mate in Lebanon and Syria",
+            "note": "Matero. Accessible here.",
+            "href": "https://yerbamatero.com/blogs/history/history-traditions-yerba-mate-lebanon-syria"
+          },
+          {
+            "type": "watch",
+            "title": "Four cultural origins of Yerba Mate",
+            "note": "TeaPro. Accessible here.",
+            "href": "https://teapro.co.uk/cultural-origins-of-yerba-mate/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Borderlands/La Frontera - Architecture of occupation/separation and slow/state violence",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Borderlands/La Frontera",
+            "note": "Anzaldua, G. (1987). Aunt Lute Books. Selected passages.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Physical and Mental Walls of Israel and the United States over Palestine and Mexico – Build Resistance Not Walls.",
+            "note": "Conde, G. Accessible here.",
+            "href": "https://book.stopthewall.org/the-physical-and-mental-walls-of-israel-and-the-united-states-over-palestine-and-mexico/."
+          },
+          {
+            "type": "reading",
+            "title": "Of Borders and Limits - Comparative Indigeneity in Mexico and Palestine",
+            "note": "Eqeiq, A. (2018). Jadaliyya.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Forensics Helps Widen Architecture’s Mission",
+            "note": "Optional reading. Kimmelman, M. (2018). New York Times. Accessible here.",
+            "href": "https://www.nytimes.com/2018/04/06/arts/design/forensic-architecture-human-rights.html"
+          },
+          {
+            "type": "reading",
+            "title": "Trajectories of Travel: Augusto Boal’s Liberatory Theatre Practice in Palestine",
+            "note": "Optional reading. Jawad, R. (2018). Jadaliyya.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "What is a Wall? And Other Questions. Discussion Forum: Forensic Architecture, and Walking through Walls.",
+            "note": "Accessible here.",
+            "href": "https://whatisawall.home.blog/2019/08/06/discussion-forum-forensic-architecture-and-walking-through-walls/"
+          },
+          {
+            "type": "watch",
+            "title": "A World Not Ours",
+            "note": "Mahdi Fleifel",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Presentation linked in the Week 3 viewing",
+            "note": "Google Slides link given in the flow; its underlying title is not shown in the text.",
+            "href": "https://docs.google.com/presentation/d/1acpHMIkqtcjAhp6WHA76cBspjYZ9Nx66M2xSGgZfIYE/edit#slide=id.gddff85ee90_0_0"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Handala meets Mafalda - A comical encounter of visionaries",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mafalda - A Social and Political History of Latin America’s Global Comic",
+            "note": "Cosse, I. (2019). Duke University Press. Selected passages.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Naji Al Ali - An Artist with Vision",
+            "note": "Accessible here.",
+            "href": "https://www.youtube.com/watch?v=Y31yUi4WVsU"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "La negra meets الست - Two pan-regional voices",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Voice of Egypt - Umm Kalthum, Arabic Song, and Egyptian Society in the 20th Century",
+            "note": "Danielson, V. (1997). University of Chicago Press. Selected passages.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Umm Kulthum",
+            "note": "Lohmann, L. (2010).",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Mercedes Sosa - The Voice of Latin America (2013)",
+            "note": "Concerts",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Rhythm, Agriculture and Poetry - and Masculinities",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Los raperos agricultores de la Comuna 13 en Medellín",
+            "note": "Rendon, C. Vice. Accessible here.",
+            "href": "https://www.vice.com/es/article/yv8zx7/medellin-comuna-13-raperos-hip-hop-aka-agroarte"
+          },
+          {
+            "type": "reading",
+            "title": "Peace, plants and hip-hop in Colombia",
+            "note": "Wecker, K. (2017). Accessible here.",
+            "href": "https://www.dw.com/en/peace-plants-and-hip-hop-in-colombia/a-38220170"
+          },
+          {
+            "type": "reading",
+            "title": "“There was Something Inside of me I Needed to Let Out”: Occupied Masculinities, Emotional Expression and Rap Music in a Palestinian Refugee Camp",
+            "note": "Skinner, C. (2021). Men and Masculinities XX(X).",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Hip Hop Agrario",
+            "note": "Two-part documentary in Spanish. Accessible here.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "AgroArte YouTube Channel",
+            "note": "Accessible here.",
+            "href": "https://www.youtube.com/user/TheAKAELITE"
+          },
+          {
+            "type": "watch",
+            "title": "Shabjdeed | Interview - شب جديد | المقابلة",
+            "note": "Ma3azef. Accessible here.",
+            "href": "https://www.youtube.com/watch?v=tvqRlsmFHwY"
+          },
+          {
+            "type": "reading",
+            "title": "Colombia city combines gardening and hip-hop to revive community",
+            "note": "Global Voices. Linked in the Week 7 readings; underlying title not shown in the text.",
+            "href": "https://globalvoices.org/2016/06/01/colombia-city-combines-gardening-and-hip-hop-to-revive-community/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "watch",
+        "title": "The Voice of a Condor",
+        "note": "Al Attar, Heba. 2014. 45 minutes. Documentary about the Christian Palestinian diaspora in Chile.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "5 Broken Cameras",
+        "note": "Burnat, Emad. 2012. 1h34.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Los rubios",
+        "note": "Carri, Albertina. 2003. About Argentinian filmmaker Carri’s search for her disappeared parents, or some image or memory of them.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Vanishing Landscape",
+        "note": "Shehadeh, Raja. 2009. Shehadeh reads an excerpt from his book Palestinian Walks: Notes on a Vanishing Landscape, accompanied by photographs (~10 minutes).",
+        "href": "https://www.youtube.com/watch?v=RB2m1m-yAwo"
+      },
+      {
+        "type": "watch",
+        "title": "Mercedes Sosa: The Voice of Latin America",
+        "note": "Vila, Rodrigo. 2013. 1h 33m.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Memorias del subdesarrollo",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Naji al-Ali",
+        "note": null,
+        "href": "https://www.youtube.com/watch?v=Y31yUi4WVsU"
+      },
+      {
+        "type": "reading",
+        "title": "Canasta de Poetas Mexicanos Para La Revolución Palestina",
+        "note": "Rohana, Shadi. Periódico de Poesía. Accessed May 31, 2021. [open access]. From the 1981 issue of Darwish’s literary magazine el-Karmel, with introductory notes translated from Arabic to Spanish by Shadi Rohana [may be able to get scans of el-Karmel to see the Arabic; can look for English translations of the poems].",
+        "href": "https://www.academia.edu/35598982/Canasta_de_poetas_mexicanos_para_la_Revoluci%C3%B3n_palestina"
+      },
+      {
+        "type": "reading",
+        "title": "Mahfud Massis",
+        "note": "Chilean-Palestinian poet, writes in Spanish. Has some interesting poems about his double exile, first from Palestine and then from Chile.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Mahmoud Darwish",
+        "note": "Animation of the Dice Player.",
+        "href": "https://www.youtube.com/watch?v=aehlMo644ZU"
+      },
+      {
+        "type": "watch",
+        "title": "Mar de dolor",
+        "note": "Raul Zurita.",
+        "href": "https://www.youtube.com/watch?v=5exqFdUosYI"
+      },
+      {
+        "type": "reading",
+        "title": "Humberto Padilla",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Laura Yasan",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Jorgenrique Adoum",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Clarice Lispector",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Shab Jdeed",
+        "note": "Music",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Daboor",
+        "note": "Music",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "DAM",
+        "note": "Music",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Shadia Mansour",
+        "note": "Music",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Calle 13",
+        "note": "Music",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Ana Tijoux",
+        "note": "Music",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Mafalda and Handala",
+        "note": "Art",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Julio Cortazar",
+        "note": "Short story",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Joao Guimaraes Rosa - The Third Bank of the River",
+        "note": "Short story",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Borges",
+        "note": "Short story",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Ghassan Kanafani",
+        "note": "Short story",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Touch?",
+        "note": "Adania Shibli. Excerpt.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Microcuentos (el dinosaurio, el emigrante…)",
+        "note": "Short stories",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Jesus Diaz - el pianista arabe",
+        "note": "Short story",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Borderlands: The New Mestiza / La Frontera",
+        "note": "Anzaldua, Gloria. 1987.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Volverse Palestina ; seguido de, Volvernos otros",
+        "note": "Meruane, Lina. Primera edición. Santiago de Chile: Literatura Random House, 2014. Also available in Shadi Rohana’s Arabic translation from Kotob Khan. Second-generation Chilean-Palestinian writer’s account of her trip to her father’s childhood home in Palestine.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Cuban Counterpoint: Tobacco and Sugar",
+        "note": "Ortis, Fernando. 1940; tr. 1995.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Palestinian Walks: Notes on a Vanishing Landscape",
+        "note": "Shehadeh, Raja. London: Profile, 2007. Requested from library.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hollow Land: Israel’s Architecture of Occupation",
+        "note": "Weizman, Eyal. London ; New York: Verso, 2007. Requested from library.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Puerto Rican Decolonization, Armed Struggle and the Question of Palestine",
+        "note": "Awartani, Sara. MERIP. April 22, 2018. [open access]",
+        "href": "http://merip.org/2018/04/puerto-rican-decolonization-armed-struggle-and-the-question-of-palestine/"
+      },
+      {
+        "type": "reading",
+        "title": "Citizens from Afar: Palestinian Migrants and the New World Order, 1920–1930",
+        "note": "Bawalsa, Nadim. Handbook of the History of the Middle East Mandates, ed. Schayegh, Cyrus, and Andrew Arsan. Routledge, 2015. [PDF uploaded]",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Physical and Mental Walls of Israel and the United States over Palestine and Mexico – Build Resistance Not Walls.",
+        "note": "Conde, Gilberto. Accessed May 31, 2021. [open access]",
+        "href": "https://book.stopthewall.org/the-physical-and-mental-walls-of-israel-and-the-united-states-over-palestine-and-mexico/"
+      },
+      {
+        "type": "reading",
+        "title": "Israel, Guatemala, and the Agricultural Roots of an Authoritarian Internationalism.",
+        "note": "Cutipa-Zorn, Gavriel. Cultural Dynamics 31, no. 4 (2019): 350–64. [PDF uploaded]",
+        "href": "https://doi.org/10.1177/0921374019860941"
+      },
+      {
+        "type": "reading",
+        "title": "From Palestine to Mexico (and Back): Reflections of a Literary Scholar.",
+        "note": "Eqeiq, Amal. Contemporary Levant 2, no. 1 (January 2, 2017): 61–66. [PDF uploaded]",
+        "href": "https://doi.org/10.1080/20581831.2017.1322301"
+      },
+      {
+        "type": "reading",
+        "title": "Of Borders and Limits",
+        "note": "Jadaliyya. Comparative indigenous studies; see Eqeiq, Amal (2018) above.",
+        "href": "https://www.jadaliyya.com/Details/37898"
+      },
+      {
+        "type": "reading",
+        "title": "Israel’s Environmental Colonialism and Ecoapartheid",
+        "note": "Lorber, Ben. Socialist Project: The Bullet. June 15, 2018. [open access]",
+        "href": "https://socialistproject.ca/2018/06/israels-environmental-colonialism-and-ecoapartheid/"
+      },
+      {
+        "type": "reading",
+        "title": "Julio Cortázar Entrevistado Por La Revolución Palestina",
+        "note": "Rohana, Shadi. Badebec. Accessed May 31, 2021. [open access]. Interview between Ikram Antaki and Julio Cortazar, originally published in Arabic in the 1981 issue of el-Karmel, here translated into Spanish by Rohana.",
+        "href": "https://www.academia.edu/35598960/Julio_Cort%C3%A1zar_entrevistado_por_la_Revoluci%C3%B3n_Palestina"
+      },
+      {
+        "type": "reading",
+        "title": "Una Entrevista Peregrina",
+        "note": "Same author as the previous entry (Rohana, Shadi). Al Zeytun, Buenos Aires. Accessed May 31, 2021. Interview between Ikram Antaki and Gabriel Garcia Marquez, originally published in Arabi in the 1981 issue of el-Karmel, here translated and introduced in Spanish by Rohana.",
+        "href": "https://www.academia.edu/35861483/Una_entrevista_peregrina"
+      },
+      {
+        "type": "reading",
+        "title": "Concrete and Livability in Occupied Palestine",
+        "note": "Rubaii, Kali. Engagement (blog), September 20, 2016. [open access]. An article about space, materiality, environment, coloniality, and intraspecies living in the village of Al-Aqaba.",
+        "href": "https://aesengagement.wordpress.com/2016/09/20/concrete-and-livability-in-occupied-palestine/"
+      },
+      {
+        "type": "reading",
+        "title": "Puerto Rican Decolonization, Armed Struggle and the Question of Palestine (link as printed in the flow, cut off)",
+        "note": "Awartani, Sara. MERIP. April 22, 2018. The flow shows this second address with the text cut off after \"the-question-\".",
+        "href": "http://merip.org/2018/04/puerto-rican-decolonization-armed-struggle-and-the-question-"
+      }
+    ],
+    "notes": "Course title: Soy pan, soy paz, soy más - انا خبز انا سالم انا ما بعد\n\nInvitation: “I had to come all the way to Mexico to rediscover Palestine,” writes literary scholar Amal Eqeiq about her visit to the Mayan village of Chamula. The visible and invisible borders that separated ethnic populations, and the uneven infrastructure and resources on each side, created for her a “dramatic déjà-vu of internal colonialism” that brought her back to her native Palestine. What might we rediscover, notice, or see differently, when looking across the Atlantic from the Arab World to Latin America, and back? What contours, constellations and legacies can we trace between parts of the world infrequently considered side by side?\n\nTransregional and translocal alliances (especially in the form of South/South dialogue) that span the Atlantic are providing impetus for collective political strategies once again. This course proposes to engage in cross-regional analysis through various texts, films, modes of inquiry and pedagogical approaches. We will begin from the specificity of the Iberian peninsula and the year 1492 marking the year of the (Re-)conquista which will provide the impetus for our cross-disciplinary exploration of a series of interrelated historical processes.\n\nThe course highlights the cross-Atlantic historical, discursive, cultural and material resonances between Latin America and the Arab world as well as the anxieties that these resonances provoke. We will engage in border thinking to probe the porosity of al-Andalous; trace the transatlantic trajectory of Yerba Mate and interrogate the architecture of occupation/separation in Mexico and Palestine. We will then turn our attention to the ‘Latin East Initiative’, an exploration of comparative indigeneity and liberatory artistic praxis in shared forms of theatre, cartoon, (rap) music and film.\n\nFlow notes: the flow has no Week 5 heading (weeks 1-4, 6-8 are numbered). Week 8 has no topic or materials of its own; its heading is followed only by the course-wide 'Further references' list, which is in the bibliography. Some entries say 'Accessible here' without a URL in the flow, so their href is null. Article abstracts in the references list were omitted.\n\nDraft comment left inside Week 2 (not treated as session content): \"Ya Phoebe I’ve been thinking about including something on sugar, sweetness and desire here. I’m thinking of this fabulous book by Sidney Mintz called Sweetness and Power. We could also read his Foreword to the Oxford Companion to Sugar and Sweets. Find both in the folder.\" and \"On a side note I’ve been wanting to teach a thematic course on ‘coffee or tea?’ (in the tone and way offered on Egypt Air flights). The subtitle of the course will be ‘سكرك قد ايه ؟’I will tell you more about the course over tea :)\""
+  }
+}

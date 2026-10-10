@@ -1,0 +1,172 @@
+{
+  "sha256": "6071b8f899aa1e6996d8d297854814d2a04f0a929503d7ed46464d524a88189a",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Hierarchy, Manners, and Social Order",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Manners, Deference, and Private Property: Or, Elements for a General Theory of Hierarchy.”",
+            "note": "Graeber, David. In Possibilities: Essays on Hierarchy, Rebellion and Desire. Oakland: AK Press, pp. 16–55.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Class: Economy, Status, and Power",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Communist Manifesto",
+            "note": "Marx, Karl, and Friedrich Engels. (selected sections)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Class, Status, Party.”",
+            "note": "Weber, Max. In From Max Weber: Essays in Sociology, pp. 180–195.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Culture, Taste, and Capital",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Distinction",
+            "note": "Bourdieu, Pierre. (Introduction)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“The Forms of Capital.”",
+            "note": "Bourdieu, Pierre.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Work, Value, and Precarity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“What Is a Bullshit Job?”",
+            "note": "Graeber, David.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Between God and the State: Cosmology, Class and Precarity on the Margins of an Egyptian Steel Town”",
+            "note": "Makram-Ebeid, Dina. (forthcoming)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Performing the Self / Identity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Presentation of Self in Everyday Life",
+            "note": "Goffman, Erving. (selections)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beer in the Snooker Club",
+            "note": "Ghali, Waguih. (selected excerpts)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Introduction: Who Needs ‘Identity’?”",
+            "note": "Hall, Stuart. 1996. In Questions of Cultural Identity, edited by Stuart Hall and Paul du Gay, 1–17. London: Sage.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Locality, Nation, and Elite Belonging",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“The Production of Locality.”",
+            "note": "Appadurai, Arjun.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Class and Nation: International Education and the Dilemmas of Elite Belonging in Contemporary Egypt",
+            "note": "Roshdy, Noha. (selected chapters)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Colonialism, Race, and the Struggle for Selfhood",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Black Skin, White Masks",
+            "note": "Fanon, Frantz. (selections)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Wretched of the Earth",
+            "note": "Fanon, Frantz. (selections)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Final Presentations",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Participant presentations and collective reflection."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Arabic line at the top of the flow (verbatim): انا بنت مين يا داده\n\nFlow header: Who Are “We”? Class, Identity, and the Struggle of Belonging. Wednesday at 6-8:30 pm.\n\nCourse description (verbatim): This course is a workshop-style seminar where participants come together to think collectively about social class and identity from an anthropological perspective. Rather than focusing only on abstract theory, the course connects key ideas to everyday life and to the social and political challenges of the present.\n\nWe begin by exploring how social class has been understood in the social sciences, drawing on foundational approaches that link class to economic conditions, social status, and culture. These perspectives help us ask critical questions about how value, work, and social hierarchies are created and sustained. At the same time, the course examines the limits of these approaches and considers why they often fall short of capturing the complexity of class today.\n\nFrom there, the course turns to identity as a broader framework within which social class operates. Identity shapes how people understand themselves, how they draw boundaries between “us” and “others,” and how they experience belonging across different social spaces. Examining class and identity together highlights how deeply intertwined they are, and why neither can be fully understood in isolation.\n\nThe discussion then expands to questions of colonialism, power, and representation, exploring how these forces have shaped ideas of class and identity over time. We examine how societies have been represented through unequal power relations, and how communities living under domination have struggled to redefine themselves and reclaim their sense of self. These histories help explain why questions of identity and belonging remain so contested today.\n\nAlongside theoretical discussions, the course incorporates ethnographic studies that bring these ideas into conversation with lived realities. With particular attention to research from Egypt, we explore how class, identity, gender, and power intersect in everyday life, often in ways that challenge fixed or simplified categories.\n\nThroughout the course, dialogue and shared exploration are central. Participants are encouraged to bring their own experiences and observations into the discussion, connecting course materials to the social world around them. By the end of the course, the aim is not only to understand social class and identity as analytical concepts, but to reflect on them as lived realities that shape who we are and the communities to which we belong.\n\nInstructor bio (verbatim): Ghosoun Ismail holds a Master’s degree in Independent School Leadership from Teachers College, Columbia University, and a Master’s degree in Sociology and Anthropology from the American University in Cairo. She has extensive experience as an researcher and educator. Her work focuses on education systems, social inequality, and the relationship between schooling, class, and belonging in Egypt. She has led and managed multiple education initiatives, authored policy reports, and designed learning programs that bridge theory, practice, and lived experience."
+  }
+}

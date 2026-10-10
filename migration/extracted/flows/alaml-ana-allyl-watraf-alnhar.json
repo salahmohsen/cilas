@@ -1,0 +1,263 @@
+{
+  "sha256": "65673d6c10fb717bd01499052307bd4f55af67199552629fac225b291e49d6ec",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "تقديم عمرو عبدالرحمن لترجمته لنص أنطونيو نيجرى \"في امكانية أن يصير المرء شيوعيا اليوم\"",
+            "note": "موقع بالأحمر",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Soul at Work By Franco Bifo Berardi (Intro.+1st Chapter)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الرأسمالية تجدد نفسها –فؤاد مرسي (الباب الأول) –سلسلة عالم المعرفة",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم (زمن حاتم زهران) اخراج محمد النجار عام 1987",
+            "note": "المشاهدة القبلية",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Immaterial Labor by Maurizio Lazzarato",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Social Brain and its Missing Body: Work in the Age of Semio-capital By Nina Power",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "New Product by Harun Farocki 2012",
+            "note": "مترجم الى العربية",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "أجور مقابل الأعمال المنزلية –سيلفيا فيدريتشي –مترجم الى العربية (ويكي جندر)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Jeanne Dielman, 23 quai du Commerce, 1080 Bruxelles",
+            "note": "by Chantal Akerman 1975",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "النقطة العمياء عند ماركس –أنيا مولينبيلت–مترجم الى العربية (الجمهورية.نت)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم الأحلام الممكنة اخراج عطيات الأبنودي 1983",
+            "note": "المشاهدة القبلية",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم استقالة عالمة ذرة اخراج ابراهيم الشنقيري 1980",
+            "note": "المشاهدة القبلية",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Proletarian Nights by Jacques Ranciere (Intro.)",
+            "note": "2012 edition",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Proletarian and His Double, Or,",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Staging The “ The Unknown Philosopher by Jacques Ranciere (Chapter 1 from Verso Books)“ People",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الليل ..زمن الخفاء والظلال-ميكائيل فوسيل -مترجم الى العربية (موقع جريدة الحياة)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم بحري اخراج أحمد غنيمي 2011",
+            "note": "المشاهدة القبلية",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم جزر اخراج محمد صلاح 2006",
+            "note": "المشاهدة القبلية",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم السيد البلطي اخراج توفيق صالح 1967",
+            "note": "المشاهدة القبلية",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "الإستلاب –فالح عبدالجبار–دار الفارابي",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم \"مايوه لبنت الأسطى محمود\"",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Office space film",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "مقطع من رواية \"الرحلة \"لفكري الخولي وفصل المصنع من \"رباعية أيام الطفولة\" لإبراهيم عبد الحليم.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلمان من الاربعينيات \"الورشة\" و\"ابن الحداد\"",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Industrial sexualities BY HananHammad",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "\"صناعة الإنسان المدين\" لموررزيو لازاراتو",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Wolf of wall street film",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Affective labor by Michael Hardt",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "فيلم السادة الرجال اخراج رأفت الميهي 1987",
+            "note": "المشاهدة القبلية",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "مناقشة ختامية \"ماذا بعد ؟\""
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "مساق نوعي لعلى العدوى لمدة 8 أسابيع\n\nالحلقة جزء من مشروع بحثي فني بعنوان \"صور العمل\" يهدف إلى دراسة صور وتمثيلات العمل في أرشيفات السينما والممارسات الفنية والأعمال الدرامية والأدبية ذات الصلة في مصر منذ ثلاثينيات القرن الماضي وحتى الآن، عبر التفكير في سياقات أخرى وفي ضوء نظريات ومفاهيم العمل المختلفة بغرض تطوير وعي وقراءة نقدية لتاريخ السينما والفن الحديث والمعاصر من منظور العمل.\n\nلغة النقاش والتواصل: العربية\nلغة القراءات والأفلام: الإنجليزية والعربية — تحتاج الى دراية جيدة باللغة الإنجليزية\n\nالجدول المقترح للقاءات(لمشاركته مع من سيقوموا بالتسجيل) :- سنقرأ القراءات المقترحة ونشاهد المشاهدات القبلية قبل مواعيد اللقاءات الأسبوعية."
+  }
+}

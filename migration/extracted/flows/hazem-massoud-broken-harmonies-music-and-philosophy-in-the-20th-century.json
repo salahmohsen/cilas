@@ -1,0 +1,387 @@
+{
+  "sha256": "c1efd174efb94c55c383000afea3b293f30af80631e29c2651721ad3245f74c3",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "What is Philosophy?\nWhat is Music?\nWhat are we going to do here? And how?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Doing Philosophy",
+            "note": "Alessandra Tanesini. In Giuseppina D’Oro and Søren Overgaard (eds.), The Cambridge Companion to Philosophical Methodology. Pp. 13-31.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Definition",
+            "note": "Andrew Kania. In Theodore Gracyk and Andrew Kania (eds.), The Routledge Companion to Philosophy and Music. Pp. 3-13.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "What is Harmony?",
+        "description": "The works of Andrew Bowie\nMusic and Philosophy\nRomanticism: A precursor to Existentialism",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Aesthetics and Subjectivity: From Kant to Nietzsche",
+            "note": "Andrew Bowie. Introduction pp. 1-15.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Music, Philosophy and Modernity",
+            "note": "Andrew Bowie. Introduction pp. 1-14.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rhythm, melody, and harmony",
+            "note": "Roger Scruton. In the Routledge Companion to Philosophy and Music. Pp. 24-37.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "What is a break?",
+        "description": "The works of Reiner Schurmann\nFrom Principles to An-Arche\nHegemonies and Harmonies: How can we approach our topic?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Broken Hegemonies",
+            "note": "Reiner Schurmann. General Introduction. Pp. 3-48.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "20th Century in Philosophy and Music",
+        "description": "Existentialism and Jazz\nMiles Davis and Melodic Interpretations\nHeidegger and the State of Hermeneutics",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Jazz",
+            "note": "Lee B. Brown. In The Routledge Companion to Philosophy and Music. Pp. 426-436.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction to Hermeneutics and Philosophy",
+            "note": "Jeff Malpas. In Jeff Malpas and Hans-Helmuth Gander (eds.), The Routledge Companion to Hermeneutics. Pp. 1-9.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Philosophy of Existence I: Heidegger",
+            "note": "Jacques Taminiaux. In Richard Kearney (ed.), Routledge History of Philosophy, Vol. VIII: Twentieth Century Continental Philosophy. Pp. 32-60.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Breaking with Tonality",
+        "description": "Critical Theory and Schoenberg\nAdorno’s Dialectics\nPopular Music vs. Classical Music",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy and Modernity",
+            "note": "Andrew Bowie. Chapter 9. Pp. 309-375.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Atonal Music of Arnold Schoenberg 1908 - 1923",
+            "note": "Bryan R. Simms. Pp. 3-6.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Theory of Harmony",
+            "note": "Arnold Schoenberg. Introduction. Pp. 7-12.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Content and Form",
+        "description": "More on Popular Music\nThe debate on Content and Form in Music\nAn Open discussion on Music and Philosophy outside the West",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Temporalized Invariance: Lukacs and the Work of Form",
+            "note": "Yoon Sun lee. In Timothy Bewes and Timothy Hall (eds.), Georg Lukacs: The Fundamental Dissonance of Existence: Aesthetics, Politics, Literature. Pp. 17-35.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Problem of Difference: Phenomenology and Poststructuralism",
+            "note": "Jeffrey A. Bell. Introduction. Pp. 3-14.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Exploring African Music",
+            "note": "Ruth M. Stone. In Ruth M. Stone (ed.), The Garland Handbook of African Music.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "An Open discussion on Music and Philosophy outside the West"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Attuned to the World",
+        "description": "Tuning Systems and the Problem of Harmony\nMelodies and Interpretation\nDissonance and Consonance",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Broken Hegemonies",
+            "note": "Reiner Schurmann. Pp. 529-552.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Landing on the Wrong Note: Jazz, Dissonance, and Critical Practice",
+            "note": "Ajay Heble. Introduction. Pp. 1-28.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Rhythms of Progress/Rhythms of Thought",
+        "description": "Metaphysics and its Critique\nRhythmic Patterns of Modernity: An Open Discussion\nNotes on Film Scores in the 1960s",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy and Modernity",
+            "note": "Andrew Bowie. Chapter 6. Pp. 166-209.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Rhythmic Patterns of Modernity: An Open Discussion"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "Out of Joint",
+        "description": "Coleman’s Free Jazz\nThe Ontology of Remnants\nQuick Notes on Psychedelia and Progressive Rock",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Remains of Being: Hermeneutic Ontology after Metaphysics",
+            "note": "Santiago Zabala. Introduction. Pp. 1-24.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Why Only Art Can Save Us: Aesthetics and the Absence of Emergency",
+            "note": "Santiago Zabala. Pp. 113-126.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Landing on the Wrong Note",
+            "note": "Ajay Heble. Chapter 1. Pp. 29-62.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "A Revolution in Sound",
+        "description": "What’s Progressive about Progressive Rock?\nBeing and Improvisation\nLate 1960s’ Revival of Romanticism",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Beyond and Before: Progressive Rock since the 1960s",
+            "note": "Paul Hegarty and Martin Halliwell. Chapter 5. Pp. 85-104.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tomorrow the Manifold: Essays on Foucault, Anarchy, and the Singularization to Come",
+            "note": "Reiner Schurmann. Pp. 55-76.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Heterotopias of Sound",
+        "description": "Quick Notes on Ambience\nStation to Station: David Bowie and the Tragic\nDissonant Futures: From Genealogy to Freedom",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Aesthetics and Subjectivity",
+            "note": "Andrew Bowie. Chapter 8. Pp. 275-311.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Different Spaces",
+            "note": "Michel Foucault. In Essential Works of Michel Foucault, 1954 - 1984. Vol. II: Aesthetics, Method, and Epistemology. Pp. 175-185.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bowie",
+            "note": "Simon Critchley.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Presentations and Open Discussion",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Presentations and Open Discussion."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "listen",
+        "title": "Free Jazz: A Collective Improvisation",
+        "note": "Ornette Coleman (1961). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Kind of Blue",
+        "note": "Miles Davis (1959). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "In the Court of the Crimson King",
+        "note": "King Crimson (1969). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "The Firebird Suite",
+        "note": "Igor Stravinsky. Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "The Rite of Spring",
+        "note": "Igor Stravinsky. Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Tales from Topographic Oceans",
+        "note": "Yes (1973). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Revolver",
+        "note": "The Beatles (1966). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Disorder",
+        "note": "Mario Nascimbene (1962). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Station to Station",
+        "note": "David Bowie (1976). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Heroes",
+        "note": "David Bowie (1977). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "3rd Symphony",
+        "note": "Henryk Gorecki. Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Spiegel im Spiegel",
+        "note": "Arvo Part. Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "My Favorite Things",
+        "note": "John Coltrane (1961). Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "5th Symphony Finale",
+        "note": "Dmitri Shostakovich. Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "7th Symphony, 4th movement",
+        "note": "Dmitri Shostakovich. Listening throughout the course.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Five Piano Pieces",
+        "note": "Arnold Schoenberg. Listening throughout the course.",
+        "href": null
+      }
+    ],
+    "notes": "Broken Harmonies: Music and Philosophy in the 20th Century. By: Hazem Massoud.\n\nCourse Teaser: How does music and philosophy relate to each other? And what does this relation might mean for us in everyday life? Even if it means something, isn’t reading music through philosophy like philosophizing about art and that’s it? What if we tried to read philosophy through music? In this course, we will engage critically in learning about philosophical transformations in the 20th century through music and its transformations at the same era and its relation to our state of being where we need to get attuned to its sound.\n\nCourse Description: The course attempts to account for the transformations that occurred in philosophy and music in the 20th century which signaled the disintegration of the metaphysical foundations of modernity both in thought and praxis. The philosophical turn in the 20th century which can be labeled as an “interpretative turn” has posed the questioning of, deconstruction and weakening metaphysical foundations of the philosophical tradition as the task of thinking. This took place through numerous schools of thought and trajectories; from critical phenomenology, to genealogy and poststructuralism, and from Frankfurt School’s critical theory to postcolonial studies, even to performance studies, where the universality of a unified principle that used to guide philosophy has been replaced with a multiplicity that ushered a post-foundational era. For music it was no less different, the rise atonal music, jazz, electronic music and the exposure to world music outside the west all helped in decentring the western perception on music and harmony as the guiding principle and opened up new possibilities both for our perception of things and for the new configurations between things, actions and sounds. Building upon the works of Andrew Bowie and Reiner Schurmann who will provide the framework for our course, we will embark on a journey through these transformations while critically engaging with readings in our attempt to read these transformations in philosophy through music.\n\nAudio: Throughout the course we would be listening to various pieces of music and along the way we will listen to more in class, some even might pop up in a discussion we have, but mainly we would listen to the following:\n\nPersonal Bio: I graduated with a Bsc. in Political Science from the Faculty of Economics and Political Science, Cairo University, in 2015, and hold an MA in Political Philosophy from Pompeu Fabra University in Spain. I’m currently working on my PhD thesis in Humanities at Pompeu Fabra University which focuses on the political ontology of Maurice Merleau-Ponty. My research interests include phenomenology, hermeneutics, ontology, film theory, political philosophy, psychology, and music theory. Aside from academia, I’m interested in different aspects of photography and filmmaking - having worked from time to time on independent small-scale film projects- and a self-taught musician.\n\nCourse Image: Pablo Picasso - Three Musicians (1921)."
+  }
+}

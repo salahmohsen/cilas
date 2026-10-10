@@ -1,0 +1,408 @@
+{
+  "sha256": "ff3be2a217e0ac53858b1a1c6fc2052fd6a801a9d777af5111f336de317aab11",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Moving Targets and Political Judgements",
+        "note": "Carver, T. (2009), in J. Pugh (ed.) What is Radical politics Today?, Basingstoke, Palgrave Macmillan.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Radicalism Handbook",
+        "note": "Button, J. (1995). Continuum.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "When Hope is Subversive",
+        "note": "Giroux, H. (2004). Tikkun, Vol. 19, No. 6. Retrieved here.",
+        "href": "http://www.henryagiroux.com/online_articles/Tikkun%20piece.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "Radicalism: A Philosophical Study",
+        "note": "McLaughlin, P. (2012). Palgrave Macmillan.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Pedagogy of the Oppressed, Chapter Two (pp. 52-67)",
+        "note": "Freire, P (1972). Penguin.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Students as Critical Citizens/Educated Subjects but Not as Commodities/Tested Objects",
+        "note": "Saltman, K. and Means, A. J. (2015). Chapter 35, pp. 284-291 in The SAGE Guide to Curriculum in Education, edited by Ming Fang He, Brian D. Schultz & W. Schubert.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Freire and Education",
+        "note": "Darder, A. (2014). London: Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "We Make the Road By Walking",
+        "note": "Horton, M. and Freire, P. (1990). Philadelphia: Temple University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "A New look at the Literacy Campaign in Cuba",
+        "note": "Kozol, J. (1978). Harvard Educational Review, 48 (3).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Life in Schools: An Introduction to Critical Pedagogy in the Foundations of Education",
+        "note": "McLaren, P. (2015). Paradigm.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Minds Stayed on Freedom: Politics and Pedagogy in the African-American Freedom Struggle",
+        "note": "Perlstein, D. (2002). American Educational Research Journal 39(2): 249-277.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Paulo Freire and Utopian Education",
+        "note": "Roberts, P. (2015). Review of Education, Pedagogy and Cultural Studies 37(5): 376-392.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "First Freire: Early Writings in Social Justice Education",
+        "note": "Torres, C. (2014). New York: Teachers College Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Freire and a feminist pedagogy of difference",
+        "note": "Weiler, K. (1994). In Lankshear, C., & McLaren, Peter. Politics of liberation: Paths from Freire. London: Routledge, pp. 12-40.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Whiteness and Critical Pedagogy",
+        "note": "Allen, R. L. (2005). In Zeus Leonardo (ed.), Critical Pedagogy, Blackwell, 2005, pp. 53-68.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Limits of Dialogue as a Critical Pedagogy",
+        "note": "Burbules, N. (2000). In Revolutionary Pedagogies, Peter Trifonas, ed., Routledge.",
+        "href": "http://faculty.education.illinois.edu/burbules/papers/limits.html"
+      },
+      {
+        "type": "reading",
+        "title": "Why Doesn't This Feel Empowering?",
+        "note": "Ellsworth, E. (1989). Harvard Educational Review, 59, 297-324.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "I Know Why This Doesn't Feel Empowering: A Critical Race Analysis of Critical Pedagogy",
+        "note": "Ladson-Billings, G. (1997). In Mentoring the Mentor: A Critical Diaogue with Paulo Freire, edited by P. Freire. New York: Peter Lang.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Evils of National Education",
+        "note": "Godwin, W. (1996). In P. Marshall (ed.), The Anarchist Writings of William Godwin. Freedom Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The 'Right to Education' and Compulsory Schooling",
+        "note": "Haydon, G. (1998). In Hirst, P. and White, P., Philosophy of Education: Major Themes in the Analytic Tradition, Vol. 3, Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Historiography of Compulsory Schooling",
+        "note": "Miller, P. (1989). History of Education, Vol 18 No. 2.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Democratic Movements, Self-Education, and Economic Democracy: Chartists, Populists, and Wobblies",
+        "note": "Niemi, W.L. and Plante, D.J. (2008). Radical History Review, Vol. 2008, No. 102: pp. 185-200 L.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "How Do New Critical Pedagogies Develop? Public Education, Social Change, and Landless Workers in Brazil",
+        "note": "Tarlau, R. (2015). Teachers College Record Volume 117 Number 11, 2015, p. 1-36.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hashtag Activism and Why #BlackLivesMatter In (and To) the Classroom",
+        "note": "Cumberbatch, P. and Trujillo-Pagán, N. (2016). Radical Teacher, No, 106 (Special Issue on Teaching Black Lives Matter).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Really Useful Knowledge",
+        "note": "Johnson, R. (1979). In Clarke, J. et al (eds) Working Class Culture. London: Hutchinson.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Forty years of Popular Education in Latin America: Lessons for Social Movements Today",
+        "note": "Kane, L. (2012). In Hall et al (eds) Learning and Education for a Better World; The Role of Social Movements, Sense Publishers.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Educate, Organize, Emancipate: The Work People's College and the Industrial Workers of the World",
+        "note": "Pinta, S. (2012). In Haworth, R., (Ed.) Anarchist Pedagogies, PM Pres.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Oh no! Not the 'A' Word; Proposing an 'Anarchism' for Education",
+        "note": "DeLeon, A. (2008). Educational Studies, No. 44, Vol. 2, pp. 122-141.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Modern School Movement; Anarchism and education in the United States",
+        "note": "Avrich, P. (2006). AK Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Anarchist Pedagogies",
+        "note": "Haworth, R. (Ed.) (2012). PM Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Anarchism and Education",
+        "note": "Suissa, J. (2006). Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Integral Education and Pring's Liberal Vocationalism",
+        "note": "Suissa, J. (2016). In Education, Ethics and Experience, Essays in Honour of Richard Pring, Michal Hand and Richard Davies (Eds), Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Anarchy in Action",
+        "note": "Ward, C. (1973). Freedom Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "In Defense of Anarchism",
+        "note": "Wolff, R.P. (1970). University of California Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Why we must disestablish school, Chapter 1 (pp. 1-24)",
+        "note": "Illich, I. (1971). In Deschooling society. New York: Harper & Row.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Idea of Summerhill",
+        "note": "Neill, A. S. (2013). In Educational Foundations: An Anthology of Critical Readings by Alan S. Canestrari and Bruce A. Marlowe (Chapter 16: pp 165-172). USA: Sage Publications Inc.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Radical Education A Critique Of Freeschooling and Deschooling",
+        "note": "Barrow, R. (1978). London, Martin Robertson.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Real Education; Varieties of Freedom, Libertarian Education",
+        "note": "Gribble, D. (1998).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "How Children Fail",
+        "note": "Holt, J. (1964). Pitman.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Liberating Education",
+        "note": "Kumar, S. (2008). In Herne, M. (Ed.) Everywhere all the Time: A New Deschooling Reader, AK Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The New Summerhill",
+        "note": "Neill, A.S. (1992). Albert Lamb (Ed), Penguin.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "No Master High or Low; Libertarian Education and Schooling in Britain, 1890-1990",
+        "note": "Shotton, J. (1993). LibEd.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Libertarians and Education",
+        "note": "Smith, M. (1983). London: George Allen.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Affiliation and alienation: Hip-hop, rap, and urban science education",
+        "note": "Emdin, C. (2010). Journal of Curriculum Studies, 42(1), pp.1-25.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Is Hip-Hop Education Another Hustle? The (Ir)Responsible Use of Hip-Hop as Pedagogy",
+        "note": "Gosa, Travis L. and Tristan G. Fields (2012). In Hip-Hop (E): The Cultural Practice and Critical Pedagogy of International Hip-Hop edited by Brad J. Porfilio and Michael J. Viola (Chapter 11: pp 195-210). New York: Peter Lang.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Toward a Philosophy of Hip-Hop Education",
+        "note": "Bailey, Julius. In Philosophy and Hip-Hop, pp. 71-81. Palgrave Macmillan US, 2014.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Beats, Rhymes, and Classroom Life: Hip-Hop Pedagogy and the Politics of Identity",
+        "note": "Hill, Marc Lamont. Teachers College Press. 1234 Amsterdam Avenue, New York, NY 10027, 2009. (Preface, Chapters 1 and 2 pp xv-29)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "What Is Hip-Hop-Based Education Doing in Nice Fields Such as Early Childhood and Elementary Education?",
+        "note": "Love, B.L. (2015). Urban Education, 50(1), pp.106-131.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "We can relate hip-hop culture, critical pedagogy, and the secondary classroom",
+        "note": "Stovall, David. Urban Education 41, no. 6 (2006): 585-602.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Why take them out?, Chapter 1 (pp 8-23)",
+        "note": "Holt, J. C. (1997). In Teach your own: a hopeful path for education (3rd Edition). New York, NY, Delacorte Press/Seymour Lawrence.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Testing the Boundaries of Parental Authority Over Education: The Case of Homeschooling",
+        "note": "Reich, R. (2002). In Political and Moral Education, NOMOS XLIII, Stephen Macedo and Yael Tamir, eds., New York: New York University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Away with All Teachers: The Cultural Politics of Home Schooling",
+        "note": "Apple, Michael W. (2003). In Pedagogy of Place: Seeing Space as Cultural Education, edited by David M. Callejo Perez, Stephen M. Fain and Judith J. Slater, pp. 49-73. New York: Peter Lang Publishing.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Government's construction of the relation between parents and schools in the upbringing of children in England: 1963-2009",
+        "note": "Bridges, D. (2010). Educational Theory, Vol. 60, No. 3, pp. 299-324.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The State, Parenting, and the Populist Energies of Anxiety",
+        "note": "Conroy, J. C. (2010). Educational Theory, Vol. 60, No. 3, pp. 325-340.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Why More Black Parents are Homeschooling Their Children",
+        "note": "Huseman, J. (2015). Hechinger Report, February, 2015.",
+        "href": "http://hechingerreport.org/black-parents-homeschooling-children/"
+      },
+      {
+        "type": "reading",
+        "title": "Education Without Schools: Discovering Alternatives",
+        "note": "Lees, H. (2014). Bristol: Policy Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Parents and the Schools: Alternative Role Definitions",
+        "note": "Meighan, R. (1989). Educational Review, Vol. 41, No.2.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Doing Something Very Different",
+        "note": "Sheffer, S. (2008). In Hern, M. (Ed) Everywhere All the Time, Oakland: AK Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Why Black Kids Should be Homeschooled",
+        "note": "Trunk, P. (2014).",
+        "href": "http://education.penelopetrunk.com/black-kids-should-homeschool/"
+      },
+      {
+        "type": "reading",
+        "title": "The Privatized Public; Antagonism for a Radical Democratic Politics in Schools?",
+        "note": "Boyles, D. (2011). Educational Theory, 61: 433-450.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Experiences of learning within a twentieth-century radical experiment in education: Prestolee School, 1919-1952",
+        "note": "Burke, C. (2010). Oxford Review of Education, 36:2, pp. 203-218.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Radical Education and the Common School; A Democratic Alternative",
+        "note": "Fielding, M. and Moss. P. (2011). London: Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Beyond the Rhetoric of Student Voice: New Departures or New Constraints in the Transformation of 21st Century Schooling?",
+        "note": "Fielding, M. (2001). Forum 43(2): 100-110.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Education and the Crisis of Youth: Schooling and the Promise of Democracy",
+        "note": "Giroux, H. (2008). The Educational Forum, Vol. 73. No. 1.",
+        "href": "http://www.tandfonline.com/doi/pdf/10.1080/00131720802539523"
+      },
+      {
+        "type": "reading",
+        "title": "What If Democracy Really Matters?",
+        "note": "Ruitenberg, C. (2008). Journal of Educational Controversy, Vol. 3, No. 1 (2008).",
+        "href": "http://www.wce.wwu.edu/Resources/CEP/eJournal/v003n001/a005.shtml"
+      },
+      {
+        "type": "reading",
+        "title": "The Radical Tradition in Education in Britain",
+        "note": "Simon, B. (ed) (1972). London, Lawrence & Wishart.",
+        "href": null
+      }
+    ],
+    "notes": "CILAS Pedagogy Lab, Fall 2021. Offered by Karim-Yassin Goessinger.\n\nWhat is 'radical education'? In this fall's pedagogy lab, we will explore different associations we may have with the term \"radical\" and will consider the historical, social and conceptual dimensions of the term. We will focus particularly on the negative and positive connotations of the word \"radical\", and the distinctions that can be made between these ideas and connected ideas such as \"reform\", \"revolution\" and \"progress\". We will engage with the work of the Brazilian educator and theorist Paulo Freire and the tradition of Critical Pedagogy to consider the central themes in Freire's work: the oppressed/oppressor relationship; critical consciousness; humanization; dialogue and liberation, and the intellectual roots of Freire's thought. We will focus on the ways that Freire's work has been developed by theorists and practitioners outside the context of adult education in Latin America. In particular, we will discuss some critiques of Freire by Feminist theorists and by Critical Race scholars.\n\nWe then move to questions concerning the control and provision of education add the role of the state. We will take a step back to examine the arguments put forward by critics of state education at a time when universal state educational provision was a contested idea. Starting from the anarchist rejection of state education articulated by William Godwin in the 18th Century, and comparing this with the liberal suspicion of state education put forward by J.S. Mill in the 19th Century, we will look at how fundamental questions about individual rights, the moral status of children, paternalism, and the limits of individual freedom are reflected in ideas about the control, provision and purposes of education. More specifically, we will consider the historical tradition of community-based adult education to understand how radical educational ideals and demands, on the part of working-class communities and political movements, shifted and how these shifts and orientations are reflected in contemporary debates. We explore some contemporary examples of community-based radical education projects in a post-colonial context, such as the Zapatista Autonomous education movement and the Landless Rural Workers' movement schools in Brazil.\n\nWe then examine the tradition of anarchist education, focusing specifically on the notion of the school as a form of prefigurative practice. In exploring the central anarchist values of mutual aid, freedom and cooperation, we will address the philosophical question of how the anarchist perspective yields a distinctive position on the relationship between education and social change. We will compare this position to the Marxist and the Liberal position, and to non-anarchist Libertarian educational experiments to consider the ways anarchist educators and theorists addressed issues of teacher authority, knowledge and pedagogy. The following week we will focus on libertarian education and deschooling and will look at the defense of libertarianism in education, drawing on principles of individual rights and autonomy, as a rationale for a particular form of learning, and as a route to individual flourishing and happiness. We will think about how these different ideas and values are intertwined and look at the way they are reflected in radical educational experiments, beginning with Tolstoy's 19th Century school, Yasnaya Polyana, and ending with A.S. Neill's Summerhill.\n\nWe will then look at a contemporary form of radical education that operates both within and outside of mainstream schools: Hip-Hop Education. We will engage with some theoretical literature on this field and will explore how it addresses issues of identity, power, knowledge and social justice, comparing this work with related work from the field of critical pedagogy and other ideas encountered earlier in the module. The following session will look at the area of home schooling. In discussing the various arguments offered in defense of home schooling, and the distinctions drawn between \"unschooling\", \"de-schooling\" and \"elective home education\", as well as some of the objections to it, we will revisit some earlier discussions about the control and provision of education and their connection to political questions about the relationship between the individual and society. Finally, we will explore the tradition of radical state education and will revisit some of the questions about the control and provision of education, the nature of education as a public good, and issues of educational equality and access. We will look at some examples of experiments in radical democratic education within the state system.\n\nLab participants will get to discuss selected readings and develop/design a small 'core' curriculum in Arabic and/or English to teach to adults in partnership with StARS and Beit Yakan once a week beginning in January.\n\nReading list to select from (the bibliography above)."
+  }
+}

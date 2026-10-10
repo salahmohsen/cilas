@@ -1,0 +1,428 @@
+{
+  "sha256": "86576c77e8bd62e0cc613d3ce886a67978bfb3ee1ae8e00258257fcb89be4425",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction and overview. Openings and closings",
+        "description": "a. Overview of course and the importance of imagination, enchantment, and the magic of story. Invitation to create and appreciate story in its widest sense. Invitation to engage with oral traditions, trace story in traditional and social media. Invitation to engage with literature. Special invitation to engage with poetry and apply story structure analysis to the appreciation of poetry. Option to explore how story manifests in music through rhythm, melody, harmony, and musical structure should one or more participants be inclined to explore this.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Prompt ideas: Why do stories start with ‘kan yama kan’ (‫ )كان ياما كان‬or ‘once upon a time’? (Bring a story opening to class and tell us about the context - you could choose an opening you’re familiar with and note where you last used or heard it, or noted its absence; you could research an opening from a different culture, compare and contrast its form and context with those of openings you’re familiar with.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Birth of Story",
+            "note": "Conrad. In Story and Structure: A complete guide (S&S) (London: Aladdin’s Cave; Glastonbury: Squeeze Press, 2022, pp.25–31).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Development of Reality Through Differentiation",
+            "note": "Nishida, trans. Abe and Ives. In An Enquiry into the Good (New Haven and London: Yale UP, 1990, pp.63–7).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Form",
+            "note": "Spencer-Brown. In Laws of Form (Leipzig: Bohmeier, 2011, pp.0–2).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Characters for Yin Yang",
+            "note": "de la Valée. In Yin Yang in Classical Texts ([London]: Monkey Press, 2006, pp.0–4).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Participative Consciousness in Deep Antiquity",
+            "note": "Naydler. In In the Shadow of the Machine (Forest Row: Temple Lodge, 2018, pp.3–19).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Gods and Technological Consciousness in the Ancient Near East",
+            "note": "Naydler. In In the Shadow of the Machine (Forest Row: Temple Lodge, 2018, pp.3–19).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Beyond traditional stories, eg The 1,0001 Nights, The Panchatantra, The King and the Corpse, explore the openings of other works: films; social media shorts; media stories, and media channels; religious works, eg the Qur’an, the Bible (OT/NT), poems, artworks, etc.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Characters and situations",
+        "description": "Why does a story start and end where it does? And where exactly do stories start and end?\n\na. How do openings and closings relate to characters, themes, topics, and problems? What is the distinction between openings/closings and initial/final situations in stories? To what extent can stories be said to be universal?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ripa Iconologia",
+            "note": "E.g. personifications of fear, delight, grief, etc.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cosmographia",
+            "note": "Silvestris. Noting the distinction between prose and poetry of the original, which is not rendered in the currently available English translation.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Metamorphoses opening",
+            "note": "Ovid.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Consolation of Philosophy (Meter 1, Prose 1)",
+            "note": "Boethius, trans. Relihan.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Faces of the Infinite: Interview",
+            "note": "Sperl, Thomson, and Clark. In Beshara Magazine (22, Autumn 22, pp.1–10).",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Poetry on the Lyrics of Ascent website",
+            "note": null,
+            "href": "http://lyrics-of-ascent.net/"
+          },
+          {
+            "type": "reading",
+            "title": "Categories (I–IV)",
+            "note": "Aristotle, trans. Edghill. Loeb edition (1938, pp.12–19) and commentaries, e.g. Al Kindī’s.",
+            "href": "https://archive.org/details/aristotleorganon0000aris/page/14/mode/2up"
+          },
+          {
+            "type": "reading",
+            "title": "Subject and Predicate: Logic or ontology?",
+            "note": "Ighbariah. In ‘Between Logic and Mathematics: Al-Kindī’s approach to the Aristotelian Categories’ in Arabic Sciences and Philosophy (22:1, pp.51–68, at 59–68).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Prompt ideas: If you were to tell a story - autobiographical, social, anthropological, historical, philosophical, or poetic, where would you start? Who would your characters be? If abstract characters, how would you personify them and why? How are stories told nowadays about modern wars, wars on terror? How do story spinners from politicians and journalists to activitsts and traditional storytellers treat fear and hope, terror, love, and the obstacles that these might encounter?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "d. Share a Goha story in class next week."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "The ebb and flow of story",
+        "description": "Can story structure inform our understanding of the common ground of narratives?\n\na. What have you discovered about how stories are shaped and how they develop based on what you observed about characters’ initial and final situtations? How are stories classified? What are the fundamental approaches which lead to these classification systems?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Prompt ideas: What do Goha stories have in common with academic essays (if anything)?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "How does story work? and Scribing the shape of story",
+            "note": "Conrad. In S&S (London and Glastonbury: 2022, pp.33–56).",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Individual encounters with orality and oral traditions: Goha stories, anecdotes, jokes, other storytelling traditions",
+            "note": "Suggested reading as listed (e.g. Arabic epics such as the Al-Sirah Al-Hilaliyya (‫)السيرة الهاللية‬).",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Al-Sirah Al-Hilaliyya (السيرة الهلالية)",
+            "note": "The link is a YouTube search for the Arabic epic, not a specific video.",
+            "href": "https://www.youtube.com/results?search_query=%D8%A7%D9%84%D8%B3%D9%8A%D8%B1%D8%A9+%D8%A7%D9%84%D9%87%D9%84%D8%A7%D9%84%D9%8A%D8%A9"
+          },
+          {
+            "type": "prompt",
+            "title": "Find two simple narratives in genres that are not generally considered to be related in which you have traced common story structures in characters’ story lines",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Cognitive dissonance",
+        "description": "Surprise, suspense, doubt, revelation, comedy, tragedy.\n\na. What did you discover through comparing and contrasting the ways in which story structure features across different narrative genres",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Prompt ideas: Why laughter? Why tears? (What’s the [Euclidian] point?) How do music and story connect? How do comedy and tragedy relate to Aristotle’s categories? How might surprise and suspense relate to each of these three topics?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Trickster tales’ to ‘The expansion of story’",
+            "note": "Conrad. In S&S (London and Glastonbury: 2022, pp.57–100).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Comedy’ and ‘Tragedy’",
+            "note": "In S&S (pp.101–144).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Find or create examples of a tragic tale, a comic tale (exaggeration and hyperbole work well for this) and consider how surprise, suspense and Aristotle’s categories operate in these.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Chinese Circular Structure: Exploring the harmonic role of story",
+        "description": "a. What links (if any) did you discover between comedy/tragedy, surprise/suspense, and Aristotle’s categories?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Prompt ideas: What drives story forward? What preciptates change? Stories can be told in many ways. What makes for effective narrative style and why? What purpose(s) do heightened forms of pattern use (eg rhetoric, music, poetry) serve? Are they always effective? If not, then why not?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Coming full circle – the ground of story’",
+            "note": "Conrad. In S&S (London and Glastonbury: 2022, pp.185–210).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Chunqiu Zuozhuan’",
+            "note": "de la Valée. In Yin Yang in Classical Texts ([London]: Monkey Press, 2006, pp.5–7).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Images of Divine Order’ and ‘Into the Labyrinth’",
+            "note": "Foster. In Patterns of Thought: The Hidden Meaning of the Great Pavement of Westminster Abbey (London: Jonathan Cape, 1991, pp.131–66).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘The visual depiction of Jerusalem’s centrality’ and ‘John Michell and the Earth-moon pyramid diagram’",
+            "note": "Bree. In The Cosmos in Stone (Glastonbury: Squeeze Press, 2023, pp.45–50; 120–31).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Woven storytelling: Coptic tapestries",
+            "note": "Kohan Textile Journal. Linked from the instruction on Coptic tapestry designs. Title taken from the address; the visible link text was not in the extracted text.",
+            "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/"
+          },
+          {
+            "type": "prompt",
+            "title": "Compare and contrast the effectiveness of the presence of heightened forms of pattern in two or three narrative interpretations of the same story and summarise your findings either in a narrative form which follows a single cycle of the Chinese Circular Structure or in a visual form inspired by and which honours the traditions from which quincuxial Coptic tapestry designs come (these were often found in burial sites, decorating pillows used to support the head of the deceased).",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Structures in life: Advertising, media, poetry, education, etc",
+        "description": "a. Present your narrative or artwork and respond to questions in relation to the macrocosm/microcosm; individual/universal; discrete/continuous dimensions of your work.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Prompt ideas: Open-ended discussion on the connection between story and society",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Marketing Eight Hidden Needs",
+            "note": "Packard. In Hidden Persuaders (Brooklyn: Ig, 2007, pp.86–94).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Contagious: Why things catch on",
+            "note": "Berger (New York: Simon and Schuster, 2013). Your choice of content from this and/or Storytelling below.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Storytelling: Bewitching the modern mind",
+            "note": "Salmon, trans. Macey (London and New York: Verso, 2010). Your choice of content from this and/or Contagious above.",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Explore practical and/or theoretical applications of story structure to a community or academic project you are currently working on. Test out the potential for the use of ideas from your chosen works and your knowledge of story structure to engage and inspire others on social media, through word of mouth outside CILAS and when presenting on this within CILAS.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Present your narrative or artwork and respond to questions in relation to the macrocosm/microcosm; individual/universal; discrete/continuous dimensions of your work."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Poetic form",
+        "description": "Social example of how poetry is used and how form and function interact. Is there concord, discord, or harmony?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Prompt ideas: How can we go beyond the material plane? What if we were to put inspiration, enchantment, imagination, enlightenment at the heart of our outreach efforts?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘X’, in On the Sublime",
+            "note": "Longinus, trans. Prickard. (Oxford: Clarendon Press, 1906, pp.22–6).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘“Zarte Empirie”: Goethean Science as a Way of Knowing’",
+            "note": "Wahl. In Janus Head, 8(1), pp.58–76.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘The Seven Capital Stars’: Descriptions of the Seven Ideas",
+            "note": "Patterson. In Hermogenes and the Renaissance: Seven Ideas of Style (Princeton: Princeton UP, 1970, pp.44–68).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Magic and Mystery’",
+            "note": "Conrad. In Master the Art and Craft of Writing (MACOW) (London: Aladdin’s Cave, 2024).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Chazal on Sens-Plastique’",
+            "note": "de Chazal, trans. Weiss. In Sens-Plastique (New York: SUN, pp.155–63). Both copies of the link in the flow point to this address.",
+            "href": "https://archive.org/details/sensplastique0000chaz/page/154/mode/2up"
+          },
+          {
+            "type": "prompt",
+            "title": "Revisit the activity from session 6 in light of the topics and approaches discussed in this session. Consciously seek inspiration from Sense-Plastique and draw on exercises from the MACOW extract.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Presentations and discussions relating to the use of story structure and persuasive techniques in social engagement."
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Share your story",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Creative project presentation"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "other",
+        "title": "archive.org/details/noh390b2714105",
+        "note": "Page 2 of the flow. Could not tell which suggested reading it belongs to, so it is not paired. Title taken from the address; the visible link text was not in the extracted text.",
+        "href": "https://archive.org/details/noh390b2714105/page/n11/mode/2up"
+      },
+      {
+        "type": "other",
+        "title": "archive.org/details/in.ernet.dli.2015.74738",
+        "note": "Page 4 of the flow. Could not tell which suggested reading it belongs to, so it is not paired. Title taken from the address; the visible link text was not in the extracted text.",
+        "href": "https://archive.org/details/in.ernet.dli.2015.74738/page/n47/mode/1up?view=theater"
+      },
+      {
+        "type": "other",
+        "title": "Google Drive file (linked on page 6)",
+        "note": "Could not tell which part of the flow it belongs to, so it is not paired. The visible link text was not in the extracted text.",
+        "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing"
+      },
+      {
+        "type": "reading",
+        "title": "Odyssey: Dynamic learning journey",
+        "note": "Co-authored with David Pinto. Named in the section on discussion-based learning (Odyssey Grid).",
+        "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system"
+      },
+      {
+        "type": "other",
+        "title": "Course/lab/workshop image (unsplash.com)",
+        "note": "The course image listed in section 3 of the flow. Not a participant material. Both copies of the link in the flow point to this address.",
+        "href": "https://unsplash.com/photos/man-sits-on-sand-dunes-while-watching-the-beach-fD3F3FPuG0w"
+      },
+      {
+        "type": "other",
+        "title": "The Unknown Storyteller Project",
+        "note": "Instructor bio: Founder of The Unknown Storyteller Project.",
+        "href": "https://www.unknownstorytellerproject.com"
+      },
+      {
+        "type": "other",
+        "title": "The Traditional Tutor",
+        "note": "Instructor bio: Founder and Lead Tutor. Both copies of the link in the flow point to this address.",
+        "href": "http://www.traditionaltutor.co.uk"
+      },
+      {
+        "type": "other",
+        "title": "The Academy of Oratory",
+        "note": "Instructor bio: Co-Founder and Lead Trainer.",
+        "href": "http://www.academyoforatory.com"
+      },
+      {
+        "type": "other",
+        "title": "KSU Next Society Institute",
+        "note": "Instructor bio: Affiliate, Lithuania.",
+        "href": "http://www.nextsocietyinstitute.com"
+      }
+    ],
+    "notes": "Story as participative enquiry. Proposed course outline (flexible - may change according to the individual needs and interests of participants enrolled). The flow describes a tentative course/lab/workshop flow for 6-8 weeks, one session per week.\n\nCourse description: Why does story as a phenomenon exist? How do we engage with the power of story in our lives? What is the link between story structure and poetic form? How can an appreciation of how story works help us better understand ourselves and how we think about ourselves? How can it inform our relationship to the societies and the larger cosmos in which we exist? And how can it help us address key problems we perceive in society and culture? Combining a deep appreciation of the classical liberal arts tradition, of story, and of poetry in their widest senses, this course draws on an approach to the analysis of story structure outlined in Story and Structure: A complete guide based on George Spencer-Brown’s Laws of Form. Using only six visually intuitive symbols, focusing on individual characters’ story lines and the key events in them, participants will learn how to trace the flow of story as manifest through spoken word traditions, prose, poetry, anecdotes and jokes in society and in traditional and social media. As both participative creators and appreciators, participants will engage with what they learn about story in imaginatively practical personal quests to realise personal, communal and environmental flourishing.\n\nHow I will follow discussion-based learning in your teaching: I have 10 years of facilitating round table discussions for the School of Civic Education using critical thinking, large and small group discussion and dialogic teaching (similar to DBL) looking at socio-political events and themes through liberal arts lenses such as rhetoric, philosophy, number theory, and poetics. There is potential to deliver this via an Odyssey Grid (a non-linear, inspirational approach to delivering educational content in an emergent game-based process). The approach is outlined in Odyssey: Dynamic learning journey which I co-authored with David Pinto. I welcome suggestions from others to submit work in a format they feel comfortable presenting in (film, webcast, video journal, artwork, social sculpture, musical composition, etc) as long as academic rigour, critical and creative thinking, emotional engagement and reflective practices are evident as part of the creative process.\n\nThe flow's instructor biography is summarised in the bibliography entries for the organisations it names; the biography text itself was not recorded in full."
+  }
+}

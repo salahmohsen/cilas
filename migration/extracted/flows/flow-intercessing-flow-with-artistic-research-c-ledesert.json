@@ -1,0 +1,129 @@
+{
+  "sha256": "e9bd6168d3e9509504098cd25731386d71d899be6eb0de9ef036d3da7f1692ac",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "the corporeal, all too human?",
+        "description": "Discussing how research develops artistic and creative techniques to value what is human with the example of the corporeal",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The corporeal image",
+            "note": "MacDougall, D. (2006). Princeton, N.J.: Princeton University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Affirmation versus Vulnerability",
+            "note": "Braidotti, R. (2006). Symposium, 10(1), 235-254.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "about nature, culture and reason",
+        "description": "Exploring how the more than human and nonhuman relate to research creation",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cosmological Deixis and Amerindian Perspectivism",
+            "note": "de Castro, E. V., 1998. The Journal of the Royal Anthropological Institute, 4(3), p.469.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The function of reason",
+            "note": "Whitehead, A. (1971). 7th ed. Boston: Beacon Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "posthuman research techniques",
+        "description": "Questioning the notion of method in the process of making artistic research",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Against Method",
+            "note": "Manning, E. (2015). In: Vannini, P. (2015). Non-representational methodologies. London: Routledge. 52-71.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "about the three ecologies",
+        "description": "Investigating how the social, the mental and the environmental are imbricated in the doing of artistic research",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Three Ecologies",
+            "note": "Guattari, F. (2000). London: The Athlone Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "the powers of the false",
+        "description": "Studying how the powers of the false are a key concept of practice-led research",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cinema 2: The Time-Image",
+            "note": "Deleuze, G. (1989). Minneapolis: U. of Minnesota P.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "fabulation I",
+        "description": "Considering fabulation as a series of techniques in the making of artistic research",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cinema 2: The Time-Image",
+            "note": "Deleuze, G. (1989). Minneapolis: U. of Minnesota P.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "fabulation II",
+        "description": "Considering fabulation as a series of techniques in the making of artistic research",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cinema 2: The Time-Image",
+            "note": "Deleuze, G. (1989). Minneapolis: U. of Minnesota P.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Cairo Institute of Liberal Arts and Sciences – Spring 2022. Intercessing with artistic research: an interdisciplinary class offering insights into minor performative artistic research strategies. While continuously asking what else artistic research can do, the class explores the multiplicities of processes operating in the periphery of doing research and making art. How can research and art still provoke and reveal minor performance in an era of social media and image consumption? “Intercessing with artistic research” is a journey through nondisciplinary thinking, beyond the notion of human as we know it. Starting with questions about human capacities and ethics in research, the class becomes a proposition to think beyond the human mind and body and invent gestures that are not yet."
+  }
+}

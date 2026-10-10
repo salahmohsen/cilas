@@ -1,0 +1,108 @@
+{
+  "sha256": "3a798587bcd232dbc3bc10d5812fcacec8cd86a9e299e542888b6f719c2c31aa",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Orientation: The Field and Its Questions",
+        "description": "What do we mean by the letter, the unconscious, and temporal experience?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Freud and the Timeless Unconscious",
+        "description": "“Timelessness” as a challenge to chronological models of time.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Nachträglichkeit and Retroactivity",
+        "description": "How the past is constituted and re-written from the standpoint of the present.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The Letter in Lacan",
+        "description": "From signifier to inscription: the letter as the material support of language.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Repetition and Insistence",
+        "description": "Why what is not symbolised returns without transformation.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Chronos and Kairos",
+        "description": "Chronological succession versus the cut, the moment, the encounter.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Philosophy I: Kant and Heidegger",
+        "description": "Conditions of temporal experience and being-toward-death.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Philosophy II: Derrida and Deleuze",
+        "description": "Repetition as difference: what changes in returning.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Badiou’s Logical Time",
+        "description": "Truth, event, and the construction of a new temporal order.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "The Body and the Mark",
+        "description": "Where inscription is encountered: affect, symptom, and fixation.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Interpretation and Intervention",
+        "description": "How analytic practice acts on the letter and temporality.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Clinic and Creative Praxis",
+        "description": "Real time and the Act.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Week-by-Week Flow is marked TBC in the source. The flow lists no readings, films or links.\n\nOverview (verbatim): When the Breath—the spirit of life from the heart—is interrupted on its way to the mouth, the points where it stops are called ‘letters,’ and when these letters combine, sensible life is produced under the effect of intelligible realities. - Ibn Arabi, Al Futuhat al Makkiyya.\n\n“The future belongs to God,” Lacan says. To good luck, he qualifies, and to those who had the bright idea of following the path he began treading. That path is the one of little letters he used to write his mathemes. The rest, he says, are doomed to automatism, “which is the exact opposite of luck, good or hard.”\n\nThat our destinies are written is another way of putting things. It is with writing that we approach the letter as the material substrate of discourse and the jouissance it inscribes. Thus, the destinity by which we find ourselves pursued emerges in the apparent repetition of this jouissance, always singular. For do we not find ourselves at the mercy of the same?\n\nTime, Freud shows us, does not change this; the past is always present, returning through the logic of Nachträglichkeit—the afterwardness by which what was not lived as such comes to be inscribed only after the fact.\n\nMeanwhile, psychoanalysis offers the potential for an opening we might call possibility towards choice, wherein the truth of our fate lies. By an examination of the letter and its effects on the body of the speaking being, we aim to trace Lacan’s use of structural linguistics and the writings of Freud to cough up some knowledge about that which repeats, time and time again.\n\nThe workshop will engage with a wide variety of thinkers, texts and traditions that address these ideas.\n\nContent (verbatim): In the Lacanian Orientation of the Freudian Field, the letter refers to the material substrate of language and its dimension as inscription. With Lacan’s use of structural linguistics, language is approached as a differential system whose elements can be fixed, iterated, and detached from any speaker or intention. The unconscious is strcutrued in the same way; the letter names this dimension of the signifier as something that can be written on the body of the speaking being.\n\nThe trace of the letter inscribes itself as a traumatic character that returns to produce effects in the life of an individual. What Freud calls the timelessness of the unconscious can be read from this perspective. It does not indicate the absence of time, but a temporal structure in which what is inscribed does not pass. The past is not simply left behind; it reappears, reorganising experience retroactively.\n\nSubjective temporality is thus not given as a continuous flow, but produced through discontinuity—returns, delays, and rearrangements that follow from the inscription of the letter. What appears “after” does not merely succeed what came “before,” but can alter its place and meaning.\n\nThis workshop examines the relation between the letter and temporality within the Freudian Field. It approaches language as a system of marks that structure the unconscious, and asks how temporal experience is constituted through inscription, how repetition emerges, and what it might mean to intervene at the level of the letter in both clinical and creative practice."
+  }
+}

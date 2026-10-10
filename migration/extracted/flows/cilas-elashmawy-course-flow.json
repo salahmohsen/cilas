@@ -1,0 +1,184 @@
+{
+  "sha256": "23cf7751765e72fde7779c50b7de335e72bf099eb7f29a1bf75e410b17575ccd",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction: Why do book history?",
+        "description": "Course-long assignment: Trace your book! + methodology introduction",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction to Book History",
+            "note": "Finkelstein, David, and Alistair McCleery. 2nd Edition, Routledge, 2013. Introduction (pp. 1-6) and \"Technological shifts\" (pp. 29-35).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Book History, Print, and the Middle East",
+            "note": "Schwartz, Kathryn A. History Compass 15, no. 12 (2017): 1-12.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Blurred lines: Script and Print (1): Late adoption and the decline thesis",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Arabic Print Revolution: Cultural Production and Mass Readership",
+            "note": "Ayalon, Ami. Cambridge: Cambridge University Press, 2016, 18-32.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Did Ottoman Sultans Ban Print?",
+            "note": "Schwartz, Kathryn A. Book History 20, no. 1 (2017): 1-39.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Blurred lines: Script and Print (2): Modernity and Tradition",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rediscovering the Islamic Classics: How Editors and Print Culture Transformed an Intellectual Tradition",
+            "note": "El Shamsy, Ahmed. Princeton: Princeton University Press, 2020, 63-92.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Birth of Tradition and Modernity in 18th and 19th Century Islamic Culture: The Case of Printing",
+            "note": "Schulze, Reinhard. The History of the Book in the Middle East (2013): 345-388.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Rise of Print: Questions of Philology, Materiality, and Editorial Choices",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "From Taṣḥīḥ to Taḥqīq: Toward a History of the Arabic Critical Edition",
+            "note": "Dayeh, Islam. Philological Encounters 4, no. 3-4 (2019): 245-299.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Islamic Tradition in an Age of Print: Editing, Printing and Publishing the Classical Heritage",
+            "note": "Khan, Ahmad. Reclaiming Islamic Tradition: Modern Interpretations of the Classical Heritage (2016): 52-99.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Print and Institutions: Between the state and colonial legacy",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Printing and Translations under Muḥammad Alī of Egypt: The Foundation of Modern Arabic",
+            "note": "Heyworth-Dunne, James. Journal of the Royal Asiatic Society 72, no. 4 (1940): 325-349.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ottoman Philology and the Origins of Persian Studies in Western Europe: The Gulistān's Orientalist Readers",
+            "note": "Babinski, Paul. Lias: Journal of Early Modern Intellectual Culture and its Sources 46, no. 2 (2019): 233-315.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rediscovering the Islamic Classics: How Editors and Print Culture Transformed an Intellectual Tradition (background, optional)",
+            "note": "El Shamsy, Ahmed. Princeton: Princeton University Press, 2020, 8-30.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Print and Religion",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Sufism, literary production, and printing in the nineteenth century",
+            "note": "Chih, Rachida, Catherine Mayeur-Jaouen, and Rüdiger Seesemann, eds. Würzburg: Ergon Verlag, 2015, 25-74.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Printing Arab Modernity: Book Culture and the American Press in Nineteenth-Century Beirut",
+            "note": "Auji, Hala. Vol. 7. Leiden: Brill, 2016. Selections.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Print and Gender",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "\"We, the Sexologists . . .\": Arabic Medical Writing on Sexuality, 1879-1943",
+            "note": "Kozma, Liat. Journal of the History of Sexuality 22, no. 3 (2013): 426-445.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Career and Communities of Zaynab Fawwaz: Feminist Thinking in Fin-De-siècle Egypt",
+            "note": "Booth, Marilyn. First ed. Oxford; Oxford University Press, 2021. Selections.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Kitāb al-durr al-manthūr : Fī ṭabaqāt rabbāt al-khudūr",
+            "note": "Fawwaz, Zaynab. Matba‘a al-Amiriyya bi-Bulaq, 1896. Selections.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Conclusions and Final Presentations",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Final presentations"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Towards a History of Islamicate Print: Revolution and Continuity between Colonialism, Religion, and Gender. CILAS Thematic Courses. Mariam Elashmawy, maryemashmawi@gmail.com. Offline, Wednesdays 6-8 pm.\n\nCourse Description\n\nScholarship on the advent of printing ever since Elizabeth Eisenstein's path breaking work on the Gutenberg print shop, has focused its preliminary lens on the technological potential and capacity of movable type print. Eistenstein's revolutionary framework of print received its fair share of criticism in the field, notably from Anthony Grafton and Adrian Johns. They contested Eistenstein's approach to analyzing the effects of print as simply the force of technological development uprooting the very basis of society, leading to the proliferation of movements in early modern Europe. Elizabeth Eisenstein's work and the subsequent scholarship on print has impacted ideas about the role of print in Islamicate societies. As a result, the considerable gap in timing between the adoption in Europe in the fifteenth century, and its adoption in the early nineteenth-century in the Ottoman empire posed questions for scholars such as why the Ottoman Empire had withheld the adoption of printing in its own part of the world. We aim to examine this notion of decline theory when it comes to print together, as well as shift the question from why print was adopted so late to ask ourselves how and in what ways it was adopted.\n\nThis course proposes an understanding of printing that contextualizes a set of broader societal systems and actors that shaped the Islamicate experience of print. Rather than reiterating the framing of printing as a technological, revolutionary drive forward from script to print, I set out during this course, through in-class discussions, the course-long assignment, and the primary sources we engage with, to understand the role that people-such as editors, patrons, and scholars-played in shaping printing initiatives. As a burgeoning enterprise during the late nineteenth-century, publishing houses in the Islamicate world began to circulate texts as a response to intellectual, economic, and social demands for texts in society. What was this demand for the texts in print mirroring in society? How did publishing initiatives meet such growing calls? how was print used to engage with discourse on religion, modernity, gender, and colonialism? And most importantly, who were the actors and communities central to publishing and book production during this period?\n\nCourse Learning Plan\n\nDivided into two pathways:\n\n(1) Class-based discussions on the secondary and primary sources. Students will be asked to come prepared to class by reading the assigned secondary sources in order to engage with classmates on the nature of print and its ramifications on all aspects of society. Each student will be asked to lead the discussion (based on the assigned reading of the week) to open the space up for class discussion. This will also aid students during in-class collective readings of primary sources selected by the teaching fellow. A collective reading and engagement with primary sources in class trains students to analyze and read different historical documents as well as situate them in contemporary discussions about politics, gender, history, etc.\n\n(2) Course-long assignment: Trace your book! Students will be encouraged to undertake a hands-on learning experience of book history. This way, students will be introduced to different methodological approaches as to how to trace their chosen book (relying on open-access digitization projects) through material examination. Throughout different stages, students will be asked to report on their findings (and tying it in with the nature of the week's topic), and to address the following points in a final presentation at the end of the course:\n- Reason and choice of printed text to trace.\n- Material bibliography (describing physical qualities of a book).\n- Report on the authorship as revealed by the paratexts.\n- Close reading of 1 paragraph in the text (this could be in the introduction, book blurb-taqrīz-, or colophons).\n\nNote: Handouts on each point will be sent in advance to guide students on how to prepare for such a study throughout the weeks of the course."
+  }
+}

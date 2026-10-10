@@ -1,0 +1,157 @@
+{
+  "sha256": "f261121a7087f1a49af49993ba2d01aafbad396445926be229bc5dff3077dfd3",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Idea",
+        "description": "How does this idea work? Where is beauty? What does it do?\n\nHow can beauty be truth?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Nobel Address: Beauty Will Save the World?",
+            "note": "Solzhenitsyn.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "\"The Russian Monk\"",
+            "note": "Dostoyevsky. From Brothers Kamarazov.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ode on a Grecian Urn",
+            "note": "Keats.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Erotic Beauty, Avoiding War",
+        "description": "How many people don't die?\n\nHow effective is erotic diplomacy?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Book of Judith",
+            "note": "Chapters 10-14.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Book of Esther",
+            "note": "Excerpts.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lysistrata",
+            "note": "Aristophanes. A short scene.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Native American Wisdom",
+        "description": "Can beauty be a social structuring principle? What ecological benefits come from that? How is beauty both spiritual and material? Is beauty stronger than death?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Braiding Sweetgrass (Iroquois Thanksgiving)",
+            "note": "Robin Wall Kimmerer. From.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Navajo Night Chant",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Storytelling Workshop: The Iroquois League Foundation Story."
+          },
+          {
+            "kind": "exercise",
+            "description": "In this session we'll chant, we'll sing, we'll embody the story. The power of beauty goes into hearts souls, body and mind."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "William Blake",
+        "description": "After reading Blake's words allowed we'll begin to imagine how all things interconnect, a web of beauty. Could aesthetics be more important than economics? Would that save the world?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Songs of Innocence & of Experience",
+            "note": "5 poems.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Auguries of Innocence",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Spiritual Materialism: Endurance, Forgiveness",
+        "description": "How does perception affect what we see? How do forgiveness and beauty interrelate? Why does Simone Weil think that humanity can be saved by aesthetics?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Forms of the Implicit Love of God",
+            "note": "Simone Weil.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Thank You Ma'am",
+            "note": "Langston Hughes. A very short story.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Between Heaven and Earth",
+            "note": "James Hubbell. Video on art, architecture, sculpture.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The Beauty 'Salon'",
+        "description": "We'll end with a mosaic of insights imagining how the beauties we cultivate can and will uphold truth and wisdom. How can your work have practical implications?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "You'll each present creative work, accompanied by a brief analysis of how your project relates to at least one of the texts we've considered."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Beauty Will Save the World. Preliminary Syllabus.\n\nWhen Solzhenitsyn and Dostoyevsky survived gulags they both affirmed: 'Beauty will save the World.' How can this be? 'Beauty' (as a word) has being, and it's related to other dynamic nouns, like 'truth,' 'forgiveness,' 'imagination,' 'peace.' As we enter into 'beauty' we'll be as imaginative as we are analytical. You'll each be asked to present a creative response to our readings, and to bring in examples of Arabic poetry, stories, or ideas compatible with the texts we're discussing. And, you're enjoined to create a scenario in which beauty saves a world: this can be an essay, a story, a poem, a video, a puppet show, a piece of art. Utopian thinking can have practical ramifications."
+  }
+}

@@ -1,0 +1,319 @@
+{
+  "sha256": "be06ff465d07b0f6c2c1d3af6629a0199faabe23d48ab094acd9b985871bf394",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction; Does our body know our culture?",
+        "description": "Understanding embodiment in anthropology and as anthropologists.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A. Strathern. 1996. The Social Body: Mauss to Douglas",
+            "note": "Recommended Readings",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Our Class is under our skin. On Em(bodi)ement of Social Class",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pierre Bourdieu - Selected Readings",
+            "note": "Recomended Readings",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "On Punishment, Discpline, and Pain",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Foucault - Selected Readings",
+            "note": "Recomended Readings",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Body in Pain: The Making and Unmaking of the World",
+            "note": "Recomended Readings",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The body as a mean to an end: Hunger Strikes, Self-sterlization, and Self-imulation.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Matters of Life and Longing: Female Sterlisation",
+            "note": "Recomended Readings",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discuss relevant cases circulating (Hunger Strikes in Egypt & Palestine)"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Semen as a Gift & Smuggling Babies out of Prision in Palestine",
+        "description": "Networks of Exchange and Resistance",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Our Bodies Belong to God",
+        "description": "It is not all about Sharawii; Religion, Nationalism, Othering and Organ Transplant.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Sherine Hamdy, “Our Bodies Belong to God”",
+            "note": "Recommended Readings",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The Male Body, Vulnerability and Care",
+        "description": "Break",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Farha Ghanam, Live & Die Like a Man",
+            "note": "Recomended Readings",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "** Chapter in Identity and Health - on male military service ethnography",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Karin’s work an something on Labour** and the male body",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Beyond the Human Body: On technology, animals and embodiment",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "The Body as Infrastructure; Understanding the body in the City.",
+        "description": "The Body in different Space(s)\n\nOur bodies as part of the urban metabolism, and are they spaces on/of its own?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "In-class activity: This session we will go out into the city and reflect on our embodiment."
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Death - Role of Death in our Lives & our Bodies.",
+        "description": "In transition to the next session, we will reflect on what does ‘Dying While Being Borrowed’ mean.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Nancy Scheper-Hughes’s work - Selected Readings",
+            "note": "Recomended Readings",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "The Body ‘out’ of place; the Migrant Body",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Sarah Ahmed’s “Cultural Politics of Emotions”",
+            "note": "Recomended Readings",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Samuli Shielke’s work - Selected Readings",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Space with no memory and a body. The body as an archive to the cultural and the personal.",
+        "description": "Personhood",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Chapter 1 in Health and Identity in Egypt Book: “Spirit Possession among Women in Low-income Cairo”",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Sarah Ahmed “Cultural Politics of Emotions”",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "For the Living and The Dead, Elizabeth Wickett",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Sherin Hamdy’s “Bodies Belong to God”",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carl Rommel, Chapter 6 Football Revolution Ch 6: “When the Game Feels Like Politics, It Doesn’t Feel Like Much at All”",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Extra: Noha Fikry “Of Pigeons and Men: Gender in/of relating, more-than-human in the making”",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Live and Die like a Man , Farha Ghannam",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Chapter 5 in Health and Identity in Egypt Book: “Mushahra: The Justice and Injustice of Infertility , Hania Sholkamy .",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Berlant, Lauren Gail. 2012. Cruel optimism. Durham, NC: Duke University Press.",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Masculinities in Egypt and the Arab World",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Bruno Latour, “How to Talk about the Body” 2004",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Foucault - Docile Bodies",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Bourdieu - Issues of Embodiment and Authenticity",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Body in Pain: The Making and Unmaking of the World",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Marcel Mauss. “Techniques of the Body,” translated by Ben Brewster, Economy and Society 2:70-88. 1973 [1936]",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "“The Mindful Body: A Prolegomenon to Future Work in Medical Anthropology”, Nancy Scheper-Hughes and Margaret M. Lock, Medical Anthropology Quarterly, Volume 1. No 1, 2009",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "“Bodies that Don’t Matter: Death and Dereliction in Chicago”, Eric Klinenberg, Commodifying Bodies, Nancy Scheper-Hughes& Loic Wacquant, Sage Publications, 2002, (pg.: 121-135)",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "A. Strathern. 1996. The Social Body: Mauss to Douglas",
+        "note": "On-going Reading List (for potential readings)",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "https://www.youtube.com/watch?v=MP84xOictqY",
+        "note": "Link in the document (page 2); the document does not tie it to a unit",
+        "href": "https://www.youtube.com/watch?v=MP84xOictqY"
+      },
+      {
+        "type": "reading",
+        "title": "https://www.jstor.org/stable/25758076",
+        "note": "Link in the document (page 3); the document does not tie it to a unit",
+        "href": "https://www.jstor.org/stable/25758076"
+      }
+    ],
+    "notes": null
+  }
+}

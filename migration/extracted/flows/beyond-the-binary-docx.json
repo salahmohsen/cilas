@@ -1,0 +1,186 @@
+{
+  "sha256": "9f4d71b342b805a929104198b34fca6a78b1dc125c9802632b525bf207426511",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Nature, Society, and the Anthropocene: An Introduction",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Anthropocene",
+            "note": "Chua, Liana, and Hannah Fair. (2019) 2023. “Anthropocene”. In The Open Encyclopedia of Anthropology, edited by Felix Stein. Facsimile of the first edition in The Cambridge Encyclopedia of Anthropology. Online: http://doi.org/10.29164/19anthro",
+            "href": "http://doi.org/10.29164/19anthro"
+          },
+          {
+            "type": "reading",
+            "title": "Nature and Society: Anthropological Perspectives",
+            "note": "Descola, P., & Pálsson, G. (Eds.). (1996). London: Routledge (1-21).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Splitting Nature and Culture: Modern Phenomenon or Ancient Ordeal?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "We Have Never Been Modern",
+            "note": "Latour, B. (1993). Cambridge, Massachusetts: Harvard University Press (10-48).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Ax of Gilgamesh: Splitting Naure and Culture",
+            "note": "Elmusa, S. S. (2003). In Sharif S. Elmusa (Eds.), Culture and the Natural Environment: Ancient and Modern Middle Eastern Texts (pp. 20-48). American University in Cairo Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Political Ecology and Climate Crisis: The Environmental Repercussions of Modernity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The political ontology of climate change: moral meteorology, climate justice, and the coloniality of reality in the Bolivian Andes",
+            "note": "Burman, A. (2017). Journal of Political Ecology. Vol. 24 (922-928)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Uncommoning nature: Stories from the Anthropo-Not-Seen",
+            "note": "de la Cadena, M. (2015). Anthropology of This Century, 13. (35-58)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Techno-politics and Associative Sociology: Disrupting the Subject-Object Divide",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Can the Mosquito Speak?",
+            "note": "Mitchell, T. (2002). In T. Mitchell, Rule of Experts: Egypt, Techno-Politics, Modernity (pp. 19-53). California: University of California Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Reassembling the Social: an Introduction to Actor-Network-Theory",
+            "note": "Latour, B. (2005). Oxford and New York: Oxford University Press (1-17)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "More-Than-Human Anthropology: A Study in Multispecies Ethnography",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Unruly Edges: Mushrooms as Companion Species",
+            "note": "Tsing, A. (2012). Environmental Humanities, 141-154.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Staying With the Trouble: Making Kin in the Chthulucene",
+            "note": "Haraway, D. J. (2016). Durham and London: Duke University Press (1-9) and (30-57).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Anthropology, Ontology, and Radical Alterity: Exploring the Prospects of a Different World(s)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cosmological Deixis and Amerindian Perspectivism",
+            "note": "Viveiros de Castro, E. (1998). The Journal of the Royal Anthropological Institute, 4(3), 469-488.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Ontological Turn: An Anthropological Exposition",
+            "note": "Holbraad, M., & Pedersen, M. A. (2017). Cambridge, United Kingdom: Cambridge University Press (1-29).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Animating the inanimate: Pushing the Epistemological Limits of Modernity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rethinking the animate, re-animating thought",
+            "note": "Ingold, T. (2006). Ethnos, 9-20.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Shakhṣīyat Miṣr: Dirāsah fī ʿAbqariyyat al-Makān [The Personality of Egypt: A Study in the Genius of Place]",
+            "note": "Hemdan, J. (1980). Cairo: Ālam al-Kutub.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Animism, Fetishism, and Objectivism as Strategies for Knowing (or not Knowing) the World",
+            "note": "Hornborg, A. (2011). Ethnos, 21-32.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Semiotics and Cybernetics: Is Meaning Embedded in the Universe?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Steps to an Ecology of Mind: Collected Essays in Anthropology, Psychiatry, Evolution, and Epistemology",
+            "note": "Bateson, G. (1972). Chicago, IL: University of Chicago Press (434-454).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "How Forests Think: Towards an Anthropology Beyond the Human",
+            "note": "Kohn, E. (2013). Berkley, Los Angeles, London: University of California Press (27-71).",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course description: In this course, students will learn to trace the origins of the nature-culture binary and understand its impacts in shaping contemporary human-environmental relations. By peering through the lens of environmental anthropology, this course aims to provide students with the theoretical tools necessary to critique and explore the discipline’s various proposals to ultimately bridge the gap between us and our perennial home.\n\nOpening quotation: “The relationship between Nature and Culture is the key intellectual problem of the 21st century” (Johanthan Bates).\n\nInstructor bio: Ahmad Mahana is an MA candidate of the Sociology-Anthropology degree program at the American University in Cairo. With a regional focus on Saint Catherine, South Sinai, Ahmad’s work deploys ethnographic fieldwork methods to explore the ecological and sociological networks involved in reproducing the region’s sacred landscape. By considering both human and nonhuman actors as ethnographic subjects, his work aims to deconstruct modern dualisms of nature-culture by presenting alternative modes of being in and of the world inspired by contemporary Bedouin sociality, Islamic cosmology, and desert ecologies."
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "sha256": "bb03bfb1b18236ccf95f6d035e6cd637b1413d8eb6073b53983a7408aa8044fb",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "Introduce the course\nWhy Cinematic Urbanism?\nWhat are City Films / City Symphonies?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cinematic Urbanism: A History of the Modern from Reel to Real",
+            "note": "Nezar Al-Sayyad. Suggested reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cities and Cinema",
+            "note": "Barbara Caroline Mennel. Suggested reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Egyptian Cinema and Society – Reading Raymond William Baker",
+        "description": "Dominant Social Themes of Egyptian Cinema\nModern and Post-Modern Cinema of Egypt\nThe Cinematic Spatial Transformation of Egyptian Society",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Combative Cultural Politics: Film Art and Political Spaces in Egypt",
+            "note": "Article by Raymond Baker. Suggested reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Egypt in the Shadows: Films and the Political Order",
+            "note": "Article by Raymond Baker. Suggested reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "From Visuality to the Lens – The Metropolis and Mental Life",
+        "description": "Cities as a system of luxury prefabrication\nMental Senses’ mechanization within the metropolis\nTransitory Landscapes\nVertov’s Kino-Eye",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Metropolis and the Mental Life",
+            "note": "Georg Simmel. Suggested reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Vision and Visuality",
+            "note": "Hal Foster. Suggested reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "America",
+            "note": "Jean Baudrillard. Suggested reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Film as a Socio-Spatial Influence",
+        "description": "The Concept of the Flâneur\nFlaneuring the Modern City",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Previewing the Cinematic City",
+            "note": "David Clarke. Suggested reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The writings of Walter Benjamin and Charles Baudelaire",
+            "note": "Suggested reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Narrative, the Imagery, & the Spatial",
+        "description": "Narrative Space\nReal Space vs. Imagined Space\nPhysicality and Meta-Physicality of Space\n\nThe Composition and Structure of the Image\nWittgenstein’s theory of picture representation\nCharles Sanders Peirce’s theory of semiotics\nJacques Lacan’s theory of representation\nSociety’s submission to technically manipulated images\nThe concept of Stereotype – Edward Said\n\nLefebvre & Soja – Space\nSpatial Trilogy\nWho is space for?",
+        "meetings": 3,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Exploring The Aleph",
+            "note": "Jorge Luis Borges.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Cine-Spatial Representation",
+        "description": "The City between the Façade & the Metaphysical\nYoussef Chahine’s Le Caire & Jacob Riis’s How the Other Half Lives\nA Cinematic Reading of Asef Bayat",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Small Workshop",
+        "description": "",
+        "meetings": 3,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "The workshop will be semi-theoretical semi-practical where applicants will be asked to shoot several short footage and produce a short film. Each will analyze the other applicant’s film according to what was learnt during the workshop"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course Title: The Whatness of Cinematic Urbanism.\n\nCourse Description\n\nThe aim of this course is to fuel further curiosity in discovering and understanding cities through cinematic images; to use films as tools to analyze the spatial relationships between society and its surrounding urban scenery. The main idea is not mere camera movement and angles, rather it is the underlying narrative that reveals hidden elements of our cities and societies. The course will explore the very essence of cinematic urbanism through an in-depth analysis of the word ‘representation’. Classes will involve reading and analyzing theoretical texts, as well as watching some snippets of Egyptian movie scenes. Participants will be able to trace the changes in how Egyptian cinema portrayed the city. They will be able to come up with an intellectual blueprint for identifying and analyzing socio-spatial narratives through film images.\n\nWeekly Schedule: Weeks 5, 6 & 7 and Weeks 9, 10 & 11 are each one session spanning three meetings. Week 8 has no suggested readings in the flow."
+  }
+}

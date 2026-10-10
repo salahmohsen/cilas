@@ -1,0 +1,150 @@
+{
+  "sha256": "f6abbfbd68311ce63d72314e91832254269893fd6c2fbebab2fe066c33d8e95d",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Quranic Inquiry",
+        "description": "Theme: Setting the stage\n\nWhat is the Quran and how do we study it? We will explore together what do we already (think) we know about the quran and how do we want to read it?*\n\n*syllabus may change according to the results of this discussion",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "وعلم آدم الأسماء كله - And He taught Adam the names - Bing video",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "The purpose of life: Jeffary Lang",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Turner, Colin. Reconsidering Jihad: The Perspective of Bediuzzaman Said Nursi.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Turning Inwards to Search for Meanings",
+        "description": "Theme: Different readings of the quran\n\nFor this class, we will discuss Colin Turner’s paper on Reconsidering Jihad. In this paper, it will be explained how most Islamic movements were social and political, often encouraging the use violence. However, one Islamic thinker observed the necessity of a new ‘jihad’, focusing on asking questions to build confidence in one’s faith. Turner explains that this the way to respond to ‘modernity’.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Veiled Women Unveiling God: Understanding the Quran Through its Women Characters. Sister Zahra Moballegh",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "If I have so many questions, where do I go for answers",
+        "description": "Theme: The Nursian methodology of reading the Quran\n\nHow many Qurans are there?\n\nIn this class, we will address the question of ‘what is the quran?” How can I read the quran for personal meanings in stead of laws and judgements? Here, I hope to explore the idea that human, universe and the book are all Qurans. Every created thing/human is a quran, so how am I to see that?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Said Nursi, The Words, 24th Word",
+            "note": "this reading will continue for three sessions",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "My Quran or The Quran",
+        "description": "For this class, we will discuss one possible meaning of the Quranic verse, “Read in the name of Your Lord.” We will visit the understanding of a Muslim from the legal perspective versus the belief perspective. Is a Muslim someone who submits to his/her truth or a follower of laws?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Who is the Quran for? The Comprehensive Language of the Quran",
+        "description": "Who is to read the Quran? In the 24th word, the 2nd ray, Nursi explains how anyone and everyone can benefit from the Quranic verses. In this class, we will talk about the ‘openness and comprehensiveness of the Quran’.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "If I am going to die, what’s the point of reflection?",
+        "description": "Theme: Existential Psychology and Faith\n\nAccording to existential psychology, death is one of the existential concerns of human. However, Rollo May and Irvin Yalom treat death very positively so does Said Nursi. Here, we will ask the question, “what is the relationship between life and death and how are they the same?” “Is death an endpoint?”",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A chapter from Staring at the Sun by Irvin Yalom*",
+            "note": "*subject to change",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Divine Love and Meaninglessness",
+        "description": "For this class, we can talk about human’s existential concern of meaninglessness as Irvin Yalom and Viktor Frankl suggest to be the modern human’s dilemma. Then, we will discuss the meaning of ‘being created due to Divine Love. Said Nursi suggests that the only reason to be created is because one’s Creator prefer me to exist, i.e, due to love.",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Viktor Frankl, the existential vacuum",
+            "note": "Suggested Readings",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Irvin Yalom, meaninglessness",
+            "note": "Suggested Readings",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Said Nursi, the 24th word.",
+            "note": "Suggested Readings",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Am I eating or supplicating? Using my freewill",
+        "description": "In this class, we will discuss the notion of prayer. What is prayer? Is it an action or an attitude? How can we talk about freewill when it comes to faith and prayer?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ali Mermer: Between Supplication and Seeking Forgiveness",
+            "note": "Reading/lecture",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Your Quranic Verse and Your Understanding",
+        "description": "Theme: Application of the Nursian methodology\n\nEveryone in this gathering will chose one verse (ayat) and provide a suggested meaning. Additionally, we will discuss one possible meaning of “and no bearer of burdens can bear the burden of another” (35:18) verse.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Bio:\n\nRadwa SALEM is a returning student and co-fellow of CILAS. She first joined CILAS in 2013 thinking it was a transitional period from her finance undergraduate school to her social work graduate school. In 2014, she began studying the Quran in light of the Risale-i-Nur collection. Since 2017, she has been facilitating her weekly discussions that she calls Meaningful Conversations. The aim of MC is to allow space to inquire about one's inner world and discuss with others how one can 'become' a manifestation of mercy from within and with creation. Her interests are the Quran, social work and finding meaning."
+  }
+}

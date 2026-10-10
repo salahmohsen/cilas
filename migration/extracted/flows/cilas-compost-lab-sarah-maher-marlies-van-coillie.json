@@ -1,0 +1,187 @@
+{
+  "sha256": "ec3b3401d7a6e5c8f4d3d36281959e1f5bd6a2cb34079e18cd8a0b8af89e2c04",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Salad Bar",
+        "description": "Compost is a throwntogetherness of organic materials, just like a salad.\n\nWhat are we actually eating? What are we digesting? How to relate to the things we cut, chop, and throw together in a salad?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cooking Notes from a Consumed Host",
+            "note": "Kassab, O. (2020). In: On Curating Spaces (ed. Engy Mohsen, Sarah Maher, and Nour El Safoury). Read aloud as a prompt.",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Earth, Wind, and Fire",
+            "note": "Soundtrack to the dreamworld.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "To introduce the lab, we will invite the participants to co-create a salad bar. They are asked to bring either leftovers, or any items lingering in their fridges. As a soundtrack to the act of chopping up the vegetables and inventing recipes, out loud will be read as a prompt: Kassab, O. (2020). “Cooking Notes from a Consumed Host”. In: On Curating Spaces (ed. Engy Mohsen, Sarah Maher, and Nour El Safoury)."
+          },
+          {
+            "kind": "discussion",
+            "description": "Listening to the prompt while preparing the food, eating while getting to know each other, we will digest the food by opening the conversation about the food we embody. From production to consumption, from nutrition to food waste, from compost to fertilizer,...and so on."
+          },
+          {
+            "kind": "exercise",
+            "description": "After the digestion of the food, we will engage in the practice of how to compost."
+          },
+          {
+            "kind": "exercise",
+            "description": "After all of this, our bodies might need a nap. Hence, we enter the dreamworld on the soundtrack to Earth, Wind, and Fire."
+          },
+          {
+            "kind": "exercise",
+            "description": "In revisiting the everyday acts of eating, daydreaming, and sleeping; we urge our participants to begin with a dream journal."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "The Dream Circle",
+        "description": "Where do dreams belong in the material world, a world bounded by air, water, fire, and earth?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Composters, as we are by now, are invited to gather in a circle and share snippets from our dream diaries. Those could be a dreamed story, recurring themes, images, or colors. Venturing in our dream worlds, we ask what the materials are telling us? How do they tell of the soundscapes, landscapes of our emotions and desires? While knowledge production has been oriented to consciousness, in this session we attempt to tap into the intuitive dreamworld. The stories of the participants are in themselves a prompts for the group to either write/draw a reaction to the dream. Opening a door for conversation to arise across each others dreams."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Air",
+        "description": "Rather than trying to find meaning, the composters are prompted to hear rather the frequencies, the tempo, the rhythm, to touch upon the frequencies vibrating in their bodies. With every pulse, we breathe. With every word, we send out a frequency. The session is orientated to experiments with sound waves.\n\nThis tapestry lead us to draw sound? How to draw sounds of imagination?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rhythmanalysis: Space, time and everyday life",
+            "note": "Lefebvre, H. (2007). (S. Elden & G. Moore Trans.). London, England: Continuum. (Original work published 1992). Tentative reading.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Everyday noise or sound recording",
+            "note": "Composters are asked to focus on/record an everyday noise or sound and each send in a song during the week leading up to session three.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "As an introduction to air, we initiate the air session by breathing and humming exercises Possibly singing while allowing both the dissonance and harmony to collide, glitch, and slide.We also might scream from our belly and note the vulnerability that comes along with acts of release. Followed by a period silence where we do simply nothing, but breathe."
+          },
+          {
+            "kind": "discussion",
+            "description": "Then we can listen to a mixtape of the recorded sounds coupled with the songs. Closing with our capacity to see, we open up to seeing through our ears. Also opening the space for a conversation, and possibly the common themes in our shared tapestry of sound."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "‘Making kin beyond babies’",
+        "description": "The composters are asked to delve into their kin relationships across generations to explore the witches of the family. There is always an aunt or grandmother around to tell you to put cloves in your mouth when in tooth pain, or to tell you to clean your stove with apple cider vinegar and baking soda. They might even have something to say about, yes indeed, compost. Instead of haunting the witch down, we embrace in this session the herbal world. All in all telling of the everyday wonders of material relationships or in other words; on how to make kin beyond babies.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Anthropocene, Capitalocene, Plantationocene, Chthulucene: Making Kin",
+            "note": "Haraway, D. (2015). Theorizing Environmental Gender Humanities (6). Tentative reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pro-Creation: Haraway’s “Regeneration” and the Postcolonial Cyborg Body",
+            "note": "Handelarsky, D (2010). Tentative reading.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Staying with the Trouble: Making Kin in the Chthulucene",
+            "note": "Donna Haraway. Tentative lecture.",
+            "href": "https://www.youtube.com/watch?v=GrYA7sMQaBQ"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "After an immersion in witch knowledges, we will continue the session by simply meditating with needles and hooks crocheting and knitting, while listening to Donna Haraway."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Chaos and Butterflies",
+        "description": "Chaos theory describes the qualities of the point at which stability moves to instability or order moves to disorder. For example, unlike the behavior of a pendulum, which adheres to a predictable pattern a chaotic system does not settle into a predictable pattern due to its nonlinear processes. In his lecture Sapolsky talks about the history of Chaos Theory and reductionism in science, where taking apart components of a complex system doesn't add up to the sum of its parts.\n\nIn this session we are invited to think about the application of chaos in the everyday. It opens up the space to imagine a set of possibilities in a far unknown future. For instance, we can try to imagine distant futures, new and old of post-human world, work and post-apocalyptic scenarios.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Chaos and Reductionism",
+            "note": "Lecture by Robert Sapolsky, Stanford University, 2010. Tentative.",
+            "href": "https://youtu.be/_njf8jwEGRo"
+          },
+          {
+            "type": "reading",
+            "title": "Chaos: Making a new science",
+            "note": "James Gleick. Tentative.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Boogie Wasteland: Earth, Water, and Fire",
+        "description": "Composters need to feel the earth. Prompted to explore the earth on barefoot, the composters jump into every opportunity leading up to the session to take of their shoes. This way, we can explore our footprint. Composters’ bodies on the move, squate while reposing rather than to sit on a chair. In this session, we focus on embodiment of moving through the elements of earth, wind, and fire. Therefore, we will dance our way through it.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Being alive: Essays on movement, knowledge and description",
+            "note": "Ingold, T. (2011). New York, NY: Routledge. Tentative reading.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Prompted to explore the earth on barefoot, the composters jump into every opportunity leading up to the session to take of their shoes."
+          },
+          {
+            "kind": "exercise",
+            "description": "In this session, we focus on embodiment of moving through the elements of earth, wind, and fire. Therefore, we will dance our way through it."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "We get together to work with our materials to create our zine and check the progress of the compost and possibly take it home with us to fertilize our craving plants.",
+        "meetings": 6,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Work with our materials to create our zine and check the progress of the compost."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Compost Lab: Materials of the everyday. Spring 2022. Sarah Maher, Marlies Van Coillie. CILAS.\n\nLab description: What stories does compost have to tell us? In skyrocketing, vertical, ever-shifting fast paced cities, pushing the compost at the edges of the world and eating up our senses, how to get in touch with the gestures presented by sprouts, embers, and other magical critters already enwrapped in the slow pace of the everyday? What are the practices we can do to synch with the rhythm of the compost heap?\n\nThe lab is an attempt to be thrown together like vegetable food waste. It is intended to decompose our extractive knowledges and to generate embodied relational practices with a desire to connect to joy, pleasure, intuition, and our never-ending quest to understand.\n\nTo be submerged into the world of the compost bin, both imaginal and real, is to create fictional stories. Therefore, the course is made up of a series of creative improvisational, experimental, and meditative workshops. From eating, to composting, to napping and dreaming, dancing and crocheting while reading and conversing. Processing the materials we encounter along the journey, the course will generate its own kind of compost in the form of a zine. The intent is to create a fictional story of the compost bin experience, whereby writing is not necessarily understood in a literal sense.\n\nBio (Sarah Maher): Sarah Maher has a degree in economics and a non-degree in liberal arts and sciences. Her practice involves writing, performing text, movement, swimming, crocheting, Dj'ing and organizing communal events. She has been part of a number of educational programs such as CILAS, Basata Ecolodge School, Dahshur Film Residence and Mass Alexandria. Her questions revolve around the different modes of knowing, the intersection between community and the institution and the never ending gap between experience and expression.\n\nBio (Marlies Van Coillie): Marlies Van Coillie is a dancer, knitter, nerd, aspirational pianist in her dreams, a cyborg as hobby, while carrying a Buraq and a submerged sea critter on her body. She has a BA and MA in Arabic and Islamic Studies at Ghent University, Belgium, and a MA in Gender and Women’s studies: Gendered Political Economies at AUC, Egypt. She situates her research within the New Materialisms debates. She collaborated in several art and research projects, exploring the relation between objects/things and other human becomings, despite an imagined universal hu-Man.\n\nLab concept epigraphs: Grandfather Payote told me once that we were all rocks and water set into motion by lightning strike. The Oak told me something very similar, we were water first then bone gave it structure and the lightning gave it movement. – Rune Soup, Episode Talking Animist Herbalism Seán Pádraig O’Donoghue, Gordon White [podcast]\n\nIt is not as though this world were one of brute physicality, mere matter, until people appeared on the scene to give it form and meaning. Stones [things] too, have histories, forged in ongoing relations with surroundings that may or may not include humans and much else beside. It is all very well to place stones [things] within the context of human social life and history, but within what context do we place this social life and history if not in the ever-unfolding worlds of materials in which the very beings of humans, along with that of the non-humans they encounter, is bound up? – Being Alive: Essays on movement, knowledge and description, Tim Ingold, 2011, p. 31 [Book]"
+  }
+}

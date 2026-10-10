@@ -1,0 +1,210 @@
+{
+  "sha256": "6fcee1168e6343ebcac96f2eb5f983623d4fd6344d1e9f2f2536ef21ab786f61",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introductions",
+        "description": "We will also be answering the following questions: What is an archive? What is historical memory? What responsibility do colonial and postcolonial states have in what we remember?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Caroline Elkins, “Looking beyond Mau Mau: Archiving Violence in the Era of Decolonization,”",
+            "note": "American Historical Review 120, no. 3 (2015), 852–868.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "What is a Silence? History and Erasure",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Michel-Rolph Trouillot, Silencing the Past: Power and the Production of History",
+            "note": "(Boston: Beacon Press, 1995), selections.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Archive Wars: The Struggle over Knowledge Production",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Omnia El Shakry, “History without Documents,”",
+            "note": "American Historical Review 120, no. 3 (2015), 920-934.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rosie Bsheer, Archive Wars: The Politics of History in Saudi Arabia",
+            "note": "(Palo Alto: Stanford University Press, 2020), selections.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "You Have Not Yet Been Defeated: Despair and Hope in Modern Egypt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "WHNYBD, excerpts",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Karim el Hayawan, “Forgotten Rooms”",
+            "note": "Photo essay. Photobook Egypt.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Heba Khalifa, “Homemade”",
+            "note": "Photo essay. Photobook Egypt.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Collective Memory and Social Justice",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Ten Years On Project: Roundtable on Archives, Revolution, Historical Thinking,”",
+            "note": "Jadaliyya, selections from Sherene Seikaly, Pascale Ghazaleh, and others.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Recollecting Intimacies: Love and Family",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Aho da Elly Sar",
+            "note": "episode TBD",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sherene Seikaly, “The Matter of Time,”",
+            "note": "American Historical Review 124, no. 5 (2019), 1681–1688.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Amina Kadous, “Answers to my Grandfather,”",
+            "note": "Photo essay. Mada Masr.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Recollecting Intimacies, pt. 2: Nostalgia and Romanticizing the Past",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Amy Malek, “Clickbait Orientalism and Vintage Iranian Snapshots,”",
+            "note": "International Journal of Cultural Studies 2021, Vol. 24(2) 266–289.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Reconstructing Forgotten Histories: Race and Religion",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Massoud Hayoun, When We Were Arabs: A Jewish Family’s Forgotten History",
+            "note": "selections.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Nour el Refai, The Nubians",
+            "note": "Photo essay.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Historic Preservation and Destruction",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Sharif Abdel Kouddous, “City Limits of the Dead,”",
+            "note": "Mada Masr.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Yasmine El Rashidi, “Pharaonic Ambition in Ferro-Concrete,”",
+            "note": "New York Review.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "What have we gained in learning what we have lost?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Saidiya Hartman, Wayward Lives, Beautiful Experiments: Intimate Histories of Social Upheaval",
+            "note": "(New York: W.W. Norton and Company), selections.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lyz Lenz, “Writing in An Age of Despair”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Spring 2022, Amy Fallas. Course Flow (verbatim headings as given). The flow lists only readings and viewings per week; no in-class activities, assessment or expectations are stated."
+  }
+}

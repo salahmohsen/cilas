@@ -1,0 +1,156 @@
+{
+  "sha256": "fd516bc2ea95d0cc8b05f65f75b0442e4ede971c9711069f433d24ec853f8bc1",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Beyond Resistance: Prefiguration?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Beyond Resistance: Everything. An Interview with Subcomandante Marcos",
+            "note": "El Kilombo Intergaláctico. Durham, NC: Paperboat Press, 2008.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Doing is Believing: Prefiguration as Strategic Practice in the Alterglobalization Movement",
+            "note": "Maeckelbergh, Marianne. Social Movements Studies, 10, no. 1 (2011): 1-20.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Politics of Prefiguration",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Prefigurative Politics, Catastrophe, and Hope: Does the idea of ‘Prefiguration’ Offer False Reassurance?",
+            "note": "CrimethInc.",
+            "href": "https://crimethinc.com/2018/06/12/prefigurative-politics-catastrophe-and-hope-does-the-idea-of-prefiguration-offer-false-reassurance"
+          },
+          {
+            "type": "reading",
+            "title": "Hope and Hopelessness: A Dialogue",
+            "note": "Duggan, Lisa and Jose Esteban Muñoz. Women & Performance: A Journal of Feminist Theory 19, no. 2 (2009): 275-283.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Queerness as Horizon: Utopian Hermeneutics in the Face of Gay Pragmatism",
+            "note": "Muñoz, Jose Esteban. In Cruising Utopia: The Then and There of Queer Futurity. New York: New York University Press, 2009.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Mutual Aid",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mutual Aid: Building Solidarity during this Crisis (and the Next)",
+            "note": "Spade, Dean. New York: Verso Books, 2020.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Direct Action",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Direct Action: An Ethnography",
+            "note": "Graeber, David. Oakland: AK Press, 2009. (Selections)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Worldbuilding",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "War on People: Drug User Politics and a New Ethics of Community",
+            "note": "Zigon, Jarrett. 2019. Oakland: University of California Press. (Selections)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Radical and Deviant Care",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Radical Care: Survival Strategies for Uncertain Times",
+            "note": "Hi‘ilei Julia Kawehipuaakahaopulani Hobart and Tamara Kneese. Social Text 38, no. 1 (March 2020): 1-16.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Deviant Care for Deviant Futures: QTBIPoC Radical Relationalism as Mutual Aid against Carceral Care",
+            "note": "Hwang, Ren-yo. TSQ 6, no. 4 (November 2019): 559-578.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Making Kin",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Making Kin Not Population",
+            "note": "Clarke, Adele, and Donna Haraway. Eds. Chicago: Prickly Paradigm Press, 2018.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Living and Dying Together",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Decolonizing Extinction: The Work of Care in Orangutan Rehabilitation",
+            "note": "Salazar Parreñas, Juno. Durham: Duke University Press, 2018. (Selections).",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Instructor: Fernando Revelo La Rotta. Course Description, verbatim: The concept of prefiguration encapsulates the project of creating a new or alternative society from within the current configuration of the world. Prefiguration functions as a theory in action, or the creation of an otherwise or alternative world that emerges from how one lives one’s life. Therefore, prefiguration stands in contrast to dominant conceptualizations of social change. It challenges the “revolutionary event” as the focal point (and goal) of social change by removing the temporal distinction between the process in the present and its aims in the future. In prefigurative politics, the process and the aims become intertwined recursively in the present.\n\nPrefiguration also allows for goals to be open and multiple—always on the horizon and in constant motion. It seeks to develop new ways of being without predetermining the outcome. Prefiguration also focuses on the micro-level, positing that the imagination and enactment of new forms of sociality and relationality are the foundations of social change. It marks an investment in the potential of the unknown punctuated by a dissatisfaction with the status quo.\n\nAs a result, this course begins and proceeds with the prefigurative assumptions that other worlds are possible and that glimpses of them exist in our everyday, including social movements, collective survival strategies, and our aesthetic and artistic practices. In this course, we will explore historical and contemporary manifestations of prefigurative politics and practices, including the alter-globalization movement, mutual aid projects, alternative kinship, and reimaginations of care. These “case studies” will provide us the opportunity to reflect on prefigurative practices and politics, including the obstacles and conflicts that arise in prefigurative projects of worldbuilding and the affective bonds these projects foster and engender. Throughout the course, we will also be attuned to the prefigurative glimpses of collective potentiality already being enacted and imagined in our daily lives.\n\nThe schedule is tentative (“Tentative Course Schedule”)."
+  }
+}

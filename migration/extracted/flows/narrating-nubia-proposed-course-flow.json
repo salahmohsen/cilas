@@ -1,0 +1,207 @@
+{
+  "sha256": "c3698f302c9ba0a6278280efb50290355fa0f6f81dded7362c4886ec4b82ffe9",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to Nubian Literature and Culture",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“A Minor Literature in a Major Voice”: Narrating Nubian Identity in Contemporary Egypt",
+            "note": "Gilmore, Christine. Alif: Journal of Comparative Poetics, no. 35, 2015, pp. 52–74.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Case of Nubian Literature",
+            "note": "Jacquemond, Richard. In Conscience of the Nation: Writers, State, and Society in Modern Egypt. Translated by David Tresilian. The American U in Cairo Press, 2008, pp. 181, 184.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from the ethnographic essay: Nubians in Egypt: Peaceful People",
+            "note": "Fernea, Robert Alan, and Horst Jaritz. University of Texas Press, 1973.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Cultural Memory",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The River People",
+            "note": "Short story by Haggag Oddoul.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Communicative and Cultural Memory",
+            "note": "Assmann, Jan. In Cultural Memories: The Geographical Point of View, edited by Peter Meusburger et al., Springer, 2011, pp. 15–27.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Invention, Memory, and Place",
+            "note": "Optional. Said, Edward W. Critical Inquiry, vol. 26, no. 2, Jan. 2000, pp. 175–92.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Memory and History: Les lieux de mémoire",
+            "note": "Optional. Nora, Pierre. Representations vol. 26, 1989, pp. 7-24.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Nile: A Material and Spiritual Source of Life",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "عروس النيل",
+            "note": "Short story by Yahya Mukhtar.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Damming the Nile: A Poet’s Ecology",
+            "note": "Shenoda, Matthew. Prairie Schooner, vol. 90, no. 3, 2016, pp. 40–50.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Angels in the Nile: A Theme in Nubian Ritual",
+            "note": "al-Guindi, Fadwa. In Nubian Ceremonial Life: Studies in Islamic Syncretism and Cultural Change, edited by John G. Kennedy. American U in Cairo Press, 2005, pp. 104-113",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Evil River Beings",
+            "note": "Grauer, Armgard and John G. Kennedy. In Nubian Ceremonial Life: Studies in Islamic Syncretism and Cultural Change, edited by John G. Kennedy American U in Cairo Press, 2005, pp. 114-124",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Nile Bride Myth ‘Revisioned’ in Nubian Literature",
+            "note": "Optional. Abdel Hafeez, Ghada. Dotawo: A Journal of Nubian Studies vol. 5, no. 1, 2018, pp 167-91.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الأوشي” عبيد النوبة: تمييز الأسود ضد الأسود” (“The Nubian Osheh Slaves: Discrimination of Blacks Against Blacks”)",
+            "note": "Optional. Mokhtar, Yomna. Assiyasy Magazine, November 2012. Retrieved from https://tinyurl.com/yomnamokhtar",
+            "href": "https://tinyurl.com/yomnamokhtar"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Rituals of Dance and Music",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Nights of Musk” \"ليالي المسك العتيقة\"",
+            "note": "Haggag Oddoul.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Displacement and Music: Embodiments of Contemporary Nubian Music in the Nubian Resettlements",
+            "note": "Kaddal, Fayrouz. 2021. The American U in Cairo, MA Thesis. Retrieved from https://fount.aucegypt.edu/etds/1591",
+            "href": "https://fount.aucegypt.edu/etds/1591"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Disucussion with guest speaker: Fayrouz Kaddal, Nubian musician and music anthropologist"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "During and After Tahgir: What happened to the Nubian landscape?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "حكايات للنسيان",
+            "note": "Yahya Mukhtar.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الغيوم تخنق القمر",
+            "note": "Hassan Nour.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Contradictions of Afro-Arab Solidarity(ies): The Aswan High Dam and the Erasure of the Global Black Experience",
+            "note": "Abubakr, Bayan. POMPES Studies, vol. 44, 2021, pp. 73-80.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "انتشال النوبة بالكتابة (“Salvaging Nubia through Writing”)",
+            "note": "Ali, Idris. Akhbar al-Adab, 17 June 20017, p. 35.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Archival research activity: I will share with you a collection of archived articles collected by the late Professor of anthropology, Dr. Nicholas Hopkins and generously handed down to me by his wife, Professor Ferial Ghazoul. We will spend some time searching through the archives and you will create a narrative of the Nubian journey based on the materials of this archive. This is a group activity, so we might be divided into 2 or more groups."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Making Space for Nostalgia",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Nubia Still Exists: On the Utility of the Nostalgic Space",
+            "note": "Agha, Menna. Humanities, vol. 8, no. 1, 2019. Retrieved from https://doi.org/10.3390/h8010024.",
+            "href": "https://doi.org/10.3390/h8010024"
+          },
+          {
+            "type": "reading",
+            "title": "Narrating Nubia: Between Sentimentalism and Solidarity",
+            "note": "Moll, Yasmin. POMPES Studies, vol. 44, 2021, pp. 81-86.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Field Trip: Visiting Nobadia, a Nubian cultural space in Agouza and discussing the reading over Nubian tea and Sudanese Coffee. A Nubian music night might also be arranged."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course overview, verbatim: The Nubian peoples have inhabited the area of what is now considered south of Egypt and northern Sudan for centuries. Their existence in this region has revolved around one fluid entity, the Nile River. The Nile overwhelmingly exists in Nubian culture and heritage, from mythology to birth and death rituals to traditional dances. Proximity to the Nile was of vital importance to Nubian peoples because their livelihood depended on it, and they shared a deep spiritual connection with its water. Therefore, Nubians also centralized all their daily practices around sustaining this river in its purest form. These traditions all came to an abrupt in the 1960s, when the High Dam and Lake Nasser were established under the rule of Egypt’s revolutionary president, Gamal Abdel Nasser. This rendered Nubians a diasporic people, scattered in villages east of Aswan, in Cairo and Alexandria, and around the world. Yet, the non-tangible traditions, like storytelling, singing, and dancing, that were revolved around the Nile, continued to exist in practice and in memory. Nubian people had to rely on personal and collective memories to sustain their relationship with their now drowned lands.\n\nThrough surveying Nubian literature, this course will explore Nubian culture and tradition and how it has been sustained through mnemonic practices. It will discuss its place in Egyptian culture, as well as the ecological aftermath the establishment of the High Dam has created. We will read a novel and several short stories, supplemented by ethnographic accounts and theoretical texts."
+  }
+}

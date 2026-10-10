@@ -1,0 +1,274 @@
+{
+  "sha256": "23b2efd0477f7d85a1c72af39248472e34921b013e4ce4566630ccb1010916ad",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The parable of the madman",
+            "note": "Friedrich Nietzsche, The Gay Science (1882, 1887) para. 125; Walter Kaufmann ed. (New York: Vintage, 1974), pp. 181-82.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Nietzsche and Metaphysics",
+            "note": "Houlgate, Stephen, “Hegel, Nietzsche, and the Criticism of Metaphysics”. PP: 38-90.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The opening scene of Bella Tar’s Werckmeister Harmonies",
+            "note": "Films/Videos/Notes column.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "What is Metaphysics?",
+            "note": "Martin Heidegger.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The thought of the nothing: Heidegger’s what is metaphysics? (1929)",
+            "note": "In: Lawlor’s Early Twentieth Century Continental Philosophy.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Philosophy – what is that?",
+            "note": "Martin Heidegger.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ontotheology? Understanding Heidegger’s Destruktion of Metaphysics",
+            "note": "Iain Thomson.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Derrida’s Objection to the metaphysical tradition",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Letter on Humanism",
+            "note": "Martin Heidegger.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Humanism Debate",
+            "note": "Thomas Baldwin.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beyond the death of man: Foucault, Derrida, and Philosophical Anthropology",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Letter to Lord Chandos",
+            "note": "Hugo Von Hoffmannstahl.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Adorno and Heidegger on language and the inexpressible",
+            "note": "Roger Foster.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Language",
+            "note": "Heidegger.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dwelling in the speaking of Language: Heidegger’s Language (1950)",
+            "note": "In: Lawlor’s (Ibid.)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A preface to Transgression",
+            "note": "Foucault. Further reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Thought of the Outside",
+            "note": "Foucault. Further reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Enveloped in a nameless voice: Foucault’s ‘The thought of the Outside (1966)’",
+            "note": "Lawlor. Further reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Poetically man dwells",
+            "note": "Heidegger.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Heidegger on Poetic Thinking and the Cinema of Andrie Tarkovsky, Chapter 1",
+            "note": "Evi Haggipavlu.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from Rilke",
+            "note": "Further reading.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "What are the poets for?",
+            "note": "Heidegger. Further reading.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Heidegger on Poetic Thinking and the Cinema of Andrie Tarkovsky, Chapters 2 and 3",
+            "note": "Evi Haggipavlu.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Cinema of Boredom: Heidegger, Cinematic Time, and Spectatorship",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Stalker",
+            "note": "Tarkovsky. Films/Videos/Notes column.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Praying through Cinema",
+            "note": "Like Stories of Old. Films/Videos/Notes column; medium not stated.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Utopia: a political ontology",
+            "note": "Michael Marder.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Emancipation",
+            "note": "In: Biesta’s The Beautiful Risk of Education.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Recap and Discussion on the final papers."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course topics (verbatim headings): Topic One: The problem of Western philosophy and the need to overcome metaphysics (sessions 1–4). Topic Two: the limits of language and the importance of art (sessions 5–8). Third Topic: Political Implications (sessions 9–10).\n\nCourse description (verbatim): This course aims at providing an introduction to the turn against “philosophy” that has shaped the philosophical scene since Nietzsche. Together, we shall try to see why this turn is considered fundamental if one wants to critically engage in any fruitful reading of the most influential thinkers from that date till today. This course plans to give an overview on the following three topics: the problem(s) of western philosophy and metaphysics, the limits of our language and the importance of art, and the political consequences of these issues – especially on utopia/dystopia, and pedagogy. These topics can put into perspective the genuine importance of many of the thinkers that we are going to read, like Nietzsche, Heidegger, Foucault, and Derrida. Without such an introduction, it would be hard to read and understand what they are talking about, and it would also be hard to understand why there is a turn towards the “post-modern”, the “grassroots”, the “upcoming community”, “the death of God”, and the likes of these thorny, contemporary issues. Participants in this course are expected to express their engagement with the readings and film/videos weekly, at the end of the course, or both.\n\nBiography (verbatim): Hisham Fahmy is an author, lecturer, and translator of philosophy. He graduated in political science, and is currently pursuing his post-graduation studies in philosophy. He has several publications in both English and Arabic concerning issues of Islamic philosophy, political theory, and anthropology; he also has presented numerous lectures on philosophy in general and political philosophy in particular – especially on the work of Carl Schmitt, Eric Voegelin, Theodore Adorno, Heidegger, and Michelle Foucault. He currently works as a teaching assistant of philosophy in the American University in Cairo - and he is a graduate of the Cairo Institute of Liberal Arts and Sciences (2018) as well."
+  }
+}

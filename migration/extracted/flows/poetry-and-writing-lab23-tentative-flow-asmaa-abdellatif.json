@@ -1,0 +1,295 @@
+{
+  "sha256": "16c33dce6760c110ebb872d93e21e857c6c27b1cf19cc85f5988b3e4bbbf9fcd",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Letters to a Young Poet",
+            "note": "Rilke. The first letter.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Course overview"
+          },
+          {
+            "kind": "discussion",
+            "description": "Open discussion"
+          },
+          {
+            "kind": "exercise",
+            "description": "Group Activity"
+          },
+          {
+            "kind": "exercise",
+            "description": "Writing exercise"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Let’s Talk about Form",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "https://www.theguardian.com/cities/2016/oct/06/cities-poetry-urban-language-national-poetry-day",
+            "note": "Reading.",
+            "href": "https://www.theguardian.com/cities/2016/oct/06/cities-poetry-urban-language-national-poetry-day"
+          },
+          {
+            "type": "reading",
+            "title": "How to Read a Poem: And Fall in Love with Poetry",
+            "note": "Edward Hirsch. Book.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The CITY",
+            "note": "Ghayath Almadhoun.",
+            "href": "https://www.youtube.com/watch?v=bDn_dKLtEnw"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "A General intro into poetry as a literary genre: In 2023, what is poetry? And where to find it? How to read a poem? Introduction to urban poetry"
+          },
+          {
+            "kind": "exercise",
+            "description": "Writing exercise"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Reflection and digestion"
+          },
+          {
+            "kind": "presentation",
+            "description": "Participant presentations"
+          },
+          {
+            "kind": "exercise",
+            "description": "Writing exercise"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Field Visit (To be determined with participants) - Looking into history"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Poet and the City",
+            "note": "W. H. Auden. Book.",
+            "href": "https://www.jstor.org/stable/25086852"
+          },
+          {
+            "type": "reading",
+            "title": "The Production of Space",
+            "note": "Introduction. Book by Henri Lefebvre.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "https://www.shorouknews.com/columns/view.aspx?cdate=22012021&id=de4e8e5a-e9a8-41d5-816a-05b9b54abcc2",
+            "note": "Reading.",
+            "href": "https://www.shorouknews.com/columns/view.aspx?cdate=22012021&id=de4e8e5a-e9a8-41d5-816a-05b9b54abcc2"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Participants Presentations"
+          },
+          {
+            "kind": "discussion",
+            "description": "Deconstructing the city: how do we read space?"
+          },
+          {
+            "kind": "other",
+            "description": "Digesting history"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Urban poetry and social justice",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Harlem",
+            "note": "Langston Hughes. Media.",
+            "href": "https://poets.org/poem/harlem"
+          },
+          {
+            "type": "watch",
+            "title": "Hona Alqahera",
+            "note": "Film. Media.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion of the ways in which urban poetry can engage with social and political issues. Who lives in Cairo?"
+          },
+          {
+            "kind": "other",
+            "description": "Analysis of examples of urban poetry that address issues of inequality, injustice, and resistance"
+          },
+          {
+            "kind": "exercise",
+            "description": "Writing exercise: creating urban poetry that addresses a specific social or political issues"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cleaning out the Ghettos",
+            "note": null,
+            "href": "https://www.jadaliyya.com/Details/33102"
+          },
+          {
+            "type": "reading",
+            "title": "Better than Berlin",
+            "note": null,
+            "href": "https://www.jadaliyya.com/Details/42216"
+          },
+          {
+            "type": "reading",
+            "title": "In the inner city",
+            "note": "Lucille Clifton.",
+            "href": "https://www.everseradio.com/in-the-inner-city-by-lucille-clifton/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion on Gentrification"
+          },
+          {
+            "kind": "other",
+            "description": "Examples of how gentrification is dealt with in poetry"
+          },
+          {
+            "kind": "exercise",
+            "description": "Writing exercise"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Cairo: Memoirs of a City Transformed",
+            "note": "Optional. Ahdaf Soueif. Book.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Field Visit (TBD with participants) - A look into the present and the future of Cairo"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Reading and analyzing poetry from other cities (Primary focus is on cosmopolitan, war-torn, and postcolonial cities)"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "A look into digital media and urban poetry after the internet revolution"
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Final presentations and exhibitions"
+          },
+          {
+            "kind": "other",
+            "description": "Individual Poetry readings"
+          },
+          {
+            "kind": "discussion",
+            "description": "Course reflections and open discussions"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Cairo Poetics: The City as a Poem, by Asmaa Abdellatif. Tentative Flow. Note: The selection of poems to be analyzed will be ﬂexible according to the discussions in every class.\n\nCourse work: Throughout the course, participants will be expected to start working on their own individual works of art (poems, digital art, paintings, photography..etc) in order to be collected and compiled in a digital anthology by the end of the course.\n\nThe Week 2 reading URL for the Guardian article is recorded as both title and href because the flow gives no title for it. Some links appear more than once in the link list; each address is attached to its single material."
+  }
+}

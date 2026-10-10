@@ -1,0 +1,393 @@
+{
+  "sha256": "98c70b17873799e8f8e0944a841a4817437d551a328597887c4f553741ef928b",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Foundations of Emotional Archaeology",
+        "description": "Key Themes: Emotional knowledge, sensory archives, personal memory\n\nFocus Questions: Why study archives emotionally? What makes an object or space archival?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ellis, Benjamin, Stewart",
+            "note": "Core Readings",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Introduction to the course and methodology"
+          },
+          {
+            "kind": "other",
+            "description": "Emotional Archaeology as a research lens"
+          },
+          {
+            "kind": "other",
+            "description": "Digital archives and cultural memory in a post-globalised world"
+          },
+          {
+            "kind": "exercise",
+            "description": "Workshop: Personal Object as Archive— a hands-on exercise in emotional memory and narrative layering"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Phenomenology of Space & Memory",
+        "description": "Key Themes: Embodied experience, orientation, spatial memory\n\nFocus Questions: How do we experience space emotionally? What does it mean to \"be oriented\" toward an archive?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Tuan, Ahmed",
+            "note": "Core Readings",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "La Chimera (2023)",
+            "note": "Film (excerpts)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Phenomenology of perception and place"
+          },
+          {
+            "kind": "other",
+            "description": "The politics of orientation and lived geography"
+          },
+          {
+            "kind": "other",
+            "description": "Mapping memory: space as a sensory container"
+          },
+          {
+            "kind": "exercise",
+            "description": "Workshop: Cartographies of Feeling — participants create personal memory maps"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "The Archive as Intimate Landscape",
+        "description": "Key Themes: Autoethnography, voice, vulnerability in research\n\nFocus Questions: How does the researcher’s self shape the archive? Can intimacy be methodologically valid?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reed-Danahay, Ellis",
+            "note": "Core Readings",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Al Mummia (1969)",
+            "note": "Full screening + discussion",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Autoethnography as a critical and creative mode"
+          },
+          {
+            "kind": "other",
+            "description": "Archive as a queer/feminist and embodied practice"
+          },
+          {
+            "kind": "screening",
+            "description": "Full screening + discussion: Al Mummia (1969)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Guest conversation: Archive and Queer/Feminist Practice"
+          },
+          {
+            "kind": "exercise",
+            "description": "Workshop: Writing the Archive from Within"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Intercultural Archives — Case Study: Delhi",
+        "description": "Key Themes: Syncretism, grassroots heritage, memory politics\n\nFocus Questions: What stories live in non-institutional archives? How do multilingual/multi-religious histories cohabit?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Archival selections from Delhi",
+            "note": "Core Materials",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "discussion prompts",
+            "note": "Core Materials",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Exploration of the Hazrat Shah Waliullah Library and similar community archives"
+          },
+          {
+            "kind": "presentation",
+            "description": "Visual presentation of selected manuscripts"
+          },
+          {
+            "kind": "other",
+            "description": "Intercultural memory and plural urban pasts"
+          },
+          {
+            "kind": "exercise",
+            "description": "Workshop: Sensory Writing Exercise— recording archival atmospheres"
+          },
+          {
+            "kind": "other",
+            "description": "Preparation for independent fieldwork"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Cairo Fieldwork Orientation",
+        "description": "Key Themes: Ethics of witnessing, methodological design, positionality\n\nFocus Questions: What does it mean to “excavate” cultural memory? How do we balance access and care?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Orientation to field research: approaches, challenges, permissions"
+          },
+          {
+            "kind": "discussion",
+            "description": "Field Visit Protocols shared and discussed"
+          },
+          {
+            "kind": "other",
+            "description": "Methodology Clinic: building your research toolkit"
+          },
+          {
+            "kind": "exercise",
+            "description": "Reflection activity: The Ethics of Looking Closely"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Fieldwork Week",
+        "description": "Key Themes: Embodied research, situated documentation, community dialogue",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Independent or small-group visits to local archival or cultural spaces (suggested list provided; students may propose others)"
+          },
+          {
+            "kind": "other",
+            "description": "Documentation through visual, audio, written, and sensory methods"
+          },
+          {
+            "kind": "discussion",
+            "description": "Midweek peer check-in (virtual or in-person) to share early impressions and troubleshoot"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Translating Fieldwork — Studio Sessions",
+        "description": "Key Themes: Curation, creative synthesis, affective storytelling\n\nFocus Questions: How do we tell what we felt? What does a \"living\" archive look/sound/feel like?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Practice-as-Research studio workshop: curating your materials (sound, images, text, sketches, maps)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Peer feedback and collaborative problem-solving"
+          },
+          {
+            "kind": "exercise",
+            "description": "Writing the Affective Archive: guided exercises in creative-critical synthesis"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Shared Excavations — Final Presentations",
+        "description": "Key Themes: Knowledge sharing, reflection, methodological legacies\n\nFocus Questions: What do we do with what we found? How do we honour the process?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Public or semi-public presentation of final Practice-as-Research projects"
+          },
+          {
+            "kind": "discussion",
+            "description": "Reflecting on process, ethics, and embodied knowledge"
+          },
+          {
+            "kind": "discussion",
+            "description": "Closing circle: collective reflections and possible afterlives of your research"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Deborah E. Reed-Danahay, Autoethnography: Rewriting the Self and the Social",
+        "note": "selected chapters",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Carolyn Ellis, “The Autoethnographic I,” in The Ethnographic I: A Methodological Novel about Autoethnography",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Sara Ahmed, Queer Phenomenology: Orientations, Objects, Others",
+        "note": "selections",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Yi-Fu Tuan, Space and Place: The Perspective of Experience",
+        "note": "Introduction",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Walter Benjamin, “Unpacking My Library”",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Susan Stewart, On Longing: Narratives of the Miniature, the Gigantic, the Souvenir, the Collection",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Mircea Eliade, The Sacred and the Profane: The Nature of Religion",
+        "note": "selections",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Ananda K. Coomaraswamy, The Transformation of Nature in Art",
+        "note": "selections",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Michael Baxandall, Patterns of Intention: On the Historical Explanation of Pictures",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Naguib Mahfouz, The Harafish",
+        "note": "Literature & Lived Histories",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Ahmed Ali, Twilight in Delhi",
+        "note": "Literature & Lived Histories",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Attia Hosain, Sunlight on a Broken Column",
+        "note": "Literature & Lived Histories",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Excerpts from Naguib Mahfouz, On Art, Literature & History",
+        "note": "Literature & Lived Histories",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Keri Smith, How To Be An Explorer of The World: Portable Art/Life Museum",
+        "note": "Literature & Lived Histories",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Selected Urdu and Persian manuscripts from the Hazrat Shah Waliullah Library (Delhi) and parallel archives in Cairo",
+        "note": "to be shared during the course",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Al Mummia (1969, dir. Shadi Abdel Salam)",
+        "note": "Films & Visual Poetics",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "La Chimera (2023, dir. Alice Rohrwacher)",
+        "note": "selected scenes",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Clips from Kaili Blues (2015, dir. Bi Gan) and Stalker (1979), The Mirror (1975, dir. Andrei Tarkovsky)",
+        "note": "Optional viewing",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Rustom Bharucha, The Politics of Cultural Practice: Thinking Through Theatre in an Age of Globalization",
+        "note": "Supplementary & Optional Readings",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Rashmi Varma, The Postcolonial City and its Subjects: London, Nairobi, Bombay",
+        "note": "selected chapters",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Edward Casey, The Fate of Place: A Philosophical History",
+        "note": "excerpts",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Kaveh Safa, selected articles on Transmedia Storytelling",
+        "note": "Supplementary & Optional Readings",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Paula Serafini, Performing the City",
+        "note": "optional excerpts",
+        "href": null
+      }
+    ],
+    "notes": "Learning Outcomes (verbatim, as written in the flow):\n1. Apply phenomenological and emotional archaeology frameworks to the analysis of cultural memory, space, and archival practice using tools such as Experience Logs, e.tc.\n2. Engage in autoethnographic research by drawing on personal experience, affect, and embodied memory to inform scholarly and creative inquiry using tools like Specimen Folders, e.t.c.\n3. Critically interpret grassroots and community-based archives, with attention to their intercultural, syncretic, and political dimensions, using tools like Observation Sketchbooks, e.t.c.\n4. Design and conduct field-based research using hybrid methodologies that integrate academic rigour with community knowledge and creative modes of documentation, using tools like Analytical Classification Tables, e.t.c.\n5. Produce Practice-as-Research outputs that synthesise theory, fieldwork, and artistic expression across textual, visual, and performative forms using methodological praxis frameworks such as Neo-Dastangoi, e.t.c.\n6. Demonstrate emotional and ethical literacy in research encounters, especially in contexts involving intimate, marginal, or overlooked cultural spaces.\n7. Contribute to decolonial and community-rooted modes of knowledge-making, challenging dominant narratives through sensory, inclusive, and situated methodologies.\n\nDiscussion-Based Learning Approach: In Intimate Excavations, discussion-based learning will be woven into every stage of the course as a method of both intellectual inquiry and emotional reflection. Drawing on the principles of relational autoethnography and feminist/queer pedagogy, each session will begin with a facilitated round of reflective dialogue— drawing from the week's readings, viewings, or field notes. Rather than treat discussion as commentary, we will treat it as co-authorship: a collaborative process where lived experience, emotional resonance, and theoretical insight are given equal weight. Participants will be invited to share not only what they have understood, but what they have felt, questioned, or remembered— foregrounding the affective labour of research. These dialogues will directly inform creative exercises and methodological workshops, allowing students to iteratively test and refine their Practice-as-Research approaches. The classroom will function as a porous space— part seminar, part studio— where conversations evolve into documentation strategies, memory maps, or experimental texts. Weekly peer exchange and feedback will further support the development of participants' projects, nurturing a collective environment of ethical witnessing, vulnerability, and mutual respect. Through this approach, DBL becomes not just a pedagogical tool but a core practice of emotional archaeology itself."
+  }
+}

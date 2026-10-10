@@ -1,0 +1,123 @@
+{
+  "sha256": "2a758b59d1c5e4e26c938834ceb1dce8ae5ed0c0765be050e1881c14a612d817",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Case for or against Political Realism — Part 1",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Case for or against Political Realism — Part 2",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "To Bind or not to Bind: Soft vs. Hard Law",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Quis custodiet ipsos custodes? Who guards the guardians?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "At the Root of the Political: Territory, Space, Borders",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "What comes first: the Land or the Law?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Shifting fault lines: Rise and Fall of the Jus Publicum Europaeum",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "The Concept of a “Just War”",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "From the SDN to the UN: Twilight of the Dysfunctioning Idols",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "A New Nomos of the Earth",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "The Concept of the Political",
+        "note": "Carl Schmitt, trans. George Schwab, The University of Chicago Press, 2007",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Nomos of the Earth in the International Law of the Jus Publicum Europaeum",
+        "note": "Carl Schmitt, trans. G. L. Ulmen, Telos Press Publishing, 2006",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "On Nationality",
+        "note": "David Miller, Oxford University Press, 1995",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Critique of the State",
+        "note": "Jens Bartelson, Cambridge University Press, 2004",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Philosophy and Real Politics",
+        "note": "Raymond Geuss, Princeton University Press, 2008",
+        "href": null
+      }
+    ],
+    "notes": "Course Summary: In an era where an increasing number of nations are brazenly flouting international law, Carl Schmitt's seminal work The Nomos of the Earth gains new relevance as we grapple with the implications of what more and more looks like the eve of a profound shift. Albeit radical, the idea that international law is dead, at least as we know it, cannot be characterized as fringe thinking anymore. Accordingly, participants will delve into the intricate interplay between Schmitt's political realism and contemporary challenges to the international legal framework. By scrutinizing Schmitt's insights through the lens of today's geopolitical landscape, participants will gain a deeper understanding of the complexities surrounding the advanced state of erosion of international law, and its potential replacement by a new paradigm.\n\nDrawing from Schmitt's concept of the \"Nomos,\" which presides over international law, this course explores how the global legal order has already gone through successive paradigm shifts. Key topics include the resurgence of nationalist ideologies, the return to the warring-states model in international relations, and the general decay of multilateral institutions. Participants will critically assess the implications of these developments on the future of international law and explore potential pathways towards a new global legal order. By confronting the challenges posed by Schmitt's provocative insights, participants will cultivate a nuanced understanding of the evolving dynamics of global governance and the imperatives of political realism in shaping the next age of geopolitics."
+  }
+}

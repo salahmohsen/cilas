@@ -1,0 +1,111 @@
+{
+  "sha256": "21842a120c5496605ab2c0b3278ba2e8f6190847c05bc171137c6eaaf508780d",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "History and Anthropology: Contours of a Relationship",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "History and Anthropology",
+            "note": "Geertz",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Silencing the Past",
+            "note": "Trouillot",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Storyteller",
+            "note": "Walter Benjamin",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction: Historical Anthropology and its Vicissitudes",
+            "note": "Brian Keith Axel",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction for an Anthropology of History",
+            "note": "Stephan Palmie and Stewart",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "How Does Anthropology Know History? Archival Anthropology and its Double",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Cash Book",
+            "note": "Rosalind Morris",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Archival Dis-Ease: Thinking through Colonial Ontologies",
+            "note": "Ann Stoler",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Pulse of the Archive",
+            "note": "Ann Stoler, from Along the Archival Grain",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Annals of the Archive",
+            "note": "Nicholas Dirks",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Trauma and History",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Empire of Trauma",
+            "note": "Fassin and Rechtman (multiple chapters)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Trauma and Testimony",
+            "note": "Veena Das",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Act of Witnessing",
+            "note": "Das, from Life and Words",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Saturday Or Tuesday 5:30-8:30\n\nWhy history and why anthropology? What could the historian be if not a scribe of the worlds that humans live in, and what is the anthropologist if not an archivist of social forms of life? This course asks these questions in order to figure out the ways in which the tradition of anthropological inquiry draws from and makes use of history as a portal into the social. In the course of 10-12 weeks we will try to understand this relationship as well as explore its relevance to matters of contemporary importance.\n\nSince the end of World War II and the advancement of a new global order, built on the backbone of post-war American influence, the global landscape of social imagination has changed and shifted. With the advent and failure of the independence movements of the 1960s and 70s, this landscape became ever more important to the interpretation of these post-colonial social worlds. History and memory become crucial elements of understanding the post-WWII world. I propose in this course to use the emergence of ‘Trauma” from a sociological perspective, to investigate the intersections of anthropology and history.\n\nTrauma is a historical and temporal concept. When we say that “someone” is traumatized, we identify this condition by a) locating some event in the past as “traumatic” and its continued existence in the present as a vital force as “traumatizing”. In order to think this through as anthropologists, we ask how collectivities, communities, societies, etc. remember and narrate, the conditions of production and the practices of remembrance and the ways in which people live with and make use of the past.\n\nThe course will be divided into three units that attempt to provide us with the answer to a couple of main questions that we will set together at the beginning of each unit."
+  }
+}

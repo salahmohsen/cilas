@@ -1,0 +1,174 @@
+{
+  "sha256": "257ba28550c90845327cccfda372f3f1bdd307d477a759f2b80278ff60316c4e",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "أخلاقيات الترجمة",
+            "note": null,
+            "href": "https://boringbooks.net/2018/12/professional-pride_6.html"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "ترجمة على الهواء"
+          },
+          {
+            "kind": "other",
+            "description": "تعارف وعرض الخطة"
+          },
+          {
+            "kind": "discussion",
+            "description": "حديث حول أخلاقيات الترجمة"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "كيف تقرأ ترجمة؟",
+            "note": "لورانس فينوتي",
+            "href": "https://turjoman.boringbooks.net/%d9%84%d9%88%d8%b1%d8%a7%d9%86%d8%b3-%d9%81%d9%8a%d9%86%d9%88%d8%aa%d9%8a-%d9%83%d9%8a%d9%81-%d8%aa%d9%82%d8%b1%d8%a3-%d8%aa%d8%b1%d8%ac%d9%85%d8%a9%d8%9f/"
+          },
+          {
+            "type": "reading",
+            "title": "كيف تقرأ كمترجم؟",
+            "note": null,
+            "href": "https://www.publicbooks.org/how-to-read-like-a-translator/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "ترجمة بالعامية وترجمة بالفصحى"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "تأطير الصراع في الترجمة",
+            "note": "مقال منى بيكر",
+            "href": "https://drive.google.com/file/d/0Bww4_HT3HjxcazFadTBHTzliUjA/view?resourcekey=0-HlycvdGOrVfKX09eQ7lHhQ"
+          },
+          {
+            "type": "reading",
+            "title": "الترجمة كعنف",
+            "note": "مقال إيلاف بدر الدين",
+            "href": "https://www.aljumhuriya.net/ar/content/%D8%A7%D9%84%D8%AA%D8%B1%D8%AC%D9%85%D8%A9-%D9%83%D8%B9%D9%86%D9%81"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "سياسات الترجمة"
+          },
+          {
+            "kind": "exercise",
+            "description": "ترجمة جماعية"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "فلسفة ترجمة العلوم الاجتماعية",
+            "note": "كوزليك",
+            "href": "https://drive.google.com/file/d/1RGYowvQHdZwExq4Ng-X3I2F5FS3A4XhT/view?usp=sharing"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "فلسفة ترجمة العلوم الاجتماعية"
+          },
+          {
+            "kind": "exercise",
+            "description": "مقارنة الترجمات"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "ترجمة المصطلح",
+            "note": "شاكرابارتي",
+            "href": "https://drive.google.com/file/d/1m7xMbgjJiksVOQCaRHOO9PXYJ2vp7AhX/view?usp=sharing"
+          },
+          {
+            "type": "other",
+            "title": "إزاي استخدمته في رسالتي",
+            "note": null,
+            "href": "https://drive.google.com/file/d/1m7xMbgjJiksVOQCaRHOO9PXYJ2vp7AhX/view?usp=sharing"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ترجمة المصطلح (شاكرابارتي + إزاي استخدمته في رسالتي)"
+          },
+          {
+            "kind": "exercise",
+            "description": "ترجمة تلخيصية"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "اقتراح",
+            "note": null,
+            "href": "https://docs.google.com/document/d/1BGSoYeVTkq9ZPm88JeE43oK9omZ3XGlu/edit?usp=sharing&ouid=113821247378556350209&rtpof=true&sd=true"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "تجارب في الترجمة (اقتراح)"
+          },
+          {
+            "kind": "exercise",
+            "description": "ترجمة جماعية 2"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "مختبر الترجمة الثامن: ترجمة العلوم الاجتماعية والفلسفة\nيقدمه أحمد السروجي وحسين الحاج\n\nينقسم مسار المختبر إلى قسمين، يتضمن القسم الأول (ستة أسابيع) قراءة نصوص حول أخلاقيات الترجمة وسياساتها وفلسفتها وتجاربها وممارسة تمارين مختلفة في الترجمة على سبيل الإحماء، ثم ننتقل في القسم الثاني (خمس أسابيع) إلى مشروعات الترجمة الجماعية والفردية.\n\nيسعى المختبر إلى تنشيط ممارسة المترجمين عبر تعزيز أدواتهم وتطوير معارفهم ليس من حيث النظريات العملية فحسب، بل أفضل الأساليب في توظيف المصادر المتاحة من أجل تحسين مستويات الترجمة في مجالات الآداب والعلوم الاجتماعية والإنسانية."
+  }
+}

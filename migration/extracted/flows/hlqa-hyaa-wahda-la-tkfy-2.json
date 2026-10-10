@@ -1,0 +1,426 @@
+{
+  "sha256": "9805f50cc49bb0e7b42c6adef0757958950a5c07a3b821e8c8aa356c0bdffcfc",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "التعارف وتحديد الأدوار",
+        "description": "* (طباعة) نسخ من برنامج الحلقة بعدد المشاركين\n\nالتأكيد على الاهتمام بتدوين ما نتذكر من الأحلام طوال فترة الحلقة، كسلوك دراسي.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Inception",
+            "note": "2010، إخراج كريستوفر نولان. تدوين ملاحظات أثناء المشاهدة.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "تعارف."
+          },
+          {
+            "kind": "exercise",
+            "description": "تقسيم المهام، وتوزيع عناوين الموضوعات والمراجع بحيث يكون عدة أشخاص مسئولين عن كل عنوان، يقدمون عرضا عنه خلال الحلقات القادمة، ويناقش أفكار العرض والمراجع المنشط والمشاركين."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "ما هو النوم؟",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "كيف ننام؟",
+            "note": "إيزابيل أرنوف",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "النوم مقدمة قصيرة",
+            "note": "ستيفن لوكلي وراسل فوستر",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "أسرار النوم",
+            "note": "الكسندر بوربلي",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "لماذا ننام؟",
+            "note": "ماثيو ووكر",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "لازم تنام",
+            "note": "الدحيح",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "لماذا ننام",
+            "note": "ماثيو ووكر",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "الكهف",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "النوم والأحلام",
+            "note": "عبد الرزاق جعفر",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "مائة نصيحة للنوم",
+            "note": "جوزيت ليون",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "اضطرابات النوم",
+            "note": "لطفي الشربيني",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "أخيرا سأنام جيدا",
+            "note": "ماري كريستين كولينز (قراءات من الكتاب)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "النوم الصحي",
+            "note": "خواطر",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "النوم سلطان",
+            "note": "فارماستان",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "الأحلام في التاريخ",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "أشهر الأحلام في التاريخ",
+            "note": "ممدوح الشيخ",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الأحلام بين العلم والعقيدة",
+            "note": "علي الوردي",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "كيف نحلم؟",
+            "note": "إيزابيل أرنوف",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "مجموعة مقالات",
+            "note": "كيفية تذكر الأحلام؛ لماذا نحلم؟؛ أشهر الكوابيس المتكررة؛ اكتشافات مدهشة للعلوم النفسية..",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "زمام الأحلام",
+            "note": "الدحيح",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "حقائق مذهلة لاتعرفها عن الأحلام",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Strange Science of Why We Dream",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "تفسير الأحلام بين الخرافة والعلم",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "تفسير الأحلام",
+            "note": "سيجموند فرويد (قراءات: الفصل 5: مادة الحلم ومصادره ص186-ص288)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "قاموس الأحلام",
+            "note": "رمزي النجار",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "موسوعة تفسير الأحلام",
+            "note": "ميلر",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الاحلام",
+            "note": "توفيق الطويل",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الأحلام تفسيرها ودلالتها",
+            "note": "نيريس دي",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "التحليل النفسي للأحلام",
+            "note": "عبد المنعم الحفني",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "تأمّل معي. الأحلام.. علميًا",
+            "note": "نضال قسوم",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "الأحلام والأساطير",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "الأساطير والأحلام والأسرار",
+            "note": "ميرسيا إيلياد",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "اللغة المنسية",
+            "note": "إريك فروم (قراءات: الفصل3: طبيعة الحلم ص28: ص48)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الحكايات والأساطير والأحلام",
+            "note": "إريك فروم",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "حديث الأحلام رمزية الحلم",
+            "note": "آنيا تيار",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الأحلام والجنس",
+            "note": "جوزيف جاسترو (قراءات: الفصل 7: حجة الأحلام ص74)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "التنويم والبرمجة",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "غير مجرى حياتك مع التنويم المغناطيسي",
+            "note": "دار الرشيد",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "أسرار التنويم المغناطيسي الذاتي",
+            "note": "آدم إيسون (قراءات: الفصل الثالث)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "التنويم المغناطيسي",
+            "note": "نبيل ابراهيم غالي",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "انشطار الذهن",
+            "note": "بيتر ماكلير",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "هل يمكن توجيه الأحلام؟",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "القوة الفكرية في المغنطيسية الحيوية",
+            "note": "وليم أتكنسون",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "التصوير العقلي",
+            "note": "هاني عبد الرحمن",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "التصور الإبداعي",
+            "note": "شاكتي غاوين",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الحاسة السادسة",
+            "note": "ماهر يسري",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "قانون الجذب",
+            "note": "مايكل لوسيير",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "رؤى الأحلام في الأدب",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "أحلام فترة النقاهة",
+            "note": "نجيب محفوظ (قراءات: الأحلام العشرة الأولى)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "منامات عم أحمد السماك",
+            "note": "خيري شلبي",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "كتاب النوم",
+            "note": "هيثم الورداني",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "كيف تتذكر أحلامك",
+            "note": "عمرو عزت",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "ماذا بعد،",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "مراجعة وتقييم"
+          },
+          {
+            "kind": "other",
+            "description": "جمع النصوص"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "watch",
+        "title": "Inception",
+        "note": "2010. Suggested film for discussion on the margins of the circle.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Inside Out",
+        "note": "2015. Suggested film for discussion on the margins of the circle.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "The Matrix",
+        "note": "1999. Suggested film for discussion on the margins of the circle.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Eternal Sunshine of the Spotless Mind",
+        "note": "2004. Suggested film for discussion on the margins of the circle.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Vanilla Sky",
+        "note": "2001. Suggested film for discussion on the margins of the circle.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Eyes Wide Shut",
+        "note": "1999. Suggested film for discussion on the margins of the circle.",
+        "href": null
+      }
+    ],
+    "notes": "حياة واحدة لا تكفي: حول النوم والأحلام وزرع الأفكار\nيقدمه محمد عبد العظيم\n\nهذا مساق عن حقيقة نوم الإنسان، وكيف يحدث ذلك؟ وكيف نحلم؟ متتبعا الأحلام وتأثيرها في التاريخ، والجهود العلمية لفهم الأحلام وتفسيرها، وهل يمكننا أن نتحكم في أفكار العقل الباطن وإعادة توجيهها أو زرع أفكار جديدة، معتمدا على عدة مراجع متنوعة من الدراسات والكتب وأفلام السينما والإبداع الأدبي\n\nبينما يقوم الباحثون بالبحث في المراجع عن سر هذا الحدث اليومي، يرافق ذلك مجموعة من الأنشطة حول تفسير أحلامنا، كيف نزاوج بين العقل الواعي والعقل الباطن، الدخول إلى الذات عبر تمرينات التنفس اليوجي، تسجيل الأحلام ومحاولة تفسيرها، نعرج على جوانب ربما تكون غير علمية في موضوع النوم لها طرافتها وفائدتها، سواء أكانت تتصل بالتاريخ أو علم الاجتماع أو الأدب، والسينما.\n\nثمة أدوار مساعدة في توزيع المهام داخل المساق، مثل الدليل: وهو أكثر المشاركين معرفة مسبقة بتفسير الأحلام، ويطلع على كتب التفسير ومنها: قاموس الأحلام للدكتور رمزي النجار، وموسوعة تفسير الأحلام لميلر، وبعد دراسة كتاب تفسير الأحلام لفرويد، سيكون الدليل في تفسير الأحلام التي تم تسجيلها من قبل المشاركين في بنك الأحلام، بحيث يسهل الوصول لمفاتيح التفسير. وكذلك هناك مدير لبنك الأحلام، وهو الشخص الذي تجمع عنده أحلام شخصية للمشاركين يودون مشاركتنا بها، أو بعض الأحلام الهامة التي ترد في المراجع\n\nعن ميسر المساق محمد عبد العظيم: كاتب نشر مقالات نقدية وتغطيات صحفية حول الأدب والسينما والدراما، والقصص القصيرة، في عدة من صحف ومجلات مصرية وعربية. صدرت له مجموعة قصص بعنوان \"ليس للجنة فرع أخر\" عن الجزويت للنشر والإعلام 2020، تخرج من مدرسة المشورة بمركز الجزويت بعد دراسة علم النفس لمدة عامين، منسق برنامج التكوين الصحفي، ومؤسس عدة صالونات أدبية وثقافية وسينمائية، مثل صالون زمرة الثقافي، ونادي الجزويت للكتاب\n\nعدد الساعات: 30 ساعة، مقسمة على 10 جلسات أسبوعية (الثلاثاء من السادسة حتى التاسعة مساء)."
+  }
+}

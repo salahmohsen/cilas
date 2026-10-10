@@ -1,0 +1,671 @@
+{
+  "sha256": "9fa457f91e5438399c3bc8ed99790295ac6a2548b0a6814856a46d7ad3361946",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "INTRODUCING KOYAANISQATSI",
+        "description": "Ko•yaa•nis•qatsi (from the Hopi Language), n. 1. crazy life. 2. Life in turmoil. 3. life out of balance. 4. life disintegrating. 5. a state of life that calls for another way of living.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Koyaanisqatsi",
+            "note": "Documentary, 1982. Artwork.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "TOYS",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Mimesis in New Materialisms\n\nExample of snippet:\n“He is alone in realizing that he is subject to illness, alone in knowing that he must die…Of all the creatures that live in society, man alone can swerve from the social line by giving way to selfish preoccupations…This twofold shortcomings in man is the price paid for intelligence. Man cannot exert his faculty of thought without imagining an uncertain future, which rouses his fears and his hopes. He cannot think about what nature demands of him, in so far as she has made a social being of him, without saying to himself that he might often find it more profitable to ignore others and to think of himself alone. In both cases there would be a break of the normal, natural order of things” (Bergson, 1935, pp. 204-205)\n“Assuming that society is to go on—there must be a counterpoise, at these points, to intelligence. If this counterpoise cannot be instinct itself, for the very reason that its place has been taken by intelligence, the same effect must be produced by a virtuality of instinct, or, if you prefer it, by the residue of instinct which survives on the fringe of intelligence: it cannot exercise direct action, but, since intelligence works on representations, it will call up ‘imaginary ones’, which will hold their own against the representation of reality and will succeed, through the agency of intelligence itself, in counteracting the work of intelligence. This would be the explanation of the myth-making faculty” (Bergson, 1935, p. 119).\n“Homo Sapiens, the only creature endowed with reason, is also the only creature to pin its existence to things unreasonable” (Bergson, 1935, p. 102).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introducing the new materialisms",
+            "note": "Coole, D. & S. Forst (2010). In D. Coole & S. Frost (Eds.), New materialism: Ontology, agency, and politics (pp. 1-43). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tactility and distraction",
+            "note": "Taussig, M. (1991). Cultural Anthropology 6(2), 147-153.",
+            "href": "https://doi.org/10.1525/can.1991.6.2.02a00020"
+          },
+          {
+            "type": "reading",
+            "title": "Mimesis and alterity: A particular history of senses",
+            "note": "Taussig, M. (1993). New York, NY: Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The two sources of morality and religion",
+            "note": "Bergson, H. (2002). Trans. R. A. Audra, C. Brereton & W. H. Carter. Notre Dame, IN: University of Notre Dame Press. (Original work published 1935).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Elusive Material, What the Dog Doesn’t Understand",
+            "note": "Chow, R. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 221-233). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The gospel of Mary Magdalene",
+            "note": "Leloup, J. & J. Needleman (2002). Trans. J. Rowe. Rochester, NY: Inner Traditions.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Prologue: Painting Figures",
+            "note": "Extract. Van Coillie, M. (2020). Toy-Stories of the (Im)Material Life of Things: Public Art of Becoming in the Moulid. Bodies, Objects, and Mimesis. Cairo: The American University in Cairo [Thesis].",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "PENCILS",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Art in New Materialisms\n\nExample of snippet:\n“Although her external functions were almost dead, she retained a puzzling life within her body. Her “dictionary” was a sea of words, references to all kinds of illness, places and roles she no longer inhabited, and people she once knew and lived for: “Documents, reality, tiresomeness, truth, saliva, voracious, consumer, saving, economics, Catarina, spirit, pills, marriage, cancer, Catholic church, separation of bodies, division of the state, the couple’s children.” Her seemingly disaggregated words were in many ways an extension of the abject figure she had become in family life, medicine, and Brazil. “Medical records, ready to go to heaven,” she wrote. “Dollars, Real, Brazil is bankrupted, I am not to be blamed, without a future. Things out of justice. Human body?”” (Biehl & Locke, 2017, p. 52).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The inertia of matter and the generativity of flesh",
+            "note": "Coole, D. (2010). In D. Coole & S. Frost (Eds.), New materialism: Ontology, agency, and politics (pp. 92-115). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Orientations matter",
+            "note": "Ahmed, S. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 116-136). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Prologue",
+            "note": "Pandian, A. & S. McLean (2017). In A. Pandian & S. McLean (Eds.), Crumpled paper boat (pp. 1-10). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Intoduction to the question: is confusion a form?",
+            "note": "Guyer, J. I. (2015). Social Dynamics 41(1), 1-16. doi: 10.1080/02533952.2015.1029742",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Towards the City of Thresholds",
+            "note": "Stravrides, S. (2010). Professional Dreamers [Online].",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Risking oneself and one’s identity: Agonism revisited",
+            "note": "Gambetti, Z. (2016). In J. Butler, Z. Gambetti & L. Sabsay (Eds.), Vulnerability in resistance (pp. 28-51). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ethnographic sensorium. & Anthropology of Becoming",
+            "note": "Biehl, J. & P. Locke (2017). In J. Biehl & P. Locke (Eds.), Unfinished: The anthropology of becoming (pp. 1-88). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Impersonal matter",
+            "note": "Orlie, M. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 116-136). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The agent is the void! From the subjected subject to the subject of action",
+            "note": "Gambetti, Z. (2005). Rethinking Marxism: A Journal of Economics, Culture & Society 17(3), 425- 437.",
+            "href": "https://doi.org/10.1080/08935690500122289"
+          },
+          {
+            "type": "reading",
+            "title": "Time and the other: How anthropology makes its object",
+            "note": "Fabian, J. (2014). New York, NY: Columbia University Press.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Pasting: The Battle Mural (Part 2/3)",
+            "note": "Ammar Abo Bakr. Artwork. In: Hamdy, B. & D. Karl (Eds.) (2014). Walls of freedom: Street art of the Egyptian revolution. Berlin, Germany: From Here To Fame Publishing.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "PAINTING",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Landscape\n\nExample of snippet:\n“Imagine a film of the landscape, shot over years, centuries, even millennia. Slightly speeded up, plants appear to engage in very animal-like movements, trees flex their limbs without any prompting from the winds. Speeded up rather more, glaciers flows like rivers and even the earth begins to move. At yet greater speeds solid rocks bends, buckles and flows like molten metal. The world itself begins to breathe.” (Ingold, 1993, p.164)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The temporality of the landscape",
+            "note": "Ingold, T. (1993). World Archaeology 25(2), 152-174.",
+            "href": "https://doi.org/10.1080/00438243.1993.9980235"
+          },
+          {
+            "type": "reading",
+            "title": "Gender in counterpoint",
+            "note": "Brown, W. (2003). Feminist theory 4(3), 365-368. doi: 10.117/14647001030043011",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "City life from Jakarta to Dakar: Movements at the crossroads",
+            "note": "Simone, A. (2010). New York, NY: Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Waiting, patience and love",
+            "note": "Cordner, C. (2009). In G. Hage (Ed.), Waiting (pp. 169-181). Melbourne, VI: Melbourne University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bodies in alliance and the politics of the street",
+            "note": "Butler, J. (2011, September 7). European Institute for Progressive Cultural Policies.",
+            "href": "https://transversal.at/transversal/1011/butler/en"
+          },
+          {
+            "type": "reading",
+            "title": "Virtual infrastructures of habit: The changing intensities of habit through gracefulness, restlessness and clumsiness",
+            "note": "Bisell, D. (2015). Cultural Geographies 22(1), 127-146.",
+            "href": "https://doi.org/10.1177/1474474013482812"
+          },
+          {
+            "type": "other",
+            "title": "Painting: The Harvesters",
+            "note": "Pieter Bruegel the Elder. Artwork. In: Ingold, T. (1993). The temporality of the landscape. World Archaeology 25(2), 152-174.",
+            "href": "https://doi.org/10.1080/00438243.1993.9980235"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "MONSTER & BURAQ",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Life\n\nExample of snippet:\n“To be as if already gone is to accept death and not allow it to become the limit of thinking. This is a living with, or being with death, which sees it not as an intruder but as that without which we cannot live.” (Hanafin, 2009, p. 47)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Social Being, Time and the Sense of Existence”",
+            "note": "Bourdieu, P. (1997). In: Pascalian Meditations. Stanford: Stanford University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rights of passage: Law and the biopolitics of dying",
+            "note": "Hanafin, P. (2009). In R. Braidotti, C. Colebrook & P. Hanafin (Eds.), Deleuze and law, futures (pp. 47-58). New York, NY: Palgrave MacMillan.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Politics of “Life Itself” and New Ways of Dying",
+            "note": "Braidotti, R. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 201-220). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Form-of-life",
+            "note": "Agamben, G. (1996). In P. Virno & M. Hardt (Eds.), Radical thought in Italy: A potential politics (pp. 150-156). Minneapolis, MN: University of Minnesota Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Foucault’s fossils: Life itself and the return to nature in feminist philosophy",
+            "note": "Huffer, L. (2017). In R. Grusin (Ed.), Anthropocene feminism (pp. 65-88). Minneapolis, MN: University of Minnesota Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "How to begin from the beginning",
+            "note": "Žižek, S. (2009). New Left Review 57, 43-55.",
+            "href": "https://newleftreview.org/issues/II57/articles/slavoj-zizek-how-to-begin-fromthe-beginning.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "The Meccan revelations (Vol. 1)",
+            "note": "Ibn Al ‘Arabi (2005). M. Chodkiewicz Ed., W. C. Chittick & J. W. Morris Trans. New York, NY: Pir Press.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Hajj Paintings: Buraq",
+            "note": "Artwork.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "TOMB",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Death\n\nExample of snippet:\n“In spite of the terror and the symbolic sealing off of the slave, he or she maintains alternative perspectives toward time, work, and self. This is the second paradoxical element of the plantation world as a manifestation of the state of exception. Treated as if he or she no longer existed except as a mere tool and instrument of production, the slave nevertheless is able to draw almost any object, instrument, language, or gesture into a performance and then stylize it. Breaking with uprootedness and the pure world of things of which he or she is but a fragment, the slave is able to demonstrate the protean capabilities of the human bond through music and the very body that was supposedly possessed by another.” (Mbembe, 2003, p. 22)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Necropolitics: Living death in Mexico",
+            "note": "Emerson, R. G. (2019). Palgrave Macmillan.",
+            "href": "https://doi.org/10.1007/978-3-030-12302-4"
+          },
+          {
+            "type": "reading",
+            "title": "Locating Deleuze’s eco-philosophy between bio/zoe-power and necropolitics",
+            "note": "Braidotti, R. (2009). In R. Braidotti, C. Colebrook & P. Hanafin (Eds.), Deleuze and law, futures (pp. 96-116). New York, NY: Palgrave MacMillan.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Necropolitics",
+            "note": "Mbembe, A. (2003). (L. Meintjes Trans.). Public Culture 15(1), 11-40.",
+            "href": "https://doi.org/10.1215/08992363-15-1-11"
+          },
+          {
+            "type": "reading",
+            "title": "Histories of violence: Affect, power, violence – The political is not personal",
+            "note": "Massumi, B. (2017, November 13). (B. Evans Interviewer). Los Angeles Review of Books.",
+            "href": "https://lareviewofbooks.org/article/histories-of-violence-affect-powerviolence-the-political-is-not-personal/"
+          },
+          {
+            "type": "reading",
+            "title": "The Meccan revelations (Vol. 1)",
+            "note": "Ibn Al ‘Arabi (2005). M. Chodkiewicz Ed., W. C. Chittick & J. W. Morris Trans. New York, NY: Pir Press.",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Underground Railroad",
+            "note": "Music. Artwork.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sidi Ahmad al-Rifa‘i",
+            "note": "Poem extract. Artwork.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rabia Al-Adawiyya",
+            "note": "Poem extract. Artwork.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "GLITCH & CLOCK",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Event\n\nExample of a snippet:\n“This relation to alterity is more material than matter as substance or presence because it is more fundamental or “infrastructural”, so to speak, since it constitutes matter as such. Simply put Derrida’s argument is that the very presence of matter—its persistence, endurance, or being in time—is premised on there being such a thing as a true gift of time, or which is the same thing, a pure event…They must therefore be understood through the figure of the impossible, that which we cannot imagine or figure within the realm of the possible. They require the thought of an inappropriable other that must necessarily remain unappropriated. For once the other that gives time and the event is appropriated, then it is no longer other, and there is no longer a gift or a pure event…Indeed, the impossible is curiously more material and real than concrete actuality.” (Cheah, 2010, pp. 75-76)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Non-dialectical materialism",
+            "note": "Cheah, P. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 70-91). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction: In the event—towards an anthropology of generic moments",
+            "note": "Kapferer, B. (2010). Social Analysis 54(3), 1-27. doi: 10.3167/sa.2010.540301",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Time and Affect",
+            "note": "Lapoujade, D. (2018). Powers of time. Versions of Bergson (pp. 1-16). Minneapolis, MN: University of Minnesota Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Section 2: The event according to Deleuze",
+            "note": "Badiou, A. (2009). Logics of Worlds: Being and Event II (pp. 381-388). London, England: Continuum.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Life, movement and the fabulation of the event",
+            "note": "Mullarkey, J. (2007). Theory, Culture & Society 24(6), 53-70.",
+            "href": "https://doi.org/10.1177/0263276407078712"
+          },
+          {
+            "type": "reading",
+            "title": "Machines to crystallize time: Bergson",
+            "note": "Lazzarato, M. (2007). Theory, Culture & Society 24(6), 93-122.",
+            "href": "https://doi.org/10.1177/0263276407078714"
+          },
+          {
+            "type": "reading",
+            "title": "Time matters: Marx, Negri, Agamben, and the corporeal",
+            "note": "Casarino, C. (2008). In: Praise of the Common (ed. Casarino, A Negri). Minneapolis: Univ. Minn. Press, 219–245.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Mural The Prophet",
+            "note": "Ammar Abo Bakr. Artwork.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "HUMANIMAL",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of the Human\n\nExample of a snippet:\n“Law assumed the power to humanize…The innovation of juridical humanity arose from the figure of a self-present, bounded human; the absence of the autonomous human, together with the inhuman, constituted the other of the human” (Esmeir, 2012, p. 12).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Juridical humanity: A colonial history",
+            "note": "Esmeir, S. (2012). Stanford, CA: Stanford University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Critical posthuman knowledges",
+            "note": "Braidotti, R. (2017). The South Atlantic Quarterly 116(1), 83-95.",
+            "href": "https://doi.org/10.1215/00382876-3749337"
+          },
+          {
+            "type": "reading",
+            "title": "New materialism: Interviews & cartographies",
+            "note": "Dolphijn, R. & I. Van Der Tuin (2012). Ann Arbor, MI: Open Humanities Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Power",
+            "note": "Foucault, M. (1994). (P. Rabinow ed.). New York, NY: The New Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Feminism unbound: Revolution, mourning, politics",
+            "note": "Brown, W. (2005). Edgework: Critical essays on knowledge and politics (pp. 98-115). Princeton, NJ: Princeton University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Wounded Attachments”",
+            "note": "Brown, W. (1993). Political Theory 21(3), 390-410.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Anthropocene Feminism",
+            "note": "Grusin, R. (Eds). (2017). Minneapolis and London: University of Minnesota Press, vii-xix.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Documentary Concerning Violence",
+            "note": "2014. Based on Frantz Fanon’s essay Concerning Violence in: The Wretched of the Earth (1961). Artwork.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "CYBORG & VIRUS",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of kin\n\nExample of a snippet:\n“There is no fundamental, ontological separation in our formal knowledge of machine and organisms, of technical and organic…One consequence is that our sense of connection to our tools is heightened” (Haraway, 2016, p. 60)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pro-creation—Haraway’s ‘regeneration’ and the postcolonial cyborg body",
+            "note": "Handlarski, D. (2010). Women’s Studies 39(2), 73-99.",
+            "href": "https://doi.org/10.1080/00497870903459291"
+          },
+          {
+            "type": "reading",
+            "title": "A cyborg manifesto: Science, technology and socialist-feminism in the late twentieth century",
+            "note": "Haraway, D. (2016). University of Minnesota Press. doi: 10.1007/978-1-137-05194- 3_10",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Staying with the trouble. Making kin in the Chthulucene",
+            "note": "Haraway, D. J. (2016). Durham: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Something to do” & “Contempt as a Virus”",
+            "note": "Smith, Z. (2020). Intimations. Penguin Books Ltd.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "THUS SPOKE ZARATHUSTRA",
+            "note": "Friedrich Nietzsche. Artwork.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Stretching"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "ROCK, PAPER, SCISSORS",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Material\n\nExample of snippet:\n“It is not as though this world were one of brute physicality, mere matter, until people appeared on the scene to give it form and meaning. Stones to, have histories, forged in ongoing relations with surroundings that may or may not include humans and much else beside. It is all very well to place stones within the context of human social life and history, but within what context do we place this social life and history if not in the ever unfolding worlds of materials in which the very beings of humans, along with that of the non-humans they encounter, is bound up?” (Ingold, 2011, p. 31)\n\nArtwork is marked “?” in the flow.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Being alive: Essays on movement, knowledge and description",
+            "note": "Ingold, T. (2011). New York, NY: Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "An ecology of materials",
+            "note": "Ingold, T. (2018). In S. Witzgall & K. Stakemeier (Eds.), Power of material/Politics of materiality (pp. 59-65). Zurich, Switzerland: Diaphanes.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The mushroom at the end of the world: On the possibility of life in capitalist ruins",
+            "note": "Tsing, A. L. (2015). Princeton, NJ: Princeton University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Extractive Zone. Social Ecologies and Decolonial Perspectives",
+            "note": "Gómez-Barris, M. (2017). Durham and London: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Feminism, Materialism, Freedom",
+            "note": "Grosz, E. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 139-157). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Materialities of Experience",
+            "note": "Connoly, W. E. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 178-200). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Fear and the illusion of autonomy",
+            "note": "Frost, S. (2010). In D. Coole & S. Frost (Eds.), New materialisms: Ontology, agency, and politics (pp. 158-177). Durham, NC: Duke University Press.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Experiment with the stone"
+          },
+          {
+            "kind": "exercise",
+            "description": "Experiment with paper and scissors"
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": "SHOES",
+        "description": "Assignment Readings: Academic Snippets of literature on the Concept of Movement\n\nExample of a snippet:\n“Boots and shoes, products of the ever more versatile human hand, imprison the foot, constricting its freedom of movement and blunting its sense of touch.” (Ingold, 2011, p. 36)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Being alive: Essays on movement, knowledge and description",
+            "note": "Ingold, T. (2011). New York, NY: Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rhythmanalysis: Space, time and everyday life",
+            "note": "Lefebvre, H. (2007). (S. Elden & G. Moore Trans.). London, England: Continuum. (Original work published 1992).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Social space. The production of space",
+            "note": "Lefebvre, H. (1991). (D. N. Smith Trans.) (pp. 68-168). Oxford, England: Blackwell Publishing.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On touching – The inhuman that therefore I am",
+            "note": "Barad, K. (2012). differences 23(3), 206-223.",
+            "href": "https://doi.org/10.1215/10407391-1892943"
+          },
+          {
+            "type": "reading",
+            "title": "The end of the cognitive empire: The coming of age of epistemologies of the South",
+            "note": "De Sousa Santos, B. (2018). Durham, NC: Duke University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dispersing power: Social movements as anti-state forces",
+            "note": "Zibechi, R. (2010). (R. Ryan Trans.). Oakland, CA: AK Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On believing",
+            "note": "Zournazi, M. & C. Tsiolkas (2002). In M. Zournazi (ed.), Hope: New philosophies for change (pp. 98-121). Annandale, NSW: Pluto Press Australia.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘On the side of life’: Joy and the capacity of being",
+            "note": "Zournazi, M. & G. Hage (2002). In M. Zournazi (ed.), Hope: New philosophies for change (pp. 150-173). Annandale, NSW: Pluto Press Australia.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Social change between potentiality and actuality: Imagination in Cairo’s alternative cultural spaces",
+            "note": "Kelada, M. (2015). International Journal of Sociology 45(3), 223-233. doi: 10.1080/00207659.2015.1066181",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Dhikr",
+            "note": "Music. Artwork.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Dance and Movement Workshop"
+          },
+          {
+            "kind": "exercise",
+            "description": "Experiment Barefoot"
+          },
+          {
+            "kind": "exercise",
+            "description": "Experiment Squatting"
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": "ART- AND BODYWORK",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Artwork & Bodywork: Presentation Creative Projects"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course title: THEORIZING GENDER: New Materialisms. Art & Bodywork: Materials, Objects, and Movement (Spring 2021, Marlies Van Coillie, CILAS).\n\nA Course Description: Modernity designed an emancipatory power of the mind to create the human anew, civilized and freed from her feminized naturalistic animalistic bodily drives. Modern rationality would enlighten our suffering bodies. Reason would discipline our bodies for it to reincarnate into the modern hu-Man, master over the material world. To trace, however, other human becomings, despite an imagined universal Man, is to cross the norm and to become the figure of the impossible.\n\nTo become a figure of the impossible is to become to identify with the nonhuman, to become a papered body, to become painted and colored. It is to become objects. It is to become a piece of art. It is to become gatherings of materials in movement.\n\nThis seminar invites us to unlearn the notion of ‘the hu-Man’ while learning of the hu-Man story about nonhumans as a story the hu-Man tells himself about himself. How can stories of materials make this hu-Man story leak? How can our relationality to materials speak of other becomings? Of becoming animal, insect, a cyborg, a Buraq or art? How can the human itself become a leakage rather than a category?\n\nThe seminar invites us not to wander in our human categories as bankable guarantees but to inhabit our bodies, open, relational and in movement. The course materials conceptualize bodily and material becomings wherein the binary of human and nonhuman cannot hold a grip of reality. The academic literature, different artwork and experimental bodywork of the seminar is situated within new materialisms debates in Gender Studies.\n\nTeaser: Modernity designed the hu-Man as a mastermind over the material world. But what if we think of ourselves as becoming animal, bacteria, a virus, insect, a cyborg, art, or a figure of the impossible? How can the human itself become a leakage rather than a category?\n\nCourse Requirements:\nParticipation – The seminar is situated within education as a form of correspondence with the complex lifeworld of the students. It is therefore premised on interactions, active participations, and class discussions. The seminar therefore requires both attendance and input of the students. All students are expected to attend all seminars and to thoroughly have read the assigned material in preparation for the seminar discussion. The reading consists out of snippets of articles not the full articles as listed in outline of the reading materials.\n\nResponse Essays – Each student in turn is required to write/paint/draw/collect a response essay in a personal sketchbook and bring it to class. The response essay engages creatively the key concepts of the reading materials of the seminar assigned for a class, offers a critical reflection of the posed arguments in the readings and raises questions in relation to the material. The essay furthermore situates itself within the correspondence and conversations between the overall readings of the seminar. The sketchbook in form allows for a creative assemblage of things; it is meant to be a material diary during the course.\n\nCreative Project – Based on an embodiment of knowledge, the creative project asks from the students to engage new materialisms through an artistic form of expression that blurs the division between art and academic forms of knowledge production.\n\nBio: Marlies Van Coillie is a dancer, nerd, a PowerPoint designer, a cyborg as hobby, while carrying a Buraq on her body. Her materialist plastic soul is enchanted by the Egyptian moulid festivals. Her MA thesis traces the (im)material life of things and objects in the festivals in relation to public art production. Her research has involved her in an art-research project Tawtam in collaboration with visual artist Ammar Abo Bakr. She has an BA and MA in Arabic and Islamic Studies at Ghent University and an MA in Gender and Women’s Studies in MENA at The American University in Cairo."
+  }
+}

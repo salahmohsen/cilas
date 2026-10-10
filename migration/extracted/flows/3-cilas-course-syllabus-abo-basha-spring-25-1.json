@@ -1,0 +1,473 @@
+{
+  "sha256": "58b23e620e53d18bc0aa6baac05c4190db7c07242b8273955b4fcf69b094a35b",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The dialectic of psychic-political",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Our Lucky Hours by Martine Deyres. France, Switzerland, Belgium, 77', 2019. Trailer.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Battle of Algiers. Pontecorvo, G. (1966). Rizzoli. Selected clips.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Robcis, Camille. (2020). “Frantz Fanon, Institutional Psychotherapy, and the Decolonization of Psychiatry.” Journal of the History of Ideas 81(2), 303-325.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Fanon, Frantz (2004). “Colonial War and Mental Disorders.” In The Wretched of the Earth. New York: Grove Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Daqqa, Walid. (2010). “Consciousness Molded or the Re-identification of Torture,” in Abeer Baker and Anat Matar, (eds), Threat: Palestinian Political Prisoners in Israel (2011). Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Podcast: “Camille Robcis- Uncovering Radical Psychiatry and Institutional Psychotherapy in Postwar France.” March 2023. Mad in America: Rethinking Mental Health.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hawa, Kaleem. (2024). “Like a Bag Trying to Empty: On the Palestinian Prisoner and Martyr Walid Daqqa.” Parapraxis. From the River to the Sea Palestine Issue: 2023-2024.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Salih, Arwa. (2018). The Stillborn: Notebooks of a Woman from the Student-Movement Generation in Egypt. (Samah Selim, Trans). London: Seagull Books. Excerpts",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Salih, Tayeb (2003). Season of migration to the north (D. Johnson-Davies, Trans.). Penguin Classics. Excerpts.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "ياسين الحاج صالح. بالخلاص يا شباب! ١٦عاماً في السجون السورية. دار الساقي للطباعة والنشر.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Institutional psychotherapy and the misapprehension of psychosis",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Reggio, David; Novello, Mauricio & Oury, Jean (2007). “Interview: Jean Oury: The hospital is ill.” Radical Philosophy 143. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "El Shakry, Omnia. (2017). The Arab Freud: Psychoanalysis and Islam in modern Egypt. Princeton University Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hochberg, Gil Z. (2021). Becoming Palestine: Toward an Archival Imagination of the Future. Durham, NC: Duke University Press. Excerpts.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The sound of wounds",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "listen",
+            "title": "Wade in the water by Ella Jenkins",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Selected Songs and quotes by Hamza Abu Quneis by Maazef",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "هيثم الورداني. ٢٦ يوليو ٢٠٢٤. أن تُصبح حجرًا. لمَن لم يعودوا في جوف الأرض. مدى مصر",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "عمر موسى. ١٧ أكتوبر ٢٠٢٤. من كمثلي! إني الشهيد | في رثاء حمزة أبو قينص. معازف",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Du Bois, W. E. B. The Souls of Black Folk (2008). B. H. Edwards, Ed. Oxford University Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "بودكاست : :عن الكلام في أوقات الخطر | حوار بين هيثم الورداني و نوال العلي. وزيز.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mosallam, Alia (2021). “Ya ‛aziz ‛aini ana bidi arawwah baladi …’: Voyages of an Egyptian tune – from estrangement at home to longing on the fronts of the First World War” in Gorman, A. , & Irving, S. (Ed.). Cultural Entanglement in the Pre-Independence Arab World: Arts, Thought and Literature. London: I.B. Tauris.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Fahmy, Ziad. Street Sounds: Listening to Everyday Life in Modern Egypt. Stanford University Press, 2020. Excerpts.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Our wounded cities",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "سلم لنا بقى ع الترماي\" من فيلم \" أيام الغضب\" كلمات سيد حجاب، ألحان سامي الحفناوي وغناء نجاح الموجي and selected advertisements for the film.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Sit with: Frazier, Latoya Ruby. The Notion of Family. New York: Aperture, 2016. Excerpts",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Sit with: ElNemr, Rana. “The Balcony Series, 2002- Ongoing.” Selected details.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Khalil, Omnia. (2024). “Securitizing the urban geography: Cairo between destruction and construction,” featuring artwork by Azza Ezzat. Funambulist. From “Bulldozer Politics,” Issue 56: November- December 2024.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Abourahme, Nasser. (2015). “Assembling and spilling-over: Towards an ‘ethnography of cement' in a Palestinian Refugee Camp.” International Journal of Urban and Regional Research. 39(2): 200-217. March.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Abourahme, Nasser (2020). “The Camp.” Comparative Studies of South Asia, Africa, and the Middle East. 40(1): 35-42.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Simone, AbdouMaliq (2004). For the City Yet to Come: Changing African Life in Four Cities. Durham, Duke University Press. Excerpts.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Stavrides, Stavros. (2019). Towards the City of Thresholds. Common Notions.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Theorizing the state vis-à-vis the modern hospital",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Fahmy, Khaled (2018). In Quest of Justice: Islamic Law and Forensic Medicine in Modern Egypt. Oakland: University of California Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tanous, Osama (2021). “The hospital as a place of labor in a settler colonial setting: Palestine-Israel” Funambulist magazine. From “Spaces of Labor,” Issue 33: Feb 2021.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Foucault, Michel (1977). Discipline and Punish: The birth of the prison. New York: Pantheon Books, 1926-1984. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Deleuze, Gilles. (1990). “Postscript on Societies of Control.” October 59: 3–7. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Fahmy, Khaeld. (2018). “Behind the lines: Daily life in the camps,” All the Pasha's Men: Mehmed Ali, His Army, and the Making of Modern Egypt. New York: Cambridge University Press, 1997.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Foucault, Michel. (2003).“The Lesson of the Hospitals,” The Birth of the Clinic: An Archaeology of Medical Perception, trans. A.M. Sheridan. Abingdon: Routledge Classics. Excerpts.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dewachi, Omar. (2017). Doctors without Empires: Ungovernable Life: Mandatory Medicine and Statecraft in Iraq. Stanford: Stanford University Press.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Archival returns to the hospital",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Sit with: Shomali, Faris. The Game - Installation (2023). Part of the exhibition “Instant Modernism: On the Architectural Fabrication of Israel.”",
+            "note": "اللعبة - عمل تركيبي (٢٠٢٣). جزء من معرض “الحداثة الآنية: عن فبركة إسرائيل معمارياً”.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Sit with: Raad, Walid. The Atlas Group Archive (1989-2004). Selected details",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "إيمان مرسال. ٢٠١٩. في أثر عنايات الزيات. القاهرة: كتب خان.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Benjamin, Walter. (1968) “Theses on the Philosophy of History.” In Illuminations. New York: Schocken Books, 1968, pp. 253-264. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hartman, Saidiya. V. (2019). Wayward lives, beautiful experiments: intimate histories of social upheaval. First edition. W.W. Norton & Company. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Agamben, Giorgio. The Fire and the Tale. Stanford: Stanford University Press, 2017.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "ElNemr, Rana (2022). The firesticks library.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Psychic Refusal",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "\"Geology of separation” (2023) by filmmakers Yosr Gasmi and Mauro Mazzocchi, | France/ Tunisia/Italy | 153 min | in Arabic, English, French, Italian with English and Arabic subtitles. Selected Clips",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sheehi, L. & Sheehi, S. (2022) Psychoanalysis under occupation: Practicing resistance in Palestine. New York, NY: Routledge. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "٢٠١٧. كتاب النوم. القاهرة: دار الكرمة. مقتطفات هيثم الورداني.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "وجدت أجوبتي: هكذا تكلم الشهيد باسل الأعرج دار رئبال: القدس, فلسطين. ٢٠١٨",
+            "note": "I Have Found My Answers - Thus Spoke the Martyr Basel al-Araj (2018) Excerpts.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Jamjou, Hazem (April 5, 2021). “Liberation, Wonder, and the ‘Magic of the World’: Basel al-Araj’s I Have Found My Answers. Liberated texts.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sheehi, L. & Stephen S. (March 14, 2022). “Psychoanalysis under occupation: New Texts out Now.” Jadaliyya.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "HajYahia, Adam (2023). “The Principle of Return: The repressed ruptures of Zionist time.” Parapraxis. From the River to the Sea Palestine Issue: 2023-2024.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Abo-Basha, Ayah (May 24, 2018). “What does it mean to return, and return, and return?: On marching, hunger-strikes, and tennis rackets.” Mada Masr.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Final Presentations",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Schizophrenia in contemporary social theory",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Sit with: Elfeky, Esraa (2024) “What is Beyond You / أنا لا اعرف.” Designed by: Aya Ayman published with the support of Gypsum Bursaries, 2024.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Deleuze, G., & Guattari, F. (1983). Anti-Oedipus: Capitalism and schizophrenia. University of Minnesota Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dosse, Francois (2011). Gilles Deleuze and Felix Guattari: Intersecting Lives. trans. Deborah Glassman. New York: Columbia University Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Roudinesco, Elisabeth (1999). Jacques Lacan: An Outline of a Life, History of a System of Thought, trans. Barbara Bray. New York: Columbia University Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Deleuze, Gilles (1998). “Having an Idea in Cinema.” In Deleuze and Guattari: New Mappings in Politics, Philosophy, and Culture. Edited by Eleanor Kaufman and Kevin Jon Heller. Minneapolis: University of Minnesota Press. Excerpts.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Deleuze, Gilles (2006). “Desire and Pleasure.” In Two Regimes of Madness: Texts and Interviews 1975-1995. New York: Semiotext(e), 2006. Excerpts.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Staying with the wound",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Sit with: ElNemr, Rana. Engrams of a Lunar Calendar. Feb - April 2023.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Glissant, Edouard. (1997). Poetics of relation. (B. Wing, Trans.). Ann Abor: The University of Michigan Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Abd El-Fattah, Alaa. (2021)., You have not yet been defeated: Selected writings 2011–2021. translated by a collective. Seven Stories Press. Excerpts.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "نائل الطوخي. (١٥ نيسان\\أبريل ٢٠٢١). إذا حضر الماء. الجمهورية.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Haraway, Donna. J. (2016). Staying with the trouble. Duke University Press.",
+            "note": "Optional (or future bookmarks)",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Online, night track, Saturdays 6 p.m. – 8:30 p.m. Cairo time. Start date: Saturday Jan 25th. Duration: 8 weeks.\n\nEnrollment fee waivers and sliding scale payment: For this particular course, arrangements have been made to waive the full enrollment fee for two students: one student from Gaza and one student from Sudan residing in Egypt. In addition, the course will be offered with a sliding scale payment option for all other students\n\nWeeks nine and ten will be optional reading group meetings, depending on students’ desire to continue exploring the course themes through additional texts and artworks."
+  }
+}

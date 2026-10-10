@@ -1,0 +1,294 @@
+{
+  "sha256": "839e0f08fd80ccd03993bce36c4f2f189bc5148219efa305a7785ec1e4a5e847",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction: rethinking art history",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Transcendental imperial art",
+            "note": "Azoulay, A. (2019), in Potential History (pp. 74-79)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Un-documented: Unlearning Imperial Plunder (excerpt)",
+            "note": "Documentary by Ariella Azoulay",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The coloniality of images: mental limits to the imagination",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Displacements – Beyond the coloniality of images (excerpts)",
+            "note": "Vallega, A. (2011) (pp. 206-218)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The coloniality of power",
+            "note": "Trans Borderscapes, on YouTube (13 mins)",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "A collection of classic art historical images",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Decolonial aestheSis: art that de-links from the colonial",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Decolonial aestheSis",
+            "note": "Mignolo, W.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Fish-Eye Episteme (excerpts)",
+            "note": "Gomez-Barris, M. (2017), in The Extractive Zone: Social Ecologies and Decolonial Perspectives (pp. 91-100)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Land of Friends (excerpts)",
+            "note": "Carolina Caycedo (2014), short film",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The history of the camera: imperialism and material violence",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "When the camera was a weapon of imperialism. (And when it still is.)",
+            "note": "Cole, T. (2019) (pp. 1-5)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The imperialist lens: Du Camp, Salzmann and early French photography",
+            "note": "Berg, K. (2008) (pp. 1-18)",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Imperial photographs from Egypt and Nigeria",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Beyond the visual: how to differently embrace the photograph",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "What is a photograph? What is photography?",
+            "note": "Azoulay, A. (2012) (pp. 9-13)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Listening to Images (excerpts)",
+            "note": "Campt, T. (2017) (pp. 3-11; 23-31)",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Photographs from Palestine and the Black diaspora",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The problem of visibility: gender/sexuality perspectives",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction: Visual Genders",
+            "note": "Hayes, P. (2005) (pp. 519-537)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Representation and its limits",
+            "note": "Roundtable discussion in Trap Door: Trans Cultural Production and the Politics of Visibility (pp. 191-200)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "To obscure/protect: reapproaching the “subjects” of images",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "The photographs of Zanele Muholi",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Measures of Distance",
+            "note": "Mona Hatoum (1988), short film (15 mins)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Rejecting humanism: aesthetics and anti-blackness",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rethinking aesthetics: Notes towards a deciphering practice (excerpts)",
+            "note": "Wynter, S. (199s) (pp. 1-10)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Becoming Human (excerpts)",
+            "note": "Jackson, Z. (2020) (pp. 3-12)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Deciphering the human: beyond “dehumanization”",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rethinking aesthetics: Notes towards a deciphering practice (excerpts)",
+            "note": "Wynter, S. (199s) (pp. 30-40)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Becoming Human (excerpts)",
+            "note": "Jackson, Z. (2020) (pp. 249-259)",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "The artworks of Wangechi Mutu",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "The image and “activism”: to witness and distribute?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Picturing catastrophe: the visual politics of racial reckoning",
+            "note": "Bradley, R. (2020) (pp. 1-16)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Documenting violations: rhetorical witnessing and the spectacle of distant suffering",
+            "note": "Hesford, W. (2004)",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "The artworks of Ja’Tovia Gary",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "The artworks of Tammam Azzam",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Workshopping for creative projects",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Workshopping for creative projects"
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": "Final presentations/final discussion",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Final presentations"
+          },
+          {
+            "kind": "discussion",
+            "description": "Final discussion"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Contesting the visual/visible: the image as critical and creative method. Preliminary Syllabus."
+  }
+}

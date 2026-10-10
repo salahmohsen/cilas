@@ -1,0 +1,201 @@
+{
+  "sha256": "88109d61623a0619bc4708a6ab131264645200a2a60d07417e368fb12c1e9c30",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "Participants will be introduced to film theory. They will get familiar with the course flow and learning method. They will read and reflect on two articles about structuralism, which will pave the way into understanding the theorists’ approach.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Meaning and Structure- Meaning",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Meaning and Structure- Structuralism",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Semiotics",
+        "description": "Christian Metz is a founder of the Contemporary film theory. We’ll be introduced to his studies on how film creates meaning like language does. We’ll discuss the similarities and differences between film language structure and linguistic languages. We’ll learn about visual denotations and its significance.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Some points in the semiotics of Cinema",
+            "note": "Christian Metz",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Imaginary/Symbolic/Real",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We’ll discuss the similarities and differences between film language structure and linguistic languages."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Deleuze",
+        "description": "Through Metz’s perspective, Gilles Deleuze analyzes his view on film. He categorizes films into two main styles. One is subject to active progression and the other is subject to the feel of time. Participants will reflect on both the narrative styles and Cinematic representations of both styles.",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The movement image",
+            "note": "Ch1, Ch2, Ch4; Gilles Deleuze. Week 3",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Time image",
+            "note": "Ch1, Ch2; Gilles Deleuze. Week 4",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Participants will reflect on both the narrative styles and Cinematic representations of both styles."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "The apparatus",
+        "description": "The question of why cinema is so pleasant for the audience and how we identify with the screen are the topic of discussion. Jean-louis Baudry’s theory relates renaissance to modern art’s influence and engagement with the spectators.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ideological effects of the basic cinematographic apparatus",
+            "note": "Jean-Louis Baudry",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "The question of why cinema is so pleasant for the audience and how we identify with the screen are the topic of discussion."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "School of Frankfurt",
+        "description": "This session is recognition of the cinema social role and its relation to the masses. The participants will discuss nature of Cinema from a Marxist angle. Our reference will be the works of Walter Benjamin in studying the economic influence on Film.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The work of art in the age of mechanical reproduction",
+            "note": "Walter Benjamin",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "The participants will discuss nature of Cinema from a Marxist angle."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Feminism",
+        "description": "Another critical approach in Cinema studies. The analysis of meaning constructed in film from a feminist perspective. The study of Mulvey’s male gaze established in Cinema will be our focus in criticizing women’s role and presentation in Cinema.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Visual pleasure and narrative cinema",
+            "note": "Laura Mulvey",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "watch",
+        "title": "The Shining",
+        "note": "Chapter 1; Stanley Kubrick",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Pickpocket",
+        "note": "Chapter 1; Robert Bresson",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "L’ Eclisse",
+        "note": "Chapter 2; Michelangelo Antonioni",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Nostalgia",
+        "note": "Chapter 2; Andrei Tarkovsky",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Bewitched love",
+        "note": "Chapter 3; Carlos Saura",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Breathless",
+        "note": "Chapter 3; Jean-luc Godard",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "It’s a wonderful life",
+        "note": "Chapter 4; Frank Capra",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Panthar Panchali",
+        "note": "Chapter 4; Satyajit Ray",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Jeane Dilemann",
+        "note": "Chapter 5; Chantal Akerman",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Taxi Driver",
+        "note": "Chapter 5; Martin Scorsese",
+        "href": null
+      }
+    ],
+    "notes": "Method: The course follows a social constructivist approach to learning. The instructor will guide participants in discussing and expressing their understanding of the weekly assigned reading and watch lists. Participants will collaborate and complement their understanding through questioning and elaborating. And by the end of the course, they will be assigned essay writing to reflect on their learning."
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "sha256": "b1a1efd8a7dee3eea2e3ed2920910df3eee5da7252414dcfc05e2dd6fbfe0bcc",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Social media heritage: potentials and values",
+        "description": "This introductory session examines the potential of several kinds of social media in support of community-based heritage activities using examples from the United States, South America, South Africa, Asia and Europe. The session stresses how the value of cultural heritage in a digital age lies in its power to stimulate ever-evolving community-based reflection and conversation on past, present and future identities.\n\nTake a look at the syllabus, prepare questions and points of discussion for class.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Using social media heritage in crisis contexts",
+        "description": "This session describes self-organizing curatorial activities by members of the public using social media in times of disasters. the session discusses the potential of social media technologies as both tools and sites for grassroots heritage practices of online curation, focusing on the crisis narratives of the 1984 Bhopal gas leak (India) as a case study.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Social media heritage as a museum of legacies",
+        "description": "This session reviews current practices around online data storage in relation to memory and death. It also offers a critical discussion of the various strategies concerning how the personal legacy data that people leave behind could be accessed, curated and engaged for historical and heritage purposes, while at the same time being shared and kept ‘alive’ within communities of loved ones.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Social media heritage as shared heritage traces",
+        "description": "This session discusses how the ‘social traces’ that visitors leave on cultural heritage sites can be used to facilitate broader connections, and create new communities and patterns of social interaction around the heritage.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Social media as the creator of the historical present",
+        "description": "This session explores how social media redefine the temporal and spatial boundaries of a historical event, and discusses how social media can support the formation of new publics by enabling strangers to share their experiences and renegotiate their relations to specific historical events and to each other.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Social media and heritage knowledge",
+        "description": "This session discusses how digital technologies and social media can be integrated in sustainable ways to support the documentation and sharing of intangible heritage knowledge and practices.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The rise of the “media museum”",
+        "description": "This final session provides an overview of how social media and social networking technologies are becoming increasingly important in the development of museum communication, and how audiences are invited to engage with cultural content.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Heritage and Social Media: Understanding heritage in a participatory culture",
+        "note": "Main reference. Giaccardi, E. (Ed.). (2012). 1st ed. Routledge.",
+        "href": "https://doi.org/10.4324/9780203112984"
+      },
+      {
+        "type": "reading",
+        "title": "Understanding, fostering, and supporting cultures of participation",
+        "note": "Optional. Fischer, G. (2011). Interactions, 18(3): 42–53.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Things we value",
+        "note": "Optional. Giaccardi, E. (2011). Interactions, 18(1): 17–21.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Heritage matters: Designing for current and future values through digital and social technologies",
+        "note": "Optional. Giaccardi, E., Churchill, E. and Liu, S.B. (2012). Proceedings of CHI 2012, New York: ACM Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Greenfield, A. (2006)",
+        "note": "Optional. Title not given in the flow.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Rethinking the museum: Cultural heritage and the Internet of Things",
+        "note": "Optional. Van Oost, O. (2012). In C. van den Akker (ed.) Museum Transfigurations. Curation and Co-creation of Collections in the Digital Age, Oxford and New York: Berghahn Books.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Understanding Heritage in Practice",
+        "note": "Optional. West, S. (2010) (ed.). Milton Keynes: The Open University.",
+        "href": null
+      }
+    ],
+    "notes": "Hashtag Heritage: understanding cultural heritage is the age of social media. Fridays, 19:00-20:30. M.W.FAREED, mw.fareed@gmail.com, 2022/2023.\n\nAssignment: In no more than 500 words define the themes, key concepts, what you loved and hated about using social media on cultural heritage sites and why.\n\nWhat You Expect from Me (Course Objectives):\n- Understanding the different conceptual frameworks that tackle cultural heritage in the age of social media.\n- Cultivating the ability to analyze and discuss digital cultural heritage in both verbal and written forms.\n\nWhat I Expect from You:\n- Preparedness for class by doing the readings, preparing points of discussion and questions.\n- Interaction in class. This class is an example of what an interactive learning experience looks like. We are both learning with each other along the way. Having an ongoing, open discussion in class will make the whole experience more informative and entertaining."
+  }
+}

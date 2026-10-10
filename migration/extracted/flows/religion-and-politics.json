@@ -1,0 +1,347 @@
+{
+  "sha256": "2cafdc119ecee2b6d1166aa0864cdf5085855bf9fa478bf989c1b4bbac28cca4",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Religion, secularization and the rise of capitalism",
+        "description": "Part I : Secularization and the division between politics and religion.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Protestant Ethic and the Spirit of Capitalism",
+            "note": "Max Weber. London, Routledge. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Modern Capitalism, vol. 1",
+            "note": "Werner Sombart, K A Nitz, Wellington (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Protestantism and Progress: A Historical Study of the Relation of Protestantism to the Modern World",
+            "note": "Ernst Troeltsch. Boston, Beacon Press. (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Religion, social criticism and utopia",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Essence of Christianity",
+            "note": "Ludwig Feuerbach. London: Kegan Paul, Trench, Trübner & Co., New York: Harper & Row (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Critique of Hegel's Philosophy of Right",
+            "note": "Karl Marx, Cambridge University Press, Joseph O’Malley (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Atheism in Christianity: The Religion of the Exodus and the Kingdom",
+            "note": "Ernst Bloch, Verso Books, United Kingdom (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The controversies about securalism. The example of French Catholics in the 19th and 20th centuries, between modernist crisis and reform.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The politics of heresy: the modernist crisis in Roman Catholicism",
+            "note": "Lester R. Kurtz, University of California Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Two Sources of Morality and Religion",
+            "note": "Henri Bergson, Andesite Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Integral Humanism",
+            "note": "Jacques Maritain, University of Notre Dame Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Need for Roots: prelude towards a declaration of duties towards mankind",
+            "note": "Simone Weil, Routledge (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "True and False Reform in the Church",
+            "note": "Yves Congar, Collegeville, MN, Liturgical Press (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Critique of the concept of secularization from a Catholic point of view.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "After Virtue",
+            "note": "Alasdair MacIntyre. Third edition. University of Notre Dame Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Myth of Religious Violence: Secular Ideology and the Roots of Modern Conflict",
+            "note": "William Cavanaugh. Oxford: Oxford University Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Blackwell Companion to Political Theology",
+            "note": "Scott, Peter and William Cavanaugh, eds. Oxford: Blackwell Publishing (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "A praxis-based theology: from the “base ecclesial communities” of South America to the building of a theological and political project.",
+        "description": "Part II: Liberation Theology: justice, politics and religion in modernity.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Theology of Liberation: History, Politics and Salvation",
+            "note": "Gustavo Gutierrez. Maryknoll, NY: Orbis. Rev. ed. with second intr..",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introducing Liberation Theology",
+            "note": "C. and L. Boff, London, Burns and Oates. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Movement or Moment? Assessing Liberation Theology Forty Years After Medellín",
+            "note": "Claffey, Patrick, and Joe Egan, eds, Bern: Peter Lang. (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Criticism of idolatry rather than criticism of atheism: a critical reading of the prophetic tradition of the Old Testament.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Theology of Liberation: History, Politics and Salvation",
+            "note": "Gustavo Gutierrez. Maryknoll, NY: Orbis. Rev. ed. with second intr.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Black Theology of Liberation",
+            "note": "James H. Cone. Philadelphia: Lippincott. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The war of gods. Religion and Politics in Latin America",
+            "note": "Michael Löwy, London, Verso, 1996. (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Preferential option for the poor and critique of capitalism.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On Job: God-Talk and the Suffering of the Innocent",
+            "note": "Gustavo Gutierrez. Maryknoll, NY: Orbis. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Power of the Poor in History",
+            "note": "Gustavo Gutiérrez, London, SCM, 1983 (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Extra Pauperes Nulla Salus: A Short Utopian-Prophetic Essay.",
+            "note": "Jon Sobrino. In Jon Sobrino (ed.), No Salvation Outside the Poor: Prophetic-Utopian Essays, 35–76. Maryknoll, NY: Orbis. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Marxism and Theology Liberation",
+            "note": "Michael Löwy, Notebooks.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Liberation theology in debate: from controversies with the Roman Catholic Church to the development of new models of liberation.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rift Between Gutierrez and Peru Women: Liberation Theology Said to Be Too Narrow.",
+            "note": "Ruether, Rosemary Radford (1996). National Catholic Reporter, 18 Oct., p. 28.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Two Urgent Utopias for the Twenty-First Century",
+            "note": "Leonardo Boff. In Marcella Althaus-Reid, Ivan Petrella, and Luiz Carlos Susin (eds), Another Possible World, 23–38. London: SCM Press. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Future of Liberation Theology: An Argument and Manifesto",
+            "note": "Petrella, Ivan (2004). Aldershot and Burlington, VT: Ashgate.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Extension of the concept of religion: Christianity and Islam",
+        "description": "Part III: Secularization in the colonial and post-colonial world and the desire for justice.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Orientalism",
+            "note": "Edward W. Said, Penguin Classics (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Genealogies of Religion: Discipline and Reasons of Power in Christianity and Islam",
+            "note": "Talal Asad, Johns Hopkins University Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Formations of the Secular: Christianity, Islam, Modernity",
+            "note": "Talal Asad, Stanford University Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Politics of Piety – The Islamic Revival and the Feminist Subject",
+            "note": "Saba Mahmood, Princeton University Press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Is Orientalism Islamic?",
+            "note": "Mohamed Amer Meziane, Comparative Studies of South Asia, Africa and the Middle East, 40 (1): 219–222. (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "“Abrahamic religions” and desire for justice",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Testimonies and reflections",
+            "note": "Louis Massignon, University of Notre Dame press (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Acts of Religion",
+            "note": "Jacques Derrida, Routledge (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Islam in Liberalism",
+            "note": "Joseph A. Massad, University of Chicago Press (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Liberation theology and Islam",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Justice and Only Justice: Towards a Palestinian Theology of Liberation",
+            "note": "Ateek, N., Maryknoll, NY, Orbis. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Quran, Liberation and Pluralism: An Islamic Perspective of Interreligious Solidarity against Oppression",
+            "note": "Esack, F., Oxford, Oneworld. (Excerpt).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Qur'an of the Oppressed: Liberation Theology and Gender Justice in Islam",
+            "note": "Shadaab Rahemtullah, Oxford University Press, 2017 (Excerpt).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Conclusion: What justice after secularization?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course Description:\n\nSecularization, which has gradually identified itself with the project of \"European modernity\", can be defined as a process which emancipates societies from the constraints that religious institutions exert on them. The secularization of modern societies, which is related to a process of rationalization, would thus make it possible to separate religion from the modern state and to confine religion to the private sphere. This seminar will study how this theory of secularization, which leads to reduce the political scope of religion, has been criticized by intellectuals, believers and non-believers alike, who did not define themselves as anti-modern but thought, according to different approaches, that religion could not be detached from the political desire for justice. We will thus develop our reflection on the borders of religion and politics, paying particular attention to the way in which the process of secularization, as it unfolded in the colonial and post-colonial world, revealed the contingent and non-universal character of this partition and opened the way to political and spiritual projects centered on the pursuit of justice.\n\nThis course will be divided into three parts. The first part will aim at understanding the emergence of the concept of secularization at the end of the 19th century and at the beginning of the 20th century, and the partition between politics and religion that it implied. In the second part, we will see how Liberation theology, which has been developed in Latin America from the second half of the 20th century, sought, by acknowledging the modern division between state and religion, to revive the prophetic tradition of the Old Testament concerning the liberation of the oppressed people. Finally, in the third part, we will analyze how secularization, as established in the colonial and post-colonial world, has led to a new comprehension of the division between politics and religion, as it has been structured in modernity, and the relevance of the very concept of secularization.\n\nGuidelines\n\n- The goal of the course is twofold. On the one hand, it aims at giving access to the original texts and at trying to grasp them in their historical and theoretical context, whether it be German philosophy, theology or postcolonial theory. Particular attention will thus be paid to the study of the argumentative logic of the texts, which will then allow for a precise debate on them. At each session, a student will present one of the texts to be studied, in order to open the debate between all the participants. On the other hand, the course aims at giving students the means to discuss the issues at stake in the course with specialists of these topics. Several sessions of the course will thus be devoted to live interventions, via Zoom, of philosophers and sociologists with whom the students will discuss the texts studied. A group of students will be responsible, for each session, for leading the debate. In this way, we will work on argumentative skills, both in writing and orally.\n\n- The assigned readings will be sent one week in advance, and are meant to provide a solid basis for our in-class discussions. It is, therefore, important to acquire yourself with the texts before class."
+  }
+}

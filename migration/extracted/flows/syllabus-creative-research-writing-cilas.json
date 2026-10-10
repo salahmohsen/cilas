@@ -1,0 +1,223 @@
+{
+  "sha256": "2263fdb61189ae86166c6169a9396103ea9d39d404a504ee7a12eeab173ee477",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introductions",
+        "description": "interests, impressions, potential research projects + what is and why partake in creative research writing.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Opening ourselves up to the possibilities of creative research writing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Wave in the Mind.",
+            "note": "Le Guin, U. K. (2004). Shambhala.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Notes on the Semi-fictional Form.",
+            "note": "BARD Studio. (n.d.).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gurgaon Glossaries.",
+            "note": "Shetty, P., Gupte, R., & Khanolkar, P. (n.d.). Crit Studio.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Creative non-fiction, prose, & figurative language",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Interpretation of Cultures.",
+            "note": "Geertz, C. (1973). Basic Books, Inc., Publishers.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Creative Nonfiction: A Movement, Not a Moment.",
+            "note": "Gutkind, Lee. (2006). Creative Nonfiction, 29, 6-18.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "لاجئون في هواء رطب",
+            "note": "حسان الناصر. (18 مارس، 2026). مدى مصر. The address in the flow has a stray slash where the line breaks; the href below is the one the printed encoding gives.",
+            "href": "https://mada38.appspot.com/www.madamasr.com/2026/03/18/feature/%d8%b3%d9%8a%d8%a7%d8%b3%d8%a9/%d9%84%d8%a7%d8%ac%d8%a6%d9%88%d9%86-%d9%81%d9%8a-%d9%87%d9%88%d8%a7%d8%a1-%d8%b1%d8%b7%d8%a8"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Writing workshop #1",
+        "description": "Creative non-fiction, prose, & figurative language",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Writing workshop #1: Creative non-fiction, prose, & figurative language"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Ethnographic poetry",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Crumpled Paper Boat: Experiments in Ethnographic Writing.",
+            "note": "Pandian, A., & McLean, S. (Eds.). (2017). Duke University Press.",
+            "href": "https://doi-org.libproxy.aucegypt.edu/10.2307/j.ctv1168bd2"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Writing workshop #2",
+        "description": "Ethnographic poetry",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Writing workshop #2: Ethnographic poetry"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Transcription",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Interpretive reflexivity in ethnography.",
+            "note": "Lichterman, P. (2015). Ethnography, 18(1).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Transparency in Transcribing: Making Visible Theoretical Bases Impacting Knowledge Construction from Open-Ended Interview Records.",
+            "note": "Skukauskaite, A. (2012). Forum: Qualitative Social Research, 13.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Writing workshop #3",
+        "description": "Transcription",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Writing workshop #3: Transcription"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "Autobiographical writing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction to Writing the Self: Essays on Autobiography and Autofiction.",
+            "note": "Shands, K. W., Mikrut, G. G., Pattanaik, D. R., & Ferreira-Meyers, K. (Eds.). (2015). English Studies 5.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Don’t Let Me Be Lonely: An American Lyric.",
+            "note": "Rankine, C. (2004). Graywolf Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "How to Write an Autobiographical Novel.",
+            "note": "Chee, A. (2018). Mariner Books.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Writing workshop #4",
+        "description": "Autobiographical writing",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Writing workshop #4: Autobiographical writing"
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": "Photo essays",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On Photography.",
+            "note": "Sontag, S. (1977). Farrar, Strauss, and Giroux.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Camera Lucida: Reflections on Photography.",
+            "note": "Barthes, R. (1980). Hill and Wang.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Writing workshop #5",
+        "description": "Photo essays",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Writing workshop #5: Photo essays"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Creative Research Writing: Between Fact, Fiction, and Personal Truths, with Farida Gohar.\n\nMy arrival at creative research writing is informed by two observations: 1. There is an assumed distinction between academic research and writing practices and personal, creative ones. 2. Academic research and writing practices are considerably impaired when divorced from personal, creative ones.\n\nTo attempt to reconcile both ‘types’ of writing, of approaching our work and the page, is to be faced with the dual demands of critical thinking and our imaginations. This, to me, is an incredibly exciting beckoning and if taken seriously, can be immensely expansive and not least of all, fun.\n\nAfter the first few introductory/induction sessions where we learn more about the ethos of creative research writing and decide on mini research projects, the course is structured in pairs of discussion based seminars and writing workshops.\n\nThis is only a proposed course flow, prone to restructuring, additions, and subtractions depending on our pace and preferences as expressed during our sessions."
+  }
+}

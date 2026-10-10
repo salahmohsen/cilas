@@ -1,0 +1,237 @@
+{
+  "sha256": "6e4ee884b375ace144ba75759bca7f32143e97e8aaeb97192f59cf01f3610d15",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Threshold of Fire",
+        "description": "This week’s discussion explores a theme that will be central for our upcoming discussions: how fire is imagined in modern thought as a threshold between “man” and other subhuman forms. We will pay special attention to how this threshold operates in colonial literature, and the place of the human child and the indigenous subject in relation to this threshold.\n\nAhmed Dardir, “Threshold of Fire: Man the Shooter and his Incendiary Other.” (And reflect on the hubris of the instructors who assign their own writings…)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Jungle Book",
+            "note": "Rudayrd Kippling",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Robinson Crusoe",
+            "note": "Daniel Defoe",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Man Friday",
+            "note": "Adrian Mitchell",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Man Friday",
+            "note": "film, 1976",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Jungle Book",
+            "note": "film, 1967",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Jungle Book",
+            "note": "film, 2016",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Threshold of Fire: Man the Shooter and his Incendiary Other",
+            "note": "Ahmed Dardir",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "This week’s discussion explores a theme that will be central for our upcoming discussions: how fire is imagined in modern thought as a threshold between “man” and other subhuman forms."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Fire and Revolution",
+        "description": "Historically, counterrevolution has narrated the terrors of revolution through the tropes of incendiarism and arson. This week we will look at examples—from literature, journalism, and official governmental documents— where incendiary fire stood for revolutionary destruction and chaos. What understandings of fire, then, emerge from this discourse? And what understandings of the crowd, revolution, and chaos?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Tale of Two Cities",
+            "note": "Charles Dickens (excerpts)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "الحريق عمدًا",
+            "note": "جريدة مصر، 1919/3/10",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Correspondences Respecting the Riots at Alexandria on the 11th June 1882",
+            "note": "UK Foreign Office, the National Archives, UK, FO 881/4741.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "محاكمة عرابي",
+            "note": "جريدة الجوائب، 1881/12/12",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Incendiarism and Hysteria",
+        "description": "This week we will turn to how incendiary fire was, in counterrevolutionary discourse, especially in response to the Paris Commune (1871), was attached to the figure of the female revolutionary, to sexist tropes of female hysteria, and to the feminine body, opposed to the purposeful and manly fire of the state. These representations served to both discredit revolution and revolutionary fire by attaching it to hysterical femininity, and discredit femininity by attaching it to incendiary fire.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ventriloquized Bodies: Narratives of Hysteria in Nineteenth-Century France",
+            "note": "Beizer, Janet. (excerpts)",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "La Petroleuse",
+            "note": "painting",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Les Aliénistes",
+            "note": "Sarcey, Francisque. Gaulois. 28 May 1871, 1.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Les Communeux",
+            "note": "Sarcey, Francisque. Gaulois. 6 June 1871, 1.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Histoire de la Commune de 1871",
+            "note": "Lissagaray, Prosper-Olivier. (excerpts)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Revolution in Paris",
+            "note": "The Standard, 29/3/1871",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Fete of the Commune",
+            "note": "The Standard, 31/03/1871",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Incendiarism and Terror",
+        "description": "This week we will trace how the racialized and gendered understandings of fire intersect in counterterrorism discourse.\n\nThrough looking at cinematic representations, newspaper articles, governmental documents, and academic texts, we will investigate how\n\nlooks at how representations of the 1970s terrorism of the European “far left” is anchored in stereotypical and misogynist notions of hysteria, and latched to hysterical and licentious female bodies; we will also investigate how the figure of the “Muslim terrorist” is contaminated by the figure of the “hysteric” either through tropes of failed and perverse masculinity or through the persistence of the figure of the licentious female terrorist side by side with the racialized terrorist.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "The Baader Meinhof Complex",
+            "note": "film, 2008",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Carlos",
+            "note": "Miniseries, 2010",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Terrorist Assemblages",
+            "note": "Jasbir Puar (excerpts)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Element of Madness",
+            "note": "Koenen, Gerd. Sign and Sight, 7 Dec. 2009",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘Bonnie und Kleid’: Female Terrorists and the Hysterical Feminine",
+            "note": "Bielby, Clare. Forum, vol. 2, Spring 2006, pp. 1-18.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Violent Women in Print: Representations in the West German Print Media of the 1960s and 1970s",
+            "note": "Bielby, Clare. Camden House, 2012.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Cairo Fire, 1952",
+        "description": "On the 26th of January 1952, many buildings in central Cairo caught fire. This session examines two different representations of this event: the colonial representation, and the indigenous anti-colonial response.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Egypt in Transition",
+            "note": "Lacouture & Lacouture",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "كيف دبر فاروق حريق القاهرة",
+            "note": "جريدة المصري، 1952/8/24",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "قطعة من أوروبا",
+            "note": "رضوى عاشور",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Fire Otherwise",
+        "description": "This week is left open to allow for the examination of alternative understandings and imaginations of fire. Students are encouraged to look into alternative and/or counterhegemonic archives, whether this means revisiting the themes already explored in this course, or opening up new themes.\n\nThe discussion topics may include, but are not limited to: Fire in Greek mythology; Fire in the Magian/Zoroastrian faith.; Fire and Islam.; Fire in other modern archives.; Fire and Feminism/ the Petroleuse after the Paris Commune.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "The discussion topics may include, but are not limited to: Fire in Greek mythology; Fire in the Magian/Zoroastrian faith.; Fire and Islam.; Fire in other modern archives.; Fire and Feminism/ the Petroleuse after the Paris Commune."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course Description: Fire is imagined as the first invention of “man.” It inaugurates humanity into technology, it fuels civilization, and arms its march and its ability to defend itself. It is also imagined as a destructive force, something that flows out of control, defies logic and subverts order, a licentious form that is reminiscent of, according to the predominant modernist prejudices, primitive populations, children, and women. This course is about how, in the hegemonic western thought, there exists a hierarchy between two kinds of fire: the first rational, regimented (in firearms and steam engines), and productive; the fire of the modern state, of western superpowers, and of the white man, mirroring the dominant understandings of civilization and masculinity. The other irrational, licentious, hysterical, and destructive, mirroring the dominant imagination of primtivity and hysteria, the fire of non-Europeans, of women, and of revolutionary crowds. Through the lens of fire, this course examines the hierarchical dichotomies that are central to western—and more broadly modern— thought: the state vs. revolution (or the crowd), the civilized vs. the savage, the proper vs. the licentious, the sane vs. the hysterical, and the masculine vs. the feminine. To trouble this modernist/Western typology of fire, and of human forms, we will pay special attention to how fire is represented at the frontlines of the colonial encounter, at the frontlines between revolution and counterrevolution, and the frontlines between sexist discourses and women reclaiming their bodies and agencies. This archive will hopefully allow us to both deconstruct the hegemonic narrative and look at the ways whereby subaltern groups have internalized, appropriated, or wholeheartedly subverted this hegemony.\n\nCourse Format: The course will take place online. Part of the reason is to be able to share and examine documents, film clips, and other material in real time. In many of the sessions I will share primary and archival documents—including clippings from newspapers, excerpts from governmental documents, and photographs I took from various archives, and divide the students into groups in order to closely scrutinize these documents. We will then reconvene so that we can build up our understanding of history, and of the theory with which we understand history, from each group’s experience with its archive. My aim is to counterpoise the course’s theory-heavy content with a hands on experience with archival material. This will turn some of our sessions into a virtual research workshop, and an experiment with deconstructing and reconstructing narrative. Hopefully, this will help us connect critical theory to a critical practice. What follows is a tentative and preliminary course flow, which is open for modifications as the class discussion demands or allows."
+  }
+}

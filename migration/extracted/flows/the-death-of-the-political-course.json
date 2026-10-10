@@ -1,0 +1,228 @@
+{
+  "sha256": "924f7effdb2555bfc8cb93c5ed5eb3b95b620a9908f979bc295e540e137d91b5",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Political and its nature",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Concept of the Political",
+            "note": "Schmitt, C. (1995). The University of Chicago Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Disagreement: Politics and Philosophy",
+            "note": "Rancière, J. (1999). Minneapolis: University of Minnesota Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On the Political",
+            "note": "Mouffe, C. (2005). London: Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The political as the ontological primacy: On Ernesto Laclau’s thoughts",
+            "note": "Lubis, A. & Hutagalung, D. (2018). Cultural Dynamics in a Globalized World.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The (Ontological) Politics in Depoliticization Debates: Three Lenses on the Decline of the Political",
+            "note": "Beveridge, R. (2017). Political Studies Association. 15(4).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "What is Apolitical about the crisis of representative democracy?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ruling the void: the hollowing of western democracy",
+            "note": "Mair, P. (2013). London; New York: Verso.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Post-Political and its Discontents: Spaces of Depoliticisation, Spectres of Radical Politics",
+            "note": "Wilson, J., & Swyngedouw, E. (Eds.). (2014). Edinburgh University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘’ apolitics”, “Anti-political”, “Non-Political Politics” and “Sub politics” as Threats and Challenges",
+            "note": "Havelka, M. (2016).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Direct Democracy in Switzerland: Depoliticization Through the Referendum Practice",
+            "note": "Dellagi, A. (2013). European Consortium for Political Research.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Contemporary spaces for depoliticization: international development and international organizations",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Anti-Politics Machine: “Development”, Depoliticization and Bureaucratic Power in Lesotho",
+            "note": "Ferguson, J. (1990). Cambridge, England; Cambridge University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Legitimacy of Depoliticized Decision-Making",
+            "note": "REFLEX workshop (2017). AREN. Centre for European Studies, University of Oslo.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Kick ‘em all out? Anti-politics and post-democracy in the European Union",
+            "note": "Phillips, L. (2013). Retrieved from www.statewatch.org.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Between Politics and the Political: Reading Hans J. Morgenthau’s Double Critique of Depoliticisation",
+            "note": "Paipais, V. (2014). Millennium: Journal of International Studies, Vol. 42(2).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Governance Between Expertise and Democracy: The Case of European Security",
+            "note": "Eriksen, E (2011). Journal of European Public Policy.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Evidence Based Policymaking as Depoliticized Governance Strategy: The Case of European Drug Policy",
+            "note": "Standring, A. (2016). ECPR Joint Sessions workshop.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Searching for the root causes: capitalism, neoliberalism and the crisis of representative democracy",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "American Nightmare: Neoliberalism, Neoconservatism, and De-Democratization",
+            "note": "Brown, W. (2006). Sage Publications. 34(6), 690-714.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gramsci and the political: From the state as ‘metaphysical event’ to hegemony as ‘philosophical fact’",
+            "note": "Thomas, P. (2009). Retrieved from radicalphilosophy.com.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Anti-politics: it’s not the economy, stupid: it’s you",
+            "note": "Jennings W. and Stoker G. (2014). Policy Network. Retrieved from policy-network.net.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Neoliberal reason and its forms: Depoliticization through economization",
+            "note": "Madra, Y. & Adaman, F. (2012). Antipode Journal 46(3).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The trouble of representative democracy or the crisis of capitalism? (In Arabic)",
+            "note": "Honsi, D. (2019, April). Democracy Magazine, 74, pp. 97-101.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Busted! Populism or Neo social movements?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Anti-political sentiment in contemporary liberal democracies",
+            "note": "Hogan, M. (2007). Australian Review of Public Affairs.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "They Don’t Represent Us! The Global Resonance of the Real Democracy Movement from indignados to occupy",
+            "note": "Oikonomakis, L. (2014). Solidarity Mobilizations in the ‘Refugee Crisis' project.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "You Don’t Represent Us (in Arabic)",
+            "note": "Abeid, H. (2019, April). Democracy Magazine, 74, pp. 6-7.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The call for democracy and the redefinition of ‘the political’ (in Arabic)",
+            "note": "Al-Farok, Y. (2019, April). Democracy Magazine, 74, pp. 111-118.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Reframing the political and restoring public faith in democracy",
+        "description": "(More TBD)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The General Rejection? Political Disengagement, Disaffected Democrats and ‘Doing Politics’ Differently",
+            "note": "Flinders, M. (2015). Parliamentary Affairs. 68 (suppl.1), p. 241-254.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Depoliticisation as process, governance as practice: what did the ‘first wave’ get wrong and do we need a ‘second wave’ to put it right?",
+            "note": "Hay, C. (2014). Policy & Politics Journal.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Why Politics Matters: Making Democracy Work",
+            "note": "Stoker, G. (2006). Palgrave.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Epigraphs (verbatim): “Any talk of politics in our time has to begin with those prejudice that all of those who are not professional politicians have against politics” – Hannah Ardent. “I was never really into politics ... I don’t feel myself a politician even now” – Tony Blair. “French statesman Georges Clemenceau said war was too important to leave to the generals. I’m beginning to think Europe is too important to leave to the politicians.” – Former European Commissioner Neelie Kroes.\n\nCourse description (verbatim): Saramago’s (2006) Seeing, offers a precise visualization of the current political plight that number of scholars have noticed and predicted. In an imagined country, during counting the ballots of the general elections, the city administrators found out that the populace have spoiled their votes. As a result, party elites were worried and decided to repeat the election. Yet, the turnout was worse. one minister referred to the crisis as conspiracy against democracy, in turn, the government declared a state of emergency in their attempt to uncover the mastermind behind ‘’the antidemocratic plot’’ (Wilson and Swyngedouw, 2014) Finally, the government decided to leave the citizens and move to a different place in anticipation of a resulting chaos; however, everything ran normally in the city the other day.\n\nIn everyday life, we notice evidence that suggests the decline of politics as we know it. From public distrust towards political institutions, expressed hatred against politics from both citizenry and elite (politicians as well), decline in political participation, low membership in political parties, to the technicalization of political problems, and others. This course investigates the relationship between the crisis of representative democracy and the death of politics (at which politics is shifted from a space of “contestation and agnostic engagement” to a space of consensus). Scholars have noted during the past decade that representative democracies are experiencing an age of ‘depoliticization’ (Flinders and Wood, 2014; Hay, 2007) or ‘post-politics’ (Mouffe, 2005; Rancière, 2005). From a history of ideas perspective, several terms have been employed to capture this post-politics moment, including: “apolitics”, “anti-politics”, “non-political politics”, “sub-politics”, “post-politics”, “depoliticization”, and “post-democracy”. This course is of a metapolitical nature. It opens a discussion on the very essence of politics (i.e., the Political) and relates it to the very future and survival of democracy. The course comes in six sessions each covers a different theme.\n\nTentative syllabus by Ahmed Elbasyouny.\n\nBiography (verbatim): Ahmed Elbasyouny is a PhD Fellow at the Center for Constitutional Democracy at Indiana University Maurer School of Law. He holds an LLM degree in comparative constitutional law and a BA in political science, and he works in the field of constitutional design and policy advice. Email: aelbasyo@iu.edu"
+  }
+}

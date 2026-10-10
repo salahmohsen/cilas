@@ -1,0 +1,203 @@
+{
+  "sha256": "8e83f3315a5c7caa4a104e3d3af99b430918f8afb89189c22f406a58f8b4c6ab",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "فهمُ المعرفة.",
+        "description": "الإبستمولوجيا: كيف نفكّر في المعرفة؟",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "مصادر المعرفة (الإدراك الحسي، والعقل، والشهادة، والذاكرة)",
+        "description": "الإبستمولوجيا القديمة والحديثة.\n\nدرجات اليقين",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "كيف نثق في المعرفة؟",
+        "description": "معنى الصدق",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "الفلسفة وحب الحكمة!",
+        "description": "أدوات البناء الفلسفي",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "المعرفة العلمية والتفسير العلمي",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "المعرفة الدينية، وإبستمولوجيتها",
+        "description": "معرفة الخوف!\n\nالمعرفة والشعور (الإحساس) ... قليلٌ من التصوّف!",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "فلسفة اللغة",
+        "description": "نظريات المعنى\n\nعلم الدلالة وعلم الاستعمال",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "ممارسة الفلسفة/ كتابة الفلسفة",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "قراءة نصوص فلسفية ثم تلخيص كل طالب لأي نص فلسفي من اختياره."
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "عن الحاجة إلى التفلسف بلغتَيْن.",
+        "description": "قواعد لغوية أساسية في اللغة العربية والإنجليزية.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "ممارَسَة الترجمة.",
+        "description": "مصادر البحث.\n\nطرق البحث والتحقق من صحة الترجمة.\n\nمعنى الدقة.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "أساليب الصياغة، وفهم منطقها.",
+        "description": "احترام الأنظمة اللغوية في فعل الترجمة.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "مناقشات لما قدَّمه الطلاب من أبحاث وترجمات."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "A Course in Basic Scientific English",
+        "note": "J. R. Ewer & G. Latore",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Doing Philosophy: A Practical Guide for Students",
+        "note": "Edited by: Julie Closs",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "نظرية المعرفة – مقدمة معاصرة",
+        "note": "الأستاذ الدكتور صلاح إسماعيل",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Georgetown Guide to Arabic-English Translation",
+        "note": "Mustafa Mughazy",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "تجديد الفكر العربي",
+        "note": "زكي نجيب محمود",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Theory of Knowledge",
+        "note": "Roderick M. Chisholm",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الفلسفة والمسألة الدينية",
+        "note": "عادل ضاهر",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "العقل واللغة والمجتمع – الفلسفة في العالم الواقعي",
+        "note": "جون سيرل، ترجمة: صلاح إسماعيل",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الآتي",
+        "note": "محمد المخزنجي – قراءات أدبية تتعلق بآخر 4 محاضرات في الكورس على الأقل",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "رشق السكين",
+        "note": "محمد المخزنجي – قراءات أدبية تتعلق بآخر 4 محاضرات في الكورس على الأقل",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "حيوانات أيامنا",
+        "note": "محمد المخزنجي – قراءات أدبية تتعلق بآخر 4 محاضرات في الكورس على الأقل",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "صديق قديم جدًا",
+        "note": "إبراهيم أصلان – قراءات أدبية تتعلق بآخر 4 محاضرات في الكورس على الأقل",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "خلوة الغلبان",
+        "note": "إبراهيم أصلان – قراءات أدبية تتعلق بآخر 4 محاضرات في الكورس على الأقل",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "دنيا الله",
+        "note": "نجيب محفوظ – قراءات أدبية تتعلق بآخر 4 محاضرات في الكورس على الأقل",
+        "href": null
+      }
+    ],
+    "notes": "Philosophical Construct and Tools: Philosophy through language."
+  }
+}

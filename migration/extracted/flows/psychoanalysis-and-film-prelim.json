@@ -1,0 +1,255 @@
+{
+  "sha256": "3bec1af44f1b7c7436604db4fc9c5efb52203a6ffb91c2c5192135c217d9e26f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to Lacanian Psychoanalysis",
+        "description": "Key terms:\n-Mirror Stage\n-Split Subject\n-Oedipus Complex\n-Castration\n-Imaginary, Symbolic, Real\n-Phallus\n-Signifier, Signified\n-Objet Petit a\n-Unconscious\n-Big Other\n-Desire\n-Jouissance\n-Fantasy",
+        "meetings": 3,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The mirror-stage as formative of the I function as revealed in psychoanalytic experience",
+            "note": "Lacan, J. (2006). In B. Fink (Trans.), Écrits. (pp 75-81). New York & London: W.W Norton.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The mirror stage (Commentary on Lacan’s ‘The mirror-stage’)",
+            "note": "Neill, C. (2018).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The function and field of speech and language in psychoanalysis",
+            "note": "Lacan, J. (2006). In B. Fink (Trans.), Écrits. (pp. 197-268). New York & London: W.W Norton.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Six Moments in Lacan",
+            "note": "Hook, D. (2018). Chapters 1-2.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On dreams",
+            "note": "Freud, S. (1905). SE: 5.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Lacanian Subject",
+            "note": "Fink, B. (1995). Princeton University Press. (Chapter 4: The Lacanian Subject).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lacan to the letter",
+            "note": "Fink, B. (2004). Minneapolis: University of Minnesota Press. (Chapter 3: Reading “The instance of the letter in the unconscious”).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Against Understanding: Commentary and Critique in a Lacanian Key, Volume 1",
+            "note": "Fink, B. (2014). London & New York. Routledge. (Chapter 1).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How are we to understand the body, and embodiment, via the notion of the mirror stage?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What is included within the remit of the imaginary?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How can we differentiate between the imaginary and the symbolic registers?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What is ‘the Other’, and how does this concept inform clinical work and forms of ideology critique?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What crucial concepts from Freud’s analysis of dreams are foundational to the Lacanian credo that the unconscious is structured like a language?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Why does the notion of the signifier feature so prominently in Lacan’s understanding of the unconscious?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How should one understand Lacan’s idea that the unconscious can be understood as ‘the discourse of the Other’?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How, following Lacan, are jouissance and desire to be differentiated?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What is the relation of the phallus to language?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Why is there a different relation to the phallus as signifier for those designated as ‘men’ opposed to those designated as ‘women’?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Introduction to Psychoanalytic Film Theory",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "The Pervert’s Guide to Cinema (2006)",
+            "note": "Dir. Sophie Feinnes.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lacan and contemporary film",
+            "note": "McGowan, T., & Kunkle, S. (Eds.). (2004). Other Press (Introduction: Lacanian Psychoanalysis in Film Theory).",
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "How has Lacanian film theory changed in recent years?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "With which register(s) (Imaginary, Symbolic, and/or Real) does contemporary Lacanian film theory concern itself? In what way?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What was/is the role of ideology in cinema and its critique?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "What is the role of the spectator?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Cinema as Text",
+        "description": "Suggested films (subject to change with participant input):",
+        "meetings": 6,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Vertigo (1958)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Objet petit a: Vertigo (1958)",
+            "note": "Simmons L. (2021). In: Žižek through Hitchcock. Palgrave Macmillan, Cham.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Citizen Kane (1941)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Banality of Orson Welles",
+            "note": "McGowan, T. (2007). In: The Real Gaze. State University of New York Press.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Lost in Translation (2003)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "There is Nothing Lost in Translation",
+            "note": "McGowan, T. (2007). Quarterly Review of Film and Video, 24:1, 53-63",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Lost Highway (1997)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Finding Ourselves on a Lost Highway",
+            "note": "McGowan, T. (2007). In: The Impossible David Lynch. Columbia University Press.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Stalker (1979)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Overlapping Worlds of Andrei Tarkovsky",
+            "note": "McGowan, T. (2007). In: The Real Gaze. State University of New York Press.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Safe (1995)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Desire in the era of neoliberalism: a Lacanian reading of Haynes’ [Safe]",
+            "note": "Di Gianfrancesco, C. (2019).",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Class will meet once a week, but I would also like to host weekly movie nights at CILAS that are open to the public. Discussions/readings of the films will take place in class. I have included a list of proposed films, but all of these are subject to change with participant feedback; I prefer that we make our selections as a group."
+  }
+}

@@ -1,0 +1,339 @@
+{
+  "sha256": "93dc3343383efc648180a5286fb56bb82ebf442a9ad87e920ab0e5f694bf43eb",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "الحكايات الخرافية ومسألة أصول أسطورة أوديب",
+        "description": "Oedipus as folktale and the origins of the myth",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "سوفوكليس، \"أوديب ملكا\"، ت. عبد الرحمن بدوي",
+            "note": "ص. ٩٩-١٢٧",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "يوربيدس، \"الفينيقيات\"، ت. منيرة كروان",
+            "note": "ص. ١-٣",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "\"قصة عنترة بن شداد العبسي\"",
+            "note": "(القاهرة، ١٩٦١)، ص. ١، ٩-١٥",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Apollodorus, Bibliotheca 3.5.7–9, in Edmunds",
+            "note": "pp. 51–53",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "\"Judas\" (Latin folktale), \"Andrew of Crete\" (Russian folktale), \"Usikulumi\" (Zulu folktale) in Lowell Edmunds, Oedipus: The Ancient Legend and its Later Analogues",
+            "note": "pp. 63–5, 192–5, 214–216 (10 pages in total)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sophocles, Oedipus the King, trans. Fagles",
+            "note": "English version; pp. 159–210",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Euripides, Phoenician Women ll. 1–87, in Edmunds",
+            "note": "English version; pp. 49–50",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "\"Nimrud\" (from Sirat 'Antara), in Edmunds",
+            "note": "English version; pp. 69–73",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "نظريات عن التراجيديا وعلاقتها بأوديب سوفوكليس",
+        "description": "Theories of tragedy and Sophocles' Oedipus",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "سوفوكليس، \"أوديب ملكا\"",
+            "note": "ص. ١٢٧-١٤٧",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "أرسطو، \"في الشعر\"، ت. عبد الرحمن بدوي",
+            "note": "ص. ٣-٥٣",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "نيتشه، \"مولد التراجيديا\"، ترجمة شاهر حسن عبيد",
+            "note": "ص. ١٣٦-١٤٢",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "فرويد، \"تفسير الأحلام\"، ترجمة مصطفى صفوان",
+            "note": "ص. ٢٧٦-٢٨١",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Peter Szondi, A Theory of the Tragic",
+            "note": "pp. 1–22, 59–63",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sophocles, Oedipus the King, trans. Fagles",
+            "note": "English version; pp. 211–251",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Aristotle, Poetics",
+            "note": "English version; chps. 1–18",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Nietzsche, The Birth of Tragedy",
+            "note": "English version (Anchor books edition); pp. 59–62",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Freud, The Interpretation of Dreams, in The Basic Writings",
+            "note": "English version; pp. 306–9",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "البنيوية والتحليل البنيوي للخرافات والمجتمع",
+        "description": "Structuralism and the analysis of myth and society",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "سوفوكليس، \"أوديب في كولونوس\"، ترجمة منيرة كروان",
+            "note": "ص. ٤٠-١٦٦",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Claude Lévi-Strauss, \"The Structural Study of Myth\"",
+            "note": "(1955), pp. 428–435",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sophocles, Oedipus at Colonus",
+            "note": "English version; pp. 283–347",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "نظرية المحاكاة وأوديب ككبش فداء",
+        "description": "Mimetic theory: Oedipus as scapegoat",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "سوفوكليس، \"أوديب في كولونوس\"، ترجمة منيرة كروان",
+            "note": "ص. ١٦٦-٢٤٢",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "René Girard, \"The Myth of Oedipus, the Truth of Joseph,\" in Girard, Oedipus Unbound",
+            "note": "pp. 107–113",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sophocles, Oedipus at Colonus",
+            "note": "English version; pp. 348–388",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "أوديب في المسرح المصري في القرن العشرين",
+        "description": "Oedipus in mid-twentieth-century Egyptian theatre",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "أندريه جيد، \"أوديب\"، ترجمة طه حسين",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "توفيق الحكيم، \"الملك أوديب\"",
+            "note": "(1949)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "André Gide, Oedipus",
+            "note": "English version; (1930)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tawfiq al-Hakim, King Oedipus",
+            "note": "English version; (1949), in Marvin Carlson (ed.), The Arab Oedipus",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "علي أحمد بكاثير، مأساة أوديب",
+            "note": "قراءة اختيارية (Optional reading); 1949",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "أوديب عند فرويد، \"أوديب مضادًا\"، وفيلم \"أوديب ملكًا\" (1967) لبازوليني",
+        "description": "The Freudian Oedipus and beyond",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Edipo Re",
+            "note": "فيلم \"أوديب ملكًا\" (1967)، إخراج Pier Paolo Pasolini",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "فرويد، \"الطوطم والتابو\"، ترجمة بوعلي ياسين",
+            "note": "ص. ١٢٣-١٨٧",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "مقاطع مختارة من دلوز وغواتري، \"أوديب مضادًا\"، ترجمة عبد العزيز العيادي",
+            "note": "(1972)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Freud, Totem and Taboo",
+            "note": "English version; chp. 4",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Deleuze and Guattari, Anti-Oedipus",
+            "note": "English version; (1972), pp. 88–106",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "أوديب ومسألة الجنس",
+        "description": "Gendering Oedipus",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Funeral Parade of Roses",
+            "note": "(1969), dir. Toshio Matsumoto",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hélène Cixous, \"The Laugh of the Medusa,\" Signs 1.4",
+            "note": "(1976), 875–893",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "نظرية الأنماط القصصية و\"كوميديا أوديب\" لعلي سالم",
+        "description": "Fictional modes and Ali Salem's Comedy of Oedipus",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "علي سالم، \"كوميديا أوديب، أو أنت اللي قتلت الوحش\"",
+            "note": "(١٩٧٢)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "نورثروب فراي، \"تشريح النقد\"",
+            "note": "ص. ٣٧-٨٥",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ali Salem, \"The Comedy of Oedipus\", in Marvin Carlson, The Arab Oedipus",
+            "note": "English version",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Northrop Frye, Anatomy of Criticism",
+            "note": "English version; pp. 33–67",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "انكسارات أوديب في \"الوصمة البشرية\" لفيليب روث",
+        "description": "Refractions of Oedipus in Philip Roth's The Human Stain",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "فيليب روث، \"الوصمة البشرية\"",
+            "note": "(2000)، ترجمة فاطمة ناعوت",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Philip Roth, The Human Stain",
+            "note": "English version (2000)",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "الدورة: تفكك أوديب: تجوالات الأسطورة بين الأدب والنظريات.\n\nتتناول الدورة مسائل الفاعلية والحرية، الهوية والمعرفة بالنفس، العقل والحق، الوعي واللامرئي. تُعدّ أسطورة أوديب من أكثر القصص التي تم إعادة تأليفها وتأويلها في الأدب العالمي، وقد شاركت هذه القصة المرعبة في تركيب عدد ملحوظ من النظريات ذات النفوذ ما بين النظريات عن الرغبة واللاوعي، كذلك عن التراجيديا أو المأساة سواء كصيغة أدبية أو كنمط (unclear) من التجارب الإنسانية، كما عن النظام الاجتماعي عند البشر وأسس الثقافة والحضارة بشكل عام. في هذه الدورة سنحاول أن نفهم ما هو الذي جعل أوديب شخصية جذبت انتباه مؤلفين ومفكرين لها عبر العصور، وسنفكر في سؤال كيف يمكنها أن تخاطبنا في أيامنا هذا.\n\nسوف نبدأ النقاشات بتناول مسألة نشوء هذه القصة الغريبة، فسنقرأ عدة نسخ مبكرة لها من اليونان كما سنطالع قصصا شعبية من أماكن أخرى. من بين النصوص اليونانية القديمة سنتعمق في قراءة المسرحيتين التي ألفهما سوفوكليس عن أوديب، أي \"أوديب ملكا\" المشهورة و\"أوديب عند كولونوس\" التي هي أقل شهرة. إلى جانب هاتين، سنقرأ نصوص نظرية متعلقة بهما من بينها أعمال لأرسطو، ونيتشه، وليفي-ستراوس، وريني جيرار، وبالطبع فرويد. هذه النصوص ستساعدنا أن نتفهم أعماق الأسطورة وأيضا أن نتأمل في المسائل التي تطرحها بشكل عام ومتجاوزا حدود القصة.\n\nفي النصف الثاني من الدورة سنلتفت إلى أعمال أدبية وفنية تدور حول أوديب من القرن العشرين، وإلى قراءات نظرية أخرى. هذه الأعمال ستحتوي \"الملك أوديب\" (١٩٤٩) لتوفيق الحكيم و\"كوميديا أوديب\" (١٩٧٠) لعلي سالم، وفلمين للمخرجين بيير باولو بازوليني وتوشيو ماتسوموتو. في نهاية الدورة يوجد جلستان اختياريتين يتناولان رواية \"الوصمة البشرية\" لفيليب روث، التي تقلب أسطورة أوديب بشكل معقد إلى سياق الولايات المتحدة في أواخر القرن العشرين.\n\nكمشروع نهائي سيكون للمشاركين في هذه الدورة الاختيار ما بين إنتاج عمل إبداعي وبين كتابة مقالة ردًا على مواد الدورة.\n\nمعظم القراءات ستكون متاحة باللغة العربية، والمساهمة في النقاشات يمكنها أن تكون بالعربي أو الإنجليزي حسب الاختيار الشخصي.\n\nالمدرّس: إيفلين ريتشاردسون حاصل على دكتوراه في الأدب المقارن من جامعة شيكاغو؛ حيث عمل أيضًا مدرِّسًا في قسم الآداب لمدة سنتين. يعمل حاليًا مدرّسًا خاصًا للغتين اللاتينية واليونانية القديمة."
+  }
+}

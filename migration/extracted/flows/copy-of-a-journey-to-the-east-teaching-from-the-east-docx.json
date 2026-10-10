@@ -1,0 +1,250 @@
+{
+  "sha256": "8995826dda295dc1c77633b7430708cbf80bf3181491920830be6db835cd397a",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Legend of the Buddha Shakyamuni – A Contextual Introductory Buddhism and the life of the ‘historical Buddha’",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Buddhist Scripture",
+            "note": "Radice, B. ed. (1959). Translated by Edward Conze. Hamondsworth: Penguin Books.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Genius of the Ancient World. Episode 1. Buddha",
+            "note": "2015. BBC 4. 5th August. 21.00.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Dharma (Buddha’s Teaching) – Key Themes in Buddhist Teachings",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Buddhism",
+            "note": "Cush, D., (1993). London: Hodder and Stoughton.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Buddhist Scripture",
+            "note": "Radice, B. ed. (1959). Translated by Edward Conze. Hamondsworth: Penguin Books.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Wheel of Life (Bhavacankra) – The Story/Teaching Behind the Diagram",
+        "description": "We will be looking at Wheel of Life (Bhavacankra) to discuss the Buddhist ideas are depicted through it.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Dhammapada",
+            "note": "A few verses. Maybe also look at. Easwaran, E., trans. (2003). California: Nilgiri Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Questions of King Milinda",
+            "note": "Maybe also look at. Davis, T. W. trans. (1982). Delhi: Motilal Banarsidass Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Confucius – Confucius’ Life and Vision",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Genius of the Ancient World. Episode 3. Confucius",
+            "note": "2015. BBC 4. 19th August. 21.00.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Understanding Confucianism",
+            "note": "Oldstone-Moore, J. (2003). London: Duncan Baird Publishers.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Analects",
+            "note": "Confucius, (2014). Trans. Annping Chin. London: Penguin.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Confucius’ Humanism (part I) – Exploring/Understanding Confucianism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Understanding Confucianism",
+            "note": "Oldstone-Moore, J. (2003). London: Duncan Baird Publishers.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Analects",
+            "note": "Confucius, (2014). Trans. Annping Chin. London: Penguin.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Confucius’ Humanism (part II) – Confucian Humanism Through Poetry",
+        "description": "[There is the potential to explore ideas from Taoism and the work of Lao Tzu; this will have to be discussed in advanced as it would change the shape of the following sessions].",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Li Po and Tu Fu",
+            "note": "Po, L. and Fu, T. (1973). Translated by Arthur Cooper. London: Penguin Books.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Man and Nature: A Study of Du Fu’s Poetry",
+            "note": "Yang, M. V. (2002). Monumenta Serica, 50, pp. 315-336.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Rumi & Sufism – A Glimpse into the Experience of Mystical Love",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rumi Past and Present, East and West: The Life, Teachings and Poetry of Jalâl al-Din Rumi",
+            "note": "Lewis, F. D. (2000). Oxford: Oneworld Publications.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction to Sufi Doctrine",
+            "note": "Burckhardt, T., (2008). Bloomington, Indiana: World Wisdom.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mystical Poetry in Islam: The Case of Maulana Jalaladdin Rumi",
+            "note": "Schimmel, A (1988). Religion & Literature, 20(1), pp. 67-80.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Rumi – The Poet as a Thinker",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Life and Work of Jalal-ud-din Rumi",
+            "note": "Iqbal, A. (1983). London: Octagon.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction to Sufi Doctrine",
+            "note": "Burckhardt, T., (2008). Bloomington, Indiana: World Wisdom.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rumi: Selected Poems",
+            "note": "Rumi, J. (1999). Translated by Coleman Banks. London: Penguin Books.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Rumi’s Verses – ‘The Universal Voice of the Human Soul’",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rumi: Selected Poems",
+            "note": "Rumi, J. (1999). Translated by Coleman Banks. London: Penguin Books.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Essence of Sufism",
+            "note": "Baldock, J. (2004). Royston: Eagle Editions.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Life and Work of Jalal-ud-din Rumi",
+            "note": "Iqbal, A. (1983). London: Octagon.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mystical Poetry in Islam: The Case of Maulana Jalaladdin Rumi",
+            "note": "Schimmel, A (1988). Religion & Literature, 20(1), pp. 67-80.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Nāgārjuna's Middle Way",
+        "note": "Nāgārjuna, 2013. Translated by M. Siderits & S. Katsura. Somerville: Wisdom Publications. Rest of the Course: Mādhyamaka (Middle Way) and śūnyatā.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Masnavi - Book One",
+        "note": "Rūmī, J. a.-D., 2004. Translated by J. Mojaddedi. Oxford: Oxford University Press. Rest of the Course: Rumi's Masnavi (option).",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Conference of the Birds",
+        "note": "Attar, F. (2011). Translated by Afkham Darbandi and Dick Davis. London: Penguin Books. Rest of the Course: Attar's work (option).",
+        "href": null
+      }
+    ],
+    "notes": "A Journey to the East: Teachings from the East. Cairo Institute of Liberal Arts and Sciences, Spring. Course Description/Handbook.\n\nCourse Description\n\nThis course is an opportunity to introduce ourselves to and explore various ideas from Eastern cultures (such as Buddhism, Confucianism, Sufism, and perhaps aspects of Ancient Mesopotamia/Akkadian).\n\nThe structure of the course will first look at the ‘historical’ narratives of such figures as Buddha, Confucius, and Rumi, and then explore ideas and principles as have been articulated/manifested through art.\n\nThemes that will be explored are the i) principles behind Buddhist teachings, ii) Confucian humanism, and the attitudes of (Islamic) mysticism.\n\nThis approach will cover two thirds of the course; for the tail-end of the course, the idea is to explore a specific formulation (and perhaps rather esoteric expression) of said cultures: for example, the Mādhyamaka (Middle Way) school of thought from Buddhism and the notion of emptiness (śūnyatā); a conversation around Confucius’ ethical and political views through his Analects; a read of Rumi’s Masnavi or Attar’s The Conference of the Birds.\n\nAlternatively, students may choose to turn to Ancient Mesopotamia, to look at the history and (cultural) attitudes revolving around the recovery of The Epic of Gilgamesh. Or they may like to introduce another culture and discuss its cultural artifact/artistic manifestation (literature, painting/drawing, statute, etc.).\n\nRest of the Course: the idea would be to look deeper at specific manifestations of the traditions explored so far. The above can either be all included, one each week, or students can elect one of the above to focus in length (close reading). In so doing, either students will be introduced to and discuss ideas from various traditions or get acquainted with the academic skill of close reading. Alternatively, students may opt to explore a different tradition/way of thinking from the East, such as looking at the history and (cultural) attitudes revolving around the recovery of The Epic of Gilgamesh; this last, however, will be more of an encyclopedic approach rather than the more disciplined examples above.\n\nThe flow's Week 3 gives no reading; the Dhammapada and Milinda entries are suggestions only."
+  }
+}

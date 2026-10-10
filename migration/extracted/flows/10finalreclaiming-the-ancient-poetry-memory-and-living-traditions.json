@@ -1,0 +1,280 @@
+{
+  "sha256": "5cf6ee6a99428df3333844558ce0ff703c3aebde6ec7fa45ff013911c1e9b945",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Decolonizing the Ancient World (Foundations)",
+        "description": "This opening session establishes the intellectual foundation of the course by examining how the “ancient world” has been constructed within modern scholarship. We will investigate how inherited frameworks shape what counts as knowledge, philosophy, and literature, and how these categories have often separated forms of thought that were originally intertwined. Particular attention will be given to how poetic and philosophical traditions have been differently valued, with philosophy often abstracted and poetry treated as secondary or symbolic.\n\nA central focus of this session will be the limitations of approaching the ancient world primarily through monumentality and material remains. While such approaches emphasize what is visible and durable, they often overlook the ways ancient people articulated complex philosophical ideas through poetic, dialogic, and narrative forms. By centering these expressions, the course shifts attention toward how ancient traditions grappled with questions of existence, meaning, and the human condition in ways that are embedded in language, voice, and lived experience.\n\nThis approach allows for a more relational and less hierarchical understanding of the past, recognizing poetry not as decoration but as a primary medium of philosophical inquiry. It also opens space to consider continuity, as many of these forms of thought remain active and meaningful in the present.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture and guided discussion"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of short theoretical readings"
+          },
+          {
+            "kind": "exercise",
+            "description": "Reflective writing on what “the ancient” means and how that idea has been constructed."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Ancient Egypt (Self & Psyche)",
+        "description": "This session explores ancient Egyptian conceptions of the self through a dialogic text that operates simultaneously as poetry and philosophy. The Dispute Between a Man and His Ba presents an internal conversation that raises questions about life, death, suffering, and the nature of the self. Rather than presenting a unified philosophical system, the text stages thought as dialogue, tension, and multiplicity.\n\nStudents will consider how philosophical reflection is embedded within poetic structure, and how the use of voice, repetition, and metaphor allows for a nuanced exploration of the psyche. The text invites us to see philosophy not as abstract reasoning alone, but as a lived and emotionally grounded process of thinking.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Dispute Between a Man and His Ba",
+            "note": "Text",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture providing context"
+          },
+          {
+            "kind": "discussion",
+            "description": "Close discussion of the text"
+          },
+          {
+            "kind": "exercise",
+            "description": "Write a dialogue with an aspect of your inner life."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Ancient Egypt (Narrative & Transformation)",
+        "description": "This session examines narrative as a philosophical form through The Tale of the Shipwrecked Sailor. The story’s structure—centered on displacement, encounter, and return—offers a framework for thinking about uncertainty, guidance, and transformation. Rather than separating story from thought, we will consider how narrative itself becomes a mode of philosophical reflection.\n\nAttention will be given to how imagery, voice, and storytelling techniques convey ideas about fate, resilience, and the human relationship to the unknown. Students will explore how narrative allows for a different kind of philosophical engagement—one that is experiential, situational, and open-ended.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Tale of the Shipwrecked Sailor",
+            "note": "Text",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of the text"
+          },
+          {
+            "kind": "exercise",
+            "description": "Write a narrative describing an unexpected encounter or moment of guidance."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Mesopotamia (Suffering & Justice)",
+        "description": "This session introduces Mesopotamian wisdom literature as a form of philosophical inquiry expressed through poetic dialogue. These texts grapple with suffering, injustice, and divine order, not through systematic argument, but through questioning, lament, and exchange.\n\nStudents will examine how the poetic form allows for the coexistence of multiple perspectives, and how philosophical thought emerges through tension rather than resolution. The dialogic structure invites reflection on doubt, uncertainty, and the limits of human understanding.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Babylonian Theodicy",
+            "note": "Text",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ludlul Bel Nemeqi",
+            "note": "Text",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of the readings"
+          },
+          {
+            "kind": "exercise",
+            "description": "Write a short lament or dialogue about injustice or uncertainty."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Mesopotamia (Mortality & Memory)",
+        "description": "This session explores the Epic of Gilgamesh as both narrative and philosophical meditation. Through themes of friendship, grief, and mortality, the text raises fundamental questions about the limits of human life and the search for meaning. Rather than presenting answers, the epic unfolds as a journey of realization shaped by loss and memory.\n\nStudents will consider how poetic narrative allows for the exploration of existential questions in ways that are embodied and emotionally resonant. The text invites reflection on how humans confront mortality and attempt to create meaning through relationships and legacy.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Epic of Gilgamesh",
+            "note": "Text; selections",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of the text"
+          },
+          {
+            "kind": "exercise",
+            "description": "Write a reflective poem on mortality, memory, or legacy."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Persian / Sufi Traditions (Journey & Allegory)",
+        "description": "This session examines allegory as a philosophical mode in which meaning is conveyed through symbolic journeys and figures. In The Conference of the Birds, animals, landscapes, and actions operate as carriers of complex ideas about selfhood, transformation, and the search for truth.\n\nStudents will explore how allegory allows philosophy to be expressed relationally, through images and movement rather than abstraction. The text demonstrates how poetic form can hold multiple layers of meaning simultaneously, inviting interpretation rather than prescribing it.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Conference of the Birds (Attar)",
+            "note": "Text",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of the text"
+          },
+          {
+            "kind": "exercise",
+            "description": "Write an allegorical poem or short story using animals, landscapes, or symbolic figures to represent inner transformation."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Early Indian Traditions (Cosmology & Uncertainty)",
+        "description": "This session explores cosmology as philosophical speculation expressed through poetry. The Creation Hymn does not present a fixed account of origins, but instead raises questions about the nature of existence and the limits of knowledge.\n\nStudents will consider how poetic language allows for the expression of uncertainty, ambiguity, and possibility, and how these qualities function as meaningful forms of inquiry. The text invites reflection on how knowledge itself is constructed and what it means to encounter the unknown.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rig Veda — Creation Hymn",
+            "note": "Text",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of the text"
+          },
+          {
+            "kind": "exercise",
+            "description": "Write a creation narrative that embraces ambiguity or multiple possibilities."
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Southeast Asia (Cosmology and Transformation)",
+        "description": "This session examines cosmological narrative as a dynamic and evolving form of thought. The Churning of the Ocean of Milk is approached as a story that expresses philosophical ideas about balance, conflict, and creation through movement, interaction, and transformation.\n\nStudents will consider how such narratives operate across different media—text, image, performance—and how meaning emerges through relationships between beings, substances, and environments. The story demonstrates how philosophy can be embodied and enacted rather than abstractly stated.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Churning of the Ocean of Milk in Cambodian and Balinese traditions",
+            "note": "Text; focus",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of the materials"
+          },
+          {
+            "kind": "exercise",
+            "description": "Create an imaginative allegorical narrative in which a world is transformed through the interaction of landscapes and substances (such as water, milk, oil, juice, or sand), using human, animal, or non-human forces to explore themes of tension, balance, and creation."
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "Early Buddhist Poetry (Women, Voice, and Knowledge Production)",
+        "description": "This session focuses on early Buddhist poetry as a form of philosophical expression grounded in lived experience. The Therīgāthā presents women’s voices as sites of insight, reflection, and knowledge production, challenging assumptions about who produces philosophy and how it is expressed.\n\nStudents will examine how poetic form allows for the articulation of transformation, realization, and liberation, and how these experiences are framed as forms of knowledge. The texts invite us to reconsider philosophy as something that emerges through lived practice and embodied experience.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Therīgāthā",
+            "note": "Text",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Short lecture"
+          },
+          {
+            "kind": "discussion",
+            "description": "Discussion of the poems"
+          },
+          {
+            "kind": "exercise",
+            "description": "Write a reflective or poetic piece that centers a woman as a thinker or producer of knowledge in an ancient or imagined setting."
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Presentations & Synthesis",
+        "description": "The final session is dedicated to student presentations and a collective reflection on how the relationship between poetry, philosophy, and lived experience has reshaped our understanding of the ancient world.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Student presentations"
+          },
+          {
+            "kind": "discussion",
+            "description": "Collective reflection on how the relationship between poetry, philosophy, and lived experience has reshaped our understanding of the ancient world"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course Description (verbatim): This lab explores ancient poetic and philosophical traditions as living expressions of human thought, rather than distant or static artifacts. We will engage texts from ancient Egypt, Mesopotamia, and South and Southeast Asia, approaching them through relational, context-based, and critical frameworks.\n\nRather than reading these traditions through later European categories or disciplinary boundaries, the course emphasizes how poetry and philosophy often emerge together as intertwined modes of thinking. These traditions will be understood as ways of asking questions about existence, selfhood, ethics, and the cosmos, expressed through narrative, dialogue, metaphor, and performance. Students will learn to situate texts within their archaeological and historical contexts while also recognizing their continued resonance in contemporary identities and practices.\n\nThe course begins by critically examining how the “ancient world” has been constructed within modern scholarship. From this foundation, we will move toward approaches that foreground relationality, continuity, and multiplicity, engaging ancient texts as forms of thought rather than objects of distance.\n\nEach session combines discussion with creative engagement. Students will respond to poetic and philosophical forms through writing and reflection, exploring how these texts articulate enduring human questions and how they continue to shape ways of understanding the world.\n\nThe course culminates in a final project that reinterprets ancient traditions through a relational and critical lens.\n\nFinal Project — Reframing the Ancient: Voice, Relation, and Continuity (verbatim): For the final project, students will produce a sustained reinterpretation of one or more traditions studied in the course, focusing on how the “ancient” can be understood beyond material, monumental, and inherited interpretive frameworks.\n\nThe project will take the form of a curated interpretive work, through which students develop a new way of presenting and understanding a tradition for an audience, foregrounding voice, lived experience, and relational context.\n\nAccompanying the project, students will submit a critical reflection (approximately 1,000–1,500 words) that considers how engaging with these traditions has shaped their own understanding of the “ancient,” as well as their sense of self, knowledge, and connection to the past.\n\nProjects will be presented in the final session."
+  }
+}

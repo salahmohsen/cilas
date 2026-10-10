@@ -1,0 +1,193 @@
+{
+  "sha256": "3f9325dbd5e77251b730b0b07addf207004ab6485bcf9ed1aa0e2cd7e3a531a5",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Image of an Education – The Ideas and Ideals of Behind an Educational System",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Republic",
+            "note": "Plato, 1992. Translated by A. D. Lindsay. London: Everyman's Library. Passages: (pp. 197-202: Book VII, § 514-521) for class discussion. General Background/Additional Reading: (pp. 44-61: Book II, § 368-383); (pp. 92-102: Book III, § 412-423); (pp. 156-157U167-169U174: Book V-VI, § 472-473&485-487&492).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Dialectic Path of Education – Negation (or Aufheben?) and the Dialectic Experience in Education",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Phenomenology of Spirit",
+            "note": "Hegel, G. W. F., 1977. Translated by A. V. Miller. Oxford: Oxford University Press. (Introduction, pp. 46-57)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Negative Education – The Teacher as a Vacuum Pump",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Concept of Irony",
+            "note": "Kierkegaard, S., 1992. Translated by H. Hong & E. H. Hong. Princeton: Princeton University Press. (pp. 34-36 & 175-178)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Theaetetus",
+            "note": "Additional Reading. Plato, 1997. Translated by M. J. Levett. & M. Burnyeat(rev.): J. M. Cooper, ed. Plato - Complete Works. Indianapolis: Hackett Publishing Company, pp. 157-234. Passages: pp. 165-181: § 148c-163d",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Narration Sickness in Education – The Banking System of Education and the Student as the Receptable Container",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pedagogy of the Oppressed",
+            "note": "Freire, P., 2005. Translated by M. B. Ramos. New York: The Continuum International Publishing Group. (Chapter 2, pp. 52-67)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘The Progressive Teacher’",
+            "note": "Additional Reading. Figueiredo-Cowen, M (ed.) (1995) in Paulo Freire at the Institute, London, University of London. (chapter 2)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Mediation in Education – On the ‘Judicious’ (Authoritative) and ‘Uncoercive’ Educator, and the Interplay of Authority in Education",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Paradiso",
+            "note": "Rose, G., 1999. London: The Menard Press. (Dr Grove or Goodness, pp. 42-47)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Love's Work",
+            "note": "Rose, G., 1995. New York: Schocken Books. (Chapter 8*, pp. 120-144)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "What is Learning and the Teacher’s Paradox – Concerning the Paradox of Teaching and Learning and the Reflective Practitioner",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Educating the Reflective Practitioner",
+            "note": "Schön, D., 1987. San Francisco: Jossey-Bass Publishers. (pp.82-95).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Pedagogical Theories (part I) – Feminist Pedagogy and Reflections on Power and Authority in the Teacher-student Relation",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Feminist Pedagogy Theory: Reflections on Power and Authority",
+            "note": "Luke, 1996. In Educational Theory 46.3: 283–302.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Pedagogical Theories (part II) – Plantation Pedagogy and the Postcolonial Classroom",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Plantation Pedagogy, A postcolonial and Global Perspective",
+            "note": "Bristol, L., 2012 New York: Peter Lang Publishing, Inc. (pp, 1-20).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Pedagogical Theories (part III) – Critical Pedagogy and Education as a Practice of Freedom",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Teaching to transgress: education as the practice of freedom",
+            "note": "hooks, B., 1994. London, Routledge.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Pedagogical Reflections – The Reflective and Comprehensive Teacher",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "From Reflective Practitioner to Comprehensive Teacher",
+            "note": "Tubbs, N., 2000. Educational Action Research, 8:1, 167-178.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Student Guided Sessions",
+        "description": "Groups will be set up, aligned with the various pedagogical approaches and methods discussed in the earlier sessions. Students will form and join said groups depending on which pedagogical ‘system’ they aspire to and want to draw from for their own pedagogical method. Also, in groups, they are to prepare a poster, explaining what their pedagogical ‘system’ is inspired by and draws from, and how it is supposed to function.",
+        "meetings": 2,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "The last couple of sessions will be designed and run by the students themselves – they will be run in accordance to and exemplifying the pedagogical approach of their liking, based on the methods discussed in earlier sessions."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Pedagogy Lab: Philosophy of the Teacher. Power of the Teacher & the Teacher-student Relationship. Course Description/Handbook | Liberal Arts: Cairo Institute of Liberal Arts and Sciences | Spring. Course Description, verbatim: In his Metaphysics, Aristotle writes, “it is owing to their wonder that men both now begin and at first began to philosophize” (1984, pp. Met: Book I (A), § 2, 982b12-982b13), and in this course, philosophy of the teacher will lead us down to the difficult path of asking some hard questions about the identity of the teacher.\n\nThe course is structure so us to enable us to think about the contradictions that appear in both the theory and practice of teaching, and ways in which we might begin to understand these contradictions.\n\nPaideia (education) is claimed to be an experience by which one learns, but this experience – as any experience for that matter – does not exist/take place in a vacuum, and it is festered with ambiguity and contradictions.\n\nThe purpose here will be to let ourselves explore and discuss, to ‘experience’ these contradictions, so we may begin to better understand them and the principles at play.\n\nThe Republic citation as printed reads “156-157U167-169U174”; the flow text is copied as extracted."
+  }
+}

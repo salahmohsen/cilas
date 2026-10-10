@@ -1,0 +1,132 @@
+{
+  "sha256": "4ec6fd65f5492d71c89064f198790c2e047d5d779f0987e937316a17ac5f3d0f",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Classical Judeo-Christian and Enlightenment Ethics/The Animal in Ottoman Egypt",
+        "description": "Date: 23rd September",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected readings",
+            "note": "Lynn White and Alan Mikhail",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Contemporary Animal Ethics - Animal Liberation and Animal Rights – Utilitarian and Deontological Ethics",
+        "description": "Date: 30th September",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected readings",
+            "note": "Tom Regan and Peter Singer",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Part 1: The Ontological and Moral Status of Animals: Classical Islamicate Philosophical Tradition",
+        "description": "Date: 6th October",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected readings",
+            "note": "Al-Farabi, Ibn Sina, Fakhr al-din al-Razi, Abu Bakr Al-Razi (Rhazes), Miskawayh",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Part 2: The Ontological and Moral Status of Animals: Classical Islamicate Philosophical Tradition",
+        "description": "Date: 13th October",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected readings",
+            "note": "Ikhwan al-Safa and Ibn Tufayl",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Part 3: The Ontological and Moral Status of Animals: Contemporary Islamic Environmental Ethics",
+        "description": "Date: 20th October",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected Readings",
+            "note": "N. Mohamed and S.Tlili",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Between Anthropocentric and Ecocentric Approaches",
+        "description": "Date: 27th October",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected Readings",
+            "note": "Joseph Desjardins",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Deep Ecology and Post-Colonial Approaches (Theo-Philosophical Perspectives)",
+        "description": "Date: 3rd November",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected Readings",
+            "note": "Syed Hussein Nasr and Anna M. Gade (named as Syed Hussein Nasr in the flow's course plan; Seyyed Hossein Nasr in the module summary)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "What do we owe future generations? Rethinking Sustainable Development (Secular and Theological Perspectives)",
+        "description": "Date: 10th November",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected Readings",
+            "note": "Joseph Desjardins and N. Mohamed",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "COURSE OVERVIEW, CILAS 2024. Ecology between East and West: Philosophical and Theological Dialogues on Environmental and Animal Ethics. Instructor: Nabil Yasien Mohamed.\n\nMODULE SUMMARY: This course, Ecology between East and West: Philosophical and Theological Dialogues on Environmental and Animal Ethics, will engage both the Western and Islamicate traditions. It will deal with Environmental Ethics in general, and Animal Ethics in particular.\n\nIn contemporary environmental ethics, the work of Peter Singer and Tom Regan has dominated the scene. The former gives primacy to the sentience of animals (Animal Liberation) and the latter to their intrinsic moral worth as beings that are “subject-of-a-life” (Animal Rights). Singer and Regan are Utilitarian and Deontological ethicists respectively. These two approaches attempt to overturn the anthropocentric ethics of the Judeo-Christian (Augustine, Aquinas etc.) and classical Western traditions (Descartes, Kant, Bentham etc.), and aim towards an ecocentric environmental ethics. In the course, we will critically appraise these watershed moments (from the classical to the contemporary) in Western Environmental ethics, and propose alternative paradigms.\n\nThe question of the nature and moral standing of animals is fundamental to the development of any environmental ethic. The moral concern of non-human animals in mainstream contemporary Islamic thought has been given insufficient attention. However, historically it has not gone ignored, discussions took place in the Islamic philosophical and theological traditions. The early philosophers (Ibn Sīna and Al-Farābi) and theologians (both Muʿtazilites and Ashʿarites), mainly discussed the ontological status of animals, but not much on animal welfare (it was mainly the domain of the jurists). Among the philosophers, such as Abū Bakr al-Rāzi (d. 935 CE), the Ikhwān al-Ṣafa, Ibn Tufayl (d. 1185 CE), and Ibn Miskawayh (d. 1030 CE), they discussed both the ontological status and moral standing of animals. In this course we will critically discuss their contribution to the discourse, and how it may advance a contemporary environmental ethic.\n\nWhat do we owe future generations? Remains a crucial question in environmental ethics and sustainable development. In this course, we evaluate how the economic structures of development, the problems of consumption and consumerism, the desacralisation of nature, the prism of logical positivism, contemporary ethics, and the tension between anthropocentrism and ecofascism, contribute to the ecological crisis and unsustainability. In this course, to address the ecological crisis, we will explore other paradigms within radical environmental ethics from deep ecology (Seyyed Hossein Nasr) to post-colonial approaches (Anna Gade).\n\nIn the Islamic tradition, both the anthropocentric and ecocentric elements exist and are not necessarily mutually exclusive. To reconcile the “impasse\" between anthropocentric and ecocentric environmental ethics, contemporary ethicists propose theocentric approaches to environmental ethics. Towards this vision, in the course we will discuss 1) Divine Command Theory, 2) the Higher Objectives of the Divine Law (maqāsid al-sharīʿa), and 3) Islamic Virtue Ethics as three instrumental elements that form a contemporary environmental ethic, and contribute to the discourse on sustainability and animal welfare.\n\nLEARNING OUTCOMES:\n- Evaluate Historical Perspectives: Trace the historical development of environmental ethics from classical Western traditions (e.g., Augustine, Aquinas, Descartes, Kant) to contemporary theories.\n- Critically Analyze Key Theories: Understand and critically appraise key Western environmental and animal ethics theories, including Peter Singer's utilitarian approach and Tom Regan's deontological perspective.\n- Compare Western and Islamic Traditions: Compare and contrast environmental and animal ethics in Western and Islamicate traditions, identifying both similarities and differences.\n- Discuss Islamic Philosophical Contributions: Discuss the contributions of early Islamic philosophers (e.g., Ibn Sīna, Al-Farābi, Abū Bakr al-Rāzi, Ikhwān al-Ṣafa, Ibn Tufayl, Ibn Miskawayh) to the discourse on the moral standing of animals and their ontological status.\n- Assess Islamic Theological Approaches: Evaluate Islamic theological approaches to environmental ethics, focusing on the contributions of Muʿtazilite and Ashʿarite theologians.\n- Explore Contemporary Islamic Environmental Ethics: Analyze contemporary Islamic approaches to environmental ethics, including Divine Command Theory, the Higher Objectives of the Divine Law (maqāsid al-sharīʿa), and Islamic Virtue Ethics.\n- Investigate Alternative Paradigms: Explore radical environmental ethics, including deep ecology and post-colonial approaches, and their relevance to addressing the ecological crisis.\n- Formulate a Contemporary Environmental Ethic: Synthesize knowledge from the course to propose a comprehensive, contemporary environmental ethic that addresses sustainability and animal welfare from both Western and Islamic perspectives.\n- Address Future Generations: Articulate ethical responsibilities towards future generations in the context of environmental ethics and sustainable development.\n- Engage in Interdisciplinary Dialogues: Engage in philosophical and theological dialogues that integrate insights from both Western and Islamic traditions to address contemporary environmental and animal ethics challenges.\n\nFELLOW: Nabil Yasien Mohamed is the author of Ghazālī’s Epistemology: A Critical Study of Doubt and Certainty (Routledge, 2023). He holds an M.A in Philosophy from the University of the Western Cape (UWC), an honours degree in Islamic Studies from the Islamic Peace College of South Africa (IPSA), a BA degree in Politics, Philosophy and Economics from the University of South Africa (UNISA), and a BSc Honours degree in Engineering from the University of Cape Town (UCT). Nabil has spent several years in Egypt studying Arabic and traditional Islamic studies. His research interests and publications include Ghazalian studies, classical Islamic Philosophy, contemporary Islamic thought, theology, epistemology, ethics and ecology."
+  }
+}

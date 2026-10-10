@@ -1,0 +1,78 @@
+{
+  "sha256": "fef18a8e7afcaf049d041fb7009abf9a022fe75a69fcccd7035302737ad750c7",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "The Liberation of Women and The New Woman Two Documents in the History of Egyptian Feminism",
+        "note": "Amin, Q., & Peterson, S. S. (2004). Cairo: The American University of Cairo Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Rethinking the Public Sphere: A Contribution to the Critique of Actually Existing Democracy",
+        "note": "Fraser, N. (1990). Social Text, 56-80.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Making Sense of an Untold Story: A Personal Deconstruction of the Myth of Motherhood",
+        "note": "Hager, T. (2011). Qualitative Inquiry, 35-44.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Bargaining with the Devil: States and Intimate Life",
+        "note": "Hasso, F. S. (2014). Journal of Middle East Women's Studies, 107-134.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Bargaining with Patriarchy",
+        "note": "Kandiyoti, D. (1988, September). Gender and Society, 2(3), 247-290.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Politics of Piety: The Islamic Revival and The Feminist Subject",
+        "note": "Mahmood, S. (2005). New Jersey: Princeton University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Agency, Performativity, and the Feminist Subject",
+        "note": "Mahmood, S. (2009). In H. R. Christensen, & L. Sjorup (Ed.), Pieties and Gender (pp. 11-45). Brill.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "How to Mend: Motherhood and Its Ghosts",
+        "note": "Mersal, I., & Moger, R. (2019). Sternberg Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Performativity of Motherhood: Embodying Theology and Political Agency",
+        "note": "Oh, I. (2009). Journal of the Society of Christian Ethics, 3-17.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Of Woman Born: Motherhood as Experience and Institution",
+        "note": "Rich, A. (1995). New York: W. W. Norton & Company.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Gender: a useful category of historical analysis",
+        "note": "Scott, Joan W. (1986). The American Historical Review, 91(5): 1053-1075.",
+        "href": null
+      }
+    ],
+    "notes": "As motherhood has been the haunting ghost in women’s life, it surely has constructed their self-image and directed their gender performance. Mothering has been sold to the world as the sacred mission that cannot be questioned or challenged. Yet, in real life, motherhood is not an easy experience and its impact on selfhood is complex. As such, it is crucial to trace and deconstruct the centrality of this experience in the formation of the gendered selfhood. How has this experience gained its complexity on a social level? What can it tell and convey about gender performance and sexuality? And most importantly how was it used to bargain and maneuver within social structures?\n\nبينما تمثل الأمومة شبحًا مطاردًا في حياة النساء، فإنها بالتأكيد تشكل صورتهن الذاتية وتوجه أداءهن الجندري. لقد بيعت فكرة الأمومة إلى العالم باعتبارها مهمة مقدسة لا يمكن مساءلتها. لكن الأمومة في الواقع ليست تجربة سهلة وتأثيرها على شعورنا بذواتنا معقد. وبالتالي، من الضروري أن نفكك مركزية هذه التجربة في تشكيل الهوية الجندرية. كيف اكتسبت هذه التجربة تعقيدها على المستوى الاجتماعي؟ ماذا يمكن أن تخبرنا وتنقل لنا عن أداء الجندر والجنسانية؟ والسؤال الأهم: كيف استخدمت للتفاوض والتحايل في البنى الاجتماعية؟\n\nIn this course, we will maneuver between different academic pieces attempting to trace mothering and motherhood as a social tool that formulates and constructs the gendered subjectivity.\n\nنجول في هذا المساق بين مختلف الدراسات الأكاديمية في محاولة لاقتفاء الأمومة هوية ونشاطًا بصفتها أداة اجتماعية تشكل الذات الجندرية وتبنيها.\n\nAs we visit different scholarly works, we will be able to unravel gendered structures and attempt to make sense of the world around us through grounding our knowledge with an academic theoretical framework that tackles gender as analytical categories. Throughout the course, we will see how motherhood was extracted from the private realm and pushed to the public realm by states and political systems to serve a national agenda. Moreover, we will trace how agency is pivotal when we talk about gendered subjectivity. Finally, we are going to unpack how motherhood and gender performance was crafted to serve as a tool of resistance.\n\nوبينما نقرأ هذه الدراسات، سنتمكن من كشف البنى الجندرية وفهم العالم حولنا عبر تأصيل معرفتنا الشخصية بإطار نظري أكاديمي يعالج الجندر بصفته تصنيفًا تحليليًا. من خلال المساق، سنرى الطريقة التي انتزعت بها الدولة والنظم السياسية الأمومة من المجال الخاص ودفعت بها إلى المجال العام من أجل خدمة الأجندة القومية. والأكثر من ذلك، سنتتبع مدى محورية الفاعلية عند الحديث عن الهوية الجندرية، وأخيرًا، سنحلل الطريقة التي يعمل أداء الجندر والأمومة كأداة للمقاومة.\n\nWhat to Expect:\n\nThis course is a discussion-based seminar. You are expected to be fully present and show the best you can to make the discussion fruitful and insightful.  This course does not only aim to deconstruct the long-lived rigid image about motherhood but also to equip you with tools of critical thinking and academic writing. Generally, you will be asked to do the readings, in addition to providing a short reflection on the assigned readings. The flow of readings are divided into 3 categories: first is the theoretical framework which will anchor our knowledge about gender studies through unpacking notions like agency, power and negotiation of private and public spheres. The second category will include the core readings that will guide our discussions about motherhood and gender performativity. The last category will include thematic readings and case studies to enrich our discussion and gain a detailed picture about the topic.\n\nماذا يجب أن تتوقع:\n\nهذا المساق هو سيمنار مقام على المناقشة؛ نتوقع أن تحضره كاملاً وأن تبذل ما بوسعك كي تجعل النقاش مثمرًا وعميقًا. لا يهدف هذا المساق إلى تفكيك الصورة الصارمة المعمرة حول الأمومة فقط، بل أيضًا تزويدك بأدوات للتفكير النقدي والكتابة الأكاديمية. وبشكل عام، يُطلب منك أن تقرأ قراءات المساق بالإضافة إلى تقديم انطباع قصير حول القراءات المقررة. ينقسم مسار القراءات إلى ثلاثة تصنيفات: الأول هو الإطار النظري الذي سيرسي معرفتنا عن دراسات النوع الاجتماعي من خلال تحليل أفكار مثل الفاعلية والسلطة والمفاوضة بين المجالين العام والخاص، والثاني سيتضمن القراءات الأساسية التي ستقود نقاشاتنا حول الأمومة والأدائية الجندرية، وأما الأخير، فسيتضمن قراءات نوعية ودراسات حالة من أجل إثراء نقاشاتنا واكتساب صورة مفصلة حول الموضوع.\n\nحصلت نهلة منصور على درجة البكالوريوس من الجامعة الأمريكية ببيروت بعدما تخصصت في دراسات الإعلام والإتصال، بالإضافة إلى تخصصها الثانوي في دراسات الجندر والمسرح. تنهي نهلة درجة الماجستير في علم الإجتماع من الجامعة نفسها مستكشفة علم اجتماع الجندر والإعلام. تدور اهتماماتها حول الذاتية الجندرية: ديناميات السلطة، الفاعلية، سياسات الجسد. سمحت لها خبرتها كباحثة مساعدة أن تشتبك نقديًا مع أسئلة الحداثة والاستعمار وإنتاج المعرفة. تركز أطروحتها على سؤال الأمومة وتمثيلاتها في السينما المصرية في الحقبة الناصرية."
+  }
+}

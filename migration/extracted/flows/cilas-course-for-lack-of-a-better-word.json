@@ -1,0 +1,126 @@
+{
+  "sha256": "690500857d321bce76f8ce7f92fa2e8e2244c615b10055ef346c78c88b65552c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Conduits, Canals and Crises",
+        "description": "Recent trends in pragmatics",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A deflationary approach to metaphor",
+            "note": "Wilson & Sperber",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "What Metaphors Mean",
+            "note": "Davidson",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Artificial Intelligence and NLP : the desire to dissect",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Linguistic knowledge in natural language processing",
+            "note": "Towards Data Science",
+            "href": "https://towardsdatascience.com/linguistic-knowledge-in-natural-language-processing-332630f43ce1"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Getting the world to match the words",
+        "description": "Speech Act Theory",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Language, Eros, Being : Kabbalistic Hermeneutics",
+            "note": "Wolfson",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The power of language in Jewish Kabbalah",
+            "note": "British Library, Hebrew manuscripts articles",
+            "href": "https://www.bl.uk/hebrew-manuscripts/articles/the-power-of-language-in-jewish-kabbalah"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The mind as the essence of words - Buddhist thoughts",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The mind as the essence of words",
+            "note": "Wu",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Metaphor as transcendent paradox",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Technic & Magic",
+            "note": "Campagna. Chp. 2.1-2.2 - Absolute Language",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Belief in the Act",
+            "note": "Rainey",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Closing Session",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "The words that stretch how we think",
+        "note": "Pre-course reading. BBC Culture, 2020.",
+        "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think"
+      },
+      {
+        "type": "reading",
+        "title": "The Conduit Metaphor",
+        "note": "Reddy. Pre-course reading.",
+        "href": null
+      }
+    ],
+    "notes": "CILAS course: For Lack Of A Better Word? Interrogating the Literal. Tentative course flow: the flow numbers Weeks 1, 2, 3, 4, 7 and 8; Weeks 5 and 6 are not listed, and the sessions above are numbered in order without gaps.\n\nCourse Description: It’s often argued (in the university, politics, public life, and elsewhere) that clarity and precision in language are necessary for effective communication. Recent trends in linguistics, however, suggest that metaphor is a natural outgrowth of the way human cognition is organized - indeed, that our experience of the world is often rooted in metaphor. But these arguments come with certain assumptions: why is the literal taken as default, and the non-literal as somehow aberrant? Is this truly a natural consequence of human cognition and semiotics? And to what degree is it influenced by the material and social conditions under which linguistics has developed as a academic discipline?\n\nOn this course we will try to interrogate this notion of ‘the literal’. Rather taking a linear or chronological route, we will weave between angles - beginning with ‘modern’ academic and applied linguistics, moving through esoteric and spiritual approaches to language, and into considering the role of the non-verbal in communication. The final session will be dedicated to reflection, and for participants to present their thoughts on metaphor, the literal, and everything - if anything - in between.\n\nCourse image: Rhys Bevan Jones - Hel Meddyliau (‘Mind-hunting’).\n\nBio: Biu Rainey is a PhD candidate in Linguistics at the University of Oslo, where he is investigating the ability of infants to process ‘non-literal’ language. More generally, his work looks at the ways in which semantic meaning, grammar and context coexist and influence each other. Elsewhere, Biu currently works as a researcher with Grambank - a project aiming to document global grammatical structures - at SOAS in London, and has run multiple formal and informal workshops on metaphor with various schools and groups. More importantly, he loves Pokémon, baking, and really needs to learn to tie-die."
+  }
+}

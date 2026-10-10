@@ -1,0 +1,218 @@
+{
+  "sha256": "ee85e61a79407688e539667f4cbe2a624f08a915b03dc2a29fc49d60037d2b1b",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction and Main Concepts",
+        "description": "Definitions and scope of Christian-Muslim relations.\n\nExploring Christian-Muslim relations as an interdisciplinary field.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Understanding the Complexity of Networks in Christian-Muslim Relations",
+        "description": "Models of church-state relations: Global perspectives and the Egyptian context.\n\nThe evolution and significance of the Egyptian Millet system.\n\nCircles of power and influence: The church, state, and Islamic movements.\n\nAnalyzing how these circles interact and shape interfaith dynamics.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Christian-Muslim Relations in Practice: Challenges of Building Churches",
+        "description": "The socio-legal and political challenges of church construction in Egypt.\n\nHow religious practices and social norms shape legal frameworks.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Women and Gender Issues in Christian-Muslim Relations",
+        "description": "The construction and reconstruction of women’s roles in Christian and Muslim communities.\n\nGendered narratives and their influence on interfaith dynamics.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Media and Mass Communication in Christian-Muslim Relations",
+        "description": "The role of Islamic vs. Christian media in shaping public perceptions.\n\nMedia as a tool for both dialogue and division.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The Arab-Israeli Conflict and Christian-Muslim Relations in Egypt",
+        "description": "How interfaith relations inform approaches to the Arab-Israeli conflict.\n\nPerspectives from Islamic movements and the Coptic and Evangelical churches of Egypt.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "The Arab-Israeli Conflict (Part 2)",
+        "description": "The role of Christian Zionism in the Palestinian cause.\n\nA historical exploration of Copts in Palestine.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Migration and Diaspora in Christian-Muslim Relations",
+        "description": "The experiences of Coptic Christians in the diaspora.\n\nMuslim communities in the West and their interfaith interactions.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Modernism and Reformation in Religious Institutions in Egypt",
+        "description": "Islamic reformation efforts: A case study of Al-Azhar.\n\nCoptic experiences of reformation and their broader implications.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Fieldwork in Christian-Muslim Relations",
+        "description": "Conducting research within religious communities.\n\nPractical approaches to navigating interfaith contexts.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Fieldwork in Christian-Muslim Relations (if applicable)"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "الكنيسة والدولة في مصر",
+        "note": "طارق البشري",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الكنيسة والدولة",
+        "note": "متى المسكين",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الجماعة الوطنية في مصر",
+        "note": "طارق البشري",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الدين والدولة الطائفية",
+        "note": "نبيل عبد الفتاح",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "موقف الأقباط من الحركة السياسية",
+        "note": "دكتورة هبة شوقي",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "سيكولوجية التدين لدى الأقباط",
+        "note": "رفيق حبيب",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الأقباط بين الوطن والمقدس",
+        "note": "إكرام لمعي",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الاختراق الصهيوني للمسيحية",
+        "note": "إكرام لمعي",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الكنيسة القبطية تواجه الاستعمار والصهيونية",
+        "note": "وليم سليمان قلادة",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الإحياء القبطي والإسلامي",
+        "note": "رفيق حبيب",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الجماعة القبطية بين الاندماج والانعزال",
+        "note": "رفيق حبيب",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "المسيحية والحرب والصراع علي الشرق الأوسط",
+        "note": "رفيق حبيب",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "سؤال الإصلاح.. الكنيسة القبطية في مجتمع متغير",
+        "note": "هاني لبيب",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "قصة الكنيسة القبطية",
+        "note": "ايريس حبيب المصري",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "حركات الإصلاح بين الإسلام والمسيحية",
+        "note": "طارق عبد الحميد",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "النهوض العاثر",
+        "note": "محمد حلمي عبد الوهاب",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الأزهر وسؤال التجديد",
+        "note": "دكتور علي مبروك",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الإصلاح السياسي في محراب الأزهر",
+        "note": "دكتور عمار علي حسن",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الكنيسة بين الإصلاح والمحافظة",
+        "note": "إسحق عزيز",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الإمام محمد عبده – عبقري الإصلاح والتعليم",
+        "note": null,
+        "href": null
+      }
+    ],
+    "notes": "Course Description: Christian-Muslim relations in Egypt are deeply rooted in the country’s history and are influenced by state policies, religious institutions, and global political events. This course adopts an interdisciplinary approach to explore the evolution and current state of these relations, with a focus on their social, political, and cultural dimensions.\n\nStudents will examine topics such as the historical foundations of the Egyptian Millet system, the dynamics of church-state relations, and the socio-legal challenges surrounding religious practices, such as church building. Special attention will be given to the roles of women and gender, the influence of religious media, and how Christian-Muslim relations in Egypt intersect with broader geopolitical issues, including the Arab-Israeli conflict.\n\nThrough lectures, discussions, case studies, and potential fieldwork, students will develop a nuanced understanding of how religious identity, state power, and sociopolitical contexts shape interfaith dynamics in Egypt today.\n\nCourse Aim: The course aims to equip students with a comprehensive understanding of the historical, political, and social factors shaping Christian-Muslim relations in contemporary Egypt. By engaging with themes such as religious identity, gender dynamics, legal frameworks, and global conflicts, students will critically analyze interfaith relations within Egypt’s complex sociopolitical landscape. The course also fosters skills in interdisciplinary research, critical thinking, and cross-cultural analysis."
+  }
+}

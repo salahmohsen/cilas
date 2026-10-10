@@ -1,0 +1,293 @@
+{
+  "sha256": "474ee23edcbe07d543ad6b08a72b8bbc3aa14df3897674a05f3c3f84bbf2c4d4",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introductory Week",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Inflation",
+            "note": "Hans Richter. 1928-9, 5 mins.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Les Matire Fous",
+            "note": "Jean Rouch. 1955, 36 mins.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Re-Assemblage",
+            "note": "Trinh Min-ha. 1983, 40 mins.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Subject of Documentary",
+            "note": "Nora Alter and Paul Arthur. Read in class.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Salut les Cubains",
+            "note": "Agnes Varda.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Statues also die",
+            "note": "Chris Marker.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Exercise"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Michael Renov on Jonas Mekas’s film Lost, Lost, Lost (1976)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Lost, Lost, Lost",
+            "note": "Jonas Mekas. Excerpts: the total film time is 3hrs, and we will watch half.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Sans Soleil",
+            "note": "Chris Marker.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion and Analysis"
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Thin Red Line",
+            "note": "Simon Critchley.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Terrence Malick reading",
+            "note": "Stanley Cavell.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Thin Red Line",
+            "note": "Feature film.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Otolith 1",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Otolith 1, 2, 3",
+            "note": "Otolith Group.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion and Analysis"
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Cinema Komunisto",
+            "note": "100 mins.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "in-class image/film-making exercise (as we watch today’s film)"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Filipa Cesar",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion and Analysis"
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Egypt’s Modern Pharaohs",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "in-class writing/collage exercise"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Deep Implicancy",
+            "note": "Denise Ferreira + Arjuna.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Serpent Rain",
+            "note": "Denise Ferreira + Arjuna.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discussion and Analysis"
+          },
+          {
+            "kind": "exercise",
+            "description": "Exercise"
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Presentations"
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Presentations"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Memory and History/Text and Image: The Essay-Film as Method. Media Lab Inaugural Course, Spring 2021. Conveners: Gian Spina & Ali Atef (gianspina@gmail.com; anthraligy@gmail.com).\n\nThis course looks at the ways memory and history are inscribed textually and visually. Take a moment right now and pick a topic you’re passionate about. How has this topic been written about? How has it been visualized? How can we contextualize this topic by bringing to light its histories and your (or others) memories? And how might it shed light on our everyday lives and others around us?\n\nWith these as our main guiding question, we will keep asking questions and thinking together of answers as we examine different essay-films in the ways they’ve been envisioned, made, watched, reflected and written about. The course has light reading but only so we can meditate on them more thoroughly and focuses more on the activity of watching and understanding the language of the film-essay—the arrangement and art of written and spoken word as it melds with image and moving-images’; the relationship between the visual and discursive, etc.\n\nTexts: especially the idea of ‘essays’ from which the term film-essay comes from- usually understood as short argumentative pieces.\n\nFilms: especially film-essays or the other related terms associated it with such as archival films, ethnographic film or visual ethnography, documentary, and even at times fiction films.\n\nArchive: we will arrange a special visit to a film archive (conditions permitting due to COVID 19).\n\nBy looking into visual and sound archives, recording videos and composing essays, the classes will take a practice-based/studio approach to learning and knowledge production. While exploring how artists, film-makers, historians, and ethnographers write and capture audio-visual material, we encourage students and visiting fellows to share their works in order to develop their own audio-visual and written material over the 12 weeks of the class (other ideas such as installation art is also possible). In other words, think of this course as that space where we can attempt (and fail) to develop films and writings (in groups or individually) from historical and contemporary audiovisual and discursive material.\n\nFinal projects can be something you’re thinking about for another course or something you’ve been wanting to give attention to more systematically in general. It’s up to you and your instructors—just make sure to know we are here to discuss is without anytime by appointment online (or in-person if you prefer) on Wednesdays and Thursdays (i.e. Media Lab days at CILAS).\n\nNote: Films will not be available for online viewing all the time—this depends on whether the film is available publicly online or not. Otherwise we will hold private screenings on CILAS’s rooftop in the open air in the evenings on Wednesdays and/or Thursdays (Time: TBD)."
+  }
+}

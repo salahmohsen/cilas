@@ -1,0 +1,181 @@
+{
+  "sha256": "efc9b6b0286c5134c4f7617f1db6cf6f8a9d5ea6c2853cc33b005e30ce39ad36",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "People on the Move: Dispossession and Displacement",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "They owned an island, now they are urban poor: the tragedy of Altamira",
+            "note": "Brum, E. (2018). The Guardian.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Climate of Anxiety in the Sahel: Emigration in Xenophobic Times",
+            "note": "Ribot, J.R, Faye, P and Turner, M. (2020). Public Culture 32(1), pp. 45-75.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Tomatoes and greed – the exodus of Ghana's farmers | DW Documentary",
+            "note": "Documentary.",
+            "href": "https://youtu.be/rlPZ0Bev99s"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "(Il)legal Border-Crossing: Securitization and Trafficking",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The \"other\" Side of the Legal Regulation of Globalization",
+            "note": "Kapur, R. (2003). Canadian Women's Studies, 22 (3/4).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beautiful Dead Bodies: Gender, Migration and Representation in Anti-Trafficking Campaigns",
+            "note": "Andrijasevic, R (2007). Feminist Review, 86, 24-44.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Will the Real Sex Slave Please Stand Up?",
+            "note": "Davidson, J. (2006). Feminist Review, No. 83, 4-22.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Managing the Undesirables: The Refugee Complex",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Managing the undesirables: Refugee Camps and Humanitarian Government.",
+            "note": "Agier, M. (2011). Polity.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "“City-Camp”: Questions of Citizenship and the Politics of Belonging",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Managing the undesirables: Refugee Camps and Humanitarian Government.",
+            "note": "Agier, M. (2011). Polity.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Sorting Subjects: Paperwork, Data and Digitizing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Social Technology and Refugee Encampment in Kenya",
+            "note": "Jaji, R (2011). Journal of Refugee Studies, 25 (2), pp. 221-238.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Everything Must Match”: Detection, Deception, and Migrant Illegality in the India-Bangladesh Borderlands",
+            "note": "Ghosh, S (2019). American Anthropologist, 121 (4), pp. 870-883.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Biopolitics Multiple: Migration, Extraction, Subtraction",
+            "note": "Aradau, C. and M. Tazzioli (2020). Millennium 48(2), pp. 198-220.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Human Flow",
+        "description": "Guest Lecture",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "A film screening event for documentary “Human Flow” will be held in advance"
+          },
+          {
+            "kind": "presentation",
+            "description": "Guest Lecture: Human Flow"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Circuits of Floating and Laboring",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Migrant “Illegality” and Deportability in Everyday Life.",
+            "note": "De Genova, N. P. (2003). Annual Review of Anthropology, 31(1), 419- 447.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lifetimes of disposability and surplus entrepreneurs in Bagong Barrio, Manila.",
+            "note": "Pratt, G., Johnston, C., & Banta, V. (2017). Antipode, 49(1), 169-192.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cheap and disposable? The impact of the global economic crisis on the migration of Ethiopian women domestic workers to the Gulf",
+            "note": "Fernandez, Bina (2010). Gender & Development, 18: 2, 249 — 262.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The lives of domestic helpers the Modern Slaves",
+            "note": "Documentary.",
+            "href": "https://youtu.be/b5bSnK3lRIw"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Transition Time and Affective Space: The Most We Can Hope….",
+        "description": "with Karim-Yassin Goessinger\n\n(Readings to be confirmed..)",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Human Flow: Migration and Refugee Encampment (at CILAS). Shan Yang, Teaching Fellow, Cairo Institute of Liberal Arts and Sciences. Summer 2021 (preliminary syllabus).\n\nThis seminar examines people’s lifeworlds - on the move, in the transition, contained, encamped. It explores global mobilities, citizenship, division of labor and developmentalism through a critical lens.\n\nMigrations do not just happen - they are produced. Capitalist modernity requires massive displacement that seamlessly supports the free flow of labor in the context of globalization. Yet mobile subjects are categorized, sorted and governed in and through the international legal order by initiatives dealing with trafficking, refugees, immigrant labor, sexual morality and border controls. The impact of these different initiatives on cross-border movements is mediated by gender, class, religion, sexual, and marital status.\n\nAs part of CILAS’s efforts to build social infrastructure for caring commons, this summer course attempts to open up the following possibilities:\n- Participants from financially disadvantaged backgrounds are welcome to apply for course fee waiver and a subsidize for commute cost.\n- CILAS will offer one “study day” each week for participants to use CILAS as a space to read, discuss and chill out.\n- Tea and refreshments will be served during course meetings.\n\nCourse arrangements also include epigraphs quoting Pablo Neruda, a chant outside the Internment Center for Foreigners in Barcelona, Auden WH. 1962 (“Refugee Blues”) and Michael Hardt and Antonio Negri (Empire). They are not recorded as readings.\n\nSession 4 lists the same Agier reading as Session 3. The Session 8 readings are marked as to be confirmed in the flow."
+  }
+}

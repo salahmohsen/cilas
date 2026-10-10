@@ -1,0 +1,42 @@
+{
+  "sha256": "14a79eee668c24232ff093a1b498afbf34b3f5f66dec28aebe9f77abe2408146",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "“What is Enlightenment?”",
+        "note": "Immanuel Kant; tentative reading list",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Gay Science",
+        "note": "Friedrich Nietzsche; excerpts; tentative reading list",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "“The End of Metaphysics”",
+        "note": "Martin Heidegger; tentative reading list",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "\"Existentialism is a Humanism\"",
+        "note": "Jean-Paul Sartre; excerpts; tentative reading list",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Dialectic of Enlightenment",
+        "note": "Max Horkheimer and Theodor W. Adorno; excerpts; tentative reading list",
+        "href": null
+      }
+    ],
+    "notes": "Enlightenment to the Death of God: A Philosophical Journey. A Course by: Mae Saafan.\n\nCourse Description: This course provides an in-depth exploration of the philosophical developments from the Age of Enlightenment to the existential crisis marked by Friedrich Nietzsche's proclamation of the \"Death of God.\"\n\nStudents will critically examine the evolution of ideas, societal shifts, and the cultural landscape that shaped Western thought during this transformative period.\n\nThe journey begins with the Enlightenment, an intellectual movement of the 17th and 18th centuries that championed reason, and individualism as means of understanding and improving human society. The course culminates with Nietzsche's provocative proclamation of the \"Death of God\" and its implications for morality, religion, and human existence.\n\nWe then delve into the 20th-century philosophical landscape, exploring the rise of existentialism and the questioning of traditional beliefs and values, focusing on existential themes such as individual freedom, anxiety, and the search for meaning in a seemingly indifferent universe.\n\nThroughout the course, students will engage in critical analysis, and class discussions to develop their understanding of the intellectual, cultural, and philosophical shifts from the Enlightenment to the existential crisis of the 20th century.\n\nNote: This reading list is tentative and subject to revision. Additional readings or modifications may be incorporated throughout the course to enhance learning and address emerging topics of interest."
+  }
+}

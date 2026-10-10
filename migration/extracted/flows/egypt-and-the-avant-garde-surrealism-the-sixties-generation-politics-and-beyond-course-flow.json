@@ -1,0 +1,185 @@
+{
+  "sha256": "983409b8465ccf853e5c9907f85ef89da1158e39d5c36ff5624be70203d1cd4b",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "A History of Surrealism in France and Egypt",
+        "description": "- Defining the avant-garde and surrealism\n- Timeline for Surrealism in France and in Egypt",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Surrealism in Egypt",
+            "note": "excerpts",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Art and Liberty manifesto",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Surrealist Manifesto",
+            "note": "excerpts",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Surrealist Painting in Egypt",
+        "description": "- Paintings by Ramses Younan, Abdel Hadi El-Gazzar, Hamed Nada, Samir Rafi, Amy Nimr\n- Excerpts from Surrealism in Egypt",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Paintings",
+            "note": "Ramses Younan",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Paintings",
+            "note": "Abdel Hadi El-Gazzar",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Paintings",
+            "note": "Hamed Nada",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Paintings",
+            "note": "Samir Rafi",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Paintings",
+            "note": "Amy Nimr",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Surrealism in Egypt",
+            "note": "excerpts",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Art et Liberté’s Surrealist Poetry and Political Engagement",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected poems",
+            "note": "Georges Henein and Anwar Kamel",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Surrealist Poetry, Sexuality, and the Body",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected poems",
+            "note": "Joyce Mansour",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Sixties Generation and Local Politics",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Selected works",
+            "note": "Edwar Al-Kharrat, Gamal Al-Ghitani, Sonallah Ibramhim, Ibrahim Aslan",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The Sixties Generation and South-South Solidarity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Gallery 68",
+            "note": "excerpts",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lotus",
+            "note": "excerpts",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Avant-Garde Egyptian Cinema",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "New Cinema Manifesto",
+            "note": "1968",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Avant-Garde Egyptian Cinema (Cont’d)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "The Sparrow",
+            "note": "dir. Youssef Chahine",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Screening of The Sparrow, dir. Youssef Chahine"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Egypt's Surrealists, the Avant-Garde and the Sixties Generation. Tentative Course Flow."
+  }
+}

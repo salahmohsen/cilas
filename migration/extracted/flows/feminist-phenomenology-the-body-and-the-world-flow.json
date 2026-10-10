@@ -1,0 +1,221 @@
+{
+  "sha256": "0115e18d2e5ff80daa54b16a543f35a31fd27780861b2306dc878d6b969b5dae",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is Phenomenology?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Phenomenology",
+            "note": "Smith, David Woodruff. The Stanford Encyclopedia of Philosophy (Summer 2018 Edition), Edward N. Zalta (ed.)",
+            "href": "https://plato.stanford.edu/archives/sum2018/entries/phenomenology/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Body",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Phenomenology and the Body",
+            "note": "Crossley, N. (2012). In Routledge handbook of body studies (pp. 142-155). Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction: The turn of the body",
+            "note": "Turner, B. S. (2012). In Routledge handbook of body studies (pp. 16-32). Routledge.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The World",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The world as a phenomenological problem",
+            "note": "Landgrebe, L. (1940). Philosophy and Phenomenological Research, 1(1), 38-58.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Issues and Concerns",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Feminist phenomenology",
+            "note": "Fisher, L. (2000). In Feminist phenomenology (pp. 1-15). Springer, Dordrecht.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Issues and Concerns II",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction",
+            "note": "Allen, J., & Young, I. M. (1989). In The thinking muse: Feminism and modern French philosophy (1-18).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Beauvoir reads Merleau-Ponty",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Second Sex",
+            "note": "Simone de Beauvoir, trans. H.M. Parshley (New York: Vintage Books, 1949). (Chapter TBA)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Toward a phenomenology of sexual difference: Husserl, Merleau-Ponty, Beauvoir",
+            "note": "Heinämaa, Sara. USA: Rowman & Littlefield Publishers, 2003.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Binaries",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Simone de Beauvoir and Binaries of the Body",
+            "note": "Evans, M. (2012). In Routledge Handbook of Body Studies (pp. 34-46). Routledge.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "The Other Side",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Looking Glass, from the Other Side",
+            "note": "Irigaray, L. (2020). 6. (pp. 123-136). Columbia University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "A Critique of the Hetero-Phenomenological Experience of the Body",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Queer phenomenology",
+            "note": "Ahmed, S. (2006). Duke University Press (Chapters TBA)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Post Transsexuality",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A cyborg manifesto: Science, technology, and socialist-feminism in the late 20th century",
+            "note": "Haraway, D. (2006). In The international handbook of virtual learning environments (pp. 117-158). Springer, Dordrecht.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The empire strikes back: A posttranssexual manifesto",
+            "note": "Stone, S. (2013). (pp. 237-251). Routledge.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Racialised Bodies",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Strange encounters: Embodied others in post-coloniality",
+            "note": "Ahmed, S. (2013). Routledge. (Chapters TBA)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Towards a phenomenology of racial embodiment",
+            "note": "Alcoff, L. M. (1999). Radical philosophy, (95), 15-26.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Racialized bodies",
+            "note": "Craig, M. L. (2012). In Routledge handbook of body studies (pp. 328-338). Routledge.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The normal, the natural, and the normative: A Merleau-Pontian legacy to feminist theory, critical race theory, and disability studies",
+            "note": "Weiss, G. (2015). Continental Philosophy Review, 48(1), 77-93.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Concluding Remarks",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course outline parts: I. Introduction; II. The Feminist Turn; III. Queer Embodiment, Technology, and Race. The instructor reserves the right to modify this syllabus throughout the semester."
+  }
+}

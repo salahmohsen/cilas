@@ -1,0 +1,179 @@
+{
+  "sha256": "b8b62031413f362b99a14a3ea771af185d387546d22ea9d4da657a87a51422da",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Rethinking Community: Concepts, Boundaries, and Belonging",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Understanding the Community",
+            "note": "Hoffer, C. R. 1931. American Journal of Sociology 36 (4): 616–624.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Anthropology, the Meaning of Community, and Prevention",
+            "note": "McKeown, C. Timothy, Robert A. Rubinstein, and James G. Kelly. In Prevention: Toward a Multidisciplinary Approach, edited by R. D. Felner, L. A. Jason, R. E. Hess, and J. N. Moritsugu, 35–64. New York: Haworth Press, 1987.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "What is community",
+            "note": null,
+            "href": "https://medium.com/centre-for-public-impact/what-is-community-2e895219a205"
+          },
+          {
+            "type": "reading",
+            "title": "Community",
+            "note": null,
+            "href": "https://anthroholic.com/community?srsltid=AfmBOopZS46nsaHBi-03cBg1DcXXp6QBy_DS9Tu7KwYMEsLF7NM1o8FB"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "City & Urban Communities",
+        "description": "",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The people of the city",
+            "note": "Khalil, O. (2014). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain.",
+            "href": "https://fount.aucegypt.edu/etds/1137"
+          },
+          {
+            "type": "reading",
+            "title": "Biographies of Port-Said: Everydayness of state, dwellers, and strangers",
+            "note": "Lotfy, M. M. (2018). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain.",
+            "href": "https://fount.aucegypt.edu/etds/1394"
+          },
+          {
+            "type": "reading",
+            "title": "Shared Margins: An Ethnography with Writers in Alexandria after the Revolution",
+            "note": "Shehata, M. (2021).",
+            "href": "https://doi.org/10.1515/9783110726305"
+          },
+          {
+            "type": "reading",
+            "title": "Dawsha w Al-Qāhirah: Listening to power and possibilities in Cairo’s everyday",
+            "note": "Salama, N. (2019). Master's Thesis, the American University in Cairo. AUC Know (entry is cut off in the flow).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Rural Communities: Kinship, Tradition, and Social Continuity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rooftop recipes for relating: Ecologies of humans, animals, and life",
+            "note": "Fikry, N. (2019). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain.",
+            "href": "https://fount.aucegypt.edu/etds/523"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Bedouin Communities: Mobility, Territory, and Identity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Veiled Sentiments: Honor and Poetry in a Bedouin Society (1st ed.)",
+            "note": "Abu-Lughod, L. (2016). University of California Press.",
+            "href": "http://www.jstor.org/stable/10.1525/j.ctv1wxrvj"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Upper Egypt: Honor, Hierarchy, and Social Order",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Upper Egypt: Identity and Change",
+            "note": "Hopkins, N. S. & Saad, R. (2004). The American University in Cairo Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Nubian Communities: Displacement, Memory, and Belonging",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On Displacement and Music: Embodiments of Contemporary Nubian Music in the Nubian Resettlements",
+            "note": "Kaddal, F. (2021). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain.",
+            "href": "https://fount.aucegypt.edu/etds/1591"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Vulnerable Communities: Precarity, Survival, and Marginality",
+        "description": "",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "\"In the ruins of the everyday\": Cairo and its abandoned children in street situations",
+            "note": "Fouad, M. (2020). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain.",
+            "href": "https://fount.aucegypt.edu/etds/1716"
+          },
+          {
+            "type": "reading",
+            "title": "Men of Shoubra: Hairdressing, shades of masculinities, and ghosts of sectarianism",
+            "note": "Mohmed, T. (2018). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain.",
+            "href": "https://fount.aucegypt.edu/etds/465"
+          },
+          {
+            "type": "reading",
+            "title": "A Tale of Two Somali Community-Based Organizations in Cairo: Between Assistance, Agency & Community Formations",
+            "note": "Huser, H. (2014). Master's Thesis, the American University in Cairo. AUC Knowledge Fountain.",
+            "href": "https://fount.aucegypt.edu/etds/1035"
+          },
+          {
+            "type": "reading",
+            "title": "Femininity and Dance in Egypt: Embodiment and Meaning in al-Raqs al-Baladi",
+            "note": "Roushdy, N. (2014). American University in Cairo Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Imagining Community: Final Project and Synthesis",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course title: What Is This Community? (إيه المجتمع ده؟)\n\nCourse Description: This course invites students to explore the diversity of communities in Egypt through a case-based, exploratory approach grounded in ethnographic readings and visual materials. Rather than treating “community” as a fixed or self-evident concept, the course approaches it as something to be examined, unpacked, and questioned through sustained engagement with different social contexts.\n\nEach session focuses on a specific community—such as urban neighborhoods, rural societies, Bedouin groups, or industrial labor settings—and guides students through a repeated analytical process. Across these cases, students examine how communities are structured, how they reproduce themselves over time, and how individuals navigate everyday life within them. Attention is given to social organization, survival strategies, internal hierarchies, and the ways communities understand and represent themselves.\n\nBy returning to the same set of questions each week, the course builds a cumulative analytical lens that allows students to trace patterns, differences, and tensions across diverse forms of social life in Egypt. This iterative method emphasizes close observation, discussion, and reflection, encouraging students to move beyond surface-level description toward a more critical understanding of how communities function and sustain themselves.\n\nWhile the course prioritizes exploration over abstract theorization, it gradually opens space for questioning the apparent stability of communities and the assumptions that underpin them. Students are encouraged to reflect on what appears fixed or natural within different contexts, and to consider the conditions under which communities might be otherwise.\n\nLearning Approach:\n- Case-based, exploratory sessions centered on specific communities\n- Engagement with ethnographic texts and documentaries\n- Repeated analytical framework applied across contexts\n- Emphasis on discussion, observation, and critical reflection\n\nLearning Outcomes: By the end of the course, students will be able to:\n- Analyze how different communities are structured and sustained\n- Identify key social, economic, and cultural dynamics within specific contexts\n- Examine how individuals navigate and negotiate life within communities\n- Critically reflect on norms and boundaries\n- Apply a consistent analytical lens across diverse cases\n- Translate analytical insights into a structured creative project\n\nFinal Project: Constructing an Imagined Community. The final project asks students to construct an imagined community, drawing on the analytical framework developed throughout the course. Rather than producing a purely fictional or idealized society, students are expected to design a community grounded in the social realities, tensions, and patterns observed in the ethnographic cases studied.\n\nUsing the same set of guiding questions applied each week, students will develop a detailed account of their imagined community, addressing how it is structured, how it reproduces itself, how individuals navigate life within it, and what forms of tension, inequality, or exclusion may emerge. The project encourages students to think critically about the persistence of social dynamics and to engage seriously with the challenges of imagining alternatives.\n\nThe final submission may take the form of an analytical essay, a narrative piece, or a hybrid format, but must demonstrate a clear and grounded engagement with the course’s analytical approach."
+  }
+}

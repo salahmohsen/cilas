@@ -1,0 +1,269 @@
+{
+  "sha256": "512a4342a6e9674e3e56347f0bc660db3f55ddf4bf0373ae131e1dbb4e997e99",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to Anthropology",
+        "description": "Part One: Anthropology and History\n\nOpen discussion: What is anthropology and what is history and how can we use both to investigate the cultural aspects of religion and belief systems.\n\nFebruary 8th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chapter 1: Disorientation and Orientation in Investigating Culture: An Experiential Introduction to Anthropology. John Wiley & Sons, Incorporated.",
+            "note": "Delaney, C and Kaspin, D. 1-32",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "An introduction to the discipline of anthropology",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=J5aglbgTEig"
+          },
+          {
+            "type": "watch",
+            "title": "Anthropology bel 3araby - What is anthropology?",
+            "note": "Alternative to the previous video (“Or”)",
+            "href": "https://www.youtube.com/watch?v=qDpQv1rEv9U"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Introduction to History of Religion",
+        "description": "February 15th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Religion in the Ancient World",
+            "note": null,
+            "href": "https://www.worldhistory.org/religion/"
+          },
+          {
+            "type": "reading",
+            "title": "History of the study of Religion. Britannica",
+            "note": null,
+            "href": "https://www.britannica.com/topic/study-of-religion/History-of-the-study-of-religion"
+          },
+          {
+            "type": "watch",
+            "title": "History of Ideas: Religion",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=ge071m9bGeY"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Fieldnotes",
+        "description": "February 22nd",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Shane the Lone Ethnographer: A Beginner’s Guide to Ethnography",
+            "note": "Campbell, S. 2007",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“I am a Fieldnote”",
+            "note": "Jackson, J. (1990). Alternative to the previous reading (“or”)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In class exercise: Listen and Analyze the song “Tom’s Diner” and write a fieldnote."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "What are Rituals?",
+        "description": "Part Two: Rituals and the Body\n\nMarch 1st",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘Religion and Ritual’ (Chapter 14) Small Places, Large Issues an Introduction to Social and Cultural Anthropology. 3rd ed. Anthropology, Culture, and Society. New York: Pluto Press.",
+            "note": "Eriksen, Thomas H. 2010",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "History of Ideas: Rituals",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=q_xJpVlry14"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Exercise: Start a self-healing practice and carry it out till the end of the course + keep taking field notes and writing reflections."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "The Body and Religion",
+        "description": "March 8th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Religion and the Body: Rematerializing the Human Body in the Social Sciences of Religion.",
+            "note": "McGuire, M. (1990)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Healing - Guest Speaker (Dr. Hanan Kholousy)",
+        "description": "March 15th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“Recovering the Invisible: Methods for the Historical Study of the Emotions,” Doing Emotions History, p. 41-53.",
+            "note": "Susan J Matt",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "When the Body Says ‘No’: The Cost of Hidden Stress. NY and Toronto: A.Knopf., Ltd.",
+            "note": "Mate, G. (2003). Alternative to the previous reading (“or”)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Body Keeps the Score",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=QSCXyYuT2rE"
+          },
+          {
+            "type": "watch",
+            "title": "Heal or Unwell (Netflix) or What the Health",
+            "note": "“and/or” with the previous video",
+            "href": "https://watchdocumentaries.com/what-the-health/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Discuss mini ethnographies to prepare for elevator pitches."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Ethnography Workshop and Elevator Pitches",
+        "description": "Part Three: The Magical, Mystical, and Unseen\n\nMarch 29th",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "The Mystical and the Modern",
+        "description": "April 5th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Purity and Danger: An Analysis of Concepts of Pollution and Taboo. Florence, United Kingdom: Routledge.",
+            "note": "Douglas, M. (2002). (pp. 1-7; 95-115)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Savage Mind.",
+            "note": "Levi-Strauss, C. (1962). (1-34). Alternative to the previous reading (“Or”)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "History of Ideas: Modernity",
+            "note": null,
+            "href": "https://www.youtube.com/watch?v=HIdflecvQG8"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": null,
+        "description": "April 12th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Saheb el Makam",
+            "note": "Watch, Analyze and Review",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Psychology and Ancient Wisdom",
+        "description": "Part Four: Healing and the New Age\n\nApril 19th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Modern Psychology and Ancient Wisdom: Psychological Healing Practices from the World’s Religious Traditions. Routledge.",
+            "note": "Mijares, S. (2002) (Buddhism – Christianity – Goddess Spirituality – Judaism – Native American Psychspirituality – Sufism – Taoism – Yoga and Hinduism)",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Exercise: 500-words reflection or mini presentation on a tradition that is not your own (Due before class on the 19th)."
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": "Consuming the Self",
+        "description": "April 26th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Consuming the Self: New Age Spirituality as “Social Product” in Consumer Society. Consumption Markets and Culture.",
+            "note": "Rindfleish, J. (2005)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Mini Exhibition",
+        "description": "April 30th - (Rescheduled for Eid on May 3rd)",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Final Presentations for Creative Projects"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course Objectives\nSome of the questions we’re going to cover in this course are:\n\n- What is anthropology as a field and mode of knowledge and practice?\n- How to conduct ethnographic fieldwork?\n- What is the history of religion?\n- What is the history of spiritual practices that are popular today?\n- What is spiritual healing and how does it manifest itself in our lives?\n- How do we understand the metaphysical realm in our everyday life?\n\nThis course will help participants:\n· Analyze and interpret beliefs, practices, and social structures in religious traditions from an anthropological perspective\n. Cover sufficient conceptual and background material on the selected topic.\n· Reflect on the literature directly related to the history and theories of anthropology of religion and magic and the debate over the mystical and the modern mind/mentality.\n· Compare and contrast popular spiritual healing practices from around the globe with those prevalent in Egypt.\n· Write fieldnotes.\n· Conduct ethnographic fieldwork on a topic of the student’s choice.\n\nContact info:\nsohaylaelfakahany@gmail.com\n+2 01124101411\nCourse: Hybrid (Online and Offline)\n\nMarch 22nd OFF"
+  }
+}

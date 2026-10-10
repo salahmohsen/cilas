@@ -1,0 +1,294 @@
+{
+  "sha256": "15369d4116a100a6ab35ade32b6952598638db7c2126ed4edc04fef286d8f0e6",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Contemporary Egypt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "‘Cairo has started to become ugly’: why Egypt is building a new capital city",
+            "note": "Michaelson, R. (2018, May 8). The Guardian.",
+            "href": "https://www.theguardian.com/cities/2018/may/08/cairo-why-egypt-build-new-capital-city-desert"
+          },
+          {
+            "type": "reading",
+            "title": "Understanding Cairo: The logic of a city out of control",
+            "note": "Sims, D. (2012). Oxford University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Conceptualizing the Colonially Mediated Modern City",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Urban forms and colonial confrontations: Algiers under French rule",
+            "note": "Celik, Z. (1997). University of California Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Neoliberal Urbanism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Paris, capital of modernity",
+            "note": "Harvey, David. Psychology Press, 2003.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tale of two cities: the origins of modern Cairo",
+            "note": "Abu-Lughod, Janet. Comparative Studies in Society and History 7.4 (1965): 429-457.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Neoliberal Interventions to African Cities",
+        "description": "African Cities Reader III:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Urban Sahara from the Sky: how Global Capitalism Fixes the Dunes (Nouakchott, Muaritania)",
+            "note": "African Cities Reader III, pp 19-21.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "High Class Shanty Towns (Dakar, Senegal)",
+            "note": "African Cities Reader III, pp 22-26.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "This Sea Shall Be Uprooted (Lagos, Nigeria)",
+            "note": "African Cities Reader III, pp 27-35.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "City Building in Post-Conflict, Post-Socialist Luanda: Burying the past with phantasmagorias of the future (Luanda, Angola)",
+            "note": "African Cities Reader III, pp 121-133.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dispossessed Vigils: Mourning and Regeneration in Inner-City Johannesburg (Johannesburg, South Africa)",
+            "note": "African Cities Reader III, pp 134-147.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Production of Space",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Social Space",
+            "note": "Lefebvre, H (1991), in The Production of Space, ch. 2, pp 68-168.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "African Urbanism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Invisible Urbanism in Africa",
+            "note": "Rao, V., DeBoeck, F., and Simone, A. (2007). Perspecta, 39, 78-91.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Framing themes and questions for an engagement with African urbanism",
+            "note": "Pieterse, E. (2009).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Right to the City",
+            "note": "Harvey, D. (2008). New Left Review 53: 23-53.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Urban Lifeworlds from Below",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Inhabiting Ocular Ground: Kinshasa’s Future in the Light of Congo’s Spectral Urban Politics",
+            "note": "DeBoeck, F (2011). Cultural Anthropology, 26 (2) pp. 263-286.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Bantustan Sublime: Reframing the Colonial in Ramallah",
+            "note": "Abourahme, N. (2009). City, 13(4) pp. 499-509.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Spectral housing and urban cleansing: Notes on millennial Mumbai",
+            "note": "Appadurai, A. (2000). Public Culture, 12(3), pp. 627-651.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bypassing the squalor: New towns, immaterial labour and exclusion in post-colonial urbanisation",
+            "note": "Bhattacharya, R., & Sanyal, K. (2011). Economic and Political Weekly, XLVI(31), pp. 41-48.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "House Crisis and New Land",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Egypt's Housing Crisis. The Shaping of Urban Space",
+            "note": "Shawkat, Yahia, and David Sims. American University in Cairo Press, 2020.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Egypt's desert dreams: development or disaster?",
+            "note": "Sims, David. American University in Cairo Press, 2015.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "The Politics of “Informality”",
+        "description": "Gautam Bhan’s text In the public's interest: evictions, citizenship, and inequality in contemporary Delhi. Please focus on the following chapters:",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction ‘How did we get here’",
+            "note": "Gautam Bhan, In the public's interest: evictions, citizenship, and inequality in contemporary Delhi, pp.1-43.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Unmaking Citizens: Spatial Illegality, Urban Citizenship and the Challenges for Inclusive Politics (Chapter 3)",
+            "note": "Gautam Bhan, In the public's interest: evictions, citizenship, and inequality in contemporary Delhi, pp. 146-187.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "‘You can’t Just Walk into a Court’: Notes on the Judicialisation of Resistance (Chapter 4)",
+            "note": "Gautam Bhan, In the public's interest: evictions, citizenship, and inequality in contemporary Delhi, pp. 188-232.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Security and Fear",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Urban neoliberalism, urban insecurity and urban violence: Exploring the gender dimensions",
+            "note": "Kern, L. and Mullings, B. (2013). In Rethinking Feminist Interventions into the Urban, pp. 23-40.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Tale of Two Walled Cities: Neoliberalization and Enclosure in Johannesburg and Jerusalem",
+            "note": "Clarno, A (2008). Political Power and Social Theory, 19, pp. 159-205.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Infrastructure",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Governing three-wheeled motorcycle taxis in urban Ethiopia: States, markets, and moral discourses of infrastructure",
+            "note": "Mains, D., & Kinfu, E. (2017). American Ethnologist, 44(2), 263-274.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The politics of open defecation: informality, body, and infrastructure in Mumbai",
+            "note": "Desai, R., McFarlane, C., & Graham, S. (2015). Antipode, 47(1), 98-120.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Crisis and Urban Future",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ruinous city, ruinous time: Future suspended and the science fiction of the present",
+            "note": "Abourahme, N. (2014). City, 18(4-5), 577-582.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Pandemic, Southern Urbanisms and Collective Life",
+            "note": "Gautam Bhan, Teresa Caldeira, Kelly Gillespie, and AbdouMaliq Simone (2020). Socity&Space.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course header (verbatim): The Space Lab. Shan Yang. Teaching Fellow, Cairo Institute of Liberal Arts and Sciences. Email: yangshan@aucegypt.edu\n\nDescription (verbatim): In this lab we will engage debates in contemporary neoliberal urbanism with a particular focus on the global south. It questions the colonially-mediated modern conceptual frameworks that undergird the urban studies field. It suggests to rethink the intimate connection emerges between the development of capitalism and urbanization. This seminar explores the ongoing reconfigurations in urban as social laboratory: the production of gendered, raced, classed subjectivities, housing, land, networks, livelihoods, power, violence and social movements in the everyday life of dwelling.\n\nMeanwhile, space lab provides three trajectories for creative experiments: autonomous space building (like CILAS and its neighborhood), urban gentrification and social house resettlement.\n\nLink note: the Week 1 Guardian address is printed in the text, broken across lines (“egypt- build-new-capital-” / “city-desert.”). It was joined into one address for the href; the printed text is otherwise unchanged."
+  }
+}

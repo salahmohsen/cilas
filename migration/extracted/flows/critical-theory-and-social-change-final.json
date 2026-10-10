@@ -1,0 +1,61 @@
+{
+  "sha256": "b034ec1bbad633035abe05dfbd4d03ec65ffc8b630392e3a4ef0bef0ac8369d3",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Theorizing Revolution/Revolutionizing Theory",
+        "description": "Our aim in the first three sessions is to discuss the history of the French Revolution (including the Revolution as a theatre of events), the Haitian Revolution, the Napoleonic coup d’état, and how these events were in conversation with major intellectual interventions (not only Hegel’s Phenomenology of the Spirit but also Beethoven’s Eroica).",
+        "meetings": 3,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In our first session, we will be revisiting some of our pre-conceptions concerning the French Revolution through a series of in-class exercises. This discussion will set the course for the following sessions."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Theory in the Battlefield; Marx in France",
+        "description": "The French Revolutionary upheavals, especially the ones extending from 1848 to 1871, provided a laboratory for modern politics, revolutionary practice, counterinsurgency, and political theory. Our aim from this discussion is twofold: we aim to examine how theory engaged with revolutionary practice as exemplified by two of Karl Marx’s most incisive texts, The Eighteenth Brumaire of Louis Bonaparte and Civil War in France, which we will read in the light of the events that shaped them. We will also seek to examine how these events comprised a laboratory in counterrevolutionary practice, and how racism and sexism came to the aid of the state and became enshrined in state discourse and practice during these events.",
+        "meetings": 2,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Eighteenth Brumaire of Louis Bonaparte",
+            "note": "Karl Marx.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Civil War in France",
+            "note": "Karl Marx.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Theory in Action: the Bolshevik Revolution",
+        "description": "This episode will disrupt the privileging of the Western Europe, which the previous episodes may be guilty of, by shifting the lens to the Russian Revolution. We will primarily focus on writings by Vladimir Lenin, noting how the Russian revolution was inspired by earlier episodes of revolutionary history, how Lenin read Marx, and how the Russian Revolution and Lenin influenced revolutionary theory and practice worldwide. We will also pay special attention to how the question of imperialism was integrated with the question of class in the theory and practice of the Russian Revolution. This will set the stage for part two of this course, which will be titled “A Dying Colonialism.”",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Writings by Vladimir Lenin",
+            "note": "Focus of the session, no specific work named in the flow.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Critical Theory and Social Change: I- The Age of Great Revolutions\n\nWhat can moments of upheaval, revolution, and political and social change tell us about the theories they were attached to? What can theory tell us about social change? How does political and social theory respond to change? Is there an intellectual history for revolution and counterrevolution?\n\nThis course aims to provide a survey of the great political, social, and intellectual revolutions that shaped the nineteenth and early twentieth century and set the tone for the years that followed. It aims to ground the major philosophical interventions of the century (most notably Hegel and Marx) in revolutionary practice. It is in fact astonishing how theories that seem obscure and undecipherable become clear and lucid once read in the light of the history that shaped them.\n\nThis course thus treats theory and practice as intricately bound and sometimes inseparable. It approaches critical theory as the specific intellectual history of the material political and social changes they accompanied.\n\nIn addition, we will explore what it entails to take these theories out of their historical contexts and apply them to others: what then is modified, revised, and/or preserved? In short this course is an exercise of putting theory in context and out of context.\n\nThrough this dialogue between theory and practice, the course aims to provide an introduction to critical theory, an introduction to the history of revolutions, and an exercise in critical thinking.\n\nThe course comprises six sessions, tentatively divided into the following themes and episodes: I- Theorizing Revolution/Revolutionizing Theory (tentatively three sessions); II- Theory in the Battlefield; Marx in France (tentatively two sessions); III- Theory in Action: the Bolshevik Revolution (tentatively 1 session).\n\nPS: Although part 2 of this course will be based on the discussions we have in part 1, parts 1 and 2 of this course could be taken separately; students who are interested in one are not required to enlist in the other). Students are also encouraged to participate in the parallel writing workshop, which aims to culminate in a final publication, and which will be co-hosted by the facilitator of this course."
+  }
+}

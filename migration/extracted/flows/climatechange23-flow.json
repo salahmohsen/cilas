@@ -1,0 +1,119 @@
+{
+  "sha256": "48a1ce634c7da7bff55c6f293b8f5b2414aff34ff966c9f57c62dc938d22061a",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The Basics",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Tipping Points and Existential Climate Risk",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Art and climate change",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Energy",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Agriculture",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Manufacturing",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Conservation, Indigenous Peoples, and Climate Change",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Negative Emissions, Offsets, and Geoengineering",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "International Climate Politics and Climate Finance",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Adaptation and Resilience",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "How you can have an impact",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Climate Shock: The Economic Consequences of a Hotter Planet",
+        "note": "Martin Weitzman & Gernot Wagner. Course book recommendation.",
+        "href": "https://www.worldofbooks.com/en-gb/books/gernot-wagner/climate-shock/9780691171326"
+      },
+      {
+        "type": "reading",
+        "title": "Book summary of Climate Shock",
+        "note": "Summary of Climate Shock by Martin Weitzman & Gernot Wagner. Linked from the course book recommendations as \"Book summary here.\"",
+        "href": "https://forum.effectivealtruism.org/posts/NGq4vMDxhzJmFPaCr/notes-climate-shock-by-wagner-and-weitzman"
+      },
+      {
+        "type": "reading",
+        "title": "Sustainable Energy – Without the Hot Air",
+        "note": "David MacKay. Course book recommendation. Available for free as pdf.",
+        "href": "http://withouthotair.com"
+      }
+    ],
+    "notes": "Everything You Wanted to Know About Climate Change But Were Afraid to Ask. Instructor: Mateo Arevalo Botero. E-mail: mateo.arevalo.botero@gmail.com.\n\nCourse book recommendations:\n● Climate Shock: The Economic Consequences of a Hotter Planet by Martin Weitzman & Gernot Wagner. Book summary here.\n● Sustainable Energy – Without the Hot Air by David MacKay [available for free as pdf].\n\nThe flow gives only the week titles; no readings, activities or descriptions are listed per week."
+  }
+}

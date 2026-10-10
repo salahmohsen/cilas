@@ -1,0 +1,249 @@
+{
+  "sha256": "19c4002d8da3ff27c8a0bbb73d03b57912167473ffdef60a755a0b9be678ee9c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Philosophy and the “encounter” – Facing the haunting questions of life.",
+        "description": "Part heading in the breakdown table, placed before this row: Dwelling, Home, and Philosophy.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Holger Zaborowski. (2005). “Towards a phenomenology of Dwelling”",
+            "note": "PP. 1-4",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Otto Bollnow. (1963). Crisis and New Beginning.",
+            "note": "PP: 1-5",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Watch some scenes from different films on the session, and then reflect on them."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "What is dwelling, and why is it important for us?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Zaborowski",
+            "note": "pp: 4-13",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bollnow. (1966). Human Space",
+            "note": "PP: 119-126 / 142-146",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "A reflection on dwelling",
+        "description": "Remarks: It is utterly important to reflect here, even if anyone does not have such an idea, it is important to express you do you think this is the case.\n\nPart heading in the breakdown table, placed after the week 3 row: Why is it hard for us to dwell today?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bollnow, Human Space",
+            "note": "PP: 147-179",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "This is a reflective session. Each one will need to express an experience that they had/have with a dwelling as a place/person/idea. We all have to share this together."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "What is Modernity?",
+        "description": "Remarks: You can read the first 3 pages in (1).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bauman, Zygmunt. (1991). “Introduction”, in Modernity and Ambivlance",
+            "note": "PP. 1-18",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Bauman. (2000). “Introduction”, in Liquid Modernity",
+            "note": "PP: 1-15",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Modernity and Individuality (1)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bauman. “Individuality”, in Liquid Modernity",
+            "note": "PP: 53-72",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Modernity and Individuality (2)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bauman. “Individuality”, in Liquid Modernity",
+            "note": "PP: 72-90",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Modernity and space",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bauman. “Time/space”, LM",
+            "note": "PP: 90-110",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Trouillot. The otherwise modern",
+            "note": "PP: 1-18. Extra reading (from the remarks column).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Modernity and Time",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bauman. “Time/space”, LM",
+            "note": "PP: 110-129",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Martineau. Capitalism, Time, and Alienation.",
+            "note": "PP: 99-103. Extra reading (from the remarks column).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Modernity and Work (1)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bauman. “Work”, in LM",
+            "note": "PP: 130-160",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Modernity and Work (2)",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bauman. “Work”, in LM",
+            "note": "PP: 160-167",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Modernity and Tiredness",
+        "description": "Part heading in the breakdown table, placed after the week 11 row: Revisiting the question(s): Can we have a home? From what are we running, philosophy or modernity?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Byung Chul-Han. (2015). “Vita Activa, in The Burnout Society”",
+            "note": "PP. 16-20",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Han. “Society of Tiredness”, in The Burnout Society",
+            "note": "PP. 25-30",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Han. The Burnout society, in The Burnout Society",
+            "note": "PP. 35-51. Extra reading (from the remarks column).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "A recap to answer what could be answered",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Zaborowski",
+            "note": "PP: 13-25",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "An open discussion in which we can have a meal, share stories, reflect deeply, or just shout at each other – If necessary."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course teaser (verbatim): Whenever we are haunted by a frightful silence, we search for a place wherein we can dwell. Alas, in our modern world “dwelling” has become an empty word, for we are always on the run, and we catch ourselves thinking that questioning these silent moments, i.e. philosophy, is either in vain or a luxury! This course invites you to “dwell” on these thought through a conversation with each other, and with some insightful thinkers, such as Bauman and Byung-Chul Han - among others.\n\nCourse invitation (description, verbatim): Whenever we are confronted with an event that can change the flow of our lives, fear and trembling fall upon us. Here, usually there are two paths: either to run away from the event, or to address it. Philosophy is the latter – it is addressing those events with questions that, if answered, would make us lead a good life. Today, however, we tend to run away, and consequently we tend often to put philosophy aside. This course asks why do we tend to run away from these events, and why would anyone need to address them? The main argument of this course is that we, as moderns, tend to run away because we do not have “home”, a reference point, to which we would come back to take a breath, and to then regroup ourselves in order to be able to stare back at these events.\n\nAs participants in this course we will need to read a bit, and to express ourselves in any way we find comfortable. It is a journey that could lead us to “dwell” on our feelings, thoughts, and experience with our contemporary world, so let’s make it worth it!\n\nPersonal bio (verbatim): Hisham Fahmy is a writer, lecturer and translator of philosophy. He graduated with a political science degree and is currently pursuing a graduate degree in philosophy. Hisham has published in both English and Arabic on issues of Continental philosophy, Literary Crticism, Islamic philosophy, political theory, and anthropology. He also gave numerous lectures on philosophy in general and political philosophy in particular – especially on the work of Carl Schmitt, Eric Voegelin, Theodor Adorno, Martin Heidegger, and Michel Foucault. Further, he hosted his first course as a fellow in CILAS last fall (2020) on introducing the philosophical problems of the Western metaphysics. He currently works as a teaching assistant of philosophy at the American University in Cairo and is a graduate of the Cairo Institute of Liberal Arts and Sciences (2018)."
+  }
+}

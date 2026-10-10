@@ -1,0 +1,201 @@
+{
+  "sha256": "1b07dff67240bde76b8c6be36efb2e06c5a087b0f02ba41add80eaf8168cc99c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to the Course: Who Taught You to Feel Happy?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pleasure Activism: The Politics of Feeling Good",
+            "note": "adrienne maree brown. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Building a Healing Lineage",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "How to Mend: Motherhood and Its Ghosts",
+            "note": "Iman Mersal. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Our Menstruating Bodies",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Body Is Not an Apology: The Power of Radical Self-Love",
+            "note": "Sonya Renee Taylor. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Guest Speaker TBA"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "On the Erotic",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Uses of the Erotic",
+            "note": "Audre Lorde.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pleasure Activism: The Politics of Feeling Good",
+            "note": "adrienne maree brown. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "On Beauty & Ageing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "The Gleaners & I",
+            "note": "Agnes Varda. Screening.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The Wild Woman",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pleasure Activism: The Politics of Feeling Good",
+            "note": "adrienne maree brown. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "On Anger",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Uses of Anger",
+            "note": "Audre Lorde.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "On Sex & Intimacy",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pleasure Activism: The Politics of Feeling Good",
+            "note": "adrienne maree brown. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Guest Speaker TBA"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "On Safety & Consent",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Body Is Not an Apology: The Power of Radical Self-Love",
+            "note": "Sonya Renee Taylor. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "On Surviving",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "We Will Not Cancel Us",
+            "note": "adrienne maree brown. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Building Our Tribe",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "All About Love",
+            "note": "Bell Hooks. Excerpts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 12,
+        "title": "Concluding Remarks",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Flow header (verbatim): Who Taught You to Feel Happy? On Pleasurable Feminism. A tentative course flow, including the weekly topics, materials (reading, viewing, listening, etc.) and exercises or assignments.\n\nThe flow lists a One-Week Break between Week #6 and Week #7; it has no session. The flow lists no links."
+  }
+}

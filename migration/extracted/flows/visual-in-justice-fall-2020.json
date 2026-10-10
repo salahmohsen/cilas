@@ -1,0 +1,153 @@
+{
+  "sha256": "ccf516f6f560c7a7cbfd9c793841e202e44ef3bcdb93ae3f5eac93e82049cdca",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Visuality matters: The agency and politics of visualizations",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "“The city and spatial justice”",
+            "note": "Soja, E., 2009. [« La ville et la justice spatiale », traduction : Sophie Didier, Frédéric Dufaux], justice spatiale | spatial justice |. Spatial justice, Volume n° 01.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Mediatization of Society - A Theory of the Media as Agents of Social and Cultural Change",
+            "note": "Stig Hjarvard, 2008. Nordicom Review, 29(2), pp. 105-134.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Researching ‘mediatised worlds’: Non-mediacentric media and communication research as a challenge",
+            "note": "Hepp, A., 2010. In: Media and communication studies interventions and intersections. s.l.:s.n., pp. 37-48.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Reassembling the social",
+            "note": "Latour, B., 2005. Oxford: Oxford University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Rethinking geography: the local yet global",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Global Cities, Glocal States: Global City Formation and State Territorial Restructuring in Contemporary Europe",
+            "note": "Brenner, N., 1998. Review of International Political Economy, 5(1), pp. 1-37.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "City Branding and Social Inclusion in the Glocal City",
+            "note": "Paganoni, . M. C., 2012. Mobilities, 7(1), p. 13–31.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The 21st-Century Metropolis: New Geographies of Theory",
+            "note": "Roy, A., 2009. Regional Studies, 43(6), p. 819–830.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Visual construction of reality",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Beauty and the Beast: The Ordinary City versus the Mediatised City—The Case of Cairo",
+            "note": "Hendawy, M. & Saeed, A., 2019. Urbanisation, 4(2), pp. 126–134, 2019.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Production of Space",
+            "note": "Lefebvre, H., 1974/1991. Oxford: Blackwell.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Visual Methodologies - An Introduction to the Interpretation of Visual Materials",
+            "note": "Rose, G., 2001. s.l.:SAGE Publications.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Visualizing In/justice",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Digital Visualisation as a New Driver of Urban Change in Africa",
+            "note": "Watson, V., 2020. Urban Planning, 5(2).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Theory of Justice",
+            "note": "Rawls, J., 1971. United States: Belknap Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Anarchy, State, and Utopia",
+            "note": "Nozick, R., 1974. s.l.:Basic Books.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Through the eyes of (an) underprivileged",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Law, Legislation and Liberty, Volume 2: The Mirage of Social Justice",
+            "note": "Hayek, F., 1976. s.l.:Routledge and Kegan Paul.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Social Justice and the City",
+            "note": "Harvey, D., 1973. Baltimore: Johns Hopkins University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Understanding Media: The Extensions of Man",
+            "note": "McLuhan, M., 1964. Canada: McGraw-Hill.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course description (verbatim): In the current highly mediatized world (see the work of Andreas Hepp), the popular media’s image of the city hardly represents the majority of citizens’ everyday city experiences or perceptions of their future. The misrepresentation of urban conditions in media on one side creates processes of visibility and invisibility for the city among not only the general public but also urban experts who get enrolled in the process of producing these city/ies (images). On the other side, it affect and facilitates marginalization, disablement as well as socio-spatial injustices and the further exclusion of vulnerable groups from services and infrastructure. In many cities worldwide, these vulnerable groups form the majority of the population. In this seminar, I suggest that the corresponding visual representation and consequent misrepresentation of socio-spatial conditions in cities can be termed as 'Visual in/Justice'. This seminar to make visible the intersection of social and spatial in/justice in the current highly mediatized world.\n\nPhoto source (verbatim): Hendawy, Cairo, 2019\n\nThe flow is headed 'Tentative flow'.\n\nBiography (verbatim): Mennatullah Hendawy is a Research Associate and PhD Candidate at the Chair of Urban Design, TU Berlin. She is also a Visiting Researcher at the Leibniz Institute for Research on Society and Space in Erkner, Germany and an affiliated Assistant Lecturer at the Department of Urban Planning and Design in Ain Shams University in Cairo, Egypt. Mennatullah works on the intersection of urban planning, mediatisation, and justice where she is fascinated by the way knowledge, power, and agency are man-fested in and co-construct cities and the public sphere."
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "sha256": "e4f83195fa91ab6a2877e4ba5820ee45826bc94f9070641650c9ba3f0f50adb9",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "A Psychological Response to Climate Change",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Don't Even think About It.",
+            "note": "Marshall, G., 2014. New York: Bloomsbury.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Climate Change from a Political Lens",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "This Changes Everything.",
+            "note": "Klein, N., 2014. New York: Simon & Schuster.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Concerning Ecology Movement and Discussing Nature and the Human",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Shallow and the Deep, Long-Range Ecology Movement.",
+            "note": "Naess, A., 1973. Inquiry: An Interdisciplinary Journal of, Volume 16, pp. 95-100.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "A Blue Marble Called Earth & the Gai Hypothesis",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Gaia: A New Look at Life on Earth.",
+            "note": "Lovelock, J., 2000. Oxford: Oxford University Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "On Proper Nomenclature & Understanding. of Human Relationship to Nature",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Anthropocene: Victims, Narrators, and Revolutionaries.",
+            "note": "Armiero, M. & Massimo, D. A., 2017. South Atlantic Quarterly, 116(2), pp. 345-362",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Living in the End Times.",
+            "note": "Žižek, S., 2010. Polygraph 22, pp. 243-264.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Discussing the Figure of Gaia",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Facing Gaia.",
+            "note": "Latour, B., 2017. Cambridge: Polity Press.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Ecology, Education, and the Human: Lessons from a Life in a Burning Wolrd. Course Description/Handbook | Liberal Arts: Cairo Institute of Liberal Arts and Sciences.\n\nThere has been a long and varied conversation regarding climate change; the subject of climate change has been approached through a material, political, logistical, etc. lens.\n\nIn this course we will discuss climate change through an interdisciplinary manner: we will look into the psychological, political, ecology movements and conversations concerning Nature and the Human, the Gaia Hypothesis, as well as Anthropocene or the proper nomenclature, and the Figure of Gaia and her implications.\n\nThe idea is to attempt to engage with the complex issue of climate change and ecology as a whole, so we can better understand ourselves, the Human, and our part within this complex system – within Life.\n\nRest of the Course: Depending on the flow and direction of our discussions, students will be given the chance to elect the path that is to be followed."
+  }
+}

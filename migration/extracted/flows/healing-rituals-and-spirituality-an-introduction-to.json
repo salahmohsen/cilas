@@ -1,0 +1,243 @@
+{
+  "sha256": "fe9512f7c1e0ab1de843ae1684c85c18ccef357b60732f0e5f60e81518b20163",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is Anthropology and Fieldwork",
+        "description": "Date: September 21st.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Shane the Lone Ethnographer: A Beginner’s Guide to Ethnography",
+            "note": "Campbell Galman, Sally. 2007.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Anthropology of Religion and Magic",
+        "description": "Date: September 28th.\n\nAssignment: Fieldnote about an encounter with signs, healing, and/or fate. (Due Saturday, October 2nd or before class on the 5th)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Theories and Controversies",
+            "note": "Bowie, Fiona (2002). Chapter 1. The Anthropology of Religion. Oxford: Blackwell Publishers (Blackboard).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Introduction in Magic, Witchcraft, and the Otherworld: An Anthropology",
+            "note": "Greenwood, S. (2000). Alternative to the reading above (OR).",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Living with the invisibles",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Seance reflections",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "30 must-watch videos in cultural anthropology & religion",
+            "note": "Recommended films list (Medium article, as linked in the flow).",
+            "href": "https://anthropology4u.medium.com/30-must-watch-videos-in-cultural-anthropology-religion-80d5695bc46b"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "Date: October 5th.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Elementary Forms of the Religious Life",
+            "note": "Durkheim.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Religion as a Cultural System",
+            "note": "Geertz. Alternative (OR).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Religion and Ritual",
+            "note": "Eriksen, Thomas H. 2010. (Chapter 14) Small Places, Large Issues: An Introduction to Social and Cultural Anthropology. Pluto Press. Alternative (OR).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "Date: October 12th.\n\nAssignment: 500-words reflection on a tradition that is not your own (Due before class on the 12th).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Modern Psychology and Ancient Wisdom: Psychological Healing Practices from the World’s Religious Traditions",
+            "note": "Mijares, S. (2002). Routledge. (Buddhism – Christianity – Goddess Spirituality – Judaism – Native American Psychspirituality – Sufism – Taoism – Yoga and Hinduism)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Saheb El Maqam",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Gods and Satans",
+            "note": "Recommended film.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Man Who Made Witchcraft",
+            "note": "Recommended film.",
+            "href": "https://www.youtube.com/watch?v=M56-6XA3h2M"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Sickness and Healing",
+        "description": "Date: October 19th.\n\nAssignment: Watch and write a film review for either of the below documentaries or a reflection on a healing encounter. (Due Saturday, October 23rd)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction in Sickness and Healing: An Anthropological Perspective",
+            "note": "Hahn, R. (1995). Yale. P. 1-10. Read with the next item (AND).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Recovering the Invisible: Methods for the Historical Study of the Emotions",
+            "note": "Susan J Matt. Doing Emotions History, p. 41-53.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "When the Body Says ‘No’: The Cost of Hidden Stress",
+            "note": "Mate, G. (2003). NY and Toronto: A.Knopf., Ltd. Alternative (OR).",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "(Un)Well",
+            "note": "Recommended film for the assignment.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Heal",
+            "note": "Recommended film for the assignment.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Spiritual and Alternative Healing Practices",
+        "description": "Date: October 26th.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Spiritual Healing: What Is It? Does It Work and Does It Have A Place In Modern Healthcare?",
+            "note": "Mason, S. (2010). Read with the next item (AND).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Is the Body the Temple of the Soul? Modern Yoga Practice as a Psychosocial Phenomenon",
+            "note": "Koniecki, K. (2016). Introduction. Alternative (OR) to the readings above and below.",
+            "href": "https://www-cambridge-org.libproxy.aucegypt.edu/core/books/is-the-body-the-temple-of-the-soul/C3A7E044A455B9F5EC2F7F77169A3713"
+          },
+          {
+            "type": "reading",
+            "title": "A Sociology of Tarot",
+            "note": "Sosteric, M. (2014). The Canadian Journal of Sociology. Alternative (OR).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Crystal Healing Practices in the Western World and Beyond",
+            "note": "Carlos, K. (2018). Honors Undergraduate Theses. Alternative (OR).",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "In class activity: Mini presentation or essay on a spiritual ritual or the history of a practice."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Spirituality as a Service",
+        "description": "Date: November 2nd (Might reschedule to 6th).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Consuming the Self: New Age Spirituality as “Social Product” in Consumer Society",
+            "note": "Rindfleish, J. (2005). Consumption Markets and Culture. Read with the next item (AND).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Alternative Healing as Magical Self-Care in Alternative Modernity",
+            "note": "Koch, A. (2015). Brill. Read with the item above (AND).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Mindfulness",
+            "note": "Bateman, A. (2018). Cambridge University Press. Alternative (OR).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "Date: November 9th.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Creative project on a spiritual practice."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Healing, Rituals, and Spirituality – An introduction to the Anthropology of Religion.\n\nThis course will help students:\n- Analyze and interpret beliefs, practices, and social structures in religious traditions from an anthropological perspective. Cover sufficient conceptual and background material on the selected topic.\n- Reflect on the literature directly related to the history and theories of anthropology of religion and magic and the debate over the mystical and the modern mind/mentality.\n- Compare and contrast popular spiritual healing practices from around the globe with those prevalent in Egypt.\n- Conduct ethnographic fieldwork on a topic of the student’s choice.\n\nCourse structure as headed in the flow: Part One: The Craft of Anthropology (Sessions 1-2). Part Two: History of Religion and Rituals (Sessions 3-4). Part Three: Healing and Spirituality (Sessions 5-8)."
+  }
+}

@@ -1,0 +1,123 @@
+{
+  "sha256": "8df7d3069fa7a2de7ec577261d0a5ca64f4320cedd70744b7334c9940813efa1",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "“So different from man’s and for which man’s language was inadequate”: Anais Nin and “The Language of the Senses”",
+        "description": "To set the tone for our exploration, we will start with the unique writings by Anaïs Nin, and follow her search for the language of “woman’s sensuality, so different from man’s and for which man’s language was inadequate.” Nin, who believed “the language of the senses was yet to be discovered,” writes for the senses, and we will try to feel with her. If she describes a scene, try to visualize it; if she describes a painting or a piece of music, pause and look it up.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Spy in the House of Love",
+            "note": "Anaïs Nin.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "“À mon seul desir”/”Parting is such a sweet sorrow”: Longing and Pleasure in Historical Fiction",
+        "description": "We will then explore desire and longing in a historical context: together we will decide whether we are going to read Shakespeare’s Romeo and Juliet, or The Lady and the Unicorn by Tracy Chevalier (or perhaps we can find a way to read both).",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Lady and the Unicorn",
+            "note": "Tracy Chevalier. Decided together with Romeo and Juliet (option 1); we may read both.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Romeo and Juliet",
+            "note": "William Shakespeare. Decided together with The Lady and the Unicorn (option 2); we may read both.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "“Light of my life, fire of my loins”: Pleasures of Mastery and Perversity",
+        "description": "We will then move to a more perverse and imposing text, Lolita by Nabokov. We will explore Nabokov’s mastery over the text, and the traps he sets for the readers, while criticizing the sexist aspects of this exhibitionist mastery.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Lolita",
+            "note": "Vladimir Nabokov. (we understand that Lolita is not for everyone. If you wish you may skip this class)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "“And when I love thee not, Chaos is come again”: Recognition, Race, and Desire",
+        "description": "Staying with troubling themes, we will then move to Othello but read the text through the lens of desire. Here we can begin to see how race and racism, but also other dominant ideological formations, condition how we feel.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Othello",
+            "note": "William Shakespeare.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "\"فما رأيت نظرةً حالت بيني وبين الحزم، وحسّنت عندي ركوب الإثم، مثل نظرتي هذه\": عن الهوى وعن الحرام (والحلال) في التراث العربي القديم",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "روضة المحبين ونزهة المشتاقين (Rawdat al-Muhibin)",
+            "note": "ابن قيم الجوزية (Ibn Qayyim al-Juziyah).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "“وحكاية حب لا تحكى/في الحب يموت الإيضاحُ\" شهوة البوح في الأدب العربي الحديث",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "مختارات شعرية وقصصية",
+            "note": "Selected poetry and stories. The flow places the poetry of Nizar Qabbani at the centre of the modern texts.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "“Metaphors are dangerous; metaphors are not to be trifled with”: (Mis)Understanding Desire",
+        "description": "And finally, we will turn to Milan Kundera’s The Unbearable Lightness of Being, not only because of its strong erotic content but more importantly because it explores desire which escapes meaning, , desire that exceeds the tenable, and desire in misrecognition —and through its pitfalls exposes the author’s desire for recognition which at times undermines an otherwise magnificent text.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Unbearable Lightness of Being",
+            "note": "Milan Kundera.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Text and Desire: A Literary Journey through the Senses.\n\nWhat happens to us when we read? What senses do we activate? What is the relationship between text and pleasure, language and desire?\n\nThis course is a sensory journey through different kinds of literature, exploring how pleasure is mapped into the language and style of these texts. It is part crash course, part reading group, part writing and storytelling workshop, and part lab of group activities and text based games.\n\nSome readers may be surprised by the sensuality and eroticism in many Arabic texts, classical and modern. In the following two sessions we will explore Arabic texts that defy mainstream expectations. First we will examine a plethora of poetry, tales, gossip prose, juridical and religious opinion, and other textual forms, at the centre of which Rawdat al-Muhibin by the leading medieval Islamic scholar, Ibn Qayyim al-Juziyah. Then we will turn to modern texts, at the centre of which the poetry of Nizar Qabbani.\n\nAlthough you may expect a healthy dose of eroticism, this is not a course in erotica per se. Or, if it is about Eros, it is also about Eros as the force of life, about the longing that inhabits the gap between language and meaning and animates any textual activity, about the beauty of language, the joy of reading, the playfulness of metaphors, the interplay of imagery, and all the senses that are invited to partake in the textual experience.\n\nA list of optional theoretical readings will be available in case we feel so inclined, but we will only allow the theory to interfere when necessary. As a general rule, we will let the literary texts guide our journey: maybe we will meet the characters, maybe we will visualize the scenery, maybe we will play with words and narratives, and maybe we will have deep discussions. Only the course participants would know.\n\nThe flow is a tentative course flow, subject to change according to the class discussion. Its last page is blank. The flow contains no links."
+  }
+}

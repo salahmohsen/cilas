@@ -1,0 +1,44 @@
+{
+  "sha256": "9ef140eed1acc4a3f29537e287a8e3101342baf904015a81051a1bec5e5f1300",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "On the Essence of Truth",
+        "description": "",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Origin of the Work of Art",
+        "description": "",
+        "meetings": 6,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Question Concerning Technology",
+        "description": "",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "What is Metaphysics?",
+        "description": "",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course description (verbatim): In this course, we will aim at closely reading four of the most important essays written by arguably the most important philosopher in the 20th century, Martin Heidegger, tackling the following subjects: Truth, Art, Technology, and Metaphysics.\n\nIn each of his essays, Heidegger takes us on a fascinating journey in which he subtly dismantles the commonplace views about the subject and offers his profound/poetic analysis instead. (Be reminded that, as a student in this class, you will always be asked to bring in your own views and encouraged to disagree with his arguments)\n\nAlthough such topics seem to be distinct from each other and each is interesting enough on its own, what might even be more interesting – and, of course, demanding – is that we will aim at spotting the unity within multiplicity; that is, towards the end of the course, we will try to find out the unifying thread that essentially gathers such topics.\n\nThe flow lists no readings, activities or links."
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "sha256": "3dedbfbbc9b767036bc28314d1074f35bb4faf1cdfd68a12fe2d4e340004735d",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Dialectic of Enlightenment",
+        "note": "Adorno, Theodor W. and Max Horkheimer. Trans. John Cumming. London: Verso, 1997.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Culture Industry: Selected Essays on Mass Culture",
+        "note": "Adorno, Theodor W. Edited by J. M. Bernstein. London: Routledge, 1991.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Eichmann in Jerusalem: A Report on the Banality of Evil",
+        "note": "Arendt, Hannah. London: Penguin Book: 2006.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Unfinished System of Nonknowledge",
+        "note": "Bataille, Georges. Edited by Stuart Kendall. Translated by Michele Kendall and Start Kendall. Minneapolis: University of Minnesota Press, 2001.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Laughter: An Essay on the Meaning of the Comic",
+        "note": "Bergson, Henri. Translated by Cloudesley Brereton and Fred Rothwell. New York: Macmillan Company, 1912.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Difference and Repetition",
+        "note": "Deleuze, Gilles. Translated by Paul Patton. New York: Columbia University Press, 1994.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Discourse on Method",
+        "note": "Descartes, René. Translated by Donald A. Cress. Indianapolis: Hackett Publishing Company, 1998.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Bouvard et Pécuchet",
+        "note": "Flaubert, Gustave. Translated by Mark Polizzotti. Illinois, Dilkey Archove Press, 1990.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Eclipse of Reason",
+        "note": "Horkheimer, Max. London: Bloomsbury, 1974.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "One-Dimensional Man: Studies in the Ideology of Advanced Industrial Society",
+        "note": "Marcuse, Herbert. Boston: Beacon Press, 1991.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "On Stupidity.",
+        "note": "Musil, Robert. In Precision and Soul: Essays and Addresses. Edited and Translated by Burton Pike and David S. Luft. Chicago: Chicago University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Ignorant Schoolmaster: Five Lessons in Intellectual Emancipation",
+        "note": "Rancière, Jacques. Translated by Kristin Ross. Stanford: Stanford University Press, 1991.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Stupidity",
+        "note": "Ronell, Avital. Chicago: University of Illinois Press, 2002.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Pedagogics of Unlearning",
+        "note": "Seery, Aidan and Éamonn Dunne. Punctum book, 2016.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "States of Shock: Stupidity and Knowledge in the 21st Century",
+        "note": "Stiegler, Bernard. Translated by Daniel Ross. London: Polity, 2015.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Candide and Other Stories",
+        "note": "Voltaire. Oxford: Oxford University Press, 2006.",
+        "href": null
+      }
+    ],
+    "notes": "CILAS Pedagogy LAB, Spring 2022. PEDAGOGY LAB: On Stupidity: The Trouble with Systematic Thinking.\n\nWeekly readings to be selected from the following:"
+  }
+}

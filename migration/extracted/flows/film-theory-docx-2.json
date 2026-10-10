@@ -1,0 +1,314 @@
+{
+  "sha256": "75b434b9a96c778bb10ac06679762fd91fdfd24e1f48f3401889e057728fc8b1",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "Participants will be introduced to film theory. They will get familiar with the course flow and learning method. They will read and watch the first assignment during the session, and then discuss both. The material is composed of the Lumiere brothers' movie and Maxim Gorky’s article about it.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Kingdom of Shadows",
+            "note": "Maxim Gorky",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "the arrival of a train",
+            "note": "Lumiere brothers",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "They will read and watch the first assignment during the session, and then discuss both."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "formalism",
+        "description": "Participants will discuss Rudolf Arnheim’s ideas on Gestalt psychology and the Cinematic form emerging from art’s limitations. The main concepts include framing and partial illusion.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Film as Art: Film and Reality",
+            "note": "Rudolf Arnheim",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The testament of Dr. Mabuse",
+            "note": "Fritz Lang",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The gold rush",
+            "note": "Charlie Chaplin",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Participants will discuss Rudolf Arnheim’s ideas on Gestalt psychology and the Cinematic form emerging from art’s limitations."
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Photoplay",
+        "description": "Participants will reflect on the psychological study of film through the writings of Hugo Munsterberg. They’ll explore intellectual engagement developing depth and movement in cinematic images.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Photoplay",
+            "note": "Hugo Munsterberg. Sections: Depth and Movement; Attention; Memory and Imagination; The means of the Photoplay.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Rashomon",
+            "note": "Akira Kurosawa",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The lost weekend",
+            "note": "Billy Wilder",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Participants will reflect on the psychological study of film through the writings of Hugo Munsterberg."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Close-up",
+        "description": "We will relate Bela Balazs and Jean Epstein’s realization of film's capability of revelation, and how shots can express duration in a transcendent way. Participants will also be exposed to the ideas of Henri Bergson on time and duration through Gestalt psychology once again.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On Certain Characteristics of Photogénie",
+            "note": "Jean Epstein",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Photogenic Element",
+            "note": "Jean Epstein",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "L’intelligence d’une machine",
+            "note": "Jean Epstein",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Esprit de cinema",
+            "note": "Jean Epstein",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Visible Man, or the Culture of Film",
+            "note": "Bela Balazs (1924)",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Sabotage",
+            "note": "Alfred Hitchcock",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The passion of Joan of Arc",
+            "note": "Carl Theodor Dreyer",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We will relate Bela Balazs and Jean Epstein’s realization of film's capability of revelation, and how shots can express duration in a transcendent way."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Montage",
+        "description": "This session is a recognition of the constructivism of film and cinema as a language. The participants will discuss editing and continuity for meaning through the works of Kuleshov and Eisenstein.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A Dialectic Approach to Film Form",
+            "note": "Sergei Eisenstein",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Montage as the foundation of Cinematography",
+            "note": "Lev Kuleshov",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Le chien Andalous",
+            "note": "Luis Bunuel",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Battleship Potemkin",
+            "note": "Sergei Eisenstein",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Playtime",
+            "note": "Jacques Tati. Milestone for Formalists.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The good, the bad, and the ugly",
+            "note": "Sergio Leone. Milestone for Formalists.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Summer Interlude",
+            "note": "Ingmar Bergman. Milestone for Formalists.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "The participants will discuss editing and continuity for meaning through the works of Kuleshov and Eisenstein."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Realism",
+        "description": "Now we move to a new perspective after finishing the formalist course of classic film theory. This session is an introduction to realism and another perspective on the form of cinema. The discussion will be around Andre Bazin’s ontology of the photographic image and the indexation of time through cinema.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The ontology of the photographic image",
+            "note": "Andre Bazin: What is Cinema Vol_1",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The myth of total cinema",
+            "note": "Andre Bazin: What is Cinema Vol_1",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The evolution of the language of cinema",
+            "note": "Andre Bazin: What is Cinema Vol_1",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The rules of the game",
+            "note": "Jean Renoir",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Citizen Kane",
+            "note": "Orson Welles",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "The discussion will be around Andre Bazin’s ontology of the photographic image and the indexation of time through cinema."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Physical reality",
+        "description": "We will continue the discovery of realism through the works of Siegfried Kracauer. We will analyze his reflections on revelation and the un-staged among other aesthetics of realism.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Establishment of Physical Existence",
+            "note": "Siegfried Kracauer: Theory of film",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Inherent Affinities",
+            "note": "Siegfried Kracauer: Theory of film",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Umberto D.",
+            "note": "Vittorio De Sica",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Life of Oharu",
+            "note": "Kenji Mizoguchi",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "How green was my valley",
+            "note": "John Ford. Milestone for Realists.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Pickpocket",
+            "note": "Robert Bresson. Milestone for Realists.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Tokyo Story",
+            "note": "Yasujiro Ozu. Milestone for Realists.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "We will analyze his reflections on revelation and the un-staged among other aesthetics of realism."
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course description: Film theory is the study of general patterns used to create and articulate film language. It differs from film history and film analysis. Film history is concerned with the study of major milestones in the progress of the filmmaking industry; and film analysis is the study of film against aesthetics, semiotics, socio-political aspects… etc. Generally, film theory is divided into two main eras: Classic, and Contemporary film theory. Our workshop focus will be on Classic film theory. We will study the two main waves defining film as an art: Formalists and Realists. Formalists are theorists who thought of film as an art that transfers reality, while Realists found film an art that represents it. Therefore, the question we will be able to answer after our course will be “How can we define Cinema?”\n\nMethod: The course follows a social constructivist approach to learning. The instructor will guide participants in discussing and expressing their understanding of the weekly assigned reading and watch lists. Participants will collaborate and complement their understanding through questioning and elaborating. And by the two milestones in the course, the end of formalism and the end of realism, they will be assigned essay writing to reflect on their learning.\n\nLearning outcomes: Understanding film theory allows viewers to find new levels of meaning within film; Identify various aesthetic aspects of film theory.; Identify, describe, and evaluate epistemological aspects of film theory.; Analyze films to understand them and their place in society better.; Film theory is valuable to everyone who enjoys film, but it also helps people who create films. Screenwriters, directors, producers, and other creatives can make more informed choices after learning the power of different film elements."
+  }
+}

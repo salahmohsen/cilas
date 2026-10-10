@@ -1,0 +1,264 @@
+{
+  "sha256": "84470aca1284915ea5e0482d68acb85162769009519baf14ccf763b40a4580f1",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Early German diagnosis – Max Weber and Walter Benjamin",
+        "description": "June 30th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Scholar’s Vocation",
+            "note": "Wellmon, C. (2020). In aeon. Retrieved on June 9th.",
+            "href": "https://aeon.co/essays/weber-diagnosed-the-ills-of-the-modern-university-and-prescribed-the-cure?fbclid=IwAR3tCK5DibPJLY8Cz4DxAxg9xHXijt1zx1nCpYIyq0hH5K8rEKk1xOPDkZw"
+          },
+          {
+            "type": "reading",
+            "title": "The Life of Students",
+            "note": "Benjamin, W. (1919). In libcom.org. Retrieved on June 9th.",
+            "href": "https://libcom.org/library/life-students-walter-benjamin"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Early Egyptian response – The Free Popular University and Cairo University",
+        "description": "July 7th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Anarchists in Education: The Free Popular University in Egypt (1901)",
+            "note": "Gorman, A. (2005). Middle Eastern Studies, 41:3, 303-320.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cairo University and the Making of Modern Egypt",
+            "note": "Reid, D. (1990). Cambridge University Press. Parts I and II.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Middle French diagnosis – The Situationists, Bourdieu and Passeron, and the Centre universitaire de Vincennes",
+        "description": "July 14th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "On the Poverty of Student Life - Considered in its Economic, Political, Psychological, Sexual, and Especially Intellectual Aspects, with a Modest Proposal for Doing Away With It.",
+            "note": "Situationist International and the Students of Strasbourg (1966). Retrieved June 9th.",
+            "href": "https://www.cddc.vt.edu/sionline/si/poverty.html"
+          },
+          {
+            "type": "reading",
+            "title": "The Inheritors: French Students and Their Relations to Culture.",
+            "note": "Bourdieu, P. and Passeron, J.-C. (1979). University of Chicago Press. Chapters 1 and 2.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "An Apprenticeship in Resistance May ’68 and the Power of Vincennes",
+            "note": "Dolphijn, R. (?). (Universite de Paris VIII). Retrieved June 9th.",
+            "href": "https://files.eric.ed.gov/fulltext/EJ832893.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "Destroy the University",
+            "note": "Gorz, A. (1970). In Les Temps Modernes #285, April 1970. Optional.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Middle Anglo-Saxon response – The Antiuniversity of London and Goodman’s Community of Scholars",
+        "description": "July 21st",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The London Anti-University (1968).",
+            "note": "Anonymous Blogpost. Retrieved June 9th 2020.",
+            "href": "https://greatwen.com/2010/12/15/the-london-anti-university/"
+          },
+          {
+            "type": "reading",
+            "title": "An Antihistory of the Antiuniversity of London.",
+            "note": "Retrieved June 9th 2020.",
+            "href": "https://antihistory.org/tagged/Antiuniversity-of-London"
+          },
+          {
+            "type": "reading",
+            "title": "Compulsory Miseducation and the Community of Scholars.",
+            "note": "Goodman, P. (1964). Penguin Education Specials. Preface and Part III.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "I accuse Harvard University",
+            "note": "Roger, G. et al. (1969). In libcom.org.",
+            "href": "https://libcom.org/library/i-accuse-harvard-university%E2%80%99-1969"
+          },
+          {
+            "type": "reading",
+            "title": "LSE – What it is and how we fought it (A pamphlet)",
+            "note": "Optional.",
+            "href": "https://libcom.org/files/LSE.pdf"
+          },
+          {
+            "type": "watch",
+            "title": "Paul Goodman’s Radical Anarchist Ideas on Public Education",
+            "note": "See here.",
+            "href": "https://www.youtube.com/watch?v=zlbhIqmM_oE"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Late Global diagnosis – Decolonial Futures Collective and The Edu-factory Collective",
+        "description": "July 28th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mapping interpretations of decolonization in the context of higher education.",
+            "note": "Andreotti, V., Stein, S., Ahenakew, C., Hunt, D. (2015). Decolonization: Indigeneity, Education & Society, 4(1), 21-40.",
+            "href": "https://decolonialfutures.net/mapping-decolonization/"
+          },
+          {
+            "type": "reading",
+            "title": "Towards a Global Autonomous University.",
+            "note": "The Edu-factory Collective (2009). Autonomedia: New York. Part III:5 and IV:2.",
+            "href": "https://libcom.org/files/The%20Edu-factory%20Collection%20-%20Toward%20a%20Global%20Autonomous%20University%20-%20Cognitive%20Labor,%20The%20Production%20of%20Knowledge,%20and%20Exodus%20from%20the%20Education%20Factory.pdf"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Late Global responses – Fees Must Fall and the Chilean Winter",
+        "description": "August 4th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Chilean Student Movements: Sustained Struggle to Transform a Market-oriented Educational System.",
+            "note": "Bellei, C. and Cabalin, C. (2013). Current Issues in Comparative Education 15(2): 108-123.",
+            "href": "https://www.tc.columbia.edu/cice/pdf/28175_15_02_Bellei_Cabalin.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "Compendium of new research celebrates African solutions to national and global problems",
+            "note": "Cheeseman, N. (2020). In The Conversation.",
+            "href": "https://theconversation.com/compendium-of-new-research-celebrates-african-solutions-to-national-and-global-problems-139238"
+          },
+          {
+            "type": "watch",
+            "title": "Everything Must Fall (2018)",
+            "note": "Documentary by Rehad Desai.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Student Movement in Chile.",
+            "note": "Vidal, M. (2013). Global Dialogue: Magazine of the International Sociological Association.",
+            "href": "http://globaldialogue.isa-sociology.org/the-student-movement-in-chile-2/"
+          },
+          {
+            "type": "reading",
+            "title": "Chile protests: The Students ‘woke us up’.",
+            "note": "Al Jazeera (2019). Optional.",
+            "href": "https://www.aljazeera.com/indepth/features/chile-protests-students-woke-191127175718386.html"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "On the emergence of Pigeon Towers – Ecoversities Alliance, UniTierra and Swaraj University",
+        "description": "August 11th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ecoversities Alliance. Selected Publications.",
+            "note": "Ecoversities Alliance.",
+            "href": "https://ecoversities.org/publications/"
+          },
+          {
+            "type": "watch",
+            "title": "Nuestros Caminos/Our Roads: A History of Searches (2011)",
+            "note": "TV Multiversity on Vimeo.",
+            "href": "http://gustavo-esteva.blogspot.com/2011/09/freedom-to-learn-unitierra-in-oaxaca-by_28.html"
+          },
+          {
+            "type": "reading",
+            "title": "Re-imagining Higher Education in Open Democracy.",
+            "note": "Teamey, K. (2013).",
+            "href": "https://www.opendemocracy.net/en/transformation/reimagining-higher-education/"
+          },
+          {
+            "type": "watch",
+            "title": "Re-learning Hope – A Story of Unitierra (2016)",
+            "note": "Multi-sense Media.",
+            "href": "http://enlivenedlearning.com/2016/07/01/releasing-our-new-film-re-learning-hope-a-story-of-unitierra/"
+          },
+          {
+            "type": "reading",
+            "title": "Swaraj University. Selected Khoji Stories.",
+            "note": "Swaraj University.",
+            "href": "http://www.swarajuniversity.org/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "On the emergence of Pigeon Towers – CILAS (in Cairo and Alex) and Beyond",
+        "description": "August 18th",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Compilation of Essays ‘On the emergence of Pigeon Towers’. Selected Essays.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Historical and Global Perspective on Liberal Arts Education. What Was, What Is, and What Will Be.",
+            "note": "Goodwin, K. (2016). International Journal of Chinese Education 5.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Thinking with Pigeons About Liberal Arts Education in Cairo and Beyond.",
+            "note": "Goessinger, K. (2019). AO LARGO.",
+            "href": "https://www.maxwell.vrac.puc-rio.br/37504/37504.PDFXXvmi=9nJuJOss8xAfCo6bEl3UiikTGLEUknGtLp0ufsZoqzE4ZLfD7izqBTkiG0e1nVuamvGCZG1qfGufrKTA4s1FnlZ4le5KaBVw8Da7jbzAS4PlPKVTexACjAGGOMrZooww2HFlTeVMjM8aw54L3Fonf644Sw4iVBPxivkcKg0549fBekni0MGfSLkMio5f1VekrzxdQxiVHzxWTVfTJWaDIup2UviVrwgU7O8ZnrU61s3VpjP9g0M0vd3qJlmcSE71"
+          },
+          {
+            "type": "reading",
+            "title": "Attempting to Decolonize Pedagogy in CILAS Alex.",
+            "note": "Spina, G. (2019). Mada Masr.",
+            "href": "https://madamirror18.appspot.com/madamasr.com/en/2019/09/18/feature/culture/attempting-to-decolonize-pedagogy-in-cilas-alexandria/?fbclid=IwAR1DvwtmGW3N8jiQi50IuhJns9iygI0rlJFrWZFRVxYMYRUv3RmIWISSoho"
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "On the decline of the Ivory Tower and the emergence of Pigeon Towers. The flow's introduction:\n\nThe Ivory Tower, or its literal counterpart the modern/colonial university, is terminally ill. Perhaps now with COVID-19 – an equally pervasive illness – it’s time to do away with it and call upon a new figure to guide our efforts to re-image higher education. The Pigeon Tower comes to mind as a potential new figure. As a feature of the landscapes of North Africa and West Asia, first and foremost, Pigeon Towers have housed pigeon flocks and served agriculture for millennia. As such they serve as a fertile metaphor to re-imagining higher education and addressing the ills and symptoms of the modern/colonial university as we will see in throughout course.\n\nTogether we will review two historical diagnosis of the ills of the modern/colonial university as articulated in the early 20th and in the 1960s and 70s before analyzing two contemporary student movements from the global south. A socio-historical account of the modern/colonial is instructive in this moment of conjunctural crisis. The neo-liberal assault on higher education over the past two decades has turned universities into cash cows. It has exacerbated the adjuntification of faculty on the one hand and the exploitation of students on the other, enriching university administrators. The Pigeon Tower helps us call upon a more situated and place-based approach to higher education as exemplified by a number of Ecoversities as we will get to know in this course.\n\nThe flow has no unit numbers, so sessions are the dated units in order (June 30th to August 18th). Items marked Optional are recorded as materials with that word in the note. The Goessinger link is a long address printed across several lines and was rejoined in order."
+  }
+}

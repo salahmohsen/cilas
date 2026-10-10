@@ -1,0 +1,147 @@
+{
+  "sha256": "e56ef1f64ee63622ccd5aca1933e23ec876ea968715857f251da4aee41535091",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "How nature influenced music around the world?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Why should we start with the soundscape of Mongolia, Japan and China?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In-class: Music Analysis"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Spiritual Music in the Indian Subcontinent.",
+        "description": "How the meditative Umm is translated into the music?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Karachi Beat in Algeria?",
+        "description": "How can musical instruments help us contextualize music in the Arab World? Who is Ziryab who took the Oud to Europe?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In-Class: Music Analysis"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Why no one speaks about the music of Afghanistan?",
+        "description": "What does it sound like?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In-Class: Music Analysis"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "“Whose Song is this?” Music , Nationalism and Pride in the Balkans and Circassia.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Whose Song is this?",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "How can the Afrobeat in Latin America contextualize colonization and slave trade routes?",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "In-Class: Music Analysis"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "What can finding “folk” music and beats in contemporary tracks tell us?",
+        "description": "How can we understand these fusions sonically and analytically?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Music on the Road - Nomads, Salesman and travelers",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Latcho Drom",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "On Sufi Music & Body Movement: Syncing the Body and the fluet",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Improvisation, isn’t Music all about improvisation? Philosophy of the ‘Free Style’!",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "Guest TBA: ‫ﻓن اﻟواو‬"
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": "Conclusion - An Open Collaborative & Analytical Jam Session",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Course: In Love with Music? Journey in the world of Music (Qais Raja, CILAS 2022). Resources and Media will be shared during the course. Also we will create a collaborative playlist for the course! Dates of Jam Sessions, concerts or music events are TBA."
+  }
+}
