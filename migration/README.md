@@ -77,3 +77,17 @@ Sources: the two *Pigeon Towers* books (English and Arabic), the *Translation as
    - **Other content:** publications, press (matched by first link), events, newsletters, and the partners and people they need.
    - It never touches reviewed documents, sends no email, and is safe to re-run.
 
+## Media and redirects (plan 6.6)
+
+Media needs `legacy_url` (added in 6.6), so after pulling this run `pnpm db:reset` once, then re-run `seed-people`, `seed-flows` and `seed-content`.
+
+1. `npx tsx --env-file=.env migration/seed-media.ts migration/raw --dry` lists what would be uploaded: people photos, outlet logos, the booklet cover, covers for courses with their own page, and the book and newsletter PDFs. It gives counts and total size, and writes nothing.
+2. `npx tsx --env-file=.env migration/seed-media.ts migration/raw` uploads each archive file once to the `media` collection (R2, the bucket in `.env`), keyed by its archive path in `media.legacy_url`, and sets the fields that point at it:
+   - It never overwrites a field that is already set, and never touches a reviewed document.
+   - Print-edition URLs and the newsletter's PDF link move from ci-las.org to R2.
+   - `review/media.md` lists files missing from the archive and jobs with no document.
+3. `npx tsx --env-file=.env migration/seed-redirects.ts` writes one `redirects` doc per legacy page:
+   - **Targets:** each page points at the document that replaced it, by reference. Every old upload path also gets a custom redirect to its R2 URL.
+   - **Re-runs:** it is safe to re-run, and it keeps any redirect an admin changed.
+   - **Review file:** `review/redirects.md` lists pages with no target, pages with several candidate targets, and space pages.
+   - **Collections without a page:** a redirect to a collection with no frontend route stores fine, but resolves only once `src/lib/paths.ts` knows that route.
