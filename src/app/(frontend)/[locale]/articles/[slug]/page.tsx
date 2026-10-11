@@ -1,5 +1,5 @@
 import config from '@payload-config'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { draftMode } from 'next/headers'
@@ -93,6 +93,11 @@ export default async function ArticlePage({ params }: Props) {
   const minutes = readingMinutes({ body })
   const original = article.translation
   const hasOriginal = Boolean(original?.original_title || original?.original_source)
+  // "English" / "الإنجليزية": the original's language, named in the site language.
+  const originalLanguage =
+    original?.original_language && original.original_language !== 'other'
+      ? new Intl.DisplayNames([locale], { type: 'language' }).of(original.original_language)
+      : undefined
 
   // People, named in the site language; a name missing there comes from the
   // article's other-language copy.
@@ -225,29 +230,20 @@ export default async function ArticlePage({ params }: Props) {
               )}
             </div>
 
-            {/* About this text: the original it was translated from. */}
-            {hasOriginal && (
-              <section className="rounded-[26px] bg-[var(--surface-muted)] p-6 text-sm">
-                <h2 className="font-medium">{t('aboutText')}</h2>
-                <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-                  {hasOriginal && original && (
-                    <div>
-                      <dt className="text-[var(--text-muted)]">{t('original')}</dt>
-                      <dd className="mt-1" dir="auto">
-                        {original.original_title && <span className="block">{original.original_title}</span>}
-                        {originalAuthors.length > 0 && (
-                          <span className="block">
-                            <PeopleLinks and={t('and')} people={originalAuthors} />
-                          </span>
-                        )}
-                        {original.original_source && (
-                          <span className="block text-[var(--text-secondary)]">{original.original_source}</span>
-                        )}
-                      </dd>
-                    </div>
-                  )}
-                </dl>
-              </section>
+            {/* The original this text translates, with a way to read it. */}
+            {hasOriginal && original && (
+              <OriginalCard
+                authors={<PeopleLinks and={t('and')} people={originalAuthors} />}
+                hasAuthors={originalAuthors.length > 0}
+                labels={{
+                  from: originalLanguage ? t('translatedFrom', { language: originalLanguage }) : t('translation'),
+                  read: t('readOriginal'),
+                }}
+                language={original.original_language && original.original_language !== 'other' ? original.original_language : undefined}
+                source={original.original_source}
+                title={original.original_title}
+                url={original.original_url}
+              />
             )}
           </article>
         </div>
@@ -286,5 +282,71 @@ function PeopleLinks({ people, and }: { people: Person[]; and: string }) {
         </span>
       ))}
     </>
+  )
+}
+
+/**
+ * "Translated from English": the original's title in its own language and
+ * direction (linked when we know where it lives), its authors (to their
+ * pages), its source, and a button to read it.
+ */
+function OriginalCard({
+  title,
+  authors,
+  hasAuthors,
+  source,
+  url,
+  language,
+  labels,
+}: {
+  title?: string | null
+  authors: React.ReactNode
+  hasAuthors: boolean
+  source?: string | null
+  url?: string | null
+  language?: string
+  labels: { from: string; read: string }
+}) {
+  const external = { rel: 'noopener', target: '_blank' } as const
+  return (
+    <aside className="relative overflow-hidden rounded-[26px] border border-border bg-[var(--surface-muted)] p-6 sm:p-8">
+      <p className="flex items-center gap-2 text-xs font-medium tracking-[0.08em] text-[var(--text-muted)] uppercase rtl:tracking-normal">
+        <Languages aria-hidden size={14} />
+        {labels.from}
+      </p>
+      {title && (
+        // Its own direction for the words, the card's edge for alignment.
+        <p className="mt-4 font-serif-reading text-2xl leading-snug text-balance rtl:text-right" dir="auto" lang={language}>
+          {url ? (
+            <a className="underline decoration-1 underline-offset-4 hover:decoration-2" href={url} {...external}>
+              {title}
+            </a>
+          ) : (
+            title
+          )}
+        </p>
+      )}
+      {(hasAuthors || source) && (
+        <p className="mt-2 text-sm text-[var(--text-secondary)]">
+          {hasAuthors && <span className="text-[var(--foreground)]">{authors}</span>}
+          {hasAuthors && source && <span aria-hidden> · </span>}
+          {source && (
+            <span dir="auto" lang={language}>
+              {source}
+            </span>
+          )}
+        </p>
+      )}
+      {url && (
+        <a
+          className="mt-6 inline-flex h-9 items-center gap-2 rounded-full bg-[var(--foreground)] px-4 text-sm font-medium text-[var(--background)] transition-opacity hover:opacity-85"
+          href={url}
+          {...external}
+        >
+          {labels.read}
+          <ArrowUpRight aria-hidden className="rtl:-scale-x-100" size={15} />
+        </a>
+      )}
+    </aside>
   )
 }

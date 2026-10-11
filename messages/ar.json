@@ -149,7 +149,10 @@
       "author": "تأليف",
       "other": "مساهمة"
     },
-    "people": "المساهمون"
+    "people": "المساهمون",
+    "translatedFrom": "مترجم عن {language}",
+    "translation": "ترجمة",
+    "readOriginal": "اقرأ النص الأصلي"
   },
   "Study": {
     "heroQuote": "ما نغطيه في سيلاس أقل أهمية مما يكتشفه الطالب.",

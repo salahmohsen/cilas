@@ -138,7 +138,6 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - Manish Jain
 - Mariam Sameh
 - Mohamed Nagy Sanger
-- Mohamed Yahya
 - Nazih Awad
 - Nora Helmy
 - Nour Mohy

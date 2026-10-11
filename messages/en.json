@@ -149,7 +149,10 @@
       "author": "Author",
       "other": "Contribution"
     },
-    "people": "People"
+    "people": "People",
+    "translatedFrom": "Translated from {language}",
+    "translation": "Translation",
+    "readOriginal": "Read the original"
   },
   "Study": {
     "heroQuote": "What we cover at CILAS matters less than what a student discovers.",

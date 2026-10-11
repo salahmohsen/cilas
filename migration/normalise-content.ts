@@ -269,23 +269,36 @@ for (const [k, v] of arabicNameMap(labPage.credits, tocLab.imprint.credits)) ara
 // English titles and sources come from the original publications:
 //   2 shikshantar.org/initiatives/walkouts-network/healing-ourselves-diploma-disease
 //   3 YES! Magazine, "Liberate Your Space" (the booklet: winter issue, 2008)
-//   4 Ron Miller's essay (the booklet: via Southern Cross Review)
+//   4 southerncrossreview.org/55/miller-education.htm
 //   5 libcom.org/article/reading-and-not-reading-theoretical-works
-//   6 Vicki A. Jacobs's article (the booklet names no source)
+//   6 ascd.org/el/articles/reading-writing-and-understanding (the booklet names no source)
 const LAB_ORIGINALS: Record<number, { title: string; source: string | null; url: string | null }> = {
   2: {
     title: 'Healing Ourselves from the Diploma Disease',
     source: 'Shikshantar Andolan',
     url: 'https://www.shikshantar.org/initiatives/walkouts-network/healing-ourselves-diploma-disease',
   },
-  3: { title: 'Reclaiming Our Freedom to Learn', source: 'YES! Magazine, Winter 2008', url: null },
-  4: { title: 'A Brief History of Alternative Education', source: 'Southern Cross Review', url: null },
+  // The URL as the P2P Foundation wiki (Unitierra) cites it.
+  3: {
+    title: 'Reclaiming Our Freedom to Learn',
+    source: 'YES! Magazine, "Liberate Your Space", Winter 2008',
+    url: 'https://www.yesmagazine.org/issues/liberate-your-space/reclaiming-our-freedom-to-learn',
+  },
+  4: {
+    title: 'A Brief History of Alternative Education',
+    source: 'Southern Cross Review',
+    url: 'https://southerncrossreview.org/55/miller-education.htm',
+  },
   5: {
     title: 'On Reading and Not Reading Theoretical Works',
     source: 'libcom.org',
     url: 'https://libcom.org/article/reading-and-not-reading-theoretical-works',
   },
-  6: { title: 'Reading, Writing, and Understanding', source: null, url: null },
+  6: {
+    title: 'Reading, Writing, and Understanding',
+    source: 'Educational Leadership 60(3), November 2002',
+    url: 'https://ascd.org/el/articles/reading-writing-and-understanding',
+  },
 }
 // The dev seed's former English titles, so its articles are found and corrected in place.
 const LAB_SEED_TITLES: Record<number, string> = {
