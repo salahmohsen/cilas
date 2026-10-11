@@ -1,0 +1,391 @@
+{
+  "sha256": "2cf4b0dedbff7ed3f35c7000a653be67adb448432f33b2a803811e83341d5b17",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "title": "On Ignorance",
+    "subtitle": null,
+    "authors": [
+      "Robin Weiss"
+    ],
+    "translators": [],
+    "original": null,
+    "blocks": [
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Presented here are some reflections on ignorance; perhaps the problem of our time, perhaps the solution. I begin by considering, as problem, a kind of ignorance that increases with knowledge, and end by considering, as solution, a kind of knowledge that increases with ignorance."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Ignorance as Problem"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Knowledge is like a sphere, the greater its volume, the larger its contact with the unknown.” – Blaise Pascal"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Measuring by scientific articles published, inventions patented, and websites, information has been increasing worldwide by 66% each year. According to one scientist, as the number of answers scientists find increases, so does the number of questions. In fact, the number of questions grows much faster than the number of answers. If ignorance is what we have when we have questions without answers, then ignorance is growing at an exponential rate. Alternatively, if we measure ignorance in terms of the gap between what one person knows and what the scientific community, or humanity as a whole, knows, the gap is widening, and again, ignorance is growing, not shrinking."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“…knowledge is not a path but a road with a dead end, not a goal, but a disaster....” – Petrarch"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "“Dare to know!” and “knowledge is power,” are sayings that epitomize our modern way of thinking. The modern world is based on the premise that we can solve all our problems as long as we continue to accumulate information and disseminate it. In fact, information seems to be the main source of our problems, as scientific know-how is too often placed in the service of the plundering of finite resources, the uprooting of traditional forms of life, the perpetuation of unjust economic relations, and the general destruction of the planet. As the mottos listed above suggest, much destruction is perpetrated in the belief that the consequences are manageable, even “inconsequential,” because we either have the knowledge to deal with them, or will acquire the knowledge in the future. This has only made more apparent what we have long suspected: the more human beings know, the less they know how they apply their knowledge, and to what ends."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Why does man’s ignorance hurt him, how can he feel the ache of a member he never had?” – José Ortega y Gasset"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Since so many problems seem to arise from our voracious hunger for knowledge, it is worth asking from whence this anxious desire to remedy our ignorance arises? Well, what if we were to leave a room and discover that there was nothing outside the door? We must be completely shocked because we expect everything that exists to be part of something else, or at the least connected to something else: we expect the room to be part of a building, which is on a street, which is in a city. Now, individual sciences mark off pieces of the world and study them: electrons, plants, human societies, the laws of physics. But very soon one begins to wonder how the subject matter of one science connects to those of the others, and how they all fit together into a larger whole, much as we wonder how the room fits into the rest of the world. It is here that we begin to feel our ignorance. We realize we have only a piece, a fragment, a fraction of something, but we don’t understand the larger whole of which it is a part. Hence, if our ignorance pains us, it is not simply because we want more knowledge. Is it not rather because we want to understand how the knowledge we already have fits into a larger whole?"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“…he would not have understood anything better, if he had seen more things; he would only have more to explain.” – George Santayana"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Adding to our store of facts won’t necessarily help us. To quote Emerson, “The world refuses to be analyzed by addition or subtraction.” We also have to interpret the facts. Indeed, the problem is not only that we have so many facts, but that we can interpret them in so many different ways. A storm, once observed, can be interpreted either as a collection of molecules, as a sign of climate change, or an act of God; a social movement as a series of relays along neural pathways, the inevitable reaction to a particular event, the culmination of the hard work of dedicated individuals, the outcome of a chain of events set into motion a hundred years earlier, or a particularly vivid example of a broader, worldwide trend. The facts lend themselves to being interpreted in many different ways. None of these interpretations excludes the others. Since the concepts and theoretical frameworks we use to analyze the world are varied and mutually compatible, we have to ask whether, as we develop new and increasingly complicated ways to analyze the world, we are getting closer to an unobstructed view of the underlying reality. With each new way of interpreting the facts, are we exposing the naked reality beneath? Or are we simply dressing it up in different clothes—in any clothes that “fit”? On the one hand, our knowledge certainly seems to grow as we develop different interpretations, and identify the many ways in which they “fit” the facts. On the other hand, we still remain in a state of relative ignorance with regard to why one interpretation should be favored over another, and this ignorance only seems to grow as interpretations proliferate—until we are ultimately forced to ask ourselves, “Is our knowledge increasing or is our ignorance?”"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“…we cannot think of two things at the same time.” – Blaise Pascal"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "We cannot pay attention to one thing without paying less attention to another. Even when we listen to a sound, we focus on that sound to the exclusion of other sounds. We hear it by not hearing the others. Similarly, if we focus too intently on something we know, then we may begin to suffer from a kind of myopia. Consider a magnifying glass that brings one object into focus by blurring others at its periphery. When we put too much emphasis on one detail, we deemphasize the others, with the result that we not only see them less clearly, but that our perspective of the whole is distorted. This would explain why those people who “stick to what they know,” and only to what they know, sometimes end up with a distorted picture of reality. It is why, according to Pascal, both the very old and the very young see things from a skewed perspective. This, he also remarks, applies no less to the very uneducated and the very educated."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“In those old days it was different. For then doubt was a task for a whole lifetime, not a skill to be acquired in either days or weeks.” – Søren Kierkegaard"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The difficulties we face today extend to almost every sphere of life, even the ethical. Examine most ethical theories today, and you will see that they purport to instruct you how to choose among the various courses of action you can take in life. First, you just need to calculate all the costs and benefits of each option. There’s only one problem: Suppose you don’t know the cost and benefits of each option? How will you decide whether to march off to war or stay with your family? Whether to sacrifice a life to save two? Contrast these ethical theories with those of the ancient Greeks, and you immediately see the difference. The Greeks, far from supposing that all people were knowledgeable, taught people what they thought they needed to know in order to live with their ignorance. Plato taught us how to work toward goals we knew nothing about, the Stoics how to avoid error as much as possible, and the Skeptics how to simply accept our ignorance. Are there no such philosophers today?"
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Ignorance as Solution"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“God offers to every mind its choice between truth and repose. Take which you please—you can never have both.” – Ralph Waldo Emerson"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The first step is to prevent knowledge from becoming ignorance. This is not easy. Just consider what knowledge is. Most kinds of “knowledge” are nothing more than ways of thinking that have become so ingrained that they have hardened over time, and become habits. Think of what you mean when you say you know the way home, know how to speak French, or know how to solve equations. To say that you “know” something is to say that you can perform a task, uninterrupted, without encountering setbacks, without having to revise your thinking or to adjust your behavior. For this reason, we tend to think of our knowledge as the part of our thinking that is reliable and that we won't ever have to change. And this is precisely the problem with knowledge: it is a time-saving device. It allows us to complete tasks with as little thought and effort as possible, while ignoring, or in relative ignorance of, other facts or considerations that might, indeed, be relevant. Hence knowledge can easily become ignorance. Knowledge can also become a kind of ignorance if it seems to “work” in certain contexts, in which it is neither challenged nor met with obstacles. If this knowledge is then relied upon at other times and places when it is not appropriate, then we are ignorantly applying our own thoughts and ideas, standards and values, to situations in which they simply “do not apply”: knowledge becomes ignorance."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“It seems that a man who has knowledge of something is ignorant of this very thing, not because of want of knowledge, but actually because of his knowledge.” – Plato"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Today, we think of ignorance as the exact opposite of knowledge. It’s the absence of knowledge. Knowledge is a full brain; ignorance an empty one. Yet if we look at the Latin word from which the English word derives, ignorare, we can see that, originally, people may have thought of ignorance as having more to do, either with failing to recognize, or misrecognizing something, especially something familiar. To use Plato’s example, ignorance is not never having met Socrates or Theatetus. It is what happens when you either fail to recognize Socrates, or mistake Theatetus for Socrates. It’s getting the wrong peg in the wrong hole. This is the kind of ignorance we witness in other people when they mistake injustice for justice, or bad for good. Put differently, if already mastered concepts are like pigeon coves, or birdhouses, and fleeting thoughts and perceptions are like pigeons, then ignorance happens when the wrong bird flies into the wrong cove. Of course, this idea has paradoxical implications: it seems to mean that it is, in part, because of the knowledge people possess that they are ignorant, leaving us to wonder, once again, “does knowledge make ignorant?”"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Freedom would not be not to choose between black and white but to abjure such proscribed choices.” – Theodor Adorno"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "As science advances, more and more light is thrown onto the darkest corners of the universe; the shadows recede, and darkness gives way to light. But the more blinding the light science shines on the world, the more, it seems, what science cannot illuminate is plunged into total darkness. A sign of this change is that, today, if there is something about which we cannot attain accurate scientific knowledge, we immediately declare that there are no “objective” answers to such questions, and we treat them as though they were permanently shrouded in an impenetrable obscurity. Perhaps it is easier for us to say this than to admit that we are unsure whether our answers are the right ones, and thus admit our ignorance. After all, how can a person be ignorant of what nobody can know? In general, we no longer recognize that there are things about which we can be, in some ways knowledgeable, in some ways ignorant. Gone are the “grey areas.” In their place, we find a stark line separating the light from the dark: the things we can known from the things we cannot known. Students are taught what they can know; the rest, they are told, they cannot know. So they stay in the light, keep out of the dark, and never linger in the grey. Yet Adorno reminds us that we must linger in the grey to attain freedom."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Were it not for shadows, there would be no beauty.” – Junichiro Tanizaki"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Justice, Friendship, Love, Courage, Religion—these are among the things we esteem as some of the most beautiful and wonderful in life. They are certainly among the things we consider most worth striving for in life. But they are also some of the things about which we know least, whether it be how to strive for them, or how to know when we’ve attained them. Can it be a coincidence that some of the things that are most beautiful and wonderful in life, are also the things about which we know least? This is no coincidence, in fact. These things are linked, in our mind, with so many positive qualities, and have, in our imaginations, so many positive effects on our lives, that it is difficult to say what exactly they are, in and of themselves, as opposed to all the good things we tend to associate with them. But of course the fact that they can’t be easily defined makes them no less beautiful nor less worthy of being striven toward. Indeed, it is actually their beauty that makes them hard to define."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Those who use it ruin it. Those who grab hold of it loose it.” – Laozi"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Words like Justice, Friendship, Love, Courage, Religion—these words, as we have said, can’t be easily defined. We realize this when we try to pin down their exact meaning. We see that, however we try to define them, we end up defining them so narrowly that the words no longer have the same meaning. We can’t gain knowledge of them without destroying the very thing we are trying to gain knowledge of. They are like butterflies that we can catch only by crushing. It might be thought that, if we keep an open mind about these words’ meaning, we are left with no direction in life. In fact, the person who says she can’t define friendship, and who refuses to say that friendship is simply this or that—simply being useful to friends or making them feel good—she is likely to think that friendship is this and that, and “all of the above.” This is to say, she most likely keeps a long list of the characteristics that are distinctive of a good friendship, or the qualities she looks for in a friend, from which she refuses to exclude any that might be important. It is with constant reference to this list that she measures her own friendships, examining them to see by how many of these qualities they are characterized, and whether they lack any. If anyone, then, it is perhaps she who professes herself ignorant of, and unable to define friendship, who in fact holds herself and her friends to the highest standards of friendship. Meanwhile, those who define friendship reduce it to simply this or that, and in so doing, perhaps reduce it to something it is not."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Because they liked it, they desired to illuminate it. They illuminated it without illuminating the other, and so ended up in the obscurity of paradox.” – Zhuangzi"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The Chinese philosopher Zhuangzi speaks of a school of musicians whose masters had a strong preference for a certain kind of music. The masters carefully explained this musical form to their students, describing it as music in its “purest form.” However, they ended up teaching their students that other kinds of music were not music at all, and their pupils ended up confused, bound up with and tied to this particular musical tradition. This story offers an example of how, in attempting to shed light on something, we can often push something else into the background: by learning about one kind of music the students become ignorant of other kinds. But more than that, the students not only become ignorant about other kinds of music, in a way, they become ignorant of what music is. All this because they study music in its “purest form.”"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“The intellect is a whole, and demands integrity in every work. This is resisted equally by a man’s devotion to a single thought, and by his ambition to combine too many.” – Ralph Waldo Emerson"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Let us think of the human mind as a problem-solving machine. We can see that by exposing the human mind to more and more information, we increase the amount of information it must sort through in order to find a solution to a given problem. Of course, the more information it has at its disposal, the more likely it is, either, by rummaging around in the available data, or by using the information at hand to work out a solution. Hence, as the information the mind is exposed to increases, so too do the number of solutions available to it, and the likelihood of its discovering them. On the other hand, if the human mind has too much information, it will simply have too much to process, and it will fail to find a solution. Hence, as the flow of information increases, the likelihood of finding a solution also decreases. Indeed, the mind is paralyzed by the influx of incoming data. As Raymond Dean points out, this has obvious implications for education. The mind must be exposed neither to too much, nor too little information. It can gradually be fed more information over time. However, once a threshold is reached past which point there is too much information to be usefully processed, the mind must close itself off to the flow of information until it can sort through all the available data. In short, if the human mind is a data-processing machine, its efficiency requires ignorance."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Without forgetting, it is quite impossible to live at all.” – Friedrich Nietzsche"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Freud recognized early in his career that the conscious mind can only lend its attention to a small fraction of the incoming information it receives from the external environment; the rest of the information either has to be processed by the unconscious mind, or otherwise “filtered out.” Nietzsche pointed out that forgetting is a variation of this phenomenon. He claimed that forgetfulness is not just what happens to us when we either don’t remember, or can’t remember, to bring certain thoughts to mind. Forgetfulness, he asserted, is actually a positive ability that some people have, an active ability to suppress unwanted or intrusive thoughts, “to shut the doors and windows of consciousness for a while.” Without this ability, he said, a person would be too busy with his or her own ideas and memories to do any of the things we think of as characteristically human, whether it be to deliberate, to prioritize, or to resolve to take a certain course of action. It is his recommendation therefore that we occasionally impose ignorance upon ourselves."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“I have heard the words of a butcher and learned how to care for life!” – Zhuangzi"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "One problem we face is that we have become so accustomed to thinking of only certain kinds of knowledge as “true knowledge,” that we are not likely to consider some other kinds of knowledge as “knowledge” at all. What some call “knowledge,” others call “ignorance,” and vice versa. Having recognized this, some Chinese philosophers presented, as models of wisdom, simple, apparently ignorant people: a swimmer who somehow manages to avoid being crushed on the rocks, a hunchback who catches cicadas with a long pole, and a cook who butchers a carcass with remarkable ease. When these people are asked to explain how they do what they do, it becomes clear that they don’t have a simple “formula for success.” They can’t even explain why what they do works. But they know how to achieve maximal results with minimal effort, how to deal with obstacles, and most importantly, how to focus on their task without distraction. This is why, as the story goes, a great lord, upon hearing a butcher describe the way he wielded his knife, suddenly exclaimed that he had learned from him all the secrets of life."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“We do not determine what we will think. We only open our senses, clear away, as we can, all obstruction from the fact, and suffer the intellect to see” – Ralph Waldo Emerson"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "As every educator knows, learning is as much about learning as unlearning. In order think correctly about something, I must first unlearn anything I might have been previously taught that would prevent me from seeing the matter correctly. I must clear away my preconceptions and biases. I must restrain myself from making untoward assumptions, or from jumping to unwarranted conclusions. As Mahatma Gandhi was supposed to have said, “Truth by nature is self-evident. As soon as you remove the cobwebs of ignorance that surround it, it shines clear.” Every religious tradition contains a version of this idea. Religions differ only in terms of what each claims to be the greatest obstacle standing between us and an unobstructed view of the truth. For one tradition, it is desires, or attachments, that most obstruct our view of the truth; for others, the senses; and for others, the ego. In one sense, these things obscure our view of reality and prevent us from seeing it as it truly is, so we could say that they make us ignorant. Yet, in another sense, seeing the truth requires us to remove these obstacles. This of course requires us to forget or un-learn everything we previously knew. So we could also say that the removal of these obstacles makes us ignorant, and thus, able to see the truth."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“It is desire that engenders thought.” – Plotinus"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "José Ortega y Gasset once pointed out that learning is very similar to loving. When we love someone, we can’t just think of a person the way we want them to be, much less force them to be that way. Actually, we don't want to: we want to know this new person better and better, and we want them to show us who they are. Sometimes, in order to facilitate this process, we very unselfishly put all thought of ourselves aside, simply in order to get to know the person better. It’s strange that we do this before we really know the person. But we do it nonetheless because we have the feeling that, once we do, we will discover something about the person that will change relationship to him or her—that will change us. And then, we won’t mind having put all our current priorities aside in order to peruse this person, because, by that time, all our priorities will have been turned upside down. Now, the same thing applies to learning. I cannot approach the subject matter I am studying, viewing it from the perspective of my current concerns and preconceptions: then, I’ll never see it for what it is. Indeed, that would be beside the point, since I hope to discover something that will change my concerns and preconceptions. In this way, learning is not just like love; it actually is, at root, a kind of love, in the sense of a complete and utter openness and willingness to embrace something new and unknown, in the hopes that it will leave oneself a changed person. Indeed, the only thing that can ever conquer the fear of the unknown is love."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“To expect truth to come from thinking signifies that we mistake the need to think with the urge to know.” – Hannah Arendt"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Aristotle says all humans have an “urge to know”—literally, they “stretch and strain” in order to know—and it is this that leads them to search out the truth. But perhaps a desire, much deeper than this is the desire to find meaning in life. This is something we can only do by stopping and thinking. We think because we have to reflect on events, and people’s actions, in order to tell ourselves a story about them—about what the people in the story were working toward, what they achieved, and what they showed us about themselves in particular, and human beings in general. Notice, however, that, by the time we are done thinking, we usually don’t end up with knowledge, in the sense of beliefs that are true not false, and sometimes, by the time we have finished thinking, we end up knowing less than when we started. Yet, at the risk of ending up more ignorant than we previously were, we think."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Ignorance and Community"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“Those who are merely instruments for others’ knowledge are not trusted, even if they are believed.” – Cynthia Townley"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "We can’t know everything. We must therefore enter into knowledge-sharing relationships which allow us to exchange information and increase our collective pool of knowledge. While, in one respect, this division of labor means that each person’s knowledge increases, in another, it means that each remains ignorant, having delegated to others the task of acquiring and storing knowledge on his or her behalf. When it comes to relationships such as these, we are constantly confronted with a choice: to trust other people or not to trust them. The decision whether to trust, or not, is difficult because, in the long term, we may learn more by trusting than by doubting others. Maintaining such relationships, despite their flaws, is often a more effective means of increasing our knowledge than trying to gather information by ourselves. By not trusting others, or by attempting to verify their claims, we may, it’s true, gain access to a piece of knowledge—but at a cost. For instance, if a friend were to question, or to “check up on” her friend’s claims to see whether they could be corroborated, she could be accused of not trusting her friend, and her friend might become hesitant to confide in her or to speak freely in her company. Similarly, the price we may pay for doubting or scrutinizing other people’s testimony may be the break-down of relationships with those from whom we stand to learn a great deal—perhaps even more than any single piece of information we could otherwise acquire by doubting them. So if the price we pay for belonging to a community of learners is a certain degree of ignorance, it may be worth our while nonetheless."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“An ethic may be regarded as a mode of guidance for meeting…situations so new or intricate, or involving such deferred reactions, that the path of social expediency is not discernable to the average individual.” – Aldo Leopold"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Conservationist and philosopher Aldo Leopold once claimed that human beings became moral beings when they realized their ignorance—their ignorance, in particular, of the possible effects of their actions, and how they might ripple outward. They realized that anything they did, especially anything that injured fellow members of their community, could set off a chain reaction. One theft, one murder and this could trigger a series of events, the result of which could be that the ties binding the community were irreparably frayed. Who could tell where it could end? Now, if human beings could predict exactly what they could interfere with, or destroy, without also destroying the fabric of society, they would. But as it is, human beings can never guess exactly what the consequences of their actions will be, or whether or not their actions will backfire. Faced with this situation, humans have had to relinquish the “conqueror mentality”. People with a “conqueror mentality” think they know how to manipulate people or things in their communities for their own benefit. Why did, and why do, most human beings eventually outgrow this mentality? “Because,” says Leopold, “it is implicit in such a role that the conqueror knows, ex cathedra, just what makes the community’s clock tick, and just what and who is valuable, and what and who is worthless, in community life. It always turns out that he knows neither, and this is why his conquests eventually defeat themselves” In other words, human beings realize that they cannot tamper with the workings of their communities without inadvertently inconveniencing or injuring themselves. What would be the alternative to this mentality? To acknowledge that our welfare is intimately bound up with that of other community members; that we are essentially ignorant of the many ways in which the people and things in our communities effect, and are effected by one another; and that, no matter how much knowledge we possess, we cannot endanger their welfare without potentially endangering our own. Indeed, according to Leopold, it is precisely in situations such as these, in which we cannot reliably calculate the effects of our action, that we must adopt an “ethic” or a “moral code.” In doing so, we fall back on general agreements, which, by following, we can safely mitigate, as much as possible, the potentially negative repercussions of our actions. If Leopold is right, then, it is necessary to acknowledge one’s ignorance in order to be moral—indeed, to be a good community member."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "“The key-note of democracy as a way of life may be expressed, it seems to me, as the necessity for the participation of every mature human being in formation of the values that regulate the living of men together.” – John Dewey"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "As we work with others toward collective goals, and enlist others’ support in helping to achieve these goals, it is a practical necessity to, at the same time, consider these goals from the perspective of other people. This means admitting that our own perspective is limited and incomplete. Hence the close connection that is said to exist between democracy and the willingness to admit one’s ignorance. But it might also be said that democracy, and indeed, collective action in general, is as much the condition for admitting one’s own ignorance, as admitting one’s own ignorance is the condition for collective action. Imagine a world in which everyone busied themselves with nothing but routine technical and administrative work. If nobody engaged in collective action, then, most likely, few opportunities would arise to ask who was doing what, for what purpose, and with what results. There would be no reason to try and see things from the perspective of others. In short, a world without collective action would be one in which we never ran up against the limits of our own perspective, nor fathomed the depths of our own ignorance. Collective action, it seems, provides the raw materials for thought, and thus, for the acknowledgement of ignorance."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "I have tried to offer, above, a more complicated picture of the relationship between knowledge and ignorance, wherein an increase in knowledge does not necessarily imply a corresponding decrease in ignorance. This confirms that knowledge can in fact lead to an increase in ignorance, and that vice versa, ignorance can lead to an increase in knowledge."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In the final section, I have taken note of a few respects in which ignorance is contingent on and constitutive of the formation of communities of scholars or pigeon flocks—facts important to remember in an age in which knowledge and autonomy have tended to take precedence over ignorance and community."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "25 This quote appears to be commonly misattributed to Blaise Pascal, but is perhaps traceable to a footnote in a 1986 edition of his Pansées. Blaise Pascal, “The Thoughts, Letters, and Opuscules of Blaise Pascal, translated by O.W. Wright (New York: Riverside Press, 1869), Ch. IV, 191."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "26 Kevin Kelley, “The Expansion of Ignorance,” The Technium, last modified October 2, 2008): http://kk.org/thetechnium/the-expansion-o/."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "27 Petrarch, “On His Own Ignorance,” in The Renaissance Philosophy of Man, ed. Ernest Cassier et. al. (Chicago: Chicago University Press, 1948), 117."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "28 José Ortega y Gasset, What is Philosophy?, trans. by Mildred Adams (New York: Norton, 1960), 70."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "29 George Santayana, Scepticism and Animal Faith (New York: Dover, 1955), 1."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "30 Ralph Waldo Emerson, “Intellect,” in Essays: First and Second Series (New York: Library of America, 199), 194."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "31 Pascal, Pansées, n.145."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "32 Pascal, Pansées, n.72."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "33 Søren Kierkegaard, Fear and Trembling, trans. Alastair Hannay (New York: Penguin Books, 2005), Preface, 5."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "34 Ralph Waldo Emerson, “Intellect,” in Essays: First and Second Series (New York: Library of America, 199), 195."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "35 Plato, Theatetus 199d1."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "36 Theodor Adorno, Minima Moralia: Reflections from Damaged Life (London: Verso, 2005), Ch. 85, 132."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "37 Junichiro Tanizaki, In Praise of Shadows (London: Vintage Books, 2001), 46."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "38 Laozi, Dao De Jing Ch. 29, in Readings In Classical Chinese Philosophy, ed. Philip Ivanhoe and Bryan Van Norden (New York: Seven Bridges Press, 2001), 173."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "39 Zhunagzi Ch. 2., in Readings In Classical Chinese Philosophy, ed. Philip Ivanhoe and Bryan Van Norden (New York: Seven Bridges Press, 2001), 214. Trans. mod."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "40 Emerson, “Intellect,” 194."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "41 Raymond Dean, “Optimizing Uncertainty,” The Virtues of Ignorance: Complexity, Sustainability and the Limits of Knowledge, eds. Bill Vitek and Wes Jackson (Lexington: University Press of Kentucky, 2008), 81-100."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "42 Friedrich Nietzsche, On the Advantage and Disadvantage of History for Life (Indianapolis: Hackett, 1980), 10."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "43 Friedrich Nietzsche, On The Genealogy of Morals and Ecce Homo, trans. Walter Kaufmann (New York: Random House, 1989), 57."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "44 Zhuangzi Ch. 3, 220."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "45 Emerson, “Intellect,” 189."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "46 Plotinus, Enneads V.6.5.9."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "47 Hannah Arendt, The Life of the Mind (New York: Hardcourt, 1978), 61."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "48 Cynthia Townley, “Toward a Revaluation of Ignorance,” Hypatia Vol. 21 No. 3 (Summer 2006): 37-55. The ideas to follow can be found in Townley’s essay."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "49 Aldo Leopold. A Sand County Almanac and Sketches Here and There (New York: Oxford University Press, 1949), 202."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "50 Ibid., 204."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "51 John Dewey, “On Democracy,” excerpted from John Dewey, \"Democracy and Educational Administration,\" School and Society 45 (April 3, 1937); 457-67."
+      }
+    ]
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "sha256": "40bd97955e657be1175fef459b25c811d9e0d0bb23446dec0ccb34169ce2bada",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "front_matter_pages": [
+      3
+    ],
+    "essays": [
+      {
+        "order": 1,
+        "title": "Foreword",
+        "authors": [
+          "Karim-Yassin Goessinger"
+        ],
+        "first_page": 5,
+        "last_page": 9,
+        "is_foreword": true
+      },
+      {
+        "order": 2,
+        "title": "Diversity and Differentiation in the Dialectic of Liberal Arts",
+        "authors": [
+          "Teun J. Dekker"
+        ],
+        "first_page": 10,
+        "last_page": 22,
+        "is_foreword": false
+      },
+      {
+        "order": 3,
+        "title": "Playing Our Selves: An Aesthetic Education for the Twenty-First Century",
+        "authors": [
+          "Surti Singh"
+        ],
+        "first_page": 23,
+        "last_page": 34,
+        "is_foreword": false
+      },
+      {
+        "order": 4,
+        "title": "Equality and Intimacy: An Imaginary Construction",
+        "authors": [
+          "I-Kai Jeng"
+        ],
+        "first_page": 35,
+        "last_page": 47,
+        "is_foreword": false
+      },
+      {
+        "order": 5,
+        "title": "On Ignorance",
+        "authors": [
+          "Robin Weiss"
+        ],
+        "first_page": 48,
+        "last_page": 62,
+        "is_foreword": false
+      }
+    ],
+    "imprint": {
+      "credits": [
+        {
+          "role": "Editor",
+          "names": [
+            "Karim-Yassin Goessinger"
+          ]
+        },
+        {
+          "role": "Translation",
+          "names": [
+            "Hussein EL-Hajj"
+          ]
+        },
+        {
+          "role": "Copy-editor",
+          "names": [
+            "Ali Al-Farsi",
+            "Nour Mohy"
+          ]
+        }
+      ],
+      "license": "CC BY-NC-SA",
+      "year": 2018
+    }
+  }
+}

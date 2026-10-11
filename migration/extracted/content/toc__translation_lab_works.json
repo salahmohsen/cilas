@@ -1,0 +1,137 @@
+{
+  "sha256": "3fccff17a2b4a118686af659b3226f41231183281001512f86d17aabaccf9aee",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "front_matter_pages": [
+      4
+    ],
+    "essays": [
+      {
+        "order": 1,
+        "title": "توطئة",
+        "authors": [],
+        "first_page": 6,
+        "last_page": 7,
+        "is_foreword": true
+      },
+      {
+        "order": 2,
+        "title": "التعافي من داء الدبلومات",
+        "authors": [
+          "شريا جانسنز-سانون",
+          "شليبا جابن",
+          "مانيش جابن"
+        ],
+        "first_page": 8,
+        "last_page": 11,
+        "is_foreword": false
+      },
+      {
+        "order": 3,
+        "title": "استعادة حريتنا في التعلم",
+        "authors": [
+          "جوستابو إستيبا"
+        ],
+        "first_page": 12,
+        "last_page": 16,
+        "is_foreword": false
+      },
+      {
+        "order": 4,
+        "title": "موجز تاريخ التعليم البديل",
+        "authors": [
+          "رون ميلر"
+        ],
+        "first_page": 17,
+        "last_page": 22,
+        "is_foreword": false
+      },
+      {
+        "order": 5,
+        "title": "حول كيفية قراءة الأعمال النظرية",
+        "authors": [
+          "كريس رايت"
+        ],
+        "first_page": 23,
+        "last_page": 29,
+        "is_foreword": false
+      },
+      {
+        "order": 6,
+        "title": "القراءة والكتابة والفهم",
+        "authors": [
+          "فيكي أ. جاكوبز"
+        ],
+        "first_page": 30,
+        "last_page": 36,
+        "is_foreword": false
+      },
+      {
+        "order": 7,
+        "title": "خاتمة",
+        "authors": [
+          "سارة علاء"
+        ],
+        "first_page": 37,
+        "last_page": 37,
+        "is_foreword": false
+      }
+    ],
+    "imprint": {
+      "credits": [
+        {
+          "role": "إشراف وتنسيق",
+          "names": [
+            "Hussein El-Hajj",
+            "Hind El-Ghazali",
+            "El-Sayed Mahmoud"
+          ]
+        },
+        {
+          "role": "ترجمة وتحرير",
+          "names": [
+            "Iman Maarek",
+            "Ayman El-Husseini",
+            "Mohamed Yahya",
+            "Nazih Halawa",
+            "Howaida Ahmed",
+            "Iman Kamal Abdel Hamid",
+            "Ahmed El-Menagy",
+            "Islam Karrar",
+            "Iman Safwat",
+            "Rehab Suleiman",
+            "Abdel Rahman Adel",
+            "Mariam Saleh",
+            "Nora Halabi",
+            "Sara Alaa",
+            "Amal Abdel Rahman",
+            "Heba Allah Mansour",
+            "Sara Salam",
+            "Mohamed Nagy Sanger"
+          ]
+        },
+        {
+          "role": "مراجعة لغوية",
+          "names": [
+            "Amir Zaki"
+          ]
+        },
+        {
+          "role": "الإخراج الفني",
+          "names": [
+            "Hussein El-Hajj"
+          ]
+        },
+        {
+          "role": "تصميم الغلاف",
+          "names": [
+            "Amr Okasha"
+          ]
+        }
+      ],
+      "license": "CC BY-NC-SA",
+      "year": 2018
+    }
+  }
+}

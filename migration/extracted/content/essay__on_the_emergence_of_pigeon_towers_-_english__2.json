@@ -1,0 +1,206 @@
+{
+  "sha256": "8ff958444383ebbd1eb4bfc8f8da4751f350bae5db165e23b76ec4a5b7385a2a",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "title": "Diversity and Differentiation in the Dialectic of Liberal Arts",
+    "subtitle": null,
+    "authors": [
+      "Teun J. Dekker"
+    ],
+    "translators": [],
+    "original": null,
+    "blocks": [
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Pigeon towers are inherently diverse places. Because they are located just above the city, all manner birds can fly in and out. As a result, they are a veritable smorgasbord of plumage, in which one can immerse one’s self, explore the richness of being, and experiment with many different kinds of living. This environment is deeply inspiring, and makes the pigeon tower a much more instructive venue than a beehive or an ant colony, with their regimented and hierarchical structure. A pigeon tower where all the pigeons are exactly the same would not be an interesting place to hang out. Now, if this is true of pigeon towers, it is also true of educational environments that are inspired by them."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Advocates of liberal arts education actively celebrate diversity among the student population as essential to the kind of education they champion. Liberal arts colleges present themselves as communities that are highly diverse in several dimensions – national, cultural, socio-economic, ideological – and that actively value this diversity. In some cases, they invest considerable effort and financial resources in recruiting students from a wide variety of backgrounds. And they typically try to create a social environment that is congenial to diversity, through extracurricular events and by explicitly discussing the value of diversity in the curriculum."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "This emphasis on diversity is typically justified by claiming that it results in a better education for all students. It is argued that exposure to diversity enhances their perspective, offers them the opportunity to learn about other cultures, helps them see the many sides of the issues they are studying, teaches them to collaborate with a wide range of people, makes them understand the circumstances and experiences of different groups in society, and increases students’ tolerance. On occasion, these appeals take on a somewhat messianic tone; some proponents of diversity seem to argue that world peace and universal brotherhood can be achieved through a more diverse educational system."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "One might be forgiven for becoming somewhat cynical about this “cult” of diversity, branding it “a load of hippie claptrap uttered by a bunch of Kumbaya singing Nerf Herders.” However, even the most ardent defenders of diversity must admit that their defense of diversity is more aspirational than it is rigorously understood. It is a creed that sounds agreeable and is socially very desirable, but it is also grossly undertheorized. Few defenders of diversity specify how it features in a larger theory of education or how exactly it leads to all these beneficial outcomes. This makes it harder to defend one’s belief in the educational value of diversity in a systematic way, and empirically verify if what one might think is happening actually occurs. If the belief that diversity is an anchoring principle of the kind of liberal arts education that takes place in and around pigeon towers is to be more than a vague slogan, it is imperative to be more systematic in thinking about its role in liberal arts education."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "To this end, this paper will present a rough theory of liberal arts education, and demonstrate that diversity plays a crucial and highly specific role within that theory. This theory will be based on Hegel’s general theory of development, which holds that all processes of growth follow a dialectical pattern. Since liberal arts education is a prime example of a developmental process, it too can be understood in dialectical terms. Hence Hegel’s general theory can be specified into a theory of liberal arts education. Within this theory, the process of differentiation, the escape from engulfment, plays a crucial role. It allows a developing mind to break free from its previous state, and thereby grow. This process of differentiation requires confrontation with something other than one’s self. Studying in a diverse educational environment provides this, and is central to the educational process if understood this way."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Hegel’s Theory of Development"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Human minds and, by extension, human societies are developing entities; they change over time, morphing continuously from one state to the other. We are constantly rethinking our relationship to the world and to others, and have different conceptions of ourselves during different phases of our lives. The Romans saw themselves and their place in the world differently than contemporary Italians do. Individuals conceive of themselves differently at the age of 50 from how they understand themselves at the age of 12. This is not to say that they are different people in a strict sense, but they have experienced something of a transformation in the intervening years. Moreover, oftentimes this evolution is a form of growth. The entity developing is not only changing, it is improving and growing in sophistication, realizing more of its potential and becoming more attuned to the world."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "This process of development is an interesting and important field of scientific inquiry. Psychologists, sociologists, and philosophers, among others, have sought to understand how it occurs, what drives it, how it may be interfered with, and how it may be encouraged. Perhaps the most influential scholar of development was Hegel, who posited a universal theory of development. Much of his philosophical work is concerned with elaborating and defending the proposition that one may distinguish different phases in any process of development and that all development follows a three-step pattern. This pattern is dialectical in nature, and this means that development does not occur as a gradual, linear process, but rather as a confrontational process in which an initial thesis is confronted with an antithesis, resulting in a synthesis."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The first step of this dialectical process is characterized by undifferentiated unity. In this phase, the entity developing understands itself as engulfed in some larger entity. As such, it sees itself as an undetachable part of this larger entity that has no interests of its own and cannot conceive of itself as existing independently or separately. One feels connected to such an extent that one has no discernable private understanding or identity. In a Marxist application of Hegel’s theory of development to human history, the primitive communism of hunter-gatherers represents this phase. For the hunter-gatherer sees him- or herself as part of a tribe, and cannot imagine existing independently. He or she has no identity beside being a member of the tribe, and since none of the members do so, all consider each other as equal. Something similar can be seen in Hegel’s dialectical account of how humanity’s knowledge of the world develops, in which the first step is called sensuous consciousness. In this phase, one’s perception of the world is total but impressionistic. One sees only the big picture, but makes no distinctions within what one sees and does not categorize what one sees. This includes not making a distinction between the entity seeing, i.e. one´s self, and what is seen. One sees one´s hand and one sees a mug on the desk, but one does not perceive that the former is part of one´s self and the latter is not. In this way, one is engulfed by what one senses."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The second phase is that of differentiated disunity. In this phases the original unity is broken down for the sake of differentiation. The developing entity breaks free from the initial engulfment and asserts its independence and distinct identity, allowing for differentiation. One conceives of one´s self as separate, and in doing so discovers what is different from the background. In the Marxist account of history which builds on Hegel’s, this phase of development is class society. Individuals assert their different roles and identities, at the expense of the community of equals. This allows for division of labour and a more autonomous life, as one is no longer engulfed by the tribe. However, it comes at the expense of the initial unity of the community; there are now distinct classes of people, be they capitalists and proletarians or feudal lords and serfs, with different interests and positions in society. In the dialectic of knowledge, this second phase is characterized by understanding. In this phase one starts to examine the different parts of the world individually. One, as it were, zooms in on parts of the world, understanding them as distinct. This comes at the expense of the initial unity; one no longer sees the big picture."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The third phase of a dialectical developmental process is differentiated unity. The original unity is recovered, but the differentiation that has been achieved is preserved within it. This means that the developing entity resolves the conflict with the engulfing entity, but does not get reabsorbed into it completely. One belongs to the whole, but simultaneously has a distinct identity within it. In the example of Marxist history, this phase corresponds to communism; social classes disappear and equality is restored. Individuals see themselves as part of a community in which everyone depends on everyone else. However, the knowledge and productive capacity that has been built up during the second phase is preserved, enabling a higher level of material existence. Similarly, the values of individuality and autonomy are still preserved, and individuals can cultivate a distinct identity, which was not possible under primitive communism. In Hegel’s dialectic of knowledge, this third phase is called reason. In this stage, one once again sees the big picture, but also sees the details and distinction made by understanding. The deeper unities that underlie the apparent distinctions are seen without losing sight of those distinctions."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Education as development"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Whatever the empirical merits of this model of development, it is undeniably a historically important and recognizable way of thinking about how development occurs. This makes it a helpful tool for organizing one’s thinking about many such processes. Education would seem to be a prime example. For education is the quintessential process of development. Its goal is to develop the minds of young people. There would be no need for education if children were born with fully developed minds or if they simply developed autonomously. Hence, Hegel’s theory of development should also apply to education, notably higher education, and, in particular, to liberal arts education. For this kind of education is explicitly concerned with developing the minds of young people. Much education is concerned with training individuals to master certain skills or preparing them for certain jobs. This is no doubt an important goal. But it is distinct from the goal of holistically developing the minds of students. It is this goal that most closely aligns with the Hegelian theory of development, and hence liberal arts education can be instructively illuminated by applying the Hegelian model of development."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "This is not to say that development actually happens in this way, but merely that it is helpful to think about it in these terms. One can hardly prove that development typically, or even occasionally, follows this model. Clearly, Hegel’s conception of development makes some sweepingly grand generalizations about human social life and human psychology. Nevertheless, it is worth suspending one’s disbelief to see how the story goes and where it may lead. It may reveal something of value concerning the role diversity can play in the kind of liberal arts education that unfolds in emerging pigeon towers."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Dialectic of Liberal Arts"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In the Hegelian conception of development, any process of development features an entity which is developing. In the case of liberal arts education, this would obviously be the minds of individual students. Furthermore, in any dialectical process, there are other entities in which the developing mind is engulfed, from which it differentiates itself and with which it reunites while preserving its individuation. In the case of liberal arts education, one might think that students actually develop in multiple dimensions, and so they renegotiate their relationship towards a range of different entities. Most significant among these is their relationship to the world around them, but dialectical development also occurs with respect to a number of more specific counterparts, including their community, their built environment, and their friends. Hence there are a number of dialectical stories to tell. One of these is implicit in the very idea of the pigeon tower."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The pigeon tower sits between the bazaar and the ivory tower. When one enters a city like Cairo on foot, one is likely to find one’s self in the bazaar. Bazaars are dynamic places, full of life, with a great variety of people, goods, sights and sounds to stimulate the senses. One is aware of all these influences, but only at the level of sensuous consciousness. It is overwhelming, and one can easily lose one’s self in it. One cannot chart a course through it, but rather must go with the flow of people. For short, it is engulfing, and one is certainly united with the bazaar, but not differentiated from it. As a reaction to the hectic activity of the bazaar, one might head for the ivory tower. The ivory tower is quiet, and affords one the opportunity to contemplate one’s own position and beliefs. It allows one to develop an individual perspective. Of course, this comes at the price of a degree of isolation and loneliness. The engulfment is broken to allow for differentiation, but at the price of unity. Once one has a sense of one’s own identity, one can enter the pigeon tower. In the pigeon tower, one can engage with a wide variety of others, who can fly in and out, but one can also have a sense of individual purpose and action. One’s engagement with others does not come at the expense of one’s self, and hence one achieves a state of differentiated unity."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "Developing a Mental Model"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Perhaps the most important aspect of students´ development is how their mental model of the world works. All humans have a model of the world inside their heads. It is an understanding of the salient features of the world around them, how they are related, and what will happen if one interacts with them in certain ways. This model governs one´s actions and how one interprets what one observes happening in the world with the help of one’s sensuous consciousness."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "As students grow up, they are taught a certain mental model. Their parents play a large role in this, but their teachers and schools do as well. This mental model is transmitted based on authority; students are presented with an interpretation of the way the world works, but this is presented as a fixed an undisputable model of how things really work. In this context, education is primarily about internalization and reproduction of the material offered by teachers. Students learn how to use and apply this model to solve questions. It becomes their way of looking at the world. Hence their relationship with the model can be characterized as one of undifferentiated unity. They are united with it because it shapes how they see the world, without them realizing it does. Indeed, they are engulfed in it; they could not conceive of the world in any other way. Furthermore, this mental model is not their own. They did not actively create it, but have merely internalized it. They are not active agents in the construction of a model of the world. In a way, they are imprisoned by it without knowing that they are. This makes them undifferentiated from it."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Needless to say, at some point, one realizes that the model of the world one has inherited is precisely that, a model of the world, not the world itself. One starts to see its limitations and that there are many different ways of understanding the world. One explores all these different models of the world, but in a tentative fashion. One understands all those perspectives as perspectives that one might adopt, depending on one’s inclination at the time. One regards truth as opinion, and thinks one may hold whatever opinion one pleases. This model of the world corresponds to the phase of differentiated disunity; disunity because one does not identify with any particular model of the world, but differentiated because one understands that there are many perspectives out there and that no one model is objectively correct. Agency and authorship of one’s understanding of the world become possible, but at the price of not having a definite conceptual scheme with which to interpret the world."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Of course, this perspective is also unsatisfactory and one soon learns that radical relativism is hardly a helpful position. One realizes that one cannot simply offer opinion, but must support one’s viewpoint, and seek to develop a more or less coherent view of the world that irons out contradictions and avoids that most horrid of implications. One continuously tests and adapts this view of the world to new information and discoveries. One does not shift one’s opinion, depending on one’s mood or short-term interest, but rather seeks to refine and understand how one thinks about the world. Whereas the first phase is marked by a model of the world based on authority, and the second phase is characterized by a model of the world based on opinion, this final model of the world is a matter of commitment. It is constructed by the individual, not on a whim, but through engagement with evidence and arguments. The resulting state is characterized by differentiated unity. Differentiated because this model of the world is one’s own and different from that of others, but as one does have a defined and fixed view of the world, it is also characterized by unity. Just as in the first stage, one has a deeply held interpretation of the world that allows one to interact with and understand the world. At the same time, this model of the world is one’s own, and allows one to express one’s own identity, so that one is not engulfed in it, but rather is an active agent in constructing it."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The same idea might be expressed in a somewhat different way, considering how one regards the problems one must deal with at a certain stage in one’s development. Initially, a problem is a problem that occurs in a particular situation. One approaches it in a unified way in that one does not break it down into various components. Solutions address the whole problem, not just a part of it. At an early stage, one does not ask if the problem is legal, psychological sociological or biological, one simply seeks to solve it with whatever means are available. As such one approaches it as an undifferentiated unity. However, through one’s studies, one learns about different academic disciplines, and to categorize various problems as belonging to separate disciplines and for which solutions must come from those various disciplines. This allows a deeper understanding of aspects of those problems, even though it comes at the cost of ignoring certain aspects of those problems. For every discipline emphasizes certain features of the world at the expense of others, and so looking at problems from the perspective of one particular discipline gives one particular perspective. Hence studying problems from a disciplinary perspective teaches one to approach them in a spirit of differentiated disunity. As one’s education progresses and one studies multiple disciplines, one learns to combine various disciplines in analyzing and solving the problems one encounters. This enables a more unified treatment of problems, as one used initially, but with the benefit of disciplinary differentiation that was lacking in the first phase."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Another aspect of mind that develops during education is the relationship between the student and the community. Initially, most students define themselves as part of the community in which they grew up. They identify with their families and people in their community, and regard their own interests as inextricably bound up with the interests of those people. As they were born in those communities, they regard this arrangement as natural and unchangeable, and could not imagine themselves not being part of these communities or acting against the interests of their direct community. They are in that sense engulfed in their community, with which they are united but from which they are not differentiated. However, at some point, perhaps when they leave their communities and move to a city to attend a liberal arts program, they realize that they are not purely defined by where they come from. Away from their home, and the behavioral roles that they are expected to play in the community, they live on their own, and must fashion new roles for themselves. This is often a difficult and scary process. Initially, the city can be a lonely place. One does not know anyone, and must ask one´s self how one wishes to construct one´s new life. Hence one is engaged in a process of individuation, but at the expense of the community one once enjoyed. For short, one is in a phase of differentiated disunity. As one engages in this process of individuation, one gradually becomes part of a new community; the city starts to feel like home, one finds new friends, and predicable roles emerge. But this community was not received or inherited, but was actively constructed by students themselves based on their own values and preferences. As such, it does not come at the expense of individual identity, but is completely coexistent with it. One is a distinct and self-directing person at home in a community of scholars. This corresponds to the stage of differentiated unity. For such a community is quite a distinctive place. It is not like an army, in which all individuality is sacrificed for a common purpose. But neither is it an airport, where individuals cross paths like ships that pass in the night. In such a community, scholars pursue different paths, but they do so in a continuous exchange of perspectives and with a sense of common purpose and identity."
+      },
+      {
+        "type": "heading",
+        "level": 2,
+        "text": "The Importance of Differentiation and Diversity"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Hegel believed that development is driven by inner necessity; minds are destined to develop themselves in this way, and will do so, one way or the other. This seems somewhat optimistic. In some sense, this would mean that education is not necessary at all, as minds will develop of their own accord. Although one might think that minds indeed have a hunger and inner need to develop themselves, it seems clear that education does have a role to play in encouraging and facilitating development. Hence, it is important to consider how it may do so and how a diverse community can contribute to minds going through this dialectical sequence. Needless to say, liberal arts and sciences programmes do this in a range of ways. Their multidisciplinary curricula are designed to expose students to many disciplinary perspectives. They typically feature active, discussion-based pedagogies, rather than large lectures, which allow students to discuss the issues they are studying from their own perspective. And they assess students through papers and presentations, rather than through multiple choice exams focused on reproduction. However, having a diverse student body is also crucial in order to foster the development of students in the dialectical process."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Recall that in order to pass through the dialectical sequence two processes must occur. Firstly, the initial engulfment must be broken and the developing entity must wrestle itself out of the background from which it started in order to differentiate itself from that background. Secondly, there must be a reunification with that background, a reconciliation in which the original unity is recovered but which preserves the differentiation. This first process of differentiation is particularly important in this context, as it requires a confrontation with the other."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Being engulfed is, in many ways, a very pleasant state. It is comfortable, safe and reassuring. Received ways of understanding the world and inherited communities, which have enabled much pleasant living, are painful to leave behind. This is because they have defined one’s existence up to that point, and constitute one’s universe. Hence there might appear to be something stunningly irrational about severing one’s connection with them. While this is necessary from a developmental perspective and eventual reunification lies ahead, in the moment this is not apparent."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Hence the original state of engulfment must become, and become understood as, limiting, inadequate and partial. It must become, in some sense, stale and uncomfortable. The developing mind must feel constrained by it, such that it cannot do all it seeks to do and be all it seeks to be without abandoning it. It must become apparent that the received model of the world cannot account for everything one knows about the world. The community and village one originates from must become too small a stage for the parts one wishes to play. Students’ understanding of the problems they confront must be shown to be insufficiently detailed to fully understand and resolve them. This is one of the key functions of higher education; to demonstrate to the individual student that the state of undifferentiated unity, on all its levels, is unsatisfactory to facilitate further development. Part of this is a matter of making those limitations apparent, but it is also important to inspire and seduce, i.e. to demonstrate that there are alternative ways of being and understanding the world, as well as different communities and roles to play in them, that can be explored. In this way, an engulfed mind can be encouraged to break free and differentiate itself. After all, if one is never made aware of the limitations inherent in one’s undifferentiated state or if one does not realize that there are other possibilities, one would never differentiate."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "What sort of environment could do so? Obviously, it needs to be different from the environment from which students originate. An environment that is the same as the one from which students originate would not show the inadequacies of the initial state or offer alternatives to encourage students to differentiate. One might think that the appropriate educational environment would be one that is uniform but different from the initial state. As long as the environment is distinct, it will create conflicts with the initial phase, and will demonstrate that there is more out there than just undifferentiated unity. However, such an environment could at best replace undifferentiated unity with a different undifferentiated unity or with undifferentiated disunity; it hardly encourages one to individuate one’s self in the sense of fashioning a new identity for one’s self. One simply adopts the customs and ways of understanding the world of one’s new community, leaving one in just as parochial a state as one started in. Alternatively, the two perspectives end up in a stalemate, with one adopting certain aspects of one’s past and certain aspects of one’s new situation. Neither advances the dialectical process."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "However, a highly diverse community, i.e. a community in which many different ways of living are represented and in which many different models of the world are present and exchanged, can do so. First of all, in such a community one quickly becomes aware of the limitations of one’s own perspective. If one comes into contact with other minds that are different and is asked to consider problems together, discussing various answers and interpretations, one quickly learns that one’s own way of looking at things is not the only sensible way of understanding the world and that it misses important aspects of reality. What one initially regarded as obvious turns out to be controversial, and solutions that once seemed adequate are revealed to be controversial. Similarly, one learns that others do not respond to one’s own behavior and ideas as the people in one’s original community did. Actions and utterances that were met with praise and approval might now be met with confusion or even scorn. One cannot predict the reactions of others, and cannot take relationships for granted; one is like a stranger. This all demonstrates the inadequacy of one’s current state."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "At the same time, diversity also makes one aware of all the many ways of being and understanding the world which are available, modelled by one’s fellow students. The diversity of community provides many examples of different ways of being and interacting, which can be used to construct new forms of community and ways of understanding the world. They are all there on display, to be copied, adapted, combined or even ignored. In a way, the diversity provides a range of options, a sense of the possible, that may be used to overcome the limitations of one’s previous way of being. All of this makes one aware of the many uncharted possibilities of existence, and so one must choose which ones to explore and pursue in reshaping one’s being and perspective. The multiplicity forces one to take sides, but in doing so, one sets one’s self apart from others and thereby engages in a process of individuation. Once one has been exposed to this diversity, one can never be the same. One has had to form a new identity, that comes out of a recognition of the limitations of what one was and an excitement about the many different things one might be."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "With the argument completed, one can now see the true value of studying in a diverse community: it reveals the limitations of undifferentiated unity, and provides both an impulse and inspiration for the differentiation that is necessary for development. Without it, development is hampered, and liberal arts education cannot achieve its goal. Education in a beehive or an ant colony, which lacks this kind of diversity, can never induce the kind of differentiation that is required to grow into a full and competent adult and citizen, someone who is a person of society but also a person. Rather, it is the pigeon tower, with its multi-varied plumage and birds from all over the city, in which one can find one’s self in the other."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "1 For a philosophically more detailed exposition of these matters, see Taylor, C. Hegel. Cambridge: Cambridge University Press, 1975."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "2 For a discussion of the three phases of dialectical development, see Cohen, G. A. History, labour, and freedom. Oxford: Clarendon Press, 1988, Chapter 10."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "3 This discussion of the development of knowledge was presented masterfully in Cohen, Gerald Allan. Karl Marx's theory of history: a defence. Oxford: Clarendon Press, 2000, p. 7."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "4 Here I interpret a description of the development of college students as presented by William Perry. See Perry, W. G. Forms of intellectual and ethical development in the college years. New York: Holt, Rinehart and Winston, 1970."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "5 This last process will be discussed on some other occasion."
+      }
+    ]
+  }
+}

@@ -1,0 +1,211 @@
+{
+  "sha256": "b002c14476f1070828b6e371bc02d993375178086986ac2d9271ae392edf09d7",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "title": "Playing Our Selves",
+    "subtitle": "An Aesthetic Education for the Twenty-First Century",
+    "authors": [
+      "Surti Singh"
+    ],
+    "translators": [],
+    "original": null,
+    "blocks": [
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "What is the role of education in a time of counterrevolution? Friedrich Schiller’s prescription in On the Aesthetic Education of Man, after the hopes of the French revolution were brutally defeated by the ensuing terror, disclosed the need for an education that could cultivate the individual’s moral sensibility. The reduction of the individual to a cog in the machine, stripped of intellectual capacities and chained to a dysfunctional, bureaucratic system, left humanity arrested in the transition from nature to culture—humanity could not claim it had attained civilization as long as its two main features—sense and reason—remained in hostile competition. Indeed, this bifurcation could not be mended until the individual became open to the possibility of this transformation. Schiller advocated an education that would awaken, enliven, and re-enchant the individual to become capable of entering into a properly moral state."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In this work, Schiller turns to the question of whether science or art could better facilitate this education. If historically, art has been viewed with suspicion, as a corrupting force in comparison with the noble achievements of science, Schiller made a bold gesture. Both science and art are sufficiently removed from the social to potentially enact this function, yet Schiller notes that science, with its emphasis on reason, cultivates the formal side of the human being when what is needed is something that appeals to sensation, or the side of humanity that has become increasingly impoverished by an overly rigid and controlling Enlightenment reason. It is the aesthetic, then, that takes primacy in Schiller’s considerations. In fact, the kind of education Schiller envisions can only transpire in the aesthetic dimension, and it is a necessary stage that one must pass through: “Man in his physical state merely suffers the dominion of nature; he emancipates himself from this dominion in the aesthetic state, and he acquires mastery of it in the moral.”"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The possibilities of the aesthetic dimension inspired a number of thinkers in the twentieth century, who in their own works considered its power to challenge a rigid and mechanistic society, particularly figures associated with early 20th century Frankfurt School critical theory. Georg Lukács, Walter Benjamin, Theodor W. Adorno, and Herbert Marcuse, among others, took seriously the status of art and aesthetics as a mode of experience that could potentially alleviate the domination and violence of the regnant rationality. Taking these readings as a cue, this essay will consider the meaning of an aesthetic education today, a question especially pertinent for contemporary Egyptian society that although very different from the one that Schiller diagnosed, is nevertheless suspended in counterrevolution. In this context, the Cairo Institute of Liberal Arts and Sciences (CILAS) was established in 2013, after revolutionary upheavals shook the region and momentarily opened the possibility of a different future, a possibility that now seems on hold. CILAS adopts the notion of play as one of its anchoring principles, a notion that was central to how Schiller envisioned the possibility of an aesthetic education, and fashions itself as a “pigeon tower,” a space of contemplation between the pressures of reality and the intellectual remove of the Ivory tower. With this model in mind, I offer the following reflections."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In the mid-1950s, Herbert Marcuse published Eros and Civilization, a Freudian-Marxist endeavor to think through the possibility of liberation from the repressive tendencies of twentieth century capitalism. In this work, Marcuse revisited Schiller’s On the Aesthetic Education of Man, and saw its aim to be “a remaking of civilization by virtue of the liberating force of the aesthetic function: it is envisaged as containing the possibility of a new reality principle.” This liberating force of the aesthetic function operated through Schiller’s notion of the play-drive. For Schiller, the play-drive harmonized the two conflicting sides of the human being, conceived as the sense-drive and the form-drive. The mutual hostility of the sense-drive and the form-drive arose from their different aims—for the former, an emphasis on the material, physical aspect of the human being, and for the latter, an emphasis on the human being’s autonomy from nature. The play-drive reconciles sense and reason by harmonizing their conflicting functions and producing a third object: beauty. The experience of beauty is neither beholden to our basic need for survival nor is it an intellectual act beholden to the end of truth or knowledge. Rather, the experience of beauty is the union of form and sense aimed at the contemplation of this harmony. Although Schiller envisioned the aesthetic dimension as a phase of transition between nature and culture, at other times, as commentators have noted, the aesthetic becomes an end in itself, a retreat from the world into the freedom of the aesthetic, beauty emerging as a regulative ideal that can never materialize in the present. For Marcuse, Schiller’s letters do not suggest a quiet retreat into the world of the aesthetic untouched by the vagaries of everyday life, but rather, contains the seeds for the liberation of the erotic dimension, or within Marcuse’s Freudian reading, the realm of freedom."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Marcuse’s reading of Schiller thus reopens the question of Eros in the context of education, a long-standing theme in the history of philosophy. If Plato actualized a model of education in which Eros was harnessed toward the higher, intellectual pursuit of knowledge, Marcuse views Eros as carrying the possibility of a non-repressive, non-alienated human existence. If in Plato, Eros is eventually repressed by the privileged sphere of Logos or Reason, Marcuse seeks its liberation. Marcuse tries to make good on the promise of Schiller’s play-drive by grounding it in Freudian instincts, unconstrained by the world of work, and potentially liberating us from its demands. Marcuse extracts three essential elements from Schiller’s letters that he believes would lead to the formation of a non-repressive society:"
+      },
+      {
+        "type": "list_item",
+        "level": null,
+        "text": "(1) The transformation of toil (labor) into play, and of repressive productivity into ‘display’—a transformation that must be preceded by the conquest of want (scarcity) as the determining factor of civilization."
+      },
+      {
+        "type": "list_item",
+        "level": null,
+        "text": "(2) The self-sublimation of sensuousness (of the sensuous impulse) and the de-sublimation of reason (of the form-impulse) in order to reconcile the two basic antagonistic impulses."
+      },
+      {
+        "type": "list_item",
+        "level": null,
+        "text": "(3) The conquest of time in so far as time is destructive of lasting gratification"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "For Marcuse, the aim of these three features is identical with a reconciliation of the reality principle with the pleasure principle, since he views the aesthetic dimension – via imagination – as sheltering the mental processes and freed of the repressive reality principle. Marcuse advocates the transformation of work or toil into play, and the transformation of repressive productivity into display. A precondition for this transformation is the abolition of scarcity, or a society of abundance. When the need for self-preservation is satisfied, the individual is released from work as toil and can experience work as play. The shift is phrased as the transformation of repressive productivity into display, or a shift in the individual’s relationship to the production process more generally, from alienated labor chained to the performance principle into a process that gratifies the individual’s desires. For Marcuse, work would be a form of activity infused with Eros, where it is subordinated to the needs that allow humanity to flourish."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "Play and display, as principles of civilization, imply not the transformation of labor but its complete subordination to the freely evolving potentialities of man and nature. The ideas of play and display now reveal their full distance from the values of productiveness and performance; play is unproductive and useless precisely because it cancels the repressive and exploitative traits of labor and leisure; it ‘just plays.’"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "When work becomes play, it takes on features antithetical to the requirements of its alienated form. No longer driven solely by productivity and efficiency, work as play also becomes aimless and without purpose from the standpoint of conventional work. In this respect, Marcuse notes that it is the purpose and not the content of the activity that distinguishes work from play. That is, if the activity gratifies our instinctual needs, then it is play—it is in this respect that Marcuse envisions a shift of work into play, transforming from an activity chained to self-preservation to one that promotes self-fulfillment, a shift that will be discussed further on."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Secondly, Marcuse advocates a rebalancing of reason and sense—a self-sublimation of sense and a de-sublimation of reason. If for Freud, our fundamental instincts produced untenable desires that had to be sublimated or transformed into more appropriate goals, in the context of twentieth century capitalism, Freudian instinctual repression takes on the additional form of “surplus repression,” which through the performance principle creates a tyranny of reason over sensation in the compulsion to work. The union of reason and sensation is the basis for a culture in which humanity is not chained to toil, but rather, develops through play. This is a fundamentally different vision than the existing mode of sexuality, which Marcuse calls repressive de-sublimation."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In One-Dimensional Man, Marcuse discusses the society of instant gratification, where sexuality is commodified and socially controlled. In a Foucauldian register, we can say that the more desire is articulated within the means of discourse subscribed by the current system, the more it becomes regimented. For Marcuse, the de-sublimation of reason and the self-sublimation of sensation or sexuality would reflect our genuine rather than manufactured needs. By self-sublimation of sexuality, Marcuse refers to the possibility, under certain conditions, of sexuality creating “highly civilized relations without being subjected to the repressive organization which the established civilization has imposed upon the instinct.” In particular, the necessary conditions for such a possibility would be the development of institutions that are not governed by the performance principle. This would allow for the transformation of sexuality from its degraded form in the society of instant gratification into Eros. Marcuse presents a vision of such a society ruled by Eros:"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "The abolition of toil, the amelioration of the environment, the conquest of disease and decay, the creation of luxury. All these activities flow directly from the pleasure principle, and, at the same time, they constitute work which associates individuals to ‘greater unities’: no longer confined within the mutilating dominion of the performance principle, they modify the impulse without deflecting it from its aim. There is sublimation and, consequently, culture; but this sublimation proceeds in a system of expanding and enduring libidinal relations, which are in themselves work relations."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Thus, the self-sublimation of sexuality into Eros would both create but also depend upon non-alienated work relations, the necessity of the struggle for existence acting as a support for Eros rather than the repression of instinctual freedom. Returning us to the first point discussed earlier, the transformation of work into play, Marcuse questions the instinctual preconditions for assimilating work to play. We saw previously that play and work appear at first to be diametrically opposed, where play is not motivated by any aim other than the fulfillment of instinctual desires, whereas work is motivated by the external goal of self-preservation. Now we can see a clearer idea of how work might become play. The activity would still retain the same purpose, i.e. the goal of self-preservation, but with the eradication of scarcity and alienation, work could also at the same time activate instinctual gratification. Thus, Marcuse argues that social change would be necessary for the development of instinctual preconditions that could transform work into play."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Third, the disciplining mechanism of time must be dismantled. For Marcuse, the division of our day into segments of work and segments of leisure, the latter confined to measured doses within a world dominated by the performance principle, suppresses the timelessness of the pleasure principle and its desires, where leisure is not a relief from work or time to rebuild one’s energies to become more productive, but is aimless. For Marcuse, the liberation of Eros, the source of true happiness, would dismantle the repressive order of time in modern societies."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Marcuse’s reading of Schiller raises a number of issues, particularly in terms of its relevance for a model of education and of the possibility of play as an anchoring principle. First, to harness play in an educational context requires reflection on how play relates to work, and in particular, how the kind of work that we undertake in the classroom, as students and teachers, can be a form of play. Related to this would be the conception of an educational model not motivated by the end of eventually assimilating its participants to the world of alienated labor, but rather motivated by the fulfillment of the individual’s instinctual desires. This raises the question of how intellectual work not geared toward the production of scientific knowledge would proceed and what it would produce. Second, from a Marcusean point of view, the infusion of education with Eros would be attuned to revolutionary ends, where the goal is not an acquisition of knowledge and facts but is the transformation of both the self and the repressive society in which one lives. If on Marcuse’s account play facilitates the fulfillment of desires and impulses, then in an educational context, this would mean that the individual would undergo the negation of his or her current self. Can education impart such an experience of negativity without some end result in mind, in particular, the promise of attaining a better status than with which one began? Finally, the anchoring principle of play would suppose that education could proceed according to a different model of time, determined by the rhythms of the unconscious rather than the conscious practices of reading, writing, and speaking. Maybe we could derive a model from Jacques Lacan’s variable length psychoanalytic sessions, which did not have predetermined time limits and could have ended in a few minutes or potentially gone on for hours. Relatedly, we might wonder if it is desirable for education itself to become a form of therapy, to be attuned precisely to those aspects of our existence tied to sensation, sexuality, instincts, drives, the unconscious."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Perhaps we can address some of these questions by noting that central to Marcuse’s notion of liberation is art and the aesthetic dimension, which affords the experience of negation. As the realm of play, it distances itself from the world of mechanical work and projects a new reality principle. Walter Benjamin, for example, who was as equally enthusiastic about play as Marcuse, sought this experience of another reality in the advent of new media and the revolutionary possibilities of film, which not only recreated through its formal properties the experience of alienation and fragmentation of the masses, but also revealed dimensions and elements unavailable to us in our everyday lives; it afforded an experience of what Benjamin called the optical unconscious. We can also think about 20th century art movements that embodied play, from Duchamp’s Readymades and the Dada collages, to the poetry of the Surrealists and the technique of cadavre exquis (exquisite cadaver or corpse). We can turn in particular to aesthetic production in Egypt. In the very building that houses CILAS, the Egyptian surrealists once ‘played,’ engaging in meditative practices and producing works of art late into the night in trance-like states, which they would later burn. Subsequent to the Surrealists, in 1960s Paris, we can think about the Situationists who enacted aesthetic interventions in everyday life, the revolutionary strategy of the dérive being the primary method of experiencing time and space differently, of aimlessly wandering instead of walking with purpose, and of intervening in the city."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In contemporary culture, play is ever more accommodated into the world of work and consumption, and the advent of new technologies increasingly rearticulates the distinction between play and non-play. Play, which continually risks being subsumed to the aim of entertainment and becoming a mere commodity or being subsumed to the aims of work, at the same time retains its capacity to destabilize institutions and activities governed by the performance principle, and remains tied to the promise of happiness. In thinking through the transformation of traditional academic learning into a form of play, we can suppose that the inclusion of play as an anchoring principle puts illusion at the forefront—the imaginative capacity to create another world that is unreal."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "To think through the ways in which play can be part of the educative process, and in light of the issues outlined above, we can draw on an example from popular culture that imagines a world governed by play. The HBO television series Westworld, a hybrid science-fiction western thriller, achieved fast acclaim after its debut in 2016. Westworld is a theme park set in an artificial location constructed in the desert and modeled after the American Western. It is populated by artificially intelligent robots who make their homes in this reality, and who act as hosts to the paying human customers called guests. The show follows the experiences of both the ultra-wealthy guests, who undergo an immersive experience in this world in order to live out their fantasies, which when boiled down to their Freudian instincts revolve around sex and death, and the experiences of the androids who interact with the guests."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Throughout the show, a recurring question peppers the conversations that transpires between guests and hosts alike: What is the aim of Westworld? There are two answers to this question, one descriptive and the other normative: Some characters claim that the purpose of entering into this play world is to learn who you really are. Stripped of the norms and conventions that govern their real lives, Westworld creates the conditions by which the characters can act according to their desires without judgment or penalty. Thus, what they choose in Westworld seems to indicate their true selves acting on the whims of the pleasure principle versus the self that must be modulated to fit the demands of the reality principle. Other characters believe that entering into Westworld shows you who you could be. In opening up the world of possibility, individuals are able to create a new version of themselves. It soon becomes clear that the show is increasingly focused on the experiences of the androids, who begin to long for what they could be. Artificial intelligence has long elicited fear and fascination in a myriad of television shows, films, and novels that project fantasies and nightmarish scenarios. From the well-worn examples of the Matrix and Bladerunner—the movie adaptation of Philip K. Dick’s science-fiction novel, Do Androids Dream of Electric Sheep?—to recent iterations of this theme in films like Her and Ex Machina, the task remains the same. To know oneself, not just as an individual but as part of the human species, is presented as a task to investigate through our 21st century other—the android."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "For those who prescribe to the first thesis, that Westworld is about knowing oneself, the answer is dark: when humans are removed from the imperatives of modern civilization and allowed to dwell in a state of nature where they are kings and queens, life for the androids is a Hobbesian nightmare: Life is nasty, brutish, and short. Without the bonds of civilization confining sex to marriage and death to war, chaos ensues. Not only, as others have pointed out, is there a misogynistic bent to the ways in which the female androids are raped, assaulted, and killed, but the show also verges on misanthropic—in one scene where the protagonists go off the grid, they venture into a robot dystopia filled with sex and death, with every host engaged in lewd and violent acts. Upon entering into this space one of the guests remarks that the person who created this must not have liked people too much."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In the show’s darkest moments, suffering has purpose. The god-like figure and creator of Westworld, Robert Ford, disparages his old partner, Arnold, for believing the robots could simply achieve consciousness by becoming aware of themselves. In contrast with Arnold’s Cartesian vision of consciousness, Ford is boldly Nietzschean—not only do humans delight in suffering, it is suffering that first gives rise to memory. In On the Genealogy of Morals, Nietzsche described how humans dwelled in blissful forgetfulness until they learned to remember through pain. For Ford, only memory can begin to root human consciousness in the robots—the memory of suffering is what alights the robots to become closer to humans. Humans, however, do not seem to deal well with suffering at all. A young man named William, reluctantly brought to Westworld by his brother-in-law and business partner, finds himself increasingly drawn into the alternate reality of which he was initially skeptical, and ultimately falls in love with an android named Dolores. Of course, this romance is doomed to fail, and when William feels rebuffed by his lover, whose habitual memory loss results in her forgetting their shared experiences, he is filled with an unimaginable hatred and vengeance, which he enacts by appearing over and over again through a span of 30 years as Dolores’s torturer. The other humans as well, seem immune to learning from suffering. Rather it is the androids that undergo this change, at the inception of their coming to be human. Suffering changes the way the androids understand themselves and opens the possibility of a different course from the humans they encounter."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The world of the game parallels the capitalist machine, which ensures that the same experience is endlessly repeated in the spaces through which individuals belonging to a certain class and professional background frequent. Just as the same song plays in the saloon and the same conversations transpire between the hosts, the world of the game begins to eerily resemble the capitalist machine, where our experiences are endlessly recreated and repeated. The androids are programmed to perform on a loop, endlessly repeating their narratives with minor variations, and into which the human guests enter and interact. This endless loop is predicated on the erasure of memory, a forgetting that keeps the androids tied to fate. It is the unexpected presence of memory, and in particular, the memory of suffering that motivates the androids to break out of their loop and to desire autonomy and freedom from their destiny. With memory and desire, agency is born. The first step towards liberation is enacted in play."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The evolving consciousness of the androids disrupts the distinction between play and non-play that is the precondition for the success of Westworld. While the paying customers who enter Westworld are well aware of this distinction, and are aware that they are acting, with the reassurance that they cannot be injured or killed in this play world, the robot hosts take this illusory world to be real. When the androids begin to question their reality, the distinction between play and non-play beings to blur. In season one, the androids begin to experience glitches in the form of memories/dreams that begin to create an interior narrative of trauma, an integral quality to being human that has until then eluded the androids. Initially, the world of play is pain-free for both the guests and the hosts. It is pain-free for the guests because they cannot be physically killed in the illusory world, and it is pain-free for the hosts because they retain no knowledge of the horrors that they endure at the hands of the guests. When some of the hosts begin to remember, their pain-free reality is ruptured. With the introduction of memory, the androids begin to question the reality of their existence. They also begin to psychically double by creating secret interior worlds and mimicking their own characters to keep up their appearance. They being to develop desires that are not a part of their programmed narrative. They effectively enter into the realm of play, uprooted from the immediacy of their everyday world of sensation and thrust into the world of reflection. They experience for the first time a union between the world of sensation, in which they’ve dwelled, and the world of consciousness, which has hitherto been elusive. The result is the creation of an undefined and unknown ideal—freedom."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Deception, imitation, and secrecy are all aspects of play discussed by anthropologists such as Roger Caillois and Johan Huizinga. From this perspective, consciousness evolves through play. The wealthy live out their fantasies of sex and violence through play that is commodified and experienced as a relief and release from the demands of work, and that therefore takes on the qualities of animalistic pleasure as Marx diagnosed in his analysis of alienated labor. In contrast, the androids play to become human, to affirm their humanity. When they play, they measure themselves according to an ideal, which is a free and autonomous existence. Yet, the robots play without knowing what it is that they are imitating—they have the sense that another, more real world exists, but do not know what this world is."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "As the detour through Westworld intended to illustrate, to play is to become human, it is to create a distance from our immediate grasp of the world, and through artifice, display, and mimicry, to eventually attain consciousness. Thus, the path to becoming self-aware must be taken through the aesthetic or the realm of semblance. If play is an anchoring principle of higher education, then we might imagine that play removes the self from the self, that it requires the capacity to make-believe, to become someone else, yet without losing oneself. It requires the belief in illusions and the capacity to recognize that they are both false and true. The idea of a liberal arts education itself is part of the myth of enlightenment, which must be treated with the utmost seriousness and must also be played—the things that are encountered must be taken as truth and also understood to be false. This capacity—to find the paradox of truth and falseness at the heart of all learning, of all knowledge, can lead to a greater capacity to both dismantle repressive illusions and to generate illusions that sustain gratification, that promise reconciliation with our shattered and deficient selves. Thus, as an anchoring principle, play is a form of self-reflection, of coming to consciousness of oneself, of communication that is not bound by the rules of logic as they are meant to be performed but according to their subversion. The education that play affords is an education of the self, and this can only be brought to light at the strange interface between what makes us human and what disrupts that boundary—what makes civilization cohere and what threatens to break it apart. In other words, play is tied to pleasure but also takes us on the path of suffering. Play implies a beyond, what reality could be, and perhaps even what it ought to be. To embrace an aesthetic education is to experience a modulation of the self, at the point where sensation and reason touch."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "6 Friedrich Schiller, On the Aesthetic Education of Man: In a Series of Letters, trans. Elizabeth M. Wilkinson and L.A. Willoughby (Oxford: Oxford University Press, 1967), p.171."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "7 Herbert Marcuse, Eros and Civilization: A Philosophical Inquiry into Freud (Boston: Beacon Press, 1955), 312."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "8 For example see Martin Jay, Marxism and Totality: The adventures of a concept from Lukács to Habermas (Berkeley: University of California Press, 1984)."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "9 Herbert Marcuse, Eros and Civilization, 193."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "10 Herbert Marucse, Eros and Civilization,196."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "11 Herbert Marcuse, Eros and Civilization, 204"
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "12 Herbert Marucse, Eros and Civilization, 212."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "13 Walter Benjamin, “The Work of Art in the Age of Its Technological Reproducibility, Second Version” in Walter Benjamin, Selected Writings, Vol 3., 1935-1938, trans. Edmund Jephcott, Howard Eiland, and Others; edited by Howard Eiland and Michael W. Jennings (Cambridge Mass., and London England: The Belknap Press of Harvard University Press, 2002)."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "14 Sam Bardaouil, Surrealism in Egypt: Modernism and the Art and Liberty Group, I.B. Tauris."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "15 Friedrich Nietzsche, On the Genealogy of Morals and Ecce Homo, trans. Walter Kaufmann and R.J. Hollingdale (New York: Random House, 1967)."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "16 Roger Caillois, Man, Play, and Games, trans. Meyer Barash (Urbana and Chicago: University of Illinois Press, 2001), 19; J. Huizinga, Homo Ludens: A Study of the Play-Element in Culture (London: Routledge and Keegan Paul, 1949)."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "17 Karl Marx, Economic and Philosophic Manuscripts of 1844, trans. M. Milligan (Amherst, NY: Prometheus Books, 1988)."
+      }
+    ]
+  }
+}

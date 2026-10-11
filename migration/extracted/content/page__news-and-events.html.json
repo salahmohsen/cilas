@@ -1,0 +1,258 @@
+{
+  "sha256": "e754191c15ecffc38b68be747d9d57f60aabad3786a893927ad5c5945855821c",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "posts": [
+      {
+        "title": "The Importance of Observation by Tarek Anous",
+        "date": "2014-01-06",
+        "is_gathering": true,
+        "event_type": "talk",
+        "start_time": null,
+        "end_time": null,
+        "speakers": [
+          "Tarek Anous"
+        ],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We opened our second trimester with a public lecture by Harvard-trained theoretical physicist Tarek Anous. Tarek spoke about - amongst other things - the importance of observation in modern physics."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Tarek completed his PhD in theoretical high energy physics at Harvard University and is now a postdoctoral research fellow at the Massachusetts Institute of Technology. His research interests and publications are split between two main topics: first is the quantum nature of expanding universes, such as our own, known as de Sitter space, and secondly on the nature of multicentered black hole bound states in string theory and their dual descriptions as amorphous/frustrated glassy systems."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "The lecture was amazing and the energy and enthusiasm of Tarek was infectious and all through the talk was very interactive and there were many interesting questions by the audience."
+          }
+        ]
+      },
+      {
+        "title": "Call for applications",
+        "date": "2013-12-17",
+        "is_gathering": false,
+        "event_type": null,
+        "start_time": null,
+        "end_time": null,
+        "speakers": [],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "CILAS is opening its application doors for the second trimester. Non-degree seekers may enroll in thematic courses."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Thematic courses are offered in the following fields of study:"
+          },
+          {
+            "type": "list_item",
+            "level": null,
+            "text": "Arts - Arts and the Built Environment [http://www.ci-las.org/art-and-the-built-environment.html](http://www.ci-las.org/art-and-the-built-environment.html)"
+          },
+          {
+            "type": "list_item",
+            "level": null,
+            "text": "Culture - Urban Culture [http://www.ci-las.org/urban-culture.html](http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.ci-las.org%2Furban-culture.html&h=uAQF3LtKu&enc=AZMZaG7zltYCl9ZhBTkYFTRJUXkKPDrhFtH7qHH3o_JWmQ8ShSQLyTOkr6aZB6MMK34HF6sh8s0gyG58tgRJi163vbO6oQsoVaPuLPvni5-CLmR-mAgdxjN8NgsxX5UN0AxJBQh52amDdmcwS8IFfM5t&s=1)"
+          },
+          {
+            "type": "list_item",
+            "level": null,
+            "text": "Natural Sciences - Green Economy [http://www.ci-las.org/green-economy.html](http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.ci-las.org%2Fgreen-economy.html&h=vAQHGUD0e&enc=AZMUcSuu4WzX9wAFWRl79TjexdxQPccSvtzHRMl-T7_-PXFJPG5Ayl5aR-Fs-SxmaeOQXfOQwxjfrJnIZmmQ_DLe1w_T1Yx-0Jp7vIjQWlnywGTrrYiWfhXPafdMBl2D_8BKmtBypqEsyB8jThMgxudU&s=1)"
+          },
+          {
+            "type": "list_item",
+            "level": null,
+            "text": "Social Sciences - Governance in the 21st Century [http://www.ci-las.org/governance-in-the-21st-century.html](http://www.facebook.com/l.php?u=http%3A%2F%2Fwww.ci-las.org%2Fgovernance-in-the-21st-century.html&h=tAQFmnAou&enc=AZPKA5jDk1GEWaoQNYPkiFnqt8LoQm1mKNb-hjHexl6q0CLAQygWdPTDj8QJ3FbSrxddeIPfP6lSi7DrTZ51ZxkscEAVgdzkz7ADG3qDoZZmlIMmxqRuqr0Le86mWBXlbsUwo_SzTTu4FRcXjcmkZ2O2&s=1)"
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Thematic courses are of a duration of eight weeks starting January 5th, 2014 and chargeable at 1500 L.E. per course."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Need-based, partial scholarships are available."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "To apply for a course, submit the following short application form: [https://docs.google.com/a/ci-las.org/forms/d/13Ne2_Lz8WYsl9jYqUHuudk6OUWgzsPeBNTC8-DSQucM/viewform?embedded=true](https://www.facebook.com/l.php?u=https%3A%2F%2Fdocs.google.com%2Fa%2Fci-las.org%2Fforms%2Fd%2F13Ne2_Lz8WYsl9jYqUHuudk6OUWgzsPeBNTC8-DSQucM%2Fviewform%3Fembedded%3Dtrue&h=MAQGs2StX&enc=AZPIMH5EhOli9w6xm-tfFs5o-Hz_yMXr0ifEHBjjFQK6cWEmEvBBkvPdPXfD6OH77jFLLvyPqQqwzKM89iS0J94pwp5f3zo113aV5EphMhLEYpyFb286xGwAHA48RFy1Kib8sLfk3CR1JoPYXkNM4HjL&s=1)"
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Should you require course specific information, kindly contact the course coordinator (contact details are included in the course outline)."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Should you require general information about CILAS, kindly contact the the Programme Director Karim Goessinger (karim@ci-las.org)."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Application deadline is December 31st, 2013."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "With best wishes,"
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "CILAS"
+          }
+        ]
+      },
+      {
+        "title": "An Evening with Filmmaker Karim El Hakim",
+        "date": "2013-11-05",
+        "is_gathering": true,
+        "event_type": "talk",
+        "start_time": null,
+        "end_time": null,
+        "speakers": [
+          "Karim El Hakim"
+        ],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We had Karim El Hakim at CILAS, who in his talk gave insights into the various aspects of film making with emphasis of documentary film making and films made in the context of developmental process and projects. It was an interactive talk with the director taking us through some of his work. At the end of the talk a brief preview of his upcoming documentary 1/2 Revolution was shown. The talk was followed by interesting Q&A session on questions of censorship in Egypt, relation between camera and individuals, society, the importance of research in film making. All in all it was one more interesting evening at CILAS."
+          }
+        ]
+      },
+      {
+        "title": "Workshop on Healthy Decision Making",
+        "date": "2013-11-02",
+        "is_gathering": true,
+        "event_type": "workshop",
+        "start_time": null,
+        "end_time": null,
+        "speakers": [
+          "Kesmat El Nahel"
+        ],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We had an amazing workshop on \"Healthy Decision Making\" by [Kesmat El Nahel](https://www.facebook.com/kesmat.e.nahel?directed_target_id=0). Kesmat is a cognitive behavioral psychologist. She has lived and worked in Frankfurt am Main since 1981. Prior to moving to Germany Kesmat obtained a degree in Psychology from the American University in Cairo. She began her career as a psychological counselor with Caritas facilitating the integration process of young immigrants from the Arab and Muslim world."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "In 1989, Kesmat joined Goethe University in Frankfurt to complete a Master's in Clinical Psychology. She now works in her own practice treating a variety of clinical cases related to depression, anxiety, stress, adaptation and identity problems, and post-traumatic disorder."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "The workshop was very informative and insightful with so much to think about and take home. The workshop was attended by enthusiastic participants who had interesting questions for Kesmat El Nahel followed by her responses drawn from more than three decades of her work in the field as a practitioner. It was one more well meaning day at CILAS as always :)"
+          }
+        ]
+      },
+      {
+        "title": "Second Intake (October 27th, 2013)",
+        "date": "2013-10-15",
+        "is_gathering": false,
+        "event_type": null,
+        "start_time": null,
+        "end_time": null,
+        "speakers": [],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "CILAS is opening its application doors for a second intake on October 27th, 2013. Applicants will join the first cohort. Joining means catching up on the first period of the first trimester (two core courses and two skill courses). This requires that prospective students either attend both morning **and **evening classes, **or **complete written assignments and private tutorials for the four courses they cannot attend. Study fees will be 4000 L.E. Prospective students are asked to fill in the application form (follow APPLY NOW below). Application deadline is October 22nd at midnight. We invite candidates for an interview on a rolling basis."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "[ Apply now ](https://docs.google.com/a/ci-las.org/forms/d/11iawrnOW3q80xNqIrAnLxo1-zxOsDGiulbsLr9AOvV8/viewform)"
+          }
+        ]
+      },
+      {
+        "title": "CILAS Second Open Day",
+        "date": "2013-06-22",
+        "is_gathering": true,
+        "event_type": "open_day",
+        "start_time": "10:00",
+        "end_time": "15:00",
+        "speakers": [],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "This upcoming Saturday, June 22nd, 2013 CILAS is holding its second Open Day."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "This time we are offering TWO drop-in Discussion Based Learning sessions: one at 1100 and one at 1300."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We encourage you to come along and experience our unique learning format, see the building and have the opportunity to speak to The Directors and some of our volunteers."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We will be available before and after DBL sessions between 10am and 3pm to answer questions."
+          }
+        ]
+      },
+      {
+        "title": "CILAS Open Day",
+        "date": "2013-06-08",
+        "is_gathering": true,
+        "event_type": "open_day",
+        "start_time": "10:00",
+        "end_time": null,
+        "speakers": [],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Sign up for our open day, taking place from 10am on the 8th of June to experience CILAS' Discussion-Based Learning methods, find out more about available courses, see our building and ask questions. Tea and refreshments will be provided."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "[ Sign up now! ](june-8th-open-day-sign-up.html)"
+          }
+        ]
+      },
+      {
+        "title": "CILAS Open Day Schedule",
+        "date": "2013-06-08",
+        "is_gathering": true,
+        "event_type": "open_day",
+        "start_time": null,
+        "end_time": null,
+        "speakers": [],
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Our open day is drawing closer! Please take a look at our schedule to see how the day will pan out. [http://www.ci-las.org/uploads/1/9/1/0/19102967/cilas_open_day_schedule.pdf](uploads/1/9/1/0/19102967/cilas_open_day_schedule.pdf)"
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "See you on Saturday."
+          }
+        ]
+      }
+    ]
+  }
+}

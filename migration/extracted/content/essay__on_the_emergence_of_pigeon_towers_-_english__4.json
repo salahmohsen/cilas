@@ -1,0 +1,311 @@
+{
+  "sha256": "4cda7eca312573d8fb033313ec3dde2b056cab0749b84545c4ff0fe34e227f8e",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "title": "Equality and Intimacy",
+    "subtitle": "An Imaginary Construction",
+    "authors": [
+      "I-Kai Jeng"
+    ],
+    "translators": [],
+    "original": null,
+    "blocks": [
+      {
+        "type": "quote",
+        "level": null,
+        "text": "What, then, is education? I believe it is the course the individual goes through in order to catch up with himself.\n- Johannes de Silentio (Søren Kierkegaard), Fear and Trembling"
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "Philosophy could have taken up the problem with its own means and with the necessary modesty, by considering the fact that stupidity is never that of others but the object of a properly transcendental question: how is stupidity (not error) possible?\n- Gilles Deleuze, Diﬀerence and Repetition"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Jacques Rancière's The Ignorant Schoolmaster presents 19th-century educator Jacotot's \"universal\" or \"emancipatory teaching.\" Such teaching presupposes a distinction between two kinds of learning. Most of what is taught—mathematics, medicine, mechanics, biology—model learning on the activity of acquiring. I didn't \"have\" mathematical knowledge before taking Prof. Gauss' course; after the course, I \"have acquired\" and come to possess it. I now know something, namely mathematics. But a second and much more elusive learning concerns, not acquiring anything, but coming to be someone. What is that someone? \"Yourself.\" \"But what is a self? Who am I?\" Whatever the answer is, this second learning is not modeled on acquisition. And Rancière's book is about this kind of learning, or in other words, \"Prof. Emancipation\" does not need to \"have\" any knowledge in order to teach-emancipate me. The professor can be ignorant, in the sense of not having knowledge, not knowing x; but one must have already become who one is."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Keeping this distinction in mind is absolutely crucial, because Rancière is not claiming that we can responsibly teach physics or medicine without knowing them, or that students trained under universal teaching can be good doctors (TIS 31). Traditional schools are still necessary if we need a doctor when we are sick, or a mechanic when our cars are broken. What Rancière is claiming is that medicine or mathematics fails to guide us towards coming to be who we are. Whatever you want to call it, teaching, instruction....it is not \"education,\" strictly speaking. When ordinary teaching pretends to be education, we become what Rancière calls \"stultified.\" (Being stultified, I believe, is becoming \"stupid\" in the sense Deleuze distinguishes from \"error.\") Who are we? We are individually intelligent beings. We are intelligent: we have it \"in us\" to solve puzzles in the world. Others do not need to give it to us, they only need to awaken it, make us become aware of our intelligence. We are individually so: there are others like us, and we can understand each other because we are all intelligent. Even the most difficult book, say, James Joyce's Finnegans Wake, can be read and understood, because the author wrote it with intelligence and so can I grasp it as far as it is in my power (TIS 22). And finally, we are beings: that is, a plural that is not a simple aggregation, but a togetherness that never loses its initial separation (TIS 58). Whoever denies such a plurality, or thinks of the togetherness in such a way that collective unity excludes individual plurality, is \"waging war\" in Rancière's words (TIS 82, 85)."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "As such beings, we are equal to one another. As Ross, the English translator of TIS notes, Rancière urges us to begin with equality (TIS xix-xx; for an especially illuminating example of this, see 32-33). Normally, teaching ends with equality or some approximation of it. At the beginning of the semester, I know something about Plato, my students don't; at the end of the semester, if they worked hard enough, they will know something about Plato as well and thereby become closer to me. But in universal teaching, it is the initial equality that matters: the attitude of \"you can do it too.\" There is no book that cannot be understood, because it is meant by an intelligent being to communicate something with other intelligent beings (cf. TIS 22). There is no language that cannot be learned. Even if I know nothing about repairing cars, I can verify (TIS 29-31). You might say, well, I am not able to verify that the car mechanic ripped me off. Maybe he didn't change the engine, he just tweaked it and lied to me. That is quite true. But I can at least verify that he is not incompetent: the car mechanic had to at least know what he was doing even in order to deceive me that he did a good job. And I can learn his skill by studying books that teach these kinds of things. And, to repeat, there is no book that cannot be understood by another intelligent being. Every point made in TIS is an application, implication, or explication of what this idea of initial equality entails."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "In order to clarify \"radical equality\" to my students, I once told them, just like Rancière himself tells us in chapter 2, to carefully compare the Jacotot-emancipator with the Socratic educator. The two share many similarities, but are different in some fundamental respects. To begin with, there is also equality between the Socratic teacher and his student. First, because the Socratic assumes that both of them potentially know everything, and second because in relation to what both of them do not yet know, the teacher's present superiority over the student is nothing to be proud of. So it looks like there are resemblances between the Socratic and the Jacototian. But consider the differences. The Socratic teacher plays the questioner, i.e. a role usually assumed by students. Jacotot also asks students questions, since the emancipator does so for verifying. \"Tell me what this shape means. Is it a word or a picture?\" \"What do you see in this painting? Say something.\" But actually, the difference between the two is immense here. This is because, to any outside observer, who the teacher and who the student is are completely clear in Socratic teaching. No one would confuse the teacher, who is only pretending to be confused, with the student, who is truly confused. In emancipatory teaching, however, the teacher and the student would actually be difficult to tell apart: the emancipator does not pretend: he searches so that he can verify the student has searched. He can actually be ignorant and it shows. So I concluded triumphantly to students: Walk into a classroom that practices emancipatory teaching, you would be at a loss whether you entered a classroom or a conference."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "My comparison commits at least three crimes to Rancière's text. To begin with, according to him, Socratic teaching is the perfected form of stultification (TIS 29-30), but I didn't treat it as such. Instead I treated it as an alternative to emancipation. Moreover, emancipation best occurs in a family, not a classroom (TIS chapter 5 makes a case for this): asking the students to imagine the classroom risks presenting emancipatory teaching as \"just another pedagogical technique,\" which it is not. Finally, emancipatory teaching still retains a distinction between the schoolmaster and the student because the former still compels the latter to do certain things, i.e. there is an unequal relation between wills while an equal one between intelligences (as TIS 7 unforgettably defines \"intellectual emancipation\": it is fully compatible with obedience to the will of another)."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "My threefold simplification, even falsification, appears to be against the spirit of emancipation. If I and my students are equals, shouldn't I trust that they can understand what I have understood? Am I not judging rashly that they cannot grasp the subtleties at their current level, and therefore unjustly infantilizing them?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "That seems to be how Bowman would take it, as Rancière's text becomes his springboard for reflecting on the question of embodiment in learning. However, he doesn't speak of trust as I just did, but intimacy instead. According to his reading of Rancière, the radical equality envisioned goes hand in hand with intimacy. Intimacy is a specific mode of togetherness. But being together is being together with something. The question here does not concern intimacy between the learner and the text inviting to be deciphered, nor does it concern the intimacy between the learner and truth or knowledge. The question concerns the intimacy between the teacher and the student. As the title of Bowman's paper suggests, his model (or foil?) for Rancière's \"intimate schoolmaster\" is the sifu in martial arts, someone whose name roughly means \"mentor,\" but more literally, \"the teacher-father.\""
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "The name itself therefore reminds the student that he is to rely on his kungfu master like a father; it also reminds the sifu that he is responsible for the student in a way that Prof. Gauss is not. Since Rancière claims that what Jacotot discovered is nothing but what we do all the time without realizing it—and Bowman obviously agrees—could it be that the sifu-tudi (apprentice, or literally: \"the little brother of a family (i.e. the kungfu school)\") relation exemplifies emancipatory learning, and therefore could provide us with insight into what is unsaid in Rancière?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "I, on the other hand, think that, different from Bowman, the relation between intimacy and equality is far from obvious. Does Jacotot or Rancière see the two as intimately related? As a rule, the ordinary teacher avoids intimacy. You want to be fair; so you assess students' progress numerically (an assessment that in many institutionalized settings often takes the form of \"marking\" or \"grading\"), and intimacy creates the unfavorable condition of favoritism. But perhaps the ignorant schoolmaster doesn't have to grade; verifying, after all, is not the same as grading. Does that mean intimacy is acceptable, or even necessary, when it comes to emancipation? If the ideal environment to conduct emancipatory teaching is the family, does this imply that intimacy facilitates emancipation?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "Maybe my confusion can be clarified by imagining a dialogue between a teacher and a student? Dialogue provides a chance to test whether Bowman's reading of Rancière is correct. Dialogue helps us see whether an imaginary dialogue can reasonably induce (or even presuppose) intimacy and emancipation as it proceeds. Of course, even if emancipation without intimacy occurs at the end of the conversation, this does not necessarily mean that Bowman or Bowman-Rancière was wrong; it might simply mean that the dialogue was badly imagined. I leave it to the reader to judge what exactly happens in the imaginary construction below. Personally, I'd like to think of it as an intimate dialogue about equality."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: Hey, can I ask you about something?… I found out that you uploaded a file named \"auto-feedback on the meetings\" to our course folder in the cloud; but you didn't tell us in class that you did so. ...Did you know that we could see it? Was it an accident that you forgot to set the file as confidential or even just uploaded it to a wrong folder? Why are you doing this?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: ...Well, since you asked...I was debating with myself whether this should be strictly confidential, since it is only meant for self-assessment. Let's be clear: there is something good about all of you being in the dark about what I think of you and how I think the classroom dynamic is working out, at least before the semester is over. In the interest of experimenting (I'm sorry to say \"experimenting,\" because it sounds like I'm treating you and other students here like lab rats—and I really am, so I guess the word is honest, even though being honest doesn't make it right), I ultimately decided upon this lousy way of disclosure: to make it available, but without making an official announcement that it was available. I figured that in this way those who are curious would eventually find it."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: Why did you do it? I can't really say I like it."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Yes, you're absolutely right, I have to have an answer to the \"why,\" at least a tentative or preliminary one, otherwise I would be behaving in a perfectly irresponsible way. Teaching is not avant-garde art, after all. If I make a bad piece, I'm harming the art-lovers much less. A classroom is sacred—it sounds cliché, I know—and you are in a sense my responsibility. So if I do something out of the ordinary, I need some justifications for giving one. Anyway, when I took this job, I was told that my role would not strictly be a \"professor\" or \"teacher\" as it is usually thought. You know this already: our \"school\" is about something else. Teaching in the usual sense is copying: the teacher, in a mysterious and not fully comprehensible way, copies what was in her soul into the student's soul. But the lovely fellows in our school explained to me that I was to be a facilitator; in a way, I do not completely decide what is there to be learned or even what should not be learned. The classroom should be run collaboratively, where each member in the classroom, communicating what they wish to get out of the presented material, influence, modify, amplify, direct the flow, and so on and so on...I don't need to get into details, you know all this better than I do."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: ——Yes, please move on: your point being?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: ——well, as you already sensed, I suppose, I haven't really followed these guidelines in a strict way in the classroom. What I actually did was heavily qualified by what I think I know about teaching. I deliberately presented my syllabus in such a way that made it difficult for you to make suggestions to change. I have also decided to conduct the conversation for more than half of the time in the classroom. This doesn't mean I disagree with the collaborative-flow style of running things. It just means I don't quite know how to implement it in a way true to its spirit while not completely letting things descend into chaos. And actually, there are wonderful things about it that I dearly like. One thing that really spoke to me was that, while collaborative determination of the course content seems problematic to me, I am very much devoted to the idea that what you get out of this class is to be determined by yourself."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: I don't like what you did."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Oh? Do you mind explaining why?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: I just think it's wrong."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Hmmm. It's very likely that you're right."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Let me try to explain what kind of compromise I was seeking. The spirit behind the collaborative methodology seems to me to be equality. I attempt, in my own way, to presuppose equality in revealing how I think the course is actually \"flowing,\" because transparency or openness seems deeply related to equality."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: What then?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: No, related; not identical. More precisely, perhaps, transparency presupposes equality. Here's a simple example: when I work in a company, sharing my true thoughts about the company or the competence of my superior with this superior would harm me, if he can fire me that is. So we all understand this: institutionalized inequality makes it difficult to continue for us to be open to one another. Another example: no secret between true friends. Friendship is the paradigm of equal human relations. A grown-up daughter sometimes says \"my mom and I are best friends,\" meaning that they are equal and they share all the secrets with each other. You never hear a 12-year old daughter saying that about her relationship with her mother, because the level of mutual understanding is insufficient and the inequality still too significant, they cannot become \"friends\" yet. So you see, \"friendship\" conveys simultaneously equality and intimacy. In an unequal relationship, transparency works one-way. The one who is more powerful can afford more to be open. This is another way of stating the relation between power and nakedness: having power means doing and getting what you want without repercussions. You show your true self more in a position of power than in a position of powerlessness. The more powerful decides how much transparency the less powerful can handle. Even when the powerful attempts to create equality out of inequality by being open, he can paradoxically end up showing off his initial power. Imbalance is then reinforced. It does not evolve into balance."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: Whatever. Now that you explain it, it's not even clear to me whether, in disclosing your thoughts about the class to us, you were presupposing equality, or just gesturing your superiority."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: ...You're right. It really is ambiguous. Perhaps even a dilemma...!"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: Forget about that. I think you should always be completely open to everyone in class. If someone cannot take it, too bad, that's part of the process. If one is not ready to be hurt one should not even be there. In order to grow, one must confront pain. Even as a \"facilitator,\" you have an obligation to supply the pain that makes us grow no less than the ordinary teacher. It should not be your concern whether we can take it or not; it makes it impossible for you to make the right choices."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Complete openness is of course impossible. There is no such thing because every expressing is a concealing. The sober person does not say that \"I am sober.\" Any person who claims \"I am sober\" becomes immediately suspect of not being completely sober. He reveals and thereby is suspected of concealing. The very act of revealing oneself sets up a distinction between an \"out- side\" and an \"inside\": you suspect there is something \"behind\" the claim."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "—This is perhaps why some people always hesitate in declaring their love for someone. They don't always do so out of shyness, or out of respect for the promised word. They could be doing so because they are afraid that thoughts become \"less real\" so to speak precisely through being spoken. Someone once said that \"one can only utter things that are a little dead already in the heart.\" This works even in intimacy, because intimacy, despite its internal impulse towards breaking the barrier between the outside and the inside, still erects another barrier: the sharing and openness between people who are intimate creates a \"circle\" closed off to people \"outside the circle.\" There is no intimacy in a crowd, because there is no public intimacy, an intimacy in the open. —But I digress. The thing I really wanted to say is that, the very logic of concealing-in-revealing is at work in sharing my thoughts. I'm certainly aware of that. In that file I assess you frankly; that is, I am speaking behind your back while knowing that you might read it at the same time. This creates uncertainty on your part about my intentions, for sure. To be honest, I did this because I thought the spirit of the collaborative implies a certain suspension of what one thinks is best, a letting-go of things that one would prefer to control. So by giving you a record of my impressions of where the course is going gives you a chance to see where it deviated from my expectations or plans, for better or worse. It also gives you a chance to see how your participation is clearly making a difference to what is going on in the classroom. Of course there is always more to say, but that is unintentional. I try to be frank about the things that matter."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: So in things that don't matter, you are less frank?! What kind of things matter anyway? I think no one can know that. You simply cannot know in advance. I just encountered this story about teaching, and it seems to illustrate the need to not be frank. Let me read it to you."
+      },
+      {
+        "type": "quote",
+        "level": null,
+        "text": "\"When I first began studying Taiji, when my head and heart were filled with mysticism and orientalism and magic, I complained to my Taiji teacher about a steep hill that I could never manage to cycle up without stopping from exhaustion. He said, that's because you are pushing with your legs, but you have to pump from your dan-tien (below your belly-button), and then you'll get up the hill and do so without becoming tired at all. So, the next day I tried it. Lo and behold, what he said came true. So, when I next saw him I immediately reported, with delight and pride, that it had worked. He said, 'blimey, so it is true; I've never been able to do anything like that; can you teach me how to do it?' \" (Bowman, \"Sifu,\" pp. 154-155)"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "This is from Bowman's \"Sifu\" essay. It seems to me that here, equality is created precisely through authority, that is, a sort of inequality."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: What do you mean by that? I don't understand."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: Well, didn't the student become the teacher because he trusted the teacher's authority, that the sifu knows what he is talking about?"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Ah, you're right, but if the student becomes the teacher, it can be seen as inequality turned upside down; unless you mean equality in the sense that they can exchange roles. And also, the sifu kind of abused his authority."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: But the semblance of authority, as long as it is trusted and relied upon, is effectively authority nevertheless. And for me that is the beauty of the story. The teacher pretended to know something, but he did not know it at all; for all he knows, this dan-tien talk is full of nonsense, things people repeat without thinking, as if it were an oracle that only smart people can crack after enlightenment. But he did not do that; he even hid the fact that he never succeeded in understanding it. He passed on the message like he himself was told, I imagine, in the past by his masters, his sifu and their sifu. But precisely through this concealment, the student managed to learn something that the teacher didn't learn. This explains why you were wrong to share your thoughts with us. Because similarly, if we believed that everything was going fine and under your control, maybe we could have learned something that you didn't know."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Hmm. I'll have to think about that. I wonder if there is not another kind of interpretation than the one you offered. It's not necessarily the case that the sifu's concealment or pretension to a solemn authority caused Bowman's enlightenment. Maybe Bowman always knew about dan-tien. What he didn't know was simply how to get in touch with his body so that his body \"knows\" it too. The teacher didn't need to lie. He could have simply encouraged Bowman. And Bowman might even have succeeded in going up the hill without dan-tien talk, just like many sports athletes can do things without being able to explain how it is done. It's amusing to think about what we said so far. You initially criticized me for being too open; then you claimed that I should be completely open to everyone; but now you are explaining—with a much better argument than what you had in the beginning—actually, come to think of it you had none in the beginning (laughs)—why, at least sometimes, hiding things can be helpful."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: No, that's not what I mean, I'm not contradicting myself. They belong to different situations and circumstances..."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: But what sorts of circumstances? If you're not precise then you would be contradicting yourself. You have to specify them so that the conflict is resolved."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: ...they're different, anyway."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Well, maybe you can figure that out later and let me know. You remind me of a story about Schoenberg. He would always tell every student that they had no talent for composing music, and should leave the field as soon as they can. This is not because he was a mean person, but because he felt that the only people who could really stay and survive in such a competitive field like composing were those who didn't care about what others thought about their competence, who display grit after constant frustration, neglect, and dismissal. Even when it was from their teachers. In other words, he had to train their courage and confidence in their own abilities, their self-belief that even if composing brings them misery, it is the only royal road towards becoming who they are—a self-belief that might be false, but nevertheless a virtue."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: That's exactly what I'm saying! Hiding or revealing, it should be about virtue."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Intellectual ones anyway. How to nurture them? Deciding when they still need the protection of the greenhouse, and when they need to risk being crushed by the outside world. That's the whole art of teaching."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: Given what we said so far, I wonder if teaching really is a kind of knowledge. Think about it. Physics is knowledge, because clear and stable relations can be discovered between material objects. Mathematics is knowledge, too: the inner angles of a triangle always add up to two right angles. But no such relation seems to exist between what a teacher does and how a student might react. Let me come back to Schoenberg. I used him as an example of telling a lie for the sake of something important in teaching like cultivating virtue or character. But we can certainly imagine that many of Schoenberg's students gave up because they got scared by their teacher's rhetoric. From Schoenberg's own perspective, his tactics weeded out the ones who will never be ready for the job. But maybe what these students needed at that point was encouragement instead of intimidation. Maybe they simply needed their teacher to say: try a bit harder, I'm there for you if you need me. And from this point of view, Schoenberg's strategy was too rigid. He shouldn't have treated everyone the same way. That's lazy. He should've observed the temperament of each student and dealt with them differently."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: But that shouldn't be a surprise, because everyone is different. We are individuals."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: That's right! I think you put your finger on the exact issue. If individually speaking we are not that different, if we share more in common than we differ, or if what we share in common matters more in learning-teaching, then humans can be classified, and they can be objects of knowledge like planets and triangles. Pedagogy would be something we can learn. But, if each of us is radically individual and unique, then we can never tell in advance what is good for someone. Even if I succeeded hundreds of times in the past, there is no telling if the next student will be a failure. And maybe I have to accept that, because if individuality matters, then it is impossible to give general rules or at least the general rules will not be useful or always have exceptions. And that which allows for exceptions seems more like art than knowledge. It's like medicine, actually. Medicine requires that the doctor treat even the same diseases differently because of the different physiologies of the patients. If even the body exhibits such a variety that medicine has features of art mixed with knowledge, then one would suppose that the soul is like that too."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: Individuality is of course true. There is no doubt about it."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: No, no, no, no, no, no! I don't think we can decide the issue so quickly. Many people have believed that when we become ourselves, we become wise, and wisdom is anonymous, because wisdom is a kind of knowledge, and knowledge is anonymous. When everyone in the classroom answers \"4\" in response to \"how much is 2 and 2?\" Everyone is the same, there is no difference between the skin colors, ethnic background, or genders of Tracy and Andrew—"
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: Stop that. I know what you mean. But that's irrelevant. Even if we lose our \"name,\" our individuality in the end, this doesn't mean that the road towards anonymity is the same for everyone. We begin with individuality and \"travel through it.\" It doesn't matter whether the end is individual or not."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "B: —You're right, I take that back. The issue is rather whether the individual, idiosyncratic characters, personalities of students (and teachers!) are something to take care of in education. To avoid complicating things even more than they already are, let's say they are important. If so, then we have, I think, a strong argument for intimacy now. \"Intimacy\" and \"pedagogy is art, not knowledge\" go hand in hand. If teaching is an art because of the individuality of human beings, then the teacher can only be good or reliably good if she spends time with each student and takes care to note what they need according to their individualities. In order to teach something effectively, a teacher needs to learn about their souls. Effective teaching requires knowledge of individualities in such a way that both requires and creates intimacy. That teacher can't have too many students; being selective is necessary. Even self-knowledge is necessary, in the realization that there is no single teacher fit for every student. Only if she or he is true to herself or himself can others become true to themselves. The art of teaching, then, must be quite related to the art of love, insofar as love is the paradigm of intimacy. Intimacy means individual treatment. If this is not to be done randomly, but with knowledge, then time matters. From that perspective, I think any classroom setting that operates collaboratively needs activities outside the classroom. Like what we are doing right now—I feel I understand you much better now given your reactions to what I decided to do. I did learn something, even though it wasn't quite what I expected. To that extent, my experiment remains an experiment, since I didn't do it in a mature grasp of who each of you is. I didn't do it in a responsible way."
+      },
+      {
+        "type": "paragraph",
+        "level": null,
+        "text": "A: That's okay. The Sifu in my story isn't really responsible, either."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "18 Kierkegaard, Søren, Fear and Trembling / Repetition, trans. and edited by Howard V. Hong and Edna H. Hong, with Introduction and Notes, Princeton University Press, 1983, p. 46."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "19 Deleuze, Gilles, Difference and Repetition, trans. Paul Patton, Columbia University Press, 1994, p. 151."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "20 Rancière, Jacques, The Ignorant Schoolmaster: Five Lessons in Intellectual Emancipation, translated with an introduction by Kristin Ross, Stanford University Press, 1991. Hereafter TIS followed by page numbers. A not irrelevant point: the subtitle indicates that this teaching will not \"emancipate\" in the sense of diminishing or eliminating political or social inequalities. As the final chapter shows clearly, intellectual equality coexists very well with social conservatism."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "21 We all recognize the distinction, I suppose, to some extent. I know a doctor, extremely competent at his job, highly intelligent, but he easily falls for \"self-help\" \"spiritual leaders.\" He is knowledgeable, but also stupid or stultified. Rather insightfully, Rancière sometimes suggests that there is even a tension between the two ways of learning: the more you are accomplished in learning in the ordinary sense, the harder it is for you to become emancipated. See (TIS 107, 133.)"
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "22 As Karim wonderfully suggested, it might actually be more poignantly (if poetically misleading) described as a way of being-together."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "23 Bowman, Paul, \"The Intimate Schoolmaster and the Ignorant Sifu: Poststructualism, Bruce Lee, and the Ignorance of Everyday Radical Pedagogy,\" in Seery, Aidan, and Éamonn Dunne, The Pedagogics of Unlearning, Punctum Books, 2016, pp. 131-156."
+      },
+      {
+        "type": "note",
+        "level": null,
+        "text": "24 Bowman, \"Sifu,\" pp. 154-155, Also compare TIS 58; 107."
+      }
+    ]
+  }
+}

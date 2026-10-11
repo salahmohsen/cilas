@@ -1,0 +1,87 @@
+{
+  "sha256": "b7f30239442cf66750650a0a7ead66069aa844a971a8f8b1b91f356191b646b0",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "front_matter_pages": [
+      3
+    ],
+    "essays": [
+      {
+        "order": 1,
+        "title": "مقدمة",
+        "authors": [
+          "كريم ياسين جوسنجر"
+        ],
+        "first_page": 5,
+        "last_page": 8,
+        "is_foreword": true
+      },
+      {
+        "order": 2,
+        "title": "التنوع والتمايز في جدلية الآداب الحرة",
+        "authors": [
+          "تُن جي. ديكر"
+        ],
+        "first_page": 9,
+        "last_page": 19,
+        "is_foreword": false
+      },
+      {
+        "order": 3,
+        "title": "اللهو بأنفسنا: تربية جمالية للقرن الحادي والعشرين",
+        "authors": [
+          "سورتي سينغ"
+        ],
+        "first_page": 20,
+        "last_page": 29,
+        "is_foreword": false
+      },
+      {
+        "order": 4,
+        "title": "المساواة والحميمية: تأسيس خيالي",
+        "authors": [
+          "إي-كاي جينج"
+        ],
+        "first_page": 30,
+        "last_page": 40,
+        "is_foreword": false
+      },
+      {
+        "order": 5,
+        "title": "حول الجهل",
+        "authors": [
+          "روبن فايس"
+        ],
+        "first_page": 41,
+        "last_page": 52,
+        "is_foreword": false
+      }
+    ],
+    "imprint": {
+      "credits": [
+        {
+          "role": "تحرير",
+          "names": [
+            "Karim Yassin Goessinger"
+          ]
+        },
+        {
+          "role": "ترجمة",
+          "names": [
+            "Hussein El-Hajj"
+          ]
+        },
+        {
+          "role": "مراجعة لغوية",
+          "names": [
+            "Ali Al-Farsi",
+            "Nour Mohy"
+          ]
+        }
+      ],
+      "license": "CC BY-NC-SA",
+      "year": 2018
+    }
+  }
+}

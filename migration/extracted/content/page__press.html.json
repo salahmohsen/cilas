@@ -1,0 +1,197 @@
+{
+  "sha256": "e3a97ee0fba33ddb5f4ab1812680c7e0d0fecb437f5c789acd249a736724ae49",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "items": [
+      {
+        "title": "Attempting to decolonize pedagogy in CILAS Alexandria",
+        "outlet": null,
+        "authors": [
+          "Gian Spina"
+        ],
+        "kind": "coverage",
+        "date": "2019-09-18",
+        "links": [
+          {
+            "language": "en",
+            "url": "https://madamirror18.appspot.com/madamasr.com/en/2019/09/18/feature/culture/attempting-to-decolonize-pedagogy-in-cilas-alexandria/?fbclid=IwAR1DvwtmGW3N8jiQi50IuhJns9iygI0rlJFrWZFRVxYMYRUv3RmIWISSoho"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/editor/8234539.png?1591107543"
+      },
+      {
+        "title": "Sitting on top of Egyptian civilisation",
+        "outlet": null,
+        "authors": [],
+        "kind": "interview",
+        "date": null,
+        "links": [
+          {
+            "language": "en",
+            "url": "https://www.opendemocracy.net/north-africa-west-asia/mona-abaza-karim-yassin-goessinger/sitting-on-top-of-egyptian-civilisation"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/editor/od960-logo-2x.jpg?1509537359"
+      },
+      {
+        "title": "On the Task of the Liberal Educator",
+        "outlet": "2016 Weissbourd Conference",
+        "authors": [
+          "Karim-Yassin Goessinger"
+        ],
+        "kind": "talk",
+        "date": "2016",
+        "links": [
+          {
+            "language": "en",
+            "url": "https://www.youtube.com/watch?v=aI_QYrQnTfQ"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/editor/300x300.jpg?1509538126"
+      },
+      {
+        "title": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\"",
+        "outlet": "مشاهد القاهرة",
+        "authors": [
+          "فريدة مقار"
+        ],
+        "kind": "coverage",
+        "date": null,
+        "links": [
+          {
+            "language": "ar",
+            "url": "uploads/1/9/1/0/19102967/Ù…Ù‚Ø§Ù„_ÙØ±ÙŠØ¯Ø©_Ù…Ù‚Ø§Ø±.pdf"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/editor/tumblr-static-duuncxueug0koc8ggwgcg8gwg.png?1530094294"
+      },
+      {
+        "title": "Learning on Wings an Egyptian Tower of alternative education",
+        "outlet": null,
+        "authors": [
+          "Tine Lavent",
+          "Amro Okacha"
+        ],
+        "kind": "coverage",
+        "date": null,
+        "links": [
+          {
+            "language": "en",
+            "url": "https://www.mashallahnews.com/learning-on-wings/"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/editor/logo.png?1509538368"
+      },
+      {
+        "title": "Liberal Arts and Sciences Institute Turns To Crowdfunding After Egyptian Government Blocks Support",
+        "outlet": null,
+        "authors": [
+          "Tine Lavent"
+        ],
+        "kind": "coverage",
+        "date": "2015-02-24",
+        "links": [
+          {
+            "language": "en",
+            "url": "http://egyptianstreets.com/2015/02/24/liberal-arts-and-sciences-institute-turns-to-crowdfunding-after-egyptian-government-blocks-funding/"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/8861668.png?134"
+      },
+      {
+        "title": "Unconventional Education in the Heart of one of Cairo's Oldest Attractions",
+        "outlet": null,
+        "authors": [
+          "Mai El Sayed"
+        ],
+        "kind": "coverage",
+        "date": null,
+        "links": [
+          {
+            "language": "en",
+            "url": "http://because.bz/gamechangers/unconventional-education-in-the-heart-of-one-of-cairos-oldest-attractions/"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/9636925.png"
+      },
+      {
+        "title": "A piece on CILAS",
+        "outlet": null,
+        "authors": [
+          "Antonia Bouwers"
+        ],
+        "kind": "coverage",
+        "date": null,
+        "links": [
+          {
+            "language": "de",
+            "url": "http://www.goethe.de/ins/eg/kai/kul/mag/bil/de12183513.htm"
+          },
+          {
+            "language": "ar",
+            "url": "http://www.goethe.de/ins/eg/kai/kul/mag/bil/de12183513.htm"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/9604764.jpeg"
+      },
+      {
+        "title": "Sciences Po Paris alumnus Karim-Yassin Goessinger heads CILAS",
+        "outlet": null,
+        "authors": [],
+        "kind": "coverage",
+        "date": null,
+        "links": [
+          {
+            "language": "en",
+            "url": "http://www.sciencespo.fr/affaires-urbaines/en/content/glm-2012-alumni-heads-cairo-institute-liberal-arts-and-sciences"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/published/306717.jpeg?1509537416"
+      },
+      {
+        "title": "New institute to offer one year dose of the liberal arts",
+        "outlet": null,
+        "authors": [
+          "Sarah Lynch"
+        ],
+        "kind": "coverage",
+        "date": "2013-08",
+        "links": [
+          {
+            "language": "en",
+            "url": "http://www.al-fanarmedia.org/2013/08/new-institute-to-offer-one-year-dose-of-the-liberal-arts/"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/published/8358494.jpeg?1509537411"
+      },
+      {
+        "title": "Looking for alternative education in Egypt?",
+        "outlet": null,
+        "authors": [
+          "Farida Makar"
+        ],
+        "kind": "coverage",
+        "date": null,
+        "links": [
+          {
+            "language": "en",
+            "url": "http://madamasr.com/content/looking-alternative-education-egypt"
+          }
+        ],
+        "excerpt": null,
+        "logo": "uploads/1/9/1/0/19102967/editor/8234539.png?1509537401"
+      }
+    ]
+  }
+}

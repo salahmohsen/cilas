@@ -1,0 +1,184 @@
+{
+  "sha256": "d699809bc5040a4fa97e78ea68864ab8c369d63e9dce6cbf939a5384b96d9223",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "issues": [
+      {
+        "title": "Newsletter Issue no. 1, June 2013",
+        "date": "2013-06",
+        "archive_url": "uploads/1/9/1/0/19102967/cilas_newsletter_issue_no._1.pdf",
+        "blocks": [
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Dear Friends of CILAS,"
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Welcome to the first issue of our bi-monthly newsletter, intended to keep you updated on our progress in implementing a challenging and innovative liberal arts programme in Cairo, Egypt."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "In our first issue you can find out about the Open Day we recently held, our current activities surrounding funding, applications and what fellows are up to."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We had our first Open Day on the 8th of June and had a sign-up list of about 25 people. Unfortunately only about a quarter of the people turned up, but still, the day was not lost. We showed our prospective students the building and explained CILAS and its curriculum to them. With the participation of our volunteers and some friends here in Cairo we managed to have 2 lively Discussion Based Learning (DBL) sessions."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Feedback we got for the Open Day was very positive and we are currently organising ourselves to hold a series of open Saturdays for people to participate in drop-in DBL sessions and find out more about CILAS from the directors."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "In other news, we're still working hard on finding funding for the programme and student recruitment. Our online application is still open on the website and we've now launched our interview stage too. We had our first student interview on Tuesday last week and look forward to meeting some of the other prospective students in the weeks to come."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We are currently drafting documents for funding and accreditation and hope to organise some fundraising events both in Egypt and abroad. The Serious Beans are holding an end of year concert in Maastricht at the beginning of July and will be presenting CILAS and collecting donations for the project. If any of you would like to get involved in fundraising, we definitely encourage you to do so! Please also don't forget to keep sharing (and donating to) our online crowdfunding page www.gofundme.com/2vhj9s"
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "With the exception of 1 spot that is still being discussed, we have our 2013-2014 fellows, all of whom are amazing- check them out here: www.ci-las.org/fellows-2013-2014.html . They are currently immersed in course design, communicating with each other from all over the world."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "We are in the process of creating a 'Friends of CILAS' mailing list, so please sign up for that if you would like to receive updates on our progress and announcements for events. We should have it organised by the end of this week."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Also very exciting; Karim is currently in Tunisia at a conference on educational challenges and visions in the MENA region where he will be presenting CILAS- Good luck to him!"
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "That's about it from Cairo at the moment- please dont hesitate to get in touch with questions or comments."
+          },
+          {
+            "type": "paragraph",
+            "level": null,
+            "text": "Karim and Alexandra."
+          }
+        ]
+      },
+      {
+        "title": "CILAS Newsletter January 2014",
+        "date": "2014-01",
+        "archive_url": "http://us7.campaign-archive1.com/?u=45b282385543244e52cab14e5&id=7222057522",
+        "blocks": []
+      },
+      {
+        "title": "October 2013",
+        "date": "2013-10",
+        "archive_url": "http://us7.campaign-archive1.com/?u=45b282385543244e52cab14e5&id=d3a2709ded",
+        "blocks": []
+      },
+      {
+        "title": "December 2013",
+        "date": "2013-12",
+        "archive_url": "http://us7.campaign-archive1.com/?u=45b282385543244e52cab14e5&id=1a01d6e503",
+        "blocks": []
+      },
+      {
+        "title": "February 2014",
+        "date": "2014-02",
+        "archive_url": "http://pub.lucidpress.com/CILASNEWSLETTER2014FEB/",
+        "blocks": []
+      },
+      {
+        "title": "March 2014",
+        "date": "2014-03",
+        "archive_url": "http://eepurl.com/RXg1b",
+        "blocks": []
+      },
+      {
+        "title": "April 2014",
+        "date": "2014-04",
+        "archive_url": "http://eepurl.com/TS0Wj",
+        "blocks": []
+      },
+      {
+        "title": "November-December 2014",
+        "date": "2014-11",
+        "archive_url": "http://us7.campaign-archive2.com/?u=45b282385543244e52cab14e5&id=221704c95c",
+        "blocks": []
+      },
+      {
+        "title": "January-March 2015",
+        "date": "2015-01",
+        "archive_url": "http://us7.campaign-archive1.com/?u=45b282385543244e52cab14e5&id=47c0d2ed78&e=4fe3427524",
+        "blocks": []
+      },
+      {
+        "title": "March - April 2015",
+        "date": "2015-03",
+        "archive_url": "https://us7.campaign-archive.com/?u=45b282385543244e52cab14e5&id=8f826e7152",
+        "blocks": []
+      },
+      {
+        "title": "September - October 2015",
+        "date": "2015-09",
+        "archive_url": "https://us7.campaign-archive.com/?u=45b282385543244e52cab14e5&id=e8b80d9aaa",
+        "blocks": []
+      },
+      {
+        "title": "November 2015 - February 2016",
+        "date": "2015-11",
+        "archive_url": "https://us7.campaign-archive.com/?u=45b282385543244e52cab14e5&id=c534cab19b",
+        "blocks": []
+      },
+      {
+        "title": "October 2016",
+        "date": "2016-10",
+        "archive_url": "https://us7.campaign-archive.com/?u=45b282385543244e52cab14e5&id=b024fd26e3",
+        "blocks": []
+      },
+      {
+        "title": "November 2016",
+        "date": "2016-11",
+        "archive_url": "https://us7.campaign-archive.com/?u=45b282385543244e52cab14e5&id=b941275cb5",
+        "blocks": []
+      },
+      {
+        "title": "December 2016 - January 2017",
+        "date": "2016-12",
+        "archive_url": "https://us7.campaign-archive.com/?u=45b282385543244e52cab14e5&id=de5c5ced5b",
+        "blocks": []
+      },
+      {
+        "title": "February - March 2017",
+        "date": "2017-02",
+        "archive_url": "https://us7.campaign-archive.com/?u=45b282385543244e52cab14e5&id=a89d4014c2",
+        "blocks": []
+      },
+      {
+        "title": "October 2019",
+        "date": "2019-10",
+        "archive_url": "https://us20.campaign-archive.com/?u=df0bb6afbc457f280df4d7a94&id=f526af76e4",
+        "blocks": []
+      },
+      {
+        "title": "November 2019",
+        "date": "2019-11",
+        "archive_url": "https://us20.campaign-archive.com/?u=df0bb6afbc457f280df4d7a94&id=b5fe960951",
+        "blocks": []
+      },
+      {
+        "title": "December 2019 - Janurary 2020",
+        "date": "2019-12",
+        "archive_url": "https://us20.campaign-archive.com/?u=df0bb6afbc457f280df4d7a94&id=c2b074740c",
+        "blocks": []
+      }
+    ]
+  }
+}
