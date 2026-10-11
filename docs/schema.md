@@ -48,7 +48,9 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 
 - People (plan 6.3): 10 Bridge programmes (7 cohort years plus 3 unverified drafts), 110 memberships, 8 governance rows. Name variants are merged through `migration/aliases.json`, and 68 duplicate people were pruned.
 
-Stages 2–4 for course flows and publishing come in plans 6.4–6.5.
+- Course flows (plan 6.4): 164 of 166 flows (2 files missing) written into 165 courses, 1,318 sessions in all. Every PDF link is captured. `migration/review/flows.md` lists what a person should check.
+
+Stage 2–4 for publishing comes in plan 6.5.
 
 - **Sources:**
   - The Weebly "Archive Site" ZIP (202 pages and their uploads, snapshot of 23 Apr 2025) is the primary source.

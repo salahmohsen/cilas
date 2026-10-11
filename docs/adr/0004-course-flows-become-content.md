@@ -6,3 +6,15 @@ Legacy course flows (about 158 PDFs/DOCX, mostly Arabic) are turned into structu
 
 - **Keep the PDFs as attachments**: simpler, but the content can't be searched or localised, and it can't be read on a phone.
 - **Text-layer extraction (pdfplumber, PyMuPDF)**: tested and rejected because the Arabic output was corrupted.
+
+## Outcome (2026-10-11)
+
+A benchmark of the 160 flow PDFs found:
+- **English flows (140):** text layers that read cleanly, apart from any Arabic they quote. That Arabic comes out reversed.
+- **Arabic flows (20):** broken text layers. The lam-alef ligature is reversed, word spaces are missing, and punctuation is displaced.
+- **Scans:** none.
+
+What was done about it:
+- Tesseract (`ara`) reads Arabic prose correctly but scrambles tables. So Arabic flows, and the Arabic inside English flows, are read from page images, with the text layer or OCR as a helper.
+- The extraction ran on Claude Code agents. Every link from the PDFs' annotations was checked into the result.
+

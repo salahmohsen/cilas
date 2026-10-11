@@ -45,3 +45,20 @@ Rules worth knowing:
    - imports people, Bridge programmes (drafts), memberships and governance;
    - prunes imported, unreviewed people that nothing references, stopping above 200.
 
+## Course flows into syllabi (plan 6.4)
+
+Tools: `brew install poppler tesseract-lang` (pdftotext, pdftoppm, pdfinfo, Tesseract with Arabic). Word files go through macOS `textutil`.
+
+1. `npx tsx migration/prepare-flows.ts migration/raw` writes every flow's derived files to `raw/flows/<id>/`, and the flow list to `flows.json`. Each flow gets the cheapest reading method that works:
+   - `text`: the PDF text layer.
+   - `mixed`: English flows quoting Arabic; the text layer, plus page images for the Arabic words.
+   - `vision`: Arabic flows; page images, with Tesseract OCR as a helper.
+   - `docx`: Word files.
+   - Links come from `pdfinfo -url`, because the text shows only a link's underlined words.
+2. `npx tsx migration/extract-flows.ts migration/raw --pending | --prompt <id> | --record <id> <answer.json>`: agents extract each flow on the subscription, as in 6.2.
+3. `npx tsx migration/verify-flows.ts migration/raw` checks every syllabus against its source and writes `review/flows.md`:
+   - every PDF link must be captured;
+   - the meetings count must match the units the text numbers;
+   - it also lists empty syllabi and flows it can't check automatically.
+4. `npx tsx --env-file=.env migration/seed-flows.ts` writes the syllabi into courses: sessions, readings with links, and activities, in the flow's own locale. It never touches reviewed courses, and it is safe to re-run.
+
