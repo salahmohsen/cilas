@@ -16,6 +16,10 @@ import styles from './copy-button.module.css'
 export interface CopyButtonProps {
   value: string
   label?: string
+  /** Shown after a copy; for other languages. */
+  copiedLabel?: string
+  /** Shown when copying fails; for other languages. */
+  failedLabel?: string
   className?: string
   iconOnly?: boolean
   variant?: 'outline' | 'plain'
@@ -77,6 +81,7 @@ function DrawnCheck({ reduced }: { reduced: boolean }) {
 }
 
 type Glyph = { id: string; char: string; order: number }
+const JOINING = /[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF]/
 const toGlyphs = (chars: string[], seq: number): Glyph[] =>
   chars.map((char, order) => ({ id: `${seq}:${order}`, char, order }))
 
@@ -114,6 +119,25 @@ function useGlyphs(text: string) {
  */
 function MorphText({ text, reduced }: { text: string; reduced: boolean }) {
   const glyphs = useGlyphs(text)
+  // Joining scripts (Arabic) lose their letter shapes when split into spans,
+  // so the whole label crossfades instead of morphing letter by letter.
+  if (JOINING.test(text)) {
+    return (
+      <span className={styles.glyphs}>
+        <AnimatePresence mode="popLayout" initial={false}>
+          <motion.span
+            key={text}
+            initial={reduced ? fadeIn : glyphIn}
+            animate={rest}
+            exit={reduced ? fadeOut : glyphOut}
+            transition={reduced ? instant : enter}
+          >
+            {text}
+          </motion.span>
+        </AnimatePresence>
+      </span>
+    )
+  }
   return (
     <motion.span className={styles.glyphs} layoutRoot>
       <AnimatePresence mode="popLayout" initial={false}>
@@ -143,6 +167,8 @@ function MorphText({ text, reduced }: { text: string; reduced: boolean }) {
 export function CopyButton({
   value,
   label = 'Copy',
+  copiedLabel = 'Copied',
+  failedLabel = 'Failed',
   className,
   iconOnly = false,
   variant = 'outline',
@@ -151,7 +177,7 @@ export function CopyButton({
 }: CopyButtonProps) {
   const { state, copy } = useCopyFeedback()
   const reduced = useReducedMotion() ?? false
-  const text = state === 'copied' ? 'Copied' : state === 'error' ? 'Failed' : label
+  const text = state === 'copied' ? copiedLabel : state === 'error' ? failedLabel : label
 
   async function handleCopy() {
     if (await copy(value)) onCopied?.()
@@ -198,8 +224,8 @@ export function CopyButton({
         {!iconOnly && (
           <span className={styles.label} aria-hidden="true">
             <span className={styles.measure}>{label}</span>
-            <span className={styles.measure}>Copied</span>
-            <span className={styles.measure}>Failed</span>
+            <span className={styles.measure}>{copiedLabel}</span>
+            <span className={styles.measure}>{failedLabel}</span>
             <MorphText text={text} reduced={reduced} />
           </span>
         )}
@@ -208,8 +234,8 @@ export function CopyButton({
         {state === 'idle'
           ? ''
           : state === 'error'
-            ? `${label}: Could not copy`
-            : `${label}: Copied`}
+            ? `${label}: ${failedLabel}`
+            : `${label}: ${copiedLabel}`}
       </span>
     </>
   )

@@ -2,7 +2,7 @@ import type { getFormatter } from 'next-intl/server'
 
 import { authorNames, excerptOf, joinNames, publicationOf, readingMinutes } from '@/lib/articles'
 import { pathOf } from '@/lib/paths'
-import type { Article, Media } from '@/payload-types'
+import type { Article, Media, Person } from '@/payload-types'
 
 export type ArticleCard = {
   id: string
@@ -31,15 +31,23 @@ export const toArticleCard = (
     minutesLabel,
     and,
     otherCategory,
+    publicationCovers,
   }: {
     locale: string
     format: Awaited<ReturnType<typeof getFormatter>>
     minutesLabel: (m: number) => string
     and: string
     otherCategory: string
+    publicationCovers?: Map<number, Media>
   },
 ): ArticleCard => {
-  const image = typeof a.cover_image === 'object' && a.cover_image ? (a.cover_image as Media) : undefined
+  // The article's own image, else its writer's photo, else its publication's cover.
+  const media = (v: unknown): Media | undefined =>
+    typeof v === 'object' && v !== null && (v as Media).url ? (v as Media) : undefined
+  const writer = (a.authors ?? []).find((p): p is Person => typeof p === 'object' && p !== null)
+  const pub = publicationOf(a)
+  const image =
+    media(a.cover_image) ?? media(writer?.photo) ?? media(pub?.cover_image) ?? (pub ? publicationCovers?.get(pub.id) : undefined)
   const date = a.published_date ?? a.createdAt
   const minutes = readingMinutes(a)
   return {

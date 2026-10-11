@@ -1,0 +1,33 @@
+{
+  "articles": {
+    "/translation-as-education.html#recovering-from-the-diploma-disease": {
+      "file": "images/DSCN3456.webp",
+      "alt": "Healing Ourselves from the Diploma Disease (Shikshantar)"
+    },
+    "/translation-as-education.html#reclaiming-our-fire-in-education": {
+      "file": "images/unitierra-outdoor-sign.webp",
+      "alt": "The outdoor sign of Unitierra, Oaxaca"
+    },
+    "/translation-as-education.html#on-how-to-read-theoretical-works": {
+      "file": "images/bestsellers_round_up--e1725377476935.webp",
+      "alt": "Books"
+    },
+    "/-latest.html#as-we-transition-from-the-normative-to-the-empirical-realm": {
+      "file": "images/blog-normative-to-empirical.jpg",
+      "alt": "From the CILAS blog, 2015"
+    },
+    "/-latest.html#we-too-are-berlin-ers-also-retrieved-from-the-archives": {
+      "file": "images/blog-berlin-ers.jpg",
+      "alt": "CILAS in Berlin, from the blog, 2015"
+    }
+  },
+  "publications": {
+    "/translation-as-education.html": {
+      "file": "images/translation-as-education-cover.jpg",
+      "alt": "Translation as Education: the booklet's cover"
+    }
+  },
+  "people": {
+    "Manish Jain": { "file": "images/Manish-Jain.webp", "alt": "Manish Jain" }
+  }
+}

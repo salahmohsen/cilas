@@ -23,6 +23,8 @@ const main = async () => {
     press: read('press.json'),
     events: read('events.json'),
     newsletters: read('newsletters.json'),
+    images: read('images.json'),
+    imagesDir: dir,
   })
   for (const [name, t] of Object.entries(result)) {
     console.log(`${name.padEnd(13)} created ${t.created}, updated ${t.updated}, skipped (reviewed) ${t.skipped}`)

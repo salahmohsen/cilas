@@ -5,7 +5,7 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import type { Locale } from '@/api/articles.api'
+import { getPublicationCovers, type Locale } from '@/api/articles.api'
 import { getContributions, getPerson } from '@/api/people.api'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
@@ -38,7 +38,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${person.name} — CILAS`,
     alternates: {
       canonical: pathOf('people', person, locale),
-      languages: Object.fromEntries(routing.locales.map((l) => [l, pathOf('people', person, l) ?? ''])),
+      languages: Object.fromEntries(
+        routing.locales.map((l) => [l, pathOf('people', person, l) ?? '']),
+      ),
     },
   }
 }
@@ -52,6 +54,7 @@ export default async function PersonPage({ params }: Props) {
   if (!person) notFound()
 
   const other: Locale = locale === 'ar' ? 'en' : 'ar'
+  const publicationCovers = await getPublicationCovers(payload)
   const [t, tArticle, tArticles, format, contributions, otherName] = await Promise.all([
     getTranslations('Person'),
     getTranslations('Article'),
@@ -59,11 +62,19 @@ export default async function PersonPage({ params }: Props) {
     getFormatter(),
     getContributions(payload, person.id, locale),
     payload
-      .findByID({ collection: 'people', id: person.id, locale: other, fallbackLocale: false, depth: 0, select: { name: true } })
+      .findByID({
+        collection: 'people',
+        id: person.id,
+        locale: other,
+        fallbackLocale: false,
+        depth: 0,
+        select: { name: true },
+      })
       .then((p) => p?.name ?? null)
       .catch(() => null),
   ])
-  const photo = typeof person.photo === 'object' && person.photo ? (person.photo as Media) : undefined
+  const photo =
+    typeof person.photo === 'object' && person.photo ? (person.photo as Media) : undefined
   const { written, credited, taught } = contributions
   const nothing = !written.length && !credited.length && !taught.length
   const card = (a: (typeof written)[number]) =>
@@ -73,6 +84,7 @@ export default async function PersonPage({ params }: Props) {
       minutesLabel: (m) => tArticle('minutes', { count: m }),
       and: tArticle('and'),
       otherCategory: tArticles('notes'),
+      publicationCovers,
     })
 
   return (
@@ -89,9 +101,16 @@ export default async function PersonPage({ params }: Props) {
             <div className="size-36 shrink-0 overflow-hidden rounded-[26px] bg-[var(--surface-muted)] sm:size-44">
               {photo?.url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt={photo.alt || person.name} className="h-full w-full object-cover" src={photo.url} />
+                <img
+                  alt={photo.alt || person.name}
+                  className="h-full w-full object-cover"
+                  src={photo.url}
+                />
               ) : (
-                <span aria-hidden className="flex h-full w-full items-center justify-center text-5xl font-medium text-[var(--text-muted)]">
+                <span
+                  aria-hidden
+                  className="flex h-full w-full items-center justify-center text-5xl font-medium text-[var(--text-muted)]"
+                >
                   {person.name.trim().charAt(0)}
                 </span>
               )}
@@ -99,19 +118,34 @@ export default async function PersonPage({ params }: Props) {
             <div className="grid gap-2">
               <h1 className={grid.readerTitle}>{person.name}</h1>
               {otherName && otherName !== person.name && (
-                <p className="text-lg text-[var(--text-secondary)]" dir={isRtl(other) ? 'rtl' : 'ltr'} lang={other}>
+                <p
+                  className="text-lg text-[var(--text-secondary)]"
+                  dir={isRtl(other) ? 'rtl' : 'ltr'}
+                  lang={other}
+                >
                   {otherName}
                 </p>
               )}
               {Boolean(person.website || person.social_links?.length) && (
                 <p className="flex flex-wrap gap-x-4 gap-y-1 text-sm">
                   {person.website && (
-                    <a className="underline underline-offset-4" href={person.website} rel="noopener" target="_blank">
+                    <a
+                      className="underline underline-offset-4"
+                      href={person.website}
+                      rel="noopener"
+                      target="_blank"
+                    >
                       {t('website')}
                     </a>
                   )}
                   {person.social_links?.map((s) => (
-                    <a className="underline underline-offset-4" href={s.url} key={s.id ?? s.url} rel="noopener" target="_blank">
+                    <a
+                      className="underline underline-offset-4"
+                      href={s.url}
+                      key={s.id ?? s.url}
+                      rel="noopener"
+                      target="_blank"
+                    >
                       {SOCIAL[s.platform] ?? s.platform}
                     </a>
                   ))}
@@ -133,9 +167,14 @@ export default async function PersonPage({ params }: Props) {
               <ul className="divide-y divide-border border-y border-border">
                 {credited.map(({ article, role, label }) => (
                   <li key={`${article.id}-${role}`}>
-                    <Link className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3 hover:underline" href={`/articles/${article.slug}`}>
+                    <Link
+                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3 hover:underline"
+                      href={`/articles/${article.slug}`}
+                    >
                       <span className="font-medium">{article.title}</span>
-                      <span className="text-sm text-[var(--text-muted)]">{label || tArticle(`roles.${role}`)}</span>
+                      <span className="text-sm text-[var(--text-muted)]">
+                        {label || tArticle(`roles.${role}`)}
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -150,7 +189,10 @@ export default async function PersonPage({ params }: Props) {
               <ul className="divide-y divide-border border-y border-border">
                 {taught.map((c: Course) => (
                   <li key={c.id}>
-                    <Link className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3 hover:underline" href={`/study/${c.slug}`}>
+                    <Link
+                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3 hover:underline"
+                      href={`/study/${c.slug}`}
+                    >
                       <span className="font-medium">{c.title}</span>
                       {typeof c.cycle === 'object' && c.cycle?.title && (
                         <span className="text-sm text-[var(--text-muted)]">{c.cycle.title}</span>

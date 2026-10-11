@@ -1,6 +1,6 @@
 import type { Payload, Where } from 'payload'
 
-import type { Article } from '@/payload-types'
+import type { Article, Media } from '@/payload-types'
 
 export type Locale = 'en' | 'ar'
 
@@ -137,4 +137,16 @@ export const getRelatedArticles = async (
   await take(authorIds.length ? { authors: { in: authorIds } } : null)
 
   return picked
+}
+
+/**
+ * Publication covers by publication id. An article card falls back to its
+ * publication's cover; the join that links them is not populated deep enough
+ * to carry the image, so the covers are looked up once per page.
+ */
+export const getPublicationCovers = async (payload: Payload): Promise<Map<number, Media>> => {
+  const { docs } = await payload.find({ collection: 'publications', depth: 1, limit: 50, overrideAccess: false })
+  const covers = new Map<number, Media>()
+  for (const p of docs) if (typeof p.cover_image === 'object' && p.cover_image?.url) covers.set(p.id, p.cover_image)
+  return covers
 }

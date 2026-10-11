@@ -26,6 +26,8 @@ export const seedArticles = async (payload: Payload, _ctx: SeedContext): Promise
     press: [],
     events: [],
     newsletters: [],
+    images: read('images.json'),
+    imagesDir: archive,
   })
   console.log(
     `articles: ${result.articles.created} created, ${result.articles.updated} updated; publications: ${result.publications.created} created, ${result.publications.updated} updated`,

@@ -39,7 +39,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <DirectionProvider direction={direction}>
               <CILASSiteHeader />
               <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
-              <SiteFooter />
+              {/* The same width as the page content. */}
+              <div className="mx-auto max-w-300">
+                <SiteFooter />
+              </div>
             </DirectionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

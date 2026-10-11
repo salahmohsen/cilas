@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
-import { getPublishedArticles, type Locale } from '@/api/articles.api'
+import { getPublicationCovers, getPublishedArticles, type Locale } from '@/api/articles.api'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { toArticleCard } from '@/lib/article-cards'
@@ -30,7 +30,10 @@ export default async function ArticlesPage({ params, searchParams }: Props) {
     getFormatter(),
   ])
   const payload = await getPayload({ config })
-  const { docs } = await getPublishedArticles(payload, locale as Locale)
+  const [{ docs }, publicationCovers] = await Promise.all([
+    getPublishedArticles(payload, locale as Locale),
+    getPublicationCovers(payload),
+  ])
 
   const other = t('notes')
   const posts = docs.map((a) =>
@@ -40,6 +43,7 @@ export default async function ArticlesPage({ params, searchParams }: Props) {
       minutesLabel: (m) => tArticle('minutes', { count: m }),
       and: tArticle('and'),
       otherCategory: other,
+      publicationCovers,
     }),
   )
   // Publications in first-seen order (newest article first), then the rest.

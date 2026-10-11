@@ -1,8 +1,11 @@
+import path from 'node:path'
+
 import type { CollectionSlug, Payload, Where } from 'payload'
 
 import { slugify } from '../../src/lib/slugify'
 import { blocksToLexical, type Block } from './blocks'
 import { freeSlug } from './import-courses'
+import { mediaFor } from './import-media'
 
 type Names = { en?: string; ar?: string }
 export type ArchiveCredit = { role: string; label?: Names | null; people: string[] }
@@ -86,12 +89,23 @@ export type ArchiveNewsletter = {
   blocks_en: Block[] | null
 }
 
+export type ArchiveImage = { file: string; alt: string }
+/** Images an editor chose (seed/data/archive/images.json): files relative to `imagesDir`. */
+export type ArchiveImages = {
+  articles?: Record<string, ArchiveImage>
+  publications?: Record<string, ArchiveImage>
+  people?: Record<string, ArchiveImage>
+}
+
 export type ArchiveContent = {
   articles: ArchiveArticle[]
   publications: ArchivePublication[]
   press: ArchivePress[]
   events: ArchiveEvent[]
   newsletters: ArchiveNewsletter[]
+  images?: ArchiveImages
+  /** Where `images` files live. */
+  imagesDir?: string
 }
 
 export type Tally = { created: number; updated: number; skipped: number }
@@ -265,6 +279,15 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
   }
   const hasArabicLabel = (credits: ArchiveCredit[]) => credits.some((c) => c.people.length && c.label?.ar)
 
+  // Editor-chosen images fill an empty upload field; one already set is kept.
+  const giveImage = async (collection: 'articles' | 'publications' | 'people', id: number, field: 'cover_image' | 'photo', image?: ArchiveImage) => {
+    if (!image || !data.imagesDir) return
+    const doc = (await payload.findByID({ collection, id, depth: 0, overrideAccess: true, draft: collection !== 'people' })) as unknown as Record<string, unknown>
+    if (doc[field] || doc.import_status === 'reviewed') return
+    const media = await mediaFor(payload, { path: `seed/${image.file}`, file: path.join(data.imagesDir, image.file), alt: image.alt })
+    await payload.update({ collection, id, data: { [field]: media.id }, overrideAccess: true, context: IMPORT_CONTEXT } as Parameters<Payload['update']>[0])
+  }
+
   // ---- Articles
   const articleIds = new Map<string, number>()
   for (const a of data.articles) {
@@ -304,6 +327,7 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       },
     )
     articleIds.set(a.legacy_url, written.id)
+    await giveImage('articles', written.id, 'cover_image', data.images?.articles?.[a.legacy_url])
     const arabic = rich(a.blocks_ar, 'rtl')
     // Nothing Arabic (the blog posts): no Arabic write at all; a published
     // article would need an Arabic title for one.
@@ -332,8 +356,11 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
     ((await payload.find({ collection: 'articles', where: { legacy_url: { equals: legacy } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]?.id as number | undefined)
   for (const p of data.publications) {
     const titles = [...new Set([p.title_en, ...p.match_titles_en])]
-    const articles = (await Promise.all(p.articles.map(articleId))).filter((id): id is number => id !== undefined)
     const foreword = p.foreword ? await articleId(p.foreword) : undefined
+    // The foreword leads the list too, so it belongs to the publication like its essays.
+    const articles = [
+      ...new Set([foreword, ...(await Promise.all(p.articles.map(articleId)))].filter((id): id is number => id !== undefined)),
+    ]
     const funders: number[] = []
     for (const f of p.funders) funders.push(await partner(f, 'funder'))
     const written = await put(
@@ -359,6 +386,7 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       },
     )
     const arabicIntro = rich(p.intro_ar, 'rtl')
+    await giveImage('publications', written.id, 'cover_image', data.images?.publications?.[p.legacy_url])
     if (written.touched && (p.title_ar || p.subtitle_ar || arabicIntro || hasArabicLabel(p.credits))) {
       await payload.update({
         collection: 'publications',
@@ -445,6 +473,12 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       },
       { draft: true },
     )
+  }
+
+  // ---- Portraits an editor added for people the content names.
+  for (const [name, image] of Object.entries(data.images?.people ?? {})) {
+    const { docs } = await payload.find({ collection: 'people', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
+    if (docs[0]) await giveImage('people', docs[0].id as number, 'photo', image)
   }
 
   return result

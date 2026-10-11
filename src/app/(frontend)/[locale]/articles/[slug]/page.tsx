@@ -7,7 +7,12 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
 
-import { getArticleForReading, getRelatedArticles, type Locale } from '@/api/articles.api'
+import {
+  getArticleForReading,
+  getPublicationCovers,
+  getRelatedArticles,
+  type Locale,
+} from '@/api/articles.api'
 import {
   ArticleContents,
   ArticleNotes,
@@ -19,7 +24,7 @@ import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
-import { ContributorList, PersonLink, photoOf, type Contributor } from '@/components/person/contributors'
+import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { env } from '@/env'
 import { Link } from '@/i18n/navigation'
@@ -64,7 +69,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     // Each site language has its own URL (ADR 0006).
     alternates: {
       canonical: pathOf('articles', article, locale),
-      languages: Object.fromEntries(routing.locales.map((l) => [l, pathOf('articles', article, l) ?? ''])),
+      languages: Object.fromEntries(
+        routing.locales.map((l) => [l, pathOf('articles', article, l) ?? '']),
+      ),
     },
   }
 }
@@ -79,6 +86,7 @@ export default async function ArticlePage({ params }: Props) {
   if (!reading) notFound()
   const { article, contentLocale, body, title, other } = reading
 
+  const publicationCovers = await getPublicationCovers(payload)
   const [t, tl, tArticles, format, related] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
@@ -102,26 +110,35 @@ export default async function ArticlePage({ params }: Props) {
   // People, named in the site language; a name missing there comes from the
   // article's other-language copy.
   const otherPeople = new Map<number, Person>()
-  for (const p of [...(other?.authors ?? []), ...(other?.credits ?? []).flatMap((c) => c.people), ...(other?.translation?.original_authors ?? [])])
+  for (const p of [
+    ...(other?.authors ?? []),
+    ...(other?.credits ?? []).flatMap((c) => c.people),
+    ...(other?.translation?.original_authors ?? []),
+  ])
     if (isObject<Person>(p)) otherPeople.set(p.id, p)
-  const named = (p: Person): Person => (p.name ? p : { ...p, name: otherPeople.get(p.id)?.name ?? p.slug })
-  const peopleOf = (xs: Array<number | Person> | null | undefined) => (xs ?? []).filter(isObject<Person>).map(named)
+  const named = (p: Person): Person =>
+    p.name ? p : { ...p, name: otherPeople.get(p.id)?.name ?? p.slug }
+  const peopleOf = (xs: Array<number | Person> | null | undefined) =>
+    (xs ?? []).filter(isObject<Person>).map(named)
   const writers = peopleOf(article.authors)
-  const translatorPeople = (article.credits ?? []).filter((c) => c.role === 'translator').flatMap((c) => peopleOf(c.people))
   const originalAuthors = peopleOf(original?.original_authors)
   // The sidebar: writers, then translators and every other credit.
   const contributors: Contributor[] = []
   const add = (person: Person, role: string) => {
-    if (!contributors.some((c) => c.person.id === person.id && c.role === role)) contributors.push({ person, role })
+    if (!contributors.some((c) => c.person.id === person.id && c.role === role))
+      contributors.push({ person, role })
   }
   for (const w of writers) add(w, t('roles.author'))
-  for (const c of article.credits ?? []) for (const p of peopleOf(c.people)) add(p, c.label || t(`roles.${c.role}`))
+  for (const c of article.credits ?? [])
+    for (const p of peopleOf(c.people)) add(p, c.label || t(`roles.${c.role}`))
   const cover = isObject<Media>(article.cover_image) ? article.cover_image : undefined
   const url = `${env.NEXT_PUBLIC_SERVER_URL}${pathOf('articles', article, locale)}`
   // The reader opens with a lead: the article's description when it has one.
   const excerpt = article.meta?.description ?? null
 
-  const year = article.published_date ? format.dateTime(new Date(article.published_date), 'year') : yearOf(article)
+  const year = article.published_date
+    ? format.dateTime(new Date(article.published_date), 'year')
+    : yearOf(article)
   const hasContents = sections.length >= 3
 
   // The layout is Arc's blog-grid reader (blocks/blog-grid): one centred
@@ -143,7 +160,10 @@ export default async function ArticlePage({ params }: Props) {
           </aside>
 
           <article aria-labelledby="article-title" className={grid.reader}>
-            <Link className={grid.back} href={pub ? `/articles?publication=${pub.slug}` : '/articles'}>
+            <Link
+              className={grid.back}
+              href={pub ? `/articles?publication=${pub.slug}` : '/articles'}
+            >
               <ArrowLeft aria-hidden className="rtl:-scale-x-100" size={16} />
               {pub?.title ?? t('back')}
             </Link>
@@ -153,27 +173,16 @@ export default async function ArticlePage({ params }: Props) {
                 <span>{pub?.title ?? tl(contentLocale)}</span>
                 <span aria-hidden="true">·</span>
                 <time dateTime={article.published_date ?? article.createdAt}>{year}</time>
+                {minutes > 0 && (
+                  <>
+                    <span aria-hidden="true">·</span>
+                    <span>{t('minutes', { count: minutes })}</span>
+                  </>
+                )}
               </p>
               <h1 className={`${grid.readerTitle} article-title`} id="article-title">
                 {title}
               </h1>
-              <div className={grid.byline} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
-                {writers[0] && photoOf(writers[0]) ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img alt="" className={grid.avatar} src={photoOf(writers[0])} />
-                ) : (
-                  <span aria-hidden className={grid.avatar} />
-                )}
-                <span className={grid.authorName}>
-                  <PeopleLinks and={t('and')} people={writers} />
-                </span>
-                {minutes > 0 && <span className={grid.readTime}>{t('minutes', { count: minutes })}</span>}
-              </div>
-              {translatorPeople.length > 0 && (
-                <p className={grid.meta} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
-                  {t('translatedBy')} <PeopleLinks and={t('and')} people={translatorPeople} />
-                </p>
-              )}
             </header>
 
             {cover?.url && (
@@ -217,7 +226,13 @@ export default async function ArticlePage({ params }: Props) {
 
             {/* Tools at the end of the text. */}
             <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
-              <CopyButton label={t('copyLink')} value={url} variant="outline" />
+              <CopyButton
+                copiedLabel={t('copied')}
+                failedLabel={t('copyFailed')}
+                label={t('copyLink')}
+                value={url}
+                variant="outline"
+              />
               {pub?.print_edition_url && (
                 <a
                   className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm transition-colors hover:bg-[var(--surface-muted)]"
@@ -236,10 +251,16 @@ export default async function ArticlePage({ params }: Props) {
                 authors={<PeopleLinks and={t('and')} people={originalAuthors} />}
                 hasAuthors={originalAuthors.length > 0}
                 labels={{
-                  from: originalLanguage ? t('translatedFrom', { language: originalLanguage }) : t('translation'),
+                  from: originalLanguage
+                    ? t('translatedFrom', { language: originalLanguage })
+                    : t('translation'),
                   read: t('readOriginal'),
                 }}
-                language={original.original_language && original.original_language !== 'other' ? original.original_language : undefined}
+                language={
+                  original.original_language && original.original_language !== 'other'
+                    ? original.original_language
+                    : undefined
+                }
                 source={original.original_source}
                 title={original.original_title}
                 url={original.original_url}
@@ -261,6 +282,7 @@ export default async function ArticlePage({ params }: Props) {
               minutesLabel: (m) => t('minutes', { count: m }),
               and: t('and'),
               otherCategory: tArticles('notes'),
+              publicationCovers,
             }),
           )}
           showFeatured={false}
@@ -316,9 +338,17 @@ function OriginalCard({
       </p>
       {title && (
         // Its own direction for the words, the card's edge for alignment.
-        <p className="mt-4 font-serif-reading text-2xl leading-snug text-balance rtl:text-right" dir="auto" lang={language}>
+        <p
+          className="mt-4 font-serif-reading text-2xl leading-snug text-balance rtl:text-right"
+          dir="auto"
+          lang={language}
+        >
           {url ? (
-            <a className="underline decoration-1 underline-offset-4 hover:decoration-2" href={url} {...external}>
+            <a
+              className="underline decoration-1 underline-offset-4 hover:decoration-2"
+              href={url}
+              {...external}
+            >
               {title}
             </a>
           ) : (

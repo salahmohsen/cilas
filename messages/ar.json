@@ -152,7 +152,8 @@
     "people": "المساهمون",
     "translatedFrom": "مترجم عن {language}",
     "translation": "ترجمة",
-    "readOriginal": "اقرأ النص الأصلي"
+    "readOriginal": "اقرأ النص الأصلي",
+    "copyFailed": "تعذّر النسخ"
   },
   "Study": {
     "heroQuote": "ما نغطيه في سيلاس أقل أهمية مما يكتشفه الطالب.",
