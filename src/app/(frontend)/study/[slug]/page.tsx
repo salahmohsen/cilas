@@ -25,7 +25,7 @@ export async function generateStaticParams() {
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'courses',
-    where: { tier: { equals: 'public' } },
+    where: { and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }] },
     limit: 0,
     select: { slug: true },
     depth: 0,
