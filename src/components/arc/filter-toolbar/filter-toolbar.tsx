@@ -15,8 +15,8 @@ import {
   type MotionValue,
   type Variants,
 } from 'motion/react'
+import { motionTokens } from '../lib/motion-tokens'
 import styles from './filter-toolbar.module.css'
-import { motionTokens } from '../motion-tokens'
 
 export interface FilterChip {
   id: string
