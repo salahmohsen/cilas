@@ -1,0 +1,26 @@
+[
+  {
+    "id": "on_the_emergence_of_pigeon_towers_-_english",
+    "file": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_english.pdf",
+    "pages": 65,
+    "method": "text"
+  },
+  {
+    "id": "on_the_emergence_of_pigeon_towers_-_arabic",
+    "file": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_ِarabic.pdf",
+    "pages": 55,
+    "method": "vision"
+  },
+  {
+    "id": "translation_lab_works",
+    "file": "uploads/1/9/1/0/19102967/translation_lab_works.pdf",
+    "pages": 38,
+    "method": "vision"
+  },
+  {
+    "id": "cilas_newsletter_issue_no._1",
+    "file": "uploads/1/9/1/0/19102967/cilas_newsletter_issue_no._1.pdf",
+    "pages": 1,
+    "method": "text"
+  }
+]

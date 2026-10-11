@@ -150,7 +150,7 @@ export type NewsletterSources = z.infer<typeof NewsletterSources>
 
 /* ================================================================= prompts */
 
-type Link = { page?: number; url: string }
+type Link = { page?: number; text?: string; url: string }
 
 const BLOCKS_RULE = `Blocks: each block is one of heading (level 2-4; a section heading, not the document title), paragraph, quote (a block quotation), list_item (one bullet or numbered entry), note (a footnote or endnote, with its number). level is null unless type is heading. Keep every paragraph, in order, one block per paragraph; join lines broken by the page layout and fix hyphenation at line ends.`
 
@@ -163,7 +163,7 @@ const imagesPart = (images: string[], what: string): string =>
 
 const linksPart = (links: Link[]): string =>
   links.length
-    ? `\nThe source's links (its text shows only the anchor words, not these addresses). Keep every one, attached to what it belongs to:\n${links.map((l) => `- ${l.page ? `page ${l.page}: ` : ''}${l.url}`).join('\n')}\n`
+    ? `\nThe source's links (a page shows only the anchor words, not the addresses). Keep every one, attached to what it belongs to:\n${links.map((l) => `- ${l.page ? `page ${l.page}: ` : ''}${l.text ? `${l.text}: ` : ''}${l.url}`).join('\n')}\n`
     : ''
 
 const body = (label: string, text: string): string => `\n${label}:\n"""\n${text}\n"""`
@@ -236,7 +236,7 @@ export const pressPrompt = ({
   id: string
   text: string
 }): string => `${pageHead('the press page', id)}
-- items: one per press item (article, interview, talk, op-ed) the page lists. title as given; outlet is the publication or channel named; authors are the bylines.
+- items: one per press item (article, interview, talk, op-ed) the page lists. The page also lists the newsletter issues (CILAS Newsletter, CILAS Alex: dated links to campaign archives and similar); they are not press items, so leave them out. title as given; outlet is the publication or channel named; authors are the bylines.
 - kind: coverage (written about CILAS), interview, talk (a recorded or filmed talk), op_ed (written by a CILAS person).
 - date: YYYY, YYYY-MM or YYYY-MM-DD, exactly as precise as the page states; null if absent.
 - links: each link with its language (ar, en, de, fr, other) when the page or the link text says so; null otherwise.
