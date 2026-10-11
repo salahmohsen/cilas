@@ -9,7 +9,7 @@ import { pathOf } from '@/lib/paths'
 
 /**
  * Turns on Next's draft mode and sends the admin live-preview iframe to the
- * document, which is what lets `/study/[slug]` render an unpublished draft
+ * document, which is what lets `/study/[slug]` and `/articles/[slug]` render an unpublished draft
  * (see `overrideAccess`/`draft` in that route).
  *
  * Draft mode is a cookie scoped to the requesting browser, so this endpoint must
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
   const slug = searchParams.get('slug')
   const collection = searchParams.get('collection')
 
-  if (!slug || collection !== 'courses') {
+  if (!slug || (collection !== 'courses' && collection !== 'articles')) {
     return new Response('Missing or unsupported preview target', { status: 400 })
   }
 
@@ -34,33 +34,35 @@ export async function GET(request: Request) {
 
   const req = { user } as PayloadRequest
 
-  // Editing a course is admin, or a fellow listed on that course. The live
-  // preview renders the whole document, so the same bar applies to it.
-  const canUpdate = await payload.collections.courses.config.access.update?.({ req })
+  // Editing a course is admin, or a fellow listed on it; an article, admin or
+  // one of its authors. The live preview renders the whole document, so the
+  // same bar applies to it.
+  const canUpdate = await payload.collections[collection].config.access.update?.({ req })
   if (!canUpdate) {
     return new Response('You are not allowed to preview this page', { status: 403 })
   }
 
   const { docs } = await payload.find({
-    collection: 'courses',
+    collection,
     where: { slug: { equals: slug } },
     limit: 1,
     depth: 0,
     overrideAccess: true,
+    draft: true,
   })
 
   const doc = docs[0]
   if (!doc) {
-    return new Response('Course not found', { status: 404 })
+    return new Response('Not found', { status: 404 })
   }
 
   const draft = await draftMode()
   draft.enable()
 
   // pathOf, not a hand-built path: the course route has moved before.
-  const path = pathOf('courses', doc)
+  const path = pathOf(collection, doc)
   if (!path) {
-    return new Response('Course has no page', { status: 404 })
+    return new Response('This document has no page', { status: 404 })
   }
   redirect(path)
 }

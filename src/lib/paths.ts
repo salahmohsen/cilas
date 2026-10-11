@@ -7,6 +7,8 @@ export const pathOf = (collection: string, doc: { slug?: string | null }): strin
   switch (collection) {
     case 'courses':
       return `/study/${doc.slug}`
+    case 'articles':
+      return `/articles/${doc.slug}`
     default:
       return null
   }

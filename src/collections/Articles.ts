@@ -142,6 +142,11 @@ export const Articles: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'authors', 'review.status', 'tier'],
+    // Through /api/preview, which checks the editor and turns on draft mode,
+    // as courses do.
+    livePreview: {
+      url: ({ data }) => `/api/preview?collection=articles&slug=${data?.slug ?? ''}`,
+    },
   },
   hooks: {
     beforeOperation: [recordDraftSave],

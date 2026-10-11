@@ -148,3 +148,55 @@
   min-height: var(--control-height-sm);
   height: var(--control-height-sm);
 }
+
+/* Long-form reading (articles). The serif faces come from src/lib/fonts.ts,
+   whose variables are set on the page wrapper; Arabic text takes Naskh. */
+@utility font-serif-reading {
+  font-family: var(--font-serif-latin), var(--font-serif-arabic), Georgia, serif;
+}
+
+/* Mono labels have no Arabic: in RTL pages they fall back to the sans,
+   without the tracking and capitals that only suit Latin. */
+[dir='rtl'] .font-mono {
+  font-family: var(--font-sans);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.article-prose {
+  @apply prose prose-neutral max-w-[68ch] font-serif-reading text-[1.2rem] leading-[1.7];
+  --tw-prose-body: var(--foreground);
+  --tw-prose-quote-borders: var(--foreground);
+
+  /* Section heads in the interface sans, small and spaced, as on the moodboard. */
+  & :where(h2, h3, h4) {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+  & :where(h2) {
+    @apply mt-14 border-t border-foreground pt-4 text-[1.35rem];
+  }
+  & :where(h3) {
+    @apply mt-10 text-base tracking-[0.06em] uppercase;
+  }
+  /* Block quotations: a rule and indent, not italics (Arabic has none). */
+  & :where(blockquote) {
+    @apply border-s-2 ps-6 font-normal not-italic;
+  }
+  & :where(blockquote p)::before,
+  & :where(blockquote p)::after {
+    content: none;
+  }
+  & :where(a) {
+    @apply decoration-1 underline-offset-[3px];
+  }
+  /* The notes at the end: everything after the last h3 ("Notes" / "ملاحظات"). */
+  & :where(h3:last-of-type ~ p) {
+    @apply my-2 text-[0.92rem] leading-snug opacity-75;
+  }
+}
+
+.article-prose:where([dir='rtl'] *) {
+  @apply text-[1.3rem] leading-[1.95];
+}
