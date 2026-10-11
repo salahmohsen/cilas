@@ -99,7 +99,7 @@ const main = async () => {
 
   const { default: config } = await import('../src/payload.config')
   const payload = await getPayload({ config: await config })
-  const { urls, ...tally } = await importMedia(payload, jobs, resolve, extras)
+  const { urls, noTargetJobs, ...tally } = await importMedia(payload, jobs, resolve, extras)
   console.log(
     `uploaded ${tally.uploaded}, reused ${tally.reused}, attached ${tally.attached}, skipped (reviewed) ${tally.skippedReviewed}, skipped (already set) ${tally.skippedSet}, missing file ${tally.missing}, no target document ${tally.noTarget}`,
   )
@@ -115,6 +115,9 @@ const main = async () => {
     '',
     '## Files not in the archive',
     ...jobs.filter((j) => !resolve(j.path).file).map((j) => `- ${j.collection} ${j.legacy_url ?? j.name} (${j.field}): ${j.path}`),
+    '',
+    '## No document to attach to',
+    ...noTargetJobs.map((j) => `- ${j}`),
   ]
   writeFileSync(path.join(here, 'review', 'media.md'), lines.join('\n') + '\n')
   await payload.destroy()

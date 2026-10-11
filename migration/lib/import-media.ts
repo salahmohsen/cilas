@@ -12,7 +12,7 @@ export type MediaTally = {
   missing: number
   noTarget: number
 }
-export type MediaResult = MediaTally & { urls: Map<string, string> }
+export type MediaResult = MediaTally & { urls: Map<string, string>; noTargetJobs: string[] }
 
 type MediaDoc = { id: number; url?: string | null }
 
@@ -52,7 +52,7 @@ export const importMedia = async (
   resolve: (path: string) => ResolvedFile,
   extras: Array<{ path: string; alt: string }> = [],
 ): Promise<MediaResult> => {
-  const result: MediaResult = { uploaded: 0, reused: 0, attached: 0, skippedReviewed: 0, skippedSet: 0, missing: 0, noTarget: 0, urls: new Map() }
+  const result: MediaResult = { uploaded: 0, reused: 0, attached: 0, skippedReviewed: 0, skippedSet: 0, missing: 0, noTarget: 0, urls: new Map(), noTargetJobs: [] }
   const cache = new Map<string, { id: number; url: string }>()
 
   /** null when the file is not in the archive. */
@@ -83,10 +83,16 @@ export const importMedia = async (
   for (const job of jobs) {
     const draft = hasDrafts(job.collection)
     const where: Where = job.name ? { name: { equals: job.name } } : { legacy_url: { equals: job.legacy_url ?? '' } }
-    const { docs } = await payload.find({ collection: job.collection, where, limit: 1, depth: 0, overrideAccess: true, draft })
+    let { docs } = await payload.find({ collection: job.collection, where, limit: 1, depth: 0, overrideAccess: true, draft })
+    // A person first met as a course fellow keeps that course's legacy_url;
+    // the people import matched them by name, so the photo's page differs.
+    if (!docs.length && job.collection === 'people' && job.alt) {
+      ;({ docs } = await payload.find({ collection: 'people', where: { name: { equals: job.alt } }, limit: 1, depth: 0, overrideAccess: true }))
+    }
     const doc = docs[0] as unknown as Record<string, unknown> & { id: number; import_status?: string | null } | undefined
     if (!doc) {
       result.noTarget++
+      result.noTargetJobs.push(`${job.collection} ${job.name ?? job.legacy_url} (${job.field})`)
       continue
     }
     if (doc.import_status === 'reviewed') {
