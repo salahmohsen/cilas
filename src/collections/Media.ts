@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { importFields } from '@/fields/import'
+
 export const Media: CollectionConfig = {
   slug: 'media',
 
@@ -23,6 +25,7 @@ export const Media: CollectionConfig = {
         position: 'sidebar',
       },
     },
+    ...importFields(),
   ],
 
   upload: {

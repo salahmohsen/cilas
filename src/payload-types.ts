@@ -271,6 +271,11 @@ export interface Media {
   id: number;
   alt: string;
   space?: (number | null) | Space;
+  legacy_url?: string | null;
+  /**
+   * Imported from the old site. Mark it reviewed once checked.
+   */
+  import_status?: ('needs_review' | 'reviewed') | null;
   prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
@@ -1810,6 +1815,8 @@ export interface MembershipsSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   space?: T;
+  legacy_url?: T;
+  import_status?: T;
   prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
