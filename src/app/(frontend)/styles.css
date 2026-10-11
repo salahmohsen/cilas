@@ -226,3 +226,16 @@
   font-size: calc(1.3rem * var(--reading-scale, 1));
   @apply leading-[1.95];
 }
+
+/* Article reader (Arc blog-grid layout): the opening lead and title. */
+.article-lead {
+  margin: 0;
+  color: var(--foreground);
+  font-size: calc(1.3rem * var(--reading-scale, 1));
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+.article-title:where([dir='rtl'] *, [dir='rtl']) {
+  letter-spacing: 0;
+  line-height: 1.35;
+}

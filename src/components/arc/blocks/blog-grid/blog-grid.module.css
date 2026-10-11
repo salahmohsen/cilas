@@ -218,7 +218,7 @@
 }
 .readTime::before {
   content: '·';
-  margin-right: var(--space-2);
+  margin-inline-end: var(--space-2);
 }
 .card:active .imageFrame,
 .featured:active .imageFrame {
@@ -332,7 +332,7 @@
   border: 0;
   border-radius: var(--radius-pill);
   padding: 0 var(--space-3) 0 var(--space-2);
-  margin-left: calc(var(--space-2) * -1);
+  margin-inline-start: calc(var(--space-2) * -1);
   background: none;
   color: var(--text-secondary);
   font: inherit;

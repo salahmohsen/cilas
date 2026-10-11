@@ -1,4 +1,5 @@
 import config from '@payload-config'
+import { ArrowLeft } from 'lucide-react'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { draftMode } from 'next/headers'
@@ -14,6 +15,7 @@ import {
   RelatedArticles,
   TextSize,
 } from '@/components/article/reading-tools'
+import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { RichTextField } from '@/components/RichTextField'
@@ -101,158 +103,149 @@ export default async function ArticlePage({ params }: Props) {
   const hasOriginal = Boolean(original?.original_title || original?.original_source)
   const cover = isObject<Media>(article.cover_image) ? article.cover_image : undefined
   const url = `${env.NEXT_PUBLIC_SERVER_URL}${pathOf('articles', article, locale)}`
+  // The reader opens with a lead: the article's description when it has one.
+  const excerpt = article.meta?.description ?? null
 
+  const authors = joinNames(authorNames(article), t('and'))
+  const year = article.published_date ? format.dateTime(new Date(article.published_date), 'year') : yearOf(article)
+  const hasContents = sections.length >= 3
+
+  // The layout is Arc's blog-grid reader (blocks/blog-grid): one centred
+  // column with a back link, meta line, title, byline, image and body. The
+  // reading tools sit around it.
   return (
-    <article className={`${readingFonts} px-4 pb-24 sm:px-6`} id="article">
+    <div className={`${grid.root} ${readingFonts}`}>
       {preview && <RefreshRouteOnSave />}
       <ReadingProgress target="article-text" />
+      <div className={grid.inner}>
+        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_760px_minmax(0,1fr)] xl:gap-12">
+          {/* Margin: the contents, sticky beside the column on wide screens. */}
+          <aside className="hidden xl:block">
+            <div className="sticky top-24 space-y-6">
+              {hasContents && <ArticleContents container="article-text" sections={sections} />}
+              <TextSize target="article-text" />
+            </div>
+          </aside>
 
-      {/* Running head: where this sits. The language switch is in the site header. */}
-      <nav
-        aria-label="Breadcrumb"
-        className="flex flex-wrap items-center gap-2 border-b border-foreground py-3 font-mono text-[0.7rem] tracking-[0.14em] uppercase"
-      >
-        <Link className="opacity-60 hover:opacity-100" href="/articles">
-          {t('back')}
-        </Link>
-        {pub && (
-          <>
-            <span aria-hidden className="opacity-40">
-              /
-            </span>
-            <Link className="opacity-60 hover:opacity-100" href={`/articles?publication=${pub.slug}`}>
-              {pub.title}
+          <article aria-labelledby="article-title" className={grid.reader}>
+            <Link className={grid.back} href={pub ? `/articles?publication=${pub.slug}` : '/articles'}>
+              <ArrowLeft aria-hidden className="rtl:-scale-x-100" size={16} />
+              {pub?.title ?? t('back')}
             </Link>
-          </>
-        )}
-      </nav>
 
-      <header className="pt-14 pb-10 sm:pt-20" dir={contentDir} lang={contentLocale}>
-        <h1
-          className={`max-w-[18ch] font-serif-reading text-[clamp(2.5rem,7vw,5.75rem)] tracking-[-0.02em] ${isRtl(contentLocale) ? 'leading-[1.25]' : 'leading-[0.98]'}`}
-        >
-          {title}
-        </h1>
-      </header>
-      <div className="-mt-4 pb-10">
-        <p className="text-lg">
-          <span className="opacity-60">{t('by')} </span>
-          {joinNames(authorNames(article), t('and'))}
-        </p>
-        {translators.length > 0 && (
-          <p className="mt-1 text-sm opacity-70">
-            {t('translatedBy')} {joinNames(translators, t('and'))}
-          </p>
-        )}
-      </div>
+            <header className={grid.readerHead} dir={contentDir} lang={contentLocale}>
+              <p className={grid.meta} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
+                <span>{pub?.title ?? tl(contentLocale)}</span>
+                <span aria-hidden="true">·</span>
+                <time dateTime={article.published_date ?? article.createdAt}>{year}</time>
+              </p>
+              <h1 className={`${grid.readerTitle} article-title`} id="article-title">
+                {title}
+              </h1>
+              <div className={grid.byline} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
+                <span aria-hidden className={grid.avatar} />
+                <span className={grid.authorName}>{authors}</span>
+                {minutes > 0 && <span className={grid.readTime}>{t('minutes', { count: minutes })}</span>}
+              </div>
+              {translators.length > 0 && (
+                <p className={grid.meta} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
+                  {t('translatedBy')} {joinNames(translators, t('and'))}
+                </p>
+              )}
+            </header>
 
-      {/* Facts strip, ruled like a table. */}
-      <dl className="grid grid-cols-2 border-y border-border sm:grid-cols-4">
-        <Fact label={t('publication')}>{pub?.title ?? '—'}</Fact>
-        <Fact label={t('published')}>
-          {article.published_date
-            ? format.dateTime(new Date(article.published_date), 'year')
-            : yearOf(article)}
-        </Fact>
-        <Fact label={t('readingTime')}>{minutes ? t('minutes', { count: minutes }) : '—'}</Fact>
-        <Fact label={t('language')}>{tl(contentLocale)}</Fact>
-      </dl>
-
-      {cover?.url && (
-        <figure className="mt-10">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img alt={cover.alt} className="w-full object-cover" src={cover.url} />
-        </figure>
-      )}
-
-      <div className="mt-12 grid gap-10 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-16">
-        {/* Margin: the contents, sticky beside the text. */}
-        <aside className="lg:sticky lg:top-24 lg:self-start">
-          {sections.length >= 3 && <ArticleContents container="article-text" sections={sections} />}
-          <div className={`flex items-center gap-3 ${sections.length >= 3 ? 'mt-6' : ''}`}>
-            <TextSize target="article-text" />
-          </div>
-        </aside>
-
-        <div className="min-w-0">
-          {/* No text in the site language: show the content language, and say so. */}
-          {fallback && (
-            <p className="mb-8 border-s-2 border-foreground ps-4 text-sm" role="note">
-              {(await getTranslations('Fallback'))('onlyIn', { language: tl(contentLocale) })}
-            </p>
-          )}
-
-          <div dir={contentDir} id="article-text" lang={contentLocale}>
-            {text ? (
-              <RichTextField className="article-prose" data={text} />
-            ) : (
-              <p className="font-serif-reading text-xl opacity-60">—</p>
-            )}
-
-            {notes && (
-              <div className="article-notes mt-14 max-w-[68ch]">
-                <ArticleNotes title={t('notes', { count: noteCount })}>
-                  <RichTextField className="article-prose article-prose--notes" data={notes} />
-                </ArticleNotes>
+            {cover?.url && (
+              <div className={grid.readerImage}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt={cover.alt} className={grid.image} src={cover.url} />
               </div>
             )}
-          </div>
 
-          {/* Tools at the end of the text. */}
-          <div className="mt-12 flex max-w-[68ch] flex-wrap items-center gap-3 border-t border-border pt-6">
-            <CopyButton label={t('copyLink')} value={url} variant="outline" />
-            {pub?.print_edition_url && (
-              <a
-                className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm transition-colors hover:bg-[var(--surface-muted)]"
-                href={pub.print_edition_url}
-                rel="noopener"
-                target="_blank"
-              >
-                {t('printEdition')}
-              </a>
+            {/* Narrow screens: the tools fold into the column. */}
+            <div className="flex flex-col gap-4 xl:hidden">
+              {hasContents && <ArticleContents container="article-text" sections={sections} />}
+              <TextSize target="article-text" />
+            </div>
+
+            {/* No text in the site language: show the content language, and say so. */}
+            {fallback && (
+              <p className="border-s-2 border-foreground ps-4 text-sm" role="note">
+                {(await getTranslations('Fallback'))('onlyIn', { language: tl(contentLocale) })}
+              </p>
             )}
-          </div>
 
-          {/* About this text: provenance and credits, after the essay. */}
-          {(hasOriginal || credits.length > 0) && (
-            <section className="mt-12 max-w-[68ch] border-t border-foreground pt-4 text-sm">
-              <h2 className="font-mono text-[0.7rem] tracking-[0.14em] uppercase">{t('aboutText')}</h2>
-              <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
-                {hasOriginal && original && (
-                  <div>
-                    <dt className="opacity-60">{t('original')}</dt>
-                    <dd className="mt-1" dir="auto">
-                      {original.original_title && (
-                        <span className="block font-serif-reading text-base">{original.original_title}</span>
-                      )}
-                      {originalAuthors.length > 0 && <span className="block">{joinNames(originalAuthors, t('and'))}</span>}
-                      {original.original_source && <span className="block opacity-70">{original.original_source}</span>}
-                    </dd>
-                  </div>
-                )}
-                {credits.map((c) => (
-                  <div key={c.id ?? c.role}>
-                    <dt className="opacity-60">{c.label || t(`roles.${c.role}`)}</dt>
-                    <dd className="mt-1">
-                      {joinNames(c.people.filter(isObject<Person>).map((p) => p.name), t('and'))}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-          )}
+            {/* Not grid.readerBody: its paragraph rules are for short previews and
+                would override the essay's measure, size and spacing. */}
+            <div className="grid gap-5" dir={contentDir} id="article-text" lang={contentLocale}>
+              {excerpt && <p className="article-lead">{excerpt}</p>}
+              {text ? (
+                <RichTextField className="article-prose" data={text} />
+              ) : (
+                <p className="opacity-60">—</p>
+              )}
+              {notes && (
+                <div className="mt-6">
+                  <ArticleNotes title={t('notes', { count: noteCount })}>
+                    <RichTextField className="article-prose article-prose--notes" data={notes} />
+                  </ArticleNotes>
+                </div>
+              )}
+            </div>
+
+            {/* Tools at the end of the text. */}
+            <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
+              <CopyButton label={t('copyLink')} value={url} variant="outline" />
+              {pub?.print_edition_url && (
+                <a
+                  className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm transition-colors hover:bg-[var(--surface-muted)]"
+                  href={pub.print_edition_url}
+                  rel="noopener"
+                  target="_blank"
+                >
+                  {t('printEdition')}
+                </a>
+              )}
+            </div>
+
+            {/* About this text: provenance and credits, after the essay. */}
+            {(hasOriginal || credits.length > 0) && (
+              <section className="rounded-[26px] bg-[var(--surface-muted)] p-6 text-sm">
+                <h2 className="font-medium">{t('aboutText')}</h2>
+                <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                  {hasOriginal && original && (
+                    <div>
+                      <dt className="text-[var(--text-muted)]">{t('original')}</dt>
+                      <dd className="mt-1" dir="auto">
+                        {original.original_title && <span className="block">{original.original_title}</span>}
+                        {originalAuthors.length > 0 && <span className="block">{joinNames(originalAuthors, t('and'))}</span>}
+                        {original.original_source && (
+                          <span className="block text-[var(--text-secondary)]">{original.original_source}</span>
+                        )}
+                      </dd>
+                    </div>
+                  )}
+                  {credits.map((c) => (
+                    <div key={c.id ?? c.role}>
+                      <dt className="text-[var(--text-muted)]">{c.label || t(`roles.${c.role}`)}</dt>
+                      <dd className="mt-1">
+                        {joinNames(c.people.filter(isObject<Person>).map((p) => p.name), t('and'))}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            )}
+          </article>
         </div>
       </div>
 
       {related.length > 0 && (
-        <div className="mt-24 border-t border-foreground pt-4">
-          <RelatedArticles
-            posts={related.map((r) => toPost(r, locale, format, (m) => t('minutes', { count: m }), t('and')))}
-            title={t('related')}
-          />
-        </div>
+        <RelatedArticles
+          posts={related.map((r) => toPost(r, locale, format, (m) => t('minutes', { count: m }), t('and')))}
+          title={t('related')}
+        />
       )}
-    </article>
+    </div>
   )
 }
 
@@ -281,13 +274,4 @@ const toPost = (
     author: { name: joinNames(names, and) },
     ...(image?.url ? { image: { src: image.url, alt: image.alt } } : {}),
   }
-}
-
-function Fact({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="border-border px-1 py-3 not-last:border-e max-sm:nth-2:border-e-0 max-sm:nth-[-n+2]:border-b">
-      <dt className="font-mono text-[0.65rem] tracking-[0.14em] uppercase opacity-60">{label}</dt>
-      <dd className="mt-1 text-sm">{children}</dd>
-    </div>
-  )
 }
