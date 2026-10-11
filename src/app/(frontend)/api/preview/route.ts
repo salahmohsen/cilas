@@ -5,9 +5,11 @@ import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 import type { PayloadRequest } from 'payload'
 
+import { pathOf } from '@/lib/paths'
+
 /**
  * Turns on Next's draft mode and sends the admin live-preview iframe to the
- * document, which is what lets `/courses/[slug]` render an unpublished draft
+ * document, which is what lets `/study/[slug]` render an unpublished draft
  * (see `overrideAccess`/`draft` in that route).
  *
  * Draft mode is a cookie scoped to the requesting browser, so this endpoint must
@@ -55,5 +57,10 @@ export async function GET(request: Request) {
   const draft = await draftMode()
   draft.enable()
 
-  redirect(`/courses/${doc.slug}`)
+  // pathOf, not a hand-built path: the course route has moved before.
+  const path = pathOf('courses', doc)
+  if (!path) {
+    return new Response('Course has no page', { status: 404 })
+  }
+  redirect(path)
 }
