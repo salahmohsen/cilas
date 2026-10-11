@@ -49,4 +49,14 @@ describe('resolveUpload', () => {
     expect(resolveUpload('https://example.org/x.pdf', files)).toBeNull()
     expect(resolveUpload('fall-cycle-2024.html', files)).toBeNull()
   })
+
+  it('resolves a link whose Arabic file name was decoded as Latin-1 or Windows-1252', () => {
+    const arabic = new Set(['uploads/1/9/1/0/19102967/مقال_فريدة_مقار.pdf'])
+    const dir = 'uploads/1/9/1/0/19102967/'
+    const bytes = Buffer.from('مقال_فريدة_مقار.pdf', 'utf8')
+    const cp1252 = new TextDecoder('windows-1252').decode(bytes)
+    for (const name of [bytes.toString('latin1'), cp1252]) {
+      expect(resolveUpload(dir + name, arabic)).toEqual({ path: `${dir}مقال_فريدة_مقار.pdf`, missing: false })
+    }
+  })
 })

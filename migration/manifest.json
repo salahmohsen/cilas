@@ -9743,12 +9743,12 @@
           "missing": true
         },
         {
-          "path": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_english.pdf",
+          "path": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_ِarabic.pdf",
           "missing": false
         },
         {
-          "path": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_Ùarabic.pdf",
-          "missing": true
+          "path": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_english.pdf",
+          "missing": false
         },
         {
           "path": "uploads/1/9/1/0/19102967/robin-weiss-updated_orig.jpeg",
@@ -11147,8 +11147,8 @@
           "missing": true
         },
         {
-          "path": "uploads/1/9/1/0/19102967/Ù…Ù‚Ø§Ù„_ÙØ±ÙŠØ¯Ø©_Ù…Ù‚Ø§Ø±.pdf",
-          "missing": true
+          "path": "uploads/1/9/1/0/19102967/مقال_فريدة_مقار.pdf",
+          "missing": false
         }
       ]
     },
@@ -24631,7 +24631,9 @@
     {
       "path": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_ِarabic.pdf",
       "source": "zip",
-      "referenced_by": []
+      "referenced_by": [
+        "/on-pigeon-towers.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_ِarabic_and_english.pdf",
@@ -26048,7 +26050,9 @@
     {
       "path": "uploads/1/9/1/0/19102967/مقال_فريدة_مقار.pdf",
       "source": "zip",
-      "referenced_by": []
+      "referenced_by": [
+        "/press.html"
+      ]
     },
     {
       "path": "uploads/1/9/1/0/19102967/مقترح_مختبر_الترجمة_-_سارة_السباعي_ومصطفى_طه.pdf",
