@@ -128,7 +128,7 @@ function Meta({ post }: { post: BlogPost }) {
     <p className={styles.meta}>
       <span>{post.category}</span>
       <span aria-hidden="true">·</span>
-      <time dateTime={post.date}>{formatDate(post.date)}</time>
+      <time dateTime={post.date}>{post.dateLabel ?? formatDate(post.date)}</time>
     </p>
   )
 }
@@ -149,7 +149,7 @@ function Byline({ post }: { post: BlogPost }) {
         <span className={styles.avatar} aria-hidden="true" />
       )}
       <span className={styles.authorName}>{post.author.name}</span>
-      <span className={styles.readTime}>{post.readTime} min read</span>
+      <span className={styles.readTime}>{post.readTimeLabel ?? `${post.readTime} min read`}</span>
     </div>
   )
 }
@@ -360,31 +360,33 @@ export function BlogGrid({
                   {description && <p className={styles.description}>{description}</p>}
                 </motion.header>
 
-                <motion.div
-                  className={styles.filters}
-                  role="group"
-                  aria-label="Filter by category"
-                  {...enterFade(back)}
-                >
-                  {tabs.map((tab) => (
-                    <button
-                      key={tab}
-                      type="button"
-                      className={styles.filter}
-                      aria-pressed={tab === category}
-                      onClick={() => setCategory(tab)}
-                    >
-                      {tab === category && (
-                        <motion.span
-                          layoutId={`${uid}-filter`}
-                          className={styles.filterHighlight}
-                          transition={reduced ? { duration: 0 } : morph}
-                        />
-                      )}
-                      <span>{tab}</span>
-                    </button>
-                  ))}
-                </motion.div>
+                {categories.length > 0 && (
+                  <motion.div
+                    className={styles.filters}
+                    role="group"
+                    aria-label="Filter by category"
+                    {...enterFade(back)}
+                  >
+                    {tabs.map((tab) => (
+                      <button
+                        key={tab}
+                        type="button"
+                        className={styles.filter}
+                        aria-pressed={tab === category}
+                        onClick={() => setCategory(tab)}
+                      >
+                        {tab === category && (
+                          <motion.span
+                            layoutId={`${uid}-filter`}
+                            className={styles.filterHighlight}
+                            transition={reduced ? { duration: 0 } : morph}
+                          />
+                        )}
+                        <span>{tab}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
 
                 <AutoHeight
                   changeKey={`${pageKey}-${pageCount}`}

@@ -4,18 +4,24 @@ import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintex
 import config from '@payload-config'
 import { getPayload } from 'payload'
 import Image from 'next/image'
+import { getTranslations } from 'next-intl/server'
+
 import { StudyFilters } from '@/components/study-filters'
 
-export default async function CoursesPage() {
+type Props = { params: Promise<{ locale: string }> }
+
+export default async function CoursesPage({ params }: Props) {
+  const { locale } = await params
+  const t = await getTranslations('Study')
   const payload = await getPayload({ config })
-  const { docs: courses } = await getPublicPosts(payload)
+  const { docs: courses } = await getPublicPosts(payload, locale as 'en' | 'ar')
 
   const items = courses.map((course) => {
     const cover = course.cover_image
 
     return {
       label: course.title,
-      href: `/study/${course.slug}`,
+      href: `/${locale}/study/${course.slug}`,
       sublabel: course.subtitle ?? undefined,
       description: course.description
         ? convertLexicalToPlaintext({ data: course.description })
@@ -30,15 +36,15 @@ export default async function CoursesPage() {
       <div className="relative h-96 w-full">
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/50 px-8 text-center">
           <p className="text-2xl font-bold text-white leading-tight">
-            What we cover at CILAS matters less than what a student discovers.
+            {t('heroQuote')}
           </p>
           <p className="text-white/80 mt-4 text-lg max-w-2xl mx-auto">
-            — A pedagogy of discovery and attunement, not consumption
+            {t('heroAttribution')}
           </p>
         </div>
         <Image
           src="/assets/images/cilas-classroom.jpg"
-          alt="CILAS Classroom"
+          alt={t('heroImageAlt')}
           width={1000}
           height={1000}
           className="absolute inset-0 h-full w-full object-cover object-center"

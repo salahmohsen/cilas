@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { useState } from 'react'
 import {
   FilterToolbar,
@@ -7,20 +8,21 @@ import {
   type FilterField,
 } from '@/components/arc/filter-toolbar/filter-toolbar'
 
-const mockFields: FilterField[] = [
+// Sample filters until the list is wired to real cycles and fellows.
+const fieldsFor = (t: (key: string) => string): FilterField[] => [
   {
     id: 'cycle',
-    label: 'Cycle',
+    label: t('cycle'),
     options: [
-      { value: 'fall', label: 'Fall' },
-      { value: 'winter', label: 'Winter' },
-      { value: 'spring', label: 'Spring' },
-      { value: 'summer', label: 'Summer' },
+      { value: 'fall', label: t('fall') },
+      { value: 'winter', label: t('winter') },
+      { value: 'spring', label: t('spring') },
+      { value: 'summer', label: t('summer') },
     ],
   },
   {
     id: 'cycle_year',
-    label: 'Cycle Year',
+    label: t('cycleYear'),
     options: [
       { value: '2023', label: '2023' },
       { value: '2024', label: '2024' },
@@ -30,7 +32,7 @@ const mockFields: FilterField[] = [
   },
   {
     id: 'year',
-    label: 'Academic Year',
+    label: t('academicYear'),
     options: [
       { value: '2024-2025', label: '2024–2025' },
       { value: '2025-2026', label: '2025–2026' },
@@ -39,7 +41,7 @@ const mockFields: FilterField[] = [
   },
   {
     id: 'fellow',
-    label: 'Fellow',
+    label: t('fellow'),
     options: [
       { value: 'karim-goessinger', label: 'Karim-Yassin Goessinger' },
       { value: 'surti-singh', label: 'Surti Singh' },
@@ -50,18 +52,19 @@ const mockFields: FilterField[] = [
   },
   {
     id: 'type',
-    label: 'Course Type',
+    label: t('courseType'),
     options: [
-      { value: 'bridge', label: 'Bridge Programme' },
-      { value: 'core', label: 'Core Curriculum' },
-      { value: 'thematic', label: 'Thematic Courses' },
-      { value: 'lab', label: 'Labs' },
-      { value: 'workshop', label: 'Workshops' },
+      { value: 'bridge', label: t('bridge') },
+      { value: 'core', label: t('core') },
+      { value: 'thematic', label: t('thematic') },
+      { value: 'lab', label: t('lab') },
+      { value: 'workshop', label: t('workshop') },
     ],
   },
 ]
 
 export function StudyFilters() {
+  const t = useTranslations('Study.filters')
   const [filters, setFilters] = useState<FilterChip[]>([])
 
   const handleAddFilter = (chip: FilterChip, field: FilterField) => {
@@ -83,11 +86,11 @@ export function StudyFilters() {
         onRemove={handleRemoveFilter}
         onClearAll={handleClearAll}
         addFilter={{
-          fields: mockFields,
+          fields: fieldsFor(t),
           onAdd: handleAddFilter,
-          label: 'Add filter',
+          label: t('add'),
         }}
-        label="Course filters"
+        label={t('label')}
       />
     </div>
   )

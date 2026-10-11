@@ -11,7 +11,7 @@ import { CourseView } from './CourseView'
 import { seoDefaults } from '@/lib/seo'
 import type { Course } from '@/payload-types'
 
-type Params = { params: Promise<{ slug: string }> }
+type Params = { params: Promise<{ locale: string; slug: string }> }
 
 // Registration open/closed is computed from today's date, so rebuild hourly.
 export const revalidate = 3600
@@ -22,6 +22,7 @@ export const revalidate = 3600
  * without a redeploy.
  */
 export async function generateStaticParams() {
+  // One page per site language (the [locale] layout lists the languages).
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'courses',
@@ -36,7 +37,7 @@ export async function generateStaticParams() {
 
 /** Meta fields win; the course's own title, summary and cover fill any gaps. */
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const { slug } = await params
+  const { slug, locale } = await params
   const payload = await getPayload({ config })
   const { docs } = await payload.find({
     collection: 'courses',
@@ -44,6 +45,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
     limit: 1,
     depth: 1,
     joins: false,
+    locale: locale as 'en' | 'ar',
+    fallbackLocale: 'en',
   })
   const course = docs[0]
   if (!course) return {}
@@ -63,7 +66,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function CoursePage({ params }: Params) {
-  const { slug } = await params
+  const { slug, locale } = await params
   const { isEnabled: isPreview } = await draftMode()
   const payload = await getPayload({ config })
 
@@ -78,6 +81,9 @@ export default async function CoursePage({ params }: Params) {
     // ship them to the page, where a previewing fellow would see assessments.
     joins: false,
     overrideAccess: isPreview,
+    // A course without text in the site language shows its own (CONTEXT.md).
+    locale: locale as 'en' | 'ar',
+    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
   })
 
   const course: Course | undefined = docs[0]
@@ -103,6 +109,8 @@ export default async function CoursePage({ params }: Params) {
     joins: false,
     overrideAccess: true,
     draft: true,
+    locale: locale as 'en' | 'ar',
+    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
   })
 
   return (

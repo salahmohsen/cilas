@@ -1,3 +1,4 @@
+import { useFormatter, useTranslations } from 'next-intl'
 import React from 'react'
 
 import { RichTextField } from '@/components/RichTextField'
@@ -25,7 +26,20 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
   const firstMeeting = meetings.find((m) => !m.cancelled)
   const price = priceLabel(pricingFor(course, cycle))
   const registration = registrationStatus(course.registration, cycle?.registration)
-  const unit = course.session_unit === 'week' ? 'Week' : 'Session'
+  const t = useTranslations('Course')
+  const format = useFormatter()
+  const unitLabel = (n: number) => (course.session_unit === 'week' ? t('week', { number: n }) : t('session', { number: n }))
+  /** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
+  const dayLabel = (day: string): string =>
+    format.dateTime(new Date(`${day}T00:00:00Z`), {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'UTC',
+      numberingSystem: 'latn',
+    })
+  /** "Tue 3 Mar, 18:00–20:30" */
+  const meetingLabel = (m: Meeting): string => `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`
 
   return (
     <article className="mx-auto w-full max-w-4xl py-16">
@@ -54,28 +68,29 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
       <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3">
         {course.location?.length ? (
           <>
-            <dt className="text-xs tracking-widest uppercase opacity-50">Location</dt>
+            <dt className="text-xs tracking-widest uppercase opacity-50">{t('location')}</dt>
             <dd>{course.location.join(', ').toLowerCase()}</dd>
           </>
         ) : null}
         {cycleLabel ? (
           <>
-            <dt className="text-xs tracking-widest uppercase opacity-50">Cycle</dt>
+            <dt className="text-xs tracking-widest uppercase opacity-50">{t('cycle')}</dt>
             <dd>{cycleLabel}</dd>
           </>
         ) : null}
         {firstMeeting ? (
           <>
-            <dt className="text-xs tracking-widest uppercase opacity-50">Starts</dt>
+            <dt className="text-xs tracking-widest uppercase opacity-50">{t('starts')}</dt>
             <dd>
-              {course.schedule?.start_precision === 'week' ? 'Week of ' : ''}
-              {dayLabel(firstMeeting.date)}
+              {course.schedule?.start_precision === 'week'
+                ? t('weekOf', { date: dayLabel(firstMeeting.date) })
+                : dayLabel(firstMeeting.date)}
             </dd>
           </>
         ) : null}
         {price ? (
           <>
-            <dt className="text-xs tracking-widest uppercase opacity-50">Price</dt>
+            <dt className="text-xs tracking-widest uppercase opacity-50">{t('price')}</dt>
             <dd>
               {price}
               {pricingFor(course, cycle)?.need_based_deductions
@@ -84,12 +99,12 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
             </dd>
           </>
         ) : null}
-        <dt className="text-xs tracking-widest uppercase opacity-50">Registration</dt>
-        <dd>{registration === 'open' ? 'Open' : 'Closed'}</dd>
+        <dt className="text-xs tracking-widest uppercase opacity-50">{t('registration')}</dt>
+        <dd>{registration === 'open' ? t('open') : t('closed')}</dd>
       </dl>
 
       {course.bibliography?.length ? (
-        <Section title="Bibliography">
+        <Section title={t('bibliography')}>
           <ul className="list-disc ps-5">
             {course.bibliography.map((item, i) =>
               item?.title ? <li key={item.id ?? i}>{renderEntry(item)}</li> : null,
@@ -99,7 +114,7 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
       ) : null}
 
       {sessions.length ? (
-        <Section title="Syllabus">
+        <Section title={t('sessions')}>
           <ol className="space-y-4">
             {sessions.map((session, i) => {
               const own = meetings.filter((m) => m.session === i + 1)
@@ -107,7 +122,7 @@ export const CourseView: React.FC<{ course: Course }> = ({ course }) => {
                 <li key={session.id ?? i}>
                   <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                     <p className="font-medium">
-                      {unit} {i + 1}
+                      {unitLabel(i + 1)}
                       {session.session_title ? ` · ${session.session_title}` : ''}
                       {session.cancelled ? ' (cancelled)' : ''}
                     </p>
@@ -154,14 +169,3 @@ const renderEntry = (entry: BibEntry): string => {
   return `${label} — ${body}`
 }
 
-/** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
-const dayLabel = (day: string): string =>
-  new Date(`${day}T00:00:00Z`).toLocaleDateString('en-GB', {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    timeZone: 'UTC',
-  })
-
-/** "Tue 3 Mar, 18:00–20:30" */
-const meetingLabel = (m: Meeting): string => `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`

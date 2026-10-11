@@ -27,6 +27,15 @@ export interface SiteFooterNewsletter {
   title?: string
   description?: string
   placeholder?: string
+  /** Interface text, for other languages. */
+  labels?: {
+    subscribe?: string
+    subscribed?: string
+    empty?: string
+    invalid?: string
+    failed?: string
+    done?: string
+  }
   /** Called with a valid address. Throw or reject to show an error; resolve to show the subscribed state. */
   onSubscribe?: (email: string) => void | Promise<void>
 }
@@ -153,6 +162,7 @@ function Newsletter({
   title,
   description,
   placeholder = 'you@example.com',
+  labels = {},
   onSubscribe,
 }: SiteFooterNewsletter) {
   const id = useId()
@@ -164,10 +174,10 @@ function Newsletter({
 
   const validate = (value: string) =>
     !value.trim()
-      ? 'Enter your email address'
+      ? (labels.empty ?? 'Enter your email address')
       : EMAIL.test(value.trim())
         ? null
-        : "That email doesn't look right"
+        : (labels.invalid ?? "That email doesn't look right")
 
   async function submit(event: FormEvent) {
     event.preventDefault()
@@ -184,11 +194,12 @@ function Newsletter({
       setState('done')
     } catch {
       setState('idle')
-      setError("We couldn't subscribe you. Try again in a moment")
+      setError(labels.failed ?? "We couldn't subscribe you. Try again in a moment")
     }
   }
 
-  const message = state === 'done' ? `Check ${email.trim()} to confirm` : (error ?? description)
+  const message =
+    state === 'done' ? (labels.done ?? `Check ${email.trim()} to confirm`) : (error ?? description)
   const tone = state === 'done' ? 'success' : error ? 'error' : 'hint'
 
   return (
@@ -244,10 +255,10 @@ function Newsletter({
           {state === 'done' ? (
             <>
               <Check size={15} strokeWidth={2.25} aria-hidden="true" />
-              Subscribed
+              {labels.subscribed ?? 'Subscribed'}
             </>
           ) : (
-            'Subscribe'
+            (labels.subscribe ?? 'Subscribe')
           )}
         </Button>
       </div>

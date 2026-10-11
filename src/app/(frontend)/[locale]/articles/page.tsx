@@ -1,10 +1,12 @@
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 import React from 'react'
 
-import { getPublishedArticles } from '@/api/articles.api'
+import { getPublishedArticles, type Locale } from '@/api/articles.api'
+import { EmptyState } from '@/components/arc/empty-state/empty-state'
+import { Link } from '@/i18n/navigation'
 import {
   authorNames,
   excerptOf,
@@ -17,22 +19,28 @@ import {
 import { readingFonts } from '@/lib/fonts'
 import type { Article, Media, Publication } from '@/payload-types'
 
-export const metadata: Metadata = {
-  title: 'Articles — CILAS',
-  description: 'Essays, translations and writing from the Cairo Institute of Liberal Arts and Sciences.',
-}
-
 export const revalidate = 3600
 
-type Props = { searchParams: Promise<{ publication?: string }> }
+type Props = {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ publication?: string }>
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('Articles')
+  return { title: t('metaTitle'), description: t('metaDescription') }
+}
 
 const cover = (a: Article): Media | undefined =>
   typeof a.cover_image === 'object' && a.cover_image ? a.cover_image : undefined
 
-export default async function ArticlesPage({ searchParams }: Props) {
-  const { publication: selected } = await searchParams
+export default async function ArticlesPage({ params, searchParams }: Props) {
+  const [{ locale }, { publication: selected }] = await Promise.all([params, searchParams])
+  const t = await getTranslations('Articles')
+  const tArticle = await getTranslations('Article')
+  const and = tArticle('and')
   const payload = await getPayload({ config })
-  const { docs: all } = await getPublishedArticles(payload)
+  const { docs: all } = await getPublishedArticles(payload, locale as Locale)
 
   // The publications that hold at least one listed article, in first-seen order.
   const publications = [
@@ -44,9 +52,7 @@ export default async function ArticlesPage({ searchParams }: Props) {
     ).values(),
   ]
   const articles = selected
-    ? all.filter((a) =>
-        selected === 'other' ? !publicationOf(a) : publicationOf(a)?.slug === selected,
-      )
+    ? all.filter((a) => (selected === 'other' ? !publicationOf(a) : publicationOf(a)?.slug === selected))
     : all
   const featured = articles.find((a) => a.featured) ?? articles[0]
   const rest = articles.filter((a) => a !== featured)
@@ -55,65 +61,63 @@ export default async function ArticlesPage({ searchParams }: Props) {
     <div className={`${readingFonts} px-4 pb-24 sm:px-6`}>
       {/* Masthead: one big word, a count, a hairline. */}
       <header className="border-b border-foreground pt-16 pb-6 sm:pt-24">
-        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase opacity-60">
-          Cairo Institute of Liberal Arts and Sciences
-        </p>
-        <h1 className="mt-4 flex items-start gap-3 text-[clamp(3.5rem,13vw,10rem)] leading-[0.82] font-semibold tracking-[-0.045em]">
-          Articles
+        <p className="font-mono text-[0.7rem] tracking-[0.2em] uppercase opacity-60">{t('eyebrow')}</p>
+        <h1 className="mt-4 flex items-start gap-3 text-[clamp(3.5rem,13vw,10rem)] leading-[0.95] font-semibold tracking-[-0.045em] rtl:tracking-normal">
+          {t('title')}
           <sup className="mt-[0.4em] font-mono text-[clamp(0.9rem,1.6vw,1.25rem)] font-normal tracking-normal opacity-60">
             {all.length}
           </sup>
         </h1>
-        <p className="mt-8 max-w-xl font-serif-reading text-xl leading-snug opacity-80">
-          Essays, translations and notes written with and around CILAS — from the
-          rooftop in Darb el-Labbana to the Translation Lab.
-        </p>
+        <p className="mt-8 max-w-xl font-serif-reading text-xl leading-snug opacity-80">{t('intro')}</p>
       </header>
 
       {/* Sections: one per publication, plus everything else. */}
       <nav
-        aria-label="Filter by publication"
+        aria-label={t('filterLabel')}
         className="flex flex-wrap gap-x-6 gap-y-2 border-b border-border py-3 font-mono text-[0.72rem] tracking-[0.12em] uppercase"
       >
         <FilterLink active={!selected} href="/articles">
-          All
+          {t('all')}
         </FilterLink>
         {publications.map((p: Publication) => (
-          <FilterLink
-            active={selected === p.slug}
-            href={`/articles?publication=${p.slug}`}
-            key={p.slug}
-          >
+          <FilterLink active={selected === p.slug} href={`/articles?publication=${p.slug}`} key={p.slug}>
             {p.title}
           </FilterLink>
         ))}
         {all.some((a) => !publicationOf(a)) && (
           <FilterLink active={selected === 'other'} href="/articles?publication=other">
-            Notes &amp; blog
+            {t('notes')}
           </FilterLink>
         )}
       </nav>
 
       {articles.length === 0 && (
-        <p className="py-24 text-center font-serif-reading text-2xl opacity-60">
-          Nothing published here yet.
-        </p>
+        <div className="py-20">
+          <EmptyState description={t('emptyText')} title={t('empty')} />
+        </div>
       )}
 
-      {featured && <Featured article={featured} />}
+      {featured && (
+        <Featured
+          and={and}
+          article={featured}
+          notesLabel={t('notes')}
+          readLabel={t('read', { minutes: readingMinutes(featured) })}
+        />
+      )}
 
       {rest.length > 0 && (
-        <section aria-label="All articles" className="mt-16">
+        <section aria-label={t('allArticles')} className="mt-16">
           <div className="hidden grid-cols-[3.5rem_minmax(0,1fr)_13rem_11rem_4rem] gap-6 border-b border-foreground pb-2 font-mono text-[0.68rem] tracking-[0.14em] uppercase opacity-60 md:grid">
-            <span>No.</span>
-            <span>Title</span>
-            <span>Author</span>
-            <span>Publication</span>
-            <span className="text-end">Year</span>
+            <span>{t('columns.number')}</span>
+            <span>{t('columns.title')}</span>
+            <span>{t('columns.author')}</span>
+            <span>{t('columns.publication')}</span>
+            <span className="text-end">{t('columns.year')}</span>
           </div>
           <ol>
             {rest.map((a, i) => (
-              <IndexRow article={a} index={i + 1} key={a.id} />
+              <IndexRow and={and} article={a} index={i + 1} key={a.id} notesLabel={t('notes')} />
             ))}
           </ol>
         </section>
@@ -122,23 +126,11 @@ export default async function ArticlesPage({ searchParams }: Props) {
   )
 }
 
-function FilterLink({
-  active,
-  href,
-  children,
-}: {
-  active: boolean
-  href: string
-  children: React.ReactNode
-}) {
+function FilterLink({ active, href, children }: { active: boolean; href: string; children: React.ReactNode }) {
   return (
     <Link
       aria-current={active ? 'page' : undefined}
-      className={
-        active
-          ? 'bg-foreground px-1.5 text-background'
-          : 'px-1.5 opacity-60 transition-opacity hover:opacity-100'
-      }
+      className={active ? 'bg-foreground px-1.5 text-background' : 'px-1.5 opacity-60 transition-opacity hover:opacity-100'}
       href={href}
     >
       {children}
@@ -147,7 +139,17 @@ function FilterLink({
 }
 
 /** The lead story: image (or a flat colour block) beside a large title. */
-function Featured({ article }: { article: Article }) {
+function Featured({
+  article,
+  and,
+  readLabel,
+  notesLabel,
+}: {
+  article: Article
+  and: string
+  readLabel: string
+  notesLabel: string
+}) {
   const image = cover(article)
   const pub = publicationOf(article)
   return (
@@ -155,7 +157,7 @@ function Featured({ article }: { article: Article }) {
       className="group mt-10 grid gap-6 border-b border-border pb-10 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-10"
       href={`/articles/${article.slug}`}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-[oklch(0.93_0.17_110)]">
+      <div className="relative aspect-[4/3] overflow-hidden bg-[oklch(0.93_0.17_110)] text-[oklch(0.2_0_0)] dark:bg-[oklch(0.42_0.09_110)] dark:text-[oklch(0.97_0.03_110)]">
         {image?.url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -164,30 +166,38 @@ function Featured({ article }: { article: Article }) {
             src={image.url}
           />
         ) : (
-          <span className="absolute inset-0 flex items-end p-6 text-[clamp(2rem,5vw,4rem)] leading-[0.9] font-semibold tracking-tight">
+          <span className="absolute inset-0 flex items-end p-6 text-[clamp(2rem,5vw,4rem)] leading-[0.95] font-semibold tracking-tight">
             {pub?.title ?? 'CILAS'}
           </span>
         )}
       </div>
       <div className="flex flex-col">
         <p className="font-mono text-[0.7rem] tracking-[0.16em] uppercase opacity-60">
-          {indexLabel(0)} — {pub?.title ?? 'Notes'} · {yearOf(article)}
+          {indexLabel(0)} — {pub?.title ?? notesLabel} · {yearOf(article)}
         </p>
-        <h2 className="mt-4 font-serif-reading text-[clamp(2rem,4vw,3.25rem)] leading-[1.02] tracking-tight group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
+        <h2 className="mt-4 font-serif-reading text-[clamp(2rem,4vw,3.25rem)] leading-[1.08] tracking-tight group-hover:underline group-hover:decoration-1 group-hover:underline-offset-4">
           {article.title}
         </h2>
-        <p className="mt-3 text-sm">{joinNames(authorNames(article))}</p>
+        <p className="mt-3 text-sm">{joinNames(authorNames(article), and)}</p>
         <p className="mt-6 font-serif-reading text-lg leading-relaxed opacity-75">{excerptOf(article)}</p>
-        <p className="mt-auto pt-6 font-mono text-[0.7rem] tracking-[0.16em] uppercase">
-          Read · {readingMinutes(article)} min →
-        </p>
+        <p className="mt-auto pt-6 font-mono text-[0.7rem] tracking-[0.16em] uppercase">{readLabel} →</p>
       </div>
     </Link>
   )
 }
 
 /** A ruled index row that inverts on hover. */
-function IndexRow({ article, index }: { article: Article; index: number }) {
+function IndexRow({
+  article,
+  index,
+  and,
+  notesLabel,
+}: {
+  article: Article
+  index: number
+  and: string
+  notesLabel: string
+}) {
   const pub = publicationOf(article)
   const image = cover(article)
   return (
@@ -198,9 +208,7 @@ function IndexRow({ article, index }: { article: Article; index: number }) {
       >
         <span className="font-mono text-sm opacity-60">{indexLabel(index)}</span>
         <span className="flex items-center gap-4">
-          <span className="font-serif-reading text-[1.4rem] leading-tight md:text-[1.6rem]">
-            {article.title}
-          </span>
+          <span className="font-serif-reading text-[1.4rem] leading-tight md:text-[1.6rem]">{article.title}</span>
           {image?.url && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -210,15 +218,11 @@ function IndexRow({ article, index }: { article: Article; index: number }) {
             />
           )}
         </span>
-        <span className="col-start-2 text-sm opacity-80 md:col-start-auto">
-          {joinNames(authorNames(article))}
-        </span>
+        <span className="col-start-2 text-sm opacity-80 md:col-start-auto">{joinNames(authorNames(article), and)}</span>
         <span className="col-start-2 font-mono text-[0.7rem] tracking-[0.1em] uppercase opacity-60 md:col-start-auto">
-          {pub?.title ?? 'Notes'}
+          {pub?.title ?? notesLabel}
         </span>
-        <span className="col-start-2 font-mono text-sm opacity-60 md:col-start-auto md:text-end">
-          {yearOf(article)}
-        </span>
+        <span className="col-start-2 font-mono text-sm opacity-60 md:col-start-auto md:text-end">{yearOf(article)}</span>
       </Link>
     </li>
   )

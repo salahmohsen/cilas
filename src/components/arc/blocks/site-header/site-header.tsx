@@ -102,6 +102,8 @@ export interface SiteHeaderProps {
   scrollThreshold?: number
   /** Accessible name of the navigation landmark. */
   label?: string
+  /** Compact controls shown beside the actions at every width (language, theme). */
+  utilities?: ReactNode
   className?: string
 }
 
@@ -337,6 +339,7 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
     scrollContainer,
     scrollThreshold = 8,
     label = 'Main',
+    utilities,
     className,
   },
   ref,
@@ -707,6 +710,7 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
             </nav>
           </LayoutGroup>
           <div className={styles.actions}>
+            {utilities}
             {secondaryAction && actionNode(secondaryAction, 'secondary', styles.wideOnly)}
             {primaryAction && actionNode(primaryAction, 'primary')}
             <button

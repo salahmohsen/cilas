@@ -1,0 +1,187 @@
+{
+  "Meta": {
+    "siteName": "CILAS",
+    "description": "Cairo Institute of Liberal Arts and Sciences — A pedagogy of discovery and attunement."
+  },
+  "Header": {
+    "brand": "Cairo Institute of\nLiberal Arts and Sciences",
+    "label": "CILAS main navigation",
+    "signIn": "Sign in",
+    "apply": "Apply",
+    "study": {
+      "label": "Study",
+      "thematic": "Thematic Courses",
+      "thematicDescription": "Spring 12-week courses emerging from three fields of study. Open to visiting students (8 places per course). Hosted on rooftop and online.",
+      "labs": "Labs",
+      "labsDescription": "10–12 week project-based \"playful production\". Experiment with translation, space, media, and pedagogy. Emphasise experiential learning, welcome all walks of life.",
+      "workshops": "Workshops",
+      "workshopsDescription": "Short skill/experiment offerings with varied schedules. Focused, hands-on sessions for specific craft or inquiry.",
+      "featureTitle": "Bridge Programme",
+      "featureDescription": "One-year flagship liberal arts programme (2 semesters, 15+ hrs/week). Discussion-based, trans-disciplinary coursework across Historical Consciousness, Philosophical & Poetic Inquiry, and Ethnographic Study.",
+      "featureImageAlt": "All CILAS courses"
+    },
+    "people": {
+      "label": "People",
+      "fellows": "Fellows",
+      "fellowsDescription": "Teachers who \"know how to be a student\" — not ones who know answers, but who know how to find out. Graduate-trained, experienced educators attuned to context.",
+      "cilasians": "CILASians",
+      "cilasiansDescription": "Students, alumni, and community members from all walks of life",
+      "governance": "Governance",
+      "governanceDescription": "Advisors and trustees guiding CILAS's mission."
+    },
+    "articles": {
+      "label": "Articles",
+      "description": "Essays, translations and notes written with and around CILAS."
+    },
+    "calendar": {
+      "label": "Calendar"
+    }
+  },
+  "Language": {
+    "label": "Language",
+    "switchTo": "عربي",
+    "switchToLabel": "اقرأ الموقع بالعربية",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "Theme": {
+    "label": "Colour theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "Footer": {
+    "tagline": "A pedagogy of discovery and attunement.",
+    "explore": "Explore",
+    "study": "Study",
+    "articles": "Articles",
+    "people": "People",
+    "calendar": "Calendar",
+    "institute": "The institute",
+    "about": "About",
+    "spaces": "Spaces",
+    "contact": "Contact",
+    "newsletterTitle": "Newsletter",
+    "newsletterText": "News of cycles, courses and gatherings, a few times a year.",
+    "license": "Texts are published under Creative Commons licences unless noted.",
+    "rights": "© {year} Cairo Institute of Liberal Arts and Sciences",
+    "newsletter": {
+      "subscribe": "Subscribe",
+      "subscribed": "Subscribed",
+      "placeholder": "you@example.com",
+      "empty": "Enter your email address",
+      "invalid": "That email doesn't look right",
+      "failed": "We couldn't subscribe you. Try again in a moment",
+      "done": "You're on the list."
+    }
+  },
+  "Fallback": {
+    "onlyIn": "Available in {language} only.",
+    "readIn": "Read in {language}"
+  },
+  "Articles": {
+    "metaTitle": "Articles — CILAS",
+    "metaDescription": "Essays, translations and writing from the Cairo Institute of Liberal Arts and Sciences.",
+    "eyebrow": "Cairo Institute of Liberal Arts and Sciences",
+    "title": "Articles",
+    "intro": "Essays, translations and notes written with and around CILAS — from the rooftop in Darb el-Labbana to the Translation Lab.",
+    "filterLabel": "Filter by publication",
+    "all": "All",
+    "notes": "Notes & blog",
+    "empty": "Nothing published here yet.",
+    "emptyText": "Articles appear here once an editor publishes them.",
+    "columns": {
+      "number": "No.",
+      "title": "Title",
+      "author": "Author",
+      "publication": "Publication",
+      "year": "Year"
+    },
+    "read": "Read · {minutes} min",
+    "allArticles": "All articles"
+  },
+  "Article": {
+    "by": "By",
+    "and": "and",
+    "translatedBy": "Translated by",
+    "publication": "Publication",
+    "published": "Published",
+    "readingTime": "Reading time",
+    "minutes": "{count} min",
+    "language": "Language",
+    "contents": "Contents",
+    "onThisPage": "On this page",
+    "notes": "Notes ({count})",
+    "aboutText": "About this text",
+    "original": "Original",
+    "credits": "Credits",
+    "related": "Related articles",
+    "copyLink": "Copy link",
+    "copied": "Link copied",
+    "printEdition": "Print edition (PDF)",
+    "textSize": "Text size",
+    "smaller": "Smaller text",
+    "larger": "Larger text",
+    "progress": "Reading progress",
+    "back": "All articles",
+    "roles": {
+      "editor": "Editor",
+      "translator": "Translation",
+      "copy_editor": "Copy-editing",
+      "proofreader": "Proofreading",
+      "supervisor": "Supervision",
+      "coordinator": "Coordination",
+      "art_director": "Art direction",
+      "cover_designer": "Cover design",
+      "illustrator": "Illustration",
+      "photographer": "Photography",
+      "author": "Author",
+      "other": "Contribution"
+    }
+  },
+  "Study": {
+    "heroQuote": "What we cover at CILAS matters less than what a student discovers.",
+    "heroAttribution": "— A pedagogy of discovery and attunement, not consumption",
+    "heroImageAlt": "CILAS classroom",
+    "filters": {
+      "label": "Course filters",
+      "add": "Add filter",
+      "cycle": "Cycle",
+      "fall": "Fall",
+      "winter": "Winter",
+      "spring": "Spring",
+      "summer": "Summer",
+      "cycleYear": "Cycle year",
+      "academicYear": "Academic year",
+      "fellow": "Fellow",
+      "courseType": "Course type",
+      "bridge": "Bridge Programme",
+      "core": "Core Curriculum",
+      "thematic": "Thematic Courses",
+      "lab": "Labs",
+      "workshop": "Workshops"
+    }
+  },
+  "Course": {
+    "location": "Location",
+    "cycle": "Cycle",
+    "starts": "Starts",
+    "weekOf": "Week of {date}",
+    "price": "Price",
+    "registration": "Registration",
+    "open": "Open",
+    "closed": "Closed",
+    "fellows": "Fellows",
+    "sessions": "Sessions",
+    "week": "Week {number}",
+    "session": "Session {number}",
+    "bibliography": "Bibliography",
+    "readings": "Readings",
+    "activities": "Activities"
+  },
+  "NotFound": {
+    "title": "Page not found",
+    "text": "The page you are looking for is not here. It may have moved when the site was rebuilt.",
+    "home": "Go to the home page"
+  }
+}

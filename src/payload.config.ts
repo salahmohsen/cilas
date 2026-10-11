@@ -75,8 +75,8 @@ const generateDescription: GenerateDescription = ({ collectionConfig, doc }) =>
   seoFor(collectionConfig?.slug, doc).description ?? ''
 const generateImage: GenerateImage = ({ collectionConfig, doc }) =>
   seoFor(collectionConfig?.slug, doc).image ?? ''
-const generateURL: GenerateURL = ({ collectionConfig, doc }) =>
-  `${env.NEXT_PUBLIC_SERVER_URL}${pathOf(collectionConfig?.slug ?? '', doc ?? {}) ?? ''}`
+const generateURL: GenerateURL = ({ collectionConfig, doc, locale }) =>
+  `${env.NEXT_PUBLIC_SERVER_URL}${pathOf(collectionConfig?.slug ?? '', doc ?? {}, locale ?? 'en') ?? ''}`
 
 export default buildConfig({
   // System email only. Newsletter subscribers live in Resend Audiences (ADR 0005).

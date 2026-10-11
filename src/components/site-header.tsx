@@ -1,101 +1,85 @@
 'use client'
 
-import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
+import { BookOpen, Calendar, Newspaper, Users } from 'lucide-react'
+import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { BookOpen, Users, Building, TreePine, Newspaper, Calendar, Award } from 'lucide-react'
+import { Suspense } from 'react'
 
-const studyLinks = [
-  {
-    label: 'Thematic Courses',
-    href: '/study/thematic',
-    description:
-      'Spring 12-week courses emerging from three fields of study. Open to visiting students (8 places per course). Hosted on rooftop and online.',
-  },
-  {
-    label: 'Labs',
-    href: '/study/labs',
-    description:
-      '10–12 week project-based "playful production". Experiment with translation, space, media, and pedagogy. Emphasise experiential learning, welcome all walks of life.',
-  },
-  {
-    label: 'Workshops',
-    href: '/study/workshops',
-    description:
-      'Short skill/experiment offerings with varied schedules. Focused, hands-on sessions for specific craft or inquiry.',
-  },
-]
+import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
+import { LanguageSwitch, ThemeMenu } from '@/components/site-controls'
 
-const peopleLinks = [
-  {
-    label: 'Fellows',
-    href: '/people/fellows',
-    description:
-      'Teachers who "know how to be a student" — not ones who know answers, but who know how to find out. Graduate-trained, experienced educators attuned to context.',
-  },
-  {
-    label: 'CILASians',
-    href: '/people/cilasians',
-    description: 'Students, alumni, and community members from all walks of life',
-  },
-  {
-    label: 'Governance',
-    href: '/governance',
-    description: "Advisors and trustees guiding CILAS's mission.",
-  },
-]
-
-const navigationItems = [
-  {
-    value: 'study',
-    label: 'Study',
-    href: '/study',
-    icon: BookOpen,
-    links: studyLinks,
-    feature: {
-      title: 'Bridge Programme',
-      description:
-        'One-year flagship liberal arts programme (2 semesters, 15+ hrs/week). Discussion-based, trans-disciplinary coursework across Historical Consciousness, Philosophical & Poetic Inquiry, and Ethnographic Study.',
-      href: '/study',
-      image: { src: '/assets/images/cilas-classroom.jpg', alt: 'All CILAS courses' },
-    },
-  },
-  {
-    value: 'people',
-    label: 'People',
-    href: '/people',
-    icon: Users,
-    links: peopleLinks,
-  },
-
-  {
-    value: 'articles',
-    label: 'Articles',
-    href: '/articles',
-    icon: Newspaper,
-    description:
-      'Community writing: featured essays, fellow reflections, CILASian voices. Draft → Community → Public workflow. "Food for thought" newsletter archive. Bilingual (AR/EN).',
-  },
-  {
-    value: 'calendar',
-    label: 'Calendar',
-    href: '/calendar',
-    icon: Calendar,
-  },
-]
-
+/** The site's main navigation, in the site language, with links under it. */
 export function CILASSiteHeader() {
+  const t = useTranslations('Header')
+  const locale = useLocale()
+  // Arc's header renders plain anchors, so each href carries the language.
+  const href = (path: string) => `/${locale}${path === '/' ? '' : path}`
+
+  const items = [
+    {
+      value: 'study',
+      label: t('study.label'),
+      href: href('/study'),
+      icon: BookOpen,
+      links: [
+        { label: t('study.thematic'), href: href('/study/thematic'), description: t('study.thematicDescription') },
+        { label: t('study.labs'), href: href('/study/labs'), description: t('study.labsDescription') },
+        { label: t('study.workshops'), href: href('/study/workshops'), description: t('study.workshopsDescription') },
+      ],
+      feature: {
+        title: t('study.featureTitle'),
+        description: t('study.featureDescription'),
+        href: href('/study'),
+        image: { src: '/assets/images/cilas-classroom.jpg', alt: t('study.featureImageAlt') },
+      },
+    },
+    {
+      value: 'people',
+      label: t('people.label'),
+      href: href('/people'),
+      icon: Users,
+      links: [
+        { label: t('people.fellows'), href: href('/people/fellows'), description: t('people.fellowsDescription') },
+        { label: t('people.cilasians'), href: href('/people/cilasians'), description: t('people.cilasiansDescription') },
+        { label: t('people.governance'), href: href('/governance'), description: t('people.governanceDescription') },
+      ],
+    },
+    {
+      value: 'articles',
+      label: t('articles.label'),
+      href: href('/articles'),
+      icon: Newspaper,
+      description: t('articles.description'),
+    },
+    {
+      value: 'calendar',
+      label: t('calendar.label'),
+      href: href('/calendar'),
+      icon: Calendar,
+    },
+  ]
+
   return (
     <SiteHeader
-      variant="mega"
       brand={{
-        name: 'Cairo Institute of\nLiberal Arts and Sciences',
-        href: '/',
-        mark: <Image src="/assets/images/logo.webp" alt="CILAS" width={25} height={25} />,
+        name: t('brand'),
+        href: href('/'),
+        mark: <Image alt="CILAS" height={25} src="/assets/images/logo.webp" width={25} />,
       }}
-      items={navigationItems}
-      secondaryAction={{ label: 'Sign in', href: '/admin' }}
-      primaryAction={{ label: 'Apply', href: '/study/bridge/apply' }}
-      label="CILAS main navigation"
+      items={items}
+      label={t('label')}
+      primaryAction={{ label: t('apply'), href: href('/study/bridge/apply') }}
+      secondaryAction={{ label: t('signIn'), href: '/admin' }}
+      utilities={
+        <>
+          {/* useSearchParams needs a Suspense boundary on static pages. */}
+          <Suspense fallback={null}>
+            <LanguageSwitch />
+          </Suspense>
+          <ThemeMenu />
+        </>
+      }
+      variant="mega"
     />
   )
 }

@@ -9,6 +9,10 @@ export type BlogPost = {
   date: string
   /** Minutes to read. */
   readTime: number
+  /** Shown instead of the formatted date, e.g. in the reader's language. */
+  dateLabel?: string
+  /** Shown instead of "N min read". */
+  readTimeLabel?: string
   author: BlogAuthor
   image?: { src: string; alt: string }
   /** Paragraphs for the in-place reader. Leave out when every post links out through getHref. */

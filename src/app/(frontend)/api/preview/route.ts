@@ -60,7 +60,9 @@ export async function GET(request: Request) {
   draft.enable()
 
   // pathOf, not a hand-built path: the course route has moved before.
-  const path = pathOf(collection, doc)
+  // The editor's saved site language, else English.
+  const saved = request.headers.get('cookie')?.match(/(?:^|;\s*)NEXT_LOCALE=(en|ar)/)?.[1]
+  const path = pathOf(collection, doc, saved ?? 'en')
   if (!path) {
     return new Response('This document has no page', { status: 404 })
   }

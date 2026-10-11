@@ -164,9 +164,29 @@
 }
 
 .article-prose {
-  @apply prose prose-neutral max-w-[68ch] font-serif-reading text-[1.2rem] leading-[1.7];
+  @apply prose prose-neutral max-w-[68ch] font-serif-reading leading-[1.7];
+  /* --reading-scale is set by the A−/A+ control on the text's container. */
+  font-size: calc(1.2rem * var(--reading-scale, 1));
+  /* Every prose colour follows the site's tokens, so light and dark both work
+     without prose-invert's own palette. */
   --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--foreground);
+  --tw-prose-links: var(--foreground);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted-foreground);
+  --tw-prose-bullets: var(--muted-foreground);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
   --tw-prose-quote-borders: var(--foreground);
+  --tw-prose-captions: var(--muted-foreground);
+
+  color: var(--foreground);
+  /* Explicit too: the typography plugin's own defaults otherwise win at the
+     element and leave headings dark on the dark theme. */
+  & :where(h2, h3, h4, blockquote, strong, a, li) {
+    color: var(--foreground);
+  }
 
   /* Section heads in the interface sans, small and spaced, as on the moodboard. */
   & :where(h2, h3, h4) {
@@ -191,12 +211,18 @@
   & :where(a) {
     @apply decoration-1 underline-offset-[3px];
   }
-  /* The notes at the end: everything after the last h3 ("Notes" / "ملاحظات"). */
-  & :where(h3:last-of-type ~ p) {
-    @apply my-2 text-[0.92rem] leading-snug opacity-75;
+}
+
+/* The essay's notes, folded under the text. */
+.article-prose--notes {
+  font-size: calc(0.95rem * var(--reading-scale, 1));
+  @apply leading-snug;
+  & :where(p) {
+    @apply my-2 opacity-80;
   }
 }
 
 .article-prose:where([dir='rtl'] *) {
-  @apply text-[1.3rem] leading-[1.95];
+  font-size: calc(1.3rem * var(--reading-scale, 1));
+  @apply leading-[1.95];
 }
