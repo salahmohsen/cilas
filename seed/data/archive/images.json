@@ -28,6 +28,13 @@
     }
   },
   "people": {
-    "Manish Jain": { "file": "images/Manish-Jain.webp", "alt": "Manish Jain" }
+    "Manish Jain": {
+      "file": "images/Manish-Jain.webp",
+      "alt": "Manish Jain"
+    },
+    "Surti Singh": {
+      "file": "images/surti-singh.jpg",
+      "alt": "Surti Singh"
+    }
   }
 }
