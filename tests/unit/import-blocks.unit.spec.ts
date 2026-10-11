@@ -57,4 +57,40 @@ describe('blocksToLexical', () => {
     expect(root.children.map((c) => c.type)).toEqual(['list', 'paragraph', 'list'])
     expect(blocksToLexical([], 'rtl')).toBeNull()
   })
+
+  it('turns [label](url) into a custom link node between text nodes', () => {
+    const root = blocksToLexical(
+      [{ type: 'paragraph', text: 'See [the form](https://example.org/f?a=1) now.' }],
+      'ltr',
+    )!.root
+    const children = (root.children[0] as unknown as { children: Array<Record<string, unknown>> })
+      .children
+    expect(children.map((c) => c.type)).toEqual(['text', 'link', 'text'])
+    expect(children[0]).toMatchObject({ text: 'See ' })
+    expect(children[1]).toMatchObject({
+      fields: { url: 'https://example.org/f?a=1', newTab: false, linkType: 'custom' },
+      direction: 'ltr',
+      children: [{ type: 'text', text: 'the form', format: 0 }],
+    })
+    expect(children[2]).toMatchObject({ text: ' now.' })
+  })
+
+  it('makes **bold** bold text, bold links keep the bold, and stray markers vanish', () => {
+    const kids = (text: string) =>
+      (
+        blocksToLexical([{ type: 'paragraph', text }], 'ltr')!.root.children[0] as unknown as {
+          children: Array<Record<string, unknown>>
+        }
+      ).children
+    expect(kids('a **b** c').map((c) => [c.text, c.format])).toEqual([
+      ['a ', 0],
+      ['b', 1],
+      [' c', 0],
+    ])
+    expect(kids('ten weeks** **with two')).toMatchObject([{ text: 'ten weeks' }, { text: ' ', format: 0 }, { text: 'with two' }])
+    expect(kids('**[apply](https://x.org)**')).toMatchObject([
+      { type: 'link', children: [{ text: 'apply', format: 1 }] },
+    ])
+    expect(kids('one ** unpaired').map((c) => c.text).join('')).toBe('one  unpaired')
+  })
 })

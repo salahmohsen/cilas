@@ -8,10 +8,10 @@ export type Block = {
 
 type Direction = 'ltr' | 'rtl'
 
-const textNode = (text: string): LexicalChild => ({
+const textNode = (text: string, format = 0): LexicalChild => ({
   type: 'text',
   detail: 0,
-  format: 0,
+  format,
   mode: 'normal',
   style: '',
   text,
@@ -34,11 +34,51 @@ const element = (
   ...extra,
 })
 
+const BOLD = 1
+const LINK = /\[([^\]]*)\]\(([^)\s]+)\)/g
+
+/** Text with `[label](url)` links: link nodes around text nodes of the given format. */
+const withLinks = (text: string, format: number, direction: Direction): LexicalChild[] => {
+  const out: LexicalChild[] = []
+  let last = 0
+  for (const match of text.matchAll(LINK)) {
+    if (match.index > last) out.push(textNode(text.slice(last, match.index), format))
+    out.push(
+      element('link', direction, [textNode(match[1].trim() || match[2], format)], {
+        fields: { url: match[2], newTab: false, linkType: 'custom' },
+        version: 3,
+      }),
+    )
+    last = match.index + match[0].length
+  }
+  if (last < text.length) out.push(textNode(text.slice(last), format))
+  return out
+}
+
+/**
+ * Inline content: `**bold**` becomes bold text (format 1) and `[label](url)` a
+ * custom link. Markers around only whitespace, and an unpaired `**`, are
+ * dropped rather than shown.
+ */
+export const inlineToLexical = (text: string, direction: Direction): LexicalChild[] => {
+  const parts = text.split('**')
+  const paired = parts.length % 2 === 1
+  const out: LexicalChild[] = []
+  parts.forEach((part, i) => {
+    if (!part) return
+    const bold = paired && i % 2 === 1 && part.trim() !== ''
+    out.push(...withLinks(part, bold ? BOLD : 0, direction))
+  })
+  return out.length ? out : [textNode(text)]
+}
+
 const paragraph = (text: string, direction: Direction) =>
-  element('paragraph', direction, [textNode(text)], { textFormat: '', textStyle: '' })
+  element('paragraph', direction, inlineToLexical(text, direction), { textFormat: '', textStyle: '' })
 
 const heading = (text: string, level: number, direction: Direction) =>
-  element('heading', direction, [textNode(text)], { tag: `h${Math.min(4, Math.max(2, level))}` })
+  element('heading', direction, inlineToLexical(text, direction), {
+    tag: `h${Math.min(4, Math.max(2, level))}`,
+  })
 
 /**
  * Typed article blocks as a Lexical document: real headings, quotes and lists.
@@ -58,7 +98,7 @@ export const blocksToLexical = (blocks: Block[], direction: Direction): LexicalJ
     } else if (block.type === 'heading') {
       children.push(heading(block.text, block.level ?? 2, direction))
     } else if (block.type === 'quote') {
-      children.push(element('quote', direction, [textNode(block.text)]))
+      children.push(element('quote', direction, inlineToLexical(block.text, direction)))
     } else if (block.type === 'list_item') {
       if (!list) {
         list = element('list', direction, [], { listType: 'bullet', tag: 'ul', start: 1 })
@@ -66,7 +106,9 @@ export const blocksToLexical = (blocks: Block[], direction: Direction): LexicalJ
       }
       const items = list.children as LexicalChild[]
       items.push(
-        element('listitem', direction, [textNode(block.text)], { value: items.length + 1 }),
+        element('listitem', direction, inlineToLexical(block.text, direction), {
+          value: items.length + 1,
+        }),
       )
     } else {
       children.push(paragraph(block.text, direction))
