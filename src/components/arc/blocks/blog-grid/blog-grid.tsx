@@ -19,6 +19,19 @@ import styles from './blog-grid.module.css'
 
 export type { BlogAuthor, BlogPost } from './blog-grid-data'
 
+export interface BlogGridLabels {
+  all?: string
+  allPosts?: string
+  filterBy?: string
+  pagination?: string
+  previous?: string
+  next?: string
+  previousPage?: string
+  nextPage?: string
+  page?: (n: number) => string
+  empty?: (category: string) => string
+}
+
 export interface BlogGridProps {
   title?: string
   description?: string
@@ -39,6 +52,8 @@ export interface BlogGridProps {
   showFeatured?: boolean
   /** Link for each post. When set, cards render as links and the in-place reader is off. */
   getHref?: (post: BlogPost) => string
+  /** Interface text, for other languages. */
+  labels?: BlogGridLabels
   /** Called when a post opens, from a link or the in-place reader. */
   onPostOpen?: (post: BlogPost) => void
   className?: string
@@ -169,6 +184,7 @@ export function BlogGrid({
   showFeatured = true,
   getHref,
   onPostOpen,
+  labels = {},
   className,
 }: BlogGridProps) {
   const reduced = useReducedMotion()
@@ -315,7 +331,7 @@ export function BlogGrid({
                   {...enterFade(true)}
                 >
                   <ArrowLeft size={16} aria-hidden="true" />
-                  All posts
+                  {labels.allPosts ?? 'All posts'}
                 </motion.button>
                 <motion.header className={styles.readerHead} {...enterFade(true)}>
                   <Meta post={reading} />
@@ -364,7 +380,7 @@ export function BlogGrid({
                   <motion.div
                     className={styles.filters}
                     role="group"
-                    aria-label="Filter by category"
+                    aria-label={labels.filterBy ?? 'Filter by category'}
                     {...enterFade(back)}
                   >
                     {tabs.map((tab) => (
@@ -382,7 +398,7 @@ export function BlogGrid({
                             transition={reduced ? { duration: 0 } : morph}
                           />
                         )}
-                        <span>{tab}</span>
+                        <span>{tab === 'All' ? (labels.all ?? 'All') : tab}</span>
                       </button>
                     ))}
                   </motion.div>
@@ -424,7 +440,9 @@ export function BlogGrid({
                         </div>
                       )}
                       {filtered.length === 0 && (
-                        <p className={styles.empty}>No posts in {category} yet.</p>
+                        <p className={styles.empty}>
+                          {labels.empty ? labels.empty(category) : `No posts in ${category} yet.`}
+                        </p>
                       )}
                     </motion.div>
                   </AnimatePresence>
@@ -434,7 +452,7 @@ export function BlogGrid({
                       <motion.nav
                         key="pagination"
                         className={styles.pagination}
-                        aria-label="Pagination"
+                        aria-label={labels.pagination ?? 'Pagination'}
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{
@@ -448,10 +466,10 @@ export function BlogGrid({
                           className={styles.pageStep}
                           onClick={() => setPage(safePage - 1)}
                           disabled={safePage === 1}
-                          aria-label="Previous page"
+                          aria-label={labels.previousPage ?? 'Previous page'}
                         >
                           <ChevronLeft size={16} aria-hidden="true" />
-                          <span>Previous</span>
+                          <span>{labels.previous ?? 'Previous'}</span>
                         </button>
                         <div className={styles.pageNumbers}>
                           {Array.from({ length: pageCount }, (_, index) => index + 1).map(
@@ -461,7 +479,7 @@ export function BlogGrid({
                                 type="button"
                                 className={styles.pageNumber}
                                 aria-current={number === safePage ? 'page' : undefined}
-                                aria-label={`Page ${number}`}
+                                aria-label={labels.page ? labels.page(number) : `Page ${number}`}
                                 onClick={() => setPage(number)}
                               >
                                 {number === safePage && (
@@ -481,9 +499,9 @@ export function BlogGrid({
                           className={styles.pageStep}
                           onClick={() => setPage(safePage + 1)}
                           disabled={safePage === pageCount}
-                          aria-label="Next page"
+                          aria-label={labels.nextPage ?? 'Next page'}
                         >
-                          <span>Next</span>
+                          <span>{labels.next ?? 'Next'}</span>
                           <ChevronRight size={16} aria-hidden="true" />
                         </button>
                       </motion.nav>

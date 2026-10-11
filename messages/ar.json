@@ -97,7 +97,19 @@
       "year": "السنة"
     },
     "read": "اقرأ · {minutes} دقيقة",
-    "allArticles": "كل المقالات"
+    "allArticles": "كل المقالات",
+    "grid": {
+      "all": "الكل",
+      "allPosts": "كل المقالات",
+      "filterBy": "تصفية حسب المنشور",
+      "pagination": "الصفحات",
+      "previous": "السابق",
+      "next": "التالي",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "page": "الصفحة {n}",
+      "empty": "لا يوجد شيء في {category} بعد."
+    }
   },
   "Article": {
     "by": "بقلم",

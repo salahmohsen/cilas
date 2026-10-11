@@ -4,7 +4,6 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState, useSyncExternalStore, type ReactNode } from 'react'
 
 import { Accordion } from '@/components/arc/accordion/accordion'
-import { BlogGrid, type BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import type { Section } from '@/lib/article-body'
 
 /** A thin bar across the top of the viewport that fills as the essay is read. */
@@ -157,19 +156,4 @@ export function TextSize({ target }: { target: string }) {
 /** The essay's notes, folded so the text ends cleanly. */
 export function ArticleNotes({ title, children }: { title: string; children: ReactNode }) {
   return <Accordion defaultOpen={-1} items={[{ title, content: children }]} />
-}
-
-/** Related articles as cards; each opens its own page. */
-export function RelatedArticles({ title, posts }: { title: string; posts: Array<BlogPost & { href: string }> }) {
-  return (
-    <BlogGrid
-      categories={[]}
-      description=""
-      getHref={(post) => posts.find((p) => p.id === post.id)?.href ?? '#'}
-      pageSize={3}
-      posts={posts}
-      showFeatured={false}
-      title={title}
-    />
-  )
 }

@@ -444,3 +444,9 @@
     transform: none;
   }
 }
+
+/* Chevrons and arrows point the reading direction. */
+[dir='rtl'] .pageStep svg,
+[dir='rtl'] .back svg {
+  transform: scaleX(-1);
+}

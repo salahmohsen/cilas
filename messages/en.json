@@ -97,7 +97,19 @@
       "year": "Year"
     },
     "read": "Read · {minutes} min",
-    "allArticles": "All articles"
+    "allArticles": "All articles",
+    "grid": {
+      "all": "All",
+      "allPosts": "All articles",
+      "filterBy": "Filter by publication",
+      "pagination": "Pages",
+      "previous": "Previous",
+      "next": "Next",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "page": "Page {n}",
+      "empty": "Nothing in {category} yet."
+    }
   },
   "Article": {
     "by": "By",

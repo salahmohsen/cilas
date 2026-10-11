@@ -12,9 +12,10 @@ import {
   ArticleContents,
   ArticleNotes,
   ReadingProgress,
-  RelatedArticles,
   TextSize,
 } from '@/components/article/reading-tools'
+import { ArticlesGrid } from '@/components/article/articles-grid'
+import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
@@ -85,9 +86,10 @@ export default async function ArticlePage({ params }: Props) {
   if (!reading) notFound()
   const { article, contentLocale, body, title } = reading
 
-  const [t, tl, format, related] = await Promise.all([
+  const [t, tl, tArticles, format, related] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
+    getTranslations('Articles'),
     getFormatter(),
     getRelatedArticles(payload, article, locale),
   ])
@@ -240,38 +242,23 @@ export default async function ArticlePage({ params }: Props) {
       </div>
 
       {related.length > 0 && (
-        <RelatedArticles
-          posts={related.map((r) => toPost(r, locale, format, (m) => t('minutes', { count: m }), t('and')))}
+        <ArticlesGrid
+          categories={[]}
+          description=""
+          pageSize={3}
+          posts={related.map((r) =>
+            toArticleCard(r, {
+              locale,
+              format,
+              minutesLabel: (m) => t('minutes', { count: m }),
+              and: t('and'),
+              otherCategory: tArticles('notes'),
+            }),
+          )}
+          showFeatured={false}
           title={t('related')}
         />
       )}
     </div>
   )
-}
-
-/** A related article as an Arc blog card. */
-const toPost = (
-  a: Article,
-  locale: Locale,
-  format: Awaited<ReturnType<typeof getFormatter>>,
-  minutesLabel: (m: number) => string,
-  and: string,
-) => {
-  const image = isObject<Media>(a.cover_image) ? a.cover_image : undefined
-  const date = a.published_date ?? a.createdAt
-  const minutes = readingMinutes(a)
-  const names = authorNames(a)
-  return {
-    id: String(a.id),
-    href: pathOf('articles', a, locale) ?? '#',
-    title: a.title,
-    excerpt: excerptOf(a, 140),
-    category: publicationOf(a)?.title ?? '',
-    date: date.slice(0, 10),
-    dateLabel: format.dateTime(new Date(date), 'year'),
-    readTime: minutes,
-    readTimeLabel: minutesLabel(minutes),
-    author: { name: joinNames(names, and) },
-    ...(image?.url ? { image: { src: image.url, alt: image.alt } } : {}),
-  }
 }
