@@ -50,7 +50,9 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 
 - Course flows (plan 6.4): 164 of 166 flows (2 files missing) written into 165 courses, 1,318 sessions in all. Every PDF link is captured. `migration/review/flows.md` lists what a person should check.
 
-Stage 2–4 for publishing comes in plan 6.5.
+- Publishing content (plan 6.5): 15 articles (5 *Pigeon Towers* essays in English and Arabic, 7 *Translation as Education* essays in Arabic, 3 blog posts), 2 publications, 11 press items, 6 events and 19 newsletters, all drafts for review. `migration/review/content.md` lists what a person should check.
+
+Media upload to R2 and one redirect per legacy URL come in plan 6.6.
 
 - **Sources:**
   - The Weebly "Archive Site" ZIP (202 pages and their uploads, snapshot of 23 Apr 2025) is the primary source.

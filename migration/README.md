@@ -62,3 +62,18 @@ Tools: `brew install poppler tesseract-lang` (pdftotext, pdftoppm, pdfinfo, Tess
    - it also lists empty syllabi and flows it can't check automatically.
 4. `npx tsx --env-file=.env migration/seed-flows.ts` writes the syllabi into courses: sessions, readings with links, and activities, in the flow's own locale. It never touches reviewed courses, and it is safe to re-run.
 
+## Publishing content (plan 6.5)
+
+Sources: the two *Pigeon Towers* books (English and Arabic), the *Translation as Education* booklet (Arabic), the newsletter PDF, and the press, news, blog, publication and newsletter pages.
+
+1. `npx tsx migration/prepare-docs.ts migration/raw` writes each document's pages to `raw/docs/<id>/`: `page-N.txt`, plus `page-N.png` and Tesseract `page-N.ocr.txt` for the Arabic ones. The document list goes to `docs.json`.
+2. `npx tsx migration/extract-content.ts migration/raw --pending | --prompt <unit> | --record <unit> <answer.json>`. The units are extracted in two passes, by agents on the subscription:
+   - **Pass 1:** `toc:<doc>` gives each document's essays with their PDF page ranges, and its imprint. Check the ranges against the page images: printed page numbers are offset from PDF pages.
+   - **Pass 2:** `essay:<doc>:<order>` units, available once their toc is recorded, plus `page:<file>` and `doc:newsletter-1`.
+   - Arabic essays are read from the page images. A cheap model's first pass misreads Arabic words, so every Arabic essay is proofread against its images by a stronger model before it is committed.
+3. `npx tsx migration/normalise-content.ts` writes `../seed/data/archive/{articles,publications,press,events,newsletters}.json` and `review/content.md`, which covers judgement calls, derived press outlets, Arabic names mapped to Latin spellings, and names with no person yet. An English essay and its Arabic translation become one article, paired by table-of-contents order.
+4. `npx tsx --env-file=.env migration/seed-content.ts` imports everything as drafts:
+   - **Articles:** they get `review.status: submitted`. An article from the dev seed is matched by `legacy_url` or English title, and its body is replaced.
+   - **Other content:** publications, press (matched by first link), events, newsletters, and the partners and people they need.
+   - It never touches reviewed documents, sends no email, and is safe to re-run.
+
