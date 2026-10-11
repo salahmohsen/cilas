@@ -16,6 +16,10 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       enableSystem
       disableTransitionOnChange
       storageKey="cilas-theme"
+      // The inline script runs from the server HTML, before paint. On the
+      // client React 19 warns about any executable <script> a component
+      // renders, so there it is marked non-executable (it has already run).
+      scriptProps={{ type: typeof window === 'undefined' ? 'text/javascript' : 'text/plain' }}
     >
       {children}
     </NextThemes>
