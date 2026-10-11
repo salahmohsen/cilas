@@ -138,6 +138,9 @@ The tier an author asks for when submitting an article. Only an admin sets the a
 A piece of writing by members of the community, published after review.
 _Avoid_: Post, blog post
 
+**Related article**:
+An article shown under another as further reading: those an editor picked, then others from the same publication, then ones sharing a tag, then others by the same author — at most three, and only ones the reader may see.
+
 **Review**:
 The approval path an article goes through: draft, submitted, changes requested, then approved or rejected.
 
@@ -157,6 +160,15 @@ A one-off or recurring gathering that is not a course: talk, open day, screening
 
 **Newsletter**:
 An issue CILAS sends to subscribers and keeps in its archive. The subscriber list lives with the email service, not on the site.
+
+### Reading the site
+
+**Site language**:
+The language a visitor reads the site in: English or Arabic. Every public page exists once per site language, and the language is part of its address.
+_Avoid_: Locale (in conversation), translation
+
+**Content language**:
+The language a piece of content is written in. When a piece has no text in the site language, it is shown in its content language, marked as such, while the rest of the page stays in the site language.
 
 ### Archive
 
