@@ -1,12 +1,11 @@
 'use client'
 
-import { Monitor, Moon, Sun } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useSearchParams } from 'next/navigation'
 import { useSyncExternalStore } from 'react'
 
-import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
+import { ThemeSwitch } from '@/components/arc/theme-switch/theme-switch'
 import { Link, usePathname } from '@/i18n/navigation'
 import { routing, type Locale } from '@/i18n/routing'
 
@@ -35,37 +34,28 @@ export function LanguageSwitch() {
   )
 }
 
-/** Light, dark or the system's setting; the icon shows what is in effect. */
-export function ThemeMenu() {
+/**
+ * One icon that morphs between sun and moon. Until the visitor picks, the
+ * theme follows the system (next-themes' `system`); a click stores the
+ * opposite of what is showing.
+ */
+export function ThemeToggle() {
   const t = useTranslations('Theme')
-  const { theme, resolvedTheme, setTheme } = useTheme()
-  // The stored choice exists only in the browser; render a stable icon until hydrated.
+  const { resolvedTheme, setTheme } = useTheme()
+  // The resolved theme exists only in the browser; keep the slot until hydrated.
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
     () => false,
   )
-
-  const icon = !mounted ? (
-    <Monitor aria-hidden size={16} />
-  ) : theme === 'system' ? (
-    <Monitor aria-hidden size={16} />
-  ) : resolvedTheme === 'dark' ? (
-    <Moon aria-hidden size={16} />
-  ) : (
-    <Sun aria-hidden size={16} />
-  )
-  const current = mounted && theme ? t(theme as 'light' | 'dark' | 'system') : t('system')
-
+  if (!mounted || !resolvedTheme) return <span aria-hidden className="inline-block size-8" />
+  const theme = resolvedTheme === 'dark' ? 'dark' : 'light'
   return (
-    <DropdownMenu
-      icon={icon}
-      items={[
-        { label: t('light'), icon: <Sun aria-hidden size={16} />, onSelect: () => setTheme('light') },
-        { label: t('dark'), icon: <Moon aria-hidden size={16} />, onSelect: () => setTheme('dark') },
-        { label: t('system'), icon: <Monitor aria-hidden size={16} />, onSelect: () => setTheme('system') },
-      ]}
-      label={current}
+    <ThemeSwitch
+      iconOnly
+      label={theme === 'dark' ? t('toLight') : t('toDark')}
+      onThemeChange={(next) => setTheme(next)}
+      theme={theme}
     />
   )
 }

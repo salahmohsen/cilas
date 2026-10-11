@@ -46,9 +46,8 @@
   },
   "Theme": {
     "label": "Colour theme",
-    "light": "Light",
-    "dark": "Dark",
-    "system": "System"
+    "toLight": "Switch to light mode",
+    "toDark": "Switch to dark mode"
   },
   "Footer": {
     "tagline": "A pedagogy of discovery and attunement.",

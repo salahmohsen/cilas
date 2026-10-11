@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { Suspense } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
-import { LanguageSwitch, ThemeMenu } from '@/components/site-controls'
+import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 
 /** The site's main navigation, in the site language, with links under it. */
 export function CILASSiteHeader() {
@@ -76,7 +76,7 @@ export function CILASSiteHeader() {
           <Suspense fallback={null}>
             <LanguageSwitch />
           </Suspense>
-          <ThemeMenu />
+          <ThemeToggle />
         </>
       }
       variant="mega"
