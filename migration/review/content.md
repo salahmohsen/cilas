@@ -112,7 +112,7 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - نزيه هلوده → Nazih Hallouda
 - نورا حلمي → Nora Helmy
 - هبة الله منصور → Heba Allah Mansour
-- هند الغزالي → Hind El-Ghazali
+- هند الغزالي → Hend El Ghazaly
 - هويدا أحمد → Howaida Ahmed
 
 ## Names with no match in people.json (an import creates them as needs_review)
@@ -127,7 +127,7 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - El-Sayed Mahmoud
 - Gustavo Esteva
 - Heba Allah Mansour
-- Hind El-Ghazali
+- Hend El Ghazaly
 - Howaida Ahmed
 - Iman Safwat
 - Islam Karrar
