@@ -1,0 +1,305 @@
+// @vitest-environment node
+// Boots the real config against DATABASE_URL.
+import { getPayload, type CollectionSlug, type Payload, type Where } from 'payload'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+
+import config from '@/payload.config'
+import type { Article } from '@/payload-types'
+import { importContent, type ArchiveContent } from '../../migration/lib/import-content'
+
+let payload: Payload
+
+// Fixtures use the "/probecontent-" prefix and "Probe Content" names, apart
+// from the other import specs.
+const P = '/probecontent-'
+const L = {
+  pair: `${P}book.html#pair`,
+  booklet: `${P}booklet.html#only-arabic`,
+  seeded: `${P}book.html#seeded`,
+  reviewed: `${P}book.html#reviewed`,
+  event: `${P}news.html#talk`,
+  newsletter: `${P}docs.html#issue`,
+  press: `${P}press.html#item`,
+  publication: `${P}book.html`,
+}
+const PRESS_URL = 'https://example.org/probecontent-press'
+const SEEDED_TITLE = 'Probe Content Seeded Title'
+
+const content = (reviewedBody = 'Imported over a reviewed article'): ArchiveContent => ({
+  articles: [
+    {
+      legacy_url: L.pair,
+      kind: 'essay',
+      title_en: 'Probe Content Pair',
+      title_ar: 'زوج الاختبار',
+      match_titles_en: [],
+      blocks_en: [
+        { type: 'heading', level: 2, text: 'English heading' },
+        { type: 'paragraph', level: null, text: 'English first paragraph with a [link](https://example.org/x).' },
+        { type: 'quote', level: null, text: 'An English quote' },
+      ],
+      blocks_ar: [
+        { type: 'heading', level: 2, text: 'عنوان عربي' },
+        { type: 'paragraph', level: null, text: 'الفقرة العربية الأولى' },
+        { type: 'quote', level: null, text: 'اقتباس عربي' },
+      ],
+      authors: ['Probe Content Author'],
+      credits: [{ role: 'translator', label: { en: 'Translation', ar: 'ترجمة' }, people: ['Probe Content Translator'] }],
+      translation: null,
+      publication: L.publication,
+      published_date: null,
+    },
+    {
+      legacy_url: L.booklet,
+      kind: 'essay',
+      title_en: 'Probe Content Booklet',
+      title_ar: 'كتيب الاختبار',
+      match_titles_en: [],
+      blocks_en: null,
+      blocks_ar: [{ type: 'paragraph', level: null, text: 'نص عربي فقط' }],
+      authors: ['Probe Content Author'],
+      credits: [],
+      translation: { original_language: 'en', original_title: 'Original', original_authors: ['Probe Content Original'], original_source: 'A journal, 2016' },
+      publication: null,
+      published_date: null,
+    },
+    {
+      legacy_url: L.seeded,
+      kind: 'essay',
+      title_en: 'Probe Content Seeded Replacement',
+      title_ar: null,
+      match_titles_en: [SEEDED_TITLE],
+      blocks_en: [{ type: 'paragraph', level: null, text: 'The full text replaces the digest.' }],
+      blocks_ar: null,
+      authors: ['Probe Content Author'],
+      credits: [],
+      translation: null,
+      publication: null,
+      published_date: null,
+    },
+    {
+      legacy_url: L.reviewed,
+      kind: 'blog',
+      title_en: 'Probe Content Reviewed',
+      title_ar: null,
+      match_titles_en: [],
+      blocks_en: [{ type: 'paragraph', level: null, text: reviewedBody }],
+      blocks_ar: null,
+      authors: ['Probe Content Author'],
+      credits: [],
+      translation: null,
+      publication: null,
+      published_date: '2015-02-24',
+    },
+  ],
+  publications: [
+    {
+      legacy_url: L.publication,
+      kind: 'essay_collection',
+      title_en: 'Probe Content Collection',
+      title_ar: 'مجموعة الاختبار',
+      subtitle_en: null,
+      subtitle_ar: null,
+      match_titles_en: [],
+      year_from: 2018,
+      year_to: 2018,
+      intro_en: [{ type: 'paragraph', level: null, text: 'Intro.' }],
+      intro_ar: null,
+      foreword: L.pair,
+      articles: [L.pair, L.seeded],
+      credits: [{ role: 'editor', people: ['Probe Content Author'] }],
+      funders: ['Probe Content Funder'],
+      license: 'cc_by_nc_sa',
+      produced_by: [],
+      print_edition_url: 'https://example.org/probecontent.pdf',
+    },
+  ],
+  press: [
+    {
+      legacy_url: L.press,
+      kind: 'coverage',
+      title: 'Probe Content Press',
+      language: 'en',
+      outlet: 'Probe Content Outlet',
+      authors: ['Probe Content Author', 'A Free Name'],
+      published_date: '2019-09-18',
+      date_precision: 'day',
+      links: [{ language: 'en', url: PRESS_URL }],
+      excerpt: null,
+    },
+  ],
+  events: [
+    {
+      legacy_url: L.event,
+      title_en: 'Probe Content Talk',
+      event_type: 'talk',
+      tier: 'public',
+      schedule: { start_date: '2014-01-06', start_precision: 'day', weeks: 1, slots: [] },
+      speakers: ['Probe Content Author'],
+      description_en: [{ type: 'paragraph', level: null, text: 'A talk.' }],
+    },
+  ],
+  newsletters: [
+    {
+      legacy_url: L.newsletter,
+      title_en: 'Probe Content Issue',
+      issue_date: '2013-06-01',
+      blocks_en: [{ type: 'paragraph', level: null, text: 'Dear friends.' }],
+    },
+  ],
+})
+
+const cleanup = async () => {
+  const like = { legacy_url: { like: P } }
+  const targets: Array<[CollectionSlug, Where]> = [
+    ['publications', like],
+    ['articles', { or: [like, { title: { equals: SEEDED_TITLE } }] }],
+    ['press', like],
+    ['events', like],
+    ['newsletters', like],
+    ['partners', { name: { like: 'Probe Content' } }],
+    ['people', { name: { like: 'Probe Content' } }],
+  ]
+  for (const [collection, where] of targets) {
+    await payload.delete({ collection, where, overrideAccess: true }).catch(() => undefined)
+  }
+}
+
+const article = async (legacy: string, locale: 'en' | 'ar' = 'en'): Promise<Article> =>
+  (
+    await payload.find({
+      collection: 'articles',
+      where: { legacy_url: { equals: legacy } },
+      draft: true,
+      depth: 0,
+      locale,
+      fallbackLocale: false,
+      overrideAccess: true,
+    })
+  ).docs[0]
+const plain = (doc: unknown) => JSON.stringify(doc ?? null)
+const nodeTypes = (a: Article): string[] =>
+  ((a.body?.root.children ?? []) as Array<{ type: string }>).map((c) => c.type)
+
+describe('publishing content import', () => {
+  beforeAll(async () => {
+    payload = await getPayload({ config: await config })
+    await cleanup()
+    const author = await payload.create({
+      collection: 'people',
+      data: { name: 'Probe Content Author', slug: 'probe-content-author' },
+      overrideAccess: true,
+    })
+    // An article the dev seed would have made: a digest, a tier, no legacy URL.
+    await payload.create({
+      collection: 'articles',
+      data: {
+        title: SEEDED_TITLE,
+        slug: 'probe-content-seeded-title',
+        authors: [author.id],
+        tier: 'public',
+        review: { status: 'approved' },
+        _status: 'published',
+      },
+      overrideAccess: true,
+    })
+    // An imported article an editor has since reviewed.
+    await payload.create({
+      collection: 'articles',
+      data: {
+        title: 'Probe Content Reviewed',
+        slug: 'probe-content-reviewed',
+        authors: [author.id],
+        legacy_url: L.reviewed,
+        import_status: 'reviewed',
+        review: { status: 'approved' },
+        _status: 'draft',
+      },
+      overrideAccess: true,
+    } as Parameters<Payload['create']>[0])
+  }, 120_000)
+  afterAll(async () => {
+    await cleanup()
+    await payload.destroy()
+  }, 120_000)
+
+  it('writes an English and Arabic pair, each locale with its own body', async () => {
+    await importContent(payload, content())
+
+    const en = await article(L.pair, 'en')
+    expect(en.title).toBe('Probe Content Pair')
+    expect(nodeTypes(en)).toEqual(['heading', 'paragraph', 'quote'])
+    expect(plain(en.body)).toContain('English first paragraph')
+    expect(plain(en.body)).toContain('"direction":"ltr"')
+    expect(en.review?.status).toBe('submitted')
+    expect(en._status).toBe('draft')
+    expect(en.import_status).toBe('needs_review')
+    expect(en.requested_tier).toBe('public')
+    expect(en.credits?.[0]).toMatchObject({ role: 'translator', label: 'Translation' })
+
+    const ar = await article(L.pair, 'ar')
+    expect(ar.title).toBe('زوج الاختبار')
+    expect(nodeTypes(ar)).toEqual(['heading', 'paragraph', 'quote'])
+    expect(plain(ar.body)).toContain('الفقرة العربية الأولى')
+    expect(plain(ar.body)).toContain('"direction":"rtl"')
+    expect(ar.credits?.[0]).toMatchObject({ label: 'ترجمة' })
+    expect(ar.credits?.[0].id).toBe(en.credits?.[0].id)
+  })
+
+  it('writes a booklet article in Arabic only, with its translation group', async () => {
+    const en = await article(L.booklet, 'en')
+    expect(en.title).toBe('Probe Content Booklet')
+    expect(en.body ?? null).toBeNull()
+    const ar = await article(L.booklet, 'ar')
+    expect(plain(ar.body)).toContain('نص عربي فقط')
+    expect(en.translation).toMatchObject({ original_language: 'en', original_title: 'Original', original_source: 'A journal, 2016' })
+  })
+
+  it('replaces the body of a seeded article matched by title and keeps its tier', async () => {
+    const seeded = await article(L.seeded)
+    expect(seeded.title).toBe('Probe Content Seeded Replacement')
+    expect(plain(seeded.body)).toContain('The full text replaces the digest.')
+    expect(seeded.tier).toBe('public')
+    expect(seeded.review?.status).toBe('submitted')
+    expect(seeded._status).toBe('draft')
+    expect(seeded.slug).toBe('probe-content-seeded-title')
+  })
+
+  it('does not touch a reviewed article', async () => {
+    const reviewed = await article(L.reviewed)
+    expect(reviewed.import_status).toBe('reviewed')
+    expect(reviewed.review?.status).toBe('approved')
+    expect(plain(reviewed.body)).not.toContain('Imported over')
+  })
+
+  it('writes the publication, press, event and newsletter', async () => {
+    const pub = (await payload.find({ collection: 'publications', where: { legacy_url: { equals: L.publication } }, depth: 0, overrideAccess: true })).docs[0]
+    const pair = await article(L.pair)
+    expect(pub.foreword).toBe(pair.id)
+    expect(pub.articles).toHaveLength(2)
+    expect(pub.funders).toHaveLength(1)
+    expect(pub.license).toBe('cc_by_nc_sa')
+
+    const press = (await payload.find({ collection: 'press', where: { 'links.url': { equals: PRESS_URL } }, depth: 0, overrideAccess: true })).docs
+    expect(press).toHaveLength(1)
+    expect(press[0].authors?.map((a) => Boolean(a.person) || a.name)).toEqual([true, 'A Free Name'])
+
+    const event = (await payload.find({ collection: 'events', where: { legacy_url: { equals: L.event } }, depth: 0, overrideAccess: true })).docs[0]
+    expect(event.tier).toBe('public')
+    expect(event.schedule?.start_date).toContain('2014-01-06')
+    expect(event.speakers).toHaveLength(1)
+
+    const issue = (await payload.find({ collection: 'newsletters', where: { legacy_url: { equals: L.newsletter } }, draft: true, depth: 0, overrideAccess: true })).docs[0]
+    expect(issue._status).toBe('draft')
+    expect(plain(issue.body)).toContain('Dear friends.')
+  })
+
+  it('creates nothing new on a second run', async () => {
+    const result = await importContent(payload, content())
+    for (const t of Object.values(result)) expect(t.created).toBe(0)
+    const press = await payload.count({ collection: 'press', where: { 'links.url': { equals: PRESS_URL } }, overrideAccess: true })
+    expect(press.totalDocs).toBe(1)
+    const pair = await payload.count({ collection: 'articles', where: { legacy_url: { equals: L.pair } }, overrideAccess: true })
+    expect(pair.totalDocs).toBe(1)
+  })
+})
