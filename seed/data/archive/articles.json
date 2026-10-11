@@ -219,7 +219,11 @@
     ],
     "translation": null,
     "publication": "/on-pigeon-towers.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Karim-Yassin Goessinger": "كريم ياسين جوسنجر",
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/on-pigeon-towers.html#diversity-and-differentiation-in-the-dialectic-of-liberal-arts",
@@ -624,7 +628,11 @@
     ],
     "translation": null,
     "publication": "/on-pigeon-towers.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Teun Dekker": "تُن جي. ديكر",
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/on-pigeon-towers.html#playing-our-selves-an-aesthetic-education-for-the-twenty-first-century",
@@ -1049,7 +1057,11 @@
     ],
     "translation": null,
     "publication": "/on-pigeon-towers.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Surti Singh": "سورتي سينغ",
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/on-pigeon-towers.html#equality-and-intimacy-an-imaginary-construction",
@@ -1689,7 +1701,11 @@
     ],
     "translation": null,
     "publication": "/on-pigeon-towers.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "I-Kai Jeng": "إي- كاي جينج",
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/on-pigeon-towers.html#on-ignorance",
@@ -2464,7 +2480,11 @@
     ],
     "translation": null,
     "publication": "/on-pigeon-towers.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Robin Weiss": "روبن فايس",
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/translation-as-education.html#twtia",
@@ -2496,12 +2516,15 @@
     "credits": [],
     "translation": null,
     "publication": "/translation-as-education.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/translation-as-education.html#recovering-from-the-diploma-disease",
     "kind": "essay",
-    "title_en": "Recovering from the Diploma Disease",
+    "title_en": "Healing Ourselves from the Diploma Disease",
     "title_ar": "التعافي من داء الدبلومات",
     "match_titles_en": [
       "Recovering from the Diploma Disease"
@@ -2595,8 +2618,8 @@
       }
     ],
     "authors": [
-      "Shereen Janzen-Sanson",
-      "Shelba Jain",
+      "Shreya Janssens-Sannon",
+      "Shilpa Jain",
       "Manish Jain"
     ],
     "credits": [
@@ -2616,21 +2639,35 @@
     ],
     "translation": {
       "original_language": "en",
-      "original_title": null,
+      "original_title": "Healing Ourselves from the Diploma Disease",
       "original_authors": [
-        "Shereen Janzen-Sanson",
-        "Shelba Jain",
+        "Shreya Janssens-Sannon",
+        "Shilpa Jain",
         "Manish Jain"
       ],
-      "original_source": null
+      "original_source": "Shikshantar Andolan",
+      "original_url": "https://www.shikshantar.org/initiatives/walkouts-network/healing-ourselves-diploma-disease"
     },
     "publication": "/translation-as-education.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Shreya Janssens-Sannon": "شريا جانسنز-سانون",
+      "Shilpa Jain": "شليبا جاين",
+      "Manish Jain": "مانيش جاين",
+      "Nora Helmy": "نورا حلمي",
+      "Heba Allah Mansour": "هبة الله منصور",
+      "Sara Sallam": "سارة سلّام",
+      "Sara Alaa": "سارة علاء",
+      "Amal Abdel Rahman": "أمل عبد الرحمن",
+      "Mohamed Nagy Sanger": "محمد ناجي سنجر",
+      "El-Sayed Mahmoud": "السيد محمود",
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/translation-as-education.html#reclaiming-our-fire-in-education",
     "kind": "essay",
-    "title_en": "Reclaiming Our Fire in Education",
+    "title_en": "Reclaiming Our Freedom to Learn",
     "title_ar": "استعادة حريتنا في التعلم",
     "match_titles_en": [
       "Reclaiming Our Fire in Education"
@@ -2775,19 +2812,33 @@
     ],
     "translation": {
       "original_language": "en",
-      "original_title": null,
+      "original_title": "Reclaiming Our Freedom to Learn",
       "original_authors": [
         "Gustavo Esteva"
       ],
-      "original_source": "إصدار الشتاء من مجلة \"ياس! Yes!\" عام 2008"
+      "original_source": "YES! Magazine, Winter 2008",
+      "original_url": null
     },
     "publication": "/translation-as-education.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Gustavo Esteva": "جوستابو إستبا",
+      "Ahmed Mongey": "أحمد المنجي",
+      "Islam Karrar": "إسلام كرّار",
+      "El-Sayed Mahmoud": "السيد محمود",
+      "Iman Safwat": "إيمان صفوت",
+      "Rehab Suleiman": "رحاب سليمان",
+      "Abdel Rahman Adel": "عبد الرحمن عادل",
+      "Mariam Sameh": "مريم سامح",
+      "Nazih Hallouda": "نزيه هلوده",
+      "Hend El Ghazaly": "هند الغزالي",
+      "Hussein El-Hag": "حسين الحاج"
+    }
   },
   {
     "legacy_url": "/translation-as-education.html#a-short-history-of-alternative-education",
     "kind": "essay",
-    "title_en": "A Short History of Alternative Education",
+    "title_en": "A Brief History of Alternative Education",
     "title_ar": "موجز تاريخ التعليم البديل",
     "match_titles_en": [
       "A Short History of Alternative Education"
@@ -2898,19 +2949,24 @@
     ],
     "translation": {
       "original_language": "en",
-      "original_title": "المدارس البديلة والتعليم المنزلي: النشأة والتطور",
+      "original_title": "A Brief History of Alternative Education",
       "original_authors": [
         "Ron Miller"
       ],
-      "original_source": "سوثرن كروس ريفيو، 2016"
+      "original_source": "Southern Cross Review",
+      "original_url": null
     },
     "publication": "/translation-as-education.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Ron Miller": "رون ميلر",
+      "Ayman El-Husseini": "أيمن الحسيني"
+    }
   },
   {
     "legacy_url": "/translation-as-education.html#on-how-to-read-theoretical-works",
     "kind": "essay",
-    "title_en": "On How to Read Theoretical Works",
+    "title_en": "On Reading and Not Reading Theoretical Works",
     "title_ar": "حول كيفية قراءة الأعمال النظرية",
     "match_titles_en": [
       "On How to Read Theoretical Works"
@@ -3041,9 +3097,9 @@
         "role": "translator",
         "people": [
           "Eman Maarek",
-          "نزيه عوض",
+          "Nazih Awad",
           "Ayman El-Husseini",
-          "محمد يحيى",
+          "Mohamed Yahya",
           "Hussein El-Hag",
           "Howaida Ahmed"
         ]
@@ -3051,14 +3107,24 @@
     ],
     "translation": {
       "original_language": "en",
-      "original_title": null,
+      "original_title": "On Reading and Not Reading Theoretical Works",
       "original_authors": [
         "Chris Wright"
       ],
-      "original_source": "موقع ليبكوم، 2016"
+      "original_source": "libcom.org",
+      "original_url": "https://libcom.org/article/reading-and-not-reading-theoretical-works"
     },
     "publication": "/translation-as-education.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Chris Wright": "كريس رايت",
+      "Eman Maarek": "إيمان معارك",
+      "Nazih Awad": "نزيه عوض",
+      "Ayman El-Husseini": "أيمن الحسيني",
+      "Mohamed Yahya": "محمد يحيي",
+      "Hussein El-Hag": "حسين الحاج",
+      "Howaida Ahmed": "هويدا أحمد"
+    }
   },
   {
     "legacy_url": "/translation-as-education.html#reading-writing-and-understanding",
@@ -3249,14 +3315,19 @@
     ],
     "translation": {
       "original_language": "en",
-      "original_title": null,
+      "original_title": "Reading, Writing, and Understanding",
       "original_authors": [
         "Vicki A. Jacobs"
       ],
-      "original_source": null
+      "original_source": null,
+      "original_url": null
     },
     "publication": "/translation-as-education.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Vicki A. Jacobs": "فيكي أ. جاكوبز",
+      "Eman Abdelhamid Kamal": "إيمان كمال عبد الحميد"
+    }
   },
   {
     "legacy_url": "/translation-as-education.html#khatma",
@@ -3288,7 +3359,10 @@
     "credits": [],
     "translation": null,
     "publication": "/translation-as-education.html",
-    "published_date": null
+    "published_date": "2018-01-01",
+    "names_ar": {
+      "Sara Alaa": "سارة علاء"
+    }
   },
   {
     "legacy_url": "/-latest.html#as-we-transition-from-the-normative-to-the-empirical-realm",
@@ -3310,7 +3384,10 @@
     "credits": [],
     "translation": null,
     "publication": null,
-    "published_date": "2015-02-24"
+    "published_date": "2015-02-24",
+    "names_ar": {
+      "Karim-Yassin Goessinger": "كريم ياسين جوسنجر"
+    }
   },
   {
     "legacy_url": "/-latest.html#we-too-are-berlin-ers-also-retrieved-from-the-archives",
@@ -3439,6 +3516,9 @@
     "credits": [],
     "translation": null,
     "publication": null,
-    "published_date": "2015-02-24"
+    "published_date": "2015-02-24",
+    "names_ar": {
+      "Karim-Yassin Goessinger": "كريم ياسين جوسنجر"
+    }
   }
 ]

@@ -15,7 +15,7 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - The foreword is titled "Foreword" (and Arabic "مقدمة"); it lists "On the Emergence of Pigeon Towers: Foreword" in `match_titles_en` so the dev seed's article is still found.
 - /translation-as-education.html#twtia: no English title exists (the booklet is Arabic only and the dev seed has no matching article), so the Arabic title "توطئة" is used as `title_en`. The Articles collection requires a title; give it an English one if wanted.
 - /translation-as-education.html#khatma: no English title exists (the booklet is Arabic only and the dev seed has no matching article), so the Arabic title "خاتمة" is used as `title_en`. The Articles collection requires a title; give it an English one if wanted.
-- Booklet essays 2-6 take their English titles from the dev seed: "Recovering from the Diploma Disease", "Reclaiming Our Fire in Education", "A Short History of Alternative Education", "On How to Read Theoretical Works", "Reading, Writing, and Understanding". Their Arabic titles are the booklet's table of contents (a few differ slightly from the seed's Arabic titles).
+- Booklet essays 2-6 take their English titles from the original publications (see LAB_ORIGINALS): "Healing Ourselves from the Diploma Disease", "Reclaiming Our Freedom to Learn", "A Brief History of Alternative Education", "On Reading and Not Reading Theoretical Works", "Reading, Writing, and Understanding". Their Arabic titles are the booklet's table of contents. They have no English text, so the English site shows the Arabic text with a notice.
 - Booklet articles list the original authors as `authors` (as the essay prints them) and again as `translation.original_authors`; the translators are credits. `original_language` is "en" for all five (inferred: the sources are English-language publications).
 
 ## Publication introductions
@@ -79,7 +79,7 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 
 ## Arabic-script names kept as written (no alias or imprint match)
 
-- نزيه عوض
+- none
 
 ## Arabic-script names resolved to a Latin spelling (check)
 
@@ -98,8 +98,8 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - رون ميلر → Ron Miller
 - سارة سلّام → Sara Sallam
 - سارة علاء → Sara Alaa
-- شريا جانسنز-سانون → Shereen Janzen-Sanson
-- شليبا جاين → Shelba Jain
+- شريا جانسنز-سانون → Shreya Janssens-Sannon
+- شليبا جاين → Shilpa Jain
 - عبد الرحمن عادل → Abdel Rahman Adel
 - عمرو عكاشة → Amr Okasha
 - فريدة مقار → Farida Makar
@@ -107,8 +107,9 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - كريس رايت → Chris Wright
 - مانيش جاين → Manish Jain
 - محمد ناجي سنجر → Mohamed Nagy Sanger
-- محمد يحيي → محمد يحيى
+- محمد يحيي → Mohamed Yahya
 - مريم سامح → Mariam Sameh
+- نزيه عوض → Nazih Awad
 - نزيه هلوده → Nazih Hallouda
 - نورا حلمي → Nora Helmy
 - هبة الله منصور → Heba Allah Mansour
@@ -137,6 +138,8 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - Manish Jain
 - Mariam Sameh
 - Mohamed Nagy Sanger
+- Mohamed Yahya
+- Nazih Awad
 - Nora Helmy
 - Nour Mohy
 - Rehab Suleiman
@@ -144,8 +147,8 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - Sara Alaa
 - Sara Sallam
 - Sarah Lynch
-- Shelba Jain
-- Shereen Janzen-Sanson
+- Shilpa Jain
+- Shreya Janssens-Sannon
 - Surti Singh
 - Tarek Anous
 - Tine Lavent

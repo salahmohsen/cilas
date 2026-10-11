@@ -77,12 +77,14 @@ const usedNames = new Set<string>()
 
 /* ---------------------------------------------------------------- names */
 
-// Original authors of the booklet's essays, in Latin script as the dev seed
-// gives them (the booklet itself prints them in Arabic).
+// Original authors of the booklet's essays in Latin script, as the original
+// publications print them (the booklet gives them in Arabic only). The
+// Shikshantar letter is signed "Shreya Janssens-Sannon, Shilpa Jain, Manish
+// Jain" (shikshantar.org, "Healing Ourselves from the Diploma Disease").
 const KNOWN_ARABIC: Record<string, string> = {
-  'شريا جانسنز-سانون': 'Shereen Janzen-Sanson',
-  'شليبا جابن': 'Shelba Jain',
-  'شليبا جاين': 'Shelba Jain',
+  'شريا جانسنز-سانون': 'Shreya Janssens-Sannon',
+  'شليبا جابن': 'Shilpa Jain',
+  'شليبا جاين': 'Shilpa Jain',
   'مانيش جابن': 'Manish Jain',
   'مانيش جاين': 'Manish Jain',
   'جوستابو إستيبا': 'Gustavo Esteva',
@@ -91,9 +93,17 @@ const KNOWN_ARABIC: Record<string, string> = {
   'كريس رايت': 'Chris Wright',
   'فيكي أ. جاكوبز': 'Vicki A. Jacobs',
   'فريدة مقار': 'Farida Makar',
+  // A translator of essay 5, credited on its title page only (not in the imprint).
+  'نزيه عوض': 'Nazih Awad',
 }
 const arabicMap = new Map<string, string>(Object.entries(KNOWN_ARABIC).map(([k, v]) => [foldArabic(k), v]))
 const ARABIC = /[؀-ۿ]/
+
+/** Latin name → its Arabic spelling as a source prints it (first one seen). */
+const latinToArabic = new Map<string, string>()
+const noteArabic = (latin: string, arabic: string) => {
+  if (ARABIC.test(arabic) && !ARABIC.test(latin) && !latinToArabic.has(latin)) latinToArabic.set(latin, arabic)
+}
 
 const nameOf = (raw: string): string => {
   const name = raw.replace(/\s+/g, ' ').trim()
@@ -103,6 +113,7 @@ const nameOf = (raw: string): string => {
     if (latin) {
       out = canonicalName(latin, aliases)
       resolvedArabic.set(name, out)
+      noteArabic(out, name)
     } else {
       unresolvedArabic.add(name)
       out = name
@@ -183,9 +194,12 @@ type Article = {
     original_title: string | null
     original_authors: string[]
     original_source: string | null
+    original_url: string | null
   }
   publication: string | null
   published_date: string | null
+  /** Arabic spellings of the people named, as the sources print them. */
+  names_ar?: Record<string, string>
 }
 const articles: Article[] = []
 
@@ -218,6 +232,10 @@ for (const pair of pairs) {
   pigeonUrls.set(pair.order, url)
   const blocksEn = blocksOf(en.blocks)
   scanHyphens(`${url} (English)`, blocksEn)
+  // The Arabic edition prints the same authors in Arabic, in the same order.
+  const authorsEn = namesOf(en.authors.length ? en.authors : pair.en.authors)
+  const authorsAr = ar.authors.length ? ar.authors : pair.ar.authors
+  if (authorsAr.length === authorsEn.length) authorsEn.forEach((n, i) => noteArabic(n, authorsAr[i]))
   articles.push({
     legacy_url: url,
     kind: 'essay',
@@ -226,11 +244,12 @@ for (const pair of pairs) {
     match_titles_en: PIGEON_SEED_TITLES[pair.order] ? [PIGEON_SEED_TITLES[pair.order]] : [],
     blocks_en: blocksEn,
     blocks_ar: blocksOf(ar.blocks),
-    authors: namesOf(en.authors.length ? en.authors : pair.en.authors),
+    authors: authorsEn,
     credits: pigeonTranslators.length ? [{ role: 'translator', people: pigeonTranslators }] : [],
     translation: null,
     publication: PIGEON,
-    published_date: null,
+    // The book prints its year only.
+    published_date: tocEn.imprint.year ? `${tocEn.imprint.year}-01-01` : null,
   })
 }
 review.titles.push(
@@ -246,7 +265,29 @@ const labPage = unit('page__translation-as-education.html', PublicationPage)
 // The booklet's page and imprint list the same people in the same order.
 for (const [k, v] of arabicNameMap(labPage.credits, tocLab.imprint.credits)) arabicMap.set(k, v)
 
-// English titles of the five translated essays, from the dev seed (the booklet is Arabic only).
+// The five translated essays' originals. The booklet is Arabic only, so the
+// English titles and sources come from the original publications:
+//   2 shikshantar.org/initiatives/walkouts-network/healing-ourselves-diploma-disease
+//   3 YES! Magazine, "Liberate Your Space" (the booklet: winter issue, 2008)
+//   4 Ron Miller's essay (the booklet: via Southern Cross Review)
+//   5 libcom.org/article/reading-and-not-reading-theoretical-works
+//   6 Vicki A. Jacobs's article (the booklet names no source)
+const LAB_ORIGINALS: Record<number, { title: string; source: string | null; url: string | null }> = {
+  2: {
+    title: 'Healing Ourselves from the Diploma Disease',
+    source: 'Shikshantar Andolan',
+    url: 'https://www.shikshantar.org/initiatives/walkouts-network/healing-ourselves-diploma-disease',
+  },
+  3: { title: 'Reclaiming Our Freedom to Learn', source: 'YES! Magazine, Winter 2008', url: null },
+  4: { title: 'A Brief History of Alternative Education', source: 'Southern Cross Review', url: null },
+  5: {
+    title: 'On Reading and Not Reading Theoretical Works',
+    source: 'libcom.org',
+    url: 'https://libcom.org/article/reading-and-not-reading-theoretical-works',
+  },
+  6: { title: 'Reading, Writing, and Understanding', source: null, url: null },
+}
+// The dev seed's former English titles, so its articles are found and corrected in place.
 const LAB_SEED_TITLES: Record<number, string> = {
   2: 'Recovering from the Diploma Disease',
   3: 'Reclaiming Our Fire in Education',
@@ -258,15 +299,17 @@ const labUrls = new Map<number, string>()
 for (const toc of tocLab.essays) {
   const essay = unit(`essay__${lab}__${toc.order}`, Essay)
   const seedTitle = LAB_SEED_TITLES[toc.order]
-  const titleEn = seedTitle ?? toc.title
-  const url = legacy(TRANSLATION, titleEn)
+  const original = LAB_ORIGINALS[toc.order]
+  // Legacy URLs stay on the former titles' slugs so redirects and links hold.
+  const titleEn = original?.title ?? toc.title
+  const url = legacy(TRANSLATION, seedTitle ?? toc.title)
   labUrls.set(toc.order, url)
-  if (!seedTitle) {
+  if (!original) {
     review.titles.push(
       `- ${url}: no English title exists (the booklet is Arabic only and the dev seed has no matching article), so the Arabic title "${toc.title}" is used as \`title_en\`. The Articles collection requires a title; give it an English one if wanted.`,
     )
   }
-  const translated = Boolean(seedTitle)
+  const translated = Boolean(original)
   const translators = namesOf(essay.translators)
   const authors = namesOf(essay.authors.length ? essay.authors : toc.authors)
   articles.push({
@@ -282,17 +325,18 @@ for (const toc of tocLab.essays) {
     translation: translated
       ? {
           original_language: 'en',
-          original_title: essay.original?.title ?? null,
+          original_title: original?.title ?? null,
           original_authors: essay.original?.authors.length ? namesOf(essay.original.authors) : authors,
-          original_source: essay.original?.source ?? null,
+          original_source: original?.source ?? null,
+          original_url: original?.url ?? null,
         }
       : null,
     publication: TRANSLATION,
-    published_date: null,
+    published_date: tocLab.imprint.year ? `${tocLab.imprint.year}-01-01` : null,
   })
 }
 review.titles.push(
-  `- Booklet essays 2-6 take their English titles from the dev seed: ${Object.values(LAB_SEED_TITLES).map((t) => `"${t}"`).join(', ')}. Their Arabic titles are the booklet's table of contents (a few differ slightly from the seed's Arabic titles).`,
+  `- Booklet essays 2-6 take their English titles from the original publications (see LAB_ORIGINALS): ${Object.values(LAB_ORIGINALS).map((o) => `"${o.title}"`).join(', ')}. Their Arabic titles are the booklet's table of contents. They have no English text, so the English site shows the Arabic text with a notice.`,
   '- Booklet articles list the original authors as `authors` (as the essay prints them) and again as `translation.original_authors`; the translators are credits. `original_language` is "en" for all five (inferred: the sources are English-language publications).',
 )
 
@@ -553,6 +597,13 @@ review.other.push(
 
 const outDir = path.join(root, 'seed', 'data', 'archive')
 mkdirSync(outDir, { recursive: true })
+// Every person's Arabic spelling, as printed, once all sources are read.
+for (const a of articles) {
+  const named = [...a.authors, ...a.credits.flatMap((c) => c.people), ...(a.translation?.original_authors ?? [])]
+  const pairs = named.flatMap((n) => (latinToArabic.has(n) ? [[n, latinToArabic.get(n) as string] as const] : []))
+  if (pairs.length) a.names_ar = Object.fromEntries(pairs)
+}
+
 const write = (name: string, data: unknown) => writeFileSync(path.join(outDir, `${name}.json`), `${JSON.stringify(data, null, 2)}\n`)
 write('articles', articles)
 write('publications', publications)

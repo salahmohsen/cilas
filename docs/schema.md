@@ -50,7 +50,7 @@ People, users, governance and memberships match the code (ADR 0001). Partners, a
 
 - Course flows (plan 6.4): 164 of 166 flows (2 files missing) written into 165 courses, 1,318 sessions in all. Every PDF link is captured. `migration/review/flows.md` lists what a person should check.
 
-- Publishing content (plan 6.5): 15 articles (5 *Pigeon Towers* essays in English and Arabic, 7 *Translation as Education* essays in Arabic, 3 blog posts), 2 publications, 11 press items, 6 events and 19 newsletters, all drafts for review. `migration/review/content.md` lists what a person should check.
+- Publishing content (plan 6.5): 15 articles (5 *Pigeon Towers* essays in English and Arabic, 7 *Translation as Education* essays in Arabic, 3 blog posts), 2 publications, 11 press items, 6 events and 19 newsletters. Articles are published; the rest are drafts for review. `migration/review/content.md` lists what a person should check.
 
 - Media and redirects (plan 6.6): 192 archive files in media on R2 (98 people photos, outlet logos, course covers, the booklet cover, the book and newsletter PDFs; 13 files are missing from the archive). 330 redirects: 138 legacy pages to the documents that replaced them, and 192 old upload paths to their R2 copies. `migration/review/{media,redirects}.md` list what a person should check.
 

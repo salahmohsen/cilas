@@ -138,22 +138,6 @@ export type GovernanceSeed = {
   advises_on?: string
 }
 
-/* =============================================================== articles */
-
-export type ArticleSeed = Omit<
-  Draft<Article>,
-  'body' | 'authors' | 'slug' | 'review' | 'requested_tier'
-> & {
-  /** String => one paragraph; array => one paragraph per entry. */
-  body?: string | string[]
-  /** Arabic title, written in a follow-up `locale: 'ar'` update. */
-  title_ar: string
-  /** Arabic body, written in the same follow-up `locale: 'ar'` update. */
-  body_ar?: string | string[]
-  /** Fixture email of the author's person. */
-  author_email: string
-}
-
 /* ================================================================== press */
 
 export type PressSeed = {
@@ -192,27 +176,6 @@ export type PartnerSeed = {
 
 export type SpaceSeed = Omit<Draft<Space>, 'description' | 'slug'> & {
   description?: string
-}
-
-/* ============================================================ publications */
-
-export type PublicationSeed = Omit<
-  Draft<Publication>,
-  'intro' | 'subtitle' | 'articles' | 'cover_image' | 'slug' | 'funders' | 'foreword'
-> & {
-  /** Plain text; converted to Lexical by the seeder. */
-  intro?: string | string[]
-  subtitle?: string
-  /** English titles of the member articles, resolved to ids by the seeder. */
-  articles?: string[]
-  /** Partner names, resolved to ids. */
-  funders?: string[]
-  /** The first article doubles as the foreword. */
-  foreword?: boolean
-  /** Written in a follow-up `locale: 'ar'` update. */
-  title_ar?: string
-  subtitle_ar?: string
-  intro_ar?: string | string[]
 }
 
 /* ========================================================== site settings */

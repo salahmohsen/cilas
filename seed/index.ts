@@ -13,7 +13,6 @@ import { seedPress } from './collections/press.seed'
 import { seedEvents } from './collections/events.seed'
 import { seedSpaces } from './collections/spaces.seed'
 import { seedPartners } from './collections/partners.seed'
-import { seedPublications } from './collections/publications.seed'
 import { seedSiteSettings } from './collections/site-settings.seed'
 
 process.loadEnvFile('.env')
@@ -39,10 +38,10 @@ await seedProgrammes(payload, ctx)
 await seedCourses(payload, ctx)
 await linkFellows(payload, ctx) // validates that course fellows were seeded
 await seedGovernance(payload, ctx)
+// Articles and publications, from the archive (see articles.seed.ts).
 await seedArticles(payload, ctx)
 await seedPress(payload, ctx)
 await seedEvents(payload, ctx)
-await seedPublications(payload, ctx)
 await seedSiteSettings(payload)
 
 await payload.destroy()

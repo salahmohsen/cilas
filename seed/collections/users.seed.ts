@@ -142,27 +142,30 @@ export const usersData: UserSeed[] = [
     name: 'Surti Singh',
     name_ar: 'سورتي سينغ',
     email: 'surti.singh@cilas.test',
-    bio: 'Assistant Professor of Philosophy at the American University in Cairo. Specializes in 20th-century Continental Philosophy, Critical Theory, Aesthetics and Feminism; recent work explores aesthetics from early critical theory, and theories of the image within psychoanalysis, phenomenology and social theory.',
+    // The book's own contributor note (English and Arabic editions).
+    bio: 'Surti Singh is an Assistant Professor of Philosophy at the American University in Cairo. She specializes in 20th Century Continental Philosophy, Critical Theory, Aesthetics, and Feminism. Her recent work explores issues in aesthetics from the vantage point of early critical theory; theories of the image and the imaginary within the framework of psychoanalysis, phenomenology, and social theory; and feminist approaches to subjectivity. Her work has appeared in The Aesthetic Ground of Critical Theory: New Readings of Benjamin and Adorno (Rowman and Littlefield: 2015), New Forms of Revolt: Essays on Kristeva’s Intimate Politics (SUNY: 2017), and is forthcoming in Subjectivity and the Political (Routledge: 2017).',
     bio_ar:
-      'أستاذة مساعدة للفلسفة بالجامعة الأمريكية بالقاهرة، متخصصة في الفلسفة القارية والنظرية النقدية والجمالية والنظرية النسوية، وقد نشرت في أنطولوجيا (The Aesthetic Ground of Critical Theory) وغيرها.',
+      'سورتي سينغ هي أستاذة مساعدة في الفلسفة في الجامعة الأمريكية بالقاهرة. تخصصت في فلسفة القرن العشرين القارية الأوروبية والنظرية النقدية وفلسفة الجمال والنسوية. تستكشف أعمالها الحديثة موضوعات في فلسفة الجمال من وجهة نظر النظرية النقدية المبكرة، ونظريات الصورة والخيال في إطار التحليل النفسي والفينومينولوجيا والنظرية الاجتماعية، والمقاربات النسوية للذاتية.',
     roles: ['member'],
   },
   {
     name: 'I-Kai Jeng',
-    name_ar: 'إيكاي چانغ',
+    name_ar: 'إي-كاي جنيج',
     email: 'qtaroj@gmail.com',
-    bio: 'Received his PhD/MA in Philosophy and Classical Studies at Boston University; visiting fellow at CILAS for a trimester. Now in the Department of Philosophy, National Taiwan University, and a specialist in Greek philosophy — especially Plato on philosophical engagement in politics and the character of philosophical discourse.',
+    // The book's own contributor note (English and Arabic editions).
+    bio: "I-Kai Jeng received his PhD/MA in Philosophy and Classical Studies at Boston University. Before going back home and taking up a position in the Department of Philosophy, National Taiwan University, he was visiting fellow at CILAS for a trimester and shared his thoughts on Plato's Republic with the wonderful people there. He is a specialist in Greek philosophy, with special concentration on Plato's reflections on the philosophical engagement in politics and the character of philosophical discourse. He enjoys tennis (only theorizing, no practice!), cinema, and folding paper when he's not unfolding concepts.",
     bio_ar:
-      'حاصل على الدكتوراه والماجستير في الفلسفة والدراسات الكلاسيكية من جامعة بوسطن، وكان زميل زيارته في CILAS لفصل دراسي. يعمل اليوم في قسم الفلسفة بجامعة تايوان الوطنية، ومتخصص في الفلسفة الإغريقية، خصوصًا أفلاطون.',
+      'تلقى إي-كاي جنيج درجة الماجستير والدكتوراة في الفلسفة والدراسات الكلاسيكية في جامعة بوسطن، قبل أن يعود إلى بلاده ويتقلد منصباً في قسم الفلسفة بجامعة تايوان الوطنية، وقد عمل كزميل أكاديمي زائر في سيلاس لفصل دراسي واحد وشارك أفكاره حول جمهورية أفلاطون مع طلابها الرائعين هناك. وهو متخصص في الفلسفة اليونانية، مع تركيز خاص على تأملات أفلاطون عن الانخراط الفلسفي في السياسية وطبيعة الخطاب الفلسفي، كما يستمتع بلعبة التنس (نظريًا فقط، وليست الممارسة!) والسينما وطي الورق عندما لا يكون منشغلاً بإيضاح المفاهيم.',
     roles: ['member'],
   },
   {
     name: 'Robin Weiss',
     name_ar: 'روبن فايس',
     email: 'robin.weiss@cilas.test',
-    bio: 'Received her PhD from DePaul University, and taught most recently at Mount Allison University in Canada. Specializes in ancient Greek and Roman philosophy — Roman Stoicism in particular, where it relates the connection between thought and action.',
+    // The book's own contributor note (English and Arabic editions).
+    bio: 'Robin Weiss received her Ph.D. from DePaul University, and taught most recently at Mount Allison University in Canada. She specializes in ancient Greek and Roman Philosophy, and in Roman Stoicism in particular, where it relates to the connection between thought and action. She has written on how the Stoics understood practical, as opposed to theoretical, intelligence, and also how it was understood by their predecessor, Aristotle. Her interests extend to the differing ways in which this connection has been taken up by subsequent thinkers, who have variously described it—in the traditions of Continental Philosophy and American Pragmatism—as the connection between knowing and doing, truth and subjectivity, theory and praxis.',
     bio_ar:
-      'حاصلة على الدكتوراه من جامعة ديبول، وآخر تدريسها في جامعة ماونت أليسون بكندا. متخصصة في الفلسفة الإغريقية والرومانية القديمة، وفي الرواقية الرومانية وعلاقة الفكر بالفعل.',
+      'حصلت روبن فايس على درجة الدكتوراة من جامعة دي بول، ودرست مؤخرًا في جامعة ماونت آليسون في كندا، وتخصصت في الفلسفة اليونانية والرومانية القديمة، وتحديدًا في الرواقية الرومانية، من حيث تعلقها في الإتصال بين الفكر والفعل. كتبت عن كيفية فهم الرواقيون للذكاء العملي بصفته مناقضًا للذكاء النظري، وأيضًا كيف فهمها من سلفهم، مثل أرسطو. يمتد اهتمامها في الشعب المختلفة التي اتخذ فيها مفكرون لاحقون تلك الرابطة بصفتها رابطة بين المعرفة والفعل والحقيقة والذاتية والنظرية والممارسة ووصفوها بطرق متنوعة في تقاليد الفلسفة القارية الأوروبية والذرائعية الأمريكية.',
     roles: ['member'],
   },
 
@@ -177,11 +180,12 @@ export const usersData: UserSeed[] = [
   },
   {
     name: 'Teun Dekker',
-    name_ar: 'تون ديكر',
+    name_ar: 'تُن جي. ديكر',
     email: 'teun.dekker@cilas.test',
-    bio: 'Vice-Dean of Academic Affairs and Professor of Liberal Arts and Sciences Education at University College Maastricht; did his BA at University College Utrecht, completed graduate studies in political philosophy at Oxford (desert-based theories of distributive justice) and continued at Yale. Teaches political philosophy and writes about the educational philosophy behind LAS education.',
+    // The book's own contributor note (English and Arabic editions).
+    bio: 'Teun J. Dekker is Vice-Dean of Academic Affairs and Professor of Liberal Arts and Sciences Education at University College Maastricht. He did his BA at University College Utrecht, the first liberal arts college in the Netherlands, and has been a staunch advocate of liberal arts education ever since. He completed his graduate studies in political philosophy at Oxford University, focussing on desert-based theories of distributive justice, and continued this research at Yale University. At University College Maastricht, he teaches courses in political philosophy, and writes about the educational philosophy behind Liberal Arts and Sciences education.',
     bio_ar:
-      'نائب عميد الشؤون الأكاديمية وأستاذ تربية العلوم والآداب الحرة بجامعة كولج ماستريخت؛ نال البكالوريوس من يوترخت ودراساته العليا في الفلسفة السياسية من أكسفورد ثم ييل، وتعلّم الفلسفة السياسية ويكتب عن فلسفة تعليم العلوم والآداب الحرة.',
+      'تُن جي. ديكر هو نائب عميد الشئون الأكاديمية وأستاذ تعليم العلوم والآداب الحرة في كلية ماستريخت الجامعية. وقد حصل على درجة بكالوريوس في الآداب من كلية أوتريخت الجامعية، وهي أول جامعة للآداب الحرة في هولندا، ومنذ ذلك الوقت أصبح مناديًا متحمسًا لتعليم الآداب الحرة. أكمل دراساته العليا في الفلسفة السياسية في جامعة أوكسفورد مركّزًا على نظريات البداوة للعدالة التوزيعية، ثم أكمل بحوثه في جامعة ييل. يُدرس تُن مساقات في كلية ماستريخت الجامعية ويكتب عن الفلسفة التعليمية خلف تعليم العلوم والآداب الحرة.',
     roles: ['member'],
   },
   {
@@ -212,10 +216,12 @@ export const usersData: UserSeed[] = [
   // ---- trustees ----
   {
     name: 'Karim-Yassin Goessinger',
-    name_ar: 'كريم ياسين جوسينجر',
+    name_ar: 'كريم ياسين جوسنجر',
     email: 'karim@ci-las.org',
-    bio: 'Founder of CILAS.',
-    bio_ar: 'مؤسس مركز CILAS.',
+    // The book's own contributor note (English and Arabic editions).
+    bio: 'Karim-Yassin Goessinger studied political philosophy and urbanism in the Netherlands, Brazil and France. He worked with different development agencies in Latin America and the Middle East in fields including micro-finance, informal housing and local governance. A Dalai Lama and Donella Meadows Fellow, he enjoys martial arts, languages, world music, cooking and tea. After his graduate studies at Sciences Po Paris, he founded the Cairo Institute of Liberal Arts and Sciences (CILAS). At CILAS, he has coordinated the field of study Social Sciences and has directed the yearlong study programme in the liberal arts between 2013 and 2016. At the American University in Cairo, he convened two sociology courses in 2016 and 2017.',
+    bio_ar:
+      'درس كريم ياسين جوسنجر الفلسفة السياسية والعمران في هولندا والبرازيل وفرنسا وعمل في عدة مؤسسات تنموية في أمريكا اللاتينية والشرق الأوسط في حقول التمويل المتناهي الصغر والإسكان الشعبي والحوكمة المحلية. يستمتع بالفنون القتالية واللغات والموسيقى العالمية والطبخ والشاي. بعد تخرجه من جامعة ساينس بو باريس، أنشأ معهد القاهرة للعلوم والآداب الحرة (سيلاس). نسق حقل العلوم الإجتماعية والطبيعية في سيلاس وأدار برنامج العام الدراسي في الآداب الحرة بين عام 2013 و2016، كما درّس مساقين في علم الإجتماع في الجامعة الأمريكية بالقاهرة في عامي 2016 و2017.',
     roles: ['member'],
   },
   {
@@ -235,232 +241,235 @@ export const usersData: UserSeed[] = [
     roles: ['member'],
   },
 
-  // ---- CILAS Translation Lab, 2016–2018 ----
-  // Credited in "أعمال مختبر الترجمة" (CILAS, 2018), the volume of the five
-  // articles seeded in `articles.seed.ts`. Supervision line (إشراف وتنسيق):
-  // حسين الحاج، هند الغزالي، السيد محمود. All others are credited as
-  // translators (ترجمة وتحرير) or reviewers (مراجعة).
   {
     name: 'Hussein El-Hag',
     name_ar: 'حسين الحاج',
     email: 'sheikh.kamar@gmail.com',
-    bio: 'Translation Lab supervisor and coordinator (إشراف وتنسيق), 2016–2018. Translator and reviewer on all five articles in "أعمال مختبر الترجمة" (CILAS, 2018).',
+    // The book's own contributor note (English and Arabic editions).
+    bio: 'Hussein El Hajj is a graduate of the Faculty of Arts in the Department of English at Cairo University. While at college, he began reciting poems, acting in plays and short movies, writing and translating poetry, articles, and short stories published in print and in online magazines, as well as keeping a personal blog. The transition from the arts to deep socio-political issues after the revolution was what brought him to CILAS in 2014.',
     bio_ar:
-      'مشرف ومنسّق مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم ومراجع للمقالات الخمسة جميعها في «أعمال مختبر الترجمة» (CILAS، 2018).',
+      'تخرج حسين الحاج من كلية الآداب قسم اللغة الإنجليزية بجامعة القاهرة. أثناء سنوات الدراسة، اهتم بإلقاء الشعر والتمثيل في المسرحيات والأفلام القصيرة وكتابة وترجمة الشعر والمقالات والقصص القصيرة التي نشرها في المواقع والمدونات الإلكترونية. والتحول الذي مرر به من عالم الفنون إلى الموضوعات السياسية الإجتماعية بعد الثورة هو الذي دفعه للإلتحاق بسيلاس في 2014.',
     roles: ['member'],
   },
+
+  // ---- CILAS Translation Lab, 2016–2018 ----
+  // Credited in "الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة" (CILAS, 2018). Names
+  // and roles as the booklet prints them (its imprint and each essay's title
+  // page); Latin spellings match migration/aliases.json so the archive import
+  // finds the same people. Hussein El-Hag is with the Pigeon Towers contributors.
   {
-    name: 'Hind El-Ghazaly',
+    name: 'Hend El Ghazaly',
     name_ar: 'هند الغزالي',
     email: 'hind.ghazaly@cilas.test',
-    bio: 'Translation Lab supervisor and coordinator (إشراف وتنسيق), 2016–2018. Translator of "استعادة حريقنا في التعليم" in "أعمال مختبر الترجمة" (CILAS, 2018).',
+    bio: 'Supervision and coordination of the CILAS Translation Lab, and a translator of "Reclaiming Our Freedom to Learn", in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مشرفة ومنسّقة مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم» في «أعمال مختبر الترجمة» (CILAS، 2018).',
+      'إشراف وتنسيق مختبر الترجمة بسيلاس، وشاركت في ترجمة «استعادة حريتنا في التعلم»، في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'El-Sayed Mahmoud',
     name_ar: 'السيد محمود',
     email: 'sayid.mahmoud@cilas.test',
-    bio: 'Translation Lab supervisor and coordinator (إشراف وتنسيق), 2016–2018. Translator of "التعافي من داء الدبلومات" and "استعادة حريقنا في التعليم".',
+    bio: 'Supervision and coordination of the CILAS Translation Lab, and a translator of "Healing Ourselves from the Diploma Disease" and "Reclaiming Our Freedom to Learn", in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مشرف ومنسّق مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقالَي «التعافي من داء الدبلومات» و«استعادة حريقنا في التعليم».',
+      'إشراف وتنسيق مختبر الترجمة بسيلاس، وشارك في ترجمة «التعافي من داء الدبلومات» و«استعادة حريتنا في التعلم»، في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Iman Marak',
-    name_ar: 'إيمان مراك',
+    name: 'Eman Maarek',
+    name_ar: 'إيمان معارك',
     email: 'imani.marak@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Lead translator of "حول كيفية قراءة الأعمال النظرية".',
+    bio: 'A translator of "On Reading and Not Reading Theoretical Works" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجمة الرئيسية لمقال «حول كيفية قراءة الأعمال النظرية».',
+      'شاركت في ترجمة «حول كيفية قراءة الأعمال النظرية» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Ayman El-Husseini',
     name_ar: 'أيمن الحسيني',
     email: 'ayman.elhusseini@cilas.test',
-    bio: 'Translator and reviewer in the CILAS Translation Lab, 2016–2018.',
-    bio_ar: 'مترجم ومراجع في مختبر الترجمة بمركز CILAS (2016–2018).',
-    roles: ['member'],
-  },
-  {
-    name: 'Mad Bahi',
-    name_ar: 'مد بحي',
-    email: 'mad.bahi@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018.',
-    bio_ar: 'مترجم في مختبر الترجمة بمركز CILAS (2016–2018).',
-    roles: ['member'],
-  },
-  {
-    name: 'Nazihy Halouda',
-    name_ar: 'نزيهة حلودة',
-    email: 'nazihy.halouda@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
+    bio: 'Translator of "A Brief History of Alternative Education", a translator of "On Reading and Not Reading Theoretical Works", and a reviewer of "Reading, Writing, and Understanding", in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
+      'ترجم «موجز تاريخ التعليم البديل»، وشارك في ترجمة «حول كيفية قراءة الأعمال النظرية» ومراجعة «القراءة والكتابة والفهم»، في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
+    roles: ['member'],
+  },
+  {
+    name: 'Mohamed Yahya',
+    name_ar: 'محمد يحيي',
+    email: 'mohamed.yahya@cilas.test',
+    bio: 'A translator of "On Reading and Not Reading Theoretical Works" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
+    bio_ar:
+      'شارك في ترجمة «حول كيفية قراءة الأعمال النظرية» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
+    roles: ['member'],
+  },
+  {
+    name: 'Nazih Hallouda',
+    name_ar: 'نزيه هلوده',
+    email: 'nazihy.halouda@cilas.test',
+    bio: 'A translator of "Reclaiming Our Freedom to Learn" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
+    bio_ar:
+      'شارك في ترجمة «استعادة حريتنا في التعلم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Howaida Ahmed',
-    name_ar: 'هويدة أحمد',
+    name_ar: 'هويدا أحمد',
     email: 'howaida.ahmad@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "حول كيفية قراءة الأعمال النظرية".',
+    bio: 'A translator of "On Reading and Not Reading Theoretical Works" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «حول كيفية قراءة الأعمال النظرية».',
+      'شاركت في ترجمة «حول كيفية قراءة الأعمال النظرية» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Iman Kal Abdel Hamid',
-    name_ar: 'إيمان كل عبد الحميد',
+    name: 'Eman Abdelhamid Kamal',
+    name_ar: 'إيمان كمال عبد الحميد',
     email: 'imani.kal@cilas.test',
-    bio: 'Translator and reviewer in the CILAS Translation Lab, 2016–2018. Sole translator of "القراءة والكتابة والفهم".',
+    bio: 'Translator of "Reading, Writing, and Understanding" and a reviewer of "A Brief History of Alternative Education", in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة ومراجعة في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجمة الوحيدة لمقال «القراءة والكتابة والفهم».',
+      'ترجمت «القراءة والكتابة والفهم» وشاركت في مراجعة «موجز تاريخ التعليم البديل»، في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Ahmed El-Mengy',
-    name_ar: 'أحمد colg',
+    name: 'Ahmed Mongey',
+    name_ar: 'أحمد المنجي',
     email: 'ahmed.elmengy@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Lead translator of "استعادة حريقنا في التعليم".',
+    bio: 'A translator of "Reclaiming Our Freedom to Learn" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، والمترجم الرئيسي لمقال «استعادة حريقنا في التعليم».',
+      'شارك في ترجمة «استعادة حريتنا في التعلم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Islam Karam',
-    name_ar: 'إسلام كرم',
+    name: 'Islam Karrar',
+    name_ar: 'إسلام كرّار',
     email: 'islam.karam@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
+    bio: 'A translator of "Reclaiming Our Freedom to Learn" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «استعادة حريقنا في التعليم».',
+      'شارك في ترجمة «استعادة حريتنا في التعلم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Iman Safwat',
     name_ar: 'إيمان صفوت',
     email: 'imani.safwat@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
+    bio: 'A translator of "Reclaiming Our Freedom to Learn" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
+      'شاركت في ترجمة «استعادة حريتنا في التعلم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Rehab Soliman',
+    name: 'Rehab Suleiman',
     name_ar: 'رحاب سليمان',
     email: 'rehab.soliman@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
+    bio: 'A translator of "Reclaiming Our Freedom to Learn" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
+      'شاركت في ترجمة «استعادة حريتنا في التعلم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Abdel Rahman Adel',
     name_ar: 'عبد الرحمن عادل',
     email: 'abdelrahman.adel@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
+    bio: 'A translator of "Reclaiming Our Freedom to Learn" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «استعادة حريقنا في التعليم».',
+      'شارك في ترجمة «استعادة حريتنا في التعلم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Mariam Salem',
-    name_ar: 'مريم سالم',
+    name: 'Mariam Sameh',
+    name_ar: 'مريم سامح',
     email: 'mariam.salem@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "استعادة حريقنا في التعليم".',
+    bio: 'A translator of "Reclaiming Our Freedom to Learn" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «استعادة حريقنا في التعليم».',
+      'شاركت في ترجمة «استعادة حريتنا في التعلم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Noura Halmy',
-    name_ar: 'نورة حلمي',
+    name: 'Nora Helmy',
+    name_ar: 'نورا حلمي',
     email: 'noura.halmy@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
+    bio: 'A translator of "Healing Ourselves from the Diploma Disease" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
+      'شاركت في ترجمة «التعافي من داء الدبلومات» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Sara Alaa',
     name_ar: 'سارة علاء',
     email: 'sara.alaa@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
+    bio: 'A translator of "Healing Ourselves from the Diploma Disease", and author of the closing note (خاتمة), in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
+      'شاركت في ترجمة «التعافي من داء الدبلومات»، وكتبت «خاتمة»، في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Amal Abdel Rahman',
     name_ar: 'أمل عبد الرحمن',
     email: 'amal.abdelrahman@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
+    bio: 'A translator of "Healing Ourselves from the Diploma Disease" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
+      'شاركت في ترجمة «التعافي من داء الدبلومات» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Heba El-Mansour',
-    name_ar: 'هبة المنصور',
+    name: 'Heba Allah Mansour',
+    name_ar: 'هبة الله منصور',
     email: 'heba.mansour@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
+    bio: 'A translator of "Healing Ourselves from the Diploma Disease" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
+      'شاركت في ترجمة «التعافي من داء الدبلومات» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Sara Salam',
-    name_ar: 'سارة سلام',
+    name: 'Sara Sallam',
+    name_ar: 'سارة سلّام',
     email: 'sara.salam@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
+    bio: 'A translator of "Healing Ourselves from the Diploma Disease" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «التعافي من داء الدبلومات».',
+      'شاركت في ترجمة «التعافي من داء الدبلومات» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Mohamed Nagu Senjer',
+    name: 'Mohamed Nagy Sanger',
     name_ar: 'محمد ناجي سنجر',
     email: 'mohamed.nagu@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "التعافي من داء الدبلومات".',
+    bio: 'A translator of "Healing Ourselves from the Diploma Disease" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجم في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجم مقال «التعافي من داء الدبلومات».',
+      'شارك في ترجمة «التعافي من داء الدبلومات» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Amir Zaki',
     name_ar: 'أمير زكي',
     email: 'amir.zaki@cilas.test',
-    bio: 'Reviewer (مراجعة) in the CILAS Translation Lab, 2016–2018, for "موجز تاريخ التعليم البديل" and "القراءة والكتابة والفهم".',
+    bio: 'Proofreader of "Translation as Education: Works of the Translation Lab" (CILAS, 2018), and a reviewer of "A Brief History of Alternative Education" and "Reading, Writing, and Understanding".',
     bio_ar:
-      'مراجع (مراجعة) في مختبر الترجمة بمركز CILAS (2016–2018) لمقالَي «موجز تاريخ التعليم البديل» و«القراءة والكتابة والفهم».',
+      'المراجعة اللغوية لـ«الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018)، وشارك في مراجعة «موجز تاريخ التعليم البديل» و«القراءة والكتابة والفهم».',
     roles: ['member'],
   },
   {
     name: 'Nahir Emad',
     name_ar: 'نهير عماد',
     email: 'nahir.emad@cilas.test',
-    bio: 'Reviewer (مراجعة) of "القراءة والكتابة والفهم" in the CILAS Translation Lab, 2016–2018.',
+    bio: 'A reviewer of "Reading, Writing, and Understanding" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مراجِعة (مراجعة) لمقال «القراءة والكتابة والفهم» في مختبر الترجمة بمركز CILAS (2016–2018).',
+      'شاركت في مراجعة «القراءة والكتابة والفهم» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
-    name: 'Nazihy Awad',
-    name_ar: 'نزيهة عوض',
+    name: 'Nazih Awad',
+    name_ar: 'نزيه عوض',
     email: 'nazihy.awad@cilas.test',
-    bio: 'Translator in the CILAS Translation Lab, 2016–2018. Translator of "حول كيفية قراءة الأعمال النظرية".',
+    bio: 'A translator of "On Reading and Not Reading Theoretical Works" in "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
     bio_ar:
-      'مترجمة في مختبر الترجمة بمركز CILAS (2016–2018)، ومترجمة مقال «حول كيفية قراءة الأعمال النظرية».',
+      'شارك في ترجمة «حول كيفية قراءة الأعمال النظرية» في «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
   {
     name: 'Amr Okasha',
-    name_ar: 'عمرو عاشا',
+    name_ar: 'عمرو عكاشة',
     email: 'amr.okasha@cilas.test',
-    bio: 'Cover designer (تصميم الغلاف) and art director (الإخراج الفني) of "أعمال مختبر الترجمة" (CILAS, 2018).',
-    bio_ar:
-      'مصمم الغلاف (تصميم الغلاف) والمخرج الفني (الإخراج الفني) لكتاب «أعمال مختبر الترجمة» (CILAS، 2018).',
+    bio: 'Cover designer of "Translation as Education: Works of the Translation Lab" (CILAS, 2018).',
+    bio_ar: 'صمّم غلاف «الترجمة بصفتها تعليمًا: أعمال مختبر الترجمة» (سيلاس، 2018).',
     roles: ['member'],
   },
 

@@ -5,6 +5,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
 import type { Article } from '@/payload-types'
+import { blocksToLexical } from '../../migration/lib/blocks'
 import { importContent, type ArchiveContent } from '../../migration/lib/import-content'
 
 let payload: Payload
@@ -190,19 +191,33 @@ describe('publishing content import', () => {
       data: { name: 'Probe Content Author', slug: 'probe-content-author' },
       overrideAccess: true,
     })
-    // An article the dev seed would have made: a digest, a tier, no legacy URL.
+    // An article the old dev seed would have made: a digest, a community tier,
+    // no legacy URL.
     await payload.create({
       collection: 'articles',
       data: {
         title: SEEDED_TITLE,
         slug: 'probe-content-seeded-title',
         authors: [author.id],
-        tier: 'public',
+        tier: 'community',
+        requested_tier: 'community',
         review: { status: 'approved' },
         _status: 'published',
       },
       overrideAccess: true,
     })
+    // A booklet article that already carries an English stand-in body.
+    await payload.create({
+      collection: 'articles',
+      data: {
+        title: 'Probe Content Booklet',
+        slug: 'probe-content-booklet',
+        authors: [author.id],
+        legacy_url: L.booklet,
+        body: blocksToLexical([{ type: 'paragraph', level: null, text: 'An English digest.' }], 'ltr'),
+      },
+      overrideAccess: true,
+    } as Parameters<Payload['create']>[0])
     // An imported article an editor has since reviewed.
     await payload.create({
       collection: 'articles',
@@ -231,10 +246,11 @@ describe('publishing content import', () => {
     expect(nodeTypes(en)).toEqual(['heading', 'paragraph', 'quote'])
     expect(plain(en.body)).toContain('English first paragraph')
     expect(plain(en.body)).toContain('"direction":"ltr"')
-    expect(en.review?.status).toBe('submitted')
-    expect(en._status).toBe('draft')
+    // Archive works are published, approved and public.
+    expect(en.review?.status).toBe('approved')
+    expect(en._status).toBe('published')
+    expect(en.tier).toBe('public')
     expect(en.import_status).toBe('needs_review')
-    expect(en.requested_tier).toBe('public')
     expect(en.credits?.[0]).toMatchObject({ role: 'translator', label: 'Translation' })
 
     const ar = await article(L.pair, 'ar')
@@ -246,22 +262,23 @@ describe('publishing content import', () => {
     expect(ar.credits?.[0].id).toBe(en.credits?.[0].id)
   })
 
-  it('writes a booklet article in Arabic only, with its translation group', async () => {
+  it('writes a booklet article in Arabic only, clearing an English stand-in, with its translation group', async () => {
     const en = await article(L.booklet, 'en')
     expect(en.title).toBe('Probe Content Booklet')
+    // No English text: no English body, so the site shows the Arabic one.
     expect(en.body ?? null).toBeNull()
     const ar = await article(L.booklet, 'ar')
     expect(plain(ar.body)).toContain('نص عربي فقط')
     expect(en.translation).toMatchObject({ original_language: 'en', original_title: 'Original', original_source: 'A journal, 2016' })
   })
 
-  it('replaces the body of a seeded article matched by title and keeps its tier', async () => {
+  it('replaces the body of a seeded article matched by title and publishes it', async () => {
     const seeded = await article(L.seeded)
     expect(seeded.title).toBe('Probe Content Seeded Replacement')
     expect(plain(seeded.body)).toContain('The full text replaces the digest.')
     expect(seeded.tier).toBe('public')
-    expect(seeded.review?.status).toBe('submitted')
-    expect(seeded._status).toBe('draft')
+    expect(seeded.review?.status).toBe('approved')
+    expect(seeded._status).toBe('published')
     expect(seeded.slug).toBe('probe-content-seeded-title')
   })
 

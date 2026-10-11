@@ -22,9 +22,12 @@ export type ArchiveArticle = {
     original_title: string | null
     original_authors: string[]
     original_source: string | null
+    original_url?: string | null
   } | null
   publication: string | null
   published_date: string | null
+  /** Arabic spellings, as printed, of the people this article names (Latin name → Arabic). */
+  names_ar?: Record<string, string>
 }
 
 export type ArchivePublication = {
@@ -170,9 +173,24 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
 
   // People, by exact name; a missing one is created, flagged for review.
   const people = new Map<string, number>()
-  const person = async (name: string, from: string): Promise<number> => {
+  const arabicNamed = new Set<number>()
+  /** Gives a person their Arabic name as the source prints it (never on a reviewed person). */
+  const nameInArabic = async (id: number, nameAr: string | undefined) => {
+    if (!nameAr || arabicNamed.has(id)) return
+    arabicNamed.add(id)
+    const doc = (await payload.findByID({ collection: 'people', id, locale: 'ar', fallbackLocale: false, depth: 0, overrideAccess: true })) as {
+      name?: string | null
+      import_status?: string | null
+    }
+    if (doc.import_status === 'reviewed' || doc.name === nameAr) return
+    await payload.update({ collection: 'people', id, data: { name: nameAr }, locale: 'ar', overrideAccess: true, context: IMPORT_CONTEXT } as Parameters<Payload['update']>[0])
+  }
+  const person = async (name: string, from: string, nameAr?: string): Promise<number> => {
     const known = people.get(name)
-    if (known) return known
+    if (known) {
+      await nameInArabic(known, nameAr)
+      return known
+    }
     const { docs } = await payload.find({ collection: 'people', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
     let id = docs[0]?.id as number | undefined
     if (!id) {
@@ -194,11 +212,12 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       result.people.created++
     }
     people.set(name, id)
+    await nameInArabic(id, nameAr)
     return id
   }
-  const resolveSeq = async (names: string[], from: string): Promise<number[]> => {
+  const resolveSeq = async (names: string[], from: string, namesAr: Record<string, string> = {}): Promise<number[]> => {
     const ids: number[] = []
-    for (const n of names) ids.push(await person(n, from)) // sequential: a name may repeat
+    for (const n of names) ids.push(await person(n, from, namesAr[n])) // sequential: a name may repeat
     return ids
   }
 
@@ -224,7 +243,13 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
   }
 
   /** Credit rows in one locale: ids from the English write keep Arabic labels on the same rows. */
-  const creditRows = async (credits: ArchiveCredit[], from: string, locale: 'en' | 'ar', rows?: Array<{ id?: string }>) => {
+  const creditRows = async (
+    credits: ArchiveCredit[],
+    from: string,
+    locale: 'en' | 'ar',
+    rows?: Array<{ id?: string }>,
+    namesAr: Record<string, string> = {},
+  ) => {
     const out = []
     const kept = credits.filter((c) => c.people.length)
     for (const [i, c] of kept.entries()) {
@@ -233,7 +258,7 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         ...(rows?.[i]?.id ? { id: rows[i].id } : {}),
         role: c.role,
         ...(label ? { label } : {}),
-        people: await resolveSeq(c.people, from),
+        people: await resolveSeq(c.people, from, namesAr),
       })
     }
     return out
@@ -245,12 +270,14 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
   for (const a of data.articles) {
     const english = rich(a.blocks_en, 'ltr')
     const titles = [...new Set([a.title_en, ...a.match_titles_en])]
+    const namesAr = a.names_ar ?? {}
     const translation = a.translation
       ? {
           original_language: a.translation.original_language,
           original_title: a.translation.original_title,
-          original_authors: await resolveSeq(a.translation.original_authors, a.legacy_url),
+          original_authors: await resolveSeq(a.translation.original_authors, a.legacy_url, namesAr),
           original_source: a.translation.original_source,
+          original_url: a.translation.original_url ?? null,
         }
       : undefined
     const written = await put(
@@ -260,31 +287,36 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       {
         title: a.title_en,
         slug: slugify(a.title_en) || slugify(a.legacy_url),
-        // A booklet article has no English text: a matched article keeps its own.
-        ...(english ? { body: english } : {}),
-        authors: await resolveSeq(a.authors, a.legacy_url),
-        credits: await creditRows(a.credits, a.legacy_url, 'en'),
+        // No English text (the booklet is Arabic only): no English body, so the
+        // site shows the article in its content language rather than a stand-in.
+        body: english ?? null,
+        authors: await resolveSeq(a.authors, a.legacy_url, namesAr),
+        credits: await creditRows(a.credits, a.legacy_url, 'en', undefined, namesAr),
         ...(translation ? { translation } : {}),
         ...(a.published_date ? { published_date: a.published_date } : {}),
-        review: { status: 'submitted' },
-        _status: 'draft',
+        // Published works from the archive: public and approved.
+        requested_tier: 'public',
+        tier: 'public',
+        review: { status: 'approved' },
+        _status: 'published',
         import_status: 'needs_review',
         legacy_url: a.legacy_url,
       },
-      // A tier is an editor's call: a new article asks for public, a matched one keeps its own.
-      { createOnly: { requested_tier: 'public' } },
     )
     articleIds.set(a.legacy_url, written.id)
     const arabic = rich(a.blocks_ar, 'rtl')
+    // Nothing Arabic (the blog posts): no Arabic write at all; a published
+    // article would need an Arabic title for one.
     if (written.touched && (arabic || a.title_ar)) {
       await payload.update({
         collection: 'articles',
         id: written.id,
         data: {
           ...(a.title_ar ? { title: a.title_ar } : {}),
-          ...(arabic ? { body: arabic } : {}),
+          // Same rule as English: no Arabic text, no Arabic body (never a copy).
+          body: arabic ?? null,
           ...(hasArabicLabel(a.credits)
-            ? { credits: await creditRows(a.credits, a.legacy_url, 'ar', (written.doc?.credits as Array<{ id?: string }>) ?? []) }
+            ? { credits: await creditRows(a.credits, a.legacy_url, 'ar', (written.doc?.credits as Array<{ id?: string }>) ?? [], namesAr) }
             : {}),
         },
         locale: 'ar',
