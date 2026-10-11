@@ -89,7 +89,7 @@ const KNOWN_ARABIC: Record<string, string> = {
   'جوستابو إستبا': 'Gustavo Esteva',
   'رون ميلر': 'Ron Miller',
   'كريس رايت': 'Chris Wright',
-  'فيكي أ. جاكوبز': 'Vicky A. Jacobs',
+  'فيكي أ. جاكوبز': 'Vicki A. Jacobs',
   'فريدة مقار': 'Farida Makar',
 }
 const arabicMap = new Map<string, string>(Object.entries(KNOWN_ARABIC).map(([k, v]) => [foldArabic(k), v]))

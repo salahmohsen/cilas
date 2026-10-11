@@ -83,34 +83,34 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 
 ## Arabic-script names resolved to a Latin spelling (check)
 
-- أحمد المنجي → Ahmed El-Menagy
+- أحمد المنجي → Ahmed Mongey
 - أمل عبد الرحمن → Amal Abdel Rahman
 - أمير زكي → Amir Zaki
 - أيمن الحسيني → Ayman El-Husseini
 - إسلام كرّار → Islam Karrar
 - إيمان صفوت → Iman Safwat
-- إيمان كمال عبد الحميد → Iman Kamal Abdel Hamid
-- إيمان معارك → Iman Maarek
+- إيمان كمال عبد الحميد → Eman Abdelhamid Kamal
+- إيمان معارك → Eman Maarek
 - السيد محمود → El-Sayed Mahmoud
 - جوستابو إستبا → Gustavo Esteva
 - حسين الحاج → Hussein El-Hag
 - رحاب سليمان → Rehab Suleiman
 - رون ميلر → Ron Miller
-- سارة سلّام → Sara Salam
+- سارة سلّام → Sara Sallam
 - سارة علاء → Sara Alaa
 - شريا جانسنز-سانون → Shereen Janzen-Sanson
 - شليبا جاين → Shelba Jain
 - عبد الرحمن عادل → Abdel Rahman Adel
 - عمرو عكاشة → Amr Okasha
 - فريدة مقار → Farida Makar
-- فيكي أ. جاكوبز → Vicky A. Jacobs
+- فيكي أ. جاكوبز → Vicki A. Jacobs
 - كريس رايت → Chris Wright
 - مانيش جاين → Manish Jain
 - محمد ناجي سنجر → Mohamed Nagy Sanger
-- محمد يحيي → Mohamed Yahya
-- مريم سامح → Mariam Saleh
-- نزيه هلوده → Nazih Halawa
-- نورا حلمي → Nora Halabi
+- محمد يحيي → محمد يحيى
+- مريم سامح → Mariam Sameh
+- نزيه هلوده → Nazih Hallouda
+- نورا حلمي → Nora Helmy
 - هبة الله منصور → Heba Allah Mansour
 - هند الغزالي → Hind El-Ghazali
 - هويدا أحمد → Howaida Ahmed
@@ -118,11 +118,9 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 ## Names with no match in people.json (an import creates them as needs_review)
 
 - Abdel Rahman Adel
-- Ahmed El-Menagy
 - Ali Al-Farsi
 - Amal Abdel Rahman
 - Amr Okasha
-- Amro Okacha
 - Antonia Bouwers
 - Ayman El-Husseini
 - Chris Wright
@@ -131,32 +129,27 @@ Counts: 15 articles (12 essays, 3 blog posts), 2 publications, 11 press items, 6
 - Heba Allah Mansour
 - Hind El-Ghazali
 - Howaida Ahmed
-- Iman Kamal Abdel Hamid
-- Iman Maarek
 - Iman Safwat
 - Islam Karrar
 - Karim El Hakim
 - Kesmat El Nahel
 - Mai El Sayed
 - Manish Jain
-- Mariam Saleh
+- Mariam Sameh
 - Mohamed Nagy Sanger
-- Mohamed Yahya
-- Nazih Halawa
-- Nora Halabi
+- Nora Helmy
 - Nour Mohy
 - Rehab Suleiman
 - Ron Miller
 - Sara Alaa
-- Sara Salam
+- Sara Sallam
 - Sarah Lynch
 - Shelba Jain
 - Shereen Janzen-Sanson
 - Surti Singh
 - Tarek Anous
-- Teun J. Dekker
 - Tine Lavent
-- Vicky A. Jacobs
+- Vicki A. Jacobs
 
 ## Line-end hyphens left in English text (not fixed)
 
