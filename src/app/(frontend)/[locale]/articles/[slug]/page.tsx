@@ -19,23 +19,16 @@ import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
+import { ContributorList, PersonLink, photoOf, type Contributor } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { env } from '@/env'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { splitBody } from '@/lib/article-body'
-import {
-  authorNames,
-  creditNames,
-  excerptOf,
-  joinNames,
-  publicationOf,
-  readingMinutes,
-  yearOf,
-} from '@/lib/articles'
+import { excerptOf, publicationOf, readingMinutes, yearOf } from '@/lib/articles'
 import { readingFonts } from '@/lib/fonts'
 import { pathOf } from '@/lib/paths'
-import type { Article, Media, Person } from '@/payload-types'
+import type { Media, Person } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -84,7 +77,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const reading = await getArticleForReading(payload, slug, { locale, preview })
   if (!reading) notFound()
-  const { article, contentLocale, body, title } = reading
+  const { article, contentLocale, body, title, other } = reading
 
   const [t, tl, tArticles, format, related] = await Promise.all([
     getTranslations('Article'),
@@ -97,18 +90,32 @@ export default async function ArticlePage({ params }: Props) {
   const fallback = contentLocale !== locale
   const contentDir = isRtl(contentLocale) ? 'rtl' : 'ltr'
   const pub = publicationOf(article)
-  const translators = creditNames(article, 'translator')
   const minutes = readingMinutes({ body })
   const original = article.translation
-  const originalAuthors = (original?.original_authors ?? []).filter(isObject<Person>).map((p) => p.name)
-  const credits = (article.credits ?? []).filter((c) => c.role !== 'translator' && c.role !== 'author')
   const hasOriginal = Boolean(original?.original_title || original?.original_source)
+
+  // People, named in the site language; a name missing there comes from the
+  // article's other-language copy.
+  const otherPeople = new Map<number, Person>()
+  for (const p of [...(other?.authors ?? []), ...(other?.credits ?? []).flatMap((c) => c.people), ...(other?.translation?.original_authors ?? [])])
+    if (isObject<Person>(p)) otherPeople.set(p.id, p)
+  const named = (p: Person): Person => (p.name ? p : { ...p, name: otherPeople.get(p.id)?.name ?? p.slug })
+  const peopleOf = (xs: Array<number | Person> | null | undefined) => (xs ?? []).filter(isObject<Person>).map(named)
+  const writers = peopleOf(article.authors)
+  const translatorPeople = (article.credits ?? []).filter((c) => c.role === 'translator').flatMap((c) => peopleOf(c.people))
+  const originalAuthors = peopleOf(original?.original_authors)
+  // The sidebar: writers, then translators and every other credit.
+  const contributors: Contributor[] = []
+  const add = (person: Person, role: string) => {
+    if (!contributors.some((c) => c.person.id === person.id && c.role === role)) contributors.push({ person, role })
+  }
+  for (const w of writers) add(w, t('roles.author'))
+  for (const c of article.credits ?? []) for (const p of peopleOf(c.people)) add(p, c.label || t(`roles.${c.role}`))
   const cover = isObject<Media>(article.cover_image) ? article.cover_image : undefined
   const url = `${env.NEXT_PUBLIC_SERVER_URL}${pathOf('articles', article, locale)}`
   // The reader opens with a lead: the article's description when it has one.
   const excerpt = article.meta?.description ?? null
 
-  const authors = joinNames(authorNames(article), t('and'))
   const year = article.published_date ? format.dateTime(new Date(article.published_date), 'year') : yearOf(article)
   const hasContents = sections.length >= 3
 
@@ -123,7 +130,8 @@ export default async function ArticlePage({ params }: Props) {
         <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_760px_minmax(0,1fr)] xl:gap-12">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
-            <div className="sticky top-24 space-y-6">
+            <div className="sticky top-24 space-y-8">
+              <ContributorList contributors={contributors} title={t('people')} />
               {hasContents && <ArticleContents container="article-text" sections={sections} />}
               <TextSize target="article-text" />
             </div>
@@ -145,13 +153,20 @@ export default async function ArticlePage({ params }: Props) {
                 {title}
               </h1>
               <div className={grid.byline} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
-                <span aria-hidden className={grid.avatar} />
-                <span className={grid.authorName}>{authors}</span>
+                {writers[0] && photoOf(writers[0]) ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img alt="" className={grid.avatar} src={photoOf(writers[0])} />
+                ) : (
+                  <span aria-hidden className={grid.avatar} />
+                )}
+                <span className={grid.authorName}>
+                  <PeopleLinks and={t('and')} people={writers} />
+                </span>
                 {minutes > 0 && <span className={grid.readTime}>{t('minutes', { count: minutes })}</span>}
               </div>
-              {translators.length > 0 && (
+              {translatorPeople.length > 0 && (
                 <p className={grid.meta} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
-                  {t('translatedBy')} {joinNames(translators, t('and'))}
+                  {t('translatedBy')} <PeopleLinks and={t('and')} people={translatorPeople} />
                 </p>
               )}
             </header>
@@ -164,7 +179,8 @@ export default async function ArticlePage({ params }: Props) {
             )}
 
             {/* Narrow screens: the tools fold into the column. */}
-            <div className="flex flex-col gap-4 xl:hidden">
+            <div className="flex flex-col gap-6 xl:hidden">
+              <ContributorList contributors={contributors} title={t('people')} />
               {hasContents && <ArticleContents container="article-text" sections={sections} />}
               <TextSize target="article-text" />
             </div>
@@ -209,8 +225,8 @@ export default async function ArticlePage({ params }: Props) {
               )}
             </div>
 
-            {/* About this text: provenance and credits, after the essay. */}
-            {(hasOriginal || credits.length > 0) && (
+            {/* About this text: the original it was translated from. */}
+            {hasOriginal && (
               <section className="rounded-[26px] bg-[var(--surface-muted)] p-6 text-sm">
                 <h2 className="font-medium">{t('aboutText')}</h2>
                 <dl className="mt-4 grid gap-x-8 gap-y-4 sm:grid-cols-2">
@@ -219,21 +235,17 @@ export default async function ArticlePage({ params }: Props) {
                       <dt className="text-[var(--text-muted)]">{t('original')}</dt>
                       <dd className="mt-1" dir="auto">
                         {original.original_title && <span className="block">{original.original_title}</span>}
-                        {originalAuthors.length > 0 && <span className="block">{joinNames(originalAuthors, t('and'))}</span>}
+                        {originalAuthors.length > 0 && (
+                          <span className="block">
+                            <PeopleLinks and={t('and')} people={originalAuthors} />
+                          </span>
+                        )}
                         {original.original_source && (
                           <span className="block text-[var(--text-secondary)]">{original.original_source}</span>
                         )}
                       </dd>
                     </div>
                   )}
-                  {credits.map((c) => (
-                    <div key={c.id ?? c.role}>
-                      <dt className="text-[var(--text-muted)]">{c.label || t(`roles.${c.role}`)}</dt>
-                      <dd className="mt-1">
-                        {joinNames(c.people.filter(isObject<Person>).map((p) => p.name), t('and'))}
-                      </dd>
-                    </div>
-                  ))}
                 </dl>
               </section>
             )}
@@ -260,5 +272,19 @@ export default async function ArticlePage({ params }: Props) {
         />
       )}
     </div>
+  )
+}
+
+/** Names, each linking to its person's page: "A", "A and B", "A, B and C". */
+function PeopleLinks({ people, and }: { people: Person[]; and: string }) {
+  return (
+    <>
+      {people.map((p, i) => (
+        <span key={p.id}>
+          {i > 0 && (i === people.length - 1 ? ` ${and} ` : ', ')}
+          <PersonLink person={p} />
+        </span>
+      ))}
+    </>
   )
 }

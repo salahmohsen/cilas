@@ -148,7 +148,8 @@
       "photographer": "Photography",
       "author": "Author",
       "other": "Contribution"
-    }
+    },
+    "people": "People"
   },
   "Study": {
     "heroQuote": "What we cover at CILAS matters less than what a student discovers.",
@@ -194,5 +195,12 @@
     "title": "Page not found",
     "text": "The page you are looking for is not here. It may have moved when the site was rebuilt.",
     "home": "Go to the home page"
+  },
+  "Person": {
+    "written": "Writing",
+    "credited": "Translations and other work",
+    "taught": "Courses",
+    "website": "Website",
+    "nothing": "No published contributions yet."
   }
 }

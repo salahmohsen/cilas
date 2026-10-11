@@ -36,6 +36,8 @@ export type ArticleReading = {
   title: string
   /** Whether the body also exists in the other language. */
   hasOther: boolean
+  /** The same article read in the other language (names missing here are there). */
+  other?: Article
 }
 
 /**
@@ -71,7 +73,7 @@ export const getArticleForReading = async (
   const inOther = await read(other)
 
   if (hasBody(article)) {
-    return { article, contentLocale: locale, body: article.body, title: article.title, hasOther: hasBody(inOther) }
+    return { article, contentLocale: locale, body: article.body, title: article.title, hasOther: hasBody(inOther), other: inOther }
   }
   if (inOther && hasBody(inOther)) {
     return {
@@ -80,9 +82,10 @@ export const getArticleForReading = async (
       body: inOther.body,
       title: article.title || inOther.title,
       hasOther: false,
+      other: inOther,
     }
   }
-  return { article, contentLocale: locale, body: null, title: article.title || inOther?.title || '', hasOther: false }
+  return { article, contentLocale: locale, body: null, title: article.title || inOther?.title || '', hasOther: false, other: inOther }
 }
 
 /**

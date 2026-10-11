@@ -5,6 +5,8 @@ const pagePath = (collection: string, slug: string): string | null => {
       return `/study/${slug}`
     case 'articles':
       return `/articles/${slug}`
+    case 'people':
+      return `/people/${slug}`
     default:
       return null
   }

@@ -239,3 +239,8 @@
   letter-spacing: 0;
   line-height: 1.35;
 }
+
+/* A person's bio: the reading face, a little smaller than an essay. */
+.article-prose--bio {
+  font-size: calc(1.1rem * var(--reading-scale, 1));
+}
