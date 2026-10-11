@@ -116,3 +116,26 @@ export const rewriteLinks = <T>(tree: T, map: (url: string) => string | null): {
   }
   return { tree: walk(tree) as T, count }
 }
+
+/**
+ * The PDFs the archive content points at: a publication's print edition and a
+ * newsletter's "Original PDF" link. Both are set to the media file's URL.
+ */
+export const pdfJobs = ({
+  publications,
+  newsletters,
+}: {
+  publications: Array<{ legacy_url: string; title_en: string; print_edition_url?: string | null }>
+  newsletters: Array<{ legacy_url: string; title_en: string; archive_url?: string | null }>
+}): MediaJob[] => {
+  const jobs: MediaJob[] = []
+  for (const p of publications) {
+    const path = p.print_edition_url ? uploadsPath(p.print_edition_url) : null
+    if (path) jobs.push({ collection: 'publications', legacy_url: p.legacy_url, field: 'print_edition_url', path, alt: p.title_en })
+  }
+  for (const n of newsletters) {
+    const path = n.archive_url && /\.pdf$/i.test(stripQuery(n.archive_url)) ? uploadsPath(n.archive_url) : null
+    if (path) jobs.push({ collection: 'newsletters', legacy_url: n.legacy_url, field: 'body_pdf_link', path, alt: n.title_en })
+  }
+  return jobs
+}

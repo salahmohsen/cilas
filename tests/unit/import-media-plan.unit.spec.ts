@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { firstImage, mediaJobs, rewriteLinks, stripQuery, uniquePaths, uploadsPath } from '../../migration/lib/media-plan'
+import { firstImage, mediaJobs, pdfJobs, rewriteLinks, stripQuery, uniquePaths, uploadsPath } from '../../migration/lib/media-plan'
 
 const U = 'uploads/1/9/1/0/19102967/'
 
@@ -110,5 +110,24 @@ describe('rewriteLinks', () => {
     expect(JSON.stringify(out.tree)).toContain('https://r2/a.pdf')
     expect(JSON.stringify(out.tree)).toContain('https://other.org/')
     expect(JSON.stringify(tree)).toContain('ci-las.org')
+  })
+})
+
+describe('pdfJobs', () => {
+  it('plans the print editions and the newsletter PDF, skipping other links', () => {
+    const jobs = pdfJobs({
+      publications: [
+        { legacy_url: '/a.html', title_en: 'A', print_edition_url: `https://www.ci-las.org/${U}a%20b.pdf` },
+        { legacy_url: '/b.html', title_en: 'B', print_edition_url: null },
+      ],
+      newsletters: [
+        { legacy_url: '/n.html#1', title_en: 'N1', archive_url: `https://www.ci-las.org/${U}n.pdf` },
+        { legacy_url: '/n.html#2', title_en: 'N2', archive_url: 'http://us7.campaign-archive1.com/?id=1' },
+      ],
+    })
+    expect(jobs).toEqual([
+      { collection: 'publications', legacy_url: '/a.html', field: 'print_edition_url', path: `${U}a b.pdf`, alt: 'A' },
+      { collection: 'newsletters', legacy_url: '/n.html#1', field: 'body_pdf_link', path: `${U}n.pdf`, alt: 'N1' },
+    ])
   })
 })
