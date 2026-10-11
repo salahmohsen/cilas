@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto'
 /**
  * Stage 2 for the course flows → migration/extracted/flows/<id>.json.
  * An agent works flow by flow, on the Claude Code subscription (no API key):
@@ -7,10 +8,10 @@
  * Input comes from prepare-flows.ts. The prompt (and so the hash) includes the
  * page-image paths, not the image bytes: they are derived from the PDF.
  */
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
-import { agentPrompt, isCurrent, recordAnswer } from './lib/agent-extract'
+import { agentPrompt, isCurrent, recordAnswer, shaOf } from './lib/agent-extract'
 import { FLOW_PROMPT_VERSION, flowPrompt, Syllabus } from './lib/syllabus-schema'
 
 const [raw, mode, ...rest] = process.argv.slice(2)
@@ -64,7 +65,23 @@ const flowNamed = (id: string): Flow => {
   return f
 }
 
-if (mode === '--pending') {
+if (mode === '--rehash-paths') {
+  // One-off after hashes became repo-relative: re-stamp answers whose stored
+  // hash matches the old absolute-path formula for exactly the same prompt.
+  const legacy = (version: string, model: string, prompt: string) =>
+    createHash('sha256').update(`${version}\n${model}\n${prompt}`).digest('hex')
+  let restamped = 0
+  for (const f of flows) {
+    const file = path.join(outDir, `${f.id}.json`)
+    if (!existsSync(file)) continue
+    const cached = JSON.parse(readFileSync(file, 'utf8')) as { sha256: string; model: string; version: string }
+    const prompt = promptFor(f)
+    if (cached.sha256 !== legacy(FLOW_PROMPT_VERSION, cached.model, prompt)) continue
+    writeFileSync(file, `${JSON.stringify({ ...cached, sha256: shaOf(FLOW_PROMPT_VERSION, cached.model, prompt) }, null, 2)}\n`)
+    restamped++
+  }
+  console.log(`re-stamped ${restamped} flow answer(s)`)
+} else if (mode === '--pending') {
   const pending = flows.filter(
     (f) => !isCurrent({ outDir, name: f.id, prompt: promptFor(f), version: FLOW_PROMPT_VERSION }),
   )

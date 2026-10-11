@@ -6,8 +6,18 @@ import * as z from 'zod'
 /** Recorded on answers written by a Claude Code agent (subscription), not the API. */
 export const AGENT_MODEL = 'claude-code:haiku'
 
+/** The repository root, as it appears in prompts that list file paths. */
+const REPO_ROOT = path.resolve(import.meta.dirname, '..', '..')
+
+/**
+ * The hash ignores where the repo lives: absolute paths in a prompt (page
+ * images) are written relative to the repo root first, so committed answers
+ * stay current on any machine.
+ */
 export const shaOf = (version: string, model: string, prompt: string): string =>
-  createHash('sha256').update(`${version}\n${model}\n${prompt}`).digest('hex')
+  createHash('sha256')
+    .update(`${version}\n${model}\n${prompt.split(REPO_ROOT).join('<repo>')}`)
+    .digest('hex')
 
 type Key = { outDir: string; name: string; prompt: string; version: string }
 
