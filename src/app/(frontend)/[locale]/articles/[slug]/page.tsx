@@ -30,6 +30,7 @@ import { env } from '@/env'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { splitBody } from '@/lib/article-body'
+import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, yearOf } from '@/lib/articles'
 import { readingFonts } from '@/lib/fonts'
 import { pathOf } from '@/lib/paths'
@@ -95,6 +96,7 @@ export default async function ArticlePage({ params }: Props) {
     getRelatedArticles(payload, article, locale),
   ])
   const { text, notes, noteCount, sections } = splitBody(body)
+  const footnotes = footnotesOf(text)
   const fallback = contentLocale !== locale
   const contentDir = isRtl(contentLocale) ? 'rtl' : 'ltr'
   const pub = publicationOf(article)
@@ -211,9 +213,28 @@ export default async function ArticlePage({ params }: Props) {
             <div className="grid gap-5" dir={contentDir} id="article-text" lang={contentLocale}>
               {excerpt && <p className="article-lead">{excerpt}</p>}
               {text ? (
-                <RichTextField className="article-prose" data={text} />
+                <RichTextField className="article-prose" data={text} footnoteLabel={t('footnote')} footnotes={footnotes} />
               ) : (
                 <p className="opacity-60">—</p>
+              )}
+              {/* Footnotes written in the editor, numbered as marked in the text. */}
+              {footnotes.length > 0 && (
+                <section aria-labelledby="footnotes-title" className="mt-10 border-t border-border pt-6">
+                  <h2 className="mb-4 text-base font-medium" id="footnotes-title">
+                    {t('footnotes')}
+                  </h2>
+                  <ol className="article-footnotes">
+                    {footnotes.map((f) => (
+                      <li id={`fn-${f.number}`} key={f.id}>
+                        <span className="footnote-number">{f.number}</span>
+                        <RichTextField className="article-prose article-prose--notes" data={f.note} />
+                        <a aria-label={t('backToText')} className="footnote-back" href={`#fnref-${f.number}`}>
+                          ↩
+                        </a>
+                      </li>
+                    ))}
+                  </ol>
+                </section>
               )}
               {notes && (
                 <div className="mt-6">

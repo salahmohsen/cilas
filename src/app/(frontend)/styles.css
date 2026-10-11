@@ -244,3 +244,46 @@
 .article-prose--bio {
   font-size: calc(1.1rem * var(--reading-scale, 1));
 }
+
+/* Footnotes: the mark in the text, and the list at the end. */
+.footnote-mark {
+  margin-inline-start: 0.1em;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--foreground);
+  & sup {
+    padding: 0 0.25em;
+    border-radius: 999px;
+    background: var(--surface-muted);
+    font-size: 0.68em;
+  }
+  &:hover sup,
+  &:focus-visible sup {
+    background: var(--foreground);
+    color: var(--background);
+  }
+}
+.article-footnotes {
+  display: grid;
+  gap: 0.75rem;
+  & li {
+    display: grid;
+    grid-template-columns: 1.75rem minmax(0, 1fr) auto;
+    align-items: baseline;
+    scroll-margin-top: 6rem;
+  }
+  & li:target {
+    background: var(--surface-muted);
+    border-radius: 0.75rem;
+  }
+  & .footnote-number {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  & .footnote-back {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+}

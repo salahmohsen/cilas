@@ -153,7 +153,10 @@
     "translatedFrom": "مترجم عن {language}",
     "translation": "ترجمة",
     "readOriginal": "اقرأ النص الأصلي",
-    "copyFailed": "تعذّر النسخ"
+    "copyFailed": "تعذّر النسخ",
+    "footnote": "هامش",
+    "footnotes": "الهوامش",
+    "backToText": "العودة إلى النص"
   },
   "Study": {
     "heroQuote": "ما نغطيه في سيلاس أقل أهمية مما يكتشفه الطالب.",

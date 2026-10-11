@@ -18,6 +18,9 @@ import {
   personOf,
   readTiers,
 } from '@/access'
+import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+
+import { Footnote } from '@/blocks/footnote'
 import { creditsField } from '@/fields/credits'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { slugField } from '@/fields/slug'
@@ -157,7 +160,15 @@ export const Articles: CollectionConfig = {
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-    { name: 'body', type: 'richText', localized: true },
+    {
+      name: 'body',
+      type: 'richText',
+      localized: true,
+      // Footnotes are inline blocks: inserted where they belong in the text.
+      editor: lexicalEditor({
+        features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ inlineBlocks: [Footnote] })],
+      }),
+    },
     {
       name: 'authors',
       type: 'relationship',
