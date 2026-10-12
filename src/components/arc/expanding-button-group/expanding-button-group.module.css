@@ -32,7 +32,8 @@
   overflow: clip;
   border: 0;
   border-radius: var(--radius-pill);
-  padding: 0 0 0 var(--ebg-start);
+  padding-block: 0;
+  padding-inline: var(--ebg-start) 0;
   background: transparent;
   color: var(--text-secondary);
   font: inherit;

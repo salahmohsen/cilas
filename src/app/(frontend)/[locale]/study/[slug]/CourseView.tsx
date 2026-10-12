@@ -20,6 +20,7 @@ import { Avatar } from '@/components/arc/avatar/avatar'
 import { photoOf } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
+import { ShareBar } from '@/components/share-bar'
 import { Link } from '@/i18n/navigation'
 import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
@@ -84,6 +85,7 @@ const RELATED_SHOWN = 6
 export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }> = ({ course, related = [] }) => {
   const t = useTranslations('Course')
   const tf = useTranslations('Study.filters')
+  const ts = useTranslations('Share')
   const format = useFormatter()
   const locale = useLocale()
 
@@ -277,6 +279,15 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
     </section>
   ) : null
 
+  const shareCard = (
+    <section aria-labelledby="course-share" className="course-side">
+      <h2 className="course-side-heading" id="course-share">
+        {ts('heading')}
+      </h2>
+      <ShareBar label={ts('course')} path={`/${locale}/study/${course.slug}`} title={course.title} />
+    </section>
+  )
+
   return (
     <div
       className={`course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0 ${applyUrl ? 'max-lg:pb-28' : ''}`}
@@ -322,6 +333,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           <div className="mt-10 grid gap-10 lg:hidden">
             {factsCard}
             {fellows.length ? facultyCard : null}
+            {shareCard}
           </div>
 
           {course.epigraph ? (
@@ -450,6 +462,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
             {factsCard}
             {fellows.length ? facultyCard : null}
             {materialsCard}
+            {shareCard}
           </div>
           {applyUrl ? (
             <div className="sticky top-[5.5rem]">

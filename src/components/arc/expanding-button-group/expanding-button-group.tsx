@@ -43,7 +43,7 @@ export interface ExpandingButtonGroupProps {
   style?: CSSProperties
 }
 
-/** Geometry per size. The icon keeps the same left inset collapsed and expanded, so it never moves while the label is revealed. */
+/** Geometry per size. The icon keeps the same inline-start inset collapsed and expanded, so it never moves while the label is revealed. */
 const metrics = {
   sm: { height: 28, icon: 14, start: 7, gap: 5, end: 11 },
   md: { height: 36, icon: 16, start: 10, gap: 7, end: 14 },
@@ -63,12 +63,13 @@ const labelVariants: Variants = {
     filter: 'blur(0px)',
     transition: { duration: motionTokens.duration.standard, ease: enter, delay: 0.04 },
   },
-  hidden: {
+  // From behind the icon: the inline start, so the left in LTR and the right in RTL.
+  hidden: (rtl: boolean) => ({
     opacity: 0,
-    x: -6,
+    x: rtl ? 6 : -6,
     filter: `blur(${motionTokens.blur.subtle}px)`,
     transition: { duration: motionTokens.duration.instant, ease: standard },
-  },
+  }),
 }
 const reducedLabelVariants: Variants = {
   shown: {
@@ -172,6 +173,10 @@ function Item({
   const labelRef = useRef<HTMLSpanElement>(null)
   const doneRef = useRef<HTMLSpanElement>(null)
   const [text, setText] = useState(0)
+  const [rtl, setRtl] = useState(false)
+  useLayoutEffect(() => {
+    if (labelRef.current) setRtl(getComputedStyle(labelRef.current).direction === 'rtl')
+  }, [])
 
   // Hidden copies of both words share the label's grid cell, so the slot is always as wide as the longer one. The confirmation
   // swap then never changes the width, and the server render already has the right width before anything is measured.
@@ -247,6 +252,7 @@ function Item({
         className={styles.label}
         aria-hidden="true"
         variants={reduced ? reducedLabelVariants : labelVariants}
+        custom={rtl}
         initial={false}
         animate={expanded ? 'shown' : 'hidden'}
       >
@@ -457,12 +463,16 @@ export function ExpandingButtonGroup({
     const index = list.findIndex((button) => button === document.activeElement)
     if (index < 0) return
     const last = list.length - 1
+    // Arrows follow the row as it reads: in RTL the right arrow goes back.
+    const rtl = root.current ? getComputedStyle(root.current).direction === 'rtl' : false
+    const forward = rtl ? 'ArrowLeft' : 'ArrowRight'
+    const back = rtl ? 'ArrowRight' : 'ArrowLeft'
     const target =
-      event.key === 'ArrowRight'
+      event.key === forward
         ? index === last
           ? 0
           : index + 1
-        : event.key === 'ArrowLeft'
+        : event.key === back
           ? index === 0
             ? last
             : index - 1

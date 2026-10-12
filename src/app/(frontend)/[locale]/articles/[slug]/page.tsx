@@ -23,12 +23,11 @@ import {
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
-import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
+import { ShareBar } from '@/components/share-bar'
 import { OrbitCardStack } from '@/components/ui/orbit-card-stack'
-import { env } from '@/env'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { splitBody } from '@/lib/article-body'
@@ -96,10 +95,11 @@ export default async function ArticlePage({ params }: Props) {
   const { article, contentLocale, body, title, other } = reading
 
   const publicationCovers = await getPublicationCovers(payload)
-  const [t, tl, tArticles, format, collection] = await Promise.all([
+  const [t, tl, tArticles, tShare, format, collection] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
     getTranslations('Articles'),
+    getTranslations('Share'),
     getFormatter(),
     getArticleCollection(payload, article, locale),
   ])
@@ -154,7 +154,6 @@ export default async function ArticlePage({ params }: Props) {
   for (const c of article.credits ?? [])
     for (const p of peopleOf(c.people)) add(p, c.label || t(`roles.${c.role}`))
   const cover = isObject<Media>(article.cover_image) ? article.cover_image : undefined
-  const url = `${env.NEXT_PUBLIC_SERVER_URL}${pathOf('articles', article, locale)}`
   // The reader opens with a lead: the article's description when it has one.
   const excerpt = article.meta?.description ?? null
 
@@ -291,25 +290,17 @@ export default async function ArticlePage({ params }: Props) {
             </div>
 
             {/* Tools at the end of the text. */}
-            <div className="flex flex-wrap items-center gap-3 border-t border-border pt-6">
-              <CopyButton
-                copiedLabel={t('copied')}
-                failedLabel={t('copyFailed')}
-                label={t('copyLink')}
-                value={url}
-                variant="outline"
+            <section aria-labelledby="article-share" className="mt-2 grid gap-3 border-t border-border pt-6">
+              <h2 className="text-sm text-[var(--text-muted)]" id="article-share">
+                {tShare('heading')}
+              </h2>
+              <ShareBar
+                file={pub?.print_edition_url ? { href: pub.print_edition_url, label: t('printEdition'), kind: 'print' } : undefined}
+                label={tShare('article')}
+                path={pathOf('articles', article, locale) ?? ''}
+                title={title}
               />
-              {pub?.print_edition_url && (
-                <a
-                  className="inline-flex h-9 items-center rounded-full border border-border px-4 text-sm transition-colors hover:bg-[var(--surface-muted)]"
-                  href={pub.print_edition_url}
-                  rel="noopener"
-                  target="_blank"
-                >
-                  {t('printEdition')}
-                </a>
-              )}
-            </div>
+            </section>
 
             {/* The original this text translates, with a way to read it. */}
             {hasOriginal && original && (

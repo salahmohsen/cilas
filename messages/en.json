@@ -401,5 +401,18 @@
     "close": "Close",
     "noMatches": "No matches",
     "matches": "{count, plural, one {# option} other {# options}}"
+  },
+  "Share": {
+    "course": "Share this course",
+    "article": "Share this article",
+    "heading": "Share",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "whatsapp": "WhatsApp",
+    "facebook": "Facebook",
+    "x": "X",
+    "telegram": "Telegram",
+    "email": "Email"
   }
 }

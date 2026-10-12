@@ -401,5 +401,18 @@
     "close": "إغلاق",
     "noMatches": "لا نتائج",
     "matches": "{count, plural, zero {لا خيارات} one {خيار واحد} two {خياران} few {{count, number, digits} خيارات} many {{count, number, digits} خيارًا} other {{count, number, digits} خيار}}"
+  },
+  "Share": {
+    "course": "شارك هذا المقرر",
+    "article": "شارك هذا المقال",
+    "heading": "مشاركة",
+    "share": "مشاركة",
+    "copyLink": "نسخ الرابط",
+    "copied": "نُسخ",
+    "whatsapp": "واتساب",
+    "facebook": "فيسبوك",
+    "x": "إكس",
+    "telegram": "تيليجرام",
+    "email": "البريد"
   }
 }
