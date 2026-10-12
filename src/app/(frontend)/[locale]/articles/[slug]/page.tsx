@@ -8,6 +8,7 @@ import { getPayload } from 'payload'
 import React from 'react'
 
 import {
+  getArticleCollection,
   getArticleForReading,
   getPublicationCovers,
   getRelatedArticles,
@@ -26,6 +27,7 @@ import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
+import { OrbitCardStack } from '@/components/ui/orbit-card-stack'
 import { env } from '@/env'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
@@ -34,7 +36,7 @@ import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, yearOf } from '@/lib/articles'
 import { readingFonts } from '@/lib/fonts'
 import { pathOf } from '@/lib/paths'
-import type { Media, Person } from '@/payload-types'
+import type { Article, Media, Person, Publication } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -88,13 +90,25 @@ export default async function ArticlePage({ params }: Props) {
   const { article, contentLocale, body, title, other } = reading
 
   const publicationCovers = await getPublicationCovers(payload)
-  const [t, tl, tArticles, format, related] = await Promise.all([
+  const [t, tl, tArticles, format, collection] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
     getTranslations('Articles'),
     getFormatter(),
-    getRelatedArticles(payload, article, locale),
+    getArticleCollection(payload, article, locale),
   ])
+  // A collection's article ends with the whole collection, in its order;
+  // any other article with related ones.
+  const related = collection ? [] : await getRelatedArticles(payload, article, locale)
+  const card = (a: Article) =>
+    toArticleCard(a, {
+      locale,
+      format,
+      minutesLabel: (m) => t('minutes', { count: m }),
+      and: t('and'),
+      otherCategory: tArticles('notes'),
+      publicationCovers,
+    })
   const { text, notes, noteCount, sections } = splitBody(body)
   const footnotes = footnotesOf(text)
   const fallback = contentLocale !== locale
@@ -186,6 +200,29 @@ export default async function ArticlePage({ params }: Props) {
                 {title}
               </h1>
             </header>
+
+            {/* The introduction opens onto the collection it introduces. */}
+            {collection?.isForeword && (
+              <OrbitCardStack
+                className="overflow-x-clip p-0 xl:overflow-visible"
+                dir={isRtl(locale) ? 'rtl' : 'ltr'}
+                items={collection.articles
+                  .filter((a) => a.id !== article.id)
+                  .map((a, i, rest) => {
+                    const c = card(a)
+                    return {
+                      name: c.title,
+                      role: c.author.name,
+                      description: c.excerpt,
+                      href: pathOf('articles', a) ?? '#',
+                      ...(c.image ? { image: c.image.src, imageAlt: c.image.alt } : {}),
+                      stat: t('essayOf', { n: i + 1, total: rest.length }),
+                    }
+                  })}
+                label={t('collectionStack', { title: collection.publication.title })}
+                spread={Math.min(150, 380 / Math.max(1, collection.articles.length - 2))}
+              />
+            )}
 
             {cover?.url && (
               <div className={grid.readerImage}>
@@ -287,6 +324,25 @@ export default async function ArticlePage({ params }: Props) {
                 url={original.original_url}
               />
             )}
+
+            {collection && (
+              <CollectionList
+                current={article.id}
+                labels={{ title: t('inCollection'), current: t('readingNow'), foreword: t('foreword') }}
+                publication={collection.publication}
+                items={collection.articles.map((a) => ({
+                  id: a.id,
+                  title: card(a).title,
+                  authors: card(a).author.name,
+                  href: pathOf('articles', a) ?? '#',
+                  foreword: collection.publication.foreword
+                    ? (typeof collection.publication.foreword === 'object'
+                        ? collection.publication.foreword.id
+                        : collection.publication.foreword) === a.id
+                    : false,
+                }))}
+              />
+            )}
           </article>
         </div>
       </div>
@@ -296,21 +352,74 @@ export default async function ArticlePage({ params }: Props) {
           categories={[]}
           description=""
           pageSize={3}
-          posts={related.map((r) =>
-            toArticleCard(r, {
-              locale,
-              format,
-              minutesLabel: (m) => t('minutes', { count: m }),
-              and: t('and'),
-              otherCategory: tArticles('notes'),
-              publicationCovers,
-            }),
-          )}
+          posts={related.map(card)}
           showFeatured={false}
           title={t('related')}
         />
       )}
     </div>
+  )
+}
+
+/**
+ * A collection's articles in their order, the open one marked: the end of
+ * every article that belongs to one.
+ */
+function CollectionList({
+  publication,
+  items,
+  current,
+  labels,
+}: {
+  publication: Publication
+  items: Array<{ id: number; title: string; authors: string; href: string; foreword: boolean }>
+  current: number
+  labels: { title: string; current: string; foreword: string }
+}) {
+  return (
+    <nav aria-labelledby="collection-title" className="mt-6 border-t border-border pt-8">
+      <p className="text-sm text-[var(--text-muted)]">{labels.title}</p>
+      <h2 className="mt-1 text-xl font-semibold" id="collection-title">
+        <Link className="underline-offset-4 hover:underline" href={`/articles?publication=${publication.slug}`}>
+          {publication.title}
+        </Link>
+      </h2>
+      <ol className="collection-list mt-5">
+        {items.map((item, i) => {
+          const here = item.id === current
+          const body = (
+            <>
+              <span aria-label={item.foreword ? labels.foreword : undefined} className="collection-number">
+                {item.foreword ? '—' : String(i + (items[0]?.foreword ? 0 : 1)).padStart(2, '0')}
+              </span>
+              <span className="min-w-0">
+                <span className="block font-medium" dir="auto">
+                  {item.title}
+                </span>
+                <span className="mt-0.5 block text-sm text-[var(--text-secondary)]">
+                  {[item.authors || null, here ? labels.current : null]
+                    .filter(Boolean)
+                    .join(' · ')}
+                </span>
+              </span>
+            </>
+          )
+          return (
+            <li key={item.id}>
+              {here ? (
+                <span aria-current="page" className="collection-item" data-current>
+                  {body}
+                </span>
+              ) : (
+                <Link className="collection-item" href={item.href}>
+                  {body}
+                </Link>
+              )}
+            </li>
+          )
+        })}
+      </ol>
+    </nav>
   )
 }
 

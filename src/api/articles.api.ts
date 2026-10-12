@@ -1,6 +1,6 @@
 import type { Payload, Where } from 'payload'
 
-import type { Article, Media } from '@/payload-types'
+import type { Article, Media, Publication } from '@/payload-types'
 
 export type Locale = 'en' | 'ar'
 
@@ -137,6 +137,46 @@ export const getRelatedArticles = async (
   await take(authorIds.length ? { authors: { in: authorIds } } : null)
 
   return picked
+}
+
+export type ArticleCollection = {
+  publication: Publication
+  /** Every article of the publication, in its order (the foreword first). */
+  articles: Article[]
+  /** Whether the open article is the publication's introduction. */
+  isForeword: boolean
+}
+
+/**
+ * The publication an article belongs to, with all its articles in the order
+ * the publication gives them (its print edition's contents), or undefined
+ * when the article belongs to none. Only articles this visitor may read.
+ */
+export const getArticleCollection = async (
+  payload: Payload,
+  article: Article,
+  locale: Locale,
+): Promise<ArticleCollection | undefined> => {
+  const idOf = (v: number | { id: number }) => (typeof v === 'object' ? v.id : v)
+  const publication = (article.publications?.docs ?? []).find(
+    (p): p is Publication => typeof p === 'object' && p !== null,
+  )
+  if (!publication) return undefined
+  const order = (publication.articles ?? []).map(idOf)
+  if (order.length < 2) return undefined
+  const { docs } = await payload.find({
+    collection: 'articles',
+    where: { and: [{ id: { in: order } }, { _status: { equals: 'published' } }] },
+    // Two levels: a card's picture may be its writer's photo.
+    depth: 2,
+    pagination: false,
+    locale,
+    fallbackLocale: otherLocale(locale),
+    overrideAccess: false,
+  })
+  const articles = order.map((id) => docs.find((d) => d.id === id)).filter((d): d is Article => Boolean(d))
+  const foreword = publication.foreword ? idOf(publication.foreword) : undefined
+  return { publication, articles, isForeword: foreword === article.id }
 }
 
 /**
