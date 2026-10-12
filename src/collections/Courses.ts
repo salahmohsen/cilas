@@ -16,6 +16,7 @@ import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig } from 'payload'
 import type { Course } from '@/payload-types'
 import { importFields } from '@/fields/import'
+import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
 
 /**
  * `courses.fellows` lists people, but the `fellow` role lives on the account
@@ -309,7 +310,7 @@ export const Courses: CollectionConfig = {
     },
   },
   hooks: {
-    afterChange: [propagateFellowRole],
-    afterDelete: [revokeDeletedCourseFellows],
+    afterChange: [propagateFellowRole, revalidateCoursesAfterChange],
+    afterDelete: [revokeDeletedCourseFellows, revalidateCoursesAfterDelete],
   },
 }

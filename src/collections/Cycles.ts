@@ -7,6 +7,7 @@ import { registrationField } from '@/fields/registration'
 import { academicYear, cycleTitle, SEASONS, type Season } from '@/lib/cycle'
 import { slugify } from '@/lib/slugify'
 import { importFields } from '@/fields/import'
+import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
 
 /**
  * Title, slug and academic year are derived, never typed (ADR 0003). The
@@ -65,6 +66,9 @@ export const Cycles: CollectionConfig = {
   indexes: [{ fields: ['season', 'start_year', 'space'], unique: true }],
   hooks: {
     beforeValidate: [deriveCycleIdentity],
+    // Its names show in the cached study list.
+    afterChange: [revalidateCoursesAfterChange],
+    afterDelete: [revalidateCoursesAfterDelete],
   },
   fields: [
     { name: 'title', type: 'text', admin: { readOnly: true } },

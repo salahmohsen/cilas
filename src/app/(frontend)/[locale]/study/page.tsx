@@ -1,35 +1,23 @@
-import { HoverExpand } from '@/components/unlumen-ui/hover-expand'
-import { getPublicPosts } from '@/api/courses.api'
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
-import config from '@payload-config'
-import { getPayload } from 'payload'
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
+import { Suspense } from 'react'
 
-import { StudyFilters } from '@/components/study-filters'
+import { getStudyCards, searchStudy } from '@/api/study-index'
+import { StudyList } from '@/components/study-list'
 
-type Props = { params: Promise<{ locale: string }> }
+type Props = {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}
 
-export default async function CoursesPage({ params }: Props) {
+export default async function CoursesPage({ params, searchParams }: Props) {
   const { locale } = await params
+  const { q } = await searchParams
+  const lang = locale === 'ar' ? 'ar' : 'en'
   const t = await getTranslations('Study')
-  const payload = await getPayload({ config })
-  const { docs: courses } = await getPublicPosts(payload, locale as 'en' | 'ar')
-
-  const items = courses.map((course) => {
-    const cover = course.cover_image
-
-    return {
-      label: course.title,
-      href: `/${locale}/study/${course.slug}`,
-      sublabel: course.subtitle ?? undefined,
-      description: course.description
-        ? convertLexicalToPlaintext({ data: course.description })
-        : undefined,
-      image: typeof cover === 'object' ? (cover?.url ?? undefined) : undefined,
-      imageAlt: typeof cover === 'object' ? (cover?.alt ?? undefined) : undefined,
-    }
-  })
+  const courses = await getStudyCards(lang)
+  // A search in the URL is answered here, so the first render is already filtered.
+  const search = typeof q === 'string' && q.trim() ? { q: q.trim(), ids: await searchStudy(lang, q) } : undefined
 
   return (
     <div className="flex flex-col gap-8">
@@ -50,8 +38,9 @@ export default async function CoursesPage({ params }: Props) {
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
       </div>
-      <StudyFilters />
-      <HoverExpand items={items} />
+      <Suspense>
+        <StudyList courses={courses} initialSearch={search} />
+      </Suspense>
     </div>
   )
 }

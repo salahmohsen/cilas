@@ -47,7 +47,7 @@ describe('archive course import', () => {
     await payload.destroy()
   })
 
-  it('imports a course as a draft needing review, with its cycle and fellow', async () => {
+  it('imports a course published but needing review, with its cycle and fellow', async () => {
     const result = await importCourses(payload, { cycles, courses: [course()] })
     expect(result).toMatchObject({ cycles: 1, courses: 1, people: 1, skipped: [] })
 
@@ -59,7 +59,7 @@ describe('archive course import', () => {
       depth: 1,
     })
     expect(docs).toHaveLength(1)
-    expect(docs[0]).toMatchObject({ _status: 'draft', import_status: 'needs_review', tier: 'public' })
+    expect(docs[0]).toMatchObject({ _status: 'published', import_status: 'needs_review', tier: 'public' })
     expect(docs[0].registration?.archived_registration_url).toBe('https://forms.gle/probe')
     expect((docs[0].fellows as Array<{ name: string }>).map((f) => f.name)).toEqual(['Probe Import Fellow'])
   })

@@ -374,6 +374,7 @@ export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<v
           cycle: requireIds(ctx.cycles, [cycle])[0],
           schedule,
           session_unit: session_unit ?? 'session',
+          _status: 'published',
           sessions: (sessions ?? []).map(({ description, bibliography, ...s }) => ({
             ...s,
             description: description ? lexical(description) : null,

@@ -34,9 +34,9 @@ export function CILASSiteHeader() {
       href: href('/study'),
       icon: BookOpen,
       links: [
-        { label: t('study.thematic'), href: href('/study/thematic'), description: t('study.thematicDescription') },
-        { label: t('study.labs'), href: href('/study/labs'), description: t('study.labsDescription') },
-        { label: t('study.workshops'), href: href('/study/workshops'), description: t('study.workshopsDescription') },
+        { label: t('study.thematic'), href: href('/study?type=thematic'), description: t('study.thematicDescription') },
+        { label: t('study.labs'), href: href('/study?type=lab'), description: t('study.labsDescription') },
+        { label: t('study.workshops'), href: href('/study?type=workshop'), description: t('study.workshopsDescription') },
       ],
       feature: {
         title: t('study.featureTitle'),

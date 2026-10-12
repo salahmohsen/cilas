@@ -165,20 +165,53 @@
     "filters": {
       "label": "تصفية المقررات",
       "add": "إضافة تصفية",
-      "cycle": "الدورة",
-      "fall": "الخريف",
-      "winter": "الشتاء",
-      "spring": "الربيع",
-      "summer": "الصيف",
-      "cycleYear": "سنة الدورة",
-      "academicYear": "العام الأكاديمي",
-      "fellow": "الزميل",
-      "courseType": "نوع المقرر",
-      "bridge": "برنامج الجسر",
-      "core": "المنهج الأساسي",
-      "thematic": "المقررات الموضوعية",
-      "lab": "المختبرات",
-      "workshop": "الورش"
+      "search": "ابحث في المقررات",
+      "searchPlaceholder": "العنوان، الزميل، القراءة، الموضوع…",
+      "count": "{count, plural, =0 {لا مقررات} one {مقرر واحد} two {مقرران} few {# مقررات} many {# مقررًا} other {# مقرر}}",
+      "empty": "لا يوجد مقرر مطابق",
+      "emptyText": "جرّب تصفيات أقل أو كلمات أخرى.",
+      "facets": {
+        "type": "نوع المقرر",
+        "season": "الفصل",
+        "year": "السنة",
+        "academic": "العام الأكاديمي",
+        "place": "المكان",
+        "fellow": "الزميل",
+        "format": "طريقة الحضور",
+        "language": "لغة التدريس"
+      },
+      "types": {
+        "core": "مقرر أساسي",
+        "thematic": "مقرر موضوعي",
+        "lab": "مختبر",
+        "workshop": "ورشة",
+        "short": "مقرر قصير"
+      },
+      "seasons": {
+        "fall": "الخريف",
+        "winter": "الشتاء",
+        "spring": "الربيع",
+        "summer": "الصيف"
+      },
+      "formats": {
+        "offline": "حضوري",
+        "online": "عبر الإنترنت",
+        "hybrid": "مدمج"
+      },
+      "languages": {
+        "ar": "العربية",
+        "en": "الإنجليزية"
+      },
+      "searching": "جارٍ البحث…",
+      "clearSearch": "امسح البحث",
+      "none": "بلا تصفية",
+      "clearAll": "امسح الكل",
+      "back": "رجوع إلى التصفيات",
+      "remove": "أزل {chip}",
+      "added": "أُضيف {chip}",
+      "removed": "أُزيل {chip}",
+      "changed": "تغيّر {field} إلى {value}",
+      "cleared": "أُزيلت كل التصفيات"
     }
   },
   "Course": {

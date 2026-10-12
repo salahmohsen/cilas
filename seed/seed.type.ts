@@ -176,6 +176,7 @@ export type PartnerSeed = {
 
 export type SpaceSeed = Omit<Draft<Space>, 'description' | 'slug'> & {
   description?: string
+  city_ar?: string
 }
 
 /* ========================================================== site settings */

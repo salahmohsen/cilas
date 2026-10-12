@@ -1,6 +1,7 @@
 import type { Payload } from 'payload'
 
 import { lexical } from '../../seed/seed.utils'
+import { publishCourse } from './import-courses'
 import { isMostlyArabic } from './normalise-courses'
 import type { Syllabus } from './syllabus-schema'
 
@@ -82,8 +83,9 @@ const materialShape = (m: Material, text: boolean, id?: string | null) => ({
 
 /**
  * Writes each flow's syllabus into its courses' sessions and bibliography.
- * Drafts throughout; courses marked `reviewed` are never touched, and a re-run
- * replaces the sessions rather than adding to them.
+ * Written as drafts, then published, like the courses; ones marked
+ * `reviewed` are never touched, and a re-run replaces the sessions rather
+ * than adding to them.
  *
  * Array rows are shared by both locales, so an Arabic flow is written in two
  * steps: the rows and their non-localized fields in the default locale, then
@@ -193,6 +195,7 @@ export const importFlows = async (
         } as Parameters<Payload['update']>[0])
       }
 
+      await publishCourse(payload, course.id)
       written++
       sessions += syllabus.sessions.length
     }

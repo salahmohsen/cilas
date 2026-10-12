@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from '@/fields/slug'
 import { anyone, isAdmin } from '../access'
 import { importFields } from '@/fields/import'
+import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
 
 export const Spaces: CollectionConfig = {
   slug: 'spaces',
@@ -11,6 +12,11 @@ export const Spaces: CollectionConfig = {
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,
+  },
+  // Its names show in the cached study list.
+  hooks: {
+    afterChange: [revalidateCoursesAfterChange],
+    afterDelete: [revalidateCoursesAfterDelete],
   },
   fields: [
     { name: 'name', type: 'text', required: true },

@@ -93,7 +93,20 @@ export const upsert = async (
   return doc.id as number
 }
 
-/** Imports archived cycles and courses as drafts marked "needs review". */
+/**
+ * Publishes a course's latest draft, both languages. It runs in the default
+ * locale: publishing validates the request's locale, and a course need not
+ * have an Arabic title. Reviewed courses are left as their reviewer left them.
+ */
+export const publishCourse = async (payload: Payload, id: number): Promise<void> => {
+  const current = (await payload.findByID({ collection: 'courses', id, depth: 0, draft: true, overrideAccess: true })) as {
+    import_status?: string | null
+  }
+  if (current.import_status === 'reviewed') return
+  await payload.update({ collection: 'courses', id, data: { _status: 'published' }, overrideAccess: true })
+}
+
+/** Imports archived cycles and courses: written as drafts, then published, marked "needs review". */
 export const importCourses = async (
   payload: Payload,
   { cycles, courses }: { cycles: ArchiveCycle[]; courses: ArchiveCourse[] },
@@ -227,6 +240,7 @@ export const importCourses = async (
         })
       }
     }
+    await publishCourse(payload, id)
     imported++
   }
 

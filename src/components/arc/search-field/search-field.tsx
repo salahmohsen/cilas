@@ -9,9 +9,10 @@ export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElem
   label: string
   value: string
   onValueChange: (value: string) => void
+  clearLabel?: string
 }
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(function SearchField(
-  { label, value, onValueChange, id, className, ...props },
+  { label, value, onValueChange, clearLabel = 'Clear search', id, className, ...props },
   ref,
 ) {
   const generated = useId()
@@ -51,7 +52,7 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
                 type="button"
                 tabIndex={0}
                 onClick={clear}
-                aria-label="Clear search"
+                aria-label={clearLabel}
                 initial={
                   reduced
                     ? { opacity: 0 }

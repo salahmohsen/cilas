@@ -36,8 +36,31 @@ export interface FilterField {
   icon?: ReactNode
   options: (string | FilterOption)[]
 }
+/** The toolbar's own words, for a site in another language. Each takes a chip's "Field: value" where it names one. */
+export interface FilterToolbarText {
+  empty: string
+  clearAll: string
+  back: string
+  remove: (chip: string) => string
+  added: (chip: string) => string
+  removed: (chip: string) => string
+  changed: (field: string, value: string) => string
+  cleared: string
+}
+const defaultText: FilterToolbarText = {
+  empty: 'No filters applied',
+  clearAll: 'Clear all',
+  back: 'Back to fields',
+  remove: (chip) => `Remove ${chip}`,
+  added: (chip) => `Added ${chip}`,
+  removed: (chip) => `Removed ${chip}`,
+  changed: (field, value) => `${field} changed to ${value}`,
+  cleared: 'All filters cleared',
+}
 export interface FilterMenuProps {
   fields: FilterField[]
+  /** Labels the back button; see FilterToolbarText. */
+  backLabel?: string
   /** Receives a chip whose id is the field id, so a second pick for a field replaces the first. */
   onSelect: (filter: FilterChip, field: FilterField) => void
   /** Applied filters. Each field shows its current value and the value step marks it. */
@@ -52,6 +75,7 @@ export interface FilterToolbarProps {
   onClearAll?: () => void
   children?: ReactNode
   label?: string
+  text?: Partial<FilterToolbarText>
   /** Adds an Add filter trigger that morphs into a two step field and value menu. */
   addFilter?: {
     fields: FilterField[]
@@ -216,19 +240,21 @@ function useReflowGlide(
   }, [armed, list, reduced])
 }
 
-function describeChange(before: FilterChip[], after: FilterChip[]) {
-  const text = (filter: FilterChip) =>
-    filter.value ? `${filter.label}: ${filter.value}` : filter.label
+const chipText = (filter: FilterChip) =>
+  filter.value ? `${filter.label}: ${filter.value}` : filter.label
+
+function describeChange(before: FilterChip[], after: FilterChip[], words: FilterToolbarText) {
+  const text = chipText
   const removed = before.filter((old) => !after.some((filter) => filter.id === old.id))
-  if (!after.length && removed.length > 1) return 'All filters cleared'
+  if (!after.length && removed.length > 1) return words.cleared
   const added = after.filter((filter) => !before.some((old) => old.id === filter.id))
   const changed = after.filter((filter) =>
     before.some((old) => old.id === filter.id && old.value !== filter.value),
   )
   return [
-    ...added.map((filter) => `Added ${text(filter)}`),
-    ...changed.map((filter) => `${filter.label} changed to ${filter.value ?? 'any'}`),
-    ...removed.map((filter) => `Removed ${text(filter)}`),
+    ...added.map((filter) => words.added(text(filter))),
+    ...changed.map((filter) => words.changed(filter.label, filter.value ?? '')),
+    ...removed.map((filter) => words.removed(text(filter))),
   ].join('. ')
 }
 
@@ -453,6 +479,7 @@ export function FilterMenu({
   active = [],
   label = 'Add filter',
   align = 'end',
+  backLabel = defaultText.back,
 }: FilterMenuProps) {
   const reduced = useReducedMotion() ?? false
   const id = useId(),
@@ -691,7 +718,7 @@ export function FilterMenu({
     meta: (
       <>
         {current(entry) ? <span className={styles.metaValue}>{current(entry)}</span> : null}
-        <ChevronRight size={15} strokeWidth={1.8} aria-hidden="true" />
+        <ChevronRight className="rtl:-scale-x-100" size={15} strokeWidth={1.8} aria-hidden="true" />
       </>
     ),
   }))
@@ -794,7 +821,7 @@ export function FilterMenu({
                     key="back"
                     type="button"
                     className={styles.back}
-                    aria-label="Back to fields"
+                    aria-label={backLabel}
                     onClick={(event) => goBack(event.detail === 0)}
                     initial={
                       reduced
@@ -815,7 +842,7 @@ export function FilterMenu({
                     }
                     transition={reduced ? fade : { ...motionTokens.spring.snappy, opacity: enter }}
                   >
-                    <ChevronLeft size={16} strokeWidth={1.8} aria-hidden="true" />
+                    <ChevronLeft className="rtl:-scale-x-100" size={16} strokeWidth={1.8} aria-hidden="true" />
                   </motion.button>
                 ) : null}
               </AnimatePresence>
@@ -876,7 +903,9 @@ export function FilterToolbar({
   children,
   label = 'Active filters',
   addFilter,
+  text: textProp,
 }: FilterToolbarProps) {
+  const words = { ...defaultText, ...textProp }
   const reduced = useReducedMotion() ?? false
   const root = useRef<HTMLDivElement>(null),
     list = useRef<HTMLDivElement>(null)
@@ -886,7 +915,7 @@ export function FilterToolbar({
   const [message, setMessage] = useState('')
   if (seen !== filters) {
     setSeen(filters)
-    const next = describeChange(seen, filters)
+    const next = describeChange(seen, filters, words)
     if (next) setMessage(next)
   }
   const signature = filters.map((filter) => `${filter.id}:${filter.value ?? ''}`).join('|')
@@ -968,7 +997,7 @@ export function FilterToolbar({
                   <button
                     type="button"
                     data-chip-remove={filter.id}
-                    aria-label={`Remove ${filter.label}${filter.value ? `: ${filter.value}` : ''}`}
+                    aria-label={words.remove(chipText(filter))}
                     onClick={(event) => {
                       if (document.activeElement === event.currentTarget)
                         pendingFocus.current = index
@@ -985,7 +1014,7 @@ export function FilterToolbar({
           <AnimatePresence initial={false}>
             {filters.length ? null : (
               <motion.span key="empty" className={styles.empty} {...emptyText}>
-                No filters applied
+                {words.empty}
               </motion.span>
             )}
           </AnimatePresence>
@@ -999,6 +1028,7 @@ export function FilterToolbar({
             active={filters}
             label={addFilter.label}
             align={addFilter.align}
+            backLabel={words.back}
           />
         ) : null}
         {children}
@@ -1014,7 +1044,7 @@ export function FilterToolbar({
                 }}
               >
                 <motion.span className={styles.clearText} {...text}>
-                  Clear all
+                  {words.clearAll}
                 </motion.span>
               </button>
             </motion.span>

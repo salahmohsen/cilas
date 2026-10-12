@@ -165,20 +165,53 @@
     "filters": {
       "label": "Course filters",
       "add": "Add filter",
-      "cycle": "Cycle",
-      "fall": "Fall",
-      "winter": "Winter",
-      "spring": "Spring",
-      "summer": "Summer",
-      "cycleYear": "Cycle year",
-      "academicYear": "Academic year",
-      "fellow": "Fellow",
-      "courseType": "Course type",
-      "bridge": "Bridge Programme",
-      "core": "Core Curriculum",
-      "thematic": "Thematic Courses",
-      "lab": "Labs",
-      "workshop": "Workshops"
+      "search": "Search courses",
+      "searchPlaceholder": "Title, fellow, reading, topic…",
+      "count": "{count, plural, =0 {No courses} one {# course} other {# courses}}",
+      "empty": "No course matches",
+      "emptyText": "Try fewer filters or other words.",
+      "facets": {
+        "type": "Course type",
+        "season": "Season",
+        "year": "Year",
+        "academic": "Academic year",
+        "place": "Place",
+        "fellow": "Fellow",
+        "format": "Format",
+        "language": "Teaching language"
+      },
+      "types": {
+        "core": "Core Course",
+        "thematic": "Thematic Course",
+        "lab": "Lab",
+        "workshop": "Workshop",
+        "short": "Short Course"
+      },
+      "seasons": {
+        "fall": "Fall",
+        "winter": "Winter",
+        "spring": "Spring",
+        "summer": "Summer"
+      },
+      "formats": {
+        "offline": "In person",
+        "online": "Online",
+        "hybrid": "Hybrid"
+      },
+      "languages": {
+        "ar": "Arabic",
+        "en": "English"
+      },
+      "searching": "Searching…",
+      "clearSearch": "Clear search",
+      "none": "No filters",
+      "clearAll": "Clear all",
+      "back": "Back to filters",
+      "remove": "Remove {chip}",
+      "added": "Added {chip}",
+      "removed": "Removed {chip}",
+      "changed": "{field} changed to {value}",
+      "cleared": "All filters cleared"
     }
   },
   "Course": {

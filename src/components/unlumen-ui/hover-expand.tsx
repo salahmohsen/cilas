@@ -113,7 +113,10 @@ export function HoverExpand({
                   )}
                   style={{ fontSize: 'clamp(1.1rem, 2.2vw, 1.5rem)', lineHeight: 1.15 }}
                 >
-                  <Link href={item.href}>{item.label}</Link>
+                  {/* dir=auto: a title in the other script keeps its own punctuation order. */}
+                  <Link dir="auto" href={item.href}>
+                    {item.label}
+                  </Link>
                 </motion.span>
 
                 {item.sublabel && (
@@ -139,7 +142,10 @@ export function HoverExpand({
                       y: { duration: 0.4, ease: [0.23, 1, 0.32, 1] },
                     }}
                   >
-                    <p className="max-w-prose text-sm leading-relaxed       bg-black/25 -m-5 p-5 rounded-md text-white/85">
+                    <p
+                      className="max-w-prose text-sm leading-relaxed       bg-black/25 -m-5 p-5 rounded-md text-white/85"
+                      dir="auto"
+                    >
                       <span className="shadow-xs">{item.description}</span>
                     </p>
                   </motion.div>

@@ -4,6 +4,7 @@ import { anyone, isAdmin, isAdminUser, personOf } from '@/access'
 import { slugField } from '@/fields/slug'
 import { socialFields } from '@/fields/social'
 import { importFields } from '@/fields/import'
+import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
 
 /**
  * Everyone who appears on the site: fellows, CILASians, authors, advisors,
@@ -26,6 +27,11 @@ export const People: CollectionConfig = {
       return person === null ? false : { id: { equals: person } }
     },
     delete: isAdmin,
+  },
+  // Its names show in the cached study list.
+  hooks: {
+    afterChange: [revalidateCoursesAfterChange],
+    afterDelete: [revalidateCoursesAfterDelete],
   },
   fields: [
     { name: 'name', type: 'text', required: true, localized: true },
