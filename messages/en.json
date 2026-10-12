@@ -394,5 +394,12 @@
     "copied": "Feed link copied",
     "copyFailed": "Couldn't copy the link",
     "feedName": "CILAS"
+  },
+  "Select": {
+    "search": "Search",
+    "clearSearch": "Clear search",
+    "close": "Close",
+    "noMatches": "No matches",
+    "matches": "{count, plural, one {# option} other {# options}}"
   }
 }

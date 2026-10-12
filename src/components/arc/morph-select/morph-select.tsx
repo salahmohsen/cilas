@@ -71,6 +71,17 @@ export interface MorphSelectProps {
   name?: string
   disabled?: boolean
   className?: string
+  /** Words the select speaks, for other languages. */
+  text?: MorphSelectText
+}
+
+/** The select's own words: its search field, its buttons and what it announces. */
+export interface MorphSelectText {
+  search?: string
+  clearSearch?: string
+  close?: string
+  noMatches?: string
+  matches?: (count: number) => string
 }
 
 type Section = { key: string; label?: string; options: MorphSelectOption[] }
@@ -180,6 +191,7 @@ export function MorphSelect({
   name,
   disabled = false,
   className,
+  text: words = {},
 }: MorphSelectProps) {
   const reduced = useReducedFlag()
   const uid = useId()
@@ -542,7 +554,11 @@ export function MorphSelect({
     const text = next.trim().toLowerCase()
     const count = text ? all.filter((option) => matches(option, text)).length : all.length
     setAnnouncement(
-      text ? (count ? `${count} ${count === 1 ? 'option' : 'options'}` : 'No matches') : '',
+      text
+        ? count
+          ? (words.matches?.(count) ?? `${count} ${count === 1 ? 'option' : 'options'}`)
+          : (words.noMatches ?? 'No matches')
+        : '',
     )
   }
 
@@ -681,14 +697,14 @@ export function MorphSelect({
                   className={styles.input}
                   type="text"
                   role="combobox"
-                  aria-label={`Search ${label.toLowerCase()}`}
+                  aria-label={words.search ?? `Search ${label.toLowerCase()}`}
                   aria-expanded={open}
                   aria-controls={listId}
                   aria-autocomplete="list"
                   aria-activedescendant={
                     open && current !== null ? optionId(indexOf.get(current) ?? 0) : undefined
                   }
-                  placeholder={searchPlaceholder ?? selectedOption?.label ?? 'Search'}
+                  placeholder={searchPlaceholder ?? selectedOption?.label ?? words.search ?? 'Search'}
                   value={query}
                   autoComplete="off"
                   spellCheck={false}
@@ -701,7 +717,7 @@ export function MorphSelect({
                       key="clear"
                       type="button"
                       className={styles.clear}
-                      aria-label="Clear search"
+                      aria-label={words.clearSearch ?? 'Clear search'}
                       onPointerDown={(event) => event.preventDefault()}
                       onClick={() => {
                         onQuery('')
@@ -719,7 +735,7 @@ export function MorphSelect({
                 <button
                   type="button"
                   className={styles.closeHit}
-                  aria-label={`Close ${label.toLowerCase()}`}
+                  aria-label={words.close ?? `Close ${label.toLowerCase()}`}
                   onClick={() => close(true)}
                 />
               </motion.div>

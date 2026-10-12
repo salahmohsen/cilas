@@ -5,12 +5,13 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useState } from 'react'
 
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
+import { Select } from '@/components/select'
 import { useRouter } from '@/i18n/navigation'
 import { localDigits } from '@/lib/digits'
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1)
 
-/** Going straight to any month: a month and a year, each a select that goes there on change. */
+/** Going straight to any month: a month and a year, each a select that goes there when picked. */
 export function CalendarJump({
   view,
   date,
@@ -30,28 +31,28 @@ export function CalendarJump({
     new Intl.DateTimeFormat(locale, { month: 'long', timeZone: 'UTC' }).format(new Date(Date.UTC(2000, m - 1, 1)))
   const go = (y: number, m: number) => router.push(`/calendar?view=${view}&date=${y}-${String(m).padStart(2, '0')}-01`)
 
+  const yearList = years.includes(year) ? years : [...years, year].sort()
+
   return (
-    <div className="flex items-center gap-2">
-      <label className="sr-only" htmlFor="cal-month">
-        {t('month')}
-      </label>
-      <select className="cal-select" id="cal-month" onChange={(e) => go(year, Number(e.target.value))} value={month}>
-        {MONTHS.map((m) => (
-          <option key={m} value={m}>
-            {monthName(m)}
-          </option>
-        ))}
-      </select>
-      <label className="sr-only" htmlFor="cal-year">
-        {t('year')}
-      </label>
-      <select className="cal-select" id="cal-year" onChange={(e) => go(Number(e.target.value), month)} value={year}>
-        {(years.includes(year) ? years : [...years, year].sort()).map((y) => (
-          <option key={y} value={y}>
-            {localDigits(y, locale)}
-          </option>
-        ))}
-      </select>
+    <div className="cal-jump flex items-center gap-2">
+      <Select
+        className="cal-select"
+        hideLabel
+        items={MONTHS.map((m) => ({ value: String(m), label: monthName(m) }))}
+        label={t('month')}
+        onValueChange={(m) => go(year, Number(m))}
+        searchable={false}
+        value={String(month)}
+      />
+      <Select
+        className="cal-select"
+        hideLabel
+        items={yearList.map((y) => ({ value: String(y), label: localDigits(y, locale) }))}
+        label={t('year')}
+        onValueChange={(y) => go(Number(y), month)}
+        searchable={false}
+        value={String(year)}
+      />
     </div>
   )
 }

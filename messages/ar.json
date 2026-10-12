@@ -394,5 +394,12 @@
     "copied": "نُسخ رابط التقويم",
     "copyFailed": "تعذّر نسخ الرابط",
     "feedName": "سيلاس"
+  },
+  "Select": {
+    "search": "بحث",
+    "clearSearch": "مسح البحث",
+    "close": "إغلاق",
+    "noMatches": "لا نتائج",
+    "matches": "{count, plural, zero {لا خيارات} one {خيار واحد} two {خياران} few {{count, number, digits} خيارات} many {{count, number, digits} خيارًا} other {{count, number, digits} خيار}}"
   }
 }

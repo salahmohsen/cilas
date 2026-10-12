@@ -34,7 +34,7 @@
 .shape {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
   overflow: clip;
   background: var(--surface);
   box-shadow: var(--shadow-resting);
@@ -53,8 +53,8 @@
   transition: border-color var(--duration-fast) var(--ease-standard);
 }
 .root[data-align='end'] .shape {
-  right: 0;
-  left: auto;
+  inset-inline-end: 0;
+  inset-inline-start: auto;
 }
 .root[data-open] .shape {
   background: var(--surface-raised);
@@ -77,8 +77,7 @@
   position: absolute;
   z-index: 1;
   top: 0;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   height: var(--ms-h);
 }
 
@@ -88,7 +87,8 @@
   height: var(--ms-h);
   align-items: center;
   gap: var(--space-2);
-  padding: 0 36px 0 14px;
+  padding-block: 0;
+  padding-inline: 14px 36px;
   font-size: var(--text-sm);
   font-weight: 500;
   white-space: nowrap;
@@ -104,7 +104,7 @@
   cursor: pointer;
   font-family: inherit;
   letter-spacing: inherit;
-  text-align: left;
+  text-align: start;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -122,11 +122,11 @@
 .root[data-ready] .measure {
   position: absolute;
   top: 0;
-  left: 0;
+  inset-inline-start: 0;
 }
 .root[data-align='end'][data-ready] .measure {
-  right: 0;
-  left: auto;
+  inset-inline-end: 0;
+  inset-inline-start: auto;
 }
 
 .slot {
@@ -180,7 +180,7 @@
 .chevron {
   position: absolute;
   top: 50%;
-  right: 12px;
+  inset-inline-end: 12px;
   display: grid;
   width: 16px;
   height: 16px;
@@ -197,7 +197,8 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  padding: 0 2px 0 14px;
+  padding-block: 0;
+  padding-inline: 14px 2px;
 }
 .searchRow[inert] {
   pointer-events: none;
@@ -263,21 +264,20 @@
 .listFace {
   position: absolute;
   top: var(--ms-h);
-  left: 0;
+  inset-inline-start: 0;
   box-sizing: border-box;
   width: max(var(--ms-trigger-w), min(var(--ms-panel-w), calc(100vw - 2rem)));
   padding: 0 6px 6px;
 }
 .root[data-align='end'] .listFace {
-  right: 0;
-  left: auto;
+  inset-inline-end: 0;
+  inset-inline-start: auto;
 }
 .listFace::before {
   content: '';
   position: absolute;
   top: 0;
-  right: 14px;
-  left: 14px;
+  inset-inline: 14px;
   height: 1px;
   background: var(--border-subtle);
 }
@@ -299,8 +299,7 @@
 .highlight {
   position: absolute;
   top: 0;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   border-radius: 16px;
   background: color-mix(in oklab, var(--foreground) 6.5%, transparent);
   pointer-events: none;
@@ -327,7 +326,8 @@
   box-sizing: border-box;
   align-items: center;
   gap: var(--space-2);
-  padding: 0 10px 0 8px;
+  padding-block: 0;
+  padding-inline: 8px 10px;
   border-radius: 16px;
   color: var(--text-secondary);
   cursor: pointer;
