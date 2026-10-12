@@ -1,7 +1,7 @@
 import type { Payload } from 'payload'
 
 import { lexical } from '../../seed/seed.utils'
-import { splitBios, type FlowBio } from './flow-notes'
+import { splitBios, withSubject, type FlowBio } from './flow-notes'
 import { publishCourse } from './import-courses'
 import { isMostlyArabic } from './normalise-courses'
 import type { Syllabus } from './syllabus-schema'
@@ -120,7 +120,7 @@ const giveBios = async (payload: Payload, bios: FlowBio[], fellows: Fellow[], lo
   for (const bio of bios) {
     const fellow = fellows.find((f) => bio.name && f.names.includes(bio.name))
     if (!fellow || fellow.reviewed || textOf(fellow.bio[locale]).trim()) continue
-    const body = rich(bio.text, dir)
+    const body = rich(withSubject(fellow.names[0], bio.text), dir)
     // The name is required in every locale written; one only spelled in the other keeps that spelling.
     const name = fellow.name[locale] ? {} : { name: fellow.names[0] }
     await payload.update({ collection: 'people', id: fellow.id, data: { ...name, bio: body }, locale, overrideAccess: true })

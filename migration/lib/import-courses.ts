@@ -1,5 +1,6 @@
 import type { CollectionSlug, Payload, Where } from 'payload'
 
+import { withSubject } from './flow-notes'
 import { slugify } from '../../src/lib/slugify'
 import { lexical } from '../../seed/seed.utils'
 import { isMostlyArabic, splitLocales } from './normalise-courses'
@@ -170,7 +171,7 @@ export const importCourses = async (
           data: {
             name: f.name,
             slug: await freeSlug(payload, 'people', slugify(f.name)),
-            ...(f.bio ? { bio: rich(f.bio) } : {}),
+            ...(f.bio ? { bio: rich(withSubject(f.name, f.bio)) } : {}),
             ...(legacyTaken ? {} : { legacy_url }),
             import_status: 'needs_review',
           },

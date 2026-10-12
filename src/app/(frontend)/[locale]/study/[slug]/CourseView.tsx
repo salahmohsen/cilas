@@ -20,7 +20,8 @@ import {
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
 import React from 'react'
 
-import { ContributorList } from '@/components/person/contributors'
+import { Avatar } from '@/components/arc/avatar/avatar'
+import { photoOf } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { Link } from '@/i18n/navigation'
 import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
@@ -185,12 +186,44 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       : []),
   ]
 
+  // Each fellow with the start of their bio; the whole of it is on their page.
   const facultyCard = (
-    <ContributorList
-      contributors={fellows.map((person) => ({ person, role: t('fellow') }))}
-      title={t('taughtBy')}
-      titleClassName="mb-3 text-sm font-medium"
-    />
+    <section aria-labelledby="course-fellows">
+      <h2 className="text-sm font-medium" id="course-fellows">
+        {t('taughtBy')}
+      </h2>
+      <ul className="mt-3 grid gap-5">
+        {fellows.map((person) => {
+          const bio = textOf(person.bio).replace(/\s+/g, ' ').trim()
+          return (
+            <li key={person.id}>
+              <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
+                <Avatar name={person.name} size="lg" src={photoOf(person)} />
+                <span className="min-w-0">
+                  <span className="block text-sm leading-snug font-medium underline-offset-4 group-hover:underline">
+                    {person.name}
+                  </span>
+                  <span className="block text-xs text-[var(--text-muted)]">{t('fellow')}</span>
+                </span>
+              </Link>
+              {bio ? (
+                <>
+                  <p className="mt-3 line-clamp-6 text-sm leading-relaxed text-[var(--text-secondary)]" dir="auto">
+                    {bio}
+                  </p>
+                  <Link
+                    className="mt-2 inline-block text-sm underline decoration-[var(--border-strong,var(--border))] underline-offset-4 hover:decoration-current"
+                    href={`/people/${person.slug}`}
+                  >
+                    {t('fellowProfile')}
+                  </Link>
+                </>
+              ) : null}
+            </li>
+          )
+        })}
+      </ul>
+    </section>
   )
 
   const factsCard = (

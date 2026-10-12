@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { splitBios } from '../../migration/lib/flow-notes'
+import { splitBios, withSubject } from '../../migration/lib/flow-notes'
 
 const hisham = [['Hisham Fahmy', 'هشام فهمي']]
 const bio = 'Hisham Fahmy is the teaching fellow of philosophy and poetry in this year’s Bridge Program at CILAS.'
@@ -39,5 +39,13 @@ describe('splitBios', () => {
 
   it('has nothing to split in empty notes', () => {
     expect(splitBios(null, hisham)).toEqual({ notes: null, bios: [] })
+  })
+})
+
+describe('withSubject', () => {
+  it('gives a bio that starts with its verb the person’s name back', () => {
+    expect(withSubject('Hisham Fahmy', 'is a writer.')).toBe('Hisham Fahmy is a writer.')
+    expect(withSubject('Hisham Fahmy', 'Hisham Fahmy is a writer.')).toBe('Hisham Fahmy is a writer.')
+    expect(withSubject('مي عامر', 'باحثة نسوية')).toBe('باحثة نسوية')
   })
 })

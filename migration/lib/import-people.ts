@@ -2,6 +2,7 @@ import type { CollectionSlug, Payload, Where } from 'payload'
 
 import { slugify } from '../../src/lib/slugify'
 import { lexical } from '../../seed/seed.utils'
+import { withSubject } from './flow-notes'
 import { freeSlug, upsert } from './import-courses'
 import { isMostlyArabic } from './normalise-courses'
 
@@ -102,7 +103,7 @@ export const importPeople = async (
           data: {
             name: p.name,
             slug: await freeSlug(payload, 'people', slugify(p.name)),
-            ...(p.bio?.trim() ? { bio: rich(p.bio) } : {}),
+            ...(p.bio?.trim() ? { bio: rich(withSubject(p.name, p.bio)) } : {}),
             ...(legacyTaken ? {} : { legacy_url: p.legacy_url }),
             import_status: 'needs_review',
           },
@@ -115,7 +116,7 @@ export const importPeople = async (
       id = existing.id
       // An imported person nobody has reviewed: fill in what is empty, never overwrite.
       if (existing.import_status === 'needs_review' && !existing.bio && p.bio?.trim()) {
-        await payload.update({ collection: 'people', id, data: { bio: rich(p.bio) }, locale: 'en', overrideAccess: true })
+        await payload.update({ collection: 'people', id, data: { bio: rich(withSubject(p.name, p.bio)) }, locale: 'en', overrideAccess: true })
       }
     }
     if (p.name_ar && (!existing || existing.import_status === 'needs_review')) {

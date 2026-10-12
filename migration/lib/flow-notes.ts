@@ -114,3 +114,13 @@ export const splitBios = (
 
   return { notes: kept.length ? kept.join('\n\n') : null, bios }
 }
+
+/**
+ * Many archived bios start with the verb ("is a writer…", "holds a PhD…"):
+ * the page showed the name as a heading just above. A bio that starts that
+ * way gets the person's name back in front.
+ */
+export const withSubject = (name: string, bio: string): string => {
+  const text = bio.trim()
+  return /^[a-z]/.test(text) ? `${name} ${text}` : text
+}
