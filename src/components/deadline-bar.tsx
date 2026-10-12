@@ -33,11 +33,14 @@ export function DeadlineBar({ items }: { items: Deadline[] }) {
       }}
       messages={items.map((item) => ({
         id: item.id,
+        // The words and the time left are one group; the action sits further off.
         message: (
-          <>
-            <span dir="auto">{item.title}</span> {t('announcementClosesIn')}{' '}
+          <span className="deadline-message">
+            <span>
+              <span dir="auto">{item.title}</span> {t('announcementClosesIn')}
+            </span>
             <DeadlineCountdown deadline={item.deadline} />
-          </>
+          </span>
         ),
         action: { label: t('details'), href: `/${locale}${item.href}` },
       }))}

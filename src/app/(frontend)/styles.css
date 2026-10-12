@@ -2248,3 +2248,13 @@ h3 {
 .home-contact {
   scroll-margin-top: 6rem;
 }
+
+/* The deadline bar's message: the words and the time left, held together by
+   one small gap; the bar sets the action twice as far off. */
+.deadline-message {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 10px;
+}

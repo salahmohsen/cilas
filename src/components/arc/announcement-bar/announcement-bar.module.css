@@ -53,7 +53,8 @@
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: center;
-  gap: 2px 12px;
+  /* Twice the gap inside a message, so the action reads as its own group. */
+  gap: 4px 20px;
   margin: 0;
   padding: 6px 0;
   font-size: var(--text-sm);
@@ -250,5 +251,15 @@
   .ring,
   .cta svg {
     transition: none;
+  }
+}
+
+/* The arrow points the way the text reads. */
+.cta svg:dir(rtl) {
+  scale: -1 1;
+}
+@media (hover: hover) {
+  .cta:hover svg:dir(rtl) {
+    transform: translateX(-2px);
   }
 }

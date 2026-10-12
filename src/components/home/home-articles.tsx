@@ -17,6 +17,10 @@ export function HomeArticles({ posts, title }: { posts: ArticleCard[]; title: st
       <Carousel
         // With three or more, start on the second, so a neighbour shows on each side.
         defaultIndex={posts.length > 2 ? 1 : 0}
+        // Turns on its own and starts over after the last; stops on hover,
+        // focus, its pause button or reduced motion.
+        autoplay
+        interval={6000}
         label={title}
         labels={{
           slides: t('slides'),
