@@ -44,25 +44,49 @@ export type BridgeYear = {
   members: number
 }
 
+/** A Bridge year's page: `/study/bridge/2024-2025` for `bridge-programme-2024-2025`. */
+export const bridgeYearPath = (slug: string) => `/study/bridge/${slug.replace(/^bridge-programme-/, '')}`
+/** The programme slug a year's page names. */
+export const bridgeSlugOf = (year: string) => `bridge-programme-${year}`
+
+/** The published Bridge years, latest first: the first is the current one. */
+export const listBridgeYears = async (payload: Payload, locale: Locale) => {
+  const { docs } = await payload.find({
+    collection: 'programmes',
+    where: { and: [{ kind: { equals: 'bridge' } }, { _status: { equals: 'published' } }] },
+    // Slugs carry the years (bridge-programme-2025-2026) in every language, so the latest sorts first.
+    sort: '-slug',
+    limit: 0,
+    depth: 0,
+    locale,
+    fallbackLocale: 'en',
+    select: { title: true, slug: true },
+  })
+  return docs.flatMap((d) => (d.slug ? [{ slug: d.slug, title: d.title }] : []))
+}
+
 /**
- * The current Bridge year: the latest published Bridge programme, with each of
- * its components' courses worked out from its cycle (ADR 0003 — a programme
- * never stores its courses). `preview` names a programme by slug and reads its
+ * A Bridge year: the latest published Bridge programme, or the one `slug`
+ * names, with each of its components' courses worked out from its cycle
+ * (ADR 0003 — a programme never stores its courses). `draft` reads the
  * latest draft, for the admin's live preview (draft mode only).
  */
 export const getBridgeYear = async (
   payload: Payload,
   locale: Locale,
-  preview?: { slug: string },
+  { slug, draft = false }: { slug?: string; draft?: boolean } = {},
 ): Promise<BridgeYear | null> => {
   const { docs } = await payload.find({
     collection: 'programmes',
-    where: preview
-      ? { and: [{ kind: { equals: 'bridge' } }, { slug: { equals: preview.slug } }] }
-      : { and: [{ kind: { equals: 'bridge' } }, { _status: { equals: 'published' } }] },
-    draft: Boolean(preview),
-    // Titles carry the years ("Bridge Programme 2025–2026"), so the latest sorts first.
-    sort: '-title',
+    where: {
+      and: [
+        { kind: { equals: 'bridge' } },
+        ...(slug ? [{ slug: { equals: slug } }] : []),
+        ...(draft ? [] : [{ _status: { equals: 'published' } }]),
+      ],
+    },
+    draft,
+    sort: '-slug',
     limit: 1,
     depth: 1,
     locale,

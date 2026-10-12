@@ -23,7 +23,7 @@ export async function GET() {
   const { docs } = await payload.find({
     collection: 'programmes',
     where: { and: [{ kind: { equals: 'bridge' } }, { _status: { equals: 'published' } }] },
-    sort: '-title',
+    sort: '-slug',
     limit: 1,
     depth: 0,
     select: { registration: true },

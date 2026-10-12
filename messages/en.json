@@ -441,7 +441,9 @@
     "plan": "{label}: {count} × {amount}",
     "needBased": "Need-based reductions available",
     "requirements": "Who can apply",
-    "share": "Share this programme"
+    "share": "Share this programme",
+    "pastYear": "This year has ended. Its page stays as a record.",
+    "years": "All years"
   },
   "Forms": {
     "sent": "Application sent",

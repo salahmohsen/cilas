@@ -532,6 +532,34 @@ html {
 .bridge-figure {
   margin-top: 2.5rem;
 }
+/* The years, latest first: plain links, this one marked. */
+.bridge-years {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.bridge-year {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  border-radius: 999px;
+  padding-inline: 0.875rem;
+  box-shadow: 0 0 0 1px var(--border);
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  transition-property: background-color, color;
+  transition-duration: 150ms;
+}
+a.bridge-year:hover {
+  background: var(--surface-muted, var(--muted));
+  color: var(--text-primary, var(--foreground));
+}
+.bridge-year[data-current] {
+  background: var(--text-primary, var(--foreground));
+  box-shadow: none;
+  color: var(--background);
+}
 .bridge-link {
   display: inline-flex;
   height: 2.25rem;
