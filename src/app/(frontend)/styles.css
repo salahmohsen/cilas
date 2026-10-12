@@ -406,8 +406,8 @@ html {
 }
 .course-facts {
   display: grid;
-  gap: 0.875rem;
-  margin-top: 0.5rem;
+  gap: 1rem;
+  margin-top: 0.75rem;
 }
 /* Under the cover on mid-width screens the facts have room for two columns. */
 @media (min-width: 36rem) and (max-width: 63.99rem) {
@@ -417,15 +417,19 @@ html {
   }
 }
 
+/* The status dot sits in the same 1.25rem column as the facts' icons, so the
+   status, the facts and the materials share one text edge. */
 .course-status {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: 1.25rem 1fr;
+  column-gap: 0.75rem;
   align-items: center;
-  gap: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
 }
 .course-status::before {
   content: '';
+  justify-self: center;
   width: 0.5rem;
   height: 0.5rem;
   border-radius: 999px;

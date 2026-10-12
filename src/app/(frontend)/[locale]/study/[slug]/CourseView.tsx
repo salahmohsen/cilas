@@ -263,8 +263,8 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
         {counts.map(({ type, count }) => {
           const Icon = MATERIAL_ICONS[type]
           return (
-            <li className="flex items-center gap-3 text-sm" key={type}>
-              <Icon aria-hidden className="shrink-0 text-(--text-muted)" size={16} strokeWidth={1.5} />
+            <li className="grid grid-cols-[1.25rem_1fr] items-center gap-x-3 text-sm" key={type}>
+              <Icon aria-hidden className="text-(--text-muted)" size={16} strokeWidth={1.5} />
               {t(`materialCounts.${type}`, { count })}
             </li>
           )
