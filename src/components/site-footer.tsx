@@ -17,7 +17,16 @@ export function SiteFooter() {
       brand={{
         name: brand('brand').replace('\n', ' '),
         href: href(''),
-        mark: <Image alt="" height={22} src="/assets/images/logo.webp" style={{ width: 'auto' }} width={22} />,
+        mark: (
+          <Image
+            alt=""
+            height={22}
+            src="/assets/images/logo.webp"
+            style={{ width: 'auto' }}
+            className="dark:invert"
+            width={22}
+          />
+        ),
       }}
       columns={[
         {
@@ -58,7 +67,8 @@ export function SiteFooter() {
             body: JSON.stringify({ email }),
           })
           // The Arc form shows its error state when this throws.
-          if (!res.ok) throw new Error((await res.json().catch(() => null))?.error ?? 'Subscribe failed')
+          if (!res.ok)
+            throw new Error((await res.json().catch(() => null))?.error ?? 'Subscribe failed')
         },
       }}
       // No social accounts or status page yet; Arc's samples would show otherwise.

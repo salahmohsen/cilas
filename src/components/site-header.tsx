@@ -20,7 +20,8 @@ export function CILASSiteHeader() {
   useEffect(() => {
     const el = headerRef.current
     if (!el) return
-    const set = () => document.documentElement.style.setProperty('--site-header-height', `${el.offsetHeight}px`)
+    const set = () =>
+      document.documentElement.style.setProperty('--site-header-height', `${el.offsetHeight}px`)
     set()
     const observer = new ResizeObserver(set)
     observer.observe(el)
@@ -34,9 +35,21 @@ export function CILASSiteHeader() {
       href: href('/study'),
       icon: BookOpen,
       links: [
-        { label: t('study.thematic'), href: href('/study?type=thematic'), description: t('study.thematicDescription') },
-        { label: t('study.labs'), href: href('/study?type=lab'), description: t('study.labsDescription') },
-        { label: t('study.workshops'), href: href('/study?type=workshop'), description: t('study.workshopsDescription') },
+        {
+          label: t('study.thematic'),
+          href: href('/study?type=thematic'),
+          description: t('study.thematicDescription'),
+        },
+        {
+          label: t('study.labs'),
+          href: href('/study?type=lab'),
+          description: t('study.labsDescription'),
+        },
+        {
+          label: t('study.workshops'),
+          href: href('/study?type=workshop'),
+          description: t('study.workshopsDescription'),
+        },
       ],
       feature: {
         title: t('study.featureTitle'),
@@ -51,9 +64,21 @@ export function CILASSiteHeader() {
       href: href('/people'),
       icon: Users,
       links: [
-        { label: t('people.fellows'), href: href('/people/fellows'), description: t('people.fellowsDescription') },
-        { label: t('people.cilasians'), href: href('/people/cilasians'), description: t('people.cilasiansDescription') },
-        { label: t('people.governance'), href: href('/governance'), description: t('people.governanceDescription') },
+        {
+          label: t('people.fellows'),
+          href: href('/people/fellows'),
+          description: t('people.fellowsDescription'),
+        },
+        {
+          label: t('people.cilasians'),
+          href: href('/people/cilasians'),
+          description: t('people.cilasiansDescription'),
+        },
+        {
+          label: t('people.governance'),
+          href: href('/governance'),
+          description: t('people.governanceDescription'),
+        },
       ],
     },
     {
@@ -77,7 +102,16 @@ export function CILASSiteHeader() {
       brand={{
         name: t('brand'),
         href: href('/'),
-        mark: <Image alt="CILAS" height={25} src="/assets/images/logo.webp" style={{ width: 'auto' }} width={25} />,
+        mark: (
+          <Image
+            alt="CILAS"
+            height={20}
+            src="/assets/images/logo.webp"
+            style={{ width: 'auto' }}
+            className="dark:invert"
+            width={20}
+          />
+        ),
       }}
       items={items}
       label={t('label')}
