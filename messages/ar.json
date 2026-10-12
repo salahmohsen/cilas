@@ -303,8 +303,40 @@
     "wheel": "الزملاء",
     "announce": "{name}، {n} من {total}",
     "fellow": "زميل التدريس",
-    "taught": "{count, plural, one {درّس مقررًا واحدًا} two {درّس مقررين} few {درّس # مقررات} many {درّس # مقررًا} other {درّس # مقرر}}",
     "profile": "الصفحة الكاملة",
-    "allCourses": "الصفحة الكاملة وكل المقررات ({count})"
+    "lines": "{count, plural, other {درّس هنا}}"
+  },
+  "Cilasians": {
+    "metaTitle": "سيلاسيون — سيلاس",
+    "title": "السيلاسيون",
+    "intro": "طلاب كل دفعة من برنامج الجسر وزملاؤها المقيمون: المجتمع الذي تتكون منه سيلاس، الأحدث أولًا. أدِر العجلة لتتعرف عليهم.",
+    "count": "{count, plural, zero {لا أحد} one {سيلاسي واحد} two {سيلاسيان} few {# سيلاسيين} many {# سيلاسيًا} other {# سيلاسي}}",
+    "wheel": "السيلاسيون",
+    "announce": "{name}، {n} من {total}",
+    "lines": "{count, plural, other {في سيلاس}}",
+    "profile": "الصفحة الكاملة",
+    "roles": {
+      "student": "طالب",
+      "residential_fellow": "زميل مقيم",
+      "visiting_fellow": "زميل زائر"
+    }
+  },
+  "Governance": {
+    "metaTitle": "الحوكمة — سيلاس",
+    "title": "الحوكمة",
+    "intro": "المستشارون والأمناء الذين يوجّهون سيلاس ويحفظونها على رسالتها.",
+    "count": "{count, plural, zero {لا أحد} one {شخص واحد} two {شخصان} few {# أشخاص} many {# شخصًا} other {# شخص}}",
+    "wheel": "المستشارون والأمناء",
+    "announce": "{name}، {n} من {total}",
+    "lines": "{count, plural, other {الدور}}",
+    "profile": "الصفحة الكاملة",
+    "roles": {
+      "advisor": "مستشار",
+      "trustee": "أمين"
+    },
+    "board": "في مجلس الأمناء",
+    "advisesOn": "يقدم المشورة في",
+    "term": "المدة",
+    "since": "منذ {year}"
   }
 }

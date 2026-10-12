@@ -144,3 +144,93 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
     .map((f) => ({ ...f, courses: f.courses.sort((a, b) => b.start.localeCompare(a.start)) }))
     .sort((a, b) => latest(b).localeCompare(latest(a)) || a.name.localeCompare(b.name))
 }
+
+type PersonCard = Pick<Fellow, 'id' | 'slug' | 'name' | 'photo' | 'bio'>
+
+const cardOf = (p: Person): PersonCard => {
+  const photo = typeof p.photo === 'object' && p.photo?.url ? p.photo : null
+  return {
+    id: p.id,
+    slug: p.slug ?? String(p.id),
+    name: p.name,
+    ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? p.name } } : {}),
+    bio: p.bio ? convertLexicalToPlaintext({ data: p.bio }).replace(/\s+/g, ' ').trim() : '',
+  }
+}
+
+const personPopulate = {
+  people: { name: true, slug: true, photo: true, bio: true },
+  media: { url: true, alt: true, filename: true, prefix: true },
+} as const
+
+export type CilasianPlace = { role: string; title: string | null; programme: string | null }
+export type Cilasian = PersonCard & { places: CilasianPlace[] }
+
+/**
+ * CILASians: everyone with a place in a programme's community — students
+ * and resident fellows of each Bridge cohort — the newest cohort first.
+ * Programmes are drafts until someone confirms their years, but their
+ * titles are the archive's own, so they are named here.
+ */
+export const getCilasians = async (payload: Payload, locale: Locale): Promise<Cilasian[]> => {
+  const { docs } = await payload.find({
+    collection: 'memberships',
+    depth: 2,
+    pagination: false,
+    populate: { ...personPopulate, programmes: { title: true } },
+    locale,
+    fallbackLocale: otherLocale(locale),
+    overrideAccess: true,
+  })
+  const people = new Map<number, Cilasian>()
+  for (const m of docs) {
+    if (typeof m.person !== 'object' || !m.person) continue
+    const programme = typeof m.programme === 'object' && m.programme ? m.programme.title : null
+    const place = { role: m.role, title: m.title ?? null, programme }
+    const known = people.get(m.person.id)
+    if (known) known.places.push(place)
+    else people.set(m.person.id, { ...cardOf(m.person), places: [place] })
+  }
+  const newest = (c: Cilasian) => c.places.map((p) => p.programme ?? '').sort().at(-1) ?? ''
+  return [...people.values()]
+    .map((c) => ({ ...c, places: c.places.sort((a, b) => (b.programme ?? '').localeCompare(a.programme ?? '')) }))
+    .sort((a, b) => newest(b).localeCompare(newest(a)) || a.name.localeCompare(b.name))
+}
+
+export type GovernanceMember = PersonCard & {
+  role: 'advisor' | 'trustee'
+  title: string | null
+  boardRole: string | null
+  advisesOn: string | null
+  termFrom: number | null
+  termTo: number | null
+}
+
+/** The advisors and trustees, in the order an editor gave them. */
+export const getGovernance = async (payload: Payload, locale: Locale): Promise<GovernanceMember[]> => {
+  const { docs } = await payload.find({
+    collection: 'governance',
+    depth: 2,
+    pagination: false,
+    sort: ['order', 'createdAt'],
+    populate: personPopulate,
+    locale,
+    fallbackLocale: otherLocale(locale),
+    overrideAccess: false,
+  })
+  return docs.flatMap((g) =>
+    typeof g.person === 'object' && g.person
+      ? [
+          {
+            ...cardOf(g.person),
+            role: g.role,
+            title: g.title ?? null,
+            boardRole: g.board_role ?? null,
+            advisesOn: g.advises_on ?? null,
+            termFrom: g.term_from ?? null,
+            termTo: g.term_to ?? null,
+          },
+        ]
+      : [],
+  )
+}

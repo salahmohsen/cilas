@@ -303,8 +303,40 @@
     "wheel": "Fellows",
     "announce": "{name}, {n} of {total}",
     "fellow": "Fellow",
-    "taught": "{count, plural, one {Taught one course} other {Taught # courses}}",
     "profile": "Full profile",
-    "allCourses": "Profile and all {count} courses"
+    "lines": "{count, plural, one {Taught here} other {Taught here}}"
+  },
+  "Cilasians": {
+    "metaTitle": "CILASians — CILAS",
+    "title": "CILASians",
+    "intro": "Students and resident fellows of each Bridge cohort: the community CILAS is made of, the newest first. Turn the wheel to meet them.",
+    "count": "{count, plural, one {# CILASian} other {# CILASians}}",
+    "wheel": "CILASians",
+    "announce": "{name}, {n} of {total}",
+    "lines": "{count, plural, one {At CILAS} other {At CILAS}}",
+    "profile": "Full profile",
+    "roles": {
+      "student": "Student",
+      "residential_fellow": "Resident fellow",
+      "visiting_fellow": "Visiting fellow"
+    }
+  },
+  "Governance": {
+    "metaTitle": "Governance — CILAS",
+    "title": "Governance",
+    "intro": "The advisors and trustees who guide CILAS and keep it to its mission.",
+    "count": "{count, plural, one {# person} other {# people}}",
+    "wheel": "Advisors and trustees",
+    "announce": "{name}, {n} of {total}",
+    "lines": "{count, plural, one {Role} other {Role}}",
+    "profile": "Full profile",
+    "roles": {
+      "advisor": "Advisor",
+      "trustee": "Trustee"
+    },
+    "board": "On the board",
+    "advisesOn": "Advises on",
+    "term": "Term",
+    "since": "Since {year}"
   }
 }
