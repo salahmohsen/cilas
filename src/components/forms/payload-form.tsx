@@ -22,6 +22,22 @@ const emptyFor = (q: Question): Answer =>
 const optionsOf = (q: Question) => ('options' in q && q.options ? q.options : [])
 const fieldId = (name: string) => `field-${name}`
 
+// An address in help text, without the punctuation that ends its sentence.
+const URL_PATTERN = /(https?:\/\/[^\s<>"]*[^\s<>".,;:!?)\]])/g
+
+/** Help text as written, its web addresses made into links that open in a new tab. */
+function Linked({ text }: { text: string }) {
+  return text.split(URL_PATTERN).map((part, i) =>
+    i % 2 ? (
+      <a className="payload-form-link" href={part} key={i} rel="noopener noreferrer" target="_blank">
+        {part.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+      </a>
+    ) : (
+      part
+    ),
+  )
+}
+
 /**
  * A form built in the admin (Payload's form builder), answered here: each
  * question with its help text, essays with their image and a word count, and
@@ -144,7 +160,11 @@ export function PayloadForm({
         const lead =
           description || image?.url ? (
             <>
-              {description ? <p className="whitespace-pre-line">{description}</p> : null}
+              {description ? (
+                <p className="whitespace-pre-line">
+                  <Linked text={description} />
+                </p>
+              ) : null}
               {image?.url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img alt={image.alt ?? ''} className="payload-form-image" loading="lazy" src={image.url} />
@@ -176,7 +196,7 @@ export function PayloadForm({
       case 'radio':
         return (
           <RadioGroup
-            description={description}
+            description={description ? <Linked text={description} /> : undefined}
             error={error}
             label={label(q)}
             name={q.name}
@@ -199,7 +219,11 @@ export function PayloadForm({
             }}
           >
             <legend>{label(q)}</legend>
-            {description ? <p className="payload-form-description">{description}</p> : null}
+            {description ? (
+              <p className="payload-form-description">
+                <Linked text={description} />
+              </p>
+            ) : null}
             <div className="payload-form-options">
               {optionsOf(q).map((o, i) => (
                 <Checkbox
@@ -235,7 +259,13 @@ export function PayloadForm({
         return (
           <Input
             error={error}
-            lead={description ? <p>{description}</p> : undefined}
+            lead={
+              description ? (
+                <p>
+                  <Linked text={description} />
+                </p>
+              ) : undefined
+            }
             id={fieldId(q.name)}
             inputMode={q.blockType === 'number' ? 'decimal' : q.blockType === 'email' ? 'email' : undefined}
             label={label(q)}

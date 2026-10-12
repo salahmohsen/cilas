@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useId, useLayoutEffect, useRef } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, type ReactNode } from 'react'
 import { animate, motion, useReducedMotion } from 'motion/react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './radio-group.module.css'
@@ -9,8 +9,8 @@ export interface RadioGroupProps {
   value: string
   onValueChange: (value: string) => void
   name?: string
-  /** Help text under the legend. */
-  description?: string
+  /** Help text under the legend; may hold links. */
+  description?: ReactNode
   /** What is wrong with the choice, shown under the options. */
   error?: string
   required?: boolean

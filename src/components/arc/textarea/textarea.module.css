@@ -100,9 +100,11 @@
   }
 }
 
+/* Help text belongs to its label: it sits close under it, and the field keeps a clear step below. */
 .lead {
   display: grid;
-  margin-bottom: var(--space-1);
+  margin-top: calc(var(--space-1) - var(--space-2));
+  margin-bottom: var(--space-3);
   gap: var(--space-3);
   color: var(--text-secondary);
   font-size: var(--text-sm);
