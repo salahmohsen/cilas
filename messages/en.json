@@ -575,5 +575,32 @@
       "motionPaused": "Motion paused",
       "outlets": "Outlets"
     }
+  },
+  "Contact": {
+    "metaTitle": "Contact",
+    "title": "Write to CILAS",
+    "text": "Questions about a course, the Bridge, teaching or anything else. A person at CILAS reads every message.",
+    "name": "Name",
+    "namePlaceholder": "Your name",
+    "email": "Email",
+    "emailPlaceholder": "you@example.com",
+    "topic": "Topic",
+    "message": "Message",
+    "messagePlaceholder": "What would you like to ask or tell us?",
+    "charactersLeft": "{count, plural, one {# character left} other {# characters left}}",
+    "fine": "We reply by email, usually within a few days.",
+    "send": "Send message",
+    "failed": "Your message wasn’t sent. Check your connection and try again; what you wrote is still here.",
+    "thanks": "Thank you, {name}",
+    "sent": "Your message about “{topic}” has reached CILAS. We’ll reply to {email}.",
+    "another": "Send another message",
+    "nameMissing": "Enter your name",
+    "emailMissing": "Enter your email address",
+    "emailInvalid": "Enter an email like name@example.com",
+    "messageMissing": "Write your message",
+    "messageShort": "Add a little more, at least 20 characters",
+    "replyFact": "Replies by email, usually within a few days",
+    "copyEmail": "Copy the email address",
+    "copied": "Copied"
   }
 }

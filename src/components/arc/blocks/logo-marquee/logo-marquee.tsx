@@ -124,7 +124,9 @@ function BrandList({
               <a
                 className={styles.brandLink}
                 href={brand.href}
+                rel="noopener noreferrer"
                 tabIndex={duplicate ? -1 : undefined}
+                target="_blank"
               >
                 {content}
               </a>

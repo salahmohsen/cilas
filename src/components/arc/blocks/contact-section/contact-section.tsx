@@ -51,6 +51,60 @@ export interface ContactOffice {
   hours?: [number, number]
 }
 
+/** Every word the form says, in the page's language. */
+export interface ContactLabels {
+  form: string
+  name: string
+  namePlaceholder: string
+  email: string
+  emailPlaceholder: string
+  topic: string
+  message: string
+  messagePlaceholder: string
+  charactersLeft: (count: number) => string
+  fine: string
+  send: string
+  failed: string
+  thanks: (name: string) => string
+  sentText: (topic: string, email: string) => string
+  another: string
+  nameMissing: string
+  emailMissing: string
+  emailInvalid: string
+  messageMissing: string
+  messageShort: string
+  replyFact: string
+  copyEmail: string
+  copied: string
+}
+
+const DEFAULT_LABELS: ContactLabels = {
+  form: 'Contact form',
+  name: 'Name',
+  namePlaceholder: 'Emma Collins',
+  email: 'Work email',
+  emailPlaceholder: 'emma@northwind.example',
+  topic: 'Topic',
+  message: 'Message',
+  messagePlaceholder: 'What are you building?',
+  charactersLeft: (count) => `${count} characters left`,
+  fine: 'We reply within one business day.',
+  send: 'Send message',
+  failed: "We couldn't send your message. Check your connection and try again.",
+  thanks: (name) => `Thanks, ${name}`,
+  sentText: (topic, email) =>
+    `Your message is with our ${topic.toLowerCase()} team. We’ll reply to ${email} within one business day.`,
+  another: 'Send another message',
+  nameMissing: 'Enter your name',
+  emailMissing: 'Enter your email address',
+  emailInvalid: 'Enter an email like name@example.com',
+  messageMissing: 'Tell us how we can help',
+  messageShort: 'Add a little more detail, at least 20 characters',
+  replyFact: 'Replies within one business day',
+  copyEmail: 'Copy email',
+  copied: 'Copied',
+}
+
 export interface ContactSectionProps {
   /** `form` validates and morphs into a confirmation, `channels` lists ways to reach you, `offices` shows live local times. */
   variant?: ContactSectionVariant
@@ -66,6 +120,10 @@ export interface ContactSectionProps {
   defaultChannel?: string
   onChannelChange?: (value: string) => void
   offices?: ContactOffice[]
+  /** The form's words, in the page's language. */
+  labels?: Partial<ContactLabels>
+  /** The address shown beside the form, with a copy button; leave out for none. */
+  email?: string | null
   className?: string
 }
 
@@ -208,19 +266,25 @@ function TopicPicker({
   value,
   onChange,
   reduced,
+  label,
 }: {
   topics: string[]
   value: string
   onChange: (topic: string) => void
   reduced: boolean
+  label: string
 }) {
   const id = useId()
   const refs = useRef<(HTMLButtonElement | null)[]>([])
   function onKeyDown(event: KeyboardEvent) {
+    // Left and right follow the reading direction: in a right-to-left page, left is next.
+    const rtl = getComputedStyle(event.currentTarget as Element).direction === 'rtl'
+    const forward = rtl ? 'ArrowLeft' : 'ArrowRight',
+      back = rtl ? 'ArrowRight' : 'ArrowLeft'
     const delta =
-      event.key === 'ArrowRight' || event.key === 'ArrowDown'
+      event.key === forward || event.key === 'ArrowDown'
         ? 1
-        : event.key === 'ArrowLeft' || event.key === 'ArrowUp'
+        : event.key === back || event.key === 'ArrowUp'
           ? -1
           : 0
     if (!delta) return
@@ -232,7 +296,7 @@ function TopicPicker({
   return (
     <div className={styles.topicField}>
       <span id={`${id}-label`} className={styles.fieldLabel}>
-        Topic
+        {label}
       </span>
       <LayoutGroup id={id}>
         <div
@@ -272,15 +336,16 @@ function TopicPicker({
 }
 
 type Errors = Partial<Record<'name' | 'email' | 'message', string>>
-function validate(values: { name: string; email: string; message: string }): Errors {
+function validate(
+  values: { name: string; email: string; message: string },
+  labels: ContactLabels,
+): Errors {
   const errors: Errors = {}
-  if (!values.name.trim()) errors.name = 'Enter your name'
-  if (!values.email.trim()) errors.email = 'Enter your email address'
-  else if (!EMAIL.test(values.email.trim())) errors.email = 'Enter an email like name@example.com'
+  if (!values.name.trim()) errors.name = labels.nameMissing
+  if (!values.email.trim()) errors.email = labels.emailMissing
+  else if (!EMAIL.test(values.email.trim())) errors.email = labels.emailInvalid
   if (values.message.trim().length < 20)
-    errors.message = values.message.trim()
-      ? 'Add a little more detail, at least 20 characters'
-      : 'Tell us how we can help'
+    errors.message = values.message.trim() ? labels.messageShort : labels.messageMissing
   return errors
 }
 
@@ -288,10 +353,12 @@ function ContactForm({
   topics,
   onSubmit,
   reduced,
+  labels,
 }: {
   topics: string[]
   onSubmit?: ContactSectionProps['onSubmit']
   reduced: boolean
+  labels: ContactLabels
 }) {
   const [values, setValues] = useState({ name: '', email: '', message: '' })
   const [topic, setTopic] = useState(topics[0] ?? '')
@@ -317,7 +384,7 @@ function ContactForm({
   const update = (field: keyof typeof values) => (event: { target: { value: string } }) => {
     const next = { ...values, [field]: event.target.value }
     setValues(next)
-    if (submitted) setErrors(validate(next))
+    if (submitted) setErrors(validate(next, labels))
   }
 
   async function submit(event: FormEvent) {
@@ -325,7 +392,7 @@ function ContactForm({
     if (phase !== 'editing') return
     setSubmitted(true)
     setFailure(null)
-    const found = validate(values)
+    const found = validate(values, labels)
     setErrors(found)
     if (found.name) {
       nameRef.current?.focus()
@@ -352,7 +419,7 @@ function ContactForm({
       setPhase('sent')
     } catch {
       setPhase('editing')
-      setFailure("We couldn't send your message. Check your connection and try again.")
+      setFailure(labels.failed)
     }
   }
 
@@ -393,25 +460,22 @@ function ContactForm({
             </svg>
           </span>
           <h3 ref={successRef} tabIndex={-1} className={styles.successTitle}>
-            Thanks, {sentTo.name}
+            {labels.thanks(sentTo.name)}
           </h3>
-          <p className={styles.successText}>
-            Your message is with our {topic.toLowerCase()} team. We&rsquo;ll reply to {sentTo.email}{' '}
-            within one business day.
-          </p>
+          <p className={styles.successText}>{labels.sentText(topic, sentTo.email)}</p>
           <Button variant="secondary" onClick={reset}>
-            Send another message
+            {labels.another}
           </Button>
         </div>
       ) : (
-        <form className={styles.formBody} onSubmit={submit} noValidate aria-label="Contact form">
+        <form className={styles.formBody} onSubmit={submit} noValidate aria-label={labels.form}>
           <div className={styles.row}>
             <Input
               ref={nameRef}
-              label="Name"
+              label={labels.name}
               name="name"
               autoComplete="name"
-              placeholder="Emma Collins"
+              placeholder={labels.namePlaceholder}
               value={values.name}
               onChange={update('name')}
               error={errors.name}
@@ -419,30 +483,36 @@ function ContactForm({
             />
             <Input
               ref={emailRef}
-              label="Work email"
+              label={labels.email}
               name="email"
               type="email"
               inputMode="email"
               autoComplete="email"
-              placeholder="emma@northwind.example"
+              placeholder={labels.emailPlaceholder}
               value={values.email}
               onChange={update('email')}
               error={errors.email}
               readOnly={phase === 'sending'}
             />
           </div>
-          <TopicPicker topics={topics} value={topic} onChange={setTopic} reduced={reduced} />
+          <TopicPicker
+            topics={topics}
+            value={topic}
+            onChange={setTopic}
+            reduced={reduced}
+            label={labels.topic}
+          />
           <Textarea
             ref={messageRef}
-            label="Message"
+            label={labels.message}
             name="message"
             rows={4}
             maxLength={MAX_MESSAGE}
-            placeholder="What are you building?"
+            placeholder={labels.messagePlaceholder}
             value={values.message}
             onChange={update('message')}
             error={errors.message}
-            description={`${left} characters left`}
+            description={labels.charactersLeft(left)}
             readOnly={phase === 'sending'}
           />
           <AnimatePresence initial={false}>
@@ -468,9 +538,9 @@ function ContactForm({
             )}
           </AnimatePresence>
           <div className={styles.submitRow}>
-            <p className={styles.fine}>We reply within one business day.</p>
+            <p className={styles.fine}>{labels.fine}</p>
             <Button type="submit" variant="primary" loading={phase === 'sending'}>
-              Send message
+              {labels.send}
             </Button>
           </div>
         </form>
@@ -863,10 +933,13 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(funct
     defaultChannel,
     onChannelChange,
     offices = contactExampleOffices,
+    labels: labelsProp,
+    email = 'hello@example.com',
     className,
   },
   ref,
 ) {
+  const labels = { ...DEFAULT_LABELS, ...labelsProp }
   const id = useId()
   const reduced = !!useReducedMotion()
   const [innerChannel, setInnerChannel] = useState(defaultChannel ?? channels[0]?.value ?? '')
@@ -909,18 +982,26 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(funct
             <ul className={styles.facts}>
               <li>
                 <Clock size={16} strokeWidth={1.75} aria-hidden="true" />
-                Replies within one business day
+                {labels.replyFact}
               </li>
-              <li>
-                <Mail size={16} strokeWidth={1.75} aria-hidden="true" />
-                <span>hello@example.com</span>
-                <CopyButton value="hello@example.com" label="Copy email" iconOnly variant="plain" />
-              </li>
+              {email ? (
+                <li>
+                  <Mail size={16} strokeWidth={1.75} aria-hidden="true" />
+                  <span dir="ltr">{email}</span>
+                  <CopyButton
+                    value={email}
+                    label={labels.copyEmail}
+                    copiedLabel={labels.copied}
+                    iconOnly
+                    variant="plain"
+                  />
+                </li>
+              ) : null}
             </ul>
           )}
         </div>
         {variant === 'form' && (
-          <ContactForm topics={topics} onSubmit={onSubmit} reduced={reduced} />
+          <ContactForm topics={topics} onSubmit={onSubmit} reduced={reduced} labels={labels} />
         )}
         {variant === 'channels' && (
           <Channels

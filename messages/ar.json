@@ -575,5 +575,32 @@
       "motionPaused": "توقفت الحركة",
       "outlets": "المنابر"
     }
+  },
+  "Contact": {
+    "metaTitle": "تواصل معنا",
+    "title": "راسل سيلاس",
+    "text": "أسئلة عن مقرر أو عن برنامج الجسر أو عن التدريس أو أي شيء آخر. يقرأ كل رسالة شخصٌ في سيلاس.",
+    "name": "الاسم",
+    "namePlaceholder": "اسمك",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "you@example.com",
+    "topic": "الموضوع",
+    "message": "الرسالة",
+    "messagePlaceholder": "ما الذي تودّ أن تسأله أو تخبرنا به؟",
+    "charactersLeft": "{count, plural, zero {لم يبقَ أي حرف} one {يتبقى حرف واحد} two {يتبقى حرفان} few {يتبقى {count, number, digits} أحرف} many {يتبقى {count, number, digits} حرفًا} other {يتبقى {count, number, digits} حرف}}",
+    "fine": "نرد بالبريد الإلكتروني، عادةً خلال أيام قليلة.",
+    "send": "أرسل الرسالة",
+    "failed": "لم تُرسل رسالتك. تحقق من اتصالك وحاول مجددًا؛ ما كتبته ما زال هنا.",
+    "thanks": "شكرًا لك يا {name}",
+    "sent": "وصلت رسالتك عن «{topic}» إلى سيلاس. سنرد عليك على {email}.",
+    "another": "أرسل رسالة أخرى",
+    "nameMissing": "اكتب اسمك",
+    "emailMissing": "اكتب بريدك الإلكتروني",
+    "emailInvalid": "اكتب بريدًا مثل name@example.com",
+    "messageMissing": "اكتب رسالتك",
+    "messageShort": "أضف المزيد، ٢٠ حرفًا على الأقل",
+    "replyFact": "نرد بالبريد الإلكتروني، عادةً خلال أيام قليلة",
+    "copyEmail": "انسخ عنوان البريد",
+    "copied": "نُسخ"
   }
 }
