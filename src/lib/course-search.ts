@@ -37,9 +37,9 @@ export type StudyCard = Omit<StudyCourse, 'words'>
 export const normaliseSearch = (text: string): string =>
   text
     .normalize('NFKD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
-    .replace(/[ً-ٰٟـ]/g, '')
+    .replace(/[\u064b-\u065f\u0670ـ]/g, '')
     .replace(/[أإآٱ]/g, 'ا')
     .replace(/ى/g, 'ي')
     .replace(/ة/g, 'ه')

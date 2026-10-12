@@ -54,7 +54,7 @@ export const usersData: UserSeed[] = [
     roles: ['fellow'],
   },
   {
-    name: 'George Bartlett',
+    name: 'George Louis Bartlett',
     name_ar: 'جورج بارتلت',
     bio: 'A writer and lecturer working across cinema and psychoanalysis.',
     bio_ar: 'چورچ بارتلت كاتب ومحاضِر بيشتغل في مجال السينما والتحليل النفسي.',

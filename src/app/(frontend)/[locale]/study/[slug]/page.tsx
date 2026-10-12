@@ -7,9 +7,10 @@ import React from 'react'
 
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { CourseLivePreview } from './CourseLivePreview'
-import { CourseView } from './CourseView'
+import { CourseView, type RelatedCourse } from './CourseView'
+import { readingFonts } from '@/lib/fonts'
 import { seoDefaults } from '@/lib/seo'
-import type { Course } from '@/payload-types'
+import type { Course, Media, Person } from '@/payload-types'
 
 type Params = { params: Promise<{ locale: string; slug: string }> }
 
@@ -90,8 +91,46 @@ export default async function CoursePage({ params }: Params) {
 
   if (!course) notFound()
 
+  // The other published courses of the same cycle, for the end of the page.
+  const cycleId = typeof course.cycle === 'object' ? course.cycle?.id : course.cycle
+  const { docs: siblings } = cycleId
+    ? await payload.find({
+        collection: 'courses',
+        where: {
+          and: [
+            { cycle: { equals: cycleId } },
+            { id: { not_equals: course.id } },
+            { tier: { equals: 'public' } },
+            { _status: { equals: 'published' } },
+          ],
+        },
+        depth: 1,
+        joins: false,
+        pagination: false,
+        populate: { people: { name: true }, media: { url: true, alt: true } },
+        select: { title: true, slug: true, course_type: true, fellows: true, cover_image: true },
+        locale: locale as 'en' | 'ar',
+        fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+      })
+    : { docs: [] }
+  const related: RelatedCourse[] = siblings.map((c) => {
+    const cover = typeof c.cover_image === 'object' ? (c.cover_image as Media | null) : null
+    return {
+      id: c.id,
+      slug: c.slug ?? String(c.id),
+      title: c.title,
+      type: c.course_type,
+      fellows: (c.fellows ?? []).flatMap((f) => (typeof f === 'object' && f ? [(f as Person).name] : [])),
+      ...(cover?.url ? { image: { url: cover.url, alt: cover.alt ?? '' } } : {}),
+    }
+  })
+
   if (!isPreview) {
-    return <CourseView course={course} />
+    return (
+      <div className={readingFonts}>
+        <CourseView course={course} related={related} />
+      </div>
+    )
   }
 
   /*
@@ -114,9 +153,9 @@ export default async function CoursePage({ params }: Params) {
   })
 
   return (
-    <>
+    <div className={readingFonts}>
       <RefreshRouteOnSave />
-      <CourseLivePreview initialData={drafts[0] ?? course} />
-    </>
+      <CourseLivePreview initialData={drafts[0] ?? course} related={related} />
+    </div>
   )
 }

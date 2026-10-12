@@ -157,8 +157,9 @@ describe('course flow import', () => {
     expect(plain(c.sessions?.[0].description)).toContain('Where to?')
     expect(c.bibliography).toMatchObject([{ type: 'reading', title: 'General reading', href: 'https://example.org/general' }])
     expect(plain(c.description)).toContain('The course.')
-    expect(plain(c.description)).toContain('Assessment by essay.')
-    expect(headings(c)).toBe(1)
+    // The flow's notes are the fellow's note, not part of the description.
+    expect(c.facilitator_note).toBe('Assessment by essay.')
+    expect(headings(c)).toBe(0)
   })
 
   it('writes an Arabic syllabus into the ar locale, on the same rows', async () => {
@@ -170,15 +171,16 @@ describe('course flow import', () => {
     expect(ar.sessions?.[0].activities).toMatchObject([{ kind: 'discussion', description: 'نقاش مفتوح' }])
     expect(plain(ar.sessions?.[0].description)).toContain('"direction":"rtl"')
     expect(ar.bibliography).toMatchObject([{ type: 'reading', title: 'قراءة عامة' }])
-    expect(plain(ar.description)).toContain('التقييم بالمقالة.')
+    expect(ar.facilitator_note).toBe('التقييم بالمقالة.')
+    expect(headings(ar)).toBe(0)
 
     const en = await find('arabic', 'en')
     expect(en.session_unit).toBe('session')
     expect(en.sessions).toHaveLength(2)
     expect(en.sessions?.map((s) => s.id)).toEqual(ar.sessions?.map((s) => s.id))
-    // The English description is not given the Arabic notes.
+    // The English side is not given the Arabic notes.
     expect(plain(en.description)).toContain('The course.')
-    expect(headings(en)).toBe(0)
+    expect(en.facilitator_note ?? null).toBeNull()
   })
 
   it('keeps English text when an ar update lands on the same rows', async () => {
@@ -216,11 +218,11 @@ describe('course flow import', () => {
     expect(en.sessions).toHaveLength(2)
     expect(en.sessions?.[0].bibliography).toHaveLength(1)
     expect(en.bibliography).toHaveLength(1)
-    expect(headings(en)).toBe(1)
+    expect(en.facilitator_note).toBe('Assessment by essay.')
 
     const ar = await find('arabic', 'ar')
     expect(ar.sessions?.map((s) => s.session_title)).toEqual(['تاريخ القضاء', 'محاكم الشريعة'])
-    expect(headings(ar)).toBe(1)
+    expect(ar.facilitator_note).toBe('التقييم بالمقالة.')
     expect((await find('arabic', 'en')).sessions).toHaveLength(2)
   })
 

@@ -1,13 +1,14 @@
 import type { Payload } from 'payload'
 
 import { lexical } from '../../seed/seed.utils'
+import { splitBios, type FlowBio } from './flow-notes'
 import { publishCourse } from './import-courses'
 import { isMostlyArabic } from './normalise-courses'
 import type { Syllabus } from './syllabus-schema'
 
 export type FlowEntry = { id: string; courses: string[] }
 
-/** The heading paragraph over a flow's notes in the course description. */
+/** The heading paragraph that earlier imports put over a flow's notes in the course description. */
 export const NOTES_HEADING = 'Course flow notes'
 export const NOTES_HEADING_AR = 'ملاحظات مسار المقرر'
 
@@ -38,6 +39,7 @@ type StoredCourse = {
   description?: Lexical | null
   sessions?: StoredSession[] | null
   bibliography?: Row[] | null
+  fellows?: number[] | null
 }
 
 const paragraphs = (text: string): string[] => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
@@ -64,14 +66,66 @@ const textOf = (node: unknown): string => {
   return [typeof n.text === 'string' ? n.text : '', ...(n.children ?? []).map(textOf)].join('\n')
 }
 
-/** The description with the flow's notes appended, or null when nothing changes. */
-const withNotes = (description: Lexical | null | undefined, notes: string | null, dir: 'ltr' | 'rtl'): Lexical | null => {
-  if (!notes?.trim()) return null
-  const existing = description ? textOf(description) : ''
-  if (existing.includes(NOTES_HEADING) || existing.includes(NOTES_HEADING_AR)) return null
-  const block = lexical([dir === 'rtl' ? NOTES_HEADING_AR : NOTES_HEADING, ...paragraphs(notes)], dir)
-  if (!description?.root) return block
-  return { ...description, root: { ...description.root, children: [...description.root.children, ...block.root.children] } }
+/**
+ * The description without the notes an earlier import appended under the
+ * notes heading (they now go to `facilitator_note`), or null when it has none.
+ */
+const withoutNotes = (description: Lexical | null | undefined): Lexical | null => {
+  const children = description?.root?.children ?? []
+  const at = children.findIndex((n) => {
+    const text = textOf(n).trim()
+    return text === NOTES_HEADING || text === NOTES_HEADING_AR
+  })
+  if (!description || at === -1) return null
+  return { ...description, root: { ...description.root, children: children.slice(0, at) } }
+}
+
+type Fellow = {
+  id: number
+  names: string[]
+  name: Partial<Record<Locale, string>>
+  bio: Partial<Record<Locale, unknown>>
+  reviewed: boolean
+}
+
+/** The course's fellows, with every spelling of their names. */
+const fellowsOf = async (payload: Payload, ids: number[]): Promise<Fellow[]> => {
+  if (!ids.length) return []
+  const { docs } = await payload.find({
+    collection: 'people',
+    where: { id: { in: ids } },
+    depth: 0,
+    pagination: false,
+    locale: 'all',
+    overrideAccess: true,
+  })
+  return docs.map((d) => {
+    const p = d as unknown as { id: number; name?: Record<string, string>; bio?: Record<string, unknown>; import_status?: string | null }
+    return {
+      id: p.id,
+      names: Object.values(p.name ?? {}).filter(Boolean),
+      name: (p.name ?? {}) as Fellow['name'],
+      bio: (p.bio ?? {}) as Fellow['bio'],
+      reviewed: p.import_status === 'reviewed',
+    }
+  })
+}
+
+/**
+ * A bio from a flow goes to its fellow's profile, in the flow's language,
+ * when the profile has none there yet: a bio from the course page, or one an
+ * editor wrote, wins.
+ */
+const giveBios = async (payload: Payload, bios: FlowBio[], fellows: Fellow[], locale: Locale, dir: 'ltr' | 'rtl') => {
+  for (const bio of bios) {
+    const fellow = fellows.find((f) => bio.name && f.names.includes(bio.name))
+    if (!fellow || fellow.reviewed || textOf(fellow.bio[locale]).trim()) continue
+    const body = rich(bio.text, dir)
+    // The name is required in every locale written; one only spelled in the other keeps that spelling.
+    const name = fellow.name[locale] ? {} : { name: fellow.names[0] }
+    await payload.update({ collection: 'people', id: fellow.id, data: { ...name, bio: body }, locale, overrideAccess: true })
+    fellow.bio[locale] = body
+  }
 }
 
 const materialShape = (m: Material, text: boolean, id?: string | null) => ({
@@ -137,7 +191,11 @@ export const importFlows = async (
         skipped.push(url)
         continue
       }
-      const description = withNotes(course.description, syllabus.notes, dir)
+      // The flow's notes are the fellow's note on the course; bios in them go to the fellows.
+      const fellows = await fellowsOf(payload, course.fellows ?? [])
+      const { notes, bios } = splitBios(syllabus.notes, fellows.map((f) => f.names))
+      await giveBios(payload, bios, fellows, locale, dir)
+      const description = withoutNotes(course.description)
 
       // Step A: the rows and their non-localized fields; English text too.
       await payload.update({
@@ -154,6 +212,7 @@ export const importFlows = async (
           })),
           bibliography: syllabus.bibliography.map((m) => materialShape(m, english)),
           ...(english && description ? { description } : {}),
+          ...(english ? { facilitator_note: notes } : {}),
         },
         draft: true,
         overrideAccess: true,
@@ -188,6 +247,7 @@ export const importFlows = async (
             })),
             bibliography: syllabus.bibliography.map((m, j) => materialShape(m, true, stored.bibliography?.[j]?.id)),
             ...(description ? { description } : {}),
+            facilitator_note: notes,
           },
           locale: 'ar',
           draft: true,

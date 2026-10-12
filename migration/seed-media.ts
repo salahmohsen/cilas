@@ -12,6 +12,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from '
 import path from 'node:path'
 import { getPayload } from 'payload'
 
+import { courseImagesOnPage } from './lib/course-images'
 import { importMedia, type ResolvedFile } from './lib/import-media'
 import { mediaJobs, pdfJobs, uniquePaths, type MediaJob } from './lib/media-plan'
 import { pageText } from './lib/page-text'
@@ -64,16 +65,33 @@ const build = () => {
       text: pageText(readFileSync(path.join(p.source === 'zip' ? zip : path.join(mirror, 'pages'), p.file), 'utf8')),
     }))
 
-  const jobs: MediaJob[] = [...mediaJobs({ people, press, publications, courses, pages }), ...pdfJobs({ publications, newsletters })]
+  // Courses that share a cycle page: each one's image from its own block there.
+  const byPage = new Map<string, typeof courses>()
+  for (const c of courses) byPage.set(c.legacy_url.split('#')[0], [...(byPage.get(c.legacy_url.split('#')[0]) ?? []), c])
+  const shared: MediaJob[] = []
+  for (const [url, list] of byPage) {
+    const page = manifest.pages.find((p) => p.legacy_url === url)
+    if (list.length < 2 || !page) continue
+    const html = readFileSync(path.join(page.source === 'zip' ? zip : path.join(mirror, 'pages'), page.file), 'utf8')
+    const found = courseImagesOnPage(html, list.map((c) => ({ legacy_url: c.legacy_url, titles: [c.title, c.title_ar ?? ''].filter(Boolean) })))
+    for (const c of list) {
+      const image = found.get(c.legacy_url)
+      if (image) shared.push({ collection: 'courses', legacy_url: c.legacy_url, field: 'cover_image', path: image, alt: c.title || c.title_ar || '' })
+    }
+  }
+
+  const jobs: MediaJob[] = [
+    ...mediaJobs({ people, press, publications, courses, pages }),
+    ...shared,
+    ...pdfJobs({ publications, newsletters }),
+  ]
   const attached = new Set(jobs.map((j) => resolve(j.path).key))
   const extras = docs
     .filter((d) => !attached.has(resolve(d.file).key))
     .map((d) => ({ path: d.file, alt: d.id.replace(/[_-]+/g, ' ').replace(/^./, (c) => c.toUpperCase()).trim() }))
 
-  const perPage = new Map<string, number>()
-  for (const c of courses) perPage.set(c.legacy_url.split('#')[0], (perPage.get(c.legacy_url.split('#')[0]) ?? 0) + 1)
-  const ownPage = new Set(pages.filter((p) => p.kind === 'course').map((p) => p.legacy_url))
-  const noCover = courses.filter((c) => !(ownPage.has(c.legacy_url.split('#')[0]) && perPage.get(c.legacy_url.split('#')[0]) === 1)).length
+  const covered = new Set(jobs.filter((j) => j.collection === 'courses').map((j) => j.legacy_url))
+  const noCover = courses.filter((c) => !covered.has(c.legacy_url)).length
   return { jobs, extras, noCover }
 }
 
@@ -109,7 +127,7 @@ const main = async () => {
     '',
     `Uploaded ${tally.uploaded}, reused ${tally.reused}, attached ${tally.attached}, missing ${tally.missing}.`,
     '',
-    `- ${noCover} courses have no cover: they share a page with other courses, or the page has no image.`,
+    `- ${noCover} courses have no cover: no image on their page, or none that is theirs alone.`,
     '- Pigeon Towers `print_edition_url` is the English PDF (the field holds one URL). The Arabic PDF is uploaded too:',
     ...extras.map((e) => `  - ${e.alt}: ${urls.get(e.path) ?? '(not uploaded)'}`),
     '',

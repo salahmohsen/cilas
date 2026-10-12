@@ -20,11 +20,19 @@ export function PersonLink({ person, className }: { person: Person; className?: 
  * The people behind an article — writers, then translators and other
  * credits — each with their photo, name (to their page) and role.
  */
-export function ContributorList({ title, contributors }: { title: string; contributors: Contributor[] }) {
+export function ContributorList({
+  title,
+  contributors,
+  titleClassName = 'mb-3 font-mono text-[0.68rem] tracking-[0.14em] uppercase opacity-60',
+}: {
+  title: string
+  contributors: Contributor[]
+  titleClassName?: string
+}) {
   if (!contributors.length) return null
   return (
     <section aria-label={title}>
-      <p className="mb-3 font-mono text-[0.68rem] tracking-[0.14em] uppercase opacity-60">{title}</p>
+      <p className={titleClassName}>{title}</p>
       <ul className="space-y-3">
         {contributors.map(({ person, role }) => (
           <li key={`${person.id}-${role}`}>

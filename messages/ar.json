@@ -156,7 +156,12 @@
     "copyFailed": "تعذّر النسخ",
     "footnote": "هامش",
     "footnotes": "الهوامش",
-    "backToText": "العودة إلى النص"
+    "backToText": "العودة إلى النص",
+    "inCollection": "في هذه المجموعة",
+    "readingNow": "تقرؤه الآن",
+    "foreword": "تقديم",
+    "essayOf": "{n} من {total}",
+    "collectionStack": "مقالات {title}"
   },
   "Study": {
     "heroQuote": "ما نغطيه في سيلاس أقل أهمية مما يكتشفه الطالب.",
@@ -215,21 +220,68 @@
     }
   },
   "Course": {
-    "location": "المكان",
+    "details": "تفاصيل المقرر",
     "cycle": "الدورة",
     "starts": "يبدأ",
     "weekOf": "أسبوع {date}",
+    "meets": "المواعيد",
+    "length": "المدة",
+    "sessions": "{count, plural, zero {لا جلسات} one {جلسة واحدة} two {جلستان} few {# جلسات} many {# جلسة} other {# جلسة}}",
+    "weeks": "{count, plural, zero {لا أسابيع} one {أسبوع واحد} two {أسبوعان} few {# أسابيع} many {# أسبوعًا} other {# أسبوع}}",
+    "format": "طريقة الحضور",
+    "language": "لغة التدريس",
     "price": "الرسوم",
     "registration": "التسجيل",
-    "open": "مفتوح",
-    "closed": "مغلق",
+    "open": "التسجيل مفتوح",
+    "closed": "التسجيل مغلق",
+    "apply": "قدّم الآن",
+    "taughtBy": "يقدّمه",
+    "fellow": "زميل التدريس",
     "fellows": "الزملاء",
-    "sessions": "اللقاءات",
+    "about": "عن المقرر",
+    "note": "من زميل التدريس",
+    "contentWarning": "تنبيه بشأن المحتوى:",
+    "flow": "مسار المقرر",
+    "tentative": "قد يتغير المسار مع سير المقرر.",
     "week": "الأسبوع {number}",
-    "session": "اللقاء {number}",
-    "bibliography": "المراجع",
+    "session": "الجلسة {number}",
+    "cancelled": "أُلغيت",
+    "materialCount": "{count, plural, zero {لا مواد} one {مادة واحدة} two {مادتان} few {# مواد} many {# مادة} other {# مادة}}",
+    "materials": "المواد",
+    "bibliography": "قائمة قراءات المقرر",
     "readings": "القراءات",
-    "activities": "الأنشطة"
+    "activities": "في الجلسة",
+    "alsoIn": "أيضًا في {cycle}",
+    "materialTypes": {
+      "reading": "قراءة",
+      "watch": "للمشاهدة",
+      "listen": "للاستماع",
+      "prompt": "سؤال للتفكير",
+      "other": "رابط"
+    },
+    "materialCounts": {
+      "reading": "{count, plural, zero {لا قراءات} one {قراءة واحدة} two {قراءتان} few {# قراءات} many {# قراءة} other {# قراءة}}",
+      "watch": "{count, plural, zero {لا أفلام} one {فيلم أو فيديو} two {فيلمان أو فيديوهان} few {# أفلام وفيديوهات} many {# فيلمًا وفيديو} other {# فيلم وفيديو}}",
+      "listen": "{count, plural, zero {لا تسجيلات} one {تسجيل صوتي} two {تسجيلان} few {# تسجيلات} many {# تسجيلًا} other {# تسجيل}}",
+      "prompt": "{count, plural, zero {لا أسئلة} one {سؤال للتفكير} two {سؤالان للتفكير} few {# أسئلة للتفكير} many {# سؤالًا للتفكير} other {# سؤال للتفكير}}",
+      "other": "{count, plural, zero {لا روابط} one {رابط واحد} two {رابطان} few {# روابط} many {# رابطًا} other {# رابط}}"
+    },
+    "activityKinds": {
+      "discussion": "نقاش",
+      "field_visit": "زيارة ميدانية",
+      "exercise": "تمرين",
+      "screening": "عرض",
+      "presentation": "عرض تقديمي",
+      "other": "نشاط"
+    },
+    "backTo": {
+      "core": "المقررات الأساسية",
+      "thematic": "المقررات الموضوعية",
+      "lab": "المختبرات",
+      "workshop": "الورش",
+      "short": "المقررات القصيرة"
+    },
+    "allInCycle": "كل مقررات هذه الدورة ({count})"
   },
   "NotFound": {
     "title": "الصفحة غير موجودة",

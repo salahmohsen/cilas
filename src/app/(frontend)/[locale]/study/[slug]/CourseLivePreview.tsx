@@ -3,7 +3,7 @@
 import { useLivePreview } from '@payloadcms/live-preview-react'
 import React from 'react'
 
-import { CourseView } from './CourseView'
+import { CourseView, type RelatedCourse } from './CourseView'
 import { env } from '@/env'
 import type { Course } from '@/payload-types'
 
@@ -19,7 +19,10 @@ import type { Course } from '@/payload-types'
  * `depth` must match the depth of the server component's query exactly, or
  * relationships and uploads will not populate.
  */
-export const CourseLivePreview: React.FC<{ initialData: Course }> = ({ initialData }) => {
+export const CourseLivePreview: React.FC<{ initialData: Course; related?: RelatedCourse[] }> = ({
+  initialData,
+  related,
+}) => {
   const { data } = useLivePreview<Course>({
     initialData,
     // Read from env, not `window.location.origin`: these pages are statically
@@ -28,5 +31,5 @@ export const CourseLivePreview: React.FC<{ initialData: Course }> = ({ initialDa
     depth: 2,
   })
 
-  return <CourseView course={data} />
+  return <CourseView course={data} related={related} />
 }

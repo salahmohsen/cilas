@@ -156,7 +156,12 @@
     "copyFailed": "Could not copy",
     "footnote": "Note",
     "footnotes": "Notes",
-    "backToText": "Back to the text"
+    "backToText": "Back to the text",
+    "inCollection": "In this collection",
+    "readingNow": "Reading now",
+    "foreword": "Foreword",
+    "essayOf": "{n} of {total}",
+    "collectionStack": "The essays of {title}"
   },
   "Study": {
     "heroQuote": "What we cover at CILAS matters less than what a student discovers.",
@@ -215,21 +220,68 @@
     }
   },
   "Course": {
-    "location": "Location",
+    "details": "Course details",
     "cycle": "Cycle",
     "starts": "Starts",
     "weekOf": "Week of {date}",
+    "meets": "Meets",
+    "length": "Length",
+    "sessions": "{count, plural, one {# session} other {# sessions}}",
+    "weeks": "{count, plural, one {# week} other {# weeks}}",
+    "format": "Format",
+    "language": "Taught in",
     "price": "Price",
     "registration": "Registration",
-    "open": "Open",
-    "closed": "Closed",
+    "open": "Registration open",
+    "closed": "Registration closed",
+    "apply": "Apply",
+    "taughtBy": "Taught by",
+    "fellow": "Fellow",
     "fellows": "Fellows",
-    "sessions": "Sessions",
+    "about": "About the course",
+    "note": "From the fellow",
+    "contentWarning": "Content note:",
+    "flow": "Course flow",
+    "tentative": "The flow may change as the course goes.",
     "week": "Week {number}",
     "session": "Session {number}",
-    "bibliography": "Bibliography",
+    "cancelled": "cancelled",
+    "materialCount": "{count, plural, one {# material} other {# materials}}",
+    "materials": "Materials",
+    "bibliography": "Course reading list",
     "readings": "Readings",
-    "activities": "Activities"
+    "activities": "In class",
+    "alsoIn": "Also in {cycle}",
+    "materialTypes": {
+      "reading": "Reading",
+      "watch": "To watch",
+      "listen": "To listen",
+      "prompt": "Prompt",
+      "other": "Link"
+    },
+    "materialCounts": {
+      "reading": "{count, plural, one {# reading} other {# readings}}",
+      "watch": "{count, plural, one {# film or video} other {# films and videos}}",
+      "listen": "{count, plural, one {# recording} other {# recordings}}",
+      "prompt": "{count, plural, one {# prompt} other {# prompts}}",
+      "other": "{count, plural, one {# link} other {# links}}"
+    },
+    "activityKinds": {
+      "discussion": "Discussion",
+      "field_visit": "Field visit",
+      "exercise": "Exercise",
+      "screening": "Screening",
+      "presentation": "Presentation",
+      "other": "Activity"
+    },
+    "backTo": {
+      "core": "Core courses",
+      "thematic": "Thematic courses",
+      "lab": "Labs",
+      "workshop": "Workshops",
+      "short": "Short courses"
+    },
+    "allInCycle": "See all {count} courses of this cycle"
   },
   "NotFound": {
     "title": "Page not found",
