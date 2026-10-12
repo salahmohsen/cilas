@@ -32,6 +32,8 @@ export interface HoverExpandProps {
    */
   expandedHeight?: number
   className?: string
+  /** The number of the first row, when the list is one page of a longer one. */
+  start?: number
 }
 
 export function HoverExpand({
@@ -39,6 +41,7 @@ export function HoverExpand({
   collapsedHeight = 88,
   expandedHeight = 320,
   className,
+  start = 1,
 }: HoverExpandProps) {
   const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null)
 
@@ -103,7 +106,7 @@ export function HoverExpand({
                   animate={{ opacity: isHovered ? 0.5 : 0.4 }}
                   transition={{ duration: 0.2 }}
                 >
-                  {String(i + 1).padStart(2, '0')}
+                  {String(i + start).padStart(2, '0')}
                 </motion.span>
 
                 <motion.span

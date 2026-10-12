@@ -216,7 +216,11 @@
       "added": "Added {chip}",
       "removed": "Removed {chip}",
       "changed": "{field} changed to {value}",
-      "cleared": "All filters cleared"
+      "cleared": "All filters cleared",
+      "pages": "Pages of courses",
+      "previousPage": "Previous page",
+      "nextPage": "Next page",
+      "page": "Page {n}"
     }
   },
   "Course": {

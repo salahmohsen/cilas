@@ -16,6 +16,10 @@ export interface PaginationProps {
   pageCount: number
   onPageChange: (page: number) => void
   label?: string
+  /** The controls' accessible names, for other languages. */
+  previousLabel?: string
+  nextLabel?: string
+  pageLabel?: (page: number) => string
 }
 /** When the five page window shifts, numbers travel like a belt: each one moves by the same number of slots. */
 const slot = 1000 / 9 // One button plus the gap (36px + 4px), as a percentage of the button width.
@@ -36,6 +40,9 @@ export function Pagination({
   pageCount,
   onPageChange,
   label = 'Pagination',
+  previousLabel = 'Previous page',
+  nextLabel = 'Next page',
+  pageLabel = (page: number) => `Page ${page}`,
 }: PaginationProps) {
   const reduced = useReducedMotion() ?? false
   const navRef = useRef<HTMLElement>(null)
@@ -91,7 +98,7 @@ export function Pagination({
         className={styles.step}
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage <= 1}
-        aria-label="Previous page"
+        aria-label={previousLabel}
       >
         <NavArrowLeft width={16} height={16} aria-hidden="true" />
       </button>
@@ -102,7 +109,7 @@ export function Pagination({
             type="button"
             key={number}
             onClick={() => onPageChange(number)}
-            aria-label={`Page ${number}`}
+            aria-label={pageLabel(number)}
             aria-current={currentPage === number ? 'page' : undefined}
             layout={reduced ? false : 'position'}
             layoutDependency={start}
@@ -133,7 +140,7 @@ export function Pagination({
         className={styles.step}
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage >= safePageCount}
-        aria-label="Next page"
+        aria-label={nextLabel}
       >
         <NavArrowRight width={16} height={16} aria-hidden="true" />
       </button>

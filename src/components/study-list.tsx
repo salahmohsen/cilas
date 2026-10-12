@@ -2,11 +2,12 @@
 
 import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { searchCourses } from '@/app/(frontend)/[locale]/study/actions'
 
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
+import { Pagination } from '@/components/arc/pagination/pagination'
 import {
   FilterToolbar,
   type FilterChip,
@@ -22,6 +23,9 @@ import {
   type CourseFacet,
   type StudyCard,
 } from '@/lib/course-search'
+
+/** Courses on a page of the list. */
+const PAGE_SIZE = 20
 
 /**
  * The study list: a search over everything a course has and filters over its
@@ -52,8 +56,10 @@ export function StudyList({
     setText(query.q ?? '')
   }
 
-  const navigate = (change: (next: URLSearchParams) => void) => {
+  // Any change to the search or filters starts the list again at its first page.
+  const navigate = (change: (next: URLSearchParams) => void, keepPage = false) => {
     const next = new URLSearchParams(params.toString())
+    if (!keepPage) next.delete('page')
     change(next)
     const search = next.toString()
     router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false })
@@ -107,7 +113,19 @@ export function StudyList({
     return [{ id: f, label: t(`facets.${f}`), value: label }]
   })
 
-  const shown = courses.filter((c) => matchesFacets(c, query) && (!wanted || !found || found.ids.has(c.id)))
+  const shown = courses.filter(
+    (c) => matchesFacets(c, query) && (!wanted || !found || found.ids.has(c.id)),
+  )
+
+  // A page of the list at a time; the page is in the URL (`?page=2`).
+  const listRef = useRef<HTMLDivElement>(null)
+  const pageCount = Math.max(1, Math.ceil(shown.length / PAGE_SIZE))
+  const page = Math.min(Math.max(1, Number(params.get('page')) || 1), pageCount)
+  const onPage = shown.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+  const goToPage = (next: number) => {
+    navigate((p) => (next > 1 ? p.set('page', String(next)) : p.delete('page')), true)
+    listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <section className="study-list flex flex-col gap-6">
@@ -151,16 +169,33 @@ export function StudyList({
       </div>
 
       {shown.length ? (
-        <HoverExpand
-          items={shown.map((c) => ({
-            label: c.title,
-            sublabel: c.sublabel,
-            description: c.description,
-            image: c.image,
-            imageAlt: c.imageAlt,
-            href: c.href,
-          }))}
-        />
+        <div className="scroll-mt-28" ref={listRef}>
+          <HoverExpand
+            start={(page - 1) * PAGE_SIZE + 1}
+            items={onPage.map((c) => ({
+              label: c.title,
+              sublabel: c.sublabel,
+              description: c.description,
+              image: c.image,
+              imageAlt: c.imageAlt,
+              href: c.href,
+            }))}
+          />
+          {pageCount > 1 ? (
+            // Pages run left to right in either language, like the calendar's arrows.
+            <div className="mt-8 flex justify-center" dir="ltr">
+              <Pagination
+                label={t('pages')}
+                nextLabel={t('nextPage')}
+                onPageChange={goToPage}
+                page={page}
+                pageCount={pageCount}
+                pageLabel={(n) => t('page', { n })}
+                previousLabel={t('previousPage')}
+              />
+            </div>
+          ) : null}
+        </div>
       ) : (
         <EmptyState description={t('emptyText')} title={t('empty')} />
       )}

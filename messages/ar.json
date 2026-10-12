@@ -216,7 +216,11 @@
       "added": "أُضيف {chip}",
       "removed": "أُزيل {chip}",
       "changed": "تغيّر {field} إلى {value}",
-      "cleared": "أُزيلت كل التصفيات"
+      "cleared": "أُزيلت كل التصفيات",
+      "pages": "صفحات المقررات",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "page": "الصفحة {n}"
     }
   },
   "Course": {
