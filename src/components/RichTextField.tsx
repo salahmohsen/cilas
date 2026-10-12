@@ -1,10 +1,14 @@
 import type { SerializedInlineBlockNode } from '@payloadcms/richtext-lexical'
+import type { SerializedLexicalNode } from '@payloadcms/richtext-lexical/lexical'
 import { RichText, type JSXConvertersFunction } from '@payloadcms/richtext-lexical/react'
 import React from 'react'
 
 import { FootnoteMark } from '@/components/article/footnote'
 import type { Footnote } from '@/lib/footnotes'
 import type { FootnoteBlock } from '@/payload-types'
+
+/** The dash (or tilde) that opens a quote's source line. */
+const SOURCE_LEAD = /^\s*[—–~-]\s*/
 
 /**
  * Renders Lexical rich text through Payload's own converters, so the frontend
@@ -30,6 +34,27 @@ export const RichTextField: React.FC<{
 
   const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ...defaultConverters,
+    // A quote whose last line starts with a dash ("— Pascal", written in the
+    // editor as a line break then the source) gets that line as its citation.
+    quote: ({ node, nodesToJSX }) => {
+      const kids = (node as { children: SerializedLexicalNode[] }).children
+      let at = -1
+      kids.forEach((k, i) => {
+        const next = kids[i + 1] as { type?: string; text?: string } | undefined
+        if (k.type === 'linebreak' && next?.type === 'text' && SOURCE_LEAD.test(next.text ?? '')) at = i
+      })
+      if (at === -1) return <blockquote>{nodesToJSX({ nodes: kids })}</blockquote>
+      const first = kids[at + 1] as SerializedLexicalNode & { text: string }
+      const source = [{ ...first, text: first.text.replace(SOURCE_LEAD, '') }, ...kids.slice(at + 2)]
+      return (
+        <blockquote className="quote-with-source">
+          <p>{nodesToJSX({ nodes: kids.slice(0, at) })}</p>
+          <footer>
+            <cite>{nodesToJSX({ nodes: source })}</cite>
+          </footer>
+        </blockquote>
+      )
+    },
     inlineBlocks: {
       footnote: ({ node }: { node: SerializedInlineBlockNode<FootnoteBlock> }) => {
         const f = footnotes.find((x) => x.id === node.fields.id)

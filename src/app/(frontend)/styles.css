@@ -200,9 +200,45 @@
   & :where(h3) {
     @apply mt-10 text-base tracking-[0.06em] uppercase;
   }
-  /* Block quotations: a rule and indent, not italics (Arabic has none). */
+  /* Block quotations: upright, a little larger, set off by a hairline (not
+     italics: Arabic has none). */
   & :where(blockquote) {
-    @apply border-s-2 ps-6 font-normal not-italic;
+    margin-block: 2.25rem;
+    padding-inline-start: 1.25rem;
+    border-inline-start: 1px solid var(--border-strong, var(--border));
+    font-size: 1.12em;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--foreground);
+  }
+  & :where(blockquote.quote-with-source p) {
+    margin: 0;
+    text-wrap: pretty;
+  }
+  /* Its source: a short rule, then the name in the interface sans. */
+  & :where(blockquote footer) {
+    margin-top: 0.9rem;
+  }
+  & :where(blockquote cite) {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.6rem;
+    font-family: var(--font-sans);
+    font-size: calc(0.85rem * var(--reading-scale, 1));
+    font-style: normal;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+    color: var(--text-secondary);
+  }
+  & :where(blockquote cite)::before {
+    content: '';
+    width: 1.25rem;
+    height: 1px;
+    align-self: center;
+    background: currentColor;
+    opacity: 0.6;
   }
   & :where(blockquote p)::before,
   & :where(blockquote p)::after {

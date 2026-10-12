@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { blocksToLexical, type Block } from '../../migration/lib/blocks'
+import { blocksToLexical, splitAttribution, type Block } from '../../migration/lib/blocks'
 
 const blocks: Block[] = [
   { type: 'heading', level: 2, text: 'Introduction' },
@@ -92,5 +92,40 @@ describe('blocksToLexical', () => {
       { type: 'link', children: [{ text: 'apply', format: 1 }] },
     ])
     expect(kids('one ** unpaired').map((c) => c.text).join('')).toBe('one  unpaired')
+  })
+})
+
+describe('splitAttribution', () => {
+  it('takes the source after the closing quotation mark', () => {
+    expect(splitAttribution('“Knowledge is a sphere.” – Blaise Pascal[^1]')).toEqual([
+      '“Knowledge is a sphere.”',
+      'Blaise Pascal[^1]',
+    ])
+  })
+  it('takes a last line that starts with a tilde', () => {
+    expect(splitAttribution('“بدلاً من هدر طاقتك”\n~ بول جودمان في سوء التعليم الإلزامي')).toEqual([
+      '“بدلاً من هدر طاقتك”',
+      'بول جودمان في سوء التعليم الإلزامي',
+    ])
+  })
+  it('leaves a quote whose tail quotes a title', () => {
+    const text = '“Teach me how to do it?” (Bowman, "Sifu," pp. 154-155)'
+    expect(splitAttribution(text)).toEqual([text, null])
+  })
+})
+
+describe('blocksToLexical quotes', () => {
+  it('joins a source paragraph to the quote before it', () => {
+    const root = blocksToLexical(
+      [
+        { type: 'quote', text: '“Said.”' },
+        { type: 'paragraph', text: '~ Someone' },
+      ],
+      'ltr',
+    )!.root
+    expect(root.children).toHaveLength(1)
+    const quote = root.children[0] as unknown as { type: string; children: Array<{ type: string; text?: string }> }
+    expect(quote.type).toBe('quote')
+    expect(quote.children.map((c) => c.text ?? c.type)).toEqual(['“Said.”', 'linebreak', '— Someone'])
   })
 })

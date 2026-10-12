@@ -127,6 +127,46 @@ const heading = (text: string, level: number, direction: Direction, footnotes?: 
     tag: `h${Math.min(4, Math.max(2, level))}`,
   })
 
+/** Leading dash or tilde of an attribution line ("– Pascal", "~ Darwish"). */
+const ATTRIBUTION_LEAD = /^\s*[~–—-]\s*/
+const MARKERS = /\[\^\d+\]/g
+
+/** True for a short line that names a source: no sentence of its own, parentheses balanced. */
+const looksLikeAttribution = (text: string): boolean => {
+  const bare = text.replace(MARKERS, '').trim()
+  return (
+    bare.length > 1 &&
+    bare.length <= 120 &&
+    /\p{L}/u.test(bare) &&
+    !/[“”"«»]/.test(bare) &&
+    (bare.match(/\(/g) ?? []).length === (bare.match(/\)/g) ?? []).length
+  )
+}
+
+/**
+ * A quotation and the line that names its source, if the text carries one:
+ * a last line starting with a dash or tilde, or a short name after the
+ * closing quotation mark ("…the unknown.” – Blaise Pascal[^25]").
+ */
+export const splitAttribution = (text: string): [string, string | null] => {
+  const lines = text.split('\n')
+  const last = lines.at(-1) ?? ''
+  if (lines.length > 1 && ATTRIBUTION_LEAD.test(last) && looksLikeAttribution(last.replace(ATTRIBUTION_LEAD, ''))) {
+    return [lines.slice(0, -1).join('\n').trimEnd(), last.replace(ATTRIBUTION_LEAD, '').trim()]
+  }
+  const m = text.match(/^([\s\S]*[”"»])\.?\s*[~–—-]?\s*([^”"«»\n]+)$/)
+  if (m && looksLikeAttribution(m[2])) return [m[1].trimEnd(), m[2].trim()]
+  return [text, null]
+}
+
+/** A quote: the quotation, then (after a line break) "— Source", which the site sets as its citation. */
+const quote = (text: string, direction: Direction, footnotes?: Footnotes): LexicalChild => {
+  const [quotation, source] = splitAttribution(text)
+  const children = inlineToLexical(quotation, direction, footnotes)
+  if (source) children.push({ type: 'linebreak', version: 1 } as LexicalChild, ...inlineToLexical(`— ${source}`, direction, footnotes))
+  return element('quote', direction, children)
+}
+
 /**
  * Typed article blocks as a Lexical document: real headings, quotes and lists.
  * A `[^n]` marker in the text becomes a footnote holding note n (see
@@ -145,14 +185,29 @@ export const blocksToLexical = (blocks: Block[], direction: Direction): LexicalJ
     if (m) footnotes.notes.set(Number(m[1]), b.text.slice(m[0].length))
   }
 
-  for (const block of blocks) {
+  // A source line printed as its own paragraph after a quote joins the quote.
+  const joined: Block[] = []
+  for (const b of blocks) {
+    const prev = joined.at(-1)
+    const attribution =
+      b.type === 'paragraph' &&
+      prev?.type === 'quote' &&
+      !splitAttribution(prev.text)[1] &&
+      (ATTRIBUTION_LEAD.test(b.text)
+        ? looksLikeAttribution(b.text.replace(ATTRIBUTION_LEAD, ''))
+        : looksLikeAttribution(b.text) && /\[\^\d+\]\s*$/.test(b.text) && !/\.\s*\[\^\d+\]\s*$/.test(b.text))
+    if (attribution && prev) joined[joined.length - 1] = { ...prev, text: `${prev.text}\n— ${b.text.replace(ATTRIBUTION_LEAD, '').trim()}` }
+    else joined.push(b)
+  }
+
+  for (const block of joined) {
     if (block.type !== 'list_item') list = null
     if (block.type === 'note') {
       notes.push(block)
     } else if (block.type === 'heading') {
       children.push(heading(block.text, block.level ?? 2, direction, footnotes))
     } else if (block.type === 'quote') {
-      children.push(element('quote', direction, inlineToLexical(block.text, direction, footnotes)))
+      children.push(quote(block.text, direction, footnotes))
     } else if (block.type === 'list_item') {
       if (!list) {
         list = element('list', direction, [], { listType: 'bullet', tag: 'ul', start: 1 })
