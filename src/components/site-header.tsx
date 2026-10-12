@@ -3,7 +3,7 @@
 import { BookOpen, Calendar, Newspaper, Users } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { Suspense, useEffect, useRef } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
@@ -26,6 +26,21 @@ export function CILASSiteHeader() {
     const observer = new ResizeObserver(set)
     observer.observe(el)
     return () => observer.disconnect()
+  }, [])
+
+  // Apply shows only while something is open, and leads to it (see /api/open).
+  const [applyPath, setApplyPath] = useState<string | null>(null)
+  useEffect(() => {
+    let live = true
+    fetch('/api/open')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body: { href?: string | null } | null) => {
+        if (live) setApplyPath(body?.href ?? null)
+      })
+      .catch(() => {})
+    return () => {
+      live = false
+    }
   }, [])
 
   const items = [
@@ -115,7 +130,7 @@ export function CILASSiteHeader() {
       }}
       items={items}
       label={t('label')}
-      primaryAction={{ label: t('apply'), href: href('/study/bridge/apply') }}
+      primaryAction={applyPath ? { label: t('apply'), href: href(applyPath) } : null}
       secondaryAction={{ label: t('signIn'), href: '/admin' }}
       utilities={
         <>

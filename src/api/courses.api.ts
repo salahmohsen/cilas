@@ -4,6 +4,7 @@ import type { Payload, Where } from 'payload'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { SEASONS } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
+import { registrationStatus } from '@/lib/registration'
 import { slugify } from '@/lib/slugify'
 import { searchWords, type StudyCourse } from '@/lib/course-search'
 import type { Course, Cycle, Media, Person, Space } from '@/payload-types'
@@ -16,7 +17,7 @@ type Locale = 'en' | 'ar'
  */
 const populate = {
   people: { name: true, slug: true },
-  cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, space: true },
+  cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, space: true, registration: true },
   spaces: { name: true, city: true, slug: true },
   media: { url: true, alt: true, filename: true, prefix: true },
 } as const
@@ -118,7 +119,12 @@ export const getStudyCourses = async (
       const languages = (c.teaching_languages ?? []).map((l) => ({ value: l, label: t(`languages.${l}`) }))
       const description = c.summary || c.subtitle || plain(c.description) || undefined
 
+      // Open or closed today; the index is rebuilt every few minutes, so it follows deadlines.
+      const registration = registrationStatus(c.registration, cycle?.registration)
       const facets: StudyCourse['facets'] = {
+        registration: [
+          { value: registration, label: t(`registration.${registration}`), rank: registration === 'open' ? 0 : 1 },
+        ],
         type: [
           {
             value: type.toLowerCase(),

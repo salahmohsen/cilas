@@ -176,6 +176,7 @@
       "empty": "لا يوجد مقرر مطابق",
       "emptyText": "جرّب تصفيات أقل أو كلمات أخرى.",
       "facets": {
+        "registration": "التسجيل",
         "type": "نوع المقرر",
         "season": "الفصل",
         "year": "السنة",
@@ -221,7 +222,11 @@
       "previousPage": "الصفحة السابقة",
       "nextPage": "الصفحة التالية",
       "page": "الصفحة {n, number, digits}",
-      "viewCourse": "صفحة المقرر"
+      "viewCourse": "صفحة المقرر",
+      "registration": {
+        "open": "مفتوح",
+        "closed": "مغلق"
+      }
     },
     "title": "المقررات",
     "since": "{count, plural, zero {لا مقررات} one {مقرر واحد} two {مقرران} few {{count, number, digits} مقررات} many {{count, number, digits} مقررًا} other {{count, number, digits} مقرر}} منذ {year, number, digits}"

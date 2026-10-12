@@ -176,6 +176,7 @@
       "empty": "No course matches",
       "emptyText": "Try fewer filters or other words.",
       "facets": {
+        "registration": "Registration",
         "type": "Course type",
         "season": "Season",
         "year": "Year",
@@ -221,7 +222,11 @@
       "previousPage": "Previous page",
       "nextPage": "Next page",
       "page": "Page {n}",
-      "viewCourse": "View course"
+      "viewCourse": "View course",
+      "registration": {
+        "open": "Open",
+        "closed": "Closed"
+      }
     },
     "title": "Courses",
     "since": "{count, plural, one {# course} other {# courses}} since {year}"

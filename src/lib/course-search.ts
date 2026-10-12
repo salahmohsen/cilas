@@ -8,7 +8,7 @@
 import { latinDigits } from '@/lib/digits'
 
 /** The filters, in the order the menu lists them; each is a URL parameter. */
-export const COURSE_FACETS = ['type', 'season', 'year', 'academic', 'place', 'fellow', 'format', 'language'] as const
+export const COURSE_FACETS = ['registration', 'type', 'season', 'year', 'academic', 'place', 'fellow', 'format', 'language'] as const
 export type CourseFacet = (typeof COURSE_FACETS)[number]
 
 /** `rank` orders values with a natural order (seasons, course types). */
