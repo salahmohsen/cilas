@@ -1,7 +1,10 @@
-import type { Payload, Where } from 'payload'
+import config from '@payload-config'
+import { unstable_cache } from 'next/cache'
+import { getPayload, type Payload, type Where } from 'payload'
 
 import type { Locale } from '@/api/articles.api'
 import { cairoDay } from '@/lib/cairo-day'
+import { COURSES_TAG } from '@/lib/revalidate-courses'
 import { expandSchedule, type Schedule, type SessionDates } from '@/lib/schedule'
 import type { Media } from '@/payload-types'
 
@@ -116,3 +119,10 @@ export const getCalendarItems = async (payload: Payload, locale: Locale): Promis
 
   return items.sort((a, b) => a.date.localeCompare(b.date) || (a.start ?? '').localeCompare(b.start ?? ''))
 }
+
+/** The items above, built once per language and kept until a course changes. */
+export const getCachedCalendarItems = unstable_cache(
+  async (locale: Locale) => getCalendarItems(await getPayload({ config }), locale),
+  ['calendar-items'],
+  { tags: [COURSES_TAG], revalidate: 3600 },
+)

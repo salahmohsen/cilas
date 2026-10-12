@@ -377,6 +377,15 @@
       "event": "Gathering"
     },
     "close": "Close",
-    "openDay": "{date}: {count, plural, one {# item} other {# items}}"
+    "openDay": "{date}: {count, plural, one {# item} other {# items}}",
+    "month": "Month",
+    "year": "Year",
+    "feed": "Add to calendar",
+    "subscribe": "Subscribe in your calendar app",
+    "download": "Download (.ics)",
+    "copyFeed": "Copy feed link",
+    "copied": "Feed link copied",
+    "copyFailed": "Couldn't copy the link",
+    "feedName": "CILAS"
   }
 }

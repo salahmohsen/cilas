@@ -377,6 +377,15 @@
       "event": "لقاء"
     },
     "close": "إغلاق",
-    "openDay": "{date}: {count, plural, one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}"
+    "openDay": "{date}: {count, plural, one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}",
+    "month": "الشهر",
+    "year": "السنة",
+    "feed": "أضف إلى تقويمك",
+    "subscribe": "اشترك من تطبيق التقويم",
+    "download": "تنزيل (.ics)",
+    "copyFeed": "انسخ رابط التقويم",
+    "copied": "نُسخ رابط التقويم",
+    "copyFailed": "تعذّر نسخ الرابط",
+    "feedName": "سيلاس"
   }
 }

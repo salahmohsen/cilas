@@ -629,6 +629,33 @@ a.collection-item:hover {
   color: var(--text-secondary);
 }
 
+/* Month and year: native selects, styled as the toolbar's pills. */
+.cal-select {
+  min-width: 6.5rem;
+  height: 2.25rem;
+  appearance: none;
+  border-radius: 999px;
+  padding-inline: 0.9rem 2rem;
+  background: var(--background)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E")
+    no-repeat right 0.8rem center;
+  box-shadow: 0 0 0 1px var(--border);
+  font-size: 0.875rem;
+  color: var(--foreground);
+  cursor: pointer;
+}
+[dir='rtl'] .cal-select {
+  padding-inline: 2rem 0.9rem;
+  background-position: left 0.8rem center;
+}
+.cal-select:hover {
+  box-shadow: 0 0 0 1px var(--border-strong, var(--border));
+}
+.cal-select:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
 /* The month: a dashed grid with big, light numbers. */
 .cal-month {
   border-top: 1px dashed var(--border-strong, var(--border));
@@ -744,6 +771,15 @@ a.collection-item:hover {
   background: transparent;
   box-shadow: none;
 }
+/* The whole cell opens the day: the preview (on its own layer, the frosted
+   band) lets clicks through to the card's open control under it. */
+.cal-day .cal-day-card .cal-day-items {
+  pointer-events: none;
+}
+.cal-day .cal-day-card {
+  cursor: pointer;
+}
+
 /* The card's content: the day number, then the preview. */
 .cal-day .cal-day-card > div:last-child {
   display: flex;
