@@ -434,9 +434,30 @@
     "plan": "{label}: {count} × {amount}",
     "needBased": "Need-based reductions available",
     "requirements": "Who can apply",
-    "share": "Share this programme",
-    "period": "Period",
-    "cycles": "{from} to {to}",
-    "sessions": "Two semesters"
+    "share": "Share this programme"
+  },
+  "Forms": {
+    "optional": "optional",
+    "required": "This question needs an answer.",
+    "email": "Enter an email address like name@example.com.",
+    "pickOne": "Choose at least one.",
+    "words": "{count, plural, one {# word} other {# words}} of at least {min}",
+    "tooShort": "Write at least {min} words; you have {count}.",
+    "submit": "Send",
+    "sending": "Sending…",
+    "failed": "We couldn’t send your answers. Check your connection and try again; nothing you wrote is lost.",
+    "draft": "Your answers are kept on this device until you send them.",
+    "fix": "{count, plural, one {One question still needs an answer.} other {# questions still need an answer.}}"
+  },
+  "Apply": {
+    "metaTitle": "Apply to the Bridge Programme",
+    "title": "Apply to the Bridge Programme",
+    "year": "{year}",
+    "deadline": "Applications are open until {date}.",
+    "closed": "Applications for {year} closed on {date}. The questions stay here so you can prepare for the next year.",
+    "english": "Please don’t feel discouraged to apply if your English is not ‘proficient’. We welcome all ‘English-es’ and embrace bi-linguality in our discussions. However, we ask you to fill in the form in English as many of the assigned readings at CILAS are in English.",
+    "scholarship": "There is a possibility of offering partial scholarships for a limited number of students, you can apply by sending an email to admissions@ci-las.org after filling the application form.",
+    "about": "About the programme",
+    "questions": "See the application questions"
   }
 }

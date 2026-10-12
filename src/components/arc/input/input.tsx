@@ -3,6 +3,7 @@
 import { forwardRef, useEffect, useId, useRef, useState } from 'react'
 import type { InputHTMLAttributes } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import type { ReactNode } from 'react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './input.module.css'
 
@@ -10,6 +11,8 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
   description?: string
   error?: string
+  /** Shown between the label and the field (a question's help text, an image it asks about) and read with the field. */
+  lead?: ReactNode
 }
 
 /* Digits roll up when a number grows and down when it shrinks; `custom` hands the latest direction to digits already leaving. */
@@ -215,20 +218,26 @@ function MessageRow({
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-  { label, description, error, id, className, ...props },
+  { label, description, error, lead, id, className, ...props },
   ref,
 ) {
   const generatedId = useId()
   const controlId = id ?? generatedId
   const hintId = description ? `${controlId}-description` : undefined
+  const leadId = lead ? `${controlId}-lead` : undefined
   const errorId = error ? `${controlId}-error` : undefined
   const describedBy =
-    [props['aria-describedby'], hintId, errorId].filter(Boolean).join(' ') || undefined
+    [props['aria-describedby'], leadId, hintId, errorId].filter(Boolean).join(' ') || undefined
   return (
     <div className={styles.field}>
       <label className={styles.label} htmlFor={controlId}>
         {label}
       </label>
+      {lead ? (
+        <div className={styles.lead} id={leadId}>
+          {lead}
+        </div>
+      ) : null}
       <input
         {...props}
         id={controlId}

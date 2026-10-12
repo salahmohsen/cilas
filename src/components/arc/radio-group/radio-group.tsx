@@ -9,6 +9,14 @@ export interface RadioGroupProps {
   value: string
   onValueChange: (value: string) => void
   name?: string
+  /** Help text under the legend. */
+  description?: string
+  /** What is wrong with the choice, shown under the options. */
+  error?: string
+  required?: boolean
+  disabled?: boolean
+  /** Called when focus leaves the group. */
+  onBlur?: () => void
 }
 
 /** Sizes the highlight to the chosen row. A new choice glides on the morph spring; the first paint and resizes place it at once. */
@@ -41,7 +49,18 @@ function place(
 }
 
 /** One highlight travels to the chosen row while the new dot springs in and the old one shrinks away, so a change reads as a single physical move. Arrow keys take the same path. Rows and text never resize. */
-export function RadioGroup({ label, options, value, onValueChange, name }: RadioGroupProps) {
+export function RadioGroup({
+  label,
+  options,
+  value,
+  onValueChange,
+  name,
+  description,
+  error,
+  required,
+  disabled,
+  onBlur,
+}: RadioGroupProps) {
   const id = useId()
   const reduced = useReducedMotion()
   const listRef = useRef<HTMLDivElement>(null)
@@ -71,8 +90,21 @@ export function RadioGroup({ label, options, value, onValueChange, name }: Radio
     return () => observer.disconnect()
   }, [options.length])
   return (
-    <fieldset className={styles.group}>
+    <fieldset
+      aria-describedby={[description ? `${id}-description` : '', error ? `${id}-error` : ''].filter(Boolean).join(' ') || undefined}
+      aria-invalid={error ? true : undefined}
+      className={styles.group}
+      disabled={disabled}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) onBlur?.()
+      }}
+    >
       <legend>{label}</legend>
+      {description ? (
+        <p className={styles.description} id={`${id}-description`}>
+          {description}
+        </p>
+      ) : null}
       <div ref={listRef} className={styles.options}>
         <span ref={highlightRef} className={styles.highlight} aria-hidden="true" />
         {options.map((option, index) => {
@@ -90,6 +122,7 @@ export function RadioGroup({ label, options, value, onValueChange, name }: Radio
                 name={name ?? id}
                 value={option.value}
                 checked={checked}
+                required={required}
                 onChange={() => onValueChange(option.value)}
               />
               <span className={styles.mark} aria-hidden="true">
@@ -119,6 +152,11 @@ export function RadioGroup({ label, options, value, onValueChange, name }: Radio
           )
         })}
       </div>
+      {error ? (
+        <p className={styles.error} id={`${id}-error`} role="alert">
+          {error}
+        </p>
+      ) : null}
     </fieldset>
   )
 }

@@ -1,5 +1,5 @@
 import config from '@payload-config'
-import { CalendarRange, Clock, Hourglass, Wallet } from 'lucide-react'
+import { Clock, Hourglass, Wallet } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -45,11 +45,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BridgePage({ params }: Props) {
   const { locale } = await params
   const lang = langOf(locale)
-  const [t, tc, tf, ts, format] = await Promise.all([
+  const [t, tc, tf, ts, ta, format] = await Promise.all([
     getTranslations('Bridge'),
     getTranslations('Course'),
     getTranslations('Study.filters'),
     getTranslations('Share'),
+    getTranslations('Apply'),
     getFormatter(),
   ])
   const year = await getBridgeYear(await getPayload({ config }), lang)
@@ -58,7 +59,9 @@ export default async function BridgePage({ params }: Props) {
 
   const cycleName = (cycle: Cycle) => `${tf(`seasons.${cycle.season}`)} ${localDigits(cycle.start_year, locale)}`
   const open = registrationStatus(programme.registration) === 'open'
-  const applyUrl = open ? (programme.registration?.url ?? null) : null
+  // Applying through the site's own form leads to its page; otherwise to wherever registration points.
+  const viaForm = programme.registration?.method === 'form' && Boolean(programme.registration.form)
+  const applyUrl = open && !viaForm ? (programme.registration?.url ?? null) : null
   // Fees in the page's own currency format: EGP 18,000, or ١٨٬٠٠٠ ج.م.
   const pricing = programme.pricing
   const money = (amount: number) =>
@@ -76,14 +79,9 @@ export default async function BridgePage({ params }: Props) {
       : null
   const plan = programme.pricing?.payment_plans?.[0]
   const instalments = plan?.installments ?? []
-  const first = semesters[0]?.cycle
-  const last = semesters.at(-1)?.cycle
   const testimonial = programme.testimonials?.[0]
 
   const facts: Array<{ icon: typeof Clock; label: string; value: ReactNode }> = [
-    ...(first && last && first.id !== last.id
-      ? [{ icon: CalendarRange, label: t('period'), value: t('cycles', { from: cycleName(first), to: cycleName(last) }) }]
-      : []),
     ...(programme.weekly_hours ? [{ icon: Hourglass, label: t('commitment'), value: t('hours', { count: programme.weekly_hours }) }] : []),
     ...(programme.schedule_note ? [{ icon: Clock, label: t('schedule'), value: programme.schedule_note }] : []),
     ...(price
@@ -103,6 +101,7 @@ export default async function BridgePage({ params }: Props) {
                     })}
                   </span>
                 ) : null}
+                {programme.pricing?.note ? <span className="block text-(--text-secondary)">{programme.pricing.note}</span> : null}
                 {programme.pricing?.need_based_deductions ? (
                   <span className="block text-(--text-secondary)">{t('needBased')}</span>
                 ) : null}
@@ -118,10 +117,18 @@ export default async function BridgePage({ params }: Props) {
       <span className="course-status" data-open={open || undefined}>
         {open ? tc('open') : tc('closed')}
       </span>
-      {applyUrl ? (
+      {open && viaForm ? (
+        <Link className="course-apply" data-primary href="/study/bridge/apply">
+          {tc('apply')}
+        </Link>
+      ) : applyUrl ? (
         <a className="course-apply" data-primary href={applyUrl} rel="noopener" target="_blank">
           {tc('apply')}
         </a>
+      ) : viaForm ? (
+        <Link className="bridge-link" href="/study/bridge/apply">
+          {ta('questions')}
+        </Link>
       ) : null}
       <dl className="course-facts">
         {facts.map(({ icon: Icon, label, value }) => (

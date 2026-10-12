@@ -24,6 +24,7 @@ import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { formFields } from './forms/form-fields'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import type {
@@ -150,7 +151,13 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    formBuilderPlugin({}),
+    formBuilderPlugin({
+      fields: formFields,
+      // Applications are read by admins only; anyone may send one.
+      formSubmissionOverrides: {
+        access: { read: isAdmin, update: isAdmin, delete: isAdmin },
+      },
+    }),
     seoPlugin({
       collections: [...SEO_COLLECTIONS],
       uploadsCollection: 'media',

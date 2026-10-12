@@ -2,12 +2,15 @@
 import { forwardRef, useEffect, useId, useRef, useState } from 'react'
 import type { TextareaHTMLAttributes } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import type { ReactNode } from 'react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './textarea.module.css'
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
   label: string
   description?: string
   error?: string
+  /** Shown between the label and the field (a question's help text, an image it asks about) and read with the field. */
+  lead?: ReactNode
 }
 /* Digits roll up when a number grows and down when it shrinks; `custom` hands the latest direction to digits already leaving. */
 const digit = {
@@ -210,16 +213,22 @@ function MessageRow({
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-  { label, description, error, id, className, ...props },
+  { label, description, error, lead, id, className, ...props },
   ref,
 ) {
   const generatedId = useId()
   const controlId = id ?? generatedId
   const hintId = description ? `${controlId}-description` : undefined
+  const leadId = lead ? `${controlId}-lead` : undefined
   const errorId = error ? `${controlId}-error` : undefined
   return (
     <div className={styles.field}>
       <label htmlFor={controlId}>{label}</label>
+      {lead ? (
+        <div className={styles.lead} id={leadId}>
+          {lead}
+        </div>
+      ) : null}
       <textarea
         {...props}
         id={controlId}
@@ -227,7 +236,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
         className={[styles.control, className].filter(Boolean).join(' ')}
         aria-invalid={error ? true : props['aria-invalid']}
         aria-describedby={
-          [props['aria-describedby'], hintId, errorId].filter(Boolean).join(' ') || undefined
+          [props['aria-describedby'], leadId, hintId, errorId].filter(Boolean).join(' ') || undefined
         }
       />
       <FieldMessage id={hintId} text={description} className={styles.hint} />

@@ -143,3 +143,18 @@
     transform: none;
   }
 }
+
+.description {
+  margin: 0 0 var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+}
+.error {
+  margin: var(--space-2) 0 0;
+  color: var(--danger, oklch(0.58 0.2 25));
+  font-size: var(--text-sm);
+}
+.group:disabled {
+  opacity: 0.6;
+}

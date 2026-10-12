@@ -668,6 +668,10 @@ export interface Form {
             width?: number | null;
             required?: boolean | null;
             defaultValue?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkbox';
@@ -686,6 +690,10 @@ export interface Form {
             label?: string | null;
             width?: number | null;
             required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'email';
@@ -716,6 +724,10 @@ export interface Form {
             width?: number | null;
             defaultValue?: number | null;
             required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'number';
@@ -734,6 +746,10 @@ export interface Form {
                 }[]
               | null;
             required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'select';
@@ -753,6 +769,10 @@ export interface Form {
             width?: number | null;
             defaultValue?: string | null;
             required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'text';
@@ -763,9 +783,63 @@ export interface Form {
             width?: number | null;
             defaultValue?: string | null;
             required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            /**
+             * An image the question asks about, shown above the answer.
+             */
+            image?: (number | null) | Media;
+            /**
+             * The fewest words an answer may have.
+             */
+            minWords?: number | null;
             id?: string | null;
             blockName?: string | null;
             blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'radio';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkboxGroup';
           }
       )[]
     | null;
@@ -2496,6 +2570,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               required?: T;
               defaultValue?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2516,6 +2591,7 @@ export interface FormsSelect<T extends boolean = true> {
               label?: T;
               width?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2534,6 +2610,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2553,6 +2630,7 @@ export interface FormsSelect<T extends boolean = true> {
                     id?: T;
                   };
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2574,6 +2652,7 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };
@@ -2585,6 +2664,47 @@ export interface FormsSelect<T extends boolean = true> {
               width?: T;
               defaultValue?: T;
               required?: T;
+              description?: T;
+              image?: T;
+              minWords?: T;
+              id?: T;
+              blockName?: T;
+            };
+        radio?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        checkboxGroup?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
               id?: T;
               blockName?: T;
             };

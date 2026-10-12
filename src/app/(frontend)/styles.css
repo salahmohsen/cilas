@@ -611,6 +611,128 @@ html {
   scale: 0.96;
 }
 
+/* Applying: the page's head, and forms built in the admin. */
+.apply-back {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-underline-offset: 4px;
+}
+.apply-back:hover {
+  color: var(--text-primary, var(--foreground));
+  text-decoration: underline;
+}
+.apply-notes {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  max-width: 62ch;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+.payload-form-questions {
+  display: grid;
+  gap: 2.5rem;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.payload-form-questions:disabled {
+  opacity: 0.75;
+}
+.payload-form-question {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.payload-form-note {
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+/* A note between questions reads as a quiet aside, its first line its title. */
+.payload-form-note .article-prose {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.payload-form-note .article-prose > p:first-child {
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+  color: var(--text-primary, var(--foreground));
+}
+.payload-form-image {
+  width: 100%;
+  max-width: 34rem;
+  border-radius: calc(var(--radius) * 2);
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+.dark .payload-form-image {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+.payload-form-count {
+  margin-top: -0.25rem;
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.payload-form-count[data-short] {
+  color: var(--text-secondary);
+}
+.payload-form-group {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.payload-form-group legend {
+  margin-bottom: 0.25rem;
+  font-size: var(--text-sm, 0.875rem);
+  font-weight: 500;
+}
+.payload-form-description {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+.payload-form-options {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+.payload-form-error {
+  font-size: 0.8125rem;
+  color: var(--danger, oklch(0.58 0.2 25));
+}
+.payload-form-actions {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 3rem;
+  border-top: 1px solid var(--border);
+  padding-top: 2rem;
+}
+.payload-form-submit {
+  justify-self: start;
+  padding-inline: 1.75rem;
+}
+.payload-form-submit:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.payload-form-status {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+.payload-form-sent {
+  border-radius: calc(var(--radius) * 2);
+  background: var(--surface-muted, var(--muted));
+  padding: 1.5rem;
+}
+
 /* Closed is red, open is green. */
 .course-status::before {
   background: oklch(0.62 0.21 25);
