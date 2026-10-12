@@ -1,0 +1,52 @@
+{
+  "sha256": "6a221fcf84865f2c1f5b177aeaa073ad90d7298245e60db928d2c41338d99143",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Genealogy of the concept ‘environment’",
+        "description": "Steps towards developing a critical approach to the built environment\n\nRevisiting dichotomies: e.g. primitive versus modern, colonial versus post-colonial, vernacular versus capital A architecture",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Social Life of Things – The Ecological System’s Approach",
+        "description": "Religion, monuments and colonial built forms – India, Sub-Saharan Africa, Egypt",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Modernist “IDEAL” built environments",
+        "description": "e.g. Walter Gropius’ Bauhaus, Garden Cities and development corridors: Chandigarh, New Delhi, New Settlements",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Time-Space Compression and early Ideas of socio-technical systems",
+        "description": "Starchitects and seductive landscapes of consumption, affective built environments and the vertical city",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Self-built environments and engineering the future",
+        "description": "Self-built environments and engineering the future including informal built environment in contrast to micro-biopolitics and energy-efficient settlements e.g. BedZed\n\nNeoliberal built environments: What is “real” about Real Estate?",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Activities and Assessments\n\nA. Readings and Class Discussion 15%\nB. Acquisition and Documentation of primary data 30%\nC. Comparative analytical essays in diverse formats e.g. photos essays, spatial representations such as maps or architectural designs 30%\nD. Comparative analysis of development plans 25%"
+  }
+}

@@ -1,0 +1,370 @@
+{
+  "sha256": "9182ed9e79d1c87592a571c5788e6f3ebf11a980ea723cd1e99b1f10ef2ecfcb",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Intro to Performativity",
+        "description": "Definitions, names, and general ideas\nPerformativity as a theory\nPerformance as Visual Arts practice\nTheatre, Intervention, Video Performance, Lecture Performance,\nConversation about the curriculum\nGoing over what to expect\nIntorucing the learning experiments at the end of the course",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Richard Schechner's performance theory",
+            "note": "Richard Schechner",
+            "href": "https://www.ukessays.com/services/example-essays/drama/richard-schechners-performance-theory.php"
+          },
+          {
+            "type": "watch",
+            "title": "Video Samples of Contemporary Performance Art",
+            "note": "Bas Jan Ader, Marina Abramovic, Coco Fusco Zhang Huan, Francis Alys, Li Ming, Sophie Calle, Adel Abdelssamad, Rabih Mroue",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Conversation about the curriculum"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Agency and Roles / Gender and Sexuality",
+        "description": "Eve Kosofsky Sedgwick: The theory of the “homosocial”",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Performative Acts and Gender Constitution: An Essay in Phenomenology and Feminist Theory",
+            "note": "Judith Butler",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Performativity, Precarity, and Sexual Politics",
+            "note": "Judith Butler",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Drag Performance Artists",
+            "note": "Contemporary Arts",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Valet Export",
+            "note": "Contemporary Arts",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Becoming an Image",
+            "note": "Heather Cassils",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Temporary Husband",
+            "note": "Catherine Chun Dong",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Labour and Consumption / Public Intervention",
+        "description": "Labour\nConsumption: Performativity of supply/demans\nPublic Intervention as Art Performance",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Labour and Performance",
+            "note": "Gabriele Klein and Bojana Kunst",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Punching the Time Clock for One Year",
+            "note": "Theching Hsieh",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Work, Work, Work: A Reader on Art and Labour",
+            "note": "Sternberg Press",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Century of the Self",
+            "note": "Adam Curtis",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "BBC Report and WTO Resignation",
+            "note": "Yes Men",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Silence of the Sheep",
+            "note": "Amal Kenawy",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Safely Manouvring Across Lin He Road",
+            "note": "Lin Yilin",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Rebecca Belmore",
+            "note": "Contemporary Arts",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Temporality of the Event: From Conference to Olympics",
+        "description": "Claire Doherty: Advertising/Preparing for a Future performative Moment\nArtists: Lee Walton, Situationist Happenings",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Ontology of Performance, Representation without Reproduction",
+            "note": "Peggy Phalen",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Presence in Absentia: Experiencing Performance as Documentation",
+            "note": "Amelia Jones",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Society of the Spectacle",
+            "note": "Guy Dubord",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Archetypes and Rituals",
+        "description": "Archetypes of Performativity\nCarl Jung psychology of Archetypes\nTypecasts, Tropes, and Sterotypes\nWhen Site Lost the Plot\n(Possible Studio Visit to Talk to Mohamed Abdelkarim, a local lecture-performance artist.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Covenant Transport: Move or Die",
+            "note": "Amanda Beech",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Under Black Carpets",
+            "note": "Ilona Gaynor",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Interview",
+            "note": "Harun Farocki",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Watch and Analyze Video"
+          },
+          {
+            "kind": "discussion",
+            "description": "Group Discussion"
+          },
+          {
+            "kind": "field_visit",
+            "description": "(Possible Studio Visit to Talk to Mohamed Abdelkarim, a local lecture-performance artist."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Speech Acts and Spoken Word",
+        "description": "Speech Acts.\nthose verbal assurances and promises which seem not only to refer to a speaking relationship, but to constitute a moral bond between speakers,\n\nPerformative Utterance\nSentences which are not only describing a given reality, but also changing the social reality they are describing.\n\nIllocutionary Acts and Gestures\nillocution is what was meant, and perlocution is what happened as a result.\n\nJL Austin",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Obama and Roberts Try the Presidential Oath of Office Again.",
+            "note": "Zeleny, Jeff. Case study.",
+            "href": "http://www.nytimes.com/2009/01/22/us/politics/22oath.html"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Performing Bureaucracy, and Surveillance",
+        "description": "Legal Performance: Declaration of Oath; Witness, Testimony, Evidence and Judgement\n\nRana Hamadeh\nWhat if justice is the degree to which one can access theatre?\nWhat constitutes a public audience in age of surveillance?\n\nPerformance Artworks Using Surveillance Technologies",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Documentality",
+            "note": "Maurizio Ferraris",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Performing Archives / Archives of Performance",
+            "note": "Rune Gade",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Soverignty as Performenace and Video Art",
+            "note": "Corina Lacatus",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Janez Jansa, Janez Jansa, Janez Jansa: Legally changing name as art performance",
+            "note": null,
+            "href": "http://www.mgml.si/en/tobacna-001-cultural-centre/exhibitions/archive-exhibitions/janez-jansa-janez-jansa-janez-jansa-all-about-you/"
+          },
+          {
+            "type": "watch",
+            "title": "Janez Jansa, Janez Jansa, Janez Jansa",
+            "note": "video",
+            "href": "https://vimeo.com/46937250"
+          },
+          {
+            "type": "watch",
+            "title": "3rdi",
+            "note": "Wafaa Bilal 2010-11",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Hito Steyerl",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Trevor Paglan",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Group Discussion"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Role-Play, Gaming, and Algorithms",
+        "description": "Study of Live-Action-Role-Plays\nThe Performance of Algorithms\nGame Theory\nMethods of Learning: Role-Play, Games, Social Experiments, Project-based learning, Performative Reading\nPreparation for Role Play",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Power Games: Rules and Roles in Second Life",
+            "note": "Maria Backe",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Code as Performative Speech Act",
+            "note": "Inke Arms",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Depressed Man",
+            "note": "David Worovics",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Trial of SuberDebtThunderbot",
+            "note": "Helen Knowles",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Trap",
+            "note": "Adam Curtis",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Serious Games",
+            "note": "Harun Farocki",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Lecture",
+            "note": "Hito Steyerl",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Reading and Discussing Examples"
+          },
+          {
+            "kind": "exercise",
+            "description": "Preparation for Role Play"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": null,
+        "description": "Interactive Role Play\nA type of role playing game in which each participant assumes a particular character and acts out various scenarios at events which last for a predetermined time",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Using what we have learned throughout the course, we will create a role play scenario in which each student in the course will be designated a role, and using certain rules, we will act them out in a collaborative experiment."
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": null,
+        "description": "Discussion on Yesterday’s Role Play\nPower dynamics, strictness of the rules, how can we analyze what happened, how much was planned, was it a success or failure.\nWhat reflections do we have on this experiment keeping in mind the things that we learned through the 5 weeks\n\nRecap on the course\nReflections, critiques, etc.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Group Discussion"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": "The course progresses through 3 categories:\n• Societal Roles: from Gender to Labour\n• The Legal Theatre: Speech Acts and Algorithms\n• Pedagogy and Role-Play: Collaborative Experiments"
+  }
+}

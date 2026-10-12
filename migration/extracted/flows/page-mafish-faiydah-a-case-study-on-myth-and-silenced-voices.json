@@ -1,0 +1,379 @@
+{
+  "sha256": "3cb8de0b95ddffb55aec99f21dd3f468c0a57e9073e6e7169c767a9269fe1ac5",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What is History?- History as a Social Science.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "What is History?",
+            "note": "Carr, Edward Hallett. Vintage Books, 1961.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Re-thinking History",
+            "note": "Jenkins, Keith. Routledge, 1991.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "An Arab Philosophy of History: Selections from the Prolegomena of Ibn Khaldun of Tunis (1332-1406)",
+            "note": "Khaldūn, Ibn and Charles Philip Issawi. American University in Cairo Press, 1992.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Schools of History-Part 1",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The house of history: A critical reader in twentieth-century history and theory",
+            "note": "Green, Anna and Troup, Kathleen. New York University Press, 1999.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Historians, State, and Politics in Twentieth Century Egypt: Contesting the Nation",
+            "note": "Gorman, Anthony. London: New York: Routledge, 2003.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Schools of History-Part 2",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The house of history: A critical reader in twentieth-century history and theory",
+            "note": "Green, Anna and Troup, Kathleen. New York University Press, 1999.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dialectical reasoning and Dialectical Materialism",
+            "note": "Swyngedouw, E. in R. Kitchin and N. Thrift International Encyclopedia of Human Geography, Elsevier Inc, 2009.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Marxism, Orientalism, Cosmpolitanism",
+            "note": "Achcar, Gilbert. Saqi Book, 2013.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Egypt in search of a Political Community: An analysis of the intellectual and political evolution of Egypt, 1804-1952",
+            "note": "Safran, Nadav. Harvard University Press, 1961.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "\" Ya Aziz Ya Aziz...Dahya Takhod al-engleez\" (يا عزيز يا عزيز...داهية تاخد الانجليز) and \"Ahl el benok we al-atyan...tharo 'ala al-'ayan 'ayan...wi ebn al-bald mashy 'ayran..ma-m'aah wala ha' al-dokhan...shorom boromhaly galban\" - Colonialism, the rise of Egyptian local elites and formation of subaltern classes.",
+        "description": "(أهل البنوك والأطيان صاروا... على الأعيان أعيان ...وابن البلد ماشي عريان... ممعاه ولا حق الدخان... شرم برم حالي غلبان)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Middle East in the World Economy,1800-1914",
+            "note": "Owen, Roger. I.B Tauris and Co., 2009.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Attitudes of British Officials to the Development of the Egyptian Economy, 1882-1922",
+            "note": "Owen, Roger. in M. Cook's Studies in the Economic History of the Middle East: From the Rise of Islam to the Present Day. Oxford University Press, 1970.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Primitive Accumulation in Egypt, 1798-1882",
+            "note": "Richards, Alan. Review (Fernand Braudel Center) 1, no. 2 (1977): 3-49.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "\" Law lam akon Misryan, la wadadt an akon Misryan\" (\" لو لم أكن مصرياً لوددت أن أكون مصرياً \"). - The Bourgeoisie intellectual and the proliferation of Nationalism.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Thawrat 1919 : tarikh Miṣr al-qawmi min sanat 1914 ila sanat 1921 (The 1919 Revolution: Egypt's national history from 1914 to 1921)",
+            "note": "Al-Rafi'i, Abdel-Rahman. Cairo: Dar al-Sha’ab, 1968.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Evolving Perspectives on International Political Economy: Twentieth-Century Contexts and Discontinuties",
+            "note": "Bieresteker, Thomas J. International Political Science Review, 1993.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Myths and Misconceptions in the Study of Nationalism",
+            "note": "Brubaker, Rogers. National Self-Determination and Secession, Oxford University Press, 1998.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Egyptian Nationalist Party: 1892-1919",
+            "note": "Goldschmidt, Arthur. in Holt, P. M. Political and Social Change in Modern Egypt : Historical Studies from the Ottoman Conquest to the United Arab Republic. London: Oxford University Press, 1968.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Jarīdah-Ummah Group and Egyptian Politics",
+            "note": "Kazziha, Walid. Middle Eastern Studies13, no. 3 (1977): 373-85.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Al-Naser Salah Al-Din",
+            "note": "Youssef Shahin, 1963 (movie)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Zaynab",
+            "note": "Muhamad Husayn Haykal, 1913 (novel)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "\"Misr Wata'na Sa'adha Amlna...\" (مصر وطنا سعدها املنا)- 1919 in Perspective?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Thawrat 1919 : tarikh Miṣr al-qawmi min sanat 1914 ila sanat 1921 (The 1919 Revolution: Egypt's national history from 1914 to 1921)",
+            "note": "Al-Rafi'i, Abdel-Rahman. Cairo: Dar al-Sha’ab, 1968.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ordinary Egyptians: Creating the Modern Nation through Popular Culture, 1870-1919",
+            "note": "Fahmy, Ziad. Cairo: The American University in Cairo Press, 2011.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Egyptian Revolution of 1919: New Directions in the Egyptian Economy",
+            "note": "Tignor, Robert. Middle Eastern Studies 12, no. 3 (1976): 41-67.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Politics, History, and Culture in Nasser's Egypt",
+            "note": "Crabbs, Jr., Jack. International Journal of Middle East Studies, 6, 4 (1975): 386-420.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Qantra alzi Kafr (قنطرة الذى كفر)",
+            "note": "Mustafah Mushrafah (novel)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "\" Ya Angleezy ya haramy osolyee...khadt she'ery we qamhy we folye\" (يا انجليزى يا حرامى اصولى...خدت قمحى و شعيرى و فولى) Vs. \"... Na7n tolab qoot\" (نحن طلاب قوت)- Egyptian Peasants' Violence in the context of 1919.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "al Ard wa al-fallah : al mas'alah al-Zira'iyah fi Misr (The land and the Peasant: The agriculture question in Egypt)",
+            "note": "‘Amir, Ibrahim. Matb'at al-dar al-misryih, 1958.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On History From Below",
+            "note": "Hobsbawm, Eric. in On History. Weidenfeld & Nicolson, 1997.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Peasants in Revolt - Egypt 1919",
+            "note": "Goldberg, Ellis. International Journal of Middle East Studies 24, no. 2 (1992): 261-80.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Land and Labor on Egyptian Cotton Farms, 1882-1940",
+            "note": "Richards, Alan. Agricultural History, 1978.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Al-ard (الارض)",
+            "note": "Youssef Chahin, 1969 (movie)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "\"Maktob 'ala al fool...Yahya Sa'ad Zaghloul\" (مكتوب على الفول...يحيى سعد زغلول). - Workers' consciousness evolvement and resistance.",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Concepts of Ideology, Hegemony, and Organic Intellectuals in Gramsci’s Marxism",
+            "note": "Ramos, Valeriano. Theoretical Review, 27 (1982).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Social Roots of Nationalism: Workers and the National Movement in Egypt, 1908-1919",
+            "note": "Lockman, Zachary. Middle Eastern Studies, 1988.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tarikh al-tạbaqah al-ʻamilah al-Misṛiyah: Mundhu nashʼatihā hạttá thawrat 1919",
+            "note": "ʻIzz al-Dīn, A. Dar al-Katib al-ʻArabi lil-Tịbaʻah wa-al-Nashr, 1967.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Labour and Politics in Egypt, 1919-1939",
+            "note": "Deeb, Marius. International Journal of Middle East Studies 10, no. 2 (1979): 187-203.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Coal Heavers of Port Sa'id: State-Making and Worker Protest, 1869-1914",
+            "note": "Chalcraft, John. International Labor and Working-Class History, 2001.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "\"Na7n la nahab al-mawt\" (نحن لا نهاب الموت). Women's liberation?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Egypt as a Woman: Nationalism, Gender and Politics",
+            "note": "Baron, Beth. The American University in Cairo press, 2005.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Feminism, Class, and Islam in Turn-of-the-Century Egypt",
+            "note": "Cole, Juan Ricardo. International Journal of Middle East Studies, 1981.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Tarbiyat al-marʼah wa-al-hịjab",
+            "note": "Harb, Tal'at. Matḅaʻat al-Taraqqī 1899.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Been al-Kasren (بين القصرين)",
+            "note": "Hasan al-Iimam, 1962 (movie)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "\" Ma hazhe al-hyah ila harb eqtsadeyah....wa ma qowtkom ila bil-mal wa al-'alm\" ( ما هذة الحياة الا حرب اقتصادية ... و ما قوتكم الا بالمال و العلم )- Economic Nationalism of who and for what?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Al-Burjuwaziyah al-Misriyah wa ‘uslub al-Mufwadah (The Egyptian Bourgeoisie and the negotiations approach)",
+            "note": "‘Isa, Salah. Cairo : Matḅuʻāt al-Thaqafah al-Watạniyah, 1980.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Dirasat fi tarikh Miṣr al-siyasi mundhu al-ʻaṣr al-Mamluki (Studies in Egypt’s Political History since the Mamluks)",
+            "note": "Jirjis, Fawzi. Cairo:al-ʻArabi lil-Nashr wa-al-Tawziʻ, 1958.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The ideology of Economic Nationalism in its Egyptian Context:1919-1939",
+            "note": "Owen, Roger. in Marwan Buheiry's Intellectual life in the Arab East, 1890-1939. Beirut: The American University in Beirut Press, 1981.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On the Theory and Practice of Compradors: The Role of ʿAbbud Pasha in the Egyptian Political Economy",
+            "note": "Vitalis, Robert. International Journal of Middle East Studies 22, no. 3 (1990): 291-315.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "al-Rihla (الرحلة)",
+            "note": "Fekri al-Khouly, 2015 (novel)",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Al-Fallhon w al-Soltah: ‘ala do’a al-harkat al-fallaheya al-Misryah, 1919-1999 (The Peasants and the Authority: Egyptian Peasants’ movement, 1919-1999)",
+        "note": "‘Ashmawi, Sayyid. Dar Merit, 2001. A source of the slogans, verses and quotes.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Hutāfāt Al-Thawrah Al-Miṣriyah Wa-nuṣūṣihā Al-kamilah (The slogans of the Egyptian Revolution and its full texts)",
+        "note": "Mughīth KH. al-Majlis al-Aʻlá lil-Thaqafah; 2014. A source of the slogans, verses and quotes.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Tạlʻat Hạrb: Bahṭh fī al-ʻazạmah (Harb: an invistigation of greatness)",
+        "note": "Raḍwān, F. Dar al-Kitab al-ʻArabi, 2005. A source of the slogans, verses and quotes.",
+        "href": null
+      }
+    ],
+    "notes": "N.B: This is a preliminary list of the materials to be used in the course. It does not include all of the non-academic materials and is subject to change. Only parts of this list are to be used. Participants will not assigned full books to read. Rather, just a number of pages from the books to be chosen."
+  }
+}

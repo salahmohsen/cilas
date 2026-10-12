@@ -1,0 +1,378 @@
+{
+  "sha256": "71ed2442e6d2eaec1cb6f8fe1ad390ba9337b0fe6536eafb76c391034f4d1643",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The viewer: The maker",
+        "description": "What are the differences between someone who loves cinema, as the member of an audience, and someone who decides to make a movie?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Notes on the Cinematographer",
+            "note": "Bresson, Robert. 1975. Gallimard",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Be Kind Rewind",
+            "note": "Michel Gondry, 2008 [excerpts]",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Cinema Paradiso",
+            "note": "Giusepe Tornatore, 1988 [excerpts]",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Be Kind Rewind (Michel Gondry, 2008) [excerpts]; Cinema Paradiso (Giusepe Tornatore, 1988) [excerpts]"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Notation, wanderings: writing and walking as a research.",
+        "description": "For a moviemaker, walking around is a good way to find scenes, locations, dialogues and characters. But if walking is a great method to inspire, notation is an important resource to capture an idea. In Chekhov's Seagull, for example, Trigorin - the well-known writer - is always carrying a notebook. In the end of Act II, while talking with Nina, he sees the dead seagull and writes down an idea for a short story.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Preparation of the Novel",
+            "note": "Barthes, Roland. 2010. Columbia University Press [excerpts] pg: 90 - 93 and 245 - 257",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Flaneur. In: The Arcades Project",
+            "note": "Benjamin, Walter",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Suite Vénitienne",
+            "note": "Calle, Sophie. 2015. Siglio Press",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Lisbon Story",
+            "note": "Wim Wenders, 1994",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Lisbon Story (Wim Wenders, 1994)"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "The idea for the movie.",
+        "description": "Eureka! The idea captures you. Once you have an idea, you feel authorized to start. There are many ways to start: a screenplay, research, rehearsals, an ambience. What matters is to find an efficient way to develop the idea, giving it a body.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Poetics",
+            "note": "Aristotle",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Who's Camus Anyway",
+            "note": "Mitsuo Yangimachi, 2005",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Who's Camus Anyway (Mitsuo Yangimachi, 2005)"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "The first images: pictures, videos, drawings and storyboard.",
+        "description": "There are many ways to develop an imaginary for a movie. We will analyse different strategies, such as the drawings made by Kurosawa before the start of shooting or the graphics that Alain Resnais developed for Last Year at Marienbad. We will also do some exercises to create the first images for our movies, discussing the process in class.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Something Like an Autobiography",
+            "note": "Kurosawa, Akira. 1981. Berkeley University Press.",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "We will also do some exercises to create the first images for our movies, discussing the process in class."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "The project",
+        "description": "The project is the plan or the strategy to accomplish the idea for the movie. It is a document that should answer as many questions as possible about how to execute the idea. If written, it also can be a relevant material to apply for grants or to find collaborators.\n\nHow to write a project? Each student will write a project for their movies, inspired by the examples that will be shown in class.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Each student will write a project for their movies, inspired by the examples that will be shown in class."
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Crisis",
+        "description": "You don't have the equipment. You don't have money. You don't have a crew. You don't have a screenplay. You don't know how to start. You are not sure about your idea.\n\nThe crisis is a well known component in the process of making a movie. We will discuss different scenarios of crisis, how to overcome or accept it, as well as investigate cinemas that are created from it or are structured by a permanent state of crisis.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "8½",
+            "note": "Federico Fellini, 1963",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "8½ (Federico Fellini, 1963)"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "The locations, the actors.",
+        "description": "Wong Kar Wai says that first of all he finds the locations. Hong Sang Soo likes to get drunk with his actors before casting them for a movie. Auditions to find actors. Walkings to find locations. Between the actor and the character, between the location and the scenario: the alchemy between the fiction and the real conditions.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Opening Night",
+            "note": "John Cassavetes, 1977 [excerpts]",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Opening Night (John Cassavetes, 1977) [excerpts]"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Rehearsals",
+        "description": "Lev Kuleshov and the ideal space to rehearse a movie. Reharsing with the crew. Rehearsing with actors. Digital era: rehearsing and shooting at the same time.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Rehearsal Method. In: Kuleshov on Film",
+            "note": "Kuleshov, Lev. 1974. University of California Press.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Salaam Cinema",
+            "note": "Mohsen Makhmalbaf, 1995",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Salaam Cinema (Mohsen Makhmalbaf, 1995)"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "The crew",
+        "description": "Cinema is a collective effort. We will discuss how to deal with a group of people, taking in consideration the structured roles that each one needs to perform in order to shoot a movie, and also the politics of friendship that needs to be established for a smooth shooting routine.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rebel without a Crew",
+            "note": "Rodriguez, Robert. University Press of Mississipi.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The Monsters",
+            "note": "Pedro Diógenes, Guto Parente, Luiz Pretti and Ricardo Pretti, 2011",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "The Monsters (Pedro Diógenes, Guto Parente, Luiz Pretti and Ricardo Pretti, 2011)"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Before shooting",
+        "description": "Godard often worked composing the day's script in a car on the way to the set, borrowing lines from a newspaper, the radio, or a book at hand, and even whispering lines into the earpieces of his actors. This \"open method\" is also true for filmmakers like Apichatpong Weerasethakul, who keeps the process open until the last minute before shooting. Others, like Francis Ford Coppola, prefer to have everything planned (even the smallest details). Each student will present for the class their plans for a first day of shooting.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "La nuit américaine",
+            "note": "François Truffaut, 1973",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Each student will present for the class their plans for a first day of shooting."
+          },
+          {
+            "kind": "screening",
+            "description": "La nuit américaine (François Truffaut, 1973)"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Poetics",
+        "note": "Aristotle. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Preparation of the Novel",
+        "note": "Barthes, Roland. 2010. Columbia University Press. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Notes on the Cinematographer",
+        "note": "Bresson, Robert. 1975. Gallimard. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Suite Vénitienne",
+        "note": "Calle, Sophie. 2015. Siglio Press. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Kazan on Directing",
+        "note": "Kazan, Elia. 2009. Penguin Random House. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Rehearsal Method. In: Kuleshov on Film",
+        "note": "Kuleshov, Lev. 1974. University of California Press. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Something Like an Autobiography",
+        "note": "Kurosawa, Akira. 1981. Berkeley University Press. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Making Movies",
+        "note": "Lumet, Sidney. 1995. Alfred Knopf. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "On Directing Film",
+        "note": "Mamet, David. 1991. Viking Press. Required reading.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Rebel without a Crew",
+        "note": "Rodriguez, Robert. University Press of Mississipi. Required reading.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "The Cameramen",
+        "note": "Buster Keaton, 1928. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Amator",
+        "note": "Krzystof Kieslowski, 1983. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Passion",
+        "note": "Jean-Luc Godard, 1982. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Purple Rose of Cairo",
+        "note": "Woody Allen, 1985. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "La Ricotta",
+        "note": "Pier Paolo Pasolini, 1963. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Sunset Boulevard",
+        "note": "Billy Wilder, 1950. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Barton Fink",
+        "note": "Joel Coen, 1991. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Caro Diario",
+        "note": "Nanni Moretti, 1993. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Eisenstein in Guanajuato",
+        "note": "Peter Greenaway, 2015. Not required for class, but related to our course.",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Fitzcarraldo",
+        "note": "Werner Herzog, 1982. Not required for class, but related to our course.",
+        "href": null
+      }
+    ],
+    "notes": null
+  }
+}

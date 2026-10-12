@@ -1,0 +1,84 @@
+{
+  "sha256": "136a80adedcdcb332fb49d97de0ac5cbf85bf8ae8124a4acfc059154293e16fa",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Key conceptual frameworks and mechanisms underlying the social determinants of health",
+        "description": "We will discuss causal inference. What are Mill's criteria for causality and how have they shaped thinking around causes?\n\nReadings will introduce the “population approach” to health etiology and intervention\n\nTogether, we will explore key conceptual theories such as the fundamental causes (FC) framework to health inequalities and pathways by which social factors “get under the skin\"",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Social class, socioeconomic status, and the social gradient in health",
+        "description": "What is social stratification? What are the different sociological traditions that have impacted the understanding and measurement of social class (ex Weberian, Marxian, and functionalist traditions)? What are the shortcomings of these traditions?\n\nWhat are existing measures of social stratification? What are their strengths and weaknesses?\n\nWhat studies have been conducted to interrogate the impact of social stratification on the health of populations? What are the limitations and strengths of these studies?\n\nWe will survey the evidence around social inequalities and health. What evidence is there and what exactly is the social gradient in health? Is this evidence compelling or are there alternative explanations that can explain this association?\n\nWhat are practical policy and programmatic interventions that could be effective in reducing disparities rooted in social status",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Race, Racism, and Discrimination",
+        "description": "Critically evaluate “race” as a social construct and contemplate the following question: Is racism ontologically subjective? Is the construction of race contingent on collective acceptance? How has the meaning of race developed historically?\n\nExamine levels of racism (structural/systemic/institutional, interpersonal, and individual). How does racism manifest on different levels; on the structural, interpersonal and individual levels?\n\nWhat are types of racism/discrimination – aversive racism, internalized racism and stereotype threat? Are these real phenomena? What are your critical opinions of these terms?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Race, Racism, and Discrimination",
+        "description": "We will discuss measurement and other methodological issues in the study of racism and health. How have sociologists attempted to measure the prevalence of racism? What are the merits of various working definitions and measurements of racism and what are their weaknesses? Do these definitions measure what they are supposed to measure?\n\nHow can we address the insidious impact of racial discrimination on health? What kinds of policies and interventions can mitigate the impact of racial discrimination on health?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Immigration/displacement and Health",
+        "description": "We will be introduced to and asked to problematize the construct of acculturation\n\nWhat are the key elements of the “new sociology of immigration”?\n\nWhat are the features of immigrant and ethnic health paradoxes?\n\nWe will examine the processes of racialization and their relevance for immigrant health trajectories\n\nWe will explore the influence of ethnic identity and ethnic enclaves on immigrant health\n\nCase studies will be explored to showcase the impact of acculturation on health with emphasis on migration and health in the Arab World and how migrant communities have been affected by the habits and behaviors of the host community.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Gender and Health",
+        "description": "To start, we will problematize the interchangeability of the terms “sex” and “gender”. How are these concepts different and how do they intersect? Is the distinction warranted?\n\nWe will discuss core gender concepts, particularly concepts such as ‘binary’, ‘essentialism’ , ‘patriarchy’, ‘hegemony’ ‘gender normativity’ and ‘social construction’ which are often used in the literature on gender. What is meant by these terms and what are competing views about these constructs? Are these constructs rooted in Western schools of thought or do they have a basis in other cultures?\n\nWhat are paradoxes and deviations in assumptions about gender and health – does male privilege translate into unambiguous health benefits?\n\nWhat is the empirical patterning in morbidity and mortality by gender\n\nWe will not forget to include masculinities in our discussions. We will explore the relevance of gender to men and theories of masculinity",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Gender and Health",
+        "description": "First we will define “intersectionality” and elaborate on its potential contribution to understanding the impact of gender and other axes of stratification on health outcomes\n\nWhat are types of sexism: ambivalent sexism, hostile and benevolent sexism? You will be asked to reflect on these terms and their utility in understanding the different manifestations of sexism.\n\nWhat is system justification and how is it used to justify the existing social order? To what extent is this applicable to the context of Egypt? What evidence do advocates of system justification provide for its presence? What are the critiques against it?\n\nWhat are methodological and measurement issues in the study of gender? What is wrong with the way studies look at gender?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Sexual Orientation and Health",
+        "description": "Readings will deconstruct sexual orientation along three axes: sexual attraction, self-identification, and sexual behavior. Is this deconstruction useful? How can we unpack and operationalize sexual orientation? How can we measure its prevalence?\n\nWhat is the evidence for sexual orientation health disparities? Mental Health, HIV and suicidality disparities\n\nExplicate how the health implications of sexual orientation are shaped by social context and stigma\n\nDiscuss transgender health and explore case studies on the history of hijras in South Asia, kathoeys in Thailand, and muxes in Mexico. How have societies viewed transgender populations across history in the East and West? What implications have these perceptions had on the health of these populations?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Culmination",
+        "description": "Summarize cross-cutting themes – social context, stigma, and stress\n\nHow do we alter the social environment to improve health outcomes?\n\nFood for thought: are social inequalities inherent and unavoidable?",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  }
+}

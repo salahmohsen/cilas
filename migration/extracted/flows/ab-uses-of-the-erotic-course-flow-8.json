@@ -1,0 +1,203 @@
+{
+  "sha256": "51e68356d5faedf2afa03d70e2edd5be0c429a5ac06b772a939edb6d1582e0ef",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introductions / Listening to Lorde",
+        "description": "We will listen together to a recording of Lorde reading the essay, which inspired this course and its title.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Uses of the Erotic: The Erotic as Power",
+            "note": "Audre Lorde, Sister Outsider: Essays and Speeches",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Audre Lorde reading “Uses of the Erotic: The Erotic as Power”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "We will listen together to a recording of Lorde reading the essay."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Thinking with Lorde",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Frottage: Frictions of Intimacy across the Black Diaspora",
+            "note": "Keguro Macharia",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Does anyone have the right to sex?",
+            "note": "Amia Srinivasan",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Erotohistoriography",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Time Binds: Queer Temporalities, Queer Histories",
+            "note": "Elizabeth Freeman",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Unruly Visions: The Aesthetic Practices of Queer Diaspora",
+            "note": "Gayatri Gopinath",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Porno/tropes",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Habeas Viscus: Racializing Assemblages, Biopolitics, and Black Feminist Theories of the Human",
+            "note": "Alexander Weheliye",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Black Body in Ecstasy: Reading Race, Reading Pornography",
+            "note": "Jennifer Nash",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Positions",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Extravagant Abjection: Blackness, Power, and Sexuality in the African American Literary Imagination",
+            "note": "Darieck Scott",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "View from the Bottom: Asian American Masculinity and Sexual Representation",
+            "note": "Tan Hoang Nguyen",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Desubjectification, Resubjectification",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Sensational Flesh: Race, Power, and Masochism",
+            "note": "Amber Musser",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Disturbing Attachments: Genet, Modern Pederasty, and Queer History",
+            "note": "Kadji Amin",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "The White Elephant",
+            "note": "Shuruq Harb (film)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "(Settler) Colonial Erotics",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Visual Occupations: Violence and Visibility in a Conflict Zone",
+            "note": "Gil Hochberg",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Loving Unbecoming: The Queer Politics of the Transitive Native",
+            "note": "Jodi Byrd",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Out in the Dark",
+            "note": "Michael Mayer (film)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Indigenous and Anticolonial Erotics",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Erotics of Sovereignty: Queer Native Writing in the Era of Self-Determination",
+            "note": "Mark Rifkin",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sexual Futures, Queer Gestures and Other Latina Longings",
+            "note": "Juana María Rodríguez",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Bonboné",
+            "note": "Rakan Mayasi (film)",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "How has the erotic been deployed as a colonial and racializing technology? How might the erotic scramble, however fleetingly or flimsily, the coherence of racialized and colonial relations? Lingering with this dialectic of ab/use, we consider how the erotic has been aesthetically and theoretically taken up, not despite but precisely because of the violence that haunts it."
+  }
+}

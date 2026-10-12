@@ -127,4 +127,8 @@ describe('splitLocales', () => {
   it('leaves a locale empty when the text has none of it', () => {
     expect(splitLocales('مقدمة فقط.')).toEqual({ en: '', ar: 'مقدمة فقط.' })
   })
+
+  it('drops a placeholder for a translation to come', () => {
+    expect(splitLocales('Intro.\n\nالترجمة في الطريق')).toEqual({ en: 'Intro.', ar: '' })
+  })
 })

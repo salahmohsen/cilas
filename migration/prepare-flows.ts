@@ -10,6 +10,8 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
+import { pageText } from './lib/page-text'
+
 import { arabicShareOf, flowId, methodFor, parseUrls, type FlowMethod } from './lib/flow-files'
 
 const [raw] = process.argv.slice(2)
@@ -23,7 +25,7 @@ const roots = {
   mirror: path.join(rawAbs, 'mirror'),
 }
 
-type Course = { legacy_url: string; flow_uploads: string[] }
+type Course = { legacy_url: string; flow_uploads: string[]; description: string }
 const courses = JSON.parse(
   readFileSync(path.join(here, '..', 'seed', 'data', 'archive', 'courses.json'), 'utf8'),
 ) as Course[]
@@ -139,6 +141,29 @@ for (const upload of sorted) {
   }
   entries.push({ id, upload, source: found.source, method, pages, links, arabic_share: Math.round(share * 1000) / 1000, courses: courseUrls })
   console.error(`${entries.length}/${sorted.length} ${id} (${method})`)
+}
+
+// Page flows: a course with a page of its own and no flow file, whose page
+// lays out its sessions ("Week 1 …", "الجلسة الأولى …"). The page itself is
+// the flow, so its sessions land in the syllabus and leave the description.
+const SESSION_MARK =
+  /\b(?:week|session|class|module|unit)\s*\d+\b|(?:الأسبوع|الجلسة|اللقاء)\s*(?:\d+|الأول|الأولى|الثاني|الثانية)/gi
+const manifest = JSON.parse(readFileSync(path.join(here, 'manifest.json'), 'utf8')) as {
+  pages: Array<{ legacy_url: string; file: string; source: 'zip' | 'mirror' }>
+}
+for (const c of courses) {
+  if (c.legacy_url.includes('#') || c.flow_uploads.length) continue
+  if ((c.description.match(SESSION_MARK) ?? []).length < 2) continue
+  const page = manifest.pages.find((p) => p.legacy_url === c.legacy_url)
+  if (!page) continue
+  const id = `page-${c.legacy_url.replace(/^\//, '').replace(/\.html$/, '')}`
+  const dir = path.join(flowsRoot, id)
+  mkdirSync(dir, { recursive: true })
+  const textFile = path.join(dir, 'text.txt')
+  const html = readFileSync(path.join(page.source === 'zip' ? roots.zip : path.join(roots.mirror, 'pages'), page.file), 'utf8')
+  const text = pageText(html)
+  if (!existsSync(textFile)) writeFileSync(textFile, text)
+  entries.push({ id, upload: c.legacy_url, source: page.source, method: 'text', pages: 1, links: 0, arabic_share: Math.round(arabicShareOf(text) * 1000) / 1000, courses: [c.legacy_url] })
 }
 
 entries.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))

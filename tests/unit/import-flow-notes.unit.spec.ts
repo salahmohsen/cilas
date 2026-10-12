@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { splitBios, withSubject } from '../../migration/lib/flow-notes'
+import { splitBios, withoutRepeats, withSubject } from '../../migration/lib/flow-notes'
 
 const hisham = [['Hisham Fahmy', 'هشام فهمي']]
 const bio = 'Hisham Fahmy is the teaching fellow of philosophy and poetry in this year’s Bridge Program at CILAS.'
@@ -47,5 +47,18 @@ describe('withSubject', () => {
     expect(withSubject('Hisham Fahmy', 'is a writer.')).toBe('Hisham Fahmy is a writer.')
     expect(withSubject('Hisham Fahmy', 'Hisham Fahmy is a writer.')).toBe('Hisham Fahmy is a writer.')
     expect(withSubject('مي عامر', 'باحثة نسوية')).toBe('باحثة نسوية')
+  })
+})
+
+describe('withoutRepeats', () => {
+  const description =
+    'تقدم هذه الدورة فرصة للتعرف بشكل بانورامي على تاريخ تطور أهم الأفكار في التراث الإسلامي السني وتأثيرها على الواقع المعاصر.'
+  it('drops a paragraph the description already has, with its heading', () => {
+    const notes = `تعريف عام\n\nتقدم هذه الدورة فرصة للتعرف بشكل بانورامي على تاريخ تطور أهم الأفكار في التراث الإسلامي السني، وتأثيرها على الواقع المعاصر.`
+    expect(withoutRepeats(notes, description)).toBeNull()
+  })
+  it('keeps what is new', () => {
+    const notes = 'Assessment:\n\nA short essay at the end of the course, on a question of your choice.'
+    expect(withoutRepeats(notes, description)).toBe(notes)
   })
 })

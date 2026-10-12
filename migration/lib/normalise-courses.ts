@@ -91,13 +91,19 @@ export const isMostlyArabic = (text: string): boolean => {
   return letters.length > 0 && arabic / letters.length > 0.5
 }
 
+/** The old site's stand-in for a translation not yet written ("الترجمة في الطريق"). */
+const PLACEHOLDER = /^(?:الترجمة (?:جاية في السكة|جاية|في الطريق|في السكة|قادمة)|translation (?:is )?(?:coming|to follow))\W*$/i
+
 /**
  * Splits a description into its English and Arabic paragraphs, so each lands
  * in its own locale. A paragraph belongs to the language most of its letters
- * are in.
+ * are in. Placeholders for a translation to come are dropped.
  */
 export const splitLocales = (text: string): { en: string; ar: string } => {
-  const paras = text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+  const paras = text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter((p) => p && !PLACEHOLDER.test(p))
   return {
     en: paras.filter((p) => !isMostlyArabic(p)).join('\n\n'),
     ar: paras.filter((p) => isMostlyArabic(p)).join('\n\n'),

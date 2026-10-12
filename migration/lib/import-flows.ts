@@ -1,7 +1,7 @@
 import type { Payload } from 'payload'
 
 import { lexical } from '../../seed/seed.utils'
-import { splitBios, withSubject, type FlowBio } from './flow-notes'
+import { keepNotIn, splitBios, withoutRepeats, withSubject, type FlowBio } from './flow-notes'
 import { publishCourse } from './import-courses'
 import { isMostlyArabic } from './normalise-courses'
 import type { Syllabus } from './syllabus-schema'
@@ -78,6 +78,28 @@ const withoutNotes = (description: Lexical | null | undefined): Lexical | null =
   })
   if (!description || at === -1) return null
   return { ...description, root: { ...description.root, children: children.slice(0, at) } }
+}
+
+/** Every text the syllabus holds, with the words that number its units. */
+const syllabusText = (s: Syllabus): string =>
+  [
+    'week weeks class session sessions',
+    ...s.sessions.flatMap((x) => [
+      x.title ?? '',
+      x.description,
+      ...x.materials.flatMap((m) => [m.title, m.note ?? '', m.href ?? '']),
+      ...x.activities.map((a) => a.description),
+    ]),
+    ...s.bibliography.flatMap((m) => [m.title, m.note ?? '', m.href ?? '']),
+  ].join('\n')
+
+/** The description without the paragraphs the syllabus now holds, or null when none go. */
+const withoutSyllabus = (description: Lexical | null | undefined, syllabus: Syllabus): Lexical | null => {
+  const children = description?.root?.children ?? []
+  if (!description || !children.length) return null
+  const keep = keepNotIn(children.map((n) => textOf(n).trim()), syllabusText(syllabus), 2)
+  if (keep.every(Boolean)) return null
+  return { ...description, root: { ...description.root, children: children.filter((_, i) => keep[i]) } }
 }
 
 type Fellow = {
@@ -193,9 +215,16 @@ export const importFlows = async (
       }
       // The flow's notes are the fellow's note on the course; bios in them go to the fellows.
       const fellows = await fellowsOf(payload, course.fellows ?? [])
-      const { notes, bios } = splitBios(syllabus.notes, fellows.map((f) => f.names))
+      const { notes: flowNotes, bios } = splitBios(syllabus.notes, fellows.map((f) => f.names))
       await giveBios(payload, bios, fellows, locale, dir)
-      const description = withoutNotes(course.description)
+      const trimmed = withoutNotes(course.description)
+      // A page flow is the course's own page: its sessions were in the
+      // description, and now that they are the syllabus they leave it.
+      const description = flow.id.startsWith('page-')
+        ? (withoutSyllabus(trimmed ?? course.description, syllabus) ?? trimmed)
+        : trimmed
+      // The notes keep only what the description does not already say.
+      const notes = withoutRepeats(flowNotes, textOf(description ?? course.description))
 
       // Step A: the rows and their non-localized fields; English text too.
       await payload.update({

@@ -124,3 +124,45 @@ export const withSubject = (name: string, bio: string): string => {
   const text = bio.trim()
   return /^[a-z]/.test(text) ? `${name} ${text}` : text
 }
+
+const wordsOf = (text: string): string[] => fold(text).split(' ').filter((w) => w.length > 1)
+
+/** Whether nearly every word of a paragraph is already in `known` (a set of folded words). */
+const covered = (paragraph: string, known: Set<string>, least: number): boolean => {
+  const words = wordsOf(paragraph)
+  return words.length >= least && words.filter((w) => known.has(w)).length / words.length >= 0.85
+}
+
+/** A heading: a few words, often ending with a colon ("تعريف عام", "Course description:"). */
+const isHeading = (p: string): boolean => wordsOf(p).length <= 6 && !/[.!?؟]$/.test(p.trim())
+
+/**
+ * Drops the paragraphs of `paragraphs` that `other` already says (nearly all
+ * their words appear there), and a heading left with nothing under it.
+ * Returns which paragraphs stay.
+ */
+export const keepNotIn = (paragraphs: string[], other: string, least = 6): boolean[] => {
+  const known = new Set(wordsOf(other))
+  // A paragraph without a word ("• ?") says nothing either.
+  const keep = paragraphs.map((p) => wordsOf(p).length > 0 && !covered(p, known, least))
+  // A heading whose next paragraph went (or that ends the text) goes too.
+  for (let i = paragraphs.length - 1; i >= 0; i--) {
+    if (keep[i] && isHeading(paragraphs[i]) && (i === paragraphs.length - 1 || !keep[i + 1])) keep[i] = false
+  }
+  return keep
+}
+
+/**
+ * A flow's notes without what the course description already says: the
+ * extraction sometimes copied the course's own description into the notes.
+ */
+export const withoutRepeats = (notes: string | null, description: string): string | null => {
+  if (!notes) return null
+  const paras = notes
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+  const keep = keepNotIn(paras, description)
+  const left = paras.filter((_, i) => keep[i])
+  return left.length ? left.join('\n\n') : null
+}

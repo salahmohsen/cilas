@@ -1,0 +1,225 @@
+{
+  "sha256": "63153d2ede4c7e8ea513a0696b691d4e70f2e50a5a082340448365ace631d748",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "The why, what and how of urban gardening",
+        "description": "1. We will clarify what is gardening and what is agriculture and explore why we should grow our own food and engage in gardenign activities in the city\n2. Introduce the main players in Egypt in urban gardening and agriculture\n3. Introduce different growing systems (soil-based, hydroponic, aquaponic, aeroponic)",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction. In: Agricultural Urbanism: Handbook for Building Sustainable Food and Agriculture Systems in 21st Century Cities",
+            "note": "de la Salle, J., Holland, M. et al. 2010. place n.a.: Green Frigate Books, pp. 11-38. Reading prior to the first session.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Getting started: location, soil and seeds",
+        "description": "This week will be pretty practical, to get our garden started\n\nWe will look at some basic permaculture principles that help us designing our garden\n\nWe will learn about soil ingredients and mix our potting mix\n\nWe will learn about seeds and seedling production and prepare our seed nursery\n\nSince putting a seed in the soil is a powerful image of creation and resurrection, we will explore this simple but fundamental act from a philosophical perspective.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "youtube videos about permaculture, soil mixes and seedling production",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "texts (poems, excerpts of novels and philosophical texts) about the spiritual act of planting a seed",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "We will learn about soil ingredients and mix our potting mix"
+          },
+          {
+            "kind": "exercise",
+            "description": "We will learn about seeds and seedling production and prepare our seed nursery"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Getting ready: preparing planters from recycled materials",
+        "description": "We will check on the seedlings, which most likely still need some time to grow up.\n\nWe will use the time to make planters from recycled wood, plastic bottles and other materials.\n\nWe will also prepare our compost bins for aerobic and anaerobic digestion of our garden and kitchen waste.\n\nWe will reflect on waste, reusing, repurposing and recycling.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "youtube and pinterest tutorials about recycling different materials to containers for planting",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "resources on anaerobic and aerobic composting",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "text that contemplates what is waste and how „waste” can be given a second life or be recycled",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "We will use the time to make planters from recycled wood, plastic bottles and other materials."
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Planting!",
+        "description": "The seedlings should be big enough by now and we will plant them in the pots and containers, that we prepared the week before.\n\nSince now we got our hands dirty a couple of times already, we will reflect what the interaction with soil, seeds, compost and plants feels, and what it does with us.\n\nWe will explore the garden with our five senses aiming for greater awareness of",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "youtube tutorials about transplanting seedlings",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "we will plant them in the pots and containers, that we prepared the week before."
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Harvesting seeds and propagating plants from cuttings",
+        "description": "(Outdoor session in Al Azhar Park).\n\nAl Azhar Park incorporates an intriguing variety of edible plants, herbs, and fruit trees. The landscape designers of the park purposefully included these in the park with the objective that visitors and Darb El-Ahmar residents can forage from the plants of the park.\n\nWe will explore the landscape of the park, idenify edible plants in the park, collect seeds and take cuttings for propagation.\n\nWe will also look at the concept of urban foraging and map, where else in Cairo edible plants have been adopted in landscaping.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The design of Parks and Gardens in Cairo, Egypt: Their Heritage, Tradition and Development",
+            "note": "El-Masry, L. and Stino, M., 2011",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Al-Azhar Park, Cairo and the Revitalisation of Darb Al-Ahmar: Project Brief",
+            "note": "Aga Khan Trust for Culture, 2005",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Text or video about foraging in cities",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "you tube video about propagation of plant cuttings",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "field_visit",
+            "description": "Outdoor session in Al Azhar Park"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Tending the garden I: mulching, weeding, pruning, etc.",
+        "description": "We will tend the garden and do all necessary work.\n\nWe will also learn some tips and tricks for garden maintenance\n\nWe will also look into plant nutrition and organic fertilizers\n\nWork or recreation? Chore or passion? We’ll reflect on the experience of gardening and its impacts on body and soul.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "a text on the mental and psycological effects of interacting with nature and working in a garden",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "text about the increasing interest in gardening",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Between tech and tradition",
+        "description": "We will discover, how technology is increasingyl applied in gardening and agriculture through sensors, robots, drones, etc.\n\nWe will test two different systems of sensors for plant control (Flower Power from Parrot and a self-made Arduino based kit).\n\nWe will explore if all this actually makes us smarter or leaves us more ignorant.\n\nWe will talk about the dichotonomy of tech and tradition in gardening and agriculture and explore if and how the two can be reconciled.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "text on the future of farming using modern technologies",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "We will test two different systems of sensors for plant control (Flower Power from Parrot and a self-made Arduino based kit)."
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Tending the garden II: What else there is to know",
+        "description": "We will tend the garden and do all necessary work.\n\nThis session will also leave room for aditional topics and questions that came up during the previous weeks (e.g. fertilization, pest control, etc.)\n\nResources: depending on interest of the group",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Urban Homesteading",
+        "description": "We will learn the history of urban homesteading in Cairo and explore how contemporary homesteading in Cairo can look like. We will therefore discuss local, community based models and explore, how we can form local food communities.\n\nWe will tend our garden and test some methods for home steading, like drying fruit and vegetables, making jam, pickles, pasta, etc.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "text on urban homesteading",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "recipies for the various methods of preserving",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Reap what you sow",
+        "description": "We will celebrate with a meal (breakfast/ dinner, depending on the day time) with fresh produce from our garden, reflect on our gardening journey and share our experiences.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": "Requirements:\n\nGardening is dirty business and that’s why it’s fun! Students are recommended to bring an extra set of gardening cloths (old pant and shirt) that can get dirty. All work will be carried out directly by hand, without shovels or similar. If you wish to use a shovel or gloves, please bring your own.\n\nBesides the course fee, participants are requested to pay a 200 EGP cost contribution."
+  }
+}

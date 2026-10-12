@@ -74,9 +74,9 @@
   {
     "id": "ab-uses-of-the-erotic-course-flow-8",
     "upload": "uploads/1/9/1/0/19102967/ab_uses_of_the_erotic_course_flow__8_.pdf",
-    "source": null,
+    "source": "mirror",
     "method": "text",
-    "pages": null,
+    "pages": 1,
     "links": 0,
     "arabic_share": 0,
     "courses": [
@@ -1392,6 +1392,102 @@
     "arabic_share": 0,
     "courses": [
       "/summer-2022.html#other-worlds-are-possible-quotidian-prefigurations"
+    ]
+  },
+  {
+    "id": "page-growing-food-and-wellbeing-gardening-in-the-city",
+    "upload": "/growing-food-and-wellbeing-gardening-in-the-city.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.076,
+    "courses": [
+      "/growing-food-and-wellbeing-gardening-in-the-city.html"
+    ]
+  },
+  {
+    "id": "page-identity-culture-and-resistance",
+    "upload": "/identity-culture-and-resistance.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.017,
+    "courses": [
+      "/identity-culture-and-resistance.html"
+    ]
+  },
+  {
+    "id": "page-in-preparation-of-a-movie",
+    "upload": "/in-preparation-of-a-movie.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.057,
+    "courses": [
+      "/in-preparation-of-a-movie.html"
+    ]
+  },
+  {
+    "id": "page-libertarian-economics-and-alternative-model-building",
+    "upload": "/libertarian-economics-and-alternative-model-building.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.402,
+    "courses": [
+      "/libertarian-economics-and-alternative-model-building.html"
+    ]
+  },
+  {
+    "id": "page-mafish-faiydah-a-case-study-on-myth-and-silenced-voices",
+    "upload": "/mafish-faiydah-a-case-study-on-myth-and-silenced-voices.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.027,
+    "courses": [
+      "/mafish-faiydah-a-case-study-on-myth-and-silenced-voices.html"
+    ]
+  },
+  {
+    "id": "page-power-and-space-critical-approaches-to-the-built-environment",
+    "upload": "/power-and-space-critical-approaches-to-the-built-environment.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.061,
+    "courses": [
+      "/power-and-space-critical-approaches-to-the-built-environment.html"
+    ]
+  },
+  {
+    "id": "page-roles-and-rituals-performativity-in-contemporary-arts-and-society",
+    "upload": "/roles-and-rituals-performativity-in-contemporary-arts-and-society.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.079,
+    "courses": [
+      "/roles-and-rituals-performativity-in-contemporary-arts-and-society.html"
+    ]
+  },
+  {
+    "id": "page-social-determinants-of-health",
+    "upload": "/social-determinants-of-health.html",
+    "source": "zip",
+    "method": "text",
+    "pages": 1,
+    "links": 0,
+    "arabic_share": 0.009,
+    "courses": [
+      "/social-determinants-of-health.html"
     ]
   },
   {

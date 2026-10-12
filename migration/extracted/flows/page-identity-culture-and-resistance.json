@@ -1,0 +1,417 @@
+{
+  "sha256": "eb310cf9fc98eb4fea2cc5f1e92bdbab12bb1ec1456905e23f2aa83aba914ec0",
+  "model": "claude-code:haiku",
+  "version": "1",
+  "data": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction: Defining & Situating Identity and Culture",
+        "description": "Reviewing concepts students were exposed to in the first trimester: What is culture, hegemony, resistance? What is ‘text’? Where is politics? Where is the archive? Whose archive?\n\nIntersectional feminist and anti-racist approaches/Positionality\n\nHow is culture significant in bridging between emotion and politics?\n\nSession will consist of icebreakers, activities and exercises to think about identity, positionality, the body and creative production.",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Session will consist of icebreakers, activities and exercises to think about identity, positionality, the body and creative production."
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "The politics of language",
+        "description": "Language and power: Are some languages more valuable than others? Are some Arabics more valuable than others?\n\nEmotion and language\n\nNon-verbal language, visual language, body language",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Queering the Mother Tongue",
+            "note": "Mourad, S. (2013), International Journal of Communication, vol 7, pp. 2533–2546.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Oral Traditions",
+            "note": "William Nu’utupu Giles & Travis T. (NPS 2015)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Minute on Indian Education",
+            "note": "Thomas Babington Macaulay (1835)",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "نحو “مصر بالعامية” أقرب لطفلك",
+            "note": "ميراندا بشارة (2016). مدى مصر",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "The Body, Reproduction & Performance",
+        "description": "Politics of dress codes/costumes\n\nLiteral and figurative reproduction through physical performance and embodiment, respectability\n\nAbortion, disability",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The revolution shall not pass through women’s bodies: Egypt, uprising and gender politics",
+            "note": "Hafez, S. (2014). The Journal of North African Studies 19(2), 172-185.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Femininity and Dance in Egypt: Embodiment and Meaning in al-Raqs al-Baladi",
+            "note": "Roushdy, N. (2010). Cairo Papers 32(3).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "At the Seams: a Political History of Palestinian Embroidery",
+            "note": "Talty, A. (2016). Reorient Magazine.",
+            "href": "http://www.reorientmag.com/2016/08/palestinian-embroidery/"
+          },
+          {
+            "type": "reading",
+            "title": "Faces and Phases",
+            "note": "Muholi, Z. (2012). Transition 107, 112-114.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Colonialism, Imperialism & Orientalism",
+        "description": "Orientalism: External representations historically\n\nCultural imperialism: cultural productions used to justify violence\n\nSelf-representations of this history\n\nHierarchies of aesthetics",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Politics of Preservation: Privileging One Heritage over Another",
+            "note": "Bell, J. S. (2013). International Journal of Cultural Property 20(4), 431-450.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cultural Imperialism and Nationalism: The Struggle to Define and Control the Heritage of Arab Art in Egypt",
+            "note": "Reid, D. M. (1992). International Journal of Middle East Studies, 24(1), 57-76.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Palestinian literature and film in postcolonial feminist perspective",
+            "note": "Ball, A. (2012). New York, NY & London, UK: Routledge.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Orientalism in Film",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Nationalisms, Militarization & Securitization",
+        "description": "Propaganda & National Anthems\n\nPerforming nationalisms and their contradictions\n\nExceptional threats of terrorism",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Gender and nation",
+            "note": "Yuval-Davis, N. (1998), in Women, Ethnicity and Nationalism: The Politics of Transition, ed. by Rick Wilford & Robert Miller. London & New York: Routledge, pp. 23-35.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Imagined Communities: Reflections on the Origin and Spread of Nationalism",
+            "note": "Anderson, B. (1983), London: Verso.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Violence and masculinity in Maroun Baghdadi’s Lebanese war films",
+            "note": "Khatib, L. (2007). Critical Arts 21(1), 68-85.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The (Little) Militia Man: Memory and Militarized Masculinity in Lebanon",
+            "note": "Haugbolle, S. (2012). Journal of Middle East Women's Studies, Volume 8, Number 1, Winter 2012, pp. 115-139.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Arab Idol - Mohammed Assaf",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "2011 protest chants/song",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Race & Religion",
+        "description": "Black-Egyptian Identity\n\nRefugee Communities\n\nInternalized racism\n\nPortrayal of ‘Islamists’\n\nCoptic Christians: Oppression and resistance",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "سوداء",
+            "note": "هدى سالم. (2016). إختيار.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Nationalism and Otherness: The representation of Islamic fundamentalism in Egyptian film",
+            "note": "Khatib, L. (2006). European Journal of Cultural Studies 9(1), 63-80.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Islamic Televangelism: Religion, Media and Visuality in Contemporary Egypt",
+            "note": "Moll, Y. (2010). Arab Media & Society 10.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Black Skin, White Masks",
+            "note": "Fanon, F. (1952). Grove Press.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Black Skin, White Masks: Cinema Inspired by Frantz Fanon",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Words of Women from the Egyptian Revolution | Episode 4: Nada Zatouna",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Class & Urban Space",
+        "description": "Mahraganat\n\nArchitecture\n\nStreet art\n\nYouth and Public Space\n\nBillboards and advertisements",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "العشوائيات أحسن من التجمع",
+            "note": "عقل العين.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Mountain View Ads",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Billboard Intervention",
+            "note": "Van Deer, T. et al. (2016). Kohl: a Journal for Body and Gender Research 2(1).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Six Explosive Tracks that Define Mahraganat, Egypt's Wildly Popular Street Music",
+            "note": "Holslin, P. (2017). Vice.",
+            "href": "https://thump.vice.com/en_us/article/ezwqke/explosive-mahraganat-egypt"
+          },
+          {
+            "type": "reading",
+            "title": "Madam wants her Rights",
+            "note": "Ayloul. (2010). Al Akhbar Newspaper.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "el Seed: a project of peace, painted across 50 buildings",
+            "note": null,
+            "href": "https://www.ted.com/talks/el_seed_a_project_of_peace_painted_across_50_buildings"
+          },
+          {
+            "type": "reading",
+            "title": "The effect of the television viewership on self-image and perception of the Upper Egyptians among the Cairenes",
+            "note": "Hamed, D. M. (2013). American University in Cairo.",
+            "href": "http://dar.aucegypt.edu/handle/10526/3347"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Family, Friendship and Kinship",
+        "description": "Heteronormativity & Marriage\n\nHierarchy of relationships (Reproductions)\n\nRelationality, Connectivity and Selving\n\nInterfaith and interracial relationships\n\nLove",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "خرابيش نسوية",
+            "note": null,
+            "href": "https://www.facebook.com/comicskilljoy/"
+          },
+          {
+            "type": "reading",
+            "title": "Intimate Selving in Arab Families. Gender, Self, and Identity",
+            "note": "Joseph, S. (1999). Syracuse University Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The privilege of revolution: Gender, class, space and affect in Egypt",
+            "note": "Winegar, J. (2012). Journal of the American Ethnological Society, 39 (1): 67-70.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Cairo Exit",
+            "note": "(2010)",
+            "href": "https://tribecafilm.com/filmguide/archive/512ce1091c7d76e0460007f3-cairo-exit"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Sex, Desire & Intimacy",
+        "description": "Documenting women’s sexuality\n\nQueer Desire\n\nSilence and taboo around sexuality - use of metaphors",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Uses of the Erotic: The Erotic as Power",
+            "note": "Lorde, A. (2007). Sister Outsider. Essays and Speeches. Berkeley: Crossing. pp. 53-59.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Performing Disidentifications",
+            "note": "Muñoz, J. E. (1999). In J.E. Muñoz (Ed.), Disidentifications. Queers of Color and the Performance of Politics (pp. 1-36). Minneapolis: University of Minnesota Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Using Life",
+            "note": "Naji, A. (2017). The University of Texas at Austin.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Constructing and echoing social perceptions: Gay characters in Egyptian film",
+            "note": "Youssef, A. (2017). Mada Masr.",
+            "href": "https://www.madamasr.com/en/2017/10/05/feature/culture/constructing-and-echoing-social-perceptions-gay-characters-in-egyptian-film/"
+          },
+          {
+            "type": "listen",
+            "title": "أغاني عربية عن المثلية والتعددية الجنسية والجندرية",
+            "note": null,
+            "href": "https://raseef22.com/culture/2017/03/15/%d8%a3%d8%ba%d8%a7%d9%86%d9%8a-%d8%b9%d8%b1%d8%a8%d9%8a%d8%a9-%d8%b9%d9%86-%d8%a7%d9%84%d9%85%d8%ab%d9%84%d9%8a%d8%a9-%d9%88%d8%a7%d9%84%d8%aa%d8%b9%d8%af%d8%af%d9%8a%d8%a9-%d8%a7%d9%84%d8%ac%d9%86/"
+          },
+          {
+            "type": "reading",
+            "title": "Guapa",
+            "note": "Haddad, S. (2016). Other Press.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Blog on Arab Queer Cinema by Samar Habib",
+            "note": null,
+            "href": "https://www.samarhabib.net/blog"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Wrap Up & Creative Resistance",
+        "description": "Joy as Resistance\n\nStudents’ Projects",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Students’ Projects"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Pop goes the Arab World: Popular music, gender, politics, and transnationalism in the Arab World",
+        "note": "Abdel-Nabi, S. et. al. (2004). Hawwa, 2(2), 231-254.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Cultural resistance reader",
+        "note": "Duncombe, S. (2002). London; New York: Verso.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Popular culture in the Arab World: Arts, politics, and the media",
+        "note": "Hammond, A. (2007). Cairo, Egypt: The American University in Cairo Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Shifting Positionalities: Empirical Reflections on a Queer/Trans of Colour Methodology",
+        "note": "Haritaworn, Jin (2008), in Sociological Research Online. 13 (1) [30.01.2014].",
+        "href": "http://www.socresonline.org.uk/13/1/13.html"
+      },
+      {
+        "type": "reading",
+        "title": "Resistance in contemporary Middle Eastern cultures: literature, cinema and music",
+        "note": "Laachir, K & Talajooy, S. (2013). New York, NY: Routledge.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Feminist Methods in Social Research",
+        "note": "Reinharz, S. (1992) New York & Oxford: Oxford University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Cultures of Resistance in Palestine and Beyond: On the Politics of Art, Aesthetics, and Affect",
+        "note": "Salih, R. & Richter-Devroe, S. (2014). Arab Studies Journal, XXII(1), 8-28.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Feminist Research Methodology – Making Meaning of Meaning-making",
+        "note": "Wickramasinghe, Maithree, (2010) London/New York: Routledge",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Creative Reckonings: The politics of art and culture in contemporary Egypt",
+        "note": "Winegar, J. (2006). Redwood City, CA: Stanford University Press.",
+        "href": null
+      }
+    ],
+    "notes": "The course will include various creative activities and students will be expected to present/share/submit a self-portrait and/or piece of creative resistance in whatever form they choose (written, spoken, song, dance, poetry, film, etc.) at the end of the course. Students will also be asked to reflect each week on how they personally relate to themes discussed in class through a visual or written ‘journal’."
+  }
+}
