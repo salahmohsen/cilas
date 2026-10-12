@@ -3,7 +3,7 @@ import type { Payload } from 'payload'
 import { lexical } from '../../seed/seed.utils'
 import { keepNotIn, splitBios, withoutRepeats, withSubject, type FlowBio } from './flow-notes'
 import { publishCourse } from './import-courses'
-import { isMostlyArabic } from './normalise-courses'
+import { isMostlyArabic, splitLocales } from './normalise-courses'
 import type { Syllabus } from './syllabus-schema'
 
 export type FlowEntry = { id: string; courses: string[] }
@@ -253,6 +253,10 @@ export const importFlows = async (
           OFFERED_BY,
         ].join('\n'),
       )
+      // A bilingual flow's notes: each language on its own page.
+      const notesByLocale = notes ? splitLocales(notes) : { en: '', ar: '' }
+      const notesEn = notesByLocale.en || null
+      const notesAr = notesByLocale.ar || null
 
       // Step A: the rows and their non-localized fields; English text too.
       await payload.update({
@@ -269,7 +273,8 @@ export const importFlows = async (
           })),
           bibliography: syllabus.bibliography.map((m) => materialShape(m, english)),
           ...(english && description ? { description } : {}),
-          ...(english ? { facilitator_note: notes } : {}),
+          // The notes' English paragraphs, whatever the flow's language.
+          facilitator_note: notesEn,
         },
         draft: true,
         overrideAccess: true,
@@ -304,8 +309,20 @@ export const importFlows = async (
             })),
             bibliography: syllabus.bibliography.map((m, j) => materialShape(m, true, stored.bibliography?.[j]?.id)),
             ...(description ? { description } : {}),
-            facilitator_note: notes,
+            facilitator_note: notesAr,
           },
+          locale: 'ar',
+          draft: true,
+          overrideAccess: true,
+        } as Parameters<Payload['update']>[0])
+      }
+
+      // An English flow's Arabic notes still go to the Arabic page.
+      if (english) {
+        await payload.update({
+          collection: 'courses',
+          id: course.id,
+          data: { facilitator_note: notesAr },
           locale: 'ar',
           draft: true,
           overrideAccess: true,

@@ -205,7 +205,8 @@ export const importCourses = async (
       {
         title: c.title,
         slug,
-        subtitle: c.subtitle,
+        // A subtitle belongs to the language it is written in.
+        subtitle: c.subtitle && !isMostlyArabic(c.subtitle) ? c.subtitle : null,
         ...(c.epigraph ? { epigraph: c.epigraph } : {}),
         course_type: c.course_type,
         cycle,
@@ -226,8 +227,9 @@ export const importCourses = async (
     // The Arabic locale: an Arabic title (given, or the title itself when it
     // is Arabic) and the description's Arabic paragraphs.
     const titleAr = c.title_ar ?? (isMostlyArabic(c.title) ? c.title : null)
+    const subtitleAr = c.subtitle && isMostlyArabic(c.subtitle) ? c.subtitle : null
     const descriptionAr = splitLocales(c.description).ar
-    if (titleAr || descriptionAr || c.epigraph_ar) {
+    if (titleAr || descriptionAr || subtitleAr || c.epigraph_ar) {
       const current = (await payload.findByID({ collection: 'courses', id, depth: 0, draft: true, overrideAccess: true })) as {
         import_status?: string | null
       }
@@ -237,6 +239,7 @@ export const importCourses = async (
           id,
           data: {
             ...(titleAr ? { title: titleAr } : {}),
+            ...(subtitleAr ? { subtitle: subtitleAr } : {}),
             ...(descriptionAr ? { description: rich(descriptionAr) } : {}),
             ...(c.epigraph_ar ? { epigraph: c.epigraph_ar } : {}),
           },
