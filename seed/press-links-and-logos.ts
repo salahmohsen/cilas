@@ -21,7 +21,8 @@ const payload: Payload = await getPayload({ config })
  *
  * Logos for Mada Masr, openDemocracy and Mashallah News are their own
  * marks (from Wikimedia Commons and the outlets' sites), rendered to PNG,
- * since Media turns uploads into WebP.
+ * since Media turns uploads into WebP. The Weissbourd Conference talk takes
+ * the University of Chicago's seal (from biocars.uchicago.edu).
  *
  *   npx tsx seed/press-links-and-logos.ts
  */
@@ -87,6 +88,8 @@ const logos: Array<{ outlet: string; file: string; alt: string }> = [
   { outlet: 'Mada Masr', file: 'madamasr.png', alt: 'Mada Masr logo' },
   { outlet: 'OpenDemocracy', file: 'opendemocracy.png', alt: 'openDemocracy logo' },
   { outlet: 'Mashallah News', file: 'mashallah.png', alt: 'Mashallah News logo' },
+  // The talk was given at the University of Chicago; its seal stands for the conference.
+  { outlet: '2016 Weissbourd Conference', file: 'uchicago.png', alt: 'University of Chicago seal' },
 ]
 for (const { outlet, file, alt } of logos) {
   const { docs } = await payload.find({
