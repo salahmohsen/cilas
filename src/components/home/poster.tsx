@@ -1,5 +1,7 @@
 'use client'
 
+import { ArrowRight } from 'lucide-react'
+
 import { DeadlineCountdown } from '@/components/home/deadline-countdown'
 
 /**
@@ -22,6 +24,8 @@ export type PosterData = {
   /** Above the title: what it is ("Thematic Course", the publication). */
   label?: string
   title: string
+  /** A few lines under the title: what it is about. */
+  description?: string
   /** Under the title: who ("With Ghosoun Ismail", the author). */
   credit?: string
   image?: { src: string; alt: string }
@@ -36,7 +40,7 @@ export type PosterData = {
 const FALLBACK = '/assets/images/cilas-classroom.jpg'
 
 export function Poster({ poster }: { poster: PosterData }) {
-  const { layout, label, title, credit, image, meta, details, action, href } = poster
+  const { layout, label, title, description, credit, image, meta, details, action, href } = poster
   const picture = (
     <div className="poster-image">
       {/* Covers come from the storage host, as on course pages. */}
@@ -64,17 +68,26 @@ export function Poster({ poster }: { poster: PosterData }) {
         ))}
         <span className="poster-action" aria-hidden>
           {action}
+          <ArrowRight className="poster-arrow" size={16} strokeWidth={2} />
         </span>
       </span>
     </div>
   )
+  // The title and its description stay together, one group.
   const heading = (
-    <h3 className="poster-title" dir="auto">
-      {/* The whole poster is the link's target; the title names it. */}
-      <a className="poster-link" href={href}>
-        {title}
-      </a>
-    </h3>
+    <div className="poster-heading">
+      <h3 className="poster-title" dir="auto">
+        {/* The whole poster is the link's target; the title names it. */}
+        <a className="poster-link" href={href}>
+          {title}
+        </a>
+      </h3>
+      {description ? (
+        <p className="poster-description" dir="auto">
+          {description}
+        </p>
+      ) : null}
+    </div>
   )
 
   return (

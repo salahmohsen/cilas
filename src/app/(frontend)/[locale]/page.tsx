@@ -4,10 +4,12 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import { getPublicationCovers, type Locale } from '@/api/articles.api'
+import { getContactForm } from '@/api/contact.api'
 import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/api/home.api'
 import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { StatsBand } from '@/components/arc/blocks/stats-band/stats-band'
+import { ContactForm } from '@/components/contact/contact-form'
 import { HomeArticles } from '@/components/home/home-articles'
 import { HomeHero } from '@/components/home/home-hero'
 import { OpenNow } from '@/components/home/open-now'
@@ -32,7 +34,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const payload = await getPayload({ config })
   const tBridge = await getTranslations('Bridge')
-  const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers] =
+  const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers, contact] =
     await Promise.all([
       getTranslations('Home'),
       getTranslations('Article'),
@@ -43,6 +45,7 @@ export default async function HomePage({ params }: Props) {
       getHomeStats(payload),
       getPressOutlets(payload, locale as Locale),
       getPublicationCovers(payload),
+      getContactForm(payload, locale as Locale),
     ])
 
   const posts = articles.docs.map((a) =>
@@ -132,7 +135,7 @@ export default async function HomePage({ params }: Props) {
           contact={{
             label: t('faqContact'),
             description: t('faqContactText'),
-            href: `/${locale}/contact`,
+            href: '#contact',
           }}
           description={t('faqText')}
           items={(t.raw('faq') as Array<{ q: string; a: string }>).map((f, i) => ({
@@ -144,6 +147,12 @@ export default async function HomePage({ params }: Props) {
           title={t('faqTitle')}
           variant="accordion"
         />
+
+        {contact ? (
+          <div className="home-contact" id="contact">
+            <ContactForm {...contact} flush />
+          </div>
+        ) : null}
       </div>
     </>
   )

@@ -13,16 +13,20 @@ export function ContactForm({
   formId,
   topics,
   email,
+  flush = false,
 }: {
   formId: number
   topics: string[]
   email: string | null
+  /** In the page's gutter, as on the home page, rather than in its own width. */
+  flush?: boolean
 }) {
   const t = useTranslations('Contact')
   return (
     <ContactSection
       description={t('text')}
       email={email}
+      flush={flush}
       labels={{
         form: t('title'),
         name: t('name'),

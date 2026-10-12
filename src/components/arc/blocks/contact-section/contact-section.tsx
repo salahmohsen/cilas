@@ -124,6 +124,8 @@ export interface ContactSectionProps {
   labels?: Partial<ContactLabels>
   /** The address shown beside the form, with a copy button; leave out for none. */
   email?: string | null
+  /** Drops the section's own width and padding, so it sits in the page's gutter. */
+  flush?: boolean
   className?: string
 }
 
@@ -935,6 +937,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(funct
     offices = contactExampleOffices,
     labels: labelsProp,
     email = 'hello@example.com',
+    flush = false,
     className,
   },
   ref,
@@ -970,6 +973,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(funct
       ref={ref}
       className={[styles.contact, className].filter(Boolean).join(' ')}
       data-variant={variant}
+      data-flush={flush || undefined}
       aria-labelledby={`${id}-title`}
     >
       <div className={styles.inner}>

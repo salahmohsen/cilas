@@ -1984,10 +1984,15 @@ h3 {
   --poster-ink: #121212;
   --poster-paper: #ffffff;
   --poster-color: #ffb71b;
+  /* One inset for the panel and every strip cell, so their text shares edges. */
+  --poster-pad: clamp(0.875rem, 2.2cqi, 1.5rem);
   position: relative;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  /* Clip, not hide: a long title or a translation grows the poster past its
+     16:9 instead of being cut off. */
+  overflow: clip;
+  border: 1px solid var(--poster-ink);
   border-radius: 1rem;
   background: var(--poster-paper);
   color: var(--poster-ink);
@@ -2019,15 +2024,20 @@ h3 {
   flex: 1;
   flex-direction: column;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.5rem;
   min-width: 0;
-  padding: clamp(0.875rem, 2.2cqi, 1.75rem);
+  padding: var(--poster-pad);
   background: var(--poster-color);
 }
 .poster[data-layout='3'] .poster-panel {
   flex: none;
   flex-direction: row;
-  align-items: baseline;
+  align-items: flex-start;
+}
+.poster[data-layout='3'] .poster-credit {
+  flex: none;
+  max-width: 40%;
+  text-align: end;
 }
 .poster-image {
   position: relative;
@@ -2108,7 +2118,7 @@ h3 {
   align-items: center;
   background: var(--poster-color);
   border-inline-end: 1px solid var(--poster-ink);
-  padding-inline: clamp(0.75rem, 2cqi, 1.25rem);
+  padding-inline: var(--poster-pad);
 }
 .poster-mark img {
   height: clamp(1.75rem, 5cqi, 2.75rem);
@@ -2126,17 +2136,47 @@ h3 {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.25rem 1.5rem;
-  padding-inline: clamp(0.75rem, 2cqi, 1.25rem);
+  padding-inline: var(--poster-pad);
   background: var(--poster-paper);
   font-size: clamp(0.75rem, 1.4cqi, 0.9375rem);
 }
+.poster-heading {
+  display: grid;
+  gap: 0.75rem;
+}
+.poster-description {
+  display: -webkit-box;
+  max-width: 34ch;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-size: clamp(0.875rem, 1.6cqi, 1.0625rem);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+.poster[data-layout='3'] .poster-description {
+  max-width: 60ch;
+  -webkit-line-clamp: 2;
+}
+/* What the poster does, set apart as a pill so it reads as the way in. */
 .poster-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
   margin-inline-start: auto;
+  border-radius: 999px;
+  padding: 0.375rem 0.875rem;
+  background: var(--poster-ink);
+  color: var(--poster-paper);
   font-weight: 600;
+  transition-property: gap;
+  transition-duration: 150ms;
+}
+.poster-arrow:dir(rtl) {
+  scale: -1 1;
 }
 .poster:hover .poster-action {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+  gap: 0.625rem;
 }
 
 /* Narrow: every layout stacks, image first. */
@@ -2175,4 +2215,13 @@ h3 {
     padding-block: 0.625rem;
     border-top: 1px solid var(--poster-ink);
   }
+}
+.poster[data-layout='3'] .poster-heading {
+  flex: 1;
+}
+
+/* The contact form after the questions, in the page's gutter; a link from
+   the questions lands here below the sticky header. */
+.home-contact {
+  scroll-margin-top: 6rem;
 }

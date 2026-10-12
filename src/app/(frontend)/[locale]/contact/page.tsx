@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
+import { getContactForm } from '@/api/contact.api'
 import { ContactForm } from '@/components/contact/contact-form'
-import { CONTACT_FORM_TITLE } from '@/lib/contact'
 
 export const revalidate = 3600
 
@@ -20,26 +20,11 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ContactPage({ params }: Props) {
   const { locale } = await params
   const payload = await getPayload({ config })
-  const [{ docs }, settings] = await Promise.all([
-    payload.find({
-      collection: 'forms',
-      where: { title: { equals: CONTACT_FORM_TITLE } },
-      limit: 1,
-      depth: 0,
-      locale: locale as 'en' | 'ar',
-      fallbackLocale: 'en',
-    }),
-    payload.findGlobal({ slug: 'site-settings', depth: 0 }),
-  ])
-  const form = docs[0]
-  if (!form) notFound()
-  const topicField = form.fields?.find((f) => f.blockType === 'select' && f.name === 'topic')
-  const topics =
-    topicField && 'options' in topicField ? (topicField.options ?? []).map((o) => o.label) : []
-
+  const contact = await getContactForm(payload, locale as 'en' | 'ar')
+  if (!contact) notFound()
   return (
     <div className="contact-page">
-      <ContactForm email={settings.contact_emails?.info ?? null} formId={form.id} topics={topics} />
+      <ContactForm {...contact} />
     </div>
   )
 }
