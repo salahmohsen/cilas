@@ -575,8 +575,7 @@
       "motionPaused": "Motion paused",
       "outlets": "Outlets"
     },
-    "with": "With {names}",
-    "read": "Read"
+    "with": "With {names}"
   },
   "Contact": {
     "metaTitle": "Contact",

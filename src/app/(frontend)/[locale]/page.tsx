@@ -8,13 +8,11 @@ import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/ap
 import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { StatsBand } from '@/components/arc/blocks/stats-band/stats-band'
-import type { PosterData } from '@/components/home/poster'
-import { PosterCarousel } from '@/components/home/poster-carousel'
+import { HomeArticles } from '@/components/home/home-articles'
 import { HomeHero } from '@/components/home/home-hero'
 import { OpenNow } from '@/components/home/open-now'
 import { Link } from '@/i18n/navigation'
 import { toArticleCard } from '@/lib/article-cards'
-import { posterLayouts } from '@/lib/posters'
 
 // What is open changes with deadlines: worked out again every five minutes.
 export const revalidate = 300
@@ -58,19 +56,6 @@ export default async function HomePage({ params }: Props) {
     }),
   )
   const articlesTitle = articles.featured ? t('featuredTitle') : t('latestTitle')
-  const articleLayouts = posterLayouts(posts.length)
-  const articlePosters: PosterData[] = posts.map((post, i) => ({
-    id: post.id,
-    href: post.href,
-    layout: articleLayouts[i]!,
-    label: post.category,
-    title: post.title,
-    credit: post.author.name || undefined,
-    image: post.image,
-    meta: { lines: [post.dateLabel, post.readTimeLabel].filter(Boolean) },
-    details: [post.category].filter(Boolean),
-    action: t('read'),
-  }))
   const controls = t.raw('controls') as Record<string, string>
 
   return (
@@ -101,7 +86,7 @@ export default async function HomePage({ params }: Props) {
                 {t('allArticles')}
               </Link>
             </header>
-            <PosterCarousel label={articlesTitle} posters={articlePosters} />
+            <HomeArticles posts={posts} title={articlesTitle} />
           </section>
         ) : null}
 
