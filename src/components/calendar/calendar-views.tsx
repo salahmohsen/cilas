@@ -103,7 +103,7 @@ export async function MonthView({
                   className="cal-day-card"
                   closeLabel={labels.close}
                   data-cover={cover ? '' : undefined}
-                  details={<DayAgenda heading={longDate(day)} items={all} labels={labels} />}
+                  details={<DayAgenda items={all} labels={labels} />}
                   media={
                     cover ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -135,6 +135,7 @@ export async function MonthView({
                       ))}
                     </ul>
                   }
+                  panelTitle={longDate(day)}
                   title={number(day)}
                   triggerLabel={labels.open(longDate(day), all.length)}
                 />
@@ -150,11 +151,10 @@ export async function MonthView({
 }
 
 /** One day's agenda: what the quick look of a month's day lists. */
-function DayAgenda({ heading, items, labels }: { heading: string; items: CalendarItem[]; labels: Labels }) {
+function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels }) {
   return (
     <div>
-      <p className="text-sm text-[var(--text-muted)]">{heading}</p>
-      <ul className="mt-4 grid gap-3">
+      <ul className="grid gap-3">
         {items.map((item) => (
           <li className="cal-agenda-item" key={item.key}>
             <span className="cal-time" dir={item.start ? 'ltr' : undefined}>

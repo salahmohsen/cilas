@@ -24,6 +24,8 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   details?: ReactNode
   /** Content only the card shows, not its quick look (which has `details`), such as a summary of what the quick look lists. */
   preview?: ReactNode
+  /** The quick look's title, when it should say more than the card's (a day's full date for its number). */
+  panelTitle?: string
   /** The open control's accessible name, when the title alone does not say what opens (a day's number). */
   triggerLabel?: string
   /** The close control's accessible name, for other languages. */
@@ -130,6 +132,7 @@ export function Card({
   status,
   details,
   preview,
+  panelTitle,
   triggerLabel,
   closeLabel = 'Close quick look',
   open: openProp,
@@ -396,7 +399,7 @@ export function Card({
                   <div className={styles.content}>
                     <Dialog.Title asChild>
                       <motion.h2 className={styles.title} {...shared('title', 'panel')}>
-                        {title}
+                        {panelTitle ?? title}
                       </motion.h2>
                     </Dialog.Title>
                     {description ? (
