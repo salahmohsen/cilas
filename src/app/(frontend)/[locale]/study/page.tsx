@@ -31,7 +31,6 @@ export default async function CoursesPage({ params, searchParams }: Props) {
       <header className="study-header">
         <div className="study-header-text">
           <h1 className="study-title">{t('title')}</h1>
-          <p className="study-intro">{t('intro')}</p>
           {firstYear ? <p className="study-since">{t('since', { count: all, year: firstYear })}</p> : null}
           <div className="article-prose study-quote">
             <blockquote className="quote-with-source">

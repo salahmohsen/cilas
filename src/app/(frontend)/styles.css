@@ -1174,16 +1174,8 @@ a.collection-item:hover {
   letter-spacing: 0;
   line-height: 1.25;
 }
-.study-intro {
-  margin-top: 1.1rem;
-  max-width: 52ch;
-  font-size: 1.1rem;
-  line-height: 1.6;
-  color: var(--text-secondary);
-  text-wrap: pretty;
-}
 .study-since {
-  margin-top: 0.75rem;
+  margin-top: 1rem;
   font-size: 0.875rem;
   font-variant-numeric: tabular-nums;
   color: var(--text-muted);
