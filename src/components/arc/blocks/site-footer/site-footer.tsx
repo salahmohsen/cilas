@@ -205,6 +205,8 @@ function Newsletter({
   return (
     <form
       className={styles.newsletter}
+      // Pages link here ("Subscribe to the newsletter"); one footer per page.
+      id="newsletter"
       onSubmit={submit}
       noValidate
       aria-labelledby={title ? `${id}-title` : undefined}

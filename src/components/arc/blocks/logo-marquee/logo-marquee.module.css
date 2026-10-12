@@ -199,3 +199,17 @@ img.brandMark {
     display: none;
   }
 }
+
+.brandLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 4px;
+  color: inherit;
+  text-decoration: none;
+  transition-property: color;
+  transition-duration: 150ms;
+}
+.brandLink:hover {
+  color: var(--foreground);
+}

@@ -7,12 +7,33 @@ import styles from './logo-marquee.module.css'
 
 export interface LogoMarqueeBrand {
   name: string
-  /** Monochrome SVG, drawn as a mask in the text color. */
-  icon: string
+  /** Monochrome SVG, drawn as a mask in the text color. Leave out to show the name alone. */
+  icon?: string
   /** Single brand color for the mark in color tone. Leave out for brands whose mark is black or white. */
   color?: string
   /** Full color SVG for multicolor marks, used in color tone instead of `icon`. */
   colorIcon?: string
+  /** Where the name leads, such as the outlet's coverage. */
+  href?: string
+}
+
+export interface LogoMarqueeLabels {
+  /** Names the row of logos. */
+  list: string
+  play: string
+  pause: string
+  playLabel: string
+  pauseLabel: string
+  paused: string
+}
+
+const DEFAULT_LABELS: LogoMarqueeLabels = {
+  list: 'Illustrative tool logos',
+  play: 'Play',
+  pause: 'Pause',
+  playLabel: 'Play logo motion',
+  pauseLabel: 'Pause logo motion',
+  paused: 'Motion paused',
 }
 
 export type LogoMarqueeTone = 'color' | 'mono'
@@ -23,6 +44,8 @@ export interface LogoMarqueeProps {
   brands?: LogoMarqueeBrand[]
   /** `color` shows each mark in its official colors; `mono` draws every mark in the text color. */
   tone?: LogoMarqueeTone
+  /** The section's own words, in the page's language. */
+  labels?: Partial<LogoMarqueeLabels>
 }
 
 const exampleBrands: LogoMarqueeBrand[] = [
@@ -36,6 +59,7 @@ const exampleBrands: LogoMarqueeBrand[] = [
 ]
 
 function BrandMark({ brand, tone }: { brand: LogoMarqueeBrand; tone: LogoMarqueeTone }) {
+  if (!brand.icon && !brand.colorIcon) return null
   if (tone === 'color' && brand.colorIcon) {
     // eslint-disable-next-line @next/next/no-img-element
     return (
@@ -66,23 +90,41 @@ function BrandList({
   brands,
   tone,
   duplicate = false,
+  label,
 }: {
   brands: LogoMarqueeBrand[]
   tone: LogoMarqueeTone
   duplicate?: boolean
+  label: string
 }) {
   return (
     <ul
       className={styles.brandList}
-      aria-label={duplicate ? undefined : 'Illustrative tool logos'}
+      aria-label={duplicate ? undefined : label}
       aria-hidden={duplicate || undefined}
     >
-      {brands.map((brand, index) => (
-        <li className={styles.brand} key={`${brand.name}-${index}`}>
-          <BrandMark brand={brand} tone={tone} />
-          <span className={styles.brandName}>{brand.name}</span>
-        </li>
-      ))}
+      {brands.map((brand, index) => {
+        const content = (
+          <>
+            <BrandMark brand={brand} tone={tone} />
+            <span className={styles.brandName} dir="auto">
+              {brand.name}
+            </span>
+          </>
+        )
+        return (
+          <li className={styles.brand} key={`${brand.name}-${index}`}>
+            {brand.href ? (
+              // The copy that completes the loop is hidden, so its links leave the tab order.
+              <a className={styles.brandLink} href={brand.href} tabIndex={duplicate ? -1 : undefined}>
+                {content}
+              </a>
+            ) : (
+              content
+            )}
+          </li>
+        )
+      })}
     </ul>
   )
 }
@@ -92,7 +134,9 @@ export function LogoMarquee({
   description = 'From the first idea to the final handoff, a familiar set of tools stays close to the work.',
   brands = exampleBrands,
   tone = 'color',
+  labels: labelsProp,
 }: LogoMarqueeProps) {
+  const labels = { ...DEFAULT_LABELS, ...labelsProp }
   const titleId = useId()
   const [paused, setPaused] = useState(false)
 
@@ -103,10 +147,11 @@ export function LogoMarquee({
         <p>{description}</p>
       </div>
 
-      <div className={styles.marquee} role="region" aria-label="Illustrative tool logos">
+      {/* The loop runs left to right in both directions; each name keeps its own. */}
+      <div className={styles.marquee} role="region" aria-label={labels.list} dir="ltr">
         <div className={`${styles.track}${paused ? ` ${styles.paused}` : ''}`}>
-          <BrandList brands={brands} tone={tone} />
-          <BrandList brands={brands} tone={tone} duplicate />
+          <BrandList brands={brands} tone={tone} label={labels.list} />
+          <BrandList brands={brands} tone={tone} label={labels.list} duplicate />
         </div>
       </div>
 
@@ -115,23 +160,23 @@ export function LogoMarquee({
           variant="ghost"
           size="sm"
           className={styles.motionButton}
-          aria-label={paused ? 'Play logo motion' : 'Pause logo motion'}
+          aria-label={paused ? labels.playLabel : labels.pauseLabel}
           onClick={() => setPaused((value) => !value)}
         >
           {paused ? (
             <>
               <Play size={16} strokeWidth={1.75} aria-hidden="true" />
-              Play
+              {labels.play}
             </>
           ) : (
             <>
               <Pause size={16} strokeWidth={1.75} aria-hidden="true" />
-              Pause
+              {labels.pause}
             </>
           )}
         </Button>
         <span className={styles.motionStatus} aria-live="polite">
-          {paused ? 'Motion paused' : ''}
+          {paused ? labels.paused : ''}
         </span>
       </div>
     </section>

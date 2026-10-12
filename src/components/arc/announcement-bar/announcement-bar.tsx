@@ -61,11 +61,32 @@ export interface AnnouncementBarProps {
   onCountdownEnd?: (announcement: Announcement) => void
   /** Accessible name of the region. */
   label?: string
+  /** The controls' names, in the page's language. */
+  labels?: Partial<AnnouncementLabels>
   className?: string
 }
 
 const storageKey = (id: string) => `arc-announcement:${id}`
 /** Forgets a remembered dismissal so the bar with this id shows again. */
+export interface AnnouncementLabels {
+  previous: string
+  next: string
+  pause: string
+  resume: string
+  dismiss: string
+  /** A slide's name among several, such as "2 of 3". */
+  position: (position: number, total: number) => string
+}
+
+const DEFAULT_LABELS: AnnouncementLabels = {
+  previous: 'Previous announcement',
+  next: 'Next announcement',
+  pause: 'Pause announcements',
+  resume: 'Resume announcements',
+  dismiss: 'Dismiss',
+  position: (position, total) => `${position} of ${total}`,
+}
+
 export function clearAnnouncementDismissal(id: string) {
   try {
     window.localStorage.removeItem(storageKey(id))
@@ -251,16 +272,16 @@ function Face({
   announcement,
   direction,
   reduced,
-  position,
   total,
   onSize,
   onAction,
   onCountdownEnd,
+  positionLabel,
 }: {
   announcement: Announcement
+  positionLabel: string
   direction: number
   reduced: boolean
-  position: number
   total: number
   onSize: (height: number) => void
   onAction?: (announcement: Announcement) => void
@@ -317,10 +338,11 @@ function Face({
       exit="gone"
       role={total > 1 ? 'group' : undefined}
       aria-roledescription={total > 1 ? 'slide' : undefined}
-      aria-label={total > 1 ? `${position} of ${total}` : undefined}
+      aria-label={total > 1 ? positionLabel : undefined}
       inert={!present || undefined}
     >
-      <p className={styles.message}>
+      {/* A div: a message may hold block content, such as a countdown. */}
+      <div className={styles.message}>
         <span className={styles.text}>{announcement.message}</span>
         {countdown ? (
           <Countdown
@@ -331,7 +353,7 @@ function Face({
           />
         ) : null}
         {cta}
-      </p>
+      </div>
     </motion.div>
   )
 }
@@ -357,11 +379,13 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
       onAction,
       onCountdownEnd,
       label = 'Announcements',
+      labels: labelsProp,
       className,
     },
     ref,
   ) {
     const reduced = !!useReducedMotion()
+    const labels = { ...DEFAULT_LABELS, ...labelsProp }
     const uid = useId()
     const total = messages.length
 
@@ -523,8 +547,8 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
                     announcement={announcement}
                     direction={direction}
                     reduced={reduced}
-                    position={current + 1}
                     total={total}
+                    positionLabel={labels.position(current + 1, total)}
                     onSize={onSize}
                     onAction={onAction}
                     onCountdownEnd={onCountdownEnd}
@@ -537,7 +561,7 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
                     <button
                       type="button"
                       className={styles.icon}
-                      aria-label="Previous announcement"
+                      aria-label={labels.previous}
                       aria-controls={`${uid}-slides`}
                       onClick={() => go(-1)}
                     >
@@ -547,7 +571,7 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
                       <button
                         type="button"
                         className={styles.ring}
-                        aria-label={userPaused ? 'Resume announcements' : 'Pause announcements'}
+                        aria-label={userPaused ? labels.resume : labels.pause}
                         aria-pressed={userPaused}
                         onClick={() => setUserPaused((paused) => !paused)}
                       >
@@ -574,7 +598,7 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
                     <button
                       type="button"
                       className={styles.icon}
-                      aria-label="Next announcement"
+                      aria-label={labels.next}
                       aria-controls={`${uid}-slides`}
                       onClick={() => go(1)}
                     >
@@ -586,7 +610,7 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
                   <button
                     type="button"
                     className={styles.icon}
-                    aria-label="Dismiss"
+                    aria-label={labels.dismiss}
                     onClick={dismiss}
                   >
                     <X size={16} strokeWidth={1.75} aria-hidden="true" />

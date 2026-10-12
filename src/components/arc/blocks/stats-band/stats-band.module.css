@@ -548,3 +548,8 @@
     transition-duration: 0ms;
   }
 }
+
+.band[data-flush] .inner {
+  max-width: none;
+  padding: 0;
+}

@@ -343,3 +343,30 @@
     transform: none;
   }
 }
+
+/* Split: the heading (and the way to ask more) on the start side, the questions beside it. It sits in the page's own gutter. */
+.faq[data-layout='split'] .stack {
+  max-width: none;
+  padding: 0;
+}
+.faq[data-layout='split'] .intro {
+  justify-items: start;
+  text-align: start;
+}
+@container faq (min-width: 48rem) {
+  .faq[data-layout='split'] .stack {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
+    grid-template-rows: auto 1fr;
+    column-gap: var(--space-16);
+    align-items: start;
+  }
+  .faq[data-layout='split'] .stack > :nth-child(2) {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+  }
+  .faq[data-layout='split'] .stack > :nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+  }
+}

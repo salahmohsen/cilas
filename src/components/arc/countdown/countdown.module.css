@@ -211,3 +211,9 @@
     transition: none;
   }
 }
+
+/* Digits read left to right in every language; in a right-to-left page the units still run right to left. */
+.number {
+  direction: ltr;
+  unicode-bidi: isolate;
+}

@@ -468,5 +468,113 @@
     "about": "About the programme",
     "backTo": "Back to the {title}",
     "questions": "See the application questions"
+  },
+  "Home": {
+    "metaTitle": "Cairo Institute of Liberal Arts and Sciences",
+    "heroTitle": "A pedagogy of discovery and attunement",
+    "heroText": "Since 2013, CILAS has invited people from all walks of life to study the liberal arts together, in seasonal courses and in the Bridge, a year-long programme.",
+    "heroWho": [
+      "For high school graduates",
+      "For university walkouts",
+      "For engineers and doctors",
+      "For artists and organisers",
+      "For wisdom seekers",
+      "For anyone curious"
+    ],
+    "seeOpen": "See what’s open",
+    "browseCourses": "Browse courses",
+    "readArticles": "Read the articles",
+    "openTitle": "Open for registration",
+    "openText": "Programmes and courses you can still join, the nearest deadline first.",
+    "closesIn": "Registration closes in",
+    "closesOn": "Closes {date}",
+    "noDeadline": "Open until filled",
+    "closed": "Registration has closed",
+    "programme": "Programme",
+    "noneOpen": "Nothing is open for registration right now.",
+    "noneOpenText": "Each new cycle of courses and each Bridge year is announced in the newsletter.",
+    "subscribe": "Subscribe to the newsletter",
+    "pastCourses": "Browse past courses",
+    "featuredTitle": "Featured articles",
+    "latestTitle": "Latest articles",
+    "allArticles": "All articles",
+    "statsTitle": "CILAS in numbers",
+    "statsText": "Counted from the archive of every cycle and Bridge year.",
+    "statYears": "Years of teaching",
+    "statCourses": "Courses",
+    "statFellows": "Fellows",
+    "statCilasians": "CILASians",
+    "pressTitle": "Written about CILAS",
+    "pressText": "Coverage, interviews and talks, from Cairo and further away.",
+    "faqTitle": "Questions people ask",
+    "faqText": "About studying at CILAS, before you apply.",
+    "faqContact": "Still have a question?",
+    "faqContactText": "Write to {email}.",
+    "faq": [
+      {
+        "q": "What is CILAS?",
+        "a": "An independent school in Cairo, founded in 2013. It runs cycles of courses each season and the Bridge, a year-long programme in the liberal arts, and publishes the work of its community."
+      },
+      {
+        "q": "Who can apply?",
+        "a": "Anyone who has finished high school. For the Bridge, a bachelor’s degree is recommended but not required. Single courses are open to everyone."
+      },
+      {
+        "q": "Do I need to take the whole Bridge year?",
+        "a": "No. Most courses in a cycle can be taken one at a time, without joining a programme."
+      },
+      {
+        "q": "My English isn’t perfect. Can I still join?",
+        "a": "Yes. CILAS welcomes every kind of English and many discussions move between Arabic and English. Application forms are filled in English, as are many of the readings."
+      },
+      {
+        "q": "Are there scholarships?",
+        "a": "Yes, partial scholarships for a limited number of students, based on need. Each programme’s page explains how to ask for one."
+      },
+      {
+        "q": "Where are classes held?",
+        "a": "In Darb el-Labbana, in Cairo. Some courses also meet online."
+      }
+    ],
+    "announcement": "Announcements",
+    "announcementClosesIn": "closes in",
+    "apply": "Apply",
+    "details": "Details",
+    "units": {
+      "days": [
+        "Days",
+        "d"
+      ],
+      "hours": [
+        "Hours",
+        "h"
+      ],
+      "minutes": [
+        "Minutes",
+        "m"
+      ],
+      "seconds": [
+        "Seconds",
+        "s"
+      ]
+    },
+    "unitSpoken": "{unit, select, days {{count, plural, one {# day} other {# days}}} hours {{count, plural, one {# hour} other {# hours}}} minutes {{count, plural, one {# minute} other {# minutes}}} other {{count, plural, one {# second} other {# seconds}}}}",
+    "controls": {
+      "previous": "Previous",
+      "next": "Next",
+      "pause": "Pause",
+      "resume": "Resume",
+      "play": "Play",
+      "dismiss": "Dismiss",
+      "position": "{position} of {total}",
+      "slides": "Articles",
+      "choose": "Choose an article",
+      "pauseRotation": "Pause rotation",
+      "startRotation": "Start rotation",
+      "pauseMotion": "Pause the moving list",
+      "playMotion": "Play the moving list",
+      "motionPaused": "Motion paused",
+      "outlets": "Outlets"
+    }
   }
 }

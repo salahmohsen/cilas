@@ -24,6 +24,8 @@ export type StudyCourse = {
   imageAlt?: string
   /** Sorts the list: newest first. */
   startDate: string
+  /** The last day to register (YYYY-MM-DD), its own or its cycle's. */
+  deadline?: string
   facets: Partial<Record<CourseFacet, FacetValue[]>>
   /** Unique normalised words, space separated. */
   words: string

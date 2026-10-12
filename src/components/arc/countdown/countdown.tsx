@@ -1,6 +1,8 @@
 'use client'
 
 import {
+  createContext,
+  useContext,
   useEffect,
   useImperativeHandle,
   useLayoutEffect,
@@ -47,6 +49,12 @@ export interface CountdownProps {
   label?: string
   /** Clock source in epoch milliseconds. Pass a server-synced clock when the visitor's device time cannot be trusted. */
   clock?: () => number
+  /** Unit names in the page's language: the full name under large digits, the short one in the compact line. */
+  names?: Partial<Record<CountdownUnit, [full: string, short: string]>>
+  /** The ten digits to draw, 0 to 9, such as '٠١٢٣٤٥٦٧٨٩'. Defaults to Western digits. */
+  numerals?: string
+  /** What a screen reader hears for one part, such as "3 days". Defaults to English. */
+  speak?: (value: number, unit: CountdownUnit) => string
   ref?: Ref<HTMLDivElement>
   className?: string
 }
@@ -67,6 +75,7 @@ const NAMES: Record<CountdownUnit, [string, string, string]> = {
   minutes: ['Minutes', 'm', 'minute'],
   seconds: ['Seconds', 's', 'second'],
 }
+const Numerals = createContext('0123456789')
 const MAX_TIMEOUT = 2_147_483_647
 const systemClock = () => Date.now()
 
@@ -146,6 +155,7 @@ function Glyph({
   digit: number
   base: number
 }) {
+  const numerals = useContext(Numerals)
   const offset = useTransform(
     position,
     (current) => ((((digit - current) % base) + base * 1.5) % base) - base / 2,
@@ -162,7 +172,7 @@ function Glyph({
   )
   return (
     <motion.span className={styles.glyph} style={{ y, opacity, filter, visibility }}>
-      {digit}
+      {numerals[digit] ?? digit}
     </motion.span>
   )
 }
@@ -222,6 +232,9 @@ export function Countdown({
   onComplete,
   label = 'Time remaining',
   clock = systemClock,
+  names,
+  numerals = '0123456789',
+  speak,
   ref,
   className,
 }: CountdownProps) {
@@ -332,9 +345,10 @@ export function Countdown({
       : parts
           .filter((part, index) => part.value > 0 || index === parts.length - 1)
           .filter((part) => seconds < 60 || part.unit !== 'seconds')
-          .map(
-            (part) =>
-              `${part.value} ${part.value === 1 ? NAMES[part.unit][2] : `${NAMES[part.unit][2]}s`}`,
+          .map((part) =>
+            speak
+              ? speak(part.value, part.unit)
+              : `${part.value} ${part.value === 1 ? NAMES[part.unit][2] : `${NAMES[part.unit][2]}s`}`,
           )
           .join(', ')
   const swap = reduced
@@ -366,6 +380,7 @@ export function Countdown({
       role="timer"
       aria-label={label}
     >
+      <Numerals.Provider value={numerals}>
       <motion.div className={styles.shell} style={{ width, height }}>
         <div ref={content} className={styles.content} aria-hidden="true">
           <AnimatePresence mode="popLayout" initial={false}>
@@ -396,7 +411,9 @@ export function Countdown({
                             ))}
                           </AnimatePresence>
                         </span>
-                        <span className={styles.name}>{NAMES[part.unit][compact ? 1 : 0]}</span>
+                        <span className={styles.name}>
+                          {(names?.[part.unit] ?? NAMES[part.unit])[compact ? 1 : 0]}
+                        </span>
                       </span>
                     </span>
                   )
@@ -406,6 +423,7 @@ export function Countdown({
           </AnimatePresence>
         </div>
       </motion.div>
+      </Numerals.Provider>
       <span className={styles.srOnly}>{spoken}</span>
     </div>
   )

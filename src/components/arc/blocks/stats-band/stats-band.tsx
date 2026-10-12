@@ -32,6 +32,10 @@ export interface StatsBandProps {
   duration?: number
   /** Number formatting locale. Fixed by default so server and client agree. */
   locale?: string
+  /** The digits to count in, as an Intl numbering system: `latn` (the default) or `arab`. */
+  numberingSystem?: string
+  /** Drops the band's own width and padding, so it sits in the page's gutter. */
+  flush?: boolean
   className?: string
 }
 
@@ -58,13 +62,13 @@ function useReducedMotionSafe() {
  * Formats a stat's number, split from its compact unit so the unit can sit beside the digits like a suffix. A compact
  * stat counts inside its final unit (0.0M to 2.3M) instead of jumping from K to M halfway through.
  */
-function useFormat(stat: Stat, locale: string) {
+function useFormat(stat: Stat, locale: string, numberingSystem: string) {
   return useMemo(() => {
     const decimals = stat.decimals ?? 0
     const digits = new Intl.NumberFormat(locale, {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
-      numberingSystem: 'latn',
+      numberingSystem,
     })
     if (stat.notation !== 'compact')
       return { unit: '', format: (value: number) => digits.format(value) }
@@ -78,7 +82,7 @@ function useFormat(stat: Stat, locale: string) {
             .formatToParts(scale)
             .find((part) => part.type === 'compact')?.value ?? '')
     return { unit, format: (value: number) => digits.format(value / scale) }
-  }, [stat.decimals, stat.notation, stat.value, locale])
+  }, [stat.decimals, stat.notation, stat.value, locale, numberingSystem])
 }
 
 /**
@@ -92,6 +96,7 @@ function CountUp({
   duration,
   reduced,
   locale,
+  numberingSystem,
 }: {
   stat: Stat
   run: boolean
@@ -99,10 +104,11 @@ function CountUp({
   duration: number
   reduced: boolean
   locale: string
+  numberingSystem: string
 }) {
   const live = useRef<HTMLSpanElement>(null)
   const done = useRef(false)
-  const { unit, format } = useFormat(stat, locale)
+  const { unit, format } = useFormat(stat, locale, numberingSystem)
   const final = format(stat.value)
   const suffix = `${unit}${stat.suffix ?? ''}`
 
@@ -319,6 +325,8 @@ export const StatsBand = forwardRef<HTMLElement, StatsBandProps>(function StatsB
     description,
     duration = 1.6,
     locale = 'en-US',
+    flush = false,
+    numberingSystem = 'latn',
     className,
   },
   ref,
@@ -333,6 +341,7 @@ export const StatsBand = forwardRef<HTMLElement, StatsBandProps>(function StatsB
       ref={ref}
       className={[styles.band, className].filter(Boolean).join(' ')}
       data-layout={layout}
+      data-flush={flush || undefined}
       data-in-view={inView || reduced ? '' : undefined}
       aria-labelledby={title ? `${id}-title` : undefined}
       aria-label={title ? undefined : 'Key numbers'}
@@ -377,6 +386,7 @@ export const StatsBand = forwardRef<HTMLElement, StatsBandProps>(function StatsB
                   duration={duration}
                   reduced={reduced}
                   locale={locale}
+                  numberingSystem={numberingSystem}
                 />
               </dd>
               {(stat.detail || stat.context) && (

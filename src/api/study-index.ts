@@ -24,7 +24,7 @@ export const getStudyIndex = unstable_cache(
     return getStudyCourses(payload, locale, (key) => t(key as never))
   },
   // The key names the index's shape: a change to it starts a fresh cache.
-  ['study-index-v3'],
+  ['study-index-v4'],
   { tags: [COURSES_TAG], revalidate: 300 },
 )
 

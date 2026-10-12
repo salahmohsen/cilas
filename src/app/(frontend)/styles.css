@@ -1592,3 +1592,350 @@ a.collection-item:hover {
   aspect-ratio: 4 / 3;
   object-fit: cover;
 }
+
+/* ===================================================== home page */
+
+/* The opening: a framed field of grain over the page's own gutter, the motto
+   set in the reading serif at its bottom edge, where the field is darkest. */
+.home-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: min(86svh, 48rem);
+  align-items: flex-end;
+  overflow: hidden;
+  margin-inline: 1rem;
+  margin-top: 0.5rem;
+  border-radius: 1.5rem;
+  background: #0f1a1c;
+  color: oklch(0.985 0 0);
+}
+@media (min-width: 40rem) {
+  .home-hero {
+    margin-inline: 2rem;
+  }
+}
+@media (min-width: 80rem) {
+  .home-hero {
+    margin-inline: 0;
+  }
+}
+.home-hero-ground {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+/* The light gathers at the top of the end side, away from the copy at the
+   bottom of the start side. */
+[dir='ltr'] .home-hero-ground {
+  scale: -1 1;
+}
+/* A veil under the copy keeps it legible wherever the light drifts. */
+.home-hero::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to top, oklch(0.16 0.012 200 / 0.85), oklch(0.16 0.012 200 / 0.35) 55%, oklch(0.16 0.012 200 / 0) 85%);
+  pointer-events: none;
+}
+.home-hero-inner {
+  display: grid;
+  width: 100%;
+  gap: 1.25rem;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  padding-top: 8rem;
+}
+.home-hero .home-hero-title {
+  max-width: 15ch;
+  color: inherit;
+  font-family: var(--font-serif-latin), var(--font-serif-arabic), Georgia, serif;
+  font-size: clamp(2.75rem, 7vw, 6rem);
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+[dir='rtl'] .home-hero-title {
+  font-family: var(--font-serif-arabic), Georgia, serif;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+.home-hero-text {
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.6vw, 1.175rem);
+  line-height: 1.6;
+  color: oklch(0.985 0 0 / 0.82);
+  text-wrap: pretty;
+}
+.home-hero-who {
+  min-height: 1.5em;
+  font-size: clamp(1rem, 1.6vw, 1.175rem);
+  font-weight: 500;
+}
+.home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+/* The page's links that look like buttons: filled for the one main action,
+   outlined beside it, plain where a link is enough. */
+.home-action {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  border-radius: 999px;
+  padding-inline: 1.25rem;
+  box-shadow: inset 0 0 0 1px oklch(0.985 0 0 / 0.45);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  transition-property: background-color, color, scale;
+  transition-duration: 150ms;
+}
+.home-action:hover {
+  background: oklch(0.985 0 0 / 0.12);
+}
+.home-action[data-primary] {
+  background: oklch(0.985 0 0);
+  box-shadow: none;
+  color: #0f1a1c;
+}
+.home-action[data-primary]:hover {
+  background: oklch(0.92 0 0);
+}
+.home-action[data-outline] {
+  box-shadow: inset 0 0 0 1px var(--border);
+}
+.home-action[data-outline]:hover,
+.home-action[data-plain]:hover {
+  background: var(--muted);
+}
+.home-action[data-plain] {
+  box-shadow: none;
+  padding-inline: 0.75rem;
+  color: var(--text-secondary);
+}
+.home-action:active {
+  scale: 0.96;
+}
+
+/* The sections under the hero share the site's gutter and are held apart by
+   space: 6rem between sections, 2rem from a heading to its content. */
+.home-page {
+  display: grid;
+  gap: clamp(4rem, 9vw, 6rem);
+  padding: clamp(4rem, 9vw, 6rem) 1rem 2rem;
+}
+@media (min-width: 40rem) {
+  .home-page {
+    padding-inline: 2rem;
+  }
+}
+@media (min-width: 80rem) {
+  .home-page {
+    padding-inline: 0;
+  }
+}
+.home-section {
+  display: grid;
+  gap: 2rem;
+  scroll-margin-top: 6rem;
+}
+.home-section-header {
+  display: grid;
+  gap: 0.5rem;
+}
+.home-section-header[data-row] {
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+}
+.home-heading {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+[dir='rtl'] .home-heading {
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+.home-lead {
+  max-width: 52ch;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+.home-more {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-decoration-color: var(--border);
+  text-underline-offset: 4px;
+  transition-property: color, text-decoration-color;
+  transition-duration: 150ms;
+}
+.home-more:hover {
+  color: var(--foreground);
+  text-decoration-color: currentColor;
+}
+
+/* Open for registration: rows, not cards. The image, the words, and the
+   time left on the trailing edge; on narrow screens the time drops under. */
+.home-open-list {
+  display: grid;
+}
+.home-open-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr);
+  gap: 0.5rem 1.25rem;
+  padding-block: 1.5rem;
+  border-top: 1px solid var(--border);
+}
+.home-open-item:last-child {
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 48rem) {
+  .home-open-item {
+    grid-template-columns: 9rem minmax(0, 1fr) minmax(12rem, auto);
+    gap: 2rem;
+    align-items: center;
+  }
+}
+.home-open-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.75rem;
+  background: var(--muted);
+  object-fit: cover;
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+.dark .home-open-image {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+.home-open-copy {
+  display: grid;
+  gap: 0.375rem;
+  align-content: start;
+}
+.home-open-meta {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+.home-open-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+/* The title's link stretches over the whole row, so the row is one target. */
+.home-open-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+.home-open-link:focus-visible {
+  outline: none;
+}
+.home-open-link:focus-visible::after {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-radius: 0.75rem;
+}
+.home-open-item:hover .home-open-title {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.home-open-excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.home-open-deadline {
+  display: grid;
+  gap: 0.25rem;
+  grid-column: 2;
+  justify-items: start;
+}
+@media (min-width: 48rem) {
+  .home-open-deadline {
+    grid-column: auto;
+    justify-items: end;
+    text-align: end;
+  }
+}
+.home-open-deadline-label,
+.home-open-deadline-date {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* Nothing open: a short note and where to go instead. */
+.home-none {
+  display: grid;
+  gap: 1.25rem;
+  justify-items: start;
+}
+.home-none-text {
+  max-width: 52ch;
+  color: var(--text-secondary);
+}
+.home-none-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* An article in the carousel: its image, its publication, its title in the
+   reading serif, its byline. */
+.home-article {
+  display: grid;
+  gap: 0.5rem;
+  text-align: start;
+}
+.home-article-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 0.5rem;
+  border-radius: 1rem;
+  background: var(--muted);
+  object-fit: cover;
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+.dark .home-article-image {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+.home-article-meta {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+.home-article-title {
+  font-family: var(--font-serif-latin), var(--font-serif-arabic), Georgia, serif;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+.home-article-title:dir(rtl) {
+  font-family: var(--font-serif-arabic), Georgia, serif;
+  line-height: 1.5;
+}
+.home-article-byline {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+.home-article:hover .home-article-title {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}

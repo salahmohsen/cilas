@@ -56,7 +56,27 @@ export interface CarouselProps {
   interval?: number
   /** Starts rotating on mount. Off by default, so motion begins with the viewer. */
   autoplay?: boolean
+  /** The controls' names, in the page's language. */
+  labels?: Partial<CarouselLabels>
   className?: string
+}
+
+export interface CarouselLabels {
+  slides: string
+  pause: string
+  play: string
+  choose: string
+  previous: string
+  next: string
+}
+
+const DEFAULT_LABELS: CarouselLabels = {
+  slides: 'Slides',
+  pause: 'Pause slide rotation',
+  play: 'Start slide rotation',
+  choose: 'Choose a slide',
+  previous: 'Previous slide',
+  next: 'Next slide',
 }
 
 type Drag = {
@@ -125,8 +145,10 @@ export function Carousel({
   slideLabel = defaultSlideLabel,
   interval,
   autoplay = false,
+  labels: labelsProp,
   className,
 }: CarouselProps) {
+  const labels = { ...DEFAULT_LABELS, ...labelsProp }
   const slides = Children.toArray(children)
   const count = slides.length
   const last = Math.max(0, count - 1)
@@ -497,7 +519,7 @@ export function Carousel({
         ref={viewportRef}
         className={styles.viewport}
         role="group"
-        aria-label="Slides"
+        aria-label={labels.slides}
         tabIndex={0}
         data-dragging={dragging || undefined}
         onPointerDown={onPointerDown}
@@ -539,7 +561,7 @@ export function Carousel({
               ref={playRef}
               type="button"
               className={styles.control}
-              aria-label={playing ? 'Pause slide rotation' : 'Start slide rotation'}
+              aria-label={playing ? labels.pause : labels.play}
               onClick={toggleRotation}
             >
               <span className={styles.iconSlot}>
@@ -566,7 +588,7 @@ export function Carousel({
               </span>
             </button>
           )}
-          <div className={styles.tabs} role="tablist" aria-label="Choose a slide">
+          <div className={styles.tabs} role="tablist" aria-label={labels.choose}>
             {slides.map((_, i) => (
               <Dot
                 key={i}
@@ -588,7 +610,7 @@ export function Carousel({
             <button
               type="button"
               className={styles.control}
-              aria-label="Previous slide"
+              aria-label={labels.previous}
               aria-disabled={index === 0}
               onClick={() => {
                 if (target.current > 0) select(target.current - 1)
@@ -599,7 +621,7 @@ export function Carousel({
             <button
               type="button"
               className={styles.control}
-              aria-label="Next slide"
+              aria-label={labels.next}
               aria-disabled={index === last}
               onClick={() => {
                 if (target.current < last) select(target.current + 1)

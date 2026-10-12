@@ -43,6 +43,8 @@ export interface FaqSectionProps {
   onQueryChange?: (query: string) => void
   /** A way to reach a person when the answer isn't here. Pass null to hide it. */
   contact?: { label: string; description?: string; href?: string; onClick?: () => void } | null
+  /** Accordion only: `split` sets the heading and contact beside the questions, aligned to the start edge, with no padding of its own. */
+  layout?: 'stacked' | 'split'
   className?: string
 }
 
@@ -327,6 +329,7 @@ function Contact({ contact }: { contact: NonNullable<FaqSectionProps['contact']>
 export const FaqSection = forwardRef<HTMLElement, FaqSectionProps>(function FaqSection(
   {
     variant = 'accordion',
+    layout = 'stacked',
     title = 'Frequently asked questions',
     description = 'Everything you need to know before you install your first component.',
     items = faqExampleItems,
@@ -418,6 +421,7 @@ export const FaqSection = forwardRef<HTMLElement, FaqSectionProps>(function FaqS
     <section
       ref={ref}
       className={[styles.faq, styles[variant], className].filter(Boolean).join(' ')}
+      data-layout={layout}
       aria-labelledby={`${id}-title`}
     >
       {variant === 'accordion' && (

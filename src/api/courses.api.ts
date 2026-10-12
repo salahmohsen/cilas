@@ -156,6 +156,9 @@ export const getStudyCourses = async (
         image: cover?.url ?? undefined,
         imageAlt: cover?.alt ?? undefined,
         startDate: c.schedule?.start_date ?? cycle?.start_date ?? `${cycle?.start_year ?? 0}`,
+        ...((c.registration?.deadline ?? cycle?.registration?.deadline)
+          ? { deadline: (c.registration?.deadline ?? cycle?.registration?.deadline)!.slice(0, 10) }
+          : {}),
         facets,
         words: searchWords([
           ...courseTexts(c),
