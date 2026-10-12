@@ -4,8 +4,9 @@ import type { CalendarItem } from '@/api/calendar.api'
 import { Link } from '@/i18n/navigation'
 import { monthGrid, monthStart, weekDays } from '@/lib/calendar'
 
-/** How many items a month's day cell lists before "+N more". */
+/** How many items a month's day cell lists before "+N more": fewer over a cover, to keep it legible. */
 const IN_CELL = 3
+const IN_COVER_CELL = 1
 
 type Labels = {
   type: (item: CalendarItem) => string
@@ -28,17 +29,17 @@ const timeOf = (item: CalendarItem) => (item.start ? item.start : null)
 
 /** An item's title, linked to its course when it has a page. */
 function ItemTitle({ item, className }: { item: CalendarItem; className?: string }) {
-  const title = (
-    <span className={item.cancelled ? 'line-through opacity-60' : undefined} dir="auto">
-      {item.title}
-    </span>
-  )
+  // dir=auto on the title itself: a title in the other script keeps its own
+  // order, and its clamp's ellipsis falls at its own end.
+  const classes = [className, item.cancelled ? 'line-through opacity-60' : null].filter(Boolean).join(' ')
   return item.href ? (
-    <Link className={`underline-offset-4 hover:underline ${className ?? ''}`} href={item.href}>
-      {title}
+    <Link className={`underline-offset-4 hover:underline ${classes}`} dir="auto" href={item.href}>
+      {item.title}
     </Link>
   ) : (
-    <span className={className}>{title}</span>
+    <span className={classes} dir="auto">
+      {item.title}
+    </span>
   )
 }
 
@@ -74,9 +75,13 @@ export async function MonthView({
       </div>
       <div className="cal-month-body">
         {days.map((day) => {
-          const dayItems = map.get(day) ?? []
-          const cover = dayItems.find((i) => i.cover && !i.cancelled)?.cover
+          const all = map.get(day) ?? []
+          const owner = all.find((i) => i.cover && !i.cancelled)
+          const cover = owner?.cover
+          // The course whose cover the day shows comes first, so its name is on it.
+          const dayItems = owner ? [owner, ...all.filter((i) => i !== owner)] : all
           const outside = !day.startsWith(month)
+          const shown = cover ? IN_COVER_CELL : IN_CELL
           return (
             <div
               aria-label={format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC' })}
@@ -88,31 +93,36 @@ export async function MonthView({
               role="gridcell"
             >
               {cover ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img alt={cover.alt} className="cal-day-cover" loading="lazy" src={cover.url} />
+                <span aria-hidden className="cal-day-cover">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img alt="" decoding="async" loading="lazy" src={cover.url} />
+                </span>
               ) : null}
               <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: 'latn' })}</span>
               {dayItems.length ? (
                 <ul className="cal-day-items">
-                  {dayItems.slice(0, IN_CELL).map((item) => (
-                    <li key={item.key}>
-                      {timeOf(item) ? (
-                        <span className="cal-time" dir="ltr">
-                          {timeOf(item)}
-                        </span>
-                      ) : item.starts ? (
-                        <span className="cal-time">{labels.starts}</span>
-                      ) : null}
-                      <ItemTitle item={item} />
+                  {dayItems.slice(0, shown).map((item, i) => (
+                    <li className="cal-item" key={item.key}>
+                      <span className="cal-item-head">
+                        {timeOf(item) ? (
+                          <span className="cal-item-when" dir="ltr">
+                            {timeOf(item)}
+                          </span>
+                        ) : item.starts ? (
+                          <span className="cal-item-when">{labels.starts}</span>
+                        ) : (
+                          <span />
+                        )}
+                        {/* On the last shown item's line: how many more the day has. */}
+                        {i === shown - 1 && dayItems.length > shown ? (
+                          <Link className="cal-more" href={`/calendar?view=agenda&date=${day}`}>
+                            {labels.more(dayItems.length - shown)}
+                          </Link>
+                        ) : null}
+                      </span>
+                      <ItemTitle className="cal-item-title" item={item} />
                     </li>
                   ))}
-                  {dayItems.length > IN_CELL ? (
-                    <li>
-                      <Link className="cal-more" href={`/calendar?view=agenda&date=${day}`}>
-                        {labels.more(dayItems.length - IN_CELL)}
-                      </Link>
-                    </li>
-                  ) : null}
                 </ul>
               ) : null}
             </div>

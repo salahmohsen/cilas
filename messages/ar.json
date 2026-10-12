@@ -358,7 +358,7 @@
     "lastOn": "الأحدث: {date}",
     "session": "الجلسة {n}",
     "starts": "يبدأ",
-    "more": "{count, plural, other {+# أخرى}}",
+    "more": "المزيد ({count})",
     "cancelled": "أُلغيت",
     "eventTypes": {
       "talk": "محاضرة",

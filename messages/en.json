@@ -358,7 +358,7 @@
     "lastOn": "Most recent: {date}",
     "session": "Session {n}",
     "starts": "Starts",
-    "more": "{count, plural, one {+# more} other {+# more}}",
+    "more": "{count, plural, one {# more} other {# more}}",
     "cancelled": "Cancelled",
     "eventTypes": {
       "talk": "Talk",

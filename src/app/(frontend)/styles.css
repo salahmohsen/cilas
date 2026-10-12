@@ -650,7 +650,7 @@ a.collection-item:hover {
 .cal-day {
   position: relative;
   display: flex;
-  min-height: 9.5rem;
+  min-height: 10.5rem;
   flex-direction: column;
   gap: 0.5rem;
   overflow: hidden;
@@ -680,15 +680,36 @@ a.collection-item:hover {
 }
 .cal-day-items {
   display: grid;
-  gap: 0.35rem;
-  font-size: 0.75rem;
-  line-height: 1.35;
+  gap: 0.5rem;
 }
-.cal-day-items li {
+.cal-item {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+.cal-item-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+/* The time (or "Starts") sits on its own line above the title. */
+.cal-item-when {
+  font-size: 0.7rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  unicode-bidi: isolate;
+}
+.cal-item-title {
   display: -webkit-box;
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  font-size: 0.78rem;
+  font-weight: 500;
+  line-height: 1.3;
+  text-wrap: pretty;
 }
 .cal-time {
   unicode-bidi: isolate;
@@ -704,34 +725,75 @@ a.collection-item:hover {
   text-underline-offset: 3px;
 }
 
-/* A day a course meets with a cover: the cover is the day. */
+/*
+ * A day a course with a cover meets: the cover is the day. The number keeps
+ * a light shade at the top; the items sit at the bottom on a deep one, so
+ * white text stays legible whatever the picture.
+ */
 .cal-day[data-cover] {
+  isolation: isolate;
+  justify-content: space-between;
   color: #fff;
 }
 .cal-day-cover {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: -1;
+  overflow: hidden;
+  background: oklch(0.2 0 0);
+}
+.cal-day-cover img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
-.cal-day[data-cover]::after {
+.cal-day-cover::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 0;
-  background: linear-gradient(to bottom, oklch(0 0 0 / 0.15), oklch(0 0 0 / 0.72));
+  background: linear-gradient(to bottom, oklch(0 0 0 / 0.5) 0%, oklch(0 0 0 / 0) 38%);
 }
-.cal-day[data-cover] > :not(img) {
-  position: relative;
-  z-index: 1;
+/* The items sit on a frosted band, legible on any picture. */
+.cal-day[data-cover] {
+  padding: 0;
 }
-.cal-day[data-cover] .cal-time,
+.cal-day[data-cover] .cal-day-number {
+  margin: 0.75rem;
+}
+.cal-day[data-cover] .cal-day-items {
+  margin-top: auto;
+  padding: 0.6rem 0.75rem 0.7rem;
+  background: oklch(0.12 0 0 / 0.62);
+  -webkit-backdrop-filter: blur(10px) saturate(1.1);
+  backdrop-filter: blur(10px) saturate(1.1);
+}
+.cal-day[data-cover] .cal-day-number {
+  text-shadow: 0 1px 12px oklch(0 0 0 / 0.45);
+}
+.cal-day[data-cover] .cal-item-when,
 .cal-day[data-cover] .cal-more,
 .cal-day[data-cover][data-outside] .cal-day-number {
-  color: oklch(1 0 0 / 0.8);
+  color: oklch(1 0 0 / 0.78);
   opacity: 1;
+}
+.cal-day[data-cover][data-today] .cal-day-number {
+  background: #fff;
+  color: #000;
+  text-shadow: none;
+}
+@media (hover: hover) {
+  .cal-day-cover img {
+    transition: scale 400ms cubic-bezier(0.2, 0, 0, 1);
+  }
+  .cal-day[data-cover]:hover .cal-day-cover img {
+    scale: 1.04;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cal-day-cover img {
+    transition: none;
+  }
 }
 
 /* The week: a column a day. */
