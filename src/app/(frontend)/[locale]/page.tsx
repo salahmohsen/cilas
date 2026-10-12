@@ -130,29 +130,27 @@ export default async function HomePage({ params }: Props) {
           </div>
         ) : null}
 
-        <FaqSection
-          className="home-faq"
-          contact={{
-            label: t('faqContact'),
-            description: t('faqContactText'),
-            href: '#contact',
-          }}
-          description={t('faqText')}
-          items={(t.raw('faq') as Array<{ q: string; a: string }>).map((f, i) => ({
-            id: `faq-${i}`,
-            question: f.q,
-            answer: f.a,
-          }))}
-          layout="split"
-          title={t('faqTitle')}
-          variant="accordion"
-        />
-
-        {contact ? (
-          <div className="home-contact" id="contact">
-            <ContactForm {...contact} flush />
-          </div>
-        ) : null}
+        {/* Questions and the contact form side by side: read the answers, then ask what they leave open. */}
+        <div className="home-help">
+          <FaqSection
+            className="home-faq"
+            contact={null}
+            description={t('faqText')}
+            items={(t.raw('faq') as Array<{ q: string; a: string }>).map((f, i) => ({
+              id: `faq-${i}`,
+              question: f.q,
+              answer: f.a,
+            }))}
+            layout="split"
+            title={t('faqTitle')}
+            variant="accordion"
+          />
+          {contact ? (
+            <div className="home-contact" id="contact">
+              <ContactForm {...contact} flush />
+            </div>
+          ) : null}
+        </div>
       </div>
     </>
   )

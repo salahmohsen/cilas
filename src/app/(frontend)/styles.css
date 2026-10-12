@@ -2220,8 +2220,31 @@ h3 {
   flex: 1;
 }
 
-/* The contact form after the questions, in the page's gutter; a link from
-   the questions lands here below the sticky header. */
+/* Questions and the contact form: side by side while both have room, the
+   questions first in reading order; stacked below that. Both headings start
+   on the same top edge and take the page's section-heading size. */
+.home-help {
+  display: grid;
+  gap: 4rem;
+  align-items: start;
+}
+@media (min-width: 64rem) {
+  .home-help {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(3rem, 6vw, 5rem);
+  }
+}
+.home-help h2 {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+[dir='rtl'] .home-help h2 {
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+/* A link to the form lands below the sticky header. */
 .home-contact {
   scroll-margin-top: 6rem;
 }
