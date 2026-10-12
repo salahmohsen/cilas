@@ -2,7 +2,8 @@ import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { Suspense } from 'react'
 
-import { getStudyCards, searchStudy } from '@/api/study-index'
+import { getStudyPage, STUDY_PAGE_SIZE } from '@/api/study-index'
+import { readCourseQuery } from '@/lib/course-search'
 import { StudyList } from '@/components/study-list'
 
 type Props = {
@@ -12,12 +13,14 @@ type Props = {
 
 export default async function CoursesPage({ params, searchParams }: Props) {
   const { locale } = await params
-  const { q } = await searchParams
+  const raw = await searchParams
   const lang = locale === 'ar' ? 'ar' : 'en'
   const t = await getTranslations('Study')
-  const courses = await getStudyCards(lang)
-  // A search in the URL is answered here, so the first render is already filtered.
-  const search = typeof q === 'string' && q.trim() ? { q: q.trim(), ids: await searchStudy(lang, q) } : undefined
+  // The search, filters and page are worked out here: the browser gets one page.
+  const url = new URLSearchParams(
+    Object.entries(raw).flatMap(([k, v]) => (typeof v === 'string' ? [[k, v]] : [])),
+  )
+  const result = await getStudyPage(lang, readCourseQuery(url), Number(url.get('page')) || 1)
 
   return (
     <div className="flex flex-col gap-8">
@@ -39,7 +42,7 @@ export default async function CoursesPage({ params, searchParams }: Props) {
         />
       </div>
       <Suspense>
-        <StudyList courses={courses} initialSearch={search} />
+        <StudyList pageSize={STUDY_PAGE_SIZE} result={result} />
       </Suspense>
     </div>
   )

@@ -4,7 +4,7 @@ import { unstable_cache } from 'next/cache'
 import { getPayload } from 'payload'
 
 import { getStudyCourses } from '@/api/courses.api'
-import { filterCourses, type CourseQuery, type StudyCard } from '@/lib/course-search'
+import { facetOptions, filterCourses, type CourseQuery, type StudyCard } from '@/lib/course-search'
 import { COURSES_TAG } from '@/lib/revalidate-courses'
 import ar from '../../messages/ar.json'
 import en from '../../messages/en.json'
@@ -27,10 +27,39 @@ export const getStudyIndex = unstable_cache(
   { tags: [COURSES_TAG], revalidate: 300 },
 )
 
-/** The courses for the page, without their search words. */
-export const getStudyCards = async (locale: Locale): Promise<StudyCard[]> =>
-  (await getStudyIndex(locale)).map(({ words: _words, ...card }) => card)
+/** Courses on a page of the study list. */
+export const STUDY_PAGE_SIZE = 20
 
-/** The ids of the courses whose words match the search. */
-export const searchStudy = async (locale: Locale, q: string): Promise<number[]> =>
-  filterCourses(await getStudyIndex(locale), { q } satisfies CourseQuery).map((c) => c.id)
+/** What the page sends for one course: enough to show its row. */
+export type StudyRow = Pick<StudyCard, 'id' | 'href' | 'title' | 'sublabel' | 'description' | 'image' | 'imageAlt'>
+
+export type StudyPage = {
+  rows: StudyRow[]
+  /** How many courses match, across all pages. */
+  total: number
+  page: number
+  pageCount: number
+  /** Each filter's values across all courses, with how many each has. */
+  options: ReturnType<typeof facetOptions>
+}
+
+/**
+ * One page of the study list, worked out on the server: the courses that
+ * match the filters and search, newest first, cut to the page asked for.
+ * Only that page's rows (and the filters' options) go to the browser.
+ */
+export const getStudyPage = async (locale: Locale, query: CourseQuery, page: number): Promise<StudyPage> => {
+  const index = await getStudyIndex(locale)
+  const matches = filterCourses(index, query)
+  const pageCount = Math.max(1, Math.ceil(matches.length / STUDY_PAGE_SIZE))
+  const current = Math.min(Math.max(1, Math.floor(page) || 1), pageCount)
+  return {
+    rows: matches
+      .slice((current - 1) * STUDY_PAGE_SIZE, current * STUDY_PAGE_SIZE)
+      .map(({ id, href, title, sublabel, description, image, imageAlt }) => ({ id, href, title, sublabel, description, image, imageAlt })),
+    total: matches.length,
+    page: current,
+    pageCount,
+    options: facetOptions(index),
+  }
+}
