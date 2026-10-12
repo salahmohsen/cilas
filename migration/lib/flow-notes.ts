@@ -21,6 +21,10 @@ const BIO_LABEL =
 const ROLE_LABEL = /^(?:fellow|facilitator|instructor|المدر\u0651س|المدرس|المدر\u0651سة|المدرسة|المدربة|المدرب|الميسرة|الميسر|السيرة)\s*[:：|\n]\s*/i
 const ROLE_HEADING = /^(?:السيرة|السيرة الذاتية|نبذة)\s*:?$/
 
+/** "عن ميسر المساق محمد عبد العظيم: …", "About the instructor: …": the name, if any, then the bio. */
+const ABOUT_LABEL =
+  /^(?:عن (?:ميسر|ميسرة|مقدم|مقدمة|مدرس|مدرسة|مدرب|مدربة) (?:المساق|المقرر|الورشة|المعمل)|عن (?:الميسر|الميسرة|المدرب|المدربة|المحاضر|المحاضرة)|about the (?:facilitator|instructor|fellow|teacher|lecturer))\s*([^:：\n]{0,60})[:：]\s*/i
+
 /** "تيسر المعمل مي عامر …", "تقدم المساق مي عامر …": the rest is the bio. */
 const ARABIC_INTRO = /^(?:تيسر|تيس\u0651ر|يقدم|تقدم|تقد\u0651م|يدير|تدير)\s+(?:المعمل|المساق|الورشة|المقرر)\s+/
 
@@ -84,6 +88,7 @@ export const splitBios = (
   for (let i = 0; i < paras.length; i++) {
     const p = paras[i]
     const bio = p.match(BIO_LABEL)
+    const about = p.match(ABOUT_LABEL)
     const role = p.match(ROLE_LABEL)
     const intro = p.match(ARABIC_INTRO)
     let text: string | null = null
@@ -92,6 +97,9 @@ export const splitBios = (
     if (bio) {
       label = bio[1] && !/verbatim/i.test(bio[1]) ? bio[1] : null
       text = p.slice(bio[0].length).trim()
+    } else if (about) {
+      label = about[1]?.trim() || null
+      text = p.slice(about[0].length).trim()
     } else if (ROLE_HEADING.test(p)) {
       text = ''
     } else if (role) {

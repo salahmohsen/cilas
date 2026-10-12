@@ -37,6 +37,13 @@ describe('splitBios', () => {
     })
   })
 
+  it('reads an "about the facilitator" label', () => {
+    const text = 'كاتب نشر مقالات نقدية وتغطيات صحفية حول الأدب والسينما والدراما والقصص القصيرة في صحف مصرية وعربية.'
+    expect(splitBios(`عن ميسر المساق محمد عبد العظيم: ${text}`, [['محمد عبد العظيم']]).bios).toEqual([
+      { text, name: 'محمد عبد العظيم' },
+    ])
+  })
+
   it('has nothing to split in empty notes', () => {
     expect(splitBios(null, hisham)).toEqual({ notes: null, bios: [] })
   })

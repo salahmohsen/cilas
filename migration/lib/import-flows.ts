@@ -35,6 +35,7 @@ type Row = { id?: string | null }
 type StoredSession = Row & { bibliography?: Row[] | null; activities?: Row[] | null }
 type StoredCourse = {
   id: number
+  title?: string | null
   import_status?: string | null
   description?: Lexical | null
   sessions?: StoredSession[] | null
@@ -79,6 +80,9 @@ const withoutNotes = (description: Lexical | null | undefined): Lexical | null =
   if (!description || at === -1) return null
   return { ...description, root: { ...description.root, children: children.slice(0, at) } }
 }
+
+/** The words a flow's header line puts before its fellow's name. */
+const OFFERED_BY = 'offered by presented facilitated taught يقدمه تقدمه يقدمها تقدمها تيسير إعداد'
 
 /** Every text the syllabus holds, with the words that number its units. */
 const syllabusText = (s: Syllabus): string =>
@@ -223,8 +227,12 @@ export const importFlows = async (
       const description = flow.id.startsWith('page-')
         ? (withoutSyllabus(trimmed ?? course.description, syllabus) ?? trimmed)
         : trimmed
-      // The notes keep only what the description does not already say.
-      const notes = withoutRepeats(flowNotes, textOf(description ?? course.description))
+      // The notes keep only what the page does not already say: the
+      // description, and the title and fellows its header line repeats.
+      const notes = withoutRepeats(
+        flowNotes,
+        [textOf(description ?? course.description), course.title ?? '', ...fellows.flatMap((f) => f.names), OFFERED_BY].join('\n'),
+      )
 
       // Step A: the rows and their non-localized fields; English text too.
       await payload.update({
