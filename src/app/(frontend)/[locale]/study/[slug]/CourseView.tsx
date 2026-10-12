@@ -242,7 +242,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   ) : null
 
   return (
-    <div className="course-page mx-auto w-full max-w-6xl px-0 py-10 sm:py-14">
+    <div className="course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
         <article aria-labelledby="course-title" className="min-w-0">
           <Link

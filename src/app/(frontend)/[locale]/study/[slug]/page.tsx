@@ -107,7 +107,7 @@ export default async function CoursePage({ params }: Params) {
         depth: 1,
         joins: false,
         pagination: false,
-        populate: { people: { name: true }, media: { url: true, alt: true } },
+        populate: { people: { name: true }, media: { url: true, alt: true, filename: true, prefix: true } },
         select: { title: true, slug: true, course_type: true, fellows: true, cover_image: true },
         locale: locale as 'en' | 'ar',
         fallbackLocale: locale === 'ar' ? 'en' : 'ar',

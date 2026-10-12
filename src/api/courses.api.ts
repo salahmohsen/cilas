@@ -17,7 +17,7 @@ const populate = {
   people: { name: true, slug: true },
   cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, space: true },
   spaces: { name: true, city: true, slug: true },
-  media: { url: true, alt: true },
+  media: { url: true, alt: true, filename: true, prefix: true },
 } as const
 
 const visible: Where = { and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }] }
