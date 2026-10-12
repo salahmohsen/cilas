@@ -106,7 +106,7 @@
   display: flex;
   flex: none;
   gap: var(--space-2);
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 .control {
   display: grid;
@@ -181,4 +181,12 @@
     transition: none;
     transform: none;
   }
+}
+
+/* Controls at the start: one group at the carousel's start edge, not spread to the centered slide's edges. */
+.root[data-controls='start'] .controls {
+  padding-inline: 0;
+}
+.root[data-controls='start'] .arrows {
+  margin-inline-start: var(--space-3);
 }

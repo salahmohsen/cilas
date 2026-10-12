@@ -36,10 +36,16 @@ export function HomeHero({
   const reduced = useReducedMotion()
   const [index, setIndex] = useState(0)
   const last = who.length - 1
-  const shown = reduced ? last : index
+  // The server renders the first line; with reduced motion the list jumps to its last line once hydrated, so both renders agree.
+  const shown = index
 
   useEffect(() => {
-    if (reduced || index >= last) return
+    if (reduced) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setIndex(last)
+      return
+    }
+    if (index >= last) return
     const timer = window.setTimeout(() => setIndex((i) => i + 1), STEP)
     return () => window.clearTimeout(timer)
   }, [index, last, reduced])

@@ -2099,7 +2099,8 @@ h3 {
 /* The strip: the mark and the date in the poster's colour, then the white cell. */
 .poster-strip {
   display: grid;
-  grid-template-columns: 17% 21% 1fr;
+  /* The mark's cell is as wide as the mark; with the date's it makes the side panel's 38%, so the white cell starts where the image does. */
+  grid-template-columns: auto minmax(0, 1fr) 62%;
   flex: none;
   min-height: clamp(3.25rem, 8.6cqi, 4.5rem);
   border-block: 1px solid var(--poster-ink);
@@ -2125,9 +2126,11 @@ h3 {
   width: auto;
 }
 .poster-meta {
-  display: grid;
-  align-content: center;
-  gap: 0.15rem;
+  /* The closing date and the time left on one line; they wrap only when the cell is too narrow. */
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.625rem;
   font-size: clamp(0.75rem, 1.4cqi, 0.9375rem);
   line-height: 1.2;
 }

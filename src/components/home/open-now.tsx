@@ -17,7 +17,8 @@ export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: st
   const day = (iso: string) =>
     format.dateTime(new Date(`${iso}T12:00:00Z`), {
       day: 'numeric',
-      month: 'long',
+      // Short, so the date and the time left share one line in the poster's strip.
+      month: 'short',
       timeZone: 'Africa/Cairo',
       numberingSystem: numberingSystemOf(locale),
     })

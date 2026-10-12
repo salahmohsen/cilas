@@ -58,6 +58,8 @@ export interface CarouselProps {
   autoplay?: boolean
   /** The controls' names, in the page's language. */
   labels?: Partial<CarouselLabels>
+  /** `slide` lines the controls up with the centered slide's edges; `start` sets them together at the carousel's start edge. */
+  controlsAt?: 'slide' | 'start'
   className?: string
 }
 
@@ -146,6 +148,7 @@ export function Carousel({
   interval,
   autoplay = false,
   labels: labelsProp,
+  controlsAt = 'slide',
   className,
 }: CarouselProps) {
   const labels = { ...DEFAULT_LABELS, ...labelsProp }
@@ -505,6 +508,7 @@ export function Carousel({
       ref={rootRef}
       className={[styles.root, className].filter(Boolean).join(' ')}
       style={rootStyle}
+      data-controls={controlsAt}
       aria-roledescription="carousel"
       aria-label={label}
       onKeyDown={onKeyDown}

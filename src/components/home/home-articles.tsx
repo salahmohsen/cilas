@@ -7,8 +7,8 @@ import type { ArticleCard } from '@/lib/article-cards'
 
 /**
  * The featured articles, one in the middle and its neighbours peeking in,
- * to drag, swipe or step through. The carousel moves left to right in both
- * languages; each card keeps its own direction.
+ * to drag, swipe or step through, its controls together on the left. It
+ * runs left to right in both languages; each card keeps its own direction.
  */
 export function HomeArticles({ posts, title }: { posts: ArticleCard[]; title: string }) {
   const t = useTranslations('Home.controls')
@@ -21,6 +21,7 @@ export function HomeArticles({ posts, title }: { posts: ArticleCard[]; title: st
         // focus, its pause button or reduced motion.
         autoplay
         interval={6000}
+        controlsAt="start"
         label={title}
         labels={{
           slides: t('slides'),
