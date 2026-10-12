@@ -120,6 +120,7 @@ export default async function HomePage({ params }: Props) {
             <LogoMarquee
               brands={outlets.map((o) => ({
                 name: o.name,
+                ...(o.logo ? { logo: o.logo } : {}),
                 ...(o.href ? { href: o.href } : {}),
               }))}
               description={t('pressText')}

@@ -15,6 +15,8 @@ export interface LogoMarqueeBrand {
   colorIcon?: string
   /** Where the name leads, such as the outlet's coverage. */
   href?: string
+  /** A full logo (wordmark included), shown in place of the mark and the name; the name becomes its alt text. */
+  logo?: string
 }
 
 export interface LogoMarqueeLabels {
@@ -104,7 +106,10 @@ function BrandList({
       aria-hidden={duplicate || undefined}
     >
       {brands.map((brand, index) => {
-        const content = (
+        const content = brand.logo ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className={styles.brandLogo} src={brand.logo} alt={brand.name} draggable={false} />
+        ) : (
           <>
             <BrandMark brand={brand} tone={tone} />
             <span className={styles.brandName} dir="auto">
@@ -116,7 +121,11 @@ function BrandList({
           <li className={styles.brand} key={`${brand.name}-${index}`}>
             {brand.href ? (
               // The copy that completes the loop is hidden, so its links leave the tab order.
-              <a className={styles.brandLink} href={brand.href} tabIndex={duplicate ? -1 : undefined}>
+              <a
+                className={styles.brandLink}
+                href={brand.href}
+                tabIndex={duplicate ? -1 : undefined}
+              >
                 {content}
               </a>
             ) : (

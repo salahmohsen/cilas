@@ -213,3 +213,24 @@ img.brandMark {
 .brandLink:hover {
   color: var(--foreground);
 }
+
+/* A full logo: one height for all, in the row's ink. Light: grey on the page, white backgrounds dropped by multiply. Dark: inverted, dark backgrounds dropped by screen. */
+.brandLogo {
+  display: block;
+  width: auto;
+  height: 2.25rem;
+  max-width: 10rem;
+  object-fit: contain;
+  filter: grayscale(1) contrast(1.15);
+  mix-blend-mode: multiply;
+  opacity: 0.8;
+  transition-property: opacity;
+  transition-duration: 150ms;
+}
+.brandLink:hover .brandLogo {
+  opacity: 1;
+}
+:global(.dark) .brandLogo {
+  filter: grayscale(1) invert(1) contrast(1.15);
+  mix-blend-mode: screen;
+}
