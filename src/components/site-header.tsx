@@ -64,7 +64,7 @@ export function CILASSiteHeader() {
       brand={{
         name: t('brand'),
         href: href('/'),
-        mark: <Image alt="CILAS" height={25} src="/assets/images/logo.webp" width={25} />,
+        mark: <Image alt="CILAS" height={25} src="/assets/images/logo.webp" style={{ width: 'auto' }} width={25} />,
       }}
       items={items}
       label={t('label')}

@@ -23,7 +23,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Meta')
-  return { title: t('siteName'), description: t('description') }
+  return { title: t('siteName'), description: t('description'), icons: { icon: '/assets/images/logo.webp' } }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

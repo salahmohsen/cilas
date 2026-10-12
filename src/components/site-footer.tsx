@@ -17,7 +17,7 @@ export function SiteFooter() {
       brand={{
         name: brand('brand').replace('\n', ' '),
         href: href(''),
-        mark: <Image alt="" height={22} src="/assets/images/logo.webp" width={22} />,
+        mark: <Image alt="" height={22} src="/assets/images/logo.webp" style={{ width: 'auto' }} width={22} />,
       }}
       columns={[
         {

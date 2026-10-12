@@ -151,10 +151,10 @@ export default async function ArticlePage({ params }: Props) {
       {preview && <RefreshRouteOnSave />}
       <ReadingProgress target="article-text" />
       <div className={grid.inner}>
-        <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_760px_minmax(0,1fr)] xl:gap-12">
+        <div className="xl:grid xl:grid-cols-[17rem_minmax(0,760px)] xl:justify-center xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
-            <div className="sticky top-24 space-y-8">
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-10 overflow-y-auto pe-2">
               <ContributorList contributors={contributors} title={t('people')} />
               {hasContents && <ArticleContents container="article-text" sections={sections} />}
               <TextSize target="article-text" />

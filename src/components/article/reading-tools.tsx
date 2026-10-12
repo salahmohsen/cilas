@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { useEffect, useState, useSyncExternalStore, type ReactNode } from 'react'
 
 import { Accordion } from '@/components/arc/accordion/accordion'
+import { BounceSidebar } from '@/components/ui/bounce-sidebar'
 import type { Section } from '@/lib/article-body'
 
 /** A thin bar across the top of the viewport that fills as the essay is read. */
@@ -48,7 +49,13 @@ export function ReadingProgress({ target }: { target: string }) {
  * under the title on narrow ones. The current section is the last heading
  * that has scrolled past the top third of the viewport.
  */
-export function ArticleContents({ sections, container }: { sections: Section[]; container: string }) {
+export function ArticleContents({
+  sections,
+  container,
+}: {
+  sections: Section[]
+  container: string
+}) {
   const t = useTranslations('Article')
   const [active, setActive] = useState<string | null>(null)
 
@@ -70,21 +77,17 @@ export function ArticleContents({ sections, container }: { sections: Section[]; 
     return () => window.removeEventListener('scroll', update)
   }, [container, sections])
 
+  // rareui's BounceSidebar: the dot travels to the section in view.
   const list = (
-    <ol className="space-y-2 text-sm">
-      {sections.map((s, i) => (
-        <li key={s.id}>
-          <a
-            aria-current={active === s.id ? 'location' : undefined}
-            className={`grid grid-cols-[1.75rem_1fr] gap-1 leading-snug transition-opacity ${active === s.id ? 'font-medium opacity-100' : 'opacity-55 hover:opacity-100'}`}
-            href={`#${s.id}`}
-          >
-            <span className="font-mono text-xs tabular-nums">{String(i + 1).padStart(2, '0')}</span>
-            <span>{s.title}</span>
-          </a>
-        </li>
-      ))}
-    </ol>
+    <BounceSidebar
+      aria-label={t('contents')}
+      className="text-sm leading-snug"
+      items={sections.map((s) => ({ label: s.title, href: `#${s.id}` }))}
+      value={Math.max(
+        0,
+        sections.findIndex((s) => s.id === active),
+      )}
+    />
   )
 
   return (
@@ -96,7 +99,9 @@ export function ArticleContents({ sections, container }: { sections: Section[]; 
         <div className="pt-3">{list}</div>
       </details>
       <div className="hidden lg:block">
-        <p className="mb-3 font-mono text-[0.68rem] tracking-[0.14em] uppercase opacity-60">{t('onThisPage')}</p>
+        <p className="mb-3 font-mono text-[0.68rem] tracking-[0.14em] uppercase opacity-60">
+          {t('onThisPage')}
+        </p>
         {list}
       </div>
     </nav>
@@ -140,13 +145,26 @@ export function TextSize({ target }: { target: string }) {
   useEffect(() => {
     document.getElementById(target)?.style.setProperty('--reading-scale', String(SIZES[step]))
   }, [step, target])
-  const button = 'inline-flex h-8 w-8 items-center justify-center rounded-full border border-border transition-colors hover:bg-[var(--surface-muted)] disabled:opacity-30'
+  const button =
+    'inline-flex h-8 w-8 items-center justify-center rounded-full border border-border transition-colors hover:bg-[var(--surface-muted)] disabled:opacity-30'
   return (
     <div aria-label={t('textSize')} className="inline-flex items-center gap-1" role="group">
-      <button aria-label={t('smaller')} className={`${button} text-xs`} disabled={step === 0} onClick={() => setStep((s) => s - 1)} type="button">
+      <button
+        aria-label={t('smaller')}
+        className={`${button} text-xs`}
+        disabled={step === 0}
+        onClick={() => setStep((s) => s - 1)}
+        type="button"
+      >
         A−
       </button>
-      <button aria-label={t('larger')} className={`${button} text-base`} disabled={step === SIZES.length - 1} onClick={() => setStep((s) => s + 1)} type="button">
+      <button
+        aria-label={t('larger')}
+        className={`${button} text-base`}
+        disabled={step === SIZES.length - 1}
+        onClick={() => setStep((s) => s + 1)}
+        type="button"
+      >
         A+
       </button>
     </div>
