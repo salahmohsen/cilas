@@ -11,10 +11,10 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useTranslations } from 'next-intl'
+import Link from 'next/link'
 
 import type { StudyRow } from '@/api/study-index'
 import { SEASON_ICONS } from '@/components/season-icon'
-import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
 
 /** A course type's mark, beside its name. */
@@ -75,7 +75,8 @@ export function CourseRows({ rows, start }: { rows: StudyRow[]; start: number })
           <span className="course-row-number">{String(start + i).padStart(2, '0')}</span>
           <div className="course-row-main">
             <h3 className="course-row-title">
-              {/* The title's link stretches over the whole row. Its direction is
+              {/* The href already carries its locale (`/en/study/…`), so a plain
+                  link. The title's link stretches over the whole row. Its direction is
                   its own, so it keeps its punctuation while aligning with the page. */}
               <Link className="course-row-link" dir="auto" href={row.href}>
                 {row.title}
