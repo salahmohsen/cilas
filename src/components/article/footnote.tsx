@@ -10,19 +10,7 @@ import type { FootnoteBlock } from '@/payload-types'
  * on touch) shows the note. The mark also links to the note in the list at
  * the end, so it works without the card.
  */
-export function FootnoteMark({
-  number,
-  note,
-  url,
-  label,
-  sourceLabel,
-}: {
-  number: number
-  note: FootnoteBlock['note']
-  url?: string | null
-  label: string
-  sourceLabel: string
-}) {
+export function FootnoteMark({ number, note, label }: { number: number; note: FootnoteBlock['note']; label: string }) {
   return (
     <HoverCard
       content={
@@ -30,8 +18,7 @@ export function FootnoteMark({
           <p className="mb-1 font-mono text-[0.68rem] tracking-[0.14em] text-[var(--text-muted)] uppercase rtl:tracking-normal">
             {label} {number}
           </p>
-          <RichText className="[&_a]:underline [&_p]:m-0" data={note} />
-          {url && <SourceLink href={url} label={sourceLabel} />}
+          <RichText className="[&_a]:underline [&_a]:underline-offset-2 [&_p]:m-0" data={note} />
         </div>
       }
       side="top"
@@ -45,20 +32,5 @@ export function FootnoteMark({
         <sup>{number}</sup>
       </a>
     </HoverCard>
-  )
-}
-
-/** The reference online: opens in a new tab. */
-export function SourceLink({ href, label }: { href: string; label: string }) {
-  return (
-    <a
-      className="mt-2 inline-flex items-center gap-1 text-xs font-medium underline underline-offset-4 hover:decoration-2"
-      href={href}
-      rel="noopener"
-      target="_blank"
-    >
-      {label}
-      <span aria-hidden className="rtl:-scale-x-100">↗</span>
-    </a>
   )
 }

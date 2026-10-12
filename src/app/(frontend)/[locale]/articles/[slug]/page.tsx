@@ -25,7 +25,6 @@ import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { CopyButton } from '@/components/arc/copy-button/copy-button'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
-import { SourceLink } from '@/components/article/footnote'
 import { RichTextField } from '@/components/RichTextField'
 import { env } from '@/env'
 import { Link } from '@/i18n/navigation'
@@ -214,7 +213,7 @@ export default async function ArticlePage({ params }: Props) {
             <div className="grid gap-5" dir={contentDir} id="article-text" lang={contentLocale}>
               {excerpt && <p className="article-lead">{excerpt}</p>}
               {text ? (
-                <RichTextField className="article-prose" data={text} footnoteLabel={t('footnote')} footnotes={footnotes} sourceLabel={t('source')} />
+                <RichTextField className="article-prose" data={text} footnoteLabel={t('footnote')} footnotes={footnotes} />
               ) : (
                 <p className="opacity-60">—</p>
               )}
@@ -228,10 +227,7 @@ export default async function ArticlePage({ params }: Props) {
                     {footnotes.map((f) => (
                       <li id={`fn-${f.number}`} key={f.id}>
                         <span className="footnote-number">{f.number}</span>
-                        <div>
-                          <RichTextField className="article-prose article-prose--notes" data={f.note} />
-                          {f.url && <SourceLink href={f.url} label={t('source')} />}
-                        </div>
+                        <RichTextField className="article-prose article-prose--notes" data={f.note} />
                         <a aria-label={t('backToText')} className="footnote-back" href={`#fnref-${f.number}`}>
                           ↩
                         </a>

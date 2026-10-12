@@ -30,6 +30,7 @@ import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { Nav as Nav_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { HeaderActions as HeaderActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { LoginHero as LoginHero_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
@@ -74,6 +75,7 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "payload-theme/client#Nav": Nav_f436cf2a4719114d9e44505773a04007,
   "payload-theme/client#HeaderActions": HeaderActions_f436cf2a4719114d9e44505773a04007,
   "payload-theme/rsc#LoginHero": LoginHero_37fe5310e1c82b2fade6b239ca4c79e5,

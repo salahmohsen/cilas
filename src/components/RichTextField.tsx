@@ -25,8 +25,7 @@ export const RichTextField: React.FC<{
   className?: string
   footnotes?: Footnote[]
   footnoteLabel?: string
-  sourceLabel?: string
-}> = ({ data, className, footnotes = [], footnoteLabel = 'Note', sourceLabel = 'Source' }) => {
+}> = ({ data, className, footnotes = [], footnoteLabel = 'Note' }) => {
   if (!data) return null
 
   const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
@@ -34,7 +33,7 @@ export const RichTextField: React.FC<{
     inlineBlocks: {
       footnote: ({ node }: { node: SerializedInlineBlockNode<FootnoteBlock> }) => {
         const f = footnotes.find((x) => x.id === node.fields.id)
-        return f ? <FootnoteMark label={footnoteLabel} note={f.note} number={f.number} sourceLabel={sourceLabel} url={f.url} /> : null
+        return f ? <FootnoteMark label={footnoteLabel} note={f.note} number={f.number} /> : null
       },
     },
   })

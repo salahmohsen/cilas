@@ -1,5 +1,7 @@
 import {
   BoldFeature,
+  FixedToolbarFeature,
+  InlineToolbarFeature,
   ItalicFeature,
   lexicalEditor,
   LinkFeature,
@@ -11,7 +13,7 @@ import type { Block } from 'payload'
  * A footnote, written where it belongs in the text: in the editor, place the
  * cursor after the words it explains and insert a Footnote. The site numbers
  * footnotes in reading order, shows each in a hover card at its mark, and
- * lists them all at the end of the article.
+ * lists them all at the end of the article. Links go in the note's own text.
  */
 export const Footnote: Block = {
   slug: 'footnote',
@@ -22,16 +24,19 @@ export const Footnote: Block = {
       name: 'note',
       type: 'richText',
       required: true,
-      // Notes cite and gloss: emphasis and links, nothing structural.
-      editor: lexicalEditor({ features: [ParagraphFeature(), BoldFeature(), ItalicFeature(), LinkFeature()] }),
-    },
-    {
-      name: 'url',
-      type: 'text',
-      label: 'Source link',
-      admin: { description: 'Where the reference can be read online (optional). Shown as a link with the note.' },
-      validate: (value: string | null | undefined) =>
-        !value || /^https?:\/\/\S+$/.test(value) || 'A full web address, starting with http:// or https://',
+      // Notes cite and gloss: emphasis and links, nothing structural. The
+      // toolbars carry the link button (select words, then link them); a URL
+      // typed or pasted into the note becomes a link by itself.
+      editor: lexicalEditor({
+        features: [
+          ParagraphFeature(),
+          BoldFeature(),
+          ItalicFeature(),
+          LinkFeature(),
+          FixedToolbarFeature(),
+          InlineToolbarFeature(),
+        ],
+      }),
     },
   ],
 }
