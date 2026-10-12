@@ -16,6 +16,12 @@ export type OpenItem = {
   href: string
   /** What it is and when: "Thematic Course · Fall 2026, Cairo". */
   sublabel?: string
+  /** What it is: its course type; unset for a programme. */
+  type?: string
+  /** When and where: "Fall 2026, Cairo". */
+  when?: string
+  /** Who teaches it. */
+  fellows?: string[]
   excerpt?: string
   image?: { src: string; alt: string }
   /** The last day to register (YYYY-MM-DD), when there is one. */
@@ -97,6 +103,14 @@ export const getOpenNow = async (
       // The index keeps the language in its paths; links here add it themselves.
       href: c.href.replace(/^\/(en|ar)(?=\/)/, ''),
       sublabel: c.sublabel,
+      type: c.facets.type?.[0]?.label,
+      when: [
+        [c.facets.season?.[0]?.label, c.facets.year?.[0]?.label].filter(Boolean).join(' '),
+        c.facets.place?.[0]?.label,
+      ]
+        .filter(Boolean)
+        .join(locale === 'ar' ? '، ' : ', '),
+      fellows: (c.facets.fellow ?? []).map((f) => f.label),
       excerpt: c.description,
       image: c.image ? { src: c.image, alt: c.imageAlt ?? '' } : undefined,
       deadline: c.deadline,

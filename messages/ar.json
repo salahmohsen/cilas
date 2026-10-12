@@ -508,7 +508,7 @@
     "faqTitle": "أسئلة يطرحها الناس",
     "faqText": "عن الدراسة في سيلاس، قبل أن تتقدم.",
     "faqContact": "ما زال لديك سؤال؟",
-    "faqContactText": "راسلنا على {email}.",
+    "faqContactText": "راسلنا من صفحة التواصل.",
     "faq": [
       {
         "q": "ما سيلاس؟",
@@ -574,7 +574,9 @@
       "playMotion": "شغّل حركة القائمة",
       "motionPaused": "توقفت الحركة",
       "outlets": "المنابر"
-    }
+    },
+    "with": "مع {names}",
+    "read": "اقرأ"
   },
   "Contact": {
     "metaTitle": "تواصل معنا",

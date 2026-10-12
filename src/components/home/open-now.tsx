@@ -1,13 +1,15 @@
 import { getFormatter, getTranslations } from 'next-intl/server'
 
 import type { OpenItem } from '@/api/home.api'
-import { DeadlineCountdown } from '@/components/home/deadline-countdown'
+import type { PosterData } from '@/components/home/poster'
+import { PosterCarousel } from '@/components/home/poster-carousel'
 import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
+import { posterLayouts } from '@/lib/posters'
 
 /**
- * What people can register for today, each with the time left. With
- * nothing open, the section says so and points to where new cycles are
+ * What people can register for today, a poster each, turning on their own.
+ * With nothing open, the section says so and points to where new cycles are
  * announced.
  */
 export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: string }) {
@@ -19,6 +21,22 @@ export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: st
       timeZone: 'Africa/Cairo',
       numberingSystem: numberingSystemOf(locale),
     })
+  const and = locale === 'ar' ? ' و' : ' & '
+  const layouts = posterLayouts(items.length)
+  const posters: PosterData[] = items.map((item, i) => ({
+    id: `${item.kind}-${item.href}`,
+    href: `/${locale}${item.href}`,
+    layout: layouts[i]!,
+    label: item.kind === 'programme' ? t('programme') : item.type,
+    title: item.title,
+    credit: item.fellows?.length ? t('with', { names: item.fellows.join(and) }) : undefined,
+    image: item.image,
+    meta: item.deadline
+      ? { lines: [t('closesOn', { date: day(item.deadline) })], deadline: item.deadline }
+      : { lines: [t('noDeadline')] },
+    details: item.when ? [item.when] : [],
+    action: t('apply'),
+  }))
 
   return (
     <section aria-labelledby="home-open" className="home-section" id="open">
@@ -29,49 +47,8 @@ export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: st
         <p className="home-lead">{items.length ? t('openText') : t('noneOpen')}</p>
       </header>
 
-      {items.length ? (
-        <ul className="home-open-list">
-          {items.map((item) => (
-            <li className="home-open-item" key={`${item.kind}-${item.href}`}>
-              {item.image ? (
-                // Covers come from the storage host, as on course pages.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img alt="" className="home-open-image" loading="lazy" src={item.image.src} />
-              ) : (
-                <span aria-hidden className="home-open-image" />
-              )}
-              <div className="home-open-copy">
-                <p className="home-open-meta">
-                  {item.kind === 'programme' ? t('programme') : item.sublabel}
-                </p>
-                <h3 className="home-open-title" dir="auto">
-                  {/* The whole row is the link's target; the title names it. */}
-                  <Link className="home-open-link" href={item.href}>
-                    {item.title}
-                  </Link>
-                </h3>
-                {item.excerpt ? (
-                  <p className="home-open-excerpt" dir="auto">
-                    {item.excerpt}
-                  </p>
-                ) : null}
-              </div>
-              <div className="home-open-deadline">
-                {item.deadline ? (
-                  <>
-                    <span className="home-open-deadline-label">{t('closesIn')}</span>
-                    <DeadlineCountdown deadline={item.deadline} />
-                    <span className="home-open-deadline-date">
-                      {t('closesOn', { date: day(item.deadline) })}
-                    </span>
-                  </>
-                ) : (
-                  <span className="home-open-deadline-label">{t('noDeadline')}</span>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
+      {posters.length ? (
+        <PosterCarousel label={t('openTitle')} posters={posters} />
       ) : (
         <div className="home-none">
           <p className="home-none-text">{t('noneOpenText')}</p>

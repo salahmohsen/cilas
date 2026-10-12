@@ -508,7 +508,7 @@
     "faqTitle": "Questions people ask",
     "faqText": "About studying at CILAS, before you apply.",
     "faqContact": "Still have a question?",
-    "faqContactText": "Write to {email}.",
+    "faqContactText": "Write to us from the contact page.",
     "faq": [
       {
         "q": "What is CILAS?",
@@ -574,7 +574,9 @@
       "playMotion": "Play the moving list",
       "motionPaused": "Motion paused",
       "outlets": "Outlets"
-    }
+    },
+    "with": "With {names}",
+    "read": "Read"
   },
   "Contact": {
     "metaTitle": "Contact",

@@ -8,11 +8,13 @@ import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/ap
 import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { StatsBand } from '@/components/arc/blocks/stats-band/stats-band'
-import { HomeArticles } from '@/components/home/home-articles'
+import type { PosterData } from '@/components/home/poster'
+import { PosterCarousel } from '@/components/home/poster-carousel'
 import { HomeHero } from '@/components/home/home-hero'
 import { OpenNow } from '@/components/home/open-now'
 import { Link } from '@/i18n/navigation'
 import { toArticleCard } from '@/lib/article-cards'
+import { posterLayouts } from '@/lib/posters'
 
 // What is open changes with deadlines: worked out again every five minutes.
 export const revalidate = 300
@@ -32,7 +34,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const payload = await getPayload({ config })
   const tBridge = await getTranslations('Bridge')
-  const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers, settings] =
+  const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers] =
     await Promise.all([
       getTranslations('Home'),
       getTranslations('Article'),
@@ -43,7 +45,6 @@ export default async function HomePage({ params }: Props) {
       getHomeStats(payload),
       getPressOutlets(payload, locale as Locale),
       getPublicationCovers(payload),
-      payload.findGlobal({ slug: 'site-settings', depth: 0 }),
     ])
 
   const posts = articles.docs.map((a) =>
@@ -57,7 +58,19 @@ export default async function HomePage({ params }: Props) {
     }),
   )
   const articlesTitle = articles.featured ? t('featuredTitle') : t('latestTitle')
-  const email = settings.contact_emails?.info ?? settings.contact_emails?.admissions ?? null
+  const articleLayouts = posterLayouts(posts.length)
+  const articlePosters: PosterData[] = posts.map((post, i) => ({
+    id: post.id,
+    href: post.href,
+    layout: articleLayouts[i]!,
+    label: post.category,
+    title: post.title,
+    credit: post.author.name || undefined,
+    image: post.image,
+    meta: { lines: [post.dateLabel, post.readTimeLabel].filter(Boolean) },
+    details: [post.category].filter(Boolean),
+    action: t('read'),
+  }))
   const controls = t.raw('controls') as Record<string, string>
 
   return (
@@ -88,7 +101,7 @@ export default async function HomePage({ params }: Props) {
                 {t('allArticles')}
               </Link>
             </header>
-            <HomeArticles posts={posts} title={articlesTitle} />
+            <PosterCarousel label={articlesTitle} posters={articlePosters} />
           </section>
         ) : null}
 
@@ -131,15 +144,11 @@ export default async function HomePage({ params }: Props) {
 
         <FaqSection
           className="home-faq"
-          contact={
-            email
-              ? {
-                  label: t('faqContact'),
-                  description: t('faqContactText', { email }),
-                  href: `mailto:${email}`,
-                }
-              : null
-          }
+          contact={{
+            label: t('faqContact'),
+            description: t('faqContactText'),
+            href: `/${locale}/contact`,
+          }}
           description={t('faqText')}
           items={(t.raw('faq') as Array<{ q: string; a: string }>).map((f, i) => ({
             id: `faq-${i}`,
