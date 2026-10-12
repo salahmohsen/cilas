@@ -54,7 +54,7 @@ export function CILASSiteHeader() {
       feature: {
         title: t('study.featureTitle'),
         description: t('study.featureDescription'),
-        href: href('/study'),
+        href: href('/study/bridge'),
         image: { src: '/assets/images/cilas-classroom.jpg', alt: t('study.featureImageAlt') },
       },
     },
