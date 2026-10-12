@@ -28,6 +28,8 @@ import { registrationStatus } from '@/lib/registration'
 import { expandSchedule, sessionsInOrder, type Meeting } from '@/lib/schedule'
 import type { Course, Media, Person, Space } from '@/payload-types'
 
+import { RegisterBar } from './RegisterBar'
+
 /** A course in the same cycle, as the end of the page lists it. */
 export type RelatedCourse = {
   id: number
@@ -234,7 +236,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
         {price ? <span className="text-sm text-(--text-secondary)">{price}</span> : null}
       </div>
       {applyUrl ? (
-        <a className="course-apply" href={applyUrl} rel="noopener" target="_blank">
+        <a className="course-apply" data-primary href={applyUrl} rel="noopener" target="_blank">
           {t('apply')}
         </a>
       ) : null}
@@ -274,7 +276,14 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   ) : null
 
   return (
-    <div className="course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+    <div
+      className={`course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0 ${applyUrl ? 'max-lg:pb-28' : ''}`}
+    >
+      {applyUrl ? (
+        <div className="lg:hidden">
+          <RegisterBar applyLabel={t('apply')} applyUrl={applyUrl} price={price} status={t('open')} variant="bar" />
+        </div>
+      ) : null}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
         <article aria-labelledby="course-title" className="min-w-0">
           <Link
@@ -432,13 +441,19 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           ) : null}
         </article>
 
-        <aside className="hidden lg:block">
-          {/* Not sticky: a fellow's bio can make the column taller than the screen. */}
+        <aside className="hidden lg:flex lg:flex-col lg:gap-10">
+          {/* Not sticky: a fellow's bio can make the column taller than the screen.
+              Only applying follows the reader down, at the column's end. */}
           <div className="grid gap-10">
             {factsCard}
             {fellows.length ? facultyCard : null}
             {materialsCard}
           </div>
+          {applyUrl ? (
+            <div className="sticky top-[5.5rem]">
+              <RegisterBar applyLabel={t('apply')} applyUrl={applyUrl} price={price} status={t('open')} variant="side" />
+            </div>
+          ) : null}
         </aside>
       </div>
 

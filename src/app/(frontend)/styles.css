@@ -435,8 +435,67 @@ html {
   border-radius: 999px;
   background: var(--text-muted);
 }
+/* Closed is red, open is green. */
+.course-status::before {
+  background: oklch(0.62 0.21 25);
+}
 .course-status[data-open]::before {
   background: oklch(0.65 0.15 150);
+}
+
+/* Applying, kept in reach once the details' own button has scrolled away. */
+.course-register {
+  display: grid;
+  gap: 0.75rem;
+  opacity: 0;
+  translate: 0 0.5rem;
+  visibility: hidden;
+  transition-property: opacity, translate, visibility;
+  transition-duration: 200ms;
+  transition-timing-function: ease-out;
+}
+.course-register[data-shown] {
+  opacity: 1;
+  translate: 0 0;
+  visibility: visible;
+}
+.course-register .course-apply {
+  margin-top: 0;
+}
+.course-register-price {
+  display: block;
+  margin-top: 0.125rem;
+  padding-inline-start: 2rem;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+/* Narrow screens: a bar along the bottom, clear of the phone's home bar. */
+.course-register[data-variant='bar'] {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 40;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom, 0px));
+  background: var(--background);
+  box-shadow:
+    0 -1px 0 var(--border),
+    0 -8px 24px oklch(0 0 0 / 0.06);
+  translate: 0 100%;
+}
+.course-register[data-variant='bar'][data-shown] {
+  translate: 0 0;
+}
+.course-register[data-variant='bar'] .course-apply {
+  padding-inline: 1.5rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .course-register {
+    transition-property: visibility;
+    transition-duration: 0ms;
+  }
 }
 
 .course-apply {
