@@ -214,9 +214,12 @@ function Newsletter({
           {title}
         </h2>
       )}
+      {/* An email address reads left to right in any language, so the field
+          does too: the address from the left, the button at its right end. */}
       <div
         className={styles.newsletterRow}
         data-invalid={error ? '' : undefined}
+        dir="ltr"
         data-done={state === 'done' ? '' : undefined}
       >
         <label className={styles.srOnly} htmlFor={`${id}-email`}>
