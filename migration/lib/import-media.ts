@@ -99,7 +99,9 @@ export const importMedia = async (
       result.skippedReviewed++
       continue
     }
-    const args = { collection: job.collection, id: doc.id, overrideAccess: true, draft } as const
+    // A published document stays published: the file is written to it, not
+    // to a new draft that the site would not show.
+    const args = { collection: job.collection, id: doc.id, overrideAccess: true, draft: draft && doc._status !== 'published' } as const
 
     if (job.field === 'body_pdf_link') {
       if (!doc.body) {
