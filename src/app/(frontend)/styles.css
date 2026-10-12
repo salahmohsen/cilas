@@ -560,10 +560,18 @@ html {
   color: var(--text-primary, var(--foreground));
   text-decoration: underline;
 }
+.apply-intro {
+  display: grid;
+  gap: 1.5rem;
+  margin-block: 1.5rem 3rem;
+}
+/* Once sent, what came before the questions has done its job. */
+.apply-page:has(.payload-form-sent) .apply-intro {
+  display: none;
+}
 .apply-notes {
   display: grid;
   gap: 0.75rem;
-  margin-top: 1.5rem;
   max-width: 62ch;
   font-size: 0.9375rem;
   line-height: 1.65;
@@ -682,10 +690,40 @@ html {
   font-size: 0.875rem;
   color: var(--text-muted);
 }
+/* Sent: a mark, a plain heading, the form's own message at reading size, and the way back. */
 .payload-form-sent {
-  border-radius: calc(var(--radius) * 2);
-  background: var(--surface-muted, var(--muted));
-  padding: 1.5rem;
+  display: grid;
+  justify-items: start;
+  gap: 1rem;
+  max-width: 62ch;
+  padding-block: 1rem 2rem;
+}
+.payload-form-sent-mark {
+  display: grid;
+  width: 2.5rem;
+  height: 2.5rem;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in oklab, oklch(0.65 0.15 150) 16%, transparent);
+  color: oklch(0.55 0.15 150);
+}
+.payload-form-sent h2 {
+  margin-top: 0.25rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-wrap: balance;
+}
+.payload-form-sent .article-prose {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+.payload-form-sent .article-prose > * {
+  margin-block: 0 0.75rem;
+}
+.payload-form-sent .bridge-link {
+  margin-top: 0.75rem;
 }
 
 /* Closed is red, open is green. */

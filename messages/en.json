@@ -439,6 +439,7 @@
     "share": "Share this programme"
   },
   "Forms": {
+    "sent": "Application sent",
     "optional": "optional",
     "required": "This question needs an answer.",
     "email": "Enter an email address like name@example.com.",
@@ -460,6 +461,7 @@
     "english": "Please don’t feel discouraged to apply if your English is not ‘proficient’. We welcome all ‘English-es’ and embrace bi-linguality in our discussions. However, we ask you to fill in the form in English as many of the assigned readings at CILAS are in English.",
     "scholarship": "There is a possibility of offering partial scholarships for a limited number of students, you can apply by sending an email to admissions@ci-las.org after filling the application form.",
     "about": "About the programme",
+    "backTo": "Back to the {title}",
     "questions": "See the application questions"
   }
 }

@@ -69,25 +69,38 @@ export default async function ApplyPage({ params }: Props) {
   ) : null
 
   return (
-    <div className="mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
+    <div className="apply-page mx-auto w-full max-w-3xl px-4 py-10 sm:px-8 sm:py-14">
       <header className="apply-header">
         <Link className="apply-back" href="/study/bridge">
           {year.programme.title}
         </Link>
         <h1 className="course-title mt-3">{t('title')}</h1>
-        <p className="course-status mt-5" data-open={open || undefined}>
-          {open ? (deadline ? t('deadline', { date: deadline }) : null) : t('closed', { year: year.programme.title, date: deadline ?? '' })}
+      </header>
+
+      {/* Before the questions only: hidden once the application is sent (see .apply-intro). */}
+      <div className="apply-intro">
+        <p className="course-status" data-open={open || undefined}>
+          {open
+            ? deadline
+              ? t('deadline', { date: deadline })
+              : null
+            : t('closed', { year: year.programme.title, date: deadline ?? '' })}
         </p>
         <div className="apply-notes">
           <p>{t('english')}</p>
           <p>{t('scholarship')}</p>
         </div>
-      </header>
+      </div>
 
       {/* The questions are written in English, so they read left to right on either page. */}
-      <div className="mt-12" dir="ltr" lang="en">
-        <PayloadForm confirmation={confirmation} disabled={!open} form={form} notes={notes} />
-      </div>
+      <PayloadForm
+        back={{ href: '/study/bridge', label: t('backTo', { title: year.programme.title }) }}
+        confirmation={confirmation}
+        disabled={!open}
+        form={form}
+        lang="en"
+        notes={notes}
+      />
     </div>
   )
 }

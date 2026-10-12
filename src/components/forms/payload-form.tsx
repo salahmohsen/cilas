@@ -1,13 +1,15 @@
 'use client'
 
 import { useForm, useSelector, type AnyFieldApi } from '@tanstack/react-form'
+import { Check } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { Input } from '@/components/arc/input/input'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
+import { Link } from '@/i18n/navigation'
 import type { Form, Media } from '@/payload-types'
 
 type Block = NonNullable<Form['fields']>[number]
@@ -15,7 +17,8 @@ type Question = Exclude<Block, { blockType: 'message' }>
 type Answer = string | string[] | boolean
 type Values = Record<string, Answer>
 
-const isQuestion = (b: Block): b is Question => b.blockType !== 'message' && 'name' in b && Boolean(b.name)
+const isQuestion = (b: Block): b is Question =>
+  b.blockType !== 'message' && 'name' in b && Boolean(b.name)
 const wordsIn = (text: string) => text.trim().split(/\s+/).filter(Boolean).length
 const emptyFor = (q: Question): Answer =>
   q.blockType === 'checkboxGroup' ? [] : q.blockType === 'checkbox' ? false : ''
@@ -27,14 +30,24 @@ const URL_PATTERN = /(https?:\/\/[^\s<>"]*[^\s<>".,;:!?)\]])/g
 
 /** Help text as written, its web addresses made into links that open in a new tab. */
 function Linked({ text }: { text: string }) {
-  return text.split(URL_PATTERN).map((part, i) =>
-    i % 2 ? (
-      <a className="payload-form-link" href={part} key={i} rel="noopener noreferrer" target="_blank">
-        {part.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
-      </a>
-    ) : (
-      part
-    ),
+  return (
+    <>
+      {text.split(URL_PATTERN).map((part, i) =>
+        i % 2 ? (
+          <a
+            className="payload-form-link"
+            href={part}
+            key={i}
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            {part.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+          </a>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        ),
+      )}
+    </>
   )
 }
 
@@ -47,17 +60,22 @@ function Linked({ text }: { text: string }) {
  * survives a closed tab.
  *
  * `notes` holds what the server rendered for the form's text blocks (by block
- * id) and `confirmation` the message shown once sent.
+ * id) and `confirmation` the message shown once sent, closed by a link `back`.
  */
 export function PayloadForm({
   form,
   notes = {},
   confirmation,
+  back,
+  lang,
   disabled = false,
 }: {
   form: Form
   notes?: Record<string, ReactNode>
   confirmation: ReactNode
+  back?: { href: string; label: string }
+  /** The questions' language, when it is not the page's. */
+  lang?: string
   /** The questions are shown to read, not to answer (applications closed). */
   disabled?: boolean
 }) {
@@ -70,9 +88,17 @@ export function PayloadForm({
   const top = useRef<HTMLDivElement>(null)
 
   const check = (q: Question, value: Answer): string | undefined => {
-    const empty = Array.isArray(value) ? value.length === 0 : value === false || String(value).trim() === ''
-    if (empty) return q.required ? (q.blockType === 'checkboxGroup' ? t('pickOne') : t('required')) : undefined
-    if (q.blockType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value))) return t('email')
+    const empty = Array.isArray(value)
+      ? value.length === 0
+      : value === false || String(value).trim() === ''
+    if (empty)
+      return q.required
+        ? q.blockType === 'checkboxGroup'
+          ? t('pickOne')
+          : t('required')
+        : undefined
+    if (q.blockType === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value)))
+      return t('email')
     if (q.blockType === 'textarea' && q.minWords) {
       const count = wordsIn(String(value))
       if (count < q.minWords) return t('tooShort', { min: q.minWords, count })
@@ -97,7 +123,10 @@ export function PayloadForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           form: form.id,
-          submissionData: questions.map((q) => ({ field: q.name, value: readable(q, value[q.name] ?? emptyFor(q)) })),
+          submissionData: questions.map((q) => ({
+            field: q.name,
+            value: readable(q, value[q.name] ?? emptyFor(q)),
+          })),
         }),
       }).catch(() => null)
       if (!res?.ok) {
@@ -121,7 +150,9 @@ export function PayloadForm({
     if (disabled) return
     try {
       const saved = JSON.parse(localStorage.getItem(draftKey) ?? 'null') as Values | null
-      if (saved) for (const q of questions) if (q.name in saved) api.setFieldValue(q.name, saved[q.name]!, { dontUpdateMeta: true })
+      if (saved)
+        for (const q of questions)
+          if (q.name in saved) api.setFieldValue(q.name, saved[q.name]!, { dontUpdateMeta: true })
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -138,13 +169,29 @@ export function PayloadForm({
 
   const attempts = useSelector(api.store, (s) => s.submissionAttempts)
   const errorOf = (field: AnyFieldApi) =>
-    field.state.meta.isBlurred || attempts > 0 ? (field.state.meta.errors[0] as string | undefined) : undefined
+    field.state.meta.isBlurred || attempts > 0
+      ? (field.state.meta.errors[0] as string | undefined)
+      : undefined
 
   if (sent) {
     return (
-      <div className="payload-form-sent" ref={top} role="status">
+      <section
+        aria-labelledby="payload-form-sent"
+        className="payload-form-sent"
+        ref={top}
+        role="status"
+      >
+        <span aria-hidden className="payload-form-sent-mark">
+          <Check size={20} strokeWidth={2} />
+        </span>
+        <h2 id="payload-form-sent">{t('sent')}</h2>
         {confirmation}
-      </div>
+        {back ? (
+          <Link className="bridge-link" href={back.href}>
+            {back.label}
+          </Link>
+        ) : null}
+      </section>
     )
   }
 
@@ -167,7 +214,12 @@ export function PayloadForm({
               ) : null}
               {image?.url ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img alt={image.alt ?? ''} className="payload-form-image" loading="lazy" src={image.url} />
+                <img
+                  alt={image.alt ?? ''}
+                  className="payload-form-image"
+                  loading="lazy"
+                  src={image.url}
+                />
               ) : null}
             </>
           ) : undefined
@@ -186,7 +238,11 @@ export function PayloadForm({
               value={String(field.state.value ?? '')}
             />
             {q.minWords ? (
-              <p aria-live="polite" className="payload-form-count" data-short={count < q.minWords || undefined}>
+              <p
+                aria-live="polite"
+                className="payload-form-count"
+                data-short={count < q.minWords || undefined}
+              >
                 {t('words', { count, min: q.minWords })}
               </p>
             ) : null}
@@ -232,7 +288,9 @@ export function PayloadForm({
                   key={o.value}
                   label={o.label}
                   onCheckedChange={(on) =>
-                    field.handleChange(on ? [...chosen, o.value] : chosen.filter((v) => v !== o.value))
+                    field.handleChange(
+                      on ? [...chosen, o.value] : chosen.filter((v) => v !== o.value),
+                    )
                   }
                 />
               ))}
@@ -267,7 +325,9 @@ export function PayloadForm({
               ) : undefined
             }
             id={fieldId(q.name)}
-            inputMode={q.blockType === 'number' ? 'decimal' : q.blockType === 'email' ? 'email' : undefined}
+            inputMode={
+              q.blockType === 'number' ? 'decimal' : q.blockType === 'email' ? 'email' : undefined
+            }
             label={label(q)}
             name={q.name}
             onBlur={field.handleBlur}
@@ -283,6 +343,8 @@ export function PayloadForm({
   return (
     <form
       className="payload-form"
+      dir={lang ? (lang === 'ar' ? 'rtl' : 'ltr') : undefined}
+      lang={lang}
       noValidate
       onSubmit={(e) => {
         e.preventDefault()
@@ -306,7 +368,11 @@ export function PayloadForm({
             <api.Field
               key={q.id ?? q.name}
               name={q.name}
-              validators={{ onBlur: ({ value }) => check(q, value), onChange: ({ value }) => check(q, value), onSubmit: ({ value }) => check(q, value) }}
+              validators={{
+                onBlur: ({ value }) => check(q, value),
+                onChange: ({ value }) => check(q, value),
+                onSubmit: ({ value }) => check(q, value),
+              }}
             >
               {(field) => <div className="payload-form-question">{render(q, field)}</div>}
             </api.Field>
@@ -315,12 +381,20 @@ export function PayloadForm({
       </fieldset>
 
       {disabled ? null : (
-        <api.Subscribe selector={(s) => [s.isSubmitting, s.submissionAttempts, s.errors.length, s.fieldMeta] as const}>
+        <api.Subscribe
+          selector={(s) =>
+            [s.isSubmitting, s.submissionAttempts, s.errors.length, s.fieldMeta] as const
+          }
+        >
           {([submitting, tried, , meta]) => {
             const gaps = Object.values(meta ?? {}).filter((m) => m?.errors?.length).length
             return (
               <div className="payload-form-actions">
-                <button className="course-apply payload-form-submit" disabled={submitting} type="submit">
+                <button
+                  className="course-apply payload-form-submit"
+                  disabled={submitting}
+                  type="submit"
+                >
                   {submitting ? t('sending') : (form.submitButtonLabel ?? t('submit'))}
                 </button>
                 <p aria-live="polite" className="payload-form-status">

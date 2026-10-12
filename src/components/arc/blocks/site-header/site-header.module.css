@@ -276,8 +276,17 @@
   display: grid;
   gap: var(--space-2);
 }
+/* With a feature: the links stack in one column and the feature takes the other half, so neither leaves a hole. */
 .faceGrid[data-featured] {
-  grid-template-columns: minmax(0, 1fr) minmax(200px, 260px);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+/* A wide feature keeps a wide picture, so the menu does not grow taller than its links. */
+.faceGrid[data-featured] .featureImage {
+  aspect-ratio: 2 / 1;
+}
+.faceGrid[data-featured] .panelLinks {
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
 }
 .panelLinks {
   display: grid;
