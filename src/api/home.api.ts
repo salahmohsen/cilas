@@ -165,9 +165,13 @@ export const getHomeStats = async (payload: Payload): Promise<HomeStats> => {
   }
 }
 
-export type PressOutlet = { name: string; href?: string; logo?: string }
+export type PressOutlet = { name: string; href?: string }
 
-/** The outlets that have written about CILAS, most recent first, each linking to its latest piece. */
+/**
+ * The outlets that have written about CILAS, most recent first, each linking
+ * to its latest piece. Names only: the logos on file are wide banners that a
+ * row of marks cannot show legibly.
+ */
 export const getPressOutlets = async (payload: Payload, locale: Locale): Promise<PressOutlet[]> => {
   const { docs } = await payload.find({
     collection: 'press',
@@ -182,12 +186,7 @@ export const getPressOutlets = async (payload: Payload, locale: Locale): Promise
     const outlet = obj<Partner>(piece.outlet)
     if (!outlet?.name || outlets.has(outlet.name)) continue
     const link = piece.links?.find((l) => l.url) ?? null
-    const logo = obj<Media>(outlet.logo)
-    outlets.set(outlet.name, {
-      name: outlet.name,
-      ...(link?.url ? { href: link.url } : {}),
-      ...(logo?.url ? { logo: logo.url } : {}),
-    })
+    outlets.set(outlet.name, { name: outlet.name, ...(link?.url ? { href: link.url } : {}) })
   }
   return [...outlets.values()]
 }

@@ -122,7 +122,6 @@ export default async function HomePage({ params }: Props) {
             <LogoMarquee
               brands={outlets.map((o) => ({
                 name: o.name,
-                ...(o.logo ? { colorIcon: o.logo, icon: o.logo } : {}),
                 ...(o.href ? { href: o.href } : {}),
               }))}
               description={t('pressText')}
@@ -135,7 +134,7 @@ export default async function HomePage({ params }: Props) {
                 paused: controls.motionPaused,
               }}
               title={t('pressTitle')}
-              tone="color"
+              tone="mono"
             />
           </div>
         ) : null}
