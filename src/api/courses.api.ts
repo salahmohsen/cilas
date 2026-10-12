@@ -3,6 +3,7 @@ import type { Payload, Where } from 'payload'
 
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { SEASONS } from '@/lib/cycle'
+import { localDigits } from '@/lib/digits'
 import { slugify } from '@/lib/slugify'
 import { searchWords, type StudyCourse } from '@/lib/course-search'
 import type { Course, Cycle, Media, Person, Space } from '@/payload-types'
@@ -106,7 +107,7 @@ export const getStudyCourses = async (
       const place = space ? (space.city ?? space.name) : null
       const season = cycle?.season
       const cycleLabel = cycle
-        ? [`${t(`seasons.${season}`)} ${cycle.start_year}`, place].filter(Boolean).join(locale === 'ar' ? '، ' : ', ')
+        ? [`${t(`seasons.${season}`)} ${localDigits(cycle.start_year, locale)}`, place].filter(Boolean).join(locale === 'ar' ? '، ' : ', ')
         : null
       const type = c.course_type
       const fellows = (c.fellows ?? []).flatMap((f) => {
@@ -128,9 +129,9 @@ export const getStudyCourses = async (
         ...(cycle && season
           ? {
               season: [{ value: season, label: t(`seasons.${season}`), rank: SEASONS.indexOf(season) }],
-              year: [{ value: String(cycle.start_year), label: String(cycle.start_year) }],
+              year: [{ value: String(cycle.start_year), label: localDigits(cycle.start_year, locale) }],
               ...(cycle.academic_year
-                ? { academic: [{ value: cycle.academic_year.replace('–', '-'), label: cycle.academic_year }] }
+                ? { academic: [{ value: cycle.academic_year.replace('–', '-'), label: localDigits(cycle.academic_year, locale) }] }
                 : {}),
             }
           : {}),

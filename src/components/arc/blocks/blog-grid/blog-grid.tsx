@@ -29,6 +29,8 @@ export interface BlogGridLabels {
   previousPage?: string
   nextPage?: string
   page?: (n: number) => string
+  /** How a page number is written, for other digits. */
+  number?: (n: number) => string
   empty?: (category: string) => string
 }
 
@@ -501,7 +503,7 @@ export function BlogGrid({
                                     transition={reduced ? { duration: 0 } : morph}
                                   />
                                 )}
-                                <span>{number}</span>
+                                <span>{labels.number ? labels.number(number) : number}</span>
                               </button>
                             ),
                           )}

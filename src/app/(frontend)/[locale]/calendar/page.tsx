@@ -7,6 +7,7 @@ import { CalendarFeed, CalendarJump } from '@/components/calendar/calendar-tools
 import { AgendaView, calendarLabels, MonthView, WeekView } from '@/components/calendar/calendar-views'
 import { Link } from '@/i18n/navigation'
 import { cairoDay } from '@/lib/cairo-day'
+import { numberingSystemOf } from '@/lib/digits'
 import { CALENDAR_VIEWS, monthStart, readCalendarParams, viewRange, type CalendarView } from '@/lib/calendar'
 
 type Props = {
@@ -38,6 +39,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const today = cairoDay(new Date())!
   const { view, date } = readCalendarParams(query, today)
   const range = viewRange(view, date)
+  const nu = numberingSystemOf(locale)
   const all = await getCachedCalendarItems(locale === 'ar' ? 'ar' : 'en')
   const items = all.filter((i) => i.date >= range.from && i.date <= range.to)
   // In a month, the days outside it belong to its neighbours: the phone list skips them.
@@ -46,8 +48,8 @@ export default async function CalendarPage({ params, searchParams }: Props) {
   const href = (v: CalendarView, d: string) => `/calendar?view=${v}&date=${d}`
   const title =
     view === 'month'
-      ? format.dateTime(UTC(date), { month: 'long', year: 'numeric', timeZone: 'UTC', numberingSystem: 'latn' })
-      : `${format.dateTime(UTC(range.from), { day: 'numeric', month: 'short', timeZone: 'UTC', numberingSystem: 'latn' })} – ${format.dateTime(UTC(range.to), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC', numberingSystem: 'latn' })}`
+      ? format.dateTime(UTC(date), { month: 'long', year: 'numeric', timeZone: 'UTC', numberingSystem: nu })
+      : `${format.dateTime(UTC(range.from), { day: 'numeric', month: 'short', timeZone: 'UTC', numberingSystem: nu })} – ${format.dateTime(UTC(range.to), { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC', numberingSystem: nu })}`
 
   // Nothing here: point to the nearest time that has something.
   const after = all.find((i) => i.date > range.to)
@@ -103,7 +105,7 @@ export default async function CalendarPage({ params, searchParams }: Props) {
             {nearest ? (
               <Link className="underline underline-offset-4" href={href(view, nearest.date)}>
                 {t(after ? 'nextOn' : 'lastOn', {
-                  date: format.dateTime(UTC(nearest.date), { dateStyle: 'long', timeZone: 'UTC', numberingSystem: 'latn' }),
+                  date: format.dateTime(UTC(nearest.date), { dateStyle: 'long', timeZone: 'UTC', numberingSystem: nu }),
                 })}
               </Link>
             ) : null}

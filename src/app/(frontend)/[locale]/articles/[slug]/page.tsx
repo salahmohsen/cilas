@@ -32,6 +32,7 @@ import { env } from '@/env'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { splitBody } from '@/lib/article-body'
+import { localDigits } from '@/lib/digits'
 import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, yearOf } from '@/lib/articles'
 import { readingFonts } from '@/lib/fonts'
@@ -159,7 +160,7 @@ export default async function ArticlePage({ params }: Props) {
 
   const year = article.published_date
     ? format.dateTime(new Date(article.published_date), 'year')
-    : yearOf(article)
+    : localDigits(yearOf(article), locale)
   const hasContents = sections.length >= 3
 
   // The layout is Arc's blog-grid reader (blocks/blog-grid): one centred
@@ -336,6 +337,7 @@ export default async function ArticlePage({ params }: Props) {
               <CollectionList
                 current={article.id}
                 labels={{ title: t('inCollection'), current: t('readingNow'), foreword: t('foreword') }}
+                locale={locale}
                 publication={collection.publication}
                 items={collection.articles.map((a) => ({
                   id: a.id,
@@ -377,11 +379,13 @@ function CollectionList({
   items,
   current,
   labels,
+  locale,
 }: {
   publication: Publication
   items: Array<{ id: number; title: string; authors: string; href: string; foreword: boolean }>
   current: number
   labels: { title: string; current: string; foreword: string }
+  locale: string
 }) {
   return (
     <nav aria-labelledby="collection-title" className="mt-6 border-t border-border pt-8">
@@ -397,7 +401,7 @@ function CollectionList({
           const body = (
             <>
               <span aria-label={item.foreword ? labels.foreword : undefined} className="collection-number">
-                {item.foreword ? '—' : String(i + (items[0]?.foreword ? 0 : 1)).padStart(2, '0')}
+                {item.foreword ? '—' : localDigits(String(i + (items[0]?.foreword ? 0 : 1)).padStart(2, '0'), locale)}
               </span>
               <span className="min-w-0">
                 <span className="block font-medium" dir="auto">

@@ -6,6 +6,7 @@ import { useState } from 'react'
 
 import { DropdownMenu } from '@/components/arc/dropdown-menu/dropdown-menu'
 import { useRouter } from '@/i18n/navigation'
+import { localDigits } from '@/lib/digits'
 
 const MONTHS = Array.from({ length: 12 }, (_, i) => i + 1)
 
@@ -47,7 +48,7 @@ export function CalendarJump({
       <select className="cal-select" id="cal-year" onChange={(e) => go(Number(e.target.value), month)} value={year}>
         {(years.includes(year) ? years : [...years, year].sort()).map((y) => (
           <option key={y} value={y}>
-            {y}
+            {localDigits(y, locale)}
           </option>
         ))}
       </select>

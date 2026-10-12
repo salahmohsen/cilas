@@ -23,7 +23,8 @@ export const getStudyIndex = unstable_cache(
     const t = createTranslator({ locale, messages: locale === 'ar' ? ar : en, namespace: 'Study.filters' })
     return getStudyCourses(payload, locale, (key) => t(key as never))
   },
-  ['study-index'],
+  // The key names the index's shape: a change to it starts a fresh cache.
+  ['study-index-v2'],
   { tags: [COURSES_TAG], revalidate: 300 },
 )
 

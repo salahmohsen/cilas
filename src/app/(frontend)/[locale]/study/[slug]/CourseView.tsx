@@ -22,6 +22,7 @@ import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
 import { Link } from '@/i18n/navigation'
 import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
+import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import type { Season } from '@/lib/cycle'
 import { priceLabel, pricingFor } from '@/lib/pricing'
 import { registrationStatus } from '@/lib/registration'
@@ -92,7 +93,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   const season = (cycle?.season ?? null) as Season | null
   const SeasonIcon = season ? SEASON_ICONS[season] : null
   const cycleLabel = cycle
-    ? [`${tf(`seasons.${season}`)} ${cycle.start_year}`, space?.city ?? space?.name].filter(Boolean).join(locale === 'ar' ? '، ' : ', ')
+    ? [`${tf(`seasons.${season}`)} ${localDigits(cycle.start_year, locale)}`, space?.city ?? space?.name].filter(Boolean).join(locale === 'ar' ? '، ' : ', ')
     : null
   const typeLabel = tf(`types.${course.course_type.toLowerCase()}`)
   const fellows = (course.fellows ?? []).filter(isObject<Person>)
@@ -113,11 +114,12 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       day: 'numeric',
       month: 'short',
       timeZone: 'UTC',
-      numberingSystem: 'latn',
+      numberingSystem: numberingSystemOf(locale),
     })
   const weekdayName = (day: string): string =>
     format.dateTime(new Date(`${day}T00:00:00Z`), { weekday: 'long', timeZone: 'UTC' })
-  const meetingLabel = (m: Meeting): string => `${dayLabel(m.date)}, ${m.start_time}–${m.end_time}`
+  const meetingLabel = (m: Meeting): string =>
+    `${dayLabel(m.date)}${locale === 'ar' ? '، ' : ', '}${localDigits(`${m.start_time}–${m.end_time}`, locale)}`
   const unitLabel = (n: number) =>
     course.session_unit === 'week' ? t('week', { number: n }) : t('session', { number: n })
 
@@ -130,7 +132,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   // The weekly meeting time, from the first meeting of each slot.
   const slots = (course.schedule?.slots ?? []).flatMap((slot) => {
     const first = meetings.find((m) => !m.cancelled && cairoWeekday(m.date) === slot.weekday && m.start_time === slot.start_time)
-    return first ? [{ day: weekdayName(first.date), time: `${slot.start_time}–${slot.end_time}` }] : []
+    return first ? [{ day: weekdayName(first.date), time: localDigits(`${slot.start_time}–${slot.end_time}`, locale) }] : []
   })
   const comma = locale === 'ar' ? '، ' : ', '
 
@@ -153,12 +155,12 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           {
             icon: Clock,
             label: t('meets'),
-            // A slot a line; the time held left to right, so Arabic doesn't reverse it.
+            // A slot a line; the time held in its digits' direction, so it never reads backwards.
             value: slots.map(({ day, time }) => (
               <span className="block" key={`${day}${time}`}>
                 {day}
                 {comma}
-                <span className="whitespace-nowrap tabular-nums" dir="ltr">
+                <span className="whitespace-nowrap tabular-nums" dir={timeDir(locale)}>
                   {time}
                 </span>
               </span>
@@ -382,7 +384,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
                     <li key={session.id ?? i}>
                       <details className="course-session" open={i === 0 && hasBody}>
                         <summary>
-                          <span className="course-session-number">{String(i + 1).padStart(2, '0')}</span>
+                          <span className="course-session-number">{localDigits(String(i + 1).padStart(2, '0'), locale)}</span>
                           <span className="min-w-0 flex-1">
                             <span className="block font-medium" dir="auto">
                               {session.session_title || unitLabel(i + 1)}

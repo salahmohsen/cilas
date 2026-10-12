@@ -20,6 +20,8 @@ export interface PaginationProps {
   previousLabel?: string
   nextLabel?: string
   pageLabel?: (page: number) => string
+  /** How a page number is written, for other digits. */
+  formatNumber?: (page: number) => string
 }
 /** When the five page window shifts, numbers travel like a belt: each one moves by the same number of slots. */
 const slot = 1000 / 9 // One button plus the gap (36px + 4px), as a percentage of the button width.
@@ -43,6 +45,7 @@ export function Pagination({
   previousLabel = 'Previous page',
   nextLabel = 'Next page',
   pageLabel = (page: number) => `Page ${page}`,
+  formatNumber = String,
 }: PaginationProps) {
   const reduced = useReducedMotion() ?? false
   const navRef = useRef<HTMLElement>(null)
@@ -131,7 +134,7 @@ export function Pagination({
                   }
             }
           >
-            {number}
+            {formatNumber(number)}
           </motion.button>
         ))}
       </AnimatePresence>

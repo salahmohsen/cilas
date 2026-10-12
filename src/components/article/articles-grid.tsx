@@ -1,10 +1,11 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
 import { BlogGrid } from '@/components/arc/blocks/blog-grid/blog-grid'
 import type { ArticleCard } from '@/lib/article-cards'
+import { localDigits } from '@/lib/digits'
 
 /**
  * Arc's blog-grid with CILAS articles: publications are the categories, and
@@ -35,6 +36,7 @@ export function ArticlesGrid({
   categoryOrder?: Record<string, string[]>
 }) {
   const t = useTranslations('Articles.grid')
+  const locale = useLocale()
   const router = useRouter()
   return (
     <BlogGrid
@@ -53,6 +55,7 @@ export function ArticlesGrid({
         previousPage: t('previousPage'),
         nextPage: t('nextPage'),
         page: (n) => t('page', { n }),
+        number: (n) => localDigits(n, locale),
         empty: (category) => t('empty', { category }),
       }}
       onCategoryChange={(category) => {

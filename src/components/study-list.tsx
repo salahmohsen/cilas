@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState, useTransition } from 'react'
 
@@ -15,6 +15,7 @@ import { Pagination } from '@/components/arc/pagination/pagination'
 import { SearchField } from '@/components/arc/search-field/search-field'
 import { CourseRows } from '@/components/course-rows'
 import { COURSE_FACETS, readCourseQuery, type CourseFacet } from '@/lib/course-search'
+import { localDigits } from '@/lib/digits'
 
 /**
  * The study list: a search over everything a course has, filters over its
@@ -25,6 +26,7 @@ import { COURSE_FACETS, readCourseQuery, type CourseFacet } from '@/lib/course-s
  */
 export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: number }) {
   const t = useTranslations('Study.filters')
+  const locale = useLocale()
   const router = useRouter()
   const pathname = usePathname()
   const params = useSearchParams()
@@ -67,7 +69,7 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
   const fields: FilterField[] = COURSE_FACETS.filter((f) => options[f].length > 1).map((f) => ({
     id: f,
     label: t(`facets.${f}`),
-    options: options[f].map((o) => ({ value: o.value, label: o.label, hint: o.count })),
+    options: options[f].map((o) => ({ value: o.value, label: o.label, hint: localDigits(o.count, locale) })),
   }))
 
   const chips: FilterChip[] = COURSE_FACETS.flatMap((f) => {
@@ -138,6 +140,7 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
               // Pages run left to right in either language, like the calendar's arrows.
               <div className="mt-8 flex justify-center" dir="ltr">
                 <Pagination
+                  formatNumber={(n) => localDigits(n, locale)}
                   label={t('pages')}
                   nextLabel={t('nextPage')}
                   onPageChange={goToPage}

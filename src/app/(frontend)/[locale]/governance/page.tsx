@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 import type { Locale } from '@/api/articles.api'
 import { getGovernance } from '@/api/people.api'
 import { PeoplePage } from '@/components/person/people-page'
+import { localDigits } from '@/lib/digits'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -22,7 +23,7 @@ export default async function GovernancePage({ params }: Props) {
   const t = await getTranslations('Governance')
   const members = await getGovernance(await getPayload({ config }), (locale === 'ar' ? 'ar' : 'en') as Locale)
   const term = (from: number | null, to: number | null) =>
-    from ? (to ? `${from}–${to}` : t('since', { year: from })) : null
+    from ? (to ? localDigits(`${from}–${to}`, locale) : t('since', { year: from })) : null
 
   return (
     <PeoplePage

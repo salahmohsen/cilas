@@ -24,7 +24,7 @@ export default async function CoursesPage({ params, searchParams }: Props) {
 
   // The whole catalogue, for the header: every course, and the first year.
   const all = result.options.type.reduce((n, o) => n + o.count, 0)
-  const firstYear = result.options.year.at(-1)?.label
+  const firstYear = result.options.year.at(-1)?.value
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 sm:px-8 sm:py-14 xl:px-0">

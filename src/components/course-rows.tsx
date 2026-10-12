@@ -10,12 +10,13 @@ import {
   MapPin,
   type LucideIcon,
 } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import Link from 'next/link'
 
 import type { StudyRow } from '@/api/study-index'
 import { SEASON_ICONS } from '@/components/season-icon'
 import type { Season } from '@/lib/cycle'
+import { localDigits } from '@/lib/digits'
 
 /** A course type's mark, beside its name. */
 export const TYPE_ICONS: Record<string, LucideIcon> = {
@@ -62,6 +63,7 @@ export function CourseMeta({ row }: { row: StudyRow }) {
  */
 export function CourseRows({ rows, start }: { rows: StudyRow[]; start: number }) {
   const t = useTranslations('Study.filters')
+  const locale = useLocale()
   return (
     <ol className="course-rows">
       {rows.map((row, i) => (
@@ -72,7 +74,7 @@ export function CourseRows({ rows, start }: { rows: StudyRow[]; start: number })
               <img alt="" decoding="async" loading="lazy" src={row.image} />
             </span>
           ) : null}
-          <span className="course-row-number">{String(start + i).padStart(2, '0')}</span>
+          <span className="course-row-number">{localDigits(String(start + i).padStart(2, '0'), locale)}</span>
           <div className="course-row-main">
             <h3 className="course-row-title">
               {/* The href already carries its locale (`/en/study/…`), so a plain

@@ -9,6 +9,7 @@ import { getFellows } from '@/api/people.api'
 import { PeoplePage } from '@/components/person/people-page'
 import { SEASON_ICONS } from '@/components/season-icon'
 import type { Season } from '@/lib/cycle'
+import { localDigits } from '@/lib/digits'
 import { COURSES_TAG } from '@/lib/revalidate-courses'
 
 type Props = { params: Promise<{ locale: string }> }
@@ -48,7 +49,7 @@ export default async function FellowsPage({ params }: Props) {
             key: c.slug,
             title: c.title,
             href: `/study/${c.slug}`,
-            ...(c.season && c.year ? { sub: `${tf(`seasons.${c.season}`)} ${c.year}` } : {}),
+            ...(c.season && c.year ? { sub: `${tf(`seasons.${c.season}`)} ${localDigits(c.year, locale)}` } : {}),
             ...(Icon
               ? { icon: <Icon aria-hidden className="course-season mt-0.5" data-season={c.season} size={16} strokeWidth={1.5} /> }
               : {}),

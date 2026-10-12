@@ -5,6 +5,8 @@
  * within some word of the course.
  */
 
+import { latinDigits } from '@/lib/digits'
+
 /** The filters, in the order the menu lists them; each is a URL parameter. */
 export const COURSE_FACETS = ['type', 'season', 'year', 'academic', 'place', 'fellow', 'format', 'language'] as const
 export type CourseFacet = (typeof COURSE_FACETS)[number]
@@ -35,7 +37,7 @@ export type StudyCard = Omit<StudyCourse, 'words'>
  * diacritics and tatweel, and the alef, ya and ta marbuta variants.
  */
 export const normaliseSearch = (text: string): string =>
-  text
+  latinDigits(text)
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()

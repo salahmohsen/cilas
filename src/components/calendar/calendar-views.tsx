@@ -1,9 +1,10 @@
-import { getFormatter, getTranslations } from 'next-intl/server'
+import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 
 import type { CalendarItem } from '@/api/calendar.api'
 import { Card } from '@/components/arc/card/card'
 import { Link } from '@/i18n/navigation'
 import { monthGrid, monthStart, weekDays } from '@/lib/calendar'
+import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 
 /** How many items a month's day cell lists before "+N more": fewer over a cover, to keep it legible. */
 const IN_CELL = 3
@@ -17,6 +18,10 @@ type Labels = {
   cancelled: string
   close: string
   open: (date: string, count: number) => string
+  /** A time or number the views build themselves, in the page's digits. */
+  digits: (text: string) => string
+  /** The direction a time is held in, for its digits. */
+  timeDir: 'ltr' | undefined
 }
 
 const byDay = (items: CalendarItem[]) => {
@@ -61,14 +66,14 @@ export async function MonthView({
   items: CalendarItem[]
   labels: Labels
 }) {
-  const format = await getFormatter()
+  const [format, nu] = await Promise.all([getFormatter(), getLocale().then(numberingSystemOf)])
   const days = monthGrid(date)
   const month = monthStart(date).slice(0, 7)
   const map = byDay(items)
   const weekday = (day: string) => format.dateTime(UTC(day), { weekday: 'short', timeZone: 'UTC' })
-  const number = (day: string) => format.number(Number(day.slice(8)), { numberingSystem: 'latn' })
+  const number = (day: string) => format.number(Number(day.slice(8)), { numberingSystem: nu })
   const longDate = (day: string) =>
-    format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC', numberingSystem: 'latn' })
+    format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC', numberingSystem: nu })
 
   return (
     <div className="cal-month" role="grid">
@@ -116,8 +121,8 @@ export async function MonthView({
                         <li className="cal-item" key={item.key}>
                           <span className="cal-item-head">
                             {timeOf(item) ? (
-                              <span className="cal-item-when" dir="ltr">
-                                {timeOf(item)}
+                              <span className="cal-item-when" dir={labels.timeDir}>
+                                {labels.digits(timeOf(item)!)}
                               </span>
                             ) : item.starts ? (
                               <span className="cal-item-when">{labels.starts}</span>
@@ -157,8 +162,8 @@ function DayAgenda({ items, labels }: { items: CalendarItem[]; labels: Labels })
       <ul className="grid gap-3">
         {items.map((item) => (
           <li className="cal-agenda-item" key={item.key}>
-            <span className="cal-time" dir={item.start ? 'ltr' : undefined}>
-              {item.start ? `${item.start}${item.end ? `–${item.end}` : ''}` : item.starts ? labels.starts : ''}
+            <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
+              {item.start ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`) : item.starts ? labels.starts : ''}
             </span>
             {item.cover ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -191,15 +196,15 @@ export async function WeekView({
   items: CalendarItem[]
   labels: Labels
 }) {
-  const format = await getFormatter()
+  const [format, nu] = await Promise.all([getFormatter(), getLocale().then(numberingSystemOf)])
   const map = byDay(items)
   return (
     <div className="cal-week">
       {weekDays(date).map((day) => (
-        <section aria-label={format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC' })} className="cal-week-day" data-today={day === today || undefined} key={day}>
+        <section aria-label={format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC', numberingSystem: nu })} className="cal-week-day" data-today={day === today || undefined} key={day}>
           <header className="cal-week-head">
             <span className="cal-weekday">{format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}</span>
-            <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: 'latn' })}</span>
+            <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: nu })}</span>
           </header>
           <ul className="grid gap-3">
             {(map.get(day) ?? []).map((item) => (
@@ -209,8 +214,8 @@ export async function WeekView({
                   <img alt={item.cover.alt} className="cal-card-cover" loading="lazy" src={item.cover.url} />
                 ) : null}
                 <div className="p-3">
-                  <p className="cal-time" dir={item.start ? 'ltr' : undefined}>
-                    {item.start ? `${item.start}${item.end ? `–${item.end}` : ''}` : item.starts ? labels.starts : ''}
+                  <p className="cal-time" dir={item.start ? labels.timeDir : undefined}>
+                    {item.start ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`) : item.starts ? labels.starts : ''}
                   </p>
                   <ItemTitle className="mt-1 block text-sm font-medium" item={item} />
                   <p className="mt-1 text-xs text-[var(--text-muted)]">
@@ -230,25 +235,25 @@ export async function WeekView({
 
 /** The agenda: the days that have something, each with its items in time order. */
 export async function AgendaView({ items, labels }: { items: CalendarItem[]; labels: Labels }) {
-  const format = await getFormatter()
+  const [format, nu] = await Promise.all([getFormatter(), getLocale().then(numberingSystemOf)])
   const map = byDay(items)
   return (
     <ol className="cal-agenda">
       {[...map.entries()].map(([day, dayItems]) => (
         <li className="cal-agenda-day" key={day}>
           <div className="cal-agenda-date">
-            <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: 'latn' })}</span>
+            <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: nu })}</span>
             <span className="text-sm leading-snug text-[var(--text-muted)]">
               {format.dateTime(UTC(day), { weekday: 'long', timeZone: 'UTC' })}
               <br />
-              {format.dateTime(UTC(day), { month: 'long', year: 'numeric', timeZone: 'UTC', numberingSystem: 'latn' })}
+              {format.dateTime(UTC(day), { month: 'long', year: 'numeric', timeZone: 'UTC', numberingSystem: nu })}
             </span>
           </div>
           <ul className="grid gap-2">
             {dayItems.map((item) => (
               <li className="cal-agenda-item" key={item.key}>
-                <span className="cal-time" dir={item.start ? 'ltr' : undefined}>
-                  {item.start ? `${item.start}${item.end ? `–${item.end}` : ''}` : item.starts ? labels.starts : ''}
+                <span className="cal-time" dir={item.start ? labels.timeDir : undefined}>
+                  {item.start ? labels.digits(`${item.start}${item.end ? `–${item.end}` : ''}`) : item.starts ? labels.starts : ''}
                 </span>
                 {item.cover ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -273,7 +278,7 @@ export async function AgendaView({ items, labels }: { items: CalendarItem[]; lab
 
 /** The labels the views share, in the site language. */
 export const calendarLabels = async (): Promise<Labels> => {
-  const [t, tf] = await Promise.all([getTranslations('Calendar'), getTranslations('Study.filters')])
+  const [t, tf, locale] = await Promise.all([getTranslations('Calendar'), getTranslations('Study.filters'), getLocale()])
   return {
     type: (item) => (item.kind === 'course' ? tf(`types.${item.type}`) : t(`eventTypes.${item.type}`)),
     session: (n) => t('session', { n }),
@@ -282,5 +287,7 @@ export const calendarLabels = async (): Promise<Labels> => {
     cancelled: t('cancelled'),
     close: t('close'),
     open: (date, count) => t('openDay', { date, count }),
+    digits: (text) => localDigits(text, locale),
+    timeDir: timeDir(locale),
   }
 }

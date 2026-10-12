@@ -63,7 +63,7 @@
     "newsletterTitle": "النشرة البريدية",
     "newsletterText": "أخبار الدورات والمقررات واللقاءات، بضع مرات في السنة.",
     "license": "تُنشر النصوص بتراخيص المشاع الإبداعي ما لم يُذكر غير ذلك.",
-    "rights": "© {year} معهد القاهرة للعلوم والآداب الحرة",
+    "rights": "© {year, number, digits} معهد القاهرة للعلوم والآداب الحرة",
     "newsletter": {
       "subscribe": "اشترك",
       "subscribed": "تم الاشتراك",
@@ -96,7 +96,7 @@
       "publication": "المنشور",
       "year": "السنة"
     },
-    "read": "اقرأ · {minutes} دقيقة",
+    "read": "اقرأ · {minutes, number, digits} دقيقة",
     "allArticles": "كل المقالات",
     "grid": {
       "all": "الكل",
@@ -107,7 +107,7 @@
       "next": "التالي",
       "previousPage": "الصفحة السابقة",
       "nextPage": "الصفحة التالية",
-      "page": "الصفحة {n}",
+      "page": "الصفحة {n, number, digits}",
       "empty": "لا يوجد شيء في {category} بعد."
     }
   },
@@ -118,11 +118,11 @@
     "publication": "المنشور",
     "published": "تاريخ النشر",
     "readingTime": "مدة القراءة",
-    "minutes": "{count} دقيقة",
+    "minutes": "{count, number, digits} دقيقة",
     "language": "اللغة",
     "contents": "المحتويات",
     "onThisPage": "في هذه الصفحة",
-    "notes": "الهوامش ({count})",
+    "notes": "الهوامش ({count, number, digits})",
     "aboutText": "عن هذا النص",
     "original": "الأصل",
     "credits": "المساهمون",
@@ -160,7 +160,7 @@
     "inCollection": "في هذه المجموعة",
     "readingNow": "تقرؤه الآن",
     "foreword": "تقديم",
-    "essayOf": "{n} من {total}",
+    "essayOf": "{n, number, digits} من {total, number, digits}",
     "collectionStack": "مقالات {title}"
   },
   "Study": {
@@ -172,7 +172,7 @@
       "add": "إضافة تصفية",
       "search": "ابحث في المقررات",
       "searchPlaceholder": "العنوان، الزميل، القراءة، الموضوع…",
-      "count": "{count, plural, =0 {لا مقررات} one {مقرر واحد} two {مقرران} few {# مقررات} many {# مقررًا} other {# مقرر}}",
+      "count": "{count, plural, =0 {لا مقررات} one {مقرر واحد} two {مقرران} few {{count, number, digits} مقررات} many {{count, number, digits} مقررًا} other {{count, number, digits} مقرر}}",
       "empty": "لا يوجد مقرر مطابق",
       "emptyText": "جرّب تصفيات أقل أو كلمات أخرى.",
       "facets": {
@@ -220,11 +220,11 @@
       "pages": "صفحات المقررات",
       "previousPage": "الصفحة السابقة",
       "nextPage": "الصفحة التالية",
-      "page": "الصفحة {n}",
+      "page": "الصفحة {n, number, digits}",
       "viewCourse": "صفحة المقرر"
     },
     "title": "المقررات",
-    "since": "{count, plural, zero {لا مقررات} one {مقرر واحد} two {مقرران} few {# مقررات} many {# مقررًا} other {# مقرر}} منذ {year}"
+    "since": "{count, plural, zero {لا مقررات} one {مقرر واحد} two {مقرران} few {{count, number, digits} مقررات} many {{count, number, digits} مقررًا} other {{count, number, digits} مقرر}} منذ {year, number, digits}"
   },
   "Course": {
     "details": "تفاصيل المقرر",
@@ -233,8 +233,8 @@
     "weekOf": "أسبوع {date}",
     "meets": "المواعيد",
     "length": "المدة",
-    "sessions": "{count, plural, zero {لا جلسات} one {جلسة واحدة} two {جلستان} few {# جلسات} many {# جلسة} other {# جلسة}}",
-    "weeks": "{count, plural, zero {لا أسابيع} one {أسبوع واحد} two {أسبوعان} few {# أسابيع} many {# أسبوعًا} other {# أسبوع}}",
+    "sessions": "{count, plural, zero {لا جلسات} one {جلسة واحدة} two {جلستان} few {{count, number, digits} جلسات} many {{count, number, digits} جلسة} other {{count, number, digits} جلسة}}",
+    "weeks": "{count, plural, zero {لا أسابيع} one {أسبوع واحد} two {أسبوعان} few {{count, number, digits} أسابيع} many {{count, number, digits} أسبوعًا} other {{count, number, digits} أسبوع}}",
     "format": "طريقة الحضور",
     "language": "لغة التدريس",
     "price": "الرسوم",
@@ -250,10 +250,10 @@
     "contentWarning": "تنبيه بشأن المحتوى:",
     "flow": "مسار المقرر",
     "tentative": "قد يتغير المسار مع سير المقرر.",
-    "week": "الأسبوع {number}",
-    "session": "الجلسة {number}",
+    "week": "الأسبوع {number, number, digits}",
+    "session": "الجلسة {number, number, digits}",
     "cancelled": "أُلغيت",
-    "materialCount": "{count, plural, zero {لا مواد} one {مادة واحدة} two {مادتان} few {# مواد} many {# مادة} other {# مادة}}",
+    "materialCount": "{count, plural, zero {لا مواد} one {مادة واحدة} two {مادتان} few {{count, number, digits} مواد} many {{count, number, digits} مادة} other {{count, number, digits} مادة}}",
     "materials": "المواد",
     "bibliography": "قائمة قراءات المقرر",
     "readings": "القراءات",
@@ -267,11 +267,11 @@
       "other": "رابط"
     },
     "materialCounts": {
-      "reading": "{count, plural, zero {لا قراءات} one {قراءة واحدة} two {قراءتان} few {# قراءات} many {# قراءة} other {# قراءة}}",
-      "watch": "{count, plural, zero {لا أفلام} one {فيلم أو فيديو} two {فيلمان أو فيديوهان} few {# أفلام وفيديوهات} many {# فيلمًا وفيديو} other {# فيلم وفيديو}}",
-      "listen": "{count, plural, zero {لا تسجيلات} one {تسجيل صوتي} two {تسجيلان} few {# تسجيلات} many {# تسجيلًا} other {# تسجيل}}",
-      "prompt": "{count, plural, zero {لا أسئلة} one {سؤال للتفكير} two {سؤالان للتفكير} few {# أسئلة للتفكير} many {# سؤالًا للتفكير} other {# سؤال للتفكير}}",
-      "other": "{count, plural, zero {لا روابط} one {رابط واحد} two {رابطان} few {# روابط} many {# رابطًا} other {# رابط}}"
+      "reading": "{count, plural, zero {لا قراءات} one {قراءة واحدة} two {قراءتان} few {{count, number, digits} قراءات} many {{count, number, digits} قراءة} other {{count, number, digits} قراءة}}",
+      "watch": "{count, plural, zero {لا أفلام} one {فيلم أو فيديو} two {فيلمان أو فيديوهان} few {{count, number, digits} أفلام وفيديوهات} many {{count, number, digits} فيلمًا وفيديو} other {{count, number, digits} فيلم وفيديو}}",
+      "listen": "{count, plural, zero {لا تسجيلات} one {تسجيل صوتي} two {تسجيلان} few {{count, number, digits} تسجيلات} many {{count, number, digits} تسجيلًا} other {{count, number, digits} تسجيل}}",
+      "prompt": "{count, plural, zero {لا أسئلة} one {سؤال للتفكير} two {سؤالان للتفكير} few {{count, number, digits} أسئلة للتفكير} many {{count, number, digits} سؤالًا للتفكير} other {{count, number, digits} سؤال للتفكير}}",
+      "other": "{count, plural, zero {لا روابط} one {رابط واحد} two {رابطان} few {{count, number, digits} روابط} many {{count, number, digits} رابطًا} other {{count, number, digits} رابط}}"
     },
     "activityKinds": {
       "discussion": "نقاش",
@@ -288,7 +288,7 @@
       "workshop": "الورش",
       "short": "المقررات القصيرة"
     },
-    "allInCycle": "كل مقررات هذه الدورة ({count})"
+    "allInCycle": "كل مقررات هذه الدورة ({count, number, digits})"
   },
   "NotFound": {
     "title": "الصفحة غير موجودة",
@@ -306,9 +306,9 @@
     "metaTitle": "الزملاء — سيلاس",
     "title": "الزملاء",
     "intro": "معلمون يعرفون كيف يكونون طلابًا: من درّسوا في سيلاس، الأحدث أولًا. أدِر العجلة لتتعرف عليهم.",
-    "count": "{count, plural, zero {لا زملاء} one {زميل واحد} two {زميلان} few {# زملاء} many {# زميلًا} other {# زميل}}",
+    "count": "{count, plural, zero {لا زملاء} one {زميل واحد} two {زميلان} few {{count, number, digits} زملاء} many {{count, number, digits} زميلًا} other {{count, number, digits} زميل}}",
     "wheel": "الزملاء",
-    "announce": "{name}، {n} من {total}",
+    "announce": "{name}، {n, number, digits} من {total, number, digits}",
     "fellow": "زميل التدريس",
     "profile": "الصفحة الكاملة",
     "lines": "{count, plural, other {درّس هنا}}"
@@ -317,9 +317,9 @@
     "metaTitle": "سيلاسيون — سيلاس",
     "title": "السيلاسيون",
     "intro": "طلاب كل دفعة من برنامج الجسر وزملاؤها المقيمون: المجتمع الذي تتكون منه سيلاس، الأحدث أولًا. أدِر العجلة لتتعرف عليهم.",
-    "count": "{count, plural, zero {لا أحد} one {سيلاسي واحد} two {سيلاسيان} few {# سيلاسيين} many {# سيلاسيًا} other {# سيلاسي}}",
+    "count": "{count, plural, zero {لا أحد} one {سيلاسي واحد} two {سيلاسيان} few {{count, number, digits} سيلاسيين} many {{count, number, digits} سيلاسيًا} other {{count, number, digits} سيلاسي}}",
     "wheel": "السيلاسيون",
-    "announce": "{name}، {n} من {total}",
+    "announce": "{name}، {n, number, digits} من {total, number, digits}",
     "lines": "{count, plural, other {في سيلاس}}",
     "profile": "الصفحة الكاملة",
     "roles": {
@@ -332,9 +332,9 @@
     "metaTitle": "الحوكمة — سيلاس",
     "title": "الحوكمة",
     "intro": "المستشارون والأمناء الذين يوجّهون سيلاس ويحفظونها على رسالتها.",
-    "count": "{count, plural, zero {لا أحد} one {شخص واحد} two {شخصان} few {# أشخاص} many {# شخصًا} other {# شخص}}",
+    "count": "{count, plural, zero {لا أحد} one {شخص واحد} two {شخصان} few {{count, number, digits} أشخاص} many {{count, number, digits} شخصًا} other {{count, number, digits} شخص}}",
     "wheel": "المستشارون والأمناء",
-    "announce": "{name}، {n} من {total}",
+    "announce": "{name}، {n, number, digits} من {total, number, digits}",
     "lines": "{count, plural, other {الدور}}",
     "profile": "الصفحة الكاملة",
     "roles": {
@@ -344,7 +344,7 @@
     "board": "في مجلس الأمناء",
     "advisesOn": "يقدم المشورة في",
     "term": "المدة",
-    "since": "منذ {year}"
+    "since": "منذ {year, number, digits}"
   },
   "Calendar": {
     "metaTitle": "التقويم — سيلاس",
@@ -363,9 +363,9 @@
     "empty": "لا شيء في التقويم هنا.",
     "nextOn": "التالي: {date}",
     "lastOn": "الأحدث: {date}",
-    "session": "الجلسة {n}",
+    "session": "الجلسة {n, number, digits}",
     "starts": "يبدأ",
-    "more": "المزيد ({count})",
+    "more": "المزيد ({count, number, digits})",
     "cancelled": "أُلغيت",
     "eventTypes": {
       "talk": "محاضرة",
@@ -384,7 +384,7 @@
       "event": "لقاء"
     },
     "close": "إغلاق",
-    "openDay": "{date}: {count, plural, one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}",
+    "openDay": "{date}: {count, plural, one {عنصر واحد} two {عنصران} few {{count, number, digits} عناصر} many {{count, number, digits} عنصرًا} other {{count, number, digits} عنصر}}",
     "month": "الشهر",
     "year": "السنة",
     "feed": "أضف إلى تقويمك",
