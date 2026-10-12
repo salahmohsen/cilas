@@ -392,17 +392,29 @@ html {
 }
 
 /* Sidebar cards: elevation from a layered shadow, not a border. */
-.course-card {
-  border-radius: calc(var(--radius) * 2 + 0.25rem);
-  background: var(--card);
-  padding: 1.25rem;
-  box-shadow:
-    0 0 0 1px oklch(0 0 0 / 0.06),
-    0 1px 2px oklch(0 0 0 / 0.04),
-    0 4px 12px oklch(0 0 0 / 0.03);
+/* The course page's side column: no surfaces, its groups held apart by space
+   alone. Within a group things sit 0.75rem apart; between groups, 2.5rem. */
+.course-side {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
 }
-.dark .course-card {
-  box-shadow: 0 0 0 1px oklch(1 0 0 / 0.08);
+.course-side-heading {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.course-facts {
+  display: grid;
+  gap: 0.875rem;
+  margin-top: 0.5rem;
+}
+/* Under the cover on mid-width screens the facts have room for two columns. */
+@media (min-width: 36rem) and (max-width: 63.99rem) {
+  .course-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
 }
 
 .course-status {
@@ -424,7 +436,7 @@ html {
 }
 
 .course-apply {
-  margin-top: 1rem;
+  margin-top: 0.25rem;
   display: flex;
   height: 2.5rem;
   align-items: center;

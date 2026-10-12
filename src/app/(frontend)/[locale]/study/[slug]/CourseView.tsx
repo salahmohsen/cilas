@@ -128,8 +128,9 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   // The weekly meeting time, from the first meeting of each slot.
   const slots = (course.schedule?.slots ?? []).flatMap((slot) => {
     const first = meetings.find((m) => !m.cancelled && cairoWeekday(m.date) === slot.weekday && m.start_time === slot.start_time)
-    return first ? [`${weekdayName(first.date)}, ${slot.start_time}–${slot.end_time}`] : []
+    return first ? [{ day: weekdayName(first.date), time: `${slot.start_time}–${slot.end_time}` }] : []
   })
+  const comma = locale === 'ar' ? '، ' : ', '
 
   const facts: Array<{ icon: LucideIcon; label: string; value: React.ReactNode }> = [
     ...(cycleLabel && SeasonIcon ? [{ icon: SeasonIcon, label: t('cycle'), value: cycleLabel }] : []),
@@ -145,7 +146,24 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           },
         ]
       : []),
-    ...(slots.length ? [{ icon: Clock, label: t('meets'), value: slots.join(' · ') }] : []),
+    ...(slots.length
+      ? [
+          {
+            icon: Clock,
+            label: t('meets'),
+            // A slot a line; the time held left to right, so Arabic doesn't reverse it.
+            value: slots.map(({ day, time }) => (
+              <span className="block" key={`${day}${time}`}>
+                {day}
+                {comma}
+                <span className="whitespace-nowrap tabular-nums" dir="ltr">
+                  {time}
+                </span>
+              </span>
+            )),
+          },
+        ]
+      : []),
     ...(sessions.length
       ? [
           {
@@ -177,11 +195,11 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
 
   // Each fellow with their whole bio: who teaches a course matters to it.
   const facultyCard = (
-    <section aria-labelledby="course-fellows">
-      <h2 className="text-sm font-medium" id="course-fellows">
+    <section aria-labelledby="course-fellows" className="course-side">
+      <h2 className="course-side-heading" id="course-fellows">
         {t('taughtBy')}
       </h2>
-      <ul className="mt-3 grid gap-5">
+      <ul className="grid gap-6">
         {fellows.map((person) => {
           const hasBio = Boolean(textOf(person.bio).trim())
           return (
@@ -208,7 +226,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   )
 
   const factsCard = (
-    <section aria-label={t('details')} className="course-card">
+    <section aria-label={t('details')} className="course-side">
       <div className="flex items-center justify-between gap-3">
         <span className="course-status" data-open={open || undefined}>
           {open ? t('open') : t('closed')}
@@ -221,7 +239,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
         </a>
       ) : null}
       {facts.length ? (
-        <dl className="mt-4 grid gap-3 border-t border-border pt-4">
+        <dl className="course-facts">
           {facts.map(({ icon: Icon, label, value }) => (
             <div className="grid grid-cols-[1.25rem_1fr] items-start gap-x-3" key={label}>
               <Icon aria-hidden className="mt-0.5 text-(--text-muted)" size={16} strokeWidth={1.5} />
@@ -237,16 +255,16 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   )
 
   const materialsCard = counts.length ? (
-    <section aria-labelledby="course-materials" className="course-card">
-      <h2 className="text-sm font-medium" id="course-materials">
+    <section aria-labelledby="course-materials" className="course-side">
+      <h2 className="course-side-heading" id="course-materials">
         {t('materials')}
       </h2>
-      <ul className="mt-3 grid gap-2">
+      <ul className="grid gap-2">
         {counts.map(({ type, count }) => {
           const Icon = MATERIAL_ICONS[type]
           return (
             <li className="flex items-center gap-3 text-sm" key={type}>
-              <Icon aria-hidden className="text-(--text-muted)" size={16} strokeWidth={1.5} />
+              <Icon aria-hidden className="shrink-0 text-(--text-muted)" size={16} strokeWidth={1.5} />
               {t(`materialCounts.${type}`, { count })}
             </li>
           )
@@ -290,9 +308,9 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           ) : null}
 
           {/* Narrow screens: the facts and the fellows come before the text. */}
-          <div className="mt-8 grid gap-4 lg:hidden">
+          <div className="mt-10 grid gap-10 lg:hidden">
             {factsCard}
-            <div className="course-card">{facultyCard}</div>
+            {fellows.length ? facultyCard : null}
           </div>
 
           {course.epigraph ? (
@@ -416,9 +434,9 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
 
         <aside className="hidden lg:block">
           {/* Not sticky: a fellow's bio can make the column taller than the screen. */}
-          <div className="grid gap-4">
+          <div className="grid gap-10">
             {factsCard}
-            {fellows.length ? <div className="course-card">{facultyCard}</div> : null}
+            {fellows.length ? facultyCard : null}
             {materialsCard}
           </div>
         </aside>
@@ -467,7 +485,11 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   )
 }
 
-/** Materials with their kind's icon: the title (linked when it has one) and its note. */
+/**
+ * Materials with their kind's icon: the title (linked when it has one) and its
+ * note. Each item reads in its own direction, so an Arabic reading on an
+ * English page has its icon at its own start, beside its text.
+ */
 function MaterialList({ items }: { items: Material[] }) {
   const t = useTranslations('Course')
   return (
@@ -476,9 +498,13 @@ function MaterialList({ items }: { items: Material[] }) {
         if (!m?.title) return null
         const Icon = MATERIAL_ICONS[m.type] ?? Link2
         return (
-          <li className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug" key={m.id ?? i}>
+          <li
+            className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug"
+            dir={directionOf(`${m.title} ${m.note ?? ''}`)}
+            key={m.id ?? i}
+          >
             <Icon aria-label={t(`materialTypes.${m.type}`)} className="mt-0.5 text-(--text-muted)" role="img" size={16} strokeWidth={1.5} />
-            <span dir="auto">
+            <span>
               {m.href ? (
                 <a className="underline decoration-(--border-strong,var(--border)) underline-offset-4 hover:decoration-current" href={m.href} rel="noopener" target="_blank">
                   {m.title}
