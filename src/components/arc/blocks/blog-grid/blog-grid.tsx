@@ -50,6 +50,8 @@ export interface BlogGridProps {
   pageSize?: number
   /** Shows the newest post of the current filter as a large card on page one. Defaults to true. */
   showFeatured?: boolean
+  /** Post ids in reading order, per category: a category listed here keeps that order instead of newest first, and leads with its first post. */
+  categoryOrder?: Record<string, string[]>
   /** Link for each post. When set, cards render as links and the in-place reader is off. */
   getHref?: (post: BlogPost) => string
   /** Interface text, for other languages. */
@@ -182,6 +184,7 @@ export function BlogGrid({
   onPageChange,
   pageSize = 6,
   showFeatured = true,
+  categoryOrder,
   getHref,
   onPostOpen,
   labels = {},
@@ -203,10 +206,19 @@ export function BlogGrid({
   const lastOpened = useRef<string | null>(null)
 
   const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date))
-  const filtered = category === 'All' ? sorted : sorted.filter((post) => post.category === category)
+  const order = category === 'All' ? undefined : categoryOrder?.[category]
+  const inCategory = category === 'All' ? sorted : sorted.filter((post) => post.category === category)
+  const filtered = order
+    ? [
+        ...order.flatMap((id) => inCategory.filter((post) => post.id === id)),
+        ...inCategory.filter((post) => !order.includes(post.id)),
+      ]
+    : inCategory
   const featured =
     showFeatured && filtered.length > 1
-      ? (filtered.find((post) => post.featured) ?? filtered[0])
+      ? order
+        ? filtered[0]
+        : (filtered.find((post) => post.featured) ?? filtered[0])
       : null
   const rest = featured ? filtered.filter((post) => post !== featured) : filtered
   const pageCount = Math.max(1, Math.ceil(rest.length / pageSize))

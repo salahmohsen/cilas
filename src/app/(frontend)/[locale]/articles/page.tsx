@@ -54,6 +54,14 @@ export default async function ArticlesPage({ params, searchParams }: Props) {
   }
   if (docs.some((a) => !publicationOf(a))) slugs[other] = 'other'
   const categories = Object.keys(slugs)
+  // A publication lists its articles in its own order (its print edition's
+  // contents: the foreword, then the essays), not newest first.
+  const categoryOrder: Record<string, string[]> = {}
+  for (const a of docs) {
+    const p = publicationOf(a)
+    if (p && !categoryOrder[p.title])
+      categoryOrder[p.title] = (p.articles ?? []).map((x) => String(typeof x === 'object' ? x.id : x))
+  }
   const initial = Object.entries(slugs).find(([, slug]) => slug === selected)?.[0]
 
   if (posts.length === 0) {
@@ -67,6 +75,7 @@ export default async function ArticlesPage({ params, searchParams }: Props) {
   return (
     <ArticlesGrid
       categories={categories.length > 1 ? categories : []}
+      categoryOrder={categoryOrder}
       description={t('intro')}
       initialCategory={initial}
       posts={posts}

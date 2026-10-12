@@ -204,7 +204,9 @@ export default async function ArticlePage({ params }: Props) {
             {/* The introduction opens onto the collection it introduces. */}
             {collection?.isForeword && (
               <OrbitCardStack
-                className="overflow-x-clip p-0 xl:overflow-visible"
+                // Desktop only: on a phone the fan has no room, and the
+                // collection is listed at the end of the article anyway.
+                className="hidden overflow-x-clip p-0 lg:flex xl:overflow-visible"
                 dir={isRtl(locale) ? 'rtl' : 'ltr'}
                 items={collection.articles
                   .filter((a) => a.id !== article.id)

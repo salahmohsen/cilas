@@ -20,6 +20,7 @@ export function ArticlesGrid({
   slugs,
   showFeatured = true,
   pageSize = 9,
+  categoryOrder,
 }: {
   title: string
   description: string
@@ -30,12 +31,15 @@ export function ArticlesGrid({
   slugs?: Record<string, string>
   showFeatured?: boolean
   pageSize?: number
+  /** Card ids in reading order, per category title (a publication's own order). */
+  categoryOrder?: Record<string, string[]>
 }) {
   const t = useTranslations('Articles.grid')
   const router = useRouter()
   return (
     <BlogGrid
       categories={categories}
+      categoryOrder={categoryOrder}
       defaultCategory={initialCategory ?? 'All'}
       description={description}
       getHref={(post) => posts.find((p) => p.id === post.id)?.href ?? '#'}
