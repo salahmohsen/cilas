@@ -532,67 +532,6 @@ html {
 .bridge-figure {
   margin-top: 2.5rem;
 }
-.bridge-semesters {
-  display: grid;
-  gap: 2.5rem;
-  margin-top: 1.5rem;
-}
-.bridge-semester {
-  display: grid;
-  gap: 1.5rem;
-}
-.bridge-semester-title {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.125rem;
-  font-weight: 600;
-}
-.bridge-part {
-  display: grid;
-  gap: 0.5rem;
-}
-.bridge-part-label {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  color: var(--text-muted);
-}
-.bridge-courses {
-  display: grid;
-  border-top: 1px solid var(--border);
-}
-.bridge-course {
-  display: grid;
-  gap: 0.125rem;
-  padding: 0.75rem 0.5rem;
-  border-bottom: 1px solid var(--border);
-  transition-property: background-color;
-  transition-duration: 150ms;
-}
-.bridge-course:hover {
-  background: var(--surface-muted, var(--muted));
-}
-.bridge-course:focus-visible {
-  outline: 2px solid var(--ring);
-  outline-offset: -2px;
-}
-.bridge-course-title {
-  font-weight: 500;
-}
-.bridge-course-meta {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-.bridge-empty {
-  font-size: 0.875rem;
-  color: var(--text-muted);
-}
-/* The self-directed study between the semesters: a pause, set apart by space and a quiet rule. */
-.bridge-interlude {
-  margin-top: 1rem;
-  border-inline-start: 2px dashed var(--border-strong, var(--border));
-  padding-inline-start: 1rem;
-}
 .bridge-link {
   display: inline-flex;
   height: 2.25rem;

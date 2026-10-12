@@ -52,6 +52,14 @@ export interface BlogGridProps {
   pageSize?: number
   /** Shows the newest post of the current filter as a large card on page one. Defaults to true. */
   showFeatured?: boolean
+  /** `newest` sorts by date; `given` keeps the order of `posts`. Defaults to `newest`. */
+  order?: 'newest' | 'given'
+  /** Shows the title and description. Off when the page gives the block its own heading; `title` still names the section. */
+  header?: boolean
+  /** Drops the block's own width and padding, to sit inside a page's column. */
+  flush?: boolean
+  /** Shown in the image frame of a post without an image, so every card keeps its frame. */
+  imageFallback?: (post: BlogPost) => ReactNode
   /** Post ids in reading order, per category: a category listed here keeps that order instead of newest first, and leads with its first post. */
   categoryOrder?: Record<string, string[]>
   /** Link for each post. When set, cards render as links and the in-place reader is off. */
@@ -145,7 +153,7 @@ function AutoHeight({
 function Meta({ post }: { post: BlogPost }) {
   return (
     <p className={styles.meta}>
-      <span>{post.category}</span>
+      <span>{post.label ?? post.category}</span>
       <span aria-hidden="true">·</span>
       <time dateTime={post.date}>{post.dateLabel ?? formatDate(post.date)}</time>
     </p>
@@ -165,9 +173,13 @@ function Byline({ post }: { post: BlogPost }) {
           loading="lazy"
         />
       ) : (
-        <span className={styles.avatar} aria-hidden="true" />
+        <span className={styles.avatar} aria-hidden="true">
+          {post.author.name.trim().charAt(0)}
+        </span>
       )}
-      <span className={styles.authorName}>{post.author.name}</span>
+      <span className={styles.authorName} dir="auto">
+        {post.author.name}
+      </span>
       {post.readTimeLabel !== '' && (
         <span className={styles.readTime}>{post.readTimeLabel ?? `${post.readTime} min read`}</span>
       )}
@@ -188,6 +200,10 @@ export function BlogGrid({
   onPageChange,
   pageSize = 6,
   showFeatured = true,
+  order: sortOrder = 'newest',
+  header = true,
+  flush = false,
+  imageFallback,
   categoryOrder,
   getHref,
   onPostOpen,
@@ -209,7 +225,7 @@ export function BlogGrid({
   const [returning, setReturning] = useState<string | null>(null)
   const lastOpened = useRef<string | null>(null)
 
-  const sorted = [...posts].sort((a, b) => b.date.localeCompare(a.date))
+  const sorted = sortOrder === 'given' ? posts : [...posts].sort((a, b) => b.date.localeCompare(a.date))
   const order = category === 'All' ? undefined : categoryOrder?.[category]
   const inCategory = category === 'All' ? sorted : sorted.filter((post) => post.category === category)
   const filtered = order
@@ -272,7 +288,7 @@ export function BlogGrid({
     const href = getHref?.(post)
     const inner = (
       <>
-        {post.image && (
+        {post.image ? (
           <motion.div
             layoutId={reduced ? undefined : `${uid}-image-${post.id}`}
             transition={morph}
@@ -285,11 +301,21 @@ export function BlogGrid({
               loading={isFeatured ? 'eager' : 'lazy'}
             />
           </motion.div>
-        )}
+        ) : imageFallback ? (
+          <div className={styles.imageFrame} data-fallback="">
+            {imageFallback(post)}
+          </div>
+        ) : null}
         <div className={styles.cardBody}>
           <Meta post={post} />
-          <h3 className={isFeatured ? styles.featuredTitle : styles.cardTitle}>{post.title}</h3>
-          <p className={styles.excerpt}>{post.excerpt}</p>
+          <h3 className={isFeatured ? styles.featuredTitle : styles.cardTitle} dir="auto">
+            {post.title}
+          </h3>
+          {post.excerpt ? (
+            <p className={styles.excerpt} dir="auto">
+              {post.excerpt}
+            </p>
+          ) : null}
           <Byline post={post} />
         </div>
       </>
@@ -325,6 +351,7 @@ export function BlogGrid({
       ref={rootRef}
       className={[styles.root, className].filter(Boolean).join(' ')}
       aria-label={title}
+      data-flush={flush || undefined}
     >
       <LayoutGroup id={uid}>
         <div className={styles.inner}>
@@ -387,10 +414,12 @@ export function BlogGrid({
                   transition: { duration: motionTokens.duration.exit, ease: standard },
                 }}
               >
-                <motion.header className={styles.header} {...enterFade(back)}>
-                  <h2 className={styles.title}>{title}</h2>
-                  {description && <p className={styles.description}>{description}</p>}
-                </motion.header>
+                {header && (
+                  <motion.header className={styles.header} {...enterFade(back)}>
+                    <h2 className={styles.title}>{title}</h2>
+                    {description && <p className={styles.description}>{description}</p>}
+                  </motion.header>
+                )}
 
                 {categories.length > 0 && (
                   <motion.div

@@ -199,11 +199,17 @@
   font-size: var(--text-sm);
 }
 .avatar {
+  display: inline-grid;
   width: 24px;
   height: 24px;
   flex: none;
+  place-items: center;
   border-radius: 50%;
   background: var(--surface-muted);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
   object-fit: cover;
 }
 .authorName {
@@ -443,6 +449,26 @@
   .featured:hover .image {
     transform: none;
   }
+}
+
+/* A post without an image keeps its frame, holding what the page gives it. */
+.imageFrame[data-fallback] {
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+}
+
+/* Inside a page's column: the column sets the width and the gutters. */
+.root[data-flush] {
+  background: none;
+}
+.root[data-flush] .inner {
+  max-width: none;
+  padding: 0;
+}
+.root[data-flush] .filters {
+  margin: 0;
+  padding: 0;
 }
 
 /* Chevrons and arrows point the reading direction. */

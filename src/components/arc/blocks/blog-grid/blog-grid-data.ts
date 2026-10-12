@@ -5,6 +5,8 @@ export type BlogPost = {
   title: string
   excerpt: string
   category: string
+  /** Shown on the card instead of the category, e.g. a course's type. */
+  label?: string
   /** ISO date, used for sorting and the visible date. */
   date: string
   /** Minutes to read. */

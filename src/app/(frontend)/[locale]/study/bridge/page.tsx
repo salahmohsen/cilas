@@ -7,9 +7,10 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import type { ReactNode } from 'react'
 
-import { getBridgeYear, type ProgrammePart } from '@/api/programmes.api'
+import { getBridgeYear } from '@/api/programmes.api'
+import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
+import { BridgeCourses } from '@/components/bridge/bridge-courses'
 import { RichTextField } from '@/components/RichTextField'
-import { SEASON_ICONS } from '@/components/season-icon'
 import { ShareBar } from '@/components/share-bar'
 import { Link } from '@/i18n/navigation'
 import type { Season } from '@/lib/cycle'
@@ -80,6 +81,42 @@ export default async function BridgePage({ params }: Props) {
   const plan = programme.pricing?.payment_plans?.[0]
   const instalments = plan?.installments ?? []
   const testimonial = programme.testimonials?.[0]
+
+  // The year's courses as cards, semester by semester; a course drawn by two parts shows once.
+  const day = (iso: string) =>
+    format.dateTime(new Date(`${iso}T12:00:00Z`), {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'Africa/Cairo',
+      numberingSystem: numberingSystemOf(locale),
+    })
+  const seasons: Record<string, Season> = {}
+  const posts: BlogPost[] = semesters.flatMap(({ cycle, parts }) =>
+    parts
+      .flatMap((part) => part.courses)
+      .sort((a, b) => a.startDate.localeCompare(b.startDate) || a.title.localeCompare(b.title))
+      .flatMap((c) => {
+        if (c.slug in seasons) return []
+        seasons[c.slug] = cycle.season as Season
+        const [lead, ...others] = c.fellows
+        return [
+          {
+            id: c.slug,
+            title: c.title,
+            excerpt: c.excerpt,
+            category: cycleName(cycle),
+            label: tf(`types.${c.type.toLowerCase()}`),
+            date: c.startDate,
+            dateLabel: day(c.startDate),
+            readTime: 0,
+            readTimeLabel: others.length ? t('moreFellows', { count: others.length }) : '',
+            author: { name: lead?.name ?? '', avatar: lead?.avatar ?? undefined },
+            image: c.image ?? undefined,
+          },
+        ]
+      }),
+  )
 
   const facts: Array<{ icon: typeof Clock; label: string; value: ReactNode }> = [
     ...(programme.weekly_hours ? [{ icon: Hourglass, label: t('commitment'), value: t('hours', { count: programme.weekly_hours }) }] : []),
@@ -199,40 +236,12 @@ export default async function BridgePage({ params }: Props) {
             <RichTextField className="article-prose mt-10" data={programme.overview} />
           ) : null}
 
-          {semesters.length ? (
+          {posts.length ? (
             <section aria-labelledby="bridge-year" className="mt-14">
-              <h2 className="course-heading" id="bridge-year">
+              <h2 className="course-heading mb-6" id="bridge-year">
                 {t('year')}
               </h2>
-              <ol className="bridge-semesters">
-                {semesters.map(({ cycle, parts }, i) => {
-                  const SeasonIcon = SEASON_ICONS[cycle.season as Season]
-                  return (
-                    <li className="bridge-semester" key={cycle.id}>
-                      <h3 className="bridge-semester-title">
-                        {SeasonIcon ? (
-                          <SeasonIcon aria-hidden className="course-season" data-season={cycle.season} size={18} strokeWidth={1.5} />
-                        ) : null}
-                        {cycleName(cycle)}
-                      </h3>
-                      {parts.map((part) => (
-                        <Part
-                          comma={lang === 'ar' ? '، ' : ', '}
-                          key={part.label}
-                          noCourses={t('noCourses')}
-                          part={part}
-                          typeLabel={(type) => tf(`types.${type.toLowerCase()}`)}
-                        />
-                      ))}
-                      {programme.self_directed_study && i < semesters.length - 1 ? (
-                        <div className="bridge-interlude">
-                          <p className="font-medium">{t('selfDirected')}</p>
-                        </div>
-                      ) : null}
-                    </li>
-                  )
-                })}
-              </ol>
+              <BridgeCourses posts={posts} seasons={seasons} semesters={semesters.map(({ cycle }) => cycleName(cycle))} title={t('year')} />
             </section>
           ) : null}
 
@@ -272,44 +281,6 @@ export default async function BridgePage({ params }: Props) {
           {share}
         </aside>
       </div>
-    </div>
-  )
-}
-
-/** One part of a semester: its label, and the courses it draws, each linked. */
-function Part({
-  part,
-  noCourses,
-  typeLabel,
-  comma,
-}: {
-  part: ProgrammePart
-  comma: string
-  noCourses: string
-  typeLabel: (type: string) => string
-}) {
-  return (
-    <div className="bridge-part">
-      <p className="bridge-part-label">{part.label}</p>
-      {part.description ? <p className="text-sm text-(--text-secondary)">{part.description}</p> : null}
-      {part.courses.length ? (
-        <ul className="bridge-courses">
-          {part.courses.map((c) => (
-            <li key={c.id}>
-              <Link className="bridge-course" dir={/[\u0600-\u06ff]/.test(c.title) ? 'rtl' : 'ltr'} href={`/study/${c.slug}`}>
-                <span className="bridge-course-title">
-                  {c.title}
-                </span>
-                <span className="bridge-course-meta">
-                  {[typeLabel(c.type), c.fellows.join(comma)].filter(Boolean).join(' · ')}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="bridge-empty">{noCourses}</p>
-      )}
     </div>
   )
 }
