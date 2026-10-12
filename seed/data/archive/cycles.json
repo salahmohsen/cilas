@@ -263,5 +263,14 @@
     "deadline": "2026-01-31",
     "space": "Darb el-Labbana",
     "legacy_url": "/winter-cycle-2026.html"
+  },
+  {
+    "key": "summer-2025-Darb el-Labbana",
+    "season": "summer",
+    "start_year": 2025,
+    "start_date": "2025-07-19",
+    "deadline": "2025-07-11",
+    "space": "Darb el-Labbana",
+    "legacy_url": "/writing-the-self.html#summer-2025"
   }
 ]

@@ -44,6 +44,12 @@ describe('splitBios', () => {
     ])
   })
 
+  it('drops a line that only points elsewhere on the page', () => {
+    expect(splitBios('For English, please scroll below.\n\nAssessment by essay, at the end of the lab.', []).notes).toBe(
+      'Assessment by essay, at the end of the lab.',
+    )
+  })
+
   it('has nothing to split in empty notes', () => {
     expect(splitBios(null, hisham)).toEqual({ notes: null, bios: [] })
   })

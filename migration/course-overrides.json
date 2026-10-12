@@ -1,0 +1,28 @@
+{
+  "$comment": "Editorial corrections to the archive, applied by normalise-courses.ts. Each says why.",
+  "cycles": [
+    {
+      "$why": "The Summer 2025 lab had a page of its own and no cycle page; its flow PDF (writing_the_self_summer_2025_lab.pdf) and page give the dates.",
+      "key": "summer-2025-Darb el-Labbana",
+      "season": "summer",
+      "start_year": 2025,
+      "start_date": "2025-07-19",
+      "deadline": "2025-07-11",
+      "space": "Darb el-Labbana",
+      "legacy_url": "/writing-the-self.html#summer-2025"
+    }
+  ],
+  "courses": {
+    "/writing-the-self.html": {
+      "$why": "Put in its cycle; the opening questions are its epigraph; the page's Arabic, copied from a PDF, had broken letters (ال for لا, شعو ًرا).",
+      "cycle": "summer-2025-Darb el-Labbana",
+      "title_ar": "نكتب أنفسنا",
+      "epigraph": "We write our diaries and lock them in a drawer away from the eyes of those we know. What does all this say about ourselves? And why are we afraid of what we write about ourselves?",
+      "epigraph_ar": "نكتب يومياتنا ونقفل عليها في درج بعيد عن أعين من نعرف. ماذا يقول كل هذا عن ذواتنا؟ ولماذا نخاف مما نكتب عن أنفسنا؟",
+      "description": "نكتب جوابًا لحبيب على ملف Word ثم نغلق الملف بدون حفظ، ونفتح الموبايل في المواصلات لنكتب مشهدًا رأيناه ونود أن نحتفظ به. ربما يكون هناك شيء ما مخفي في أعماقنا (أو خارجنا) لا نريد لأحد أن يراه، وربما لا نريد أن نراه نحن مجددًا. في الوقت الذي نبدأ فيه تلك الكتابة، ربما لا نعرف ماذا سنكتب وماذا ستكشف تلك الكتابة، لكننا نثير شعورًا لم يكن موجودًا قبل أن نفتح هذا الملف.\n\nيهدف هذا المعمل إلى طرح المزيد من التساؤلات عن كتابة الذات، ونوعها، وما تثيره بداخلنا. وكيف تكون هذه الكتابات امتدادًا لذاتنا: تعبيرًا عن هويتنا، وجندرنا. كما يهدف إلى التجريب في تلك الأنواع من الكتابة التي قد تكون ملحوظاتنا المنسية، أو اعترافاتنا الغريبة، أو جواباتنا غير المرسلة، أو تفاصيلنا اليومية التي لم نظن أن أحدًا سيهتم بها. كما يهدف إلى تذوق ألوان أدبية ذاتية وفتح نقاش حولها. وأيضًا الاشتباك مع نصوص نقدية نسوية حول الكتابة الذاتية وتطورها وما تظهره أو تخفيه من ذواتنا ومن عالمنا.\n\nWe write a letter to a lover in a Word document and then close the file without saving it. We open our mobile phones on public transport to write about a scene we saw and want to keep. Perhaps there is something hidden deep within us (or outside of us) that we don't want anyone to see, and perhaps we don't want to see it again. When we begin writing, we may not know what we will write or what it will reveal, but we stir up a feeling that wasn't there before we opened this file.\n\nThis lab aims to raise further questions about self-writing, its genre, and what it evokes within us. Is what we write an extension of ourselves: our identity and gender. It also aims to experiment with these types of writing, which may include our forgotten notes, our strange confessions, our unsent letters, or our daily details that we never thought anyone would care about. It also aims to savor various forms of literature and open a discussion about them. It also aims to engage with feminist critical texts about self-writing, its development, and what it reveals or conceals about ourselves and our world.",
+      "schedule": {
+        "start_date": "2025-07-19"
+      }
+    }
+  }
+}

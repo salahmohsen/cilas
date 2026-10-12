@@ -38,6 +38,9 @@ const NOT_BIO = /course (?:description|overview|flow)|description\s*:/i
 const EXTRACTOR_REMARK =
   /\b(?:the|this) flow\b|\bflow['’]s\b|\bflow header\b|\bwere not recorded\b|\brecorded as\b/i
 
+/** A line that only points the reader elsewhere on the page ("For English, please scroll below."). */
+const NAVIGATION = /^(?:for (?:english|arabic)\b.*(?:below|above|scroll)|scroll (?:down|below) for (?:english|arabic)|(?:english|arabic) (?:version )?below)\W*$/i
+
 /** "Course description (verbatim):", "Course Flow, verbatim:" → "Course description:", "Course Flow:". */
 const unannotate = (p: string): string =>
   p
@@ -79,7 +82,7 @@ export const splitBios = (
 ): { notes: string | null; bios: FlowBio[] } => {
   const paras = paragraphs(notes ?? '')
     .map(unannotate)
-    .filter((p) => !EXTRACTOR_REMARK.test(p))
+    .filter((p) => !EXTRACTOR_REMARK.test(p) && !NAVIGATION.test(p))
   const kept: string[] = []
   const bios: FlowBio[] = []
   const startsWithFellow = (p: string) =>

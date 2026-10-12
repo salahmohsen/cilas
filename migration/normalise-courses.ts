@@ -47,6 +47,8 @@ type Course = {
   description: string
   flow_uploads: string[]
   register_url: string | null
+  epigraph?: string
+  epigraph_ar?: string
 }
 
 const cycles = new Map<string, Cycle>()
@@ -139,6 +141,22 @@ for (const { file, page, data } of parsed) {
       courses.set(course.legacy_url, course)
     }
   }
+}
+
+// Editorial corrections (migration/course-overrides.json): a cycle the
+// archive lacks, and fields a course's page got wrong. Each entry says why.
+const overrides = JSON.parse(readFileSync(path.join(here, 'course-overrides.json'), 'utf8')) as {
+  cycles: Array<Cycle & { $why?: string }>
+  courses: Record<string, Partial<Course> & { $why?: string; schedule?: Partial<Course['schedule']> }>
+}
+for (const { $why: _why, ...cycle } of overrides.cycles) cycles.set(cycle.key, cycle)
+for (const [url, { $why: _why, schedule, ...fields }] of Object.entries(overrides.courses)) {
+  const course = courses.get(url)
+  if (!course) {
+    review.push(`- ${url}: an override names a course the archive does not have`)
+    continue
+  }
+  courses.set(url, { ...course, ...fields, schedule: { ...course.schedule, ...schedule } })
 }
 
 const orphans = [...courses.values()].filter((c) => !c.cycle)

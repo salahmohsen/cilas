@@ -1,25 +1,7 @@
 import type { Payload } from 'payload'
 import { slugify } from '@/lib/slugify'
 import type { CourseSeed, SeedContext } from '../seed.type'
-import { getOrCreateId, lexical, requireIds, weekly } from '../seed.utils'
-
-/** Expands `count` weekly sessions for a course whose flow PDF was not published. */
-const shortSeries = (
-  count: number,
-  firstDate: string,
-  start: string,
-  end: string,
-  theme?: string,
-): ReturnType<typeof weekly> =>
-  weekly(
-    firstDate,
-    start,
-    end,
-    Array.from({ length: count }, (_, i) => ({
-      order: i + 1,
-      session_title: theme && i === 0 ? theme : `Session ${i + 1}`,
-    })),
-  )
+import { getOrCreateId, lexical, requireIds } from '../seed.utils'
 
 export const coursesData: CourseSeed[] = [
   /* === bridge programme semester one — core curriculum (enrolled CILASians) === */
@@ -51,19 +33,6 @@ export const coursesData: CourseSeed[] = [
     fellows: [],
   },
 
-  /* === summer cycle 2026 — labs and workshops === */
-  {
-    course_type: 'LAB',
-    tier: 'public',
-    title: 'Writing the Self',
-    title_ar: 'نكتب أنفسنا',
-    description:
-      'نكتب يومياتنا ونقفل عليها في درج بعيد عن أعين من نعرف، ونكتب جوابًا لحبيب على ملف Word ثم نغلق الملف بدون حفظ. ماذا يقول كل هذا عن ذواتنا؟ ولماذا نخاف مما نكتب عن أنفسنا؟ يهدف هذا المعمل إلى طرح المزيد من التساؤلات عن كتابة الذات، ونوعها، وما تثيره بداخلنا؛ وكيف تكون هذه الكتابات امتدادًا لذواتنا: تعبيرًا عن هويتنا وجندرنا. كما يهدف إلى التجريب في تلك الأنواع من الكتابة — ملحوظاتنا المنسية، أو اعترافاتنا الغريبة، أو جواباتنا غير مرسلة، أو تفاصيلنا اليومية التي لم نظن أن أحدًا سيهتم بها — وإلى تذوق ألوان أدبية ذاتية، والاشتباك مع نصوص نقدية نسوية حول الكتابة الذاتية. We write our diaries and lock them in a drawer away from the eyes of those we know. What does all this say about ourselves? And why are we afraid of what we write about ourselves?',
-    location: ['ONLINE'],
-    cycle: 'summer-2026',
-    fellows: ['osamaamer@aucegypt.edu'],
-    ...shortSeries(10, '2026-07-19', '19:00', '21:30'),
-  },
 ]
 
 export const seedCourses = async (payload: Payload, ctx: SeedContext): Promise<void> => {

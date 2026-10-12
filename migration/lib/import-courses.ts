@@ -32,6 +32,9 @@ export type ArchiveCourse = {
     note?: string
   }
   description: string
+  /** From migration/course-overrides.json. */
+  epigraph?: string
+  epigraph_ar?: string
   flow_uploads: string[]
   register_url: string | null
 }
@@ -203,6 +206,7 @@ export const importCourses = async (
         title: c.title,
         slug,
         subtitle: c.subtitle,
+        ...(c.epigraph ? { epigraph: c.epigraph } : {}),
         course_type: c.course_type,
         cycle,
         tier: 'public',
@@ -223,7 +227,7 @@ export const importCourses = async (
     // is Arabic) and the description's Arabic paragraphs.
     const titleAr = c.title_ar ?? (isMostlyArabic(c.title) ? c.title : null)
     const descriptionAr = splitLocales(c.description).ar
-    if (titleAr || descriptionAr) {
+    if (titleAr || descriptionAr || c.epigraph_ar) {
       const current = (await payload.findByID({ collection: 'courses', id, depth: 0, draft: true, overrideAccess: true })) as {
         import_status?: string | null
       }
@@ -234,6 +238,7 @@ export const importCourses = async (
           data: {
             ...(titleAr ? { title: titleAr } : {}),
             ...(descriptionAr ? { description: rich(descriptionAr) } : {}),
+            ...(c.epigraph_ar ? { epigraph: c.epigraph_ar } : {}),
           },
           locale: 'ar',
           draft: true,
