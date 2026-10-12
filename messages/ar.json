@@ -375,6 +375,8 @@
       "visit": "زيارة",
       "other": "لقاء",
       "event": "لقاء"
-    }
+    },
+    "close": "إغلاق",
+    "openDay": "{date}: {count, plural, one {عنصر واحد} two {عنصران} few {# عناصر} many {# عنصرًا} other {# عنصر}}"
   }
 }

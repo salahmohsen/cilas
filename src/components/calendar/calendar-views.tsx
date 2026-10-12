@@ -1,6 +1,7 @@
 import { getFormatter, getTranslations } from 'next-intl/server'
 
 import type { CalendarItem } from '@/api/calendar.api'
+import { Card } from '@/components/arc/card/card'
 import { Link } from '@/i18n/navigation'
 import { monthGrid, monthStart, weekDays } from '@/lib/calendar'
 
@@ -14,6 +15,8 @@ type Labels = {
   starts: string
   more: (n: number) => string
   cancelled: string
+  close: string
+  open: (date: string, count: number) => string
 }
 
 const byDay = (items: CalendarItem[]) => {
@@ -63,6 +66,9 @@ export async function MonthView({
   const month = monthStart(date).slice(0, 7)
   const map = byDay(items)
   const weekday = (day: string) => format.dateTime(UTC(day), { weekday: 'short', timeZone: 'UTC' })
+  const number = (day: string) => format.number(Number(day.slice(8)), { numberingSystem: 'latn' })
+  const longDate = (day: string) =>
+    format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC', numberingSystem: 'latn' })
 
   return (
     <div className="cal-month" role="grid">
@@ -84,7 +90,6 @@ export async function MonthView({
           const shown = cover ? IN_COVER_CELL : IN_CELL
           return (
             <div
-              aria-label={format.dateTime(UTC(day), { dateStyle: 'full', timeZone: 'UTC' })}
               className="cal-day"
               data-cover={cover ? '' : undefined}
               data-outside={outside || undefined}
@@ -92,43 +97,84 @@ export async function MonthView({
               key={day}
               role="gridcell"
             >
-              {cover ? (
-                <span aria-hidden className="cal-day-cover">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img alt="" decoding="async" loading="lazy" src={cover.url} />
-                </span>
-              ) : null}
-              <span className="cal-day-number">{format.number(Number(day.slice(8)), { numberingSystem: 'latn' })}</span>
               {dayItems.length ? (
-                <ul className="cal-day-items">
-                  {dayItems.slice(0, shown).map((item, i) => (
-                    <li className="cal-item" key={item.key}>
-                      <span className="cal-item-head">
-                        {timeOf(item) ? (
-                          <span className="cal-item-when" dir="ltr">
-                            {timeOf(item)}
+                // A day with something opens, growing into that day's agenda.
+                <Card
+                  className="cal-day-card"
+                  closeLabel={labels.close}
+                  data-cover={cover ? '' : undefined}
+                  details={<DayAgenda heading={longDate(day)} items={all} labels={labels} />}
+                  media={
+                    cover ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img alt="" className="cal-cover-img" decoding="async" src={cover.url} />
+                    ) : undefined
+                  }
+                  preview={
+                    <ul className="cal-day-items">
+                      {dayItems.slice(0, shown).map((item, i) => (
+                        <li className="cal-item" key={item.key}>
+                          <span className="cal-item-head">
+                            {timeOf(item) ? (
+                              <span className="cal-item-when" dir="ltr">
+                                {timeOf(item)}
+                              </span>
+                            ) : item.starts ? (
+                              <span className="cal-item-when">{labels.starts}</span>
+                            ) : (
+                              <span />
+                            )}
+                            {i === shown - 1 && dayItems.length > shown ? (
+                              <span className="cal-more">{labels.more(dayItems.length - shown)}</span>
+                            ) : null}
                           </span>
-                        ) : item.starts ? (
-                          <span className="cal-item-when">{labels.starts}</span>
-                        ) : (
-                          <span />
-                        )}
-                        {/* On the last shown item's line: how many more the day has. */}
-                        {i === shown - 1 && dayItems.length > shown ? (
-                          <Link className="cal-more" href={`/calendar?view=agenda&date=${day}`}>
-                            {labels.more(dayItems.length - shown)}
-                          </Link>
-                        ) : null}
-                      </span>
-                      <ItemTitle className="cal-item-title" item={item} />
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
+                          <span className="cal-item-title" dir="auto">
+                            {item.title}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  }
+                  title={number(day)}
+                  triggerLabel={labels.open(longDate(day), all.length)}
+                />
+              ) : (
+                <span className="cal-day-number">{number(day)}</span>
+              )}
             </div>
           )
         })}
       </div>
+    </div>
+  )
+}
+
+/** One day's agenda: what the quick look of a month's day lists. */
+function DayAgenda({ heading, items, labels }: { heading: string; items: CalendarItem[]; labels: Labels }) {
+  return (
+    <div>
+      <p className="text-sm text-[var(--text-muted)]">{heading}</p>
+      <ul className="mt-4 grid gap-3">
+        {items.map((item) => (
+          <li className="cal-agenda-item" key={item.key}>
+            <span className="cal-time" dir={item.start ? 'ltr' : undefined}>
+              {item.start ? `${item.start}${item.end ? `–${item.end}` : ''}` : item.starts ? labels.starts : ''}
+            </span>
+            {item.cover ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img alt="" className="cal-agenda-cover" loading="lazy" src={item.cover.url} />
+            ) : null}
+            <span className="min-w-0">
+              <ItemTitle className="block font-medium text-[var(--foreground)]" item={item} />
+              <span className="block text-xs text-[var(--text-muted)]">
+                {[labels.type(item), item.session ? labels.session(item.session) : null, item.cancelled ? labels.cancelled : null]
+                  .filter(Boolean)
+                  .join(' · ')}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
@@ -234,5 +280,7 @@ export const calendarLabels = async (): Promise<Labels> => {
     starts: t('starts'),
     more: (n) => t('more', { count: n }),
     cancelled: t('cancelled'),
+    close: t('close'),
+    open: (date, count) => t('openDay', { date, count }),
   }
 }

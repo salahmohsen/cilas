@@ -22,6 +22,12 @@ export interface CardProps extends HTMLAttributes<HTMLElement> {
   status?: string
   /** Content for a quick look. When set, the whole card opens and grows into a larger view; Escape or the close control morphs it back. */
   details?: ReactNode
+  /** Content only the card shows, not its quick look (which has `details`), such as a summary of what the quick look lists. */
+  preview?: ReactNode
+  /** The open control's accessible name, when the title alone does not say what opens (a day's number). */
+  triggerLabel?: string
+  /** The close control's accessible name, for other languages. */
+  closeLabel?: string
   open?: boolean
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
@@ -123,6 +129,9 @@ export function Card({
   meta,
   status,
   details,
+  preview,
+  triggerLabel,
+  closeLabel = 'Close quick look',
   open: openProp,
   defaultOpen = false,
   onOpenChange,
@@ -255,7 +264,7 @@ export function Card({
         <motion.h3 className={styles.title} {...shared('title', 'card')}>
           {details ? (
             <Dialog.Trigger asChild>
-              <button type="button" className={styles.trigger}>
+              <button type="button" className={styles.trigger} aria-label={triggerLabel}>
                 {title}
               </button>
             </Dialog.Trigger>
@@ -273,6 +282,7 @@ export function Card({
           </motion.p>
         ) : null}
         {children}
+        {preview}
         {footer('card')}
       </div>
     </motion.article>
@@ -375,7 +385,7 @@ export function Card({
                       <motion.button
                         type="button"
                         className={styles.close}
-                        aria-label="Close quick look"
+                        aria-label={closeLabel}
                         whileTap={reduced ? undefined : { scale: 0.94 }}
                         transition={spring.snappy}
                       >
