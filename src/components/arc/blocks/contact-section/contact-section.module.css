@@ -217,7 +217,7 @@
   background: none;
   color: var(--foreground);
   font: inherit;
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -292,7 +292,8 @@
   gap: var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius-control);
-  padding: 4px 4px 4px var(--space-4);
+  padding-block: 4px;
+  padding-inline: var(--space-4) 4px;
   font-size: var(--text-sm);
 }
 .copyRow > span {
