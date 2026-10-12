@@ -288,7 +288,8 @@
       "workshop": "Workshops",
       "short": "Short courses"
     },
-    "allInCycle": "See all {count} courses of this cycle"
+    "allInCycle": "See all {count} courses of this cycle",
+    "whoTeaches": "Who teaches it"
   },
   "NotFound": {
     "title": "Page not found",

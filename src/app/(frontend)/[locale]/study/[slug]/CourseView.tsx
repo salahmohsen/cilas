@@ -199,28 +199,56 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       : []),
   ]
 
-  // Each fellow with their whole bio: who teaches a course matters to it.
+  // The side column names who teaches; their bios are read in the main text.
   const facultyCard = (
     <section aria-labelledby="course-fellows" className="course-side">
       <h2 className="course-side-heading" id="course-fellows">
         {t('taughtBy')}
       </h2>
-      <ul className="grid gap-6">
+      <ul className="grid gap-3">
+        {fellows.map((person) => (
+          <li key={person.id}>
+            <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
+              <span className="course-fellow-photo">
+                <Avatar name={person.name} size="md" src={photoOf(person)} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm leading-snug font-medium underline-offset-4 group-hover:underline">
+                  {person.name}
+                </span>
+                <span className="block text-xs text-[var(--text-muted)]">{t('fellow')}</span>
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+
+  // Each fellow with their whole bio: who teaches a course matters to it.
+  const fellowsSection = fellows.length ? (
+    <section aria-labelledby="course-teachers" className="mt-12">
+      <h2 className="course-heading" id="course-teachers">
+        {t('whoTeaches')}
+      </h2>
+      <ul className="course-fellows">
         {fellows.map((person) => {
           const hasBio = Boolean(textOf(person.bio).trim())
           return (
-            <li key={person.id}>
-              <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
-                <Avatar name={person.name} size="lg" src={photoOf(person)} />
-                <span className="min-w-0">
-                  <span className="block text-sm leading-snug font-medium underline-offset-4 group-hover:underline">
-                    {person.name}
-                  </span>
-                  <span className="block text-xs text-[var(--text-muted)]">{t('fellow')}</span>
-                </span>
+            <li className="course-fellow" key={person.id}>
+              <Link aria-hidden className="course-fellow-photo" href={`/people/${person.slug}`} tabIndex={-1}>
+                <Avatar name={person.name} size="xl" src={photoOf(person)} />
               </Link>
+              <div className="course-fellow-head">
+                <h3 className="text-base font-medium">
+                  <Link className="underline-offset-4 hover:underline" href={`/people/${person.slug}`}>
+                    {person.name}
+                  </Link>
+                </h3>
+                <p className="text-sm text-[var(--text-muted)]">{t('fellow')}</p>
+              </div>
               {hasBio ? (
-                <div className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]" dir="auto">
+                <div className="course-fellow-bio" dir="auto">
                   <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
                 </div>
               ) : null}
@@ -229,7 +257,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
         })}
       </ul>
     </section>
-  )
+  ) : null
 
   const factsCard = (
     <section aria-label={t('details')} className="course-side">
@@ -332,7 +360,6 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           {/* Narrow screens: the facts and the fellows come before the text. */}
           <div className="mt-10 grid gap-10 lg:hidden">
             {factsCard}
-            {fellows.length ? facultyCard : null}
             {shareCard}
           </div>
 
@@ -375,6 +402,8 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
               <span className="font-medium">{t('contentWarning')}</span> {course.content_warning}
             </p>
           ) : null}
+
+          {fellowsSection}
 
           {sessions.length ? (
             <section aria-labelledby="course-flow" className="mt-12">
