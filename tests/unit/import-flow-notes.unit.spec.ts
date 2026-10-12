@@ -78,6 +78,12 @@ describe('withoutRepeats', () => {
 })
 
 describe('sessionTexts', () => {
+  it('puts an Arabic title on the Arabic side even in a mostly English flow', () => {
+    const texts = sessionTexts('عن نسوية كتابة الحياة', 'نستهدف في الأسبوع الأول التعارف.\n\nWeek 1: On the Feminism of Life Writing\nIn the first week, we meet.', true)
+    expect(texts.ar.title).toBe('عن نسوية كتابة الحياة')
+    expect(texts.en).toEqual({ title: 'On the Feminism of Life Writing', description: 'In the first week, we meet.' })
+  })
+
   it('gives a bilingual session each language, the other language’s heading as its title', () => {
     const description =
       'سنبدأ الجزء الثالث والأخير من هذا المعمل بقراءة في كتاب Object-oriented feminism.\n\nWeek 7: We are things?\nWe will begin the third and final part of this lab by reading a book Object-oriented feminism.'

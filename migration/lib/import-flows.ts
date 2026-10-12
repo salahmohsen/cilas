@@ -86,10 +86,10 @@ const withoutNotes = (description: Lexical | null | undefined): Lexical | null =
 const UNIT_HEADING = /^(?:week|session|class|unit|الأسبوع|الجلسة|اللقاء|المحاضرة)\s*[\d٠-٩]+\s*[:：.\-–]\s*(.+)$/i
 
 /**
- * A session's title and description in each language. The flow's own
- * language keeps the extracted title; the other language's paragraphs (a
- * bilingual flow gives both) go to that language, and their "Week 7: …"
- * heading becomes its title.
+ * A session's title and description in each language. The extracted title
+ * goes to the language it is written in; each language gets its own
+ * paragraphs (a bilingual flow gives both), and a "Week 7: …" heading among
+ * them becomes that language's title.
  */
 export const sessionTexts = (
   title: string | null,
@@ -97,17 +97,18 @@ export const sessionTexts = (
   english: boolean,
 ): Record<Locale, { title: string | null; description: string }> => {
   const parts = splitLocales(description)
-  const own: Locale = english ? 'en' : 'ar'
-  const other: Locale = english ? 'ar' : 'en'
-  const lines = parts[other].split('\n')
-  const heading = lines[0]?.trim().match(UNIT_HEADING)
-  return {
-    [own]: { title, description: parts[own] },
-    [other]: {
-      title: heading ? heading[1].trim() : null,
+  // The extracted title belongs to the language it is written in, which a
+  // bilingual flow need not share with most of its text.
+  const titleIn: Locale = title ? (isMostlyArabic(title) ? 'ar' : 'en') : english ? 'en' : 'ar'
+  const side = (locale: Locale) => {
+    const lines = parts[locale].split('\n')
+    const heading = lines[0]?.trim().match(UNIT_HEADING)
+    return {
+      title: locale === titleIn ? title : heading ? heading[1].trim() : null,
       description: (heading ? lines.slice(1) : lines).join('\n').trim(),
-    },
-  } as Record<Locale, { title: string | null; description: string }>
+    }
+  }
+  return { en: side('en'), ar: side('ar') }
 }
 
 /** The words a flow's header line puts before its fellow's name. */
