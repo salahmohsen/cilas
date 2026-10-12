@@ -3,14 +3,12 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import type { OpenItem } from '@/api/home.api'
 import type { PosterData } from '@/components/home/poster'
 import { PosterCarousel } from '@/components/home/poster-carousel'
-import { Link } from '@/i18n/navigation'
 import { numberingSystemOf } from '@/lib/digits'
 import { posterLayouts } from '@/lib/posters'
 
 /**
  * What people can register for today, a poster each, turning on their own.
- * With nothing open, the section says so and points to where new cycles are
- * announced.
+ * The page leaves the section out when nothing is open.
  */
 export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: string }) {
   const [t, format] = await Promise.all([getTranslations('Home'), getFormatter()])
@@ -46,24 +44,10 @@ export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: st
         <h2 className="home-heading" id="home-open">
           {t('openTitle')}
         </h2>
-        <p className="home-lead">{items.length ? t('openText') : t('noneOpen')}</p>
+        <p className="home-lead">{t('openText')}</p>
       </header>
 
-      {posters.length ? (
-        <PosterCarousel label={t('openTitle')} posters={posters} />
-      ) : (
-        <div className="home-none">
-          <p className="home-none-text">{t('noneOpenText')}</p>
-          <div className="home-none-actions">
-            <a className="home-action" data-outline href="#newsletter">
-              {t('subscribe')}
-            </a>
-            <Link className="home-action" data-plain href="/study">
-              {t('pastCourses')}
-            </Link>
-          </div>
-        </div>
-      )}
+      <PosterCarousel label={t('openTitle')} posters={posters} />
     </section>
   )
 }

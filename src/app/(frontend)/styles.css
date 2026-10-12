@@ -2238,3 +2238,27 @@ h3 {
   justify-content: center;
   gap: 4px 10px;
 }
+
+/* The hero's main action while nothing is open: shown, not usable, and the
+   note beneath says why and where to go instead. */
+.home-action[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.home-action[aria-disabled='true']:active {
+  scale: 1;
+}
+.home-hero-note {
+  max-width: 46ch;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: oklch(0.985 0 0 / 0.82);
+}
+.home-hero-note a {
+  color: oklch(0.985 0 0);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-action[data-primary][aria-disabled='true']:hover {
+  background: oklch(0.985 0 0);
+}

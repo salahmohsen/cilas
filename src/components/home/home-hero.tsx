@@ -9,6 +9,8 @@ import { TextReveal } from '@/components/arc/text-reveal/text-reveal'
 import { Link } from '@/i18n/navigation'
 
 type Action = { label: string; href: string }
+/** The main action while it can't be taken: its label, and why, with where to go instead. */
+type Closed = { label: string; note: string; link: Action }
 
 /** How long each audience stays before the next takes its place. */
 const STEP = 2400
@@ -29,7 +31,8 @@ export function HomeHero({
   title: string
   text: string
   who: string[]
-  primary: Action
+  /** Unavailable: the button shows but does nothing, and the note says why. */
+  primary: Action | Closed
   secondary: Action
   locale: string
 }) {
@@ -84,13 +87,31 @@ export function HomeHero({
           )}
         </p>
         <div className="home-hero-actions">
-          <Link className="home-action" data-primary href={primary.href}>
-            {primary.label}
-          </Link>
+          {'href' in primary ? (
+            <Link className="home-action" data-primary href={primary.href}>
+              {primary.label}
+            </Link>
+          ) : (
+            // aria-disabled rather than disabled: it stays reachable, so keyboard and screen-reader users meet the note too.
+            <button
+              aria-describedby="home-hero-note"
+              aria-disabled
+              className="home-action"
+              data-primary
+              type="button"
+            >
+              {primary.label}
+            </button>
+          )}
           <Link className="home-action" href={secondary.href}>
             {secondary.label}
           </Link>
         </div>
+        {'note' in primary ? (
+          <p className="home-hero-note" id="home-hero-note">
+            {primary.note} <a href={primary.link.href}>{primary.link.label}</a>
+          </p>
+        ) : null}
       </div>
     </section>
   )

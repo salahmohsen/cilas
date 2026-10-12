@@ -68,7 +68,11 @@ export default async function HomePage({ params }: Props) {
         primary={
           open.length
             ? { label: t('seeOpen'), href: '/#open' }
-            : { label: t('browseCourses'), href: '/study' }
+            : {
+                label: t('seeOpen'),
+                note: t('noneOpen'),
+                link: { label: t('noneOpenLink'), href: '#newsletter' },
+              }
         }
         secondary={{ label: t('readArticles'), href: '/articles' }}
         text={t('heroText')}
@@ -77,7 +81,8 @@ export default async function HomePage({ params }: Props) {
       />
 
       <div className="home-page">
-        <OpenNow items={open} locale={locale} />
+        {/* With nothing open there is no section; the hero says so instead. */}
+        {open.length ? <OpenNow items={open} locale={locale} /> : null}
 
         {posts.length ? (
           <section aria-labelledby="home-articles" className="home-section">
@@ -96,7 +101,6 @@ export default async function HomePage({ params }: Props) {
         <StatsBand
           className="home-stats"
           flush
-          description={t('statsText')}
           locale={locale === 'ar' ? 'ar-EG' : 'en-GB'}
           numberingSystem={locale === 'ar' ? 'arab' : 'latn'}
           stats={[

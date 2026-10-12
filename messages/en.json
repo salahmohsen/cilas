@@ -482,7 +482,6 @@
       "For anyone curious"
     ],
     "seeOpen": "See what’s open",
-    "browseCourses": "Browse courses",
     "readArticles": "Read the articles",
     "openTitle": "Open for registration",
     "openText": "Programmes and courses you can still join, the nearest deadline first.",
@@ -491,15 +490,11 @@
     "noDeadline": "Open until filled",
     "closed": "Registration has closed",
     "programme": "Programme",
-    "noneOpen": "Nothing is open for registration right now.",
-    "noneOpenText": "Each new cycle of courses and each Bridge year is announced in the newsletter.",
-    "subscribe": "Subscribe to the newsletter",
-    "pastCourses": "Browse past courses",
+    "noneOpen": "Registration is closed for now.",
     "featuredTitle": "Featured articles",
     "latestTitle": "Latest articles",
     "allArticles": "All articles",
     "statsTitle": "CILAS in numbers",
-    "statsText": "Counted from the archive of every cycle and Bridge year.",
     "statYears": "Years of teaching",
     "statCourses": "Courses",
     "statFellows": "Fellows",
@@ -575,7 +570,8 @@
       "motionPaused": "Motion paused",
       "outlets": "Outlets"
     },
-    "with": "With {names}"
+    "with": "With {names}",
+    "noneOpenLink": "Sign up for the newsletter to hear when it opens."
   },
   "Contact": {
     "metaTitle": "Contact",
