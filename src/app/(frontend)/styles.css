@@ -493,6 +493,15 @@ html {
   outline-color: oklch(1 0 0 / 0.1);
 }
 
+/* A course row while the next page comes: the placeholder spans the title and meta columns. */
+/* It doesn't open under the pointer like a course row would. */
+.course-row-skeleton {
+  pointer-events: none;
+}
+.course-row-skeleton > :last-child {
+  grid-column: 2 / -1;
+}
+
 /* Closed is red, open is green. */
 .course-status::before {
   background: oklch(0.62 0.21 25);

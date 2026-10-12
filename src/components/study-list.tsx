@@ -13,9 +13,31 @@ import {
 } from '@/components/arc/filter-toolbar/filter-toolbar'
 import { Pagination } from '@/components/arc/pagination/pagination'
 import { SearchField } from '@/components/arc/search-field/search-field'
+import { Skeleton } from '@/components/arc/skeleton/skeleton'
 import { CourseRows } from '@/components/course-rows'
 import { COURSE_FACETS, readCourseQuery, type CourseFacet } from '@/lib/course-search'
 import { localDigits } from '@/lib/digits'
+
+/**
+ * True once `active` has lasted `delay` ms, and then for at least `min` ms, so
+ * a quick change never flashes a placeholder and a slow one never blinks it.
+ */
+function useSlow(active: boolean, delay = 400, min = 350) {
+  const [slow, setSlow] = useState(false)
+  const since = useRef(0)
+  useEffect(() => {
+    if (active) {
+      const id = setTimeout(() => {
+        since.current = performance.now()
+        setSlow(true)
+      }, delay)
+      return () => clearTimeout(id)
+    }
+    const id = setTimeout(() => setSlow(false), Math.max(0, min - (performance.now() - since.current)))
+    return () => clearTimeout(id)
+  }, [active, delay, min])
+  return slow
+}
 
 /**
  * The study list: a search over everything a course has, filters over its
@@ -85,6 +107,9 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
     listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
   const typing = wanted !== (query.q ?? '')
+  // A quick change dims the list in place; a slow one gives way to rows of
+  // placeholders shaped like the rows to come.
+  const slow = useSlow(pending)
 
   return (
     <section className="study-list flex flex-col gap-6">
@@ -131,9 +156,19 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
         aria-busy={pending || undefined}
         className="scroll-mt-28 transition-opacity duration-150"
         ref={listRef}
-        style={{ opacity: pending ? 0.55 : 1 }}
+        style={{ opacity: pending && !slow ? 0.55 : 1 }}
       >
-        {result.rows.length ? (
+        {slow ? (
+          // The "Searching…" line above speaks for the wait; these are only seen.
+          <ol aria-hidden className="course-rows">
+            {Array.from({ length: Math.max(result.rows.length, 6) }, (_, i) => (
+              <li className="course-row course-row-skeleton" key={i}>
+                <span className="course-row-number" />
+                <Skeleton lines={2} />
+              </li>
+            ))}
+          </ol>
+        ) : result.rows.length ? (
           <>
             <CourseRows rows={result.rows} start={(result.page - 1) * pageSize + 1} />
             {result.pageCount > 1 ? (
