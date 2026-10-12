@@ -125,6 +125,9 @@ const HOVER_INTENT = 70,
 /** Matches the container query in site-header.module.css. */
 const COLLAPSE_BELOW = 760
 
+/** Whether the page reads right to left: the menus' order, and the side panels slide from, follow it. */
+const isRtl = (): boolean => typeof document !== 'undefined' && document.documentElement.dir === 'rtl'
+
 /** Panel content slides in from the side of the newly opened item; opening from closed drops in from the bar. */
 const faceVariants: Variants = {
   hidden: (direction: number) => ({
@@ -389,7 +392,8 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
         if (previous?.value === value) return previous
         const from = previous ? items.findIndex((item) => item.value === previous.value) : -1
         const to = items.findIndex((item) => item.value === value)
-        return { value, direction: from < 0 ? 0 : Math.sign(to - from) }
+        // A later item sits to the left in RTL, so its panel comes from the left.
+        return { value, direction: from < 0 ? 0 : Math.sign(to - from) * (isRtl() ? -1 : 1) }
       })
       if (!value) setPanel({ height: null, grow: true })
     },
@@ -506,8 +510,9 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
     const index = triggers.indexOf(document.activeElement as HTMLElement)
     if (index < 0) return
     event.preventDefault()
-    const nextIndex =
-      (index + (event.key === 'ArrowRight' ? 1 : -1) + triggers.length) % triggers.length
+    // The next item is to the reading side: the right in LTR, the left in RTL.
+    const forward = isRtl() ? 'ArrowLeft' : 'ArrowRight'
+    const nextIndex = (index + (event.key === forward ? 1 : -1) + triggers.length) % triggers.length
     triggers[nextIndex]!.focus()
     if (open) {
       const item = items[nextIndex]

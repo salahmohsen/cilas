@@ -299,7 +299,7 @@
   background: none;
   color: var(--foreground);
   font: inherit;
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
   transition: background-color var(--duration-fast) var(--ease-standard);
@@ -337,7 +337,7 @@
   background: var(--surface-muted);
   color: var(--foreground);
   font: inherit;
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
 }
@@ -380,6 +380,10 @@
   }
   .feature:hover .featureTitle svg {
     transform: translateX(2px);
+  }
+  /* The arrow points, and nudges, the way the page reads. */
+  [dir='rtl'] .feature:hover .featureTitle svg {
+    transform: translateX(-2px) scaleX(-1);
   }
 }
 
@@ -430,7 +434,7 @@
   font: inherit;
   font-size: var(--text-base);
   font-weight: 500;
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
@@ -470,7 +474,7 @@
   color: var(--text-secondary);
   font: inherit;
   font-size: var(--text-sm);
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
 }
@@ -609,4 +613,8 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+[dir='rtl'] .featureTitle svg {
+  transform: scaleX(-1);
 }
