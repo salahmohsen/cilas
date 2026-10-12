@@ -186,7 +186,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       : []),
   ]
 
-  // Each fellow with the start of their bio; the whole of it is on their page.
+  // Each fellow with their whole bio: who teaches a course matters to it.
   const facultyCard = (
     <section aria-labelledby="course-fellows">
       <h2 className="text-sm font-medium" id="course-fellows">
@@ -194,7 +194,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       </h2>
       <ul className="mt-3 grid gap-5">
         {fellows.map((person) => {
-          const bio = textOf(person.bio).replace(/\s+/g, ' ').trim()
+          const hasBio = Boolean(textOf(person.bio).trim())
           return (
             <li key={person.id}>
               <Link className="group flex items-center gap-3" href={`/people/${person.slug}`}>
@@ -206,18 +206,10 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
                   <span className="block text-xs text-[var(--text-muted)]">{t('fellow')}</span>
                 </span>
               </Link>
-              {bio ? (
-                <>
-                  <p className="mt-3 line-clamp-6 text-sm leading-relaxed text-[var(--text-secondary)]" dir="auto">
-                    {bio}
-                  </p>
-                  <Link
-                    className="mt-2 inline-block text-sm underline decoration-[var(--border-strong,var(--border))] underline-offset-4 hover:decoration-current"
-                    href={`/people/${person.slug}`}
-                  >
-                    {t('fellowProfile')}
-                  </Link>
-                </>
+              {hasBio ? (
+                <div className="mt-3 text-sm leading-relaxed text-[var(--text-secondary)]" dir="auto">
+                  <RichTextField className="grid gap-3 [&_p]:m-0" data={person.bio} />
+                </div>
               ) : null}
             </li>
           )
@@ -434,7 +426,8 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
         </article>
 
         <aside className="hidden lg:block">
-          <div className="sticky top-[calc(var(--site-header-height,4rem)+1.5rem)] grid gap-4">
+          {/* Not sticky: a fellow's bio can make the column taller than the screen. */}
+          <div className="grid gap-4">
             {factsCard}
             {fellows.length ? <div className="course-card">{facultyCard}</div> : null}
             {materialsCard}

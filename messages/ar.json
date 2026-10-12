@@ -281,8 +281,7 @@
       "workshop": "الورش",
       "short": "المقررات القصيرة"
     },
-    "allInCycle": "كل مقررات هذه الدورة ({count})",
-    "fellowProfile": "الصفحة الكاملة"
+    "allInCycle": "كل مقررات هذه الدورة ({count})"
   },
   "NotFound": {
     "title": "الصفحة غير موجودة",

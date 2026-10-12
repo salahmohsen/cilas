@@ -281,8 +281,7 @@
       "workshop": "Workshops",
       "short": "Short courses"
     },
-    "allInCycle": "See all {count} courses of this cycle",
-    "fellowProfile": "Full profile"
+    "allInCycle": "See all {count} courses of this cycle"
   },
   "NotFound": {
     "title": "Page not found",
