@@ -379,7 +379,7 @@ export function WheelCarousel({
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: reduceMotion ? 0 : crossfadeDuration }}
-                  className="absolute inset-0 grid place-items-center font-serif-reading text-6xl text-[var(--text-muted)]"
+                  className="absolute inset-0 grid place-items-center font-heading text-6xl text-[var(--text-muted)]"
                 >
                   {/\p{Script=Arabic}/u.test(selectedItem.label)
                     ? selectedItem.label.at(0) // Arabic has no initials; the first letter stands for the name.

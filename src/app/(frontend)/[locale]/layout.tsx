@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getTranslations } from 'next-intl/server'
-import { Noto_Sans_Arabic } from 'next/font/google'
 import React from 'react'
 
 import '@/components/arc/foundation.css'
@@ -12,12 +11,8 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { DirectionProvider } from '@/components/ui/direction'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
+import { fontVariables } from '@/lib/fonts'
 import { DEFAULT_OG_IMAGE } from '@/lib/og'
-
-const fontSans = Noto_Sans_Arabic({
-  subsets: ['arabic', 'latin'],
-  variable: '--font-sans',
-})
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -44,7 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     // next-themes sets data-theme and the class before React hydrates.
     <html
-      className={fontSans.variable}
+      className={fontVariables}
       // Smooth in-page jumps; Next turns smoothing off for route changes.
       data-scroll-behavior="smooth"
       dir={direction}

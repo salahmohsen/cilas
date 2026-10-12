@@ -34,7 +34,6 @@ import { splitBody } from '@/lib/article-body'
 import { localDigits } from '@/lib/digits'
 import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, yearOf } from '@/lib/articles'
-import { readingFonts } from '@/lib/fonts'
 import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
 import type { Article, Media, Person, Publication } from '@/payload-types'
@@ -166,7 +165,7 @@ export default async function ArticlePage({ params }: Props) {
   // column with a back link, meta line, title, byline, image and body. The
   // reading tools sit around it.
   return (
-    <div className={`${grid.root} ${readingFonts}`}>
+    <div className={grid.root}>
       {preview && <RefreshRouteOnSave />}
       <ReadingProgress target="article-text" />
       <div className={grid.inner}>
@@ -309,7 +308,7 @@ export default async function ArticlePage({ params }: Props) {
               aria-labelledby="article-share"
               className="mt-2 grid gap-3 border-t border-border pt-6"
             >
-              <h2 className="text-sm text-[var(--text-muted)]" id="article-share">
+              <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-share">
                 {tShare('heading')}
               </h2>
               <ShareBar
@@ -503,7 +502,7 @@ function OriginalCard({
       {title && (
         // Its own direction for the words, the card's edge for alignment.
         <p
-          className="mt-4 font-serif-reading text-2xl leading-snug text-balance rtl:text-right"
+          className="mt-4 font-heading text-2xl leading-snug text-balance rtl:text-right"
           dir="auto"
           lang={language}
         >

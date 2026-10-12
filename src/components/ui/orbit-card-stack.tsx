@@ -59,7 +59,7 @@ function Portrait({ item }: { item: OrbitStackItem }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img alt={item.imageAlt ?? ''} className="h-full w-full object-cover" src={item.image} />
       ) : (
-        <span className="m-auto font-serif-reading text-5xl text-[var(--text-muted)]">{initialsFor(item)}</span>
+        <span className="m-auto font-heading text-5xl text-[var(--text-muted)]">{initialsFor(item)}</span>
       )}
     </div>
   )

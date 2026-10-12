@@ -1,28 +1,56 @@
-import { Newsreader, Noto_Naskh_Arabic } from 'next/font/google'
+import { Amiri_Quran, IBM_Plex_Sans_Arabic, Inter, Newsreader } from 'next/font/google'
 
 /**
- * Reading faces for long-form text (articles). The interface stays in the
- * site's sans; essays are set in a serif, Latin in Newsreader and Arabic in
- * Naskh, which reads better at length than the sans.
+ * The site's four faces, two roles in two scripts:
  *
- * No generated fallback face: next/font's metric-matched fallback is local
- * Arial, which has Arabic glyphs and would catch Arabic text before Naskh.
- * The stack in styles.css puts Newsreader first; it has no Arabic, so Arabic
- * text falls through to Naskh (Naskh also ships Latin, which must not win).
+ *   titles  Newsreader (Latin)  ·  Amiri Quran (Arabic)
+ *   text    Inter (Latin)       ·  IBM Plex Sans Arabic (Arabic)
+ *
+ * styles.css stacks each role Latin first (`--font-title`, `--font-text`).
+ * The Latin faces have no Arabic, so Arabic falls through to its own face.
+ * The Arabic faces load only their Arabic subset, so their Latin never wins.
+ *
+ * No generated fallback faces: next/font's metric-matched fallback is local
+ * Arial, which has Arabic glyphs and would catch Arabic text before the
+ * Arabic face.
  */
-export const serifLatin = Newsreader({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-serif-latin',
+  variable: '--font-inter',
   style: ['normal', 'italic'],
   adjustFontFallback: false,
   fallback: [],
 })
 
-export const serifArabic = Noto_Naskh_Arabic({
+const plexArabic = IBM_Plex_Sans_Arabic({
   subsets: ['arabic'],
-  variable: '--font-serif-arabic',
+  // Every weight the text uses, so none is synthesised.
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-plex-arabic',
   adjustFontFallback: false,
   fallback: [],
 })
 
-export const readingFonts = `${serifLatin.variable} ${serifArabic.variable}`
+// Variable, with optical sizes: large titles take the display cut.
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  axes: ['opsz'],
+  variable: '--font-newsreader',
+  style: ['normal', 'italic'],
+  adjustFontFallback: false,
+  fallback: [],
+})
+
+// One weight only: Arabic titles are set at 400 whatever weight the Latin takes.
+const amiriQuran = Amiri_Quran({
+  subsets: ['arabic'],
+  weight: '400',
+  variable: '--font-amiri-quran',
+  adjustFontFallback: false,
+  fallback: [],
+})
+
+/** The faces' variables, set once on the document. */
+export const fontVariables = [inter, plexArabic, newsreader, amiriQuran]
+  .map((f) => f.variable)
+  .join(' ')

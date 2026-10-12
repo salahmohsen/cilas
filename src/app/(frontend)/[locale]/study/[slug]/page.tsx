@@ -8,7 +8,6 @@ import React from 'react'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
-import { readingFonts } from '@/lib/fonts'
 import { ogImages } from '@/lib/og'
 import { seoDefaults } from '@/lib/seo'
 import type { Course, Media, Person } from '@/payload-types'
@@ -109,7 +108,10 @@ export default async function CoursePage({ params }: Params) {
         depth: 1,
         joins: false,
         pagination: false,
-        populate: { people: { name: true }, media: { url: true, alt: true, filename: true, prefix: true } },
+        populate: {
+          people: { name: true },
+          media: { url: true, alt: true, filename: true, prefix: true },
+        },
         select: { title: true, slug: true, course_type: true, fellows: true, cover_image: true },
         locale: locale as 'en' | 'ar',
         fallbackLocale: locale === 'ar' ? 'en' : 'ar',
@@ -122,17 +124,15 @@ export default async function CoursePage({ params }: Params) {
       slug: c.slug ?? String(c.id),
       title: c.title,
       type: c.course_type,
-      fellows: (c.fellows ?? []).flatMap((f) => (typeof f === 'object' && f ? [(f as Person).name] : [])),
+      fellows: (c.fellows ?? []).flatMap((f) =>
+        typeof f === 'object' && f ? [(f as Person).name] : [],
+      ),
       ...(cover?.url ? { image: { url: cover.url, alt: cover.alt ?? '' } } : {}),
     }
   })
 
   if (!isPreview) {
-    return (
-      <div className={readingFonts}>
-        <CourseView course={course} related={related} />
-      </div>
-    )
+    return <CourseView course={course} related={related} />
   }
 
   /*
@@ -155,9 +155,9 @@ export default async function CoursePage({ params }: Params) {
   })
 
   return (
-    <div className={readingFonts}>
+    <>
       <RefreshRouteOnSave />
       <CourseLivePreview initialData={drafts[0] ?? course} related={related} />
-    </div>
+    </>
   )
 }

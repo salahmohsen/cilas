@@ -13,7 +13,6 @@ import { RichTextField } from '@/components/RichTextField'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { toArticleCard, toCourseCard } from '@/lib/article-cards'
-import { readingFonts } from '@/lib/fonts'
 import { pathOf } from '@/lib/paths'
 import type { Media } from '@/payload-types'
 
@@ -89,7 +88,7 @@ export default async function PersonPage({ params }: Props) {
     })
 
   return (
-    <div className={`${grid.root} ${readingFonts}`}>
+    <div className={grid.root}>
       <div className={grid.inner}>
         <div className={grid.reader}>
           <Link className={grid.back} href="/articles">

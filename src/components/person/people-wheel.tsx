@@ -75,7 +75,7 @@ export function PeopleWheel({
 
         {person.lines.length ? (
           <>
-            <h3 className="mt-6 text-sm font-medium">{t('lines', { count: person.lines.length })}</h3>
+            <h3 className="mt-6 font-sans text-sm font-medium">{t('lines', { count: person.lines.length })}</h3>
             <ul className="mt-2 grid gap-2">
               {person.lines.map((line) => (
                 <li className="grid grid-cols-[1rem_1fr] gap-x-3 text-sm" key={line.key}>

@@ -384,7 +384,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
 
           {course.facilitator_note ? (
             <section aria-labelledby="course-note" className="course-note mt-10">
-              <h2 className="text-sm font-medium" id="course-note">
+              <h2 className="font-sans text-sm font-medium" id="course-note">
                 {t('note')}
               </h2>
               <div className="mt-3 grid gap-3 text-[0.95rem] leading-relaxed" dir="auto">

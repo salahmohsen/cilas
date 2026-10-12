@@ -14,7 +14,6 @@ import { HomeHero } from '@/components/home/home-hero'
 import { OpenNow } from '@/components/home/open-now'
 import { Link } from '@/i18n/navigation'
 import { toArticleCard } from '@/lib/article-cards'
-import { readingFonts } from '@/lib/fonts'
 
 // What is open changes with deadlines: worked out again every five minutes.
 export const revalidate = 300
@@ -63,8 +62,7 @@ export default async function HomePage({ params }: Props) {
   const controls = t.raw('controls') as Record<string, string>
 
   return (
-    // The hero's motto and the article titles are set in the reading serif.
-    <div className={readingFonts}>
+    <>
       <HomeAnnouncements
         items={open.flatMap((item) =>
           item.deadline
@@ -161,6 +159,6 @@ export default async function HomePage({ params }: Props) {
           variant="accordion"
         />
       </div>
-    </div>
+    </>
   )
 }

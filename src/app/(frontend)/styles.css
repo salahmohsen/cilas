@@ -10,8 +10,11 @@
 
 :root {
   --font-mono: 'Roboto Mono', monospace;
-  --font-body: var(--font-sans);
-  --font-display: var(--font-heading);
+  /* Two roles in two scripts (src/lib/fonts.ts): Latin first, Arabic after. */
+  --font-text: var(--font-inter), var(--font-plex-arabic), system-ui, sans-serif;
+  --font-title: var(--font-newsreader), var(--font-amiri-quran), Georgia, serif;
+  --font-body: var(--font-text);
+  --font-display: var(--font-title);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.141 0.005 285.823);
@@ -82,8 +85,8 @@
 }
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: var(--font-sans);
+  --font-heading: var(--font-title);
+  --font-sans: var(--font-text);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -140,6 +143,22 @@
 
   html {
     @apply font-sans;
+    /* Every weight in use is loaded; Amiri Quran has only 400, and a faked
+       bold would smear its strokes, so no weight is ever synthesised. */
+    font-synthesis-weight: none;
+  }
+  /* Titles take the title faces; small headings that act as labels opt out. */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+  }
+  /* Small headings that name a group (a sidebar's "Share", a footer column)
+     read as labels, in the text face. */
+  footer h2,
+  footer h3,
+  .course-side-heading {
+    font-family: var(--font-sans);
   }
 }
 
@@ -147,12 +166,6 @@
 .study-filters .frame > div:first-child {
   min-height: var(--control-height-sm);
   height: var(--control-height-sm);
-}
-
-/* Long-form reading (articles). The serif faces come from src/lib/fonts.ts,
-   whose variables are set on the page wrapper; Arabic text takes Naskh. */
-@utility font-serif-reading {
-  font-family: var(--font-serif-latin), var(--font-serif-arabic), Georgia, serif;
 }
 
 /* Mono labels have no Arabic: in RTL pages they fall back to the sans,
@@ -164,9 +177,9 @@
 }
 
 .article-prose {
-  @apply prose prose-neutral max-w-[68ch] font-serif-reading leading-[1.7];
+  @apply prose prose-neutral max-w-[68ch] font-sans leading-[1.7];
   /* --reading-scale is set by the A−/A+ control on the text's container. */
-  font-size: calc(1.2rem * var(--reading-scale, 1));
+  font-size: calc(1.125rem * var(--reading-scale, 1));
   /* Every prose colour follows the site's tokens, so light and dark both work
      without prose-invert's own palette. */
   --tw-prose-body: var(--foreground);
@@ -188,17 +201,17 @@
     color: var(--foreground);
   }
 
-  /* Section heads in the interface sans, small and spaced, as on the moodboard. */
+  /* Section heads in the title faces: a ruled head, then smaller ones. */
   & :where(h2, h3, h4) {
-    font-family: var(--font-sans);
-    font-weight: 600;
+    font-family: var(--font-heading);
+    font-weight: 500;
     letter-spacing: -0.01em;
   }
   & :where(h2) {
-    @apply mt-14 border-t border-foreground pt-4 text-[1.35rem];
+    @apply mt-14 border-t border-foreground pt-4 text-[1.6rem];
   }
   & :where(h3) {
-    @apply mt-10 text-base tracking-[0.06em] uppercase;
+    @apply mt-10 text-[1.3rem];
   }
   /* Block quotations: upright, a little larger, set off by a hairline (not
      italics: Arabic has none). */
@@ -259,8 +272,8 @@
 }
 
 .article-prose:where([dir='rtl'] *) {
-  font-size: calc(1.3rem * var(--reading-scale, 1));
-  @apply leading-[1.95];
+  font-size: calc(1.1875rem * var(--reading-scale, 1));
+  @apply leading-[1.9];
 }
 
 /* Article reader (Arc blog-grid layout): the opening lead and title. */
@@ -351,7 +364,7 @@ html {
 
 .course-title {
   font-size: clamp(2rem, 4.2vw, 3.1rem);
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.02em;
   line-height: 1.08;
   text-wrap: balance;
@@ -363,7 +376,7 @@ html {
 
 .course-heading {
   font-size: 1.35rem;
-  font-weight: 600;
+  font-weight: 500;
   letter-spacing: -0.01em;
 }
 [dir='rtl'] .course-heading {
@@ -756,7 +769,7 @@ a.bridge-year:hover > :first-child {
 .payload-form-sent h2 {
   margin-top: 0.25rem;
   font-size: 1.5rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
   text-wrap: balance;
 }
@@ -1394,7 +1407,7 @@ a.collection-item:hover {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   font-size: clamp(1.1rem, 1.9vw, 1.45rem);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.25;
   letter-spacing: -0.01em;
   text-wrap: balance;
@@ -1556,7 +1569,7 @@ a.collection-item:hover {
 }
 .study-title {
   font-size: clamp(2.4rem, 5vw, 3.6rem);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.02;
   letter-spacing: -0.03em;
 }
@@ -1649,7 +1662,7 @@ a.collection-item:hover {
 .home-hero .home-hero-title {
   max-width: 15ch;
   color: inherit;
-  font-family: var(--font-serif-latin), var(--font-serif-arabic), Georgia, serif;
+  font-family: var(--font-heading);
   font-size: clamp(2.75rem, 7vw, 6rem);
   font-weight: 400;
   line-height: 1.02;
@@ -1657,8 +1670,7 @@ a.collection-item:hover {
   text-wrap: balance;
 }
 [dir='rtl'] .home-hero-title {
-  font-family: var(--font-serif-arabic), Georgia, serif;
-  line-height: 1.35;
+  line-height: 1.5;
   letter-spacing: 0;
 }
 .home-hero-text {
@@ -1829,7 +1841,7 @@ a.collection-item:hover {
 }
 .home-open-title {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.3;
   text-wrap: balance;
 }
@@ -1921,14 +1933,13 @@ a.collection-item:hover {
   color: var(--text-muted);
 }
 .home-article-title {
-  font-family: var(--font-serif-latin), var(--font-serif-arabic), Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 1.5rem;
   line-height: 1.2;
   text-wrap: balance;
 }
 .home-article-title:dir(rtl) {
-  font-family: var(--font-serif-arabic), Georgia, serif;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 .home-article-byline {
   font-size: 0.875rem;
@@ -1938,4 +1949,13 @@ a.collection-item:hover {
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 4px;
+}
+
+/* Titles stay at the serif's regular and medium weights; its heavier ones
+   crowd it. Outside any layer, so it holds over Tailwind's weight utilities
+   (a heading styled font-semibold for the sans gets 500). */
+h1,
+h2,
+h3 {
+  font-weight: 500;
 }
