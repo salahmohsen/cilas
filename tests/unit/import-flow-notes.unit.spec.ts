@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { splitBios, withoutRepeats, withSubject } from '../../migration/lib/flow-notes'
+import { sessionTexts } from '../../migration/lib/import-flows'
 
 const hisham = [['Hisham Fahmy', 'هشام فهمي']]
 const bio = 'Hisham Fahmy is the teaching fellow of philosophy and poetry in this year’s Bridge Program at CILAS.'
@@ -73,5 +74,19 @@ describe('withoutRepeats', () => {
   it('keeps what is new', () => {
     const notes = 'Assessment:\n\nA short essay at the end of the course, on a question of your choice.'
     expect(withoutRepeats(notes, description)).toBe(notes)
+  })
+})
+
+describe('sessionTexts', () => {
+  it('gives a bilingual session each language, the other language’s heading as its title', () => {
+    const description =
+      'سنبدأ الجزء الثالث والأخير من هذا المعمل بقراءة في كتاب Object-oriented feminism.\n\nWeek 7: We are things?\nWe will begin the third and final part of this lab by reading a book Object-oriented feminism.'
+    expect(sessionTexts('نحن أشياء؟', description, false)).toEqual({
+      ar: { title: 'نحن أشياء؟', description: 'سنبدأ الجزء الثالث والأخير من هذا المعمل بقراءة في كتاب Object-oriented feminism.' },
+      en: {
+        title: 'We are things?',
+        description: 'We will begin the third and final part of this lab by reading a book Object-oriented feminism.',
+      },
+    })
   })
 })

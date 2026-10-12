@@ -82,6 +82,34 @@ const withoutNotes = (description: Lexical | null | undefined): Lexical | null =
   return { ...description, root: { ...description.root, children: children.slice(0, at) } }
 }
 
+/** "Week 7: We are things?", "الأسبوع 7: …": a unit's heading line, and its title. */
+const UNIT_HEADING = /^(?:week|session|class|unit|الأسبوع|الجلسة|اللقاء|المحاضرة)\s*[\d٠-٩]+\s*[:：.\-–]\s*(.+)$/i
+
+/**
+ * A session's title and description in each language. The flow's own
+ * language keeps the extracted title; the other language's paragraphs (a
+ * bilingual flow gives both) go to that language, and their "Week 7: …"
+ * heading becomes its title.
+ */
+export const sessionTexts = (
+  title: string | null,
+  description: string,
+  english: boolean,
+): Record<Locale, { title: string | null; description: string }> => {
+  const parts = splitLocales(description)
+  const own: Locale = english ? 'en' : 'ar'
+  const other: Locale = english ? 'ar' : 'en'
+  const lines = parts[other].split('\n')
+  const heading = lines[0]?.trim().match(UNIT_HEADING)
+  return {
+    [own]: { title, description: parts[own] },
+    [other]: {
+      title: heading ? heading[1].trim() : null,
+      description: (heading ? lines.slice(1) : lines).join('\n').trim(),
+    },
+  } as Record<Locale, { title: string | null; description: string }>
+}
+
 /** The words a flow's header line puts before its fellow's name. */
 const OFFERED_BY = 'offered by presented facilitated taught يقدمه تقدمه يقدمها تقدمها تيسير إعداد'
 
@@ -259,15 +287,22 @@ export const importFlows = async (
       const notesAr = notesByLocale.ar || null
 
       // Step A: the rows and their non-localized fields; English text too.
+      // A bilingual flow gives each session in both languages: each goes to
+      // its own locale, and a "Week 7: …" line in the other language is that
+      // language's session title.
+      const texts = syllabus.sessions.map((s) => sessionTexts(s.title, s.description, english))
+
+      // Step A: the rows and their non-localized fields, with the English text.
       await payload.update({
         collection: 'courses',
         id: course.id,
         data: {
           session_unit: syllabus.session_unit,
-          sessions: syllabus.sessions.map((s) => ({
+          sessions: syllabus.sessions.map((s, i) => ({
             order: s.order,
             meetings: s.meetings,
-            ...(english ? { session_title: s.title, description: rich(s.description, dir) } : {}),
+            session_title: texts[i].en.title,
+            description: rich(texts[i].en.description, 'ltr'),
             bibliography: s.materials.map((m) => materialShape(m, english)),
             activities: s.activities.map((a) => ({ kind: a.kind, ...(english ? { description: a.description } : {}) })),
           })),
@@ -281,53 +316,39 @@ export const importFlows = async (
       } as Parameters<Payload['update']>[0])
 
       // Step B: the Arabic text, onto the rows Step A made.
-      if (!english) {
-        const stored = (await payload.findByID({
-          collection: 'courses',
-          id: course.id,
-          depth: 0,
-          draft: true,
-          overrideAccess: true,
-        })) as unknown as StoredCourse
-        const rows = stored.sessions ?? []
-        await payload.update({
-          collection: 'courses',
-          id: course.id,
-          data: {
-            sessions: syllabus.sessions.map((s, i) => ({
-              id: rows[i]?.id,
-              order: s.order,
-              meetings: s.meetings,
-              session_title: s.title,
-              description: rich(s.description, dir),
-              bibliography: s.materials.map((m, j) => materialShape(m, true, rows[i]?.bibliography?.[j]?.id)),
-              activities: s.activities.map((a, j) => ({
-                id: rows[i]?.activities?.[j]?.id,
-                kind: a.kind,
-                description: a.description,
-              })),
+      const stored = (await payload.findByID({
+        collection: 'courses',
+        id: course.id,
+        depth: 0,
+        draft: true,
+        overrideAccess: true,
+      })) as unknown as StoredCourse
+      const rows = stored.sessions ?? []
+      await payload.update({
+        collection: 'courses',
+        id: course.id,
+        data: {
+          sessions: syllabus.sessions.map((s, i) => ({
+            id: rows[i]?.id,
+            order: s.order,
+            meetings: s.meetings,
+            session_title: texts[i].ar.title,
+            description: rich(texts[i].ar.description, 'rtl'),
+            bibliography: s.materials.map((m, j) => materialShape(m, !english, rows[i]?.bibliography?.[j]?.id)),
+            activities: s.activities.map((a, j) => ({
+              id: rows[i]?.activities?.[j]?.id,
+              kind: a.kind,
+              ...(english ? {} : { description: a.description }),
             })),
-            bibliography: syllabus.bibliography.map((m, j) => materialShape(m, true, stored.bibliography?.[j]?.id)),
-            ...(description ? { description } : {}),
-            facilitator_note: notesAr,
-          },
-          locale: 'ar',
-          draft: true,
-          overrideAccess: true,
-        } as Parameters<Payload['update']>[0])
-      }
-
-      // An English flow's Arabic notes still go to the Arabic page.
-      if (english) {
-        await payload.update({
-          collection: 'courses',
-          id: course.id,
-          data: { facilitator_note: notesAr },
-          locale: 'ar',
-          draft: true,
-          overrideAccess: true,
-        } as Parameters<Payload['update']>[0])
-      }
+          })),
+          bibliography: syllabus.bibliography.map((m, j) => materialShape(m, !english, stored.bibliography?.[j]?.id)),
+          ...(!english && description ? { description } : {}),
+          facilitator_note: notesAr,
+        },
+        locale: 'ar',
+        draft: true,
+        overrideAccess: true,
+      } as Parameters<Payload['update']>[0])
 
       await publishCourse(payload, course.id)
       written++
