@@ -22,25 +22,38 @@ export default async function CoursesPage({ params, searchParams }: Props) {
   )
   const result = await getStudyPage(lang, readCourseQuery(url), Number(url.get('page')) || 1)
 
+  // The whole catalogue, for the header: every course, and the first year.
+  const all = result.options.type.reduce((n, o) => n + o.count, 0)
+  const firstYear = result.options.year.at(-1)?.label
+
   return (
-    <div className="flex flex-col gap-8">
-      <div className="relative h-96 w-full">
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/50 px-8 text-center">
-          <p className="text-2xl font-bold text-white leading-tight">
-            {t('heroQuote')}
-          </p>
-          <p className="text-white/80 mt-4 text-lg max-w-2xl mx-auto">
-            {t('heroAttribution')}
-          </p>
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+      <header className="study-header">
+        <div className="study-header-text">
+          <h1 className="study-title">{t('title')}</h1>
+          <p className="study-intro">{t('intro')}</p>
+          {firstYear ? <p className="study-since">{t('since', { count: all, year: firstYear })}</p> : null}
+          <div className="article-prose study-quote">
+            <blockquote className="quote-with-source">
+              <p>{t('heroQuote')}</p>
+              <footer>
+                <cite>{t('heroAttribution').replace(/^\s*[—–-]\s*/, '')}</cite>
+              </footer>
+            </blockquote>
+          </div>
         </div>
-        <Image
-          src="/assets/images/cilas-classroom.jpg"
-          alt={t('heroImageAlt')}
-          width={1000}
-          height={1000}
-          className="absolute inset-0 h-full w-full object-cover object-center"
-        />
-      </div>
+        <figure className="study-figure">
+          <Image
+            alt={t('heroImageAlt')}
+            className="study-figure-image"
+            height={1536}
+            priority
+            sizes="(min-width: 64rem) 34rem, 100vw"
+            src="/assets/images/cilas-classroom.jpg"
+            width={2048}
+          />
+        </figure>
+      </header>
       <Suspense>
         <StudyList pageSize={STUDY_PAGE_SIZE} result={result} />
       </Suspense>

@@ -967,3 +967,246 @@ a.collection-item:hover {
   background: var(--surface-muted, var(--muted));
   object-fit: cover;
 }
+
+/* ===================================================== course list */
+
+.course-rows {
+  border-top: 1px solid var(--border);
+}
+.course-row {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 0.35rem 1.5rem;
+  overflow: hidden;
+  padding: 1.35rem 1rem;
+  border-bottom: 1px solid var(--border);
+  transition-property: min-height, opacity, color;
+  transition-duration: 320ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+.course-row-number {
+  padding-top: 0.45rem;
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.course-row-main {
+  display: grid;
+  min-width: 0;
+  gap: 0.6rem;
+}
+.course-row-title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: clamp(1.1rem, 1.9vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+[dir='rtl'] .course-row-title {
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+/* The title's link covers the row: anywhere opens the course. */
+.course-row-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.course-row:has(.course-row-link:focus-visible) {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+.course-row-link:focus-visible {
+  outline: none;
+}
+
+/* Type, cycle and place: small marks, never shouting. */
+.course-meta {
+  display: flex;
+  max-width: 20rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.35rem 1rem;
+  padding-top: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.course-meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+/* What opening shows: hidden until then. */
+.course-row-description,
+.course-row-cta {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition-property: max-height, opacity;
+  transition-duration: 320ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+.course-row-description {
+  display: -webkit-box;
+  max-width: 46ch;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+.course-row-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.course-row-cover {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 320ms cubic-bezier(0.2, 0, 0, 1);
+}
+.course-row-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  scale: 1.04;
+  transition: scale 600ms cubic-bezier(0.2, 0, 0, 1);
+}
+/* A shade from the reading side, where the text is: legible on any cover. */
+.course-row-cover::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, oklch(0 0 0 / 0.86) 0%, oklch(0 0 0 / 0.62) 45%, oklch(0 0 0 / 0.2) 100%);
+}
+[dir='rtl'] .course-row-cover::after {
+  background: linear-gradient(to left, oklch(0 0 0 / 0.86) 0%, oklch(0 0 0 / 0.62) 45%, oklch(0 0 0 / 0.2) 100%);
+}
+
+@media (hover: hover) and (pointer: fine) and (min-width: 48rem) {
+  /* The others step back while one is open. */
+  .course-rows:has(.course-row:hover) .course-row:not(:hover) {
+    opacity: 0.45;
+  }
+  .course-row:is(:hover, :focus-within) {
+    min-height: 17rem;
+  }
+  .course-row:is(:hover, :focus-within) .course-row-description {
+    max-height: 6em;
+    opacity: 1;
+  }
+  .course-row:is(:hover, :focus-within) .course-row-cta {
+    max-height: 2em;
+    opacity: 1;
+  }
+  .course-row[data-cover]:is(:hover, :focus-within) {
+    color: #fff;
+  }
+  .course-row[data-cover]:is(:hover, :focus-within) .course-row-cover {
+    opacity: 1;
+  }
+  .course-row[data-cover]:is(:hover, :focus-within) .course-row-cover img {
+    scale: 1;
+  }
+  .course-row[data-cover]:is(:hover, :focus-within) :is(.course-meta, .course-row-number) {
+    color: oklch(1 0 0 / 0.75);
+  }
+  .course-row:not([data-cover]):is(:hover, :focus-within) {
+    background: var(--surface-muted, var(--muted));
+  }
+}
+
+/* Narrow screens: the meta goes under the title; rows do not open. */
+@media (max-width: 47.99rem) {
+  .course-row {
+    grid-template-columns: 2rem minmax(0, 1fr);
+  }
+  .course-meta {
+    grid-column: 2;
+    justify-content: flex-start;
+    padding-top: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .course-row,
+  .course-row-description,
+  .course-row-cta,
+  .course-row-cover,
+  .course-row-cover img {
+    transition: none;
+  }
+}
+
+/* The study page's header: the words, and the classroom beside them. */
+.study-header {
+  display: grid;
+  align-items: center;
+  gap: 2.5rem;
+}
+@media (min-width: 64rem) {
+  .study-header {
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: 4rem;
+  }
+}
+.study-title {
+  font-size: clamp(2.4rem, 5vw, 3.6rem);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+}
+[dir='rtl'] .study-title {
+  letter-spacing: 0;
+  line-height: 1.25;
+}
+.study-intro {
+  margin-top: 1.1rem;
+  max-width: 52ch;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-wrap: pretty;
+}
+.study-since {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.study-quote {
+  margin-top: 2rem;
+  font-size: 1.05rem;
+}
+.study-quote blockquote {
+  margin-block: 0;
+}
+.study-figure {
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 3);
+  outline: 1px solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+.dark .study-figure {
+  outline-color: oklch(1 0 0 / 0.1);
+}
+.study-figure-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}

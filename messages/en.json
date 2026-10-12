@@ -220,8 +220,12 @@
       "pages": "Pages of courses",
       "previousPage": "Previous page",
       "nextPage": "Next page",
-      "page": "Page {n}"
-    }
+      "page": "Page {n}",
+      "viewCourse": "View course"
+    },
+    "title": "Courses",
+    "intro": "Thematic courses, labs and workshops taught at CILAS, on the rooftop in Darb el-Labbana, in Alexandria and online. Search them by anything they hold: a title, a fellow, a reading.",
+    "since": "{count, plural, one {# course} other {# courses}} since {year}"
   },
   "Course": {
     "details": "Course details",

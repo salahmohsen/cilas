@@ -31,7 +31,13 @@ export const getStudyIndex = unstable_cache(
 export const STUDY_PAGE_SIZE = 20
 
 /** What the page sends for one course: enough to show its row. */
-export type StudyRow = Pick<StudyCard, 'id' | 'href' | 'title' | 'sublabel' | 'description' | 'image' | 'imageAlt'>
+export type StudyRow = Pick<StudyCard, 'id' | 'href' | 'title' | 'description' | 'image' | 'imageAlt'> & {
+  /** Its course type, cycle (season and year) and place, each with its label. */
+  type: { value: string; label: string }
+  season?: { value: string; label: string }
+  year?: string
+  place?: string
+}
 
 export type StudyPage = {
   rows: StudyRow[]
@@ -56,7 +62,18 @@ export const getStudyPage = async (locale: Locale, query: CourseQuery, page: num
   return {
     rows: matches
       .slice((current - 1) * STUDY_PAGE_SIZE, current * STUDY_PAGE_SIZE)
-      .map(({ id, href, title, sublabel, description, image, imageAlt }) => ({ id, href, title, sublabel, description, image, imageAlt })),
+      .map(({ id, href, title, description, image, imageAlt, facets }) => ({
+        id,
+        href,
+        title,
+        description,
+        image,
+        imageAlt,
+        type: facets.type?.[0] ?? { value: '', label: '' },
+        ...(facets.season?.[0] ? { season: facets.season[0] } : {}),
+        ...(facets.year?.[0] ? { year: facets.year[0].label } : {}),
+        ...(facets.place?.[0] ? { place: facets.place[0].label } : {}),
+      })),
     total: matches.length,
     page: current,
     pageCount,

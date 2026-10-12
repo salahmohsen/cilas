@@ -13,7 +13,7 @@ import {
 } from '@/components/arc/filter-toolbar/filter-toolbar'
 import { Pagination } from '@/components/arc/pagination/pagination'
 import { SearchField } from '@/components/arc/search-field/search-field'
-import { HoverExpand } from '@/components/unlumen-ui/hover-expand'
+import { CourseRows } from '@/components/course-rows'
 import { COURSE_FACETS, readCourseQuery, type CourseFacet } from '@/lib/course-search'
 
 /**
@@ -133,17 +133,7 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
       >
         {result.rows.length ? (
           <>
-            <HoverExpand
-              items={result.rows.map((c) => ({
-                label: c.title,
-                sublabel: c.sublabel,
-                description: c.description,
-                image: c.image,
-                imageAlt: c.imageAlt,
-                href: c.href,
-              }))}
-              start={(result.page - 1) * pageSize + 1}
-            />
+            <CourseRows rows={result.rows} start={(result.page - 1) * pageSize + 1} />
             {result.pageCount > 1 ? (
               // Pages run left to right in either language, like the calendar's arrows.
               <div className="mt-8 flex justify-center" dir="ltr">
