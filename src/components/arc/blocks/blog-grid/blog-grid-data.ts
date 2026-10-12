@@ -11,7 +11,7 @@ export type BlogPost = {
   readTime: number
   /** Shown instead of the formatted date, e.g. in the reader's language. */
   dateLabel?: string
-  /** Shown instead of "N min read". */
+  /** Shown instead of "N min read"; empty hides it. */
   readTimeLabel?: string
   author: BlogAuthor
   image?: { src: string; alt: string }

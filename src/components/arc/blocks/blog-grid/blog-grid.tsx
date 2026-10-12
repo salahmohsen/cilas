@@ -168,7 +168,9 @@ function Byline({ post }: { post: BlogPost }) {
         <span className={styles.avatar} aria-hidden="true" />
       )}
       <span className={styles.authorName}>{post.author.name}</span>
-      <span className={styles.readTime}>{post.readTimeLabel ?? `${post.readTime} min read`}</span>
+      {post.readTimeLabel !== '' && (
+        <span className={styles.readTime}>{post.readTimeLabel ?? `${post.readTime} min read`}</span>
+      )}
     </div>
   )
 }

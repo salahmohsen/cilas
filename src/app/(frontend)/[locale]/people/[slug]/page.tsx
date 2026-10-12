@@ -12,10 +12,10 @@ import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { RichTextField } from '@/components/RichTextField'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
-import { toArticleCard } from '@/lib/article-cards'
+import { toArticleCard, toCourseCard } from '@/lib/article-cards'
 import { readingFonts } from '@/lib/fonts'
 import { pathOf } from '@/lib/paths'
-import type { Course, Media } from '@/payload-types'
+import type { Media } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
 
@@ -55,10 +55,11 @@ export default async function PersonPage({ params }: Props) {
 
   const other: Locale = locale === 'ar' ? 'en' : 'ar'
   const publicationCovers = await getPublicationCovers(payload)
-  const [t, tArticle, tArticles, format, contributions, otherName] = await Promise.all([
+  const [t, tArticle, tArticles, tCourse, format, contributions, otherName] = await Promise.all([
     getTranslations('Person'),
     getTranslations('Article'),
     getTranslations('Articles'),
+    getTranslations('Course'),
     getFormatter(),
     getContributions(payload, person.id, locale),
     payload
@@ -159,54 +160,10 @@ export default async function PersonPage({ params }: Props) {
           ) : null}
 
           {nothing && <p className="text-[var(--text-muted)]">{t('nothing')}</p>}
-
-          {/* Translations, editing and other credits. */}
-          {credited.length > 0 && (
-            <section className="grid gap-3">
-              <h2 className="text-xl font-medium">{t('credited')}</h2>
-              <ul className="divide-y divide-border border-y border-border">
-                {credited.map(({ article, role, label }) => (
-                  <li key={`${article.id}-${role}`}>
-                    <Link
-                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3 hover:underline"
-                      href={`/articles/${article.slug}`}
-                    >
-                      <span className="font-medium">{article.title}</span>
-                      <span className="text-sm text-[var(--text-muted)]">
-                        {label || tArticle(`roles.${role}`)}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-
-          {/* Courses they taught. */}
-          {taught.length > 0 && (
-            <section className="grid gap-3">
-              <h2 className="text-xl font-medium">{t('taught')}</h2>
-              <ul className="divide-y divide-border border-y border-border">
-                {taught.map((c: Course) => (
-                  <li key={c.id}>
-                    <Link
-                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 py-3 hover:underline"
-                      href={`/study/${c.slug}`}
-                    >
-                      <span className="font-medium">{c.title}</span>
-                      {typeof c.cycle === 'object' && c.cycle?.title && (
-                        <span className="text-sm text-[var(--text-muted)]">{c.cycle.title}</span>
-                      )}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
         </div>
       </div>
 
-      {/* What they wrote, as Arc blog cards. */}
+      {/* What they wrote, worked on and taught, as Arc blog cards. */}
       {written.length > 0 && (
         <ArticlesGrid
           categories={[]}
@@ -215,6 +172,37 @@ export default async function PersonPage({ params }: Props) {
           posts={written.map(card)}
           showFeatured={false}
           title={t('written')}
+        />
+      )}
+      {credited.length > 0 && (
+        <ArticlesGrid
+          categories={[]}
+          description=""
+          pageSize={6}
+          posts={credited.map(({ article, role, label }) => ({
+            ...card(article),
+            id: `${article.id}-${role}`,
+            category: label || tArticle(`roles.${role}`),
+          }))}
+          showFeatured={false}
+          title={t('credited')}
+        />
+      )}
+      {taught.length > 0 && (
+        <ArticlesGrid
+          categories={[]}
+          description=""
+          pageSize={6}
+          posts={taught.map((c) =>
+            toCourseCard(c, {
+              locale,
+              format,
+              weeksLabel: (w) => tCourse('weeks', { count: w }),
+              and: tArticle('and'),
+            }),
+          )}
+          showFeatured={false}
+          title={t('taught')}
         />
       )}
     </div>

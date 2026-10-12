@@ -57,7 +57,6 @@ export const getContributions = async (payload: Payload, personId: number, local
       sort: '-createdAt',
       joins: false,
       ...query,
-      depth: 1,
     }),
   ])
 

@@ -2,7 +2,7 @@ import type { getFormatter } from 'next-intl/server'
 
 import { authorNames, excerptOf, joinNames, publicationOf, readingMinutes } from '@/lib/articles'
 import { pathOf } from '@/lib/paths'
-import type { Article, Media, Person } from '@/payload-types'
+import type { Article, Course, Media, Person } from '@/payload-types'
 
 export type ArticleCard = {
   id: string
@@ -14,7 +14,7 @@ export type ArticleCard = {
   dateLabel: string
   readTime: number
   readTimeLabel: string
-  author: { name: string }
+  author: { name: string; avatar?: string }
   image?: { src: string; alt: string }
   featured?: boolean
 }
@@ -23,6 +23,20 @@ export type ArticleCard = {
  * An article as an Arc blog-grid card, in the site language. Its category
  * is its publication, or `otherCategory` when it belongs to none.
  */
+const media = (v: unknown): Media | undefined =>
+  typeof v === 'object' && v !== null && (v as Media).url ? (v as Media) : undefined
+
+/** A person's photo at byline size, when they have one. */
+const avatarOf = (p: Person | undefined): string | undefined => {
+  const photo = media(p?.photo)
+  return photo ? (photo.sizes?.thumbnail?.url ?? photo.url ?? undefined) : undefined
+}
+
+const byline = (people: Person[], and: string) => {
+  const avatar = avatarOf(people.find((p) => avatarOf(p)))
+  return { name: joinNames(people.map((p) => p.name), and), ...(avatar ? { avatar } : {}) }
+}
+
 export const toArticleCard = (
   a: Article,
   {
@@ -42,8 +56,6 @@ export const toArticleCard = (
   },
 ): ArticleCard => {
   // The article's own image, else its writer's photo, else its publication's cover.
-  const media = (v: unknown): Media | undefined =>
-    typeof v === 'object' && v !== null && (v as Media).url ? (v as Media) : undefined
   const writer = (a.authors ?? []).find((p): p is Person => typeof p === 'object' && p !== null)
   const pub = publicationOf(a)
   const image =
@@ -60,8 +72,46 @@ export const toArticleCard = (
     dateLabel: format.dateTime(new Date(date), 'year'),
     readTime: minutes,
     readTimeLabel: minutesLabel(minutes),
-    author: { name: joinNames(authorNames(a), and) },
+    author: { ...byline(writer ? [writer] : [], and), name: joinNames(authorNames(a), and) },
     ...(image?.url ? { image: { src: image.url, alt: image.alt } } : {}),
     ...(a.featured ? { featured: true } : {}),
+  }
+}
+
+/**
+ * A course as a blog-grid card: its cycle in place of a publication, its
+ * length in place of a reading time, and its fellows on the byline.
+ */
+export const toCourseCard = (
+  c: Course,
+  {
+    locale,
+    format,
+    weeksLabel,
+    and,
+  }: {
+    locale: string
+    format: Awaited<ReturnType<typeof getFormatter>>
+    weeksLabel: (w: number) => string
+    and: string
+  },
+): ArticleCard => {
+  const cycle = typeof c.cycle === 'object' && c.cycle ? c.cycle : null
+  const fellows = (c.fellows ?? []).filter((p): p is Person => typeof p === 'object' && p !== null)
+  const image = media(c.cover_image)
+  const date = c.schedule?.start_date ?? cycle?.start_date ?? c.createdAt
+  const weeks = c.schedule?.weeks ?? 0
+  return {
+    id: String(c.id),
+    href: pathOf('courses', c, locale) ?? '#',
+    title: c.title,
+    excerpt: c.summary ?? c.subtitle ?? '',
+    category: cycle?.title ?? '',
+    date: date.slice(0, 10),
+    dateLabel: format.dateTime(new Date(date), 'year'),
+    readTime: weeks,
+    readTimeLabel: weeks ? weeksLabel(weeks) : '',
+    author: byline(fellows, and),
+    ...(image?.url ? { image: { src: image.url, alt: image.alt } } : {}),
   }
 }
