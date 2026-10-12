@@ -294,5 +294,17 @@
     "taught": "Courses",
     "website": "Website",
     "nothing": "No published contributions yet."
+  },
+  "Fellows": {
+    "metaTitle": "Fellows — CILAS",
+    "title": "Fellows",
+    "intro": "Teachers who know how to be students: the people who have taught at CILAS, the most recent first. Turn the wheel to meet them.",
+    "count": "{count, plural, one {# fellow} other {# fellows}}",
+    "wheel": "Fellows",
+    "announce": "{name}, {n} of {total}",
+    "fellow": "Fellow",
+    "taught": "{count, plural, one {Taught one course} other {Taught # courses}}",
+    "profile": "Full profile",
+    "allCourses": "Profile and all {count} courses"
   }
 }

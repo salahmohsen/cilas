@@ -1,3 +1,4 @@
+import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
 import type { Payload } from 'payload'
 
 import type { Locale } from '@/api/articles.api'
@@ -74,4 +75,72 @@ export const getContributions = async (payload: Payload, personId: number, local
   }
 
   return { written, credited, taught: courses.docs }
+}
+
+export type FellowCourse = { slug: string; title: string; season: string | null; year: number | null; start: string }
+export type Fellow = {
+  id: number
+  slug: string
+  name: string
+  photo?: { url: string; alt: string }
+  /** The bio as plain text, in the site language (or its own). */
+  bio: string
+  /** What they taught here, newest first. */
+  courses: FellowCourse[]
+}
+
+/**
+ * CILAS's fellows: everyone who taught a published course, the most recent
+ * teachers first, each with the courses they taught.
+ */
+export const getFellows = async (payload: Payload, locale: Locale): Promise<Fellow[]> => {
+  const { docs } = await payload.find({
+    collection: 'courses',
+    where: { and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }] },
+    depth: 2,
+    joins: false,
+    pagination: false,
+    select: { title: true, slug: true, fellows: true, cycle: true, schedule: true },
+    populate: {
+      people: { name: true, slug: true, photo: true, bio: true },
+      media: { url: true, alt: true, filename: true, prefix: true },
+      cycles: { season: true, start_year: true, start_date: true },
+    },
+    locale,
+    fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+    overrideAccess: false,
+  })
+
+  const fellows = new Map<number, Fellow>()
+  for (const c of docs) {
+    const cycle = typeof c.cycle === 'object' && c.cycle ? c.cycle : null
+    const course: FellowCourse = {
+      slug: c.slug ?? String(c.id),
+      title: c.title,
+      season: cycle?.season ?? null,
+      year: cycle?.start_year ?? null,
+      start: c.schedule?.start_date ?? cycle?.start_date ?? `${cycle?.start_year ?? 0}`,
+    }
+    for (const f of c.fellows ?? []) {
+      if (typeof f !== 'object' || !f?.slug) continue
+      const known = fellows.get(f.id)
+      if (known) {
+        known.courses.push(course)
+        continue
+      }
+      const photo = typeof f.photo === 'object' && f.photo?.url ? f.photo : null
+      fellows.set(f.id, {
+        id: f.id,
+        slug: f.slug,
+        name: f.name,
+        ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? f.name } } : {}),
+        bio: f.bio ? convertLexicalToPlaintext({ data: f.bio }).replace(/\s+/g, ' ').trim() : '',
+        courses: [course],
+      })
+    }
+  }
+  const latest = (f: Fellow) => f.courses.reduce((m, c) => (c.start > m ? c.start : m), '')
+  return [...fellows.values()]
+    .map((f) => ({ ...f, courses: f.courses.sort((a, b) => b.start.localeCompare(a.start)) }))
+    .sort((a, b) => latest(b).localeCompare(latest(a)) || a.name.localeCompare(b.name))
 }

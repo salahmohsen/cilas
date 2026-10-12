@@ -1,10 +1,8 @@
 import type { CollectionSlug, Payload, Where } from 'payload'
 
 import { slugify } from '../../src/lib/slugify'
-import { lexical } from '../../seed/seed.utils'
-import { withSubject } from './flow-notes'
+import { writeBio } from './people-bio'
 import { freeSlug, upsert } from './import-courses'
-import { isMostlyArabic } from './normalise-courses'
 
 export type ArchivePerson = {
   name: string
@@ -58,8 +56,6 @@ export const SPACES_BY_PLACE: Record<ArchiveProgramme['place'], string[]> = {
 
 export const UNVERIFIED_NOTE = 'Unverified year: no cohort page in the archive'
 
-const paragraphs = (text: string): string[] => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
-const rich = (text: string) => lexical(paragraphs(text), isMostlyArabic(text) ? 'rtl' : 'ltr')
 
 const SEASON_MONTH: Record<string, number> = { fall: 9, winter: 1, spring: 3, summer: 6 }
 
@@ -103,7 +99,6 @@ export const importPeople = async (
           data: {
             name: p.name,
             slug: await freeSlug(payload, 'people', slugify(p.name)),
-            ...(p.bio?.trim() ? { bio: rich(withSubject(p.name, p.bio)) } : {}),
             ...(legacyTaken ? {} : { legacy_url: p.legacy_url }),
             import_status: 'needs_review',
           },
@@ -111,12 +106,13 @@ export const importPeople = async (
           overrideAccess: true,
         })
       ).id as number
+      if (p.bio?.trim()) await writeBio(payload, id, { name: p.name, nameAr: p.name_ar, bio: p.bio })
       newPeople++
     } else {
       id = existing.id
       // An imported person nobody has reviewed: fill in what is empty, never overwrite.
       if (existing.import_status === 'needs_review' && !existing.bio && p.bio?.trim()) {
-        await payload.update({ collection: 'people', id, data: { bio: rich(withSubject(p.name, p.bio)) }, locale: 'en', overrideAccess: true })
+        await writeBio(payload, id, { name: p.name, nameAr: p.name_ar, bio: p.bio })
       }
     }
     if (p.name_ar && (!existing || existing.import_status === 'needs_review')) {

@@ -5,16 +5,12 @@ import {
   ChevronDown,
   Clapperboard,
   Clock,
-  Flower2,
   Headphones,
   Languages,
-  Leaf,
   Link2,
   ListOrdered,
   MapPin,
   MessageCircleQuestion,
-  Snowflake,
-  Sun,
   type LucideIcon,
 } from 'lucide-react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
@@ -23,6 +19,7 @@ import React from 'react'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { photoOf } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
+import { SEASON_ICONS } from '@/components/season-icon'
 import { Link } from '@/i18n/navigation'
 import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
 import type { Season } from '@/lib/cycle'
@@ -43,14 +40,6 @@ export type RelatedCourse = {
 
 type Material = NonNullable<Course['bibliography']>[number]
 type MaterialType = Material['type']
-
-/** A season's mark: the one picture the page gives a cycle. */
-export const SEASON_ICONS: Record<Season, LucideIcon> = {
-  spring: Flower2,
-  summer: Sun,
-  fall: Leaf,
-  winter: Snowflake,
-}
 
 /** What kind of thing a material is: read, watched, listened to, answered, or followed. */
 export const MATERIAL_ICONS: Record<MaterialType, LucideIcon> = {
