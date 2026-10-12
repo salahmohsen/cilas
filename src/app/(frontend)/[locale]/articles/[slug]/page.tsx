@@ -206,6 +206,27 @@ export default async function ArticlePage({ params }: Props) {
               </h1>
             </header>
 
+            {cover?.url && (
+              <div className={grid.readerImage}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img alt={cover.alt} className={grid.image} src={cover.url} />
+              </div>
+            )}
+
+            {/* Narrow screens: the tools fold into the column. */}
+            <div className="flex flex-col gap-6 xl:hidden">
+              <ContributorList contributors={contributors} title={t('people')} />
+              {hasContents && <ArticleContents container="article-text" sections={sections} />}
+              <TextSize target="article-text" />
+            </div>
+
+            {/* No text in the site language: show the content language, and say so. */}
+            {fallback && (
+              <p className="border-s-2 border-foreground ps-4 text-sm" role="note">
+                {(await getTranslations('Fallback'))('onlyIn', { language: tl(contentLocale) })}
+              </p>
+            )}
+
             {/* The introduction opens onto the collection it introduces. */}
             {collection?.isForeword && (
               <OrbitCardStack
@@ -231,39 +252,26 @@ export default async function ArticlePage({ params }: Props) {
               />
             )}
 
-            {cover?.url && (
-              <div className={grid.readerImage}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt={cover.alt} className={grid.image} src={cover.url} />
-              </div>
-            )}
-
-            {/* Narrow screens: the tools fold into the column. */}
-            <div className="flex flex-col gap-6 xl:hidden">
-              <ContributorList contributors={contributors} title={t('people')} />
-              {hasContents && <ArticleContents container="article-text" sections={sections} />}
-              <TextSize target="article-text" />
-            </div>
-
-            {/* No text in the site language: show the content language, and say so. */}
-            {fallback && (
-              <p className="border-s-2 border-foreground ps-4 text-sm" role="note">
-                {(await getTranslations('Fallback'))('onlyIn', { language: tl(contentLocale) })}
-              </p>
-            )}
-
             {/* Not grid.readerBody: its paragraph rules are for short previews and
                 would override the essay's measure, size and spacing. */}
             <div className="grid gap-5" dir={contentDir} id="article-text" lang={contentLocale}>
               {excerpt && <p className="article-lead">{excerpt}</p>}
               {text ? (
-                <RichTextField className="article-prose" data={text} footnoteLabel={t('footnote')} footnotes={footnotes} />
+                <RichTextField
+                  className="article-prose"
+                  data={text}
+                  footnoteLabel={t('footnote')}
+                  footnotes={footnotes}
+                />
               ) : (
                 <p className="opacity-60">—</p>
               )}
               {/* Footnotes written in the editor, numbered as marked in the text. */}
               {footnotes.length > 0 && (
-                <section aria-labelledby="footnotes-title" className="mt-10 border-t border-border pt-6">
+                <section
+                  aria-labelledby="footnotes-title"
+                  className="mt-10 border-t border-border pt-6"
+                >
                   <h2 className="mb-4 text-base font-medium" id="footnotes-title">
                     {t('footnotes')}
                   </h2>
@@ -271,8 +279,15 @@ export default async function ArticlePage({ params }: Props) {
                     {footnotes.map((f) => (
                       <li id={`fn-${f.number}`} key={f.id}>
                         <span className="footnote-number">{f.number}</span>
-                        <RichTextField className="article-prose article-prose--notes" data={f.note} />
-                        <a aria-label={t('backToText')} className="footnote-back" href={`#fnref-${f.number}`}>
+                        <RichTextField
+                          className="article-prose article-prose--notes"
+                          data={f.note}
+                        />
+                        <a
+                          aria-label={t('backToText')}
+                          className="footnote-back"
+                          href={`#fnref-${f.number}`}
+                        >
                           ↩
                         </a>
                       </li>
@@ -290,12 +305,19 @@ export default async function ArticlePage({ params }: Props) {
             </div>
 
             {/* Tools at the end of the text. */}
-            <section aria-labelledby="article-share" className="mt-2 grid gap-3 border-t border-border pt-6">
+            <section
+              aria-labelledby="article-share"
+              className="mt-2 grid gap-3 border-t border-border pt-6"
+            >
               <h2 className="text-sm text-[var(--text-muted)]" id="article-share">
                 {tShare('heading')}
               </h2>
               <ShareBar
-                file={pub?.print_edition_url ? { href: pub.print_edition_url, label: t('printEdition'), kind: 'print' } : undefined}
+                file={
+                  pub?.print_edition_url
+                    ? { href: pub.print_edition_url, label: t('printEdition'), kind: 'print' }
+                    : undefined
+                }
                 label={tShare('article')}
                 path={pathOf('articles', article, locale) ?? ''}
                 title={title}
@@ -327,7 +349,11 @@ export default async function ArticlePage({ params }: Props) {
             {collection && (
               <CollectionList
                 current={article.id}
-                labels={{ title: t('inCollection'), current: t('readingNow'), foreword: t('foreword') }}
+                labels={{
+                  title: t('inCollection'),
+                  current: t('readingNow'),
+                  foreword: t('foreword'),
+                }}
                 locale={locale}
                 publication={collection.publication}
                 items={collection.articles.map((a) => ({
@@ -382,7 +408,10 @@ function CollectionList({
     <nav aria-labelledby="collection-title" className="mt-6 border-t border-border pt-8">
       <p className="text-sm text-[var(--text-muted)]">{labels.title}</p>
       <h2 className="mt-1 text-xl font-semibold" id="collection-title">
-        <Link className="underline-offset-4 hover:underline" href={`/articles?publication=${publication.slug}`}>
+        <Link
+          className="underline-offset-4 hover:underline"
+          href={`/articles?publication=${publication.slug}`}
+        >
           {publication.title}
         </Link>
       </h2>
@@ -391,17 +420,20 @@ function CollectionList({
           const here = item.id === current
           const body = (
             <>
-              <span aria-label={item.foreword ? labels.foreword : undefined} className="collection-number">
-                {item.foreword ? '—' : localDigits(String(i + (items[0]?.foreword ? 0 : 1)).padStart(2, '0'), locale)}
+              <span
+                aria-label={item.foreword ? labels.foreword : undefined}
+                className="collection-number"
+              >
+                {item.foreword
+                  ? '—'
+                  : localDigits(String(i + (items[0]?.foreword ? 0 : 1)).padStart(2, '0'), locale)}
               </span>
               <span className="min-w-0">
                 <span className="block font-medium" dir="auto">
                   {item.title}
                 </span>
                 <span className="mt-0.5 block text-sm text-[var(--text-secondary)]">
-                  {[item.authors || null, here ? labels.current : null]
-                    .filter(Boolean)
-                    .join(' · ')}
+                  {[item.authors || null, here ? labels.current : null].filter(Boolean).join(' · ')}
                 </span>
               </span>
             </>
