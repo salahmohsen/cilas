@@ -32,7 +32,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     // next-themes sets data-theme and the class before React hydrates.
-    <html className={fontSans.variable} dir={direction} lang={locale} suppressHydrationWarning>
+    <html
+      className={fontSans.variable}
+      // Smooth in-page jumps; Next turns smoothing off for route changes.
+      data-scroll-behavior="smooth"
+      dir={direction}
+      lang={locale}
+      suppressHydrationWarning
+    >
       <body>
         <ThemeProvider>
           <NextIntlClientProvider>

@@ -3,7 +3,7 @@
 import { BookOpen, Calendar, Newspaper, Users } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useRef } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
@@ -14,6 +14,18 @@ export function CILASSiteHeader() {
   const locale = useLocale()
   // Arc's header renders plain anchors, so each href carries the language.
   const href = (path: string) => `/${locale}${path === '/' ? '' : path}`
+
+  // The header's height, as --site-header-height, so in-page jumps land below it.
+  const headerRef = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const el = headerRef.current
+    if (!el) return
+    const set = () => document.documentElement.style.setProperty('--site-header-height', `${el.offsetHeight}px`)
+    set()
+    const observer = new ResizeObserver(set)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const items = [
     {
@@ -61,6 +73,7 @@ export function CILASSiteHeader() {
 
   return (
     <SiteHeader
+      ref={headerRef}
       brand={{
         name: t('brand'),
         href: href('/'),

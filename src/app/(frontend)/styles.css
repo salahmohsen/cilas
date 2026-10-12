@@ -271,7 +271,6 @@
     display: grid;
     grid-template-columns: 1.75rem minmax(0, 1fr) auto;
     align-items: baseline;
-    scroll-margin-top: 6rem;
   }
   & li:target {
     background: var(--surface-muted);
@@ -294,4 +293,20 @@
 .article-footnotes p {
   unicode-bidi: plaintext;
   text-align: start;
+}
+
+/* In-page jumps (footnotes, back to the text, "On this page") glide, and stop
+   below the sticky header, whose height the header itself keeps current. */
+html {
+  scroll-padding-top: calc(var(--site-header-height, 4rem) + 1.5rem);
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+/* Arriving back at a footnote's mark, it is briefly marked. */
+.footnote-mark:target sup {
+  background: var(--foreground);
+  color: var(--background);
 }

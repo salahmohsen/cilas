@@ -64,7 +64,6 @@ export function ArticleContents({
     const headings = [...(document.getElementById(container)?.querySelectorAll('h2') ?? [])]
     headings.forEach((h, i) => {
       if (sections[i]) h.id = sections[i].id
-      h.style.scrollMarginTop = '6rem'
     })
     const update = () => {
       const line = window.innerHeight / 3
