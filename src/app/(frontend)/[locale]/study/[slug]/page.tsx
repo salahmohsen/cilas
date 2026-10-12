@@ -9,6 +9,7 @@ import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
 import { readingFonts } from '@/lib/fonts'
+import { ogImages } from '@/lib/og'
 import { seoDefaults } from '@/lib/seo'
 import type { Course, Media, Person } from '@/payload-types'
 
@@ -62,7 +63,8 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return {
     title,
     description,
-    openGraph: { title, description, ...(imageUrl ? { images: [imageUrl] } : {}) },
+    openGraph: { title, description, images: ogImages(imageUrl) },
+    twitter: { card: 'summary_large_image', images: ogImages(imageUrl).map((i) => i.url) },
   }
 }
 

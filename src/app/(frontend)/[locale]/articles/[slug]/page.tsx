@@ -35,6 +35,7 @@ import { splitBody } from '@/lib/article-body'
 import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, yearOf } from '@/lib/articles'
 import { readingFonts } from '@/lib/fonts'
+import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
 import type { Article, Media, Person, Publication } from '@/payload-types'
 
@@ -64,11 +65,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!reading) return {}
   const { article, title, body } = reading
   const metaTitle = article.meta?.title || `${title} — CILAS`
+  // The SEO image, else the article's cover; the site's default otherwise.
+  const media = (v: unknown) => (isObject<Media>(v) && v.url ? v.url : null)
+  const image = media(article.meta?.image) ?? media(article.cover_image)
   const description = article.meta?.description || excerptOf({ body }, 160)
   return {
     title: metaTitle,
     description,
-    openGraph: { title: metaTitle, description, type: 'article' },
+    openGraph: { title: metaTitle, description, type: 'article', images: ogImages(image) },
+    twitter: { card: 'summary_large_image', images: ogImages(image).map((i) => i.url) },
     // Each site language has its own URL (ADR 0006).
     alternates: {
       canonical: pathOf('articles', article, locale),

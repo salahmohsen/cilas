@@ -11,6 +11,8 @@ import { CILASSiteHeader } from '@/components/site-header'
 import { ThemeProvider } from '@/components/theme-provider'
 import { DirectionProvider } from '@/components/ui/direction'
 import { isRtl, routing } from '@/i18n/routing'
+import { env } from '@/env'
+import { DEFAULT_OG_IMAGE } from '@/lib/og'
 
 const fontSans = Noto_Sans_Arabic({
   subsets: ['arabic', 'latin'],
@@ -23,7 +25,16 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Meta')
-  return { title: t('siteName'), description: t('description'), icons: { icon: '/assets/images/logo.webp' } }
+  return {
+    // Absolute URLs for shared images and links.
+    metadataBase: new URL(env.NEXT_PUBLIC_SERVER_URL),
+    title: t('siteName'),
+    description: t('description'),
+    icons: { icon: '/assets/images/logo.webp' },
+    // A page with no image of its own shares the default one.
+    openGraph: { siteName: t('siteName'), images: [DEFAULT_OG_IMAGE] },
+    twitter: { card: 'summary_large_image', images: [DEFAULT_OG_IMAGE.url] },
+  }
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
