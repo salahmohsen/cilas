@@ -1,11 +1,11 @@
 'use client'
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
 
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
 import { TextReveal } from '@/components/arc/text-reveal/text-reveal'
-import { GrainGradient } from '@/components/ui/grain-gradient'
 import { Link } from '@/i18n/navigation'
 
 type Action = { label: string; href: string }
@@ -14,8 +14,8 @@ type Action = { label: string; href: string }
 const STEP = 2400
 
 /**
- * The home page's opening: the motto over a slow grain gradient, the dusk
- * over the Nile, and who CILAS is for, one after another. The list runs once
+ * The home page's opening: the motto over a drawing of the CILAS classroom,
+ * and who CILAS is for, one after another. The list runs once
  * and rests on its last line; with reduced motion it starts there.
  */
 export function HomeHero({
@@ -46,17 +46,13 @@ export function HomeHero({
 
   return (
     <section aria-labelledby="home-title" className="home-hero">
-      <GrainGradient
-        angle={-14}
+      <Image
+        alt=""
         className="home-hero-ground"
-        colorDark="#0f1a1c"
-        colorLight="#cfd5c7"
-        colorMid="#4c6f69"
-        curve={0.35}
-        grain={0.28}
-        position={0.42}
-        softness={0.22}
-        speed={0.6}
+        fill
+        priority
+        sizes="(min-width: 80rem) 75rem, 100vw"
+        src="/assets/images/cilas-classroom.jpg"
       />
       <div className="home-hero-inner">
         <TextReveal as="h1" className="home-hero-title" id="home-title" text={title} />

@@ -8,7 +8,6 @@ import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/ap
 import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { StatsBand } from '@/components/arc/blocks/stats-band/stats-band'
-import { HomeAnnouncements } from '@/components/home/home-announcements'
 import { HomeArticles } from '@/components/home/home-articles'
 import { HomeHero } from '@/components/home/home-hero'
 import { OpenNow } from '@/components/home/open-now'
@@ -63,13 +62,6 @@ export default async function HomePage({ params }: Props) {
 
   return (
     <>
-      <HomeAnnouncements
-        items={open.flatMap((item) =>
-          item.deadline
-            ? [{ id: item.href, title: item.title, href: item.href, deadline: item.deadline }]
-            : [],
-        )}
-      />
       <HomeHero
         locale={locale}
         primary={
@@ -110,7 +102,6 @@ export default async function HomePage({ params }: Props) {
             { value: stats.years, label: t('statYears') },
             { value: stats.courses, label: t('statCourses') },
             { value: stats.fellows, label: t('statFellows') },
-            { value: stats.cilasians, label: t('statCilasians') },
           ]}
           title={t('statsTitle')}
         />

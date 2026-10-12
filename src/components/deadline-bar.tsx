@@ -8,11 +8,11 @@ import { DeadlineCountdown } from '@/components/home/deadline-countdown'
 export type Deadline = { id: string; title: string; href: string; deadline: string }
 
 /**
- * A bar over the page while registration is open somewhere with a deadline:
- * what closes, and when. Several take turns; dismissing hides the bar until
- * the set of deadlines changes.
+ * A bar over every page, above the site header, while registration is open
+ * somewhere with a deadline: what closes, and when. Several take turns;
+ * dismissing hides the bar until the set of deadlines changes.
  */
-export function HomeAnnouncements({ items }: { items: Deadline[] }) {
+export function DeadlineBar({ items }: { items: Deadline[] }) {
   const t = useTranslations('Home')
   const tc = useTranslations('Home.controls')
   const locale = useLocale()

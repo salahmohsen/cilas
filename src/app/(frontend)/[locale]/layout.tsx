@@ -5,6 +5,7 @@ import React from 'react'
 
 import '@/components/arc/foundation.css'
 import '../styles.css'
+import { SiteDeadlines } from '@/components/site-deadlines'
 import { SiteFooter } from '@/components/site-footer'
 import { CILASSiteHeader } from '@/components/site-header'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -50,6 +51,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <ThemeProvider>
           <NextIntlClientProvider>
             <DirectionProvider direction={direction}>
+              {/* Open deadlines, across the whole width, above the header. */}
+              <SiteDeadlines locale={locale as 'en' | 'ar'} />
               <CILASSiteHeader />
               <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
               {/* The same width as the page content. */}

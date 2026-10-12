@@ -136,11 +136,11 @@ export const getHomeArticles = async (
   return { featured: false, docs: (await query(false)).docs }
 }
 
-export type HomeStats = { years: number; courses: number; fellows: number; cilasians: number }
+export type HomeStats = { years: number; courses: number; fellows: number }
 
-/** The institute in four numbers, all counted from the archive. */
+/** The institute in three numbers, all counted from the archive. */
 export const getHomeStats = async (payload: Payload): Promise<HomeStats> => {
-  const [courses, fellows, memberships] = await Promise.all([
+  const [courses, fellows] = await Promise.all([
     payload.count({
       collection: 'courses',
       where: { and: [{ _status: { equals: 'published' } }, { tier: { equals: 'public' } }] },
@@ -152,7 +152,6 @@ export const getHomeStats = async (payload: Payload): Promise<HomeStats> => {
       depth: 0,
       select: { fellows: true },
     }),
-    payload.find({ collection: 'memberships', limit: 0, depth: 0, select: { person: true } }),
   ])
   const distinct = (ids: unknown[]) =>
     new Set(ids.map((v) => (typeof v === 'object' && v ? (v as { id: number }).id : v))).size
@@ -161,7 +160,6 @@ export const getHomeStats = async (payload: Payload): Promise<HomeStats> => {
     years: new Date().getFullYear() - 2013,
     courses: courses.totalDocs,
     fellows: distinct(fellows.docs.flatMap((c) => c.fellows ?? [])),
-    cilasians: distinct(memberships.docs.map((m) => m.person)),
   }
 }
 

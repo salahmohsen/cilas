@@ -1608,8 +1608,8 @@ a.collection-item:hover {
 
 /* ===================================================== home page */
 
-/* The opening: a framed field of grain over the page's own gutter, the motto
-   set in the reading serif at its bottom edge, where the field is darkest. */
+/* The opening: the classroom drawing, framed in the page's own gutter, under
+   a dark veil; the motto at its bottom edge, where the veil is deepest. */
 .home-hero {
   position: relative;
   isolation: isolate;
@@ -1620,7 +1620,7 @@ a.collection-item:hover {
   margin-inline: 1rem;
   margin-top: 0.5rem;
   border-radius: 1.5rem;
-  background: #0f1a1c;
+  background: #1c1915;
   color: oklch(0.985 0 0);
 }
 @media (min-width: 40rem) {
@@ -1634,14 +1634,8 @@ a.collection-item:hover {
   }
 }
 .home-hero-ground {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-}
-/* The light gathers at the top of the end side, away from the copy at the
-   bottom of the start side. */
-[dir='ltr'] .home-hero-ground {
-  scale: -1 1;
+  z-index: -2;
+  object-fit: cover;
 }
 /* A veil under the copy keeps it legible wherever the light drifts. */
 .home-hero::after {
@@ -1649,7 +1643,9 @@ a.collection-item:hover {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(to top, oklch(0.16 0.012 200 / 0.85), oklch(0.16 0.012 200 / 0.35) 55%, oklch(0.16 0.012 200 / 0) 85%);
+  background:
+    linear-gradient(to top, oklch(0.14 0.01 60 / 0.92), oklch(0.14 0.01 60 / 0.55) 55%, oklch(0.14 0.01 60 / 0.25)),
+    oklch(0.14 0.01 60 / 0.2);
   pointer-events: none;
 }
 .home-hero-inner {
