@@ -25,5 +25,13 @@ export const Footnote: Block = {
       // Notes cite and gloss: emphasis and links, nothing structural.
       editor: lexicalEditor({ features: [ParagraphFeature(), BoldFeature(), ItalicFeature(), LinkFeature()] }),
     },
+    {
+      name: 'url',
+      type: 'text',
+      label: 'Source link',
+      admin: { description: 'Where the reference can be read online (optional). Shown as a link with the note.' },
+      validate: (value: string | null | undefined) =>
+        !value || /^https?:\/\/\S+$/.test(value) || 'A full web address, starting with http:// or https://',
+    },
   ],
 }

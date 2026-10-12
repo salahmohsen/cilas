@@ -156,7 +156,8 @@
     "copyFailed": "Could not copy",
     "footnote": "Note",
     "footnotes": "Notes",
-    "backToText": "Back to the text"
+    "backToText": "Back to the text",
+    "source": "Source"
   },
   "Study": {
     "heroQuote": "What we cover at CILAS matters less than what a student discovers.",

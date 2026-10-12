@@ -2791,6 +2791,10 @@ export interface FootnoteBlock {
     };
     [k: string]: unknown;
   };
+  /**
+   * Where the reference can be read online (optional). Shown as a link with the note.
+   */
+  url?: string | null;
   id?: string | null;
   blockName?: string | null;
   blockType: 'footnote';
