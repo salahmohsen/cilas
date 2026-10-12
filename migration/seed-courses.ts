@@ -8,6 +8,7 @@ import path from 'node:path'
 import { getPayload } from 'payload'
 
 import { importCourses } from './lib/import-courses'
+import { applyArabicNames } from './lib/names-ar'
 
 const dir = path.join(import.meta.dirname, '..', 'seed', 'data', 'archive')
 const read = (f: string) => JSON.parse(readFileSync(path.join(dir, f), 'utf8'))
@@ -18,6 +19,7 @@ const main = async () => {
   const result = await importCourses(payload, { cycles: read('cycles.json'), courses: read('courses.json') })
   console.log(`cycles ${result.cycles}, courses ${result.courses}, new people ${result.people}`)
   if (result.skipped.length) console.log(`skipped (no cycle): ${result.skipped.join(', ')}`)
+  console.log(`Arabic names given: ${await applyArabicNames(payload)}`)
   await payload.destroy()
   process.exit(0)
 }

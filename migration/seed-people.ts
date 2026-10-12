@@ -13,6 +13,7 @@ import { getPayload } from 'payload'
 
 import { importCourses } from './lib/import-courses'
 import { importPeople, prunePeople } from './lib/import-people'
+import { applyArabicNames } from './lib/names-ar'
 
 const root = path.join(import.meta.dirname, '..')
 const dir = path.join(root, 'seed', 'data', 'archive')
@@ -42,6 +43,7 @@ const main = async () => {
   const pruned = await prunePeople(payload)
   console.log(`pruned ${pruned.length} people${pruned.length ? `: ${pruned.join(', ')}` : ''}`)
 
+  console.log(`Arabic names given: ${await applyArabicNames(payload)}`)
   await payload.destroy()
   process.exit(0)
 }
