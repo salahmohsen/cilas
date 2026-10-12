@@ -220,7 +220,6 @@ export default async function BridgePage({ params }: Props) {
                       {programme.self_directed_study && i < semesters.length - 1 ? (
                         <div className="bridge-interlude">
                           <p className="font-medium">{t('selfDirected')}</p>
-                          <p className="text-sm text-(--text-secondary)">{t('selfDirectedText')}</p>
                         </div>
                       ) : null}
                     </li>
