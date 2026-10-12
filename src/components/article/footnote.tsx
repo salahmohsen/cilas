@@ -14,7 +14,7 @@ export function FootnoteMark({ number, note, label }: { number: number; note: Fo
   return (
     <HoverCard
       content={
-        <div className="max-w-[22rem] text-sm leading-relaxed">
+        <div className="footnote-card max-w-[22rem] text-sm leading-relaxed">
           <p className="mb-1 font-mono text-[0.68rem] tracking-[0.14em] text-[var(--text-muted)] uppercase rtl:tracking-normal">
             {label} {number}
           </p>

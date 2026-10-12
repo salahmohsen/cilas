@@ -1,0 +1,65 @@
+{
+  "unit": "essay:on_the_emergence_of_pigeon_towers_-_english:3",
+  "anchors": [
+    {
+      "number": 6,
+      "block": 1,
+      "offset": 1064
+    },
+    {
+      "number": 7,
+      "block": 3,
+      "offset": 469
+    },
+    {
+      "number": 8,
+      "block": 3,
+      "offset": 1665
+    },
+    {
+      "number": 9,
+      "block": 7,
+      "offset": 82
+    },
+    {
+      "number": 10,
+      "block": 9,
+      "offset": 426
+    },
+    {
+      "number": 11,
+      "block": 12,
+      "offset": 723
+    },
+    {
+      "number": 12,
+      "block": 13,
+      "offset": 595
+    },
+    {
+      "number": 13,
+      "block": 17,
+      "offset": 769
+    },
+    {
+      "number": 14,
+      "block": 17,
+      "offset": 1261
+    },
+    {
+      "number": 15,
+      "block": 22,
+      "offset": 560
+    },
+    {
+      "number": 16,
+      "block": 25,
+      "offset": 129
+    },
+    {
+      "number": 17,
+      "block": 25,
+      "offset": 464
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "unit": "essay:on_the_emergence_of_pigeon_towers_-_arabic:2",
+  "anchors": [
+    {
+      "number": 1,
+      "block": 3,
+      "offset": 185
+    },
+    {
+      "number": 2,
+      "block": 7,
+      "offset": 412
+    },
+    {
+      "number": 3,
+      "block": 8,
+      "offset": 62
+    },
+    {
+      "number": 4,
+      "block": 8,
+      "offset": 801
+    },
+    {
+      "number": 5,
+      "block": 18,
+      "offset": 77
+    },
+    {
+      "number": 6,
+      "block": 25,
+      "offset": 338
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "unit": "essay:translation_lab_works:4",
+  "anchors": [
+    {
+      "number": 1,
+      "block": 2,
+      "offset": 179
+    },
+    {
+      "number": 2,
+      "block": 3,
+      "offset": 456
+    },
+    {
+      "number": 3,
+      "block": 5,
+      "offset": 493
+    },
+    {
+      "number": 4,
+      "block": 6,
+      "offset": 498
+    },
+    {
+      "number": 5,
+      "block": 8,
+      "offset": 515
+    }
+  ]
+}

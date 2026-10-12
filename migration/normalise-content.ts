@@ -5,7 +5,7 @@
  *
  *   npx tsx migration/normalise-content.ts
  */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 
 import { slugify } from '../src/lib/slugify'
@@ -30,6 +30,7 @@ import {
   pairEssays,
   pressDate,
 } from './lib/normalise-content'
+import { markNotes, NoteAnchors } from './lib/note-anchors'
 import { canonicalName } from './lib/normalise-courses'
 import { resolveUpload } from './lib/uploads'
 
@@ -56,6 +57,25 @@ const siteUrl = (p: string): string => SITE + encodeURI(p)
 
 const unit = <T>(name: string, schema: { parse: (x: unknown) => T }): T =>
   schema.parse(JSON.parse(readFileSync(path.join(here, 'extracted', 'content', `${name}.json`), 'utf8')).data)
+
+/**
+ * An essay's blocks with its notes placed: a `[^n]` marker where each note is
+ * marked in the source (notes__<unit>.json; see record-note-anchors.ts), which
+ * blocks.ts turns into a footnote. An unnumbered note directly after a
+ * numbered one continues it (the Arabic Jeng essay's "ملاحظة ذات صلة").
+ */
+const withNotes = <B extends { type: string; text: string }>(unitFile: string, blocks: B[]): B[] => {
+  const file = path.join(here, 'extracted', 'content', `notes__${unitFile}.json`)
+  const anchors = existsSync(file) ? NoteAnchors.parse(JSON.parse(readFileSync(file, 'utf8'))).anchors : []
+  const marked = markNotes(blocks, anchors)
+  const out: B[] = []
+  for (const b of marked) {
+    const prev = out.at(-1)
+    if (b.type === 'note' && !/^\s*\d/.test(b.text) && prev?.type === 'note') out[out.length - 1] = { ...prev, text: `${prev.text} ${b.text}` }
+    else out.push(b)
+  }
+  return out
+}
 
 /* ------------------------------------------------------------ review log */
 
@@ -230,7 +250,7 @@ for (const pair of pairs) {
   const ar = unit(`essay__${pigeonAr}__${pair.order}`, Essay)
   const url = legacy(PIGEON, pair.en.title)
   pigeonUrls.set(pair.order, url)
-  const blocksEn = blocksOf(en.blocks)
+  const blocksEn = blocksOf(withNotes(`essay__${pigeonEn}__${pair.order}`, en.blocks))
   scanHyphens(`${url} (English)`, blocksEn)
   // The Arabic edition prints the same authors in Arabic, in the same order.
   const authorsEn = namesOf(en.authors.length ? en.authors : pair.en.authors)
@@ -243,7 +263,7 @@ for (const pair of pairs) {
     title_ar: pair.ar.title,
     match_titles_en: PIGEON_SEED_TITLES[pair.order] ? [PIGEON_SEED_TITLES[pair.order]] : [],
     blocks_en: blocksEn,
-    blocks_ar: blocksOf(ar.blocks),
+    blocks_ar: blocksOf(withNotes(`essay__${pigeonAr}__${pair.order}`, ar.blocks)),
     authors: authorsEn,
     credits: pigeonTranslators.length ? [{ role: 'translator', people: pigeonTranslators }] : [],
     translation: null,
@@ -332,7 +352,7 @@ for (const toc of tocLab.essays) {
     title_ar: toc.title,
     match_titles_en: seedTitle ? [seedTitle] : [],
     blocks_en: null,
-    blocks_ar: blocksOf(essay.blocks),
+    blocks_ar: blocksOf(withNotes(`essay__${lab}__${toc.order}`, essay.blocks)),
     authors,
     credits: translators.length ? [{ role: 'translator', people: translators }] : [],
     translation: translated

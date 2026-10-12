@@ -287,3 +287,11 @@
     text-decoration: none;
   }
 }
+
+/* A note takes the direction of its own words: Latin citations on an Arabic
+   page read left to right, with their punctuation where it belongs. */
+.footnote-card p,
+.article-footnotes p {
+  unicode-bidi: plaintext;
+  text-align: start;
+}

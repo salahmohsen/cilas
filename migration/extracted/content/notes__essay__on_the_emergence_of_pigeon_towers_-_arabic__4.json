@@ -1,0 +1,45 @@
+{
+  "unit": "essay:on_the_emergence_of_pigeon_towers_-_arabic:4",
+  "anchors": [
+    {
+      "number": 19,
+      "block": 1,
+      "offset": 39
+    },
+    {
+      "number": 20,
+      "block": 3,
+      "offset": 29
+    },
+    {
+      "number": 21,
+      "block": 4,
+      "offset": 107
+    },
+    {
+      "number": 22,
+      "block": 5,
+      "offset": 617
+    },
+    {
+      "number": 23,
+      "block": 10,
+      "offset": 456
+    },
+    {
+      "number": 24,
+      "block": 12,
+      "offset": 125
+    },
+    {
+      "number": 25,
+      "block": 13,
+      "offset": 299
+    },
+    {
+      "number": 26,
+      "block": 34,
+      "offset": 534
+    }
+  ]
+}
