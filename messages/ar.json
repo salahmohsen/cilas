@@ -338,5 +338,43 @@
     "advisesOn": "يقدم المشورة في",
     "term": "المدة",
     "since": "منذ {year}"
+  },
+  "Calendar": {
+    "metaTitle": "التقويم — سيلاس",
+    "title": "التقويم",
+    "intro": "مواعيد مقررات سيلاس ولقاءاتها.",
+    "navigation": "التنقل في التقويم",
+    "views": "العرض",
+    "view": {
+      "month": "شهر",
+      "week": "أسبوع",
+      "agenda": "جدول"
+    },
+    "previous": "السابق",
+    "next": "التالي",
+    "today": "اليوم",
+    "empty": "لا شيء في التقويم هنا.",
+    "nextOn": "التالي: {date}",
+    "lastOn": "الأحدث: {date}",
+    "session": "الجلسة {n}",
+    "starts": "يبدأ",
+    "more": "{count, plural, other {+# أخرى}}",
+    "cancelled": "أُلغيت",
+    "eventTypes": {
+      "talk": "محاضرة",
+      "panel": "ندوة",
+      "book_discussion": "نقاش كتاب",
+      "reading_group": "مجموعة قراءة",
+      "screening": "عرض فيلم",
+      "performance": "عرض أدائي",
+      "music": "موسيقى",
+      "exhibition": "معرض",
+      "open_day": "يوم مفتوح",
+      "workshop": "ورشة",
+      "residency": "إقامة",
+      "visit": "زيارة",
+      "other": "لقاء",
+      "event": "لقاء"
+    }
   }
 }

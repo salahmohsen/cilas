@@ -581,3 +581,248 @@ a.collection-item:hover {
   font-variant-numeric: tabular-nums;
   color: var(--text-muted);
 }
+
+/* ===================================================== calendar */
+
+.cal-switch {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 3px;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.cal-switch a {
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  transition-property: background-color, color;
+  transition-duration: 150ms;
+}
+.cal-switch a[aria-current='page'] {
+  background: var(--foreground);
+  color: var(--background);
+}
+.cal-step,
+.cal-today {
+  display: inline-flex;
+  height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  transition-property: background-color;
+  transition-duration: 150ms;
+}
+.cal-step {
+  width: 2.25rem;
+}
+.cal-today {
+  padding-inline: 0.9rem;
+  box-shadow: 0 0 0 1px var(--border);
+}
+.cal-step:hover,
+.cal-today:hover {
+  background: var(--surface-muted, var(--muted));
+}
+.cal-empty {
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+}
+
+/* The month: a dashed grid with big, light numbers. */
+.cal-month {
+  border-top: 1px dashed var(--border-strong, var(--border));
+}
+.cal-month-head,
+.cal-month-body {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+.cal-weekday {
+  padding: 0.6rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+.cal-month-head {
+  border-bottom: 1px dashed var(--border-strong, var(--border));
+}
+.cal-day {
+  position: relative;
+  display: flex;
+  min-height: 9.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow: hidden;
+  padding: 0.75rem;
+  border-bottom: 1px dashed var(--border-strong, var(--border));
+  border-inline-end: 1px dashed var(--border-strong, var(--border));
+}
+.cal-day:nth-child(7n) {
+  border-inline-end: 0;
+}
+.cal-day-number {
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.cal-day[data-outside] .cal-day-number {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+.cal-day[data-today] .cal-day-number {
+  align-self: flex-start;
+  border-radius: 0.4rem;
+  background: var(--foreground);
+  padding: 0.15rem 0.4rem;
+  color: var(--background);
+}
+.cal-day-items {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+.cal-day-items li {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+.cal-time {
+  unicode-bidi: isolate;
+  margin-inline-end: 0.35rem;
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+.cal-more {
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* A day a course meets with a cover: the cover is the day. */
+.cal-day[data-cover] {
+  color: #fff;
+}
+.cal-day-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.cal-day[data-cover]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(to bottom, oklch(0 0 0 / 0.15), oklch(0 0 0 / 0.72));
+}
+.cal-day[data-cover] > :not(img) {
+  position: relative;
+  z-index: 1;
+}
+.cal-day[data-cover] .cal-time,
+.cal-day[data-cover] .cal-more,
+.cal-day[data-cover][data-outside] .cal-day-number {
+  color: oklch(1 0 0 / 0.8);
+  opacity: 1;
+}
+
+/* The week: a column a day. */
+.cal-week {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  box-shadow: 0 0 0 1px var(--border);
+  border-radius: calc(var(--radius) * 2);
+  overflow: hidden;
+}
+@media (min-width: 48rem) {
+  .cal-week {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+.cal-week-day {
+  min-height: 12rem;
+  background: var(--background);
+  padding: 0.75rem;
+}
+.cal-week-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.cal-week-head .cal-weekday {
+  padding: 0;
+  text-align: start;
+}
+.cal-week-day[data-today] .cal-week-head .cal-day-number {
+  border-radius: 0.4rem;
+  background: var(--foreground);
+  padding: 0.15rem 0.4rem;
+  color: var(--background);
+}
+.cal-card {
+  overflow: hidden;
+  border-radius: calc(var(--radius) * 1.5);
+  box-shadow: 0 0 0 1px var(--border);
+}
+.cal-card-cover {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+/* The agenda: a date, then its items. */
+.cal-agenda {
+  display: grid;
+}
+.cal-agenda-day {
+  display: grid;
+  gap: 0.75rem;
+  padding-block: 1.25rem;
+  border-bottom: 1px dashed var(--border-strong, var(--border));
+}
+@media (min-width: 48rem) {
+  .cal-agenda-day {
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+}
+.cal-agenda-date {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+@media (min-width: 48rem) {
+  .cal-agenda-date {
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+}
+.cal-agenda-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+.cal-agenda-item > .cal-time {
+  flex: none;
+  width: 5.5rem;
+}
+.cal-agenda-item > .cal-agenda-cover {
+  flex: none;
+}
+.cal-agenda-cover {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: calc(var(--radius) * 1.5);
+  background: var(--surface-muted, var(--muted));
+  object-fit: cover;
+}

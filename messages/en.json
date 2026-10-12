@@ -338,5 +338,43 @@
     "advisesOn": "Advises on",
     "term": "Term",
     "since": "Since {year}"
+  },
+  "Calendar": {
+    "metaTitle": "Calendar — CILAS",
+    "title": "Calendar",
+    "intro": "When CILAS's courses meet, and its gatherings.",
+    "navigation": "Calendar navigation",
+    "views": "View",
+    "view": {
+      "month": "Month",
+      "week": "Week",
+      "agenda": "Agenda"
+    },
+    "previous": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "empty": "Nothing on the calendar here.",
+    "nextOn": "Next: {date}",
+    "lastOn": "Most recent: {date}",
+    "session": "Session {n}",
+    "starts": "Starts",
+    "more": "{count, plural, one {+# more} other {+# more}}",
+    "cancelled": "Cancelled",
+    "eventTypes": {
+      "talk": "Talk",
+      "panel": "Panel",
+      "book_discussion": "Book discussion",
+      "reading_group": "Reading group",
+      "screening": "Screening",
+      "performance": "Performance",
+      "music": "Music",
+      "exhibition": "Exhibition",
+      "open_day": "Open day",
+      "workshop": "Workshop",
+      "residency": "Residency",
+      "visit": "Visit",
+      "other": "Gathering",
+      "event": "Gathering"
+    }
   }
 }
