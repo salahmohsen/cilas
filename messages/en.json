@@ -424,15 +424,12 @@
   "Bridge": {
     "metaTitle": "Bridge Programme",
     "metaDescription": "CILAS’s one-year programme in the liberal arts: two semesters of core courses, thematic courses and labs, bridged by self-directed study.",
-    "year": "The year",
+    "courses": "Courses",
     "wholeYear": "Whole year",
     "moreFellows": "+{count}",
     "filterBy": "Filter by semester",
     "noCourses": "No courses are listed for this semester yet.",
     "moreCourses": "All courses of {cycle}",
-    "cohort": "The community",
-    "cohortText": "{count, plural, =0 {Each year’s students and fellows become CILASians.} one {# CILASian so far this year.} other {# CILASians this year.}}",
-    "meetCohort": "Meet the CILASians",
     "details": "Programme details",
     "commitment": "Commitment",
     "hours": "{count} hours a week",
@@ -443,7 +440,8 @@
     "requirements": "Who can apply",
     "share": "Share this programme",
     "pastYear": "This year has ended. Its page stays as a record.",
-    "years": "All years"
+    "years": "All years",
+    "alexandria": "Alexandria"
   },
   "Forms": {
     "sent": "Application sent",

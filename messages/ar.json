@@ -424,15 +424,12 @@
   "Bridge": {
     "metaTitle": "برنامج الجسر",
     "metaDescription": "برنامج سيلاس لمدة عام في الآداب والعلوم الحرة: فصلان من المقررات الأساسية والموضوعية والمختبرات، يصل بينهما وقت للدراسة الذاتية.",
-    "year": "العام الدراسي",
+    "courses": "المقررات",
     "wholeYear": "العام كله",
     "moreFellows": "+{count, number, digits}",
     "filterBy": "تصفية حسب الفصل الدراسي",
     "noCourses": "لا مقررات مدرجة لهذا الفصل بعد.",
     "moreCourses": "كل مقررات {cycle}",
-    "cohort": "الجماعة",
-    "cohortText": "{count, plural, =0 {يصبح طلاب كل عام وزملاؤه سيلاسيين.} one {سيلاسي واحد هذا العام حتى الآن.} two {سيلاسيان هذا العام.} few {{count, number, digits} سيلاسيين هذا العام.} many {{count, number, digits} سيلاسيًا هذا العام.} other {{count, number, digits} سيلاسي هذا العام.}}",
-    "meetCohort": "تعرّف على السيلاسيين",
     "details": "تفاصيل البرنامج",
     "commitment": "الالتزام",
     "hours": "{count, number, digits} ساعة أسبوعيًا",
@@ -443,7 +440,8 @@
     "requirements": "من يمكنه التقديم",
     "share": "شارك هذا البرنامج",
     "pastYear": "انتهى هذا العام، وتبقى صفحته سجلًّا له.",
-    "years": "كل الأعوام"
+    "years": "كل الأعوام",
+    "alexandria": "الإسكندرية"
   },
   "Forms": {
     "sent": "أُرسل طلبك",

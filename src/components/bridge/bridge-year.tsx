@@ -16,10 +16,10 @@ import { registrationStatus } from '@/lib/registration'
 import type { Cycle } from '@/payload-types'
 
 /**
- * One Bridge year's page: its words, its courses semester by semester, what
- * it asks, and its community. The current year also says how to join; a past
- * one is a record. `years` lists every published year, latest first, to move
- * between them.
+ * One Bridge year's page: its words, its courses semester by semester, and
+ * what it asks. The current year also says how to join; a past one is a
+ * record. `years` lists every published year, latest first, to move between
+ * them from the side column.
  */
 export async function BridgeYearView({
   year,
@@ -35,7 +35,7 @@ export async function BridgeYearView({
   /** In the admin's live preview: refresh on each save. */
   preview?: boolean
 }) {
-  const { programme, cover, semesters, members } = year
+  const { programme, cover, semesters } = year
   const [t, tc, tf, ts, ta, format] = await Promise.all([
     getTranslations('Bridge'),
     getTranslations('Course'),
@@ -149,6 +149,8 @@ export async function BridgeYearView({
       : []),
   ]
 
+  // The side column renders twice, beside the text on wide screens and in its
+  // flow on narrow ones; `at` keeps each copy's ids its own.
   const details = (
     <section aria-label={t('details')} className="course-side">
       {current ? (
@@ -185,21 +187,22 @@ export async function BridgeYearView({
     </section>
   )
 
-  const requirements = programme.requirements ? (
-    <section aria-labelledby="bridge-requirements" className="course-side">
-      <h2 className="course-side-heading" id="bridge-requirements">
-        {t('requirements')}
-      </h2>
-      <RichTextField
-        className="grid gap-2 text-sm leading-relaxed [&_p]:m-0"
-        data={programme.requirements}
-      />
-    </section>
-  ) : null
+  const requirements = (at: string) =>
+    programme.requirements ? (
+      <section aria-labelledby={`bridge-requirements-${at}`} className="course-side">
+        <h2 className="course-side-heading" id={`bridge-requirements-${at}`}>
+          {t('requirements')}
+        </h2>
+        <RichTextField
+          className="grid gap-2 text-sm leading-relaxed [&_p]:m-0"
+          data={programme.requirements}
+        />
+      </section>
+    ) : null
 
-  const share = (
-    <section aria-labelledby="bridge-share" className="course-side">
-      <h2 className="course-side-heading" id="bridge-share">
+  const share = (at: string) => (
+    <section aria-labelledby={`bridge-share-${at}`} className="course-side">
+      <h2 className="course-side-heading" id={`bridge-share-${at}`}>
         {ts('heading')}
       </h2>
       <ShareBar
@@ -209,6 +212,66 @@ export async function BridgeYearView({
       />
     </section>
   )
+
+  // A year by its span, and its city when it was not Cairo: «2019–2020 Alexandria».
+  const yearLabel = (slug: string) => {
+    const [, span = slug, place] = /^bridge-programme-(\d{4}-\d{4})(?:-(.+))?$/.exec(slug) ?? []
+    return {
+      span: localDigits(span.replace('-', '–'), locale),
+      place: place === 'alexandria' ? t('alexandria') : null,
+    }
+  }
+  const yearsNav = (at: string) =>
+    years.length > 1 ? (
+      <nav aria-labelledby={`bridge-years-${at}`} className="course-side">
+        <h2 className="course-side-heading" id={`bridge-years-${at}`}>
+          {t('years')}
+        </h2>
+        <ul className="bridge-years">
+          {years.map((y, i) => {
+            const { span, place } = yearLabel(y.slug)
+            const label = (
+              <>
+                <span>{span}</span>
+                {place ? <span className="bridge-year-place">{place}</span> : null}
+              </>
+            )
+            return (
+              <li key={y.slug}>
+                {y.slug === programme.slug ? (
+                  <span aria-current="page" className="bridge-year">
+                    {label}
+                  </span>
+                ) : (
+                  <Link
+                    className="bridge-year"
+                    href={i === 0 ? '/study/bridge' : bridgeYearPath(y.slug)}
+                  >
+                    {label}
+                  </Link>
+                )}
+              </li>
+            )
+          })}
+        </ul>
+      </nav>
+    ) : null
+  // Beside the current year, who can apply follows the apply button; on a past
+  // year, the other years come first.
+  const side = (at: string) =>
+    current ? (
+      <>
+        {requirements(at)}
+        {yearsNav(at)}
+        {share(at)}
+      </>
+    ) : (
+      <>
+        {yearsNav(at)}
+        {requirements(at)}
+        {share(at)}
+      </>
+    )
 
   return (
     <div className="course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
@@ -261,15 +324,15 @@ export async function BridgeYearView({
           ) : null}
 
           {posts.length ? (
-            <section aria-labelledby="bridge-year" className="mt-14">
-              <h2 className="course-heading mb-6" id="bridge-year">
-                {t('year')}
+            <section aria-labelledby="bridge-courses" className="mt-14">
+              <h2 className="course-heading mb-6" id="bridge-courses">
+                {t('courses')}
               </h2>
               <BridgeCourses
                 posts={posts}
                 seasons={seasons}
                 semesters={semesters.map(({ cycle }) => cycleName(cycle))}
-                title={t('year')}
+                title={t('courses')}
               />
             </section>
           ) : null}
@@ -287,53 +350,13 @@ export async function BridgeYearView({
             </div>
           ) : null}
 
-          <section aria-labelledby="bridge-cohort" className="mt-14">
-            <h2 className="course-heading" id="bridge-cohort">
-              {t('cohort')}
-            </h2>
-            <p className="mt-3 text-(--text-secondary)">{t('cohortText', { count: members })}</p>
-            <Link className="bridge-link mt-4" href="/people/cilasians">
-              {t('meetCohort')}
-            </Link>
-          </section>
-
-          {years.length > 1 ? (
-            <section aria-labelledby="bridge-years" className="mt-14">
-              <h2 className="course-heading" id="bridge-years">
-                {t('years')}
-              </h2>
-              <ul className="bridge-years">
-                {years.map((y, i) => (
-                  <li key={y.slug}>
-                    {y.slug === programme.slug ? (
-                      <span aria-current="page" className="bridge-year" data-current="">
-                        {y.title}
-                      </span>
-                    ) : (
-                      <Link
-                        className="bridge-year"
-                        href={i === 0 ? '/study/bridge' : bridgeYearPath(y.slug)}
-                      >
-                        {y.title}
-                      </Link>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
-          {/* Narrow screens: who can apply and sharing close the page. */}
-          <div className="mt-14 grid gap-10 lg:hidden">
-            {requirements}
-            {share}
-          </div>
+          {/* Narrow screens: the rest of the side column closes the page. */}
+          <div className="mt-14 grid gap-10 lg:hidden">{side('narrow')}</div>
         </article>
 
         <aside className="hidden lg:flex lg:flex-col lg:gap-10">
           {details}
-          {requirements}
-          {share}
+          {side('wide')}
         </aside>
       </div>
     </div>

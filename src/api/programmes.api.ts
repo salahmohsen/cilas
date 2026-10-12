@@ -40,8 +40,6 @@ export type BridgeYear = {
   cover: Media | null
   /** The parts in order, grouped by their cycle (a semester). */
   semesters: Array<{ cycle: Cycle; parts: ProgrammePart[] }>
-  /** How many people the year's community counts. */
-  members: number
 }
 
 /** A Bridge year's page: `/study/bridge/2024-2025` for `bridge-programme-2024-2025`. */
@@ -164,10 +162,5 @@ export const getBridgeYear = async (
     else semesters.push({ cycle: part.cycle, parts: [part] })
   }
 
-  const { totalDocs: members } = await payload.count({
-    collection: 'memberships',
-    where: { programme: { equals: programme.id } },
-  })
-
-  return { programme, cover: obj<Media>(programme.cover), semesters, members }
+  return { programme, cover: obj<Media>(programme.cover), semesters }
 }
