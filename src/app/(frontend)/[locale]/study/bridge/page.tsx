@@ -1,6 +1,7 @@
 import config from '@payload-config'
 import { Clock, Hourglass, Wallet } from 'lucide-react'
 import type { Metadata } from 'next'
+import { draftMode } from 'next/headers'
 import Image from 'next/image'
 import { getFormatter, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
@@ -10,6 +11,7 @@ import type { ReactNode } from 'react'
 import { getBridgeYear } from '@/api/programmes.api'
 import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { BridgeCourses } from '@/components/bridge/bridge-courses'
+import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { RichTextField } from '@/components/RichTextField'
 import { ShareBar } from '@/components/share-bar'
 import { Link } from '@/i18n/navigation'
@@ -19,7 +21,7 @@ import { ogImages } from '@/lib/og'
 import { registrationStatus } from '@/lib/registration'
 import type { Cycle } from '@/payload-types'
 
-type Props = { params: Promise<{ locale: string }> }
+type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ programme?: string }> }
 
 // Registration open/closed is computed from today's date, so rebuild hourly.
 export const revalidate = 3600
@@ -43,8 +45,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * The Bridge Programme: the current year's words, its two semesters with the
  * courses each part draws from its cycle, what it asks, and how to join.
  */
-export default async function BridgePage({ params }: Props) {
+export default async function BridgePage({ params, searchParams }: Props) {
   const { locale } = await params
+  // In the admin's live preview (draft mode, from /api/preview): the programme being edited, as drafted.
+  const { isEnabled: isPreview } = await draftMode()
+  const previewSlug = isPreview ? (await searchParams).programme : undefined
   const lang = langOf(locale)
   const [t, tc, tf, ts, ta, format] = await Promise.all([
     getTranslations('Bridge'),
@@ -54,7 +59,7 @@ export default async function BridgePage({ params }: Props) {
     getTranslations('Apply'),
     getFormatter(),
   ])
-  const year = await getBridgeYear(await getPayload({ config }), lang)
+  const year = await getBridgeYear(await getPayload({ config }), lang, previewSlug ? { slug: previewSlug } : undefined)
   if (!year) notFound()
   const { programme, cover, semesters, members } = year
 
@@ -201,6 +206,7 @@ export default async function BridgePage({ params }: Props) {
 
   return (
     <div className="course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+      {isPreview ? <RefreshRouteOnSave /> : null}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
         <article aria-labelledby="bridge-title" className="min-w-0">
           <header>

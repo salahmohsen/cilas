@@ -9,7 +9,8 @@ import { pathOf } from '@/lib/paths'
 
 /**
  * Turns on Next's draft mode and sends the admin live-preview iframe to the
- * document, which is what lets `/study/[slug]` and `/articles/[slug]` render an unpublished draft
+ * document, which is what lets `/study/[slug]`, `/articles/[slug]` and `/study/bridge`
+ * render an unpublished draft
  * (see `overrideAccess`/`draft` in that route).
  *
  * Draft mode is a cookie scoped to the requesting browser, so this endpoint must
@@ -22,7 +23,7 @@ export async function GET(request: Request) {
   const slug = searchParams.get('slug')
   const collection = searchParams.get('collection')
 
-  if (!slug || (collection !== 'courses' && collection !== 'articles')) {
+  if (!slug || (collection !== 'courses' && collection !== 'articles' && collection !== 'programmes')) {
     return new Response('Missing or unsupported preview target', { status: 400 })
   }
 
@@ -62,7 +63,13 @@ export async function GET(request: Request) {
   // pathOf, not a hand-built path: the course route has moved before.
   // The editor's saved site language, else English.
   const saved = request.headers.get('cookie')?.match(/(?:^|;\s*)NEXT_LOCALE=(en|ar)/)?.[1]
-  const path = pathOf(collection, doc, saved ?? 'en')
+  // A programme has no page of its own: the Bridge page shows the one it is given.
+  const path =
+    collection === 'programmes'
+      ? 'kind' in doc && doc.kind === 'bridge'
+        ? `/${saved ?? 'en'}/study/bridge?programme=${encodeURIComponent(slug)}`
+        : null
+      : pathOf(collection, doc, saved ?? 'en')
   if (!path) {
     return new Response('This document has no page', { status: 404 })
   }

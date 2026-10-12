@@ -27,6 +27,11 @@ export const Programmes: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'kind', '_status'],
+    // Through /api/preview, as courses and articles: it checks the editor,
+    // turns on draft mode and opens the programme's page with this draft.
+    livePreview: {
+      url: ({ data }) => `/api/preview?collection=programmes&slug=${data?.slug ?? ''}`,
+    },
   },
   fields: [
     {

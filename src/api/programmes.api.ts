@@ -47,12 +47,20 @@ export type BridgeYear = {
 /**
  * The current Bridge year: the latest published Bridge programme, with each of
  * its components' courses worked out from its cycle (ADR 0003 — a programme
- * never stores its courses).
+ * never stores its courses). `preview` names a programme by slug and reads its
+ * latest draft, for the admin's live preview (draft mode only).
  */
-export const getBridgeYear = async (payload: Payload, locale: Locale): Promise<BridgeYear | null> => {
+export const getBridgeYear = async (
+  payload: Payload,
+  locale: Locale,
+  preview?: { slug: string },
+): Promise<BridgeYear | null> => {
   const { docs } = await payload.find({
     collection: 'programmes',
-    where: { and: [{ kind: { equals: 'bridge' } }, { _status: { equals: 'published' } }] },
+    where: preview
+      ? { and: [{ kind: { equals: 'bridge' } }, { slug: { equals: preview.slug } }] }
+      : { and: [{ kind: { equals: 'bridge' } }, { _status: { equals: 'published' } }] },
+    draft: Boolean(preview),
     // Titles carry the years ("Bridge Programme 2025–2026"), so the latest sorts first.
     sort: '-title',
     limit: 1,
