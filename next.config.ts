@@ -11,6 +11,8 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
 const nextConfig: NextConfig = {
+  // A self-contained server for the Docker image (Dockerfile, Dokploy).
+  output: 'standalone',
   images: {
     localPatterns: [
       {

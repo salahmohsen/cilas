@@ -22,6 +22,20 @@ RUN \
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
+
+# next.config validates the environment (src/env.ts) and the build reads
+# Payload, so the build needs the runtime variables: Dokploy passes them as
+# build arguments. They stay in this stage; the runner stage gets its own at
+# run time.
+ARG DATABASE_URL
+ARG PAYLOAD_SECRET
+ARG R2_BUCKET
+ARG R2_ACCESS_KEY_ID
+ARG R2_SECRET_ACCESS_KEY
+ARG R2_ENDPOINT
+ARG R2_PUBLIC_URL
+ARG NEXT_PUBLIC_SERVER_URL
+ENV DATABASE_URL=$DATABASE_URL PAYLOAD_SECRET=$PAYLOAD_SECRET R2_BUCKET=$R2_BUCKET R2_ACCESS_KEY_ID=$R2_ACCESS_KEY_ID R2_SECRET_ACCESS_KEY=$R2_SECRET_ACCESS_KEY R2_ENDPOINT=$R2_ENDPOINT R2_PUBLIC_URL=$R2_PUBLIC_URL NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
@@ -41,7 +55,7 @@ RUN \
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -64,7 +78,7 @@ USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
