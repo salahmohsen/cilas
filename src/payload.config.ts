@@ -141,6 +141,11 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: env.DATABASE_URL,
+      // Fewer, longer-lived connections: a remote database (a long import
+      // over a slow link) times out on connect more than on query.
+      idleTimeoutMillis: 60_000,
+      connectionTimeoutMillis: 30_000,
+      keepAlive: true,
     },
     // Explicit migrations rather than dev-mode schema auto-push. Auto-push asks
     // to DROP tables on stdin, which silently destroys data when it runs
