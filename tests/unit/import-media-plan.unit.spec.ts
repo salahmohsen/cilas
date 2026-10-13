@@ -67,8 +67,8 @@ describe('mediaJobs', () => {
   })
 
   it('plans one logo per outlet, the first logo winning, keyed by name', () => {
-    expect(jobs.filter((j) => j.collection === 'partners')).toEqual([
-      { collection: 'partners', name: 'Mada', field: 'logo', path: `${U}editor/m.png`, alt: 'Mada' },
+    expect(jobs.filter((j) => j.collection === 'press')).toEqual([
+      { collection: 'press', name: 'Mada', field: 'outlet.logo', path: `${U}editor/m.png`, alt: 'Mada' },
     ])
   })
 

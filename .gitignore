@@ -52,3 +52,6 @@ aha/
 
 # Legacy site archive (Weebly ZIP + Wayback cache), kept out of git
 /migration/raw/
+
+# Live-database snapshots (pnpm db:snapshot): large; kept out of git until decided.
+/seed/data/live/

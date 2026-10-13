@@ -59,7 +59,7 @@ describe('archive course import', () => {
       depth: 1,
     })
     expect(docs).toHaveLength(1)
-    expect(docs[0]).toMatchObject({ _status: 'published', import_status: 'needs_review', tier: 'public' })
+    expect(docs[0]).toMatchObject({ _status: 'published', tier: 'public' })
     expect(docs[0].registration?.archived_registration_url).toBe('https://forms.gle/probe')
     expect((docs[0].fellows as Array<{ name: string }>).map((f) => f.name)).toEqual(['Probe Import Fellow'])
   })
@@ -72,25 +72,6 @@ describe('archive course import', () => {
       overrideAccess: true,
     })
     expect(totalDocs).toBe(1)
-  })
-
-  it('never overwrites a reviewed course', async () => {
-    const { docs } = await payload.find({
-      collection: 'courses',
-      where: { legacy_url: { equals: '/probe-fall-2031.html#probe-course' } },
-      draft: true,
-      overrideAccess: true,
-    })
-    await payload.update({
-      collection: 'courses',
-      id: docs[0].id,
-      data: { title: 'Edited by a reviewer', import_status: 'reviewed' },
-      overrideAccess: true,
-      draft: true,
-    })
-    await importCourses(payload, { cycles, courses: [course()] })
-    const after = await payload.findByID({ collection: 'courses', id: docs[0].id, draft: true, overrideAccess: true })
-    expect(after.title).toBe('Edited by a reviewer')
   })
 
   it('skips a course with no cycle, and reports it', async () => {

@@ -238,8 +238,9 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
         method: 'external',
         url: FORM_URL,
         deadline: APPLICATION_DEADLINE,
-        application_requirements: lexical(REQUIREMENTS_EN),
       },
+      // What to bring and wear: the fellow's notes to participants.
+      facilitator_note: REQUIREMENTS_EN.join('\n\n'),
       pricing_override: {
         min: 2500,
         max: 3000,
@@ -262,9 +263,7 @@ const seedCourse = async (cycleId: number, personId: number, coverId: number) =>
       subtitle: 'ورشة عمل السيانوتايب / الطباعة الزرقاء',
       description: lexical(DESCRIPTION_AR, 'rtl'),
       schedule: { note: 'خمسة أيام على مدى أسبوعين بساعات متفاوتة؛ التاريخ والوقت لكل جلسة مذكور عندها.' },
-      registration: {
-        application_requirements: lexical(REQUIREMENTS_AR, 'rtl'),
-      },
+      facilitator_note: REQUIREMENTS_AR.join('\n\n'),
       pricing_override: {
         note: 'تسعيرة متدرجة — يرجى اختيار الفئة التي تناسب ميزانيتك الحالية: ٢٥٠٠ / ٢٧٥٠ / ٣٠٠٠ جنيه مصري. تشمل جميع الفئات نفس المستوى من التعليم، وطباعة الصور على الورق الشفاف، والمحاليل الكيميائية، والأوراق-الأعمال، وتنظيم المعرض؛ وكل شيء تستخدمه ملك لك ويمكن الاحتفاظ به لاستخدامات أخرى في مساحتك الخاصة.',
       },

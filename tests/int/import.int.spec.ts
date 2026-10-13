@@ -4,7 +4,7 @@ import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import config from '@/payload.config'
-import { assertNoReviewedContent } from '../../seed/seed.utils'
+import { assertResetAllowed } from '../../seed/seed.utils'
 
 let payload: Payload
 const created: number[] = []
@@ -16,53 +16,37 @@ describe('archive import foundations', () => {
 
   afterAll(async () => {
     for (const id of created) {
-      await payload
-        .delete({ collection: 'partners', id, overrideAccess: true })
-        .catch(() => undefined)
+      await payload.delete({ collection: 'spaces', id, overrideAccess: true }).catch(() => undefined)
     }
     await payload.destroy()
   })
 
   it('refuses a second document with the same legacy URL', async () => {
     const first = await payload.create({
-      collection: 'partners',
-      data: {
-        name: 'Legacy Probe',
-        slug: 'legacy-probe',
-        kind: ['other'],
-        legacy_url: '/probe.html#a',
-      },
+      collection: 'spaces',
+      data: { name: 'Legacy Probe', slug: 'legacy-probe', legacy_url: '/probe.html#a' },
       overrideAccess: true,
     })
     created.push(first.id)
     await expect(
       payload.create({
-        collection: 'partners',
-        data: {
-          name: 'Legacy Probe 2',
-          slug: 'legacy-probe-2',
-          kind: ['other'],
-          legacy_url: '/probe.html#a',
-        },
+        collection: 'spaces',
+        data: { name: 'Legacy Probe 2', slug: 'legacy-probe-2', legacy_url: '/probe.html#a' },
         overrideAccess: true,
       }),
     ).rejects.toThrow()
   })
 
-  it('lets the reset run with no reviewed content, and refuses once there is some', async () => {
-    await expect(assertNoReviewedContent(payload)).resolves.toBeUndefined()
+  it('refuses to reset a database that holds courses, unless asked to wipe', async () => {
+    const { totalDocs } = await payload.count({ collection: 'courses', overrideAccess: true })
+    if (totalDocs) await expect(assertResetAllowed(payload)).rejects.toThrow(/--wipe/)
+    else await expect(assertResetAllowed(payload)).resolves.toBeUndefined()
 
-    const reviewed = await payload.create({
-      collection: 'partners',
-      data: {
-        name: 'Reviewed Probe',
-        slug: 'reviewed-probe',
-        kind: ['other'],
-        import_status: 'reviewed',
-      },
-      overrideAccess: true,
-    })
-    created.push(reviewed.id)
-    await expect(assertNoReviewedContent(payload)).rejects.toThrow(/partners: 1/)
+    process.argv.push('--wipe')
+    try {
+      await expect(assertResetAllowed(payload)).resolves.toBeUndefined()
+    } finally {
+      process.argv.pop()
+    }
   })
 })

@@ -21,12 +21,12 @@ export const applyArabicNames = async (payload: Payload): Promise<number> => {
     depth: 0,
     locale: 'all',
     overrideAccess: true,
-    select: { name: true, import_status: true },
+    select: { name: true },
   })
   let named = 0
   for (const doc of docs) {
-    const d = doc as unknown as { id: number; name?: Record<string, string>; import_status?: string | null }
-    if (d.import_status === 'reviewed' || isArabic(d.name?.ar)) continue
+    const d = doc as unknown as { id: number; name?: Record<string, string> }
+    if (isArabic(d.name?.ar)) continue
     const en = d.name?.en ?? ''
     const ar = names[en] ?? (isArabic(en) ? en : undefined)
     if (!ar) continue

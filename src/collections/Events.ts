@@ -69,7 +69,12 @@ export const Events: CollectionConfig = {
       filterOptions: ({ id }) => (id ? { id: { not_equals: id } } : true),
       admin: { position: 'sidebar', description: 'The event this one is part of.' },
     },
-    { name: 'programme', type: 'relationship', relationTo: 'programmes', admin: { position: 'sidebar' } },
+    {
+      name: 'programme',
+      type: 'relationship',
+      relationTo: 'programmes',
+      admin: { position: 'sidebar' },
+    },
     { name: 'course', type: 'relationship', relationTo: 'courses', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
@@ -117,35 +122,6 @@ export const Events: CollectionConfig = {
               admin: { width: '60%' },
             },
             { name: 'role', type: 'text', localized: true, admin: { width: '40%' } }, // "moderator"
-          ],
-        },
-      ],
-    },
-    {
-      name: 'partners',
-      type: 'array',
-      fields: [
-        {
-          type: 'row',
-          fields: [
-            {
-              name: 'partner',
-              type: 'relationship',
-              relationTo: 'partners',
-              required: true,
-              admin: { width: '60%' },
-            },
-            {
-              name: 'role',
-              type: 'select',
-              options: [
-                { label: 'Sponsor', value: 'sponsor' },
-                { label: 'Co-host', value: 'co_host' },
-                { label: 'Venue', value: 'venue' },
-                { label: 'Other', value: 'other' },
-              ],
-              admin: { width: '40%' },
-            },
           ],
         },
       ],

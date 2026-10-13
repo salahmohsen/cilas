@@ -3,7 +3,10 @@ import type { CollectionConfig } from 'payload'
 import { slugField } from '@/fields/slug'
 import { anyone, isAdmin } from '../access'
 import { importFields } from '@/fields/import'
-import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
+import {
+  revalidateCoursesAfterChange,
+  revalidateCoursesAfterDelete,
+} from '@/lib/revalidate-courses'
 
 export const Spaces: CollectionConfig = {
   slug: 'spaces',

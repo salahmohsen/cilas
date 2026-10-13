@@ -37,7 +37,6 @@ type StoredCourse = {
   id: number
   title?: string | null
   epigraph?: string | null
-  import_status?: string | null
   description?: Lexical | null
   sessions?: StoredSession[] | null
   bibliography?: Row[] | null
@@ -156,13 +155,13 @@ const fellowsOf = async (payload: Payload, ids: number[]): Promise<Fellow[]> => 
     overrideAccess: true,
   })
   return docs.map((d) => {
-    const p = d as unknown as { id: number; name?: Record<string, string>; bio?: Record<string, unknown>; import_status?: string | null }
+    const p = d as unknown as { id: number; name?: Record<string, string>; bio?: Record<string, unknown> }
     return {
       id: p.id,
       names: Object.values(p.name ?? {}).filter(Boolean),
       name: (p.name ?? {}) as Fellow['name'],
       bio: (p.bio ?? {}) as Fellow['bio'],
-      reviewed: p.import_status === 'reviewed',
+      reviewed: false,
     }
   })
 }
@@ -243,7 +242,7 @@ export const importFlows = async (
           ).docs[0]
         : undefined
       const course = found as unknown as StoredCourse | undefined
-      if (!course || course.import_status === 'reviewed') {
+      if (!course) {
         skipped.push(url)
         continue
       }

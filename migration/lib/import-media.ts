@@ -7,7 +7,6 @@ export type MediaTally = {
   uploaded: number
   reused: number
   attached: number
-  skippedReviewed: number
   skippedSet: number
   missing: number
   noTarget: number
@@ -29,7 +28,7 @@ export const mediaFor = async (
   if (found) return { id: found.id, url: found.url ?? '', created: false }
   const doc = (await payload.create({
     collection: 'media',
-    data: { alt, legacy_url: path, import_status: 'needs_review' },
+    data: { alt, legacy_url: path },
     filePath: file,
     overrideAccess: true,
   })) as MediaDoc
@@ -52,7 +51,7 @@ export const importMedia = async (
   resolve: (path: string) => ResolvedFile,
   extras: Array<{ path: string; alt: string }> = [],
 ): Promise<MediaResult> => {
-  const result: MediaResult = { uploaded: 0, reused: 0, attached: 0, skippedReviewed: 0, skippedSet: 0, missing: 0, noTarget: 0, urls: new Map(), noTargetJobs: [] }
+  const result: MediaResult = { uploaded: 0, reused: 0, attached: 0, skippedSet: 0, missing: 0, noTarget: 0, urls: new Map(), noTargetJobs: [] }
   const cache = new Map<string, { id: number; url: string }>()
 
   /** null when the file is not in the archive. */
@@ -81,6 +80,30 @@ export const importMedia = async (
   const hasDrafts = (collection: CollectionSlug): boolean => Boolean(payload.collections[collection]?.config.versions?.drafts)
 
   for (const job of jobs) {
+    // An outlet's logo: every press item from that outlet that has none yet.
+    if (job.collection === 'press') {
+      const { docs } = await payload.find({ collection: 'press', where: { 'outlet.name': { equals: job.name } }, pagination: false, depth: 0, overrideAccess: true })
+      const bare = docs.filter((d) => !d.outlet?.logo)
+      if (!docs.length) {
+        result.noTarget++
+        result.noTargetJobs.push(`press ${job.name} (outlet logo)`)
+        continue
+      }
+      if (!bare.length) {
+        result.skippedSet++
+        continue
+      }
+      const m = await media(job.path, job.alt)
+      if (!m) {
+        result.missing++
+        continue
+      }
+      for (const d of bare) {
+        await payload.update({ collection: 'press', id: d.id, overrideAccess: true, data: { outlet: { ...d.outlet, logo: m.id } } })
+      }
+      result.attached++
+      continue
+    }
     const draft = hasDrafts(job.collection)
     const where: Where = job.name ? { name: { equals: job.name } } : { legacy_url: { equals: job.legacy_url ?? '' } }
     let { docs } = await payload.find({ collection: job.collection, where, limit: 1, depth: 0, overrideAccess: true, draft })
@@ -89,14 +112,10 @@ export const importMedia = async (
     if (!docs.length && job.collection === 'people' && job.alt) {
       ;({ docs } = await payload.find({ collection: 'people', where: { name: { equals: job.alt } }, limit: 1, depth: 0, overrideAccess: true }))
     }
-    const doc = docs[0] as unknown as Record<string, unknown> & { id: number; import_status?: string | null } | undefined
+    const doc = docs[0] as unknown as Record<string, unknown> & { id: number } | undefined
     if (!doc) {
       result.noTarget++
       result.noTargetJobs.push(`${job.collection} ${job.name ?? job.legacy_url} (${job.field})`)
-      continue
-    }
-    if (doc.import_status === 'reviewed') {
-      result.skippedReviewed++
       continue
     }
     // A published document stays published: the file is written to it, not

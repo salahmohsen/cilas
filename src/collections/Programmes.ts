@@ -43,17 +43,29 @@ export const Programmes: CollectionConfig = {
         { label: "Women's Studies", value: 'women_studies' },
         { label: 'Residency', value: 'residency' },
       ],
-      admin: { position: 'sidebar' },
+      admin: {
+        description:
+          'What sort of programme: the Bridge (the year-long programme), Women’s Studies or a Residency.',
+        position: 'sidebar',
+      },
     },
     { name: 'cover', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
-    { name: 'tagline', type: 'text', localized: true },
+    {
+      name: 'tagline',
+      type: 'text',
+      localized: true,
+      admin: {
+        description: 'One line under the title, e.g. “A year of the liberal arts in Cairo”.',
+      },
+    },
     { name: 'overview', type: 'richText', localized: true },
     {
       name: 'highlights',
       type: 'array',
       fields: [{ name: 'text', type: 'text', localized: true, required: true }],
+      admin: { description: 'Short points shown as a list, e.g. “Taught in Arabic and English”.' },
     },
     {
       label: 'Structure',
@@ -83,12 +95,6 @@ export const Programmes: CollectionConfig = {
             },
           ],
         },
-        { name: 'featured_courses', type: 'relationship', relationTo: 'courses', hasMany: true },
-        {
-          name: 'self_directed_study',
-          type: 'checkbox',
-          admin: { description: 'A self-directed study period between the semesters.' },
-        },
       ],
     },
     {
@@ -98,17 +104,42 @@ export const Programmes: CollectionConfig = {
         {
           type: 'row',
           fields: [
-            { name: 'capacity', type: 'number', min: 1, admin: { width: '50%' } },
-            { name: 'weekly_hours', type: 'number', min: 0, admin: { width: '50%' } },
+            {
+              name: 'capacity',
+              type: 'number',
+              min: 1,
+              admin: { description: 'Seats available, e.g. 20.', width: '50%' },
+            },
+            {
+              name: 'weekly_hours',
+              type: 'number',
+              min: 0,
+              admin: { description: 'Expected hours of study a week, e.g. 9.', width: '50%' },
+            },
           ],
         },
-        { name: 'schedule_note', type: 'textarea', localized: true },
-        { name: 'requirements', type: 'richText', localized: true },
+        {
+          name: 'schedule_note',
+          type: 'textarea',
+          localized: true,
+          admin: {
+            description:
+              'When it meets, in words, e.g. “Saturdays and Tuesdays, from 10:30 or 5:30, three hours”.',
+          },
+        },
+        {
+          name: 'requirements',
+          type: 'richText',
+          localized: true,
+          admin: {
+            description:
+              'What applicants need, e.g. “A high-school certificate; a university degree helps.”',
+          },
+        },
       ],
     },
     registrationField(),
     pricingField({ dbName: 'programme_price' }),
-    { name: 'partners', type: 'relationship', relationTo: 'partners', hasMany: true },
     {
       name: 'testimonials',
       type: 'array',
@@ -117,15 +148,7 @@ export const Programmes: CollectionConfig = {
         { name: 'attribution', type: 'text', localized: true }, // "CILASian, 2018–19"
         { name: 'person', type: 'relationship', relationTo: 'people' },
       ],
-    },
-    {
-      name: 'faqs',
-      type: 'array',
-      labels: { singular: 'FAQ', plural: 'FAQs' },
-      fields: [
-        { name: 'question', type: 'text', localized: true, required: true },
-        { name: 'answer', type: 'richText', localized: true },
-      ],
+      admin: { description: 'Quotes from past participants, shown on the programme page.' },
     },
     ...importFields(),
   ],

@@ -110,11 +110,11 @@ export type ArchiveContent = {
 
 export type Tally = { created: number; updated: number; skipped: number }
 export type ContentResult = Record<
-  'articles' | 'publications' | 'press' | 'events' | 'newsletters' | 'partners' | 'people',
+  'articles' | 'publications' | 'press' | 'events' | 'newsletters' | 'people',
   Tally
 >
 
-type Row = { id: number; slug?: string | null; import_status?: string | null }
+type Row = { id: number; slug?: string | null }
 type Written = { id: number; touched: boolean; doc?: Record<string, unknown> }
 
 const IMPORT_CONTEXT = { skipReviewEmail: true }
@@ -134,7 +134,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
     press: tally(),
     events: tally(),
     newsletters: tally(),
-    partners: tally(),
     people: tally(),
   }
 
@@ -159,10 +158,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
       draft: options.draft,
     })
     const existing = docs[0] as unknown as Row | undefined
-    if (existing?.import_status === 'reviewed') {
-      result[key].skipped++
-      return { id: existing.id, touched: false }
-    }
     const args = { overrideAccess: true, draft: options.draft, context: IMPORT_CONTEXT }
     if (existing) {
       const { slug: _slug, ...rest } = body
@@ -194,9 +189,8 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
     arabicNamed.add(id)
     const doc = (await payload.findByID({ collection: 'people', id, locale: 'ar', fallbackLocale: false, depth: 0, overrideAccess: true })) as {
       name?: string | null
-      import_status?: string | null
     }
-    if (doc.import_status === 'reviewed' || doc.name === nameAr) return
+    if (doc.name === nameAr) return
     await payload.update({ collection: 'people', id, data: { name: nameAr }, locale: 'ar', overrideAccess: true, context: IMPORT_CONTEXT } as Parameters<Payload['update']>[0])
   }
   const person = async (name: string, from: string, nameAr?: string): Promise<number> => {
@@ -218,7 +212,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
             name,
             slug: await freeSlug(payload, 'people', slugify(name) || 'person'),
             ...(legacyTaken ? {} : { legacy_url }),
-            import_status: 'needs_review',
           },
           overrideAccess: true,
         })
@@ -233,27 +226,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
     const ids: number[] = []
     for (const n of names) ids.push(await person(n, from, namesAr[n])) // sequential: a name may repeat
     return ids
-  }
-
-  // Partners, by name; created when missing.
-  const partners = new Map<string, number>()
-  const partner = async (name: string, kind: 'outlet' | 'funder'): Promise<number> => {
-    const known = partners.get(name)
-    if (known) return known
-    const { docs } = await payload.find({ collection: 'partners', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
-    let id = docs[0]?.id as number | undefined
-    if (!id) {
-      id = (
-        await payload.create({
-          collection: 'partners',
-          data: { name, slug: await freeSlug(payload, 'partners', slugify(name) || 'partner'), kind: [kind], import_status: 'needs_review' },
-          overrideAccess: true,
-        })
-      ).id as number
-      result.partners.created++
-    }
-    partners.set(name, id)
-    return id
   }
 
   /** Credit rows in one locale: ids from the English write keep Arabic labels on the same rows. */
@@ -283,7 +255,7 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
   const giveImage = async (collection: 'articles' | 'publications' | 'people', id: number, field: 'cover_image' | 'photo', image?: ArchiveImage) => {
     if (!image || !data.imagesDir) return
     const doc = (await payload.findByID({ collection, id, depth: 0, overrideAccess: true, draft: collection !== 'people' })) as unknown as Record<string, unknown>
-    if (doc[field] || doc.import_status === 'reviewed') return
+    if (doc[field]) return
     const media = await mediaFor(payload, { path: `seed/${image.file}`, file: path.join(data.imagesDir, image.file), alt: image.alt })
     await payload.update({ collection, id, data: { [field]: media.id }, overrideAccess: true, context: IMPORT_CONTEXT } as Parameters<Payload['update']>[0])
   }
@@ -322,7 +294,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         tier: 'public',
         review: { status: 'approved' },
         _status: 'published',
-        import_status: 'needs_review',
         legacy_url: a.legacy_url,
       },
     )
@@ -361,8 +332,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
     const articles = [
       ...new Set([foreword, ...(await Promise.all(p.articles.map(articleId)))].filter((id): id is number => id !== undefined)),
     ]
-    const funders: number[] = []
-    for (const f of p.funders) funders.push(await partner(f, 'funder'))
     const written = await put(
       'publications',
       'publications',
@@ -373,15 +342,11 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         slug: slugify(p.title_en),
         ...(p.subtitle_en ? { subtitle: p.subtitle_en } : {}),
         ...(rich(p.intro_en, 'ltr') ? { intro: rich(p.intro_en, 'ltr') } : {}),
-        ...(p.year_from ? { year_from: p.year_from } : {}),
-        ...(p.year_to ? { year_to: p.year_to } : {}),
         ...(foreword ? { foreword } : {}),
         ...(articles.length ? { articles } : {}),
         credits: await creditRows(p.credits, p.legacy_url, 'en'),
-        ...(funders.length ? { funders } : {}),
         ...(p.license ? { license: p.license } : {}),
         ...(p.print_edition_url ? { print_edition_url: p.print_edition_url } : {}),
-        import_status: 'needs_review',
         legacy_url: p.legacy_url,
       },
     )
@@ -420,17 +385,15 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         kind: item.kind,
         title: item.title,
         ...(item.language ? { language: item.language } : {}),
-        ...(item.outlet ? { outlet: await partner(item.outlet, 'outlet') } : {}),
+        ...(item.outlet ? { outlet: { name: item.outlet } } : {}),
         authors,
         ...(item.published_date ? { published_date: item.published_date } : {}),
         ...(item.date_precision ? { date_precision: item.date_precision } : {}),
         links: item.links.map((l) => ({
           ...(l.language ? { language: l.language } : {}),
           url: l.url,
-          ...(l.archived_url ? { archived_url: l.archived_url } : {}),
         })),
         ...(item.excerpt ? { excerpt: item.excerpt } : {}),
-        import_status: 'needs_review',
         legacy_url: item.legacy_url,
       },
     )
@@ -450,7 +413,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         schedule: { start_precision: 'day', ...e.schedule },
         speakers: (await resolveSeq(e.speakers, e.legacy_url)).map((p) => ({ person: p })),
         ...(rich(e.description_en, 'ltr') ? { description: rich(e.description_en, 'ltr') } : {}),
-        import_status: 'needs_review',
         legacy_url: e.legacy_url,
       },
     )
@@ -467,7 +429,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         slug: slugify(n.title_en),
         issue_date: n.issue_date,
         ...(rich(n.blocks_en, 'ltr') ? { body: rich(n.blocks_en, 'ltr') } : {}),
-        import_status: 'needs_review',
         legacy_url: n.legacy_url,
         _status: 'draft',
       },

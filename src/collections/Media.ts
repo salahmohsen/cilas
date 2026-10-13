@@ -14,14 +14,8 @@ export const Media: CollectionConfig = {
       type: 'text',
       required: true,
       admin: {
-        position: 'sidebar',
-      },
-    },
-    {
-      name: 'space',
-      type: 'relationship',
-      relationTo: 'spaces',
-      admin: {
+        description:
+          'Describes the image for people who can’t see it, e.g. “Students reading on the rooftop”.',
         position: 'sidebar',
       },
     },

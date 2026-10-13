@@ -73,12 +73,8 @@ const imageFor = async (payload: Payload, collection: SeoCollection, doc: Doc, f
     if (cover) return cover
   }
   if (collection === 'press') {
-    const outlet = idOf(doc.outlet)
-    if (outlet) {
-      const partner = (await payload.findByID({ collection: 'partners', id: outlet, depth: 0, overrideAccess: true })) as unknown as Doc
-      const logo = idOf(partner.logo)
-      if (logo) return logo
-    }
+    const logo = idOf((doc.outlet as { logo?: unknown } | null | undefined)?.logo)
+    if (logo) return logo
   }
   if (collection === 'events') {
     for (const [rel, field] of [['courses', 'cover_image'], ['programmes', 'cover']] as const) {
@@ -133,15 +129,26 @@ for (const collection of SEO_COLLECTIONS) {
       if (!Object.keys(data).length) continue
       touched = true
       if (dry) continue
+      // A locale without its own title fails the required title on save.
+      // Versioned collections write a draft (drafts skip required fields) and
+      // publish it below; the rest take the English title, as the site's
+      // fallback already shows it.
+      const titleless = locale === 'ar' && !arDoc.title
       await payload.update({
         collection,
         id: enDoc.id,
         locale,
-        data: { meta: { ...meta, image: idOf(meta.image) ?? null, ...data } },
+        data: {
+          meta: { ...meta, image: idOf(meta.image) ?? null, ...data },
+          ...(titleless && !drafts(collection) ? { title: enDoc.title } : {}),
+        },
         overrideAccess: true,
-        // An unpublished draft stays a draft; a published doc is updated in place.
-        ...(drafts(collection) ? { draft: enDoc._status === 'draft' } : {}),
+        ...(drafts(collection) ? { draft: true } : {}),
       } as Parameters<Payload['update']>[0])
+    }
+    // The drafts above become the published version, as they were before.
+    if (touched && !dry && drafts(collection) && enDoc._status === 'published') {
+      await payload.update({ collection, id: enDoc.id, data: { _status: 'published' }, overrideAccess: true } as Parameters<Payload['update']>[0])
     }
     if (touched) filled++
   }

@@ -81,7 +81,6 @@ describe('registrationField', () => {
       'form',
       'url',
       'deadline',
-      'application_requirements',
       'archived_registration_url',
     ])
   })
@@ -296,13 +295,9 @@ describe('credits and language', () => {
 })
 
 describe('importFields', () => {
-  it('adds a hidden, unique legacy URL and an import status', () => {
-    const [legacy, status] = importFields()
-    expect(names([legacy, status])).toEqual(['legacy_url', 'import_status'])
-    expect(legacy).toMatchObject({ type: 'text', unique: true, index: true, admin: { hidden: true } })
-    expect(status).toMatchObject({ type: 'select', admin: { position: 'sidebar' } })
-    expect(
-      (status as { options: Array<{ value: string }> }).options.map((o) => o.value),
-    ).toEqual(['needs_review', 'reviewed'])
+  it('adds a hidden, unique legacy URL and nothing else', () => {
+    const fields = importFields()
+    expect(names(fields)).toEqual(['legacy_url'])
+    expect(fields[0]).toMatchObject({ type: 'text', unique: true, index: true, admin: { hidden: true } })
   })
 })

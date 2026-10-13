@@ -19,7 +19,6 @@ import { Press } from './collections/Press'
 import { Events } from './collections/Events'
 import { Newsletters } from './collections/Newsletters'
 import { Spaces } from './collections/Spaces'
-import { Partners } from './collections/Partners'
 import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { resendAdapter } from '@payloadcms/email-resend'
@@ -122,7 +121,6 @@ export default buildConfig({
     Events,
     Newsletters,
     Spaces,
-    Partners,
   ],
   globals: [SiteSettings],
   localization: {

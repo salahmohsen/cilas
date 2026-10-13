@@ -16,7 +16,7 @@ export const Press: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'outlet', 'published_date', 'kind'],
+    defaultColumns: ['title', 'published_date', 'kind'],
   },
   defaultSort: '-published_date',
   fields: [
@@ -31,7 +31,11 @@ export const Press: CollectionConfig = {
         { label: 'Talk', value: 'talk' },
         { label: 'Op-ed', value: 'op_ed' },
       ],
-      admin: { position: 'sidebar' },
+      admin: {
+        description:
+          'Coverage is written about CILAS; an interview, talk or op-ed is by someone from CILAS.',
+        position: 'sidebar',
+      },
     },
     // As published, in its own language; never translated.
     { name: 'title', type: 'text', required: true },
@@ -44,7 +48,27 @@ export const Press: CollectionConfig = {
           options: [...LANGUAGE_OPTIONS],
           admin: { width: '30%' },
         },
-        { name: 'outlet', type: 'relationship', relationTo: 'partners', admin: { width: '70%' } },
+      ],
+    },
+    {
+      // The outlet that published it: its name, site and logo, shown in the
+      // home page's press row.
+      name: 'outlet',
+      type: 'group',
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'name', type: 'text', localized: true, admin: { width: '50%' } },
+            {
+              name: 'url',
+              type: 'text',
+              validate: (value: unknown) => (value ? httpUrl(value) : true),
+              admin: { width: '50%', placeholder: 'https://…' },
+            },
+          ],
+        },
+        { name: 'logo', type: 'upload', relationTo: 'media' },
       ],
     },
     {
@@ -60,8 +84,10 @@ export const Press: CollectionConfig = {
               name: 'name',
               type: 'text',
               admin: { width: '50%' },
-              validate: (value: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
-                value || siblingData.person ? true : 'Pick a person or type a name.',
+              validate: (
+                value: unknown,
+                { siblingData }: { siblingData: Record<string, unknown> },
+              ) => (value || siblingData.person ? true : 'Pick a person or type a name.'),
             },
           ],
         },
@@ -84,7 +110,11 @@ export const Press: CollectionConfig = {
             { label: 'Month', value: 'month' },
             { label: 'Year', value: 'year' },
           ],
-          admin: { width: '50%' },
+          admin: {
+            description:
+              'How exact the date is. Year when only the year is known, e.g. a 2016 talk.',
+            width: '50%',
+          },
         },
       ],
     },
@@ -110,14 +140,7 @@ export const Press: CollectionConfig = {
               type: 'text',
               required: true,
               validate: httpUrl,
-              admin: { width: '40%' },
-            },
-            {
-              // Wayback copy, shown when the original is gone.
-              name: 'archived_url',
-              type: 'text',
-              validate: (value: unknown) => (value ? httpUrl(value) : true),
-              admin: { width: '40%' },
+              admin: { width: '80%' },
             },
           ],
         },

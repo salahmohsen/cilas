@@ -7,7 +7,7 @@ import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
 type Tracked =
-  'people' | 'articles' | 'publications' | 'press' | 'partners' | 'spaces' | 'cycles' | 'courses'
+  'people' | 'articles' | 'publications' | 'press' | 'spaces' | 'cycles' | 'courses'
 
 let payload: Payload
 const created: Array<{ collection: Tracked; id: number }> = []

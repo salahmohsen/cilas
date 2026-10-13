@@ -32,7 +32,7 @@ const course = (name: string): ArchiveCourse => ({
   flow_uploads: [],
   register_url: null,
 })
-const archived = ['english', 'arabic', 'reviewed'].map(course)
+const archived = ['english', 'arabic'].map(course)
 
 const english: Syllabus = {
   session_unit: 'week',
@@ -83,7 +83,7 @@ const arabic: Syllabus = {
 }
 
 const flows = [
-  { id: 'probe-english', courses: [url('english'), url('reviewed')] },
+  { id: 'probe-english', courses: [url('english')] },
   { id: 'probe-arabic', courses: [url('arabic')] },
   { id: 'probe-unextracted', courses: [url('english')] },
 ]
@@ -126,14 +126,6 @@ describe('course flow import', () => {
     payload = await getPayload({ config: await config })
     await cleanup()
     await importCourses(payload, { cycles, courses: archived })
-    const reviewed = await find('reviewed')
-    await payload.update({
-      collection: 'courses',
-      id: reviewed.id,
-      data: { import_status: 'reviewed' },
-      draft: true,
-      overrideAccess: true,
-    })
   })
   afterAll(async () => {
     await cleanup()
@@ -142,7 +134,7 @@ describe('course flow import', () => {
 
   it('writes an English syllabus into its course', async () => {
     const result = await run()
-    expect(result).toEqual({ courses: 2, sessions: 4, skipped: [url('reviewed')] })
+    expect(result).toEqual({ courses: 2, sessions: 4, skipped: [] })
 
     const c = await find('english')
     expect(c.session_unit).toBe('week')
@@ -226,10 +218,4 @@ describe('course flow import', () => {
     expect((await find('arabic', 'en')).sessions).toHaveLength(2)
   })
 
-  it('leaves a reviewed course untouched', async () => {
-    const c = await find('reviewed')
-    expect(c.sessions ?? []).toHaveLength(0)
-    expect(c.session_unit).toBe('session')
-    expect(headings(c)).toBe(0)
-  })
 })

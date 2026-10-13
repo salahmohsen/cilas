@@ -166,7 +166,10 @@ export const Articles: CollectionConfig = {
       localized: true,
       // Footnotes are inline blocks: inserted where they belong in the text.
       editor: lexicalEditor({
-        features: ({ defaultFeatures }) => [...defaultFeatures, BlocksFeature({ inlineBlocks: [Footnote] })],
+        features: ({ defaultFeatures }) => [
+          ...defaultFeatures,
+          BlocksFeature({ inlineBlocks: [Footnote] }),
+        ],
       }),
     },
     {
@@ -213,6 +216,10 @@ export const Articles: CollectionConfig = {
               type: 'textarea',
               access: { create: canSetTier, update: canSetTier },
               hooks: { beforeDuplicate: [() => null] },
+              admin: {
+                description:
+                  'The editor’s note to the author when asking for changes, e.g. “Shorten the second section.”',
+              },
             },
           ],
         },

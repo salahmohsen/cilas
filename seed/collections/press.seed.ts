@@ -1,6 +1,6 @@
 import type { Payload } from 'payload'
 import type { PressSeed, SeedContext } from '../seed.type'
-import { getOrCreateId, requireId } from '../seed.utils'
+import { getOrCreateId } from '../seed.utils'
 
 export const pressData: PressSeed[] = [
     {
@@ -47,7 +47,7 @@ export const pressData: PressSeed[] = [
     },
 ]
 
-export const seedPress = async (payload: Payload, ctx: SeedContext): Promise<void> => {
+export const seedPress = async (payload: Payload, _ctx: SeedContext): Promise<void> => {
   for (const { outlet, url, language, ...item } of pressData) {
     await getOrCreateId(payload, 'press', { title: { equals: item.title } }, () =>
       payload.create({
@@ -56,7 +56,7 @@ export const seedPress = async (payload: Payload, ctx: SeedContext): Promise<voi
           ...item,
           kind: 'coverage',
           language,
-          outlet: requireId(ctx.partners, outlet),
+          outlet: { name: outlet },
           links: [{ language, url }],
         },
         overrideAccess: true,

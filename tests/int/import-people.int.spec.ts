@@ -72,15 +72,12 @@ describe('archive people import', () => {
     await payload.destroy()
   })
 
-  it('creates people needing review, and a second run creates nothing new', async () => {
+  it('creates the people, and a second run creates nothing new', async () => {
     const first = await importPeople(payload, data)
     expect(first).toEqual({ people: 2, programmes: 1, memberships: 1, governance: 1 })
 
     const { docs } = await payload.find({ collection: 'people', where: PROBE, depth: 0, overrideAccess: true, sort: 'name' })
-    expect(docs.map((d) => [d.name, d.import_status])).toEqual([
-      ['Probe People Advisor', 'needs_review'],
-      ['Probe People Student', 'needs_review'],
-    ])
+    expect(docs.map((d) => d.name)).toEqual(['Probe People Advisor', 'Probe People Student'])
     const ar = await payload.findByID({ collection: 'people', id: docs[1].id, locale: 'ar', fallbackLocale: false, overrideAccess: true })
     expect(ar.name).toBe('طالب')
 
@@ -103,7 +100,7 @@ describe('archive people import', () => {
       overrideAccess: true,
     })
     expect(docs).toHaveLength(1)
-    expect(docs[0]).toMatchObject({ _status: 'draft', import_status: 'needs_review', kind: 'bridge' })
+    expect(docs[0]).toMatchObject({ _status: 'draft', kind: 'bridge' })
     expect(docs[0].cycles).toContain(cycle.id)
     const mine = (docs[0].components ?? []).filter((c) => c.cycle === cycle.id)
     expect(mine.map((c) => [c.label, c.course_types])).toEqual([
@@ -118,7 +115,7 @@ describe('archive people import', () => {
     ).docs
     const { docs } = await payload.find({ collection: 'memberships', where: { person: { equals: student.id } }, depth: 0, overrideAccess: true })
     expect(docs).toHaveLength(1)
-    expect(docs[0]).toMatchObject({ role: 'student', import_status: 'needs_review' })
+    expect(docs[0]).toMatchObject({ role: 'student' })
     await expect(
       payload.create({
         collection: 'memberships',
@@ -140,12 +137,16 @@ describe('archive people import', () => {
     expect((docs[0].person as { name: string }).name).toBe('Probe People Advisor')
   })
 
-  it('prunes an unreferenced person needing review, and keeps reviewed and referenced ones', async () => {
-    for (const [name, import_status] of [
-      ['Probe People Orphan', 'needs_review'],
-      ['Probe People Reviewed', 'reviewed'],
+  it('prunes an unreferenced imported person, and keeps hand-added and referenced ones', async () => {
+    for (const [name, legacy_url] of [
+      ['Probe People Orphan', '/probe-people.html#orphan'],
+      ['Probe People Reviewed', null],
     ] as const) {
-      await payload.create({ collection: 'people', data: { name, slug: name.toLowerCase().replaceAll(' ', '-'), import_status }, overrideAccess: true })
+      await payload.create({
+        collection: 'people',
+        data: { name, slug: name.toLowerCase().replaceAll(' ', '-'), ...(legacy_url ? { legacy_url } : {}) },
+        overrideAccess: true,
+      })
     }
     const pruned = await prunePeople(payload, { scope: PROBE })
     expect(pruned).toEqual(['Probe People Orphan'])
@@ -155,7 +156,7 @@ describe('archive people import', () => {
   })
 
   it('refuses to prune more than the limit', async () => {
-    await payload.create({ collection: 'people', data: { name: 'Probe People Orphan 2', slug: 'probe-people-orphan-2', import_status: 'needs_review' }, overrideAccess: true })
+    await payload.create({ collection: 'people', data: { name: 'Probe People Orphan 2', slug: 'probe-people-orphan-2', legacy_url: '/probe-people.html#orphan-2' }, overrideAccess: true })
     await expect(prunePeople(payload, { scope: PROBE, limit: 0 })).rejects.toThrow(/refusing/)
     expect(await probeIds()).toHaveLength(4)
   })

@@ -82,7 +82,6 @@ export interface Config {
     events: Event;
     newsletters: Newsletter;
     spaces: Space;
-    partners: Partner;
     forms: Form;
     'form-submissions': FormSubmission;
     redirects: Redirect;
@@ -124,7 +123,6 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
-    partners: PartnersSelect<false> | PartnersSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -256,10 +254,6 @@ export interface Person {
     totalDocs?: number;
   };
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -269,13 +263,11 @@ export interface Person {
  */
 export interface Media {
   id: number;
-  alt: string;
-  space?: (number | null) | Space;
-  legacy_url?: string | null;
   /**
-   * Imported from the old site. Mark it reviewed once checked.
+   * Describes the image for people who can’t see it, e.g. “Students reading on the rooftop”.
    */
-  import_status?: ('needs_review' | 'reviewed') | null;
+  alt: string;
+  legacy_url?: string | null;
   prefix?: string | null;
   _objectKey?: string | null;
   updatedAt: string;
@@ -307,6 +299,358 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courses".
+ */
+export interface Course {
+  id: number;
+  /**
+   * Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins).
+   */
+  tier: 'owner' | 'community' | 'public';
+  /**
+   * Core, Thematic and Lab courses count toward the Bridge; Workshop and Short courses do not.
+   */
+  course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT';
+  cycle: number | Cycle;
+  cover_image?: (number | null) | Media;
+  title: string;
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
+  /**
+   * A second line under the title, e.g. “An introduction to translation studies”.
+   */
+  subtitle?: string | null;
+  /**
+   * One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.
+   */
+  summary?: string | null;
+  /**
+   * A short quote or question shown before the description, e.g. “What does a city remember?”
+   */
+  epigraph?: string | null;
+  description?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  /**
+   * The fellow’s practical notes to participants: what to bring, how work is assessed, e.g. “Bring an apron; all chemicals are provided.”
+   */
+  facilitator_note?: string | null;
+  /**
+   * Sensitive material participants should know about beforehand, e.g. “Discusses sexual violence.”
+   */
+  content_warning?: string | null;
+  schedule?: {
+    start_date?: string | null;
+    /**
+     * Week only keeps it off the calendar.
+     */
+    start_precision?: ('day' | 'week') | null;
+    /**
+     * How long it runs, e.g. 8. With the start date it sets the end date.
+     */
+    weeks?: number | null;
+    /**
+     * Weekly meeting times, in Cairo time.
+     */
+    slots?:
+      | {
+          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
+          start_time: string;
+          end_time: string;
+          id?: string | null;
+        }[]
+      | null;
+    /**
+     * Worked out from the schedule.
+     */
+    end_date?: string | null;
+    /**
+     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
+     */
+    note?: string | null;
+  };
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    archived_registration_url?: string | null;
+  };
+  /**
+   * Only when this course costs something other than its cycle’s price.
+   */
+  pricing_override?: {
+    /**
+     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
+     */
+    min?: number | null;
+    /**
+     * Leave empty for a single price.
+     */
+    max?: number | null;
+    currency?: 'EGP' | null;
+    /**
+     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
+     */
+    note?: string | null;
+    /**
+     * Tick when people who can’t pay the full price may ask for a reduction.
+     */
+    need_based_deductions?: boolean | null;
+    /**
+     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
+     */
+    payment_plans?:
+      | {
+          label: string;
+          installments?:
+            | {
+                amount: number;
+                id?: string | null;
+              }[]
+            | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  sessions?:
+    | {
+        /**
+         * Its number in the flow: 1, 2, 3…
+         */
+        order?: number | null;
+        session_title?: string | null;
+        /**
+         * Default: one week of slots.
+         */
+        meetings?: number | null;
+        /**
+         * The session will not take place: marked as cancelled on the page and left off the calendar.
+         */
+        cancelled?: boolean | null;
+        description?: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        /**
+         * Only for a session off the weekly schedule, e.g. a 5-day workshop at changing hours. These dates replace the schedule’s for this session.
+         */
+        dates?:
+          | {
+              date: string;
+              start_time: string;
+              end_time: string;
+              id?: string | null;
+            }[]
+          | null;
+        bibliography?:
+          | {
+              type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
+              title?: string | null;
+              /**
+               * A link to the text, video or recording, if it is online.
+               */
+              href?: string | null;
+              /**
+               * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
+               */
+              note?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        activities?:
+          | {
+              kind: 'discussion' | 'field_visit' | 'exercise' | 'screening' | 'presentation' | 'other';
+              description?: string | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  bibliography?:
+    | {
+        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
+        title?: string | null;
+        /**
+         * A link to the text, video or recording, if it is online.
+         */
+        href?: string | null;
+        /**
+         * Author, year or pages, e.g. “Arendt, 1958, ch. 2”.
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Offline (in person), Online, or Hybrid (both at once).
+   */
+  location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
+  /**
+   * Languages the course is taught in. Mixed use goes in the language note.
+   */
+  teaching_languages?: ('ar' | 'en')[] | null;
+  /**
+   * Only when languages mix, e.g. “Readings in Arabic, discussion in either.”
+   */
+  language_note?: string | null;
+  /**
+   * Who teaches it. Each gets the Fellow role on their linked account.
+   */
+  fellows?: (number | Person)[] | null;
+  /**
+   * Tick when the fellow may still change the sessions; the page says the syllabus may change.
+   */
+  syllabus_tentative?: boolean | null;
+  /**
+   * How sessions are numbered on the page: “Week 3” or “Session 3”.
+   */
+  session_unit: 'session' | 'week';
+  enrollments?: {
+    docs?: (number | Enrollment)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  legacy_url?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "cycles".
+ */
+export interface Cycle {
+  id: number;
+  title?: string | null;
+  slug?: string | null;
+  season: 'fall' | 'winter' | 'spring' | 'summer';
+  /**
+   * The year it starts in. A winter cycle counts by its January: Dec 2025–Feb 2026 is 2026.
+   */
+  start_year: number;
+  space: number | Space;
+  start_date?: string | null;
+  academic_year?: string | null;
+  registration?: {
+    /**
+     * Leave empty on a course to use its cycle's.
+     */
+    method?: ('form' | 'external' | 'closed') | null;
+    form?: (number | null) | Form;
+    url?: string | null;
+    /**
+     * The last day to register, in Cairo. Empty on a course uses its cycle's.
+     */
+    deadline?: string | null;
+    archived_registration_url?: string | null;
+  };
+  /**
+   * One price per group of course types.
+   */
+  pricing?:
+    | {
+        /**
+         * Which course types this price is for, e.g. Thematic and Lab.
+         */
+        course_types: ('CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT')[];
+        pricing?: {
+          /**
+           * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
+           */
+          min?: number | null;
+          /**
+           * Leave empty for a single price.
+           */
+          max?: number | null;
+          currency?: 'EGP' | null;
+          /**
+           * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
+           */
+          note?: string | null;
+          /**
+           * Tick when people who can’t pay the full price may ask for a reduction.
+           */
+          need_based_deductions?: boolean | null;
+          /**
+           * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
+           */
+          payment_plans?:
+            | {
+                label: string;
+                installments?:
+                  | {
+                      amount: number;
+                      id?: string | null;
+                    }[]
+                  | null;
+                id?: string | null;
+              }[]
+            | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  courses?: {
+    docs?: (number | Course)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  legacy_url?: string | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -346,310 +690,6 @@ export interface Space {
       }[]
     | null;
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "courses".
- */
-export interface Course {
-  id: number;
-  tier: 'owner' | 'community' | 'public';
-  course_type: 'CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT';
-  cycle: number | Cycle;
-  cover_image?: (number | null) | Media;
-  title: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  subtitle?: string | null;
-  summary?: string | null;
-  epigraph?: string | null;
-  description?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  facilitator_note?: string | null;
-  content_warning?: string | null;
-  schedule?: {
-    start_date?: string | null;
-    /**
-     * Week only keeps it off the calendar.
-     */
-    start_precision?: ('day' | 'week') | null;
-    weeks?: number | null;
-    /**
-     * Weekly meeting times, in Cairo time.
-     */
-    slots?:
-      | {
-          weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
-          start_time: string;
-          end_time: string;
-          label?: string | null;
-          id?: string | null;
-        }[]
-      | null;
-    /**
-     * Worked out from the schedule.
-     */
-    end_date?: string | null;
-    /**
-     * One-off exceptions, e.g. "hybrid for the first 6 weeks, then online".
-     */
-    note?: string | null;
-  };
-  registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
-    method?: ('form' | 'external' | 'closed') | null;
-    form?: (number | null) | Form;
-    url?: string | null;
-    /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
-     */
-    deadline?: string | null;
-    application_requirements?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    archived_registration_url?: string | null;
-  };
-  pricing_override?: {
-    min?: number | null;
-    /**
-     * Leave empty for a single price.
-     */
-    max?: number | null;
-    currency?: 'EGP' | null;
-    note?: string | null;
-    need_based_deductions?: boolean | null;
-    payment_plans?:
-      | {
-          label: string;
-          installments?:
-            | {
-                amount: number;
-                due_date?: string | null;
-                id?: string | null;
-              }[]
-            | null;
-          id?: string | null;
-        }[]
-      | null;
-  };
-  sessions?:
-    | {
-        order?: number | null;
-        session_title?: string | null;
-        /**
-         * Default: one week of slots.
-         */
-        meetings?: number | null;
-        cancelled?: boolean | null;
-        description?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        /**
-         * Only when this session's dates differ from the schedule. These replace them.
-         */
-        dates?:
-          | {
-              date: string;
-              start_time: string;
-              end_time: string;
-              id?: string | null;
-            }[]
-          | null;
-        bibliography?:
-          | {
-              type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
-              title?: string | null;
-              href?: string | null;
-              note?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        activities?:
-          | {
-              kind: 'discussion' | 'field_visit' | 'exercise' | 'screening' | 'presentation' | 'other';
-              description?: string | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  bibliography?:
-    | {
-        type: 'reading' | 'watch' | 'listen' | 'prompt' | 'other';
-        title?: string | null;
-        href?: string | null;
-        note?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  location?: ('OFFLINE' | 'ONLINE' | 'HYBRID')[] | null;
-  teaching_languages?: ('ar' | 'en')[] | null;
-  language_note?: string | null;
-  fellows?: (number | Person)[] | null;
-  syllabus_tentative?: boolean | null;
-  session_unit: 'session' | 'week';
-  enrollments?: {
-    docs?: (number | Enrollment)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-  };
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "cycles".
- */
-export interface Cycle {
-  id: number;
-  title?: string | null;
-  slug?: string | null;
-  season: 'fall' | 'winter' | 'spring' | 'summer';
-  start_year: number;
-  space: number | Space;
-  start_date?: string | null;
-  academic_year?: string | null;
-  registration?: {
-    /**
-     * Leave empty on a course to use its cycle's.
-     */
-    method?: ('form' | 'external' | 'closed') | null;
-    form?: (number | null) | Form;
-    url?: string | null;
-    /**
-     * The last day to register, in Cairo. Empty on a course uses its cycle's.
-     */
-    deadline?: string | null;
-    application_requirements?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
-    archived_registration_url?: string | null;
-  };
-  /**
-   * One price per group of course types.
-   */
-  pricing?:
-    | {
-        course_types: ('CORE' | 'THEMATIC' | 'LAB' | 'WORKSHOP' | 'SHORT')[];
-        pricing?: {
-          min?: number | null;
-          /**
-           * Leave empty for a single price.
-           */
-          max?: number | null;
-          currency?: 'EGP' | null;
-          note?: string | null;
-          need_based_deductions?: boolean | null;
-          payment_plans?:
-            | {
-                label: string;
-                installments?:
-                  | {
-                      amount: number;
-                      due_date?: string | null;
-                      id?: string | null;
-                    }[]
-                  | null;
-                id?: string | null;
-              }[]
-            | null;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  courses?: {
-    docs?: (number | Course)[];
-    hasNextPage?: boolean;
-    totalDocs?: number;
-  };
-  legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
-  meta?: {
-    title?: string | null;
-    description?: string | null;
-    /**
-     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
-     */
-    image?: (number | null) | Media;
-  };
   updatedAt: string;
   createdAt: string;
 }
@@ -933,16 +973,24 @@ export interface Governance {
   person: number | Person;
   role: 'advisor' | 'trustee';
   title?: string | null;
+  /**
+   * Their role on the board, e.g. “Chair” or “Treasurer”.
+   */
   board_role?: string | null;
+  /**
+   * What they advise on, e.g. “curriculum design and university partnerships”.
+   */
   advises_on?: string | null;
+  /**
+   * First year on the board, e.g. 2016.
+   */
   term_from?: number | null;
   term_to?: number | null;
+  /**
+   * Position in the list: lower numbers come first.
+   */
   order?: number | null;
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -955,13 +1003,11 @@ export interface Membership {
   person: number | Person;
   programme: number | Programme;
   role: 'student' | 'residential_fellow' | 'visiting_fellow';
-  title?: string | null;
-  note?: string | null;
-  legacy_url?: string | null;
   /**
-   * Imported from the old site. Mark it reviewed once checked.
+   * Their role in words, if it needs more than the role, e.g. “Programme coordinator”.
    */
-  import_status?: ('needs_review' | 'reviewed') | null;
+  title?: string | null;
+  legacy_url?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -971,6 +1017,9 @@ export interface Membership {
  */
 export interface Programme {
   id: number;
+  /**
+   * What sort of programme: the Bridge (the year-long programme), Women’s Studies or a Residency.
+   */
   kind: 'bridge' | 'women_studies' | 'residency';
   cover?: (number | null) | Media;
   title: string;
@@ -979,6 +1028,9 @@ export interface Programme {
    */
   generateSlug?: boolean | null;
   slug: string;
+  /**
+   * One line under the title, e.g. “A year of the liberal arts in Cairo”.
+   */
   tagline?: string | null;
   overview?: {
     root: {
@@ -995,6 +1047,9 @@ export interface Programme {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Short points shown as a list, e.g. “Taught in Arabic and English”.
+   */
   highlights?:
     | {
         text: string;
@@ -1017,14 +1072,21 @@ export interface Programme {
         id?: string | null;
       }[]
     | null;
-  featured_courses?: (number | Course)[] | null;
   /**
-   * A self-directed study period between the semesters.
+   * Seats available, e.g. 20.
    */
-  self_directed_study?: boolean | null;
   capacity?: number | null;
+  /**
+   * Expected hours of study a week, e.g. 9.
+   */
   weekly_hours?: number | null;
+  /**
+   * When it meets, in words, e.g. “Saturdays and Tuesdays, from 10:30 or 5:30, three hours”.
+   */
   schedule_note?: string | null;
+  /**
+   * What applicants need, e.g. “A high-school certificate; a university degree helps.”
+   */
   requirements?: {
     root: {
       type: string;
@@ -1051,39 +1113,35 @@ export interface Programme {
      * The last day to register, in Cairo. Empty on a course uses its cycle's.
      */
     deadline?: string | null;
-    application_requirements?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
     archived_registration_url?: string | null;
   };
   pricing?: {
+    /**
+     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
+     */
     min?: number | null;
     /**
      * Leave empty for a single price.
      */
     max?: number | null;
     currency?: 'EGP' | null;
+    /**
+     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
+     */
     note?: string | null;
+    /**
+     * Tick when people who can’t pay the full price may ask for a reduction.
+     */
     need_based_deductions?: boolean | null;
+    /**
+     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
+     */
     payment_plans?:
       | {
           label: string;
           installments?:
             | {
                 amount: number;
-                due_date?: string | null;
                 id?: string | null;
               }[]
             | null;
@@ -1091,7 +1149,9 @@ export interface Programme {
         }[]
       | null;
   };
-  partners?: (number | Partner)[] | null;
+  /**
+   * Quotes from past participants, shown on the programme page.
+   */
   testimonials?:
     | {
         quote: string;
@@ -1100,32 +1160,7 @@ export interface Programme {
         id?: string | null;
       }[]
     | null;
-  faqs?:
-    | {
-        question: string;
-        answer?: {
-          root: {
-            type: string;
-            children: {
-              type: any;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
-            version: number;
-          };
-          [k: string]: unknown;
-        } | null;
-        id?: string | null;
-      }[]
-    | null;
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1137,29 +1172,6 @@ export interface Programme {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners".
- */
-export interface Partner {
-  id: number;
-  name: string;
-  /**
-   * When enabled, the slug will auto-generate from the title field on save and autosave.
-   */
-  generateSlug?: boolean | null;
-  slug: string;
-  kind: ('funder' | 'co_host' | 'outlet' | 'other')[];
-  url?: string | null;
-  logo?: (number | null) | Media;
-  legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1195,6 +1207,9 @@ export interface Article {
      * Ready for an editor? Choose Submitted, then save with the main button. Save draft cannot change this.
      */
     status: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
+    /**
+     * The editor’s note to the author when asking for changes, e.g. “Shorten the second section.”
+     */
     review_note?: string | null;
   };
   /**
@@ -1248,10 +1263,6 @@ export interface Article {
     totalDocs?: number;
   };
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1272,8 +1283,6 @@ export interface Publication {
   id: number;
   kind: 'essay_collection' | 'translation_booklet' | 'research' | 'other';
   cover_image?: (number | null) | Media;
-  year_from?: number | null;
-  year_to?: number | null;
   title: string;
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -1325,14 +1334,9 @@ export interface Publication {
       }[]
     | null;
   produced_by?: (number | Course)[] | null;
-  funders?: (number | Partner)[] | null;
   license?: ('cc_by_nc_sa' | 'cc_by_sa' | 'cc_by' | 'all_rights_reserved') | null;
   print_edition_url?: string | null;
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1350,10 +1354,17 @@ export interface Publication {
  */
 export interface Press {
   id: number;
+  /**
+   * Coverage is written about CILAS; an interview, talk or op-ed is by someone from CILAS.
+   */
   kind: 'coverage' | 'interview' | 'talk' | 'op_ed';
   title: string;
   language?: ('ar' | 'en' | 'de' | 'fr' | 'other') | null;
-  outlet?: (number | null) | Partner;
+  outlet?: {
+    name?: string | null;
+    url?: string | null;
+    logo?: (number | null) | Media;
+  };
   /**
    * A person with a profile, or just a name.
    */
@@ -1365,6 +1376,9 @@ export interface Press {
       }[]
     | null;
   published_date?: string | null;
+  /**
+   * How exact the date is. Year when only the year is known, e.g. a 2016 talk.
+   */
   date_precision?: ('day' | 'month' | 'year') | null;
   /**
    * One per language the piece appeared in.
@@ -1372,15 +1386,10 @@ export interface Press {
   links: {
     language?: ('ar' | 'en' | 'de' | 'fr' | 'other') | null;
     url: string;
-    archived_url?: string | null;
     id?: string | null;
   }[];
   excerpt?: string | null;
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1446,6 +1455,9 @@ export interface Event {
      * Week only keeps it off the calendar.
      */
     start_precision?: ('day' | 'week') | null;
+    /**
+     * How long it runs, e.g. 8. With the start date it sets the end date.
+     */
     weeks?: number | null;
     /**
      * Weekly meeting times, in Cairo time.
@@ -1455,7 +1467,6 @@ export interface Event {
           weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri';
           start_time: string;
           end_time: string;
-          label?: string | null;
           id?: string | null;
         }[]
       | null;
@@ -1496,13 +1507,6 @@ export interface Event {
         id?: string | null;
       }[]
     | null;
-  partners?:
-    | {
-        partner: number | Partner;
-        role?: ('sponsor' | 'co_host' | 'venue' | 'other') | null;
-        id?: string | null;
-      }[]
-    | null;
   registration?: {
     /**
      * Leave empty on a course to use its cycle's.
@@ -1514,39 +1518,35 @@ export interface Event {
      * The last day to register, in Cairo. Empty on a course uses its cycle's.
      */
     deadline?: string | null;
-    application_requirements?: {
-      root: {
-        type: string;
-        children: {
-          type: any;
-          version: number;
-          [k: string]: unknown;
-        }[];
-        direction: ('ltr' | 'rtl') | null;
-        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-        indent: number;
-        version: number;
-      };
-      [k: string]: unknown;
-    } | null;
     archived_registration_url?: string | null;
   };
   pricing?: {
+    /**
+     * The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.
+     */
     min?: number | null;
     /**
      * Leave empty for a single price.
      */
     max?: number | null;
     currency?: 'EGP' | null;
+    /**
+     * Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”
+     */
     note?: string | null;
+    /**
+     * Tick when people who can’t pay the full price may ask for a reduction.
+     */
     need_based_deductions?: boolean | null;
+    /**
+     * Ways to pay in instalments, e.g. “Three payments” of 10,000 each.
+     */
     payment_plans?:
       | {
           label: string;
           installments?:
             | {
                 amount: number;
-                due_date?: string | null;
                 id?: string | null;
               }[]
             | null;
@@ -1555,10 +1555,6 @@ export interface Event {
       | null;
   };
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -1600,10 +1596,6 @@ export interface Newsletter {
     [k: string]: unknown;
   } | null;
   legacy_url?: string | null;
-  /**
-   * Imported from the old site. Mark it reviewed once checked.
-   */
-  import_status?: ('needs_review' | 'reviewed') | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -1758,10 +1750,6 @@ export interface PayloadLockedDocument {
         value: number | Space;
       } | null)
     | ({
-        relationTo: 'partners';
-        value: number | Partner;
-      } | null)
-    | ({
         relationTo: 'forms';
         value: number | Form;
       } | null)
@@ -1863,7 +1851,6 @@ export interface PeopleSelect<T extends boolean = true> {
   memberships?: T;
   enrollments?: T;
   legacy_url?: T;
-  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1876,9 +1863,7 @@ export interface MembershipsSelect<T extends boolean = true> {
   programme?: T;
   role?: T;
   title?: T;
-  note?: T;
   legacy_url?: T;
-  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1888,9 +1873,7 @@ export interface MembershipsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  space?: T;
   legacy_url?: T;
-  import_status?: T;
   prefix?: T;
   _objectKey?: T;
   updatedAt?: T;
@@ -1959,7 +1942,6 @@ export interface CoursesSelect<T extends boolean = true> {
               weekday?: T;
               start_time?: T;
               end_time?: T;
-              label?: T;
               id?: T;
             };
         end_date?: T;
@@ -1972,7 +1954,6 @@ export interface CoursesSelect<T extends boolean = true> {
         form?: T;
         url?: T;
         deadline?: T;
-        application_requirements?: T;
         archived_registration_url?: T;
       };
   pricing_override?:
@@ -1991,7 +1972,6 @@ export interface CoursesSelect<T extends boolean = true> {
                 | T
                 | {
                     amount?: T;
-                    due_date?: T;
                     id?: T;
                   };
               id?: T;
@@ -2048,7 +2028,6 @@ export interface CoursesSelect<T extends boolean = true> {
   session_unit?: T;
   enrollments?: T;
   legacy_url?: T;
-  import_status?: T;
   meta?:
     | T
     | {
@@ -2102,8 +2081,6 @@ export interface ProgrammesSelect<T extends boolean = true> {
         course_types?: T;
         id?: T;
       };
-  featured_courses?: T;
-  self_directed_study?: T;
   capacity?: T;
   weekly_hours?: T;
   schedule_note?: T;
@@ -2115,7 +2092,6 @@ export interface ProgrammesSelect<T extends boolean = true> {
         form?: T;
         url?: T;
         deadline?: T;
-        application_requirements?: T;
         archived_registration_url?: T;
       };
   pricing?:
@@ -2134,13 +2110,11 @@ export interface ProgrammesSelect<T extends boolean = true> {
                 | T
                 | {
                     amount?: T;
-                    due_date?: T;
                     id?: T;
                   };
               id?: T;
             };
       };
-  partners?: T;
   testimonials?:
     | T
     | {
@@ -2149,15 +2123,7 @@ export interface ProgrammesSelect<T extends boolean = true> {
         person?: T;
         id?: T;
       };
-  faqs?:
-    | T
-    | {
-        question?: T;
-        answer?: T;
-        id?: T;
-      };
   legacy_url?: T;
-  import_status?: T;
   meta?:
     | T
     | {
@@ -2188,7 +2154,6 @@ export interface CyclesSelect<T extends boolean = true> {
         form?: T;
         url?: T;
         deadline?: T;
-        application_requirements?: T;
         archived_registration_url?: T;
       };
   pricing?:
@@ -2211,7 +2176,6 @@ export interface CyclesSelect<T extends boolean = true> {
                       | T
                       | {
                           amount?: T;
-                          due_date?: T;
                           id?: T;
                         };
                     id?: T;
@@ -2221,7 +2185,6 @@ export interface CyclesSelect<T extends boolean = true> {
       };
   courses?: T;
   legacy_url?: T;
-  import_status?: T;
   meta?:
     | T
     | {
@@ -2246,7 +2209,6 @@ export interface GovernanceSelect<T extends boolean = true> {
   term_to?: T;
   order?: T;
   legacy_url?: T;
-  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2298,7 +2260,6 @@ export interface ArticlesSelect<T extends boolean = true> {
   related_articles?: T;
   publications?: T;
   legacy_url?: T;
-  import_status?: T;
   meta?:
     | T
     | {
@@ -2317,8 +2278,6 @@ export interface ArticlesSelect<T extends boolean = true> {
 export interface PublicationsSelect<T extends boolean = true> {
   kind?: T;
   cover_image?: T;
-  year_from?: T;
-  year_to?: T;
   title?: T;
   generateSlug?: T;
   slug?: T;
@@ -2335,11 +2294,9 @@ export interface PublicationsSelect<T extends boolean = true> {
         id?: T;
       };
   produced_by?: T;
-  funders?: T;
   license?: T;
   print_edition_url?: T;
   legacy_url?: T;
-  import_status?: T;
   meta?:
     | T
     | {
@@ -2358,7 +2315,13 @@ export interface PressSelect<T extends boolean = true> {
   kind?: T;
   title?: T;
   language?: T;
-  outlet?: T;
+  outlet?:
+    | T
+    | {
+        name?: T;
+        url?: T;
+        logo?: T;
+      };
   authors?:
     | T
     | {
@@ -2373,12 +2336,10 @@ export interface PressSelect<T extends boolean = true> {
     | {
         language?: T;
         url?: T;
-        archived_url?: T;
         id?: T;
       };
   excerpt?: T;
   legacy_url?: T;
-  import_status?: T;
   meta?:
     | T
     | {
@@ -2415,7 +2376,6 @@ export interface EventsSelect<T extends boolean = true> {
               weekday?: T;
               start_time?: T;
               end_time?: T;
-              label?: T;
               id?: T;
             };
         end_date?: T;
@@ -2445,13 +2405,6 @@ export interface EventsSelect<T extends boolean = true> {
         role?: T;
         id?: T;
       };
-  partners?:
-    | T
-    | {
-        partner?: T;
-        role?: T;
-        id?: T;
-      };
   registration?:
     | T
     | {
@@ -2459,7 +2412,6 @@ export interface EventsSelect<T extends boolean = true> {
         form?: T;
         url?: T;
         deadline?: T;
-        application_requirements?: T;
         archived_registration_url?: T;
       };
   pricing?:
@@ -2478,14 +2430,12 @@ export interface EventsSelect<T extends boolean = true> {
                 | T
                 | {
                     amount?: T;
-                    due_date?: T;
                     id?: T;
                   };
               id?: T;
             };
       };
   legacy_url?: T;
-  import_status?: T;
   meta?:
     | T
     | {
@@ -2508,7 +2458,6 @@ export interface NewslettersSelect<T extends boolean = true> {
   cover_image?: T;
   body?: T;
   legacy_url?: T;
-  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -2533,23 +2482,6 @@ export interface SpacesSelect<T extends boolean = true> {
         id?: T;
       };
   legacy_url?: T;
-  import_status?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "partners_select".
- */
-export interface PartnersSelect<T extends boolean = true> {
-  name?: T;
-  generateSlug?: T;
-  slug?: T;
-  kind?: T;
-  url?: T;
-  logo?: T;
-  legacy_url?: T;
-  import_status?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -2811,7 +2743,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
  */
 export interface SiteSetting {
   id: number;
-  site_title?: string | null;
   contact_emails?: {
     admissions?: string | null;
     info?: string | null;
@@ -2823,36 +2754,16 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
-  footer_text?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  support_us?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
+  /**
+   * Shown on the home page, in this order.
+   */
+  faq?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -2861,7 +2772,6 @@ export interface SiteSetting {
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
-  site_title?: T;
   contact_emails?:
     | T
     | {
@@ -2875,8 +2785,13 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         url?: T;
         id?: T;
       };
-  footer_text?: T;
-  support_us?: T;
+  faq?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

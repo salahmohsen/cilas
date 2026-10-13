@@ -504,32 +504,6 @@
     "faqText": "About studying at CILAS, before you apply.",
     "faqContact": "Still have a question?",
     "faqContactText": "Send us a message below.",
-    "faq": [
-      {
-        "q": "What is CILAS?",
-        "a": "An independent school in Cairo, founded in 2013. It runs cycles of courses each season and the Bridge, a year-long programme in the liberal arts, and publishes the work of its community."
-      },
-      {
-        "q": "Who can apply?",
-        "a": "Anyone who has finished high school. For the Bridge, a bachelor’s degree is recommended but not required. Single courses are open to everyone."
-      },
-      {
-        "q": "Do I need to take the whole Bridge year?",
-        "a": "No. Most courses in a cycle can be taken one at a time, without joining a programme."
-      },
-      {
-        "q": "My English isn’t perfect. Can I still join?",
-        "a": "Yes. CILAS welcomes every kind of English and many discussions move between Arabic and English. Application forms are filled in English, as are many of the readings."
-      },
-      {
-        "q": "Are there scholarships?",
-        "a": "Yes, partial scholarships for a limited number of students, based on need. Each programme’s page explains how to ask for one."
-      },
-      {
-        "q": "Where are classes held?",
-        "a": "In Darb el-Labbana, in Cairo. Some courses also meet online."
-      }
-    ],
     "announcement": "Announcements",
     "announcementClosesIn": "closes in",
     "apply": "Apply",

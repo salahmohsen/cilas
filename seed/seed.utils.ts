@@ -29,7 +29,6 @@ export const CONTENT_COLLECTIONS: CollectionSlug[] = [
   'press',
   'events',
   'newsletters',
-  'partners',
   'spaces',
   'memberships',
   'people',
@@ -196,31 +195,22 @@ export const requireIds = (map: IdMap, keys: string[]): number[] =>
 /* ================================================================== reset */
 
 /**
- * The reset is a development convenience. Once a person has reviewed imported
- * content it must survive, so refuse to wipe anything while reviewed
- * documents exist (docs/schema.md, Archive import).
+ * The reset is a development convenience: it wipes every content collection.
+ * The database may be the live site's (Dokploy), so it refuses to wipe one
+ * that already has courses unless the run asks for it with `--wipe`.
  */
-export const assertNoReviewedContent = async (payload: Payload): Promise<void> => {
-  const reviewed: string[] = []
-  for (const collection of CONTENT_COLLECTIONS) {
-    const fields = payload.collections[collection]?.config.flattenedFields ?? []
-    if (!fields.some((f) => f.name === 'import_status')) continue
-    const { totalDocs } = await payload.count({
-      collection,
-      where: { import_status: { equals: 'reviewed' } },
-      overrideAccess: true,
-    })
-    if (totalDocs) reviewed.push(`${collection}: ${totalDocs}`)
-  }
-  if (reviewed.length) {
+export const assertResetAllowed = async (payload: Payload): Promise<void> => {
+  if (process.argv.includes('--wipe')) return
+  const { totalDocs } = await payload.count({ collection: 'courses', overrideAccess: true })
+  if (totalDocs) {
     throw new Error(
-      `Refusing to reset: reviewed content would be lost (${reviewed.join(', ')}).`,
+      `Refusing to reset: the database holds ${totalDocs} courses. Run with --wipe to delete all content.`,
     )
   }
 }
 
 export const resetContent = async (payload: Payload): Promise<void> => {
-  await assertNoReviewedContent(payload)
+  await assertResetAllowed(payload)
   for (const collection of CONTENT_COLLECTIONS) {
     await payload.db.deleteMany({ collection, where: {} })
     console.log(`cleared ${collection}`)

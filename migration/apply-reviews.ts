@@ -58,7 +58,6 @@ const rich = (text: string | null, locale: Locale) =>
 type Stored = {
   id: number
   legacy_url?: string | null
-  import_status?: string | null
   cover_image?: number | null
   schedule?: Record<string, unknown> | null
 }
@@ -96,7 +95,6 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
     payload.findByID({ collection: 'courses', id: review.id, depth: 0, draft: true, locale, fallbackLocale: false, overrideAccess: true }) as unknown as Promise<Stored>
   const course = await find('en').catch(() => null)
   if (!course) return log.push(`- ${review.id}: no such course`)
-  if (course.import_status === 'reviewed') return log.push(`- ${review.id}: reviewed, left alone`)
   const head = `### ${review.id} ${course.legacy_url ?? ''}`
   log.push(head, ...review.notes.map((n) => `- ${n}`))
   if (dry) return
@@ -221,7 +219,6 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
         start_year: c.cycle.start_year,
         space: space.id,
         ...(c.cycle.start_date ? { start_date: c.cycle.start_date } : {}),
-        import_status: 'needs_review',
       },
     )
     const fellows: number[] = []
@@ -232,7 +229,7 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
           (
             await payload.create({
               collection: 'people',
-              data: { name, slug: await freeSlug(payload, 'people', slugify(name)), import_status: 'needs_review' },
+              data: { name, slug: await freeSlug(payload, 'people', slugify(name)) },
               overrideAccess: true,
             })
           ).id),
@@ -252,7 +249,6 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
         session_unit: c.syllabus?.session_unit ?? 'session',
         fellows,
         legacy_url: c.legacy_url,
-        import_status: 'needs_review',
         _status: 'draft',
       },
       { draft: true },

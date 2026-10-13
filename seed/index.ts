@@ -12,7 +12,6 @@ import { seedArticles } from './collections/articles.seed'
 import { seedPress } from './collections/press.seed'
 import { seedEvents } from './collections/events.seed'
 import { seedSpaces } from './collections/spaces.seed'
-import { seedPartners } from './collections/partners.seed'
 import { seedSiteSettings } from './collections/site-settings.seed'
 import { hasSnapshot, restoreSnapshot } from './snapshot'
 
@@ -42,7 +41,6 @@ await resetContent(payload)
 // Order matters: every seeder reads ids resolved by the ones above it.
 await seedUsers(payload, ctx)
 await seedSpaces(payload, ctx)
-await seedPartners(payload, ctx)
 await seedCycles(payload, ctx)
 await seedProgrammes(payload, ctx)
 await seedCourses(payload, ctx)

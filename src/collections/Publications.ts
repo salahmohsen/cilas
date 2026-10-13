@@ -20,7 +20,7 @@ export const Publications: CollectionConfig = {
   },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'kind', 'year_from'],
+    defaultColumns: ['title', 'kind'],
   },
   fields: [
     {
@@ -36,14 +36,6 @@ export const Publications: CollectionConfig = {
       admin: { position: 'sidebar' },
     },
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },
-    {
-      type: 'row',
-      admin: { position: 'sidebar' },
-      fields: [
-        { name: 'year_from', type: 'number', min: 2012, max: 2100, admin: { width: '50%' } },
-        { name: 'year_to', type: 'number', min: 2012, max: 2100, admin: { width: '50%' } },
-      ],
-    },
     { name: 'title', type: 'text', required: true, localized: true },
     slugField(),
     { name: 'subtitle', type: 'text', localized: true },
@@ -67,7 +59,6 @@ export const Publications: CollectionConfig = {
       type: 'collapsible',
       fields: [
         { name: 'produced_by', type: 'relationship', relationTo: 'courses', hasMany: true },
-        { name: 'funders', type: 'relationship', relationTo: 'partners', hasMany: true },
         {
           name: 'license',
           type: 'select',

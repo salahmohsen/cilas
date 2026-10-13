@@ -83,7 +83,16 @@ export const scheduleField = (): NamedGroupField => ({
             description: 'Week only keeps it off the calendar.',
           },
         },
-        { name: 'weeks', type: 'number', min: 1, max: 52, admin: { width: '30%' } },
+        {
+          name: 'weeks',
+          type: 'number',
+          min: 1,
+          max: 52,
+          admin: {
+            description: 'How long it runs, e.g. 8. With the start date it sets the end date.',
+            width: '30%',
+          },
+        },
       ],
     },
     {
@@ -103,7 +112,6 @@ export const scheduleField = (): NamedGroupField => ({
               admin: { width: '30%' },
             },
             ...timeRangeFields(),
-            { name: 'label', type: 'text', localized: true, admin: { width: '30%' } },
           ],
         },
       ],

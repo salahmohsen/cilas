@@ -17,15 +17,30 @@ export const pricingField = ({
   name = 'pricing',
   label,
   dbName,
-}: { name?: string; label?: string; dbName?: string } = {}): NamedGroupField => ({
+  description,
+}: {
+  name?: string
+  label?: string
+  dbName?: string
+  description?: string
+} = {}): NamedGroupField => ({
   name,
   ...(label ? { label } : {}),
+  ...(description ? { admin: { description } } : {}),
   type: 'group',
   fields: [
     {
       type: 'row',
       fields: [
-        { name: 'min', type: 'number', min: 0, admin: { width: '35%' } },
+        {
+          name: 'min',
+          type: 'number',
+          min: 0,
+          admin: {
+            description: 'The price in EGP; with a maximum it reads as a range, e.g. 2,500–3,000.',
+            width: '35%',
+          },
+        },
         {
           name: 'max',
           type: 'number',
@@ -48,8 +63,23 @@ export const pricingField = ({
         },
       ],
     },
-    { name: 'note', type: 'text', localized: true },
-    { name: 'need_based_deductions', type: 'checkbox', label: 'Need-based deductions available' },
+    {
+      name: 'note',
+      type: 'text',
+      localized: true,
+      admin: {
+        description:
+          'Anything the price needs said, e.g. “Sliding scale: choose the tier that fits your budget.”',
+      },
+    },
+    {
+      name: 'need_based_deductions',
+      type: 'checkbox',
+      label: 'Need-based deductions available',
+      admin: {
+        description: 'Tick when people who can’t pay the full price may ask for a reduction.',
+      },
+    },
     {
       name: 'payment_plans',
       type: 'array',
@@ -60,21 +90,10 @@ export const pricingField = ({
           name: 'installments',
           type: 'array',
           ...(dbName ? { dbName: `${dbName}_plan_items` } : {}),
-          fields: [
-            {
-              type: 'row',
-              fields: [
-                { name: 'amount', type: 'number', min: 0, required: true, admin: { width: '50%' } },
-                {
-                  name: 'due_date',
-                  type: 'date',
-                  admin: { width: '50%', date: { pickerAppearance: 'dayOnly' } },
-                },
-              ],
-            },
-          ],
+          fields: [{ name: 'amount', type: 'number', min: 0, required: true }],
         },
       ],
+      admin: { description: 'Ways to pay in instalments, e.g. “Three payments” of 10,000 each.' },
     },
   ],
 })

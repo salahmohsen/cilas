@@ -18,7 +18,16 @@ export const bibliographyField = (label?: string): ArrayField => ({
       })),
     },
     { name: 'title', type: 'text', localized: true, index: true },
-    { name: 'href', type: 'text' }, // youtube / vimeo / article url
-    { name: 'note', type: 'text', localized: true }, // author, year, pages; primary vs secondary reading
+    {
+      name: 'href',
+      type: 'text',
+      admin: { description: 'A link to the text, video or recording, if it is online.' },
+    }, // youtube / vimeo / article url
+    {
+      name: 'note',
+      type: 'text',
+      localized: true,
+      admin: { description: 'Author, year or pages, e.g. “Arendt, 1958, ch. 2”.' },
+    }, // author, year, pages; primary vs secondary reading
   ],
 })

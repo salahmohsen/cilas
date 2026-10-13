@@ -4,8 +4,8 @@
  */
 
 export type MediaJob = {
-  collection: 'people' | 'partners' | 'publications' | 'courses' | 'newsletters'
-  /** The target document's `legacy_url`. Outlets are found by `name` instead. */
+  collection: 'people' | 'press' | 'publications' | 'courses' | 'newsletters'
+  /** The target document's `legacy_url`. An outlet's logo goes to every press item from it, by `name`. */
   legacy_url?: string
   name?: string
   /** An upload field, or `print_edition_url` / `body_pdf_link` for a PDF. */
@@ -68,7 +68,7 @@ export const mediaJobs = ({
   for (const item of press) {
     if (!item.outlet || !item.logo || outlets.has(item.outlet)) continue
     outlets.add(item.outlet)
-    jobs.push({ collection: 'partners', name: item.outlet, field: 'logo', path: stripQuery(item.logo), alt: item.outlet })
+    jobs.push({ collection: 'press', name: item.outlet, field: 'outlet.logo', path: stripQuery(item.logo), alt: item.outlet })
   }
 
   const byUrl = new Map(pages.map((p) => [p.legacy_url, p]))

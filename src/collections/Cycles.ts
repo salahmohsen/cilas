@@ -7,7 +7,10 @@ import { registrationField } from '@/fields/registration'
 import { academicYear, cycleTitle, SEASONS, type Season } from '@/lib/cycle'
 import { slugify } from '@/lib/slugify'
 import { importFields } from '@/fields/import'
-import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
+import {
+  revalidateCoursesAfterChange,
+  revalidateCoursesAfterDelete,
+} from '@/lib/revalidate-courses'
 
 /**
  * Title, slug and academic year are derived, never typed (ADR 0003). The
@@ -98,7 +101,11 @@ export const Cycles: CollectionConfig = {
           required: true,
           min: 2012,
           max: 2100,
-          admin: { width: '33%' },
+          admin: {
+            description:
+              'The year it starts in. A winter cycle counts by its January: Dec 2025–Feb 2026 is 2026.',
+            width: '33%',
+          },
         },
         {
           name: 'space',
@@ -137,6 +144,7 @@ export const Cycles: CollectionConfig = {
           hasMany: true,
           required: true,
           options: [...COURSE_TYPE_OPTIONS],
+          admin: { description: 'Which course types this price is for, e.g. Thematic and Lab.' },
         },
         pricingField({ dbName: 'cycle_price' }),
       ],

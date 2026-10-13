@@ -19,7 +19,6 @@ const isJson = (s: unknown) => typeof s === 'string' && /^\s*[{[]/.test(s)
 type Loc = { en?: string | null; ar?: string | null }
 type Course = {
   id: number
-  import_status?: string | null
   legacy_url?: string | null
   schedule?: {
     start_date?: string | null
@@ -35,7 +34,7 @@ const { docs } = await payload.find({ collection: 'courses', limit: 1000, pagina
 
 let changed = 0
 for (const c of docs as unknown as Course[]) {
-  if (!c.legacy_url || c.import_status === 'reviewed') continue
+  if (!c.legacy_url) continue
   const log: string[] = []
   const en: Record<string, unknown> = {}
   const ar: Record<string, unknown> = {}

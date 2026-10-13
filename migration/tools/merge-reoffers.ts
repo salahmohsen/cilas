@@ -17,7 +17,6 @@ type Loc = Record<string, unknown> | null | undefined
 type Course = {
   id: number
   legacy_url?: string | null
-  import_status?: string | null
   title: Record<string, string | null>
   fellows?: number[] | null
   sessions?: unknown[] | null
@@ -93,10 +92,6 @@ const log: string[] = []
 const gone = new Set<number>()
 for (const [a, b] of pairs) {
   if (gone.has(a.id) || gone.has(b.id)) continue
-  if (a.import_status === 'reviewed' || b.import_status === 'reviewed') {
-    log.push(`skip ${a.id}/${b.id}: reviewed`)
-    continue
-  }
   const score = (c: Course) => (c.sessions?.length ?? 0) * 1000 + when(c)
   const [keep, drop] = score(a) >= score(b) ? [a, b] : [b, a]
   await merge(payload, keep, drop, log)

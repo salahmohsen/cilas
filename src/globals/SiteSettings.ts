@@ -1,10 +1,9 @@
 import type { GlobalConfig } from 'payload'
 
-// Site-wide config with no collection home: footer, contact, social links, donations.
+// Site-wide config with no collection home: contact, social links, the home page's questions.
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   fields: [
-    { name: 'site_title', type: 'text' },
     {
       label: 'Contact',
       type: 'group',
@@ -24,7 +23,10 @@ export const SiteSettings: GlobalConfig = {
             {
               name: 'platform',
               type: 'select',
-              options: ['facebook', 'twitter', 'youtube', 'instagram'].map((s) => ({ label: s, value: s })),
+              options: ['facebook', 'twitter', 'youtube', 'instagram'].map((s) => ({
+                label: s,
+                value: s,
+              })),
             },
             { name: 'url', type: 'text' },
           ],
@@ -32,11 +34,15 @@ export const SiteSettings: GlobalConfig = {
       ],
     },
     {
-      label: 'Footer',
-      type: 'group',
+      // The home page's "Questions people ask"; each language its own.
+      name: 'faq',
+      label: 'FAQ',
+      type: 'array',
+      labels: { singular: 'Question', plural: 'Questions' },
+      admin: { description: 'Shown on the home page, in this order.' },
       fields: [
-        { name: 'footer_text', type: 'richText', localized: true },
-        { name: 'support_us', type: 'richText', localized: true }, // IBAN bank-transfer donation details
+        { name: 'question', type: 'text', localized: true, required: true },
+        { name: 'answer', type: 'textarea', localized: true, required: true },
       ],
     },
   ],

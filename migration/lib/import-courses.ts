@@ -28,7 +28,11 @@ export type ArchiveCourse = {
     start_date?: string
     start_precision: 'day' | 'week'
     weeks?: number
-    slots: Array<{ weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri'; start_time: string; end_time: string }>
+    slots: Array<{
+      weekday: 'sat' | 'sun' | 'mon' | 'tue' | 'wed' | 'thu' | 'fri'
+      start_time: string
+      end_time: string
+    }>
     note?: string
   }
   description: string
@@ -39,15 +43,28 @@ export type ArchiveCourse = {
   register_url: string | null
 }
 
-const paragraphs = (text: string): string[] => text.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean)
+const paragraphs = (text: string): string[] =>
+  text
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter(Boolean)
 const rich = (text: string) =>
   text.trim() ? lexical(paragraphs(text), isMostlyArabic(text) ? 'rtl' : 'ltr') : null
 
-const isFree = async (payload: Payload, collection: CollectionSlug, slug: string): Promise<boolean> =>
-  (await payload.count({ collection, where: { slug: { equals: slug } }, overrideAccess: true })).totalDocs === 0
+const isFree = async (
+  payload: Payload,
+  collection: CollectionSlug,
+  slug: string,
+): Promise<boolean> =>
+  (await payload.count({ collection, where: { slug: { equals: slug } }, overrideAccess: true }))
+    .totalDocs === 0
 
 /** `base`, or `base-2`, `base-3`… — the first slug no document in `collection` uses. */
-export const freeSlug = async (payload: Payload, collection: CollectionSlug, base: string): Promise<string> => {
+export const freeSlug = async (
+  payload: Payload,
+  collection: CollectionSlug,
+  base: string,
+): Promise<string> => {
   const { docs } = await payload.find({
     collection,
     where: { slug: { like: base } },
@@ -77,12 +94,24 @@ export const upsert = async (
   data: Record<string, unknown>,
   options: { draft?: boolean; fallbackSlug?: string } = {},
 ): Promise<number> => {
-  const { docs } = await payload.find({ collection, where, limit: 1, depth: 0, overrideAccess: true, draft: options.draft })
-  const existing = docs[0] as { id: number; import_status?: string | null } | undefined
-  if (existing?.import_status === 'reviewed') return existing.id
+  const { docs } = await payload.find({
+    collection,
+    where,
+    limit: 1,
+    depth: 0,
+    overrideAccess: true,
+    draft: options.draft,
+  })
+  const existing = docs[0] as { id: number } | undefined
   if (existing) {
     const { slug: _keep, ...rest } = data
-    await payload.update({ collection, id: existing.id, data: options.fallbackSlug ? rest : data, overrideAccess: true, draft: options.draft } as Parameters<Payload['update']>[0])
+    await payload.update({
+      collection,
+      id: existing.id,
+      data: options.fallbackSlug ? rest : data,
+      overrideAccess: true,
+      draft: options.draft,
+    } as Parameters<Payload['update']>[0])
     return existing.id
   }
   // A taken slug falls back to `fallbackSlug` (the title plus its year), then
@@ -90,10 +119,17 @@ export const upsert = async (
   let body = data
   if (typeof data.slug === 'string') {
     const preferred =
-      options.fallbackSlug && !(await isFree(payload, collection, data.slug)) ? options.fallbackSlug : data.slug
+      options.fallbackSlug && !(await isFree(payload, collection, data.slug))
+        ? options.fallbackSlug
+        : data.slug
     body = { ...data, slug: await freeSlug(payload, collection, preferred) }
   }
-  const doc = await payload.create({ collection, data: body, overrideAccess: true, draft: options.draft } as Parameters<Payload['create']>[0])
+  const doc = await payload.create({
+    collection,
+    data: body,
+    overrideAccess: true,
+    draft: options.draft,
+  } as Parameters<Payload['create']>[0])
   return doc.id as number
 }
 
@@ -103,11 +139,12 @@ export const upsert = async (
  * have an Arabic title. Reviewed courses are left as their reviewer left them.
  */
 export const publishCourse = async (payload: Payload, id: number): Promise<void> => {
-  const current = (await payload.findByID({ collection: 'courses', id, depth: 0, draft: true, overrideAccess: true })) as {
-    import_status?: string | null
-  }
-  if (current.import_status === 'reviewed') return
-  await payload.update({ collection: 'courses', id, data: { _status: 'published' }, overrideAccess: true })
+  await payload.update({
+    collection: 'courses',
+    id,
+    data: { _status: 'published' },
+    overrideAccess: true,
+  })
 }
 
 /** Imports archived cycles and courses: written as drafts, then published, marked "needs review". */
@@ -131,26 +168,30 @@ export const importCourses = async (
       c.key,
       // One cycle per season, year and space (unique index), so match an
       // existing one, e.g. from the dev seed, as well as an earlier import.
-      await upsert(payload, 'cycles', {
-        or: [
-          { legacy_url: { equals: c.legacy_url } },
-          {
-            and: [
-              { season: { equals: c.season } },
-              { start_year: { equals: c.start_year } },
-              { space: { equals: spaces.get(c.space) } },
-            ],
-          },
-        ],
-      }, {
-        season: c.season,
-        start_year: c.start_year,
-        space: spaces.get(c.space),
-        ...(c.start_date ? { start_date: c.start_date } : {}),
-        ...(c.deadline ? { registration: { deadline: c.deadline } } : {}),
-        legacy_url: c.legacy_url,
-        import_status: 'needs_review',
-      }),
+      await upsert(
+        payload,
+        'cycles',
+        {
+          or: [
+            { legacy_url: { equals: c.legacy_url } },
+            {
+              and: [
+                { season: { equals: c.season } },
+                { start_year: { equals: c.start_year } },
+                { space: { equals: spaces.get(c.space) } },
+              ],
+            },
+          ],
+        },
+        {
+          season: c.season,
+          start_year: c.start_year,
+          space: spaces.get(c.space),
+          ...(c.start_date ? { start_date: c.start_date } : {}),
+          ...(c.deadline ? { registration: { deadline: c.deadline } } : {}),
+          legacy_url: c.legacy_url,
+        },
+      ),
     )
   }
 
@@ -159,15 +200,26 @@ export const importCourses = async (
   const personFor = async (f: ArchiveCourse['fellows'][number], from: string): Promise<number> => {
     const known = people.get(f.name)
     if (known) return known
-    const { docs } = await payload.find({ collection: 'people', where: { name: { equals: f.name } }, limit: 1, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({
+      collection: 'people',
+      where: { name: { equals: f.name } },
+      limit: 1,
+      depth: 0,
+      overrideAccess: true,
+    })
     let id = docs[0]?.id
     if (!id) {
       // A variant spelling with the same slug (e.g. "Alaa el-Bannan" for
       // "Alaa El-Bannan") may hold this legacy URL already: it is unique.
       const legacy_url = `${from}#${slugify(f.name)}`
       const legacyTaken =
-        (await payload.count({ collection: 'people', where: { legacy_url: { equals: legacy_url } }, overrideAccess: true }))
-          .totalDocs > 0
+        (
+          await payload.count({
+            collection: 'people',
+            where: { legacy_url: { equals: legacy_url } },
+            overrideAccess: true,
+          })
+        ).totalDocs > 0
       id = (
         await payload.create({
           collection: 'people',
@@ -175,7 +227,6 @@ export const importCourses = async (
             name: f.name,
             slug: await freeSlug(payload, 'people', slugify(f.name)),
             ...(legacyTaken ? {} : { legacy_url }),
-            import_status: 'needs_review',
           },
           overrideAccess: true,
         })
@@ -219,7 +270,6 @@ export const importCourses = async (
         description: rich(splitLocales(c.description).en),
         ...(c.register_url ? { registration: { archived_registration_url: c.register_url } } : {}),
         legacy_url: c.legacy_url,
-        import_status: 'needs_review',
         _status: 'draft',
       },
       { draft: true, fallbackSlug: `${slug}-${cycleYears.get(c.cycle as string)}` },
@@ -230,24 +280,19 @@ export const importCourses = async (
     const subtitleAr = c.subtitle && isMostlyArabic(c.subtitle) ? c.subtitle : null
     const descriptionAr = splitLocales(c.description).ar
     if (titleAr || descriptionAr || subtitleAr || c.epigraph_ar) {
-      const current = (await payload.findByID({ collection: 'courses', id, depth: 0, draft: true, overrideAccess: true })) as {
-        import_status?: string | null
-      }
-      if (current.import_status !== 'reviewed') {
-        await payload.update({
-          collection: 'courses',
-          id,
-          data: {
-            ...(titleAr ? { title: titleAr } : {}),
-            ...(subtitleAr ? { subtitle: subtitleAr } : {}),
-            ...(descriptionAr ? { description: rich(descriptionAr) } : {}),
-            ...(c.epigraph_ar ? { epigraph: c.epigraph_ar } : {}),
-          },
-          locale: 'ar',
-          draft: true,
-          overrideAccess: true,
-        })
-      }
+      await payload.update({
+        collection: 'courses',
+        id,
+        data: {
+          ...(titleAr ? { title: titleAr } : {}),
+          ...(subtitleAr ? { subtitle: subtitleAr } : {}),
+          ...(descriptionAr ? { description: rich(descriptionAr) } : {}),
+          ...(c.epigraph_ar ? { epigraph: c.epigraph_ar } : {}),
+        },
+        locale: 'ar',
+        draft: true,
+        overrideAccess: true,
+      })
     }
     await publishCourse(payload, id)
     imported++

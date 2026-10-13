@@ -5,6 +5,7 @@ import { getPayload } from 'payload'
 
 import { getPublicationCovers, type Locale } from '@/api/articles.api'
 import { getContactForm } from '@/api/contact.api'
+import { getHomeFaq } from '@/api/faq.api'
 import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/api/home.api'
 import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
@@ -34,7 +35,7 @@ export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const payload = await getPayload({ config })
   const tBridge = await getTranslations('Bridge')
-  const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers, contact] =
+  const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers, contact, faq] =
     await Promise.all([
       getTranslations('Home'),
       getTranslations('Article'),
@@ -46,6 +47,7 @@ export default async function HomePage({ params }: Props) {
       getPressOutlets(payload, locale as Locale),
       getPublicationCovers(payload),
       getContactForm(payload, locale as Locale),
+      getHomeFaq(payload, locale as Locale),
     ])
 
   const posts = articles.docs.map((a) =>
@@ -134,23 +136,21 @@ export default async function HomePage({ params }: Props) {
           </div>
         ) : null}
 
-        <FaqSection
-          className="home-faq"
-          contact={{
-            label: t('faqContact'),
-            description: t('faqContactText'),
-            href: '#contact',
-          }}
-          description={t('faqText')}
-          items={(t.raw('faq') as Array<{ q: string; a: string }>).map((f, i) => ({
-            id: `faq-${i}`,
-            question: f.q,
-            answer: f.a,
-          }))}
-          layout="split"
-          title={t('faqTitle')}
-          variant="accordion"
-        />
+        {faq.length ? (
+          <FaqSection
+            className="home-faq"
+            contact={{
+              label: t('faqContact'),
+              description: t('faqContactText'),
+              href: '#contact',
+            }}
+            description={t('faqText')}
+            items={faq}
+            layout="split"
+            title={t('faqTitle')}
+            variant="accordion"
+          />
+        ) : null}
 
         {contact ? (
           <div className="home-contact" id="contact">

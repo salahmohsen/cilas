@@ -4,7 +4,6 @@ import type {
   Course,
   Event,
   Publication,
-  SiteSetting,
   Space,
   User,
 } from '@/payload-types'
@@ -142,7 +141,7 @@ export type GovernanceSeed = {
 
 export type PressSeed = {
   title: string
-  /** Partner name, resolved to an id. */
+  /** The outlet's name. */
   outlet: string
   url: string
   published_date: string
@@ -164,14 +163,6 @@ export type EventSeed = {
   speakers?: string[]
 }
 
-/* =============================================================== partners */
-
-export type PartnerSeed = {
-  name: string
-  kind: Array<'funder' | 'co_host' | 'outlet' | 'other'>
-  url?: string
-}
-
 /* ================================================================= spaces */
 
 export type SpaceSeed = Omit<Draft<Space>, 'description' | 'slug'> & {
@@ -181,10 +172,6 @@ export type SpaceSeed = Omit<Draft<Space>, 'description' | 'slug'> & {
 
 /* ========================================================== site settings */
 
-export type SiteSettingsSeed = Omit<Draft<SiteSetting>, 'footer_text' | 'support_us'> & {
-  footer_text?: string
-  support_us?: string
-}
 
 /* =============================================================== context */
 
@@ -202,8 +189,6 @@ export type SeedContext = {
   publications: IdMap
   /** Space names, resolved to ids. */
   spaces: IdMap
-  /** Partner names, resolved to ids. */
-  partners: IdMap
 }
 
 export const createSeedContext = (): SeedContext => ({
@@ -214,5 +199,4 @@ export const createSeedContext = (): SeedContext => ({
   programmes: {},
   publications: {},
   spaces: {},
-  partners: {},
 })

@@ -3,7 +3,7 @@ import type { Payload } from 'payload'
 import { bridgeYearPath, listBridgeYears } from '@/api/programmes.api'
 import { getStudyIndex } from '@/api/study-index'
 import { registrationStatus } from '@/lib/registration'
-import type { Article, Media, Partner, Press } from '@/payload-types'
+import type { Article, Media, Press } from '@/payload-types'
 
 type Locale = 'en' | 'ar'
 
@@ -188,13 +188,13 @@ export const getPressOutlets = async (payload: Payload, locale: Locale): Promise
     collection: 'press',
     sort: '-published_date',
     limit: 0,
-    depth: 2, // the outlet, and its logo
+    depth: 1, // the outlet's logo
     locale,
     fallbackLocale: 'en',
   })
   const outlets = new Map<string, PressOutlet>()
   for (const piece of docs as Press[]) {
-    const outlet = obj<Partner>(piece.outlet)
+    const outlet = piece.outlet
     if (!outlet?.name || outlets.has(outlet.name)) continue
     const link = piece.links?.find((l) => l.url) ?? null
     const logo = obj<Media>(outlet.logo)

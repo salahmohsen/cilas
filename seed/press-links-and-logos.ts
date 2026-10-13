@@ -92,23 +92,25 @@ const logos: Array<{ outlet: string; file: string; alt: string }> = [
   { outlet: '2016 Weissbourd Conference', file: 'uchicago.png', alt: 'University of Chicago seal' },
 ]
 for (const { outlet, file, alt } of logos) {
+  // Every press item from the outlet carries its logo.
   const { docs } = await payload.find({
-    collection: 'partners',
-    where: { name: { equals: outlet } },
-    limit: 1,
+    collection: 'press',
+    where: { 'outlet.name': { equals: outlet } },
+    pagination: false,
     depth: 0,
     locale: 'en',
     overrideAccess: true,
   })
-  const partner = docs[0]
-  if (!partner) throw new Error(`No outlet ${outlet}`)
+  if (!docs.length) throw new Error(`No press from ${outlet}`)
   const logo = await upload(alt, `${ASSETS}/${file}`)
-  await payload.update({
-    collection: 'partners',
-    id: partner.id,
-    overrideAccess: true,
-    data: { logo },
-  })
+  for (const piece of docs) {
+    await payload.update({
+      collection: 'press',
+      id: piece.id,
+      overrideAccess: true,
+      data: { outlet: { ...piece.outlet, logo } },
+    })
+  }
   console.log(`logo set: ${outlet}`)
 }
 

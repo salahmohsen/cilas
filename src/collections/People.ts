@@ -4,7 +4,10 @@ import { anyone, isAdmin, isAdminUser, personOf } from '@/access'
 import { slugField } from '@/fields/slug'
 import { socialFields } from '@/fields/social'
 import { importFields } from '@/fields/import'
-import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
+import {
+  revalidateCoursesAfterChange,
+  revalidateCoursesAfterDelete,
+} from '@/lib/revalidate-courses'
 
 /**
  * Everyone who appears on the site: fellows, CILASians, authors, advisors,

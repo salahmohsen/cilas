@@ -51,7 +51,6 @@ export const registrationField = (): NamedGroupField => ({
         description: "The last day to register, in Cairo. Empty on a course uses its cycle's.",
       },
     },
-    { name: 'application_requirements', type: 'richText', localized: true },
     // The old Weebly or Google Forms link, kept for the record.
     { name: 'archived_registration_url', type: 'text', admin: { hidden: true } },
   ],

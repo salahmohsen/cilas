@@ -119,7 +119,7 @@ const main = async () => {
   const payload = await getPayload({ config: await config })
   const { urls, noTargetJobs, ...tally } = await importMedia(payload, jobs, resolve, extras)
   console.log(
-    `uploaded ${tally.uploaded}, reused ${tally.reused}, attached ${tally.attached}, skipped (reviewed) ${tally.skippedReviewed}, skipped (already set) ${tally.skippedSet}, missing file ${tally.missing}, no target document ${tally.noTarget}`,
+    `uploaded ${tally.uploaded}, reused ${tally.reused}, attached ${tally.attached}, skipped (already set) ${tally.skippedSet}, missing file ${tally.missing}, no target document ${tally.noTarget}`,
   )
 
   const lines = [

@@ -41,8 +41,15 @@ export const Memberships: CollectionConfig = {
       ],
     },
     // e.g. "coordinates the field of Social Sciences"
-    { name: 'title', type: 'text', localized: true },
-    { name: 'note', type: 'textarea' },
+    {
+      name: 'title',
+      type: 'text',
+      localized: true,
+      admin: {
+        description:
+          'Their role in words, if it needs more than the role, e.g. “Programme coordinator”.',
+      },
+    },
     ...importFields(),
   ],
 }

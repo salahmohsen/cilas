@@ -158,7 +158,6 @@ const cleanup = async () => {
     ['press', like],
     ['events', like],
     ['newsletters', like],
-    ['partners', { name: { like: 'Probe Content' } }],
     ['people', { name: { like: 'Probe Content' } }],
   ]
   for (const [collection, where] of targets) {
@@ -218,20 +217,6 @@ describe('publishing content import', () => {
       },
       overrideAccess: true,
     } as Parameters<Payload['create']>[0])
-    // An imported article an editor has since reviewed.
-    await payload.create({
-      collection: 'articles',
-      data: {
-        title: 'Probe Content Reviewed',
-        slug: 'probe-content-reviewed',
-        authors: [author.id],
-        legacy_url: L.reviewed,
-        import_status: 'reviewed',
-        review: { status: 'approved' },
-        _status: 'draft',
-      },
-      overrideAccess: true,
-    } as Parameters<Payload['create']>[0])
   }, 120_000)
   afterAll(async () => {
     await cleanup()
@@ -250,7 +235,6 @@ describe('publishing content import', () => {
     expect(en.review?.status).toBe('approved')
     expect(en._status).toBe('published')
     expect(en.tier).toBe('public')
-    expect(en.import_status).toBe('needs_review')
     expect(en.credits?.[0]).toMatchObject({ role: 'translator', label: 'Translation' })
 
     const ar = await article(L.pair, 'ar')
@@ -282,19 +266,11 @@ describe('publishing content import', () => {
     expect(seeded.slug).toBe('probe-content-seeded-title')
   })
 
-  it('does not touch a reviewed article', async () => {
-    const reviewed = await article(L.reviewed)
-    expect(reviewed.import_status).toBe('reviewed')
-    expect(reviewed.review?.status).toBe('approved')
-    expect(plain(reviewed.body)).not.toContain('Imported over')
-  })
-
   it('writes the publication, press, event and newsletter', async () => {
     const pub = (await payload.find({ collection: 'publications', where: { legacy_url: { equals: L.publication } }, depth: 0, overrideAccess: true })).docs[0]
     const pair = await article(L.pair)
     expect(pub.foreword).toBe(pair.id)
     expect(pub.articles).toHaveLength(2)
-    expect(pub.funders).toHaveLength(1)
     expect(pub.license).toBe('cc_by_nc_sa')
 
     const press = (await payload.find({ collection: 'press', where: { 'links.url': { equals: PRESS_URL } }, depth: 0, overrideAccess: true })).docs

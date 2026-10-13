@@ -13,10 +13,17 @@ import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
-import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, CollectionConfig } from 'payload'
+import type {
+  CollectionAfterChangeHook,
+  CollectionAfterDeleteHook,
+  CollectionConfig,
+} from 'payload'
 import type { Course } from '@/payload-types'
 import { importFields } from '@/fields/import'
-import { revalidateCoursesAfterChange, revalidateCoursesAfterDelete } from '@/lib/revalidate-courses'
+import {
+  revalidateCoursesAfterChange,
+  revalidateCoursesAfterDelete,
+} from '@/lib/revalidate-courses'
 
 /**
  * `courses.fellows` lists people, but the `fellow` role lives on the account
@@ -89,6 +96,8 @@ export const Courses: CollectionConfig = {
       // `owner` default and promoting it stays an admin action.
       access: { create: canSetTier, update: canSetTier },
       admin: {
+        description:
+          'Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins).',
         position: 'sidebar',
       },
     },
@@ -99,6 +108,8 @@ export const Courses: CollectionConfig = {
       required: true,
       options: [...COURSE_TYPE_OPTIONS],
       admin: {
+        description:
+          'Core, Thematic and Lab courses count toward the Bridge; Workshop and Short courses do not.',
         position: 'sidebar',
       },
     },
@@ -128,9 +139,33 @@ export const Courses: CollectionConfig = {
       label: 'Overview',
       type: 'group',
       fields: [
-        { name: 'subtitle', type: 'text', localized: true },
-        { name: 'summary', type: 'text', localized: true },
-        { name: 'epigraph', type: 'text', localized: true },
+        {
+          name: 'subtitle',
+          type: 'text',
+          localized: true,
+          admin: {
+            description:
+              'A second line under the title, e.g. “An introduction to translation studies”.',
+          },
+        },
+        {
+          name: 'summary',
+          type: 'text',
+          localized: true,
+          admin: {
+            description:
+              'One line for cards and search results, e.g. “Reading Plato’s Republic in Cairo, book by book.” Leave empty to use the description’s start.',
+          },
+        },
+        {
+          name: 'epigraph',
+          type: 'text',
+          localized: true,
+          admin: {
+            description:
+              'A short quote or question shown before the description, e.g. “What does a city remember?”',
+          },
+        },
       ],
     },
     {
@@ -143,8 +178,24 @@ export const Courses: CollectionConfig = {
       type: 'collapsible',
       admin: { initCollapsed: true },
       fields: [
-        { name: 'facilitator_note', type: 'textarea', localized: true },
-        { name: 'content_warning', type: 'textarea', localized: true },
+        {
+          name: 'facilitator_note',
+          type: 'textarea',
+          localized: true,
+          admin: {
+            description:
+              'The fellow’s practical notes to participants: what to bring, how work is assessed, e.g. “Bring an apron; all chemicals are provided.”',
+          },
+        },
+        {
+          name: 'content_warning',
+          type: 'textarea',
+          localized: true,
+          admin: {
+            description:
+              'Sensitive material participants should know about beforehand, e.g. “Discusses sexual violence.”',
+          },
+        },
       ],
     },
     scheduleField(),
@@ -153,6 +204,7 @@ export const Courses: CollectionConfig = {
       name: 'pricing_override',
       label: 'Price override',
       dbName: 'course_price',
+      description: 'Only when this course costs something other than its cycle’s price.',
     }),
     {
       // Unnamed: `sessions` must stay top-level, because the schedule's
@@ -168,7 +220,11 @@ export const Courses: CollectionConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'order', type: 'number', admin: { width: '15%' } },
+                {
+                  name: 'order',
+                  type: 'number',
+                  admin: { description: 'Its number in the flow: 1, 2, 3…', width: '15%' },
+                },
                 {
                   name: 'session_title',
                   type: 'text',
@@ -181,7 +237,15 @@ export const Courses: CollectionConfig = {
                   min: 0,
                   admin: { width: '15%', description: 'Default: one week of slots.' },
                 },
-                { name: 'cancelled', type: 'checkbox', admin: { width: '15%' } },
+                {
+                  name: 'cancelled',
+                  type: 'checkbox',
+                  admin: {
+                    description:
+                      'The session will not take place: marked as cancelled on the page and left off the calendar.',
+                    width: '15%',
+                  },
+                },
               ],
             },
             { name: 'description', type: 'richText', localized: true },
@@ -189,8 +253,9 @@ export const Courses: CollectionConfig = {
               name: 'dates',
               type: 'array',
               admin: {
+                initCollapsed: true,
                 description:
-                  "Only when this session's dates differ from the schedule. These replace them.",
+                  'Only for a session off the weekly schedule, e.g. a 5-day workshop at changing hours. These dates replace the schedule’s for this session.',
               },
               fields: [
                 {
@@ -243,6 +308,7 @@ export const Courses: CollectionConfig = {
         { label: 'Hybrid', value: 'HYBRID' },
       ],
       admin: {
+        description: 'Offline (in person), Online, or Hybrid (both at once).',
         position: 'sidebar',
       },
     },
@@ -254,13 +320,20 @@ export const Courses: CollectionConfig = {
         { label: 'Arabic', value: 'ar' },
         { label: 'English', value: 'en' },
       ],
-      admin: { position: 'sidebar' },
+      admin: {
+        description: 'Languages the course is taught in. Mixed use goes in the language note.',
+        position: 'sidebar',
+      },
     },
     {
       name: 'language_note',
       type: 'text',
       localized: true,
-      admin: { position: 'sidebar', placeholder: 'Readings in Arabic, discussion in either' },
+      admin: {
+        description: 'Only when languages mix, e.g. “Readings in Arabic, discussion in either.”',
+        position: 'sidebar',
+        placeholder: 'Readings in Arabic, discussion in either',
+      },
     },
     {
       name: 'fellows',
@@ -268,6 +341,7 @@ export const Courses: CollectionConfig = {
       relationTo: 'people',
       hasMany: true,
       admin: {
+        description: 'Who teaches it. Each gets the Fellow role on their linked account.',
         position: 'sidebar',
       },
     },
@@ -275,7 +349,11 @@ export const Courses: CollectionConfig = {
       name: 'syllabus_tentative',
       type: 'checkbox',
       label: 'Syllabus may change',
-      admin: { position: 'sidebar' },
+      admin: {
+        description:
+          'Tick when the fellow may still change the sessions; the page says the syllabus may change.',
+        position: 'sidebar',
+      },
     },
     {
       // The label sessions get: "Week 3" or "Session 3".
@@ -287,7 +365,10 @@ export const Courses: CollectionConfig = {
         { label: 'Session', value: 'session' },
         { label: 'Week', value: 'week' },
       ],
-      admin: { position: 'sidebar' },
+      admin: {
+        description: 'How sessions are numbered on the page: “Week 3” or “Session 3”.',
+        position: 'sidebar',
+      },
     },
     {
       name: 'enrollments',

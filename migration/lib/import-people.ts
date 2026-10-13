@@ -87,7 +87,7 @@ export const importPeople = async (
       locale: 'en',
       overrideAccess: true,
     })
-    const existing = docs[0] as { id: number; bio?: unknown; import_status?: string | null } | undefined
+    const existing = docs[0] as { id: number; bio?: unknown } | undefined
     let id: number
     if (!existing) {
       const legacyTaken =
@@ -100,7 +100,6 @@ export const importPeople = async (
             name: p.name,
             slug: await freeSlug(payload, 'people', slugify(p.name)),
             ...(legacyTaken ? {} : { legacy_url: p.legacy_url }),
-            import_status: 'needs_review',
           },
           locale: 'en',
           overrideAccess: true,
@@ -110,12 +109,12 @@ export const importPeople = async (
       newPeople++
     } else {
       id = existing.id
-      // An imported person nobody has reviewed: fill in what is empty, never overwrite.
-      if (existing.import_status === 'needs_review' && !existing.bio && p.bio?.trim()) {
+      // An existing person: fill in what is empty, never overwrite.
+      if (!existing.bio && p.bio?.trim()) {
         await writeBio(payload, id, { name: p.name, nameAr: p.name_ar, bio: p.bio })
       }
     }
-    if (p.name_ar && (!existing || existing.import_status === 'needs_review')) {
+    if (p.name_ar) {
       const ar = (await payload.findByID({
         collection: 'people',
         id,
@@ -186,7 +185,6 @@ export const importPeople = async (
           : [],
         schedule_note: pr.verified ? null : UNVERIFIED_NOTE,
         legacy_url: pr.legacy_url,
-        import_status: 'needs_review',
         _status: 'draft',
       },
       // Passing the slug as its own fallback keeps it out of updates.
@@ -206,7 +204,7 @@ export const importPeople = async (
       payload,
       'memberships',
       { and: [{ person: { equals: person } }, { programme: { equals: programme } }] },
-      { person, programme, role: m.role, title: m.title, legacy_url: m.legacy_url, import_status: 'needs_review' },
+      { person, programme, role: m.role, title: m.title, legacy_url: m.legacy_url },
     )
   }
   const membershipsCreated = (await count(payload, 'memberships')) - membershipsBefore
@@ -227,7 +225,6 @@ export const importPeople = async (
         board_role: g.role === 'trustee' ? g.board_role : null,
         order: g.order,
         legacy_url: g.legacy_url,
-        import_status: 'needs_review',
       },
     )
   }
@@ -290,17 +287,18 @@ export const prunePeople = async (
   { limit = PRUNE_LIMIT, scope }: { limit?: number; /** Narrows the candidates, e.g. to test fixtures. */ scope?: Where } = {},
 ): Promise<string[]> => {
   const referenced = await referencedPeople(payload)
-  const needsReview: Where = { import_status: { equals: 'needs_review' } }
+  // Imported people carry the page they came from; ones added by hand do not.
+  const imported: Where = { legacy_url: { exists: true } }
   const { docs } = await payload.find({
     collection: 'people',
-    where: scope ? { and: [needsReview, scope] } : needsReview,
+    where: scope ? { and: [imported, scope] } : imported,
     pagination: false,
     depth: 0,
     locale: 'en',
     overrideAccess: true,
   })
-  const doomed = (docs as Array<{ id: number; name: string; import_status?: string | null }>).filter(
-    (p) => p.import_status === 'needs_review' && !referenced.has(p.id),
+  const doomed = (docs as Array<{ id: number; name: string }>).filter(
+    (p) => !referenced.has(p.id),
   )
   if (doomed.length > limit) {
     throw new Error(`Prune would delete ${doomed.length} people (limit ${limit}); refusing, this is likely a bug.`)
