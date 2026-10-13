@@ -10,7 +10,13 @@ import {
   Link2,
   ListOrdered,
   MapPin,
+  MapPinned,
   MessageCircleQuestion,
+  MessagesSquare,
+  PencilLine,
+  Presentation,
+  Projector,
+  Shapes,
   type LucideIcon,
 } from 'lucide-react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
@@ -54,6 +60,18 @@ export const MATERIAL_ICONS: Record<MaterialType, LucideIcon> = {
   other: Link2,
 }
 const MATERIAL_ORDER: MaterialType[] = ['reading', 'watch', 'listen', 'prompt', 'other']
+
+type ActivityKind = NonNullable<NonNullable<Course['sessions']>[number]['activities']>[number]['kind']
+
+/** What happens in the session: talked over, visited, practised, watched together, presented. */
+const ACTIVITY_ICONS: Record<ActivityKind, LucideIcon> = {
+  discussion: MessagesSquare,
+  field_visit: MapPinned,
+  exercise: PencilLine,
+  screening: Projector,
+  presentation: Presentation,
+  other: Shapes,
+}
 
 const isObject = <T,>(v: unknown): v is T => typeof v === 'object' && v !== null
 
@@ -452,13 +470,26 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
                             {activities.length ? (
                               <div>
                                 <p className="text-xs text-(--text-muted)">{t('activities')}</p>
-                                <ul className="mt-2 grid gap-1.5 text-sm">
-                                  {activities.map((a, j) => (
-                                    <li dir="auto" key={a.id ?? j}>
-                                      <span className="font-medium">{t(`activityKinds.${a.kind}`)}</span>
-                                      {a.description ? ` — ${a.description}` : ''}
-                                    </li>
-                                  ))}
+                                {/* Laid out as the materials are: the kind's icon in its own column. */}
+                                <ul className="mt-2 grid gap-2.5">
+                                  {activities.map((a, j) => {
+                                    const Icon = ACTIVITY_ICONS[a.kind] ?? Shapes
+                                    return (
+                                      <li
+                                        className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug"
+                                        dir="auto"
+                                        key={a.id ?? j}
+                                      >
+                                        <Icon aria-hidden className="mt-0.5 text-(--text-muted)" size={16} strokeWidth={1.5} />
+                                        <span>
+                                          <span className="font-medium">{t(`activityKinds.${a.kind}`)}</span>
+                                          {a.description ? (
+                                            <span className="block text-(--text-secondary)">{a.description}</span>
+                                          ) : null}
+                                        </span>
+                                      </li>
+                                    )
+                                  })}
                                 </ul>
                               </div>
                             ) : null}
