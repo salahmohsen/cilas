@@ -1,6 +1,6 @@
 # Media import
 
-Uploaded 143, reused 6, attached 161, missing 41.
+Uploaded 334, reused 0, attached 347, missing 41.
 
 - 21 courses have no cover: no image on their page, or none that is theirs alone.
 - Pigeon Towers `print_edition_url` is the English PDF (the field holds one URL). The Arabic PDF is uploaded too:
