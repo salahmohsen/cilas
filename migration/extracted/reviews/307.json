@@ -1,28 +1,41 @@
 {
-  "id": 307,
-  "notes": [
-    "epigraph: the Bates quote and its attribution opened the description; moved to epigraph.en, removed from description",
-    "schedule: note held a JSON string ({\"en\":...}) and the slot label did too; rewrote cleanly. Page sentence (24 Feb, Tuesdays 6-8:30 pm, eight weeks) is fully expressed by start_date, slot and weeks, so no note",
-    "teaching_languages: English page and flow -> en"
-  ],
-  "set": {
-    "epigraph": {
-      "en": "“The relationship between Nature and Culture is the key intellectual problem of the 21st century”\n\nJohanthan Bates",
-      "ar": null
-    },
-    "description": {
-      "en": "Throughout the span of human history, no period has ever alienated humankind from the natural world as much as the modern era. In it, the advent of scientific discovery, the Industrial Revolution, and technological advancement have achieved a dual effect—one that simultaneously furthered the cause of human progress while accelerating the rate of planetary destruction. While these material conditions have certainly deepened the rift between society and nature, the origin of this division precedes our desire to exploit the planet of its resources and returns to a fundamental belief that nature is the antagonist of human culture.\n\nIn this course, students will learn to trace the origins of the nature-culture binary and understand its impacts in shaping contemporary human-environmental relations. By peering through the lens of environmental anthropology, this course aims to provide students with the theoretical tools necessary to critique and explore the discipline’s various proposals to ultimately bridge the gap between us and our perennial home.",
-      "ar": null
-    },
-    "schedule": {
-      "start_date": "2026-02-24",
-      "weeks": 8,
-      "slots": [{ "weekday": "tue", "start_time": "18:00", "end_time": "20:30" }],
-      "note": { "en": null, "ar": null }
-    },
-    "teaching_languages": ["en"]
+ "id": 307,
+ "notes": [
+  "epigraph: the Bates quote and its attribution opened the description; moved to epigraph.en, removed from description",
+  "schedule: note held a JSON string ({\"en\":...}) and the slot label did too; rewrote cleanly. Page sentence (24 Feb, Tuesdays 6-8:30 pm, eight weeks) is fully expressed by start_date, slot and weeks, so no note",
+  "teaching_languages: English page and flow -> en",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "epigraph": {
+   "en": "“The relationship between Nature and Culture is the key intellectual problem of the 21st century”\n\nJohanthan Bates",
+   "ar": null
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "description": {
+   "en": "Throughout the span of human history, no period has ever alienated humankind from the natural world as much as the modern era. In it, the advent of scientific discovery, the Industrial Revolution, and technological advancement have achieved a dual effect—one that simultaneously furthered the cause of human progress while accelerating the rate of planetary destruction. While these material conditions have certainly deepened the rift between society and nature, the origin of this division precedes our desire to exploit the planet of its resources and returns to a fundamental belief that nature is the antagonist of human culture.\n\nIn this course, students will learn to trace the origins of the nature-culture binary and understand its impacts in shaping contemporary human-environmental relations. By peering through the lens of environmental anthropology, this course aims to provide students with the theoretical tools necessary to critique and explore the discipline’s various proposals to ultimately bridge the gap between us and our perennial home.",
+   "ar": null
+  },
+  "schedule": {
+   "start_date": "2026-02-24",
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "tue",
+     "start_time": "18:00",
+     "end_time": "20:30"
+    }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "course_type": "THEMATIC"
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

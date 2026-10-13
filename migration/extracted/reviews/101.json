@@ -1,32 +1,38 @@
 {
-  "id": 101,
-  "notes": [
-    "teaching_languages ar and en: full text in both; discussion in Arabic or English",
-    "schedule note removed: it only repeated the weekday and time already in the slot",
-    "description, sessions and materials match the page and flow, unchanged"
+ "id": 101,
+ "notes": [
+  "teaching_languages ar and en: full text in both; discussion in Arabic or English",
+  "schedule note removed: it only repeated the weekday and time already in the slot",
+  "description, sessions and materials match the page and flow, unchanged",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "teaching_languages": [
+   "ar",
+   "en"
   ],
-  "set": {
-    "teaching_languages": [
-      "ar",
-      "en"
-    ],
-    "schedule": {
-      "start_date": "2025-10-25",
-      "weeks": 8,
-      "slots": [
-        {
-          "weekday": "sat",
-          "start_time": "18:00",
-          "end_time": "20:30"
-        }
-      ],
-      "note": {
-        "en": null,
-        "ar": null
-      }
+  "schedule": {
+   "start_date": "2025-10-25",
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "sat",
+     "start_time": "18:00",
+     "end_time": "20:30"
     }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "course_type": "THEMATIC",
+  "title": {
+   "en": "Unravelling Oedipus: Wanderings of the Myth in Literature and Theory",
+   "ar": "تفكك أوديب: تجوالات الأسطورة بين الأدب والنظريات"
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

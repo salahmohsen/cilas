@@ -1,78 +1,80 @@
 {
-  "id": 309,
-  "notes": [
-    "teaching_languages en: the page and flow are in English",
-    "schedule: note removed (it was a JSON string and only repeated the Thursday 18:00-20:30 slot, four weeks, and Offline in location); slot label reset",
-    "syllabus: the sessions were fragments of the flow cut mid-sentence (e.g. a session description starting 'After reading another cluster of six'), with sentences split into prompts and activities; rewritten as the flow's own four numbered sessions, text verbatim, so nothing repeats in activities or materials",
-    "bibliography: kept Songs of Innocence and of Experience only (the hard copy and illuminations sentence stays in facilitator_note)",
-    "description and facilitator_note already match the page and flow, unchanged"
+ "id": 309,
+ "notes": [
+  "teaching_languages en: the page and flow are in English",
+  "schedule: note removed (it was a JSON string and only repeated the Thursday 18:00-20:30 slot, four weeks, and Offline in location); slot label reset",
+  "syllabus: the sessions were fragments of the flow cut mid-sentence (e.g. a session description starting 'After reading another cluster of six'), with sentences split into prompts and activities; rewritten as the flow's own four numbered sessions, text verbatim, so nothing repeats in activities or materials",
+  "bibliography: kept Songs of Innocence and of Experience only (the hard copy and illuminations sentence stays in facilitator_note)",
+  "description and facilitator_note already match the page and flow, unchanged",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
   ],
-  "set": {
-    "teaching_languages": [
-      "en"
-    ],
-    "schedule": {
-      "start_date": "2026-02-26",
-      "weeks": 4,
-      "slots": [
-        {
-          "weekday": "thu",
-          "start_time": "18:00",
-          "end_time": "20:30"
-        }
-      ],
-      "note": {
-        "en": null,
-        "ar": null
-      }
+  "schedule": {
+   "start_date": "2026-02-26",
+   "weeks": 4,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "18:00",
+     "end_time": "20:30"
     }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
   },
-  "syllabus": {
-    "session_unit": "week",
-    "sessions": [
-      {
-        "order": 1,
-        "title": null,
-        "description": "We begin with introductions. Who are you? Do you have a favourite poet?\nI'll then talk briefly about the life and work of William Blake.\nTogether we'll read aloud a cluster of the very short Songs of Innocence. Before carefully analysing four of them, we'll do a bit of class writing. After reading another cluster of six - we take a short break.\n\nNow we look closely at Blake's visual designs. Are there any patterns? Does that influence our analysis of at least three more poems?",
-        "meetings": null,
-        "materials": [],
-        "activities": []
-      },
-      {
-        "order": 2,
-        "title": null,
-        "description": "We continue our Innocence journey, reading aloud. And then we play a poetry game, creating group poems before returning to Blake. How do nature, culture, and the divine intermingle? How important is empathy? What is the value of Innocence? Can you see with the eyes of your heart?\n\nAfter the break, we enter into Experience. What has changed? Carefully, we explore at least four poems.",
-        "meetings": null,
-        "materials": [],
-        "activities": []
-      },
-      {
-        "order": 3,
-        "title": null,
-        "description": "We continue in Experience. How do the 'companion poems' ('Infant Joy'/'Infant Sorrow'; 'The Chimney Sweeper[s]; 'The Lamb' & 'The Tyger') interrelate? Can you be in a state of Innocence when in Experience?",
-        "meetings": null,
-        "materials": [],
-        "activities": []
-      },
-      {
-        "order": 4,
-        "title": null,
-        "description": "In our first hour we continue in Experience. We read, write creatively, and critically analyse. Then we regain innocent wisdom in Blake's \"Auguries of Innocence.\"\n\nAfter the break, we feast poetically. You'll each be asked to read a short Arabic poem, perhaps one you have written. Translation can be enjoyable. How does poetic beauty deepen perception? How can your favourite poetry be 'in conversation' with William Blake's?",
-        "meetings": null,
-        "materials": [],
-        "activities": []
-      }
-    ],
-    "bibliography": [
-      {
-        "type": "reading",
-        "title": "Songs of Innocence and of Experience",
-        "note": null,
-        "href": null
-      }
-    ],
-    "notes": null
-  },
-  "cover": null,
-  "duplicate_of": []
+  "course_type": "WORKSHOP"
+ },
+ "syllabus": {
+  "session_unit": "week",
+  "sessions": [
+   {
+    "order": 1,
+    "title": null,
+    "description": "We begin with introductions. Who are you? Do you have a favourite poet?\nI'll then talk briefly about the life and work of William Blake.\nTogether we'll read aloud a cluster of the very short Songs of Innocence. Before carefully analysing four of them, we'll do a bit of class writing. After reading another cluster of six - we take a short break.\n\nNow we look closely at Blake's visual designs. Are there any patterns? Does that influence our analysis of at least three more poems?",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 2,
+    "title": null,
+    "description": "We continue our Innocence journey, reading aloud. And then we play a poetry game, creating group poems before returning to Blake. How do nature, culture, and the divine intermingle? How important is empathy? What is the value of Innocence? Can you see with the eyes of your heart?\n\nAfter the break, we enter into Experience. What has changed? Carefully, we explore at least four poems.",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 3,
+    "title": null,
+    "description": "We continue in Experience. How do the 'companion poems' ('Infant Joy'/'Infant Sorrow'; 'The Chimney Sweeper[s]; 'The Lamb' & 'The Tyger') interrelate? Can you be in a state of Innocence when in Experience?",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 4,
+    "title": null,
+    "description": "In our first hour we continue in Experience. We read, write creatively, and critically analyse. Then we regain innocent wisdom in Blake's \"Auguries of Innocence.\"\n\nAfter the break, we feast poetically. You'll each be asked to read a short Arabic poem, perhaps one you have written. Translation can be enjoyable. How does poetic beauty deepen perception? How can your favourite poetry be 'in conversation' with William Blake's?",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   }
+  ],
+  "bibliography": [
+   {
+    "type": "reading",
+    "title": "Songs of Innocence and of Experience",
+    "note": null,
+    "href": null
+   }
+  ],
+  "notes": null
+ },
+ "cover": null,
+ "duplicate_of": []
 }

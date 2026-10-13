@@ -1,37 +1,43 @@
 {
-  "id": 102,
-  "notes": [
-    "facilitator_note: removed the fellow bio paragraph (lives on the fellow profile); kept the logistics paragraphs from the flow",
-    "teaching_languages ar and en: page in Arabic, creative project in Arabic or English",
-    "schedule note removed: it only repeated the weekday and time already in the slot",
-    "sessions 1-8 match the flow, unchanged"
-  ],
-  "set": {
-    "facilitator_note": {
-      "en": null,
-      "ar": "تقام الورشة أونلاين عبر تطبيق Google Meet يوم في الأسبوع لمدة شهرين، ومدة الجلسة 3 ساعات.\n\nالأيام المتاحة للتدريس: اثنين، ثلاثاء، أربعاء."
-    },
-    "teaching_languages": [
-      "ar",
-      "en"
-    ],
-    "schedule": {
-      "start_date": "2025-10-20",
-      "weeks": 8,
-      "slots": [
-        {
-          "weekday": "mon",
-          "start_time": "18:00",
-          "end_time": "20:30"
-        }
-      ],
-      "note": {
-        "en": null,
-        "ar": null
-      }
-    }
+ "id": 102,
+ "notes": [
+  "facilitator_note: removed the fellow bio paragraph (lives on the fellow profile); kept the logistics paragraphs from the flow",
+  "teaching_languages ar and en: page in Arabic, creative project in Arabic or English",
+  "schedule note removed: it only repeated the weekday and time already in the slot",
+  "sessions 1-8 match the flow, unchanged",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": null,
+   "ar": "تقام الورشة أونلاين عبر تطبيق Google Meet يوم في الأسبوع لمدة شهرين، ومدة الجلسة 3 ساعات.\n\nالأيام المتاحة للتدريس: اثنين، ثلاثاء، أربعاء."
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "teaching_languages": [
+   "ar",
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2025-10-20",
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "mon",
+     "start_time": "18:00",
+     "end_time": "20:30"
+    }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
+  },
+  "course_type": "WORKSHOP",
+  "title": {
+   "en": "Writing Capitalism",
+   "ar": "كتابة الرأسماليَّة"
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

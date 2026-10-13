@@ -1,16 +1,31 @@
 {
-  "id": 196,
-  "notes": [
-    "teaching_languages was empty: page and flow are English only, set [\"en\"]",
-    "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Thursdays 18:00-20:30 is already in the slot)",
-    "CHECK: title.ar does not appear in the page or flow; left unchanged",
-    "CHECK: fellow Ahmad Mahana's Arabic bio ends mid-word (\"ف\"); fellow profile, not changed here"
+ "id": 196,
+ "notes": [
+  "teaching_languages was empty: page and flow are English only, set [\"en\"]",
+  "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Thursdays 18:00-20:30 is already in the slot)",
+  "CHECK: title.ar does not appear in the page or flow; left unchanged",
+  "CHECK: fellow Ahmad Mahana's Arabic bio ends mid-word (\"ف\"); fellow profile, not changed here",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
   ],
-  "set": {
-    "teaching_languages": ["en"],
-    "schedule": { "note": { "en": null, "ar": null } }
+  "schedule": {
+   "note": {
+    "en": null,
+    "ar": null
+   },
+   "start_date": "2026-04-30",
+   "weeks": 8
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "course_type": "THEMATIC",
+  "title": {
+   "en": "Modernity and the Ecological Crisis: Why We Can’t Help but Destroy the World",
+   "ar": "الحداثة والأزمة البيئية: لماذا لا نستطيع إلا أن ندمّر العالم"
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

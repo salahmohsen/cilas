@@ -1,15 +1,30 @@
 {
-  "id": 195,
-  "notes": [
-    "teaching_languages was empty: page and flow are English only, set [\"en\"]",
-    "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Sundays 18:00-20:30 is already in the slot)",
-    "CHECK: title.ar (البطولة والحداثة) does not appear in the page or flow; left unchanged"
+ "id": 195,
+ "notes": [
+  "teaching_languages was empty: page and flow are English only, set [\"en\"]",
+  "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Sundays 18:00-20:30 is already in the slot)",
+  "CHECK: title.ar (البطولة والحداثة) does not appear in the page or flow; left unchanged",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
   ],
-  "set": {
-    "teaching_languages": ["en"],
-    "schedule": { "note": { "en": null, "ar": null } }
+  "schedule": {
+   "note": {
+    "en": null,
+    "ar": null
+   },
+   "start_date": "2026-04-26",
+   "weeks": 6
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "course_type": "THEMATIC",
+  "title": {
+   "en": "Heroism and Modernity",
+   "ar": "البطولة والحداثة"
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

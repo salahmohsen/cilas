@@ -1,179 +1,181 @@
 {
-  "id": 311,
-  "notes": [
-    "description: split the run-together sentence 'Liberal Arts.Participants may work...' into its own paragraph, as in the flow",
-    "facilitator_note: removed the template instruction ('2) A tentative course/lab/workshop flow...') and the four-line outline (moved into the session descriptions); kept only the flexibility caveat",
-    "syllabus: the course had five sessions, but the flow's outline has four; the unnumbered 'Descriptions and settings' block continues session 1 (its items are lettered d-g after a-c), and session 1's homework says 'write about in session 2' (persons and personas). Rebuilt as four sessions",
-    "schedule: sentence kept as note (Saturdays 19:00 to 21:00 or 21:30, so no single slot), start 2026-02-21 and four weeks unchanged; note rewritten from the page's own wording instead of a JSON string",
-    "teaching_languages en: page in English (participants may work in English and/or Arabic)"
+ "id": 311,
+ "notes": [
+  "description: split the run-together sentence 'Liberal Arts.Participants may work...' into its own paragraph, as in the flow",
+  "facilitator_note: removed the template instruction ('2) A tentative course/lab/workshop flow...') and the four-line outline (moved into the session descriptions); kept only the flexibility caveat",
+  "syllabus: the course had five sessions, but the flow's outline has four; the unnumbered 'Descriptions and settings' block continues session 1 (its items are lettered d-g after a-c), and session 1's homework says 'write about in session 2' (persons and personas). Rebuilt as four sessions",
+  "schedule: sentence kept as note (Saturdays 19:00 to 21:00 or 21:30, so no single slot), start 2026-02-21 and four weeks unchanged; note rewritten from the page's own wording instead of a JSON string",
+  "teaching_languages en: page in English (participants may work in English and/or Arabic)",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "description": {
+   "en": "Story, narrative, and poetry are all, to paraphrase poet-essayist Robert Bringhurst, ‘forms of knowing’. It isn’t so much that we know them but that they know. Knowing in the sense of ‘knowing freed from the agenda of possession and control – knowing in the sense of stepping in tune with being, hearing and echoing the music and heartbeat of being’.\n\nI invite you to enter the knowing of story, of narrative, of poetry; to explore stories, narratives, poetry; place; time; sacred and secular; self and society. Explore the ‘minute particulars’ of being (as the poet and artist William Blake put it) and the wonder and mystery of being that is around us and within us.\n\nIn this Four-week course, we will draw on views of harmony (balancing concord and discord) to inform our approach to creative writing based on an immersion in ‘the knowing’. The approach will be inspired by an integrated and integrative view of the classical Liberal Arts.\n\nParticipants may work in English and/or Arabic. Films, webcasts, video journals, artwork, social sculptures, or musical compositions are acceptable, as long as academic rigour, and critical and creative thinking are evidenced both in the creative process and in the final outputs.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": "Proposed course outline (flexible - may change according to the individual needs and interests of participants enrolled)",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
   ],
-  "set": {
-    "description": {
-      "en": "Story, narrative, and poetry are all, to paraphrase poet-essayist Robert Bringhurst, ‘forms of knowing’. It isn’t so much that we know them but that they know. Knowing in the sense of ‘knowing freed from the agenda of possession and control – knowing in the sense of stepping in tune with being, hearing and echoing the music and heartbeat of being’.\n\nI invite you to enter the knowing of story, of narrative, of poetry; to explore stories, narratives, poetry; place; time; sacred and secular; self and society. Explore the ‘minute particulars’ of being (as the poet and artist William Blake put it) and the wonder and mystery of being that is around us and within us.\n\nIn this Four-week course, we will draw on views of harmony (balancing concord and discord) to inform our approach to creative writing based on an immersion in ‘the knowing’. The approach will be inspired by an integrated and integrative view of the classical Liberal Arts.\n\nParticipants may work in English and/or Arabic. Films, webcasts, video journals, artwork, social sculptures, or musical compositions are acceptable, as long as academic rigour, and critical and creative thinking are evidenced both in the creative process and in the final outputs.",
-      "ar": null
-    },
-    "facilitator_note": {
-      "en": "Proposed course outline (flexible - may change according to the individual needs and interests of participants enrolled)",
-      "ar": null
-    },
-    "teaching_languages": [
-      "en"
-    ],
-    "schedule": {
-      "start_date": "2026-02-21",
-      "weeks": 4,
-      "slots": [],
-      "note": {
-        "en": "Saturdays: 7:00 to 9:00 or 9:30 pm, for four weeks.",
-        "ar": null
-      }
-    }
+  "schedule": {
+   "start_date": "2026-02-21",
+   "weeks": 4,
+   "slots": [],
+   "note": {
+    "en": "Saturdays: 7:00 to 9:00 or 9:30 pm, for four weeks.",
+    "ar": null
+   }
   },
-  "syllabus": {
-    "session_unit": "session",
-    "sessions": [
-      {
-        "order": 1,
-        "title": "Introduction and overview. The art of participatory knowing.",
-        "description": "Introduction and invitation to connect with a specific space as a ‘knowing space’.\n\nTheme: What does it mean to participate in the kind of knowing that Bringhurst writes about; what does it feel like?\n\nDescriptions and settings. Entering the ‘knowing space’.\n\nTheme: If our job is to create a mood for the reader that speaks relationally to their emotions, values, and powers of reason, how can we move beyond character-based drama to explore the power of setting, time, and narratorial voice to provide an emotional backdrop or colour to our writing?",
-        "meetings": null,
-        "materials": [
-          {
-            "type": "prompt",
-            "title": "An invitation to enter into this kind of knowing.",
-            "note": "Prompt ideas",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "An exploration of principles of symbolic geometry and architecture – sacred and secular – with particular emphasis on the principles of Islamic geometry.",
-            "note": "Prompt ideas",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "Individual writing exercise (evoking the ‘knowing space’).",
-            "note": "‘Play away’ games (out of class)",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "Choose a personality (imaginary, real, historic, current, private connection, public figure, archetype, function) and put them in a familiar space (to them: personal, historic, cultural, social, shared, private, or other) to draw on and write about in session 2. Stretch exercise: Put them in an unfamiliar space (to them).",
-            "note": "HW",
-            "href": null
-          }
-        ],
-        "activities": [
-          {
-            "kind": "exercise",
-            "description": "How can sensory, imaginative, and energetic modes of being help us produce a multi-layered piece of writing – a piece of writing that demonstrates participative knowing through evocations of person, place, and poignant moment which link to eternal-infinite ‘dimensions’ of being?"
-          },
-          {
-            "kind": "exercise",
-            "description": "Space task sharing. Exploring ways of engaging with space. Spanning. Restricting. Contracting. Expanding."
-          }
-        ]
-      },
-      {
-        "order": 2,
-        "title": "Persons and personas: How do people act and exist in ‘knowing space and time’?",
-        "description": "An invitation to connect with people, personalities, archetypes.\n\nTheme: The individual and the collective. The individual and society.",
-        "meetings": null,
-        "materials": [
-          {
-            "type": "prompt",
-            "title": "Change and constancy. What stays the same; what changes?",
-            "note": "Prompt ideas",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "Individual writing exercise (based on characters, archetypes, place, and moment(s)).",
-            "note": "‘Play away’ games (out of class)",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "What is time for you? For your character? For the space you chose to describe? Take the time to engage with time. Allow it to shape you.",
-            "note": "HW",
-            "href": null
-          }
-        ],
-        "activities": [
-          {
-            "kind": "exercise",
-            "description": "Personality task sharing. How has your character remained the same; what has changed for them in the last year; decade; life so far? What about their hopes and fears for the future? How does that shape their being in the here and now?"
-          }
-        ]
-      },
-      {
-        "order": 3,
-        "title": "Existence in time: Assume Time’s knowing. How does time react to us? How does its knowing influence our acts?",
-        "description": "An invitation to creatively explore notions of time.\n\nTheme: Time flows. How are we shaped by it?",
-        "meetings": null,
-        "materials": [
-          {
-            "type": "prompt",
-            "title": "How can time help shape a narrative? How can we know time? How does knowledge evolve through time, and how can we link to the knowledge that transcends time?",
-            "note": "Prompt ideas",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "Individual writing exercise (narratives shaped by time); application to own work.",
-            "note": "‘Play away’ games (out of class)",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "Choose a short example of poetic writing to bring to the next class and share a question about it for us to discuss.",
-            "note": "HW",
-            "href": null
-          }
-        ],
-        "activities": [
-          {
-            "kind": "exercise",
-            "description": "Time task sharing. Letting time tell and direct the stories that flow through us. Personify time: let Time reveal itself to you in its chosen form."
-          }
-        ]
-      },
-      {
-        "order": 4,
-        "title": "The magic of poetry: Bringing the liberal arts together.",
-        "description": "An exploration of the integrated and integrative aspect of the classical liberal arts and their union in the poetic.\n\nTheme: Finding inspiration in the classical liberal arts as an integrated and integrative tool for learning and ‘knowing knowing’. Exploring the essences of the three word-based subjects of the trivium (logic, grammar, rhetoric) and the four number-based subjects of the quadrivium (arithmetic, geometry, astronomy, music: the study of number in one and two dimensions, in three dimensions, in motion, and in harmony and proportion).",
-        "meetings": null,
-        "materials": [
-          {
-            "type": "prompt",
-            "title": "How does poetry unite and celebrate the two branches of the liberal arts?",
-            "note": "Prompt ideas",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "Individual writing exercise (voice and story); application to own work.",
-            "note": "‘Play away’ games (out of class)",
-            "href": null
-          },
-          {
-            "type": "prompt",
-            "title": "How and where can this integrated and integrative form of knowing be found in the here and now today? Find at least 3 examples and share at least 1 of them in our WhatsApp group 1 week after the course has ended.",
-            "note": "HW",
-            "href": null
-          }
-        ],
-        "activities": [
-          {
-            "kind": "exercise",
-            "description": "Poetic writing task sharing. Rhetoric and rhythm. Poetry and the poetic."
-          }
-        ]
-      }
+  "course_type": "LAB"
+ },
+ "syllabus": {
+  "session_unit": "session",
+  "sessions": [
+   {
+    "order": 1,
+    "title": "Introduction and overview. The art of participatory knowing.",
+    "description": "Introduction and invitation to connect with a specific space as a ‘knowing space’.\n\nTheme: What does it mean to participate in the kind of knowing that Bringhurst writes about; what does it feel like?\n\nDescriptions and settings. Entering the ‘knowing space’.\n\nTheme: If our job is to create a mood for the reader that speaks relationally to their emotions, values, and powers of reason, how can we move beyond character-based drama to explore the power of setting, time, and narratorial voice to provide an emotional backdrop or colour to our writing?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "prompt",
+      "title": "An invitation to enter into this kind of knowing.",
+      "note": "Prompt ideas",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "An exploration of principles of symbolic geometry and architecture – sacred and secular – with particular emphasis on the principles of Islamic geometry.",
+      "note": "Prompt ideas",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "Individual writing exercise (evoking the ‘knowing space’).",
+      "note": "‘Play away’ games (out of class)",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "Choose a personality (imaginary, real, historic, current, private connection, public figure, archetype, function) and put them in a familiar space (to them: personal, historic, cultural, social, shared, private, or other) to draw on and write about in session 2. Stretch exercise: Put them in an unfamiliar space (to them).",
+      "note": "HW",
+      "href": null
+     }
     ],
-    "bibliography": [],
-    "notes": null
-  },
-  "cover": null,
-  "duplicate_of": []
+    "activities": [
+     {
+      "kind": "exercise",
+      "description": "How can sensory, imaginative, and energetic modes of being help us produce a multi-layered piece of writing – a piece of writing that demonstrates participative knowing through evocations of person, place, and poignant moment which link to eternal-infinite ‘dimensions’ of being?"
+     },
+     {
+      "kind": "exercise",
+      "description": "Space task sharing. Exploring ways of engaging with space. Spanning. Restricting. Contracting. Expanding."
+     }
+    ]
+   },
+   {
+    "order": 2,
+    "title": "Persons and personas: How do people act and exist in ‘knowing space and time’?",
+    "description": "An invitation to connect with people, personalities, archetypes.\n\nTheme: The individual and the collective. The individual and society.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "prompt",
+      "title": "Change and constancy. What stays the same; what changes?",
+      "note": "Prompt ideas",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "Individual writing exercise (based on characters, archetypes, place, and moment(s)).",
+      "note": "‘Play away’ games (out of class)",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "What is time for you? For your character? For the space you chose to describe? Take the time to engage with time. Allow it to shape you.",
+      "note": "HW",
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "exercise",
+      "description": "Personality task sharing. How has your character remained the same; what has changed for them in the last year; decade; life so far? What about their hopes and fears for the future? How does that shape their being in the here and now?"
+     }
+    ]
+   },
+   {
+    "order": 3,
+    "title": "Existence in time: Assume Time’s knowing. How does time react to us? How does its knowing influence our acts?",
+    "description": "An invitation to creatively explore notions of time.\n\nTheme: Time flows. How are we shaped by it?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "prompt",
+      "title": "How can time help shape a narrative? How can we know time? How does knowledge evolve through time, and how can we link to the knowledge that transcends time?",
+      "note": "Prompt ideas",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "Individual writing exercise (narratives shaped by time); application to own work.",
+      "note": "‘Play away’ games (out of class)",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "Choose a short example of poetic writing to bring to the next class and share a question about it for us to discuss.",
+      "note": "HW",
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "exercise",
+      "description": "Time task sharing. Letting time tell and direct the stories that flow through us. Personify time: let Time reveal itself to you in its chosen form."
+     }
+    ]
+   },
+   {
+    "order": 4,
+    "title": "The magic of poetry: Bringing the liberal arts together.",
+    "description": "An exploration of the integrated and integrative aspect of the classical liberal arts and their union in the poetic.\n\nTheme: Finding inspiration in the classical liberal arts as an integrated and integrative tool for learning and ‘knowing knowing’. Exploring the essences of the three word-based subjects of the trivium (logic, grammar, rhetoric) and the four number-based subjects of the quadrivium (arithmetic, geometry, astronomy, music: the study of number in one and two dimensions, in three dimensions, in motion, and in harmony and proportion).",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "prompt",
+      "title": "How does poetry unite and celebrate the two branches of the liberal arts?",
+      "note": "Prompt ideas",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "Individual writing exercise (voice and story); application to own work.",
+      "note": "‘Play away’ games (out of class)",
+      "href": null
+     },
+     {
+      "type": "prompt",
+      "title": "How and where can this integrated and integrative form of knowing be found in the here and now today? Find at least 3 examples and share at least 1 of them in our WhatsApp group 1 week after the course has ended.",
+      "note": "HW",
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "exercise",
+      "description": "Poetic writing task sharing. Rhetoric and rhythm. Poetry and the poetic."
+     }
+    ]
+   }
+  ],
+  "bibliography": [],
+  "notes": null
+ },
+ "cover": null,
+ "duplicate_of": []
 }

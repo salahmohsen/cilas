@@ -13,7 +13,7 @@
  */
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
-import { getPayload, type Payload } from 'payload'
+import { getPayload, type Payload, type Where } from 'payload'
 
 import { lexical } from '../seed/seed.utils'
 import { importFlows } from './lib/import-flows'
@@ -147,7 +147,7 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
 
 /** Fellows' bios the import got wrong (extracted/people-fixes.json); only the locales given change. */
 const applyPeople = async (payload: Payload, log: string[]) => {
-  const file = path.join(here, 'extracted', 'people-fixes.json')
+  const file = path.join(here, 'extracted', 'corrections', 'people-fixes.json')
   if (!existsSync(file)) return
   const fixes = JSON.parse(readFileSync(file, 'utf8')) as Array<{ name: string; bio: Partial<Record<Locale, string | null>>; $why: string }>
   log.push('## People')
@@ -168,7 +168,7 @@ const applyPeople = async (payload: Payload, log: string[]) => {
 
 /** Cycle corrections (extracted/cycle-reviews.json): dates, and a season or year the pages contradict. */
 const applyCycles = async (payload: Payload, log: string[]) => {
-  const file = path.join(here, 'extracted', 'cycle-reviews.json')
+  const file = path.join(here, 'extracted', 'corrections', 'cycle-reviews.json')
   if (!existsSync(file)) return
   const entries = JSON.parse(readFileSync(file, 'utf8')) as Array<{
     id: number
@@ -176,9 +176,10 @@ const applyCycles = async (payload: Payload, log: string[]) => {
     notes: string[]
   }>
   log.push('## Cycles')
-  for (const { id, set, notes } of entries) {
-    log.push(`### cycle ${id}`, ...notes.map((n) => `- ${n}`))
-    if (dry) continue
+  for (const { id: oldId, set, notes } of entries) {
+    const id = await cycleId(payload, oldId)
+    log.push(`### cycle ${oldId}${id === oldId ? '' : ` (now ${id})`}`, ...notes.map((n) => `- ${n}`))
+    if (dry || id === null) continue
     const { deadline, ...rest } = set
     const current = (await payload.findByID({ collection: 'cycles', id, depth: 0, overrideAccess: true })) as unknown as {
       registration?: Record<string, unknown> | null
@@ -261,6 +262,31 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
   return out
 }
 
+/**
+ * Reviews and cycle reviews name documents by their id in the database they
+ * were written against (2026-10-13); review-index.json keeps each one's
+ * legacy URL (and a cycle's season and year), so they apply to a rebuilt one.
+ */
+const index = JSON.parse(readFileSync(path.join(here, 'extracted', 'corrections', 'review-index.json'), 'utf8')) as {
+  courses: Record<string, string>
+  cycles: Record<string, { legacy_url: string | null; season: string; start_year: number }>
+}
+const courseId = async (payload: Payload, id: number): Promise<number | null> => {
+  const url = index.courses[String(id)]
+  if (!url) return id
+  const found = (await payload.find({ collection: 'courses', where: { legacy_url: { equals: url } }, limit: 1, depth: 0, draft: true, overrideAccess: true })).docs[0]
+  return found ? (found.id as number) : null
+}
+const cycleId = async (payload: Payload, id: number): Promise<number | null> => {
+  const known = index.cycles[String(id)]
+  if (!known) return id
+  const where: Where = known.legacy_url
+    ? { legacy_url: { equals: known.legacy_url } }
+    : { and: [{ season: { equals: known.season } }, { start_year: { equals: known.start_year } }] }
+  const found = (await payload.find({ collection: 'cycles', where, limit: 1, depth: 0, overrideAccess: true })).docs[0]
+  return found ? (found.id as number) : null
+}
+
 const main = async () => {
   const { default: config } = await import('../src/payload.config')
   const payload = await getPayload({ config: await config })
@@ -271,6 +297,12 @@ const main = async () => {
     for (const review of await createNewCourses(payload, log)) reviews.push(review)
   }
   for (const review of reviews) {
+    const id = await courseId(payload, review.id)
+    if (id === null) {
+      log.push(`- review ${review.id} (${index.courses[String(review.id)]}): no such course`)
+      continue
+    }
+    review.id = id
     try {
       await apply(payload, review, log)
       console.log(`${review.id} done`)

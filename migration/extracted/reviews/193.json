@@ -1,14 +1,29 @@
 {
-  "id": 193,
-  "notes": [
-    "teaching_languages was empty: page and flow are Arabic only, set [\"ar\"]",
-    "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Saturdays 18:00-20:30 is already in the slot)"
+ "id": 193,
+ "notes": [
+  "teaching_languages was empty: page and flow are Arabic only, set [\"ar\"]",
+  "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Saturdays 18:00-20:30 is already in the slot)",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "teaching_languages": [
+   "ar"
   ],
-  "set": {
-    "teaching_languages": ["ar"],
-    "schedule": { "note": { "en": null, "ar": null } }
+  "schedule": {
+   "note": {
+    "en": null,
+    "ar": null
+   },
+   "start_date": "2026-04-25",
+   "weeks": 8
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "course_type": "THEMATIC",
+  "title": {
+   "en": "المكان في الأدب الحديث",
+   "ar": "المكان في الأدب الحديث"
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

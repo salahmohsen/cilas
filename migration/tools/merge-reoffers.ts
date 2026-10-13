@@ -11,7 +11,7 @@ import { getPayload, type Payload } from 'payload'
 
 const dry = process.argv.includes('--dry')
 /** Same text under two titles. */
-const EXTRA_PAIRS: Array<[number, number]> = [[273, 151]]
+const EXTRA_PAIRS: Array<[string, string]> = [['/the-philosophy-of-soren-kierkegaard.html', '/quality-time-with-kierkegaard.html']]
 
 type Loc = Record<string, unknown> | null | undefined
 type Course = {
@@ -73,7 +73,7 @@ const courses = (docs as unknown as Course[]).map((c) => ({
   fellows: (c.fellows ?? []).map((f) => (typeof f === 'object' ? (f as { id: number }).id : f)),
   cover_image: c.cover_image && typeof c.cover_image === 'object' ? (c.cover_image as { id: number }).id : c.cover_image,
 }))
-const byId = new Map(courses.map((c) => [c.id, c]))
+const byUrl = new Map(courses.map((c) => [c.legacy_url, c]))
 
 const pairs: Array<[Course, Course]> = []
 for (let i = 0; i < courses.length; i++) {
@@ -87,7 +87,7 @@ for (let i = 0; i < courses.length; i++) {
     if (sameTitle && sharedFellow) pairs.push([a, b])
   }
 }
-for (const [x, y] of EXTRA_PAIRS) if (byId.has(x) && byId.has(y)) pairs.push([byId.get(x)!, byId.get(y)!])
+for (const [x, y] of EXTRA_PAIRS) if (byUrl.has(x) && byUrl.has(y)) pairs.push([byUrl.get(x)!, byUrl.get(y)!])
 
 const log: string[] = []
 const gone = new Set<number>()

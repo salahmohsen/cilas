@@ -1,28 +1,36 @@
 {
-  "id": 98,
-  "notes": [
-    "teaching_languages set to ar (page and flow are Arabic only)",
-    "schedule slot label and note were stored as JSON strings; label cleared, note removed (repeats weekday, times, location and start date)"
+ "id": 98,
+ "notes": [
+  "teaching_languages set to ar (page and flow are Arabic only)",
+  "schedule slot label and note were stored as JSON strings; label cleared, note removed (repeats weekday, times, location and start date)",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "teaching_languages": [
+   "ar"
   ],
-  "set": {
-    "teaching_languages": [
-      "ar"
-    ],
-    "schedule": {
-      "slots": [
-        {
-          "weekday": "thu",
-          "start_time": "18:00",
-          "end_time": "20:30"
-        }
-      ],
-      "note": {
-        "en": null,
-        "ar": null
-      }
+  "schedule": {
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "18:00",
+     "end_time": "20:30"
     }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   },
+   "start_date": "2025-10-23",
+   "weeks": 6
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "course_type": "THEMATIC",
+  "title": {
+   "en": "فلسفة \"تربية المقهورين\" عند پاولو فريري",
+   "ar": "فلسفة \"تربية المقهورين\" عند پاولو فريري"
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

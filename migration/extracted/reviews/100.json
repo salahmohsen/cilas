@@ -1,36 +1,38 @@
 {
-  "id": 100,
-  "notes": [
-    "facilitator_note removed: it only repeated the flow title and fellow name",
-    "schedule.weeks 6: the flow says six-week and numbers six weeks (was 8); note removed (the weekday and time are in the slot, Offline in location)",
-    "teaching_languages en: page in English",
-    "sessions already match the flow, unchanged"
-  ],
-  "set": {
-    "facilitator_note": {
-      "en": null,
-      "ar": null
-    },
-    "teaching_languages": [
-      "en"
-    ],
-    "schedule": {
-      "start_date": "2025-10-28",
-      "weeks": 6,
-      "slots": [
-        {
-          "weekday": "tue",
-          "start_time": "18:00",
-          "end_time": "20:30"
-        }
-      ],
-      "note": {
-        "en": null,
-        "ar": null
-      }
-    }
+ "id": 100,
+ "notes": [
+  "facilitator_note removed: it only repeated the flow title and fellow name",
+  "schedule.weeks 6: the flow says six-week and numbers six weeks (was 8); note removed (the weekday and time are in the slot, Offline in location)",
+  "teaching_languages en: page in English",
+  "sessions already match the flow, unchanged",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": null,
+   "ar": null
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2025-10-28",
+   "weeks": 6,
+   "slots": [
+    {
+     "weekday": "tue",
+     "start_time": "18:00",
+     "end_time": "20:30"
+    }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
+  },
+  "course_type": "WORKSHOP"
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

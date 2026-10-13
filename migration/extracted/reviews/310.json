@@ -1,31 +1,37 @@
 {
-  "id": 310,
-  "notes": [
-    "teaching_languages en: the page and flow are in English",
-    "schedule: note removed (it was a JSON string and only repeated the Wednesday 18:00-20:30 slot, eight weeks, and Offline in location); slot label reset",
-    "sessions already match the eight-week flow, description matches the flow, unchanged"
+ "id": 310,
+ "notes": [
+  "teaching_languages en: the page and flow are in English",
+  "schedule: note removed (it was a JSON string and only repeated the Wednesday 18:00-20:30 slot, eight weeks, and Offline in location); slot label reset",
+  "sessions already match the eight-week flow, description matches the flow, unchanged",
+  "start date, weeks, course type and Arabic title carried from the dev seed copy merged into this course"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
   ],
-  "set": {
-    "teaching_languages": [
-      "en"
-    ],
-    "schedule": {
-      "start_date": "2026-02-25",
-      "weeks": 8,
-      "slots": [
-        {
-          "weekday": "wed",
-          "start_time": "18:00",
-          "end_time": "20:30"
-        }
-      ],
-      "note": {
-        "en": null,
-        "ar": null
-      }
+  "schedule": {
+   "start_date": "2026-02-25",
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "wed",
+     "start_time": "18:00",
+     "end_time": "20:30"
     }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
   },
-  "syllabus": null,
-  "cover": null,
-  "duplicate_of": []
+  "course_type": "THEMATIC",
+  "title": {
+   "en": "Who Are “We”? Class, Identity, and the Struggle of Belonging",
+   "ar": "أنا بنت مين يا داده"
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
 }

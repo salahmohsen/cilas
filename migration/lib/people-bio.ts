@@ -22,11 +22,13 @@ export const writeBio = async (
     await payload.update({ collection: 'people', id, data: { bio: lexical(paras, 'ltr') }, locale: 'en', overrideAccess: true })
   }
   if (ar.trim()) {
-    const arName = nameAr ?? (isMostlyArabic(name) ? name : null)
+    // An Arabic name not yet known: the name as written, until one is.
+    const current = (await payload.findByID({ collection: 'people', id, depth: 0, locale: 'ar', fallbackLocale: false, overrideAccess: true })) as { name?: string | null }
+    const arName = nameAr ?? (isMostlyArabic(name) ? name : (current.name ?? name))
     await payload.update({
       collection: 'people',
       id,
-      data: { ...(arName ? { name: arName } : {}), bio: lexical(ar.split(/\n\s*\n/), 'rtl') },
+      data: { name: arName, bio: lexical(ar.split(/\n\s*\n/), 'rtl') },
       locale: 'ar',
       overrideAccess: true,
     })
