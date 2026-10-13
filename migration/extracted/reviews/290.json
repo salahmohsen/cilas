@@ -1,0 +1,229 @@
+{
+  "id": 290,
+  "notes": [
+    "schedule: start 2020-12-29 (Tuesday), 10 weeks, 17:00-19:00; note removed as slots express it",
+    "MISSING-IMAGE: uploads/1/9/1/0/19102967/published/two.jpg?1608143205",
+    "CHECK: start date 2020-12-29 as stated, though winter-2020 cycle by the winter rule runs Nov 2019-Mar 2020",
+    "syllabus from on_time_and_temporary_winter_2020.docx (10 weekly sessions with readings), which the import never linked",
+    "Requirements (class attendance, read weekly readings) from the docx go to facilitator_note"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2020-12-29",
+      "weeks": 10,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "17:00",
+          "end_time": "19:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    },
+    "facilitator_note": {
+      "en": "Requirements\n\n1. Class attendance 2. Read readings assigned each week",
+      "ar": null
+    }
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction",
+        "description": "Time is invention or it is nothing at all.  - Bergson",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bergson, Henri. 2005. Creative Evolution. Random House, Inc.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Philosophical Underpinnings",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Casarino, C. (2003). Time matters: Marx, Negri, Agamben, and the corporeal. Strategies, 16 (2), 185-206",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Grosz, E. (2005). Bergson, Deleuze and the becoming of unbecoming. parallax, 11(2), 4-13.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Clock Time, Labor and Master Time",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "LeGoff, Jacques. (1980). “Merchants’ Time and Church Time in the Middle Ages” and Labor Time in the Crisis of the Fourteenth Century” In Time, Work and Culture in the Middle Ages. Chicago: University of Chicago Press",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Smith, Mark. (1997) Mastered by the Clock. Time, Slavery and Freedom in the American South. Chapel Hill: University of North Carolina Press. Chaps 1-4.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Time and Class Struggle",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Marx, Karl. “1993. The Working Day” in Capital Vol. 1. pp. 340-416",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Globalizing Time and Space",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Harvey, D. (1999). Time—Space Compression and the Postmodern. Modernity: After Modernity, 4, 98-118",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Johnston, R. and A. Glasmeier. 2007. “Neo-Liberalism, Democracy and the State: Temporal and Spatial Constraints to Globalisation.” Space and Polity 11 (1), pp. 1-33.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Bureaucratizing Time",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Auyero, J. (2012). Patients of the state: The politics of waiting in Argentina. Duke University Press.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Transition Times",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Abourahme, N. (2011). “Spatial collisions and discordant temporalities: Everyday life between camp and checkpoint.” International Journal of Urban and Regional Research, 35(2), 453-6",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Brun, C. (2015). “Active waiting and changing hopes: toward a time perspective on protracted displacement.” Social Analysis, Volume 59, Issue 1, Spring",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Harms, E. (2013). “Eviction time in the new Saigon: Temporalities of displacement in the rubble of development.” Cultural Anthropology, Vol. 28, Issue 2, pp. 344–368.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Affective times",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Berlant, Lauren. (2011). Cruel Optimism. Durham: Duke University Press.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Trading the Future",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Han, C. (2012). Life in debt. Times of care and violence in Neoliberal Chile University of California Press.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "On Critical Time",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Abourahme, N. (2014). Ruinous city, ruinous time: Future suspended and the science fiction of the present. City, 18(4-5), 577-582",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Roy, A. (2020) “The Pandemic is a Portal” in Azadi, pp. 235-247.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,40 @@
+{
+  "id": 255,
+  "notes": [
+    "epigraph: the four opening quotes (Neruda, Barcelona chant, Auden, Hardt and Negri) from the syllabus 'Course Arrangements' page were missing",
+    "facilitator_note: kept only the CILAS fee-waiver / study-day / refreshments paragraph; removed title/fellow credit line and the overview repeated from description",
+    "schedule: page says starting July 12th 7pm-8:30pm for eight consecutive weeks; 12 July 2021 is a Monday, so slot mon 19:00-20:30",
+    "teaching_languages: English-only page",
+    "cover: the course image directly above the course title on the page"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“Earth, who was it who measured and divided you with walls, wire, enclosures?”\n- Pablo Neruda\n\n“No Human is Illegal”\n- Chants outside the Internment Center for Foreigners, Barcelona (Spain), 11. January 2014\n\nThe consul banged on the table and said;\n“If you’ve got no passport you’re officially dead”:\nBut we are still alive, my dear, but we are still alive.\n- Auden WH. 1962. “Refugee Blues.” In Collected Shorter Poems 1930- 1944, pp. 256-57.\n\n“A specter haunts the world and it is the specter of migration. All the powers of the old world are allied in a merciless operation against it, but the movement is irresistible... The legal and documented movements are dwarfed by clandestine migrations: the borders of national sovereignty are sieves.\n- Michael Hardt and Antonio Negri in Empire",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "As part of CILAS’s efforts to build social infrastructure for caring commons, this summer course attempts to open up the following possibilities:\n- Participants from financially disadvantaged backgrounds are welcome to apply for course fee waiver and a subsidize for commute cost.\n- CILAS will offer one “study day” each week for participants to use CILAS as a space to read, discuss and chill out.\n- Tea and refreshments will be served during course meetings.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2021-07-12",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "19:00",
+          "end_time": "20:30"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/course-image-human-flow-migration-and-refugee-encampment_orig.jpg",
+    "alt": "Aerial view of a large refugee tent camp with rows of tents and people walking along a wall"
+  },
+  "duplicate_of": []
+}

@@ -1,0 +1,19 @@
+{
+  "id": 211,
+  "notes": [
+    "facilitator_note: removed (course/semester/instructor line repeats title, cycle and fellow)",
+    "teaching_languages: page and flow are English only"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

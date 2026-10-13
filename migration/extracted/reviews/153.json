@@ -1,0 +1,15 @@
+{
+  "id": 153,
+  "notes": [
+    "teaching_languages en: page in English",
+    "rest matches the source (start date 2016-01-06 stated; two alternative groups, note kept)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

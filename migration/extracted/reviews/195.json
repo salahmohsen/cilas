@@ -1,0 +1,15 @@
+{
+  "id": 195,
+  "notes": [
+    "teaching_languages was empty: page and flow are English only, set [\"en\"]",
+    "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Sundays 18:00-20:30 is already in the slot)",
+    "CHECK: title.ar (البطولة والحداثة) does not appear in the page or flow; left unchanged"
+  ],
+  "set": {
+    "teaching_languages": ["en"],
+    "schedule": { "note": { "en": null, "ar": null } }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

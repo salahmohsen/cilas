@@ -1,0 +1,34 @@
+{
+  "id": 45,
+  "notes": [
+    "facilitator_note removed: fellow name, time and email from the flow header, not a note to participants",
+    "slots set from flow (Wednesday 05:00-08:00 PM); schedule note dropped as slots express it",
+    "teaching_languages set to en",
+    "Flow has no session structure; no syllabus"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "17:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

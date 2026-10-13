@@ -1,0 +1,196 @@
+{
+ "id": 242,
+ "notes": [
+  "facilitator_note: kept only the session-routine sentence; dropped the 'sample readings' heading line (readings now in syllabus.bibliography)",
+  "teaching_languages set to ar+en (page has full description in both)",
+  "schedule: weeks=9 from the numbered weeks of the flow; start 2025-01-23 Thursday 17:00-20:00 as page states",
+  "syllabus: re-supplied the 9 weeks with descriptions/activities from the flow; reading list moved to bibliography with authors and links"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": null,
+   "ar": "في بداية كل جلسة مناقشة للقراءات المرتبطة بالموضوع وفي نهاية الجلسة تحديد قراءات الأسبوع."
+  },
+  "teaching_languages": [
+   "ar",
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2025-01-23",
+   "weeks": 9,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "17:00",
+     "end_time": "20:00"
+    }
+   ]
+  }
+ },
+ "syllabus": {
+  "session_unit": "week",
+  "sessions": [
+   {
+    "order": 1,
+    "title": "مقدمة في الثقافة البصرية",
+    "description": "نظرة عامة على مفاهيم الثقافة البصرية.\n\nقراءات مبدئية لبعض الصور",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 2,
+    "title": "الصورة الفوتوغرافية",
+    "description": "ملخص تاريخ وأهمية وأنواع الصورة الفوتوغرافية\n\nمقدمة في العناصر التقنية لقراءة الصورة\n\nقراءات للصور من الناحية التقنية",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 3,
+    "title": "علم الإشارات والدلالات",
+    "description": "نظرة عامة على السيميولوجيا (دي سوسير)\n\nنظرة عامة على السيميوطيقيا (بيرس).",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 4,
+    "title": "رولان بارت وتأويل الصورة",
+    "description": "استكشاف نظريات رولان بارت حول التصوير الفوتوغرافي.",
+    "meetings": null,
+    "materials": [],
+    "activities": [
+     {
+      "kind": "discussion",
+      "description": "مناقشة القراءات وتطبيق نظريات بارت على صور مختارة."
+     }
+    ]
+   },
+   {
+    "order": 5,
+    "title": "الصورة كنص",
+    "description": "كيف تعمل الصور كنصوص تحمل دلالات يمكن قراءتها.\n\nفهم الصور الفوتوغرافية كمصادر أولية.\n\nتحليل صور باستخدام المنهج النصي.",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 6,
+    "title": "جولة ملاحظة: توثيق اللحظة الراهنة",
+    "description": "بداية المناقشات حول المشاريع",
+    "meetings": null,
+    "materials": [],
+    "activities": [
+     {
+      "kind": "field_visit",
+      "description": "جولة للملاحظة البصرية."
+     },
+     {
+      "kind": "discussion",
+      "description": "مناقشة الجولة"
+     }
+    ]
+   },
+   {
+    "order": 7,
+    "title": "التصوير الوثائقي وسرد القصص",
+    "description": "كيف تروي الصور قصصًا وتوثق التاريخ.",
+    "meetings": null,
+    "materials": [],
+    "activities": [
+     {
+      "kind": "other",
+      "description": "لقاء مع الفنانة والمصورة راندا شعث"
+     }
+    ]
+   },
+   {
+    "order": 8,
+    "title": "الحياة الاجتماعية للصور",
+    "description": "دراسة كيفية تأثير الصور وانعكاسها على المجتمع.\n\nدور الصور في بناء السرديات.",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 9,
+    "title": "البورتريه الفوتوغرافي والهوية",
+    "description": "استكشاف كيف تعكس البورتريهات الهوية الشخصية والثقافية.",
+    "meetings": null,
+    "materials": [],
+    "activities": [
+     {
+      "kind": "discussion",
+      "description": "لقاء مع القائمين على أرشيف بدوي ونقاش على تطور صور البورتريه من خلال الأرشيف"
+     }
+    ]
+   }
+  ],
+  "bibliography": [
+   {
+    "type": "reading",
+    "title": "قراءة الصورة وصور القراءة",
+    "note": "صلاح فضل – دار الشروق – الفصل الأول",
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "الثقافة البصرية بوصفها مجالا معرفيا بينيا",
+    "note": "بدر الدين مصطفى – مجلة فتوحات العدد الرابع يناير 2017",
+    "href": "https://www.asjp.cerist.dz/en/downArticle/68/2/4/16506"
+   },
+   {
+    "type": "reading",
+    "title": "Visual Literacy",
+    "note": null,
+    "href": "https://visualliteracytoday.org/what-is-visual-literacy/"
+   },
+   {
+    "type": "reading",
+    "title": "فلاسفة الفوتوغرافيا",
+    "note": "بدر الدين مصطفي",
+    "href": "https://mana.net/18664/"
+   },
+   {
+    "type": "reading",
+    "title": "حول الفوتوغراف",
+    "note": "سوزان سونتاج",
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "الغرفة المضيئة",
+    "note": "رولان بارت. ترجمة هالة نمر - المركز القومي للترجمة",
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "ملامح السيميولوجيا عند دي سوسير بين المفهوم والمرتكز",
+    "note": null,
+    "href": "https://www.iasj.net/iasj/pdf/5c5ba55d5298d36a"
+   },
+   {
+    "type": "reading",
+    "title": "مدخل الي مفهوم سيميائية الصورة",
+    "note": "إبراهيم محمد",
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "حياة الصورة وموتها",
+    "note": "ريجيس دوبري",
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "العلامة تحليل المفهوم وتاريخه",
+    "note": "امبرتو ايكو",
+    "href": null
+   }
+  ],
+  "notes": null
+ },
+ "cover": null,
+ "duplicate_of": []
+}

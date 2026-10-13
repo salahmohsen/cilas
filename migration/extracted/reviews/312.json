@@ -1,0 +1,29 @@
+{
+  "id": 312,
+  "notes": [
+    "teaching_languages ar: page in Arabic",
+    "schedule: note removed, it only repeated the Friday 17:30-20:30 slot; no start date or week count is given on the course page (the cycle page says eleven weeks in English and ten in Arabic), so left unset",
+    "description matches the page, unchanged; no session or reading structure in the source"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "fri",
+          "start_time": "17:30",
+          "end_time": "20:30"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

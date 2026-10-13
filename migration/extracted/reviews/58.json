@@ -1,0 +1,19 @@
+{
+  "id": 58,
+  "notes": [
+    "teaching_languages: page has full text in both",
+    "cover from own page; description already correct"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/15369766-1499127106782757-208635662-o.jpg",
+    "alt": "Hand held beside a branch of acacia leaves and pods over dark water"
+  },
+  "duplicate_of": []
+}

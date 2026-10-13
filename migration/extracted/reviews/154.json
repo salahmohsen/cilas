@@ -1,0 +1,30 @@
+{
+  "id": 154,
+  "notes": [
+    "title.en: source has no English title (slug typo 'Post-captialism' was invented), en keeps the Arabic title",
+    "schedule.note removed: it only repeats the Saturday 14:30-17:30 slot, and was filed under en though Arabic",
+    "teaching_languages ar: page in Arabic",
+    "cover: poster image on the course's own page (Vitruvian Man with geometric overlay)"
+  ],
+  "set": {
+    "title": {
+      "en": "مختبر البحث الأول - مستقبلات ما بعد رأسمالية: الحياة والسياسة",
+      "ar": "مختبر البحث الأول - مستقبلات ما بعد رأسمالية: الحياة والسياسة"
+    },
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/6020844148-d2b6eb815e-b-e19df1a62d5947289f324903a289cbad_orig.jpg",
+    "alt": "Vitruvian Man drawing overlaid with geometric lines, circles and a pentagram"
+  },
+  "duplicate_of": []
+}

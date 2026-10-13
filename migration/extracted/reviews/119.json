@@ -1,0 +1,317 @@
+{
+  "id": 119,
+  "notes": [
+    "description.en: removed the 'Tentative Flow' outline (moved to syllabus sessions with its readings)",
+    "description.ar held only Arabic readings -> null; items moved to session 8 and 10 materials as the page orders them",
+    "schedule: Sunday morning and evening groups as slots, sentence kept in note; start_date not stated by the source",
+    "teaching_languages en (English page)"
+  ],
+  "set": {
+    "description": {
+      "en": "How does political and social theory respond to change? What can theory tell us about social change? Conversely, what can moments of upheaval, revolution, and political and social change tell us about the theories they were attached to? Is there an intellectual history for revolution and counterrevolution?\n\nIn this course we will read texts of political and social theory in the light of the political and social events that shaped them, from the French Revolution of 1848 to the Egyptian uprising of 2011. We will study both revolutionary and counterrevolutionary representations. This effort will attempt to historicize these theories and understand them in the light of the specific histories that shaped them. In addition, we will explore what it entails to take these theories out of their historical contexts and apply them to others: what then is modified, revised, and/or preserved? In short this course is an exercise of putting theory in context and out of context.\n\nWhile most of the assigned texts are theoretical texts, students are encouraged to research the historical context and compile a chronology of events. This also will be covered in class discussions.\n\nThe course will be supplemented by optional movie nights and read-along sessions\n\n**Why Apply:**\n\nTo get a grasp on schools of critical theory and radical thought in light of the social and political movements they were attached to.\n\nTo theorize change, revolt, and revolution.\n\nTo think of our present condition in the light of various theoretical schools and frameworks.\n\nTo interrogate the various theoretical schools and frameworks in light of our present condition.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "sun",
+          "start_time": "10:00",
+          "end_time": "12:30"
+        },
+        {
+          "weekday": "sun",
+          "start_time": "17:30",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Marx as a Political Analyst: Revolutionary Marxism and the Events of 1848",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Karl Marx, Manifesto of the Communist Party",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Karl Marx, The 18th Brumaire of Louis Bonaparte",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The Paris Commune: The Birth of Revolutionary and Counterrevolutionary Thought",
+        "description": "The Commune and Revolutionary Theory",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Karl Marx, Civil War in France",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Political Cartoons",
+            "note": null,
+            "href": "https://www.marxists.org/history/france/paris-commune/images/caricatures/index.htm"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Race and Gender in the anti-Commune Discourse",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Neil Hertz, “Medusa’s Head: Male Hysteria under Political Pressure.”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Guy Gullickson, Unruly Women of Paris (excerpts)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Janet Beizer, Ventriloquized Bodies: Narratives of Hysteria in 19th Century France (excerpts).",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Rebels and ‘Arabis: The ‘Urabi Revolt",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Excerpts from the ‘Urabi Press (in Arabic)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Excerpts from the anti-‘Urabi Press (in both Arabic and English. French excerpts also available)",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "The Russian Revolution and Leninist Philosophy",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Vladimir Lenin, What Is to Be Done?",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Vladimir Lenin, Materialism and Empirico Criticism",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Vladimir Lenin, State and Revolution",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Prompts will include communist and Leninist anthems sung by Arab artists",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The Leninist Tradition Beyond the Russian Revolution",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Antonio Gramsci, Selections from the Prison Notebooks (excerpts)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Louis Althusser, Lenin and Philosophy (excerpts)",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Decolonization, anti-Colonial Revolts, and Post-Colonial Theory",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Frantz Fanon, A Dying Colonialism",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Frantz Fanon, Wretched of the Earth (excerpts)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Amilcar Cabral, “The Weapon of Theory.”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "The Palestinian Revolution and the Culture of Resistance",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Cartoons by Naji al-‘Ali",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "قرارات الدورة الرابعة للمجلس الوطني الفلسطيني 1968",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "قرارات الدورة الخامسة للمجلس الوطني الفلسطيني 1969",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "غسان كنفاني، عائد إلى حيفا",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "محمود درويش، مختارات",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "إلياس خوري، الجبل الصغير",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "1968 and the ‘Post-structuralist’ Revolution",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Michel Foucault, “Truth and Power.” (Interview)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Michel Foucault, “Useless to Revolt?”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Invisible Committee, The Coming Insurrection",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "2011 and Beyond: Is there an Intellectual History for the Arab Revolts?",
+        "description": "Note: Students are Encouraged to bring their own readings to this session.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "رضوى عاشور، أثقل من رضوى",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "محمد عبد القهار، غارب",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "Open Discussion, Wrapping Up, Final Projects",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

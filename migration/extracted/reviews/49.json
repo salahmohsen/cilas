@@ -1,0 +1,25 @@
+{
+  "id": 49,
+  "notes": [
+    "facilitator_note removed: it was the flow's document title, not a note",
+    "weeks set to 12 (12 numbered weeks in the flow)",
+    "teaching_languages set to ar",
+    "Existing 12 sessions match the flow; only start time given so slots unset and note kept",
+    "Spring 2025 page lists a later offering with a different description; not used for this 2024 course"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "weeks": 12
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

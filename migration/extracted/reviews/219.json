@@ -1,0 +1,40 @@
+{
+ "id": 219,
+ "notes": [
+  "facilitator_note: dropped the outline-parts line (the parts are in the sessions), kept the instructor's sentence",
+  "slots added for the two alternative groups (Sat morning at CILAS, Sat evening online); note kept",
+  "teaching_languages en; weeks 12"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": "The instructor reserves the right to modify this syllabus throughout the semester.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2022-02-12",
+   "weeks": 12,
+   "slots": [
+    {
+     "weekday": "sat",
+     "start_time": "10:00",
+     "end_time": "12:00"
+    },
+    {
+     "weekday": "sat",
+     "start_time": "18:00",
+     "end_time": "20:00"
+    }
+   ],
+   "note": {
+    "en": "Saturday 10-12 am at CILAS (morning) and/or Saturday 6-8 pm online (evening, hybrid)",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

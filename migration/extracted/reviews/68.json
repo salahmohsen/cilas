@@ -1,0 +1,24 @@
+{
+  "id": 68,
+  "notes": [
+    "title: the page gives 'Encountering the State: Anthropological Perspectives' as one title line; subtitle cleared so the text is not duplicated",
+    "teaching_languages: en (page in English only)",
+    "description, slot and note already match the source; left as is"
+  ],
+  "set": {
+    "title": {
+      "en": "Encountering the State: Anthropological Perspectives",
+      "ar": null
+    },
+    "subtitle": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

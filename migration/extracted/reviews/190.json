@@ -1,0 +1,106 @@
+{
+  "id": 190,
+  "notes": [
+    "facilitator_note removed: it held the fellow's bio",
+    "title.ar added from the flow document",
+    "teaching_languages: both (full text in English and Arabic)",
+    "schedule note: only a start time is given",
+    "syllabus: no sessions; reading list with full references as bibliography"
+  ],
+  "set": {
+    "title": {
+      "en": "On Motherhood: Between Gendered Identities and Tools of Resistance",
+      "ar": "حول الأمومة: بين الهويات الجندرية وأدوات المقاومة"
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2024-04-21",
+      "note": {
+        "en": "OFFLINE, Every Sunday at 6 pm, starting date is 21st of April",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "The Liberation of Women and The New Woman Two Documents in the History of Egyptian Feminism",
+        "note": "Amin, Q., & Peterson, S. S. (2004). Cairo: The American University of Cairo Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Rethinking the Public Sphere: A Contribution to the Critique of Actually Existing Democracy",
+        "note": "Fraser, N. (1990). Social Text, 56-80.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Making Sense of an Untold Story: A Personal Deconstruction of the Myth of Motherhood",
+        "note": "Hager, T. (2011). Qualitative Inquiry, 35-44.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Bargaining with the Devil: States and Intimate Life",
+        "note": "Hasso, F. S. (2014). Journal of Middle East Women's Studies, 107-134.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Bargaining with Patriarchy",
+        "note": "Kandiyoti, D. (1988, September). Gender and Society, 2(3), 247-290.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Politics of Piety: The Islamic Revival and The Feminist Subject",
+        "note": "Mahmood, S. (2005). New Jersey: Princeton University Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Agency, Performativity, and the Feminist Subject",
+        "note": "Mahmood, S. (2009). In H. R. Christensen, & L. Sjorup (Ed.), Pieties and Gender (pp. 11-45). Brill.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "How to Mend: Motherhood and Its Ghosts",
+        "note": "Mersal, I., & Moger, R. (2019). Sternberg Press.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Performativity of Motherhood: Embodying Theology and Political Agency",
+        "note": "Oh, I. (2009). Journal of the Society of Christian Ethics, 3-17.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Of Woman Born: Motherhood as Experience and Institution",
+        "note": "Rich, A. (1995). New York: W. W. Norton & Company.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Gender: a useful category of historical analysis",
+        "note": "Scott, Joan W. (1986). The American Historical Review, 91(5): 1053-1075.",
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

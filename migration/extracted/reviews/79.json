@@ -1,0 +1,35 @@
+{
+  "id": 79,
+  "notes": [
+    "teaching_languages: the page gives the course in Arabic and English.",
+    "location: held at Wekalet Behna (Alexandria), so OFFLINE.",
+    "schedule.note: the Arabic sentence sat in en; slots already express day, time and weeks, so the note is cleared."
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar",
+      "en"
+    ],
+    "location": [
+      "OFFLINE"
+    ],
+    "schedule": {
+      "start_date": "2021-10-06",
+      "weeks": 9,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "17:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

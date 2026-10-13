@@ -1,0 +1,28 @@
+{
+  "id": 266,
+  "notes": [
+    "description: removed the stray 'description' label at the start; text and section headings (expectations, why apply?) unchanged",
+    "schedule.note: now the source's own sentence about the two alternative groups; dates already in start_date and weeks",
+    "teaching_languages en (page in English)"
+  ],
+  "set": {
+    "description": {
+      "en": "This course is meant to analyse urban space and the concept of the flânerie. Flânerie, the art of the flâneur, means strolling, loitering, sauntering with no fixed intent. The course invites participants to discover new ways of navigating the urban landscape. We will begin by exploring the notion of aimless wandering and procrastination by looking at the literary writings of Charles Baudelaire, Walter Benjamin, Charles Dickens, and Virgina Wolf.\n\nIn this course we will examine the relationship between wandering and wondering. Urban life is characterised by moments of idlesness such as when stuck in traffic, waiting to cross the streets, anticipating a bus, or standing in a queue. Through the writings of Egyptian-born French writer Albert Cossery, we will explore notions of time and leisure in Cairo. For example, what does it mean to loose track of time and wander without destination? Egypt embodies a unique aesthetic of time. How does sitting at an ahwa, smoking shisha, playing tawla or having shai symbolize this particular context?\n\nMichel de Certeau's seminal work 'Walking in the City' will allow us to engage with the physical act of walking. According to de Certeau it is the city-walker that bring city to life. The city provides pen and paper and it is the people, namely the pedestrians who provide the story. Pedestrians and hawkers tell urban stories in their movements and these stories are woven into the urban fabric. We will further engage with situationist Guy Debord and learn about his idea of mediation as altering urban experiences. We will further re-imagine the flâneur as a flâneuse , i.e. a female flâneur, as Indian feminists are re-claiming public space.\n\nexpectations\n\nParticipants are expected to have an appreciation for literature and a passion for walking around Cairo.\n\nParticipants are expected to have access to a pair of comfortable shoes; iPods are not required.\n\nParticipants should not expect to lose weight or any form of health benefits.\n\nHowever, participants can expect a Cairene tan.\n\nwhy apply?\n\nTo re-discover the art and aesthetics of walking and particularly flânerie.\n\nTo examine the relationship between aimless wandering and navigating Cairo’s urban landscape.\n\nTo re-imagine the flâneur as a flâneuse , i.e. a female flâneur and collectively reclaim a safe and accessible public space.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2015-03-23",
+      "weeks": 10,
+      "note": {
+        "en": "The course will be hosted for early birds from 10 am to 12:30 pm AND night owls from 5 pm to 7:30 pm provided that no less than five participants sign up per class.",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,28 @@
+{
+  "id": 98,
+  "notes": [
+    "teaching_languages set to ar (page and flow are Arabic only)",
+    "schedule slot label and note were stored as JSON strings; label cleared, note removed (repeats weekday, times, location and start date)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

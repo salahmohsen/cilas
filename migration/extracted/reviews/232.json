@@ -1,0 +1,30 @@
+{
+ "id": 232,
+ "notes": [
+  "description: added How to approach the course, What to expect and What not to expect (course overview) from facilitator_note",
+  "facilitator_note: removed (repeated title, the 12-weeks/logistics paragraph and the overview text now in description); nothing left",
+  "weeks: 12 (one session per week, stated in the flow)",
+  "teaching_languages: ar and en (discussion mostly Arabic, readings mostly English, page in English)",
+  "sessions already match the flow; unchanged"
+ ],
+ "set": {
+  "description": {
+   "en": "The experience with the world as a corrupt wasteland that humanity alone can and must transform into a new, better place is a relatively recent experience, for it has started taking concrete shape only in the 16th-century Europe. From this point on, voices have echoed the sentiments of the likes of Belinsky, the 19th-century Russian Socialist who proclaimed his belief that:\n\n“… there will come a time [on earth] when … there will be no … duty and obligation … there will be no rich nor poor, neither kings nor subjects… But it is absurd to imagine that this could happen by itself, with the aid of time, without violent changes, without bloodshed. Men … must forcibly be led to happiness. And of what significance is the blood of thousands compared to the degradation and suffering of millions.”\n\nIn this course, we will delve deeper into this experience, focusing particularly on its religious-existential roots. We will use, as our guiding example, the legend of \"The Grand Inquisitor,\" a short story within Fyodor Dostoevsky’s The Brothers Karamazov. Here, we encounter a relevant confrontation where a Grand Inquisitor, tasked with burning those who do not follow the Church at the stake for a new, better world, is interrogating Jesus himself!\n\nHow to approach the course?\n\nThe topic of this course, as said, is the modern experience with the world as a corrupt wasteland that humanity alone can and must transform. This topic can be approached from various aspects, such as historical, economic, and purely philosophical aspects. However, in this course, only the religious-existential aspects are going to be isolated, for they are the least studied ones, even though they are extremely important. In order to approach the said topic from this aspect, we need a key, though, which is to be found in the work of the Austrian philosopher Eric Voegelin, who provides a host of concepts that can help us understand the religious-existential “roots” of this modern experience, such as his concept of “Gnosticism,” and his “pneumo-pathology.” However, this is still not enough, for this experience is a vastly shared one. Hence, we are to take a guiding example in which this experience is to be clearly found, e.g., Dostoevsky’s Grand Inquisitor, and then we are to apply the concepts we take from Voegelin on this example in order to eventually get a better understanding of the religious-existential roots of this experience, which is our goal. As for the pedagogical modality of the course, it is mainly the discussion-based learning. The fellow is to introduce the context of Dostoevsky’s “the Grand Inquisitor” and the host of concepts developed by Eric Voegelin, and then the fellow is to encourage all the class to engage in a thorough discussion of the Legend that involves multiple readings.\n\nWhat to expect\n\n1) A discussion of the following questions: A.) What is the experience that we are interested in, in this course, exactly, that is, the modern experience with the world as a corrupted, hostile wasteland that man alone can and must transform? B.) What religious-existential reasons could account for experiencing the world in this way? C.) Could it have anything to do with one’s attitude towards God? D.) Is it an isolated experience, or has it become a shared one across the globe? E.) What possible practical consequences could this experience of the world lead to? F.) Is such an experience dangerous or something to be welcomed? G.) If it is dangerous, why so? And, h.) What could be done, if any, in the face of such an experience?\n2) Multiple readings of the legend of the “Grand Inquisitor” by Dostoevsky as a prime, guiding example to understand the said experience. – The legend is 10 in pages.\n3) Reading some, short work(s) by original thinkers, especially Eric Voegelin, in order to find a key to approaching both the said questions and the Legend.\n4) Reading some, short excerpts from various thinkers to illuminate our discussions, like Descartes, Pascal, Hobbes, Bacon, Marx, Nietzsche, Belinsky, Heidegger, Lenin, Schmitt and others.\n5) The readings are mostly in English.\n6) If found, a translation into Arabic is to be provided for the relevant, translated reading(s) – the “Legend” is already translated, so expect its translation to be available.\n7) The discussion is mostly in Arabic, unless otherwise indicated or asked.\n8) The exact pages of the readings are to be sent as PDFs before the beginning of the course itself via email; and if not, the said pages are to then be sent at least a week before each session.\n9) The longest reading of the entire course is 18 pages long, and we are going to cover it across two classes, where the discussion is going to be led by the fellow.\n\nWhat not to expect\n\n1) Since this course takes as a given both the existence of a “God” and the possibility of maintaining an existential relation with Him, whether negatively or positively, a discussion to prove both of these givens is not to be expected at all.\n2) Since we are going to read about figures, like Marx, other than the Grand Inquisitor, who is our primary guiding example, a fuller discussion of these “side” figures should not be expected.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "ar",
+   "en"
+  ],
+  "schedule": {
+   "weeks": 12
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

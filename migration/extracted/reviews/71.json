@@ -1,0 +1,27 @@
+{
+ "id": 71,
+ "notes": [
+  "Moved the opening poem (with attribution) from description to epigraph; dropped the bare 'description' label",
+  "Set teaching_languages en (English-only page)",
+  "Cover: the course's own artwork (historical theatre announcement) at top of its block"
+ ],
+ "set": {
+  "epigraph": {
+   "en": "Write, History. Leave no one out, neither big nor small.\nWrite, for no one is ever too small,\nnone at all.\nWrite on a page, and leave the other blank\nFor tis those blanks my songs will fill!\nWrite, history...\n- Ibrahim el-Mursi, Port Said, 1967.",
+   "ar": null
+  },
+  "description": {
+   "en": "So sang resistance groups who fought in Port Said's war of attrition between 1967-1973. For a period widely remembered for its cornerstones in Egypt's military history - little is actually known of the stories of the battles waged by civilians during those years to keep Israeli invasion at bay.\n\nThis course will engage with the many silences and erasures that exist in academic, nationalist and military histories. Each week we will experiment with a different entry point into historical events - Archival material, Oral History, News-Papers, Poetry, Literature, and Architecture - and explore the nature of each historical research methodology, its politics, and the worlds they reveal and deny us. We will use these methodologies to re-explore the history of the al-Ghuria community.\n\nTowards the end of the course, participants will select and explore how a single event can be re-told based on a narrative. Join us as we decipher the archives, listen to epics and popular songs of political events, flip through periodicals of the past, and tour the architecture of al-Ghuria in search of the seldomly told.\n\nexpectations\n\nParticipants are expected to actively engage with all course material. They are expected to visit state periodicals, access archives, attend performances, interview members of the al-Ghuria community, read indicated parts of a historical novel, take photographs of a telling piece of architecture or historical site, and bring their observations to class.\nParticipants will choose a moment in history to explore through various media discussed in class. Participants will select a mode of 're-telling' historical narratives either through Wiki-entries or online blogging, writing, or story-telling.\nParticipants are expected to contribute and share reflections and experiences of historical narratives.\n\nwhy apply?\n\nIn this course we will raise questions where answers seem self-evident. We will ask questions such as:\n(1) How can we tap into the many narratives behind a single historical event?\n(2) Why are certain events silenced, and others brought out? How can we engage with these silences ourselves?\n(3) How can archives be political? How can we access them in Egypt and elsewhere?\n(4) Can memory be a reliable source for history? What do songs tell us about a particular event that academic narratives do not?\n(5) Do newspapers tell us the whole truth? How can we read between the lines?\n(6) Can novelists be historians? How much imagination is necessary for an understanding of a historical event?\n(7) How can we sift through the layers of al-Ghuria's history by walking down its streets and alleys?\n(8) How can we re-tell moments in history without ourselves silencing others?",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": {
+  "upload": "uploads/1/9/1/0/19102967/674647.jpg",
+  "alt": "Old newspaper announcement for a theatre performance, held by a hand"
+ },
+ "duplicate_of": []
+}

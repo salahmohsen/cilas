@@ -1,0 +1,30 @@
+{
+  "id": 285,
+  "notes": [
+    "teaching_languages: page has full text in English and Arabic",
+    "schedule: two alternative Monday groups as slots; sentence kept in note"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "10:00",
+          "end_time": "12:30"
+        },
+        {
+          "weekday": "mon",
+          "start_time": "17:30",
+          "end_time": "20:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

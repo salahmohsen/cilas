@@ -1,0 +1,39 @@
+{
+ "id": 88,
+ "notes": [
+  "Moved learning objectives from facilitator_note into description",
+  "Schedule note removed (repeats slot, start date, weeks, online)",
+  "teaching_languages en: page in English"
+ ],
+ "set": {
+  "description": {
+   "en": "Anthropology is the study of people, cultures, and the human condition. This course introduces the concepts of religion and spirituality with an anthropological, social, and cultural lens that focuses on rituals and healing. Our question does not focus on the synopsis of different religions in the world, it is rather an exploration and investigation of key facets of religio-spiritual practices. This includes rituals, magic and witchcraft, myth, history of religion, and spiritual healing. Our aim is to investigate how all of these concepts were created and recreated to form the spiritual beliefs and practices that are popular today.\n\nThis course will help students:\n- Analyze and interpret beliefs, practices, and social structures in religious traditions from an anthropological perspective. Cover sufficient conceptual and background material on the selected topic.\n- Reflect on the literature directly related to the history and theories of anthropology of religion and magic and the debate over the mystical and the modern mind/mentality.\n- Compare and contrast popular spiritual healing practices from around the globe with those prevalent in Egypt.\n- Conduct ethnographic fieldwork on a topic of the student’s choice.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2021-09-21",
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "tue",
+     "start_time": "18:30",
+     "end_time": "21:00"
+    }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

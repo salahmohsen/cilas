@@ -1,0 +1,33 @@
+{
+ "id": 174,
+ "notes": [
+  "Fixed run-together words in subtitle (page text 'Spiritualityand the Unseenthrough'; flow reads 'Spirituality and the Unseen through')",
+  "Moved Course Objectives from facilitator_note into description; cleared facilitator_note (rest repeated title, schedule note and the session 5 reschedule already in the sessions)",
+  "start_date 2022-05-17 from the flow's Session 1; weeks 8 (sessions 1-8 incl. presentations day)",
+  "Set teaching_languages to en"
+ ],
+ "set": {
+  "subtitle": {
+   "en": "Investigating the Social behind Spirituality and the Unseen through Anthropological Fieldwork",
+   "ar": null
+  },
+  "description": {
+   "en": "Anthropology is the study of people, cultures, and the human condition. This course introduces the study of anthropology in a practical hands-on manner. It’s all about “making the strange familiar and the familiar strange”. The participants will be encouraged to engage in discussions about anthropology as a field, otherness, rapport, access, among other important facets of conducting social qualitative research. They will also be engaging practically with writing fieldnotes, conducting participant observation and interviews, and editing their work to come up with a mini ethnography. This all will be covered with the theme: Spirituality and the Unseen by investigating rituals, activities, and experiences that are considered spiritual.\n\nCourse Objectives\n\nSome of the questions we’re going to cover in this course are:\n\n- What is anthropology as a field and mode of knowledge and practice.\n- How to read and analyze ethnographies.\n- How to conduct ethnographic fieldwork on spirituality. (Participant observation and fieldnotes)\n- How to conduct semi-structured interviews.\n- How to make the personal academic/professional. (Auto-ethnography on spiritual experiences)\n- How do we use our ethnographic eye to try and understand our everyday lives?\n\nThis course will help participants:\n\n- Get introduced to ethnographic reading and writing.\n- Understand and use participant observation as a tool to investigate the social.\n- Write fieldnotes.\n- Understand how to make personal experiences academic.\n- Learn how to edit your work.\n- Conduct ethnographic fieldwork/mini ethnography on spirituality, the focus is the student’s choice.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "schedule": {
+   "start_date": "2022-05-17",
+   "weeks": 8
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

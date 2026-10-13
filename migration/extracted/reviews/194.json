@@ -1,0 +1,31 @@
+{
+  "id": 194,
+  "notes": [
+    "The last paragraph (unconscious in Buddhist psychology) is part of the course description in the flow, not a facilitator note: moved to the end of description, facilitator_note cleared",
+    "teaching_languages was empty: page and flow are English only, set [\"en\"]",
+    "schedule.note held the literal string {\"en\":null,\"ar\":null}; cleared (Tuesdays 18:00-20:30 is already in the slot)",
+    "CHECK: schedule.weeks is 8 but the flow's reading list numbers only 6 weeks; left unchanged (the source states no week count)"
+  ],
+  "set": {
+    "description": {
+      "en": "This course intends to cover the psychological aspects of the Buddhist Doctrine. Our main focus will be to explore in depth and as much extensively as possible, both the origins and developments of the autochthonous Indian experience of mind-examination, in both its tenets and practices, as they were ingeniously discovered and formulated by early Indian meditators and contemplative practitioners. The course will begin by demonstrating the principle of Buddhist pyrhonism as an epistemology in which conventional and ultimate truths are sharply distinguished, with the latter believed to be reachable fundamentally via the individual experience rather than abstract conceptualization.\n\nThe experience with which Buddhist psychology is most concerned is, dukkha, which covers the vast expanse beginning at circumstantial forms of psychological pain and affliction, and extends further to deeper forms including the conditionality regulating mental and emotional habits, impulses, compulsions and responses, and finally reaching down to the dread characteristic of the 'unconscious'. We will explore how Buddhist Sanskrit and Pāli texts give a detailed description of these, and how they further prescribe a path of experiential practice that enables the individual practitioner transcend this dukkha as a universal and fundamental human condition.\n\nThe course will cover such characteristic and unique Buddhist practices of spiritual and psychological transcendence, including meditation, tranquillity, mindfulness, Buddhist morality, self-awareness, intuitive observation, motivation and effort, and renunciation, which Buddhist texts frequently explain by juxtaposing and contrasting against their worldly, mundane opposites. This will give us a grand and clear picture of what constitutes \"mental health\" in terms of Buddhist psychology, and which we will view also in light of what modern Western psychology proposes in terms of therapeutic intervention.\n\nFinally we shall place much attention to the remarkable discovery of the \"unconscious\" in Buddhist psychology. We shall explore how the experience of deep meditation has allowed the ancient Indian practitioner to uncover and witness first-hand certain unfathomable hidden strata of the psyche that otherwise never appear in normal everyday conscious states. The Buddhist discovery and examination of the unconscious remains one of the most significant and profound aspects of Buddhist psychology, and we shall explore how this corresponds and interacts with the contributions of psychoanalysis and Jungian analysis.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

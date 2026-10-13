@@ -1,0 +1,19 @@
+{
+  "notes": [
+    "facilitator_note cleared: held the PDF header and an extractor link note",
+    "teaching_languages en: English page"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "id": 85,
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

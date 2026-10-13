@@ -1,0 +1,29 @@
+{
+ "id": 272,
+ "notes": [
+  "Removed the bare 'course description' label from description.",
+  "Added Arabic subtitle from the page.",
+  "Set teaching_languages: taught in Arabic (a few English texts).",
+  "language sentence \"(يدرس بالعربية…)\" put in language_note.ar, not subtitle"
+ ],
+ "set": {
+  "description": {
+   "en": "This course offers an overview of Palestinian literature, with a special focus on the Palestinian novel and its development since the second half of the 20th century. With the establishment of the state of Israel in 1948, the brutal annihilation of the Palestinian people, their land and their collective memory began, resulting in a ‘nakba’ which saw the displacement of thousands of Palestinians. For their part, Palestinian novelists were adamant to write against these processes of uprootedness and erasure, employing storytelling as a tool of resistance against the Zionist settler-colonial project. They were also grappling with their status as refugees in diaspora, a new “minority” inside Israel, or as Palestinians living under Israeli occupation in the “Occupied Palestinian Territories” as of 1967.\n\nIt is within this context that the Palestinian novel came to acquire one of its central themes, namely the preservation of Palestinian collective memory. But more than just re-enact stories of home and confront the colonizer, Palestinian writers were equally committed to inspiring resistance, giving agency, documenting the Palestinian people’s relentless struggle against, and their unyielding sumoud (steadfastness) in the face of, the Zionist enemy as well as providing a critique of Palestinian society itself.\n\nThis course aims to familiarize students with some of the important literary contributions made by Palestinian novelists since 1948, and trace how this body of literature continued to respond to the changing local, regional and global contexts. While this course is interested in tracing how the political, historical and literary converge in the Palestinian novel, it is equally concerned with unpacking the literary work itself, and exploring the aesthetic shifts that occur within the Palestinian novel over time.\n\nAuthors to be studied in this course will include Ghassan Kanafani, Emile Habibi, Jabra Ibrahim Jabra, Sahar Khalifah, Elias Khoury and Anton Shammas. Literary texts will be studied in their original language (Arabic except for Shammas’ text which we will be reading in English). Additionally, we will be reading selections from autobiographical accounts (in both Arabic and English) by Edward Said, Mourid Barghouti, Mahmoud Darwish, Raja Shehadeh and Suad Amiry, and supplementary reading material in both English and Arabic. We will also be watching films and inviting guest speakers.\n\nStudents enrolled in the course are expected to read the assigned texts on a weekly basis, to lead panel discussions based on the assigned literary work of the week, and to write a mid-term comparative paper based on two of the texts discussed in class, as well as a final paper so that students can further explore one of the themes discussed in any of the assigned literary works.",
+   "ar": "يقدم المساق عرضًا للأدب الفلسطيني، مع تركيز خاص على الرواية الفلسطينية وتطورها في النصف الثاني من القرن العشرين. منذ بدء التشتيت العنيف للشعب الفلسطيني وأرضه وذاكرته الجماعية مع تأسيس دولة إسرائيل في 1948 والذي أدى إلى نكبة تهجير آلاف الفلسطينيين، والروائيون الفلسطينيون من جانبهم يصرون على الكتابة ضد عمليات محو الذاكرة وتخريبها عن طريق توظيف الحكي كأداة للمقاومة ضد المشروع الإستيطاني الصهيوني، كما اشتبكوا مع وضعهم كلاجئين في المنافي، أو كأقلية جديدة داخل إسرائيل، أو كفلسطينيين يعيشون تحت الإحتلال الإسرائيلي في مناطق 1967.\n\nتأتي الرواية الفلسطينية داخل ذلك السياق كي تقدم واحدة من أهم ثيماتها، وهي \"الحفاظ على الذاكرة الفلسطينية الجماعية\". لكن الكتاب الفلسطينيون، يشاركون بالتوازي في إلهام المقاومة وتوثيق نضال الشعب الفلسطيني وصموده في مواجهة العدو الصيهوني مثلما يطرحون نقد للمجتمع الفلسطيني ذاته أكثر من مجرد كونهم يعيدون سرد القصص عن معنى الوطن.\n\nيهدف المساق إلى أن يجعل طلابه يتآلفوا مع بعض من الإسهامات الأدبية المهمة التي كتبها الروائيين الفلسطينيين منذ عام 1948 وأن يتتبعوا كيف استطعت تلك الأدبيات أن تتجاوب مع السياقات المحلية واﻹقليمية والدولية المتغيرة. ومثلما يركز المساق على تتبع كيف اجتمع السياسي والتاريخي واﻷدبي في الرواية الفلسطينية، فهي كذلك تركز على استكشاف العمل الأدبي نفسه، واكتشاف التحولات الجمالية التي حدثت في الرواية الفلسطينية على مدى الزمن.\n\nسوف نقرأ في هذا المساق غسان كنفاني، إيميل حبيبي، جبرا إبراهيم جبرا، سحر خليفة، وإلياس خوري، وأنطون شماس. وسوف تدرس جميع النصوص اﻷدبية بلغتها اﻷصلية (تقرأ جميعها بالعربية عدا رواية أنطون شماس التي سوف تقرأ باﻹنجليزية). بالإضافة إلى مختارات من السير الذاتية (بالعربية واﻹنجليزية) ﻹدوارد سعيد، ومريد البرغوثي، ومحمود درويش، ورجا شحادة وسعاد العامري مع قراءات مكملة بالعربية واﻹنجليزية. كما سوف نعرض أفلامًا ونستضيف محاضرين.\n\nنتوقع من الطلبة المسجلين في المساق قراءة النصوص المقررة أسبوعيًا وتسيير نقاشًا حول على العمل اﻷدبي المقرر للأسبوع، ويقوموا بكتابة ورقة بحثية في منتصف الفصل الدراسي تعتمد على مقارنة نصين تمت مناقشتهما في المساق، بالإضافة إلى ورقة ختامية يستكشف فيها الطلاب واحدة من الثيمات التي نوقشت في اﻷعمال اﻷدبية المقررة"
+  },
+  "teaching_languages": [
+   "ar"
+  ],
+  "language_note": {
+   "en": "Taught in Arabic, with a few English texts",
+   "ar": "يدرس بالعربية، إلى جانب بعض النصوص اﻹنجليزية"
+  },
+  "subtitle": {
+   "en": null,
+   "ar": null
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

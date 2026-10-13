@@ -1,0 +1,30 @@
+{
+  "id": 53,
+  "notes": [
+    "removed stray 'description' label from description",
+    "schedule note repeated slots, dates, venue: dropped",
+    "teaching_languages en",
+    "cover: poster on own page"
+  ],
+  "set": {
+    "description": {
+      "en": "Humans have always organised themselves socially and spatially around food and its production. Towns and cities, roads and infrastructure, traditions and festivals have emerged and been shaped by our most fundamental need to eat. Over the last two hundred years - facilitated by technologies of transport - urban dwellers have become more distanced from sources of food.\n\nThe divide between those involved in the production of food and those who consume it has never been bigger. This divide begs questions regarding the nature of this divide and how we can bridge it. We have become disconnected from our food to the extent that we know little about how it's grown, what goes into it, who the people involved in its production are and what happens to our bodies as a result of that.\n\nThis course will use food, its acquisition and preparation as a vehicle to learn about ecological, nutritional and social issues related to food. The course is student-led and employs both a phenomenological and emergent approach in the exploration of topics. Participants will be invited to raise questions relevant to them, set frames to search and select ingredients to cook with collaboratively.\n\nEvery meal prepared during the respective classes will be a reflection of the journey of collective inquiry into how we can connect - at the most fundamental level of sustaining our life, through deeper understanding - with our bodies, the planet and each other. Recipes developed in this course will be compiled into a publication on the socio-ecological aspects of our ingredients.\n\nexpectations\n\nParticipants are expected to attend no less than 80% of classes.\n\nParticipants are expected to contribute to the creation of a recipes publication from planning to printing.\n\nParticipants are expected to identify themes for exploration and submit short weekly reflections.\n\nwhy apply?\n\nTo understand the relationship between food production and consumption patterns and its socio-ecological impacts.\n\nTo practically explore specific issues surrounding food in Cairo.\n\nTo acquire organisational, culinary skills.\n\nTo build culinary vocabulary.\n\nTo develop kitchen hygiene and safety practices.\n\nTo learn about farming, gardening and food cultivation.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/1992672.jpg",
+    "alt": "Group gathered around a kitchen table of fresh produce while a cook speaks"
+  },
+  "duplicate_of": []
+}

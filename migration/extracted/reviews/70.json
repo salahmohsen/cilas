@@ -1,0 +1,19 @@
+{
+ "id": 70,
+ "notes": [
+  "Set teaching_languages en (English-only page)",
+  "Cover: the course page's artwork (crowd at a night moulid); fellow portrait not used",
+  "Description already matches the source; schedule note kept (two alternative groups)"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": {
+  "upload": "uploads/1/9/1/0/19102967/6908359.png",
+  "alt": "Crowd at a night festival under strings of lights"
+ },
+ "duplicate_of": []
+}

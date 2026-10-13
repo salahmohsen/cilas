@@ -1,0 +1,39 @@
+{
+ "id": 90,
+ "notes": [
+  "Moved course-content paragraphs from facilitator_note into description",
+  "Schedule note removed (repeats slot, start date, weeks)",
+  "teaching_languages en"
+ ],
+ "set": {
+  "description": {
+   "en": "Systems of symbols have widely been used to mark landscapes and lay claim on them. Such land-claims can be turned into an effective tool for governance by nation states or be used by political groups pursuing other aims. The course will inquire how religiously derived land claims can be understood as a form of resistance against the seemingly all-encompassing power of the nation state? How does the term religion \"work\" in this context? And how do secularist actors justify their claims within the same discursive space? As it has become obvious today that secularism is no less ideological than religion, it is worthwhile discussing the theoretical considerations outlined here by taking into account anthropological, political and historical material from Kurdistan.\n\nFirst, we will look at the changing strategies and theories proposed by Kurdish rebel movements since the early 2000s, later with the defense of Kobanê and the subsequent recapture of much of the so-called Islamic State's territories the Kurdish Movement was acclaimed by large parts of the global left. The region is a traditional home for various minority groups that claim to be its original inhabitants. By stating to have been present in region since ancient times, these groups usually seek to differentiate themselves from Turkish, Arab or Persian national land claims, denouncing them as illegitimate. But apart from the large Kurdish nationalist movements which are historically grounded in the Sunni Muslim milieu, there are a number of religious, or ethno-religious, minorities which are historically connected to the Kurdish cultural sphere. These groups defend their own land claims not only against the nation states on whose territory they officially live, but also against Sunni Kurdish political and religious interference.\n\nThe course will introduce the Yezidis of northern Iraq as well as the Alevis of Dersim in eastern Turkey to explain some of these complex issues. Other closely related groups, such as the Ahl-e Haqq/Yarsan/Kaka'i or the Shabak will be included in the discussion. The course will also provide some basic insights into the main Kurdish national movements, their history and their aims. As it doesn't seem fruitful to reify any of these groups as imaginative unities we will focus on the issue of religious and national land claims by various groups in the region instead of attempting to shape holistic images of them.\n\nFor a CILAS student this course might be a valuable opportunity to discuss a variety of questions around anti-imperialist political movements in the Middle East, taking into account their history and the wider post-colonial context. The particular challenges that leftist Kurdish groups and parties are facing might also be of considerable interest for the comparative study of political movements in the Arab world: How do these groups attempt to build up a large following without resorting to nationalist and religious propaganda? And how do they deal with conflicting claims by other minority groups?\n\nIt will hopefully become clear that religion is - apart from many other things - an essentially political category. Apart from discussing some historical developments as well as the empirical situation, the course will try to apply a number of theoretical approaches which might help to make sense of the material. Among them: Theories on memory developed by Walter Benjamin, Dipesh Chakrabarty, Aleida Assmann among others, theories on sacred space as a political category by David Chidester, Manuel Vasquez and J.Z. Smith and others, theories on secularism by Ali Hussein Agrama and theories on similarity, mimesis and conflict by Simon Harrison and Michael Taussig.\n\nAll participants are very warmly invited to contribute from their own experience and research – it will surely be interesting to compare cases from Kurdistan to similar situations in other parts of the world, or to suggest other theoretical approaches to the same topics. Please contact me in advance so we can discuss how to possibly include your suggestions into the program.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2021-09-27",
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "mon",
+     "start_time": "10:00",
+     "end_time": "12:00"
+    }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

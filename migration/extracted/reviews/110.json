@@ -1,0 +1,29 @@
+{
+ "id": 110,
+ "notes": [
+  "description: removed the bare labels 'course description' / 'رؤية عامة' that opened each locale (headings, not text of the course)",
+  "teaching_languages: page gives full text in English and Arabic",
+  "schedule.note: two alternative groups on Tuesday (morning or evening); old English note said 'Tuesday evenings' twice and had no Arabic; now the page's own sentences in both languages; no slots",
+  "weeks 10 kept (page: 10-week course)"
+ ],
+ "set": {
+  "description": {
+   "en": "The course is designed to introduce the qualities of film and the perspectives they might offer us. Through the study of selected films, short readings, lectures and discussion, this course will introduce the specific elements of film. In each session, we will read critical responses to a film we watch. Alongside our readings and screening, we will examine the film’s aesthetic techniques—from movement, montage, sound to narrative and point to view, to scale and color. We will ask how has film been understood, shaped by, and constrained by aesthetic and social practice? By the end of each session, we will have examined in-depth one film’s qualities, perspectives, and socio-historical significance. Over the course of this 10-week course, we will closely analyse audiovisual forms to explore the range of questions, issues and methods appropriate to understanding the broad history of film—major technological developments, aesthetic techniques, artistic movements, genres, and works.\n\nThis course seeks to develop skills in perception, comprehension, and interpretation when dealing with film and other moving image media. Most importantly, the course aims to foster in students the ability to translate this understanding into verbal expression, both oral and written (creative projects are also encouraged). You will have opportunities to generate your own analysis of films and to share them with members of the group. By the end of his course, you should have a solid understanding of how film can be interpreted or “read” through close analysis.",
+   "ar": "هذا المساق مصمم كي يقدم لطلابه صفات الأفلام والرؤى التي قد توفرها لنا. من خلال دراسة أفلام مختارة وقراءات قصيرة، ومحاضرات ومناقشة، سيقدم المساق عناصر محددة عن الأفلام. سنقرأ عروضًا نقدية حول الأفلام التي نشاهدها في كل محاضرة. وسنختبر التقنيات الجمالية للأفلام إلى جانب القراءة والمشاهدة: من الحركة والمونتاج والصوت إلى السرد ووجهة النظر وحتى الألوان. سيوجهنا السؤال: كيف يتم فهم الأفلام وتشكيلها وتكثيفها بالممارسات الإجتماعية والجمالية؟ سنكشف واحدة من صفات الفيلم ووجهة نظر صانعها والأهمية الإجتماعية التاريخية في نهاية كل محاضرة. على مدى عشرة أسابيع، سنحلل عن قرب الأشكال الصوتية المرئية كي نكتشف طيف الأسئلة والقضايا والمناهج الملائمة لفهم التاريخ الواسع للأفلام - التطورات التكنولوجية الكبيرة والتنقيات الجمالية والحركات الفنية والتصنيفات والأعمال.\n\nيسعى هذا المساق إلى تطوير المهارات في الرؤية والفهم والتفسير عندما نتعامل مع الأفلام والوسائط البصرية المتحركة الأخرى. والأهم من ذلك، يهدف المساق إلى تعزيز قدرة طلابه في ترجمة هذا الفهم إلى تعبير كلامي سواء كان شفاهيًا أو مكتوبًا (مرحب بالمشاريع الإبداعية أيضًا). ستتاح لكم الفرصة في خلق تحليلاتكم الخاصة للأفلام ومشاركتها مع أعضاء آخرين من المجموعة. في نهاية المساق، سيصبح لديكم فهم قوي عن كيف يمكنهم تأويل الأفلام أو قراءتها من خلال تحليل عميق."
+  },
+  "teaching_languages": [
+   "ar",
+   "en"
+  ],
+  "schedule": {
+   "weeks": 10,
+   "note": {
+    "en": "On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+    "ar": "ايام الثلاثاء في الصباح من ١٠:٠٠ صباحاً إلى ١٢:٣٠ ظهراً و في المساء من ٥:٣٠ إلى ٨:٠٠ مساءاً"
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

@@ -1,0 +1,243 @@
+{
+  "id": 128,
+  "notes": [
+    "description: removed the course flow and the theory/art lists (moved to syllabus)",
+    "syllabus: 10 sessions from 'Tentative course flow'; theory and art/literature names into bibliography",
+    "weeks: 10 numbered sessions",
+    "teaching_languages: English-only page"
+  ],
+  "set": {
+    "description": {
+      "en": "In this course, we will use our bodies as a starting point for creative practice. We start off with the assumption that at some point in our lives, we have been exiled from our bodies — accidentally or by force. To bridge that assumed estrangement, we will begin to probe our relationships to our physical bodies through employing both visual and writing tools. Participants will write and make art about, with, and perhaps on, their bodies.\n\nThis course promotes an interdisciplinary approach to creative inquiry and practice in the attempt to explore the notion of exile from one’s own body. Assigned theoretical texts are designed to inform the production of creative work, whereby discussion and feedback are a crucial part of the journey. We will also be examining artwork and writing by local and international artists. We will be translating ideas back and forth between visual expression and written language, and we will experiment with a range of practices including embodied writing, image-making and performance.\n\nWhy apply\n\nTo explore local and international art and literature that employ the body as a theme.\n\nTo use theory as a springboard from which to explore ideas, through writing and image-making.\n\nTo explore your physical and non-physical body and mind relationship.\n\nTo produce work in various mediums, including text, drawing, and photography.\n\nTo create, share and receive feedback about creative work in a collective setting.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to embodied writing/image-making.",
+        "description": "Introduction to embodied writing/image-making.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "The body and public space.",
+        "description": "The body and public space.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Studio writing/image-making.",
+        "description": "Studio writing/image-making.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "The body and failure.",
+        "description": "The body and failure.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Studio writing/image-making.",
+        "description": "Studio writing/image-making.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "The body’s relationship to the mind.",
+        "description": "The body’s relationship to the mind.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Studio writing/image-making.",
+        "description": "Studio writing/image-making.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "The body in exile.",
+        "description": "The body in exile.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Studio writing/image-making.",
+        "description": "Studio writing/image-making.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Bodies and objects.",
+        "description": "Bodies and objects.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Bell Hooks",
+        "note": "Theory",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Judith Butler",
+        "note": "Theory",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Sara Ahmed",
+        "note": "Theory",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Kathy Acker",
+        "note": "Theory",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Nawal Al Saadawi",
+        "note": "Theory",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Silvia Federici",
+        "note": "Theory",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Susan Sontag",
+        "note": "Theory",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Amal Kenawy",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Sadik Alfraji",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Guy-Mannes Abbott",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Marlene Dumas",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Shirin Neshat",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Hayv Kahraman",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Mona Hatoum",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Forensic Architecture Collective",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Carrie Mae Weems",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Ghada Amer",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Ellen Gallagher",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Joumana Haddad",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Ocean Vuong",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Kaveh Akbar",
+        "note": "Art/literature",
+        "href": null
+      },
+      {
+        "type": "other",
+        "title": "Waguih Ghali",
+        "note": "Art/literature",
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

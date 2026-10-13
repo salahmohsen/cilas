@@ -1,0 +1,15 @@
+{
+  "id": 268,
+  "notes": [
+    "Description, subtitle and schedule note match the page (two alternative groups, no start date stated); set teaching_languages (page has full text in both)."
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar",
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

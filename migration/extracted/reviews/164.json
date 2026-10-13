@@ -1,0 +1,31 @@
+{
+  "id": 164,
+  "notes": [
+    "schedule: slot wed 19:30-21:30 from page sentence (28 April 2021, ten weeks)",
+    "cover: portrait image preceding this course's block on the page",
+    "sessions already match the flow (classes 7 and 8 combined)",
+    "teaching_languages en: English page"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2021-04-28",
+      "weeks": 10,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "19:30",
+          "end_time": "21:30"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/1499521828-imamhussain_orig.jpg",
+    "alt": "Ornate green, blue and gold Islamic calligraphy medallion artwork"
+  },
+  "duplicate_of": []
+}

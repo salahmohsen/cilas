@@ -1,0 +1,19 @@
+{
+ "id": 231,
+ "notes": [
+  "teaching_languages: Arabic (page and outline in Arabic)",
+  "weeks: 12 (outline numbers 12 weekly meetings)",
+  "description, sessions, schedule already match the source; unchanged"
+ ],
+ "set": {
+  "teaching_languages": [
+   "ar"
+  ],
+  "schedule": {
+   "weeks": 12
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

@@ -1,0 +1,23 @@
+{
+  "id": 188,
+  "notes": [
+    "teaching_languages: page and flow are in English",
+    "schedule: weeks 7 (flow lists weeks 1-7; weeks 3 and 4 are both Deleuze, kept as one session with 2 meetings); weekday/time sentence kept as note since no end time is given"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2024-04-20",
+      "weeks": 7,
+      "note": {
+        "en": "OFFLINE, Every Saturday at 6 pm, starting date is 20th of April",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

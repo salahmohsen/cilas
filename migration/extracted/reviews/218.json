@@ -1,0 +1,31 @@
+{
+ "id": 218,
+ "notes": [
+  "facilitator_note was only the title plus 'Preliminary Syllabus' (a flow header): removed",
+  "teaching_languages en (English page); weeks 12 from the numbered flow",
+  "CHECK: page gives start week 13 Feb 2022 (a Sunday) but course meets Mondays; start date kept as stated"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2022-02-13",
+   "weeks": 12,
+   "slots": [
+    {
+     "weekday": "mon",
+     "start_time": "11:30",
+     "end_time": "13:30"
+    }
+   ]
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

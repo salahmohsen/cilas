@@ -1,0 +1,23 @@
+{
+ "id": 111,
+ "notes": [
+  "schedule.note: removed 'Offered by Bianca Fliß.' (that is the fellow, not a schedule); two alternative groups (Wednesday morning or evening) so kept as a note, no slots",
+  "teaching_languages: page is in English (Arabic text on the page is only a placeholder)",
+  "description, facilitator_note and the 10 sessions match the page; left unchanged"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 10,
+   "note": {
+    "en": "On Wednesday mornings from 10:00 am to 1:00 pm and evenings from 5:00 to 8:00 pm",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

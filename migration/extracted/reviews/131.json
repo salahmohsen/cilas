@@ -1,0 +1,22 @@
+{
+  "id": 131,
+  "notes": [
+    "teaching_languages: page is English only",
+    "schedule.weeks 10: Cycle page states thematic courses last ten weeks.",
+    "cover: the Idle No More solidarity poster placed in this course's block on the cycle page"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/_8092464_orig.jpg",
+    "alt": "Poster reading Idle No More: Palestinians in Solidarity with Idle No More, a fist holding a feather and a rifle against a Canadian flag"
+  },
+  "duplicate_of": []
+}

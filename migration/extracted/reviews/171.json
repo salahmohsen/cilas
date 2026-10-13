@@ -1,0 +1,16 @@
+{
+ "id": 171,
+ "notes": [
+  "Set teaching_languages to en (English-only page)",
+  "CHECK: page says 'Starts June 5th' with Saturday meetings, but 5 June 2022 was a Sunday; kept the source date",
+  "No session structure in the source (no flow document), so no syllabus"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

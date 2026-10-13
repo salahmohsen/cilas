@@ -1,0 +1,15 @@
+{
+  "id": 44,
+  "notes": [
+    "teaching_languages set to en (English-only page)",
+    "Two alternative Sunday groups: slots left unset, schedule note kept"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

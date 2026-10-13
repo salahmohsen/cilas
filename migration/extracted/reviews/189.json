@@ -1,0 +1,71 @@
+{
+  "id": 189,
+  "notes": [
+    "facilitator_note removed: it held the fellow's bio",
+    "teaching_languages: ar (page is Arabic, 'بالعربية')",
+    "schedule note: only a start time is given",
+    "syllabus: no sessions in source; reading list with authors from the flow as bibliography",
+    "cover: no image in this course's own block on the page"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2024-04-23",
+      "note": {
+        "en": "OFFLINE, Every Tuesday at 6 pm, starting date is 23th of April",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "موت الناقد",
+        "note": "رونان ماكدونالد، ترجمة فخري صالح",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "كل ده كان ليه، سرديه نقدية عن الاغانية والصدارة",
+        "note": "فيروز كراوية",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الثقافة الجماهيرية والحداثة في مصر",
+        "note": "وولتر ارمبرست",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "تشكيل وتشفير عن رقص المهرجانات في مصر",
+        "note": "ليلى البلعوطي",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "صراع الهامش والمتن",
+        "note": "ليلت فهمى، مجلة فنون، العدد 29، يوليو 2020",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "الفيسبوك والفلسفة: بم تفكر؟",
+        "note": "دي اى وتركوور، ترجمة ربيع وهبة",
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

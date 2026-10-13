@@ -1,0 +1,45 @@
+{
+  "id": 162,
+  "notes": [
+    "description: added the three overview paragraphs of the flow ('This course thus treats...', 'In addition...', 'Through this dialogue...') that were wrongly in facilitator_note",
+    "facilitator_note: now only the PS (parts separable, parallel writing workshop); the 'six sessions' paragraph removed because it repeats the sessions",
+    "schedule: start_date 2021-05-19 (Wednesday), 6 weeks, slot wed 17:30-19:30 from 'starting May 19th from 5:30 pm to 7:30 pm for six consecutive weeks'; note removed (fully expressed)",
+    "teaching_languages en: page in English",
+    "sessions already match the flow (3 themes, tentatively 3/2/1 meetings; third theme's meetings left null), unchanged",
+    "cover: tardi-la-commune-de-paris-foule.jpg precedes this block (credited 'Jacques Tardi, Le Cri du Peuple')"
+  ],
+  "set": {
+    "description": {
+      "en": "What can moments of upheaval, revolution, and political and social change tell us about the theories they were attached to? What can theory tell us about social change? How does political and social theory respond to change? Is there an intellectual history for revolution and counterrevolution? This course aims to provide a survey of the great political, social, and intellectual revolutions that shaped the nineteenth and early twentieth century and set the tone for the years that followed. It aims to ground the major philosophical interventions of the century (notably Hegel and Marx) in revolutionary practice. It is in fact astonishing how theories that seem obscure and undecipherable become clear and lucid once read in the light of the history that shaped them.\n\nThis course thus treats theory and practice as intricately bound and sometimes inseparable. It approaches critical theory as the specific intellectual history of the material political and social changes they accompanied.\n\nIn addition, we will explore what it entails to take these theories out of their historical contexts and apply them to others: what then is modified, revised, and/or preserved? In short this course is an exercise of putting theory in context and out of context.\n\nThrough this dialogue between theory and practice, the course aims to provide an introduction to critical theory, an introduction to the history of revolutions, and an exercise in critical thinking.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "PS: Although part 2 of this course will be based on the discussions we have in part 1, parts 1 and 2 of this course could be taken separately; students who are interested in one are not required to enlist in the other). Students are also encouraged to participate in the parallel writing workshop, which aims to culminate in a final publication, and which will be co-hosted by the facilitator of this course.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2021-05-19",
+      "weeks": 6,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "17:30",
+          "end_time": "19:30"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/tardi-la-commune-de-paris-foule_orig.jpg",
+    "alt": "Ink illustration of a crowd of Paris Commune fighters with red flags, one reading 'Vive la Commune', a boy raising his fist in front"
+  },
+  "duplicate_of": []
+}

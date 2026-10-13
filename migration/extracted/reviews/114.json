@@ -1,0 +1,23 @@
+{
+  "id": 114,
+  "notes": [
+    "Removed the stray 'description' label from the start of description",
+    "weeks 10: cycle page says thematic courses run ten weeks",
+    "teaching_languages set to en: page is English only"
+  ],
+  "set": {
+    "description": {
+      "en": "In this course we will look at education as an ever evolving and overarching process. Modern state-run schooling - the type that most of us have experienced as children and young adults - has altered the way in which we think and value education today. This particular understanding of what education is has shaped modern education systems across the world in the last 200 years. This is perhaps why most countries have adopted an education system that is compulsory in nature, public, free and standardised. Throughout the 19th and 20th centuries, this particular type of schooling came to exist in the Egyptian context. We will explore together precisely how this came into being. Specifically, we will analyse concepts such as nationalism, colonialism and modernity and the ways in which they affected the emergence of the modern state-run education system. We will engage with writings of Egyptian educators to explore how they viewed the emergence of this system and the ways they sought to improve it. In other words, the course will look at education as a field of negotiation, change and evolution.'\n\nexpectations\n\nStudents are expected to complete the assigned readings.\nStudents are expected to write two essays during the course.\nStudents are expected to be present during field trips.\n(Students are encouraged to develop research proposals related to the topics discussed which could be presented using a medium of their choice (paper, blog, photos, film, workshop,etc.).\n\nobjectives\n\nIntroduce students to the basic principles of historical scholarship.\nDevelop the ability to analyse primary historical texts and other primary sources.\nFamiliarise students with prominent pedagogues, educators and philosophers of education.\nEngage with influential historical texts and classical writing on understandings of education.\nDemonstrate an understanding of the interplay between nationalism, colonialism and the modern state-run education system.\nApproach and assess education as an evolving and overarching process.",
+      "ar": null
+    },
+    "schedule": {
+      "weeks": 10
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

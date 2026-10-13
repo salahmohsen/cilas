@@ -1,0 +1,46 @@
+{
+  "id": 261,
+  "notes": [
+    "epigraph: Buñuel quote moved out of description",
+    "description: course description plus Briefing and course objectives from the flow; removed from facilitator_note",
+    "facilitator_note: now only 'What I Expect from You' (fellow's note to participants); dropped dates/time already in schedule",
+    "schedule: start_date 2022-07-26 (first session per flow; page says week of 23 July, old value 23 July was a Saturday); weeks 7 (six sessions plus essay session; 23/08 skipped)",
+    "teaching_languages en (page and flow in English)",
+    "CHECK: page says 19:00-21:00, flow says 19:00-20:30; kept 19:00-21:00 from page",
+    "syllabus left as extracted (7 sessions match the flow)"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“[The cinema] is an instrument of poetry, with all that that word can imply of the sense of liberation, of subversion of reality, of the threshold of the marvellous world of the subconscious, of nonconformity with the limited society that surrounds us.”\n-Luis Buñuel.",
+      "ar": null
+    },
+    "description": {
+      "en": "Have you ever watched a film and couldn’t describe how you felt because of it? Did a film ever leave you in awe? When watching a film, do you leave your mind at home, or does the film make you more and more conscious of your cognitive processes? Does reality inspire films, or does cinema alter reality? When was the last time you lived a film, with all your senses, and not just watched it? Are you watching the film in the right way? These are all questions we are going to tackle and play with during our 6-session seminar about the aesthetic and affective elements of film. Through this course, we will learn together how films can alter our perception of time, reality, dreams, psychology, and the likes. We will read films through philosophical and phenomenological frameworks of Deleuze, Tarkovsky, Rancière, Kuleshov, and others, and understand how different conceptual frameworks can also influence our understanding of films and cinemagoing.\n\nOh, and by the way, there is no right way to watch a film.\n\nBriefing:\n\nOur sessions will focus on the different elements of film. We will start with understanding what constitutes a frame and how frame composition is achieved. From there, we will move into the cinematic time; what makes films different than reality and how non-linearity can greatly affect a narrative. This will open the way for montage, and how it is an important tool to use in order to stitch together the stories we want to tell from our own desired perspectives. In order to combine the concept of non-linearity and the unorthodox methods of montage that some filmmakers use, we will delve deeper into our psyche and try to have a glimpse at how our inner minds, through our dreams, can be projected onto the big screen. Finally, how does cinema and the different visual arts inform our psyche and being? Are we constructed by the state through its media outlets, including cinema? Can we break free? What can the moving-image tell us about chronological societal events? Is film the way to gain this freedom? In the final session, we will discuss the concept of being an emancipated spectator; someone who thinks on their own and can view the films in whichever ways they like. This will also come in handy when writing the final film analysis essays.\n\nWhat You Expect from Me (Course Objectives):\n\n• Understanding films from different perspectives and viewpoints.\n• Understanding the different conceptual frameworks that tackle filmmaking.\n• Cultivating the ability to analyse and discuss films in both verbal and written forms.\n• Identifying different elements of cinema other than formalist techniques.\n• Paving the way to critical thinking through focusing on the details within the cinematic frame.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "What I Expect from You:\n\n• Preparedness for class by doing the readings, preparing points of discussion and questions.\n• Interaction in class. This class is an example of what an interactive learning experience looks like. We are both learning with each other along the way. Having an ongoing, open discussion in class will make the whole experience more informative and entertaining.\n• You are here to learn something new, so speak up, be loud and proud about your thoughts and ideas no matter what they are, as long as they are within the realm of cinema.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "location": [
+      "OFFLINE"
+    ],
+    "schedule": {
+      "start_date": "2022-07-26",
+      "weeks": 7,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "19:00",
+          "end_time": "21:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

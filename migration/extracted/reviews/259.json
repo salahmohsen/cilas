@@ -1,0 +1,30 @@
+{
+  "id": 259,
+  "notes": [
+    "schedule: weeks 8 from the eight numbered weeks; slot and note kept",
+    "teaching_languages: English page"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2022-07-23",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": "Offline, Tuesdays 18:00-20:00, except for the first week, which is online.",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

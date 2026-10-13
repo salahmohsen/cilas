@@ -1,0 +1,23 @@
+{
+  "id": 97,
+  "notes": [
+    "teaching_languages set to en (page and flow are in English; some readings are Arabic)",
+    "weeks set to 7 (seven numbered sessions in the flow)",
+    "schedule.note removed: repeats start date, weekday, times and location"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 7,
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

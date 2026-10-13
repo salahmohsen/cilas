@@ -1,0 +1,15 @@
+{
+  "id": 270,
+  "notes": [
+    "Description in both languages matches the page; set teaching_languages (full text in both)."
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar",
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,29 @@
+{
+ "id": 72,
+ "notes": [
+  "Description is the course-flow overview (fuller version of the page blurb), 4 paragraphs verbatim",
+  "Cleared facilitator_note: its paragraphs are the course overview, not logistics, and repeated the description's capitalist-logic sentence",
+  "Set teaching_languages en (English page; texts in both languages)",
+  "Existing 9-session syllabus matches the flow; left as is",
+  "Cover: the 1960 film poster 'Nahr al-Hubb' on the course's block (file is the _orig variant, the editor/ path is absent)"
+ ],
+ "set": {
+  "description": {
+   "en": "In what is becoming an annual tradition since it was first taught in 2018, ‘Can we talk about love?’ is a critical attempt to try to have a meaningful conversation about ‘love’. The course tries to look at a wide range of texts encompassing philosophy, psychology, literature, both in Arabic and English to not only understand ‘love’ as phenomenon but to try develop the terms and the ideas to be able to have such a conversation.\n\nThis course was inspired by a reading group spearheaded by a friend on how to come to terms with ideas that are seemingly abstract and yet immediately personal and experienced in our everyday life. In a time where capitalist logic reaches its apex in transforming our bodies, our minds, our ideas, our emotions and our very span of attention into complex modes of objectification and consumption, how can we come to understand concepts like: attraction, attachment, fidelity, amity and care, and so on. This course raises more questions than tries to answer them and it is entirely premised on the seamless mingling of the inter-subjective and the intellectual.\n\nOver the time-frame of the course participants will continuously oscillate between articulating a subjective experience and ideas and at the same time engaging with a wide variety of texts and media, ranging from St. Augustine to Egyptian “romantic” pocket-book series, Zuhur.\n\nThe course’s main objective is part therapeutic, part intellectual exploration and part critical reflection on the possibilities of love in a time and space like ours.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": {
+  "upload": "uploads/1/9/1/0/19102967/1960_orig.jpg",
+  "alt": "Poster of the 1960 Egyptian film Nahr al-Hubb (River of Love)"
+ },
+ "duplicate_of": []
+}

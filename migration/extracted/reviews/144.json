@@ -1,0 +1,13 @@
+{
+  "id": 144,
+  "notes": [
+    "teaching_languages en+ar: page has the overview in both languages",
+    "description and subtitle ('a writing lab', from the page's own heading) already match the source; schedule note kept (two alternative groups, morning and evening)"
+  ],
+  "set": {
+    "teaching_languages": ["en", "ar"]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,39 @@
+{
+  "id": 48,
+  "notes": [
+    "Opening quote moved from description to epigraph",
+    "slots set from flow (Mondays 5:30pm-8:00pm), weeks 10; schedule note dropped as slots and location express it",
+    "teaching_languages set to en",
+    "facilitator_note (hybrid sentence and parts outline from flow) left unchanged"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“In every community there is work to be done. In every nation, there are wounds to heal. In every heart there is the power to do it.”\n\nMarianne Williamson",
+      "ar": null
+    },
+    "description": {
+      "en": "This course introduces students to the field of medical anthropology, exploring its historical and contemporary approaches. Students will gain an understanding of the social and cultural determinants of health and illness, and how to conduct person-centered social research. The course will also cover the basics of writing academic articles and reports.\n\nSome of the specific topics that will be covered include:\n\n• What is medical anthropology and what is its approach?\n\n• What is medical anthropology and what is its contemporary approach?\n\n• How can we understand the social and cultural determinants of health and illness?\n\n• What is the difference between qualitative and quantitative research methods?\n\n• What are the frameworks and the tools used to conduct person-centered social research?\n\n• How to balance between voices from the field and theory?\n\n• What is the role of humanitarian aid in today’s world?\n\nBy the end of the course, students will be able to:\n\n• Cover sufficient conceptual and background material on the selected topic.\n\n• Reflect on the literature directly related to theories of medical anthropology.\n\n• Compare and contrast between different research methods and tools.\n\n• Understand how to write academic articles and reports.\n\n• Conduct social research on a topic of the student's choice.\n\nThis course is a great option for students who are interested in learning more about health, culture, development, and society. It is also a valuable introduction to the field of medical anthropology and social research.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10,
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "17:30",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,274 @@
+{
+  "id": 198,
+  "notes": [
+    "teaching_languages was empty: the page gives the full description in English and in Arabic, set [\"en\",\"ar\"]",
+    "schedule.note was empty: the page gives only a start time (Mondays at 6 pm, no end time), so slots stay unset and the sentence is kept as the note",
+    "CHECK: fellow Mostafa Taha's English bio is cut off mid-sentence and his Arabic bio differs from the page; fellow profile, not changed here",
+    "syllabus from translation_lab23_flow.pdf, the lab's real flow (11 weekly rows; the earlier review emptied the sessions because the page linked flow.pdf, a psychoanalysis workshop)",
+    "CHECK: the page says lab seasons run twelve weeks while the flow lists 11 weeks; schedule.weeks left as is"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": "Start date is the week of the 5th of February, on Mondays at 6 pm offline at CILAS",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Understanding the Text",
+        "description": "Learning objectives:\n\nHow is reading for translation purposes different?\nHow to deconstruct a text?\nHow to determine the exact meaning intended based on context?\nUsing monolingual dictionaries",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Applying learning objectives on ‘Arabic translators did far more than just preserve Greek philosophy’ article"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Watching ‘Arrival’ movie"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Reading ‘Naughty words’ article."
+          },
+          {
+            "kind": "other",
+            "description": "After session: Create a translation Diary"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "Follow up and practice",
+        "description": "Learning objectives:\n\nPracticing and discussion of week 1 assignments",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Discussing the movie and the article from last week assignments"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Applying learning objectives on ‘Why languages and dialects really are different animals’ article"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Applying learning objectives on the assigned course project"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Transferring the meaning",
+        "description": "Learning objectives:\n\nWhy should a translator see through the reader's eyes?\nHow to escape from the source text while translating?\nHow to draft your translation?\nUsing lexicons",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Translating a part of ‘Why learning a new language is like an illicit love affair’ article into Modern Standard Arabic"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Retranslating the same part into English Arabic."
+          },
+          {
+            "kind": "other",
+            "description": "During session: Comparing the two versions"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Reading ‘Thoughts into words’ article"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Translating ‘Simplicity or style: what makes a sentence a masterpiece?’ article into Modern Standard Arabic"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "Follow up and practice",
+        "description": "Learning objectives:\n\nPracticing and discussion of week 3 assignments",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Discussing reading"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Checking translated articles and giving feedback"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Translating a video subtitles"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Applying learning objectives on the assigned course project"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Polishing your writing",
+        "description": "Learning objectives:\n\nWhy is self-revision important?\nDoes your text sound “original”?\nWhat to look for when revising?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Revising our own translations for the ‘Simplicity or style: what makes a sentence a masterpiece?’ article"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Reading ‘A history of punctuation’ article"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Reading Chapters 10 and 13 of ‘Revising and Editing for Translators’ book (will be provided in PDF)"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Follow up and practice",
+        "description": "Learning objectives:\n\nPracticing and discussion of week 5 assignment",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Discussing readings"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Translating a short news article and trying to revise while drafting"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Applying learning objectives on the assigned course project"
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Translation Technology",
+        "description": "Learning objectives:\n\nHow is the translation scene changing?\nIs the technology good or bad by nature?\nWhen to decide to use them and how?\nIs MTPE a translation or a revision task?",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Testing google translate"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Testing Tarjama’s engine"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Revising a machine translated version of the ‘Simplicity or style: what makes a sentence a masterpiece?’ article"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Reading ‘Shitloads and zingers: on the perils of machine translation’"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Reading ‘Robo-writers: the rise and risks of language-generating AI’ article"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "Follow up and practice",
+        "description": "Learning objectives:\n\nPracticing and discussion of week 7 assignment",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Discussing readings"
+          },
+          {
+            "kind": "other",
+            "description": "During session: Open discussion: Should we be using Machine translation early in our careers?"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Applying learning objectives on the assigned course project"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "The whole process",
+        "description": "Learning objectives:\n\nPracticing the whole process as one, not in stages",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Translating a part of ‘L’art de la traduction’ article"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Preparing a group translation for the article"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "Working on Projects",
+        "description": "Learning objectives:\n\nChecking progress of work projects and providing feedback",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Discussing difficulties they faced in projects and suggesting solutions"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Working on projects"
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": "Working on Projects",
+        "description": "Learning objectives:\n\nCompleting assigned projects",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "During session: Discussing difficulties they faced in projects and suggesting solutions"
+          },
+          {
+            "kind": "other",
+            "description": "After session: Finishing and submitting the projects"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

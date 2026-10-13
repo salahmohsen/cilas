@@ -1,0 +1,95 @@
+{
+ "id": 69,
+ "notes": [
+  "Moved the 'Course Readings' list out of description into syllabus.bibliography (no sessions in source)",
+  "Set teaching_languages en (English-only page)",
+  "Cover: the course page's poster image"
+ ],
+ "set": {
+  "description": {
+   "en": "It might be that one of the simplest definitions of democracy is what the American president Abraham Lincoln once said that it is the “Government of the people, by the people, for the people”. It is also said that democracy is the fulfillment of complete collective authority in which the moment of election and voting is the moment that the citizen emancipate within his community, or as the French philosopher Rousseau once wrote: “In a democracy, people are free only at the moment of giving their votes. As for the rest of the time, they are the government’s slaves”. This hidden slavery in the representative organizations inspired the American poet Charles Bukowski to say, “The difference between democracy and dictatorship is that in democracies you vote first then you receive orders, but in dictatorships, you don’t waste your time voting.”\n\nThe one reason to reject establishing direct democracy from the perspective of most political thinkers remains that the masses cannot meet to govern all the time, it would be hard to imagine that the residents of a big city like Alexandria gather at one of its squares to vote on the decisions that affect their daily affairs as it used to happen in ancient Athens or what it is called a “city state”. And for that authority must be mandated, but once this happens, there is no more democracy, and here lays the democratic paradox.\n\nMore democracy or less democracy? This course is browsing the philosophy of democracy and its practice. We start with reading the various philosophical stances of the radical left on democracy, get introduced to its old and recent history, and analyze its patterns in contemporary societies contexts. This course is trying to deconstruct the many aspects of the concept of democracy as an entry for political philosophy and its sciences, and it ends with a non-dramatic act about the politics of democracy between centralism and de-centralism.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": {
+  "session_unit": "session",
+  "sessions": [],
+  "bibliography": [
+   {
+    "type": "reading",
+    "title": "In Defence of Anarchism by Robert Paul Wolff",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Debunking Democracy by Bob Black",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "The Democratic Mystification by Jacques Camatte",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Politics without Politicians by Aki Orr",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Every Cook Can Govern by C.L.R. James",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Hatred of Democracy by Jacques Rancière",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Demorcatic Centralism debate (by V. Lenin and others)",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "The Tyranny of Structurelessness debate (by Jo Freeman and others)",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "The Democracy Project: A History, a Crisis, a Movement by David Graeber",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "On Conflict and Consensus by C. T. Lawrence Butler",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Debate: From Democracy to Freedom by CrimethInc. Ex-Workers’ Collective",
+    "note": null,
+    "href": null
+   }
+  ],
+  "notes": null
+ },
+ "cover": {
+  "upload": "uploads/1/9/1/0/19102967/00-03a-democracy-not-corporatocracy_orig.jpg",
+  "alt": "Hand holding a white protest sign reading 'Democracy not corporatocracy'"
+ },
+ "duplicate_of": []
+}

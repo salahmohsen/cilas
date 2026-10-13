@@ -1,0 +1,19 @@
+{
+  "id": 291,
+  "notes": [
+    "teaching_languages en: page and flow are English only",
+    "schedule.weeks 8: flow numbers 8 weekly sessions",
+    "CHECK: Yasmine Osama's fellow bio on the page begins 'with Yasmine Osama is the course Instructional Designer', fellow record not touched here"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 8
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

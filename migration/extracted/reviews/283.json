@@ -1,0 +1,288 @@
+{
+ "id": 283,
+ "notes": [
+  "description: intro paragraph from own page plus the 'modeled as an art history/critique seminar' paragraph from the cycle page (fuller there); Schedule outline moved to syllabus.sessions (10 sessions)",
+  "facilitator_note: page's remark that the schedule is tentative",
+  "teaching_languages: English-only page",
+  "schedule: Thursday morning 10:00-14:30 and evening 17:30-20:30 groups as slots; weeks=10 from numbered sessions; note kept"
+ ],
+ "set": {
+  "description": {
+   "en": "Focusing on Egypt and the Arabic speaking world, this course intends to explore the production and reception of artworks within the context of modernity, nation-building and post-colonialism in the 20th and 21st centuries. Class discussions will be informed by in-class analysis of artworks, and readings by prominent scholars in the history of art in the region.\n\nThe course is modeled as an art history/critique seminar. Throughout the semester, students will have the opportunity to enrich their vocabulary and knowledge of Arab and Egyptian art production in the 20th and 21st centuries, as well as discuss and critique collectively each student's personal projects. The course aims to help students develop a constructive critical language in response to each others' as well as historical artworks. Together we'll explore pertinent questions posed by artists and art historians, so as to discover — both as a collective and individually — our own critical voices.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": "Schedule is tentative, subject to adjustments before semester starts.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 10,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "10:00",
+     "end_time": "14:30"
+    },
+    {
+     "weekday": "thu",
+     "start_time": "17:30",
+     "end_time": "20:30"
+    }
+   ],
+   "note": {
+    "en": "On Thursday mornings from 10:00 am to 2:30 pm and evenings from 5:30 pm to 8:30 pm",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": {
+  "session_unit": "session",
+  "sessions": [
+   {
+    "order": 1,
+    "title": "Fayoum Portraits & Islamic Arts",
+    "description": "What is “Islamic art” ? How and why was it replaced by Western art at the end of the 19th century in the muslim world? And why was there a resurgence in the late 20th century?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“Re-exploring Islamic Art: Modern and Contemporary Creation in the Arab World and Its Relation to the Artistic Past”, Silvia Naef",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“The Status of Islamic Art in the 20th Century”, Wijdan Ali",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“Infinity and Accident: Strategies of Enfoldment in Islamic Art and Computer Art”, Laura U. Marks",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 2,
+    "title": "1908: Founding fathers of Modern Art in Egypt: Mahmoud Moukhtar et. al.",
+    "description": "Artists: Mahmoud Moukhtar, Mahmous Sa’id, ... Is it Islamic? Is it Arab? From Islamic to Pharaonic imagery, and imagining the modern-nation state.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“Mahmoud Mukhtar: ‘The first sculptor from the land of sculpture’” Alexandra Dika Seggerman",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“Modern Arab Art, Formation of Arab Aesthetics”, Book, pp. TBA, Nada Shabbout",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 3,
+    "title": "Photography & Social movements",
+    "description": "Artists: Van Leo, Arman, Hassia, Lee Miller, ... What links can we make between photography and the construction of national identities?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“A Social History of Early Arab Photography or a Prolegomenon to an Archaeology of the Lebanese Imago”, Stephen Sheehi",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“The Third Citizen”, Akram Zaatari",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 4,
+    "title": "Arab Surrealisms (1937 and 1970s resurgence)",
+    "description": "Artists: Art et Liberté, Les Essayists, Ramsis Yunan, El Telmissany, et. al. Surrealist internationalism, back then, and yet again: Why? How? Where?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“The Nile of Surrealism”, Abdel Kader Al Janaby",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Two manifestos of Surrealism (1937 - 1970s)",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“Egyptian Surrealism and Degenerate Art in 1939”, Don LaCoss",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 5,
+    "title": "The infamous ‘Contemporary Art Group’",
+    "description": "Artists: Abdel Hadi El Gazzar, Hamid Nada, Gazbiya Sirry, Hassan Soliman, ... The height of Egyptian modernism, mapping the foundations of art education and cultural institutions in Cairo.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“Art Education and the Emergence of Radical Art Movements in Egypt: The Surrealists and the Contemporary Arts Group, 1938–1951”, Patrick Kane.",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“Exceeding Realism: Utopian Modern Art on the Nile and Abdel Hadi Al-Gazzar’s Surrealistic Drawings”, Avinoam Shalem.",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 6,
+    "title": "The Art & Life Group...followed an arts and crafts style",
+    "description": "Artists: Hassan Fathy, Ghada Amer, ... What lies behind the dichotomy: traditional vs. modern?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“Tradition vs. Modernity: The Quest for a Cultural Identity”, Pablo Lafuente.",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“Modernity and Postcolonial Ambivalence” Okwui Enwezor",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“Arts Writing in 20th century Egypt: Methodology, Continuity, and Change” Clare Davies",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 7,
+    "title": "“Contemporary Arab Representations = Sensational One Liner” — S.R.",
+    "description": "In what contexts are our artworks exhibited? Received? Written about? Can one make an exhibition about a whole continent?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“Art and the Foreigner's Gaze: A Report on Contemporary Arab Representations” Pablo Lafuente",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“A Conversation with Okwui Enwezor” Carol Becker and Okwui Enwezor",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "watch",
+      "title": "Sarah Rifky at the Future Curatorial",
+      "note": null,
+      "href": "https://vimeo.com/122451970"
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 8,
+    "title": "Contemporary Art in Downtown Cairo",
+    "description": "Mapping Contemporary Art in Cairo, in Downtown, what is the impact of space, architecture on art production?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“The Street and the Politics of Dissent” Asef Bayat",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“The Arab Revolution Takes Back the Public Space” Nasser Rabbat",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "watch",
+      "title": "Lucy Ryzova on Downtown Cairo as contested space",
+      "note": null,
+      "href": "https://vimeo.com/87547153"
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 9,
+    "title": "Moving Image practice & The Senses",
+    "description": "New Media arts, moving images: Is there an ‘Arab’ (Egyptian or Cairene) avant-garde?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "“What Can a Body Do? Answers from Trablus, Cairo, Beirut and Algiers” Laura Marks",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“The Singular of Seeing [Al Marra Min al Nazar]” Akram Zaatari",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "“Cairo’s Avant Garde” Seth Thompson",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 10,
+    "title": "Class Wrap Up",
+    "description": "Student works presentations (Details TBA).",
+    "meetings": null,
+    "materials": [],
+    "activities": [
+     {
+      "kind": "presentation",
+      "description": "Student works presentations (Details TBA)"
+     }
+    ]
+   }
+  ],
+  "bibliography": [],
+  "notes": null
+ },
+ "cover": null,
+ "duplicate_of": []
+}

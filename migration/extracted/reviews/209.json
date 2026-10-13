@@ -1,0 +1,339 @@
+{
+  "id": 209,
+  "notes": [
+    "summary: the flow's social media teaser, moved out of facilitator_note",
+    "facilitator_note: removed (teaching day preferences are scheduling logistics, kept in schedule note)",
+    "syllabus: same 12 weeks as the flow; dropped the bogus 'Course image' bibliography entry",
+    "teaching_languages: page and flow are English only"
+  ],
+  "set": {
+    "summary": {
+      "en": "In Good Feminist, Bad Feminist, Happy Feminist, Mariam Diefallah explores the possibility of finding joy in feminist activism. Throughout this twelve-week journey, the course will explore various themes, such as anger, profanity, intimacy, and witchcraft, assembling a toolbox that can move us towards creating the feminist futures we envision.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to the Course: Who Taught You to Feel Happy?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pleasure Activism: The Politics of Feeling Good",
+            "note": "Excerpts. adrienne maree brown",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "On Anger",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Uses of Anger",
+            "note": "Audre Lorde",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "On Profanity",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "What Happened to Her",
+            "note": "Kristy Guevara-Flanagan",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Seven Necessary Sins for Women and Girls",
+            "note": "Excerpts. Mona El Tahawy",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "EXERCISE I"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "On the Body",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Niswa",
+            "note": "Guest speaker: Zainab Alradhi, Founder of Niswa",
+            "href": "https://www.niswa.org/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest Speaker: Zainab Alradhi, Founder of Niswa"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "On Creation and the Divine",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Uses of the Erotic",
+            "note": "Audre Lorde",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Trap of Ideal Motherhood",
+            "note": "Imene Amara",
+            "href": "https://kohljournal.press/trap-ideal-motherhood"
+          },
+          {
+            "type": "other",
+            "title": "YourEgyptianDoula",
+            "note": "Guest speaker: Merette Khalil, Founder of YourEgyptianDoula",
+            "href": "https://youregyptiandoula.com/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest Speaker: Merette Khalil, Founder of YourEgyptianDoula"
+          },
+          {
+            "kind": "exercise",
+            "description": "EXERCISE II"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "On Love and Intimacy",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "All About Love",
+            "note": "Excerpts. Bell Hooks",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "نساء على أجنحة الحلم",
+            "note": "Excerpts. لفاطمة المرنيسي",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Camera/Woman",
+            "note": "Karima Zoubir",
+            "href": "https://www.wmm.com/catalog/film/camerawoman/"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "On Work and Success",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "The Three Disappearances of Suad Hosni",
+            "note": "Rania Stephan",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Corpus: A Home Video about Selena",
+            "note": "Lourdes Portillo",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Flexible Work Fallacy",
+            "note": "Sarah Stoller, aeon",
+            "href": "https://aeon.co/essays/how-did-flexible-work-turn-from-a-feminist-ideal-to-a-trap"
+          },
+          {
+            "type": "reading",
+            "title": "Meaningful Work",
+            "note": "Excerpts. Andrea Veltman",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "EXERCISE III"
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "On Care and the Economy",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "White Paper on Prostitution and Poverty",
+            "note": null,
+            "href": "https://sitahoesierra.org/abstracts/Prostitution%20is%20not%20a%20choice.pdf"
+          },
+          {
+            "type": "reading",
+            "title": "Fuck You Pay Me",
+            "note": "Chanelle Gallant",
+            "href": "https://www.youtube.com/watch?v=xh45GV8wFqY"
+          },
+          {
+            "type": "reading",
+            "title": "Female Hysteria, Invisibilized Labour, and the Kafala System",
+            "note": "Yasmine Kherfi",
+            "href": "https://kohljournal.press/female-hysteria"
+          },
+          {
+            "type": "watch",
+            "title": "و في الليل يرقصن",
+            "note": "Isabelle Lavigne and Stephane Thibault",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Night Cries, Nice Colored Girls",
+            "note": "Tracey Moffat",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "On Beauty & Ageing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "The Gleaners & I",
+            "note": "Agnes Varda",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Cindy Sherman",
+            "note": "Excerpts. Ingvild Goetz",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "ASSIGNMENT I"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "But Who is Gonna Save You?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Transformation of Silence into Language and Action",
+            "note": "Audre Lorde",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Silence and Institutional Prejudice",
+            "note": "Miranda Fricker",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "On Witchcraft and Healing",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Witches, Witch-hunting, and Women",
+            "note": "Excerpts. Silvia Federici",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Parable of the Sower",
+            "note": "Excerpts. Octavia Butler",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Hammam Radio",
+            "note": "Conversation with/on Hammam Radio (details to be confirmed later)",
+            "href": "https://hammamradio.com/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Conversation with/on Hammam Radio (details to be confirmed later)"
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": "Concluding Remarks",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "ASSIGNMENT II"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

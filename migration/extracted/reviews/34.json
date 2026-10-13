@@ -1,0 +1,11 @@
+{
+  "id": 34,
+  "notes": [
+    "teaching_languages set to en (page text is English only)",
+    "cover: the image in this course's block"
+  ],
+  "set": { "teaching_languages": ["en"] },
+  "syllabus": null,
+  "cover": { "upload": "uploads/1/9/1/0/19102967/1531300048-214283-1531300919-noticia-normal-recorte1_orig.jpg", "alt": "Illustration of a brain, the left half in black and white with physics formulas, the right half in colour with paint splashes" },
+  "duplicate_of": []
+}

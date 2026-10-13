@@ -1,0 +1,18 @@
+{
+  "id": 32,
+  "notes": [
+    "description.ar was missing: the source page gives the full Arabic text of the course; added in its own locale",
+    "teaching_languages set to en and ar (page has full text in both)",
+    "CHECK: the course poster (editor/37795190-...-n.png, in this course's block) is not in the local archive, so cover is null"
+  ],
+  "set": {
+    "description": {
+      "en": "If any saying was to be true about the 20th century, it would be that it was a century of ideologies and great narratives, and it might be said now that the 21st century is about the death of ideologies and the end of great narratives. Although we can find that ideologies did not really go extinct, but are transformed into a more liquid state, and maybe looking at them in their past solid state could help us understand their state of liquidity that flows into our daily lives today.\n\nThis course is designed to take us on a journey to explore many of the political ideologies that dominated the 20th century in philosophy, arts, and visual culture, and aims to offer access to a range of approaches to an interdisciplinary study of theory and practice of these three fields using the lens of literature, visual arts and cinema. The course critically engages cultural tendencies like feminism and racism, art movements like surrealism and futurism, and philosophical schools like utilitarianism and libertarianism, to understand the social characteristics and historical conditions that the modernist project imply.",
+      "ar": "إذا صحت أية مقولة بخصوص القرن العشرين، فيمكن أن تكون أنه قرن الأيدولوجيات والسرديات الكبرى، وقد يقال اﻵن أن القرن الواحد والعشرين هو قرن موت اﻷيدولوجيا ونهاية السرديات الكبرى، بيد أننا نجد أن اﻷيدولوجيات لم تفنى حقًا، بل تحولت إلى صورة أكثر سيولة مما كانت عليه فحسب، وربما علينا أن نراها في صورتها الصلبة من أجل فهم الصورة السائلة للأفكار والعقائد التي تتخلل حياتنا اليوم.\n\nينطلق هذا المساق في رحلة للنظر في العديد من العقائد السياسية الفكرية التي هيمنت على القرن الماضي في الفلسفة والفن والثقافة، ويهدف إلى رؤية قوتها الخفية التي شكلت بها عالمنا من قبل مستعملاً عدسات اﻷدب القصصي والروائي والفنون البصرية والسينمائية. يناقش المساق بشكل نقدي اتجاهات ثقافية كالنسوية والعرقية وفنية كالسوريالية والمستقبلية وفلسفية كالنفعية والتحررية ساعيًا إلى فهم ما ينطوي عليه المشروع الحداثي من خصائص إنسانية وشروط إجتماعية."
+    },
+    "teaching_languages": ["en", "ar"]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

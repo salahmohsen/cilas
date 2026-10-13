@@ -1,0 +1,15 @@
+{
+  "id": 66,
+  "notes": [
+    "teaching_languages: en (page in English only)",
+    "description, slot and note already match the source; left as is"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

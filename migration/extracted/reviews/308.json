@@ -1,0 +1,47 @@
+{
+  "id": 308,
+  "notes": [
+    "epigraph: Audre Lorde and Adolfo Gily quotes were inside facilitator_note; moved to epigraph.en",
+    "facilitator_note: held the title/author/cycle header, the epigraphs and the learning outcomes; emptied (header is redundant, epigraphs moved, outcomes moved)",
+    "description: appended the flow's 'Learning outcomes' section (course objectives belong to the overview)",
+    "schedule: note held a JSON string and the slot label too; rewrote cleanly. Slot Sunday 18:00-20:30, 8 weeks; the note repeated only what start_date/slot/weeks say",
+    "teaching_languages: English page and flow -> en",
+    "CHECK: page says 'Start in the 25th of February, Sunday 6-8:30 pm' but 25 Feb 2026 is a Wednesday; kept both start_date 2026-02-25 (as stated) and the Sunday slot",
+    "CHECK: course bibliography holds 'And still she's dreaming' (the cover artwork credit) and the instructor's own MA thesis (cited in her bio); neither is a course reading, consider removing them (sessions 1-8 already match the flow's reading timetable)"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“The master’s tools will never dismantle the master’s house.” Audre Lorde\n\n“Liberation does not come as a gift from anybody.” Adolfo Gily",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "description": {
+      "en": "“Decolonization” has become one of the most powerful words in contemporary political and intellectual life; invoked to name ethical commitment, institutional reform, personal awakening, and global solidarity. This course asks what happens when decolonization travels as a metaphor, especially within the moral and legal vocabularies of human rights. What does decolonization demand? What happens when it is reduced to a metaphor for inclusion, reform, or “better” politics? What forms of violence, sovereignty, and history become visible through human rights law? What forms are (purposely) misrecognized, domesticated, or rendered unintelligible?\n\nThe course offers a focus on Indigenous peoples in the United States not as a detour from Middle Eastern, African, or Asian decolonial thought, but as a way to clarify what “decolonization” names when it is treated as a struggle over land, jurisdiction, and settler-state legitimacy. Indigeneity has re-emerged at the forefront of global and academic conversations, raising a question that the universal language of human rights often struggles to answer: how does a legal order built on liberal individualism and state sovereignty perceive a peoplehood grounded in enduring relationships to land, environment, and collective life-relationships that can appear “foreign” to Western disciplines and to the ‘rationality’ of modern law? The United States offers an especially instructive site for this inquiry because it is one of the earliest and most consolidated examples of the settler state as we know it, and because its institutions have developed infamously sophisticated techniques for ‘defanging’, translating, and containing indigenous political claims. Studying this context helps sharpen our analysis of the limits of human rights law: precisely at the point where indigeneity becomes most difficult for legal recognition to fully register.\n\nDrawing from critical legal studies, post-structuralist critique, indigenous and anti-colonial thought, and adjacent debates in anthropology and history, we will examine human rights not as a neutral instrument but as a framework that organizes reality: producing particular ideas of the human, the political, the victim, the state, evidence, remedy, and justice. We will examine how the international human rights project, shaped by liberal universalism and anchored in the legitimacy of the state, tends to recognize indigenous peoples only under specific conditions: when sovereignty is translated into administrable forms, when land becomes “culture,” and when political autonomy is reframed as participation within existing state structures.\n\nAt the center of the course is a problem that repeatedly surfaces in indigenous and anti-colonial struggles: the possibility that certain political demands are not merely unmet by law, but structurally incommensurable with the frameworks meant to recognize them. We will explore why calls for Indigenous sovereignty, jurisdiction, and land can become unintelligible—or only partially intelligible—within an international order committed to preserving the authority of the settler-state. Through close engagement with debates around United Nations Declaration for the Rights of Indigenous People (UNDRIP), recognition regimes, and settler-state governance practices, the course traces how emancipatory claims are often translated into more “acceptable” forms, such as cultural rights, without resolving the underlying conflict over sovereignty. We will sit with the problem of incommensurability; moments where legal recognition does not simply “fail” but may be structurally unable to meet demands grounded in indigenous sovereignty, refusal, land, or liberation struggles that exceed the horizons of reform.\n\nParticipants will grapple with a difficult set of questions: When does rights language enable meaningful protection, and when does it operate as a technology of containment? What happens when self-determination is reformulated into claims that the law can comfortably administer? And what kinds of political imagination are required when justice cannot be secured through recognition by the very institutions that structure the harm?\n\nLearning outcomes\n\n1. Conceptualize decolonization with analytical precision by distinguishing decolonization as a material-historical political project from its circulation as a metaphor within institutional, academic, and advocacy contexts.\n\n2. Critically evaluate international human rights law as a liberal legal order by identifying its constitutive assumptions (e.g., universality, individual rights-bearing subjecthood, state sovereignty/legitimacy) and explaining how these assumptions shape the field of possible political claims.\n\n3. Analyze the politics of recognition and legal legibility by assessing how demands are translated into rights claims, what is gained through that translation, and what forms of sovereignty, relationality, and historical experience may be narrowed or rendered unintelligible.\n\n4. Assess indigenous rights frameworks and advocacy strategies (including debates around self-determination and cultural rights) by examining their strategic utility alongside their structural constraints within an international order oriented toward preserving settler-state authority.\n\n5. Develop and defend an independent argument about the limits of rights-based politics by applying course concepts (especially incommensurability and containment) to specific legal/political cases and articulating the implications for imagining justice beyond recognition-centered frameworks.",
+      "ar": null
+    },
+    "schedule": {
+      "start_date": "2026-02-25",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "sun",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

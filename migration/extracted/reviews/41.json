@@ -1,0 +1,14 @@
+{
+  "id": 41,
+  "notes": [
+    "teaching_languages set to en. Distinct from 258 (summer 2022 run: different dates, 2022 flow, readings differ), so not a duplicate"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,44 @@
+{
+  "id": 262,
+  "notes": [
+    "epigraph: the three quotes moved out of facilitator_note",
+    "facilitator_note cleared: only held the epigraphs and the 'Tentative syllabus by' credit line",
+    "description: split into the two paragraphs of the flow (text unchanged)",
+    "schedule.note removed: it only repeated the Sunday 18:00-20:00 slot",
+    "teaching_languages en"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“Any talk of politics in our time has to begin with those prejudice that all of those who are not professional politicians have against politics” – Hannah Ardent\n\n“I was never really into politics ... I don’t feel myself a politician even now” – Tony Blair\n\n“French statesman Georges Clemenceau said war was too important to leave to the generals. I’m beginning to think Europe is too important to leave to the politicians.” – Former European Commissioner Neelie Kroes",
+      "ar": null
+    },
+    "description": {
+      "en": "Saramago’s (2006) Seeing, offers a precise visualization of the current political plight that number of scholars have noticed and predicted. In an imagined country, during counting the ballots of the general elections, the city administrators found out that the populace have spoiled their votes. As a result, party elites were worried and decided to repeat the election. Yet, the turnout was worse. one minister referred to the crisis as conspiracy against democracy, in turn, the government declared a state of emergency in their attempt to uncover the mastermind behind ‘’the antidemocratic plot’’ (Wilson and Swyngedouw, 2014) Finally, the government decided to leave the citizens and move to a different place in anticipation of a resulting chaos; however, everything ran normally in the city the other day.\n\nIn everyday life, we notice evidence that suggests the decline of politics as we know it. From public distrust towards political institutions, expressed hatred against politics from both citizenry and elite (politicians as well), decline in political participation, low membership in political parties, to the technicalization of political problems, and others. This course investigates the relationship between the crisis of representative democracy and the death of politics (at which politics is shifted from a space of “contestation and agnostic engagement” to a space of consensus). Scholars have noted during the past decade that representative democracies are experiencing an age of ‘depoliticization’ (Flinders and Wood, 2014; Hay, 2007) or ‘post-politics’ (Mouffe, 2005; Rancière, 2005). From a history of ideas perspective, several terms have been employed to capture this post-politics moment, including: “apolitics”, “anti-politics”, “non-political politics”, “subpolitics”, “post-politics”, “depoliticization”, and “post-democracy”. This course is of a metapolitical nature. It opens a discussion on the very essence of politics (i.e., the Political) and relates it to the very future and survival of democracy. The course comes in six sessions each covers a different theme.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 6,
+      "slots": [
+        {
+          "weekday": "sun",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

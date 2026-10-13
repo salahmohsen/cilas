@@ -1,0 +1,16 @@
+{
+  "id": 293,
+  "notes": [
+    "teaching_languages en: page is English only",
+    "Description matches the page; no flow linked (page says 'see here' with no link), so no sessions",
+    "location left unset: source names none"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

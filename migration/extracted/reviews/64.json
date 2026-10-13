@@ -1,0 +1,38 @@
+{
+  "id": 64,
+  "notes": [
+    "description: removed the leading 'course description' label (page heading, not content); kept the rest verbatim",
+    "teaching_languages: en (page in English only)",
+    "schedule: Wednesday evening and Thursday morning as slots (two groups); note kept"
+  ],
+  "set": {
+    "description": {
+      "en": "How has Egypt been imagined as a modern nation-state? how did Egyptian intellectuals and the educated middle class draw borders of nationhood, including and excluding various groups in the process? and what changes did Egyptian nationalism undergo with the achievement of complete political independence from Britain at mid-century, and beyond?\n\nIn this course, we will analyze the nature of modern Egyptian nationalism throughout its different stages of development, from 1919 to the present, looking for ruptures and continuities in the ways in which the Egyptian nation and national identity were imagined and constructed. A historical perspective into the origins and developments of Egyptian nationalism will help us put today's perception of Egypt as a nation in context.\n\nWe will then analyze recent manifestations of Egyptian nationalism, and the ideologies that underlie mainstream discourses on nationhood and patriotism post January 25th. We will treat \"Egyptianness\" as a product of a constant work of construction and exclusion, and will inquire into the role of the state and different socio-economic interest groups in shaping this process.\n\nWhat to expect\n\nTo dissect together Egyptian patriotism as it has evolved throughout the twentieth century, analyzing the assumptions it rests on and their implications, using different texts and images. Students will be encouraged to bring to class textual and visual materials they wish to analyze, and to develop their commentaries in relation to readings and class discussions.\n\nTo read about the different theories on the rise of nationalism, and how it is constantly shaped by state power and elite interests.\n\nWhy apply\n\nTo de-construct hegemonic nationalist discourses and understand their implications in terms of the processes of inclusion and exclusion they involve, and consequently to view nationalism and patriotism as time-specific constructions that may serve elite interests.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "17:30",
+          "end_time": "20:00"
+        },
+        {
+          "weekday": "thu",
+          "start_time": "10:00",
+          "end_time": "12:30"
+        }
+      ],
+      "note": {
+        "en": "Wednesdays, 5:30 pm to 8:00 pm; Thursdays, 10:00 am to 12:30 pm",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

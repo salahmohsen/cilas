@@ -1,0 +1,13 @@
+{
+  "id": 276,
+  "notes": [
+    "teaching_languages: English-only page",
+    "description, schedule, location, title already match the source; left unchanged"
+  ],
+  "set": {
+    "teaching_languages": ["en"]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

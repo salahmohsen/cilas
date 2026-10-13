@@ -1,0 +1,38 @@
+{
+  "id": 200,
+  "notes": [
+    "description.ar: removed the heading line 'وصف مختبر: ...' (repeats the title)",
+    "facilitator_note.ar: removed 'نماذج للقراءات ...' (reading list header; the list is already the course bibliography)",
+    "teaching_languages: page gives full text in English and Arabic",
+    "schedule: Thursdays at 6 pm, offline, start 2nd of May; start time only so no slot, sentence in note; weeks = 9 numbered sessions in the flow",
+    "cover: first image of the 2024 page sits just above this block (same image reused for this course on the 2025 page)"
+  ],
+  "set": {
+    "description": {
+      "en": "The photographic image plays a pivotal role in our modern era, an age in which image and media culture have become more dominant than ever. Given this powerful influence, it has become necessary to regard the image as a form of discourse that goes hand in hand with other modes of utterance, or as the widely-known old saying goes; one picture is worth a thousand words. The image carries its own language, filled with symbols and meanings that require us to delve deeply to decipher its mysteries, and to grasp its significance within its cultural and social context. The process of interpreting these scenes depends on tracing the methods of expression and communication used and understanding the relationship between the depicted elements —the people, places, events—and on comprehending the system of signs that renders these images multilayered in their interpretation.\n\nCapturing an image is a deliberate act and an artistic one that reflects the photographer's awareness of all aspects of the captured scene and its production mechanisms. The viewer, in turn, deciphers this work according to their own modes of interpretation where both the photographer and the viewer draw on their cultural and interpretive backgrounds that affect their understanding of the image.\n\nThe lab aims to enable participants to explore and analyze the stories behind the photos, which allows them to gain a deeper understanding of photos as historical and cultural sources (reading), and to enhance their ability to create and express themselves through photos (writing).\n\nThrough various exercises, observation walks, weekly readings, group discussions, and interviews with artists and researchers, participants will delve into the cultural, historical and social aspects of the image, and will acquire skills in understanding the visual elements in collective storytelling. Participants will develop their own projects, using their personal, family, or research photo archives to extract and interpret the hidden stories and meanings behind images, culminating in an exhibition of their projects.\n\nThis lab offers an opportunity to reconsider history and the silent narratives encapsulated by photos, thus creating a space for interpreting and creating new stories through visual culture.",
+      "ar": "تلعب الصورة الفوتوغرافية دورًا محوريًا في عصرنا الحديث، عصر أصبحت فيه ثقافة الصورة والوسائط أكثر هيمنة من أي وقت مضى. لذا أصبح من الضروري اعتبار الصورة كشكل من أشكال الخطاب يوازي الخطاب اللغوي، خاصةً عندما نتذكر المقولة المشهرة؛ صورة واحدة تساوي ألف كلمة. تحمل الصورة لغتها الخاصة، المليئة بالرموز والمعاني التي تتطلب منا الغوص بعمق لفك شفرات ألغازها، ولفهم مغزاها ضمن سياقها الثقافي والاجتماعي. تعتمد عملية تفسير هذه المشاهد على تتبع أساليب التعبير والتواصل المستخدمة وفهم العلاقة بين العناصر المصورة —الأشخاص، الأماكن، الأحداث— وعلى إدراك نظام الإشارات الذي يجعل هذه الصور متعددة الطبقات في تأويلها.\n\nالتقاط صورة هو فعل متعمد وفني يعكس وعي المصور بجميع جوانب المشهد الملتقط وآليات إنتاجه. يقوم المشاهد بدوره بفك تشفير هذا العمل وفقًا لمفاهيمه وتأويلاته الشخصية، حيث يستند كل من المصور والمشاهد إلى خلفياتهما الثقافية والتأويلية التي تؤثر في فهمهما للصورة.\n\nيهدف المختبر إلى تمكين المشاركين من استكشاف وتحليل القصص المخبأة خلف الصور مما يمكّنهم من فهم أعمق للصور كمصادر تاريخية وثقافية (قراءة)، وتعزيز قدرتهم على الإبداع والتعبير عن أنفسهم من خلال الصور (كتابة).\n\nمن خلال مجموعة متنوعة من التمارين، جولات الملاحظة، القراءات الأسبوعية، المناقشات الجماعية، والمقابلات مع فنانين وباحثين، سيتعمق المشاركون في الجوانب الثقافية والتاريخية والاجتماعية للصورة، وسيكتسبون مهارات في فهم العناصر البصرية في سرد القصص الجماعي. سيطور المشاركون مشاريعهم الخاصة، باستخدام أرشيفات الصور الشخصية، العائلية، أو البحثية لاستخراج وتفسير القصص والمعاني المخفية وراء الصور، ما ينتهي بمعرض لعرض مشاريعهم.\n\nيقدم هذا المختبر فرصة لإعادة النظر في التاريخ والسرديات الصامتة التي تحتجزها الصور، مخلقةً بذلك مساحة لتفسير وخلق قصص جديدة من خلال الثقافة البصرية."
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": "في بداية كل جلسة مناقشة للقراءات المرتبطة بالموضوع وفي نهاية الجلسة تحديد قراءات الأسبوع."
+    },
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2024-05-02",
+      "weeks": 9,
+      "note": {
+        "en": "Every Thursday at 6 pm, starting date is 2nd of May",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/cilas-1_orig.jpg",
+    "alt": "Photograph of five people sitting on a sea wall looking at their phones, with the sea and two breakwater lighthouses behind"
+  },
+  "duplicate_of": []
+}

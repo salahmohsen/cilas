@@ -1,0 +1,26 @@
+{
+  "id": 56,
+  "notes": [
+    "teaching_languages: page has full text in both",
+    "schedule note: two alternative groups, added Arabic",
+    "cover from own page; description already correct"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": "On Monday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+        "ar": "أيام الإثنين صباحاً من العاشرة حتى الثانية عشر و نصف و مساءاً من الخامسة و النصف حتى الثامنة"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/on-the-art-of-manliness_1_orig.jpg",
+    "alt": "Vintage halftone illustration of a bare-chested boxer with raised fists"
+  },
+  "duplicate_of": []
+}

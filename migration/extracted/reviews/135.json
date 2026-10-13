@@ -1,0 +1,19 @@
+{
+  "id": 135,
+  "notes": [
+    "teaching_languages: page has full text in English and Arabic",
+    "schedule.weeks 10: Cycle page states thematic courses last ten weeks."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

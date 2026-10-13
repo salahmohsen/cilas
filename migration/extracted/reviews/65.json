@@ -1,0 +1,35 @@
+{
+  "id": 65,
+  "notes": [
+    "teaching_languages: en (page in English; readings in Arabic and English)",
+    "schedule: Thursdays, morning or evening group, as slots (page: thursdays at CILAS starting January 7th, 2016); start date unchanged",
+    "description already matches the source; left as is"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2016-01-07",
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "10:00",
+          "end_time": "12:30"
+        },
+        {
+          "weekday": "thu",
+          "start_time": "17:30",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": "from 10 to 12:30 in the morning or from 5:30 to 8 in the evening",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

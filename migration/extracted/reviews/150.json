@@ -1,0 +1,15 @@
+{
+  "id": 150,
+  "notes": [
+    "teaching_languages: English-only page.",
+    "Rest matches source (start 22 March 2015, 10 weeks)."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

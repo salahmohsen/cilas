@@ -1,0 +1,34 @@
+{
+  "id": 253,
+  "notes": [
+    "description: page blurb plus the flow's opening questions, modes of study, further questions and the three aims; facilitator_note keeps only the reading-list note",
+    "schedule: slot Sunday 17:00-19:00 (July 11 2021 is a Sunday; page says 5pm to 7pm)",
+    "teaching_languages en",
+    "MISSING-IMAGE: uploads/1/9/1/0/19102967/published/anth-future-pic.jpeg?250"
+  ],
+  "set": {
+    "description": {
+      "en": "Why should we – in the present – study and engage with the future? And if we do study it, how should we go about it? These are the foundational questions of this course. Broadly, anthropologists study the future in three main modes: future as temporalities, future as possibilities, and future as ideological objects.\n\nIn thinking of the future as temporality, anthropologists wonder about the meaning of the future and its relationship to the past and the present. They also question how we think of time and how we inhabit it. For instance, some anthropologists challenge its linearity by proposing other alternative modes. In tackling the future as unrealized possibilities of the present, anthropologists study things like hope, alternatives, and dreams, and follow how the present’s infinite possibilities have been appropriated by certain power structures. Anthropologists question the way we predict the future and how it relates to our reading of the past and our inhabitation of the present. They ask how certain institutions impose their logic, whether accumulative or algorithmic, to promote certain futures over others. This takes us to our last focus, which is of the future as an ideological object. Anthropologists here ask simple questions, such as: what happens when we name a city ‘the city of the future’, or ‘the car of the future’? How does this affect the present and reinterpret the past? What kind of ideologies are imposed on the future and present by confining the future to certain objects or discourse? Here, objects such as sci-fi, future money, space entrepreneurship, or future cities are examined.\n\nBesides these modes, anthropologists also ask: how can we think of collective communal methodologies for imagining, predicting, and dreaming about the future? How can we democratize the future-making process? What are possibilities of the present that we can work with and learn from? Why does the future always fail to fulfil our utopian or revolutionary visions? What are other imaginations, desires, and lives that could actualize? How do we understand and find hope in dark times? And how does one imagine otherwise radical futures and presents?\n\nThis class has three aims. The first is to go through the main methodological and theoretical questions of the anthropology of the future. The second is to learn together how to read the temporal politics of certain texts through unpacking the texts’ audiences, political projects, and temporal hierarchies, and to answer the primary question: who exactly is this text written for whose future is it directed toward? Thirdly and lastly, to hope to build on our current moment’s anxieties, conspiracies, and uncertainties about the future and to think of other futures that can materialize.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "Potential reading list for ten weeks\n\nDon’t panic, we will not read everything included here! We will make our own list from these readings depending on our common interests. Some will be required, and the rest will be recommended for your own reference. We will end the course by writing final reflections on the course or the questions that stimulated us most throughout the weeks.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "sun",
+          "start_time": "17:00",
+          "end_time": "19:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

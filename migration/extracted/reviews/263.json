@@ -1,0 +1,28 @@
+{
+  "id": 263,
+  "notes": [
+    "teaching_languages en (page and flow in English)",
+    "schedule: weeks 8 (eight numbered sessions in the flow)",
+    "CHECK: start_date 2022-07-23 kept; page says 'the week of 23th of July' but meets Thursdays, and 23 July 2022 is a Saturday",
+    "description and sessions already match the source; the 2025 re-run of this course on the spring 2025 page was not used"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2022-07-23",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

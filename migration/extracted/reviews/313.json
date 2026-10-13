@@ -1,0 +1,29 @@
+{
+  "id": 313,
+  "notes": [
+    "teaching_languages ar: page in Arabic",
+    "schedule: note removed, it only repeated the Sunday 18:00-20:30 slot; no start date or week count on the course page, so left unset",
+    "description matches the page, unchanged; no session or reading structure in the source"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "sun",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

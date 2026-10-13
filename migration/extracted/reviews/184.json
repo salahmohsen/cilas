@@ -1,0 +1,31 @@
+{
+  "id": 184,
+  "notes": [
+    "facilitator_note: removed, it was extractor metadata about the flow file, not the fellow's text",
+    "schedule: Thursdays 6-8:30pm, start 23 January, 8 weeks (flow)",
+    "teaching_languages: English-only page"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2025-01-23",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

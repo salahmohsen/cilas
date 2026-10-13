@@ -1,0 +1,24 @@
+{
+  "id": 269,
+  "notes": [
+    "Moved the opening play quote to epigraph (en and ar); dropped the stray repeated title line from description.",
+    "Set teaching_languages (full text in both)."
+  ],
+  "set": {
+    "epigraph": {
+      "en": "Teacher: \"What do you know about Logic, Morsi?\"\nStudent: \"I know that if I hit another person on the head he loses all his logic. Is this logic or isn't it logic, you educated schoolteacher?\"\n-Madrasat al-Mushaghbin (play)",
+      "ar": "\"المدرسة: تعرف إيه عن المنطق يا مرسي؟\nالطالب :أعرف إنى لما أضرب واحد على نافوخه يقع مايحطش منطق.. هوّ دا المنطق، ولا مش هوّ؟\"\n~ مسرحية \"مدرسة المشاغبين\""
+    },
+    "description": {
+      "en": "Everyone agrees that the state of our education is terrible, but few know precisely how it came into being. This course is an invitation to look more closely at our education system and to scrutinize it. Specifically, we analyze concepts such as nationalism, colonialism and modernity and the ways in which they affected the emergence of modern state-run schooling. We spend some time assessing the dynamics within the classroom thus looking at education as a field of negotiation, change and evolution.\n\nWe explore how educational institutions have emerged since the mid 19th century and what alternative forms of resistance have arisen in reaction by looking at the works of leading pedagogues, philosophers and their most influential texts.\n\nIn short, the course attempts to find logic in the place that seems to lack it the most: our education system.",
+      "ar": "يتفق الجميع على أن حالة التعليم في مصر متردية، لكن القليل يعلم كيف أتى إلى الوجود تحديدًا. من أجل ذلك يدعونا هذا المساق إلى النظر عن قرب في نظام تعليمنا بنظرة فاحصة، وخصوصًا أننا سنحلل مفاهيم مثل القومية والاستعمارية والحداثة والطرق التي أثرت بها تلك المفاهيم على نشوء المدارس الحكومية الحديثة. سنمضي بعض الوقت في تقييم الديناميكيات داخل الفصول الدراسية بينما ننظر إلى التعليم بصفته حقلاً للتفاوض والتغيير والتطور.\n\nسوف نستكشف كيف نشأت المؤسسات التعليمية منذ منتصف القرن التاسع عشر وما هي أشكال المقاومة البديلة التي هبت ردًا عليها من خلال النظر في أعمال المربيين الرائدين والفلاسفة المؤثرة.\n\nباختصار، يحاول المساق أن يجد المنطق في المكان الذي يبدو أنه يفتقر إليه تمامًا، وهو نظامنا التعليمي."
+    },
+    "teaching_languages": [
+      "ar",
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

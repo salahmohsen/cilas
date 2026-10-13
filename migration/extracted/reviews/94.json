@@ -1,0 +1,58 @@
+{
+  "id": 94,
+  "notes": [
+    "teaching_languages set to en (page and flow are English only)",
+    "schedule.note removed: it only repeats the start date, weekday, times and location already in the fields",
+    "reading list kept out of description; moved to syllabus.bibliography with authors as the flow gives them (no sessions in the flow)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "“What is Enlightenment?” by Immanuel Kant",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Excerpts from The Gay Science by Friedrich Nietzsche",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "“The End of Metaphysics” by Martin Heidegger",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Excerpts from \"Existentialism is a Humanism\", by Jean-Paul Sartre",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Excerpts from The Dialectic of Enlightenment by Max Horkheimer and Theodor W. Adorno",
+        "note": null,
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

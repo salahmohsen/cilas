@@ -1,0 +1,211 @@
+{
+  "id": 294,
+  "notes": [
+    "facilitator_note removed: extractor commentary about links, not source text",
+    "syllabus rewritten: links paired by looking at the flow PDF (Transliterative Tease video, Soulaimani archive link); the unidentified placeholder bibliography entries dropped; Slavs and Tatars cover-caption link kept as one bibliography item",
+    "teaching_languages en: page is English only",
+    "schedule.weeks 8: eight weekly sessions"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 8
+    }
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Setting the Stage",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Language and identity",
+            "note": "Prompt.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "“Thou Dost Not, and Shalt Not, Speak My Language”",
+            "note": "Abdelfattah Kilito. In Thou Shalt Not Speak My Language (Syracuse University Press, 2008): 85-94.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Imperial Language Policies and Multilingualism",
+        "description": "Case study: Language and colonialism",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Competing, Overlapping, and Contradictory Agendas: Egyptian Education under British Occupation, 1882-1922",
+            "note": "Mona Russell. Comparative Studies of South Asia, Africa and the Middle East 21.1 (2001): 50-60.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Francophone Egyptian Nationalists, anti-British Discourse, and European Public Opinion, 1885-1910: The Case of Mustafa Kamil and Ya'qub Sannu'",
+            "note": "Ziad Fahmy. Comparative Studies of South Asia, Africa and the Middle East 28.1 (2008): 170-183.",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "That Alexandria (trailer)",
+            "note": "Sherif Fathy Salem. Reading with.",
+            "href": "https://www.youtube.com/watch?v=ez_2iyd6BmY&t=2s"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Nationalism and the Mother Tongue",
+        "description": "Case study: The Turkish language reform",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Language",
+            "note": "Hale Yilmaz. In Becoming Turkish: Nationalist Reforms and Cultural Negotiations in Early Republican Turkey 1923-1945 (Syracuse University Press, 2013): 139-178.",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "“Transliterative Tease.”",
+            "note": "Lecture performance by artist collective Slavs and Tatars. Reading with.",
+            "href": "https://www.youtube.com/watch?v=hUCmu4x-ggs"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Arabization and Post-Colonial Debates",
+        "description": "Case study: Linguistic dilemmas",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Language and Ideology in the Maghreb: Francophonie and Other Languages",
+            "note": "Ali Alalou. The French Review (2006): 408-421.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Diglossia",
+            "note": "Abdelkebir Khatibi. In Berger, Anne-Emmanuelle, ed. Algeria in Others' Languages (Cornell University Press, 2002): 157-160. Reading with.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Beyond the National Language: Are Languages Dialects with an Army and a Navy?",
+        "description": "Case study: Regional politics and languages in India",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction: A New Emotional Commitment to Language",
+            "note": "Lisa Mitchell. In Language, Emotion, and Politics in South India: The Making of a Mother Tongue (Indiana University Press, 2009): 1-34.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Catalan Government Defies Supreme Court Ruling on Teaching More Spanish Language at Schools.",
+            "note": "El País, November 2021. Reading with.",
+            "href": "https://english.elpais.com/spain/2021-11-26/catalan-government-defies-supreme-court-ruling-on-teaching-more-spanish-language-at-schools.html"
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Internationalism and Globalization",
+        "description": "Case study: Decolonization and the language question in Algeria",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Battleground of Language and the Changing Discourse of Francophonie",
+            "note": "Margaret Majumdar. In Postcoloniality: The French Dimension (Berghahn Books, 2007): 147-173.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "The Burden of English",
+            "note": "Gayatri Chakravorty Spivak. In An Aesthetic Education in the Era of Globalization (Harvard University Press, 2012): 35-56. Reading with.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Local Alphabets",
+        "description": "Case study: French, Arabic, and Amazigh/Berber scriptural politics",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Arabic or Latin: Language Contact and Script Practices",
+            "note": "Dris Soulaimani. Middle East-Topics & Arguments 13 (2019): 13-20.",
+            "href": "https://archiv.ub.uni-marburg.de/ep/0003/issue/view/235/32"
+          },
+          {
+            "type": "reading",
+            "title": "Scripts in Motion: Writing as Imperial Technology, Past and Present",
+            "note": "Lydia Liu. PMLA/Publications of the Modern Language Association of America 130.2 (2015): 375-383. Reading with.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "English, the Latin Script, and Information Technologies",
+        "description": "Case study: Multilingualism for Foreign Language Teaching",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Multilingual Turn as a Critical Movement in Education: Assumptions, Challenges and a Need for Reflection",
+            "note": "Gabriela Sylvia Meier. De Gruyter Mouton, August 2016.",
+            "href": "https://www.degruyter.com/document/doi/10.1515/applirev-2016-2010/html"
+          },
+          {
+            "type": "reading",
+            "title": "“Dog Words,”",
+            "note": "Abdelfattah Kilito, trans. Ziad Elmarsafy. In Bammer, Angelika, ed. Displacements: Cultural Identities in Question (Indiana University Press, 1994): xxi-xxxi. Reading with.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "other",
+        "title": "Slavs and Tatars",
+        "note": "“Slavs and Tatars.” Installation view. May You Live in Interesting Times (Venezia Biennale 2019).",
+        "href": "https://slavsandtatars.com/cycles/language-arts"
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

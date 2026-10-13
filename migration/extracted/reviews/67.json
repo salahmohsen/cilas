@@ -1,0 +1,40 @@
+{
+  "id": 67,
+  "notes": [
+    "description: removed the leading 'description' label (page heading, not content); kept the rest verbatim",
+    "teaching_languages: en (page in English only)",
+    "schedule: Thursday morning and evening groups as slots; start date 2015-03-26 and 10 weeks already right; note kept"
+  ],
+  "set": {
+    "description": {
+      "en": "This course was conceived by a subversive urbanologist and a romantic pragmatist in the living room of a political ecologist. Its conception was sparked by an appreciation for silence, absence and emptiness; and the acknowledgement of the constitutive role of these 'voids', notably in language, philosophy and architecture. The course engages with the aesthetics and implications of these voids, in particular in relation to the spatial presence of ‘the body’. In the first half of the course we will examine the concept of the instrumental body as well as numerous interpretations of the ‘void’. We will emphasise the productive character of absence and how it provides space for our imagination.\n\nAt the same time, we will critically asses how the void has been imagined in art, culture and politics. Especially ‘the desert’ or ‘the Orient’ has been portrayed as empty and mystic often resulting in disowning and displacement. In a second part we will dialectically explore the politics of empty spaces and occupying bodies. We will examine the relation between vacant space, real estate speculation and developments, and their impact on the body. We will then study the notion of ‘non-places’ that are transitional in character and void of meaning,. Finally, we conclude with an exploration of ‘the void’ as a desirable destination, as often spelt out by Buddhist teachings for instance, which will invite us to reflect on the notion of mindfulness.\n\nexpectations\n\nParticipants should be ready to embark on an exploration of seemingly unrelated ideas.\n\nParticipants are expected to engage with different media with an open mind and heart.\n\nParticipants should be willing to spend two hours a week (or more) with an urbanist in exile and a student of chillosophy.\n\nwhy apply?\n\nTo engage in abstract and trans-disciplinary thinking.\n\nTo develop an understanding of the constitutive role of silence, emptiness and the void.\n\nTo familiarise yourself with the implications of mass vacancy for society, the city and our bodies.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2015-03-26",
+      "weeks": 10,
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "10:00",
+          "end_time": "12:30"
+        },
+        {
+          "weekday": "thu",
+          "start_time": "17:00",
+          "end_time": "19:30"
+        }
+      ],
+      "note": {
+        "en": "Thursday mornings and/or evenings: early birds from 10 am to 12:30 pm AND night owls from 5 pm to 7:30 pm, provided that no less than five participants sign up per class",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

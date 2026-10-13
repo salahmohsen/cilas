@@ -1,0 +1,20 @@
+{
+  "notes": [
+    "description already right",
+    "teaching_languages en; cover is Farida Makar's portrait, the only image in the block",
+    "not a duplicate of 114: different offering (spring 2014 vs winter 2015) with different text",
+    "CHECK: the timetable places History of Education in a merged Thursday/Saturday column (9-11 am) while the text says one 3-hour class a week; schedule left unset"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/_6568571.jpg",
+    "alt": "Black-and-white photo of a woman teaching in front of a whiteboard, two students seen from behind"
+  },
+  "id": 24,
+  "syllabus": null,
+  "duplicate_of": []
+}

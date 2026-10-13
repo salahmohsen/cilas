@@ -1,0 +1,263 @@
+{
+  "id": 238,
+  "notes": [
+    "teaching_languages set to ar (Arabic-only page)",
+    "weeks 12: the flow numbers 12 meetings",
+    "syllabus: only fix is the typo نشا to نشأ in session 5's discussion question (source OCR dropped the hamza); all else as extracted",
+    "description, title and schedule already match the page"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2026-04-27",
+      "weeks": 12,
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ]
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "مقدمة في المنهج",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ماذا تعني القراءة التاريخية للفكر الديني؟"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "الفتنة الكبرى",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "الفتنة: جدلية الدين والسياسة في الإسلام المبكر",
+            "note": "هشام جعيط",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "كيف يمكننا فهم لحظة الفتنة الكبرى في سياقها التاريخي؟\nكيف أثرت الفتنة الكبرى على تطور المدارس الكبرى في الفكر الديني الإسلامي؟"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "نشأة علم الكلام",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "علم الكلام والمجتمع",
+            "note": "جوزيف فان إس",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "مقالات الإسلاميين",
+            "note": "أبو الحسن الأشعري",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ماهو علم الكلام في التراث الإسلامي؟\nكيف ظهرت الأسئلة الكلامية المبكرة؟\nما علاقة علم الكلام بالتاريخ السياسي والاجتماعي للعالم الإسلامي؟"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "الفقه والتاريخ المبكر للمذاهب الفقهية",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "الشريعة: النظرية والممارسة والتحولات",
+            "note": "وائل حلاق",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ما هي المذاهب الفقهية الإسلامية الكبرى؟\nكيف تطورت أهم المدارس والتوجهات في الفقه الإسلامي؟\nماهو الفرق بين أدوار الفقيه والمفتي والقاضي الشرعي؟"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "الشافعي وتأسيس علم الأصول",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "رسالة الشافعي",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ما هو علم أصول الفقه؟\nكيف نشأ وكيف تطور علم أصول الفقه في العصور اللاحقة؟"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "تأسيس العقيدة الأشعرية",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "الإبانة عن أصول الديانة",
+            "note": "أبو الحسن الأشعري",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "علم الحديث",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "مقدمة ابن الصلاح في علم الحديث",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "أبو حامد الغزالي وتأسيس التصوف السني",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "إحياء علوم الدين",
+            "note": "أبو حامد الغزالي",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "كيف تطور الفكر الصوفي في الإسلام؟\nما هي أهم ملامحه؟\nكيف اندمج التصوف في التيار الرئيسي للفكر السني؟"
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "عصر الإصلاح",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "محاورات المصلح والمقلد",
+            "note": "رشيد رضا",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ماذا يعني \"إصلاح الفقه\"؟\nما هي عناصر التجديد التي ركز عليها المصلحون؟\nما هي أهم القضايا التي وجهت عملية الإصلاح؟\nما معنى التجديد في التقليد الفقهي؟\nماذا يعني \"الاجتهاد\" قبل عصر الإصلاح وبعده؟"
+          }
+        ]
+      },
+      {
+        "order": 10,
+        "title": "السلفية - الوهابية",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "كتاب التوحيد",
+            "note": "محمد بن عبد الوهاب",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ما هي أهم الأفكار التي تدور حولها المدرسة السلفية؟\nما هي الظروف والأسباب التاريخية التي أدت إلى ظهور هذه المدرسة؟\nما هي علاقة هذه المدرسة بالتراث الإسلامي السابق؟"
+          }
+        ]
+      },
+      {
+        "order": 11,
+        "title": "تحولات السياسة الشرعية ومفهوم الدولة الإسلامية",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "السياسة الشرعية للماوردي",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "السياسة الشرعية في إصلاح الراعي والرعية لابن تيمية",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "كتابات محدثة عن السياسة الشرعية",
+            "note": "عبد الوهاب خلاف",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "ما هو علم السياسة الشرعية؟\nكيف تمت إعادة إنتاج علم السياسة الشرعية في سياق الإصلاح في القرن العشرين؟\nماهي علاقة الاستعمار بتطور مفهوم الدولة الإسلامية؟"
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": "مناقشة ختامية",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

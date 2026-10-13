@@ -1,0 +1,27 @@
+{
+ "id": 279,
+ "notes": [
+  "description: removed stray leading 'description' label; kept expectations/objectives headings as own paragraphs",
+  "teaching_languages: page written in English",
+  "schedule: weeks=10 (thematic courses are ten weeks, trimester 2); morning/evening alternatives kept as note, weekdays only in timetable image"
+ ],
+ "set": {
+  "description": {
+   "en": "As a result of rapid urbanisation, in 2008 - for the first time in history - more than half of the world's population became urban. Urban explosion - the expansion of cities - is expected to largely materialise in so-called developing countries, otherwise referred to as the urban global south. Poverty, informality and exclusion will consequently acquire an inevitably urban face. In this course we will study, amongst other things, the twin forces of globalisation and urbanisation. In an effort to make sense of this confusing concept of governance, we will examine the socio-economic and technological dynamism that has come to characterise the 21st century and that is expected to diffuse decision-making prerogatives and duties. The course introduces students to both the potentials and the shadow sides of cities in the developing world as well as instil in students a wise appreciation of the complexity of the global urban future. It does so by engaging with both academic literature in disciplines ranging from critical geography to urban anthropology and non-academic literature including fiction and journalistic writing; films depicting the living conditions, inequalities and realities of the urban global south; and plenty of anecdotes by the course coordinator.\n\nexpectations\n\nStudents are expected to engage with assigned readings and viewings. (Uninformed participation in post-discussions is not allowed).\nStudents are expected summarise three assigned readings or viewings (paper or film).\nStudents are expected to give one presentation in on the 'transformation' of a city in the global south over the past decade in groups of three.\nStudents are expected to visually document in form of a photo essay a walk through their neighbourhood.\n\nobjectives\n\nBecome acquainted with the concepts of the spatial turn and socio-spatial justice.\nLearn about the production of space, the right to the city and arrival cities.\nUnderstand how the twin forces of globalisation and urbanisation correlate.\nCritically assess the term urban global south.\nAnalyse how poverty, exclusion and violence in the urban are intertwined.\nDiscuss the analytical and practical meaning of conventional distinctions between formal/informal, legal/illegal, ordered/disordered.\nDevelop an understanding of the socio-economic and technological dynamism of the 21st century.\nGain insight into the decision-making process at the urban level and recognise the diffusion of decision-making power.\nBe introduced to the notions of 'insurgent citizenship' and 'rebel cities'.\nIdentify and mobilise city-specific resources.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 10,
+   "note": {
+    "en": "Classes are scheduled both in the morning from 10 am to noon and in the evening from 5 pm to 7 pm. Note that morning and evening classes discuss the same topic.",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

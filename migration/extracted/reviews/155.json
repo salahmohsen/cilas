@@ -1,0 +1,25 @@
+{
+  "id": 155,
+  "notes": [
+    "description.en: the 'three categories' outline of the course moved in from facilitator_note (it is course overview, not a note to participants)",
+    "facilitator_note cleared",
+    "teaching_languages en: page in English",
+    "sessions already match the flow, unchanged"
+  ],
+  "set": {
+    "description": {
+      "en": "This 10 week course investigates the ways in which humans perform (both voluntarily and involuntarily) in daily life, in legal settings, and cultural contexts. Through analysing contemporary art practices, performance studies theories, and political/legal scenarios, we will investigate the norms, traditions, and power structures around different actions/gestures. Starting off with an introduction to the general ideas, the course will gradually move towards the question of what performativity means now, in the context of constant surveillance, consumption, virtual citizenships, and algorithmic control. Towards the end of the course, we will aim to actively self-reflect on the the roles and positions of the classroom setting, by participating in collaborative performative experiments (role-play, workshops, performative games, and learning experiments.\n\nPerformance studies is an interdisciplinary field that studies performance and uses performance as a lens to study the world, drawing from theories of the performing arts, anthropology and sociology, literary theory, and legal studies.\n\nThe course progresses through 3 categories:\n• Societal Roles: from Gender to Labour\n• The Legal Theatre: Speech Acts and Algorithms\n• Pedagogy and Role-Play: Collaborative Experiments",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

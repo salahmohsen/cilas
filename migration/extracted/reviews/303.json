@@ -1,0 +1,23 @@
+{
+  "id": 303,
+  "notes": [
+    "epigraph: the two Arabic opening quotes (al-Zayyat, Mersal) were in description.ar; moved to epigraph.ar and description.ar set to null",
+    "teaching_languages: page is written in English (Arabic only in the quotes and readings) -> en"
+  ],
+  "set": {
+    "epigraph": {
+      "en": null,
+      "ar": "\"وكتاباتنا الإبداعية بالتالي تختلف عن كتابات الرجل الذي ينتمي لنفس المجتمع الذي أنتمي إليه، قد تتساوى فنيًا، وقد تتميز، وقد تختلف، ولكنها في كل الحالات تختلف، فلم كان من الصعب علينا الإقرار بهذا الاختلاف؟\" لطيفة الزيات\n\n\"عندما كنت أتساءل لماذا لا توجد شاعرة عربية حديثة أنتمي إليها، لم أسمع بها [سنية صالح] عندما كنت أفكر.\" إيمان مرسال"
+    },
+    "description": {
+      "en": "Background\n\nHow many women authors have you read in school? How many women are present on the recommended shelf in your local bookstore? Literary Canon refers to the body of works traditionally perceived as masterpieces of literature that are also taught in universities and high schools. As a patriarchal construct, the Canon marginalizes women and admits few women under certain conditions. In the case of Arabic Literature, these conditions could relate to 1) nationalism, 2) responding to masculine aesthetics, and 3) committing to designated gendered traditions such as rithāʾ elegies. Accompanying the rise of nationalism in the twentieth century, women's writings, which could be categorized as national works, were more likely to be canonized. On the other hand, women writers challenged the Canon, expanded the boundaries of literary genres, and created feminist aesthetics.\n\nThe Course\n\nIn addition to discussing how the literary Canon works, this course offers a counter-feminist canon through its readings. We are going to understand why a woman author could be canonized while others are not. Furthermore, we will investigate why specific works were marginalized while others are considered masterpieces by the same author. Above all, we are going to enjoy reading poems, short stories and novels written by women.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

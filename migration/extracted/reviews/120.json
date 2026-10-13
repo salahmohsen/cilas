@@ -1,0 +1,19 @@
+{
+  "id": 120,
+  "notes": [
+    "teaching_languages ar and en: the page gives the full description in both languages",
+    "schedule: Thursday morning and evening groups as slots; sentence kept in note (en); weeks 10 and sessions already match the page syllabus"
+  ],
+  "set": {
+    "teaching_languages": ["ar", "en"],
+    "schedule": {
+      "slots": [
+        {"weekday": "thu", "start_time": "10:00", "end_time": "13:00"},
+        {"weekday": "thu", "start_time": "17:30", "end_time": "20:30"}
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

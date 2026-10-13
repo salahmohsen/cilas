@@ -1,0 +1,19 @@
+{
+  "notes": [
+    "location OFFLINE: page names the venue Wekalet Behna",
+    "teaching_languages ar+en: page gives the description in both languages"
+  ],
+  "set": {
+    "location": [
+      "OFFLINE"
+    ],
+    "teaching_languages": [
+      "ar",
+      "en"
+    ]
+  },
+  "id": 82,
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,28 @@
+{
+  "notes": [
+    "description already right",
+    "schedule: Tuesday 4-7 pm from the 2013-2014 timetable",
+    "teaching_languages en; cover is Bas Paris's portrait, the only image in the block"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "16:00",
+          "end_time": "19:00"
+        }
+      ]
+    }
+  },
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/_6220506.jpg",
+    "alt": "Portrait of Bas Paris, a man with glasses, beside a green curtain"
+  },
+  "id": 22,
+  "syllabus": null,
+  "duplicate_of": []
+}

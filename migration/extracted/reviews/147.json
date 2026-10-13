@@ -1,0 +1,346 @@
+{
+  "id": 147,
+  "notes": [
+    "Title: source heading is 'Portray: Women and Representation in the Middle East' in one line; subtitle removed.",
+    "description: removed the Tentative Weekly Flow (driving questions and reading selections) and moved it to syllabus sessions (Weeks Six and Seven kept as one session, as the source gives them together).",
+    "Documentaries moved to syllabus bibliography; the two notes about readings access and screenings moved to facilitator_note.",
+    "teaching_languages: English-only page. Schedule left as is (two Monday groups in note)."
+  ],
+  "set": {
+    "title": {
+      "en": "Portray: Women and Representation in the Middle East",
+      "ar": null
+    },
+    "subtitle": {
+      "en": null,
+      "ar": null
+    },
+    "description": {
+      "en": "In this course, we will examine the wide range of literature and media “representing” women in the Middle East and Muslim majority countries with a focus on the Arab world. We will be looking at both Western and Arab scholarship portraying “the Muslim/Arab/Middle Eastern woman” from the late 19th century and on to the so-called era of the War on Terror. We will be juxtaposing those images (after poking fun at them) with the discourse/art production of women from the region.\n\nIn addition to providing the opportunity to further explore and contest notions such as agency, political activism and feminism, the course is meant to spur discussion on Middle Eastern women beyond the dichotomies (e.g. assertive/submissive, active/passive, feminist/misogynist …etc.) which draw on Orientalist and reductionist approaches to studying the Middle East. Consequently, we will be tackling the theme of Orientalism and the colonial legacy to challenge the reductionist portrayals that have been used to justify humanitarian and military intervention in the region.\n\nLater on in the semester, we will be investigating how these portrayals cast their shadow on the national micro-level. Therefore, we will be zooming in our focus to examine the contemporary dynamics of gender and state politics and how the women interact with these dynamics as they experience them.\n\nWhat to Expect:\n\nThis is a discussion-based course. Your critical engagement with the course material and discussions is vital for your learning and the success of this class. Before discussing the readings in class, you should come prepared with a short summary of the readings in addition to 2-3 critical questions. The summaries and questions should be critical in the sense that they should reflect a close engagement with the texts and an ability to synthesize and critique. Every session, one presenter will lead the discussion on the readings addressing the main driving question(s) of the week in addition to the group’s critical questions. By the end of the term, you will be required to submit a short critique of a certain representation of women that you find worthy of intervention. This could be a novel/poem/movie/poster/music video...etc of your selection that depicts women in a way that you would like to critique using one or more of the themes we discussed in class. Halfway through the semester, you will give a short presentation of your progress on the critique so far and receive feedback from the class. Further detailed instructions will be discussed in class.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "The required selections from the readings will be made accessible online. You are more than encouraged to read the whole text if possible.\n\nShort segments of the following documentaries will be screened in class (schedule TBA). Feel free to suggest more options!",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Week One: What is Orientalism and how is it still relevant?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Annie Van Sommer, Our Moslem Sisters: A Cry of Need from Lands of Darkness Interpreted by Those Who Heard It.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Edward Said, Orientalism. Lila Abu-Lughod, “Orientalism and Middle East Feminist Studies.”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Week Two: What is the Harem and why does it (still) matter?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Douglas Scott Brookes, The Concubine, the Princess, and the Teacher: Voices from the Ottoman Harem.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Malek Alloula, The Colonial Harem.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Marilyn Booth, Harem Histories: Envisioning Places and Living Spaces.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Week Three: What is the woman question and how did Middle Eastern women experience reform & the modernization project?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Huda Shaarawi, Harem Years: The Memoirs of an Egyptian Feminist, 1879-1924.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lila Abu Lughod, Remaking Women: Feminism and Modernity in the Middle East.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Qasim Amin, The New Woman.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Week Four: Saving brown women from their brown men, FGM, and stoning: Why Muslim women do (not) need saving?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Farha Ghannam, Live and Die Like a Man: Gender Dynamics in Urban Egypt.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Lila Abu Lughod, ”Do Muslim Women (Still) Need Saving?” and “Authorizing Moral Crusades.”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Week Five: The Burkini Saga: Why does France ‘hate’ the veil?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Joan W. Scott, The Politics of the Veil.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Marnia Lazreg, The Eloquence of Silence: Algerian Women in Question.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sara Salem, “Race/Class/Gender: French Secularism and Whiteness.”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Weeks Six and Seven: The politics of representation: Who gets to speak for Muslim/Middle Eastern women? Why?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Amal Amireh, “Framing Nawal El Saadawi: Arab Feminism in a Transnational World.”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Assia Djebar, So Vast the Prison.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Ayaan Hirsi Ali, Is Islam a Religion of Peace? (A talk produced by PragerU.com)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "[https://www.youtube.com/watch?v=Cv0psoDU9u4](https://www.youtube.com/watch?v=Cv0psoDU9u4)",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Carnie Bourget, “Complicity with Orientalism in Third-World Women's Writing: Fatima Mernissi's Fictive Memoirs.”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Fatema Mernissi, Dreams of Trespass: Tales of a Harem Girlhood.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Gayatri Chakravorty Spivak, “Can the Subaltern Speak?”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hamid Dabashi, “Native informants and the making of the American empire.”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Nawal Saadawi, Woman at Point Zero.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Week Eight: The politics of representation cont’d: What is at stake?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Anne Norton, “Women and War” in On the Muslim Question and “Gender, Sexuality and the Iraq of Our Imagination”.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "C. Hirschkind and S. Mahmood, “Feminism, the Taliban, and politics of counter-insurgency.”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "George W. Bush’s statement on women and Afghanistan.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Week Nine: Gendered citizenship: How does the state play politics with its dutiful daughters?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Beth Baron, Egypt as a Woman: Nationalism, Gender, and Politics.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Danielsen, Hilde (et al.), Gendered Citizenship: The Politics of Representation.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Deniz Kandiyoti, “Women, Islam and the State.”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rhoda Kanaaneh, Birthing the Nation: Strategies of Palestinian Women in Israel.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "Week Ten: The politics of Islamic revival & whatever happened to the feminist movement?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Margot Badran, Feminism in Islam: Secular and Religious Convergences.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Rabab El-Mahdi, “A feminist movement in Egypt?” and “Does political Islam impede gender-based mobilization? The case of Egypt.”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Saba Mahmood, The Politics of Piety: The Islamic Revival and the Feminist Subject.",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Yeşim Arat, Rethinking Islam and Liberal Democracy: Islamist Women in Turkish Politics.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "watch",
+        "title": "Four Women of Egypt (1997) by Tahani Rached.",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "The Women of Hezbollah (2001) by Maher Abi-Samra.",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Divorce Iranian Style (1998) by Kim Longinotto and Ziba Mir-Hosseini.",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "A Girl in the River: The Price of Forgiveness (2015) by Sharmeen Obaid-Chinoy.",
+        "note": null,
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,15 @@
+{
+  "id": 40,
+  "notes": [
+    "teaching_languages set to en (English-only page)",
+    "CHECK: page says start 26 February 2023 (a Sunday) but meets Thursdays; kept the source date"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,35 @@
+{
+  "id": 239,
+  "notes": [
+    "teaching_languages set to en (English-only page)",
+    "weeks 10: the flow is a 10-week structure",
+    "facilitator_note: added the flow's closing sentence 'Projects will be presented in the final session.'"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2026-04-29",
+      "weeks": 10,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ],
+      "note": {
+        "en": "Hybrid (online and offline) for the first 6 weeks, then online for the rest of the course",
+        "ar": null
+      }
+    },
+    "facilitator_note": {
+      "en": "Final Project — Reframing the Ancient: Voice, Relation, and Continuity: For the final project, students will produce a sustained reinterpretation of one or more traditions studied in the course, focusing on how the “ancient” can be understood beyond material, monumental, and inherited interpretive frameworks.\n\nThe project will take the form of a curated interpretive work, through which students develop a new way of presenting and understanding a tradition for an audience, foregrounding voice, lived experience, and relational context.\n\nAccompanying the project, students will submit a critical reflection (approximately 1,000–1,500 words) that considers how engaging with these traditions has shaped their own understanding of the “ancient,” as well as their sense of self, knowledge, and connection to the past.\n\nProjects will be presented in the final session.",
+      "ar": null
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

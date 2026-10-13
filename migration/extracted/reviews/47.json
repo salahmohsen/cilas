@@ -1,0 +1,19 @@
+{
+  "id": 47,
+  "notes": [
+    "weeks set to 10 (flow Week 01 to Week 10)",
+    "teaching_languages set to en",
+    "Sessions and bibliography already match the flow; only start time given so slots unset"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

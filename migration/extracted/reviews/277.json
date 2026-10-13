@@ -1,0 +1,14 @@
+{
+  "id": 277,
+  "notes": [
+    "teaching_languages: English-only page",
+    "description, schedule, location, title already match the source; left unchanged",
+    "CHECK: page says 'from 10 to 12:30 in the morning and from 5:30 to 8 in the evening', unclear whether these are two alternative groups or one course meeting twice; slots left unset, schedule note kept"
+  ],
+  "set": {
+    "teaching_languages": ["en"]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,40 @@
+{
+  "id": 216,
+  "notes": [
+    "Margaret Mead quotation moved from description to epigraph.",
+    "Course Objectives moved from facilitator_note into description; contact info and 'Hybrid' line dropped (logistics, location already HYBRID); facilitator_note cleared.",
+    "weeks 12 (twelve numbered sessions).",
+    "teaching_languages en: English page."
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“Anthropology demands the open-mindedness with which one must look and listen, record in astonishment, and wonder that which one would not have been able to guess.” – Margaret Mead",
+      "ar": null
+    },
+    "description": {
+      "en": "Anthropology is the study of people, cultures, and the human condition. This course introduces the concepts of religion and spirituality with an anthropological, historical, social, and cultural lens that focuses on rituals and healing. Our question does not focus on the synopsis of different religions in the world, it is rather an exploration and investigation of the history of religio-spiritual practices. This includes rituals, magic and witchcraft, myth, and the history of religion and spiritual healing. Our aim is to investigate how all of these concepts are created and recreated to form the spiritual beliefs and practices that are popular today.\n\nCourse Objectives\n\nSome of the questions we’re going to cover in this course are:\n\n- What is anthropology as a field and mode of knowledge and practice?\n- How to conduct ethnographic fieldwork?\n- What is the history of religion?\n- What is the history of spiritual practices that are popular today?\n- What is spiritual healing and how does it manifest itself in our lives?\n- How do we understand the metaphysical realm in our everyday life?\n\nThis course will help participants:\n\n· Analyze and interpret beliefs, practices, and social structures in religious traditions from an anthropological perspective\n· Cover sufficient conceptual and background material on the selected topic.\n· Reflect on the literature directly related to the history and theories of anthropology of religion and magic and the debate over the mystical and the modern mind/mentality.\n· Compare and contrast popular spiritual healing practices from around the globe with those prevalent in Egypt.\n· Write fieldnotes.\n· Conduct ethnographic fieldwork on a topic of the student’s choice.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "schedule": {
+      "start_date": "2022-02-08",
+      "weeks": 12,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "18:30",
+          "end_time": "21:00"
+        }
+      ]
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

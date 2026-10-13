@@ -1,0 +1,271 @@
+{
+  "id": 295,
+  "notes": [
+    "teaching_languages en: page is English only",
+    "syllabus from wisdom_in_despair_-_course_flow.pdf (7 weeks), which the import never linked; the flow's list of primary texts goes to bibliography"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Anatomy of the Existential Crisis",
+        "description": "Summary: Theoretical framework + soft intro to Homer’s Odyssey",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "The work of Ahmed Morsi",
+            "note": "Prompts",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Jung’s Bollinger tower as a symbol we will carry through this course",
+            "note": "",
+            "href": "https://www.cgjung.net/espace/jps/living/jung-tower/"
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Existentialism vs. the existential crisis - definitions/discussions"
+          },
+          {
+            "kind": "discussion",
+            "description": "Ways of thinking about ‘existential crisis’: Philosophically, theologically, psychologically. Bloom/Merton/Jung"
+          },
+          {
+            "kind": "discussion",
+            "description": "Why did this course interest you? Be as personal as you’d like. Examples in the news and/or Egyptian pop culture. An acute crisis you can think of? (Your own, a friend). In different moments, life as a…"
+          },
+          {
+            "kind": "discussion",
+            "description": "What is the role of mythology the way we think about crisis points? Can it offer comfort? Wisdom? Consolation? (tie back to Jung)"
+          },
+          {
+            "kind": "discussion",
+            "description": "Introducing The Odyssey. Discuss why we have chosen to start with Homer (tie to Bloom). What do we already know about the Odyssey? What was our first encounter with it? Is there an equivalent?"
+          },
+          {
+            "kind": "discussion",
+            "description": "Conclusion: Reconsidering Ahmed Morsi’s images"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "From Ancient Odyssey to Space Odyssey",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Odyssey, Homer",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Ithaka, Constantine P. Cavafy",
+            "note": "poem",
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "screening",
+            "description": "Warmup: Extracts from films Solaris and 2001: A Space Odyssey? What are some of the themes that come to the surface here?"
+          },
+          {
+            "kind": "discussion",
+            "description": "Close reading of The Odyssey. What do we know about Homer? Extract from The Odyssey. Discussion. What is the crisis at the heart of this myth?"
+          },
+          {
+            "kind": "discussion",
+            "description": "The afterlife of The Odyssey: Illustrations of The Odyssey (Blake etc.); modern and classic. What has this text inspired? Read Constantine P. Cavafy’s poem Ithaka"
+          },
+          {
+            "kind": "discussion",
+            "description": "How can we tie Homer back to Jung? (Bollingen tower)"
+          }
+        ]
+      },
+      {
+        "order": 3,
+        "title": "Crisis in the Home",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Kreutzer Sonata, Leo Tolstoy",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "General discussion: The family ideal; the ideal of marriage. In your opinion, are these both idealized?"
+          },
+          {
+            "kind": "discussion",
+            "description": "Local literature/culture as starting point: Naguib Mahfouz; realism in Egyptian literature and film."
+          },
+          {
+            "kind": "discussion",
+            "description": "The text: General discussion of Tolstoy’s story. Close reading of key passages from The Kreutzer Sonata: The trigger of the crisis, solitude in spite of company, depression & self-absorption. Broaden discussion: Why is the shattering of the family ideal so unsettling? How is this portrayed in this particular text? How is this comparable to our day and age? Compare to Homer."
+          },
+          {
+            "kind": "discussion",
+            "description": "Tie back to Jung + previous readings. What is the mythology at play here? How can we view such a crisis in light of Jung’s much more ancient view of things? In light of Solaris’ cosmic perspective?"
+          }
+        ]
+      },
+      {
+        "order": 4,
+        "title": "The Embodiment of Despair",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Metamorphosis, Franz Kafka",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Solitude of the Ravens, photography series by Masahisa Fukase",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Context: Introducing Kafka’s time and life. Why Metamorphosis? + Link back to the Greek myth. The crisis: In the midst of a bustling life, everything suddenly stops"
+          },
+          {
+            "kind": "discussion",
+            "description": "Close reading of text. Close look at experience of time and space. Close look at relationships: between self + self; self + family, self + society, self + world etc… Ways of thinking about crisis: abstract vs. material"
+          },
+          {
+            "kind": "discussion",
+            "description": "General discussion + connecting the dots. What is it that makes us who we are? The way we look/feel/behave? Shift in the self vs shift in the world. Or are they one and the same thing?"
+          }
+        ]
+      },
+      {
+        "order": 5,
+        "title": "Crisis of Middle-Age",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Rama and the Dragon, Edwar El-Kharrat",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Interview with Ahmed Morsi",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Context: Elaborate on relationship between Kharrat and Morsi. Introducing Kharrat + common thread: Alexandria"
+          },
+          {
+            "kind": "discussion",
+            "description": "Close reading: a strange reading of love presented by Mikhail. Mikhail & Kharrat’s unconventional narrative technique. Mikhail’s experience of time during love. ‘TIMES’ of our lives - Mikhail’s interplay between adolescence and middle age. Concrete vs. abstract, existential"
+          },
+          {
+            "kind": "discussion",
+            "description": "General discussion + connecting the dots. Looking forward to Kundera - the concrete as a sanctuary? The escape into the abstract? Which do you find more helpful in times of crisis? Looking back at our characters, who chose the tangible vs. abstract?"
+          }
+        ]
+      },
+      {
+        "order": 6,
+        "title": "Politics and Social Damnation",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Joke, Milan Kundera",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Creative writing exercise: the passage of time in two contrasting situations",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "The burden of choice: existentialism as a framework for reading Kundera. Sartre, Camus etc."
+          },
+          {
+            "kind": "discussion",
+            "description": "Close reading of The Joke. The experience of time during crisis. Tragedy, satire, absurdity - what is the ultimate tone?"
+          },
+          {
+            "kind": "discussion",
+            "description": "General discussion: the many tones of crisis. Reflect on the approaches to the various crises we have read about - Gregor Samsa/Kafka; Ulysses/Homer; Ludvik/Kundera; Mikhail/Edwar; Pozdnyshev/Tolstoy."
+          }
+        ]
+      },
+      {
+        "order": 7,
+        "title": "Geopolitical Despair",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Men in the Sun, Ghassan Kanafani",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Recap discussion: Which literary characters, thus far, have you sympathized with most?"
+          },
+          {
+            "kind": "discussion",
+            "description": "Political despair. Kanafani, like Kundera, takes it to the political sphere, in our corner of the world. Both novels written in the 1960s. Why is satire, as a way of handling ‘despair’, less common in the Arab world? What are some of the tones of despair that have resonated with you most, thus far?"
+          },
+          {
+            "kind": "discussion",
+            "description": "Close reading. Extracts describing the town; extracts from the journey, the desert environment; frantic pace as build up to tragic ending. Where does Kanafani inject humor? What do we make of the ending?"
+          },
+          {
+            "kind": "discussion",
+            "description": "General discussion. Link final image of men overheated in back of closed truck to Jung’s Bollinger tower. Ongoing despair - in a situation such as the Israel/Palestine conflict. What consolation does Kanafani offer? What wisdom does literature offer in such circumstances?"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

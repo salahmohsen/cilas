@@ -1,0 +1,44 @@
+{
+  "id": 289,
+  "notes": [
+    "epigraph: Max Weber quote moved from facilitator_note",
+    "facilitator_note removed: flow header (title, fellow, term, heading) duplicates other fields",
+    "schedule: start 2020-12-21, Monday 18:00-20:30, 7 weeks; note removed as slots express it",
+    "CHECK: start date 2020-12-21 as stated, though winter-2020 cycle by the winter rule runs Nov 2019-Mar 2020",
+    "cover: first image in the course block (hands, from the page's image1.jpg); no caption on the page"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“The fate of our times is characterized by rationalization and intellectualization and, above all, by the disenchantment of the world” – Max Weber",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2020-12-21",
+      "weeks": 7,
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/image1_orig.jpg",
+    "alt": "Close-up of two hands reaching toward each other, from a fresco"
+  },
+  "duplicate_of": []
+}

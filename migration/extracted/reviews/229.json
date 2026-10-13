@@ -1,0 +1,27 @@
+{
+  "id": 229,
+  "notes": [
+    "teaching_languages set to en (English page and description)",
+    "weeks set to 10 (the flow numbers 10 sessions)",
+    "CHECK: course bibliography items are Arabic titles stored under en and lack the authors given in the flow; left as is (sessions are correct)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2025-01-21",
+      "weeks": 10,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

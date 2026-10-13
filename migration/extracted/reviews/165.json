@@ -1,0 +1,36 @@
+{
+  "id": 165,
+  "notes": [
+    "description: added the course overview paragraphs and objectives from the flow that sat in facilitator_note",
+    "facilitator_note: removed (moved into description)",
+    "schedule: Sunday 25 April 2021 15:30-17:30 as a slot",
+    "teaching_languages en"
+  ],
+  "set": {
+    "description": {
+      "en": "Is infrastructure political? Can infrastructure colonise, dispossess, and act as an instrument of warfare? We tend to think of infrastructure as useful objects, but can we think of them as built ideologies? Historically, infrastructural projects have been regarded as necessary preconditions of modern and efficient states. So much so that malfunctioning sewers and perennial power cuts have come to invoke images of starved and underdeveloped countries. However, the question of whether infrastructure itself fuels underdevelopment is rarely asked. This course proposes a new way of thinking about infrastructure. By studying the histories of various infrastructural projects in the Middle East, we will critically assess their role as sites of political contestation rather than as “neutral technologies.” Infrastructure has been used by colonial states to exploit the natural resources of colonised territories and to control the populations they ruled. At the same time, infrastructure is crucial in the formation of radical political movements and rich traditions of political struggle. Yet, not all infrastructure is the same. By paying attention to the material qualities and specific history of each form of infrastructure we study, we will be able to understand how different forms of infrastructure enable and foreclose different political possibilities.\n\nEach week’s readings will be devoted to one infrastructural project. We study the production of political power along railway tracks, electrical wires, oil pipelines, and telegraphic cables among other technical and infrastructural apparatuses. We situate our study of infrastructure not in development economics, but in the social and political fabric of which it is part. Development economics was itself a product of specific techno-political processes investigated in this course. Under each form of infrastructure, we will examine cases from countries including Egypt, Iran, Sudan, Palestine, and Lebanon. This will allow us to draw comparisons and to understand how the specific socio-political and historical context of each country shaped the politics that emerged around its infrastructure.\n\nCourse Objectives: Theoretically, students will learn to study historical processes not in a teleological manner, but as historically and materially situated. Students will examine the role of infrastructure in the making of politics, including questions of colonialism and modern warfare. Students will study how infrastructure was capitalised on by labour and liberation movements to precipitate the emergence of democratic politics and revolutionary demands.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2021-04-25",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "sun",
+          "start_time": "15:30",
+          "end_time": "17:30"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

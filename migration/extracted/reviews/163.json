@@ -1,0 +1,121 @@
+{
+  "id": 163,
+  "notes": [
+    "description: replaced with the full course description from the syllabus (flow), three paragraphs, instead of the truncated page version",
+    "facilitator_note: removed; it was the syllabus header plus a repeat of the description",
+    "schedule: weekday and times from page (Thursday 29 April 2021, 15:30-17:30) as a slot; note dropped as slots cover it",
+    "syllabus: no sessions; reading list with full citations as bibliography",
+    "teaching_languages en: English page"
+  ],
+  "set": {
+    "description": {
+      "en": "Debt has acquired such a centrality in our lives that some argue that homoeconomicus, the ‘economic man’ of liberal theory, has been displaced by a wholly new figure: the ‘indebted man.’ Is our indebtedness a new phenomenon, a function of increasingly global regimes of neoliberal governance? Is it merely a product of late capitalism? What is the relationship between government debt and individual debt? Or between debt, space, and time? Is debt itself a form of colonialism?\n\nThe question of debt has been engaged from multiple disciplinary vantage points. Anthropologists have long shown that debt is Janus-faced, a double-edged sword that at times serves as the basis of sociality, community, and autonomy (as in the gift economy), while at others times generating exploitation, individualism, and violence (especially when debt is quantified in money). When does it switch from one to the other? Political theorists, especially recently, have argued that debt is a form of government, a disciplinary regime which governs our lives in the present to ensure our debt repayments in the future: it is no less than a colonisation of our future. In this case, does debt foreclose possibilities for political action? And what is the way out? Finally, political economy has treated debt as a lubricant for the capitalist process, providing the finances needed for production. Moreover, financial expansion happens only when opportunities for production have tried up. Yet, far from operating at the margins, what happens when we treat debt as a primary and central component of capitalist accumulation?\n\nThis course will bring together these three lines of analysis, and the questions they raise, supplementing them with oft-sidelined accounts and analyses from the Global South. In particular, it asks what late nineteenth century colonised world can teach us about our present. Are we are witnessing a recapitulation and reproduction of colonial political economies?",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2021-04-29",
+      "weeks": 7,
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "15:30",
+          "end_time": "17:30"
+        }
+      ]
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "A Sea of Debt : Law and Economic Life in the Western Indian Ocean, 1780-1950",
+        "note": "Bishara, Fahad Ahmad. New York, NY USA: Cambridge University Press, 2017.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Undoing the Demos: Neoliberalism's Stealth Revolution",
+        "note": "Brown, Wendy. Near Futures. Brooklyn, New York: Zone Books, 2015.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Birth of Biopolitics: Lectures at the Collège de France, 1978-1979",
+        "note": "Foucault, Michel, and Michel Senellart. 1st Picador pbk ed. New York: Picador, 2010.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Debt : The First 5,000 Years",
+        "note": "Graeber, David. Brooklyn: Melville House, 2012.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "On Social Currencies and Human Economies: Some Notes on the Violence of Equivalence",
+        "note": "Graeber, David. Social Anthropology 20, no. 4 (2012): 411–28.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Egypt's Occupation: Colonial Economism and the Crises of Capitalism",
+        "note": "Jakes, Aaron. Stanford, California: Stanford University Press, 2020.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Making of the Indebted Man: An Essay on the Neoliberal Condition",
+        "note": "Lazzarato, M. Semiotext(e) Intervention Series 13. Los Angeles, CA: Semiotext(e), 2012.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Capital : A Critical Analysis of Capitalist Production",
+        "note": "Marx, Karl. Moscow: Foreign Languages Pub. House, 1957.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Gift: The Form and Reason for Exchange in Archaic Societies",
+        "note": "Mauss, Marcel. London ; New York: Routledge, 1990.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Rule of Experts: Egypt, Techno-Politics, Modernity",
+        "note": "Mitchell, Timothy. Berkeley: University of California Press, 2002.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Genealogy of Morals",
+        "note": "Nietzsche, Friedrich Wilhelm. New York, N.Y: The Modern Library, 191AD.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Indigenous Debt and the Spirit of Colonial Capitalism: Debt, Taxes and the Cash-Crop Economy in the Anglo-Egyptian Sudan, 1898-1956",
+        "note": "Serels, Steven. In Debt and Slavery in the Mediterranean and Atlantic Worlds, edited by Gwyn Campbell and Alessandro Stanziani. Financial History, no. 22. London: Pickering & Chatto, 2013.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "A Modern Economic History of Africa",
+        "note": "Zeleza, Paul Tiyambe. Codesria Book Series. Dakar, Senegal] : Oxford [England: Codesria ; ABC [distributor], 1993.",
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

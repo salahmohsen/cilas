@@ -1,0 +1,22 @@
+{
+  "id": 148,
+  "notes": [
+    "teaching_languages: page has full text in English and Arabic.",
+    "schedule.note: add the Arabic sentence given on the page (two alternative Thursday groups)."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+        "ar": "ايام الخميس في الصباح من ١٠:٠٠ صباحاً إلى ١٢:٣٠ ظهراً و في المساء من ٥:٣٠ إلى ٨:٠٠ مساءاً"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

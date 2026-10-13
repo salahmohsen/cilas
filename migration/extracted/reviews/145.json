@@ -1,0 +1,31 @@
+{
+  "id": 145,
+  "notes": [
+    "Title: source heading is 'Poetry and Short Prose: Memory That Moves' in one line, so the part after the colon is part of the title (as the Arabic title already is); subtitle removed.",
+    "teaching_languages: page has full text in English and Arabic.",
+    "schedule.note: add the Arabic sentence from the cycle page (two alternative Sunday groups)."
+  ],
+  "set": {
+    "title": {
+      "en": "Poetry and Short Prose: Memory That Moves",
+      "ar": "الشعر والنثر القصير: الذاكرة المـ(ـتـ)ـحركة"
+    },
+    "subtitle": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+        "ar": "أيام الأحد صباحاً من العاشرة حتى الثانية عشر و نصف\nو مساءاً من الخامسة و النصف حتى الثامنة"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,158 @@
+[
+  {
+    "id": 35,
+    "set": {
+      "start_date": "2024-12-01"
+    },
+    "notes": [
+      "Courses start 'the 4th of December', 'the 1st of December' and 'the 3rd of December' (2024); earliest is 1 Dec."
+    ]
+  },
+  {
+    "id": 33,
+    "set": {
+      "start_date": "2024-01-13"
+    },
+    "notes": [
+      "Page: 'The Workshop starts on the 13th of January', other courses 15th and 18th January; earliest 13 Jan 2024."
+    ]
+  },
+  {
+    "id": 31,
+    "set": {
+      "start_date": "2020-12-21",
+      "start_year": 2021
+    },
+    "notes": [
+      "Page: 'starting December 21st' (first course), others Dec 24, Dec 29, 'January 6th, 2021'; the cycle runs Dec 2020 to Feb 2021, so winter 2021 by the January-year rule. Deadline 'until December 22nd 2020' unchanged. Slug winter-2020-cairo still says 2020."
+    ]
+  },
+  {
+    "id": 30,
+    "set": {
+      "start_date": "2022-07-23"
+    },
+    "notes": [
+      "Every course: 'Start date: the week of 23th of July'."
+    ]
+  },
+  {
+    "id": 29,
+    "set": {
+      "start_date": "2021-07-11"
+    },
+    "notes": [
+      "Courses start July 11th to 15th; earliest 'starting July 11th'."
+    ]
+  },
+  {
+    "id": 28,
+    "set": {
+      "start_date": "2020-06-25"
+    },
+    "notes": [
+      "Courses start June 25th, 29th, 30th and July 8th; earliest 'starting June 25th'. Page states no registration deadline."
+    ]
+  },
+  {
+    "id": 27,
+    "set": {
+      "start_date": "2025-01-19"
+    },
+    "notes": [
+      "Spring semester page: 'Start Date: 19th of January' is earliest (labs 19th/20th/25th, short courses 22nd Jan to 11th Feb)."
+    ]
+  },
+  {
+    "id": 26,
+    "set": {
+      "start_date": "2022-02-02"
+    },
+    "notes": [
+      "Spring semester page: 'The start date is the 2nd of February' is earliest. Deadline 'until January 31st 2022' unchanged; the later short-course cycle page says 'until May 11th 2022' and 'Starts June 5th'."
+    ]
+  },
+  {
+    "id": 25,
+    "set": {
+      "start_date": "2021-02-06",
+      "deadline": "2021-01-27"
+    },
+    "notes": [
+      "Semester page: 'the courses will begin on February 6th' and 'applications are accepted and reviewed until January 27th'. A later spring cycle page says 'Register ... until April 20th 2021' with courses from April 25th."
+    ]
+  },
+  {
+    "id": 24,
+    "set": {
+      "start_date": "2022-09-24"
+    },
+    "notes": [
+      "Labs page: 'The labs will begin the week of September 24th'; cycle courses give no dates. Deadline Sep 18th 2022 matches."
+    ]
+  },
+  {
+    "id": 23,
+    "set": {
+      "start_date": "2024-09-21"
+    },
+    "notes": [
+      "Earliest courses: 'start date is September the 21st' and 'starting from the 21st of September'."
+    ]
+  },
+  {
+    "id": 21,
+    "set": {
+      "start_date": "2021-10-02"
+    },
+    "notes": [
+      "Arabic page: courses start 2 Oct (Saturday), 3 Oct, 4 Oct, 6 Oct; earliest is 'الثاني من أكتوبر'."
+    ]
+  },
+  {
+    "id": 20,
+    "set": {
+      "start_date": "2020-09-25"
+    },
+    "notes": [
+      "Earliest 'starting September 25th' (others 26th to Oct 5th)."
+    ]
+  },
+  {
+    "id": 19,
+    "set": {
+      "start_date": "2024-04-20"
+    },
+    "notes": [
+      "Labs page: 'The labs will begin the week of April 20th'; first course 'starting date is 20th of April'. Deadline Apr 5th matches."
+    ]
+  },
+  {
+    "id": 18,
+    "set": {
+      "start_date": "2023-02-05",
+      "deadline": "2023-01-27"
+    },
+    "notes": [
+      "Labs page: 'The labs will begin the week of February 5th' and 'Registrations are reviewed until January 27th'. Season kept spring per the site's label though the courses start in February."
+    ]
+  },
+  {
+    "id": 17,
+    "set": {
+      "start_date": "2020-01-30"
+    },
+    "notes": [
+      "Page: 'Thematic courses and labs begin the week of January 30th and end the week of April 13th' (second semester 2019-2020)."
+    ]
+  },
+  {
+    "id": 15,
+    "set": {
+      "start_date": "2019-01-31"
+    },
+    "notes": [
+      "Page: 'Thematic courses begin the week of January 31th' (second semester 2018-2019; the page text also says 'academic year 2017-2018', a copy slip)."
+    ]
+  }
+]

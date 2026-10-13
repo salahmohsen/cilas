@@ -1,0 +1,370 @@
+{
+  "id": 215,
+  "notes": [
+    "Added syllabus: the course reading and film list (no session structure) as course bibliography with authors and links from the flow PDF; removed the duplicated '(PDF)' entry.",
+    "teaching_languages ar: Arabic page.",
+    "CHECK: page says 'start week is 13 February' (a Sunday) while the course meets Wednesdays; kept 2022-02-13 as stored."
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ]
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "watch",
+        "title": "من الجاني",
+        "note": "1944؛ أحمد بدرخان؛ بطولة أمينة رزق وعباس فارس",
+        "href": "https://www.youtube.com/watch?v=LymEG704snc"
+      },
+      {
+        "type": "watch",
+        "title": "هذا جناه أبي",
+        "note": "1945؛ هنري بركات",
+        "href": "https://www.youtube.com/watch?v=pvf3ki3xAzE"
+      },
+      {
+        "type": "watch",
+        "title": "النائب العام",
+        "note": "1946؛ أحمد كامل مرسي؛ أفضل مشهد من فيلم النائب العام",
+        "href": "https://www.youtube.com/watch?v=ZY5mNTNfHXc"
+      },
+      {
+        "type": "watch",
+        "title": "حياة حائرة",
+        "note": "1974؛ أحمد سالم؛ فيلم حياة حائرة لفاتن حمامة",
+        "href": "https://www.youtube.com/watch?v=QyI0-uImNY0"
+      },
+      {
+        "type": "watch",
+        "title": "العقاب",
+        "note": "1948؛ هنري بركات",
+        "href": "https://www.dailymotion.com/video/x6zs6wk"
+      },
+      {
+        "type": "watch",
+        "title": "طلاق سعاد هانم",
+        "note": "1948؛ أنور وجدي؛ الفيلم العربي، بطولة أنور وجدي، إنتاج عام 1948",
+        "href": "https://www.youtube.com/watch?v=bha03vbPc6I"
+      },
+      {
+        "type": "watch",
+        "title": "المرأة شيطان",
+        "note": "1949؛ عبد الفتاح حسن؛ الفيلم النادر",
+        "href": "https://www.youtube.com/watch?v=wr5LU2VeiQs"
+      },
+      {
+        "type": "watch",
+        "title": "ريا وسكينة",
+        "note": "1953؛ صلاح أبو سيف؛ الفيلم العربي النادر، بطولة نجمة إبراهيم وأنور وجدي",
+        "href": "https://www.dailymotion.com/video/x6v9761"
+      },
+      {
+        "type": "watch",
+        "title": "الإخوة الأعداء",
+        "note": "1974؛ حسام الدين مصطفى",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "ظلموني الناس",
+        "note": "1951؛ حسن الإمام",
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "الأفوكاتو مديحة",
+        "note": "1950؛ يوسف وهبي؛ الفيلم العربي، بطولة مديحة يسري ويوسف وهبي",
+        "href": "https://www.youtube.com/watch?v=1SoOzLbBgD0"
+      },
+      {
+        "type": "watch",
+        "title": "الأستاذة فاطمة",
+        "note": "1951؛ فطين عبد الوهاب؛ عبد الفتاح القصري: سبق السيف العسل",
+        "href": "https://www.youtube.com/watch?v=N99zwk7rosc"
+      },
+      {
+        "type": "watch",
+        "title": "الأسطى حسن",
+        "note": "1952؛ صلاح أبو سيف",
+        "href": "https://www.facebook.com/watch/?v=561452318487223"
+      },
+      {
+        "type": "watch",
+        "title": "بيت الطاعة",
+        "note": "1953؛ يوسف وهبي؛ بطولة يوسف وهبي وهدى سلطان وفريد شوقي",
+        "href": "https://www.youtube.com/watch?v=datkzWzI2Sk"
+      },
+      {
+        "type": "watch",
+        "title": "صراع في الوادي",
+        "note": "1954؛ يوسف شاهين",
+        "href": "https://www.youtube.com/watch?v=crCJKjG5Agg"
+      },
+      {
+        "type": "watch",
+        "title": "فتوات الحسينية",
+        "note": "1954؛ نيازي مصطفى؛ الفيلم العربي، بطولة فريد شوقي وهدى سلطان",
+        "href": "https://www.dailymotion.com/video/x7ewdfh"
+      },
+      {
+        "type": "watch",
+        "title": "جميلة",
+        "note": "1958؛ يوسف شاهين",
+        "href": "https://www.youtube.com/watch?v=syP_WrMcA5Q"
+      },
+      {
+        "type": "watch",
+        "title": "إسماعيل ياسين في السجن",
+        "note": "1960؛ حسن الصيفي",
+        "href": "https://www.dailymotion.com/video/x6zs8hh"
+      },
+      {
+        "type": "watch",
+        "title": "الناصر صلاح الدين",
+        "note": "1963؛ يوسف شاهين",
+        "href": "https://www.youtube.com/watch?v=rf7sM4T2Rw0"
+      },
+      {
+        "type": "watch",
+        "title": "المخربون",
+        "note": "1967؛ كمال الشيخ؛ بطولة لبنى عبد العزيز وليلى فوزي وأحمد مظهر",
+        "href": "https://www.youtube.com/watch?v=WFk-C6uKMGM"
+      },
+      {
+        "type": "watch",
+        "title": "حب وخيانة",
+        "note": "1968؛ السيد بدير؛ بطولة ناهد شريف",
+        "href": "https://www.youtube.com/watch?v=uMsfkaXnkeY"
+      },
+      {
+        "type": "watch",
+        "title": "يوميات نائب في الأرياف",
+        "note": "1969؛ توفيق صالح",
+        "href": "https://youtu.be/NiCuLyGY72I"
+      },
+      {
+        "type": "watch",
+        "title": "أريد حلا",
+        "note": "1975؛ سعيد مرزوق؛ بطولة فاتن حمامة ورشدي أباظة",
+        "href": "https://www.youtube.com/watch?v=1NKDKZKwBc8"
+      },
+      {
+        "type": "watch",
+        "title": "على من نطلق الرصاص",
+        "note": "1975؛ كمال الشيخ؛ الفيلم العربي، بطولة محمود ياسين وسعاد حسني وعزت العلايلي ونجوى إبراهيم",
+        "href": "https://www.youtube.com/watch?v=bKckxloTzEE"
+      },
+      {
+        "type": "watch",
+        "title": "زائر الفجر",
+        "note": "1975؛ ممدوح شكري",
+        "href": "https://www.dailymotion.com/video/x6zs32f"
+      },
+      {
+        "type": "watch",
+        "title": "وبالوالدين إحسانا",
+        "note": "1976؛ حسن الإمام؛ بطولة فريد شوقي وسهير رمزي وسمير صبري",
+        "href": "https://youtu.be/h9lflwSBF_g"
+      },
+      {
+        "type": "watch",
+        "title": "طائر الليل الحزين",
+        "note": "1977؛ يحيى العلمي؛ بطولة محمود عبد العزيز",
+        "href": "https://www.youtube.com/watch?v=0WHo4kTSAVE"
+      },
+      {
+        "type": "watch",
+        "title": "خائفة من شيء ما",
+        "note": "1979؛ يحيى العلمي",
+        "href": "https://youtu.be/aTGemqz1v4M"
+      },
+      {
+        "type": "watch",
+        "title": "مع سبق الإصرار",
+        "note": "1979؛ أشرف فهمي",
+        "href": "https://www.youtube.com/watch?v=h8aEBoZs_OI"
+      },
+      {
+        "type": "watch",
+        "title": "الغول",
+        "note": "1983؛ سمير سيف",
+        "href": "https://www.dailymotion.com/video/x6zwo04"
+      },
+      {
+        "type": "watch",
+        "title": "الأفوكاتو",
+        "note": "1983؛ رأفت الميهي",
+        "href": "https://www.dailymotion.com/video/x6zs8uc"
+      },
+      {
+        "type": "watch",
+        "title": "ضد الحكومة",
+        "note": "1992؛ عاطف الطيب",
+        "href": "https://www.dailymotion.com/video/x7e2tug"
+      },
+      {
+        "type": "watch",
+        "title": "محامي خلع",
+        "note": "2002؛ محمد ياسين؛ بطولة هاني رمزي وداليا البحيري وعلا غانم",
+        "href": "https://www.youtube.com/watch?v=9iUl4eLulJg"
+      },
+      {
+        "type": "reading",
+        "title": "The New Rhetoric: A Treatise on Argumentation",
+        "note": "Chaïm Perelman and Lucie Olbrechts-Tyteca؛ Trans. John Wilkinson and Purcell Weaver، University of Notre Dame Press، 1971 (1958)",
+        "href": "https://play.google.com/books/reader?id=dYQlDwAAQBAJ&pg=GBS.PT5&hl=en"
+      },
+      {
+        "type": "reading",
+        "title": "The Uses of Argument",
+        "note": "Stephen Toulmin، Cambridge University Press، 2003 (1958)",
+        "href": "http://johnnywalters.weebly.com/uploads/1/3/3/5/13358288/toulmin-the-uses-of-argument_1.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "Fallacies",
+        "note": "Charles Leonard Hamblin، Methuen، London، 1970",
+        "href": "https://archive.org/details/fallacies0000hamb"
+      },
+      {
+        "type": "reading",
+        "title": "L'argumentation dans la langue",
+        "note": "Jean-Claude Anscombre et Oswald Ducrot، Langages، 10e année، n°42، 1976، Argumentation et discours scientifique، pp. 5-27",
+        "href": "https://www.persee.fr/docAsPDF/lgge_0458-726x_1976_num_10_42_2306.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "How to do things with doxa: Toward an analysis of argumentation in discourse",
+        "note": "Amossy، R. (2002)، Poetics Today، 23(3)، 465-487",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Handbook of Argumentation Theory",
+        "note": "Frans H. van Eemeren، Walter de Gruyter GmbH & Co KG، 2019",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Argumentation Schemes",
+        "note": "Douglas Walton، Christopher Reed، Fabrizio Macagno، Cambridge University Press، 2008",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Dictionary of Argumentation: An Introduction to Argumentation Studies",
+        "note": "Christian Plantin، College Publications، 2018",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Legal Argumentation and Evidence",
+        "note": "Douglas Walton، Penn State University Press، 2012",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Identifying Argumentative Patterns: A Vital Step in the Development of Pragma-Dialectics",
+        "note": "van Eemeren، F.H.؛ Argumentation 30، 1-23 (2016)",
+        "href": "https://doi.org/10.1007/s10503-015-9377-z"
+      },
+      {
+        "type": "reading",
+        "title": "Fundamentals of Legal Argumentation",
+        "note": "Eveline Feteris، Springer، 2019",
+        "href": "https://link.springer.com/content/pdf/10.1007%2F978-94-024-1129-4.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "From narrative arguments to arguments that narrate",
+        "note": "Marion Carel، 2017 (avec A. Frenay)، in Paula Olmos ed.، Narration as argument، 141-177، Springer",
+        "href": "https://semanticar.hypotheses.org/files/2019/10/CAREL-AND-FRENAY-PAPER-final-2017.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "التصور اللغوي عند علماء أصول الفقه",
+        "note": "السيد أحمد عبد الغفار؛ دار المعرفة الجامعية، الإسكندرية، 1996",
+        "href": "https://down.ketabpedia.com/files/bkb/bkb-fi06684-ketabpedia.com.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "مناهج البحث عند مفكري الإسلام",
+        "note": "علي سامي النشار؛ دار النهضة العربية، بيروت، 1984",
+        "href": "https://down.ketabpedia.com/files/bkb/bkb-mak00905-ketabpedia.com.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "L'ancienne rhétorique",
+        "note": "Barthes Roland؛ In: Communications، 16، 1970، Recherches rhétoriques، pp. 172-223",
+        "href": "https://www.persee.fr/docAsPDF/comm_0588-8018_1970_num_16_1_1236.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "A Semiotics of Legal Argument",
+        "note": "Duncan Kennedy؛ Syracuse Law Review، Volume 42، 1991، P. 75؛ Collected Courses of the Academy of European Law، Volume III، Book 2، 309-365، Kluwer Academic Publishers، 1994",
+        "href": "https://duncankennedy.net/documents/A%20Semiotics%20of%20Legal%20Argument_European%20Intro.pdf"
+      },
+      {
+        "type": "reading",
+        "title": "The Aesthetics of American Law",
+        "note": "Pierre Schlag؛ 115 Harvard Law Review 1047 (2002)",
+        "href": "https://scholar.law.colorado.edu/cgi/viewcontent.cgi?referer=&httpsredir=1&article=1561&context=articles"
+      },
+      {
+        "type": "reading",
+        "title": "Rhetoric as jurisprudence: An introduction to the politics of legal language",
+        "note": "Peter Goodrich؛ Oxford Journal of Legal Studies، 4(1)، 88-122، 1984",
+        "href": "https://doi.org/10.1093/ojls/4.1.88"
+      },
+      {
+        "type": "reading",
+        "title": "Law in the Courts of Love - Literature and other minor jurisprudences",
+        "note": "Peter Goodrich؛ Routledge، 1996",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Rhetoric of Temporality",
+        "note": "Paul de Man؛ In Charles Southward Singleton (ed.)، Interpretation: Theory and Practice، Baltimore: Johns Hopkins University Press، 1969",
+        "href": "https://philpapers.org/s/Paul%20de%20Mann"
+      },
+      {
+        "type": "reading",
+        "title": "The Concept of Irony",
+        "note": "Paul de Man؛ In Aesthetic Ideology، Ed. Andrzej Warminski، University of Minnesota Press",
+        "href": "https://www.jstor.org/stable/10.5749/j.cttttt6x.11"
+      },
+      {
+        "type": "reading",
+        "title": "The Concept of Irony",
+        "note": "Soren Kierkegaard، 1841",
+        "href": "https://philpapers.org/rec/SINITA-2"
+      },
+      {
+        "type": "reading",
+        "title": "The Dialectical Forge - Juridical Disputation and the Evolution of Islamic Law",
+        "note": "Walter Edward Young؛ Springer، 2016",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Architecture of Freedom",
+        "note": "Hassanaly Ladha؛ Bloomsbury Academic، 2020",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Law and literature",
+        "note": "Richard A. Posner؛ Harvard University Press، 2009",
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

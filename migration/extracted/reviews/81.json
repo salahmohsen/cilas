@@ -1,0 +1,27 @@
+{
+  "notes": [
+    "schedule.note moved to ar: the sentence is Arabic but sat under en",
+    "location OFFLINE: page names the venue Wekalet Behna (وكالة بهنا)",
+    "teaching_languages ar+en: page carries the full description in both",
+    "Checked 51 (winter 2020, \"second research lab\", Friday slot, with translation lab support): a different run, not a duplicate"
+  ],
+  "set": {
+    "location": [
+      "OFFLINE"
+    ],
+    "teaching_languages": [
+      "ar",
+      "en"
+    ],
+    "schedule": {
+      "note": {
+        "en": null,
+        "ar": "بدءً من الرابع من أكتوبر ولتسع أسابيع متتالية، أيام الاثنين من الساعة الخامسة إلى الساعة الثامنة مساءًا"
+      }
+    }
+  },
+  "id": 81,
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,32 @@
+{
+  "id": 55,
+  "notes": [
+    "title kept as source writes it, subtitle removed",
+    "removed stray 'description' label",
+    "teaching_languages en",
+    "cover: only image in block is fellow portrait"
+  ],
+  "set": {
+    "title": {
+      "en": "Art and the City - Artistic Representations and the Built Environment",
+      "ar": null
+    },
+    "subtitle": {
+      "en": null,
+      "ar": null
+    },
+    "description": {
+      "en": "Artistic representations and practices can improve our understanding of the built environment. From documentary film to the technique of ‘aimless wandering’, there are many ways to engage with urban space, i.e. the city. The city is more than just a physical phenomenon to be developed through architecture and planning. In addition to serving as a tool to perceive and understand the city, art can play an important role in changing the city and urban life. Artists and other stakeholders use and apply art in cities for various reasons, with different objectives and outcomes. From local groups aiming to promote neighbourhood cohesion to mayors of so-called global cities seeking to rebrand their city, the possible applications of art are manifold. In this course, students will learn how to communicate their ideas about specific urban issues through different forms of artistic expression and create their own ‘urban imaginations’.\n\nexpectations\n\nStudents are expected to attend film screenings, field trips and guest lectures outside class times as much as possible.\n\nStudents are expected to share in-class representations of cities in various media (film, literature, etc.) based on their own prior knowledge.\n\nStudents are expected to present a thoroughly researched and substantiated ‘urban imagination’ in a medium of choice after discussing their ideas and receiving feedback on a draft.\n\nobjectives\n\nDistinguish between artistic reflections on space and the impact of art on space.\n\nDevelop an understanding of how art forms can offer new interpretations of cities and urban life.\n\nUnderstand how artistic expressions can provide critical reflections on cities and urban life.\n\nExamine how art forms can influence and shape one’s mental map of a city.\n\nAnalyse how art is and can be used as an instrument or tool by different stakeholders at the local, urban, national and global level.\n\nAppreciate the potential art holds for urban communities.\n\nRecognise the problematic role art can play with regards to urban development.\n\nEngage with complex and diverse urban issues.\n\nDifferentiate between forms of art and their communicative function in expressing ideas about the city.\n\nRelate to the built environment through an artistic medium and express one's urban imagination.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/____1417081511.png",
+    "alt": "Black and white portrait of René Boer"
+  },
+  "duplicate_of": []
+}

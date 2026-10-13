@@ -1,0 +1,74 @@
+{
+  "id": 201,
+  "notes": [
+    "facilitator_note: removed (it was the fellow's bio, which lives on the fellow's profile)",
+    "teaching_languages: Arabic-only page",
+    "schedule: Saturdays at 6 pm, offline, start 20 April; start time only so no slot, sentence in note",
+    "syllabus: no session structure in the flow, only the reading list; sessions [] and list in bibliography",
+    "cover: photo (credit Ali Zaraay) sits just above this block's title"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2024-04-20",
+      "note": {
+        "en": "Every Saturday At 6 pm, starting date is 20nd of April",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "جوديث بتلر: الأفعال الأدائية وتكوين الجندر : مقالة في الظاهراتية والنظرية النسوية، مجلة عمران للعلوم الاجتماعية",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "يسري مصطفى: خطاب النوع الاجتماعي",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "هانيا الشلقامي: دراسة النوع والعلوم الاجتماعية",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "شارلين ناجي هيسي وباتريشا لينا ليفي : البحث النسوي ، ترجمة هالة خليل",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "هدى الصدة: أصوات بديلة : المرأة والعرق والوطن في العالم الثالث",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "داليا أحمد عبد الرحيم: سوسيولوجيا الرجولة : تأملات في مسألة الرجولة وتنشئة الام",
+        "note": null,
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/432394110-1551556038967490-3617759553844335732-n_orig.jpg",
+    "alt": "Photograph of a wedding celebration in a tent, a bride in white dancing with a knife in her mouth surrounded by men in galabiyas"
+  },
+  "duplicate_of": []
+}

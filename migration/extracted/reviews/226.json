@@ -1,0 +1,26 @@
+{
+  "id": 226,
+  "notes": [
+    "teaching_languages set to en (English-only page)",
+    "weeks set to 12 (the flow numbers 12 weekly sessions; a one-week break sits between weeks 6 and 7)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2022-02-13",
+      "weeks": 12,
+      "slots": [
+        {
+          "weekday": "sun",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

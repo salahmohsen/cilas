@@ -1,0 +1,24 @@
+{
+ "id": 235,
+ "notes": [
+  "facilitator_note: removed the repeated title, instructor name and email line; kept assessment and logistics",
+  "teaching_languages: English (page and syllabus in English)",
+  "weeks: 12 (syllabus numbers 12 weeks)",
+  "description, schedule, sessions match the source; unchanged"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": "Presentations: Each student will be asked to lead the discussion (based on the assigned reading of the week) to open the space up for class discussion. This will also aid students during in-class collective readings of primary sources selected by the instructor. A collective reading and engagement with primary sources in class trains students to analyze and read different historical documents as well as situate them in contemporary discussions about politics, gender, history, etc. Presentations rubric: Clarity of secondary source’s argument; Background and contextualization; Engagement with assigned primary source of the week; Overall effort and presentation.\n\nWeekly Reflections: The instructor will set up a forum for weekly reflection. At the end of each week, each student is expected to write their main takeaway from the week’s discussion, and their reflection on the primary and secondary sources. You can respond to others, comment on a local or global event (past or present), or draw parallels between what we tackled in class and personal anecdotes. Think of this as a space in which you “write in order to think”. You don’t always have to present something polished to be read, sometimes you need to write to think through what you take in around you. It can be as short or as long as you want; it simply has to be thought-provoking. Weekly reflections rubric: Promptness of uploading the reflection; Engagement with class discussion; Clear attempt at thinking through primary and secondary sources; Drawing connections between inside and outside of the classroom.\n\nFinal Project: Explore a theme, movement, or idea from the course through one of the following formats: a research project using primary and secondary sources on an esoteric topic of your choice; a fictitious historical narrative exploring an imagined esoteric encounter or society; a personal reflection that ties in experiences with esoteric, spiritual, or occult traditions to course themes; a visual or mapping project tracing the networks or symbolism of an esoteric tradition; a digital exhibit or video essay explaining a concept, group, or figure in global esotericism. All formats require a 500-word reflection explaining your process, use of sources, and relation to course themes. Projects will be presented during the final week of class. Final project rubric: Engagement with course themes and materials; Creativity and originality; Clarity and coherence; Reflective analysis (500-word statement); Overall effort and presentation.\n\nAll readings and media links will be posted in the shared drive folder.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 12
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

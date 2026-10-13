@@ -1,0 +1,26 @@
+{
+ "id": 73,
+ "notes": [
+  "Description is the course-flow overview (fuller than the page blurb), 3 paragraphs verbatim",
+  "Cleared facilitator_note: it repeated part of the overview (the questions and readings paragraph), now in description",
+  "Set teaching_languages en (English page)",
+  "Existing 8-session syllabus matches the flow; left as is",
+  "CHECK: cover image on the page (editor/leloir-jacob-wrestling-with-the-angel.jpg) is not present in raw/weebly-zip or raw/mirror, so cover is null"
+ ],
+ "set": {
+  "description": {
+   "en": "At a time when there are a lot of questions on what constitutes the phenomenon of violence, whether inflicted by the experiences of the everyday, or by the structures and institutions of the state or whether its even more “virtual”, this course offers a historical and contemporary overview to the main intellectual traditions that tried to define, outline and even critique violence, showing how complex and profoundly contested of a concept it is.\n\nThe course will tackle such questions as: how can violence be defined? Is it ever justified? Is all violence the same? What are the different ends of violence? Why does it seem to be a fundamental part of any society? Has it increased or decreased historically?\nSurveying a diverse set of readings ranging from history, psychology, philosophy,..etc the course will provide a multidisciplinary lens to critically examine a multitude of perspectives and theoretical frameworks to broaden and develop the analytical tools and intellectual approaches we have in understanding such an abstruse phenomenon.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

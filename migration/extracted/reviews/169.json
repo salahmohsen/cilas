@@ -1,0 +1,23 @@
+{
+ "id": 169,
+ "notes": [
+  "Moved the opening Alok quote from description to epigraph",
+  "Set teaching_languages to en (English-only page)"
+ ],
+ "set": {
+  "epigraph": {
+   "en": "“these words they have egos and things to prove themselves, don’t they? we plant them & as they bloom we become intoxicated by their fragrance — so much so that reality shifts.” - Alok",
+   "ar": null
+  },
+  "description": {
+   "en": "Reading Feminism/Writing To Live explores the power of language, rhythm and imagination. It is both a Creative Writing lab and a close-reading course. We indulge in the words of novelists and poets, to conjure up energy and courage for our own writing endeavours. What do stories tell us about the state of the world? Maybe more importantly: can we survive, even alter, this state through writing words? In this course, we hone our appreciation of aesthetics, both through creating and consuming, consulting and advising (ourselves and each other). In writing poetry and prose, we imagine past and future, unravel taboo and power, and sometimes craft an escape through a fantastical feminist gate. The weekly readings serve as prompts which we will interrogate in class through creative writing exercises. If your brain was a place, what would it look like? If your ancestor gave you life advice, what would they say? Do you dare to put your every word on trial for its life, can you bear to pull out your tongue and read yourself against the silence? I invite you to adventure into dystopia, utopia, love, and hope by creating words and watching them become worlds.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

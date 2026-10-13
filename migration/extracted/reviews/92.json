@@ -1,0 +1,40 @@
+{
+ "id": 92,
+ "notes": [
+  "Moved flow's 'Rest of the Course' paragraph from facilitator_note into description; dropped flow header line",
+  "Schedule note removed (repeats location, slot, start date)",
+  "weeks 9: flow numbers nine weekly sessions",
+  "teaching_languages en"
+ ],
+ "set": {
+  "description": {
+   "en": "This course is an opportunity to introduce ourselves to and explore various ideas from Eastern cultures (such as Buddhism, Confucianism, Sufism, and perhaps aspects of Ancient Mesopotamia/Akkadian).\n\nThe structure of the course will first look at the ‘historical’ narratives of such figures as Buddha, Confucius, and Rumi, and then explore ideas and principles as have been articulated/manifested through art.\n\nThemes that will be explored are the i) principles behind Buddhist teachings, ii) Confucian humanism, and the attitudes of (Islamic) mysticism.\n\nThis approach will cover two thirds of the course; for the tail-end of the course, the idea is to explore a specific formulation (and perhaps rather esoteric expression) of said cultures: for example, the Mādhyamaka (Middle Way) school of thought from Buddhism and the notion of emptiness (śūnyatā); a conversation around Confucius’ ethical and political views through his Analects; a read of Rumi’s Masnavi or Attar’s The Conference of the Birds.\n\nAlternatively, students may choose to turn to Ancient Mesopotamia, to look at the history and (cultural) attitudes revolving around the recovery of The Epic of Gilgamesh. Or they may like to introduce another culture and discuss its cultural artifact/artistic manifestation (literature, painting/drawing, statute, etc.).\n\nRest of the Course: the idea would be to look deeper at specific manifestations of the traditions explored so far. The above can either be all included, one each week, or students can elect one of the above to focus in length (close reading). In so doing, either students will be introduced to and discuss ideas from various traditions or get acquainted with the academic skill of close reading. Alternatively, students may opt to explore a different tradition/way of thinking from the East, such as looking at the history and (cultural) attitudes revolving around the recovery of The Epic of Gilgamesh; this last, however, will be more of an encyclopedic approach rather than the more disciplined examples above.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2024-09-26",
+   "weeks": 9,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "18:00",
+     "end_time": "20:30"
+    }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

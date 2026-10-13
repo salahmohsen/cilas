@@ -1,0 +1,219 @@
+{
+ "id": 246,
+ "notes": [
+  "teaching_languages en (page and flow in English)",
+  "schedule: weeks=12 from the 12 numbered weeks of the flow; Saturday 18:00-20:30, start 2026-04-25 already right",
+  "syllabus: re-supplied from the flow; removed an editorial remark that had leaked into a reading note; dropped workshop activities that only repeated the session title and description; syllabus.notes set to null (text already in description / facilitator_note)"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2026-04-25",
+   "weeks": 12,
+   "slots": [
+    {
+     "weekday": "sat",
+     "start_time": "18:00",
+     "end_time": "20:30"
+    }
+   ]
+  }
+ },
+ "syllabus": {
+  "session_unit": "week",
+  "sessions": [
+   {
+    "order": 1,
+    "title": "Introductions",
+    "description": "interests, impressions, potential research projects + what is and why partake in creative research writing.",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 2,
+    "title": "Opening ourselves up to the possibilities of creative research writing",
+    "description": "",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "The Wave in the Mind.",
+      "note": "Le Guin, U. K. (2004). Shambhala.",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Notes on the Semi-fictional Form.",
+      "note": "BARD Studio. (n.d.).",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Gurgaon Glossaries.",
+      "note": "Shetty, P., Gupte, R., & Khanolkar, P. (n.d.). Crit Studio.",
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 3,
+    "title": "Creative non-fiction, prose, & figurative language",
+    "description": "",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "The Interpretation of Cultures.",
+      "note": "Geertz, C. (1973). Basic Books, Inc., Publishers.",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Creative Nonfiction: A Movement, Not a Moment.",
+      "note": "Gutkind, Lee. (2006). Creative Nonfiction, 29, 6-18.",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "لاجئون في هواء رطب",
+      "note": "حسان الناصر. (18 مارس، 2026). مدى مصر.",
+      "href": "https://mada38.appspot.com/www.madamasr.com/2026/03/18/feature/%d8%b3%d9%8a%d8%a7%d8%b3%d8%a9/%d9%84%d8%a7%d8%ac%d8%a6%d9%88%d9%86-%d9%81%d9%8a-%d9%87%d9%88%d8%a7%d8%a1-%d8%b1%d8%b7%d8%a8"
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 4,
+    "title": "Writing workshop #1",
+    "description": "Creative non-fiction, prose, & figurative language",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 5,
+    "title": "Ethnographic poetry",
+    "description": "",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Crumpled Paper Boat: Experiments in Ethnographic Writing.",
+      "note": "Pandian, A., & McLean, S. (Eds.). (2017). Duke University Press.",
+      "href": "https://doi-org.libproxy.aucegypt.edu/10.2307/j.ctv1168bd2"
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 6,
+    "title": "Writing workshop #2",
+    "description": "Ethnographic poetry",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 7,
+    "title": "Transcription",
+    "description": "",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Interpretive reflexivity in ethnography.",
+      "note": "Lichterman, P. (2015). Ethnography, 18(1).",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Transparency in Transcribing: Making Visible Theoretical Bases Impacting Knowledge Construction from Open-Ended Interview Records.",
+      "note": "Skukauskaite, A. (2012). Forum: Qualitative Social Research, 13.",
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 8,
+    "title": "Writing workshop #3",
+    "description": "Transcription",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 9,
+    "title": "Autobiographical writing",
+    "description": "",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Introduction to Writing the Self: Essays on Autobiography and Autofiction.",
+      "note": "Shands, K. W., Mikrut, G. G., Pattanaik, D. R., & Ferreira-Meyers, K. (Eds.). (2015). English Studies 5.",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Don’t Let Me Be Lonely: An American Lyric.",
+      "note": "Rankine, C. (2004). Graywolf Press.",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "How to Write an Autobiographical Novel.",
+      "note": "Chee, A. (2018). Mariner Books.",
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 10,
+    "title": "Writing workshop #4",
+    "description": "Autobiographical writing",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   },
+   {
+    "order": 11,
+    "title": "Photo essays",
+    "description": "",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "On Photography.",
+      "note": "Sontag, S. (1977). Farrar, Strauss, and Giroux.",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Camera Lucida: Reflections on Photography.",
+      "note": "Barthes, R. (1980). Hill and Wang.",
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 12,
+    "title": "Writing workshop #5",
+    "description": "Photo essays",
+    "meetings": null,
+    "materials": [],
+    "activities": []
+   }
+  ],
+  "bibliography": [],
+  "notes": null
+ },
+ "cover": null,
+ "duplicate_of": []
+}

@@ -1,0 +1,40 @@
+{
+ "id": 284,
+ "notes": [
+  "description: removed stray leading 'description' label; kept expectations / why apply? headings",
+  "teaching_languages: English-only page",
+  "schedule: start_date 2015-03-26 and 10 weeks as stated; Thursday early-bird and night-owl groups as slots, note kept (minimum five participants)"
+ ],
+ "set": {
+  "description": {
+   "en": "Interaction among people with differing ideas, beliefs, and practices is an everyday reality in our increasingly globalised, urbanised, and digitised world. Many agree that tolerance and toleration, on both an individual and socio-political level, are necessary for healthy navigation of our complex landscapes. Toleration, however, is an elusive and paradoxical value; it is not always clear why and to what extent we should tolerate ideas and beliefs that, by definition, we think are wrong.\n\nIn this course, we will explore the nature and limits toleration and the contexts in which it is expressed, practiced, tested, and transformed. We will look at various justifications for toleration through the work of thinkers including John Locke, John Stuart Mill, Baruch Spinoza, Bernard Williams, Charles Taylor, John Rawls, Susan Mendus, Jeremy Waldron, David Heyd, and Carlos Frankel.\n\nThroughout the course we will examine current and historical examples of toleration and evaluate the extent to which theory and practice can and do inform one another. We will ask questions such as, how is toleration taught in formal education settings? What do immigration policies say about institutionalized practices of toleration? What types of speech should be tolerated and to what degree can the boundaries be tested?\n\nStudents will develop argumentative ability through classroom debate. As a final project, students will be asked to present a framework for grounding toleration in principled practice based on their own experience and context.\n\nexpectations\n\nParticipants are expected to attend no less than 80% of classes with a readiness to engage in philosophical debate.\n\nParticipants are further expected to engage with assigned reading, viewings and write short, weekly response papers.\n\nParticipants are expected to present a framework both orally and in writing for grounding toleration in principled practice based on their experience and context.\n\nwhy apply?\n\nTo familiarise yourself with pragmatic, moral, and meta-ethical arguments for toleration.\n\nTo analyse the relationship between toleration and pluralism, multiculturalism, relativism, social norms, equality, religion, education, and autonomy.\n\nTo examine tolerance as an attitude, character trait, or personal virtue vs. toleration as a socio-political value or institutional arrangement.\n\nTo discuss various forms that toleration can take such as resignation, indifference, social acceptance, curiosity, and enthusiasm for people different than ourselves.\n\nTo discuss toleration in relation to race, class, and gender.\n\nTo develop the ability to argue both sensibly and sensitively.\n\nTo identify theories of toleration at play in current events.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2015-03-26",
+   "weeks": 10,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "10:00",
+     "end_time": "12:30"
+    },
+    {
+     "weekday": "thu",
+     "start_time": "17:00",
+     "end_time": "19:30"
+    }
+   ],
+   "note": {
+    "en": "Thursdays, morning and/or evening: 10:00-12:30 (early birds) and 17:00-19:30 (night owls), provided no fewer than five participants sign up per class. Runs for 10 weeks, March 26 through May 28, 2015.",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

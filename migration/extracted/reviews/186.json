@@ -1,0 +1,31 @@
+{
+  "id": 186,
+  "notes": [
+    "facilitator_note: dropped the first line (online, Saturdays, start date, duration), now in schedule/location; kept fee waiver and weeks nine-ten note",
+    "schedule: Saturdays 6-8:30pm, start 25 January, 8 weeks (weeks 9-10 optional)",
+    "teaching_languages: English-only page"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": "Enrollment fee waivers and sliding scale payment: For this particular course, arrangements have been made to waive the full enrollment fee for two students: one student from Gaza and one student from Sudan residing in Egypt. In addition, the course will be offered with a sliding scale payment option for all other students\n\nWeeks nine and ten will be optional reading group meetings, depending on students’ desire to continue exploring the course themes through additional texts and artworks.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2025-01-25",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "sat",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

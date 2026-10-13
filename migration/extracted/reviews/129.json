@@ -1,0 +1,14 @@
+{
+  "id": 129,
+  "notes": [
+    "teaching_languages: English-only page"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,20 @@
+{
+  "id": 37,
+  "notes": [
+    "teaching_languages set to en (page text is English only)",
+    "schedule: page says 'Start date is the week of 5th of February, On Sundays at 6 pm online'; start_date 2023-02-05 (a Sunday, inside spring 2023); weeks 11 from the flow's numbered weeks; slots left unset (no end time), note keeps the sentence as written",
+    "cover: the image in this course's block",
+    "sessions and facilitator_note already match the flow; unchanged"
+  ],
+  "set": {
+    "teaching_languages": ["en"],
+    "schedule": {
+      "start_date": "2023-02-05",
+      "weeks": 11,
+      "note": { "en": "Start date is the week of 5th of February, On Sundays at 6 pm online", "ar": null }
+    }
+  },
+  "syllabus": null,
+  "cover": { "upload": "uploads/1/9/1/0/19102967/cilas-course-picture_orig.jpg", "alt": "A street in Alexandria lined with tall apartment buildings" },
+  "duplicate_of": []
+}

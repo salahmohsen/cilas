@@ -1,0 +1,26 @@
+{
+  "id": 51,
+  "notes": [
+    "schedule note was English on an Arabic-only page; replaced with the Arabic sentence of the source",
+    "teaching_languages ar",
+    "cover: course artwork on its own page",
+    "81 is the fall 2021 re-run (different cycle, text revised), not a duplicate"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": null,
+        "ar": "في أيام الجمع من الساعة الواحدة مساءً حتى الساعة الرابعة مساءً"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/alex-2_orig.jpg",
+    "alt": "Painterly view of boats in the harbour with the Qaitbay Citadel under clouds"
+  },
+  "duplicate_of": []
+}

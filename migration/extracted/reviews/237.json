@@ -1,0 +1,225 @@
+{
+  "id": 237,
+  "notes": [
+    "teaching_languages set to en (English-only page)",
+    "weeks 12: the flow numbers sessions 1 to 12",
+    "syllabus: removed the two bibliography items (Miriam Matthiessen, Jacob Bolton), which were author Twitter links, not readings; both authors are already in session 8's readings. Sessions unchanged"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2026-04-28",
+      "weeks": 12,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ]
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Empire I: what is empire to us?",
+        "description": "Reading: none",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Empire II: what is empire to us? What are different ways of theoretically approaching ‘empire’?",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Empire?",
+            "note": "Wesley Renfro and Dominic Alessio. (2020)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Materialities I: materialism and new materialism",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Material Powers. Introduction",
+            "note": "Joyce and Bennett. (2010)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "materialities II: STS and the material tout-monde",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Bodies in the System.",
+            "note": "Agard-Jones, Vanessa. (2013)",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "materialities III: assemblages and the material semiotic knot",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Arts of Noticing",
+            "note": "Anna Tsing, from The Mushroom at the End of the World (2015), chapter 1.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Contamination as Collaboration",
+            "note": "Anna Tsing, from The Mushroom at the End of the World (2015), chapter 2.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "some problems with scale",
+            "note": "Anna Tsing, from The Mushroom at the End of the World (2015), chapter 3. Optional.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "thinking from the landscape",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "A River, Remade: Making Subjects on the Perennial Nile",
+            "note": "Jennifer Derr, from The Lived Nile. Environment, disease and material colonial economy in Egypt (2019).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "thinking from the built environment",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Assembling and Spilling-Over: Towards an 'Ethnography of Cement' in a Palestinian Refugee Camp",
+            "note": "Nasser Abourahme. (2014). Read together with the next reading (AND).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Palestine along the colour line: race, colonialism, and construction labour, 1918–1948",
+            "note": "Nimrod Ben Ze’ev. (2021). Read together with the previous reading (AND).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "thinking from seas",
+        "description": "June 16 or 17",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Shipping Doesn’t Do What Everyone Says it Does. For container shipping companies, the supply chain crisis was never a crisis: it was a buffet",
+            "note": "Miriam Matthiessen and Jacob Bolton. (2023). One of three options (OR).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "A Fish Story",
+            "note": "Sekula. (1995). One of three options (OR).",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Palimpsests of Law and Corporate Sovereigns",
+            "note": "Laleh Khalili, from Sinews of War and Trade. Shipping and Capitalism in the Arabian Peninsula (2020). One of three options (OR).",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "thinking with energy",
+        "description": "Reading: TBA",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "thinking with technologies",
+        "description": "June 30 or July 1",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Ottoman Telegraphy and New Conceptions of Space and Time",
+            "note": "Pauline Lucy Lewis, from Wired Ottomans: A Sociotechnical History of the Telegraph and the Modern Ottoman Empire, 1855-1911 (2018). One of two options (OR); the other is TBA.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 11,
+        "title": "PROJECT PREPARATIONS - walk-in session",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "other",
+            "description": "PROJECT PREPARATIONS - walk-in session"
+          }
+        ]
+      },
+      {
+        "order": 12,
+        "title": "PROJECT PRESENTATIONS",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "PROJECT PRESENTATIONS"
+          }
+        ]
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,33 @@
+{
+ "id": 175,
+ "notes": [
+  "Language sentence moved from facilitator_note to language_note",
+  "Set teaching_languages en (held in English, Arabic flexibility) and weeks 7 (7 sessions)"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": "The method: The interactive and DBL nature of the sessions will rely to a great extent on the “Socratic Exercises” methodology. Using the medium of philosophical texts, dilemmas and questions, it consists in exercising one's mind on an unusual target: oneself and one’s arguments as one delivers them in public. Rooted in questioning and alterity, the aim is to move away from one’s “center” and observe dispassionately one’s ideas and arguments being analyzed by fellow participants. The “other” then becomes a mirror who helps one refine these ideas, letting them gain in clarity and strength. In the process, philosophical and logical skills are improved by learning to: identify and express important questions; present coherent propositions and objections; problematize and pinpoint the crux in a given question; uncover and analyze concepts; distinguish between concepts; determine presuppositions; reformulate propositions, etc.\n\nTentative flow: Each session revolves around one main Socratic exercise, preceded by an overview from the moderator and followed by a round table on both the exercise and the concepts we went through. The resources for the exercises — including the philosophical skills being worked on — are to a good extent tentative: participants may and are encouraged to suggest alternatives.",
+   "ar": null
+  },
+  "language_note": {
+   "en": "This course will be held in English, with flexibility for people who prefer to express themselves in Arabic (by agreement of all participants). All texts will be provided.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 7,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "18:00",
+     "end_time": "20:00"
+    }
+   ]
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

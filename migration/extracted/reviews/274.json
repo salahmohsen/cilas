@@ -1,0 +1,20 @@
+{
+  "id": 274,
+  "notes": [
+    "teaching_languages: page has full text in both English and Arabic",
+    "schedule note: add the Arabic sentence from the cycle page (two alternative groups, no start date stated)",
+    "CHECK: description.en has two overlapping 'This course is ideal for those who benefit the most...' paragraphs, both present verbatim on the source page; left as is"
+  ],
+  "set": {
+    "teaching_languages": ["en", "ar"],
+    "schedule": {
+      "note": {
+        "en": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+        "ar": "أيام الخميس صباحاً من العاشرة حتى الثانية عشر و نصف و مساءاً من الخامسة و النصف حتى الثامنة"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

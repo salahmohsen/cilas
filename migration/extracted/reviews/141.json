@@ -1,0 +1,40 @@
+{
+ "id": 141,
+ "notes": [
+  "epigraph: moved the opening Jalal Toufic quote out of description",
+  "title: the source gives 'Performing Fiction not enough without serendipity quest' as one title line (no separator); subtitle cleared, Arabic title unchanged",
+  "teaching_languages en+ar: full text in both languages",
+  "schedule note: two alternative groups (morning/evening) on Fridays plus the five-participant condition, as written; Arabic sentence added"
+ ],
+ "set": {
+  "title": {
+   "en": "Performing Fiction not enough without serendipity quest",
+   "ar": "أداء الخيال لا يكفى دون المغامرة السرنديبية"
+  },
+  "subtitle": {
+   "en": null,
+   "ar": null
+  },
+  "epigraph": {
+   "en": "“While watching a great dance film, I witnessed a dancer enter a painting. Taking into account that human bodies cannot do this, was that movement metaphorical or symbolic or oneiric? It was none of these. It struck me as a fact, an aesthetic fact”\n\n[Jalal Toufic, The dancer’s two bodies]",
+   "ar": null
+  },
+  "description": {
+   "en": "The course aims to create a space for experimentation and imagination. Standing on the hypothesis of fiction as a reality, and being skeptical towards reality as a value - If reality does exist, fiction isn’t alternative but it is the other reality - Questioning if serendipity is a spontaneous act or intentional act? - Is we call reality can be misleading? Is it possible to create other realities that are parallel to the dominant reality? Taking and treating all information equally.\n\nIn this course, we will practice the action of “Fictioning” through serendipitous methods, looking at several artistic practices, readings, poems and screenings that are related to the action of “fictioning” and the philosophy of serendipity. We will practice and examine how we can create our own fiction - fictioning ourselves to end up with the other realities.\n\nThe course is divided into three parts, starts on “serendipity and literature”, the second part on “fictioning”, and the last part “performing”: Performing can be textual either written and spoken alongside other practices related to objecthood and living as a practice.\n\nThe course involves readings by Simon O'Sullivan, Deleuze, Guattari, Jalal Toufic, Walid Raad and The encyclopedia of fictional artists.",
+   "ar": "يهدف المساق الى خلق مساحه للتجريب والتخيل. تقف علي فرضية \"التعامل مع الخيال كواقع آخر\" والتشكك في الواقع السائد كقيمة - إذا كان الواقع موجوداً ، فالخيال ليس بديلاً بل هو الواقع الآخر.\n\nوالتساؤل عما إذا كانت الصدفة \"السرنديبية\" عملاً عفويًا أو عملاً متعمداً؟ - هل مفردة الواقع يمكن أن تكون مفردة مضللة؟ هل من الممكن خلق واقع أخر (متخيل) موازي للواقع السائد؟ هل نستطيع العمل على ما يسمى واقع وما يسمى خيال على قدم المساواة.\n\nفي هذا المساق، سوف نمارس عمل \"الخيال\" من خلال أساليب الصدفة \"العمل السرنديبي\"، بجانب النظر في عدة ممارسات فنية ، قراءات ، وقصائد ومشاريع ارتبطت بعمل \"الخيال\" وفلسفة الصدفة. سوف نمارس ونفحص كيف يمكننا خلق خيالنا و جعل انفسنا خيال على أمل ان ينتهى بنا الحال في واقع آخر.\n\nينقسم المساق إلى ثلاثة أجزاء ، يبدأ بعلاقة \"الصدفة \"العمل السرنديبي والأدب\" ، والجزء الثاني عن الخيال وممارساته ، والجزء الأخير في الآداء النصي المكتوب والمنطوق جنبا إلى جنب مع ممارسات أخرى متعلقة بالجماد (الاشياء) و العيش كممارسة.\n\nتتضمن الدورة قراءات كتبها سيمون أوسوليفان ، دولوز وغوتاري ، جلال توفيق ، وليد رعد وموسوعة الفنانين الخياليين."
+  },
+  "teaching_languages": [
+   "en",
+   "ar"
+  ],
+  "schedule": {
+   "note": {
+    "en": "Fridays mornings and/or evenings. The course will be hosted for early birds from 10 am to 1:00 pm AND night owls from 5 pm to 8:00 pm provided that no less than five participants sign up per class.",
+    "ar": "في أيام الجمع صباحًا أو مساءًا"
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

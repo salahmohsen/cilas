@@ -1,0 +1,169 @@
+{
+  "id": 300,
+  "notes": [
+    "teaching_languages en: page in English",
+    "description matches the page; no flow document (Google Doc link only); no start date or session structure given",
+    "syllabus from _noticing_care-course_flow_winter22.pdf (8 sessions), which the import never linked; the flow's opening note on the preliminary flow goes to facilitator_note"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "facilitator_note": {
+      "en": "This is a preliminary suggested course flow. It will be further finetuned together with participants based on the forms of care that resonate the most with their personal experiences and learning interests. Participants are therefore welcome to make suggestions for weekly topics and / or readings within the scope of the course theme.",
+      "ar": null
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Mapping the realms of care in our lives",
+        "description": "An introduction to what ‘care’ and ‘caring’ mean to us, and what acts of care we experience in our personal lives.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Care Collective, The Care Manifesto: Politics of Interdependence",
+            "note": "Optional reading",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Mothers, mothering, and their children",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Iman Mesal, “On Motherhood and Violence”",
+            "note": "excerpted from How to Mend",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "“كل شيء عن أمي”",
+            "note": "Kerning Cultures",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Friendships that nurture us",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Nick Montgomery & carla bergman, “Freidnship is a Root of Freedom”",
+            "note": "excerpted from Joyful Militancy",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "Tbd",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Human rights activists",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "An excerpt from Yasmin El Rifae’s Radius: A Story of Feminist Revolution",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Yara Sallam, Even the Finest of Warriors / حتى أقوى المقاتلات",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Teachers and mentors",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Jane Burt & others, “Working for Living: Popular Education as/at Work for Social-ecological Justice”",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Maggie Berg and Barbara Seeber, The slow professor: challenging the culture of speed in the academy",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Caring on the internet",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Joe Karaganis, “Introduction: Access from Above, Access from Below” in Shadow Libraries: Access to Knowledge in Global Higher Education",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "The Sex Talk بالعربي (Instagram page)",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "Cooperatives as caring economic relations",
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "other",
+            "title": "Guest speaker and readings tbd",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "Wrap-up",
+        "description": "",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

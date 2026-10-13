@@ -1,0 +1,188 @@
+{
+  "id": 264,
+  "notes": [
+    "content_warning: moved out of facilitator_note",
+    "description: course paragraph plus the Background and project line from the flow",
+    "facilitator_note: only the tentative course flow logistics (in person or Zoom, sessions, duration); the project-origin sentence moved to description",
+    "schedule: weeks 8 (8 sessions once a week); schedule.note removed (repeated the Monday 18:00-20:00 slot)",
+    "syllabus: re-extracted from the flow; the earlier extraction had split session text and left session 8 without content",
+    "teaching_languages en",
+    "CHECK: start_date 2022-07-23 kept; page says 'the week of 23th of July' but meets Mondays, and 23 July 2022 is a Saturday",
+    "title/subtitle left as is: '(POP CULTURE)' follows the title in the source"
+  ],
+  "set": {
+    "description": {
+      "en": "This course is based on Salma El Tarzi’s art research project, “Yataman Wa Honna El Raghebat” ongoing since 2018.\n\nBACKGROUND\n\nFor a very long time, Egypt has dominated the commercial cinema industry in the MENA region. This domination meant that mainstream Egyptian film references represented a big part of the collective Arab popular culture. It also meant, that the discourses this cinema mediated were shaped by the complex social, political, and economic relationships that tied Egypt to other countries in the region. While global feminist film studies have mainly focused on the analysis of gender representation and sexual violence, Arab studies of the past twenty years, have limited their focus on different types of representation of women, misogyny and objectification of women in Egyptian films. These contributions did not contextualize the representations nor theorized the complexities of representation politics. This often resulted in misleading assumptions and narrow conclusions about representation of desire as exploitative to women by default. And while this may seem true in a large number of films, it is a generalization that creates an “anti sex” narrative. As such, the representation of desire as exploitative to women paradoxically reproduces a patriarchal discourse. This discourse clearly dehumanizes women above all, by stripping them of their sexuality and their will over their own bodies, as well as, by stigmatizing sexual desire. For the above gaps and limitations, in her project Yataman Wa Honna EL Raghebat (You know you want it), Salma El Tarzi approaches the topic of representation of desire and normalization of rape culture in Egyptian pop culture, from two vantage points: 1) a sex positive position, where she problematizes sexist representations of desire, and 2) a celebration of diverse sexuality and representations of sexual desire.\n\nUsing mainstream Egyptian cinema as one site of inquiry, this research examines the manifestations of patriarchal discourses in Egyptian and Arab popular culture and studies their implications on the normalization of sexual violence. How do patriarchal discourses shape mainstream Egyptian cinema and how this cinema contributes to their reproduction, creating a vicious circle of sexual violence, sexism and misogyny in society. She is also interested in following the shifts in morality discourses throughout the history of Egyptian commercial cinema, whether represented by changes in the laws of censorship or public outrage towards certain films or artists.\n\nTHE COURSE\n\nThis workshop combines discursive and practical practices, where participants will get introduced to this project and its methodology, and will collectively reflect on the questions of representation of desire & the female sexuality, Image & agency, and the normalization of rape culture, through the example of Egyptian Pop Culture of the current moment. This process will include examining films, music videos, social media influencers activities, sexual violence and rape cases, as well as public reactions, moralistic outrage, policing the female body and THE STATE.",
+      "ar": null
+    },
+    "content_warning": {
+      "en": "THIS COURSE INVOLVES WORKING WITH MATERIAL THAT MIGHT CONTAIN SEXUAL VIOLENCE.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "TENTATIVE COURSE FLOW: This workshop is intended to be held in person but it can be modified if online option is more convenient for Cilas.\n\nNumber of sessions: 8 sessions held once a week\nSession duration: 2:30 Hrs. in person or 2 Hrs. on Zoom",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2022-07-23",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Introduction to the project and the workshop",
+        "description": "In this session we will read the introduction of my research and watch John Burger’s introduction to Ways Of Seeing: The nude. We will reflect on the meaning of desire and how it is constructed and reproduced. We will discuss representation of desire and the difference between fantasy and normalization.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Introduction of the research",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Ways Of Seeing: The nude (introduction)",
+            "note": "John Burger",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Desire, pleasure, and spectatorship",
+        "description": "In this session we will learn about phallocentricity in psychoanalysis and compare Laura Mulvey, Bell Hooks, and Judith Butler’s different positions from THE GAZE and reflect on the actual relevance of these theories to our local context and personal experiences of spectatorship and pleasure.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Female sexuality and the forbidden fruit",
+        "description": "In this session, we will discuss how female desire and sexuality is being represented. We will examine Iconic films like Beer El Herman 1969, Shabab Imraa 1956, Ayn Al Maffar 1977, as well as a selection of censorship reports. In this session, we will also examine the sexualization of film posters and titles.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Beer El Herman",
+            "note": "1969",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Shabab Imraa",
+            "note": "1956",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Ayn Al Maffar",
+            "note": "1977",
+            "href": null
+          },
+          {
+            "type": "other",
+            "title": "A selection of censorship reports",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Representation of rape",
+        "description": "In this session we will discuss how rape and sexual violence are being typically represented in Egyptian cinema and how the rapist is portrayed. By examining three iconic Egyptian films; Heya Fawda 2007, Bab El Hadid 1958 and Halawet Roh 2014, we will reflect on the narrative and visual representations of rape.",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Heya Fawda",
+            "note": "2007",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Bab El Hadid",
+            "note": "1958",
+            "href": null
+          },
+          {
+            "type": "watch",
+            "title": "Halawet Roh",
+            "note": "2014",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Representation of homosexuality and other “deviances”",
+        "description": "In this session, we will examine how patriarchal discourses in mainstream cinema view any form of desire other than that of the Heteronormative cis male as a deviance and an analogy for corruption. We will examine representations of gays and lesbians through different films from different eras as well as representation of kink and fetishes. We will reflect on the role these negative representations play in the creating an atmosphere that celebrates toxic masculinity and normalizes rape culture.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "Desire, society, and the state",
+        "description": "In this session, we will try to close the circle and trace the influence of society and state on shaping our collective understanding of desires represented in cinema and vice versa. We will examine three significant moments in the history of cinema and subsequently pop culture:\n\n1- The creation of the femme fatal in Egyptian cinema post July 1952\n\n2- Clean Cinema Wave post Golf War\n\n3- The sentencing of the tiktok Girls and the image of sexuality",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "On love and violence",
+        "description": "In this session, we will reflect on how patriarchal society understands love and desire, how this is reflected in cinema and pop culture. The session will focus on three examples:\n\n1- The narrative of love and desire represented in romantic comedies\n\n2- Tameem Younis’s problematic music video Ashan Teby Teouly La\n\n3- Hassan Shakoush’s mega hit song Bent El Guiran",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "watch",
+            "title": "Ashan Teby Teouly La",
+            "note": "Tameem Younis",
+            "href": null
+          },
+          {
+            "type": "listen",
+            "title": "Bent El Guiran",
+            "note": "Hassan Shakoush",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "This final session is dedicated to open discussions and collective reflections on what we have discussed during the course. Participants will be invited to make their own contributions if they chose to. These contributions could be in the form of a question for discussion, a small presentation, or a text/video/audio of their creation.",
+        "meetings": null,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

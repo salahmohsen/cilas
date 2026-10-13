@@ -1,0 +1,16 @@
+{
+  "id": 151,
+  "notes": [
+    "teaching_languages en+ar: page has full text in both",
+    "rest matches the source (two alternative groups, so schedule note kept, no slots)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

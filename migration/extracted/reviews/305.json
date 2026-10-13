@@ -1,0 +1,22 @@
+{
+  "id": 305,
+  "notes": [
+    "facilitator_note: dropped the flow's title/cycle header lines, kept 'All texts will be provided by the instructor.'",
+    "schedule: start_date 2024-12-01 (stated: 1st of December, Sundays), weeks 8 (eight numbered lectures); only a start time is given so slots stay unset and the note stays",
+    "teaching_languages: English page and flow -> en"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": "All texts will be provided by the instructor.",
+      "ar": null
+    },
+    "schedule": {
+      "start_date": "2024-12-01",
+      "weeks": 8
+    },
+    "teaching_languages": ["en"]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": 140,
+  "notes": [
+    "title: the source writes 'Pedagogical Lab: An Act of ...' as one title (both languages); subtitle cleared so the text is not duplicated",
+    "teaching_languages en+ar: page carries full text in both languages",
+    "schedule note removed: it only repeats the Monday 18:00-20:30 slot",
+    "cover: the compass-in-hand drawing at the top of the course's own page",
+    "description already matches the source in both languages; left unchanged"
+  ],
+  "set": {
+    "title": {
+      "en": "Pedagogical Lab: An Act of Re-imagination and Reclamation of what matters in education",
+      "ar": "مختبر التربية: محاولة لإعادة تخيل واستعادة ما يهمنا في التعليم"
+    },
+    "subtitle": { "en": null, "ar": null },
+    "teaching_languages": ["en", "ar"],
+    "schedule": { "note": { "en": null, "ar": null } }
+  },
+  "syllabus": null,
+  "cover": { "upload": "uploads/1/9/1/0/19102967/1291841672_orig.jpeg", "alt": "Black and white ink drawing of an open hand holding a compass" },
+  "duplicate_of": []
+}

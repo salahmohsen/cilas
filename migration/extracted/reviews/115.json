@@ -1,0 +1,28 @@
+{
+  "id": 115,
+  "notes": [
+    "teaching_languages set to ar: page is Arabic only",
+    "Removed English schedule note: Saturday 11:00-14:00 slot already expresses the Arabic sentence, and note was English on an Arabic page"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "sat",
+          "start_time": "11:00",
+          "end_time": "14:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

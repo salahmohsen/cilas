@@ -1,0 +1,28 @@
+{
+  "id": 181,
+  "notes": [
+    "facilitator_note: dropped the syllabus header line (title, time, instructor, e-mail) and the first paragraph, which repeats the description; kept the session format, objectives and list of works",
+    "schedule: source gives start 27 February (Monday) and 6:30pm with no end time, so slots unset and the sentence kept as note; weeks = 6 numbered sessions",
+    "teaching_languages: English-only page"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": "Each session will be divided into two parts. Part one of each session will be used to discuss the readings. Part two will be dedicated to visual material from dance history as well as physical exercises allowing us to examine the topics further.\n\nBy the end of this course, students will be able to:\n\n- To define performance\n- To define dance\n- To define performativity and performance through the lens of: ritual, everyday life, politics, theatre and social constructs\n- To explore the relationship between movement and philosophy\n- To examine the connectivity of dance with social sciences and philosophy\n- To practically use the body to explore and interact with the theory using scores, tasks and improvisation\n\nIntroduce the works of:\n- Isadora Duncan\n- Martha Graham\n- Mary Wigman\n- Merce Cunningham\n- Judson Church Movement\n- Adrian Piper\n- William Pope L\n- Hijikata Tatsumi\n- Helio Oitcia\n- Lygia clark\nand more during class discussions",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2023-02-27",
+      "weeks": 6,
+      "note": {
+        "en": "Start in 27th of February, Mondays at 6:30pm, Offline",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

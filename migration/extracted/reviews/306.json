@@ -1,0 +1,34 @@
+{
+  "id": 306,
+  "notes": [
+    "epigraph: the Gramsci and Spivak quotes opened the description; moved to epigraph.en and removed from description",
+    "facilitator_note: dropped the flow header lines (title, instructor, cycle, time, 'sessions are offline') now covered by schedule/location; replaced with the full 'My teaching approach' text from the flow",
+    "schedule: start_date 2024-12-04 (stated: 4th of December, Wednesdays), weeks 8 (eight numbered sessions)",
+    "teaching_languages: English page and flow (Arabic only in the title) -> en",
+    "CHECK: page says Wednesdays at 6 pm, flow says Wednesdays at 5:30 pm; slots left unset, schedule note (page wording) kept"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "“History is at the very heart of knowledge and experience and at the very heart of history are the common people who must be heard.” – Antonio Gramsci\n\n“Let us now move to consider the margins (one can just as well say the silent, silenced center) …” - Gayatri Spivak",
+      "ar": null
+    },
+    "description": {
+      "en": "Course Overview:\n\nStep into a world of history that’s often overshadowed but never silenced. Oppressed or Voices from Below course dives into the lives, struggles, and resistances of those left out of the dominant narratives: the subaltern. This course is your gateway to understanding how marginalized groups across time have shaped societies from the peripheries.\n\nFrom the colonial peasant in India to everyday Egyptians under Mohamed Ali Pacha rule, we’ll explore stories that bring history to life from the ground up. Through interactive debates, engaging role-play, and hands-on source analysis, you'll uncover the ways subalterns have carved out their own spaces, subtly resisted oppression, and preserved their identities.\n\nWhether you're passionate about social justice, history, or simply curious to know \"what's been left unsaid,\" this course challenges you to rethink the past—and who gets to tell it.\n\nJoin us: to rediscover history through a new lens and see how hidden voices the power has to transform how we understand the world today.\n\nBy the end of this course, students can expect:\n\n1. Understanding of Subaltern Theory\n\nStudents will gain a foundational understanding of subaltern studies, including key theorists like Gramsci, Spivak, and the Subaltern Studies Collective.\n\n2. Critical Analysis of Historical Narratives\n\nStudents will develop skills in “reading against the grain” to critically examine traditional historical narratives and uncover marginalized perspectives.\n\n3. Application of Methodologies\n\nStudents will become familiar with subaltern methodologies such as oral history, ethnography, and archival reinterpretation, learning to apply these methods to analyze marginalized voices.\n\n4. Exploration of Case Studies\n\nThrough case studies, students will examine how subaltern perspectives are reflected in historical and cultural contexts, including examples from Egyptian and postcolonial histories.\n\n5. Engagement with Popular Culture\n\nStudents will explore how subaltern voices shape popular culture, gaining insight into how marginalized groups use cultural expression to resist and reshape dominant narratives.\n\nThese outcomes encourage a comprehensive and nuanced approach to subaltern studies, equipping students with both theoretical knowledge and practical analysis skills.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "My teaching approach: A discussion-based learning\n\nIn this course, I will prioritize discussion-based learning to foster an environment where students actively engage with the material and each other’s perspectives. Each session will begin with a brief introduction to key concepts, followed by open discussions, critical debates, and group activities designed to encourage diverse interpretations and responses to readings and case studies. By guiding conversations rather than lecturing, I aim to create a collaborative learning space where students analyze and challenge each other’s views, deepen their understanding, and develop critical thinking skills. This interactive approach is especially suited for subaltern studies, as it emphasizes uncovering marginalized voices and understanding complex perspectives through dialogue and collective exploration.",
+      "ar": null
+    },
+    "schedule": {
+      "start_date": "2024-12-04",
+      "weeks": 8
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

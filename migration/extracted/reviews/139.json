@@ -1,0 +1,94 @@
+{
+ "id": 139,
+ "notes": [
+  "description: removed the Bibliography and Filmography lists and the IMPORTANT block (moved out)",
+  "IMPORTANT lines (be available for Luxor travel, release form) moved to facilitator_note; sign-up sheet and travel fee lines left out (registration/price)",
+  "course bibliography and filmography added to syllabus.bibliography (no sessions in source)",
+  "teaching_languages en+ar: Group A discussions in Arabic, Group B in English",
+  "schedule note kept: two alternative groups (morning/evening); no weekly slots set",
+  "CHECK: Arabic bibliography strings are in the source's broken presentation-form letters; kept verbatim"
+ ],
+ "set": {
+  "description": {
+   "en": "Course Description:\n\nEgyptian architect Hassan Fathy (1900 - 1989) is internationally renowned, although not without his critics, as a pioneer in sustainable architecture. His rise to fame came mainly as a result of the publication of a book, wherein Fathy recounted his experience of designing the model village of New Gourna in Luxor following a commission by the Egyptian Department of Antiquities. The first edition of the book “Gourna: A Tale of Two Villages ” was published in Cairo, in 1969. It was translated a year later to French under the title “Construire avec le peuple” (“To build with the people”) . In 1973, a second edition was issued by University of Chicago Press and entitled “Architecture for the Poor: An Experiment in Rural Egypt” . An arabic translation finally appeared in 1993, taking on the title ‘Umaret Al-Fuqara’ (ءاﺮﻘﻔﻟا ةرﺎﻤﻋ).\n\n“As my proposals chiefly concern the peasant, my book is dedicated to him. I wish that it could have been addressed exclusively to him, and hope the time will soon come when he will be able to read and judge it [...]”, writes Fathy in the preface.\n\nThis course aims to materialise Fathy’s dream by reading and discussing the problematics of “Gourna: A Tale of Two Villages” with local inhabitants and builders currently working on the preservation of the model village. We will begin the course in Cairo, over the first nine weeks, to critique key issues in Fathy’s vision in its historical context, and plan our weeklong module to be implemented in Gourna, Luxor. Once there, we will meet local participants daily, host collective readings of key passages, and activate the village with film screenings and other activities.\n\nThe course proposes a twofold vision, firstly to foster a discussion-based learning environment, to historicize and shed light on the crises of pedagogy and sustainable architecture in rural Egypt, and secondly to encourage creative strategies of documentation, using audiovisual means. Students can apply to the pedagogical track (Group A) or to the documentation track (Group B).\n\nGroup A will read and discuss key concepts pertaining to Fathy’s proposal for a sustainable architectural solution in rural Egypt. Discussions and readings will be mainly in Arabic.\n\nGroup B will prepare strategies for audiovisual documentation, in preparation to shoot and record the Luxor module. Discussions and readings will be mainly in English.\n\nThe class is open to those interested in sustainable design, audiovisual documentation, and their relation to alternative pedagogical models. We encourage architects, artists, social workers, academics, and amateurs, from Egypt and abroad, to apply.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": "IMPORTANT:\n\nStudents must be available during the travel dates to Luxor (check the schedule below).\n\nStudents are required to sign a Release Form, indicating that they agree to be filmed for the purpose of documenting the course and perhaps be included in a documentary film (co-directed by Sama & Rodrigo), to be submitted on the first day of classes.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en",
+   "ar"
+  ]
+ },
+ "syllabus": {
+  "session_unit": "session",
+  "sessions": [],
+  "bibliography": [
+   {
+    "type": "reading",
+    "title": "(Hassan Fathy, Gourna: A Tale of Two Villages, 1969, Cairo) 1993, Cairo ءاﺮﻘﻔﻟا ةرﺎﻤﻋ ﻲﺤﺘﻓ ﻦﺴﺣ",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "(Hassan Fathy, The Story of Utopia) c.1940s, Beirut. ﺎﯿﺑﻮﻃﻮﯾ ﺔﺼﻗ \"ﻲﺤﺘﻓ ﻦﺴﺣ\"",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Paulo Freire, Pedagogy of the Oppressed, 2005, Continuum Publishing (NYC), pp. TBA",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Ahmed Ezzat Abdel-Kerim, Tareekh Al-Ta’leem fi masr (History of Education in Egypt), ﻲﻓ ﻢﯿﻠﻌﺘﻟا ﺦﯾرﺎﺗ ,ﻢﯾﺮﻜﻟاﺪﺒﻋ تﺰﻋ ﺪﻤﺣأ ﺮﺼﻣ Cairo: The General Organisation for Cultural Palaces, 2011. pp. TBA",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Hana Taragan, Architecture in Fact and fiction: the case of the New Gourna village in Upper Egypt, Muquarnas, 1996",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "reading",
+    "title": "Timothy Mitchell, Rule of Experts Egypt, Techno-Politics, Modernity, University of California Press, 2002, Ch. 6 “Heritage and Violence”",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "watch",
+    "title": "“الجبل” (The Mountain) by Khalil Shawqi, Egypt, Arabic, 1965 (Based on the novella by Fathi Ghanim (b. 1923))",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "watch",
+    "title": "“المومياء” (The Mummy) by Shady Abdelsalam, Egypt, Arabic 1969",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "watch",
+    "title": "“وصية رجل حكيم في شئون القرية والتعليم” (Advice from a wise man on rural education), directed by Daoud Abdel Sayed, Egypt, Arabic, 1976.",
+    "note": null,
+    "href": null
+   },
+   {
+    "type": "watch",
+    "title": "“لا يكفي أن يكن الله مع الفقراء” directed by Bourhan Alaouié, 1978 (Il ne suffit pas que Dieu soit avec les Pauvres / It’s not enough for God to be with the Poor), France, French (English or Arabic subtitles).",
+    "note": null,
+    "href": null
+   }
+  ],
+  "notes": null
+ },
+ "cover": null,
+ "duplicate_of": []
+}

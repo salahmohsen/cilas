@@ -1,0 +1,18 @@
+{
+  "id": 213,
+  "notes": [
+    "teaching_languages en: English page.",
+    "Cover: the image in this course's block (Thoughts on food)."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/img-20210101-wa0010_orig.jpg",
+    "alt": "Photograph accompanying the Thoughts on food course"
+  },
+  "duplicate_of": []
+}

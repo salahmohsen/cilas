@@ -1,0 +1,24 @@
+{
+  "id": 182,
+  "notes": [
+    "teaching_languages: English-only page",
+    "schedule: start 2 March (Thursday), 6:30pm with no end time, so note kept; weeks = 8 numbered weeks",
+    "description, sessions and bibliography match the page and flow; unchanged"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2023-03-02",
+      "weeks": 8,
+      "note": {
+        "en": "Start in the 2nd of March, Thursdays 6:30pm, Offline.",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

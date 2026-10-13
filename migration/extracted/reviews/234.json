@@ -1,0 +1,19 @@
+{
+ "id": 234,
+ "notes": [
+  "teaching_languages: English (page and syllabus in English)",
+  "weeks: 12 (syllabus numbers 12 sessions)",
+  "description, facilitator_note, schedule, sessions match the source; unchanged"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 12
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

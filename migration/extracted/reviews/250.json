@@ -1,0 +1,25 @@
+{
+  "id": 250,
+  "notes": [
+    "description: added the course-flow's Description paragraph after the page blurb",
+    "facilitator_note: removed title/fellow line and the repeated description; kept requirements and reading note",
+    "teaching_languages en",
+    "MISSING-IMAGE: uploads/1/9/1/0/19102967/editor/migration-course-image.png?1591962085"
+  ],
+  "set": {
+    "description": {
+      "en": "Migrations do not just happen - they are produced. Capitalist modernity requires massive displacement that seamlessly supports the free flow of labor in the context of globalization. Yet mobile subjects are categorized, sorted and governed in and through the international legal order by initiatives dealing with trafficking, refugees, border controls, terrorism, and sexual morality. The impact of these different initiatives on cross-border movements is mediated by gender, class, religion, sexual, and marital status. In this seminar, we will take a close look at how people - on the move, in the transition, contained, encamped or deported- really live, how the social are reassembled, and how practices of belonging, dwelling and laboring are negotiated in the everyday.\n\nThis seminar engages contemporary questions of migration. It explores the global movement of people and their lifeworlds as migrants, refugees and asylum-seekers. It introduces students to critical work about mobilities, citizenship and developmentalism through examining the effects of these strategies on practices of belonging, dwelling and laboring in the everyday.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "Requirements\n\n1. Class attendance\n\n2. Read readings assigned each week\n\nAll texts will be shared through Dropbox.\n\nI would like to give special thanks to my advisor Dr. Martina Rieker who conducted graduate seminar Mobilities: Gender and Migration at the American University in Cairo, which I took once (Spring 2018) and audited for a second time (Spring 2020). This syllabus is mainly derived from her course.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

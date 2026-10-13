@@ -1,0 +1,26 @@
+{
+  "id": 142,
+  "notes": [
+    "title: the source writes 'Philosophy of Education: On Becoming a Humanistic Educator' as one title; subtitle cleared to avoid duplication",
+    "teaching_languages en+ar: full description in both languages",
+    "schedule note: two alternative groups (morning/evening); added the Arabic sentence from the cycle page",
+    "description already matches the source in both languages; left unchanged"
+  ],
+  "set": {
+    "title": {
+      "en": "Philosophy of Education: On Becoming a Humanistic Educator",
+      "ar": "فلسفة التعليم: حول طبيعة المعلم اﻹنساني"
+    },
+    "subtitle": { "en": null, "ar": null },
+    "teaching_languages": ["en", "ar"],
+    "schedule": {
+      "note": {
+        "en": "On Monday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+        "ar": "أيام الإثنين صباحاً من العاشرة إلى الثانية وعشر ظهراً و مساءاً من الخامسة والنصف إلى الثامنة"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

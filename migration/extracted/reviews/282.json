@@ -1,0 +1,304 @@
+{
+ "id": 282,
+ "notes": [
+  "title: source spells 'Visual Anthropology: Film as a tool for research'",
+  "description: kept overview and 'Why apply' list; moved the Syllabus section into syllabus.sessions (10 sessions)",
+  "teaching_languages: English-only page (Arabic line on page is only a 'translation coming' placeholder)",
+  "schedule: Thursday morning and evening groups as slots (own page times); weeks=10 from the numbered syllabus; note kept",
+  "cycle page gives 10:00-1:00 / 5:00-8:00 and a different intro sentence; own page used as fuller"
+ ],
+ "set": {
+  "title": {
+   "en": "Visual Anthropology: Film as a tool for research",
+   "ar": null
+  },
+  "description": {
+   "en": "Visual anthropology is a rather young discipline that offers creative methods that can cross the borders and limitations of traditional anthropology in order to question representations and to rethink our and other’s roles, values, norms, rituals, mythologies, and media practices in the age of digital modernities.\n\nThis class will provide examples of visual and media anthropological researches in order to discuss the different strategies of visual anthropologists and filmmakers and the issues raised by their choices. The course will lay down fundamental tools and ideas through screenings of films and discussions and will give practical insights through a research exercise. Students will choose a topic of enquiry they would like to explore through the spectrum of visual anthropology over the span of the class.\n\nWhy apply for this course?\n\n- If you would like to discover the field of visual anthropology in a playful way\n- If you interested in bridging practice and theory through an exercise on the field\n- If you are keen on exploring new ways of seeing the world and envisioning research\n- If you are open to discuss and challenge your views about culture, media, representation of the Self and of the others",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 10,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "10:00",
+     "end_time": "12:30"
+    },
+    {
+     "weekday": "thu",
+     "start_time": "17:30",
+     "end_time": "20:00"
+    }
+   ],
+   "note": {
+    "en": "On Thursday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": {
+  "session_unit": "session",
+  "sessions": [
+   {
+    "order": 1,
+    "title": "Welcoming and introduction: What is visual anthropology?",
+    "description": "Presentation of each participant and his/her interest in the course. What is your background? What are your expectations of the course? Do you have an idea of the topic you would like to research within the course? What is anthropology? What is visual anthropology?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "watch",
+      "title": "‘An Introduction to the discipline of anthropology’",
+      "note": null,
+      "href": "https://www.youtube.com/watch?v=J5aglbgTEig"
+     },
+     {
+      "type": "watch",
+      "title": "‘Dead Anthropologists Play Golf in Heaven’",
+      "note": null,
+      "href": "https://www.youtube.com/watch?v=kv8cYPiWNDc"
+     },
+     {
+      "type": "watch",
+      "title": "‘Nanuk of the north’",
+      "note": "a film by Robert Flaherty about the struggles of an Inuk man and his family in the Canadian Artic in 1922",
+      "href": null
+     },
+     {
+      "type": "watch",
+      "title": "‘Connected’",
+      "note": "a film by Carmen Bellaschk on the use of smartphone for migrants navigating in the Mediterranean Sea in 2016",
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Singh, Bhrigupati, and Jane I. Guyer. \"Introduction: A joyful history of anthropology.\" HAU: Journal of Ethnographic Theory 6, no. 2 (2016): 197-211.",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "screening",
+      "description": "Screening of the films listed"
+     },
+     {
+      "kind": "discussion",
+      "description": "Discussion"
+     }
+    ]
+   },
+   {
+    "order": 2,
+    "title": "How to start an ethnographical research?",
+    "description": "What is ethnography? What do we talk about when we talk about fieldwork? What is a research question?",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Clifford James. Anthropology and/as Travel, Etnofoor, Jaarg. 9, Nr. 2, 5-15, 1996.",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Marcus, George E., 1995. Ethnography in/of the World System: The Emergence of Multi-sited Ethnography. In Annual Review of Anthropology, Vol. 24. pp. 95-117, Annual Reviews.",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Ingold, Tim. The Temporality of the Landscape. In World Archaeology. Vol 25. No 2. Conceptions of Time and Ancient Society. (Oct.) pp. 152 – 174. Taylor & Francis, Ltd, 1993.",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 3,
+    "title": "How to find appropriate tools for your research?",
+    "description": "Participant observation. Field notes, diary, visual notes. Interviews: structures, semi-structured, informal. Photography and film. Soundscape. Collaborative actions.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Darren Newbury, Diaries and Fieldnotes, Research Issues in Art Design and Media, 2001.",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "MacDougall, David (1998) Transcultural Cinema. Princeton University Press.",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Additional readings to be announced",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 4,
+    "title": "Theory: Overview of different methodologies",
+    "description": "Grounded theory and epistemology. Interpretive Anthropology. Narrative anthropology. Phenomenological anthropology.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Additional readings to be announced",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": []
+   },
+   {
+    "order": 5,
+    "title": "The camera as a research tool",
+    "description": "Discussion on the role of the camera and the filmmaker based on Mead and Bateson’s argument and Rouch’s film.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "watch",
+      "title": "‘Childhood Rivalry in Bali and New Guinea - Mead and Bateson’",
+      "note": null,
+      "href": "https://www.youtube.com/watch?v=4NqQ6KL-aUY"
+     },
+     {
+      "type": "watch",
+      "title": "Jean Rouch ‘Les Maîtres Fous’ (The Mad Masters), 1955",
+      "note": null,
+      "href": "https://www.youtube.com/watch?v=c8FR85eR-ec&t=2s"
+     },
+     {
+      "type": "reading",
+      "title": "Margaret Mead and Gregory Bateson on the Use of the Camera in Anthropology, Studies in Visual Communication, Volume 4, Issue 2, Winter 1977.",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "screening",
+      "description": "Screening of the two films"
+     },
+     {
+      "kind": "discussion",
+      "description": "Discussion on the role of the camera and the filmmaker based on Mead and Bateson’s argument and Rouch’s film."
+     }
+    ]
+   },
+   {
+    "order": 6,
+    "title": "Modes of representation I",
+    "description": "Screenings of films extracts (to be announced) to discuss Nichols categories.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Nichols, Bill (2001), Introduction to Documentary. Bloomington: Indiana University Press.",
+      "note": null,
+      "href": null
+     },
+     {
+      "type": "reading",
+      "title": "Additional readings to be announced",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "screening",
+      "description": "Screenings of film extracts (to be announced) to discuss Nichols categories"
+     },
+     {
+      "kind": "discussion",
+      "description": "Discussion"
+     }
+    ]
+   },
+   {
+    "order": 7,
+    "title": "What visual strategy for what project?",
+    "description": "Discussion of individual projects in the class. Feedback, proposition, analyzing potential visual strategies.",
+    "meetings": null,
+    "materials": [],
+    "activities": [
+     {
+      "kind": "discussion",
+      "description": "Discussion of individual projects in the class; feedback, proposition, analyzing potential visual strategies"
+     }
+    ]
+   },
+   {
+    "order": 8,
+    "title": "Modes of representation II",
+    "description": "Screenings of films extracts (to be announced) to discuss Nichols categories.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Additional readings to be announced",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "screening",
+      "description": "Screenings of film extracts (to be announced) to discuss Nichols categories"
+     },
+     {
+      "kind": "discussion",
+      "description": "Discussion"
+     }
+    ]
+   },
+   {
+    "order": 9,
+    "title": "Visual anthropology and art",
+    "description": "An overview of crossover research-based practices. Proposals / discussion / feedback about the upcoming display of the projects for the screening /exhibition.",
+    "meetings": null,
+    "materials": [
+     {
+      "type": "reading",
+      "title": "Readings to be announced",
+      "note": null,
+      "href": null
+     }
+    ],
+    "activities": [
+     {
+      "kind": "discussion",
+      "description": "Proposals / discussion / feedback about the upcoming display of the projects for the screening /exhibition"
+     }
+    ]
+   },
+   {
+    "order": 10,
+    "title": "Presentation of the student’s projects",
+    "description": "Screening / exhibition.",
+    "meetings": null,
+    "materials": [],
+    "activities": [
+     {
+      "kind": "presentation",
+      "description": "Presentation of the student’s projects: screening / exhibition"
+     }
+    ]
+   }
+  ],
+  "bibliography": [],
+  "notes": null
+ },
+ "cover": null,
+ "duplicate_of": []
+}

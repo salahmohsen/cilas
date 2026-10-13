@@ -1,0 +1,16 @@
+{
+  "id": 138,
+  "notes": ["teaching_languages set to en+ar: the course page carries full text in both languages", "schedule note: two alternative groups (morning and evening) on Sundays; added the Arabic sentence as written", "description already matches the source (the Arabic text is cut off at the same place on the source page); left unchanged"],
+  "set": {
+    "teaching_languages": ["en", "ar"],
+    "schedule": {
+      "note": {
+        "en": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+        "ar": "ايام الأحد صباحاً من العاشرة حتى الثانية عشر و نصف و مساءاً من الخامسة و النصف حتى الثامنة"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

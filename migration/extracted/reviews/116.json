@@ -1,0 +1,20 @@
+{
+  "id": 116,
+  "notes": [
+    "description.ar held only Arabic reading-list items already in session materials: set to null",
+    "Removed 'Course description:' label and bold markup from description.en",
+    "teaching_languages set to en: page is English"
+  ],
+  "set": {
+    "description": {
+      "en": "How does culture shape, reinforce and challenge individual and collective identities? How do power and hegemony operate within and through culture? What roles do culture and creative spaces play in maintaining, and more importantly, challenging hegemonic identities and politics? How are art and cultural productions tools of control, reflections of realities, responses to society and politics, and mediums of survival, negotiation, subversion, resistance and (re)imagination?\n\nEmploying intersectional feminist and cultural studies lenses, this interdisciplinary course aims to utilize art, creative production and cultural spaces to engage with themes about identity, such as language, gender, sexuality, nationalism, religion, race, desire, family and friendship. The course will be built on engagement with academic readings as well as creative sources from art and culture to explore these topics, with the underlying understanding that ‘text’ goes beyond written language and exists in all artifacts (oral storytelling, music, fashion, social media production, television (talent shows, talk shows, soap operas, game shows, mosalsalat), film, food, architecture, spoken word poetry, graffiti, photography, advertisements, and other mediums). Relying on lived realities, the self and the body, students will share their own experiences and bring in cultural artifacts and observations relevant to their lives as entry points to these discussions. The course aims to disrupt the hegemonic construction of knowledge production as belonging to singular academic theorists and thinkers, and instead centers the knowledge that every one brings to the space, while engaging in critical and creative reflections on this knowledge we each carry and produce.\n\nThe course will include various creative activities and students will be expected to present/share/submit a self-portrait and/or piece of creative resistance in whatever form they choose (written, spoken, song, dance, poetry, film, etc.) at the end of the course. Students will also be asked to reflect each week on how they personally relate to themes discussed in class through a visual or written ‘journal’.\n\nWhy Apply:\n\nTo situate yourself within culture and share your own experiences and artifacts as knowledge\n\nTo put academic text, cultural artifacts and personal experiences in dialogue with one another\n\nTo apply intersectional feminist approaches to analyses of cultural productions\n\nTo recognize the individual and collective significance of engaging with and critiquing cultural artifacts, and in utilizing creative resistance\n\nThe course is dedicated to the many cultural producers and artists negotiating and resisting through their work.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

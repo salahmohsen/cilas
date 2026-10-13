@@ -1,0 +1,21 @@
+{
+  "id": 29,
+  "notes": [
+    "teaching_languages en: the course text is English only",
+    "start_date: thematic courses begin the week of January 7th and this one meets Sundays"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2018-01-07"
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/20708090-1581003358586163-6007357384458630352-n_2.jpg",
+    "alt": "A lit doorway seen from a staircase with an iron railing"
+  },
+  "duplicate_of": []
+}

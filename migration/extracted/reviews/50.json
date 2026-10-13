@@ -1,0 +1,22 @@
+{
+  "id": 50,
+  "notes": [
+    "teaching_languages en: page is English only",
+    "weeks 12 from the flow (Week 1-12)",
+    "cover: poster image in the course's block"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 12
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/222186259_orig.jpg",
+    "alt": "Detail of two hands reaching toward each other, from a classical fresco"
+  },
+  "duplicate_of": []
+}

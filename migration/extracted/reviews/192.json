@@ -1,0 +1,299 @@
+{
+  "id": 192,
+  "notes": [
+    "teaching_languages: en (page and flow in English)",
+    "schedule: start time only so kept as note",
+    "syllabus rewritten only to drop course-bibliography entries that already appear in session materials (Thurschwell, Essential Social Psychology, Jones & Elcock, McAfee, the two Routledge handbooks); sessions unchanged from the flow",
+    "facilitator_note kept (flow's 'Course Flow' paragraph)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2024-04-25",
+      "note": {
+        "en": "ONLINE, Every Thursday at 6 pm, starting date is 25th of April",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "introduction to social psychology",
+        "description": "- What is social psychology and why is it crucial?\n- Main themes and currents\n- What can we do with social psychology?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Dai Jones and Jonathan Elcock - Histories and Theories of Psychology",
+            "note": "Chapter 7",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "introduction to psychoanalysis",
+        "description": "- What is psychoanalysis?\n- Main currents and contributions\n- How can we start a conversation between social psychology and psychoanalysis?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Introduction and Chapter 1",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Personality and Subjectivity",
+        "description": "- What is a subject?\n- Social influence\n- Questioning our motivations",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 7",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Chapter 2",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "ideology",
+        "description": "- What is Ideology?\n- The need for belief\n- Is there an end to Ideology?",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Jost et. al - Political Ideologies",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Routledge Handbook of Psychoanalysis",
+            "note": "Chapter 15",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Handbook of Psychoanalytic Political Theory",
+            "note": "Chapter 6",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "interpersonal relations and dynamics",
+        "description": "- Communicating and acting out\n- Questioning Power and Authority\n- Stigma and Prejudice",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Routledge Handbook of Psychoanalysis",
+            "note": "Chapter 9",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 6",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Chapter 5",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Sara Mills - Michel Foucault",
+            "note": "Chapter 2",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "intergroup relations and dynamics",
+        "description": "- Fear and Anxiety\n- Groups in times, spaces and contexts\n- The concept of the political",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 9",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Carl Schmitt - The Concept of the Political",
+            "note": "Pp. 19 - 45",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Noelle Mcafee - Fear of Breakdown",
+            "note": "Chapter 3",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Handbook of Psychoanalytic Political Theory",
+            "note": "Chapter 18",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "culture and critical psychology",
+        "description": "- Belonging to a culture\n- Nationalism and Colonialism\n- Imagined Communities",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Pamela Thurschwell - Sigmund Freud",
+            "note": "Chapter 6",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Benedict Anderson - Imagined Communities",
+            "note": "Introduction and Chapter 1",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Essential Social Psychology",
+            "note": "Chapter 8",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Pramod K. Nayar - Frantz Fanon",
+            "note": "Chapter 3",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": "presentations and recap",
+        "description": "- Questioning our affiliations\n- Presentations",
+        "meetings": null,
+        "materials": [],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Presentations"
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Richard Schacht - Alienation",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Erving Goffman - Stigma",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Frantz Fanon - Black Skins, White Masks",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Handbook of Critical Psychology",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Achille Mbembe - Society of Enmity",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Renata Salecl - On Anxiety",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "Vincent F. Rocchio - Cinema of Anxiety",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "The Godfather",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Dogville",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "Blackkklansman",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "The Conformist",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Pink Floyd - The Dark Side of the Moon",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Pink Floyd - Animals",
+        "note": null,
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

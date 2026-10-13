@@ -1,0 +1,11 @@
+{
+  "id": 36,
+  "notes": [
+    "teaching_languages set to en (page text is English only)",
+    "cover: the image in this course's block"
+  ],
+  "set": { "teaching_languages": ["en"] },
+  "syllabus": null,
+  "cover": { "upload": "uploads/1/9/1/0/19102967/whatsapp-image-2019-08-05-at-2-53-31-pm_orig.jpeg", "alt": "A figure in dark clothing standing at the seawall looking across the water at the Alexandria skyline under heavy clouds" },
+  "duplicate_of": []
+}

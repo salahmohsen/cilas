@@ -1,0 +1,29 @@
+{
+  "id": 301,
+  "notes": [
+    "facilitator_note removed: it only repeated the institute, year, 'Course flow' and the instructor name",
+    "schedule.weeks 8: the flow numbers eight weeks",
+    "teaching_languages en: page in English",
+    "sessions match the flow, unchanged"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 8,
+      "slots": [],
+      "note": {
+        "en": "Offline. The course starts the first week of January, on Thursdays at 6pm.",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": 26,
+  "notes": [
+    "teaching_languages en: the course text is English only",
+    "Objectives heading set as its own paragraph"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "description": {
+      "en": "In the aftermath of the Arab spring many were quick in their assertions that the new regimes should adopt the so-called ‘Turkish Model’. The need to emulate Turkey appeared left, right and centre in the media. Even politicians seemed to echo this popular call. Turkey has transformed itself over the past two decades. Continuing economic growth has been tremendous and the Kurdish separatist struggle appears reconciled. How was a country characterised by a weak democracy, an intractable ‘civil war’, a weak economy and dominated by a military regime able to transform itself? Indeed, Turkey seems to be a success story. But is it really so successful? Especially those parts of the story that seem glossy and new we cannot afford to not think about. As we turn over the glossy cover page, what do we read as we have a look at the table of contents? Militant nationalism hiding behind a democratic facade? Imprisonment of regime critical journalists? Let us read together.\n\nObjectives:\n\nTo acquaint students with Turkey's modern history\nTo critically reflect on the Turkish state and secularism\nTo discuss the Kurdish question\nTo understand the specificities of Turkish political Islam and the role of the military\nTo make sense of the concept of a deep state",
+      "ar": null
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/_2153486.jpg",
+    "alt": "David Tholen sitting on a sandy domed rooftop"
+  },
+  "duplicate_of": []
+}

@@ -1,0 +1,24 @@
+{
+  "id": 46,
+  "notes": [
+    "facilitator_note removed: it was only the flow's 'Tentative Course Flow' heading",
+    "weeks set to 10 (Week 1 to Week 10 in the flow)",
+    "teaching_languages set to en",
+    "Existing 10 sessions match the flow; only start time given so slots unset and note kept"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

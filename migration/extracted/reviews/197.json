@@ -1,0 +1,19 @@
+{
+  "id": 197,
+  "notes": [
+    "teaching_languages was empty: page and flow are English only, set [\"en\"]",
+    "schedule.note was empty: the page gives only a start time (Wednesdays at 6 pm, no end time), so slots stay unset and the sentence is kept as the note"
+  ],
+  "set": {
+    "teaching_languages": ["en"],
+    "schedule": {
+      "note": {
+        "en": "Start date is the week of the 5th of February, on Wednesdays at 6 pm, offline/hybrid at CILAS",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

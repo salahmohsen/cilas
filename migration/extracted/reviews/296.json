@@ -1,0 +1,20 @@
+{
+  "id": 296,
+  "notes": [
+    "start_date 2024-01-13 and weeks 7 from the page ('13th of January', Saturdays) and the 7 flow weeks; inside winter 2024 cycle",
+    "teaching_languages en: page and flow English only",
+    "only a start time given so no slots; note kept"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2024-01-13",
+      "weeks": 7
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

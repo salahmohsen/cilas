@@ -1,0 +1,19 @@
+{
+  "notes": [
+    "description already right",
+    "teaching_languages en; cover is David Tholen's portrait, the only image in the block",
+    "CHECK: the timetable lists Civil Society in several slots (Sun 6-8 pm OR Mon 9-11 am, Wed, Sat) with merged columns; schedule left unset"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/_2153486.jpg",
+    "alt": "Portrait of David Tholen sitting on a domed rooftop with palm trees behind"
+  },
+  "id": 23,
+  "syllabus": null,
+  "duplicate_of": []
+}

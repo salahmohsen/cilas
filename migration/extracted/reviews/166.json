@@ -1,0 +1,27 @@
+{
+  "id": 166,
+  "notes": [
+    "schedule: Friday 30 April 2021 15:00-17:00 slot",
+    "teaching_languages en: English page",
+    "no session structure in source"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2021-04-30",
+      "weeks": 7,
+      "slots": [
+        {
+          "weekday": "fri",
+          "start_time": "15:00",
+          "end_time": "17:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,20 @@
+{
+  "id": 273,
+  "notes": [
+    "teaching_languages: page has full text in both English and Arabic",
+    "schedule note: sentences as written on the page in each language (replaces the parenthetical English summary); two alternative groups, no start date",
+    "CHECK: English page says Saturdays 10:00-13:00 / 17:30-20:30, Arabic says Wednesdays 10:00-12:30 / 17:30-20:00"
+  ],
+  "set": {
+    "teaching_languages": ["en", "ar"],
+    "schedule": {
+      "note": {
+        "en": "On Saturday mornings from 10:00 am to 1:00 pm and evenings from 5:30 pm to 8:30 pm",
+        "ar": "ايام الأربعاء في الصباح من ١٠:٠٠ صباحاً إلى ١٢:٣٠ ظهراً و في المساء من ٥:٣٠ إلى ٨:٠٠ مساءاً"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

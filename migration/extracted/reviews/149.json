@@ -1,0 +1,82 @@
+{
+  "id": 149,
+  "notes": [
+    "Title: source heading is 'Power and Space: Critical approaches to the built environment' in one line; subtitle removed.",
+    "description: moved 'Activities and Assessments' to facilitator_note and added the missing item D (Comparative analysis of development plans 25%).",
+    "syllabus: kept the 5 two-week units from the course outline; set syllabus notes to null (assessments now in facilitator_note).",
+    "teaching_languages: English course text; the Arabic on the page is only a bio and a placeholder ('الترجمة جاية في السكة'), ignored."
+  ],
+  "set": {
+    "title": {
+      "en": "Power and Space: Critical approaches to the built environment",
+      "ar": null
+    },
+    "subtitle": {
+      "en": null,
+      "ar": null
+    },
+    "description": {
+      "en": "Anthropologists and architects often use the term built environment to refer to the man-made habitats which we humans create and within which we conduct our daily lives such as streets and roads, dwellings, schools, hospitals, green spaces and common spaces. The term has grown to comprise physical infrastructure such as waste disposal and sanitation networks and has even expanded to include what is known as real estate developments.\n\nThis course examines how anthropologists, architecture historians and critical geographers have grabbled with built environments from the early concepts of ‘primitive’ or ‘vernacular’ built forms to the twenty-first ‘real estate’ renditions. It nudges participants to critically engage with sets of readings and documentaries that analyse the interplay of religion, power, economy, ideologies and culture in the production and consumption of built environments. We shall even critically examine the very concept of ‘environment’ and its post-colonial genealogies.\n\nThe built environment is not static. It is a dynamic habitus. Thus our class discussions and activities need to reflect such dynamism. Through experiential learning and much reflexive thinking, the course introduces participants to a broad range of perspectives: from the ecological, the modernist, the socio-technical systems approach, to the built environment as real estate capital. Readings and documentaries will draw from diverse locations from the Global South such as Brazil, India, Tanzania, Dubai and Egypt.\n\nObjective of the Course:\n\nBy the end of this course you will be able to\n\n1. Discern the ideological underpinnings of the term ‘environment’ in diverse discourses\n\n2. Explain the dynamic relationship between built environment and power\n\n3. Use diverse anthropological approaches to analyse built environments comprising their aesthetic, social, economic and technological dimensions\n\n4. Discuss individual and collective agency in shaping and appropriating built environments\n\n5. Go beyond typologies and dichotomies in understanding the built environment",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "Activities and Assessments\n\nA. Readings and Class Discussion 15%\n\nB. Acquisition and Documentation of primary data 30%\n\nC. Comparative analytical essays in diverse formats e.g. photos essays, spatial representations such as maps or architectural designs 30%\n\nD. Comparative analysis of development plans 25%",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "Genealogy of the concept ‘environment’",
+        "description": "Steps towards developing a critical approach to the built environment\n\nRevisiting dichotomies: e.g. primitive versus modern, colonial versus post-colonial, vernacular versus capital A architecture",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": "Social Life of Things – The Ecological System’s Approach",
+        "description": "Religion, monuments and colonial built forms – India, Sub-Saharan Africa, Egypt",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "Modernist “IDEAL” built environments",
+        "description": "e.g. Walter Gropius’ Bauhaus, Garden Cities and development corridors: Chandigarh, New Delhi, New Settlements",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "Time-Space Compression and early Ideas of socio-technical systems",
+        "description": "Starchitects and seductive landscapes of consumption, affective built environments and the vertical city",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "Self-built environments and engineering the future",
+        "description": "Self-built environments and engineering the future including informal built environment in contrast to micro-biopolitics and energy-efficient settlements e.g. BedZed\n\nNeoliberal built environments: What is “real” about Real Estate?",
+        "meetings": 2,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

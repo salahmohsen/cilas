@@ -1,0 +1,38 @@
+{
+  "id": 254,
+  "notes": [
+    "description: the flow's full overview (replaces shorter page blurb) plus audience sentence and the N.B.; facilitator_note cleared (duration is in schedule.weeks)",
+    "schedule: slot Wednesday 17:00-19:00 (July 14 2021 is a Wednesday)",
+    "teaching_languages en",
+    "CHECK: course bibliography holds only the flow PDF file name (critical_theory_and_social_change-_final.pdf), not a reading; cannot be removed via set",
+    "cover: archival photo of a woman holding a rifle, from the course block"
+  ],
+  "set": {
+    "description": {
+      "en": "The struggle for social and political change has always been a major driving force behind the movement of history. In this sequence of courses we aim to investigate historical political and social movements through their intellectual contribution, and analyze critical theory in the light of the historical movements that shaped them.\n\nThroughout the twentieth century, the anticolonial struggle constituted a major driving force of world history; it defined the political terrain, shaped the attempt to understand and re-imagine the world, constituted the moral force behind world revolution, and translated itself into major intellectual contribution in the fields of theory, literature, and arts.\n\nIn this course we seek to analyze how anticolonial critique, postcolonial theory, and political theory at large, took shape under the conditions of the struggle between the forces of colonialism and anticolonialism. The course will thus start by examining a set of anticolonial revolts and the intellectual work they entailed. This will provide us with the arsenal of critical tools with which we can move between the colony and the metropole.\n\nThe Western world was also shaped, on many levels, by the colonial experience. Our anticolonial lens, therefore, is valid in the “Western” world as much as it is valid in Africa, Asia, and South America. This also meant that the struggle of social and political equality in the West was never divorced from the larger anticolonial struggle.\n\nAlthough we are privileging anticolonialism as an analytical lens, we are not proposing it as the only lens. Instead, we will allow the discussion to take us through an eclectic set of analytical and critical lenses.\n\nN.B: We acknowledge that colonialism started neither in the late nineteenth century nor in the Arab World, and that the colonization of the Americas 4-5 centuries earlier has shaped and continues to shape the modern world. For the confines of space and time, however, we start our inquiry in the Arab world in the late nineteenth/early twentieth century. Hopefully there will be other courses on the colonization of the Americas and the invention of the modern world.\n\nThis course is open for everyone. Having taken part I of the course (“Critical Theory and Social Change: I- the Age of Great Revolutions”) is NOT a prerequisite for taking this course.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "17:00",
+          "end_time": "19:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/omanian-fighter_orig.jpg",
+    "alt": "Young woman in a keffiyeh holding a rifle"
+  },
+  "duplicate_of": []
+}

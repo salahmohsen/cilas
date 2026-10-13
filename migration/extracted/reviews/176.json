@@ -1,0 +1,29 @@
+{
+ "id": 176,
+ "notes": [
+  "Removed from facilitator_note the sentences already in description (duplicate)",
+  "Set teaching_languages en (page in English), weeks 6"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": "Course Format: The course will take place online. Part of the reason is to be able to share and examine documents, film clips, and other material in real time. In many of the sessions I will share primary and archival documents—including clippings from newspapers, excerpts from governmental documents, and photographs I took from various archives, and divide the students into groups in order to closely scrutinize these documents. We will then reconvene so that we can build up our understanding of history, and of the theory with which we understand history, from each group’s experience with its archive. Hopefully, this will help us connect critical theory to a critical practice. What follows is a tentative and preliminary course flow, which is open for modifications as the class discussion demands or allows.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 6,
+   "slots": [
+    {
+     "weekday": "sun",
+     "start_time": "18:00",
+     "end_time": "20:00"
+    }
+   ]
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": 265,
+  "notes": [
+    "teaching_languages en (page in English)",
+    "description, location (al-Ghuria, offline) and schedule note already match the source; two alternative groups so no slots",
+    "CHECK: page gives no start date; cycle start 2016-03-27 not copied into schedule"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

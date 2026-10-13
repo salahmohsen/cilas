@@ -1,0 +1,37 @@
+{
+  "notes": [
+    "new course: the page held only a link to course_outline_abe.doc; text from that Word outline (coordinator Ahmad Aboshady, eight weeks, Jan. 5th to Feb. 27th, 2014)",
+    "dates: news-and-events call for applications (12/17/2013) says thematic courses of the second trimester run eight weeks starting January 5th, 2014; no weekday or time given",
+    "no image on the page, cover null"
+  ],
+  "set": {
+    "title": {
+      "en": "Art and the Built Environment",
+      "ar": null
+    },
+    "course_type": "THEMATIC",
+    "description": {
+      "en": "Art and the Built Environment looks at how art has influenced the material, spatial and cultural nature of the built environment. In other words, the course examines how artistic expression and man-made surroundings correlate. It explores the built environment as a natural phenomenon, human habitat, medium of expression and forum for action. Students will discover what influences the way cities are perceived, designed and built. It demonstrates how planners and designers shape the built environment that we interact with every day - whether indoor or outdoor.  The course engages with the subject matter comparatively. It seeks to impart a clear understanding of the nature of our surroundings across time and space. Adopting both a trans-historical and trans-regional perspective the course sheds light on how the arts have shaped our habitat in the past and will likely do so in the future; and how they have informed the creation of our habitat across the globe. The course aims at familiarising students with concepts including Beautification of cities, Modernism and Smart Environments. Additionally it acquaints students with prominent thinkers, such as Hassan Fathy, Daniel Burnham and Le Corbusier.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2014-01-05",
+      "weeks": 8
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "legacy_url": "/art-and-the-built-environment.html",
+  "cycle": {
+    "season": "winter",
+    "start_year": 2014,
+    "space": "al-Ghuria",
+    "start_date": "2014-01-05"
+  },
+  "fellows": [
+    "Ahmad Aboshady"
+  ]
+}

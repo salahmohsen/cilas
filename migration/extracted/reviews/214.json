@@ -1,0 +1,24 @@
+{
+  "id": 214,
+  "notes": [
+    "Moved the 'As participants in this course...' paragraph from facilitator_note into description (it is part of the flow's course invitation).",
+    "facilitator_note keeps the course teaser only.",
+    "teaching_languages en: English page."
+  ],
+  "set": {
+    "description": {
+      "en": "Whenever we are confronted with an event that can change the course of our lives, fear and trembling befall us. Two paths usually present themselves in such moments: either to run away from the event, or to address it. Philosophy is the latter – it is addressing those events with questions that, if answered, would make us lead a better life. Today, however, we tend to run away, and consequently we often to push philosophy aside. This course asks why do we tend to run away from these events, and why would anyone need to address them. The main argument of this course is that as modern subjects, we tend to run away because we do not have a “home” - a reference point to which we could return to take a breath, and to then regroup ourselves to be able to look at these events.\n\nAs participants in this course we will need to read a bit, and to express ourselves in any way we find comfortable. It is a journey that could lead us to “dwell” on our feelings, thoughts, and experience with our contemporary world, so let’s make it worth it!",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "Course teaser: Whenever we are haunted by a frightful silence, we search for a place wherein we can dwell. Alas, in our modern world “dwelling” has become an empty word, for we are always on the run, and we catch ourselves thinking that questioning these silent moments, i.e. philosophy, is either in vain or a luxury! This course invites you to “dwell” on these thought through a conversation with each other, and with some insightful thinkers, such as Bauman and Byung-Chul Han - among others.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

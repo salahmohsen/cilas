@@ -1,0 +1,24 @@
+{
+  "id": 212,
+  "notes": [
+    "Moved the 'three parts' overview paragraph from facilitator_note into description (course overview, from the flow PDF).",
+    "facilitator_note keeps only the Guidelines (how sessions work).",
+    "teaching_languages en: English page."
+  ],
+  "set": {
+    "description": {
+      "en": "Secularisation, which has gradually identified itself with the project of \"European modernity\", can be defined as a process which emancipates societies from the constraints that religious institutions exert on them. The secularisation of modern societies, which is related to a process of rationalisation, would thus make it possible to separate religion from the modern state and to confine religion to the private sphere. In this course we will study how this theory of secularisation has been criticised by intellectuals, believers and non-believers alike, who did not define themselves as anti-modern but thought following different approaches that religion could not be detached from the political desire for justice. Together we will reflect on the borders of religion and politics in the colonial and post-colonial world, and how the process of secularisation has revealed the contingent and non-universal character of this partition opening up ways to the pursuit of justice.\n\nThis course will be divided into three parts. The first part will aim at understanding the emergence of the concept of secularization at the end of the 19th century and at the beginning of the 20th century, and the partition between politics and religion that it implied. In the second part, we will see how Liberation theology, which has been developed in Latin America from the second half of the 20th century, sought, by acknowledging the modern division between state and religion, to revive the prophetic tradition of the Old Testament concerning the liberation of the oppressed people. Finally, in the third part, we will analyze how secularization, as established in the colonial and post-colonial world, has led to a new comprehension of the division between politics and religion, as it has been structured in modernity, and the relevance of the very concept of secularization.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "Guidelines\n\n- The goal of the course is twofold. On the one hand, it aims at giving access to the original texts and at trying to grasp them in their historical and theoretical context, whether it be German philosophy, theology or postcolonial theory. Particular attention will thus be paid to the study of the argumentative logic of the texts, which will then allow for a precise debate on them. At each session, a student will present one of the texts to be studied, in order to open the debate between all the participants. On the other hand, the course aims at giving students the means to discuss the issues at stake in the course with specialists of these topics. Several sessions of the course will thus be devoted to live interventions, via Zoom, of philosophers and sociologists with whom the students will discuss the texts studied. A group of students will be responsible, for each session, for leading the debate. In this way, we will work on argumentative skills, both in writing and orally.\n\n- The assigned readings will be sent one week in advance, and are meant to provide a solid basis for our in-class discussions. It is, therefore, important to acquire yourself with the texts before class.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

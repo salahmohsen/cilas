@@ -1,0 +1,30 @@
+{
+  "id": 297,
+  "notes": [
+    "facilitator_note: removed the title/fellow/cycle line (repeats title and fellow); kept the readings note",
+    "schedule: start_date 2024-01-15 (Monday, as the page says), weeks 8 (eight numbered weeks); only a start time is given so slots stay unset and the sentence stays in the note",
+    "teaching_languages en: page in English",
+    "CHECK: course bibliography holds only 'Citadel Hospital, Cairo, 1915', the cover image caption, not a reading; it should be removed (readings are all in the sessions)"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": "Note: PDF versions of all readings will be provided over email by the instructor.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2024-01-15",
+      "weeks": 8,
+      "slots": [],
+      "note": {
+        "en": "Offline. The course starts 15th of January, on Mondays at 5:30 pm.",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

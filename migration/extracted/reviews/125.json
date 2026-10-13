@@ -1,0 +1,22 @@
+{
+  "id": 125,
+  "notes": [
+    "teaching_languages: page has full text in English and Arabic",
+    "schedule.note: add the Arabic sentence from the cycle page"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": "On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm and 8:00 pm",
+        "ar": "أيام الثلاثاء صباحا من العاشرة إلى الثانية وعشر ظهراً و مساءاً من الخامسة والنصف إلى الثامنة"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,20 @@
+{
+  "id": 78,
+  "notes": [
+    "teaching_languages: the page is English only.",
+    "facilitator_note repeated the page description (the flow's reworded course description); cleared.",
+    "CHECK: cover image screen-shot-2020-09-12-at-1-53-31-pm.png (uploads/1/9/1/0/19102967/published/) is not in the weebly zip or the mirror, so cover left null."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

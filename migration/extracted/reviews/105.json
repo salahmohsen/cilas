@@ -1,0 +1,31 @@
+{
+  "id": 105,
+  "notes": [
+    "teaching_languages en: page in English",
+    "schedule.weeks 6: the flow has six weeks; note removed (only repeated weekday, time, Hybrid)",
+    "CHECK: the page says Tuesdays 6-8pm, the flow PDF says 6-9pm; kept the page time",
+    "description and 6 sessions match the page and flow, unchanged"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 6,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

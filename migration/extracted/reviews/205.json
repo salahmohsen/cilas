@@ -1,0 +1,18 @@
+{
+  "id": 205,
+  "notes": [
+    "teaching_languages: English-only page",
+    "cover: image above this block's title (cornfield with apartment blocks behind)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/field-city_orig.jpg",
+    "alt": "Green cornfield in front of a row of apartment blocks and palm trees on the edge of a city"
+  },
+  "duplicate_of": []
+}

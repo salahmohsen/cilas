@@ -1,0 +1,33 @@
+{
+  "id": 199,
+  "notes": [
+    "facilitator_note: dropped the flow's title line (Cairo Poetics..., by Asmaa Abdellatif. Tentative Flow.); kept the flow note and the course work paragraph",
+    "teaching_languages: page says primarily English and Arabic",
+    "schedule: source says Saturdays at 6 pm, offline; start time only, so no slot, sentence kept in note; start_date from 'week of the 5th of February'",
+    "cover: course image (Cairo skyline illustration, credit Ammar Kamal) sits just above this block's title"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": "Note: The selection of poems to be analyzed will be ﬂexible according to the discussions in every class.\n\nCourse work: Throughout the course, participants will be expected to start working on their own individual works of art (poems, digital art, paintings, photography..etc) in order to be collected and compiled in a digital anthology by the end of the course.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2023-02-05",
+      "weeks": 12,
+      "note": {
+        "en": "Start date is the week of the 5th of February, on Saturdays at 6 pm offline at CILAS",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/image2_orig.jpg",
+    "alt": "Illustration of the Cairo skyline at night, with the Cairo Tower, minarets and the pyramids in bright neon colours under a crescent moon"
+  },
+  "duplicate_of": []
+}

@@ -1,0 +1,29 @@
+{
+  "id": 207,
+  "notes": [
+    "description: moved the Arabic-knowledge note out into language_note",
+    "facilitator_note: removed (reading-list intro repeats the description; spring break is already in the cycle overview)",
+    "teaching_languages: films in Arabic, readings in English, discussion mixed"
+  ],
+  "set": {
+    "description": {
+      "en": "Looking at popular Egyptian cinema from the post-1952 period until the turn of the millennium, this course aims to situate a selected number of films socio-historically and aesthetically. Participants will gain fluency in the film’s unique language, both from a historical and a genre viewpoint. Classes will alternate between weeks where we closely read and situate films within their time period and weeks where we critique theoretical texts that analyse film form and language. Thematically, course participants will trace changes in Egyptian cinema’s portrayal of young people. By the end of the course, they will be able to describe and analyse formal choices made by filmmakers, understand a film form’s relationship to content, identify major social shifts that impacted narratives in contemporary Egyptian cinema.",
+      "ar": null
+    },
+    "language_note": {
+      "en": "Note that for this course speaking knowledge of Arabic is needed as most of the films we'll watch do not have English subtitles. The readings will be in English and course discussions will—as needed—mix between the two.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "ar",
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

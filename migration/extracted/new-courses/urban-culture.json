@@ -1,0 +1,37 @@
+{
+  "notes": [
+    "new course: the page held only a link to course_outline_uc.doc; text from that Word outline (coordinator Raju Hittalamani, eight weeks, Jan. 5th to Feb. 27th, 2014)",
+    "dates: news-and-events call for applications (12/17/2013) says thematic courses of the second trimester run eight weeks starting January 5th, 2014; no weekday or time given",
+    "no image on the page, cover null"
+  ],
+  "set": {
+    "title": {
+      "en": "Urban Culture",
+      "ar": null
+    },
+    "course_type": "THEMATIC",
+    "description": {
+      "en": "Urban Culture introduces and engages with ideas and processes that are vital to creating city spaces. The course will inquire into the multifaceted cultural understanding of the city as a space and how its relation to society. It will explore the dynamics of urbanisation, the creation and agglomeration of cities, the organic character of city space in built and natural environments. Moreover, the course will examine community engagement in city making, especially by looking at cultural practices such as spectacles, festivals and branding efforts. Urban Culture will demonstrate the link between cultural practices and both urban economics and political processes. Students will be acquainted with the following: the close link between culture, economy and politics on a city scale; theoretical and methodological aspects of urban cultural geography; the emergence of global cities and the rise of cultural logics; urban consumption and the spectacle; urban sub-cultures; heritage and memory; the twin forces of urbanisation and globalisation in the  Egyptian context and its relevance in urban cultural spheres. The course employs diverse interpretive and representational media: academic texts, documentary and feature films; literary writings; web sites and other media.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2014-01-05",
+      "weeks": 8
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "legacy_url": "/urban-culture.html",
+  "cycle": {
+    "season": "winter",
+    "start_year": 2014,
+    "space": "al-Ghuria",
+    "start_date": "2014-01-05"
+  },
+  "fellows": [
+    "Raju Hittalamani"
+  ]
+}

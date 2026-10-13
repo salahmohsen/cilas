@@ -1,0 +1,29 @@
+{
+ "id": 178,
+ "notes": [
+  "Removed header paragraph (title, fellow email, venue/day) from facilitator_note: duplicates title and schedule",
+  "Set teaching_languages en, weeks 8"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": "Course Learning Plan\n\nDivided into two pathways:\n\n(1) Class-based discussions on the secondary and primary sources. Students will be asked to come prepared to class by reading the assigned secondary sources in order to engage with classmates on the nature of print and its ramifications on all aspects of society. Each student will be asked to lead the discussion (based on the assigned reading of the week) to open the space up for class discussion. This will also aid students during in-class collective readings of primary sources selected by the teaching fellow. A collective reading and engagement with primary sources in class trains students to analyze and read different historical documents as well as situate them in contemporary discussions about politics, gender, history, etc.\n\n(2) Course-long assignment: Trace your book! Students will be encouraged to undertake a hands-on learning experience of book history. This way, students will be introduced to different methodological approaches as to how to trace their chosen book (relying on open-access digitization projects) through material examination. Throughout different stages, students will be asked to report on their findings (and tying it in with the nature of the week's topic), and to address the following points in a final presentation at the end of the course:\n- Reason and choice of printed text to trace.\n- Material bibliography (describing physical qualities of a book).\n- Report on the authorship as revealed by the paratexts.\n- Close reading of 1 paragraph in the text (this could be in the introduction, book blurb-taqrīz-, or colophons).\n\nNote: Handouts on each point will be sent in advance to guide students on how to prepare for such a study throughout the weeks of the course.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "wed",
+     "start_time": "18:00",
+     "end_time": "20:00"
+    }
+   ]
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

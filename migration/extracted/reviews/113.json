@@ -1,0 +1,23 @@
+{
+  "id": 113,
+  "notes": [
+    "Moved the opening quote from description into epigraph",
+    "teaching_languages set to en: page is English only"
+  ],
+  "set": {
+    "epigraph": {
+      "en": "Teacher: ''What do you know about Logic, Morsi?''\nStudent: \"I know that if I hit another person on the head he loses all his logic. Is this logic or isn't it logic, you educated school person?''\n- Madrasat al-Mushaghbin",
+      "ar": null
+    },
+    "description": {
+      "en": "Everyone agrees that the state of our education is horrendous but few know precisely how it came into being. This course is an invitation to look more closely at our education system and scrutinise it. We will pick up on earlier conversations related to nationalism, modernity and colonialism and their relationship to education. This time, greater emphasis will be placed on the intricacies of Egypt's education system and the dynamics within the classroom. We will spend time pondering over how educational institutions have worked since the 1960s and what alternative forms of resistance have emerged in reaction to it.\n\nParticularly, we will look at policy issues, educational trends, bureaucracy, the international community and the broader 20th century discourse on education. In short, we will try to find logic in the place that seems to lack it the most.\n\nexpectations\n\nStudents are expected to actively engage with assigned readings; attend 80% of the classes; and participate lively. Participation is a broad concept that can take many forms including words, art, music, etc.\nStudents are expected to work with primary historical material; a special emphasis will be placed on weekly assignments which must be completed and submitted.\nNote that the History of Modern Education Part 1 is not a pre-requisite for this course.\n\nwhy apply?\n\nTo develop an understanding and working knowledge of primary historical material.\nTo advance our knowledge about the main trends and debates regarding education today.\nTo understand the world of 'alternatives'.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

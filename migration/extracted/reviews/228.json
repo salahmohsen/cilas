@@ -1,0 +1,26 @@
+{
+  "id": 228,
+  "notes": [
+    "teaching_languages set to ar (page and flow are in Arabic)",
+    "weeks set to 11 (the flow numbers 11 sessions)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2025-01-22",
+      "weeks": 11,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "11:00",
+          "end_time": "13:30"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

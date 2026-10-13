@@ -1,0 +1,210 @@
+{
+  "id": 63,
+  "notes": [
+    "description: removed the session-by-session flow and the closing readings note; kept the overview and the Why Apply list (heading kept as its own paragraph)",
+    "syllabus: nine sessions with readings and in-class activities from the Tentative Flow of the Course; source typos kept verbatim",
+    "syllabus.bibliography: the collection the readings are taken from (footnote on the page)",
+    "teaching_languages: en (page in English; Arabic text is only a placeholder)",
+    "schedule: Wednesday morning and evening groups as slots; weeks 9 from the nine numbered sessions",
+    "CHECK: the winter 2018 cycle page says thematic courses run ten weeks, but this course's flow numbers nine sessions; weeks set to 9. No start date given for this course."
+  ],
+  "set": {
+    "description": {
+      "en": "Chinese philosophy is said to have begun with the debate between the thinkers Kongzi (Confucius) and Mozi (Mencius) in the 6th century B.C.E. – a period when China consisted of numerous independent states. It was a time known as the “hundred schools” period (bai jia zhen ming) – literally, the time when “a hundred schools competed to make themselves heard” – a fact attesting to the remarkable breadth of philosophical views put forward. In this course we will think deeply with seven of China’s most incisive, eloquent and influential thinkers belonging to the Confucian tradition, the Daoist, Mohist and Fajia schools, respectively.\n\nEarly Chinese philosophers defended tradition and proposed social reforms. They included educators, humanitarians, pragmatists, politicians, hermits, and mystics, who variously speculated about right and wrong, individual and society, nature and culture, knowledge and ignorance. The philosophers we will read held competing visions of the good life, some insisting on the right kind of society for human beings to flourish, others arguing that, in order to pursue the good life, we must allow ourselves to fall back into a preexisting harmony with Nature.\n\nArguably, the most important lesson to be learned from this rich and complex history is that (early) Chinese philosophy is not a single theory, thinker or tradition, but rather a diverse and lively conversation that has been going on for more than 2,500 years, and that continues to evolve in our time.\n\nWhy Apply:\n\nTo discuss “perennial questions” around Oolong and Pu’erh tea with two enthusiasts of Chinese philosophy and the art of tea\n\nTo read closely, and to listen closely (to podcasts), and to be exposed to a lively and ongoing conversation taking place in China\n\nTo learn how classical Chinese philosophies relate to the good life, as well as to ancient Chinese martial arts, such as Qi Gong and Taiji",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 9,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "10:00",
+          "end_time": "13:00"
+        },
+        {
+          "weekday": "wed",
+          "start_time": "17:30",
+          "end_time": "20:30"
+        }
+      ],
+      "note": {
+        "en": "Wednesdays, 10:00 am to 1:00 pm, and 5:30 pm to 8:30 pm",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": "What Makes Chinese Philosophy Different than Western Philosophy?",
+        "description": "Chinese Philosophy Describes Human Nature and What We Can Do With It",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "The Concept of Man in Early China, by Munro McDonald",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Talk by I-Kai Jeng on Chinese terminology (with focus on the concepts of ren, ‘humanity,’ and li, ‘ritual’)"
+          }
+        ]
+      },
+      {
+        "order": 2,
+        "title": "What if Human Nature is Bad?",
+        "description": "Mozi’s Answer: A Hierarchically Structured Society and Impartiality",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mozi, Selections from The Mozi (p.54-107), with a special focus on Chapter Eight; “Honoring the Worthy”; Chapter Eleven, “Obeying One’s Superior; and Chapter; and Chapter Sixteen, “Impartial Caring.”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": "What if Humans Nature Tends to the Formation of Relationships?",
+        "description": "Confucius’ Answer: A Society Based on Reciprocal Relationships",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Confucius, The Analects, p.1-54.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": "What if Human Nature is Human Nature is Good?",
+        "description": "Mengzi’s Answer: A Society Based on Fostering Inner Virtue",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Mengzi, Selections from the The Mengzi, p.111-156, with a special focus on “Heart” (6A7); “Ox Mountain” (68A); “Seeds” (67A), “Human Nature is Like Cups and Bowls” (6A1); Human Nature is Like Water” (6A2).",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": "What If If Human Desires Conflict?",
+        "description": "Xunzi’s Answer: Correctly Channeled Human Desires and and a Harmonious Society",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Xunzi. Selections from The Xunzi, p.347-294.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": "What if Society Is the Problem?",
+        "description": "Zhuangzi’s Answer: A Return to Nature",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Zhunagzi, “The Inner Chapters,” p.203-246.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": "How are We To Act If Not According to Proscribed Norms?",
+        "description": "Zhuangzi’s Answer: Spontaneous Skill and “Listening with the Qi”",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Zhunagzi, “The Inner Chapters,” p.203-246, especially “In the World of Men” and “Let it Be, Leave it Alone.”",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "exercise",
+            "description": "Finalization of a Questions Catalogue as method – to present to experts in Chinese philosophy at National Taiwan University (NTU)."
+          }
+        ]
+      },
+      {
+        "order": 8,
+        "title": "How Can We Discover the Truth Without Distorting It?",
+        "description": "Zhuangzi’s Answer: Avoiding the Traps of Language and Shifting Perspectives",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Laozi, The Daodejing, p.157-202.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "presentation",
+            "description": "Guest lecture by Xiao Hu on the history and philosophy of ancient Chinese martial arts on the concept of qi (and/or guest lecture by expert on martial arts from Taiwanese Martial Arts in the United States)."
+          }
+        ]
+      },
+      {
+        "order": 9,
+        "title": "What is the Chinese Conception of Nature and the World?",
+        "description": "Laozi’s Answer: Nature is a Spontaneous Self-Ordering Principle",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Laozi, The Daodejing, p.157-202.",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": [
+          {
+            "kind": "discussion",
+            "description": "Skype with experts in Chinese philosophy at NTU, and ask them questions from our catalogue."
+          }
+        ]
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Readings in Classical Chinese Philosophy, edited by Philip. J. Ivanhoe and Bryan Van Norden",
+        "note": "Readings are taken from this collection",
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

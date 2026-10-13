@@ -1,0 +1,30 @@
+{
+  "id": 103,
+  "notes": [
+    "teaching_languages en: page in English",
+    "schedule.weeks 8: the flow numbers eight weekly sessions; note removed (only repeated weekday, time, Hybrid)",
+    "description and 8 sessions match the page and flow, unchanged"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

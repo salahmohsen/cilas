@@ -1,0 +1,26 @@
+{
+  "id": 104,
+  "notes": [
+    "teaching_languages en: page in English",
+    "schedule.weeks 8: the course flow lists eight sessions; note kept (first class online, not expressible by slots)",
+    "description, sessions and reading list match the page and flow, unchanged"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "10:00",
+          "end_time": "12:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

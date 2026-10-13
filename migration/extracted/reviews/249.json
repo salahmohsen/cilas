@@ -1,0 +1,27 @@
+{
+  "id": 249,
+  "notes": [
+    "description: page blurb plus the course-flow's longer description (was the long text sitting in facilitator_note); facilitator_note cleared",
+    "teaching_languages en (English-only page)",
+    "cover: tarot Death card image from the course block"
+  ],
+  "set": {
+    "description": {
+      "en": "Death is seen as the great equalizer, no one can escape it and like birth, it is essentially individual. In ‘how do we talk about death?’ we will try to look at death’s inherently subjective experience and at the same time inevitable universality. Attempting to overcome modern taboos around death (contemporary culture’s obsession with youthfulness and longevity), the course will share with the participants a multi-perspective take on death, from history, anthropology, philosophy,...etc in collective exercise of sharing and discussion. Ultimately creating meaningful lexicons and terms, through these conversations and discussions, that give nuance to our perceptions and understanding of death in the here and now.\n\nWe usually don’t think or meditate on death in our modern culture, with its obsession with youthfulness and longevity, there is a taboo around death. Aside from religious convictions about the inevitability of death, we don’t think much about death in our everyday life unless we encounter it personally, as when someone we know dies or collectively as in a state of war or, like now, during a global pandemic. It is then that death becomes what it always is, an essential experience for all living things. Death then goes from the personal, individual experience to something that has to be managed, monitored, combated and even legalized (as in when is it legal to end someone’s life or when to punish those whose actions resulted in the death of someone).\n\nDeath as Derrida would say is essentially an individual experience, its inevitable, irreplaceable and terminal. No one escapes it, no one that has died has “come back from the dead” (long after they died, and not just with clinical and medical support/intervention when their vital functions are affected). And yet we lack the terms to be able to talk about it, how to understand it and understand our history in dealing with it and what can the inevitability of death mean for us, practically, philosophically but also ethically.\n\nIn this course, we will try to explore the general contours of death as a phenomenon, we will look at historical, anthropological, scientific, religious and philosophical sources that tried to examine and understand death, and what that says about the human experience. In doing so, participants collectively with the instructor would develop their own lexicon and terms in understanding and dealing with death. A central aspect of the course, that the participants relate what they read to their own subjective experience and are then able to have a meaningful engagement with the readings on hand and with their own everyday experience on the other. Thus a close reading of the materials and engaging in dialogue are absolutely essential for this course.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/cary-yale-tarot-deck-death_orig.jpg",
+    "alt": "Death on horseback with a scythe, a skeleton riding over fallen figures, from a 15th-century Visconti di Modrone tarot deck"
+  },
+  "duplicate_of": []
+}

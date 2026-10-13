@@ -1,0 +1,19 @@
+{
+  "id": 38,
+  "notes": [
+    "facilitator_note cleared: it was the flow header plus the book recommendations, already in the course bibliography",
+    "teaching_languages set to en (English-only page)"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

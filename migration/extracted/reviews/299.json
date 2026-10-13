@@ -1,0 +1,30 @@
+{
+  "id": 299,
+  "notes": [
+    "facilitator_note: removed the header line (repeats title, fellow, email, year); kept assignment and expectations",
+    "schedule.weeks 7: the flow numbers seven sessions",
+    "teaching_languages en: page in English",
+    "sessions and bibliography match the flow, unchanged",
+    "CHECK: the page says Sundays at 7pm, the flow says Fridays 19:00-20:30; slots left unset, page sentence kept in note"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": "Assignment: In no more than 500 words define the themes, key concepts, what you loved and hated about using social media on cultural heritage sites and why.\n\nWhat You Expect from Me (Course Objectives):\n- Understanding the different conceptual frameworks that tackle cultural heritage in the age of social media.\n- Cultivating the ability to analyze and discuss digital cultural heritage in both verbal and written forms.\n\nWhat I Expect from You:\n- Preparedness for class by doing the readings, preparing points of discussion and questions.\n- Interaction in class. This class is an example of what an interactive learning experience looks like. We are both learning with each other along the way. Having an ongoing, open discussion in class will make the whole experience more informative and entertaining.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 7,
+      "slots": [],
+      "note": {
+        "en": "Online. The course starts the first week of January, on Sundays at 7pm.",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

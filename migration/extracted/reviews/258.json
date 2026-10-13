@@ -1,0 +1,35 @@
+{
+  "id": 258,
+  "notes": [
+    "facilitator_note cleared: only a title and proposal credit line",
+    "schedule: weeks 8 from the eight numbered sessions; page says 'the week of 23th of July', Wednesdays 5-8pm",
+    "teaching_languages: English page"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2022-07-23",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "wed",
+          "start_time": "17:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": "Start date: the week of 23th of July. Offline, Wednesdays from 5-8pm",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

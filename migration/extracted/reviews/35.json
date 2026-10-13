@@ -1,0 +1,11 @@
+{
+  "id": 35,
+  "notes": [
+    "teaching_languages set to en (page text is English only)",
+    "cover: the image in this course's block"
+  ],
+  "set": { "teaching_languages": ["en"] },
+  "syllabus": null,
+  "cover": { "upload": "uploads/1/9/1/0/19102967/796px-rembrandt-the-anatomy-lesson-of-dr-nicolaes-tulp_orig.jpg", "alt": "Rembrandt's painting The Anatomy Lesson of Dr. Nicolaes Tulp" },
+  "duplicate_of": []
+}

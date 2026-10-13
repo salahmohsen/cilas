@@ -1,0 +1,18 @@
+{
+  "id": 57,
+  "notes": [
+    "teaching_languages: English-only page",
+    "cover: bike courier carrying a basket on his head, from the course block"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/591256.png",
+    "alt": "Blurred photo of a man cycling with a large basket of bread on his head"
+  },
+  "duplicate_of": []
+}

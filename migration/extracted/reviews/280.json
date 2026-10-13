@@ -1,0 +1,27 @@
+{
+ "id": 280,
+ "notes": [
+  "description: removed stray leading 'description' label; kept expectations/objectives headings as own paragraphs",
+  "teaching_languages: page written in English",
+  "schedule: weeks=10 (thematic courses are ten weeks, trimester 2); morning/evening alternatives kept as note, weekdays only in timetable image"
+ ],
+ "set": {
+  "description": {
+   "en": "As cities continue to grow, an increasing amount of people is exposed to various hazards related to the urban environment. ‘Urban resilience’ refers to the capacity of different stakeholders in a city, from the inhabitants of informal areas to the municipality’s policy makers, to respond to these hazards. In this course, students will develop an understanding of the possible impact of different hazards, from state violence to climate change, on cities. The various dimensions of the concept of resilience and the difference between adaptation and mitigation will be discussed extensively. Furthermore, this course will focus on possible strategies to improve urban resilience and on a wide range of issues and controversies that influence the design of these strategies. Students will develop a toolkit that enables them to identify an urban hazard, research its different dimensions and develop a strategy to improve urban resilience with regard to this specific hazard.\n\nexpectations\n\nStudents are expected to select and summarise three (newspaper) articles on a specific type of urban hazard.\nStudents are expected to produce a risk analysis and strategy paper consisting of the identification of a specific urban hazard in Cairo, an analysis of the risks involved and an outline of possible strategies responding to his hazard. (Ideas and drafts will be discussed in the second half of the course).\n\nobjectives\n\nUnderstand the various dimensions of the concept of resilience.\nAnalyse how cities and urban life are threatened by different hazards.\nLearn how cities are classified by their most characteristic and threatening hazard.\nExamine how hazards can pose serious risks to people’s lives and livelihoods\nDiscover how different stakeholders can use different strategies to respond to these hazards.\nDistinguish between adaptation and mitigation.\nIdentify which new technologies can improve resilience.\nBe able to develop a strategy to improve urban resilience",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 10,
+   "note": {
+    "en": "Classes are scheduled both in the morning from 10 am to noon and in the evening from 5 pm to 7 pm. Note that morning and evening classes discuss the same topic.",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

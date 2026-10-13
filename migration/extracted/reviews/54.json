@@ -1,0 +1,27 @@
+{
+  "id": 54,
+  "notes": [
+    "title kept as source writes it, subtitle removed",
+    "teaching_languages en: page in English (Arabic translation only a placeholder)",
+    "cover: image in course block on own page"
+  ],
+  "set": {
+    "title": {
+      "en": "Archive Fever: Appropriation in Contemporary Art",
+      "ar": null
+    },
+    "subtitle": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/screen-shot-2017-12-03-at-19-36-12_1_orig.png",
+    "alt": "Film still of a woman and a man jumping into a swimming pool"
+  },
+  "duplicate_of": []
+}

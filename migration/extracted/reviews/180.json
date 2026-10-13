@@ -1,0 +1,31 @@
+{
+ "id": 180,
+ "notes": [
+  "Flow's course overview moved from facilitator_note into description (it is overview text)",
+  "Set teaching_languages en; start_date 2023-03-01 (Wednesday), weeks 6; only start time given so slots unset and note kept"
+ ],
+ "set": {
+  "description": {
+   "en": "Nubian culture is entangled with memories of loss and longing. The Nubian indigenous peoples lived by the Nile river for hundreds of years before the systematic flooding of their homeland over the course of the 19th Century due to the establishment of the Aswan Dam and the High Dam, after which they became a diasporic people who will never reunite with their beloved homeland. Nonetheless, Nubians continued to practice many of the rituals that united them and tried vehemently to maintain the bond they had with their culture. Grandmothers kept telling their myths and legends, the weddings remained intertwined with the sounds of the tambourine and the scents of musk and incense, and the people kept recreating the communal spaces they cherished south of the Nile. Through surveying Nubian literature, this course will explore the Nubian culture and how it has been sustained through mnemonic practices, such as storytelling, dance, and music. It will discuss its place in Egyptian culture, as well as the ecological aftermath of their displacement. We will read several short stories, supplemented by ethnographic accounts, theoretical texts, and archival activities, and engage in critical discussions about memory, culture, indigeneity, and displacement.\n\nThe Nubian peoples have inhabited the area of what is now considered south of Egypt and northern Sudan for centuries. Their existence in this region has revolved around one fluid entity, the Nile River. The Nile overwhelmingly exists in Nubian culture and heritage, from mythology to birth and death rituals to traditional dances. Proximity to the Nile was of vital importance to Nubian peoples because their livelihood depended on it, and they shared a deep spiritual connection with its water. Therefore, Nubians also centralized all their daily practices around sustaining this river in its purest form. These traditions all came to an abrupt in the 1960s, when the High Dam and Lake Nasser were established under the rule of Egypt’s revolutionary president, Gamal Abdel Nasser. This rendered Nubians a diasporic people, scattered in villages east of Aswan, in Cairo and Alexandria, and around the world. Yet, the non-tangible traditions, like storytelling, singing, and dancing, that were revolved around the Nile, continued to exist in practice and in memory. Nubian people had to rely on personal and collective memories to sustain their relationship with their now drowned lands.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2023-03-01",
+   "weeks": 6,
+   "note": {
+    "en": "Start in 1st, March, Wednesdays at 6:30 pm, offline",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

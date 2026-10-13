@@ -1,0 +1,300 @@
+{
+  "id": 61,
+  "notes": [
+    "description.en: kept overview (up to Why Apply); removed Sessions Outline and Tentative reading list, which moved to the syllabus",
+    "description.ar: was only an Arabic reading list; set to null and moved items to session materials/bibliography",
+    "syllabus: 10 sessions from the page with prompts/readings as materials; course bibliography holds only items not in a session (Reddy, Arabic list, films); full citation details from the tentative list put in material notes",
+    "schedule: weeks=10 (numbered sessions); note kept as written since two alternative groups; no start date stated in source",
+    "teaching_languages: en (English page; Arabic only for the reading list)",
+    "CHECK: the Arabic note 'الترجمة في الطريق' (translation on the way) on the page was not stored anywhere"
+  ],
+  "set": {
+    "description": {
+      "en": "Following two years of continued personal and less personal losses, I was confronted with the idea of how can we come to understand love in our global, counter-global, post-human, post-politics world, specifically the context of Egypt in the aftermath of successive waves of neoliberalization, post-independence trauma, Isalmization and de-Islamization,...etc. This course was inspired by a reading group spearheaded by a friend on how to come to terms with ideas that are infinitely abstract and yet immediately personal and everyday-like. In a time where capitalist logic reaches its apex in transforming our bodies, our minds, our ideas, our emotions and our very span of attention into complex modes of objectification and consumption, how can we come to understand concepts like, attraction, attachment, fidelity, amity and care, and so on. This course raises more questions than tries to answer them and it is entirely premised on the seamless mingling of the inter-subjective and the intellectual.\n\nOver the time-frame of the course participants will continuously oscillate between articulating a subjective experience and ideas and at the same time engaging with a wide variety of texts and media, ranging from St. Augustine to Egyptian “romantic” pocket-book series, Zuhur.\n\nThe course’s main objective is part therapeutic, part intellectual exploration and part critical reflection on the possibilities of love in a time and space like ours.\n\nWhat to Expect\n\nThe course will productively use and engage with the many extraordinary critical and philosophical works that have been authored on love, from Ibn Hazm to Plato, from Hannah Arendt to Um Kalthoum. As much as possible the course will reflect upon on the way the media, literature and popular culture have reflected and formulated their own conception of love and the ways in which such conceptions resonate or contradict critical and philosophical theses.\n\nParticipants are expected to be curious, open and to exercise as much personal and critical reflection and engagement with the texts and the materials screened/discussed in the sessions. A significant aspect of the course is an inter-subjective engagement between what is theoretical and is experiential, what is personal and what is impersonal and what is emotional and what is critical.\n\nEach participant will keep a diary/journal where they will write their own reflections for each session and then share their reflections with their fellow participation for each session.\n\nA final text will be written as to the participants’ notion of love in relation to the experience of sharing, discussing and reflecting on those texts and media.\n\nWhy Apply\n\nIf you are at loss with understanding and articulating a position on love, if you ever wanted to explore how one of the most significant break-ups in the 20thC philosophical circles resulted in a profoundly complex meditation on the concept of love (yes, I am talking about Hannah Arendt’s decision to focus her dissertation on the concept after she broke up with Heidegger). Or if you ever wondered how can anyone have a serious, critical and intellectually grounded conversation about love without eliding its many personal vicissitudes.",
+      "ar": null
+    },
+    "schedule": {
+      "weeks": 10,
+      "note": {
+        "en": "On Sunday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+        "ar": null
+      }
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": {
+    "session_unit": "session",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "Prompt to the students of few visual materials (film posters, novel covers, TV series intros,...etc)\n\nReading excerpts from SEP’s Entry on Love\n\nFollowed by discussions on the consumption of visual material and its correspondence to notions of “romance”. Each participant will share a set of keywords that were triggered by this visual material and will hold on to that for later.\n\nParticipants will then be invited to randomly share the most immediate cultural reference of “love/romance” that comes to mind (be it film, TV series, novel, novella,...etc) and together we will compile list that we will use a map to look at how individual references contribute to the mental and emotional landscape of notions of love.\n\nParticipants will be given the list of readings and asked to go through it and suggest/recommend other material as well as providing selections they think are meaningful/pertinent.\n\nParticipants will be asked to keep a diary where they record their thoughts and reflections on the discussions in the course.",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "SEP entry’s on ‘Love’",
+            "note": "Helm, Bennett, \"Love\", The Stanford Encyclopedia of Philosophy (Fall 2017 Edition), Edward N. Zalta (ed.)",
+            "href": "https://plato.stanford.edu/archives/fall2017/entries/love/"
+          },
+          {
+            "type": "reading",
+            "title": "Berit Brogaard, On Romantic Love: Simple Truths about a Complex Emotion (selections)",
+            "note": "Oxford University Press, 2015",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Eva Illouz, Consuming the Romantic Utopia (selections)",
+            "note": "Consuming the Romantic Utopia: Love and the Cultural Contradictions of Capitalism, University of California Press, 1997",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Zygmunt Bauman, Liquid Love, Polity, 2003 (selections)",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "Participants to share their reflections on session (1)\n\nFollowed by discussion on what it means to consume romance as a ‘commodity’ and logic of capitalism in producing desire and perpetuating ideas of domesticity as a mode of consumption\n\nReading excerpts from Bauman and Illouz\n\nFollowed by discussions on the contemporary global conditions and how they create transient, material-less bonds and how that reflects on our ideas of attachment, care and relationality",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Interview with Eva Illouz on love and capitalism",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "prompt",
+            "title": "Zygmunt Bauman on Liquid Love",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Linnell Secomb, Philosophy and Love: From Plato to Popular Culture (selections)",
+            "note": "Indiana University Press, 2007",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Susan Wolf and Christopher Grau (eds.), Understanding Love (selections)",
+            "note": "Understanding Love: Philosophy, Film and Fiction, Oxford University Press, 2013",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "Participants to share their reflections on session (2)\n\nPrompt excerpts from Egyptian films selected by the participants\n\nReading excerpts from Secomb and Wolf\n\nFollowed by discussions notions of love in Arabic historical cultural and artistic forms and how it has evolved over time and what can popular culture tell us about Arabic",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Hannah Arendt, Love and Saint Augustine",
+            "note": "University of Chicago Press, 1996",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Amelie Oksenberg Rorty, Explaining Emotions",
+            "note": "University of California Press, 1980",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "Participants to share their reflections on session (3)\n\nReading excerpts from Arendt and Rorty and discussing the role of emotions in defining and shaping our understanding of love and what it means to use emotion as a lens",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "Excerpts from Hannah Arednt’s interview in Zur Person, 1964",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "C.S. Lewis, The Four Loves",
+            "note": "Harvest Book, 1971",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "Participants to share their reflections on session (4)\n\nPrompt on CS Lewis audio talk on different kinds of love\n\nFollowed by a discussion on how CS Lewis religious views affected his idea and ideal of love",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Soren Kierkegaard, Works of Love",
+            "note": "Princeton University Press, 1949",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Hegel, Fragment on Love 1797",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "Participants to share their reflections on session (5)\n\nReading excerpts from Kierkegaard’s work on love\n\nFollowed by discussions on how Kierkegaard transformed notions of ‘love’ into a way of understanding the psychology of religious attachment and fervour",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "محمد بن عبد الجبار النفري، كتاب المواقف والمخاطبات",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "ابن عربي، ترجمان الأشواق",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "Participants to share their reflections on session (6)\n\nPrompt to be decided later\n\nReading excerpts from al-Nifri and Ibn Arabi followed by discussion on continuities and discontinuities between ecstatic poetry and love poetry and if we can talk about a different lexicon for love",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Martha C. Nussbaum, Love's Knowledge",
+            "note": "Love's Knowledge: Essays on Philosophy and Literature, Oxford University Press, 1992",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "زكريا إبراهيم، مشكلة الحب، دار المعارف",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 8,
+        "title": null,
+        "description": "Participants to share their reflections on session (7)\n\nPrompts to be decided later\n\nReading excerpts of Nussbaum’s Love’s Knowledge and Zakaria Ibrahim’s Problem of Love and discussing if love can in fact produce knowledge or an epistemic revelation",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "S. Zeki, The Neurobiology of Love",
+            "note": "Volume 581, Issue 14, 12 June 2007, Pages 2575-2579",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Wendy Suzuki, Lecture on The Neurobiology of Love",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 9,
+        "title": "The limits and frontiers of science in understanding love",
+        "description": "Participants to share their reflections on session (8)\n\nFollowed by discussion on the notions of agency, choice and how science can help, and not help understand our emotions better",
+        "meetings": 1,
+        "materials": [
+          {
+            "type": "prompt",
+            "title": "The Chemical Mind - Crash Course Psychology #3",
+            "note": null,
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Love, Ethics and Responsibility (from Linnell Secomb, Philosophy and Love)",
+            "note": null,
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 10,
+        "title": "Review and final assessment",
+        "description": "Participants to share their reflections on their entire experience with the course as well as a personal/theoretical engagement they feel inspired to share",
+        "meetings": 1,
+        "materials": [],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "William M. Reddy, The Making of Romantic Love: Longing and Sexuality in Europe, South Asia, and Japan, 900-1200 CE",
+        "note": "University of Chicago Press, 2012",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "محمد بن جعفر الخرائطي، إعتلال القلوب",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "ابن حزم، طوق الحمامة في الألفة ولألاف",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "نبيل فاروق، النبع الجاف، سلسلة زهور، نهضة مصر",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "(1960) فيلم نهر الحب",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "فيلم أغلى من حياتي (1965)",
+        "note": null,
+        "href": null
+      },
+      {
+        "type": "watch",
+        "title": "مسلسل اللقاء الثاني (1988)",
+        "note": null,
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

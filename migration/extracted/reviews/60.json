@@ -1,0 +1,25 @@
+{
+  "id": 60,
+  "notes": [
+    "teaching_languages: both",
+    "schedule note: two alternative groups, source wording, added Arabic"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": "On Wednesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 pm to 8:00 pm",
+        "ar": "ايام الاربعاء في الصباح من ١٠:٠٠ صباحاً إلى ١٢:٣٠ ظهراً و في المساء من ٥:٣٠ إلى ٨:٠٠ مساءاً"
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/15128511-10157806183400444-2075547265-n_1.jpg",
+    "alt": "Small boy walking along a dirt road through bushland"
+  },
+  "duplicate_of": []
+}

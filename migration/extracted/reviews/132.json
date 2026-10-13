@@ -1,0 +1,18 @@
+{
+  "id": 132,
+  "notes": [
+    "teaching_languages: page is English only",
+    "schedule.weeks 10: Cycle page states thematic courses last ten weeks."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "weeks": 10
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

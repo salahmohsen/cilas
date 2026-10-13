@@ -1,0 +1,32 @@
+{
+ "id": 91,
+ "notes": [
+  "Removed invented Wednesday slot: source gives only a Sunday time; movie night on Wednesday has no time, kept in schedule note",
+  "schedule note moved to en only as written",
+  "teaching_languages en: page in English",
+  "CHECK: page says 8 weeks, flow schedule runs weeks 1-10; kept 8 from the page"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2021-09-26",
+   "weeks": 8,
+   "slots": [
+    {
+     "weekday": "sun",
+     "start_time": "18:30",
+     "end_time": "20:30"
+    }
+   ],
+   "note": {
+    "en": "Sunday nights (offline) from 6:30-8:30, movie night on Wednesday, starts 26th September, through 8 weeks",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

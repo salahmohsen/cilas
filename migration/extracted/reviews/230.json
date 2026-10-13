@@ -1,0 +1,25 @@
+{
+ "id": 230,
+ "notes": [
+  "description: added the Course Objectives (overview content) from the syllabus",
+  "facilitator_note: removed the repeated course title and fellow line and the objectives; kept the assessment methods",
+  "teaching_languages: English (page and syllabus in English)",
+  "sessions already match the syllabus; left unchanged"
+ ],
+ "set": {
+  "description": {
+   "en": "Confronting Modernity: Art, Politics, Religion, and Science invites students to explore the intricate and often contentious relationship between modernity and its various dimensions. This course delves into how modernity shapes our understanding of art, politics, religion, and science, prompting critical reflections on contemporary society.\n\nThrough a carefully curated selection of foundational texts, we will engage with influential thinkers such as Martin Heidegger, Walter Benjamin, Michel Foucault, and Frantz Fanon. We will investigate key themes, including the impact of technology on human experience, the commodification of art in the age of mechanical reproduction, and the dynamics of power and surveillance in modern governance.\n\nAs we navigate these complex ideas, we will also confront critiques of modernity itself, examining alternative perspectives that challenge prevailing narratives. From John Zerzan's reflections on postmodernism to Ian Almond's exploration of Sufism and deconstruction, this course encourages students to question assumptions and clarify the meaning of modernity in their own lives.\n\nCourse Objectives:\n\nBy the end of this course, students will:\n- Develop a critical understanding of modernity's impact through reflections on art, politics, religion, and science.\n- Engage with key philosophical texts that add to our conceptual vocabulary.\n- Foster skills in critical analysis, discussion, and written expression regarding complex ideas related to modernity.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": "Assessment Methods:\n\nAssessment will be based on participation in discussions, written reflections on readings, and a final research paper exploring a topic related to modernity.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

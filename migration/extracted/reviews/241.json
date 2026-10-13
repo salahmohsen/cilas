@@ -1,0 +1,36 @@
+{
+  "id": 241,
+  "notes": [
+    "teaching_languages set to en (English-only page; the Arabic is only the title's gloss)",
+    "weeks 10: the flow's readings run Week 1 to Week 10 (sessions 2 and 7 cover two weeks)",
+    "moved Learning Approach and Learning Outcomes from facilitator_note into description (course objectives); kept Final Project, the assessment, in facilitator_note",
+    "sessions and bibliography already match the flow"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2026-04-27",
+      "weeks": 10,
+      "slots": [
+        {
+          "weekday": "mon",
+          "start_time": "18:00",
+          "end_time": "20:30"
+        }
+      ]
+    },
+    "description": {
+      "en": "This course invites students to explore the diversity of communities in Egypt through a case-based, exploratory approach grounded in ethnographic readings and visual materials. Rather than treating “community” as a fixed or self-evident concept, the course approaches it as something to be examined, unpacked, and questioned through sustained engagement with different social contexts.\n\nEach session focuses on a specific community—such as urban neighborhoods, rural societies, Bedouin groups, or industrial labor settings—and guides students through a repeated analytical process. Across these cases, students examine how communities are structured, how they reproduce themselves over time, and how individuals navigate everyday life within them. Attention is given to social organization, survival strategies, internal hierarchies, and the ways communities understand and represent themselves.\n\nBy returning to the same set of questions each week, the course builds a cumulative analytical lens that allows students to trace patterns, differences, and tensions across diverse forms of social life in Egypt. This iterative method emphasizes close observation, discussion, and reflection, encouraging students to move beyond surface-level description toward a more critical understanding of how communities function and sustain themselves.\n\nWhile the course prioritizes exploration over abstract theorization, it gradually opens space for questioning the apparent stability of communities and the assumptions that underpin them. Students are encouraged to reflect on what appears fixed or natural within different contexts, and to consider the conditions under which communities might be otherwise.\n\nLearning Approach:\n- Case-based, exploratory sessions centered on specific communities\n- Engagement with ethnographic texts and documentaries\n- Repeated analytical framework applied across contexts\n- Emphasis on discussion, observation, and critical reflection\n\nLearning Outcomes:\nBy the end of the course, students will be able to:\n- Analyze how different communities are structured and sustained\n- Identify key social, economic, and cultural dynamics within specific contexts\n- Examine how individuals navigate and negotiate life within communities\n- Critically reflect on norms and boundaries\n- Apply a consistent analytical lens across diverse cases\n- Translate analytical insights into a structured creative project",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": "Final Project: Constructing an Imagined Community. The final project asks students to construct an imagined community, drawing on the analytical framework developed throughout the course. Rather than producing a purely fictional or idealized society, students are expected to design a community grounded in the social realities, tensions, and patterns observed in the ethnographic cases studied.\n\nUsing the same set of guiding questions applied each week, students will develop a detailed account of their imagined community, addressing how it is structured, how it reproduces itself, how individuals navigate life within it, and what forms of tension, inequality, or exclusion may emerge. The project encourages students to think critically about the persistence of social dynamics and to engage seriously with the challenges of imagining alternatives.\n\nThe final submission may take the form of an analytical essay, a narrative piece, or a hybrid format, but must demonstrate a clear and grounded engagement with the course’s analytical approach.",
+      "ar": null
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

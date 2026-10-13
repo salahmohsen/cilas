@@ -1,0 +1,27 @@
+{
+  "id": 62,
+  "notes": [
+    "title: source heading is one title with a colon, subtitle removed",
+    "teaching_languages: English-only page",
+    "cover from own page"
+  ],
+  "set": {
+    "title": {
+      "en": "Change: A Historical Survey of Oppression and Resistance",
+      "ar": null
+    },
+    "subtitle": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/125115.png",
+    "alt": "Handwritten text reading: when nothing goes right... go left."
+  },
+  "duplicate_of": []
+}

@@ -1,0 +1,27 @@
+{
+  "id": 203,
+  "notes": [
+    "teaching_languages: English-only page",
+    "schedule: Thursdays at 6 pm, online, start 2nd of May; start time only so no slot, sentence in note; weeks 12 (flow: weeks 1-10 plus student-guided sessions weeks 11-12)",
+    "cover: only image in this block (illustration of a teacher bending over a line of students)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2024-05-02",
+      "weeks": 12,
+      "note": {
+        "en": "Online, Every Thursday at 6 pm, starting date is 2nd of May",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/415969354_orig.png",
+    "alt": "Line drawing of a tall teacher bending over a row of smaller students in magenta and navy"
+  },
+  "duplicate_of": []
+}

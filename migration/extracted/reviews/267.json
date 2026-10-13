@@ -1,0 +1,14 @@
+{
+  "id": 267,
+  "notes": [
+    "Description, schedule and date match the page; set teaching_languages (page is English only)."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

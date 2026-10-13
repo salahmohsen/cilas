@@ -1,0 +1,37 @@
+{
+  "notes": [
+    "new course: the page held only a link to course_outline_g21c.doc; text from that Word outline (coordinator David Tholen, eight weeks, Jan. 5th to Feb. 27th, 2014)",
+    "dates: news-and-events call for applications (12/17/2013) says thematic courses of the second trimester run eight weeks starting January 5th, 2014; no weekday or time given",
+    "no image on the page, cover null"
+  ],
+  "set": {
+    "title": {
+      "en": "Governance in the 21st Century",
+      "ar": null
+    },
+    "course_type": "THEMATIC",
+    "description": {
+      "en": "Governance in the 21st Century acquaints students with the conceptual vocabulary and actionable knowledge to understand contemporary political systems and their decision-making processes. Not to be confused with government, governance understands the processes by which increasingly complex societies take important decisions regarding their collective well being. In great contrast to the early 20th century, wherein sovereign states wielded absolute power, we now live in an age characterised by the fragmentation of political power. Citizens, corporations, institutions and states all participate, or should participate, as actors in governance. The course will shed light on the construction of the modern nation state system and evaluate how this system is undergoing significant change. Students will think about how our understanding of governance needs to revised to address the challenges of the 21st century. Students will be presented with different theories of the state and the functioning of state institutions. The course will examine the debates regarding how states and societies relate to one another, in which capacity civil society exists, and how hitherto distinct realms of public and private - state and non - state, are increasingly merging.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2014-01-05",
+      "weeks": 8
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "legacy_url": "/governance-in-the-21st-century.html",
+  "cycle": {
+    "season": "winter",
+    "start_year": 2014,
+    "space": "al-Ghuria",
+    "start_date": "2014-01-05"
+  },
+  "fellows": [
+    "David Tholen"
+  ]
+}

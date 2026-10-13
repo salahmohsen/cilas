@@ -1,0 +1,23 @@
+{
+ "id": 109,
+ "notes": [
+  "teaching_languages: page gives full text in English and Arabic",
+  "schedule.note: two alternative groups (Wednesday mornings or Tuesday evenings), so kept as a note in both languages as the page writes it; no slots",
+  "description already right in both locales (matches the page)"
+ ],
+ "set": {
+  "teaching_languages": [
+   "ar",
+   "en"
+  ],
+  "schedule": {
+   "note": {
+    "en": "On Wednesday mornings from 10:00 am to 12:30 pm and Tuesday evenings from 5:30 to 8:00 pm",
+    "ar": "أيام الأربعاء صباحا من العاشرة إلى الثانية وعشر ظهراً و أيام الثلاثاء مساءاً من الخامسة والنصف إلى الثامنة"
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

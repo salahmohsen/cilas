@@ -1,0 +1,25 @@
+{
+ "id": 223,
+ "notes": [
+  "teaching_languages en; weeks 12 from numbered sessions"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2022-02-14",
+   "weeks": 12,
+   "slots": [
+    {
+     "weekday": "mon",
+     "start_time": "18:00",
+     "end_time": "20:00"
+    }
+   ]
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

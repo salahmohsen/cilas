@@ -1,0 +1,39 @@
+{
+  "id": 287,
+  "notes": [
+    "facilitator_note removed: syllabus header (title, schedule, instructor, email) duplicates schedule/fellow",
+    "schedule: start date and Thursday slot from page; note repeated slots so removed",
+    "CHECK: start date 2020-12-24 as the source states, though cycle winter-2020 starts Nov 2019-Mar 2020 by the winter rule (cycle deadline is Dec 2020)",
+    "CHECK: cover is image2.png on the page; on disk only image2_orig.jpg exists (Cairo skyline illustration)"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2020-12-24",
+      "weeks": 7,
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "16:00",
+          "end_time": "18:00"
+        }
+      ],
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/image2_orig.jpg",
+    "alt": "Colourful illustrated night skyline of Cairo with the Cairo Tower, pyramids and a crescent moon"
+  },
+  "duplicate_of": []
+}

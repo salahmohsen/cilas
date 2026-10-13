@@ -1,0 +1,17 @@
+{
+  "id": 271,
+  "notes": [
+    "Set teaching_languages (English-only page); cover is the poster in the course's own block on its page."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/unnamed_orig.jpg",
+    "alt": "Staged photograph of two dancers in green and three people in magenta framed by an oval window against an orange wall"
+  },
+  "duplicate_of": []
+}

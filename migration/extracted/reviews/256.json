@@ -1,0 +1,43 @@
+{
+  "id": 256,
+  "notes": [
+    "description: added the flow's second paragraph and the guiding questions (they sat in facilitator_note); the first paragraph is the page's",
+    "subtitle: 'Concerning Ghostly Matters' given with the title in the flow",
+    "facilitator_note cleared: held title/date line, overview text and timing, now in description / subtitle / schedule",
+    "schedule: page says starting July 13th 5pm-7pm for eight weeks; flow says Tuesdays 17.00-19.00 (13 July 2021 is a Tuesday) so slot tue 17:00-19:00",
+    "teaching_languages: English page",
+    "cover: MISSING-IMAGE: uploads/1/9/1/0/19102967/editor/screen-shot-2021-06-24-at-5-05-44-pm.png?1624543315",
+    "CHECK: flow says 'July 15 - September 15' but the page says starting July 13th; kept the page date 2021-07-13"
+  ],
+  "set": {
+    "subtitle": {
+      "en": "Concerning Ghostly Matters",
+      "ar": null
+    },
+    "description": {
+      "en": "Sherif Younes, in his book “Protests of Resignation and Creation of Nasser’s Worship” (2005) argues that we can understand the majority of the Egyptian people as a ghost, omnipresent in the discourse of the political regime but without any real or tangible influence. This course thinks about haunting, ghosts and the feelings they invoke in the context of Egypt and the Middle East/North Africa. In this course, we aim to think through how a focus on haunting and feeling promises ways of capturing contradictions, impossibility, hope, defeat, and a whole range of political beliefs and practices that might slip out of view when we use a narrow definition of political, social and economic transformation.\n\nHaunting has multiple genealogies, including work on the aftermath of conflict in East Asia, the afterlives of enslavement in the Americas, and work on the defeat of communism and the spectre that emerges from it. In her book Ghostly Matters (2008), Avery Gordon eloquently shows us how following the sounds, pictures and appearances of ghosts allow us to decode the un-seen and un-narrated social, political and economic dimensions of contemporary inequality and violence. The viscerality of haunting and the ghosts of past revolutions also bring to life the question of feeling. Lately, scholars, writers and activists have paid increasing attention to emotions, feelings, sensory experiences and, more broadly, affect across the Middle East and North Africa. The course thinks with and through these experiences in order to explore forms of history-telling that are “rich with emotional knowledges,” (Million 2009).\n\nThe course reflects on the following questions:\n- How might we understand the appearance and disappearance of “ghosts” and what might they signify?\n- How might we follow, converse or study these ghosts, methodologically and analytically?\n- How might theories of affect and feeling help in understanding the appearance of ghosts and how they are experienced by a variety of people?\n- How might affective experiences be connected to acts of remembering, acts of forgetting and the limits of the imagination around political struggle?\n- How might we trace the intangible ways in which feelings, states and emotive experiences shape political and economic processes?\n- How can we use haunting as an alternative way of knowledge production, and how might this build on calls to de-centre Western epistemologies and ontologies?",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2021-07-13",
+      "weeks": 8,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "17:00",
+          "end_time": "19:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

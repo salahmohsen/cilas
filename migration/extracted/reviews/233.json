@@ -1,0 +1,19 @@
+{
+ "id": 233,
+ "notes": [
+  "teaching_languages: English (page and syllabus in English)",
+  "weeks: 10 (syllabus numbers 10 sessions)",
+  "description, sessions, schedule match the 2025 source; the summer 2022 page is an earlier run of the course, not used"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 10
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

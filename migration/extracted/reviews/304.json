@@ -1,0 +1,22 @@
+{
+  "id": 304,
+  "notes": [
+    "facilitator_note: was the flow document's title/footer boilerplate; replaced by the flow's 'Rest of the Course' note to participants",
+    "schedule: start_date 2024-12-03 (stated: 3rd of December, Tuesday; inside winter 2025 cycle), weeks 6 (six numbered weekly sessions); only a start time is given so slots stay unset and the note stays",
+    "teaching_languages: English page and flow -> en"
+  ],
+  "set": {
+    "facilitator_note": {
+      "en": "Rest of the Course:\n\nDepending on the flow and direction of our discussions, students will be given the chance to elect the path that is to be followed.",
+      "ar": null
+    },
+    "schedule": {
+      "start_date": "2024-12-03",
+      "weeks": 6
+    },
+    "teaching_languages": ["en"]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

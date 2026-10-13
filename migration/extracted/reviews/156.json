@@ -1,0 +1,15 @@
+{
+  "id": 156,
+  "notes": [
+    "teaching_languages en: description page is in English (Arabic only gives title and schedule line)",
+    "sessions already match the flow (weeks 2-3 merged as one session with 2 meetings), unchanged"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": 33,
+  "notes": [
+    "teaching_languages set to en (page text is English only)",
+    "CHECK: the course image (published/37823595-...-n.png, in this course's block) is not in the local archive, so cover is null"
+  ],
+  "set": { "teaching_languages": ["en"] },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

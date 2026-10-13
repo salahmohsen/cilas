@@ -1,0 +1,22 @@
+{
+  "id": 39,
+  "notes": [
+    "teaching_languages en+ar: course uses both English and Arabic",
+    "schedule note removed: it only repeated the Saturday 17:30-19:30 slot and online venue"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en",
+      "ar"
+    ],
+    "schedule": {
+      "note": {
+        "en": null,
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

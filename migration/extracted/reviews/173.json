@@ -1,0 +1,23 @@
+{
+ "id": 173,
+ "notes": [
+  "Cleared facilitator_note: it only repeated the title and subtitle",
+  "Set weeks to 8 (the flow numbers Weeks 1-8)",
+  "Set teaching_languages to en (English-only page)"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "schedule": {
+   "weeks": 8
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

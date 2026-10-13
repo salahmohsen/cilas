@@ -1,0 +1,37 @@
+{
+  "notes": [
+    "new course: the page held only a link to course_outline_ge.doc; text from that Word outline (coordinator Karim-Yassin Goessinger, eight weeks, Jan. 5th to Feb. 27th, 2014)",
+    "dates: news-and-events call for applications (12/17/2013) says thematic courses of the second trimester run eight weeks starting January 5th, 2014; no weekday or time given",
+    "no image on the page, cover null"
+  ],
+  "set": {
+    "title": {
+      "en": "Green Economy",
+      "ar": null
+    },
+    "course_type": "THEMATIC",
+    "description": {
+      "en": "Green Economy looks at cutting edge concepts and methods in ecological economics - an interdisciplinary field that emerged in response to the global sustainability crisis. With a sustainable development focus, the course draws on a range of disciplines including economics, environmental sciences, political ecology and psychology to examine the challenges of climate change, biodiversity loss, resource depletion, water shortages and social cohesion. Ecological economics has been critical of the dominant approaches to decision making, such as cost-benefit analysis, the use of GDP as a key economic progress measure and the limits of classical economic models. The course will explore, amongst other concepts, the concept of industrial ecology, which highlights the importance of intersectoral flows of matter and energy required for the production of goods and services. The method of environmentally extended input-output analysis, will be introduced to illustrate this approach. In addition, Green Economy will equip students with the system of tools for decision making which are based on multicriteria methods and used in social and environmental policy making.",
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2014-01-05",
+      "weeks": 8
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "legacy_url": "/green-economy.html",
+  "cycle": {
+    "season": "winter",
+    "start_year": 2014,
+    "space": "al-Ghuria",
+    "start_date": "2014-01-05"
+  },
+  "fellows": [
+    "Karim-Yassin Goessinger"
+  ]
+}

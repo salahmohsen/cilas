@@ -1,0 +1,33 @@
+{
+ "id": 220,
+ "notes": [
+  "description: page paragraph kept, then the four overview paragraphs of the course flow (they were wrongly in facilitator_note)",
+  "facilitator_note cleared (it held the flow's overview text)",
+  "schedule: only a start time is given (Thursday 17:30), so no slots; sentence kept in note; weeks 10 from numbered sessions",
+  "teaching_languages en"
+ ],
+ "set": {
+  "description": {
+   "en": "Nothing can be more unsettling than pondering one’s mortality. Death is ubiquitous, and yet never really spoken about. It remains a powerful taboo. And although we are definitely better off than our ancestors were, two hundred years ago, death can still find ways to rattle us and disrupt our lives, the current pandemic being a case in point. In this course, we try to look at the “history of death” and the fundamental questions that death raises about who we are and what we do. Through using philosophical, anthropological and scientific methods and approaches, we collectively try to develop a language that would allow us to begin to think about it. Using a feminist lens that centres gender as a dividing line in the experience of life and death, the course will privilege feminist experience and contribution to understanding death as a phenomenon. Participants will be invited to build on their subjective experiences and broader cultural milieu to engage with and enrich the debate and deepen class discussions and course reflections.\n\nWe usually don’t think or meditate on death in our modern culture, with its obsession with youthfulness and longevity, there is a taboo around death. Aside from religious convictions about the inevitability of death, we don’t think much about death in our everyday life unless we encounter it personally, as when someone we know dies or collectively as in a state of war or, like now, during a global pandemic. It is then that death becomes what it always is, an essential experience for all living things. Death then goes from the personal, individual experience to something that has to be managed, monitored, combated and even legalized (as with euthanasia, for example). When is it legal to end someone’s life, or when to punish those whose actions resulted in the death of someone.\n\nDeath as many would say is essentially an individual experience, it's inevitable, irreplaceable and terminal. No one escapes it, no one that has died has “come back from the dead” (long after they died, and not just with clinical and medical support/intervention when their vital functions are affected). And yet we lack the terms to be able to talk about it, how to understand it and understand our history in dealing with it and what can the inevitability of death mean for us, practically, philosophically but also ethically.\n\nIn this course, we will try to explore the general contours of death as a phenomenon, we will look at historical, anthropological, scientific, religious and philosophical sources that tried to examine and understand death, and what that says about the human experience. The course will centre a feminist understanding and conception of death and its meaning. Despite the fact that death is the great equalizer, gendered notions of death persist in ways that most of us would still find difficult to fathom.\n\nThrough discussion and reflection, the participants collectively with the instructor would develop their own lexicon and terms in understanding and dealing with death. A central aspect of the course, that the participants relate what they read to their own subjective experience and are then able to have a meaningful engagement with the readings on hand and with their own everyday experience on the other.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2022-02-06",
+   "weeks": 10,
+   "note": {
+    "en": "Thursday at 17:30 pm - online",
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

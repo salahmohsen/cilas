@@ -1,0 +1,29 @@
+{
+  "id": 208,
+  "notes": [
+    "description: the fuller course description from the flow PDF (names Bowie and Schurmann as the framework)",
+    "summary: the flow's course teaser, moved out of facilitator_note",
+    "facilitator_note: removed (audio intro is covered by the course bibliography; course image credit is not a note)",
+    "teaching_languages: page and flow are English only"
+  ],
+  "set": {
+    "description": {
+      "en": "The course attempts to account for the transformations that occurred in philosophy and music in the 20th century which signaled the disintegration of the metaphysical foundations of modernity both in thought and praxis. The philosophical turn in the 20th century which can be labeled as an “interpretative turn” has posed the questioning of, deconstruction and weakening metaphysical foundations of the philosophical tradition as the task of thinking. This took place through numerous schools of thought and trajectories; from critical phenomenology, to genealogy and poststructuralism, and from Frankfurt School’s critical theory to postcolonial studies, even to performance studies, where the universality of a unified principle that used to guide philosophy has been replaced with a multiplicity that ushered a post-foundational era. For music it was no less different, the rise atonal music, jazz, electronic music and the exposure to world music outside the west all helped in decentring the western perception on music and harmony as the guiding principle and opened up new possibilities both for our perception of things and for the new configurations between things, actions and sounds. Building upon the works of Andrew Bowie and Reiner Schurmann who will provide the framework for our course, we will embark on a journey through these transformations while critically engaging with readings in our attempt to read these transformations in philosophy through music.",
+      "ar": null
+    },
+    "summary": {
+      "en": "How does music and philosophy relate to each other? And what does this relation might mean for us in everyday life? Even if it means something, isn’t reading music through philosophy like philosophizing about art and that’s it? What if we tried to read philosophy through music? In this course, we will engage critically in learning about philosophical transformations in the 20th century through music and its transformations at the same era and its relation to our state of being where we need to get attuned to its sound.",
+      "ar": null
+    },
+    "facilitator_note": {
+      "en": null,
+      "ar": null
+    },
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

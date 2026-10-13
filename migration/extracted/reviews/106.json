@@ -1,0 +1,23 @@
+{
+  "id": 106,
+  "notes": [
+    "epigraph: the two Arabic quotes (Latifa al-Zayyat, Iman Mersal) that open the course block, set apart from the description",
+    "teaching_languages: page is written in English",
+    "schedule.note removed: it only repeated the Wednesday 18:00-20:00 slot and 'offline' (already in location)",
+    "description left as is (matches the fall block verbatim); sessions already match the course flow"
+  ],
+  "set": {
+    "epigraph": {
+      "en": null,
+      "ar": "\"وكتاباتنا الإبداعية بالتالي تختلف عن كتابات الرجل الذي ينتمي لنفس المجتمع الذي أنتمي إليه، قد تتساوى فنيًا، وقد تتميز، وقد تختلف، ولكنها في كل الحالات تختلف، فلم كان من الصعب علينا الإقرار بهذا الاختلاف؟\" لطيفة الزيات\n\n\"عندما كنت أتساءل لماذا لا توجد شاعرة عربية حديثة أنتمي إليها، لم أسمع بها [سنية صالح] عندما كنت أفكر.\" إيمان مرسال"
+    },
+    "teaching_languages": ["en"],
+    "schedule": {
+      "slots": [{ "weekday": "wed", "start_time": "18:00", "end_time": "20:00" }],
+      "note": { "en": null, "ar": null }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

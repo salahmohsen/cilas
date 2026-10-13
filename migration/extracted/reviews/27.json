@@ -1,0 +1,19 @@
+{
+  "id": 27,
+  "notes": [
+    "teaching_languages: en (English-only page)",
+    "cover: Bas Paris's portrait, the only image in the Waste block",
+    "CHECK: schedule not set; cycle page grid shows Waste in several alternative slots ('Waste OR Identities') without a clear time for this course; page also doesn't say if offline"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ]
+  },
+  "syllabus": null,
+  "cover": {
+    "upload": "uploads/1/9/1/0/19102967/_6220506.jpg",
+    "alt": "Bas Paris, a young man with glasses, seen in profile next to a green curtain"
+  },
+  "duplicate_of": []
+}

@@ -1,0 +1,19 @@
+{
+  "id": 121,
+  "notes": [
+    "teaching_languages en: English-only page",
+    "schedule: Monday morning and evening groups as slots; sentence kept in note; start_date 2016-01-11 already matches the page"
+  ],
+  "set": {
+    "teaching_languages": ["en"],
+    "schedule": {
+      "slots": [
+        {"weekday": "mon", "start_time": "10:00", "end_time": "12:30"},
+        {"weekday": "mon", "start_time": "17:30", "end_time": "20:00"}
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

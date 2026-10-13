@@ -1,0 +1,343 @@
+{
+  "id": 75,
+  "notes": [
+    "teaching_languages: the page is English only.",
+    "facilitator_note: dropped the rooftop listening-sessions paragraph, which repeats the last sentence of the description.",
+    "syllabus: course bibliography held bare titles that repeat the session readings; now only works not already in a session's materials (with full citations and the suggested audio).",
+    "CHECK: cover image the-ancient-of-days.jpg (uploads/1/9/1/0/19102967/published/) is not in the weebly zip or the mirror, so cover left null."
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "facilitator_note": {
+      "en": "Course Flow: The course’s readings will mainly focus on the works of Andrew Bowie; Music, Philosophy and Modernity, Aesthetics and Subjectivity. Together we will critically engage with readings as well as moving back and forth between the themes we discuss, experimenting with some of them - as infusing two distinct themes through discussion and listening - in order to widen our perspectives regarding the reciprocal relation between philosophy and music.\n\nAs discussions would unfold through the course, more suggestions than the ones stated below would be welcomed.",
+      "ar": null
+    }
+  },
+  "syllabus": {
+    "session_unit": "week",
+    "sessions": [
+      {
+        "order": 1,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy and Modernity",
+            "note": "Andrew Bowie. Introduction.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Aesthetics and Subjectivity",
+            "note": "Andrew Bowie. Introduction and Chapter one.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Music as Thought",
+            "note": "Mark Evan Bonds. Chapter one.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Oxford History of Western Music, Vol. II",
+            "note": "Optional. Chapter 31.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 2,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy and Modernity",
+            "note": "Andrew Bowie. Chapters one and two.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Aesthetics and Subjectivity",
+            "note": "Andrew Bowie. Chapter Two.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Music as Thought",
+            "note": "Mark Evan Bonds. Chapter two.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "On Symbol and Allegory",
+            "note": "Optional. Gunnar Berefelt.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 3,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy, and Modernity",
+            "note": "Andrew Bowie. Chapter three.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Aesthetics and Subjectivity",
+            "note": "Andrew Bowie. Chapters three and four.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Music as Thought",
+            "note": "Mark Evan Bonds. Chapter three.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Romanticism, Aesthetics and Nationalism",
+            "note": "David Aram Kaiser. Introduction and Chapter two.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Oxford History of Western Music, Vol. III",
+            "note": "Optional. Chapter 35.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 4,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy, Modernity",
+            "note": "Andrew Bowie. Chapters four and five.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Aesthetics and subjectivity",
+            "note": "Andrew Bowie. Chapter five.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Haydn’s Sunrise, Beethoven’s Shadow",
+            "note": "Deirdre Loughridge. Introduction and Chapter one.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Metaphor and Musical Thought",
+            "note": "Additional reading. Michael Spitzer. Introduction.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 5,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy, Modernity",
+            "note": "Andrew Bowie. Chapter six.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Aesthetics and Subjectivity",
+            "note": "Andrew Bowie. Chapters six and seven.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beyond and Before",
+            "note": "Hegarty and Halliwell. Chapter one.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Metaphor and Musical Thought",
+            "note": "Additional reading. Michael Spitzer. Chapter six.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 6,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Music, Philosophy, Modernity",
+            "note": "Andrew Bowie. Chapters Seven and Eight.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Aesthetics and Subjectivity",
+            "note": "Andrew Bowie. Chapter Eight.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beyond and Before",
+            "note": "Hegarty and Halliwell. Chapter four.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Noise: The Political Economy of Music",
+            "note": "Additional reading. Jacques Attali. Chapter One.",
+            "href": null
+          }
+        ],
+        "activities": []
+      },
+      {
+        "order": 7,
+        "title": null,
+        "description": "",
+        "meetings": null,
+        "materials": [
+          {
+            "type": "reading",
+            "title": "Experiencing Progressive Rock",
+            "note": "Robert Burns. Chapters one and two.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Beyond and Before",
+            "note": "Hegarty and Halliwell. Chapter five.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Haydn’s sunrise, Beethoven’s shadow",
+            "note": "Deirdre Loughridge. Chapter five.",
+            "href": null
+          },
+          {
+            "type": "reading",
+            "title": "Platonism, Music, and the Listener’s Share",
+            "note": "Additional reading. Christopher Norris. Introduction.",
+            "href": null
+          }
+        ],
+        "activities": []
+      }
+    ],
+    "bibliography": [
+      {
+        "type": "reading",
+        "title": "Beethoven’s Symphonies: Nine Approaches to Art and Ideas",
+        "note": "Geck, Martin. Translated by Stewart Spencer, University of Chicago Press, 2017.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Oxford History of Western Music Vol. II: The Seventeenth and Eighteenth Centuries",
+        "note": "Taruskin, Richard. Oxford University Press, USA, 2005.",
+        "href": null
+      },
+      {
+        "type": "reading",
+        "title": "The Oxford History of Western Music Vol III: The Nineteenth Century",
+        "note": "Taruskin, Richard. Oxford University Press, USA, 2005.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Beethoven’s Fifth Symphony",
+        "note": "Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Beethoven’s Ninth Symphony",
+        "note": "Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Piano Sonata no. 14 (widely known as the moonlight sonata)",
+        "note": "Beethoven. Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "The Magic Flute",
+        "note": "Mozart. Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Serenade",
+        "note": "Schubert. Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Faust, and Tannhauser (overture)",
+        "note": "Wagner. Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Thus Spoke Zarathustra",
+        "note": "Richard Strauss. Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Fifth Symphony and Eighth Symphony",
+        "note": "Gustav Mahler. Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "The Piper at the Gates of Dawn, Atom Heart Mother, Echoes, The Dark Side of the Moon",
+        "note": "Pink Floyd. Suggested audio.",
+        "href": null
+      },
+      {
+        "type": "listen",
+        "title": "Al-Gondol, Al-Karnak, Cleopatra, and Al-Nahr Al-Khalid",
+        "note": "Mohamed AbdelWahab. Suggested audio.",
+        "href": null
+      }
+    ],
+    "notes": null
+  },
+  "cover": null,
+  "duplicate_of": []
+}

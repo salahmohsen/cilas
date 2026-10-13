@@ -1,0 +1,32 @@
+{
+  "id": 167,
+  "notes": [
+    "teaching_languages ar: Arabic page and flow",
+    "weeks 11: flow says six weeks of part one plus five weeks of part two (flow table lists only the first six sessions)",
+    "CHECK: start 2022-02-13 is a Sunday; source says 'start week' so kept as given",
+    "sessions already match the flow"
+  ],
+  "set": {
+    "teaching_languages": [
+      "ar"
+    ],
+    "schedule": {
+      "start_date": "2022-02-13",
+      "weeks": 11,
+      "slots": [
+        {
+          "weekday": "thu",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ],
+      "note": {
+        "en": "الخميس من 6 ل 8 مساء (online and offline), start week is 13 February",
+        "ar": null
+      }
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

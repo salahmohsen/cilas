@@ -1,0 +1,40 @@
+{
+ "id": 108,
+ "notes": [
+  "facilitator_note removed: only the flow's title line 'FEMINIST PEDAGOGY LAB. CILAS, Fall 2022.'",
+  "description: paragraphs split as in the course flow (same words as the page)",
+  "schedule.note removed (repeats the Thursday 17:30-20:00 slot)",
+  "teaching_languages: page and flow are in English",
+  "sessions and reading list already match the flow"
+ ],
+ "set": {
+  "description": {
+   "en": "Here we explore how education manifesting in an institution, a curriculum, or a teacher weaves into a broader gendered social and cultural practice. Through a feminist lens, we look back at our schooling and tertiary education to record memories in retrospective diaries. We will explore different angles to how education can engage with gender through adopting pedagogies, nurturing relationships in learning spaces, actualizing teachers’ agency, and recognizing existing power and privileges.\n\nWe will follow a reading circle format with readings divided amongst us in preparation for the session then discussed in rotational groups to then share core insights and commentary in a whole group.\n\nThroughout, we (can) work towards a final project that we enjoy individually, in pairs or small groups.",
+   "ar": null
+  },
+  "facilitator_note": {
+   "en": null,
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "weeks": 12,
+   "slots": [
+    {
+     "weekday": "thu",
+     "start_time": "17:30",
+     "end_time": "20:00"
+    }
+   ],
+   "note": {
+    "en": null,
+    "ar": null
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

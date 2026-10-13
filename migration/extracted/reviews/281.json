@@ -1,0 +1,35 @@
+{
+ "id": 281,
+ "notes": [
+  "description already matches the source in both languages; unchanged",
+  "teaching_languages: page has full text in English and Arabic",
+  "schedule: Tuesday morning and evening groups as slots; Arabic schedule sentence added to note (alternative groups)"
+ ],
+ "set": {
+  "teaching_languages": [
+   "en",
+   "ar"
+  ],
+  "schedule": {
+   "slots": [
+    {
+     "weekday": "tue",
+     "start_time": "10:00",
+     "end_time": "12:30"
+    },
+    {
+     "weekday": "tue",
+     "start_time": "17:30",
+     "end_time": "20:00"
+    }
+   ],
+   "note": {
+    "en": "On Tuesday mornings from 10:00 am to 12:30 pm and evenings from 5:30 to 8:00 pm",
+    "ar": "أيام الثلاثاء صباحا من العاشرة إلى الثانية وعشر ظهراً و مساءاً من الخامسة والنصف إلى الثامنة"
+   }
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}

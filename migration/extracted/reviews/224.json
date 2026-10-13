@@ -1,0 +1,26 @@
+{
+  "id": 224,
+  "notes": [
+    "teaching_languages set to en (page and course text in English; Arabic only in the title)",
+    "weeks set to 12 (the flow numbers 12 weekly sessions)"
+  ],
+  "set": {
+    "teaching_languages": [
+      "en"
+    ],
+    "schedule": {
+      "start_date": "2022-02-13",
+      "weeks": 12,
+      "slots": [
+        {
+          "weekday": "tue",
+          "start_time": "18:00",
+          "end_time": "20:00"
+        }
+      ]
+    }
+  },
+  "syllabus": null,
+  "cover": null,
+  "duplicate_of": []
+}

@@ -1,0 +1,30 @@
+{
+ "id": 221,
+ "notes": [
+  "facilitator_note: removed the header line repeating title/fellow/year, kept the notes to participants",
+  "teaching_languages en; weeks 12"
+ ],
+ "set": {
+  "facilitator_note": {
+   "en": "Resources and Media will be shared during the course. Also we will create a collaborative playlist for the course! Dates of Jam Sessions, concerts or music events are TBA.",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ],
+  "schedule": {
+   "start_date": "2022-02-13",
+   "weeks": 12,
+   "slots": [
+    {
+     "weekday": "mon",
+     "start_time": "18:00",
+     "end_time": "20:00"
+    }
+   ]
+  }
+ },
+ "syllabus": null,
+ "cover": null,
+ "duplicate_of": []
+}
