@@ -206,9 +206,9 @@ export default async function ArticlePage({ params }: Props) {
             </header>
 
             {cover?.url && (
-              <div className={grid.readerImage}>
+              <div className={`${grid.readerImage} article-cover`}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt={cover.alt} className={grid.image} src={cover.url} />
+                <img alt={cover.alt} className={`${grid.image} article-cover-image`} src={cover.url} />
               </div>
             )}
 

@@ -2325,3 +2325,14 @@ h3 {
 .home-action[data-primary][aria-disabled='true']:hover {
   background: oklch(0.985 0 0);
 }
+
+/* An article's cover shows whole, at its own proportions: Arc's reader crops
+   it to 16:9. A tall one stops at three quarters of the screen, contained. */
+.article-cover.article-cover {
+  aspect-ratio: auto;
+}
+.article-cover .article-cover-image.article-cover-image {
+  height: auto;
+  max-height: 75vh;
+  object-fit: contain;
+}
