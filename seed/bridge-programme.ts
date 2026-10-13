@@ -25,6 +25,7 @@ const payload: Payload = await getPayload({ config })
  */
 
 const SLUG = 'bridge-programme-2025-2026'
+const SEASON_AR = { fall: 'الخريف', winter: 'الشتاء', spring: 'الربيع', summer: 'الصيف' } as const
 
 type Dir = 'ltr' | 'rtl'
 const text = (t: string) => ({ type: 'text', text: t, format: 0, detail: 0, mode: 'normal', style: '', version: 1 })
@@ -173,6 +174,18 @@ await payload.update({
     tagline: null,
     overview: ar.overview,
     schedule_note: ar.schedule_note,
+    // Components come from the archive import with English labels only; the
+    // label is required in every locale, so the Arabic one is written here.
+    components: await Promise.all(
+      (afterEn.components ?? []).map(async (c) => {
+        const id = typeof c.cycle === 'object' && c.cycle ? c.cycle.id : c.cycle
+        const cycle = await payload.findByID({ collection: 'cycles', id, depth: 0, overrideAccess: true })
+        const season = SEASON_AR[cycle.season as keyof typeof SEASON_AR]
+        const year = String(cycle.start_year).replace(/\d/g, (d) => '٠١٢٣٤٥٦٧٨٩'[Number(d)])
+        const kind = c.course_types?.includes('CORE') ? 'المقررات الأساسية' : 'المقررات الموضوعية والمعامل'
+        return { ...c, label: `${kind}، ${season} ${year}` }
+      }),
+    ),
     // The plan's label and the note are per language; the amounts are shared.
     pricing: {
       ...afterEn.pricing,
