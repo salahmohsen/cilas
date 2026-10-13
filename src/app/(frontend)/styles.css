@@ -2206,6 +2206,29 @@ h3 {
     padding-block: 0.625rem;
     border-top: 1px solid var(--poster-ink);
   }
+  /* The time left fills its cell: flush to the cell's end, the strip's full
+     height, square corners, one rule before it instead of a pill. */
+  .poster-meta {
+    align-items: stretch;
+    padding-inline-end: 0;
+  }
+  .poster-meta > span:not([data-variant]) {
+    align-self: center;
+  }
+  .poster .poster-meta [data-variant='compact'] {
+    display: flex;
+    align-self: stretch;
+    margin-inline-start: auto;
+  }
+  .poster .poster-meta [data-variant='compact'] > div {
+    height: auto !important;
+    border: 0;
+    border-inline-start: 1px solid var(--poster-ink);
+    border-radius: 0;
+  }
+  .poster .poster-meta [data-variant='compact'] > div > div {
+    height: 100%;
+  }
 }
 .poster[data-layout='3'] .poster-heading {
   flex: 1;
