@@ -119,7 +119,9 @@ export function OrbitCardStack({
     stageRef.current?.querySelectorAll<HTMLElement>('[data-orbit-card]')[index]?.focus()
 
   return (
-    <div className={cn('relative flex w-full items-center justify-center p-8', className)}>
+    // `isolate`: the cards' z-indexes order them among themselves only, so the
+    // fan never paints over the sticky site header.
+    <div className={cn('relative isolate flex w-full items-center justify-center p-8', className)}>
       <div
         aria-label={label}
         className="relative h-[540px] w-full max-w-[980px]"
