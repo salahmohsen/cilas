@@ -22,6 +22,8 @@ export function ArticlesGrid({
   showFeatured = true,
   pageSize = 9,
   categoryOrder,
+  header = true,
+  flush = false,
 }: {
   title: string
   description: string
@@ -34,12 +36,18 @@ export function ArticlesGrid({
   pageSize?: number
   /** Card ids in reading order, per category title (a publication's own order). */
   categoryOrder?: Record<string, string[]>
+  /** Off when the page gives the grid its own heading; `title` still names it. */
+  header?: boolean
+  /** Sits inside the page's column, without the grid's own width and padding. */
+  flush?: boolean
 }) {
   const t = useTranslations('Articles.grid')
   const locale = useLocale()
   const router = useRouter()
   return (
     <BlogGrid
+      flush={flush}
+      header={header}
       categories={categories}
       categoryOrder={categoryOrder}
       defaultCategory={initialCategory ?? 'All'}

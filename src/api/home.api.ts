@@ -1,4 +1,4 @@
-import type { Payload } from 'payload'
+import type { Payload, Where } from 'payload'
 
 import { bridgeYearPath, listBridgeYears } from '@/api/programmes.api'
 import { getStudyIndex } from '@/api/study-index'
@@ -120,29 +120,27 @@ export const getOpenNow = async (
  * The featured articles, newest first. Until any article is featured, the
  * latest ones stand in, so the section is never empty.
  */
+/** The featured articles, and the latest three of the rest; both show on the home page. */
 export const getHomeArticles = async (
   payload: Payload,
   locale: Locale,
-): Promise<{ featured: boolean; docs: Article[] }> => {
-  const query = (featured: boolean) =>
+): Promise<{ featured: Article[]; latest: Article[] }> => {
+  const query = (where: Where, limit: number) =>
     payload.find({
       collection: 'articles',
-      where: {
-        and: [
-          { _status: { equals: 'published' } },
-          ...(featured ? [{ featured: { equals: true } }] : []),
-        ],
-      },
+      where: { and: [{ _status: { equals: 'published' } }, where] },
       sort: ['-published_date', '-createdAt'],
       depth: 2,
-      limit: featured ? 0 : 6,
+      limit,
       locale,
       fallbackLocale: locale === 'ar' ? 'en' : 'ar',
       overrideAccess: false,
     })
-  const featured = await query(true)
-  if (featured.docs.length) return { featured: true, docs: featured.docs }
-  return { featured: false, docs: (await query(false)).docs }
+  const [featured, latest] = await Promise.all([
+    query({ featured: { equals: true } }, 0),
+    query({ featured: { not_equals: true } }, 3),
+  ])
+  return { featured: featured.docs, latest: latest.docs }
 }
 
 export type HomeStats = { years: number; courses: number; fellows: number }

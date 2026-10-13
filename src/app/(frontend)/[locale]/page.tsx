@@ -11,7 +11,7 @@ import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { StatsBand } from '@/components/arc/blocks/stats-band/stats-band'
 import { ContactForm } from '@/components/contact/contact-form'
-import { HomeArticles } from '@/components/home/home-articles'
+import { ArticlesGrid } from '@/components/article/articles-grid'
 import { HomeHero } from '@/components/home/home-hero'
 import { OpenNow } from '@/components/home/open-now'
 import { Link } from '@/i18n/navigation'
@@ -49,7 +49,7 @@ export default async function HomePage({ params }: Props) {
       getHomeFaq(payload, locale as Locale),
     ])
 
-  const posts = articles.docs.map((a) =>
+  const toCard = (a: (typeof articles.featured)[number]) =>
     toArticleCard(a, {
       locale,
       format,
@@ -57,9 +57,9 @@ export default async function HomePage({ params }: Props) {
       and: tArticle('and'),
       otherCategory: tArticles('notes'),
       publicationCovers: covers,
-    }),
-  )
-  const articlesTitle = articles.featured ? t('featuredTitle') : t('latestTitle')
+    })
+  const featured = articles.featured.map(toCard)
+  const latest = articles.latest.map(toCard)
   const controls = t.raw('controls') as Record<string, string>
 
   return (
@@ -85,17 +85,51 @@ export default async function HomePage({ params }: Props) {
         {/* With nothing open there is no section; the hero says so instead. */}
         {open.length ? <OpenNow items={open} locale={locale} /> : null}
 
-        {posts.length ? (
-          <section aria-labelledby="home-articles" className="home-section">
+        {/* What editors chose, the first set large; then the newest of the rest. */}
+        {featured.length ? (
+          <section aria-labelledby="home-featured" className="home-section">
             <header className="home-section-header" data-row>
-              <h2 className="home-heading" id="home-articles">
-                {articlesTitle}
+              <h2 className="home-heading" id="home-featured">
+                {t('featuredTitle')}
               </h2>
               <Link className="home-more" href="/articles">
                 {t('allArticles')}
               </Link>
             </header>
-            <HomeArticles posts={posts} title={articlesTitle} />
+            <ArticlesGrid
+              categories={[]}
+              description=""
+              flush
+              header={false}
+              pageSize={featured.length}
+              posts={featured}
+              title={t('featuredTitle')}
+            />
+          </section>
+        ) : null}
+
+        {latest.length ? (
+          <section aria-labelledby="home-latest" className="home-section">
+            <header className="home-section-header" data-row>
+              <h2 className="home-heading" id="home-latest">
+                {t('latestTitle')}
+              </h2>
+              {featured.length ? null : (
+                <Link className="home-more" href="/articles">
+                  {t('allArticles')}
+                </Link>
+              )}
+            </header>
+            <ArticlesGrid
+              categories={[]}
+              description=""
+              flush
+              header={false}
+              pageSize={3}
+              posts={latest}
+              showFeatured={false}
+              title={t('latestTitle')}
+            />
           </section>
         ) : null}
 
