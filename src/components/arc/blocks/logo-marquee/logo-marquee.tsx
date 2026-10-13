@@ -1,6 +1,7 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Pause, Play } from 'lucide-react'
 import { Button } from '../../button/button'
 import styles from './logo-marquee.module.css'
@@ -28,6 +29,11 @@ export interface LogoMarqueeLabels {
   pauseLabel: string
   paused: string
 }
+
+/** Seconds for one full pass of the list. */
+const CYCLE_SECONDS = 39
+/** Pixels a pointer moves before a press becomes a drag. */
+const DRAG_THRESHOLD = 5
 
 const DEFAULT_LABELS: LogoMarqueeLabels = {
   list: 'Illustrative tool logos',
@@ -150,6 +156,61 @@ export function LogoMarquee({
   const labels = { ...DEFAULT_LABELS, ...labelsProp }
   const titleId = useId()
   const [paused, setPaused] = useState(false)
+  const track = useRef<HTMLDivElement>(null)
+  const offset = useRef(0)
+  const hovering = useRef(false)
+  const drag = useRef<{ x: number; start: number; moved: boolean } | null>(null)
+  const pausedRef = useRef(paused)
+  const reducedRef = useRef(false)
+  useEffect(() => {
+    pausedRef.current = paused
+  }, [paused])
+
+  // The row moves on its own, and a drag moves it by hand in either
+  // direction. The offset wraps at half the track (one copy of the list).
+  useEffect(() => {
+    const el = track.current
+    if (!el) return
+    // With reduced motion every logo shows at once, wrapped (see the CSS):
+    // nothing moves, by itself or by hand.
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    reducedRef.current = reduced
+    if (reduced) return
+    let frame = 0
+    let last = performance.now()
+    const tick = (now: number) => {
+      const half = el.scrollWidth / 2
+      const still = pausedRef.current || hovering.current || drag.current
+      if (!still && half) offset.current += (half / CYCLE_SECONDS) * ((now - last) / 1000)
+      if (half) offset.current = ((offset.current % half) + half) % half
+      el.style.transform = `translateX(${-offset.current}px)`
+      last = now
+      frame = requestAnimationFrame(tick)
+    }
+    frame = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(frame)
+  }, [])
+
+  const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (reducedRef.current || (e.pointerType === 'mouse' && e.button !== 0)) return
+    drag.current = { x: e.clientX, start: offset.current, moved: false }
+  }
+  const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
+    const d = drag.current
+    if (!d) return
+    const dx = e.clientX - d.x
+    if (!d.moved && Math.abs(dx) > DRAG_THRESHOLD) {
+      d.moved = true
+      e.currentTarget.setPointerCapture(e.pointerId)
+    }
+    if (d.moved) offset.current = d.start - dx
+  }
+  const endDrag = () => {
+    // Clear after the click that follows a drag, so it does not open a link.
+    setTimeout(() => {
+      drag.current = null
+    }, 0)
+  }
 
   return (
     <section className={styles.section} data-tone={tone} aria-labelledby={titleId}>
@@ -159,8 +220,29 @@ export function LogoMarquee({
       </div>
 
       {/* The loop runs left to right in both directions; each name keeps its own. */}
-      <div className={styles.marquee} role="region" aria-label={labels.list} dir="ltr">
-        <div className={`${styles.track}${paused ? ` ${styles.paused}` : ''}`}>
+      <div
+        className={styles.marquee}
+        role="region"
+        aria-label={labels.list}
+        dir="ltr"
+        onClickCapture={(e) => {
+          if (drag.current?.moved) {
+            e.preventDefault()
+            e.stopPropagation()
+          }
+        }}
+        onPointerCancel={endDrag}
+        onPointerDown={onPointerDown}
+        onPointerEnter={(e) => {
+          if (e.pointerType === 'mouse') hovering.current = true
+        }}
+        onPointerLeave={() => {
+          hovering.current = false
+        }}
+        onPointerMove={onPointerMove}
+        onPointerUp={endDrag}
+      >
+        <div className={styles.track} ref={track}>
           <BrandList brands={brands} tone={tone} label={labels.list} />
           <BrandList brands={brands} tone={tone} label={labels.list} duplicate />
         </div>

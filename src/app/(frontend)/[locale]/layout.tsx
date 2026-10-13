@@ -6,6 +6,7 @@ import React from 'react'
 import '@/components/arc/foundation.css'
 import '../styles.css'
 import { SiteDeadlines } from '@/components/site-deadlines'
+import { getSocialLinks } from '@/api/social.api'
 import { SiteFooter } from '@/components/site-footer'
 import { CILASSiteHeader } from '@/components/site-header'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -36,6 +37,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   const direction = isRtl(locale) ? 'rtl' : 'ltr'
+  const socials = await getSocialLinks()
 
   return (
     // next-themes sets data-theme and the class before React hydrates.
@@ -57,7 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
               {/* The same width as the page content. */}
               <div className="mx-auto max-w-300">
-                <SiteFooter />
+                <SiteFooter socials={socials} />
               </div>
             </DirectionProvider>
           </NextIntlClientProvider>

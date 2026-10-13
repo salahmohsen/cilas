@@ -16,6 +16,8 @@ export interface SiteFooterLink {
   href?: string
   /** Opens in a new tab and shows an outward arrow. */
   external?: boolean
+  /** Shown instead of the label, which then names the link for assistive technology. */
+  icon?: ReactNode
 }
 
 export interface SiteFooterColumn {
@@ -58,6 +60,8 @@ export interface SiteFooterProps {
   status?: { label: string; tone?: 'success' | 'warning' | 'danger'; href?: string } | null
   /** Year in the copyright line. */
   year?: number
+  /** A line after the legal links, such as who made the site. */
+  credit?: ReactNode
   /** Called for every link that is pressed. Links without an href render as buttons and only call this. */
   onNavigate?: (link: SiteFooterLink) => void
   className?: string
@@ -321,6 +325,7 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
     },
     status = { label: 'All systems normal', tone: 'success' },
     year = new Date().getFullYear(),
+    credit,
     onNavigate,
     className,
   },
@@ -368,7 +373,19 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
     <ul className={styles.inline} aria-label="Social">
       {socials.map((link) => (
         <li key={link.label}>
-          <FooterLink link={link} onNavigate={onNavigate} />
+          {link.icon && link.href ? (
+            <a
+              aria-label={link.label}
+              className={styles.socialIcon}
+              href={link.href}
+              onClick={() => onNavigate?.(link)}
+              {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+            >
+              {link.icon}
+            </a>
+          ) : (
+            <FooterLink link={link} onNavigate={onNavigate} />
+          )}
         </li>
       ))}
     </ul>
@@ -388,6 +405,7 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
             ))}
           </ul>
         )}
+        {credit ? <span className={styles.copyright}>{credit}</span> : null}
       </div>
       <div className={styles.bottomEnd}>
         {statusNode}

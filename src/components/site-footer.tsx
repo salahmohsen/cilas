@@ -1,12 +1,24 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
+import { Heart } from 'lucide-react'
 import Image from 'next/image'
 
+import { siFacebook, siInstagram, siX, siYoutube, type SimpleIcon } from 'simple-icons'
+
+import type { SocialLink } from '@/api/social.api'
 import { SiteFooter as ArcSiteFooter } from '@/components/arc/blocks/site-footer/site-footer'
 
-/** The site footer: where to go next, the newsletter and the licence line. */
-export function SiteFooter() {
+/** Each platform's mark and name; Twitter is X now. */
+const PLATFORMS: Record<SocialLink['platform'], { icon: SimpleIcon; label: string }> = {
+  facebook: { icon: siFacebook, label: 'Facebook' },
+  twitter: { icon: siX, label: 'X' },
+  youtube: { icon: siYoutube, label: 'YouTube' },
+  instagram: { icon: siInstagram, label: 'Instagram' },
+}
+
+/** The site footer: where to go next, the newsletter, the social accounts and the licence line. */
+export function SiteFooter({ socials = [] }: { socials?: SocialLink[] }) {
   const t = useTranslations('Footer')
   const brand = useTranslations('Header')
   const locale = useLocale()
@@ -48,6 +60,20 @@ export function SiteFooter() {
         },
       ]}
       legal={[{ label: t('license') }]}
+      credit={t.rich('madeBy', {
+        heart: () => (
+          <Heart
+            aria-label="love"
+            className="inline-block size-3.5 -translate-y-px fill-current text-red-500"
+            role="img"
+          />
+        ),
+        link: (chunks) => (
+          <a className="underline-offset-4 hover:underline" href="https://salahmohsen.com" rel="noopener" target="_blank">
+            {chunks}
+          </a>
+        ),
+      })}
       newsletter={{
         title: t('newsletterTitle'),
         description: t('newsletterText'),
@@ -71,8 +97,17 @@ export function SiteFooter() {
             throw new Error((await res.json().catch(() => null))?.error ?? 'Subscribe failed')
         },
       }}
-      // No social accounts or status page yet; Arc's samples would show otherwise.
-      socials={[]}
+      // Icons only, from Site settings; the platform names their links.
+      socials={socials.map(({ platform, url }) => ({
+        label: PLATFORMS[platform].label,
+        href: url,
+        external: true,
+        icon: (
+          <svg aria-hidden fill="currentColor" viewBox="0 0 24 24">
+            <path d={PLATFORMS[platform].icon.path} />
+          </svg>
+        ),
+      }))}
       status={null}
       tagline={t('tagline')}
       variant="columns"

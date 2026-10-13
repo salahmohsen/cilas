@@ -48,25 +48,17 @@
   border-bottom: 1px solid var(--border-subtle);
   padding-block: 32px;
   mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  /* Dragged sideways by hand; vertical swipes still scroll the page. */
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
 }
 
 .track {
   display: flex;
   width: max-content;
-  animation: travel 39s linear infinite;
   will-change: transform;
-}
-
-.track.paused {
-  animation-play-state: paused;
-}
-
-/* Hovering the row holds it still, so a logo can be read. */
-@media (hover: hover) and (pointer: fine) {
-  .marquee:hover .track {
-    animation-play-state: paused;
-  }
 }
 
 .brandList {
@@ -138,11 +130,6 @@ img.brandMark {
   white-space: nowrap;
 }
 
-@keyframes travel {
-  to {
-    transform: translateX(-50%);
-  }
-}
 
 @container logos (max-width: 639px) {
   .intro {
@@ -177,12 +164,11 @@ img.brandMark {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .track {
-    animation: none;
-    will-change: auto;
+  .marquee {
+    cursor: auto;
   }
-
   .track {
+    will-change: auto;
     width: auto;
     justify-content: center;
   }
