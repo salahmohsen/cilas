@@ -139,10 +139,10 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: env.DATABASE_URL,
-      // Fewer, longer-lived connections: a remote database (a long import
-      // over a slow link) times out on connect more than on query.
+      // Longer-lived connections for long imports. No connect timeout: the
+      // build pre-renders hundreds of pages at once, and a query waiting for
+      // a free connection must wait, not fail.
       idleTimeoutMillis: 60_000,
-      connectionTimeoutMillis: 30_000,
       keepAlive: true,
     },
     // Explicit migrations rather than dev-mode schema auto-push. Auto-push asks
