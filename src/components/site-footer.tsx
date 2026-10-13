@@ -4,7 +4,14 @@ import { useLocale, useTranslations } from 'next-intl'
 import { Heart } from 'lucide-react'
 import Image from 'next/image'
 
-import { siFacebook, siInstagram, siX, siYoutube, type SimpleIcon } from 'simple-icons'
+import {
+  siCreativecommons,
+  siFacebook,
+  siInstagram,
+  siX,
+  siYoutube,
+  type SimpleIcon,
+} from 'simple-icons'
 
 import type { SocialLink } from '@/api/social.api'
 import { SiteFooter as ArcSiteFooter } from '@/components/arc/blocks/site-footer/site-footer'
@@ -59,21 +66,40 @@ export function SiteFooter({ socials = [] }: { socials?: SocialLink[] }) {
           ],
         },
       ]}
-      legal={[{ label: t('license') }]}
-      credit={t.rich('madeBy', {
-        heart: () => (
+      legal={[]}
+      notice={
+        <a
+          className="inline-flex items-center gap-1.5 underline-offset-4 hover:underline"
+          href="https://creativecommons.org/licenses/"
+          rel="license noopener"
+          target="_blank"
+        >
+          <svg aria-hidden className="size-4 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d={siCreativecommons.path} />
+          </svg>
+          {t('license')}
+        </a>
+      }
+      // Not translated: a signature, the same on every page.
+      credit={
+        <span dir="ltr" lang="en">
+          Made with{' '}
           <Heart
             aria-label="love"
-            className="inline-block size-3.5 -translate-y-px fill-current text-red-500"
+            className="inline-block size-3 -translate-y-px fill-current text-red-500"
             role="img"
-          />
-        ),
-        link: (chunks) => (
-          <a className="underline-offset-4 hover:underline" href="https://salahmohsen.com" rel="noopener" target="_blank">
-            {chunks}
+          />{' '}
+          by{' '}
+          <a
+            className="underline-offset-4 hover:underline"
+            href="https://salahmohsen.com"
+            rel="noopener"
+            target="_blank"
+          >
+            Salah Mohsen
           </a>
-        ),
-      })}
+        </span>
+      }
       newsletter={{
         title: t('newsletterTitle'),
         description: t('newsletterText'),

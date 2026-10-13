@@ -22,7 +22,6 @@ export type OpenItem = {
   when?: string
   /** Who teaches it. */
   fellows?: string[]
-  excerpt?: string
   image?: { src: string; alt: string }
   /** The last day to register (YYYY-MM-DD), when there is one. */
   deadline?: string
@@ -36,8 +35,6 @@ export type OpenItem = {
 export const getOpenNow = async (
   payload: Payload,
   locale: Locale,
-  /** What a Bridge year without a tagline says about itself. */
-  { bridgeText }: { bridgeText?: string } = {},
 ): Promise<OpenItem[]> => {
   const [index, { docs: programmes }, years] = await Promise.all([
     getStudyIndex(locale),
@@ -83,7 +80,6 @@ export const getOpenNow = async (
         kind: 'programme',
         title: p.title,
         href,
-        excerpt: p.tagline ?? (bridge ? bridgeText : undefined),
         // A Bridge year without its own cover shows the classroom, as its page does.
         image: cover?.url
           ? { src: cover.url, alt: cover.alt ?? '' }
@@ -111,7 +107,6 @@ export const getOpenNow = async (
         .filter(Boolean)
         .join(locale === 'ar' ? '، ' : ', '),
       fellows: (c.facets.fellow ?? []).map((f) => f.label),
-      excerpt: c.description,
       image: c.image ? { src: c.image, alt: c.imageAlt ?? '' } : undefined,
       deadline: c.deadline,
     }))

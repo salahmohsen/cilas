@@ -60,7 +60,9 @@ export interface SiteFooterProps {
   status?: { label: string; tone?: 'success' | 'warning' | 'danger'; href?: string } | null
   /** Year in the copyright line. */
   year?: number
-  /** A line after the legal links, such as who made the site. */
+  /** A notice beside the copyright, such as the content licence. */
+  notice?: ReactNode
+  /** A line of its own under the copyright row, such as who made the site. */
   credit?: ReactNode
   /** Called for every link that is pressed. Links without an href render as buttons and only call this. */
   onNavigate?: (link: SiteFooterLink) => void
@@ -325,6 +327,7 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
     },
     status = { label: 'All systems normal', tone: 'success' },
     year = new Date().getFullYear(),
+    notice,
     credit,
     onNavigate,
     className,
@@ -405,12 +408,13 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
             ))}
           </ul>
         )}
-        {credit ? <span className={styles.copyright}>{credit}</span> : null}
+        {notice ? <span className={styles.notice}>{notice}</span> : null}
       </div>
       <div className={styles.bottomEnd}>
         {statusNode}
         {socialNode}
       </div>
+      {credit ? <p className={styles.credit}>{credit}</p> : null}
     </div>
   )
   const columnNav = (

@@ -28,7 +28,6 @@ export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: st
     layout: layouts[i]!,
     label: item.kind === 'programme' ? t('programme') : item.type,
     title: item.title,
-    description: item.excerpt,
     credit: item.fellows?.length ? t('with', { names: item.fellows.join(and) }) : undefined,
     image: item.image,
     meta: item.deadline

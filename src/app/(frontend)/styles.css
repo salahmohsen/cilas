@@ -1977,14 +1977,14 @@ h3 {
   position: relative;
   display: flex;
   flex-direction: column;
-  /* Clip, not hide: a long title or a translation grows the poster past its
-     16:9 instead of being cut off. */
   overflow: clip;
   border: 1px solid var(--poster-ink);
   border-radius: 1rem;
   background: var(--poster-paper);
   color: var(--poster-ink);
-  aspect-ratio: 16 / 9;
+  /* At least 16:9 of the frame's width, and taller when a long title or a
+     translation needs it, so nothing in the panel is cut off. */
+  min-height: calc(100cqi * 9 / 16);
 }
 .poster[data-layout='1'] {
   --poster-color: #1782ea;
@@ -1998,7 +1998,6 @@ h3 {
 .poster-body {
   display: flex;
   flex: 1;
-  min-height: 0;
 }
 .poster[data-layout='0'] .poster-image {
   flex: 0 0 62%;
@@ -2044,7 +2043,7 @@ h3 {
   font-family: var(--font-heading);
   font-size: clamp(1.6rem, 5.2cqi, 3.75rem);
   font-weight: 400;
-  line-height: 1;
+  line-height: 1.1;
   letter-spacing: -0.025em;
   text-wrap: balance;
   overflow-wrap: anywhere;
@@ -2084,11 +2083,12 @@ h3 {
   line-height: 1.05;
 }
 
-/* The strip: the mark and the date in the poster's colour, then the white cell. */
+/* The strip: the mark and the date in the poster's colour, the time left in
+   its own cell, then the white cell. */
 .poster-strip {
   display: grid;
-  /* The mark's cell is as wide as the mark; with the date's it makes the side panel's 38%, so the white cell starts where the image does. */
-  grid-template-columns: auto minmax(0, 1fr) 62%;
+  /* Mark, date and time left make the side panel's 38%, so the white cell starts where the image does. */
+  grid-template-columns: auto minmax(0, 1fr) auto 62%;
   flex: none;
   min-height: clamp(3.25rem, 8.6cqi, 4.5rem);
   border-block: 1px solid var(--poster-ink);
@@ -2109,18 +2109,63 @@ h3 {
   border-inline-end: 1px solid var(--poster-ink);
   padding-inline: var(--poster-pad);
 }
+.poster-mark {
+  /* The mark keeps clear of the strip's rules. */
+  padding-block: 0.5rem;
+}
 .poster-mark img {
   height: clamp(1.75rem, 5cqi, 2.75rem);
   width: auto;
 }
 .poster-meta {
-  /* The closing date and the time left on one line; they wrap only when the cell is too narrow. */
+  /* The closing date, centred in its cell; a second line only if the cell is too narrow. */
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: center;
+  text-align: center;
   gap: 0.25rem 0.625rem;
   font-size: clamp(0.75rem, 1.4cqi, 0.9375rem);
   line-height: 1.2;
+}
+/* The time left, flat on paper: Arc's countdown without its pill, filling
+   the cell. The poster is a printed thing, so it ignores the dark theme. */
+.poster-time {
+  display: flex;
+  align-items: stretch;
+  border-inline-end: 1px solid var(--poster-ink);
+  background: var(--poster-paper);
+  color: var(--poster-ink);
+  font-size: clamp(0.8125rem, 1.5cqi, 1rem);
+}
+.poster .poster-time [data-variant='compact'] {
+  display: flex;
+  font-size: inherit;
+}
+/* Above Arc's own compact sizes, which load after these rules. */
+.poster .poster-strip .poster-time [data-variant='compact'] * {
+  font-size: inherit;
+}
+.poster .poster-time [data-variant='compact'] > div {
+  height: auto !important;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.poster .poster-time [data-variant='compact'] > div > div {
+  height: 100%;
+  padding-inline: var(--poster-pad);
+}
+/* The poster's ink on its paper in either theme: digits full, units quieter. */
+.poster .poster-strip .poster-time [data-variant='compact'] {
+  color: var(--poster-ink);
+}
+.poster .poster-strip .poster-time [data-variant='compact'] [class*='name'] {
+  color: color-mix(in oklab, var(--poster-ink) 55%, var(--poster-paper));
+}
+.poster-details {
+  /* Always the last column, whether or not there is a time-left cell. */
+  grid-column: -2 / -1;
 }
 .poster-details {
   display: flex;
@@ -2134,20 +2179,6 @@ h3 {
 .poster-heading {
   display: grid;
   gap: 0.75rem;
-}
-.poster-description {
-  display: -webkit-box;
-  max-width: 34ch;
-  overflow: hidden;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  font-size: clamp(0.875rem, 1.6cqi, 1.0625rem);
-  line-height: 1.45;
-  text-wrap: pretty;
-}
-.poster[data-layout='3'] .poster-description {
-  max-width: 60ch;
-  -webkit-line-clamp: 2;
 }
 /* What the poster does, set apart as a pill so it reads as the way in. */
 .poster-action {
@@ -2173,7 +2204,7 @@ h3 {
 /* Narrow: every layout stacks, image first. */
 @container poster (max-width: 34rem) {
   .poster {
-    aspect-ratio: auto;
+    min-height: 0;
   }
   .poster-body {
     flex-direction: column;
@@ -2198,36 +2229,29 @@ h3 {
     flex-direction: column;
     min-height: 0;
   }
+  /* Stacked, the credit follows the title on the same edge, at full width. */
+  .poster[data-layout='3'] .poster-credit {
+    max-width: none;
+    text-align: start;
+  }
+}
+/* Tablet and narrower: the date and the time left share the strip's first
+   row; when and where, and the way in, get the full row under it. */
+@container poster (max-width: 52rem) {
   .poster-strip {
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+  .poster-mark img {
+    height: 1.5rem;
+  }
+  /* The date's cell already draws the rule between them. */
+  .poster-time {
+    border-inline-end: 0;
   }
   .poster-details {
     grid-column: 1 / -1;
     padding-block: 0.625rem;
     border-top: 1px solid var(--poster-ink);
-  }
-  /* The time left fills its cell: flush to the cell's end, the strip's full
-     height, square corners, one rule before it instead of a pill. */
-  .poster-meta {
-    align-items: stretch;
-    padding-inline-end: 0;
-  }
-  .poster-meta > span:not([data-variant]) {
-    align-self: center;
-  }
-  .poster .poster-meta [data-variant='compact'] {
-    display: flex;
-    align-self: stretch;
-    margin-inline-start: auto;
-  }
-  .poster .poster-meta [data-variant='compact'] > div {
-    height: auto !important;
-    border: 0;
-    border-inline-start: 1px solid var(--poster-ink);
-    border-radius: 0;
-  }
-  .poster .poster-meta [data-variant='compact'] > div > div {
-    height: 100%;
   }
 }
 .poster[data-layout='3'] .poster-heading {
@@ -2245,9 +2269,37 @@ h3 {
 .deadline-message {
   display: inline-flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: baseline;
   justify-content: center;
-  gap: 4px 10px;
+  gap: 4px 0.4em;
+}
+/* The time left is part of the sentence: bold, in the bar's own colour, no
+   pill (Arc's compact countdown, flattened; the doubled class outranks Arc's
+   own compact rules, which load after these). */
+.deadline-message.deadline-message [data-variant='compact'] > div {
+  height: auto !important;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.deadline-message.deadline-message [data-variant='compact'] > div > div {
+  min-height: 0;
+  padding: 0;
+}
+.deadline-message.deadline-message [data-variant='compact'] {
+  font-weight: 600;
+  color: inherit;
+}
+.deadline-message.deadline-message [data-variant='compact'] [class*='name'] {
+  color: inherit;
+  opacity: 0.7;
+}
+/* Narrow bars read from the start edge (the bar's own rule), so the
+   sentence does too. */
+@container (max-width: 560px) {
+  .deadline-message {
+    justify-content: flex-start;
+  }
 }
 
 /* The hero's main action while nothing is open: shown, not usable, and the

@@ -34,14 +34,13 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const payload = await getPayload({ config })
-  const tBridge = await getTranslations('Bridge')
   const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers, contact, faq] =
     await Promise.all([
       getTranslations('Home'),
       getTranslations('Article'),
       getTranslations('Articles'),
       getFormatter(),
-      getOpenNow(payload, locale as Locale, { bridgeText: tBridge('metaDescription') }),
+      getOpenNow(payload, locale as Locale),
       getHomeArticles(payload, locale as Locale),
       getHomeStats(payload),
       getPressOutlets(payload, locale as Locale),

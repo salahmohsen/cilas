@@ -24,12 +24,10 @@ export type PosterData = {
   /** Above the title: what it is ("Thematic Course", the publication). */
   label?: string
   title: string
-  /** A few lines under the title: what it is about. */
-  description?: string
   /** Under the title: who ("With Ghosoun Ismail", the author). */
   credit?: string
   image?: { src: string; alt: string }
-  /** The strip's coloured cell: a line or two, then the time left to a deadline (YYYY-MM-DD). */
+  /** The strip's coloured cell: a line or two; the time left to a deadline (YYYY-MM-DD) gets the cell after it. */
   meta: { lines: string[]; deadline?: string }
   /** The strip's white cell: when and where, the reading time. */
   details: string[]
@@ -40,7 +38,7 @@ export type PosterData = {
 const FALLBACK = '/assets/images/cilas-classroom.jpg'
 
 export function Poster({ poster }: { poster: PosterData }) {
-  const { layout, label, title, description, credit, image, meta, details, action, href } = poster
+  const { layout, label, title, credit, image, meta, details, action, href } = poster
   const picture = (
     <div className="poster-image">
       {/* Covers come from the storage host, as on course pages. */}
@@ -58,8 +56,13 @@ export function Poster({ poster }: { poster: PosterData }) {
         {meta.lines.map((line) => (
           <span key={line}>{line}</span>
         ))}
-        {meta.deadline ? <DeadlineCountdown deadline={meta.deadline} /> : null}
       </span>
+      {/* The time left: its own cell, the strip's full height, on every screen. */}
+      {meta.deadline ? (
+        <span className="poster-time">
+          <DeadlineCountdown deadline={meta.deadline} />
+        </span>
+      ) : null}
       <span className="poster-details">
         {details.map((d) => (
           <span dir="auto" key={d}>
@@ -73,7 +76,6 @@ export function Poster({ poster }: { poster: PosterData }) {
       </span>
     </div>
   )
-  // The title and its description stay together, one group.
   const heading = (
     <div className="poster-heading">
       <h3 className="poster-title" dir="auto">
@@ -82,11 +84,6 @@ export function Poster({ poster }: { poster: PosterData }) {
           {title}
         </a>
       </h3>
-      {description ? (
-        <p className="poster-description" dir="auto">
-          {description}
-        </p>
-      ) : null}
     </div>
   )
 

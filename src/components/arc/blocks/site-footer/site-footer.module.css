@@ -204,6 +204,9 @@
 }
 .inline:has(.socialIcon) {
   gap: var(--space-2);
+  /* The 40px targets pad each mark by 10px; pull the row out by that much so
+     the marks line up with the text around them. */
+  margin-inline: -0.625rem;
 }
 /* An icon-only link: the mark at 20px in a 40px target. */
 .socialIcon {
@@ -213,7 +216,9 @@
   height: 2.5rem;
   border-radius: 999px;
   color: var(--text-secondary);
-  transition: color 150ms, background-color 150ms;
+  transition:
+    color 150ms,
+    background-color 150ms;
 }
 .socialIcon:hover {
   color: var(--foreground);
@@ -222,6 +227,17 @@
 .socialIcon svg {
   width: 1.25rem;
   height: 1.25rem;
+}
+.notice {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+/* The credit: its own line under the copyright row, quieter than it. */
+.credit {
+  flex-basis: 100%;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
 }
 .copyright {
   color: var(--text-muted);
