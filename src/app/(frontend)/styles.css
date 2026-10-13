@@ -1681,6 +1681,13 @@ a.collection-item:hover {
   font-size: clamp(1rem, 1.6vw, 1.175rem);
   font-weight: 500;
 }
+/* The Arabic line: the leaving and arriving lines overlap in one cell. */
+.home-hero-who-stack {
+  display: inline-grid;
+}
+.home-hero-who-stack > * {
+  grid-area: 1 / 1;
+}
 .home-hero-actions {
   display: flex;
   flex-wrap: wrap;

@@ -70,18 +70,23 @@ export function HomeHero({
         <p className="sr-only">{who.join(locale === 'ar' ? '، ' : ', ')}</p>
         <p aria-hidden className="home-hero-who">
           {locale === 'ar' ? (
-            // Arabic letters join, so the line changes whole instead of letter by letter.
-            <AnimatePresence initial={false} mode="popLayout">
-              <motion.span
-                animate={{ opacity: 1, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, filter: 'blur(4px)' }}
-                initial={{ opacity: 0, filter: 'blur(4px)' }}
-                key={shown}
-                transition={{ duration: 0.35, ease: [0.2, 0, 0, 1] }}
-              >
-                {who[shown]}
-              </motion.span>
-            </AnimatePresence>
+            // Arabic letters join, so the line changes whole instead of letter by
+            // letter. Leaving and arriving lines share one grid cell and
+            // crossfade in place: popLayout's absolute positioning is measured
+            // from the left and threw the leaving line aside in RTL.
+            <span className="home-hero-who-stack">
+              <AnimatePresence initial={false}>
+                <motion.span
+                  animate={{ opacity: 1, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, filter: 'blur(4px)' }}
+                  initial={{ opacity: 0, filter: 'blur(4px)' }}
+                  key={shown}
+                  transition={{ duration: 0.35, ease: [0.2, 0, 0, 1] }}
+                >
+                  {who[shown]}
+                </motion.span>
+              </AnimatePresence>
+            </span>
           ) : (
             <TextMorph>{who[shown] ?? ''}</TextMorph>
           )}
