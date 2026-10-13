@@ -237,7 +237,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           return (
             <li className="course-fellow" key={person.id}>
               <Link aria-hidden className="course-fellow-photo" href={`/people/${person.slug}`} tabIndex={-1}>
-                <Avatar name={person.name} size="xl" src={photoOf(person)} />
+                <Avatar name={person.name} size="lg" src={photoOf(person)} />
               </Link>
               <div className="course-fellow-head">
                 <h3 className="text-base font-medium">

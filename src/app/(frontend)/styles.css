@@ -448,18 +448,17 @@ html {
   border-radius: 999px;
   background: var(--text-muted);
 }
-/* Who teaches it: each fellow with their whole bio, the photo beside the text. */
+/* Who teaches it: the photo, name and role as one row; the bio below it,
+   on the section's own edge like the rest of the course text. */
 .course-fellows {
   display: grid;
-  gap: 2rem;
+  gap: 2.5rem;
   margin-top: 1.25rem;
 }
-/* Narrow: the photo beside the name, the bio below at full width. Wide: the
-   photo in its own column, the name and bio beside it. */
 .course-fellow {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
-  column-gap: 1rem;
+  column-gap: 0.875rem;
   align-items: center;
 }
 .course-fellow-head {
@@ -473,24 +472,6 @@ html {
   line-height: 1.7;
   color: var(--text-secondary);
   text-wrap: pretty;
-}
-@media (min-width: 36rem) {
-  .course-fellow {
-    grid-template-columns: 5.5rem minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    column-gap: 1.25rem;
-    align-items: start;
-  }
-  .course-fellow-photo {
-    grid-row: 1 / span 2;
-  }
-  .course-fellow-head {
-    padding-top: 0.5rem;
-  }
-  .course-fellow-bio {
-    grid-column: 2;
-    margin-top: 0.75rem;
-  }
 }
 /* A photo's edge: pure black or white at a tenth, never a tinted grey. */
 .course-fellow-photo {
