@@ -14,12 +14,22 @@ import { seedEvents } from './collections/events.seed'
 import { seedSpaces } from './collections/spaces.seed'
 import { seedPartners } from './collections/partners.seed'
 import { seedSiteSettings } from './collections/site-settings.seed'
+import { hasSnapshot, restoreSnapshot } from './snapshot'
 
 process.loadEnvFile('.env')
 const { default: config } = await import('../src/payload.config')
 
 const payload: Payload = await getPayload({ config })
 const ctx = createSeedContext()
+
+// The live site, when a snapshot was taken (`pnpm db:snapshot`): restored as
+// it was, instead of the dev seed below.
+if (hasSnapshot() && !process.argv.includes('--dev')) {
+  await restoreSnapshot(payload)
+  await payload.destroy()
+  console.log('\nSEED COMPLETE (snapshot)')
+  process.exit(0)
+}
 
 // First: the superadmin account. Must run before resetContent, which only
 // deletes content collections — user accounts are matched by email and

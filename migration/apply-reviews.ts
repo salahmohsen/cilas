@@ -145,6 +145,27 @@ const apply = async (payload: Payload, review: CourseReview, log: string[]) => {
   await publishCourse(payload, review.id)
 }
 
+/** Fellows' bios the import got wrong (extracted/people-fixes.json); only the locales given change. */
+const applyPeople = async (payload: Payload, log: string[]) => {
+  const file = path.join(here, 'extracted', 'people-fixes.json')
+  if (!existsSync(file)) return
+  const fixes = JSON.parse(readFileSync(file, 'utf8')) as Array<{ name: string; bio: Partial<Record<Locale, string | null>>; $why: string }>
+  log.push('## People')
+  for (const fix of fixes) {
+    const person = (await payload.find({ collection: 'people', where: { name: { equals: fix.name } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]
+    if (!person) {
+      log.push(`- ${fix.name}: no such person`)
+      continue
+    }
+    log.push(`### ${fix.name}`, `- ${fix.$why}`)
+    if (dry) continue
+    for (const locale of ['en', 'ar'] as const) {
+      const bio = fix.bio[locale]
+      if (bio) await payload.update({ collection: 'people', id: person.id, data: { bio: rich(bio, locale) }, locale, overrideAccess: true })
+    }
+  }
+}
+
 /** Cycle corrections (extracted/cycle-reviews.json): dates, and a season or year the pages contradict. */
 const applyCycles = async (payload: Payload, log: string[]) => {
   const file = path.join(here, 'extracted', 'cycle-reviews.json')
@@ -246,6 +267,7 @@ const main = async () => {
   const log: string[] = []
   if (!only.size) {
     await applyCycles(payload, log)
+    await applyPeople(payload, log)
     for (const review of await createNewCourses(payload, log)) reviews.push(review)
   }
   for (const review of reviews) {

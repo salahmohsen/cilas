@@ -1,0 +1,29 @@
+{
+ "syllabus": null,
+ "cover": null,
+ "legacy_url": "/research-lab.html",
+ "cycle": {
+  "season": "fall",
+  "start_year": 2016,
+  "space": "al-Ghuria",
+  "start_date": null
+ },
+ "fellows": [],
+ "notes": [
+  "Season and year inferred, not stated: the page says CILAS 'is launching its fourth year', i.e. 2016–17 (decided by the user, 2026-10-13)"
+ ],
+ "set": {
+  "title": {
+   "en": "The Research Lab",
+   "ar": null
+  },
+  "course_type": "LAB",
+  "description": {
+   "en": "the research lab is committed to helping students develop their research skills and conducting academic research. The lab will be work on three areas to accomplish this goal:\n\n1. A series of sessions introducing qualitative and quantitative research methods, and academic writing skills. Sessions will be facilitated by experienced researchers and are scheduled bi-weekly. The goal is to familiarise participants with different forms of knowing to produce research papers.\n\n2. As CILAS is launching its fourth year, it has accumulated both experience and social capital in the realm of the academia. Building on this fact, the research lab will launch its “Research Hub” which will serve as a platform for both Egyptian and foreign researchers. The hub will support researchers offering them a space to work in and pairs them with CILASians to assist them in their research.\n\n3. The lab also assumes responsibility to identify potential research supervisors for students who which to pursue their own research project.\n\nIn parallel, CILAS tries to develop a narrative about liberal arts education in the global south, especially the Middle East. Employing Participatory Action Research PAR as a methodology the research lab will craft a student-told narrative of liberal arts education. Aiming at producing a research paper, the research lab will document past and present experiences of CILAS.\n\nIn using PAR we recognise that knowledge is always partial and that representations of knowledge produced through field research embody power relations that the researcher must be aware of when undertaking ethical research. To produce an ethical and participatory student narrative critical self-reflection and careful examination of power relations and politics during the research process.\n\nTogether we will explore the following questions:\n\nHow does Discussion Based Learning contribute to a more collaborative and horizontal learning experience?\n\nHow does CILAS' attempt at social inclusion inform your view of non-elitist liberal arts education?\n\nWhat are the implications of urban embeddedness in an effort to reinvent liberal arts education as a community-based learning experience away from an Ivory Tower and towards a more grounded Pigeon Tower?\n\nIn using narrative assessment, is CILAS able to overcome the idea of accrediation and resist market demands to create a more human learning experience?",
+   "ar": null
+  },
+  "teaching_languages": [
+   "en"
+  ]
+ }
+}

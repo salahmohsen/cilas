@@ -11,6 +11,7 @@
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "db:seed": "npx tsx seed/index.ts",
+    "db:snapshot": "npx tsx seed/snapshot-export.ts",
     "db:migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "db:migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
     "db:reset": "pnpm db:migrate:create && pnpm payload migrate:fresh --force-accept-warning && pnpm db:seed",
