@@ -337,7 +337,7 @@
   "Governance": {
     "metaTitle": "الحوكمة — سيلاس",
     "title": "الحوكمة",
-    "intro": "المستشارون والأمناء الذين يوجّهون سيلاس ويحفظونها على رسالتها.",
+    "intro": "المستشارون والأمناء الذين يوجّهون سيلاس ويحفظون رسالتها.",
     "count": "{count, plural, zero {لا أحد} one {شخص واحد} two {شخصان} few {{count, number, digits} أشخاص} many {{count, number, digits} شخصًا} other {{count, number, digits} شخص}}",
     "wheel": "المستشارون والأمناء",
     "announce": "{name}، {n, number, digits} من {total, number, digits}",
