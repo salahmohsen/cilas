@@ -1,0 +1,74 @@
+[
+ {
+  "subject": "Website message from {{name}}: {{topic}}",
+  "message": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "{{*:table}}",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textFormat": 0
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 5,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470ea"
+ },
+ {
+  "subject": "رسالة من الموقع من {{name}}: {{topic}}",
+  "message": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "{{*:table}}",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textFormat": 0
+     }
+    ],
+    "direction": "rtl"
+   }
+  },
+  "id": 6,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470ea"
+ }
+]

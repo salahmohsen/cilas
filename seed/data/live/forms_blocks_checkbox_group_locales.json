@@ -1,0 +1,34 @@
+[
+ {
+  "label": "How did you know about CILAS?",
+  "default_value": null,
+  "description": null,
+  "id": 5,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65902"
+ },
+ {
+  "label": "How did you know about CILAS?",
+  "default_value": null,
+  "description": null,
+  "id": 6,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65902"
+ },
+ {
+  "label": "Last but not least",
+  "default_value": null,
+  "description": "Tell us about your schedule preference and confirm your commitment to attending 80% of classes ready and keen to share your ideas and questions as well as to take turns at framing and moderating discussions.",
+  "id": 7,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65916"
+ },
+ {
+  "label": "Last but not least",
+  "default_value": null,
+  "description": "Tell us about your schedule preference and confirm your commitment to attending 80% of classes ready and keen to share your ideas and questions as well as to take turns at framing and moderating discussions.",
+  "id": 8,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65916"
+ }
+]

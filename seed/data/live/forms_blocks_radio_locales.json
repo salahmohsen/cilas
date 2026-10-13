@@ -1,0 +1,18 @@
+[
+ {
+  "label": "High school attendance",
+  "default_value": null,
+  "description": null,
+  "id": 3,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65907"
+ },
+ {
+  "label": "High school attendance",
+  "default_value": null,
+  "description": null,
+  "id": 4,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65907"
+ }
+]

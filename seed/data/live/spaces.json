@@ -1,0 +1,38 @@
+[
+ {
+  "id": 1,
+  "name": "Darb el-Labbana",
+  "generate_slug": false,
+  "slug": "darb-el-labbana",
+  "state": "current",
+  "opened_year": null,
+  "closed_year": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:20:23.221Z",
+  "created_at": "2026-10-13T14:18:22.682Z"
+ },
+ {
+  "id": 2,
+  "name": "al-Ghuria",
+  "generate_slug": false,
+  "slug": "al-ghuria",
+  "state": "former",
+  "opened_year": null,
+  "closed_year": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:20:22.193Z",
+  "created_at": "2026-10-13T14:18:23.332Z"
+ },
+ {
+  "id": 3,
+  "name": "al-Manshiya",
+  "generate_slug": false,
+  "slug": "al-manshiya",
+  "state": "former",
+  "opened_year": null,
+  "closed_year": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:20:24.657Z",
+  "created_at": "2026-10-13T14:18:23.700Z"
+ }
+]

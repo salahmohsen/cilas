@@ -1,0 +1,170 @@
+[
+ {
+  "id": 16,
+  "order": 1,
+  "parent_id": 9,
+  "path": "cycles",
+  "cycles_id": 20
+ },
+ {
+  "id": 17,
+  "order": 2,
+  "parent_id": 9,
+  "path": "cycles",
+  "cycles_id": 25
+ },
+ {
+  "id": 18,
+  "order": 3,
+  "parent_id": 9,
+  "path": "cycles",
+  "cycles_id": 29
+ },
+ {
+  "id": 19,
+  "order": 1,
+  "parent_id": 10,
+  "path": "cycles",
+  "cycles_id": 33
+ },
+ {
+  "id": 20,
+  "order": 2,
+  "parent_id": 10,
+  "path": "cycles",
+  "cycles_id": 19
+ },
+ {
+  "id": 21,
+  "order": 1,
+  "parent_id": 11,
+  "path": "cycles",
+  "cycles_id": 23
+ },
+ {
+  "id": 22,
+  "order": 2,
+  "parent_id": 11,
+  "path": "cycles",
+  "cycles_id": 35
+ },
+ {
+  "id": 23,
+  "order": 3,
+  "parent_id": 11,
+  "path": "cycles",
+  "cycles_id": 27
+ },
+ {
+  "id": 24,
+  "order": 4,
+  "parent_id": 11,
+  "path": "cycles",
+  "cycles_id": 36
+ },
+ {
+  "id": 67,
+  "order": 1,
+  "parent_id": 8,
+  "path": "cycles",
+  "cycles_id": 16
+ },
+ {
+  "id": 68,
+  "order": 2,
+  "parent_id": 8,
+  "path": "cycles",
+  "cycles_id": 17
+ },
+ {
+  "id": 69,
+  "order": 1,
+  "parent_id": 7,
+  "path": "cycles",
+  "cycles_id": 14
+ },
+ {
+  "id": 70,
+  "order": 2,
+  "parent_id": 7,
+  "path": "cycles",
+  "cycles_id": 15
+ },
+ {
+  "id": 71,
+  "order": 1,
+  "parent_id": 6,
+  "path": "cycles",
+  "cycles_id": 12
+ },
+ {
+  "id": 72,
+  "order": 2,
+  "parent_id": 6,
+  "path": "cycles",
+  "cycles_id": 13
+ },
+ {
+  "id": 73,
+  "order": 1,
+  "parent_id": 5,
+  "path": "cycles",
+  "cycles_id": 10
+ },
+ {
+  "id": 74,
+  "order": 2,
+  "parent_id": 5,
+  "path": "cycles",
+  "cycles_id": 11
+ },
+ {
+  "id": 75,
+  "order": 1,
+  "parent_id": 4,
+  "path": "cycles",
+  "cycles_id": 8
+ },
+ {
+  "id": 76,
+  "order": 2,
+  "parent_id": 4,
+  "path": "cycles",
+  "cycles_id": 9
+ },
+ {
+  "id": 77,
+  "order": 1,
+  "parent_id": 3,
+  "path": "cycles",
+  "cycles_id": 6
+ },
+ {
+  "id": 78,
+  "order": 2,
+  "parent_id": 3,
+  "path": "cycles",
+  "cycles_id": 7
+ },
+ {
+  "id": 79,
+  "order": 1,
+  "parent_id": 2,
+  "path": "cycles",
+  "cycles_id": 5
+ },
+ {
+  "id": 84,
+  "order": 1,
+  "parent_id": 1,
+  "path": "cycles",
+  "cycles_id": 1
+ },
+ {
+  "id": 85,
+  "order": 2,
+  "parent_id": 1,
+  "path": "cycles",
+  "cycles_id": 3
+ }
+]

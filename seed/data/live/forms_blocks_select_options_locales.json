@@ -1,0 +1,62 @@
+[
+ {
+  "label": "A question",
+  "id": 26,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e3"
+ },
+ {
+  "label": "سؤال",
+  "id": 27,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e3"
+ },
+ {
+  "label": "Applying",
+  "id": 28,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e4"
+ },
+ {
+  "label": "التقديم",
+  "id": 29,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e4"
+ },
+ {
+  "label": "Teaching at CILAS",
+  "id": 30,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e5"
+ },
+ {
+  "label": "التدريس في سيلاس",
+  "id": 31,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e5"
+ },
+ {
+  "label": "Press",
+  "id": 32,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e6"
+ },
+ {
+  "label": "الصحافة",
+  "id": 33,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e6"
+ },
+ {
+  "label": "Supporting CILAS",
+  "id": 34,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e7"
+ },
+ {
+  "label": "دعم سيلاس",
+  "id": 35,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e7"
+ }
+]

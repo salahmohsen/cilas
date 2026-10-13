@@ -1,0 +1,1444 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": 1,
+  "id": 1,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 1,
+  "id": 2,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 1,
+  "id": 3,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 1,
+  "id": 4,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 2,
+  "id": 5,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab13"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 2,
+  "id": 6,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab14"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3,
+  "id": 7,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab15"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3,
+  "id": 8,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab16"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3,
+  "id": 9,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab17"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 3,
+  "id": 10,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab18"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 4,
+  "id": 11,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab19"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 4,
+  "id": 12,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab1a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 4,
+  "id": 13,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 4,
+  "id": 14,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 5,
+  "id": 15,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 5,
+  "id": 16,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 5,
+  "id": 17,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab1f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 5,
+  "id": 18,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab20"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 6,
+  "id": 19,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab21"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 6,
+  "id": 20,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab22"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 6,
+  "id": 21,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab23"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 6,
+  "id": 22,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab24"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 7,
+  "id": 23,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab25"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 7,
+  "id": 24,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab26"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 7,
+  "id": 25,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab27"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 7,
+  "id": 26,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab28"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 8,
+  "id": 27,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab29"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 8,
+  "id": 28,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab2a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 8,
+  "id": 29,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 8,
+  "id": 30,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 12,
+  "id": 31,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 12,
+  "id": 32,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 12,
+  "id": 33,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 12,
+  "id": 34,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 13,
+  "id": 35,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 13,
+  "id": 36,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 13,
+  "id": 37,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 13,
+  "id": 38,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 14,
+  "id": 39,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 14,
+  "id": 40,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 14,
+  "id": 41,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 14,
+  "id": 42,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 15,
+  "id": 43,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 15,
+  "id": 44,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 15,
+  "id": 45,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 15,
+  "id": 46,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16,
+  "id": 47,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16,
+  "id": 48,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16,
+  "id": 49,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16,
+  "id": 50,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17,
+  "id": 51,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17,
+  "id": 52,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17,
+  "id": 53,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17,
+  "id": 54,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 18,
+  "id": 55,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab13"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 18,
+  "id": 56,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab14"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 19,
+  "id": 57,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab13"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 19,
+  "id": 58,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab14"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 20,
+  "id": 59,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab15"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 20,
+  "id": 60,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab16"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 20,
+  "id": 61,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab17"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 20,
+  "id": 62,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab18"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 21,
+  "id": 63,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab15"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 21,
+  "id": 64,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab16"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 21,
+  "id": 65,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab17"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 21,
+  "id": 66,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab18"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 22,
+  "id": 67,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab19"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 22,
+  "id": 68,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab1a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 22,
+  "id": 69,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 22,
+  "id": 70,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 23,
+  "id": 71,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab19"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 23,
+  "id": 72,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab1a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 23,
+  "id": 73,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 23,
+  "id": 74,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 24,
+  "id": 75,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 24,
+  "id": 76,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 24,
+  "id": 77,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab1f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 24,
+  "id": 78,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab20"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 25,
+  "id": 79,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 25,
+  "id": 80,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 25,
+  "id": 81,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab1f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 25,
+  "id": 82,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab20"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 26,
+  "id": 83,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab21"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 26,
+  "id": 84,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab22"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 26,
+  "id": 85,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab23"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 26,
+  "id": 86,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab24"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 27,
+  "id": 87,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab21"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 27,
+  "id": 88,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab22"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 27,
+  "id": 89,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab23"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 27,
+  "id": 90,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab24"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 28,
+  "id": 91,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 28,
+  "id": 92,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 28,
+  "id": 93,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 28,
+  "id": 94,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 29,
+  "id": 95,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab25"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 29,
+  "id": 96,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab26"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 29,
+  "id": 97,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab27"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 29,
+  "id": 98,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab28"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 30,
+  "id": 99,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 30,
+  "id": 100,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 30,
+  "id": 101,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 30,
+  "id": 102,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 31,
+  "id": 103,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab25"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 31,
+  "id": 104,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab26"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 31,
+  "id": 105,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab27"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 31,
+  "id": 106,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab28"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 32,
+  "id": 107,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab29"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 32,
+  "id": 108,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab2a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 32,
+  "id": 109,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 32,
+  "id": 110,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 33,
+  "id": 111,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab29"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 33,
+  "id": 112,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab2a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 33,
+  "id": 113,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 33,
+  "id": 114,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 40,
+  "id": 115,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab29"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 40,
+  "id": 116,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab2a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 40,
+  "id": 117,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 40,
+  "id": 118,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 41,
+  "id": 119,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab29"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 41,
+  "id": 120,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab2a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 41,
+  "id": 121,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 41,
+  "id": 122,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 42,
+  "id": 123,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab29"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 42,
+  "id": 124,
+  "cycle_id": 16,
+  "_uuid": "6ace425877ead72d7244ab2a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 42,
+  "id": 125,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 42,
+  "id": 126,
+  "cycle_id": 17,
+  "_uuid": "6ace425877ead72d7244ab2c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 43,
+  "id": 127,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab25"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 43,
+  "id": 128,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab26"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 43,
+  "id": 129,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab27"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 43,
+  "id": 130,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab28"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 44,
+  "id": 131,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab25"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 44,
+  "id": 132,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab26"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 44,
+  "id": 133,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab27"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 44,
+  "id": 134,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab28"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 45,
+  "id": 135,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab25"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 45,
+  "id": 136,
+  "cycle_id": 14,
+  "_uuid": "6ace425777ead72d7244ab26"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 45,
+  "id": 137,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab27"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 45,
+  "id": 138,
+  "cycle_id": 15,
+  "_uuid": "6ace425777ead72d7244ab28"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 46,
+  "id": 139,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab21"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 46,
+  "id": 140,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab22"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 46,
+  "id": 141,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab23"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 46,
+  "id": 142,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab24"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 47,
+  "id": 143,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab21"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 47,
+  "id": 144,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab22"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 47,
+  "id": 145,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab23"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 47,
+  "id": 146,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab24"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 48,
+  "id": 147,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab21"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 48,
+  "id": 148,
+  "cycle_id": 12,
+  "_uuid": "6ace425677ead72d7244ab22"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 48,
+  "id": 149,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab23"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 48,
+  "id": 150,
+  "cycle_id": 13,
+  "_uuid": "6ace425677ead72d7244ab24"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 49,
+  "id": 151,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 49,
+  "id": 152,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 49,
+  "id": 153,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab1f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 49,
+  "id": 154,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab20"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 50,
+  "id": 155,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 50,
+  "id": 156,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 50,
+  "id": 157,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab1f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 50,
+  "id": 158,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab20"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 51,
+  "id": 159,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 51,
+  "id": 160,
+  "cycle_id": 10,
+  "_uuid": "6ace425677ead72d7244ab1e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 51,
+  "id": 161,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab1f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 51,
+  "id": 162,
+  "cycle_id": 11,
+  "_uuid": "6ace425677ead72d7244ab20"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 52,
+  "id": 163,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab19"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 52,
+  "id": 164,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab1a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 52,
+  "id": 165,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 52,
+  "id": 166,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 53,
+  "id": 167,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab19"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 53,
+  "id": 168,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab1a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 53,
+  "id": 169,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 53,
+  "id": 170,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 54,
+  "id": 171,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab19"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 54,
+  "id": 172,
+  "cycle_id": 8,
+  "_uuid": "6ace425577ead72d7244ab1a"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 54,
+  "id": 173,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1b"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 54,
+  "id": 174,
+  "cycle_id": 9,
+  "_uuid": "6ace425577ead72d7244ab1c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 55,
+  "id": 175,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab15"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 55,
+  "id": 176,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab16"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 55,
+  "id": 177,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab17"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 55,
+  "id": 178,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab18"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 56,
+  "id": 179,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab15"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 56,
+  "id": 180,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab16"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 56,
+  "id": 181,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab17"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 56,
+  "id": 182,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab18"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 57,
+  "id": 183,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab15"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 57,
+  "id": 184,
+  "cycle_id": 6,
+  "_uuid": "6ace425377ead72d7244ab16"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 57,
+  "id": 185,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab17"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 57,
+  "id": 186,
+  "cycle_id": 7,
+  "_uuid": "6ace425377ead72d7244ab18"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 58,
+  "id": 187,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab13"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 58,
+  "id": 188,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab14"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 59,
+  "id": 189,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab13"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 59,
+  "id": 190,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab14"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 60,
+  "id": 191,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab13"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 60,
+  "id": 192,
+  "cycle_id": 5,
+  "_uuid": "6ace425077ead72d7244ab14"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 61,
+  "id": 193,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 61,
+  "id": 194,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 61,
+  "id": 195,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 61,
+  "id": 196,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 62,
+  "id": 197,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 62,
+  "id": 198,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 62,
+  "id": 199,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 62,
+  "id": 200,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 63,
+  "id": 201,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf902f"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 63,
+  "id": 202,
+  "cycle_id": 1,
+  "_uuid": "6ace3db3bac3e623fbdf9030"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 63,
+  "id": 203,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9031"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 63,
+  "id": 204,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 64,
+  "id": 205,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 65,
+  "id": 206,
+  "cycle_id": 3,
+  "_uuid": "6ace3db3bac3e623fbdf9032"
+ }
+]

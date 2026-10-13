@@ -1,0 +1,18 @@
+[
+ {
+  "label": "Topic",
+  "default_value": "general",
+  "id": 6,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e8",
+  "description": null
+ },
+ {
+  "label": "الموضوع",
+  "default_value": "general",
+  "id": 7,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e8",
+  "description": null
+ }
+]

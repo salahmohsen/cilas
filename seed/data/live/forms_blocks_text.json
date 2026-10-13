@@ -1,0 +1,82 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": 2,
+  "_path": "fields",
+  "id": "6ace4bb4640ccf5c43d658f7",
+  "name": "song",
+  "width": "100",
+  "required": true,
+  "block_name": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 2,
+  "_path": "fields",
+  "id": "6ace4bb4640ccf5c43d658f8",
+  "name": "name",
+  "width": "100",
+  "required": true,
+  "block_name": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 2,
+  "_path": "fields",
+  "id": "6ace4bb4640ccf5c43d658fa",
+  "name": "phone",
+  "width": "100",
+  "required": true,
+  "block_name": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 2,
+  "_path": "fields",
+  "id": "6ace4bb4640ccf5c43d658fb",
+  "name": "address",
+  "width": "100",
+  "required": true,
+  "block_name": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 2,
+  "_path": "fields",
+  "id": "6ace4bb4640ccf5c43d658fc",
+  "name": "email",
+  "width": "100",
+  "required": true,
+  "block_name": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 2,
+  "_path": "fields",
+  "id": "6ace4bb4640ccf5c43d65908",
+  "name": "high_school_name",
+  "width": "100",
+  "required": true,
+  "block_name": null
+ },
+ {
+  "_order": 22,
+  "_parent_id": 2,
+  "_path": "fields",
+  "id": "6ace4bb4640ccf5c43d65917",
+  "name": "remarks",
+  "width": "100",
+  "required": false,
+  "block_name": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 1,
+  "_path": "fields",
+  "id": "6ace4c27c5319768132470e1",
+  "name": "name",
+  "width": "50",
+  "required": true,
+  "block_name": null
+ }
+]

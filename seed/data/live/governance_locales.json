@@ -1,0 +1,58 @@
+[
+ {
+  "title": "Uyeno-Tseng Professor of International Studies and Professor of Political Science at California Lutheran University",
+  "advises_on": "curriculum design and university partnerships in the US and the UK",
+  "id": 6,
+  "_locale": "en",
+  "_parent_id": 1
+ },
+ {
+  "title": "Associate Professor of Political Philosophy and Vice-Dean of Academic Affairs at University College Maastricht",
+  "advises_on": "skills training and university partnerships in the Netherlands",
+  "id": 7,
+  "_locale": "en",
+  "_parent_id": 2
+ },
+ {
+  "title": "Chair of the Applied English Department at I-Shou University in Taiwan",
+  "advises_on": null,
+  "id": 8,
+  "_locale": "en",
+  "_parent_id": 3
+ },
+ {
+  "title": "Associate Chair of the Department of Rhetoric and Composition at the American University in Cairo",
+  "advises_on": "curriculum design and partnership with the American University in Cairo",
+  "id": 9,
+  "_locale": "en",
+  "_parent_id": 4
+ },
+ {
+  "title": "Associate Professor of Sociology at Sciences Po Paris",
+  "advises_on": "capstone projects and university partnerships in France and Italy",
+  "id": 10,
+  "_locale": "en",
+  "_parent_id": 5
+ },
+ {
+  "title": null,
+  "advises_on": null,
+  "id": 11,
+  "_locale": "en",
+  "_parent_id": 6
+ },
+ {
+  "title": "Director of Undergraduate Research and Senior Instructor at the Department of Rhetoric and Composition at the American University in Cairo",
+  "advises_on": null,
+  "id": 12,
+  "_locale": "en",
+  "_parent_id": 7
+ },
+ {
+  "title": "Project Manager at Netsis Egypt and Head of Operations at Salis IT Services",
+  "advises_on": null,
+  "id": 13,
+  "_locale": "en",
+  "_parent_id": 8
+ }
+]

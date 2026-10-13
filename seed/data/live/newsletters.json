@@ -1,0 +1,211 @@
+[
+ {
+  "id": 1,
+  "generate_slug": false,
+  "slug": "newsletter-issue-no-1-june-2013",
+  "issue_date": "2013-06-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#newsletter-issue-no-1-june-2013",
+  "updated_at": "2026-10-13T14:56:30.812Z",
+  "created_at": "2026-10-13T14:56:30.812Z",
+  "_status": "draft"
+ },
+ {
+  "id": 2,
+  "generate_slug": false,
+  "slug": "cilas-newsletter-january-2014",
+  "issue_date": "2014-01-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#cilas-newsletter-january-2014",
+  "updated_at": "2026-10-13T14:56:31.100Z",
+  "created_at": "2026-10-13T14:56:31.100Z",
+  "_status": "draft"
+ },
+ {
+  "id": 3,
+  "generate_slug": false,
+  "slug": "october-2013",
+  "issue_date": "2013-10-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#october-2013",
+  "updated_at": "2026-10-13T14:56:31.385Z",
+  "created_at": "2026-10-13T14:56:31.385Z",
+  "_status": "draft"
+ },
+ {
+  "id": 4,
+  "generate_slug": false,
+  "slug": "december-2013",
+  "issue_date": "2013-12-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#december-2013",
+  "updated_at": "2026-10-13T14:56:31.707Z",
+  "created_at": "2026-10-13T14:56:31.707Z",
+  "_status": "draft"
+ },
+ {
+  "id": 5,
+  "generate_slug": false,
+  "slug": "february-2014",
+  "issue_date": "2014-02-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#february-2014",
+  "updated_at": "2026-10-13T14:56:32.019Z",
+  "created_at": "2026-10-13T14:56:32.019Z",
+  "_status": "draft"
+ },
+ {
+  "id": 6,
+  "generate_slug": false,
+  "slug": "march-2014",
+  "issue_date": "2014-03-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#march-2014",
+  "updated_at": "2026-10-13T14:56:32.311Z",
+  "created_at": "2026-10-13T14:56:32.311Z",
+  "_status": "draft"
+ },
+ {
+  "id": 7,
+  "generate_slug": false,
+  "slug": "april-2014",
+  "issue_date": "2014-04-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#april-2014",
+  "updated_at": "2026-10-13T14:56:32.583Z",
+  "created_at": "2026-10-13T14:56:32.583Z",
+  "_status": "draft"
+ },
+ {
+  "id": 8,
+  "generate_slug": false,
+  "slug": "november-december-2014",
+  "issue_date": "2014-11-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#november-december-2014",
+  "updated_at": "2026-10-13T14:56:32.883Z",
+  "created_at": "2026-10-13T14:56:32.882Z",
+  "_status": "draft"
+ },
+ {
+  "id": 9,
+  "generate_slug": false,
+  "slug": "january-march-2015",
+  "issue_date": "2015-01-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#january-march-2015",
+  "updated_at": "2026-10-13T14:56:33.152Z",
+  "created_at": "2026-10-13T14:56:33.152Z",
+  "_status": "draft"
+ },
+ {
+  "id": 10,
+  "generate_slug": false,
+  "slug": "march-april-2015",
+  "issue_date": "2015-03-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#march-april-2015",
+  "updated_at": "2026-10-13T14:56:33.461Z",
+  "created_at": "2026-10-13T14:56:33.461Z",
+  "_status": "draft"
+ },
+ {
+  "id": 11,
+  "generate_slug": false,
+  "slug": "september-october-2015",
+  "issue_date": "2015-09-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#september-october-2015",
+  "updated_at": "2026-10-13T14:56:33.771Z",
+  "created_at": "2026-10-13T14:56:33.771Z",
+  "_status": "draft"
+ },
+ {
+  "id": 12,
+  "generate_slug": false,
+  "slug": "november-2015-february-2016",
+  "issue_date": "2015-11-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#november-2015-february-2016",
+  "updated_at": "2026-10-13T14:56:34.030Z",
+  "created_at": "2026-10-13T14:56:34.030Z",
+  "_status": "draft"
+ },
+ {
+  "id": 13,
+  "generate_slug": false,
+  "slug": "october-2016",
+  "issue_date": "2016-10-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#october-2016",
+  "updated_at": "2026-10-13T14:56:34.315Z",
+  "created_at": "2026-10-13T14:56:34.315Z",
+  "_status": "draft"
+ },
+ {
+  "id": 14,
+  "generate_slug": false,
+  "slug": "november-2016",
+  "issue_date": "2016-11-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#november-2016",
+  "updated_at": "2026-10-13T14:56:34.611Z",
+  "created_at": "2026-10-13T14:56:34.611Z",
+  "_status": "draft"
+ },
+ {
+  "id": 15,
+  "generate_slug": false,
+  "slug": "december-2016-january-2017",
+  "issue_date": "2016-12-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#december-2016-january-2017",
+  "updated_at": "2026-10-13T14:56:34.882Z",
+  "created_at": "2026-10-13T14:56:34.882Z",
+  "_status": "draft"
+ },
+ {
+  "id": 16,
+  "generate_slug": false,
+  "slug": "february-march-2017",
+  "issue_date": "2017-02-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#february-march-2017",
+  "updated_at": "2026-10-13T14:56:35.188Z",
+  "created_at": "2026-10-13T14:56:35.188Z",
+  "_status": "draft"
+ },
+ {
+  "id": 17,
+  "generate_slug": false,
+  "slug": "october-2019",
+  "issue_date": "2019-10-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#october-2019",
+  "updated_at": "2026-10-13T14:56:35.482Z",
+  "created_at": "2026-10-13T14:56:35.482Z",
+  "_status": "draft"
+ },
+ {
+  "id": 18,
+  "generate_slug": false,
+  "slug": "november-2019",
+  "issue_date": "2019-11-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#november-2019",
+  "updated_at": "2026-10-13T14:56:35.808Z",
+  "created_at": "2026-10-13T14:56:35.808Z",
+  "_status": "draft"
+ },
+ {
+  "id": 19,
+  "generate_slug": false,
+  "slug": "december-2019-janurary-2020",
+  "issue_date": "2019-12-01T00:00:00.000Z",
+  "cover_image_id": null,
+  "legacy_url": "/events-documents.html#december-2019-janurary-2020",
+  "updated_at": "2026-10-13T14:56:36.072Z",
+  "created_at": "2026-10-13T14:56:36.072Z",
+  "_status": "draft"
+ }
+]

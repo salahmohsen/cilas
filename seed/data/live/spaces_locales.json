@@ -1,0 +1,134 @@
+[
+ {
+  "city": "Cairo",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Former space in Fatimid Cairo — a scholar’s residence in the side alleys of al-Ghuria.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 10,
+  "_locale": "en",
+  "_parent_id": 2
+ },
+ {
+  "city": "القاهرة",
+  "description": null,
+  "id": 11,
+  "_locale": "ar",
+  "_parent_id": 2
+ },
+ {
+  "city": "Cairo",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Current space in Cairo, facing the twin mosques of Sultan Hassan and al-Refai.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 12,
+  "_locale": "en",
+  "_parent_id": 1
+ },
+ {
+  "city": "القاهرة",
+  "description": null,
+  "id": 13,
+  "_locale": "ar",
+  "_parent_id": 1
+ },
+ {
+  "city": "Alexandria",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "CILAS in Alexandria.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 14,
+  "_locale": "en",
+  "_parent_id": 3
+ },
+ {
+  "city": "الإسكندرية",
+  "description": null,
+  "id": 15,
+  "_locale": "ar",
+  "_parent_id": 3
+ }
+]

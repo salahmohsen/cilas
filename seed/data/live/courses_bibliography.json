@@ -1,0 +1,4601 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": 166,
+  "id": "6ace42cddcfd74794220331b",
+  "type": "other",
+  "href": "https://www.split-britches.com/long-table"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd747942203368",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd747942203369",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd74794220336a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd74794220336b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd74794220336c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd74794220336d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd74794220336e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd74794220336f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd747942203370",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd747942203371",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd747942203372",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd747942203373",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 156,
+  "id": "6ace42dbdcfd747942203374",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd74794220337d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd74794220337e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd74794220337f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203380",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203381",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203382",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203383",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203384",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=rxF0t-SMEXA"
+ },
+ {
+  "_order": 9,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203385",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=r9Gd-axMMbM"
+ },
+ {
+  "_order": 10,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203386",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=MJoL7E4uvuU"
+ },
+ {
+  "_order": 11,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203387",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=l5kIbQRjJHk"
+ },
+ {
+  "_order": 12,
+  "_parent_id": 163,
+  "id": "6ace42e2dcfd747942203388",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=Y7CuTxZnjXk"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd74794220343f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203440",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203441",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203442",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203443",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203444",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203445",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203446",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203447",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203448",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd747942203449",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd74794220344a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd74794220344b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd74794220344c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd74794220344d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 174,
+  "id": "6ace4309dcfd74794220344e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 233,
+  "id": "6ace431ddcfd7479422034e2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 233,
+  "id": "6ace431ddcfd7479422034e3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 233,
+  "id": "6ace431ddcfd7479422034e4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 175,
+  "id": "6ace4340dcfd747942203595",
+  "type": "other",
+  "href": "https://mahaviveka.wordpress.com/mebs/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 277,
+  "id": "6ace4358dcfd747942203643",
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203650",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203651",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203652",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203653",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203654",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203655",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203656",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203657",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203658",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203659",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220365a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220365b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220365c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220365d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220365e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220365f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 17,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203660",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 18,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203661",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 19,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203662",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 20,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203663",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 21,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203664",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 22,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203665",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 23,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203666",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 24,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203667",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 25,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203668",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 26,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd747942203669",
+  "type": "reading",
+  "href": "https://doi.org/10.17763/haer.61.4.a102265jl68rju84"
+ },
+ {
+  "_order": 27,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220366a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 28,
+  "_parent_id": 92,
+  "id": "6ace435cdcfd74794220366b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 288,
+  "id": "6ace438bdcfd747942203785",
+  "type": "other",
+  "href": "https://fatenabubakr.com/2025/08/11/and-shes-still-dreaming/"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 288,
+  "id": "6ace438bdcfd747942203786",
+  "type": "reading",
+  "href": "https://fount.aucegypt.edu/etds/2547"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 23,
+  "id": "6ace4393dcfd747942203792",
+  "type": "reading",
+  "href": "https://www.worldofbooks.com/en-gb/books/gernot-wagner/climate-shock/9780691171326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 23,
+  "id": "6ace4393dcfd747942203793",
+  "type": "reading",
+  "href": "https://forum.effectivealtruism.org/posts/NGq4vMDxhzJmFPaCr/notes-climate-shock-by-wagner-and-weitzman"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 23,
+  "id": "6ace4393dcfd747942203794",
+  "type": "reading",
+  "href": "http://withouthotair.com"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 210,
+  "id": "6ace4396dcfd7479422037b1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 210,
+  "id": "6ace4396dcfd7479422037b2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 210,
+  "id": "6ace4396dcfd7479422037b3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 210,
+  "id": "6ace4396dcfd7479422037b4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 210,
+  "id": "6ace4396dcfd7479422037b5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 76,
+  "id": "6ace439adcfd7479422037d6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 76,
+  "id": "6ace439adcfd7479422037d7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 76,
+  "id": "6ace439adcfd7479422037d8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037e4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037e5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037e6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037e7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037e8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037e9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037ea",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037eb",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037ec",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037ed",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037ee",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037ef",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 17,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 18,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 19,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 20,
+  "_parent_id": 209,
+  "id": "6ace439edcfd7479422037f7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 32,
+  "id": "6ace443bdcfd747942203b9f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 32,
+  "id": "6ace443bdcfd747942203ba0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 32,
+  "id": "6ace443bdcfd747942203ba1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 32,
+  "id": "6ace443bdcfd747942203ba2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 32,
+  "id": "6ace443bdcfd747942203ba3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bca",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bcb",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bcc",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bcd",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bce",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bcf",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bd0",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bd1",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bd2",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 169,
+  "id": "6ace4442dcfd747942203bd3",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 279,
+  "id": "6ace4459dcfd747942203c4d",
+  "type": "reading",
+  "href": "https://doi.org/10.4324/9780203112984"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 279,
+  "id": "6ace4459dcfd747942203c4e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 279,
+  "id": "6ace4459dcfd747942203c4f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 279,
+  "id": "6ace4459dcfd747942203c50",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 279,
+  "id": "6ace4459dcfd747942203c51",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 279,
+  "id": "6ace4459dcfd747942203c52",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 279,
+  "id": "6ace4459dcfd747942203c53",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c7d",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c7e",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c7f",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c80",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c81",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c82",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c83",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c84",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c85",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c86",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c87",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c88",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c89",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c8a",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c8b",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 188,
+  "id": "6ace445cdcfd747942203c8c",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 160,
+  "id": "6ace447fdcfd747942203d6a",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 160,
+  "id": "6ace447fdcfd747942203d6b",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 160,
+  "id": "6ace447fdcfd747942203d6c",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 160,
+  "id": "6ace447fdcfd747942203d6d",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 160,
+  "id": "6ace447fdcfd747942203d6e",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 160,
+  "id": "6ace447fdcfd747942203d6f",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e17",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e18",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e19",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e1a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e1b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e1c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e1d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e1e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e1f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e20",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e21",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 25,
+  "id": "6ace44a5dcfd747942203e22",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e31",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e32",
+  "type": "reading",
+  "href": "https://www.asjp.cerist.dz/en/downArticle/68/2/4/16506"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e33",
+  "type": "reading",
+  "href": "https://visualliteracytoday.org/what-is-visual-literacy/"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e34",
+  "type": "reading",
+  "href": "https://mana.net/18664/"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e35",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e36",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e37",
+  "type": "reading",
+  "href": "https://www.iasj.net/iasj/pdf/5c5ba55d5298d36a"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e38",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e39",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 181,
+  "id": "6ace44a9dcfd747942203e3a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f2e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f2f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f30",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f31",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f32",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f33",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f34",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f35",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f36",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f37",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f38",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f39",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f3a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f3b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f3c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f3d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 17,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f3e",
+  "type": "reading",
+  "href": "https://www.aljumhuriya.net/ar/content/%D8%A3%D8%B5%D9%88%D8%A7%D8%AA-%D8%A7%D9%84%D8%BA%D8%A7%D8%A6%D8%A8%D9%8A%D9%86-%D8%A3%D9%81%D9%83%D8%A7%D8%B1-%D9%84%D8%A5%D8%B5%D9%84%D8%A7%D8%AD-%D8%A7%D9%84%D8%AA%D9%81%D9%83%D9%8A%D8%B1"
+ },
+ {
+  "_order": 18,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f3f",
+  "type": "other",
+  "href": "https://archiveofforgetfulness.com/"
+ },
+ {
+  "_order": 19,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f40",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 20,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f41",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 21,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f42",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 22,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f43",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 23,
+  "_parent_id": 236,
+  "id": "6ace44d8dcfd747942203f44",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040d4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040d5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040d6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040d7",
+  "type": "reading",
+  "href": "http://www.socresonline.org.uk/13/1/13.html"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040d8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040d9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040da",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040db",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 100,
+  "id": "6ace4517dcfd7479422040dc",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 105,
+  "id": "6ace4529dcfd747942204157",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 105,
+  "id": "6ace4529dcfd747942204158",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 105,
+  "id": "6ace4529dcfd747942204159",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 240,
+  "id": "6ace454edcfd747942204209",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 240,
+  "id": "6ace454edcfd74794220420a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 240,
+  "id": "6ace454edcfd74794220420b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 240,
+  "id": "6ace454edcfd74794220420c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 240,
+  "id": "6ace454edcfd74794220420d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 240,
+  "id": "6ace454edcfd74794220420e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 240,
+  "id": "6ace454edcfd74794220420f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 240,
+  "id": "6ace454edcfd747942204210",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 240,
+  "id": "6ace454edcfd747942204211",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 240,
+  "id": "6ace454edcfd747942204212",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 240,
+  "id": "6ace454edcfd747942204213",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 240,
+  "id": "6ace454edcfd747942204214",
+  "type": "reading",
+  "href": "http://gamification-research.org/2012/04/defininggamification"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 155,
+  "id": "6ace458bdcfd7479422043b6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 155,
+  "id": "6ace458bdcfd7479422043b7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 155,
+  "id": "6ace458bdcfd7479422043b8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 155,
+  "id": "6ace458bdcfd7479422043b9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 155,
+  "id": "6ace458bdcfd7479422043ba",
+  "type": "reading",
+  "href": "https://sfcollege.libguides.com/ethnography-reading-guide"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 155,
+  "id": "6ace458bdcfd7479422043bb",
+  "type": "reading",
+  "href": "https://www.unl.edu/rhames/courses/212/ethnography.htm"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220455e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220455f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204560",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204561",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204562",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204563",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204564",
+  "type": "reading",
+  "href": "https://doi.org/10.1093/ahr/117.4.999"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204565",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204566",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204567",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204568",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd747942204569",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220456a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220456b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220456c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220456d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 17,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220456e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 18,
+  "_parent_id": 88,
+  "id": "6ace45cfdcfd74794220456f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 185,
+  "id": "6ace45f8dcfd74794220465c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 185,
+  "id": "6ace45f8dcfd74794220465d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 185,
+  "id": "6ace45f8dcfd74794220465e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 168,
+  "id": "6ace4623dcfd74794220472e",
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 168,
+  "id": "6ace4623dcfd74794220472f",
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 168,
+  "id": "6ace4623dcfd747942204730",
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 292,
+  "id": "6ace462ddcfd74794220475f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 292,
+  "id": "6ace462ddcfd747942204760",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 292,
+  "id": "6ace462ddcfd747942204761",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 292,
+  "id": "6ace462ddcfd747942204762",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 4,
+  "id": "6ace4c80013bc76d2006fcf3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 4,
+  "id": "6ace4c80013bc76d2006fcf4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 4,
+  "id": "6ace4c80013bc76d2006fcf5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 46,
+  "id": "6ace4e39013bc76d2006fd1f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 46,
+  "id": "6ace4e39013bc76d2006fd20",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 46,
+  "id": "6ace4e39013bc76d2006fd21",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 46,
+  "id": "6ace4e39013bc76d2006fd22",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 46,
+  "id": "6ace4e39013bc76d2006fd23",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 46,
+  "id": "6ace4e39013bc76d2006fd24",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 46,
+  "id": "6ace4e39013bc76d2006fd25",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 48,
+  "id": "6ace4e4b013bc76d2006fd3c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd45",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd46",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd47",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd48",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd49",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd4a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd4b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd4c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd4d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd4e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 54,
+  "id": "6ace4e6c013bc76d2006fd4f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd80",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd81",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd82",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd83",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd84",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd85",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd86",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd87",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd88",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd89",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd8a",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd8b",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 60,
+  "id": "6ace4e98013bc76d2006fd8c",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdbc",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdbd",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdbe",
+  "type": "reading",
+  "href": "http://www.henryagiroux.com/online_articles/Tikkun%20piece.pdf"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdbf",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdc9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdca",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdcb",
+  "type": "reading",
+  "href": "http://faculty.education.illinois.edu/burbules/papers/limits.html"
+ },
+ {
+  "_order": 17,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdcc",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 18,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdcd",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 19,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdce",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 20,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdcf",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 21,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 22,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 23,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 24,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 25,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 26,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 27,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 28,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 29,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 30,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdd9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 31,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdda",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 32,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fddb",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 33,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fddc",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 34,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fddd",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 35,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdde",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 36,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fddf",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 37,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 38,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 39,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 40,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 41,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 42,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 43,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 44,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 45,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 46,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fde9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 47,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdea",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 48,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdeb",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 49,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdec",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 50,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fded",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 51,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdee",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 52,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdef",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 53,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 54,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 55,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf2",
+  "type": "reading",
+  "href": "http://hechingerreport.org/black-parents-homeschooling-children/"
+ },
+ {
+  "_order": 56,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 57,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 58,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 59,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf6",
+  "type": "reading",
+  "href": "http://education.penelopetrunk.com/black-kids-should-homeschool/"
+ },
+ {
+  "_order": 60,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 61,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 62,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdf9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 63,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdfa",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 64,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdfb",
+  "type": "reading",
+  "href": "http://www.tandfonline.com/doi/pdf/10.1080/00131720802539523"
+ },
+ {
+  "_order": 65,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdfc",
+  "type": "reading",
+  "href": "http://www.wce.wwu.edu/Resources/CEP/eJournal/v003n001/a005.shtml"
+ },
+ {
+  "_order": 66,
+  "_parent_id": 69,
+  "id": "6ace4edf013bc76d2006fdfd",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 78,
+  "id": "6ace4f1b013bc76d2006fe04",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 78,
+  "id": "6ace4f1b013bc76d2006fe05",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 78,
+  "id": "6ace4f1b013bc76d2006fe06",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 78,
+  "id": "6ace4f1b013bc76d2006fe07",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 78,
+  "id": "6ace4f1b013bc76d2006fe08",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 80,
+  "id": "6ace4f2e013bc76d2006fe42",
+  "type": "other",
+  "href": "https://archive.org/details/noh390b2714105/page/n11/mode/2up"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 80,
+  "id": "6ace4f2e013bc76d2006fe43",
+  "type": "other",
+  "href": "https://archive.org/details/in.ernet.dli.2015.74738/page/n47/mode/1up?view=theater"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 80,
+  "id": "6ace4f2e013bc76d2006fe44",
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 80,
+  "id": "6ace4f2e013bc76d2006fe45",
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe79",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe7a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe7b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe7c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe7d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe7e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe7f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe80",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe81",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe82",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe83",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe84",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe85",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe86",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 83,
+  "id": "6ace4f49013bc76d2006fe87",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fec9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006feca",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fecb",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fecc",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fecd",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fece",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fecf",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fed0",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fed1",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fed2",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fed3",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fed4",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 101,
+  "id": "6ace4fc3013bc76d2006fed5",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff06",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff07",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff08",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff09",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff0a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff0b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff0c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff0d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff0e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff0f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff10",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff11",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff12",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff13",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff14",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff15",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 17,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff16",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 18,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff17",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 19,
+  "_parent_id": 106,
+  "id": "6ace4fe9013bc76d2006ff18",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff25",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff26",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff27",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff28",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff29",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff2a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff2b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff2c",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff2d",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff2e",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff2f",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff30",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff31",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff32",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff33",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff34",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 17,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff35",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 18,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff36",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 19,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff37",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 20,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff38",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 21,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff39",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 22,
+  "_parent_id": 111,
+  "id": "6ace5004013bc76d2006ff3a",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff3b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff3c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff3d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff3e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff3f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff40",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff41",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff42",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff43",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 121,
+  "id": "6ace5032013bc76d2006ff44",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 128,
+  "id": "6ace5055013bc76d2006ff6f",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 128,
+  "id": "6ace5055013bc76d2006ff70",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 128,
+  "id": "6ace5055013bc76d2006ff71",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 128,
+  "id": "6ace5055013bc76d2006ff72",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff7a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff7b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff7c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff7d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff7e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff7f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff80",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff81",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff82",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff83",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff84",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff85",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 144,
+  "id": "6ace50b7013bc76d2006ff86",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff8c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff8d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff8e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff8f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff90",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff91",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff92",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff93",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff94",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff95",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff96",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff97",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff98",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff99",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff9a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 149,
+  "id": "6ace50d4013bc76d2006ff9b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 170,
+  "id": "6ace513f013bc76d2006ffa5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 170,
+  "id": "6ace513f013bc76d2006ffa6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 170,
+  "id": "6ace513f013bc76d2006ffa7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 170,
+  "id": "6ace513f013bc76d2006ffa8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 170,
+  "id": "6ace513f013bc76d2006ffa9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 170,
+  "id": "6ace513f013bc76d2006ffaa",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffab",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffac",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffad",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffae",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffaf",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffb0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffb1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffb2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffb3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffb4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 171,
+  "id": "6ace514b013bc76d2006ffb5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffd9",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffda",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffdb",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffdc",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffdd",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 173,
+  "id": "6ace515d013bc76d2006ffde",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 182,
+  "id": "6ace51a1013bc76d2007000e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 182,
+  "id": "6ace51a1013bc76d2007000f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 182,
+  "id": "6ace51a1013bc76d20070010",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 182,
+  "id": "6ace51a1013bc76d20070011",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 182,
+  "id": "6ace51a1013bc76d20070012",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 182,
+  "id": "6ace51a1013bc76d20070013",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070043",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=LymEG704snc"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070044",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=pvf3ki3xAzE"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070045",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=ZY5mNTNfHXc"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070046",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=QyI0-uImNY0"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070047",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x6zs6wk"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070048",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=bha03vbPc6I"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070049",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=wr5LU2VeiQs"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007004a",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x6v9761"
+ },
+ {
+  "_order": 9,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007004b",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007004c",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007004d",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=1SoOzLbBgD0"
+ },
+ {
+  "_order": 12,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007004e",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=N99zwk7rosc"
+ },
+ {
+  "_order": 13,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007004f",
+  "type": "watch",
+  "href": "https://www.facebook.com/watch/?v=561452318487223"
+ },
+ {
+  "_order": 14,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070050",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=datkzWzI2Sk"
+ },
+ {
+  "_order": 15,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070051",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=crCJKjG5Agg"
+ },
+ {
+  "_order": 16,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070052",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x7ewdfh"
+ },
+ {
+  "_order": 17,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070053",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=syP_WrMcA5Q"
+ },
+ {
+  "_order": 18,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070054",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x6zs8hh"
+ },
+ {
+  "_order": 19,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070055",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=rf7sM4T2Rw0"
+ },
+ {
+  "_order": 20,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070056",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=WFk-C6uKMGM"
+ },
+ {
+  "_order": 21,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070057",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=uMsfkaXnkeY"
+ },
+ {
+  "_order": 22,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070058",
+  "type": "watch",
+  "href": "https://youtu.be/NiCuLyGY72I"
+ },
+ {
+  "_order": 23,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070059",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=1NKDKZKwBc8"
+ },
+ {
+  "_order": 24,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007005a",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=bKckxloTzEE"
+ },
+ {
+  "_order": 25,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007005b",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x6zs32f"
+ },
+ {
+  "_order": 26,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007005c",
+  "type": "watch",
+  "href": "https://youtu.be/h9lflwSBF_g"
+ },
+ {
+  "_order": 27,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007005d",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=0WHo4kTSAVE"
+ },
+ {
+  "_order": 28,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007005e",
+  "type": "watch",
+  "href": "https://youtu.be/aTGemqz1v4M"
+ },
+ {
+  "_order": 29,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007005f",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=h8aEBoZs_OI"
+ },
+ {
+  "_order": 30,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070060",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x6zwo04"
+ },
+ {
+  "_order": 31,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070061",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x6zs8uc"
+ },
+ {
+  "_order": 32,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070062",
+  "type": "watch",
+  "href": "https://www.dailymotion.com/video/x7e2tug"
+ },
+ {
+  "_order": 33,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070063",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=9iUl4eLulJg"
+ },
+ {
+  "_order": 34,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070064",
+  "type": "reading",
+  "href": "https://play.google.com/books/reader?id=dYQlDwAAQBAJ&pg=GBS.PT5&hl=en"
+ },
+ {
+  "_order": 35,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070065",
+  "type": "reading",
+  "href": "http://johnnywalters.weebly.com/uploads/1/3/3/5/13358288/toulmin-the-uses-of-argument_1.pdf"
+ },
+ {
+  "_order": 36,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070066",
+  "type": "reading",
+  "href": "https://archive.org/details/fallacies0000hamb"
+ },
+ {
+  "_order": 37,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070067",
+  "type": "reading",
+  "href": "https://www.persee.fr/docAsPDF/lgge_0458-726x_1976_num_10_42_2306.pdf"
+ },
+ {
+  "_order": 38,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070068",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 39,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070069",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 40,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007006a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 41,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007006b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 42,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007006c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 43,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007006d",
+  "type": "reading",
+  "href": "https://doi.org/10.1007/s10503-015-9377-z"
+ },
+ {
+  "_order": 44,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007006e",
+  "type": "reading",
+  "href": "https://link.springer.com/content/pdf/10.1007%2F978-94-024-1129-4.pdf"
+ },
+ {
+  "_order": 45,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007006f",
+  "type": "reading",
+  "href": "https://semanticar.hypotheses.org/files/2019/10/CAREL-AND-FRENAY-PAPER-final-2017.pdf"
+ },
+ {
+  "_order": 46,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070070",
+  "type": "reading",
+  "href": "https://down.ketabpedia.com/files/bkb/bkb-fi06684-ketabpedia.com.pdf"
+ },
+ {
+  "_order": 47,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070071",
+  "type": "reading",
+  "href": "https://down.ketabpedia.com/files/bkb/bkb-mak00905-ketabpedia.com.pdf"
+ },
+ {
+  "_order": 48,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070072",
+  "type": "reading",
+  "href": "https://www.persee.fr/docAsPDF/comm_0588-8018_1970_num_16_1_1236.pdf"
+ },
+ {
+  "_order": 49,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070073",
+  "type": "reading",
+  "href": "https://duncankennedy.net/documents/A%20Semiotics%20of%20Legal%20Argument_European%20Intro.pdf"
+ },
+ {
+  "_order": 50,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070074",
+  "type": "reading",
+  "href": "https://scholar.law.colorado.edu/cgi/viewcontent.cgi?referer=&httpsredir=1&article=1561&context=articles"
+ },
+ {
+  "_order": 51,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070075",
+  "type": "reading",
+  "href": "https://doi.org/10.1093/ojls/4.1.88"
+ },
+ {
+  "_order": 52,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070076",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 53,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070077",
+  "type": "reading",
+  "href": "https://philpapers.org/s/Paul%20de%20Mann"
+ },
+ {
+  "_order": 54,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070078",
+  "type": "reading",
+  "href": "https://www.jstor.org/stable/10.5749/j.cttttt6x.11"
+ },
+ {
+  "_order": 55,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d20070079",
+  "type": "reading",
+  "href": "https://philpapers.org/rec/SINITA-2"
+ },
+ {
+  "_order": 56,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007007a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 57,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007007b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 58,
+  "_parent_id": 195,
+  "id": "6ace51e5013bc76d2007007c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700a9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700aa",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700ab",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700ac",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700ad",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 205,
+  "id": "6ace521d013bc76d200700ae",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070102",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070103",
+  "type": "reading",
+  "href": "https://www.asjp.cerist.dz/en/downArticle/68/2/4/16506"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070104",
+  "type": "reading",
+  "href": "https://visualliteracytoday.org/what-is-visual-literacy/"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070105",
+  "type": "reading",
+  "href": "https://mana.net/18664/"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070106",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070107",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070108",
+  "type": "reading",
+  "href": "https://www.iasj.net/iasj/pdf/5c5ba55d5298d36a"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d20070109",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d2007010a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 222,
+  "id": "6ace529b013bc76d2007010b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d2007011b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d2007011c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d2007011d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d2007011e",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 5,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d2007011f",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070120",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 7,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070121",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070122",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 9,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070123",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 10,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070124",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070125",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070126",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070127",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 223,
+  "id": "6ace52a9013bc76d20070128",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701cc",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701cd",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701ce",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701cf",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=RB2m1m-yAwo"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d0",
+  "type": "watch",
+  "href": null
+ },
+ {
+  "_order": 6,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d1",
+  "type": "reading",
+  "href": "https://www.academia.edu/35598982/Canasta_de_poetas_mexicanos_para_la_Revoluci%C3%B3n_palestina"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 8,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d3",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=aehlMo644ZU"
+ },
+ {
+  "_order": 9,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d4",
+  "type": "watch",
+  "href": "https://www.youtube.com/watch?v=5exqFdUosYI"
+ },
+ {
+  "_order": 10,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 11,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 12,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 13,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 14,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701d9",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 15,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701da",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 16,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701db",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 17,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701dc",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 18,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701dd",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 19,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701de",
+  "type": "listen",
+  "href": null
+ },
+ {
+  "_order": 20,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701df",
+  "type": "other",
+  "href": null
+ },
+ {
+  "_order": 21,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e0",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 22,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e1",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 23,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e2",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 24,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e3",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 25,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e4",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 26,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e5",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 27,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e6",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 28,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e7",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 29,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e8",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 30,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701e9",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 31,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701ea",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 32,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701eb",
+  "type": "reading",
+  "href": "http://merip.org/2018/04/puerto-rican-decolonization-armed-struggle-and-the-question-of-palestine/"
+ },
+ {
+  "_order": 33,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701ec",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 34,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701ed",
+  "type": "reading",
+  "href": "https://doi.org/10.1177/0921374019860941"
+ },
+ {
+  "_order": 35,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701ee",
+  "type": "reading",
+  "href": "https://doi.org/10.1080/20581831.2017.1322301"
+ },
+ {
+  "_order": 36,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701ef",
+  "type": "reading",
+  "href": "https://socialistproject.ca/2018/06/israels-environmental-colonialism-and-ecoapartheid/"
+ },
+ {
+  "_order": 37,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701f0",
+  "type": "reading",
+  "href": "https://www.academia.edu/35598960/Julio_Cort%C3%A1zar_entrevistado_por_la_Revoluci%C3%B3n_Palestina"
+ },
+ {
+  "_order": 38,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701f1",
+  "type": "reading",
+  "href": "https://www.academia.edu/35861483/Una_entrevista_peregrina"
+ },
+ {
+  "_order": 39,
+  "_parent_id": 237,
+  "id": "6ace531c013bc76d200701f2",
+  "type": "reading",
+  "href": "https://aesengagement.wordpress.com/2016/09/20/concrete-and-livability-in-occupied-palestine/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 255,
+  "id": "6ace5381013bc76d2007021a",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 2,
+  "_parent_id": 255,
+  "id": "6ace5381013bc76d2007021b",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 3,
+  "_parent_id": 255,
+  "id": "6ace5381013bc76d2007021c",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 4,
+  "_parent_id": 255,
+  "id": "6ace5381013bc76d2007021d",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 268,
+  "id": "6ace53cc013bc76d20070282",
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 268,
+  "id": "6ace53cc013bc76d20070283",
+  "type": "reading",
+  "href": null
+ },
+ {
+  "_order": 1,
+  "_parent_id": 274,
+  "id": "6ace53f8013bc76d200702ba",
+  "type": "other",
+  "href": "https://slavsandtatars.com/cycles/language-arts"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 289,
+  "id": "6ace546f013bc76d20070303",
+  "type": "reading",
+  "href": null
+ }
+]

@@ -1,0 +1,442 @@
+[
+ {
+  "id": 251,
+  "order": 1,
+  "parent_id": 15,
+  "path": "authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 252,
+  "order": 1,
+  "parent_id": 14,
+  "path": "authors",
+  "people_id": 59,
+  "articles_id": null
+ },
+ {
+  "id": 253,
+  "order": 1,
+  "parent_id": 13,
+  "path": "authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 254,
+  "order": 1,
+  "parent_id": 12,
+  "path": "authors",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 255,
+  "order": 1,
+  "parent_id": 11,
+  "path": "authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 256,
+  "order": 1,
+  "parent_id": 11,
+  "path": "credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 257,
+  "order": 1,
+  "parent_id": 11,
+  "path": "translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 258,
+  "order": 1,
+  "parent_id": 10,
+  "path": "authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 259,
+  "order": 1,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 29,
+  "articles_id": null
+ },
+ {
+  "id": 260,
+  "order": 2,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 49,
+  "articles_id": null
+ },
+ {
+  "id": 261,
+  "order": 3,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 262,
+  "order": 4,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 31,
+  "articles_id": null
+ },
+ {
+  "id": 263,
+  "order": 5,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 264,
+  "order": 6,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 33,
+  "articles_id": null
+ },
+ {
+  "id": 265,
+  "order": 1,
+  "parent_id": 10,
+  "path": "translation.original_authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 266,
+  "order": 1,
+  "parent_id": 9,
+  "path": "authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 267,
+  "order": 1,
+  "parent_id": 9,
+  "path": "credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 268,
+  "order": 1,
+  "parent_id": 9,
+  "path": "translation.original_authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 269,
+  "order": 1,
+  "parent_id": 8,
+  "path": "authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 270,
+  "order": 1,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 35,
+  "articles_id": null
+ },
+ {
+  "id": 271,
+  "order": 2,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 36,
+  "articles_id": null
+ },
+ {
+  "id": 272,
+  "order": 3,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 273,
+  "order": 4,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 37,
+  "articles_id": null
+ },
+ {
+  "id": 274,
+  "order": 5,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 38,
+  "articles_id": null
+ },
+ {
+  "id": 275,
+  "order": 6,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 39,
+  "articles_id": null
+ },
+ {
+  "id": 276,
+  "order": 7,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 40,
+  "articles_id": null
+ },
+ {
+  "id": 277,
+  "order": 8,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 32,
+  "articles_id": null
+ },
+ {
+  "id": 278,
+  "order": 9,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 27,
+  "articles_id": null
+ },
+ {
+  "id": 279,
+  "order": 10,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 280,
+  "order": 1,
+  "parent_id": 8,
+  "path": "translation.original_authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 281,
+  "order": 1,
+  "parent_id": 7,
+  "path": "authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 282,
+  "order": 2,
+  "parent_id": 7,
+  "path": "authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 283,
+  "order": 3,
+  "parent_id": 7,
+  "path": "authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 284,
+  "order": 1,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 41,
+  "articles_id": null
+ },
+ {
+  "id": 285,
+  "order": 2,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 44,
+  "articles_id": null
+ },
+ {
+  "id": 286,
+  "order": 3,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 45,
+  "articles_id": null
+ },
+ {
+  "id": 287,
+  "order": 4,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 288,
+  "order": 5,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 43,
+  "articles_id": null
+ },
+ {
+  "id": 289,
+  "order": 6,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 46,
+  "articles_id": null
+ },
+ {
+  "id": 290,
+  "order": 7,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 291,
+  "order": 8,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 292,
+  "order": 1,
+  "parent_id": 7,
+  "path": "translation.original_authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 293,
+  "order": 2,
+  "parent_id": 7,
+  "path": "translation.original_authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 294,
+  "order": 3,
+  "parent_id": 7,
+  "path": "translation.original_authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 295,
+  "order": 1,
+  "parent_id": 6,
+  "path": "authors",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 296,
+  "order": 1,
+  "parent_id": 5,
+  "path": "authors",
+  "people_id": 17,
+  "articles_id": null
+ },
+ {
+  "id": 297,
+  "order": 1,
+  "parent_id": 5,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 298,
+  "order": 1,
+  "parent_id": 4,
+  "path": "authors",
+  "people_id": 16,
+  "articles_id": null
+ },
+ {
+  "id": 299,
+  "order": 1,
+  "parent_id": 4,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 300,
+  "order": 1,
+  "parent_id": 3,
+  "path": "authors",
+  "people_id": 15,
+  "articles_id": null
+ },
+ {
+  "id": 301,
+  "order": 1,
+  "parent_id": 3,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 302,
+  "order": 1,
+  "parent_id": 2,
+  "path": "authors",
+  "people_id": 19,
+  "articles_id": null
+ },
+ {
+  "id": 303,
+  "order": 1,
+  "parent_id": 2,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 304,
+  "order": 1,
+  "parent_id": 1,
+  "path": "authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 305,
+  "order": 1,
+  "parent_id": 1,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ }
+]

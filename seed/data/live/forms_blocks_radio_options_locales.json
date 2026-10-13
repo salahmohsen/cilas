@@ -1,0 +1,50 @@
+[
+ {
+  "label": "International school in Egypt or abroad",
+  "id": 9,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65903"
+ },
+ {
+  "label": "International school in Egypt or abroad",
+  "id": 10,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65903"
+ },
+ {
+  "label": "Private school in Egypt or abroad",
+  "id": 11,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65904"
+ },
+ {
+  "label": "Private school in Egypt or abroad",
+  "id": 12,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65904"
+ },
+ {
+  "label": "Experimental school in Egypt",
+  "id": 13,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65905"
+ },
+ {
+  "label": "Experimental school in Egypt",
+  "id": 14,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65905"
+ },
+ {
+  "label": "Public (government) school in Egypt or abroad",
+  "id": 15,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65906"
+ },
+ {
+  "label": "Public (government) school in Egypt or abroad",
+  "id": 16,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65906"
+ }
+]

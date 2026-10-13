@@ -1,0 +1,32 @@
+[
+ {
+  "label": "Supervision & coordination",
+  "id": 26,
+  "_locale": "en",
+  "_parent_id": "6ace468c360651c012d37deb"
+ },
+ {
+  "label": "إشراف وتنسيق",
+  "id": 27,
+  "_locale": "ar",
+  "_parent_id": "6ace468c360651c012d37deb"
+ },
+ {
+  "label": "Translation & editing",
+  "id": 28,
+  "_locale": "en",
+  "_parent_id": "6ace468c360651c012d37dec"
+ },
+ {
+  "label": "ترجمة وتحرير",
+  "id": 29,
+  "_locale": "ar",
+  "_parent_id": "6ace468c360651c012d37dec"
+ },
+ {
+  "label": "Contributing authors",
+  "id": 31,
+  "_locale": "en",
+  "_parent_id": "6ace468b360651c012d37dea"
+ }
+]

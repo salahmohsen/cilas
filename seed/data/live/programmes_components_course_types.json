@@ -1,0 +1,248 @@
+[
+ {
+  "order": 1,
+  "parent_id": "6ace425877ead72d7244ab29",
+  "value": "CORE",
+  "id": 172
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425877ead72d7244ab2a",
+  "value": "THEMATIC",
+  "id": 173
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425877ead72d7244ab2a",
+  "value": "LAB",
+  "id": 174
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425877ead72d7244ab2b",
+  "value": "CORE",
+  "id": 175
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425877ead72d7244ab2c",
+  "value": "THEMATIC",
+  "id": 176
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425877ead72d7244ab2c",
+  "value": "LAB",
+  "id": 177
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425777ead72d7244ab25",
+  "value": "CORE",
+  "id": 178
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425777ead72d7244ab26",
+  "value": "THEMATIC",
+  "id": 179
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425777ead72d7244ab26",
+  "value": "LAB",
+  "id": 180
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425777ead72d7244ab27",
+  "value": "CORE",
+  "id": 181
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425777ead72d7244ab28",
+  "value": "THEMATIC",
+  "id": 182
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425777ead72d7244ab28",
+  "value": "LAB",
+  "id": 183
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab21",
+  "value": "CORE",
+  "id": 184
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab22",
+  "value": "THEMATIC",
+  "id": 185
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425677ead72d7244ab22",
+  "value": "LAB",
+  "id": 186
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab23",
+  "value": "CORE",
+  "id": 187
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab24",
+  "value": "THEMATIC",
+  "id": 188
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425677ead72d7244ab24",
+  "value": "LAB",
+  "id": 189
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab1d",
+  "value": "CORE",
+  "id": 190
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab1e",
+  "value": "THEMATIC",
+  "id": 191
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425677ead72d7244ab1e",
+  "value": "LAB",
+  "id": 192
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab1f",
+  "value": "CORE",
+  "id": 193
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425677ead72d7244ab20",
+  "value": "THEMATIC",
+  "id": 194
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425677ead72d7244ab20",
+  "value": "LAB",
+  "id": 195
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425577ead72d7244ab19",
+  "value": "CORE",
+  "id": 196
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425577ead72d7244ab1a",
+  "value": "THEMATIC",
+  "id": 197
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425577ead72d7244ab1a",
+  "value": "LAB",
+  "id": 198
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425577ead72d7244ab1b",
+  "value": "CORE",
+  "id": 199
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425577ead72d7244ab1c",
+  "value": "THEMATIC",
+  "id": 200
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425577ead72d7244ab1c",
+  "value": "LAB",
+  "id": 201
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425377ead72d7244ab15",
+  "value": "CORE",
+  "id": 202
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425377ead72d7244ab16",
+  "value": "THEMATIC",
+  "id": 203
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425377ead72d7244ab16",
+  "value": "LAB",
+  "id": 204
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425377ead72d7244ab17",
+  "value": "CORE",
+  "id": 205
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425377ead72d7244ab18",
+  "value": "THEMATIC",
+  "id": 206
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425377ead72d7244ab18",
+  "value": "LAB",
+  "id": 207
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425077ead72d7244ab13",
+  "value": "CORE",
+  "id": 208
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace425077ead72d7244ab14",
+  "value": "THEMATIC",
+  "id": 209
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace425077ead72d7244ab14",
+  "value": "LAB",
+  "id": 210
+ },
+ {
+  "order": 1,
+  "parent_id": "6ace3db3bac3e623fbdf9032",
+  "value": "THEMATIC",
+  "id": 219
+ },
+ {
+  "order": 2,
+  "parent_id": "6ace3db3bac3e623fbdf9032",
+  "value": "LAB",
+  "id": 220
+ }
+]

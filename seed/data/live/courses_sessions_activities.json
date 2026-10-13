@@ -1,0 +1,3548 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd7479422032e0",
+  "id": "6ace42cddcfd7479422032dd",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd7479422032e0",
+  "id": "6ace42cddcfd7479422032de",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd7479422032e0",
+  "id": "6ace42cddcfd7479422032df",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd7479422032e9",
+  "id": "6ace42cddcfd7479422032e6",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd7479422032e9",
+  "id": "6ace42cddcfd7479422032e7",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd7479422032e9",
+  "id": "6ace42cddcfd7479422032e8",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd7479422032f5",
+  "id": "6ace42cddcfd7479422032f1",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd7479422032f5",
+  "id": "6ace42cddcfd7479422032f2",
+  "kind": "screening"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd7479422032f5",
+  "id": "6ace42cddcfd7479422032f3",
+  "kind": "exercise"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace42cddcfd7479422032f5",
+  "id": "6ace42cddcfd7479422032f4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd7479422032fb",
+  "id": "6ace42cddcfd7479422032f8",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd7479422032fb",
+  "id": "6ace42cddcfd7479422032f9",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd7479422032fb",
+  "id": "6ace42cddcfd7479422032fa",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd747942203304",
+  "id": "6ace42cddcfd747942203301",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd747942203304",
+  "id": "6ace42cddcfd747942203302",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd747942203304",
+  "id": "6ace42cddcfd747942203303",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd74794220330b",
+  "id": "6ace42cddcfd747942203308",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd74794220330b",
+  "id": "6ace42cddcfd747942203309",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd74794220330b",
+  "id": "6ace42cddcfd74794220330a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd747942203313",
+  "id": "6ace42cddcfd747942203310",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd747942203313",
+  "id": "6ace42cddcfd747942203311",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd747942203313",
+  "id": "6ace42cddcfd747942203312",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42cddcfd74794220331a",
+  "id": "6ace42cddcfd747942203317",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42cddcfd74794220331a",
+  "id": "6ace42cddcfd747942203318",
+  "kind": "presentation"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42cddcfd74794220331a",
+  "id": "6ace42cddcfd747942203319",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd74794220331f",
+  "id": "6ace42d2dcfd74794220331c",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd74794220331f",
+  "id": "6ace42d2dcfd74794220331d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd74794220331f",
+  "id": "6ace42d2dcfd74794220331e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd747942203324",
+  "id": "6ace42d2dcfd747942203321",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd747942203324",
+  "id": "6ace42d2dcfd747942203322",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd747942203324",
+  "id": "6ace42d2dcfd747942203323",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd747942203329",
+  "id": "6ace42d2dcfd747942203326",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd747942203329",
+  "id": "6ace42d2dcfd747942203327",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd747942203329",
+  "id": "6ace42d2dcfd747942203328",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd74794220332f",
+  "id": "6ace42d2dcfd74794220332c",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd74794220332f",
+  "id": "6ace42d2dcfd74794220332d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd74794220332f",
+  "id": "6ace42d2dcfd74794220332e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd747942203334",
+  "id": "6ace42d2dcfd747942203331",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd747942203334",
+  "id": "6ace42d2dcfd747942203332",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd747942203334",
+  "id": "6ace42d2dcfd747942203333",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd747942203339",
+  "id": "6ace42d2dcfd747942203336",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd747942203339",
+  "id": "6ace42d2dcfd747942203337",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd747942203339",
+  "id": "6ace42d2dcfd747942203338",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd74794220333e",
+  "id": "6ace42d2dcfd74794220333b",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd74794220333e",
+  "id": "6ace42d2dcfd74794220333c",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd74794220333e",
+  "id": "6ace42d2dcfd74794220333d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd747942203343",
+  "id": "6ace42d2dcfd747942203340",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd747942203343",
+  "id": "6ace42d2dcfd747942203341",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd747942203343",
+  "id": "6ace42d2dcfd747942203342",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd747942203348",
+  "id": "6ace42d2dcfd747942203345",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd747942203348",
+  "id": "6ace42d2dcfd747942203346",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42d2dcfd747942203348",
+  "id": "6ace42d2dcfd747942203347",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42d2dcfd74794220334b",
+  "id": "6ace42d2dcfd747942203349",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42d2dcfd74794220334b",
+  "id": "6ace42d2dcfd74794220334a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42dbdcfd74794220334f",
+  "id": "6ace42dbdcfd74794220334c",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42dbdcfd74794220334f",
+  "id": "6ace42dbdcfd74794220334d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42dbdcfd74794220334f",
+  "id": "6ace42dbdcfd74794220334e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42dbdcfd747942203353",
+  "id": "6ace42dbdcfd747942203350",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42dbdcfd747942203353",
+  "id": "6ace42dbdcfd747942203351",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42dbdcfd747942203353",
+  "id": "6ace42dbdcfd747942203352",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42dbdcfd747942203357",
+  "id": "6ace42dbdcfd747942203354",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42dbdcfd747942203357",
+  "id": "6ace42dbdcfd747942203355",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42dbdcfd747942203357",
+  "id": "6ace42dbdcfd747942203356",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42dbdcfd74794220335b",
+  "id": "6ace42dbdcfd747942203358",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42dbdcfd74794220335b",
+  "id": "6ace42dbdcfd747942203359",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42dbdcfd74794220335b",
+  "id": "6ace42dbdcfd74794220335a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42dbdcfd74794220335f",
+  "id": "6ace42dbdcfd74794220335c",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42dbdcfd74794220335f",
+  "id": "6ace42dbdcfd74794220335d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42dbdcfd74794220335f",
+  "id": "6ace42dbdcfd74794220335e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42dbdcfd747942203363",
+  "id": "6ace42dbdcfd747942203360",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42dbdcfd747942203363",
+  "id": "6ace42dbdcfd747942203361",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42dbdcfd747942203363",
+  "id": "6ace42dbdcfd747942203362",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42dbdcfd747942203367",
+  "id": "6ace42dbdcfd747942203364",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace42dbdcfd747942203367",
+  "id": "6ace42dbdcfd747942203365",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace42dbdcfd747942203367",
+  "id": "6ace42dbdcfd747942203366",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42efdcfd7479422033d4",
+  "id": "6ace42efdcfd7479422033d3",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace42f6dcfd747942203412",
+  "id": "6ace42f6dcfd747942203411",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace430edcfd74794220346b",
+  "id": "6ace430edcfd74794220346a",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd747942203481",
+  "id": "6ace4318dcfd747942203480",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd747942203486",
+  "id": "6ace4318dcfd747942203485",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd74794220348d",
+  "id": "6ace4318dcfd74794220348c",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd747942203490",
+  "id": "6ace4318dcfd74794220348f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd747942203493",
+  "id": "6ace4318dcfd747942203492",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd747942203496",
+  "id": "6ace4318dcfd747942203495",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd74794220349b",
+  "id": "6ace4318dcfd74794220349a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd7479422034a0",
+  "id": "6ace4318dcfd74794220349f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd7479422034a7",
+  "id": "6ace4318dcfd7479422034a6",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4318dcfd7479422034ad",
+  "id": "6ace4318dcfd7479422034ac",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd747942203505",
+  "id": "6ace4329dcfd747942203503",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4329dcfd747942203505",
+  "id": "6ace4329dcfd747942203504",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd747942203508",
+  "id": "6ace4329dcfd747942203507",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd74794220350a",
+  "id": "6ace4329dcfd747942203509",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd74794220350c",
+  "id": "6ace4329dcfd74794220350b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd74794220350f",
+  "id": "6ace4329dcfd74794220350e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd747942203516",
+  "id": "6ace4329dcfd747942203513",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4329dcfd747942203516",
+  "id": "6ace4329dcfd747942203514",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4329dcfd747942203516",
+  "id": "6ace4329dcfd747942203515",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd747942203518",
+  "id": "6ace4329dcfd747942203517",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4329dcfd74794220351a",
+  "id": "6ace4329dcfd747942203519",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4331dcfd747942203530",
+  "id": "6ace4331dcfd74794220352f",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd74794220354c",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd74794220354d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd74794220354e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd74794220354f",
+  "kind": "presentation"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd747942203550",
+  "kind": "exercise"
+ },
+ {
+  "_order": 6,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd747942203551",
+  "kind": "presentation"
+ },
+ {
+  "_order": 7,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd747942203552",
+  "kind": "other"
+ },
+ {
+  "_order": 8,
+  "_parent_id": "6ace4338dcfd747942203554",
+  "id": "6ace4338dcfd747942203553",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4338dcfd74794220355d",
+  "id": "6ace4338dcfd747942203557",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4338dcfd74794220355d",
+  "id": "6ace4338dcfd747942203558",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4338dcfd74794220355d",
+  "id": "6ace4338dcfd747942203559",
+  "kind": "discussion"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4338dcfd74794220355d",
+  "id": "6ace4338dcfd74794220355a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4338dcfd74794220355d",
+  "id": "6ace4338dcfd74794220355b",
+  "kind": "other"
+ },
+ {
+  "_order": 6,
+  "_parent_id": "6ace4338dcfd74794220355d",
+  "id": "6ace4338dcfd74794220355c",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4338dcfd747942203567",
+  "id": "6ace4338dcfd747942203560",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4338dcfd747942203567",
+  "id": "6ace4338dcfd747942203561",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4338dcfd747942203567",
+  "id": "6ace4338dcfd747942203562",
+  "kind": "presentation"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4338dcfd747942203567",
+  "id": "6ace4338dcfd747942203563",
+  "kind": "exercise"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4338dcfd747942203567",
+  "id": "6ace4338dcfd747942203564",
+  "kind": "presentation"
+ },
+ {
+  "_order": 6,
+  "_parent_id": "6ace4338dcfd747942203567",
+  "id": "6ace4338dcfd747942203565",
+  "kind": "other"
+ },
+ {
+  "_order": 7,
+  "_parent_id": "6ace4338dcfd747942203567",
+  "id": "6ace4338dcfd747942203566",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4338dcfd74794220356f",
+  "id": "6ace4338dcfd74794220356a",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4338dcfd74794220356f",
+  "id": "6ace4338dcfd74794220356b",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4338dcfd74794220356f",
+  "id": "6ace4338dcfd74794220356c",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4338dcfd74794220356f",
+  "id": "6ace4338dcfd74794220356d",
+  "kind": "other"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4338dcfd74794220356f",
+  "id": "6ace4338dcfd74794220356e",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4338dcfd747942203577",
+  "id": "6ace4338dcfd747942203572",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4338dcfd747942203577",
+  "id": "6ace4338dcfd747942203573",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4338dcfd747942203577",
+  "id": "6ace4338dcfd747942203574",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4338dcfd747942203577",
+  "id": "6ace4338dcfd747942203575",
+  "kind": "other"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4338dcfd747942203577",
+  "id": "6ace4338dcfd747942203576",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4338dcfd74794220357c",
+  "id": "6ace4338dcfd747942203578",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4338dcfd74794220357c",
+  "id": "6ace4338dcfd747942203579",
+  "kind": "presentation"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4338dcfd74794220357c",
+  "id": "6ace4338dcfd74794220357a",
+  "kind": "presentation"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4338dcfd74794220357c",
+  "id": "6ace4338dcfd74794220357b",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4344dcfd7479422035c0",
+  "id": "6ace4344dcfd7479422035bf",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4348dcfd7479422035c7",
+  "id": "6ace4348dcfd7479422035c6",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4348dcfd7479422035cc",
+  "id": "6ace4348dcfd7479422035cb",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4348dcfd7479422035d0",
+  "id": "6ace4348dcfd7479422035cf",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4348dcfd7479422035d5",
+  "id": "6ace4348dcfd7479422035d4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4348dcfd7479422035db",
+  "id": "6ace4348dcfd7479422035da",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4348dcfd7479422035e0",
+  "id": "6ace4348dcfd7479422035df",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4354dcfd747942203628",
+  "id": "6ace4354dcfd747942203627",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4354dcfd74794220362b",
+  "id": "6ace4354dcfd747942203629",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4354dcfd74794220362b",
+  "id": "6ace4354dcfd74794220362a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4358dcfd747942203642",
+  "id": "6ace4358dcfd747942203641",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace436fdcfd7479422036b1",
+  "id": "6ace436fdcfd7479422036b0",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4373dcfd7479422036be",
+  "id": "6ace4373dcfd7479422036bc",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4373dcfd7479422036be",
+  "id": "6ace4373dcfd7479422036bd",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4373dcfd7479422036c7",
+  "id": "6ace4373dcfd7479422036c6",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4378dcfd7479422036d3",
+  "id": "6ace4378dcfd7479422036d2",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4378dcfd7479422036d7",
+  "id": "6ace4378dcfd7479422036d6",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4378dcfd7479422036df",
+  "id": "6ace4378dcfd7479422036de",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4378dcfd7479422036e9",
+  "id": "6ace4378dcfd7479422036e8",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4378dcfd7479422036ed",
+  "id": "6ace4378dcfd7479422036ec",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4384dcfd747942203741",
+  "id": "6ace4384dcfd747942203740",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4387dcfd747942203759",
+  "id": "6ace4387dcfd747942203758",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace439edcfd7479422037e3",
+  "id": "6ace439edcfd7479422037e2",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd747942203838",
+  "id": "6ace43b2dcfd747942203837",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd74794220383b",
+  "id": "6ace43b2dcfd74794220383a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd74794220383f",
+  "id": "6ace43b2dcfd74794220383e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd747942203842",
+  "id": "6ace43b2dcfd747942203841",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd747942203845",
+  "id": "6ace43b2dcfd747942203844",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd74794220384c",
+  "id": "6ace43b2dcfd74794220384b",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd74794220384f",
+  "id": "6ace43b2dcfd74794220384e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd747942203852",
+  "id": "6ace43b2dcfd747942203851",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43b2dcfd747942203857",
+  "id": "6ace43b2dcfd747942203856",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43cadcfd74794220391b",
+  "id": "6ace43cadcfd747942203918",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace43cadcfd74794220391b",
+  "id": "6ace43cadcfd747942203919",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace43cadcfd74794220391b",
+  "id": "6ace43cadcfd74794220391a",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43cadcfd74794220391d",
+  "id": "6ace43cadcfd74794220391c",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43cadcfd747942203922",
+  "id": "6ace43cadcfd74794220391e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace43cadcfd747942203922",
+  "id": "6ace43cadcfd74794220391f",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace43cadcfd747942203922",
+  "id": "6ace43cadcfd747942203920",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace43cadcfd747942203922",
+  "id": "6ace43cadcfd747942203921",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43cadcfd747942203927",
+  "id": "6ace43cadcfd747942203923",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace43cadcfd747942203927",
+  "id": "6ace43cadcfd747942203924",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace43cadcfd747942203927",
+  "id": "6ace43cadcfd747942203925",
+  "kind": "exercise"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace43cadcfd747942203927",
+  "id": "6ace43cadcfd747942203926",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43cadcfd74794220392b",
+  "id": "6ace43cadcfd747942203928",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace43cadcfd74794220392b",
+  "id": "6ace43cadcfd747942203929",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace43cadcfd74794220392b",
+  "id": "6ace43cadcfd74794220392a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43cadcfd74794220392e",
+  "id": "6ace43cadcfd74794220392c",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace43cadcfd74794220392e",
+  "id": "6ace43cadcfd74794220392d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd74794220394a",
+  "id": "6ace43d5dcfd747942203949",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd747942203953",
+  "id": "6ace43d5dcfd747942203952",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd747942203960",
+  "id": "6ace43d5dcfd74794220395f",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd747942203969",
+  "id": "6ace43d5dcfd747942203968",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd747942203973",
+  "id": "6ace43d5dcfd747942203972",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd74794220397d",
+  "id": "6ace43d5dcfd74794220397c",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd747942203987",
+  "id": "6ace43d5dcfd747942203986",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd747942203991",
+  "id": "6ace43d5dcfd747942203990",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd747942203998",
+  "id": "6ace43d5dcfd747942203997",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd7479422039a2",
+  "id": "6ace43d5dcfd7479422039a0",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace43d5dcfd7479422039a2",
+  "id": "6ace43d5dcfd7479422039a1",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd7479422039b0",
+  "id": "6ace43d5dcfd7479422039ad",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace43d5dcfd7479422039b0",
+  "id": "6ace43d5dcfd7479422039ae",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace43d5dcfd7479422039b0",
+  "id": "6ace43d5dcfd7479422039af",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43d5dcfd7479422039b2",
+  "id": "6ace43d5dcfd7479422039b1",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43dbdcfd7479422039b4",
+  "id": "6ace43dbdcfd7479422039b3",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43dedcfd7479422039d0",
+  "id": "6ace43dedcfd7479422039cf",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43dedcfd7479422039d6",
+  "id": "6ace43dedcfd7479422039d5",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43e9dcfd7479422039e6",
+  "id": "6ace43e9dcfd7479422039e5",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43e9dcfd7479422039ed",
+  "id": "6ace43e9dcfd7479422039ec",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43e9dcfd7479422039ef",
+  "id": "6ace43e9dcfd7479422039ee",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43e9dcfd7479422039f1",
+  "id": "6ace43e9dcfd7479422039f0",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace43fcdcfd747942203a27",
+  "id": "6ace43fcdcfd747942203a26",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace440bdcfd747942203a5d",
+  "id": "6ace440bdcfd747942203a5c",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace440bdcfd747942203a60",
+  "id": "6ace440bdcfd747942203a5f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace440bdcfd747942203a6b",
+  "id": "6ace440bdcfd747942203a6a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace440bdcfd747942203a6e",
+  "id": "6ace440bdcfd747942203a6d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace440bdcfd747942203a71",
+  "id": "6ace440bdcfd747942203a6f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace440bdcfd747942203a71",
+  "id": "6ace440bdcfd747942203a70",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4416dcfd747942203a92",
+  "id": "6ace4416dcfd747942203a91",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4416dcfd747942203a97",
+  "id": "6ace4416dcfd747942203a96",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4416dcfd747942203a9c",
+  "id": "6ace4416dcfd747942203a9b",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4416dcfd747942203aa5",
+  "id": "6ace4416dcfd747942203aa4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4416dcfd747942203aae",
+  "id": "6ace4416dcfd747942203aad",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4416dcfd747942203ab5",
+  "id": "6ace4416dcfd747942203ab4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4416dcfd747942203abe",
+  "id": "6ace4416dcfd747942203abd",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace441adcfd747942203ac4",
+  "id": "6ace441adcfd747942203ac3",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace441adcfd747942203adf",
+  "id": "6ace441adcfd747942203ade",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace441edcfd747942203ae8",
+  "id": "6ace441edcfd747942203ae7",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace441edcfd747942203b02",
+  "id": "6ace441edcfd747942203b01",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace443edcfd747942203ba6",
+  "id": "6ace443edcfd747942203ba5",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace443edcfd747942203ba9",
+  "id": "6ace443edcfd747942203ba8",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace443edcfd747942203bab",
+  "id": "6ace443edcfd747942203baa",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace443edcfd747942203baf",
+  "id": "6ace443edcfd747942203bae",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace443edcfd747942203bb5",
+  "id": "6ace443edcfd747942203bb4",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4442dcfd747942203bbd",
+  "id": "6ace4442dcfd747942203bbc",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4442dcfd747942203bc1",
+  "id": "6ace4442dcfd747942203bc0",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4442dcfd747942203bc4",
+  "id": "6ace4442dcfd747942203bc3",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4442dcfd747942203bc7",
+  "id": "6ace4442dcfd747942203bc6",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4454dcfd747942203c45",
+  "id": "6ace4454dcfd747942203c44",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace445cdcfd747942203c69",
+  "id": "6ace445cdcfd747942203c68",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace445cdcfd747942203c6f",
+  "id": "6ace445cdcfd747942203c6e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace445cdcfd747942203c7c",
+  "id": "6ace445cdcfd747942203c7b",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4464dcfd747942203ca9",
+  "id": "6ace4464dcfd747942203ca8",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4464dcfd747942203caf",
+  "id": "6ace4464dcfd747942203cae",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203ccf",
+  "id": "6ace446cdcfd747942203cce",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cd3",
+  "id": "6ace446cdcfd747942203cd2",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cd6",
+  "id": "6ace446cdcfd747942203cd5",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cda",
+  "id": "6ace446cdcfd747942203cd9",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cde",
+  "id": "6ace446cdcfd747942203cdd",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203ce2",
+  "id": "6ace446cdcfd747942203ce1",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203ce6",
+  "id": "6ace446cdcfd747942203ce5",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cea",
+  "id": "6ace446cdcfd747942203ce9",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203ced",
+  "id": "6ace446cdcfd747942203cec",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cf0",
+  "id": "6ace446cdcfd747942203cef",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cf3",
+  "id": "6ace446cdcfd747942203cf2",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace446cdcfd747942203cf5",
+  "id": "6ace446cdcfd747942203cf4",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace447bdcfd747942203d2e",
+  "id": "6ace447bdcfd747942203d2d",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace447fdcfd747942203d32",
+  "id": "6ace447fdcfd747942203d30",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace447fdcfd747942203d32",
+  "id": "6ace447fdcfd747942203d31",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace447fdcfd747942203d69",
+  "id": "6ace447fdcfd747942203d67",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace447fdcfd747942203d69",
+  "id": "6ace447fdcfd747942203d68",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4495dcfd747942203dd6",
+  "id": "6ace4495dcfd747942203dd5",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4495dcfd747942203dda",
+  "id": "6ace4495dcfd747942203dd9",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4495dcfd747942203de0",
+  "id": "6ace4495dcfd747942203ddf",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4495dcfd747942203de3",
+  "id": "6ace4495dcfd747942203de2",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4495dcfd747942203de5",
+  "id": "6ace4495dcfd747942203de4",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace449adcfd747942203e0c",
+  "id": "6ace449adcfd747942203e0b",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace449fdcfd747942203e16",
+  "id": "6ace449fdcfd747942203e15",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44a9dcfd747942203e27",
+  "id": "6ace44a9dcfd747942203e26",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44a9dcfd747942203e2b",
+  "id": "6ace44a9dcfd747942203e29",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace44a9dcfd747942203e2b",
+  "id": "6ace44a9dcfd747942203e2a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44a9dcfd747942203e2d",
+  "id": "6ace44a9dcfd747942203e2c",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44a9dcfd747942203e30",
+  "id": "6ace44a9dcfd747942203e2f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44b7dcfd747942203e93",
+  "id": "6ace44b7dcfd747942203e92",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44b7dcfd747942203e98",
+  "id": "6ace44b7dcfd747942203e97",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44b7dcfd747942203e9c",
+  "id": "6ace44b7dcfd747942203e9b",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44b7dcfd747942203ea1",
+  "id": "6ace44b7dcfd747942203ea0",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44b7dcfd747942203ea7",
+  "id": "6ace44b7dcfd747942203ea6",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44b7dcfd747942203eac",
+  "id": "6ace44b7dcfd747942203eab",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f02",
+  "id": "6ace44d4dcfd747942203f01",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f09",
+  "id": "6ace44d4dcfd747942203f07",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace44d4dcfd747942203f09",
+  "id": "6ace44d4dcfd747942203f08",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f12",
+  "id": "6ace44d4dcfd747942203f10",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace44d4dcfd747942203f12",
+  "id": "6ace44d4dcfd747942203f11",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f15",
+  "id": "6ace44d4dcfd747942203f14",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f19",
+  "id": "6ace44d4dcfd747942203f17",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace44d4dcfd747942203f19",
+  "id": "6ace44d4dcfd747942203f18",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f1c",
+  "id": "6ace44d4dcfd747942203f1b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f21",
+  "id": "6ace44d4dcfd747942203f1f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace44d4dcfd747942203f21",
+  "id": "6ace44d4dcfd747942203f20",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f23",
+  "id": "6ace44d4dcfd747942203f22",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44d4dcfd747942203f25",
+  "id": "6ace44d4dcfd747942203f24",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44f1dcfd747942203fea",
+  "id": "6ace44f1dcfd747942203fe9",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44f1dcfd747942203ff0",
+  "id": "6ace44f1dcfd747942203fef",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace44f1dcfd747942203ff4",
+  "id": "6ace44f1dcfd747942203ff3",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4511dcfd747942204084",
+  "id": "6ace4511dcfd747942204082",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4511dcfd747942204084",
+  "id": "6ace4511dcfd747942204083",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4511dcfd747942204089",
+  "id": "6ace4511dcfd747942204088",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4511dcfd74794220408c",
+  "id": "6ace4511dcfd74794220408b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4511dcfd747942204092",
+  "id": "6ace4511dcfd747942204091",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4511dcfd747942204098",
+  "id": "6ace4511dcfd747942204097",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4517dcfd74794220409f",
+  "id": "6ace4517dcfd74794220409e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4517dcfd7479422040d3",
+  "id": "6ace4517dcfd7479422040d2",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4526dcfd747942204118",
+  "id": "6ace4526dcfd747942204117",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4534dcfd747942204162",
+  "id": "6ace4534dcfd747942204161",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4534dcfd74794220417d",
+  "id": "6ace4534dcfd74794220417a",
+  "kind": "screening"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4534dcfd74794220417d",
+  "id": "6ace4534dcfd74794220417b",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4534dcfd74794220417d",
+  "id": "6ace4534dcfd74794220417c",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4534dcfd747942204189",
+  "id": "6ace4534dcfd747942204188",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4534dcfd747942204193",
+  "id": "6ace4534dcfd747942204191",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4534dcfd747942204193",
+  "id": "6ace4534dcfd747942204192",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4534dcfd747942204195",
+  "id": "6ace4534dcfd747942204194",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4534dcfd747942204197",
+  "id": "6ace4534dcfd747942204196",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4549dcfd7479422041fd",
+  "id": "6ace4549dcfd7479422041fc",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace454edcfd747942204200",
+  "id": "6ace454edcfd7479422041ff",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace454edcfd747942204202",
+  "id": "6ace454edcfd747942204201",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace454edcfd747942204204",
+  "id": "6ace454edcfd747942204203",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace454edcfd747942204206",
+  "id": "6ace454edcfd747942204205",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace454edcfd747942204208",
+  "id": "6ace454edcfd747942204207",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd74794220421a",
+  "id": "6ace4552dcfd747942204216",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4552dcfd74794220421a",
+  "id": "6ace4552dcfd747942204217",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4552dcfd74794220421a",
+  "id": "6ace4552dcfd747942204218",
+  "kind": "exercise"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4552dcfd74794220421a",
+  "id": "6ace4552dcfd747942204219",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd747942204220",
+  "id": "6ace4552dcfd74794220421e",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4552dcfd747942204220",
+  "id": "6ace4552dcfd74794220421f",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd747942204224",
+  "id": "6ace4552dcfd747942204221",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4552dcfd747942204224",
+  "id": "6ace4552dcfd747942204222",
+  "kind": "presentation"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4552dcfd747942204224",
+  "id": "6ace4552dcfd747942204223",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd747942204226",
+  "id": "6ace4552dcfd747942204225",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd74794220422d",
+  "id": "6ace4552dcfd74794220422a",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4552dcfd74794220422d",
+  "id": "6ace4552dcfd74794220422b",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4552dcfd74794220422d",
+  "id": "6ace4552dcfd74794220422c",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd747942204233",
+  "id": "6ace4552dcfd747942204230",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4552dcfd747942204233",
+  "id": "6ace4552dcfd747942204231",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4552dcfd747942204233",
+  "id": "6ace4552dcfd747942204232",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd74794220423a",
+  "id": "6ace4552dcfd747942204237",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4552dcfd74794220423a",
+  "id": "6ace4552dcfd747942204238",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4552dcfd74794220423a",
+  "id": "6ace4552dcfd747942204239",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd74794220423d",
+  "id": "6ace4552dcfd74794220423c",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd74794220423f",
+  "id": "6ace4552dcfd74794220423e",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd747942204241",
+  "id": "6ace4552dcfd747942204240",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4552dcfd747942204245",
+  "id": "6ace4552dcfd747942204242",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4552dcfd747942204245",
+  "id": "6ace4552dcfd747942204243",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4552dcfd747942204245",
+  "id": "6ace4552dcfd747942204244",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace457fdcfd74794220436f",
+  "id": "6ace457fdcfd74794220436e",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4583dcfd747942204386",
+  "id": "6ace4583dcfd747942204385",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4583dcfd747942204390",
+  "id": "6ace4583dcfd74794220438f",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4583dcfd747942204392",
+  "id": "6ace4583dcfd747942204391",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace458bdcfd747942204397",
+  "id": "6ace458bdcfd747942204396",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace458bdcfd74794220439e",
+  "id": "6ace458bdcfd74794220439d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace458bdcfd7479422043a5",
+  "id": "6ace458bdcfd7479422043a4",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace458bdcfd7479422043ab",
+  "id": "6ace458bdcfd7479422043aa",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace458bdcfd7479422043ad",
+  "id": "6ace458bdcfd7479422043ac",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace458bdcfd7479422043b3",
+  "id": "6ace458bdcfd7479422043b2",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace458bdcfd7479422043b5",
+  "id": "6ace458bdcfd7479422043b4",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4590dcfd7479422043d5",
+  "id": "6ace4590dcfd7479422043d4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4590dcfd7479422043d8",
+  "id": "6ace4590dcfd7479422043d7",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4590dcfd7479422043e1",
+  "id": "6ace4590dcfd7479422043e0",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace459adcfd747942204438",
+  "id": "6ace459adcfd747942204436",
+  "kind": "screening"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace459adcfd747942204438",
+  "id": "6ace459adcfd747942204437",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace45eddcfd747942204602",
+  "id": "6ace45eddcfd747942204601",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace45eddcfd747942204608",
+  "id": "6ace45eddcfd747942204607",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace45eddcfd747942204620",
+  "id": "6ace45eddcfd74794220461f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace460adcfd7479422046b2",
+  "id": "6ace460adcfd7479422046b1",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4611dcfd7479422046e8",
+  "id": "6ace4611dcfd7479422046e7",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4619dcfd7479422046ef",
+  "id": "6ace4619dcfd7479422046ee",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4619dcfd7479422046fb",
+  "id": "6ace4619dcfd7479422046fa",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4620dcfd747942204710",
+  "id": "6ace4620dcfd74794220470f",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4620dcfd747942204716",
+  "id": "6ace4620dcfd747942204714",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4620dcfd747942204716",
+  "id": "6ace4620dcfd747942204715",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4623dcfd74794220471a",
+  "id": "6ace4623dcfd747942204719",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4623dcfd74794220471e",
+  "id": "6ace4623dcfd74794220471d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4623dcfd747942204722",
+  "id": "6ace4623dcfd747942204721",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4623dcfd747942204726",
+  "id": "6ace4623dcfd747942204725",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4623dcfd74794220472b",
+  "id": "6ace4623dcfd74794220472a",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4623dcfd74794220472d",
+  "id": "6ace4623dcfd74794220472c",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace462ddcfd747942204750",
+  "id": "6ace462ddcfd74794220474e",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace462ddcfd747942204750",
+  "id": "6ace462ddcfd74794220474f",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace462ddcfd747942204754",
+  "id": "6ace462ddcfd747942204753",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace462ddcfd74794220475e",
+  "id": "6ace462ddcfd74794220475d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4633dcfd747942204767",
+  "id": "6ace4633dcfd747942204764",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4633dcfd747942204767",
+  "id": "6ace4633dcfd747942204765",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4633dcfd747942204767",
+  "id": "6ace4633dcfd747942204766",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4633dcfd74794220476b",
+  "id": "6ace4633dcfd74794220476a",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4633dcfd747942204770",
+  "id": "6ace4633dcfd74794220476e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4633dcfd747942204770",
+  "id": "6ace4633dcfd74794220476f",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4633dcfd747942204774",
+  "id": "6ace4633dcfd747942204772",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4633dcfd747942204774",
+  "id": "6ace4633dcfd747942204773",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4633dcfd747942204779",
+  "id": "6ace4633dcfd747942204777",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4633dcfd747942204779",
+  "id": "6ace4633dcfd747942204778",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4633dcfd74794220477d",
+  "id": "6ace4633dcfd74794220477b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4633dcfd74794220477d",
+  "id": "6ace4633dcfd74794220477c",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace463fdcfd747942204790",
+  "id": "6ace463fdcfd74794220478e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace463fdcfd747942204790",
+  "id": "6ace463fdcfd74794220478f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace463fdcfd747942204797",
+  "id": "6ace463fdcfd747942204795",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace463fdcfd747942204797",
+  "id": "6ace463fdcfd747942204796",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace463fdcfd74794220479d",
+  "id": "6ace463fdcfd74794220479b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace463fdcfd74794220479d",
+  "id": "6ace463fdcfd74794220479c",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace463fdcfd7479422047a5",
+  "id": "6ace463fdcfd7479422047a4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4e4b013bc76d2006fd28",
+  "id": "6ace4e4b013bc76d2006fd27",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4e4b013bc76d2006fd35",
+  "id": "6ace4e4b013bc76d2006fd34",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4e4b013bc76d2006fd38",
+  "id": "6ace4e4b013bc76d2006fd37",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4e4b013bc76d2006fd3b",
+  "id": "6ace4e4b013bc76d2006fd3a",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4eab013bc76d2006fdb3",
+  "id": "6ace4eab013bc76d2006fdb2",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f2e013bc76d2006fe1c",
+  "id": "6ace4f2e013bc76d2006fe1b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f2e013bc76d2006fe36",
+  "id": "6ace4f2e013bc76d2006fe35",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f2e013bc76d2006fe3f",
+  "id": "6ace4f2e013bc76d2006fe3e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f2e013bc76d2006fe41",
+  "id": "6ace4f2e013bc76d2006fe40",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe4e",
+  "id": "6ace4f49013bc76d2006fe4a",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe4e",
+  "id": "6ace4f49013bc76d2006fe4b",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe4e",
+  "id": "6ace4f49013bc76d2006fe4c",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4f49013bc76d2006fe4e",
+  "id": "6ace4f49013bc76d2006fe4d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe56",
+  "id": "6ace4f49013bc76d2006fe52",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe56",
+  "id": "6ace4f49013bc76d2006fe53",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe56",
+  "id": "6ace4f49013bc76d2006fe54",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4f49013bc76d2006fe56",
+  "id": "6ace4f49013bc76d2006fe55",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe5f",
+  "id": "6ace4f49013bc76d2006fe5a",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe5f",
+  "id": "6ace4f49013bc76d2006fe5b",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe5f",
+  "id": "6ace4f49013bc76d2006fe5c",
+  "kind": "screening"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4f49013bc76d2006fe5f",
+  "id": "6ace4f49013bc76d2006fe5d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4f49013bc76d2006fe5f",
+  "id": "6ace4f49013bc76d2006fe5e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe67",
+  "id": "6ace4f49013bc76d2006fe62",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe67",
+  "id": "6ace4f49013bc76d2006fe63",
+  "kind": "presentation"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe67",
+  "id": "6ace4f49013bc76d2006fe64",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4f49013bc76d2006fe67",
+  "id": "6ace4f49013bc76d2006fe65",
+  "kind": "exercise"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4f49013bc76d2006fe67",
+  "id": "6ace4f49013bc76d2006fe66",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe6c",
+  "id": "6ace4f49013bc76d2006fe68",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe6c",
+  "id": "6ace4f49013bc76d2006fe69",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe6c",
+  "id": "6ace4f49013bc76d2006fe6a",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4f49013bc76d2006fe6c",
+  "id": "6ace4f49013bc76d2006fe6b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe70",
+  "id": "6ace4f49013bc76d2006fe6d",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe70",
+  "id": "6ace4f49013bc76d2006fe6e",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe70",
+  "id": "6ace4f49013bc76d2006fe6f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe74",
+  "id": "6ace4f49013bc76d2006fe71",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe74",
+  "id": "6ace4f49013bc76d2006fe72",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe74",
+  "id": "6ace4f49013bc76d2006fe73",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4f49013bc76d2006fe78",
+  "id": "6ace4f49013bc76d2006fe75",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4f49013bc76d2006fe78",
+  "id": "6ace4f49013bc76d2006fe76",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4f49013bc76d2006fe78",
+  "id": "6ace4f49013bc76d2006fe77",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006fea7",
+  "id": "6ace4fc3013bc76d2006fea6",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006fead",
+  "id": "6ace4fc3013bc76d2006feac",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006feb1",
+  "id": "6ace4fc3013bc76d2006feb0",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006feb4",
+  "id": "6ace4fc3013bc76d2006feb3",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006feb6",
+  "id": "6ace4fc3013bc76d2006feb5",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006feb9",
+  "id": "6ace4fc3013bc76d2006feb8",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006febc",
+  "id": "6ace4fc3013bc76d2006febb",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006fec0",
+  "id": "6ace4fc3013bc76d2006febf",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006fec4",
+  "id": "6ace4fc3013bc76d2006fec3",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace4fc3013bc76d2006fec8",
+  "id": "6ace4fc3013bc76d2006fec6",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4fc3013bc76d2006fec8",
+  "id": "6ace4fc3013bc76d2006fec7",
+  "kind": "screening"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace515d013bc76d2006ffd1",
+  "id": "6ace515d013bc76d2006ffd0",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518d013bc76d2006ffe3",
+  "id": "6ace518d013bc76d2006ffdf",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518d013bc76d2006ffe3",
+  "id": "6ace518d013bc76d2006ffe0",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518d013bc76d2006ffe3",
+  "id": "6ace518d013bc76d2006ffe1",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace518d013bc76d2006ffe3",
+  "id": "6ace518d013bc76d2006ffe2",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d2006ffe7",
+  "id": "6ace518d013bc76d2006ffe4",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d2006ffe7",
+  "id": "6ace518e013bc76d2006ffe5",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518e013bc76d2006ffe7",
+  "id": "6ace518e013bc76d2006ffe6",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d2006ffed",
+  "id": "6ace518e013bc76d2006ffe8",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d2006ffed",
+  "id": "6ace518e013bc76d2006ffe9",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518e013bc76d2006ffed",
+  "id": "6ace518e013bc76d2006ffea",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace518e013bc76d2006ffed",
+  "id": "6ace518e013bc76d2006ffeb",
+  "kind": "other"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace518e013bc76d2006ffed",
+  "id": "6ace518e013bc76d2006ffec",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d2006fff2",
+  "id": "6ace518e013bc76d2006ffee",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d2006fff2",
+  "id": "6ace518e013bc76d2006ffef",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518e013bc76d2006fff2",
+  "id": "6ace518e013bc76d2006fff0",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace518e013bc76d2006fff2",
+  "id": "6ace518e013bc76d2006fff1",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d2006fff6",
+  "id": "6ace518e013bc76d2006fff3",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d2006fff6",
+  "id": "6ace518e013bc76d2006fff4",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518e013bc76d2006fff6",
+  "id": "6ace518e013bc76d2006fff5",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d2006fffa",
+  "id": "6ace518e013bc76d2006fff7",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d2006fffa",
+  "id": "6ace518e013bc76d2006fff8",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518e013bc76d2006fffa",
+  "id": "6ace518e013bc76d2006fff9",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d20070000",
+  "id": "6ace518e013bc76d2006fffb",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d20070000",
+  "id": "6ace518e013bc76d2006fffc",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518e013bc76d20070000",
+  "id": "6ace518e013bc76d2006fffd",
+  "kind": "other"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace518e013bc76d20070000",
+  "id": "6ace518e013bc76d2006fffe",
+  "kind": "other"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace518e013bc76d20070000",
+  "id": "6ace518e013bc76d2006ffff",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d20070004",
+  "id": "6ace518e013bc76d20070001",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d20070004",
+  "id": "6ace518e013bc76d20070002",
+  "kind": "other"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace518e013bc76d20070004",
+  "id": "6ace518e013bc76d20070003",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d20070007",
+  "id": "6ace518e013bc76d20070005",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d20070007",
+  "id": "6ace518e013bc76d20070006",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d2007000a",
+  "id": "6ace518e013bc76d20070008",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d2007000a",
+  "id": "6ace518e013bc76d20070009",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace518e013bc76d2007000d",
+  "id": "6ace518e013bc76d2007000b",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace518e013bc76d2007000d",
+  "id": "6ace518e013bc76d2007000c",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace51c7013bc76d2007001b",
+  "id": "6ace51c7013bc76d2007001a",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace51c7013bc76d2007001e",
+  "id": "6ace51c7013bc76d2007001d",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace51c7013bc76d20070024",
+  "id": "6ace51c7013bc76d20070022",
+  "kind": "presentation"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace51c7013bc76d20070024",
+  "id": "6ace51c7013bc76d20070023",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace51c7013bc76d2007002e",
+  "id": "6ace51c7013bc76d2007002d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace51c7013bc76d20070038",
+  "id": "6ace51c7013bc76d20070037",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace51c7013bc76d20070040",
+  "id": "6ace51c7013bc76d2007003f",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace51c7013bc76d20070042",
+  "id": "6ace51c7013bc76d20070041",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace521d013bc76d2007008f",
+  "id": "6ace521d013bc76d2007008e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace521d013bc76d20070099",
+  "id": "6ace521d013bc76d20070098",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5272013bc76d200700cb",
+  "id": "6ace5272013bc76d200700ca",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5272013bc76d200700cd",
+  "id": "6ace5272013bc76d200700cc",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700d0",
+  "id": "6ace5282013bc76d200700cf",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700d3",
+  "id": "6ace5282013bc76d200700d2",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700d7",
+  "id": "6ace5282013bc76d200700d6",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700da",
+  "id": "6ace5282013bc76d200700d9",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700dd",
+  "id": "6ace5282013bc76d200700dc",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700e4",
+  "id": "6ace5282013bc76d200700e3",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700e7",
+  "id": "6ace5282013bc76d200700e6",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700ea",
+  "id": "6ace5282013bc76d200700e9",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5282013bc76d200700ef",
+  "id": "6ace5282013bc76d200700ee",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace529b013bc76d200700f8",
+  "id": "6ace529b013bc76d200700f7",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace529b013bc76d200700fc",
+  "id": "6ace529b013bc76d200700fa",
+  "kind": "field_visit"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace529b013bc76d200700fc",
+  "id": "6ace529b013bc76d200700fb",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace529b013bc76d200700fe",
+  "id": "6ace529b013bc76d200700fd",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace529b013bc76d20070101",
+  "id": "6ace529b013bc76d20070100",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52a9013bc76d20070115",
+  "id": "6ace52a9013bc76d20070114",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52a9013bc76d2007011a",
+  "id": "6ace52a9013bc76d20070119",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d2007012d",
+  "id": "6ace52b8013bc76d2007012c",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d20070132",
+  "id": "6ace52b8013bc76d20070131",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d20070137",
+  "id": "6ace52b8013bc76d20070136",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d2007013a",
+  "id": "6ace52b8013bc76d20070139",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d2007013c",
+  "id": "6ace52b8013bc76d2007013b",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d2007013f",
+  "id": "6ace52b8013bc76d2007013d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace52b8013bc76d2007013f",
+  "id": "6ace52b8013bc76d2007013e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d20070143",
+  "id": "6ace52b8013bc76d20070141",
+  "kind": "other"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace52b8013bc76d20070143",
+  "id": "6ace52b8013bc76d20070142",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d20070146",
+  "id": "6ace52b8013bc76d20070145",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d2007014a",
+  "id": "6ace52b8013bc76d20070149",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d20070150",
+  "id": "6ace52b8013bc76d2007014c",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace52b8013bc76d20070150",
+  "id": "6ace52b8013bc76d2007014d",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace52b8013bc76d20070150",
+  "id": "6ace52b8013bc76d2007014e",
+  "kind": "exercise"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace52b8013bc76d20070150",
+  "id": "6ace52b8013bc76d2007014f",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d20070154",
+  "id": "6ace52b8013bc76d20070151",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace52b8013bc76d20070154",
+  "id": "6ace52b8013bc76d20070152",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace52b8013bc76d20070154",
+  "id": "6ace52b8013bc76d20070153",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52b8013bc76d20070157",
+  "id": "6ace52b8013bc76d20070156",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d20070177",
+  "id": "6ace52d2013bc76d20070176",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d2007017c",
+  "id": "6ace52d2013bc76d2007017b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d20070181",
+  "id": "6ace52d2013bc76d20070180",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d20070184",
+  "id": "6ace52d2013bc76d20070183",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d20070186",
+  "id": "6ace52d2013bc76d20070185",
+  "kind": "other"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d20070189",
+  "id": "6ace52d2013bc76d20070187",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace52d2013bc76d20070189",
+  "id": "6ace52d2013bc76d20070188",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d2007018c",
+  "id": "6ace52d2013bc76d2007018b",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d2007018f",
+  "id": "6ace52d2013bc76d2007018e",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d20070193",
+  "id": "6ace52d2013bc76d20070192",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d20070199",
+  "id": "6ace52d2013bc76d20070195",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace52d2013bc76d20070199",
+  "id": "6ace52d2013bc76d20070196",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace52d2013bc76d20070199",
+  "id": "6ace52d2013bc76d20070197",
+  "kind": "exercise"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace52d2013bc76d20070199",
+  "id": "6ace52d2013bc76d20070198",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d2007019d",
+  "id": "6ace52d2013bc76d2007019a",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace52d2013bc76d2007019d",
+  "id": "6ace52d2013bc76d2007019b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace52d2013bc76d2007019d",
+  "id": "6ace52d2013bc76d2007019c",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace52d2013bc76d200701a0",
+  "id": "6ace52d2013bc76d2007019f",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53a4013bc76d20070227",
+  "id": "6ace53a4013bc76d20070225",
+  "kind": "screening"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace53a4013bc76d20070227",
+  "id": "6ace53a4013bc76d20070226",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53a4013bc76d20070237",
+  "id": "6ace53a4013bc76d20070235",
+  "kind": "screening"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace53a4013bc76d20070237",
+  "id": "6ace53a4013bc76d20070236",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53a4013bc76d2007023c",
+  "id": "6ace53a4013bc76d2007023a",
+  "kind": "screening"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace53a4013bc76d2007023c",
+  "id": "6ace53a4013bc76d2007023b",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53a4013bc76d2007023e",
+  "id": "6ace53a4013bc76d2007023d",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53a4013bc76d20070242",
+  "id": "6ace53a4013bc76d20070240",
+  "kind": "screening"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace53a4013bc76d20070242",
+  "id": "6ace53a4013bc76d20070241",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53a4013bc76d20070245",
+  "id": "6ace53a4013bc76d20070244",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53a4013bc76d20070247",
+  "id": "6ace53a4013bc76d20070246",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace53b1013bc76d2007026c",
+  "id": "6ace53b1013bc76d2007026b",
+  "kind": "presentation"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5402013bc76d200702c3",
+  "id": "6ace5402013bc76d200702bd",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace5402013bc76d200702c3",
+  "id": "6ace5402013bc76d200702be",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace5402013bc76d200702c3",
+  "id": "6ace5402013bc76d200702bf",
+  "kind": "discussion"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace5402013bc76d200702c3",
+  "id": "6ace5402013bc76d200702c0",
+  "kind": "discussion"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace5402013bc76d200702c3",
+  "id": "6ace5402013bc76d200702c1",
+  "kind": "discussion"
+ },
+ {
+  "_order": 6,
+  "_parent_id": "6ace5402013bc76d200702c3",
+  "id": "6ace5402013bc76d200702c2",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5402013bc76d200702ca",
+  "id": "6ace5402013bc76d200702c6",
+  "kind": "screening"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace5402013bc76d200702ca",
+  "id": "6ace5402013bc76d200702c7",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace5402013bc76d200702ca",
+  "id": "6ace5402013bc76d200702c8",
+  "kind": "discussion"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace5402013bc76d200702ca",
+  "id": "6ace5402013bc76d200702c9",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5402013bc76d200702d0",
+  "id": "6ace5402013bc76d200702cc",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace5402013bc76d200702d0",
+  "id": "6ace5402013bc76d200702cd",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace5402013bc76d200702d0",
+  "id": "6ace5402013bc76d200702ce",
+  "kind": "discussion"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace5402013bc76d200702d0",
+  "id": "6ace5402013bc76d200702cf",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5402013bc76d200702d6",
+  "id": "6ace5402013bc76d200702d3",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace5402013bc76d200702d6",
+  "id": "6ace5402013bc76d200702d4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace5402013bc76d200702d6",
+  "id": "6ace5402013bc76d200702d5",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5402013bc76d200702dc",
+  "id": "6ace5402013bc76d200702d9",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace5402013bc76d200702dc",
+  "id": "6ace5402013bc76d200702da",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace5402013bc76d200702dc",
+  "id": "6ace5402013bc76d200702db",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5402013bc76d200702e2",
+  "id": "6ace5402013bc76d200702df",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace5402013bc76d200702e2",
+  "id": "6ace5402013bc76d200702e0",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace5402013bc76d200702e2",
+  "id": "6ace5402013bc76d200702e1",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace5402013bc76d200702e8",
+  "id": "6ace5402013bc76d200702e4",
+  "kind": "discussion"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace5402013bc76d200702e8",
+  "id": "6ace5402013bc76d200702e5",
+  "kind": "discussion"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace5402013bc76d200702e8",
+  "id": "6ace5402013bc76d200702e6",
+  "kind": "discussion"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace5402013bc76d200702e8",
+  "id": "6ace5402013bc76d200702e7",
+  "kind": "discussion"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace547f013bc76d2007030c",
+  "id": "6ace547f013bc76d2007030a",
+  "kind": "exercise"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace547f013bc76d2007030c",
+  "id": "6ace547f013bc76d2007030b",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace547f013bc76d20070311",
+  "id": "6ace547f013bc76d20070310",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace547f013bc76d20070316",
+  "id": "6ace547f013bc76d20070315",
+  "kind": "exercise"
+ },
+ {
+  "_order": 1,
+  "_parent_id": "6ace547f013bc76d2007031b",
+  "id": "6ace547f013bc76d2007031a",
+  "kind": "exercise"
+ }
+]

@@ -1,0 +1,28 @@
+[
+ {
+  "id": 1,
+  "kind": "essay_collection",
+  "cover_image_id": null,
+  "generate_slug": false,
+  "slug": "on-the-emergence-of-pigeon-towers",
+  "foreword_id": 1,
+  "license": "cc_by_nc_sa",
+  "print_edition_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/on_the_emergence_of_pigeon_towers_-_english.pdf",
+  "legacy_url": "/on-pigeon-towers.html",
+  "updated_at": "2026-10-13T16:33:19.948Z",
+  "created_at": "2026-10-13T14:19:53.673Z"
+ },
+ {
+  "id": 2,
+  "kind": "translation_booklet",
+  "cover_image_id": 6,
+  "generate_slug": false,
+  "slug": "translation-as-education",
+  "foreword_id": 6,
+  "license": "cc_by_nc_sa",
+  "print_edition_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/translation_lab_works.pdf",
+  "legacy_url": "/translation-as-education.html",
+  "updated_at": "2026-10-13T16:33:17.667Z",
+  "created_at": "2026-10-13T14:19:56.030Z"
+ }
+]

@@ -1,0 +1,56 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": 1,
+  "id": "6ace468b360651c012d37de7",
+  "role": "editor"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 1,
+  "id": "6ace468b360651c012d37de8",
+  "role": "translator"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 1,
+  "id": "6ace468b360651c012d37de9",
+  "role": "copy_editor"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 1,
+  "id": "6ace468b360651c012d37dea",
+  "role": "author"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 2,
+  "id": "6ace468c360651c012d37deb",
+  "role": "supervisor"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 2,
+  "id": "6ace468c360651c012d37dec",
+  "role": "translator"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 2,
+  "id": "6ace468c360651c012d37ded",
+  "role": "proofreader"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 2,
+  "id": "6ace468c360651c012d37dee",
+  "role": "art_director"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 2,
+  "id": "6ace468c360651c012d37def",
+  "role": "cover_designer"
+ }
+]

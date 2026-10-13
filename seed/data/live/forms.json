@@ -1,0 +1,18 @@
+[
+ {
+  "id": 1,
+  "title": "Contact",
+  "confirmation_type": "message",
+  "redirect_url": null,
+  "updated_at": "2026-10-13T15:20:08.969Z",
+  "created_at": "2026-10-13T14:37:37.379Z"
+ },
+ {
+  "id": 2,
+  "title": "CILAS Application Form 2025-2026",
+  "confirmation_type": "message",
+  "redirect_url": null,
+  "updated_at": "2026-10-13T15:18:13.568Z",
+  "created_at": "2026-10-13T15:18:11.994Z"
+ }
+]

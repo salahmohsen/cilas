@@ -1,0 +1,743 @@
+[
+ {
+  "title": "CILAS Open Day Schedule",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Our open day is drawing closer! Please take a look at our schedule to see how the day will pan out. ",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       },
+       {
+        "type": "link",
+        "fields": {
+         "url": "https://www.ci-las.org/uploads/1/9/1/0/19102967/cilas_open_day_schedule.pdf",
+         "newTab": false,
+         "linkType": "custom"
+        },
+        "format": "",
+        "indent": 0,
+        "version": 3,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "http://www.ci-las.org/uploads/1/9/1/0/19102967/cilas_open_day_schedule.pdf",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "ltr"
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "See you on Saturday.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "CILAS Open Day Schedule · CILAS",
+  "meta_description": "Our open day is drawing closer! Please take a look at our schedule to see how the day will pan out.…",
+  "meta_image_id": 392,
+  "id": 11,
+  "_locale": "en",
+  "_parent_id": 9
+ },
+ {
+  "title": "CILAS Open Day Schedule",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "CILAS Open Day Schedule · CILAS",
+  "meta_description": "Our open day is drawing closer! Please take a look at our schedule to see how the day will pan out.…",
+  "meta_image_id": 392,
+  "id": 12,
+  "_locale": "ar",
+  "_parent_id": 9
+ },
+ {
+  "title": "CILAS Open Day",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Sign up for our open day, taking place from 10am on the 8th of June to experience CILAS' Discussion-Based Learning methods, find out more about available courses, see our building and ask questions. Tea and refreshments will be provided.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "type": "link",
+        "fields": {
+         "url": "https://www.ci-las.org/june-8th-open-day-sign-up.html",
+         "newTab": false,
+         "linkType": "custom"
+        },
+        "format": "",
+        "indent": 0,
+        "version": 3,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "Sign up now!",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "ltr"
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "CILAS Open Day · CILAS",
+  "meta_description": "Sign up for our open day, taking place from 10am on the 8th of June to experience CILAS' Discussion-Based Learning methods, find out more about available…",
+  "meta_image_id": 392,
+  "id": 14,
+  "_locale": "en",
+  "_parent_id": 8
+ },
+ {
+  "title": "CILAS Open Day",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "CILAS Open Day · CILAS",
+  "meta_description": "Sign up for our open day, taking place from 10am on the 8th of June to experience CILAS' Discussion-Based Learning methods, find out more about available…",
+  "meta_image_id": 392,
+  "id": 15,
+  "_locale": "ar",
+  "_parent_id": 8
+ },
+ {
+  "title": "CILAS Second Open Day",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "This upcoming Saturday, June 22nd, 2013 CILAS is holding its second Open Day.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "This time we are offering TWO drop-in Discussion Based Learning sessions: one at 1100 and one at 1300.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "We encourage you to come along and experience our unique learning format, see the building and have the opportunity to speak to The Directors and some of our volunteers.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "We will be available before and after DBL sessions between 10am and 3pm to answer questions.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "CILAS Second Open Day · CILAS",
+  "meta_description": "This upcoming Saturday, June 22nd, 2013 CILAS is holding its second Open Day. This time we are offering TWO drop-in Discussion Based Learning sessions: one at…",
+  "meta_image_id": 392,
+  "id": 17,
+  "_locale": "en",
+  "_parent_id": 7
+ },
+ {
+  "title": "CILAS Second Open Day",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "CILAS Second Open Day · CILAS",
+  "meta_description": "This upcoming Saturday, June 22nd, 2013 CILAS is holding its second Open Day. This time we are offering TWO drop-in Discussion Based Learning sessions: one at…",
+  "meta_image_id": 392,
+  "id": 18,
+  "_locale": "ar",
+  "_parent_id": 7
+ },
+ {
+  "title": "Workshop on Healthy Decision Making",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "We had an amazing workshop on \"Healthy Decision Making\" by ",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       },
+       {
+        "type": "link",
+        "fields": {
+         "url": "https://www.facebook.com/kesmat.e.nahel?directed_target_id=0",
+         "newTab": false,
+         "linkType": "custom"
+        },
+        "format": "",
+        "indent": 0,
+        "version": 3,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "Kesmat El Nahel",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "ltr"
+       },
+       {
+        "mode": "normal",
+        "text": ". Kesmat is a cognitive behavioral psychologist. She has lived and worked in Frankfurt am Main since 1981. Prior to moving to Germany Kesmat obtained a degree in Psychology from the American University in Cairo. She began her career as a psychological counselor with Caritas facilitating the integration process of young immigrants from the Arab and Muslim world.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "In 1989, Kesmat joined Goethe University in Frankfurt to complete a Master's in Clinical Psychology. She now works in her own practice treating a variety of clinical cases related to depression, anxiety, stress, adaptation and identity problems, and post-traumatic disorder.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "The workshop was very informative and insightful with so much to think about and take home. The workshop was attended by enthusiastic participants who had interesting questions for Kesmat El Nahel followed by her responses drawn from more than three decades of her work in the field as a practitioner. It was one more well meaning day at CILAS as always :)",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "Workshop on Healthy Decision Making · CILAS",
+  "meta_description": "We had an amazing workshop on \"Healthy Decision Making\" by Kesmat El Nahel. Kesmat is a cognitive behavioral psychologist. She has lived and worked in…",
+  "meta_image_id": 392,
+  "id": 20,
+  "_locale": "en",
+  "_parent_id": 6
+ },
+ {
+  "title": "Workshop on Healthy Decision Making",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "Workshop on Healthy Decision Making · CILAS",
+  "meta_description": "We had an amazing workshop on \"Healthy Decision Making\" by Kesmat El Nahel. Kesmat is a cognitive behavioral psychologist. She has lived and worked in…",
+  "meta_image_id": 392,
+  "id": 21,
+  "_locale": "ar",
+  "_parent_id": 6
+ },
+ {
+  "title": "An Evening with Filmmaker Karim El Hakim",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "We had Karim El Hakim at CILAS, who in his talk gave insights into the various aspects of film making with emphasis of documentary film making and films made in the context of developmental process and projects. It was an interactive talk with the director taking us through some of his work. At the end of the talk a brief preview of his upcoming documentary 1/2 Revolution was shown. The talk was followed by interesting Q&A session on questions of censorship in Egypt, relation between camera and individuals, society, the importance of research in film making. All in all it was one more interesting evening at CILAS.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "An Evening with Filmmaker Karim El Hakim · CILAS",
+  "meta_description": "We had Karim El Hakim at CILAS, who in his talk gave insights into the various aspects of film making with emphasis of documentary film making and films made…",
+  "meta_image_id": 392,
+  "id": 23,
+  "_locale": "en",
+  "_parent_id": 5
+ },
+ {
+  "title": "An Evening with Filmmaker Karim El Hakim",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "An Evening with Filmmaker Karim El Hakim · CILAS",
+  "meta_description": "We had Karim El Hakim at CILAS, who in his talk gave insights into the various aspects of film making with emphasis of documentary film making and films made…",
+  "meta_image_id": 392,
+  "id": 24,
+  "_locale": "ar",
+  "_parent_id": 5
+ },
+ {
+  "title": "The Importance of Observation by Tarek Anous",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "We opened our second trimester with a public lecture by Harvard-trained theoretical physicist Tarek Anous. Tarek spoke about - amongst other things - the importance of observation in modern physics.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Tarek completed his PhD in theoretical high energy physics at Harvard University and is now a postdoctoral research fellow at the Massachusetts Institute of Technology. His research interests and publications are split between two main topics: first is the quantum nature of expanding universes, such as our own, known as de Sitter space, and secondly on the nature of multicentered black hole bound states in string theory and their dual descriptions as amorphous/frustrated glassy systems.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "The lecture was amazing and the energy and enthusiasm of Tarek was infectious and all through the talk was very interactive and there were many interesting questions by the audience.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "The Importance of Observation by Tarek Anous · CILAS",
+  "meta_description": "We opened our second trimester with a public lecture by Harvard-trained theoretical physicist Tarek Anous. Tarek spoke about - amongst other things - the…",
+  "meta_image_id": 392,
+  "id": 26,
+  "_locale": "en",
+  "_parent_id": 4
+ },
+ {
+  "title": "The Importance of Observation by Tarek Anous",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "The Importance of Observation by Tarek Anous · CILAS",
+  "meta_description": "We opened our second trimester with a public lecture by Harvard-trained theoretical physicist Tarek Anous. Tarek spoke about - amongst other things - the…",
+  "meta_image_id": 392,
+  "id": 27,
+  "_locale": "ar",
+  "_parent_id": 4
+ },
+ {
+  "title": "Film Screening: The Man Who Shot Liberty Valance",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "Film Screening: The Man Who Shot Liberty Valance · CILAS",
+  "meta_description": null,
+  "meta_image_id": 392,
+  "id": 29,
+  "_locale": "en",
+  "_parent_id": 3
+ },
+ {
+  "title": "Film Screening: The Man Who Shot Liberty Valance",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "Film Screening: The Man Who Shot Liberty Valance · CILAS",
+  "meta_description": null,
+  "meta_image_id": 392,
+  "id": 30,
+  "_locale": "ar",
+  "_parent_id": 3
+ },
+ {
+  "title": "End-of-Year Exhibition",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Public showcase of CILASian work.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "End-of-Year Exhibition · CILAS",
+  "meta_description": "Public showcase of CILASian work.",
+  "meta_image_id": 392,
+  "id": 32,
+  "_locale": "en",
+  "_parent_id": 2
+ },
+ {
+  "title": "End-of-Year Exhibition",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "End-of-Year Exhibition · CILAS",
+  "meta_description": "Public showcase of CILASian work.",
+  "meta_image_id": 392,
+  "id": 33,
+  "_locale": "ar",
+  "_parent_id": 2
+ },
+ {
+  "title": "Essay Discussion: On the Emergence of Pigeon Towers",
+  "description": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Surti Singh and Robin Weiss discuss their essays on the anchoring principles of play and ignorance from \"On the emergence of Pigeon Towers\" (CILAS, 2018) at CILAS in Darb el-Labbana, Fall 2017. The discussion was audio-recorded; Teun Dekker and I-Kai Jeng joined via Skype from the Netherlands and Taiwan.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "Essay Discussion: On the Emergence of Pigeon Towers · CILAS",
+  "meta_description": "Surti Singh and Robin Weiss discuss their essays on the anchoring principles of play and ignorance from \"On the emergence of Pigeon Towers\" (CILAS, 2018) at…",
+  "meta_image_id": 392,
+  "id": 35,
+  "_locale": "en",
+  "_parent_id": 1
+ },
+ {
+  "title": "Essay Discussion: On the Emergence of Pigeon Towers",
+  "description": null,
+  "schedule_note": null,
+  "external_venue_name": null,
+  "external_venue_address": null,
+  "pricing_note": null,
+  "meta_title": "Essay Discussion: On the Emergence of Pigeon Towers · CILAS",
+  "meta_description": "Surti Singh and Robin Weiss discuss their essays on the anchoring principles of play and ignorance from \"On the emergence of Pigeon Towers\" (CILAS, 2018) at…",
+  "meta_image_id": 392,
+  "id": 36,
+  "_locale": "ar",
+  "_parent_id": 1
+ }
+]

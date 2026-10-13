@@ -25,6 +25,8 @@ const ctx = createSeedContext()
 // it was, instead of the dev seed below.
 if (hasSnapshot() && !process.argv.includes('--dev')) {
   await restoreSnapshot(payload)
+  // Accounts are not in the snapshot; the super admin is.
+  await createSuperAdmin(payload)
   await payload.destroy()
   console.log('\nSEED COMPLETE (snapshot)')
   process.exit(0)

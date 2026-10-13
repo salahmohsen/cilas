@@ -1,0 +1,398 @@
+[
+ {
+  "id": 263,
+  "order": 1,
+  "parent_id": 2,
+  "path": "articles",
+  "articles_id": 6,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 264,
+  "order": 2,
+  "parent_id": 2,
+  "path": "articles",
+  "articles_id": 7,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 265,
+  "order": 3,
+  "parent_id": 2,
+  "path": "articles",
+  "articles_id": 8,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 266,
+  "order": 4,
+  "parent_id": 2,
+  "path": "articles",
+  "articles_id": 9,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 267,
+  "order": 5,
+  "parent_id": 2,
+  "path": "articles",
+  "articles_id": 10,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 268,
+  "order": 6,
+  "parent_id": 2,
+  "path": "articles",
+  "articles_id": 11,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 269,
+  "order": 7,
+  "parent_id": 2,
+  "path": "articles",
+  "articles_id": 12,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 270,
+  "order": 1,
+  "parent_id": 2,
+  "path": "credits.0.people",
+  "articles_id": null,
+  "people_id": 26,
+  "courses_id": null
+ },
+ {
+  "id": 271,
+  "order": 2,
+  "parent_id": 2,
+  "path": "credits.0.people",
+  "articles_id": null,
+  "people_id": 27,
+  "courses_id": null
+ },
+ {
+  "id": 272,
+  "order": 3,
+  "parent_id": 2,
+  "path": "credits.0.people",
+  "articles_id": null,
+  "people_id": 28,
+  "courses_id": null
+ },
+ {
+  "id": 273,
+  "order": 1,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 29,
+  "courses_id": null
+ },
+ {
+  "id": 274,
+  "order": 2,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 30,
+  "courses_id": null
+ },
+ {
+  "id": 275,
+  "order": 3,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 31,
+  "courses_id": null
+ },
+ {
+  "id": 276,
+  "order": 4,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 32,
+  "courses_id": null
+ },
+ {
+  "id": 277,
+  "order": 5,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 33,
+  "courses_id": null
+ },
+ {
+  "id": 278,
+  "order": 6,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 34,
+  "courses_id": null
+ },
+ {
+  "id": 279,
+  "order": 7,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 35,
+  "courses_id": null
+ },
+ {
+  "id": 280,
+  "order": 8,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 36,
+  "courses_id": null
+ },
+ {
+  "id": 281,
+  "order": 9,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 37,
+  "courses_id": null
+ },
+ {
+  "id": 282,
+  "order": 10,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 38,
+  "courses_id": null
+ },
+ {
+  "id": 283,
+  "order": 11,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 39,
+  "courses_id": null
+ },
+ {
+  "id": 284,
+  "order": 12,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 40,
+  "courses_id": null
+ },
+ {
+  "id": 285,
+  "order": 13,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 41,
+  "courses_id": null
+ },
+ {
+  "id": 286,
+  "order": 14,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 42,
+  "courses_id": null
+ },
+ {
+  "id": 287,
+  "order": 15,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 43,
+  "courses_id": null
+ },
+ {
+  "id": 288,
+  "order": 16,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 44,
+  "courses_id": null
+ },
+ {
+  "id": 289,
+  "order": 17,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 45,
+  "courses_id": null
+ },
+ {
+  "id": 290,
+  "order": 18,
+  "parent_id": 2,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 46,
+  "courses_id": null
+ },
+ {
+  "id": 291,
+  "order": 1,
+  "parent_id": 2,
+  "path": "credits.2.people",
+  "articles_id": null,
+  "people_id": 47,
+  "courses_id": null
+ },
+ {
+  "id": 292,
+  "order": 1,
+  "parent_id": 2,
+  "path": "credits.3.people",
+  "articles_id": null,
+  "people_id": 26,
+  "courses_id": null
+ },
+ {
+  "id": 293,
+  "order": 1,
+  "parent_id": 2,
+  "path": "credits.4.people",
+  "articles_id": null,
+  "people_id": 50,
+  "courses_id": null
+ },
+ {
+  "id": 309,
+  "order": 1,
+  "parent_id": 1,
+  "path": "articles",
+  "articles_id": 1,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 310,
+  "order": 2,
+  "parent_id": 1,
+  "path": "articles",
+  "articles_id": 2,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 311,
+  "order": 3,
+  "parent_id": 1,
+  "path": "articles",
+  "articles_id": 3,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 312,
+  "order": 4,
+  "parent_id": 1,
+  "path": "articles",
+  "articles_id": 4,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 313,
+  "order": 5,
+  "parent_id": 1,
+  "path": "articles",
+  "articles_id": 5,
+  "people_id": null,
+  "courses_id": null
+ },
+ {
+  "id": 314,
+  "order": 1,
+  "parent_id": 1,
+  "path": "credits.0.people",
+  "articles_id": null,
+  "people_id": 23,
+  "courses_id": null
+ },
+ {
+  "id": 315,
+  "order": 1,
+  "parent_id": 1,
+  "path": "credits.1.people",
+  "articles_id": null,
+  "people_id": 26,
+  "courses_id": null
+ },
+ {
+  "id": 316,
+  "order": 1,
+  "parent_id": 1,
+  "path": "credits.2.people",
+  "articles_id": null,
+  "people_id": 60,
+  "courses_id": null
+ },
+ {
+  "id": 317,
+  "order": 2,
+  "parent_id": 1,
+  "path": "credits.2.people",
+  "articles_id": null,
+  "people_id": 61,
+  "courses_id": null
+ },
+ {
+  "id": 318,
+  "order": 1,
+  "parent_id": 1,
+  "path": "credits.3.people",
+  "articles_id": null,
+  "people_id": 19,
+  "courses_id": null
+ },
+ {
+  "id": 319,
+  "order": 2,
+  "parent_id": 1,
+  "path": "credits.3.people",
+  "articles_id": null,
+  "people_id": 15,
+  "courses_id": null
+ },
+ {
+  "id": 320,
+  "order": 3,
+  "parent_id": 1,
+  "path": "credits.3.people",
+  "articles_id": null,
+  "people_id": 16,
+  "courses_id": null
+ },
+ {
+  "id": 321,
+  "order": 4,
+  "parent_id": 1,
+  "path": "credits.3.people",
+  "articles_id": null,
+  "people_id": 17,
+  "courses_id": null
+ }
+]

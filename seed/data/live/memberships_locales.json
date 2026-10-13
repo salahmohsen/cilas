@@ -1,0 +1,662 @@
+[
+ {
+  "title": null,
+  "id": 1,
+  "_locale": "en",
+  "_parent_id": 1
+ },
+ {
+  "title": null,
+  "id": 2,
+  "_locale": "en",
+  "_parent_id": 2
+ },
+ {
+  "title": null,
+  "id": 3,
+  "_locale": "en",
+  "_parent_id": 3
+ },
+ {
+  "title": null,
+  "id": 4,
+  "_locale": "en",
+  "_parent_id": 4
+ },
+ {
+  "title": null,
+  "id": 5,
+  "_locale": "en",
+  "_parent_id": 5
+ },
+ {
+  "title": "coordinates the thematic Green Economy course",
+  "id": 6,
+  "_locale": "en",
+  "_parent_id": 6
+ },
+ {
+  "title": null,
+  "id": 7,
+  "_locale": "en",
+  "_parent_id": 7
+ },
+ {
+  "title": "Assistant Programme Director",
+  "id": 8,
+  "_locale": "en",
+  "_parent_id": 8
+ },
+ {
+  "title": "Assistant Programme Director",
+  "id": 9,
+  "_locale": "en",
+  "_parent_id": 9
+ },
+ {
+  "title": null,
+  "id": 10,
+  "_locale": "en",
+  "_parent_id": 10
+ },
+ {
+  "title": null,
+  "id": 11,
+  "_locale": "en",
+  "_parent_id": 11
+ },
+ {
+  "title": null,
+  "id": 12,
+  "_locale": "en",
+  "_parent_id": 12
+ },
+ {
+  "title": null,
+  "id": 13,
+  "_locale": "en",
+  "_parent_id": 13
+ },
+ {
+  "title": null,
+  "id": 14,
+  "_locale": "en",
+  "_parent_id": 14
+ },
+ {
+  "title": null,
+  "id": 15,
+  "_locale": "en",
+  "_parent_id": 15
+ },
+ {
+  "title": "Media Lab Director",
+  "id": 16,
+  "_locale": "en",
+  "_parent_id": 16
+ },
+ {
+  "title": null,
+  "id": 17,
+  "_locale": "en",
+  "_parent_id": 17
+ },
+ {
+  "title": null,
+  "id": 18,
+  "_locale": "en",
+  "_parent_id": 18
+ },
+ {
+  "title": "visiting fellow at CILAS",
+  "id": 19,
+  "_locale": "en",
+  "_parent_id": 19
+ },
+ {
+  "title": "coordinates the field of study Arts and directs CILAS' Media Lab",
+  "id": 20,
+  "_locale": "en",
+  "_parent_id": 20
+ },
+ {
+  "title": null,
+  "id": 21,
+  "_locale": "en",
+  "_parent_id": 21
+ },
+ {
+  "title": "visiting fellow in the field of study Culture; coordinates the thematic course History of Education",
+  "id": 22,
+  "_locale": "en",
+  "_parent_id": 22
+ },
+ {
+  "title": null,
+  "id": 23,
+  "_locale": "en",
+  "_parent_id": 23
+ },
+ {
+  "title": "coordinates the field of study Social Sciences and co-directs the yearlong study programme in the liberal arts",
+  "id": 24,
+  "_locale": "en",
+  "_parent_id": 24
+ },
+ {
+  "title": null,
+  "id": 25,
+  "_locale": "en",
+  "_parent_id": 25
+ },
+ {
+  "title": "visiting fellow in the field of study Culture; coordinates the thematic course History of Education",
+  "id": 26,
+  "_locale": "en",
+  "_parent_id": 26
+ },
+ {
+  "title": null,
+  "id": 27,
+  "_locale": "en",
+  "_parent_id": 27
+ },
+ {
+  "title": "visiting fellow offering a course on evaluation theory and practice",
+  "id": 28,
+  "_locale": "en",
+  "_parent_id": 28
+ },
+ {
+  "title": null,
+  "id": 29,
+  "_locale": "en",
+  "_parent_id": 29
+ },
+ {
+  "title": "coordinates coursework in the field of study Natural Sciences and serves as Space Director",
+  "id": 30,
+  "_locale": "en",
+  "_parent_id": 30
+ },
+ {
+  "title": "visiting fellow in the fields of study Arts and Natural Sciences",
+  "id": 31,
+  "_locale": "en",
+  "_parent_id": 31
+ },
+ {
+  "title": "visiting fellow at CILAS in the Social Sciences",
+  "id": 32,
+  "_locale": "en",
+  "_parent_id": 32
+ },
+ {
+  "title": null,
+  "id": 33,
+  "_locale": "en",
+  "_parent_id": 33
+ },
+ {
+  "title": null,
+  "id": 34,
+  "_locale": "en",
+  "_parent_id": 34
+ },
+ {
+  "title": null,
+  "id": 35,
+  "_locale": "en",
+  "_parent_id": 35
+ },
+ {
+  "title": null,
+  "id": 36,
+  "_locale": "en",
+  "_parent_id": 36
+ },
+ {
+  "title": null,
+  "id": 37,
+  "_locale": "en",
+  "_parent_id": 37
+ },
+ {
+  "title": null,
+  "id": 38,
+  "_locale": "en",
+  "_parent_id": 38
+ },
+ {
+  "title": null,
+  "id": 39,
+  "_locale": "en",
+  "_parent_id": 39
+ },
+ {
+  "title": null,
+  "id": 40,
+  "_locale": "en",
+  "_parent_id": 40
+ },
+ {
+  "title": "coordinates the field of study Natural Sciences and co-directs the yearlong study programme in the liberal arts",
+  "id": 41,
+  "_locale": "en",
+  "_parent_id": 41
+ },
+ {
+  "title": null,
+  "id": 42,
+  "_locale": "en",
+  "_parent_id": 42
+ },
+ {
+  "title": null,
+  "id": 43,
+  "_locale": "en",
+  "_parent_id": 43
+ },
+ {
+  "title": null,
+  "id": 44,
+  "_locale": "en",
+  "_parent_id": 44
+ },
+ {
+  "title": null,
+  "id": 45,
+  "_locale": "en",
+  "_parent_id": 45
+ },
+ {
+  "title": null,
+  "id": 46,
+  "_locale": "en",
+  "_parent_id": 46
+ },
+ {
+  "title": null,
+  "id": 47,
+  "_locale": "en",
+  "_parent_id": 47
+ },
+ {
+  "title": null,
+  "id": 48,
+  "_locale": "en",
+  "_parent_id": 48
+ },
+ {
+  "title": null,
+  "id": 49,
+  "_locale": "en",
+  "_parent_id": 49
+ },
+ {
+  "title": null,
+  "id": 50,
+  "_locale": "en",
+  "_parent_id": 50
+ },
+ {
+  "title": null,
+  "id": 51,
+  "_locale": "en",
+  "_parent_id": 51
+ },
+ {
+  "title": "visiting fellow in the field of social sciences",
+  "id": 52,
+  "_locale": "en",
+  "_parent_id": 52
+ },
+ {
+  "title": null,
+  "id": 53,
+  "_locale": "en",
+  "_parent_id": 53
+ },
+ {
+  "title": "coordinates the field of study Arts and Culture",
+  "id": 54,
+  "_locale": "en",
+  "_parent_id": 54
+ },
+ {
+  "title": "social sciences field coordinator at CILAS",
+  "id": 55,
+  "_locale": "en",
+  "_parent_id": 55
+ },
+ {
+  "title": null,
+  "id": 56,
+  "_locale": "en",
+  "_parent_id": 56
+ },
+ {
+  "title": null,
+  "id": 57,
+  "_locale": "en",
+  "_parent_id": 57
+ },
+ {
+  "title": "residential fellow for Social Sciences field of study at CILAS",
+  "id": 58,
+  "_locale": "en",
+  "_parent_id": 58
+ },
+ {
+  "title": null,
+  "id": 59,
+  "_locale": "en",
+  "_parent_id": 59
+ },
+ {
+  "title": null,
+  "id": 60,
+  "_locale": "en",
+  "_parent_id": 60
+ },
+ {
+  "title": null,
+  "id": 61,
+  "_locale": "en",
+  "_parent_id": 61
+ },
+ {
+  "title": null,
+  "id": 62,
+  "_locale": "en",
+  "_parent_id": 62
+ },
+ {
+  "title": "coordinated the field of study Humanities",
+  "id": 63,
+  "_locale": "en",
+  "_parent_id": 63
+ },
+ {
+  "title": null,
+  "id": 64,
+  "_locale": "en",
+  "_parent_id": 64
+ },
+ {
+  "title": null,
+  "id": 65,
+  "_locale": "en",
+  "_parent_id": 65
+ },
+ {
+  "title": null,
+  "id": 66,
+  "_locale": "en",
+  "_parent_id": 66
+ },
+ {
+  "title": null,
+  "id": 67,
+  "_locale": "en",
+  "_parent_id": 67
+ },
+ {
+  "title": null,
+  "id": 68,
+  "_locale": "en",
+  "_parent_id": 68
+ },
+ {
+  "title": null,
+  "id": 69,
+  "_locale": "en",
+  "_parent_id": 69
+ },
+ {
+  "title": null,
+  "id": 70,
+  "_locale": "en",
+  "_parent_id": 70
+ },
+ {
+  "title": null,
+  "id": 71,
+  "_locale": "en",
+  "_parent_id": 71
+ },
+ {
+  "title": "coordinates coursework in the field of study Natural Sciences",
+  "id": 72,
+  "_locale": "en",
+  "_parent_id": 72
+ },
+ {
+  "title": null,
+  "id": 73,
+  "_locale": "en",
+  "_parent_id": 73
+ },
+ {
+  "title": null,
+  "id": 74,
+  "_locale": "en",
+  "_parent_id": 74
+ },
+ {
+  "title": null,
+  "id": 75,
+  "_locale": "en",
+  "_parent_id": 75
+ },
+ {
+  "title": null,
+  "id": 76,
+  "_locale": "en",
+  "_parent_id": 76
+ },
+ {
+  "title": null,
+  "id": 77,
+  "_locale": "en",
+  "_parent_id": 77
+ },
+ {
+  "title": null,
+  "id": 78,
+  "_locale": "en",
+  "_parent_id": 78
+ },
+ {
+  "title": null,
+  "id": 79,
+  "_locale": "en",
+  "_parent_id": 79
+ },
+ {
+  "title": null,
+  "id": 80,
+  "_locale": "en",
+  "_parent_id": 80
+ },
+ {
+  "title": "this year's Arts and Culture co-fellow, Space lab director",
+  "id": 81,
+  "_locale": "en",
+  "_parent_id": 81
+ },
+ {
+  "title": null,
+  "id": 82,
+  "_locale": "en",
+  "_parent_id": 82
+ },
+ {
+  "title": null,
+  "id": 83,
+  "_locale": "en",
+  "_parent_id": 83
+ },
+ {
+  "title": null,
+  "id": 84,
+  "_locale": "en",
+  "_parent_id": 84
+ },
+ {
+  "title": null,
+  "id": 85,
+  "_locale": "en",
+  "_parent_id": 85
+ },
+ {
+  "title": null,
+  "id": 86,
+  "_locale": "en",
+  "_parent_id": 86
+ },
+ {
+  "title": null,
+  "id": 87,
+  "_locale": "en",
+  "_parent_id": 87
+ },
+ {
+  "title": "co-fellow for the natural science field of study at CILAS and director of the media lab",
+  "id": 88,
+  "_locale": "en",
+  "_parent_id": 88
+ },
+ {
+  "title": null,
+  "id": 89,
+  "_locale": "en",
+  "_parent_id": 89
+ },
+ {
+  "title": null,
+  "id": 90,
+  "_locale": "en",
+  "_parent_id": 90
+ },
+ {
+  "title": null,
+  "id": 91,
+  "_locale": "en",
+  "_parent_id": 91
+ },
+ {
+  "title": null,
+  "id": 92,
+  "_locale": "en",
+  "_parent_id": 92
+ },
+ {
+  "title": null,
+  "id": 93,
+  "_locale": "en",
+  "_parent_id": 93
+ },
+ {
+  "title": null,
+  "id": 94,
+  "_locale": "en",
+  "_parent_id": 94
+ },
+ {
+  "title": null,
+  "id": 95,
+  "_locale": "en",
+  "_parent_id": 95
+ },
+ {
+  "title": null,
+  "id": 96,
+  "_locale": "en",
+  "_parent_id": 96
+ },
+ {
+  "title": null,
+  "id": 97,
+  "_locale": "en",
+  "_parent_id": 97
+ },
+ {
+  "title": null,
+  "id": 98,
+  "_locale": "en",
+  "_parent_id": 98
+ },
+ {
+  "title": null,
+  "id": 99,
+  "_locale": "en",
+  "_parent_id": 99
+ },
+ {
+  "title": null,
+  "id": 100,
+  "_locale": "en",
+  "_parent_id": 100
+ },
+ {
+  "title": null,
+  "id": 101,
+  "_locale": "en",
+  "_parent_id": 101
+ },
+ {
+  "title": null,
+  "id": 102,
+  "_locale": "en",
+  "_parent_id": 102
+ },
+ {
+  "title": null,
+  "id": 103,
+  "_locale": "en",
+  "_parent_id": 103
+ },
+ {
+  "title": null,
+  "id": 104,
+  "_locale": "en",
+  "_parent_id": 104
+ },
+ {
+  "title": null,
+  "id": 105,
+  "_locale": "en",
+  "_parent_id": 105
+ },
+ {
+  "title": "teaching fellow for the Skills Lab's theoretical accompaniment",
+  "id": 106,
+  "_locale": "en",
+  "_parent_id": 106
+ },
+ {
+  "title": "co-facilitator for the Skills Lab",
+  "id": 107,
+  "_locale": "en",
+  "_parent_id": 107
+ },
+ {
+  "title": "co-facilitator for the Skills Lab",
+  "id": 108,
+  "_locale": "en",
+  "_parent_id": 108
+ },
+ {
+  "title": "Teaching Fellow in the Sciences",
+  "id": 109,
+  "_locale": "en",
+  "_parent_id": 109
+ },
+ {
+  "title": "Teaching Fellow in the Humanities and Arts",
+  "id": 110,
+  "_locale": "en",
+  "_parent_id": 110
+ }
+]

@@ -1,0 +1,2612 @@
+[
+ {
+  "id": 1,
+  "generate_slug": false,
+  "slug": "karim-el-dalil",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:23.473Z",
+  "created_at": "2026-10-13T14:17:22.410Z"
+ },
+ {
+  "id": 2,
+  "generate_slug": false,
+  "slug": "mahaviveka",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:25.940Z",
+  "created_at": "2026-10-13T14:17:25.713Z"
+ },
+ {
+  "id": 3,
+  "generate_slug": false,
+  "slug": "yasser-abdellatif",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:26.950Z",
+  "created_at": "2026-10-13T14:17:26.780Z"
+ },
+ {
+  "id": 4,
+  "generate_slug": false,
+  "slug": "ahmad-mahana",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:28.094Z",
+  "created_at": "2026-10-13T14:17:27.704Z"
+ },
+ {
+  "id": 5,
+  "generate_slug": false,
+  "slug": "shadi-jamal",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:30.634Z",
+  "created_at": "2026-10-13T14:17:30.443Z"
+ },
+ {
+  "id": 6,
+  "generate_slug": false,
+  "slug": "george-louis-bartlett",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:31.724Z",
+  "created_at": "2026-10-13T14:17:31.514Z"
+ },
+ {
+  "id": 7,
+  "generate_slug": false,
+  "slug": "s-farwah-rizvi",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:33.710Z",
+  "created_at": "2026-10-13T14:17:33.438Z"
+ },
+ {
+  "id": 8,
+  "generate_slug": false,
+  "slug": "evelyn-richardson",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:34.783Z",
+  "created_at": "2026-10-13T14:17:34.564Z"
+ },
+ {
+  "id": 9,
+  "generate_slug": false,
+  "slug": "mina-nagy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:35.871Z",
+  "created_at": "2026-10-13T14:17:35.666Z"
+ },
+ {
+  "id": 10,
+  "generate_slug": false,
+  "slug": "susanne-sklar",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:36.973Z",
+  "created_at": "2026-10-13T14:17:36.716Z"
+ },
+ {
+  "id": 11,
+  "generate_slug": false,
+  "slug": "leon-conrad",
+  "photo_id": null,
+  "website": "https://www.traditionaltutor.co.uk",
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:38.015Z",
+  "created_at": "2026-10-13T14:17:37.801Z"
+ },
+ {
+  "id": 12,
+  "generate_slug": false,
+  "slug": "ghosoun-ismail",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:39.027Z",
+  "created_at": "2026-10-13T14:17:38.803Z"
+ },
+ {
+  "id": 13,
+  "generate_slug": false,
+  "slug": "zeina-ali",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:40.068Z",
+  "created_at": "2026-10-13T14:17:39.832Z"
+ },
+ {
+  "id": 14,
+  "generate_slug": false,
+  "slug": "osama-amer",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:41.079Z",
+  "created_at": "2026-10-13T14:17:40.850Z"
+ },
+ {
+  "id": 15,
+  "generate_slug": false,
+  "slug": "surti-singh",
+  "photo_id": 8,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:20:08.871Z",
+  "created_at": "2026-10-13T14:17:41.852Z"
+ },
+ {
+  "id": 16,
+  "generate_slug": false,
+  "slug": "i-kai-jeng",
+  "photo_id": 45,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:58:15.284Z",
+  "created_at": "2026-10-13T14:17:43.691Z"
+ },
+ {
+  "id": 17,
+  "generate_slug": false,
+  "slug": "robin-weiss",
+  "photo_id": 89,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:00:06.430Z",
+  "created_at": "2026-10-13T14:17:44.798Z"
+ },
+ {
+  "id": 18,
+  "generate_slug": false,
+  "slug": "michael-brint",
+  "photo_id": 60,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:58:44.847Z",
+  "created_at": "2026-10-13T14:17:45.742Z"
+ },
+ {
+  "id": 19,
+  "generate_slug": false,
+  "slug": "teun-dekker",
+  "photo_id": 100,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:00:31.207Z",
+  "created_at": "2026-10-13T14:17:46.691Z"
+ },
+ {
+  "id": 20,
+  "generate_slug": false,
+  "slug": "yen-chi-fan",
+  "photo_id": 104,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:00:43.107Z",
+  "created_at": "2026-10-13T14:17:47.710Z"
+ },
+ {
+  "id": 21,
+  "generate_slug": false,
+  "slug": "abdul-hayy-lammert-holdijk",
+  "photo_id": 10,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:56:53.619Z",
+  "created_at": "2026-10-13T14:17:48.755Z"
+ },
+ {
+  "id": 22,
+  "generate_slug": false,
+  "slug": "tommaso-vitale",
+  "photo_id": 101,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:00:33.219Z",
+  "created_at": "2026-10-13T14:17:50.620Z"
+ },
+ {
+  "id": 23,
+  "generate_slug": false,
+  "slug": "karim-yassin-goessinger",
+  "photo_id": 50,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:58:25.051Z",
+  "created_at": "2026-10-13T14:17:51.643Z"
+ },
+ {
+  "id": 24,
+  "generate_slug": false,
+  "slug": "amani-elshimi",
+  "photo_id": 18,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:57:13.462Z",
+  "created_at": "2026-10-13T14:17:52.733Z"
+ },
+ {
+  "id": 25,
+  "generate_slug": false,
+  "slug": "ahmed-galal",
+  "photo_id": 12,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:56:57.232Z",
+  "created_at": "2026-10-13T14:17:53.716Z"
+ },
+ {
+  "id": 26,
+  "generate_slug": false,
+  "slug": "hussein-el-hag",
+  "photo_id": 44,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:58:11.964Z",
+  "created_at": "2026-10-13T14:17:54.720Z"
+ },
+ {
+  "id": 27,
+  "generate_slug": false,
+  "slug": "hend-el-ghazaly",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:56.057Z",
+  "created_at": "2026-10-13T14:17:55.824Z"
+ },
+ {
+  "id": 28,
+  "generate_slug": false,
+  "slug": "el-sayed-mahmoud",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:57.016Z",
+  "created_at": "2026-10-13T14:17:56.820Z"
+ },
+ {
+  "id": 29,
+  "generate_slug": false,
+  "slug": "eman-maarek",
+  "photo_id": 38,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:57:58.621Z",
+  "created_at": "2026-10-13T14:17:57.795Z"
+ },
+ {
+  "id": 30,
+  "generate_slug": false,
+  "slug": "ayman-el-husseini",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:17:59.028Z",
+  "created_at": "2026-10-13T14:17:58.814Z"
+ },
+ {
+  "id": 31,
+  "generate_slug": false,
+  "slug": "mohamed-yahya",
+  "photo_id": 67,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:59:03.306Z",
+  "created_at": "2026-10-13T14:17:59.830Z"
+ },
+ {
+  "id": 32,
+  "generate_slug": false,
+  "slug": "nazih-hallouda",
+  "photo_id": 73,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:59:19.976Z",
+  "created_at": "2026-10-13T14:18:00.854Z"
+ },
+ {
+  "id": 33,
+  "generate_slug": false,
+  "slug": "howaida-ahmed",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:01.995Z",
+  "created_at": "2026-10-13T14:18:01.803Z"
+ },
+ {
+  "id": 34,
+  "generate_slug": false,
+  "slug": "eman-abdelhamid-kamal",
+  "photo_id": 37,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:57:57.044Z",
+  "created_at": "2026-10-13T14:18:02.794Z"
+ },
+ {
+  "id": 35,
+  "generate_slug": false,
+  "slug": "ahmed-mongey",
+  "photo_id": 14,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:57:01.847Z",
+  "created_at": "2026-10-13T14:18:04.632Z"
+ },
+ {
+  "id": 36,
+  "generate_slug": false,
+  "slug": "islam-karrar",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:05.825Z",
+  "created_at": "2026-10-13T14:18:05.615Z"
+ },
+ {
+  "id": 37,
+  "generate_slug": false,
+  "slug": "iman-safwat",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:06.855Z",
+  "created_at": "2026-10-13T14:18:06.642Z"
+ },
+ {
+  "id": 38,
+  "generate_slug": false,
+  "slug": "rehab-suleiman",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:07.885Z",
+  "created_at": "2026-10-13T14:18:07.674Z"
+ },
+ {
+  "id": 39,
+  "generate_slug": false,
+  "slug": "abdel-rahman-adel",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:08.907Z",
+  "created_at": "2026-10-13T14:18:08.667Z"
+ },
+ {
+  "id": 40,
+  "generate_slug": false,
+  "slug": "mariam-sameh",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:09.840Z",
+  "created_at": "2026-10-13T14:18:09.643Z"
+ },
+ {
+  "id": 41,
+  "generate_slug": false,
+  "slug": "nora-helmy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:10.805Z",
+  "created_at": "2026-10-13T14:18:10.614Z"
+ },
+ {
+  "id": 42,
+  "generate_slug": false,
+  "slug": "sara-alaa",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:12.734Z",
+  "created_at": "2026-10-13T14:18:12.544Z"
+ },
+ {
+  "id": 43,
+  "generate_slug": false,
+  "slug": "amal-abdel-rahman",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:13.767Z",
+  "created_at": "2026-10-13T14:18:13.509Z"
+ },
+ {
+  "id": 44,
+  "generate_slug": false,
+  "slug": "heba-allah-mansour",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:14.847Z",
+  "created_at": "2026-10-13T14:18:14.606Z"
+ },
+ {
+  "id": 45,
+  "generate_slug": false,
+  "slug": "sara-sallam",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:15.854Z",
+  "created_at": "2026-10-13T14:18:15.660Z"
+ },
+ {
+  "id": 46,
+  "generate_slug": false,
+  "slug": "mohamed-nagy-sanger",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:16.850Z",
+  "created_at": "2026-10-13T14:18:16.662Z"
+ },
+ {
+  "id": 47,
+  "generate_slug": false,
+  "slug": "amir-zaki",
+  "photo_id": 19,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:57:14.855Z",
+  "created_at": "2026-10-13T14:18:17.620Z"
+ },
+ {
+  "id": 48,
+  "generate_slug": false,
+  "slug": "nahir-emad",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:18.795Z",
+  "created_at": "2026-10-13T14:18:18.572Z"
+ },
+ {
+  "id": 49,
+  "generate_slug": false,
+  "slug": "nazih-awad",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:19.771Z",
+  "created_at": "2026-10-13T14:18:19.591Z"
+ },
+ {
+  "id": 50,
+  "generate_slug": false,
+  "slug": "amr-okasha",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:20.973Z",
+  "created_at": "2026-10-13T14:18:20.760Z"
+ },
+ {
+  "id": 51,
+  "generate_slug": false,
+  "slug": "salah-mohsen",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T14:18:22.059Z",
+  "created_at": "2026-10-13T14:18:21.854Z"
+ },
+ {
+  "id": 52,
+  "generate_slug": false,
+  "slug": "shreya-janssens-sannon",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/translation-as-education.html#recovering-from-the-diploma-disease#person-shreya-janssens-sannon",
+  "updated_at": "2026-10-13T14:19:02.323Z",
+  "created_at": "2026-10-13T14:19:01.122Z"
+ },
+ {
+  "id": 53,
+  "generate_slug": false,
+  "slug": "shilpa-jain",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/translation-as-education.html#recovering-from-the-diploma-disease#person-shilpa-jain",
+  "updated_at": "2026-10-13T14:19:03.183Z",
+  "created_at": "2026-10-13T14:19:02.592Z"
+ },
+ {
+  "id": 54,
+  "generate_slug": false,
+  "slug": "manish-jain",
+  "photo_id": 7,
+  "website": null,
+  "legacy_url": "/translation-as-education.html#recovering-from-the-diploma-disease#person-manish-jain",
+  "updated_at": "2026-10-13T14:20:05.189Z",
+  "created_at": "2026-10-13T14:19:04.054Z"
+ },
+ {
+  "id": 55,
+  "generate_slug": false,
+  "slug": "gustavo-esteva",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/translation-as-education.html#reclaiming-our-fire-in-education#person-gustavo-esteva",
+  "updated_at": "2026-10-13T14:19:10.014Z",
+  "created_at": "2026-10-13T14:19:09.753Z"
+ },
+ {
+  "id": 56,
+  "generate_slug": false,
+  "slug": "ron-miller",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/translation-as-education.html#a-short-history-of-alternative-education#person-ron-miller",
+  "updated_at": "2026-10-13T14:19:18.440Z",
+  "created_at": "2026-10-13T14:19:17.756Z"
+ },
+ {
+  "id": 57,
+  "generate_slug": false,
+  "slug": "chris-wright",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/translation-as-education.html#on-how-to-read-theoretical-works#person-chris-wright",
+  "updated_at": "2026-10-13T14:19:24.770Z",
+  "created_at": "2026-10-13T14:19:23.933Z"
+ },
+ {
+  "id": 58,
+  "generate_slug": false,
+  "slug": "vicki-a-jacobs",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/translation-as-education.html#reading-writing-and-understanding#person-vicki-a-jacobs",
+  "updated_at": "2026-10-13T14:19:39.193Z",
+  "created_at": "2026-10-13T14:19:38.962Z"
+ },
+ {
+  "id": 59,
+  "generate_slug": false,
+  "slug": "mohamed-fayez",
+  "photo_id": 65,
+  "website": null,
+  "legacy_url": "/-latest.html#we-too-are-berlin-ers-also-retrieved-from-the-archives#person-mohamed-fayez",
+  "updated_at": "2026-10-13T14:58:58.903Z",
+  "created_at": "2026-10-13T14:19:49.637Z"
+ },
+ {
+  "id": 60,
+  "generate_slug": false,
+  "slug": "ali-al-farsi",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/on-pigeon-towers.html#person-ali-al-farsi",
+  "updated_at": "2026-10-13T14:40:01.547Z",
+  "created_at": "2026-10-13T14:19:53.135Z"
+ },
+ {
+  "id": 61,
+  "generate_slug": false,
+  "slug": "nour-mohy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/on-pigeon-towers.html#person-nour-mohy",
+  "updated_at": "2026-10-13T14:40:01.328Z",
+  "created_at": "2026-10-13T14:19:53.415Z"
+ },
+ {
+  "id": 62,
+  "generate_slug": false,
+  "slug": "ahmed-diaa",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/1601157815851577-16051606-15751604158616051606-1575158715781593160515751585-160515891585-160816051575-15711581158315791607-16051606-157815941610.html#ahmed-diaa",
+  "updated_at": "2026-10-13T14:40:01.097Z",
+  "created_at": "2026-10-13T14:20:40.631Z"
+ },
+ {
+  "id": 63,
+  "generate_slug": false,
+  "slug": "bas-paris",
+  "photo_id": 26,
+  "website": null,
+  "legacy_url": "/2013-2014.html#bas-paris",
+  "updated_at": "2026-10-13T14:57:29.431Z",
+  "created_at": "2026-10-13T14:20:49.502Z"
+ },
+ {
+  "id": 64,
+  "generate_slug": false,
+  "slug": "david-tholen",
+  "photo_id": 32,
+  "website": null,
+  "legacy_url": "/2013-2014.html#david-tholen",
+  "updated_at": "2026-10-13T14:57:41.522Z",
+  "created_at": "2026-10-13T14:20:52.114Z"
+ },
+ {
+  "id": 65,
+  "generate_slug": false,
+  "slug": "farida-makar",
+  "photo_id": 39,
+  "website": null,
+  "legacy_url": "/2013-2014.html#farida-makar",
+  "updated_at": "2026-10-13T14:58:00.068Z",
+  "created_at": "2026-10-13T14:20:54.884Z"
+ },
+ {
+  "id": 66,
+  "generate_slug": false,
+  "slug": "doaa-kaddah",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2017-2018-second-trimester.html#doaa-kaddah",
+  "updated_at": "2026-10-13T14:40:00.087Z",
+  "created_at": "2026-10-13T14:21:08.028Z"
+ },
+ {
+  "id": 67,
+  "generate_slug": false,
+  "slug": "bianca-fli",
+  "photo_id": 28,
+  "website": null,
+  "legacy_url": "/2017-2018-third-trimester.html#bianca-fli",
+  "updated_at": "2026-10-13T14:57:35.896Z",
+  "created_at": "2026-10-13T14:21:10.403Z"
+ },
+ {
+  "id": 68,
+  "generate_slug": false,
+  "slug": "batool-el-hennawy",
+  "photo_id": 27,
+  "website": null,
+  "legacy_url": "/2018-2019-cilas-alex-core-courses-2018---2019.html#batool-el-hennawy",
+  "updated_at": "2026-10-13T14:57:32.983Z",
+  "created_at": "2026-10-13T14:21:15.262Z"
+ },
+ {
+  "id": 69,
+  "generate_slug": false,
+  "slug": "kari-rosenfeld",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2018-2019-cilas-alex-core-courses-2018---2019.html#kari-rosenfeld",
+  "updated_at": "2026-10-13T14:39:59.260Z",
+  "created_at": "2026-10-13T14:21:18.152Z"
+ },
+ {
+  "id": 70,
+  "generate_slug": false,
+  "slug": "omar-el-rakhawy",
+  "photo_id": 79,
+  "website": null,
+  "legacy_url": "/2019-2020-cilas-alex-core-courses.html#omar-el-rakhawy",
+  "updated_at": "2026-10-13T14:59:40.993Z",
+  "created_at": "2026-10-13T14:21:21.475Z"
+ },
+ {
+  "id": 71,
+  "generate_slug": false,
+  "slug": "muhammad-alaraby",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2019-2020-cilas-alex-core-courses.html#muhammad-alaraby",
+  "updated_at": "2026-10-13T14:39:58.749Z",
+  "created_at": "2026-10-13T14:21:23.110Z"
+ },
+ {
+  "id": 72,
+  "generate_slug": false,
+  "slug": "mariam-soliman",
+  "photo_id": 57,
+  "website": null,
+  "legacy_url": "/2019-2020-cilas-alex-core-courses.html#mariam-soliman",
+  "updated_at": "2026-10-13T14:58:40.675Z",
+  "created_at": "2026-10-13T14:21:25.411Z"
+ },
+ {
+  "id": 73,
+  "generate_slug": false,
+  "slug": "manar-imam",
+  "photo_id": 56,
+  "website": null,
+  "legacy_url": "/2019-2020-cilas-alex-core-courses.html#manar-imam",
+  "updated_at": "2026-10-13T14:58:39.054Z",
+  "created_at": "2026-10-13T14:21:25.590Z"
+ },
+ {
+  "id": 74,
+  "generate_slug": false,
+  "slug": "alexandra-schindler",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html#alexandra-schindler",
+  "updated_at": "2026-10-13T14:39:58.087Z",
+  "created_at": "2026-10-13T14:21:27.190Z"
+ },
+ {
+  "id": 75,
+  "generate_slug": false,
+  "slug": "arevalo",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html#arevalo",
+  "updated_at": "2026-10-13T14:39:57.837Z",
+  "created_at": "2026-10-13T14:21:29.843Z"
+ },
+ {
+  "id": 76,
+  "generate_slug": false,
+  "slug": "deema-kaedbey",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html#deema-kaedbey",
+  "updated_at": "2026-10-13T14:39:57.615Z",
+  "created_at": "2026-10-13T14:21:32.392Z"
+ },
+ {
+  "id": 77,
+  "generate_slug": false,
+  "slug": "nabil-yasien-mohamed",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html#nabil-yasien-mohamed",
+  "updated_at": "2026-10-13T14:39:57.407Z",
+  "created_at": "2026-10-13T14:21:35.813Z"
+ },
+ {
+  "id": 78,
+  "generate_slug": false,
+  "slug": "amina-dessouki",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html#amina-dessouki",
+  "updated_at": "2026-10-13T14:39:57.179Z",
+  "created_at": "2026-10-13T14:21:37.771Z"
+ },
+ {
+  "id": 79,
+  "generate_slug": false,
+  "slug": "radwa-salem",
+  "photo_id": 82,
+  "website": null,
+  "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html#radwa-salem",
+  "updated_at": "2026-10-13T14:59:47.849Z",
+  "created_at": "2026-10-13T14:21:40.823Z"
+ },
+ {
+  "id": 80,
+  "generate_slug": false,
+  "slug": "sophie-frankford",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/2023-cilas-cairo-hybrid-spring-semester.html#sophie-frankford",
+  "updated_at": "2026-10-13T14:39:56.686Z",
+  "created_at": "2026-10-13T14:21:43.775Z"
+ },
+ {
+  "id": 81,
+  "generate_slug": false,
+  "slug": "hala-barakat",
+  "photo_id": 43,
+  "website": null,
+  "legacy_url": "/3eish-7orreya-3edala-igtima3eya.html#hala-barakat",
+  "updated_at": "2026-10-13T14:58:07.964Z",
+  "created_at": "2026-10-13T14:21:45.726Z"
+ },
+ {
+  "id": 82,
+  "generate_slug": false,
+  "slug": "soha",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html#soha",
+  "updated_at": "2026-10-13T14:39:56.188Z",
+  "created_at": "2026-10-13T14:21:49.270Z"
+ },
+ {
+  "id": 83,
+  "generate_slug": false,
+  "slug": "ahmed-diaa-dardir",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html#ahmed-diaa-dardir",
+  "updated_at": "2026-10-13T14:39:55.959Z",
+  "created_at": "2026-10-13T14:21:51.561Z"
+ },
+ {
+  "id": 84,
+  "generate_slug": false,
+  "slug": "marouan",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html#marouan",
+  "updated_at": "2026-10-13T14:39:55.739Z",
+  "created_at": "2026-10-13T14:21:54.920Z"
+ },
+ {
+  "id": 85,
+  "generate_slug": false,
+  "slug": "sohayla-el-fakahany",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html#sohayla-el-fakahany",
+  "updated_at": "2026-10-13T14:39:55.508Z",
+  "created_at": "2026-10-13T14:21:56.972Z"
+ },
+ {
+  "id": 86,
+  "generate_slug": false,
+  "slug": "yamn-nwh",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html#yamn-nwh",
+  "updated_at": "2026-10-13T15:58:12.761Z",
+  "created_at": "2026-10-13T14:21:59.880Z"
+ },
+ {
+  "id": 87,
+  "generate_slug": false,
+  "slug": "sherif",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html#sherif",
+  "updated_at": "2026-10-13T14:39:55.268Z",
+  "created_at": "2026-10-13T14:22:05.995Z"
+ },
+ {
+  "id": 88,
+  "generate_slug": false,
+  "slug": "nairy-abdelshafy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/alexandrian-oral-history.html#nairy-abdelshafy",
+  "updated_at": "2026-10-13T14:39:55.057Z",
+  "created_at": "2026-10-13T14:22:13.064Z"
+ },
+ {
+  "id": 89,
+  "generate_slug": false,
+  "slug": "jana-holla",
+  "photo_id": 47,
+  "website": null,
+  "legacy_url": "/an-invitation-to-collaborate.html#jana-holla",
+  "updated_at": "2026-10-13T14:58:19.121Z",
+  "created_at": "2026-10-13T14:22:16.831Z"
+ },
+ {
+  "id": 90,
+  "generate_slug": false,
+  "slug": "pam-labib",
+  "photo_id": 80,
+  "website": null,
+  "legacy_url": "/anarchist-recipes.html#pam-labib",
+  "updated_at": "2026-10-13T14:59:42.492Z",
+  "created_at": "2026-10-13T14:22:25.762Z"
+ },
+ {
+  "id": 91,
+  "generate_slug": false,
+  "slug": "bassem-khalifa",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/anarchist-recipes.html#bassem-khalifa",
+  "updated_at": "2026-10-13T14:39:54.337Z",
+  "created_at": "2026-10-13T14:22:28.452Z"
+ },
+ {
+  "id": 92,
+  "generate_slug": false,
+  "slug": "mohamed-shawky-hassan",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/archive-fever-appropriation-in-contemporary-art.html#mohamed-shawky-hassan",
+  "updated_at": "2026-10-13T14:39:54.109Z",
+  "created_at": "2026-10-13T14:22:33.362Z"
+ },
+ {
+  "id": 93,
+  "generate_slug": false,
+  "slug": "rene-boer",
+  "photo_id": 86,
+  "website": null,
+  "legacy_url": "/art-and-the-city.html#rene-boer",
+  "updated_at": "2026-10-13T15:00:01.362Z",
+  "created_at": "2026-10-13T14:22:36.182Z"
+ },
+ {
+  "id": 94,
+  "generate_slug": false,
+  "slug": "dirk-wanrooij",
+  "photo_id": 35,
+  "website": null,
+  "legacy_url": "/bicycle-diaries.html#dirk-wanrooij",
+  "updated_at": "2026-10-13T14:57:49.951Z",
+  "created_at": "2026-10-13T14:22:41.782Z"
+ },
+ {
+  "id": 95,
+  "generate_slug": false,
+  "slug": "sara-el-sayed",
+  "photo_id": 93,
+  "website": null,
+  "legacy_url": "/biomimicry.html#sara-el-sayed",
+  "updated_at": "2026-10-13T15:00:12.747Z",
+  "created_at": "2026-10-13T14:22:45.182Z"
+ },
+ {
+  "id": 96,
+  "generate_slug": false,
+  "slug": "manar-hazzaa",
+  "photo_id": 55,
+  "website": null,
+  "legacy_url": "/black-swans.html#manar-hazzaa",
+  "updated_at": "2026-10-13T14:58:37.122Z",
+  "created_at": "2026-10-13T14:22:48.610Z"
+ },
+ {
+  "id": 97,
+  "generate_slug": false,
+  "slug": "radwa-etman",
+  "photo_id": 81,
+  "website": null,
+  "legacy_url": "/bringing-the-gut-home.html#radwa-etman",
+  "updated_at": "2026-10-13T14:59:45.590Z",
+  "created_at": "2026-10-13T14:22:54.442Z"
+ },
+ {
+  "id": 98,
+  "generate_slug": false,
+  "slug": "ismail-fayed",
+  "photo_id": 46,
+  "website": null,
+  "legacy_url": "/can-we-talk-about-love.html#ismail-fayed",
+  "updated_at": "2026-10-13T14:58:17.361Z",
+  "created_at": "2026-10-13T14:22:57.792Z"
+ },
+ {
+  "id": 99,
+  "generate_slug": false,
+  "slug": "mai-alkhamissi",
+  "photo_id": 54,
+  "website": null,
+  "legacy_url": "/change-a-historical-survey-of-oppression-and-resistance.html#mai-alkhamissi",
+  "updated_at": "2026-10-13T14:58:33.367Z",
+  "created_at": "2026-10-13T14:23:05.446Z"
+ },
+ {
+  "id": 100,
+  "generate_slug": false,
+  "slug": "rim-naguib",
+  "photo_id": 88,
+  "website": null,
+  "legacy_url": "/egyptian-nationalism-from-1919-to-present.html#rim-naguib",
+  "updated_at": "2026-10-13T15:00:04.938Z",
+  "created_at": "2026-10-13T14:23:12.906Z"
+ },
+ {
+  "id": 101,
+  "generate_slug": false,
+  "slug": "maha-abdel-megeed",
+  "photo_id": 53,
+  "website": null,
+  "legacy_url": "/el-rihla-literature-and-re-thinking-the-histories-of-egypt.html#maha-abdel-megeed",
+  "updated_at": "2026-10-13T14:58:29.693Z",
+  "created_at": "2026-10-13T14:23:15.945Z"
+ },
+ {
+  "id": 102,
+  "generate_slug": false,
+  "slug": "sara-salem",
+  "photo_id": 95,
+  "website": null,
+  "legacy_url": "/elites-in-history-society-and-politics.html#sara-salem",
+  "updated_at": "2026-10-13T15:00:17.134Z",
+  "created_at": "2026-10-13T14:23:19.484Z"
+ },
+ {
+  "id": 103,
+  "generate_slug": false,
+  "slug": "ahmed-bakr",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/encountering-the-state.html#ahmed-bakr",
+  "updated_at": "2026-10-13T14:39:51.521Z",
+  "created_at": "2026-10-13T14:23:27.222Z"
+ },
+ {
+  "id": 104,
+  "generate_slug": false,
+  "slug": "mina-adel-ibrahim",
+  "photo_id": 61,
+  "website": null,
+  "legacy_url": "/everyday-piety-from-the-margins.html#mina-adel-ibrahim",
+  "updated_at": "2026-10-13T14:58:46.126Z",
+  "created_at": "2026-10-13T14:23:31.992Z"
+ },
+ {
+  "id": 105,
+  "generate_slug": false,
+  "slug": "alia-mossallam",
+  "photo_id": 17,
+  "website": null,
+  "legacy_url": "/exploring-al-ghurias-histories.html#alia-mossallam",
+  "updated_at": "2026-10-13T14:57:11.585Z",
+  "created_at": "2026-10-13T14:23:49.265Z"
+ },
+ {
+  "id": 106,
+  "generate_slug": false,
+  "slug": "nayera-abdel-rahman",
+  "photo_id": 72,
+  "website": null,
+  "legacy_url": "/exploring-al-ghurias-histories.html#nayera-abdel-rahman",
+  "updated_at": "2026-10-13T14:59:14.343Z",
+  "created_at": "2026-10-13T14:23:56.035Z"
+ },
+ {
+  "id": 107,
+  "generate_slug": false,
+  "slug": "nader-andrawos",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2020.html#nader-andrawos",
+  "updated_at": "2026-10-13T14:39:50.441Z",
+  "created_at": "2026-10-13T14:24:20.498Z"
+ },
+ {
+  "id": 108,
+  "generate_slug": false,
+  "slug": "hazem-massoud",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2020.html#hazem-massoud",
+  "updated_at": "2026-10-13T14:39:50.191Z",
+  "created_at": "2026-10-13T14:24:42.894Z"
+ },
+ {
+  "id": 109,
+  "generate_slug": false,
+  "slug": "hisham-fahmy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2020.html#hisham-fahmy",
+  "updated_at": "2026-10-13T14:39:49.959Z",
+  "created_at": "2026-10-13T14:24:57.303Z"
+ },
+ {
+  "id": 110,
+  "generate_slug": false,
+  "slug": "mina-ibrahim",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2020.html#mina-ibrahim",
+  "updated_at": "2026-10-13T14:39:49.707Z",
+  "created_at": "2026-10-13T14:25:04.713Z"
+ },
+ {
+  "id": 111,
+  "generate_slug": false,
+  "slug": "mennatullah-hendawy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2020.html#mennatullah-hendawy",
+  "updated_at": "2026-10-13T14:39:49.438Z",
+  "created_at": "2026-10-13T14:25:12.624Z"
+ },
+ {
+  "id": 112,
+  "generate_slug": false,
+  "slug": "mhmd-abd-alazym",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2021-cilas-alex.html#mhmd-abd-alazym",
+  "updated_at": "2026-10-13T14:25:22.380Z",
+  "created_at": "2026-10-13T14:25:22.006Z"
+ },
+ {
+  "id": 113,
+  "generate_slug": false,
+  "slug": "omar-salama",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2021-cilas-alex.html#omar-salama",
+  "updated_at": "2026-10-13T14:39:49.139Z",
+  "created_at": "2026-10-13T14:25:33.653Z"
+ },
+ {
+  "id": 114,
+  "generate_slug": false,
+  "slug": "nour-el-safoury",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2021.html#nour-el-safoury",
+  "updated_at": "2026-10-13T14:39:48.895Z",
+  "created_at": "2026-10-13T14:25:36.946Z"
+ },
+ {
+  "id": 115,
+  "generate_slug": false,
+  "slug": "shan-yang",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-2021.html#shan-yang",
+  "updated_at": "2026-10-13T14:39:48.654Z",
+  "created_at": "2026-10-13T14:25:41.825Z"
+ },
+ {
+  "id": 116,
+  "generate_slug": false,
+  "slug": "omar-alsayyed",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-20211.html#omar-alsayyed",
+  "updated_at": "2026-10-13T14:39:48.380Z",
+  "created_at": "2026-10-13T14:25:44.435Z"
+ },
+ {
+  "id": 117,
+  "generate_slug": false,
+  "slug": "aly-hsyn-aladwy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-20211.html#aly-hsyn-aladwy",
+  "updated_at": "2026-10-13T14:25:46.608Z",
+  "created_at": "2026-10-13T14:25:46.364Z"
+ },
+ {
+  "id": 118,
+  "generate_slug": false,
+  "slug": "benjamin-rassbach",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-20211.html#benjamin-rassbach",
+  "updated_at": "2026-10-13T14:39:48.097Z",
+  "created_at": "2026-10-13T14:25:52.074Z"
+ },
+ {
+  "id": 119,
+  "generate_slug": false,
+  "slug": "cassidy-crawford",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-20211.html#cassidy-crawford",
+  "updated_at": "2026-10-13T14:39:47.807Z",
+  "created_at": "2026-10-13T14:25:54.832Z"
+ },
+ {
+  "id": 120,
+  "generate_slug": false,
+  "slug": "alexandros",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-cycle-2024.html#alexandros",
+  "updated_at": "2026-10-13T14:39:47.590Z",
+  "created_at": "2026-10-13T14:25:56.926Z"
+ },
+ {
+  "id": 121,
+  "generate_slug": false,
+  "slug": "mae",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-cycle-2024.html#mae",
+  "updated_at": "2026-10-13T14:39:47.180Z",
+  "created_at": "2026-10-13T14:26:02.866Z"
+ },
+ {
+  "id": 122,
+  "generate_slug": false,
+  "slug": "hend-aly",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-cycle-courses-2022.html#hend-aly",
+  "updated_at": "2026-10-13T14:39:46.888Z",
+  "created_at": "2026-10-13T14:26:34.782Z"
+ },
+ {
+  "id": 123,
+  "generate_slug": false,
+  "slug": "mateo-arevalo",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-cycle-courses-2022.html#mateo-arevalo",
+  "updated_at": "2026-10-13T14:39:46.608Z",
+  "created_at": "2026-10-13T14:26:38.372Z"
+ },
+ {
+  "id": 124,
+  "generate_slug": false,
+  "slug": "mariam-boctor",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-cycle-courses-2022.html#mariam-boctor",
+  "updated_at": "2026-10-13T14:39:46.377Z",
+  "created_at": "2026-10-13T14:26:40.342Z"
+ },
+ {
+  "id": 125,
+  "generate_slug": false,
+  "slug": "nour-kamel",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-cycle-courses-2022.html#nour-kamel",
+  "updated_at": "2026-10-13T14:39:46.128Z",
+  "created_at": "2026-10-13T14:26:40.773Z"
+ },
+ {
+  "id": 126,
+  "generate_slug": false,
+  "slug": "sarah-maher",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-labs-2022.html#sarah-maher",
+  "updated_at": "2026-10-13T14:39:45.876Z",
+  "created_at": "2026-10-13T14:26:46.084Z"
+ },
+ {
+  "id": 127,
+  "generate_slug": false,
+  "slug": "marlies-van-coillie",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-labs-2022.html#marlies-van-coillie",
+  "updated_at": "2026-10-13T14:39:45.646Z",
+  "created_at": "2026-10-13T14:26:46.487Z"
+ },
+ {
+  "id": 128,
+  "generate_slug": false,
+  "slug": "naela",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/fall-labs-2022.html#naela",
+  "updated_at": "2026-10-13T14:39:45.399Z",
+  "created_at": "2026-10-13T14:26:49.415Z"
+ },
+ {
+  "id": 129,
+  "generate_slug": false,
+  "slug": "sandra-fruebing",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/falling.html#sandra-fruebing",
+  "updated_at": "2026-10-13T14:39:45.149Z",
+  "created_at": "2026-10-13T14:26:54.044Z"
+ },
+ {
+  "id": 130,
+  "generate_slug": false,
+  "slug": "ali-atef-abdelkader",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/film-and-moving-image.html#ali-atef-abdelkader",
+  "updated_at": "2026-10-13T14:39:44.899Z",
+  "created_at": "2026-10-13T14:26:57.765Z"
+ },
+ {
+  "id": 131,
+  "generate_slug": false,
+  "slug": "nadya-mnyr",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/how-do-you-want-to-be-seen.html#nadya-mnyr",
+  "updated_at": "2026-10-13T14:27:13.595Z",
+  "created_at": "2026-10-13T14:27:13.370Z"
+ },
+ {
+  "id": 132,
+  "generate_slug": false,
+  "slug": "nadine-el-nabli",
+  "photo_id": 70,
+  "website": null,
+  "legacy_url": "/identity-culture-and-resistance.html#nadine-el-nabli",
+  "updated_at": "2026-10-13T14:59:09.998Z",
+  "created_at": "2026-10-13T14:27:16.872Z"
+ },
+ {
+  "id": 133,
+  "generate_slug": false,
+  "slug": "rodrigo-gratacos-brum",
+  "photo_id": 90,
+  "website": null,
+  "legacy_url": "/in-preparation-of-a-movie.html#rodrigo-gratacos-brum",
+  "updated_at": "2026-10-13T15:00:08.360Z",
+  "created_at": "2026-10-13T14:27:23.799Z"
+ },
+ {
+  "id": 134,
+  "generate_slug": false,
+  "slug": "sara-duana-meyer",
+  "photo_id": 96,
+  "website": null,
+  "legacy_url": "/literary-representations-of-the-urban-global-south.html#sara-duana-meyer",
+  "updated_at": "2026-10-13T15:00:21.400Z",
+  "created_at": "2026-10-13T14:27:37.264Z"
+ },
+ {
+  "id": 135,
+  "generate_slug": false,
+  "slug": "kareem-megahed",
+  "photo_id": 49,
+  "website": null,
+  "legacy_url": "/mafish-faiydah-a-case-study-on-myth-and-silenced-voices.html#kareem-megahed",
+  "updated_at": "2026-10-13T14:58:23.362Z",
+  "created_at": "2026-10-13T14:27:42.677Z"
+ },
+ {
+  "id": 136,
+  "generate_slug": false,
+  "slug": "gian-spina",
+  "photo_id": 41,
+  "website": null,
+  "legacy_url": "/matte-160515891585-tropicaacutelia.html#gian-spina",
+  "updated_at": "2026-10-13T14:58:03.333Z",
+  "created_at": "2026-10-13T14:27:49.297Z"
+ },
+ {
+  "id": 137,
+  "generate_slug": false,
+  "slug": "ayesha-mualla",
+  "photo_id": 25,
+  "website": null,
+  "legacy_url": "/media-power-and-politics.html#ayesha-mualla",
+  "updated_at": "2026-10-13T14:57:26.035Z",
+  "created_at": "2026-10-13T14:27:51.209Z"
+ },
+ {
+  "id": 138,
+  "generate_slug": false,
+  "slug": "nermine-wally",
+  "photo_id": 74,
+  "website": null,
+  "legacy_url": "/monitoring-and-evaluation.html#nermine-wally",
+  "updated_at": "2026-10-13T14:59:23.696Z",
+  "created_at": "2026-10-13T14:28:03.027Z"
+ },
+ {
+  "id": 139,
+  "generate_slug": false,
+  "slug": "shaimaa-magued",
+  "photo_id": 97,
+  "website": null,
+  "legacy_url": "/morality--world-affairs.html#shaimaa-magued",
+  "updated_at": "2026-10-13T15:00:24.266Z",
+  "created_at": "2026-10-13T14:28:06.577Z"
+ },
+ {
+  "id": 140,
+  "generate_slug": false,
+  "slug": "sara-elkamel",
+  "photo_id": 94,
+  "website": null,
+  "legacy_url": "/my-body-is-my-body.html#sara-elkamel",
+  "updated_at": "2026-10-13T15:00:14.946Z",
+  "created_at": "2026-10-13T14:28:08.352Z"
+ },
+ {
+  "id": 141,
+  "generate_slug": false,
+  "slug": "yvonne-buchheim",
+  "photo_id": 105,
+  "website": null,
+  "legacy_url": "/my-body-is-my-body.html#yvonne-buchheim",
+  "updated_at": "2026-10-13T15:00:45.297Z",
+  "created_at": "2026-10-13T14:28:08.848Z"
+ },
+ {
+  "id": 142,
+  "generate_slug": false,
+  "slug": "anne",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/on-colonialism-and-post-colonialism.html#anne",
+  "updated_at": "2026-10-13T14:39:42.337Z",
+  "created_at": "2026-10-13T14:28:16.978Z"
+ },
+ {
+  "id": 143,
+  "generate_slug": false,
+  "slug": "sabrina-lilleby",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/on-gender-and-difference.html#sabrina-lilleby",
+  "updated_at": "2026-10-13T14:39:42.116Z",
+  "created_at": "2026-10-13T14:28:19.411Z"
+ },
+ {
+  "id": 144,
+  "generate_slug": false,
+  "slug": "dina-makram-ebeid",
+  "photo_id": 33,
+  "website": null,
+  "legacy_url": "/on-madness-an-inquiry-into-margins-and-emotions.html#dina-makram-ebeid",
+  "updated_at": "2026-10-13T14:57:43.443Z",
+  "created_at": "2026-10-13T14:28:22.619Z"
+ },
+ {
+  "id": 145,
+  "generate_slug": false,
+  "slug": "rahma-bavelaar",
+  "photo_id": 83,
+  "website": null,
+  "legacy_url": "/oral-history.html#rahma-bavelaar",
+  "updated_at": "2026-10-13T14:59:50.300Z",
+  "created_at": "2026-10-13T14:28:30.838Z"
+ },
+ {
+  "id": 146,
+  "generate_slug": false,
+  "slug": "mayada-madbouly",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/past-memoryies-identityies.html#mayada-madbouly",
+  "updated_at": "2026-10-13T14:39:41.358Z",
+  "created_at": "2026-10-13T14:28:35.528Z"
+ },
+ {
+  "id": 147,
+  "generate_slug": false,
+  "slug": "sama-waly",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/pedagogy-and-sustainable-architecture.html#sama-waly",
+  "updated_at": "2026-10-13T14:39:41.128Z",
+  "created_at": "2026-10-13T14:28:39.238Z"
+ },
+ {
+  "id": 148,
+  "generate_slug": false,
+  "slug": "nariman-moustafa",
+  "photo_id": 71,
+  "website": null,
+  "legacy_url": "/pedagogy-lab.html#nariman-moustafa",
+  "updated_at": "2026-10-13T14:59:12.035Z",
+  "created_at": "2026-10-13T14:28:43.500Z"
+ },
+ {
+  "id": 149,
+  "generate_slug": false,
+  "slug": "mohamed-abdelkarim",
+  "photo_id": 62,
+  "website": null,
+  "legacy_url": "/performing-fiction.html#mohamed-abdelkarim",
+  "updated_at": "2026-10-13T14:58:48.612Z",
+  "created_at": "2026-10-13T14:28:48.382Z"
+ },
+ {
+  "id": 150,
+  "generate_slug": false,
+  "slug": "riham-aziz",
+  "photo_id": 87,
+  "website": null,
+  "legacy_url": "/philosophy-of-education.html#riham-aziz",
+  "updated_at": "2026-10-13T15:00:03.489Z",
+  "created_at": "2026-10-13T14:28:51.851Z"
+ },
+ {
+  "id": 151,
+  "generate_slug": false,
+  "slug": "alaa-el-bannan",
+  "photo_id": 16,
+  "website": null,
+  "legacy_url": "/physics-for-poets.html#alaa-el-bannan",
+  "updated_at": "2026-10-13T14:57:07.007Z",
+  "created_at": "2026-10-13T14:28:59.775Z"
+ },
+ {
+  "id": 152,
+  "generate_slug": false,
+  "slug": "doaa-shahin",
+  "photo_id": 36,
+  "website": null,
+  "legacy_url": "/physics-for-poets.html#doaa-shahin",
+  "updated_at": "2026-10-13T14:57:54.534Z",
+  "created_at": "2026-10-13T14:29:00.332Z"
+ },
+ {
+  "id": 153,
+  "generate_slug": false,
+  "slug": "anne-clement",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/politics--poetics-of-identities.html#anne-clement",
+  "updated_at": "2026-10-13T14:39:39.817Z",
+  "created_at": "2026-10-13T14:29:08.019Z"
+ },
+ {
+  "id": 154,
+  "generate_slug": false,
+  "slug": "amira-elserafy",
+  "photo_id": 20,
+  "website": null,
+  "legacy_url": "/portray-women-and-representation-in-the-middle-east.html#amira-elserafy",
+  "updated_at": "2026-10-13T14:57:17.157Z",
+  "created_at": "2026-10-13T14:29:12.729Z"
+ },
+ {
+  "id": 155,
+  "generate_slug": false,
+  "slug": "nader-osama",
+  "photo_id": 69,
+  "website": null,
+  "legacy_url": "/postcolonialism.html#nader-osama",
+  "updated_at": "2026-10-13T14:59:07.743Z",
+  "created_at": "2026-10-13T14:29:15.915Z"
+ },
+ {
+  "id": 156,
+  "generate_slug": false,
+  "slug": "dalia-wahdan",
+  "photo_id": 31,
+  "website": null,
+  "legacy_url": "/power-and-space-critical-approaches-to-the-built-environment.html#dalia-wahdan",
+  "updated_at": "2026-10-13T14:57:40.121Z",
+  "created_at": "2026-10-13T14:29:19.760Z"
+ },
+ {
+  "id": 157,
+  "generate_slug": false,
+  "slug": "mhmd-alarby",
+  "photo_id": 106,
+  "website": null,
+  "legacy_url": "/research-lab-post-captialism.html#mhmd-alarby",
+  "updated_at": "2026-10-13T15:00:47.128Z",
+  "created_at": "2026-10-13T14:29:36.050Z"
+ },
+ {
+  "id": 158,
+  "generate_slug": false,
+  "slug": "ash-moniz",
+  "photo_id": 23,
+  "website": null,
+  "legacy_url": "/roles-and-rituals-performativity-in-contemporary-arts-and-society.html#ash-moniz",
+  "updated_at": "2026-10-13T14:57:22.956Z",
+  "created_at": "2026-10-13T14:29:39.549Z"
+ },
+ {
+  "id": 159,
+  "generate_slug": false,
+  "slug": "shatha-elnakib",
+  "photo_id": 98,
+  "website": null,
+  "legacy_url": "/social-determinants-of-health.html#shatha-elnakib",
+  "updated_at": "2026-10-13T15:00:27.136Z",
+  "created_at": "2026-10-13T14:29:43.302Z"
+ },
+ {
+  "id": 160,
+  "generate_slug": false,
+  "slug": "louly-seif",
+  "photo_id": 52,
+  "website": null,
+  "legacy_url": "/sound-thinking.html#louly-seif",
+  "updated_at": "2026-10-13T14:58:28.042Z",
+  "created_at": "2026-10-13T14:29:51.479Z"
+ },
+ {
+  "id": 161,
+  "generate_slug": false,
+  "slug": "ali-atef",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-2021.html#ali-atef",
+  "updated_at": "2026-10-13T14:39:38.008Z",
+  "created_at": "2026-10-13T14:29:57.796Z"
+ },
+ {
+  "id": 162,
+  "generate_slug": false,
+  "slug": "vanessa-lehmann",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-2021.html#vanessa-lehmann",
+  "updated_at": "2026-10-13T14:39:37.793Z",
+  "created_at": "2026-10-13T14:30:02.789Z"
+ },
+ {
+  "id": 163,
+  "generate_slug": false,
+  "slug": "hengameh-henny-ziai",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-20211.html#hengameh-henny-ziai",
+  "updated_at": "2026-10-13T14:39:37.541Z",
+  "created_at": "2026-10-13T14:30:09.500Z"
+ },
+ {
+  "id": 164,
+  "generate_slug": false,
+  "slug": "rana-baker",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-20211.html#rana-baker",
+  "updated_at": "2026-10-13T14:39:37.286Z",
+  "created_at": "2026-10-13T14:30:14.419Z"
+ },
+ {
+  "id": 165,
+  "generate_slug": false,
+  "slug": "ahmd-alsrwjy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-2022.html#ahmd-alsrwjy",
+  "updated_at": "2026-10-13T14:30:18.770Z",
+  "created_at": "2026-10-13T14:30:18.481Z"
+ },
+ {
+  "id": 166,
+  "generate_slug": false,
+  "slug": "farida-youssef",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-2022.html#farida-youssef",
+  "updated_at": "2026-10-13T14:39:37.007Z",
+  "created_at": "2026-10-13T14:30:22.661Z"
+ },
+ {
+  "id": 167,
+  "generate_slug": false,
+  "slug": "amuna",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-2022.html#amuna",
+  "updated_at": "2026-10-13T14:39:36.747Z",
+  "created_at": "2026-10-13T14:30:25.359Z"
+ },
+ {
+  "id": 168,
+  "generate_slug": false,
+  "slug": "beshouy-botros",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-20221.html#beshouy-botros",
+  "updated_at": "2026-10-13T14:39:36.492Z",
+  "created_at": "2026-10-13T14:30:29.850Z"
+ },
+ {
+  "id": 169,
+  "generate_slug": false,
+  "slug": "come-ledesert",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-20221.html#come-ledesert",
+  "updated_at": "2026-10-13T14:39:36.238Z",
+  "created_at": "2026-10-13T14:30:31.902Z"
+ },
+ {
+  "id": 170,
+  "generate_slug": false,
+  "slug": "maia-bouatouch-legrand",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-20221.html#maia-bouatouch-legrand",
+  "updated_at": "2026-10-13T14:39:35.997Z",
+  "created_at": "2026-10-13T14:30:35.801Z"
+ },
+ {
+  "id": 171,
+  "generate_slug": false,
+  "slug": "taher-abdel-ghani",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-20221.html#taher-abdel-ghani",
+  "updated_at": "2026-10-13T14:39:35.718Z",
+  "created_at": "2026-10-13T14:30:44.519Z"
+ },
+ {
+  "id": 172,
+  "generate_slug": false,
+  "slug": "mariam-elashmawy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-20221.html#mariam-elashmawy",
+  "updated_at": "2026-10-13T14:39:35.519Z",
+  "created_at": "2026-10-13T14:30:47.196Z"
+ },
+ {
+  "id": 173,
+  "generate_slug": false,
+  "slug": "bushra-hashem",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2023.html#bushra-hashem",
+  "updated_at": "2026-10-13T14:39:35.290Z",
+  "created_at": "2026-10-13T14:30:54.419Z"
+ },
+ {
+  "id": 174,
+  "generate_slug": false,
+  "slug": "salma-abdel-salam",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2023.html#salma-abdel-salam",
+  "updated_at": "2026-10-13T14:39:35.045Z",
+  "created_at": "2026-10-13T14:30:56.191Z"
+ },
+ {
+  "id": 175,
+  "generate_slug": false,
+  "slug": "ayah-abo-basha",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2024-2025.html#ayah-abo-basha",
+  "updated_at": "2026-10-13T14:39:34.795Z",
+  "created_at": "2026-10-13T14:31:11.466Z"
+ },
+ {
+  "id": 176,
+  "generate_slug": false,
+  "slug": "mohamed-hani",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2024.html#mohamed-hani",
+  "updated_at": "2026-10-13T14:39:34.567Z",
+  "created_at": "2026-10-13T14:31:16.030Z"
+ },
+ {
+  "id": 177,
+  "generate_slug": false,
+  "slug": "my-aamr",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2024.html#my-aamr",
+  "updated_at": "2026-10-13T14:31:18.287Z",
+  "created_at": "2026-10-13T14:31:18.069Z"
+ },
+ {
+  "id": 178,
+  "generate_slug": false,
+  "slug": "nahla-mansour",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2024.html#nahla-mansour",
+  "updated_at": "2026-10-13T14:39:34.325Z",
+  "created_at": "2026-10-13T14:31:21.417Z"
+ },
+ {
+  "id": 179,
+  "generate_slug": false,
+  "slug": "menna-fahmy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2024.html#menna-fahmy",
+  "updated_at": "2026-10-13T14:39:34.086Z",
+  "created_at": "2026-10-13T14:31:25.451Z"
+ },
+ {
+  "id": 180,
+  "generate_slug": false,
+  "slug": "hazem-ehab",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-cycle-2024.html#hazem-ehab",
+  "updated_at": "2026-10-13T14:39:33.878Z",
+  "created_at": "2026-10-13T14:31:27.200Z"
+ },
+ {
+  "id": 181,
+  "generate_slug": false,
+  "slug": "salma-abouelhossein",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-labs-2023.html#salma-abouelhossein",
+  "updated_at": "2026-10-13T14:39:33.616Z",
+  "created_at": "2026-10-13T14:31:42.283Z"
+ },
+ {
+  "id": 182,
+  "generate_slug": false,
+  "slug": "mostafa-taha",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-labs-2023.html#mostafa-taha",
+  "updated_at": "2026-10-13T14:49:11.379Z",
+  "created_at": "2026-10-13T14:31:46.632Z"
+ },
+ {
+  "id": 183,
+  "generate_slug": false,
+  "slug": "asmaa-abdellatif",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-labs-2023.html#asmaa-abdellatif",
+  "updated_at": "2026-10-13T14:39:33.135Z",
+  "created_at": "2026-10-13T14:31:50.012Z"
+ },
+ {
+  "id": 184,
+  "generate_slug": false,
+  "slug": "yasmine-hussein",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-labs-2024.html#yasmine-hussein",
+  "updated_at": "2026-10-13T14:39:32.888Z",
+  "created_at": "2026-10-13T14:31:54.503Z"
+ },
+ {
+  "id": 185,
+  "generate_slug": false,
+  "slug": "mariam-diefallah",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2021.html#mariam-diefallah",
+  "updated_at": "2026-10-13T14:39:32.667Z",
+  "created_at": "2026-10-13T14:32:17.018Z"
+ },
+ {
+  "id": 186,
+  "generate_slug": false,
+  "slug": "yosra-sultan",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2021.html#yosra-sultan",
+  "updated_at": "2026-10-13T14:39:32.381Z",
+  "created_at": "2026-10-13T14:32:20.064Z"
+ },
+ {
+  "id": 187,
+  "generate_slug": false,
+  "slug": "saliha-farid-abdelkhalek",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2021.html#saliha-farid-abdelkhalek",
+  "updated_at": "2026-10-13T14:39:32.066Z",
+  "created_at": "2026-10-13T14:32:22.258Z"
+ },
+ {
+  "id": 188,
+  "generate_slug": false,
+  "slug": "marie-nil-chounet",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2021.html#marie-nil-chounet",
+  "updated_at": "2026-10-13T14:39:31.837Z",
+  "created_at": "2026-10-13T14:32:27.381Z"
+ },
+ {
+  "id": 189,
+  "generate_slug": false,
+  "slug": "fady-awd",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#fady-awd",
+  "updated_at": "2026-10-13T14:32:34.764Z",
+  "created_at": "2026-10-13T14:32:34.581Z"
+ },
+ {
+  "id": 190,
+  "generate_slug": false,
+  "slug": "amy-fallas",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#amy-fallas",
+  "updated_at": "2026-10-13T14:39:31.550Z",
+  "created_at": "2026-10-13T14:32:41.351Z"
+ },
+ {
+  "id": 191,
+  "generate_slug": false,
+  "slug": "darren-spirk",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#darren-spirk",
+  "updated_at": "2026-10-13T14:39:31.209Z",
+  "created_at": "2026-10-13T14:32:43.435Z"
+ },
+ {
+  "id": 192,
+  "generate_slug": false,
+  "slug": "jasmin-makhlouf",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#jasmin-makhlouf",
+  "updated_at": "2026-10-13T14:39:30.945Z",
+  "created_at": "2026-10-13T14:32:45.442Z"
+ },
+ {
+  "id": 193,
+  "generate_slug": false,
+  "slug": "qais-raja",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#qais-raja",
+  "updated_at": "2026-10-13T14:39:30.685Z",
+  "created_at": "2026-10-13T14:32:49.893Z"
+ },
+ {
+  "id": 194,
+  "generate_slug": false,
+  "slug": "sally-alhaq",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#sally-alhaq",
+  "updated_at": "2026-10-13T14:39:30.486Z",
+  "created_at": "2026-10-13T14:32:52.132Z"
+ },
+ {
+  "id": 195,
+  "generate_slug": false,
+  "slug": "reem-badr",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#reem-badr",
+  "updated_at": "2026-10-13T14:39:30.246Z",
+  "created_at": "2026-10-13T14:32:57.716Z"
+ },
+ {
+  "id": 196,
+  "generate_slug": false,
+  "slug": "farah-hallaba",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2022.html#farah-hallaba",
+  "updated_at": "2026-10-13T14:39:30.025Z",
+  "created_at": "2026-10-13T14:33:02.814Z"
+ },
+ {
+  "id": 197,
+  "generate_slug": false,
+  "slug": "sara-allam-shaltout",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2025.html#sara-allam-shaltout",
+  "updated_at": "2026-10-13T14:39:29.798Z",
+  "created_at": "2026-10-13T14:33:13.371Z"
+ },
+ {
+  "id": 198,
+  "generate_slug": false,
+  "slug": "hisham",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2025.html#hisham",
+  "updated_at": "2026-10-13T14:39:29.563Z",
+  "created_at": "2026-10-13T14:33:21.826Z"
+ },
+ {
+  "id": 199,
+  "generate_slug": false,
+  "slug": "bahi-ashraf",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2026.html#bahi-ashraf",
+  "updated_at": "2026-10-13T14:39:29.322Z",
+  "created_at": "2026-10-13T14:33:32.290Z"
+ },
+ {
+  "id": 200,
+  "generate_slug": false,
+  "slug": "lies-t-defever",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2026.html#lies-t-defever",
+  "updated_at": "2026-10-13T14:39:29.086Z",
+  "created_at": "2026-10-13T14:33:34.413Z"
+ },
+ {
+  "id": 201,
+  "generate_slug": false,
+  "slug": "iman-nagy",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-2026.html#iman-nagy",
+  "updated_at": "2026-10-13T14:39:28.833Z",
+  "created_at": "2026-10-13T14:33:39.681Z"
+ },
+ {
+  "id": 202,
+  "generate_slug": false,
+  "slug": "islam-sad",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-labs-2025.html#islam-sad",
+  "updated_at": "2026-10-13T14:33:53.438Z",
+  "created_at": "2026-10-13T14:33:52.699Z"
+ },
+ {
+  "id": 203,
+  "generate_slug": false,
+  "slug": "sara-alsbaay",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-labs-2025.html#sara-alsbaay",
+  "updated_at": "2026-10-13T14:33:59.465Z",
+  "created_at": "2026-10-13T14:33:59.254Z"
+ },
+ {
+  "id": 204,
+  "generate_slug": false,
+  "slug": "farida-gohar",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/spring-semester-labs-2026.html#farida-gohar",
+  "updated_at": "2026-10-13T14:39:28.536Z",
+  "created_at": "2026-10-13T14:34:02.925Z"
+ },
+ {
+  "id": 205,
+  "generate_slug": false,
+  "slug": "alaa-attiah-mitwaly",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/summer-2021.html#alaa-attiah-mitwaly",
+  "updated_at": "2026-10-13T14:39:28.278Z",
+  "created_at": "2026-10-13T14:34:24.253Z"
+ },
+ {
+  "id": 206,
+  "generate_slug": false,
+  "slug": "phoebe-carter",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/summer-2021.html#phoebe-carter",
+  "updated_at": "2026-10-13T14:39:28.038Z",
+  "created_at": "2026-10-13T14:34:43.965Z"
+ },
+ {
+  "id": 207,
+  "generate_slug": false,
+  "slug": "fernando-revelo-la-rotta",
+  "photo_id": 40,
+  "website": null,
+  "legacy_url": "/summer-2022.html#fernando-revelo-la-rotta",
+  "updated_at": "2026-10-13T14:58:01.612Z",
+  "created_at": "2026-10-13T14:34:51.482Z"
+ },
+ {
+  "id": 208,
+  "generate_slug": false,
+  "slug": "mohamed-w-fareed",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/summer-2022.html#mohamed-w-fareed",
+  "updated_at": "2026-10-13T14:39:27.537Z",
+  "created_at": "2026-10-13T14:34:55.048Z"
+ },
+ {
+  "id": 209,
+  "generate_slug": false,
+  "slug": "iman-afify",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/summer-2022.html#iman-afify",
+  "updated_at": "2026-10-13T14:39:27.299Z",
+  "created_at": "2026-10-13T14:34:57.105Z"
+ },
+ {
+  "id": 210,
+  "generate_slug": false,
+  "slug": "ahmed-elbasyouny",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/summer-2022.html#ahmed-elbasyouny",
+  "updated_at": "2026-10-13T14:39:27.057Z",
+  "created_at": "2026-10-13T14:34:59.164Z"
+ },
+ {
+  "id": 211,
+  "generate_slug": false,
+  "slug": "salma-el-tarzi",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/summer-2022.html#salma-el-tarzi",
+  "updated_at": "2026-10-13T14:39:26.726Z",
+  "created_at": "2026-10-13T14:35:04.822Z"
+ },
+ {
+  "id": 212,
+  "generate_slug": false,
+  "slug": "yasmin-khalafallah",
+  "photo_id": 103,
+  "website": null,
+  "legacy_url": "/the-death-of-nature.html#yasmin-khalafallah",
+  "updated_at": "2026-10-13T15:00:39.958Z",
+  "created_at": "2026-10-13T14:35:12.206Z"
+ },
+ {
+  "id": 213,
+  "generate_slug": false,
+  "slug": "guillaume-de-vaulx",
+  "photo_id": 42,
+  "website": null,
+  "legacy_url": "/the-foundation-of-knowledge.html#guillaume-de-vaulx",
+  "updated_at": "2026-10-13T14:58:06.274Z",
+  "created_at": "2026-10-13T14:35:16.483Z"
+ },
+ {
+  "id": 214,
+  "generate_slug": false,
+  "slug": "nourhan-tewfik",
+  "photo_id": 77,
+  "website": null,
+  "legacy_url": "/the-palestinian-narrative.html#nourhan-tewfik",
+  "updated_at": "2026-10-13T14:59:34.819Z",
+  "created_at": "2026-10-13T14:35:29.084Z"
+ },
+ {
+  "id": 215,
+  "generate_slug": false,
+  "slug": "wiebe-ruijtenberg",
+  "photo_id": 102,
+  "website": null,
+  "legacy_url": "/the-urban-experience-an-ethnographic-approach.html#wiebe-ruijtenberg",
+  "updated_at": "2026-10-13T15:00:35.658Z",
+  "created_at": "2026-10-13T14:35:46.221Z"
+ },
+ {
+  "id": 216,
+  "generate_slug": false,
+  "slug": "alaa-badr",
+  "photo_id": 15,
+  "website": null,
+  "legacy_url": "/visions-of-the-arab.html#alaa-badr",
+  "updated_at": "2026-10-13T14:57:03.871Z",
+  "created_at": "2026-10-13T14:36:03.879Z"
+ },
+ {
+  "id": 217,
+  "generate_slug": false,
+  "slug": "celine-burnand",
+  "photo_id": 29,
+  "website": null,
+  "legacy_url": "/visual-anthropology-film-as-a-tool-for-research.html#celine-burnand",
+  "updated_at": "2026-10-13T14:57:37.493Z",
+  "created_at": "2026-10-13T14:36:06.903Z"
+ },
+ {
+  "id": 218,
+  "generate_slug": false,
+  "slug": "anne-mishkind",
+  "photo_id": 22,
+  "website": null,
+  "legacy_url": "/walk-like-an-egyptian-philosopher.html#anne-mishkind",
+  "updated_at": "2026-10-13T14:57:21.317Z",
+  "created_at": "2026-10-13T14:36:12.388Z"
+ },
+ {
+  "id": 219,
+  "generate_slug": false,
+  "slug": "biu-rainey",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2020.html#biu-rainey",
+  "updated_at": "2026-10-13T14:39:24.786Z",
+  "created_at": "2026-10-13T14:36:21.805Z"
+ },
+ {
+  "id": 220,
+  "generate_slug": false,
+  "slug": "rasha-salem",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2022.html#rasha-salem",
+  "updated_at": "2026-10-13T14:39:24.408Z",
+  "created_at": "2026-10-13T14:36:28.734Z"
+ },
+ {
+  "id": 221,
+  "generate_slug": false,
+  "slug": "yasmine-osama",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2022.html#yasmine-osama",
+  "updated_at": "2026-10-13T14:39:24.186Z",
+  "created_at": "2026-10-13T14:36:29.204Z"
+ },
+ {
+  "id": 222,
+  "generate_slug": false,
+  "slug": "malak-abdelkhalek",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2022.html#malak-abdelkhalek",
+  "updated_at": "2026-10-13T14:39:23.959Z",
+  "created_at": "2026-10-13T14:36:32.904Z"
+ },
+ {
+  "id": 223,
+  "generate_slug": false,
+  "slug": "ramah-aleryan",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2022.html#ramah-aleryan",
+  "updated_at": "2026-10-13T14:39:23.730Z",
+  "created_at": "2026-10-13T14:36:34.957Z"
+ },
+ {
+  "id": 224,
+  "generate_slug": false,
+  "slug": "olga-verlato",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2022.html#olga-verlato",
+  "updated_at": "2026-10-13T14:39:23.478Z",
+  "created_at": "2026-10-13T14:36:37.896Z"
+ },
+ {
+  "id": 225,
+  "generate_slug": false,
+  "slug": "lena-naassana",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2022.html#lena-naassana",
+  "updated_at": "2026-10-13T14:39:23.268Z",
+  "created_at": "2026-10-13T14:36:40.080Z"
+ },
+ {
+  "id": 226,
+  "generate_slug": false,
+  "slug": "theo-j-rossi",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2023-2024.html#theo-j-rossi",
+  "updated_at": "2026-10-13T14:39:23.029Z",
+  "created_at": "2026-10-13T14:36:48.466Z"
+ },
+ {
+  "id": 227,
+  "generate_slug": false,
+  "slug": "isaona",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-2023-2024.html#isaona",
+  "updated_at": "2026-10-13T14:39:22.816Z",
+  "created_at": "2026-10-13T14:36:50.424Z"
+ },
+ {
+  "id": 228,
+  "generate_slug": false,
+  "slug": "rana-elzoheiry",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-cycle-2022-2023.html#rana-elzoheiry",
+  "updated_at": "2026-10-13T14:39:22.078Z",
+  "created_at": "2026-10-13T14:36:56.915Z"
+ },
+ {
+  "id": 229,
+  "generate_slug": false,
+  "slug": "coen",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-cycle-2022-2023.html#coen",
+  "updated_at": "2026-10-13T14:39:21.788Z",
+  "created_at": "2026-10-13T14:37:00.448Z"
+ },
+ {
+  "id": 230,
+  "generate_slug": false,
+  "slug": "noha",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-cycle-2022-2023.html#noha",
+  "updated_at": "2026-10-13T14:39:21.560Z",
+  "created_at": "2026-10-13T14:37:02.374Z"
+ },
+ {
+  "id": 231,
+  "generate_slug": false,
+  "slug": "courtney-mcrae-crawford",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-cycle-2024-2025.html#courtney-mcrae-crawford",
+  "updated_at": "2026-10-13T14:39:21.332Z",
+  "created_at": "2026-10-13T14:37:09.166Z"
+ },
+ {
+  "id": 232,
+  "generate_slug": false,
+  "slug": "wafaa-elsaid",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/winter-cycle-2024-2025.html#wafaa-elsaid",
+  "updated_at": "2026-10-13T14:39:21.037Z",
+  "created_at": "2026-10-13T14:37:11.919Z"
+ },
+ {
+  "id": 233,
+  "generate_slug": false,
+  "slug": "abdelhalim-hisham-abdallah",
+  "photo_id": 9,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#abdelhalim-hisham-abdallah",
+  "updated_at": "2026-10-13T14:56:51.772Z",
+  "created_at": "2026-10-13T14:37:37.256Z"
+ },
+ {
+  "id": 234,
+  "generate_slug": false,
+  "slug": "abraham-liben",
+  "photo_id": 11,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#abraham-liben",
+  "updated_at": "2026-10-13T14:56:55.655Z",
+  "created_at": "2026-10-13T14:37:37.756Z"
+ },
+ {
+  "id": 235,
+  "generate_slug": false,
+  "slug": "ahmed-magdy-rabie",
+  "photo_id": 13,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#ahmed-magdy-rabie",
+  "updated_at": "2026-10-13T14:56:59.123Z",
+  "created_at": "2026-10-13T14:37:38.704Z"
+ },
+ {
+  "id": 236,
+  "generate_slug": false,
+  "slug": "amira-rady",
+  "photo_id": 21,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#amira-rady",
+  "updated_at": "2026-10-13T14:57:19.124Z",
+  "created_at": "2026-10-13T14:37:41.216Z"
+ },
+ {
+  "id": 237,
+  "generate_slug": false,
+  "slug": "asmaa-kamaly",
+  "photo_id": 24,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#asmaa-kamaly",
+  "updated_at": "2026-10-13T14:57:24.452Z",
+  "created_at": "2026-10-13T14:37:42.974Z"
+ },
+ {
+  "id": 238,
+  "generate_slug": false,
+  "slug": "dalia-hashad",
+  "photo_id": 30,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#dalia-hashad",
+  "updated_at": "2026-10-13T14:57:38.743Z",
+  "created_at": "2026-10-13T14:37:45.185Z"
+ },
+ {
+  "id": 239,
+  "generate_slug": false,
+  "slug": "dina-samy",
+  "photo_id": 34,
+  "website": null,
+  "legacy_url": "/cilasians-2014-2015.html#dina-samy",
+  "updated_at": "2026-10-13T14:57:45.704Z",
+  "created_at": "2026-10-13T14:37:45.895Z"
+ },
+ {
+  "id": 240,
+  "generate_slug": false,
+  "slug": "jonah-stone",
+  "photo_id": 48,
+  "website": null,
+  "legacy_url": "/cilasians-2014-2015.html#jonah-stone",
+  "updated_at": "2026-10-13T14:58:21.002Z",
+  "created_at": "2026-10-13T14:37:49.654Z"
+ },
+ {
+  "id": 241,
+  "generate_slug": false,
+  "slug": "khadiga-mohamed",
+  "photo_id": 51,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#khadiga-mohamed",
+  "updated_at": "2026-10-13T14:58:26.381Z",
+  "created_at": "2026-10-13T14:37:50.544Z"
+ },
+ {
+  "id": 242,
+  "generate_slug": false,
+  "slug": "marwa-morgan",
+  "photo_id": 58,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#marwa-morgan",
+  "updated_at": "2026-10-13T14:58:41.838Z",
+  "created_at": "2026-10-13T14:37:52.006Z"
+ },
+ {
+  "id": 243,
+  "generate_slug": false,
+  "slug": "may-khaled",
+  "photo_id": 59,
+  "website": null,
+  "legacy_url": "/cilasians-2015-2016.html#may-khaled",
+  "updated_at": "2026-10-13T14:58:43.364Z",
+  "created_at": "2026-10-13T14:37:52.516Z"
+ },
+ {
+  "id": 244,
+  "generate_slug": false,
+  "slug": "mohamed-aboelyazed",
+  "photo_id": 63,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#mohamed-aboelyazed",
+  "updated_at": "2026-10-13T14:58:51.865Z",
+  "created_at": "2026-10-13T14:37:53.295Z"
+ },
+ {
+  "id": 245,
+  "generate_slug": false,
+  "slug": "mohamed-el-araby",
+  "photo_id": 64,
+  "website": null,
+  "legacy_url": "/cilas-in-alex-2019-2020.html#mohamed-el-araby",
+  "updated_at": "2026-10-13T14:58:56.742Z",
+  "created_at": "2026-10-13T14:37:53.709Z"
+ },
+ {
+  "id": 246,
+  "generate_slug": false,
+  "slug": "mohamed-wahdan",
+  "photo_id": 66,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#mohamed-wahdan",
+  "updated_at": "2026-10-13T14:59:00.556Z",
+  "created_at": "2026-10-13T14:37:54.545Z"
+ },
+ {
+  "id": 247,
+  "generate_slug": false,
+  "slug": "nada-sallam",
+  "photo_id": 68,
+  "website": null,
+  "legacy_url": "/cilasians-2015-2016.html#nada-sallam",
+  "updated_at": "2026-10-13T14:59:05.948Z",
+  "created_at": "2026-10-13T14:37:55.044Z"
+ },
+ {
+  "id": 248,
+  "generate_slug": false,
+  "slug": "nesma-attiatalla",
+  "photo_id": 75,
+  "website": null,
+  "legacy_url": "/cilasians-2015-2016.html#nesma-attiatalla",
+  "updated_at": "2026-10-13T14:59:27.873Z",
+  "created_at": "2026-10-13T14:37:56.100Z"
+ },
+ {
+  "id": 249,
+  "generate_slug": false,
+  "slug": "noha-syam",
+  "photo_id": 76,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#noha-syam",
+  "updated_at": "2026-10-13T14:59:31.142Z",
+  "created_at": "2026-10-13T14:37:56.565Z"
+ },
+ {
+  "id": 250,
+  "generate_slug": false,
+  "slug": "olfat-sakr",
+  "photo_id": 78,
+  "website": null,
+  "legacy_url": "/cilasians-2014-2015.html#olfat-sakr",
+  "updated_at": "2026-10-13T14:59:38.565Z",
+  "created_at": "2026-10-13T14:37:57.135Z"
+ },
+ {
+  "id": 251,
+  "generate_slug": false,
+  "slug": "raju-hittalamani",
+  "photo_id": 84,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#raju-hittalamani",
+  "updated_at": "2026-10-13T14:59:54.350Z",
+  "created_at": "2026-10-13T14:37:58.330Z"
+ },
+ {
+  "id": 252,
+  "generate_slug": false,
+  "slug": "raniah-al-sayed",
+  "photo_id": 85,
+  "website": null,
+  "legacy_url": "/cilasians-2015-2016.html#raniah-al-sayed",
+  "updated_at": "2026-10-13T14:59:58.898Z",
+  "created_at": "2026-10-13T14:37:58.937Z"
+ },
+ {
+  "id": 253,
+  "generate_slug": false,
+  "slug": "sama-singer",
+  "photo_id": 91,
+  "website": null,
+  "legacy_url": "/cilasians-2015-2016.html#sama-singer",
+  "updated_at": "2026-10-13T15:00:09.927Z",
+  "created_at": "2026-10-13T14:37:59.954Z"
+ },
+ {
+  "id": 254,
+  "generate_slug": false,
+  "slug": "samar-al-zuairy",
+  "photo_id": 92,
+  "website": null,
+  "legacy_url": "/cilasians-2013-2014.html#samar-al-zuairy",
+  "updated_at": "2026-10-13T15:00:11.178Z",
+  "created_at": "2026-10-13T14:38:00.435Z"
+ },
+ {
+  "id": 255,
+  "generate_slug": false,
+  "slug": "sohila-mohamed",
+  "photo_id": 99,
+  "website": null,
+  "legacy_url": "/cilasians-2014-2015.html#sohila-mohamed",
+  "updated_at": "2026-10-13T15:00:29.857Z",
+  "created_at": "2026-10-13T14:38:02.077Z"
+ },
+ {
+  "id": 256,
+  "generate_slug": false,
+  "slug": "tarek-anous",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/news-and-events.html#the-importance-of-observation-by-tarek-anous#person-tarek-anous",
+  "updated_at": "2026-10-13T14:56:22.963Z",
+  "created_at": "2026-10-13T14:56:22.963Z"
+ },
+ {
+  "id": 257,
+  "generate_slug": false,
+  "slug": "karim-el-hakim",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/news-and-events.html#an-evening-with-filmmaker-karim-el-hakim#person-karim-el-hakim",
+  "updated_at": "2026-10-13T14:56:24.970Z",
+  "created_at": "2026-10-13T14:56:24.970Z"
+ },
+ {
+  "id": 258,
+  "generate_slug": false,
+  "slug": "kesmat-el-nahel",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": "/news-and-events.html#workshop-on-healthy-decision-making#person-kesmat-el-nahel",
+  "updated_at": "2026-10-13T14:56:28.104Z",
+  "created_at": "2026-10-13T14:56:28.103Z"
+ },
+ {
+  "id": 259,
+  "generate_slug": false,
+  "slug": "aysha-al-hurr",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:20:17.170Z",
+  "created_at": "2026-10-13T15:20:16.321Z"
+ },
+ {
+  "id": 260,
+  "generate_slug": false,
+  "slug": "mbadra-tbdyl",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:21:26.889Z",
+  "created_at": "2026-10-13T15:21:26.889Z"
+ },
+ {
+  "id": 261,
+  "generate_slug": false,
+  "slug": "ahmad-aboshady",
+  "photo_id": null,
+  "website": null,
+  "legacy_url": null,
+  "updated_at": "2026-10-13T15:21:28.053Z",
+  "created_at": "2026-10-13T15:21:28.053Z"
+ }
+]

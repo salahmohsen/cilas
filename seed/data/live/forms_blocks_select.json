@@ -1,0 +1,13 @@
+[
+ {
+  "_order": 3,
+  "_parent_id": 1,
+  "_path": "fields",
+  "id": "6ace4c27c5319768132470e8",
+  "name": "topic",
+  "width": "100",
+  "placeholder": null,
+  "required": true,
+  "block_name": null
+ }
+]

@@ -1,0 +1,16 @@
+[
+ {
+  "label": "Email",
+  "id": 6,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e2",
+  "description": null
+ },
+ {
+  "label": "البريد الإلكتروني",
+  "id": 7,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e2",
+  "description": null
+ }
+]

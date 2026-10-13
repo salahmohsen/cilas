@@ -1,0 +1,4331 @@
+[
+ {
+  "id": 1,
+  "from": "/1575160416051578158515801605-160115751593160415751611.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:47.140Z",
+  "created_at": "2026-10-13T15:15:47.140Z"
+ },
+ {
+  "id": 2,
+  "from": "/1601157815851577-16051606-15751604158616051606-1575158715781593160515751585-160515891585-160816051575-15711581158315791607-16051606-157815941610.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:48.079Z",
+  "created_at": "2026-10-13T15:15:48.079Z"
+ },
+ {
+  "id": 3,
+  "from": "/16051582157815761585-15871610160415751587-1604160415781585158016051577.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:49.290Z",
+  "created_at": "2026-10-13T15:15:49.290Z"
+ },
+ {
+  "id": 4,
+  "from": "/2013-2014.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:49.598Z",
+  "created_at": "2026-10-13T15:15:49.598Z"
+ },
+ {
+  "id": 5,
+  "from": "/2014-2015-second-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:49.856Z",
+  "created_at": "2026-10-13T15:15:49.856Z"
+ },
+ {
+  "id": 6,
+  "from": "/2014-2015-third-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:50.121Z",
+  "created_at": "2026-10-13T15:15:50.120Z"
+ },
+ {
+  "id": 7,
+  "from": "/2015-2016-second-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:50.498Z",
+  "created_at": "2026-10-13T15:15:50.498Z"
+ },
+ {
+  "id": 8,
+  "from": "/2015-2016-third-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:50.740Z",
+  "created_at": "2026-10-13T15:15:50.739Z"
+ },
+ {
+  "id": 9,
+  "from": "/2016-2017-second-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:51.032Z",
+  "created_at": "2026-10-13T15:15:51.031Z"
+ },
+ {
+  "id": 10,
+  "from": "/2016-2017-third-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:51.315Z",
+  "created_at": "2026-10-13T15:15:51.315Z"
+ },
+ {
+  "id": 11,
+  "from": "/2017-2018-second-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:51.568Z",
+  "created_at": "2026-10-13T15:15:51.568Z"
+ },
+ {
+  "id": 12,
+  "from": "/2017-2018-third-trimester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:51.818Z",
+  "created_at": "2026-10-13T15:15:51.818Z"
+ },
+ {
+  "id": 13,
+  "from": "/2018-2019-cilas-alex-core-courses-2018---2019.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:52.059Z",
+  "created_at": "2026-10-13T15:15:52.058Z"
+ },
+ {
+  "id": 14,
+  "from": "/2018-2019-cilas-alex-thematic-courses-and-labs.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:52.287Z",
+  "created_at": "2026-10-13T15:15:52.287Z"
+ },
+ {
+  "id": 15,
+  "from": "/2019-2020-cilas-alex-core-courses.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:52.499Z",
+  "created_at": "2026-10-13T15:15:52.499Z"
+ },
+ {
+  "id": 16,
+  "from": "/2019-2020-cilas-alex-second-semester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:52.809Z",
+  "created_at": "2026-10-13T15:15:52.808Z"
+ },
+ {
+  "id": 17,
+  "from": "/2023-cilas-cairo-hybrid-spring-semester.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:52.998Z",
+  "created_at": "2026-10-13T15:15:52.998Z"
+ },
+ {
+  "id": 18,
+  "from": "/3eish-7orreya-3edala-igtima3eya.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:53.183Z",
+  "created_at": "2026-10-13T15:15:53.182Z"
+ },
+ {
+  "id": 19,
+  "from": "/82032024-cilas-cairo-spring-semester8203.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:53.441Z",
+  "created_at": "2026-10-13T15:15:53.441Z"
+ },
+ {
+  "id": 20,
+  "from": "/alexandrian-oral-history.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:53.651Z",
+  "created_at": "2026-10-13T15:15:53.651Z"
+ },
+ {
+  "id": 21,
+  "from": "/an-invitation-to-collaborate.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:53.991Z",
+  "created_at": "2026-10-13T15:15:53.991Z"
+ },
+ {
+  "id": 22,
+  "from": "/anarchist-recipes.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:54.259Z",
+  "created_at": "2026-10-13T15:15:54.259Z"
+ },
+ {
+  "id": 23,
+  "from": "/archive-fever-appropriation-in-contemporary-art.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:54.570Z",
+  "created_at": "2026-10-13T15:15:54.569Z"
+ },
+ {
+  "id": 24,
+  "from": "/art-and-the-city.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:54.888Z",
+  "created_at": "2026-10-13T15:15:54.888Z"
+ },
+ {
+  "id": 25,
+  "from": "/art-of-manliness.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:55.180Z",
+  "created_at": "2026-10-13T15:15:55.180Z"
+ },
+ {
+  "id": 26,
+  "from": "/bicycle-diaries.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:55.449Z",
+  "created_at": "2026-10-13T15:15:55.449Z"
+ },
+ {
+  "id": 27,
+  "from": "/biomimicry.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:55.741Z",
+  "created_at": "2026-10-13T15:15:55.741Z"
+ },
+ {
+  "id": 28,
+  "from": "/black-swans.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:56.050Z",
+  "created_at": "2026-10-13T15:15:56.050Z"
+ },
+ {
+  "id": 29,
+  "from": "/bringing-the-gut-home.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:56.402Z",
+  "created_at": "2026-10-13T15:15:56.402Z"
+ },
+ {
+  "id": 30,
+  "from": "/can-we-talk-about-love.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:56.870Z",
+  "created_at": "2026-10-13T15:15:56.870Z"
+ },
+ {
+  "id": 31,
+  "from": "/change-a-historical-survey-of-oppression-and-resistance.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:57.382Z",
+  "created_at": "2026-10-13T15:15:57.381Z"
+ },
+ {
+  "id": 32,
+  "from": "/cilas-in-alex-2018-2019.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:57.688Z",
+  "created_at": "2026-10-13T15:15:57.688Z"
+ },
+ {
+  "id": 33,
+  "from": "/cilas-in-alex-2019-2020.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:57.919Z",
+  "created_at": "2026-10-13T15:15:57.919Z"
+ },
+ {
+  "id": 34,
+  "from": "/cilasians-2013-2014.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:58.164Z",
+  "created_at": "2026-10-13T15:15:58.164Z"
+ },
+ {
+  "id": 35,
+  "from": "/cilasians-2014-2015.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:58.388Z",
+  "created_at": "2026-10-13T15:15:58.388Z"
+ },
+ {
+  "id": 36,
+  "from": "/cilasians-2015-2016.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:58.588Z",
+  "created_at": "2026-10-13T15:15:58.588Z"
+ },
+ {
+  "id": 37,
+  "from": "/cilasians-2016-2017.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:58.807Z",
+  "created_at": "2026-10-13T15:15:58.807Z"
+ },
+ {
+  "id": 38,
+  "from": "/cilasians-2017-2018.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:59.064Z",
+  "created_at": "2026-10-13T15:15:59.064Z"
+ },
+ {
+  "id": 39,
+  "from": "/classical-chinese-philosophies.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:59.385Z",
+  "created_at": "2026-10-13T15:15:59.385Z"
+ },
+ {
+  "id": 40,
+  "from": "/egyptian-nationalism-from-1919-to-present.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:15:59.877Z",
+  "created_at": "2026-10-13T15:15:59.877Z"
+ },
+ {
+  "id": 41,
+  "from": "/el-rihla-literature-and-re-thinking-the-histories-of-egypt.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:00.628Z",
+  "created_at": "2026-10-13T15:16:00.628Z"
+ },
+ {
+  "id": 42,
+  "from": "/elites-in-history-society-and-politics.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:01.129Z",
+  "created_at": "2026-10-13T15:16:01.129Z"
+ },
+ {
+  "id": 43,
+  "from": "/embracing-the-void.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:02.065Z",
+  "created_at": "2026-10-13T15:16:02.065Z"
+ },
+ {
+  "id": 44,
+  "from": "/encountering-the-state.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:03.210Z",
+  "created_at": "2026-10-13T15:16:03.210Z"
+ },
+ {
+  "id": 45,
+  "from": "/every-cook-can-govern.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:04.620Z",
+  "created_at": "2026-10-13T15:16:04.620Z"
+ },
+ {
+  "id": 46,
+  "from": "/everyday-piety-from-the-margins.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:06.246Z",
+  "created_at": "2026-10-13T15:16:06.246Z"
+ },
+ {
+  "id": 47,
+  "from": "/exploring-al-ghurias-histories.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:07.160Z",
+  "created_at": "2026-10-13T15:16:07.160Z"
+ },
+ {
+  "id": 48,
+  "from": "/fall-2020.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:07.889Z",
+  "created_at": "2026-10-13T15:16:07.889Z"
+ },
+ {
+  "id": 49,
+  "from": "/fall-2021-cilas-alex.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:08.549Z",
+  "created_at": "2026-10-13T15:16:08.548Z"
+ },
+ {
+  "id": 50,
+  "from": "/fall-2021.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:08.738Z",
+  "created_at": "2026-10-13T15:16:08.738Z"
+ },
+ {
+  "id": 51,
+  "from": "/fall-cycle-2024.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:08.985Z",
+  "created_at": "2026-10-13T15:16:08.984Z"
+ },
+ {
+  "id": 52,
+  "from": "/fall-cycle-2025.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:09.192Z",
+  "created_at": "2026-10-13T15:16:09.192Z"
+ },
+ {
+  "id": 53,
+  "from": "/fall-cycle-courses-2022.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:09.400Z",
+  "created_at": "2026-10-13T15:16:09.400Z"
+ },
+ {
+  "id": 54,
+  "from": "/falling.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:09.611Z",
+  "created_at": "2026-10-13T15:16:09.610Z"
+ },
+ {
+  "id": 55,
+  "from": "/film-and-moving-image.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:09.898Z",
+  "created_at": "2026-10-13T15:16:09.898Z"
+ },
+ {
+  "id": 56,
+  "from": "/growing-food-and-wellbeing-gardening-in-the-city.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:10.128Z",
+  "created_at": "2026-10-13T15:16:10.128Z"
+ },
+ {
+  "id": 57,
+  "from": "/heritage-revisited.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:10.388Z",
+  "created_at": "2026-10-13T15:16:10.388Z"
+ },
+ {
+  "id": 58,
+  "from": "/history-of-education-part-2.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:10.628Z",
+  "created_at": "2026-10-13T15:16:10.628Z"
+ },
+ {
+  "id": 59,
+  "from": "/history-of-education.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:10.950Z",
+  "created_at": "2026-10-13T15:16:10.950Z"
+ },
+ {
+  "id": 60,
+  "from": "/how-do-you-want-to-be-seen.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:11.239Z",
+  "created_at": "2026-10-13T15:16:11.239Z"
+ },
+ {
+  "id": 61,
+  "from": "/identity-culture-and-resistance.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:11.528Z",
+  "created_at": "2026-10-13T15:16:11.528Z"
+ },
+ {
+  "id": 62,
+  "from": "/in-preparation-of-a-movie.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:11.857Z",
+  "created_at": "2026-10-13T15:16:11.857Z"
+ },
+ {
+  "id": 63,
+  "from": "/ldquothe-weapon-of-theoryrdquo-critical-thought-and-social-change.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:12.128Z",
+  "created_at": "2026-10-13T15:16:12.128Z"
+ },
+ {
+  "id": 64,
+  "from": "/libertarian-economics-and-alternative-model-building.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:12.378Z",
+  "created_at": "2026-10-13T15:16:12.378Z"
+ },
+ {
+  "id": 65,
+  "from": "/literary-representations-of-the-urban-global-south.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:12.652Z",
+  "created_at": "2026-10-13T15:16:12.652Z"
+ },
+ {
+  "id": 66,
+  "from": "/mafish-faiydah-a-case-study-on-myth-and-silenced-voices.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:12.954Z",
+  "created_at": "2026-10-13T15:16:12.954Z"
+ },
+ {
+  "id": 67,
+  "from": "/matte-160515891585-tropicaacutelia.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:13.241Z",
+  "created_at": "2026-10-13T15:16:13.241Z"
+ },
+ {
+  "id": 68,
+  "from": "/media-power-and-politics.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:13.448Z",
+  "created_at": "2026-10-13T15:16:13.448Z"
+ },
+ {
+  "id": 69,
+  "from": "/minorities-and-the-city.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:13.757Z",
+  "created_at": "2026-10-13T15:16:13.757Z"
+ },
+ {
+  "id": 70,
+  "from": "/monitoring-and-evaluation.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:14.008Z",
+  "created_at": "2026-10-13T15:16:14.008Z"
+ },
+ {
+  "id": 71,
+  "from": "/morality--world-affairs.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:14.267Z",
+  "created_at": "2026-10-13T15:16:14.267Z"
+ },
+ {
+  "id": 72,
+  "from": "/my-body-is-my-body.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:14.508Z",
+  "created_at": "2026-10-13T15:16:14.508Z"
+ },
+ {
+  "id": 73,
+  "from": "/nature-based-tourism.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:14.762Z",
+  "created_at": "2026-10-13T15:16:14.762Z"
+ },
+ {
+  "id": 74,
+  "from": "/new-eyes-old-city.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:15.011Z",
+  "created_at": "2026-10-13T15:16:15.011Z"
+ },
+ {
+  "id": 75,
+  "from": "/on-colonialism-and-post-colonialism.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:15.278Z",
+  "created_at": "2026-10-13T15:16:15.278Z"
+ },
+ {
+  "id": 76,
+  "from": "/on-gender-and-difference.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:15.508Z",
+  "created_at": "2026-10-13T15:16:15.508Z"
+ },
+ {
+  "id": 77,
+  "from": "/on-madness-an-inquiry-into-margins-and-emotions.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:15.748Z",
+  "created_at": "2026-10-13T15:16:15.748Z"
+ },
+ {
+  "id": 78,
+  "from": "/on-pigeon-towers.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:16.069Z",
+  "created_at": "2026-10-13T15:16:16.069Z"
+ },
+ {
+  "id": 79,
+  "from": "/on-placemaking.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:17.491Z",
+  "created_at": "2026-10-13T15:16:17.490Z"
+ },
+ {
+  "id": 80,
+  "from": "/open-canvas-thinking-through-drawing.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:18.915Z",
+  "created_at": "2026-10-13T15:16:18.915Z"
+ },
+ {
+  "id": 81,
+  "from": "/oral-history.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:19.890Z",
+  "created_at": "2026-10-13T15:16:19.890Z"
+ },
+ {
+  "id": 82,
+  "from": "/past-memoryies-identityies.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:20.322Z",
+  "created_at": "2026-10-13T15:16:20.322Z"
+ },
+ {
+  "id": 83,
+  "from": "/pedagogy-and-sustainable-architecture.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:20.686Z",
+  "created_at": "2026-10-13T15:16:20.686Z"
+ },
+ {
+  "id": 84,
+  "from": "/pedagogy-lab.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:21.309Z",
+  "created_at": "2026-10-13T15:16:21.309Z"
+ },
+ {
+  "id": 85,
+  "from": "/performing-fiction.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:21.859Z",
+  "created_at": "2026-10-13T15:16:21.859Z"
+ },
+ {
+  "id": 86,
+  "from": "/philosophy-of-education.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:22.494Z",
+  "created_at": "2026-10-13T15:16:22.494Z"
+ },
+ {
+  "id": 87,
+  "from": "/physics-for-poets.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:23.328Z",
+  "created_at": "2026-10-13T15:16:23.328Z"
+ },
+ {
+  "id": 88,
+  "from": "/poetry-and-prose.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:24.260Z",
+  "created_at": "2026-10-13T15:16:24.260Z"
+ },
+ {
+  "id": 89,
+  "from": "/politics--poetics-of-identities.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:25.439Z",
+  "created_at": "2026-10-13T15:16:25.439Z"
+ },
+ {
+  "id": 90,
+  "from": "/portray-women-and-representation-in-the-middle-east.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:26.554Z",
+  "created_at": "2026-10-13T15:16:26.554Z"
+ },
+ {
+  "id": 91,
+  "from": "/postcolonialism.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:27.130Z",
+  "created_at": "2026-10-13T15:16:27.130Z"
+ },
+ {
+  "id": 92,
+  "from": "/power-and-space-critical-approaches-to-the-built-environment.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:27.731Z",
+  "created_at": "2026-10-13T15:16:27.731Z"
+ },
+ {
+  "id": 93,
+  "from": "/public-policy-making--design-thinking.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:29.020Z",
+  "created_at": "2026-10-13T15:16:29.020Z"
+ },
+ {
+  "id": 94,
+  "from": "/quality-time-with-kierkegaard.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:30.254Z",
+  "created_at": "2026-10-13T15:16:30.254Z"
+ },
+ {
+  "id": 95,
+  "from": "/reading-aesthetics-across-time-and-space.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:30.538Z",
+  "created_at": "2026-10-13T15:16:30.537Z"
+ },
+ {
+  "id": 96,
+  "from": "/reading-platos-republic-in-cairo.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:30.850Z",
+  "created_at": "2026-10-13T15:16:30.850Z"
+ },
+ {
+  "id": 97,
+  "from": "/research-lab-post-captialism.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:31.108Z",
+  "created_at": "2026-10-13T15:16:31.108Z"
+ },
+ {
+  "id": 98,
+  "from": "/roles-and-rituals-performativity-in-contemporary-arts-and-society.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:31.309Z",
+  "created_at": "2026-10-13T15:16:31.309Z"
+ },
+ {
+  "id": 99,
+  "from": "/social-determinants-of-health.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:31.629Z",
+  "created_at": "2026-10-13T15:16:31.629Z"
+ },
+ {
+  "id": 100,
+  "from": "/sound-thinking.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:31.910Z",
+  "created_at": "2026-10-13T15:16:31.910Z"
+ },
+ {
+  "id": 101,
+  "from": "/spring-2021.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:32.189Z",
+  "created_at": "2026-10-13T15:16:32.189Z"
+ },
+ {
+  "id": 102,
+  "from": "/spring-2022.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:33.030Z",
+  "created_at": "2026-10-13T15:16:33.029Z"
+ },
+ {
+  "id": 103,
+  "from": "/spring-cycle-2024-2025.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:33.482Z",
+  "created_at": "2026-10-13T15:16:33.482Z"
+ },
+ {
+  "id": 104,
+  "from": "/spring-cycle-2026.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:33.692Z",
+  "created_at": "2026-10-13T15:16:33.692Z"
+ },
+ {
+  "id": 105,
+  "from": "/summer-2020.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:33.951Z",
+  "created_at": "2026-10-13T15:16:33.951Z"
+ },
+ {
+  "id": 106,
+  "from": "/summer-2021.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:34.208Z",
+  "created_at": "2026-10-13T15:16:34.208Z"
+ },
+ {
+  "id": 107,
+  "from": "/summer-2022.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:34.378Z",
+  "created_at": "2026-10-13T15:16:34.378Z"
+ },
+ {
+  "id": 108,
+  "from": "/tea-with-walter-benjamin.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:34.639Z",
+  "created_at": "2026-10-13T15:16:34.639Z"
+ },
+ {
+  "id": 109,
+  "from": "/the-art-of-the-flacircneur.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:34.897Z",
+  "created_at": "2026-10-13T15:16:34.897Z"
+ },
+ {
+  "id": 110,
+  "from": "/the-death-of-nature.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:35.178Z",
+  "created_at": "2026-10-13T15:16:35.178Z"
+ },
+ {
+  "id": 111,
+  "from": "/the-foundation-of-knowledge.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:35.402Z",
+  "created_at": "2026-10-13T15:16:35.402Z"
+ },
+ {
+  "id": 112,
+  "from": "/the-history-of-modern-education-in-egypt-1805-1970.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:35.621Z",
+  "created_at": "2026-10-13T15:16:35.620Z"
+ },
+ {
+  "id": 113,
+  "from": "/the-ldquodevelopment-of-underdevelopmentrdquo.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:35.878Z",
+  "created_at": "2026-10-13T15:16:35.878Z"
+ },
+ {
+  "id": 114,
+  "from": "/the-media-lab-the-image-as-theory-and-practice.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:36.118Z",
+  "created_at": "2026-10-13T15:16:36.118Z"
+ },
+ {
+  "id": 115,
+  "from": "/the-palestinian-narrative.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:36.358Z",
+  "created_at": "2026-10-13T15:16:36.358Z"
+ },
+ {
+  "id": 116,
+  "from": "/the-philosophy-of-soren-kierkegaard.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:36.618Z",
+  "created_at": "2026-10-13T15:16:36.618Z"
+ },
+ {
+  "id": 117,
+  "from": "/the-poetics-of-ethnography.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:36.891Z",
+  "created_at": "2026-10-13T15:16:36.891Z"
+ },
+ {
+  "id": 118,
+  "from": "/the-research-lab-a-critical-introduction-into-futures-studies.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:37.118Z",
+  "created_at": "2026-10-13T15:16:37.118Z"
+ },
+ {
+  "id": 119,
+  "from": "/the-urban-experience-an-ethnographic-approach.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:37.320Z",
+  "created_at": "2026-10-13T15:16:37.320Z"
+ },
+ {
+  "id": 120,
+  "from": "/theorising-the-state-in-africa.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:37.576Z",
+  "created_at": "2026-10-13T15:16:37.576Z"
+ },
+ {
+  "id": 121,
+  "from": "/to-stand-with-the-dreamers.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:37.818Z",
+  "created_at": "2026-10-13T15:16:37.817Z"
+ },
+ {
+  "id": 122,
+  "from": "/translation-as-education.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:38.058Z",
+  "created_at": "2026-10-13T15:16:38.058Z"
+ },
+ {
+  "id": 123,
+  "from": "/urban-governance.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:38.758Z",
+  "created_at": "2026-10-13T15:16:38.758Z"
+ },
+ {
+  "id": 124,
+  "from": "/urban-resilience.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:39.437Z",
+  "created_at": "2026-10-13T15:16:39.437Z"
+ },
+ {
+  "id": 125,
+  "from": "/visions-of-the-arab.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:39.689Z",
+  "created_at": "2026-10-13T15:16:39.689Z"
+ },
+ {
+  "id": 126,
+  "from": "/visual-anthropology-film-as-a-tool-for-research.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:39.968Z",
+  "created_at": "2026-10-13T15:16:39.968Z"
+ },
+ {
+  "id": 127,
+  "from": "/voice-of-the-artist.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:40.242Z",
+  "created_at": "2026-10-13T15:16:40.242Z"
+ },
+ {
+  "id": 128,
+  "from": "/walk-like-an-egyptian-philosopher.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:40.479Z",
+  "created_at": "2026-10-13T15:16:40.478Z"
+ },
+ {
+  "id": 129,
+  "from": "/we-are-what-we-eat.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:40.766Z",
+  "created_at": "2026-10-13T15:16:40.765Z"
+ },
+ {
+  "id": 130,
+  "from": "/why-do-i-love-you-the-structures-of-desire.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:41.108Z",
+  "created_at": "2026-10-13T15:16:41.108Z"
+ },
+ {
+  "id": 131,
+  "from": "/winter-2020.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:41.478Z",
+  "created_at": "2026-10-13T15:16:41.478Z"
+ },
+ {
+  "id": 132,
+  "from": "/winter-2022.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:41.838Z",
+  "created_at": "2026-10-13T15:16:41.838Z"
+ },
+ {
+  "id": 133,
+  "from": "/winter-2023-2024.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:42.209Z",
+  "created_at": "2026-10-13T15:16:42.209Z"
+ },
+ {
+  "id": 134,
+  "from": "/winter-cycle-2022-2023.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:43.089Z",
+  "created_at": "2026-10-13T15:16:43.089Z"
+ },
+ {
+  "id": 135,
+  "from": "/winter-cycle-2024-2025.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:44.058Z",
+  "created_at": "2026-10-13T15:16:44.058Z"
+ },
+ {
+  "id": 136,
+  "from": "/winter-cycle-2026.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:45.199Z",
+  "created_at": "2026-10-13T15:16:45.198Z"
+ },
+ {
+  "id": 137,
+  "from": "/writing-the-self.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:46.162Z",
+  "created_at": "2026-10-13T15:16:46.162Z"
+ },
+ {
+  "id": 138,
+  "from": "/you-me-and-translation-theory.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:47.415Z",
+  "created_at": "2026-10-13T15:16:47.415Z"
+ },
+ {
+  "id": 139,
+  "from": "/youth-madness.html",
+  "to_type": "reference",
+  "to_url": null,
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:48.058Z",
+  "created_at": "2026-10-13T15:16:48.058Z"
+ },
+ {
+  "id": 140,
+  "from": "/uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_ِarabic.pdf",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/on_the_emergence_of_pigeon_towers_-_%D9%90arabic.pdf",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:48.578Z",
+  "created_at": "2026-10-13T15:16:48.578Z"
+ },
+ {
+  "id": 141,
+  "from": "/uploads/1/9/1/0/19102967/cilas_newsletter_issue_no._1.pdf",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas_newsletter_issue_no._1.pdf",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:48.698Z",
+  "created_at": "2026-10-13T15:16:48.698Z"
+ },
+ {
+  "id": 142,
+  "from": "/uploads/1/9/1/0/19102967/translation_lab_works.pdf",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/translation_lab_works.pdf",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:48.818Z",
+  "created_at": "2026-10-13T15:16:48.818Z"
+ },
+ {
+  "id": 143,
+  "from": "/uploads/1/9/1/0/19102967/on_the_emergence_of_pigeon_towers_-_english.pdf",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/on_the_emergence_of_pigeon_towers_-_english.pdf",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:48.950Z",
+  "created_at": "2026-10-13T15:16:48.950Z"
+ },
+ {
+  "id": 144,
+  "from": "/uploads/1/9/1/0/19102967/leon_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/leon_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:49.077Z",
+  "created_at": "2026-10-13T15:16:49.077Z"
+ },
+ {
+  "id": 145,
+  "from": "/uploads/1/9/1/0/19102967/published/1000346659__q_67c6b7c5f6.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1000346659__q_67c6b7c5f6.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:49.208Z",
+  "created_at": "2026-10-13T15:16:49.208Z"
+ },
+ {
+  "id": 146,
+  "from": "/uploads/1/9/1/0/19102967/published/america-m-p9-100__q_493e614473.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/america-m-p9-100__q_493e614473.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:49.331Z",
+  "created_at": "2026-10-13T15:16:49.331Z"
+ },
+ {
+  "id": 147,
+  "from": "/uploads/1/9/1/0/19102967/zaina_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/zaina_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:49.470Z",
+  "created_at": "2026-10-13T15:16:49.469Z"
+ },
+ {
+  "id": 148,
+  "from": "/uploads/1/9/1/0/19102967/published/ahmed__q_992c04b754.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/ahmed__q_992c04b754.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:49.598Z",
+  "created_at": "2026-10-13T15:16:49.598Z"
+ },
+ {
+  "id": 149,
+  "from": "/uploads/1/9/1/0/19102967/gender_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/gender_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:49.728Z",
+  "created_at": "2026-10-13T15:16:49.728Z"
+ },
+ {
+  "id": 150,
+  "from": "/uploads/1/9/1/0/19102967/ecology_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/ecology_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:49.868Z",
+  "created_at": "2026-10-13T15:16:49.868Z"
+ },
+ {
+  "id": 151,
+  "from": "/uploads/1/9/1/0/19102967/17-21-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17-21-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.012Z",
+  "created_at": "2026-10-13T15:16:50.011Z"
+ },
+ {
+  "id": 152,
+  "from": "/uploads/1/9/1/0/19102967/privilege-mountain-view_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/privilege-mountain-view_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.164Z",
+  "created_at": "2026-10-13T15:16:50.164Z"
+ },
+ {
+  "id": 153,
+  "from": "/uploads/1/9/1/0/19102967/irony-of-culture-course-photo_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/irony-of-culture-course-photo_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.288Z",
+  "created_at": "2026-10-13T15:16:50.288Z"
+ },
+ {
+  "id": 154,
+  "from": "/uploads/1/9/1/0/19102967/noticing-care-course-photo_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/noticing-care-course-photo_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.418Z",
+  "created_at": "2026-10-13T15:16:50.418Z"
+ },
+ {
+  "id": 155,
+  "from": "/uploads/1/9/1/0/19102967/hashtag-heritage-course_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/hashtag-heritage-course_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.539Z",
+  "created_at": "2026-10-13T15:16:50.539Z"
+ },
+ {
+  "id": 156,
+  "from": "/uploads/1/9/1/0/19102967/affiche-cours-cilas-ok_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/affiche-cours-cilas-ok_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.678Z",
+  "created_at": "2026-10-13T15:16:50.678Z"
+ },
+ {
+  "id": 157,
+  "from": "/uploads/1/9/1/0/19102967/wisdom-in-despair-course-image_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/wisdom-in-despair-course-image_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.809Z",
+  "created_at": "2026-10-13T15:16:50.809Z"
+ },
+ {
+  "id": 158,
+  "from": "/uploads/1/9/1/0/19102967/image002_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image002_orig-1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:50.938Z",
+  "created_at": "2026-10-13T15:16:50.938Z"
+ },
+ {
+  "id": 159,
+  "from": "/uploads/1/9/1/0/19102967/1185950204_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1185950204_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.072Z",
+  "created_at": "2026-10-13T15:16:51.072Z"
+ },
+ {
+  "id": 160,
+  "from": "/uploads/1/9/1/0/19102967/image001_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image001_orig-1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.189Z",
+  "created_at": "2026-10-13T15:16:51.188Z"
+ },
+ {
+  "id": 161,
+  "from": "/uploads/1/9/1/0/19102967/image002_orig.gif",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image002_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.339Z",
+  "created_at": "2026-10-13T15:16:51.339Z"
+ },
+ {
+  "id": 162,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2022-07-04-at-12-25-00-pm_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2022-07-04-at-12-25-00-pm_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.468Z",
+  "created_at": "2026-10-13T15:16:51.468Z"
+ },
+ {
+  "id": 163,
+  "from": "/uploads/1/9/1/0/19102967/course-photo-3_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/course-photo-3_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.589Z",
+  "created_at": "2026-10-13T15:16:51.589Z"
+ },
+ {
+  "id": 164,
+  "from": "/uploads/1/9/1/0/19102967/picture-religion-politics_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/picture-religion-politics_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.708Z",
+  "created_at": "2026-10-13T15:16:51.708Z"
+ },
+ {
+  "id": 165,
+  "from": "/uploads/1/9/1/0/19102967/717672202_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/717672202_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.859Z",
+  "created_at": "2026-10-13T15:16:51.859Z"
+ },
+ {
+  "id": 166,
+  "from": "/uploads/1/9/1/0/19102967/course-poster_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/course-poster_orig-1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:51.998Z",
+  "created_at": "2026-10-13T15:16:51.998Z"
+ },
+ {
+  "id": 167,
+  "from": "/uploads/1/9/1/0/19102967/347118637_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/347118637_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:52.118Z",
+  "created_at": "2026-10-13T15:16:52.118Z"
+ },
+ {
+  "id": 168,
+  "from": "/uploads/1/9/1/0/19102967/by-blu-in-berlinkreuzberg_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/by-blu-in-berlinkreuzberg_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:52.241Z",
+  "created_at": "2026-10-13T15:16:52.240Z"
+ },
+ {
+  "id": 169,
+  "from": "/uploads/1/9/1/0/19102967/amal-eqeiqa_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/amal-eqeiqa_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:52.358Z",
+  "created_at": "2026-10-13T15:16:52.358Z"
+ },
+ {
+  "id": 170,
+  "from": "/uploads/1/9/1/0/19102967/pigeon-tower-palms_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/pigeon-tower-palms_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:52.534Z",
+  "created_at": "2026-10-13T15:16:52.534Z"
+ },
+ {
+  "id": 171,
+  "from": "/uploads/1/9/1/0/19102967/published/archive__q_16fd2f8ddd.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/archive__q_16fd2f8ddd.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:52.690Z",
+  "created_at": "2026-10-13T15:16:52.690Z"
+ },
+ {
+  "id": 172,
+  "from": "/uploads/1/9/1/0/19102967/photo-from-sohair-7_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo-from-sohair-7_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:52.841Z",
+  "created_at": "2026-10-13T15:16:52.840Z"
+ },
+ {
+  "id": 173,
+  "from": "/uploads/1/9/1/0/19102967/forbidden-fruit-nina-simone_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/forbidden-fruit-nina-simone_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:52.960Z",
+  "created_at": "2026-10-13T15:16:52.960Z"
+ },
+ {
+  "id": 174,
+  "from": "/uploads/1/9/1/0/19102967/cilas-translation-lab_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas-translation-lab_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:53.129Z",
+  "created_at": "2026-10-13T15:16:53.129Z"
+ },
+ {
+  "id": 175,
+  "from": "/uploads/1/9/1/0/19102967/img-6436_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/img-6436_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:53.240Z",
+  "created_at": "2026-10-13T15:16:53.239Z"
+ },
+ {
+  "id": 176,
+  "from": "/uploads/1/9/1/0/19102967/1727775638_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1727775638_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:53.379Z",
+  "created_at": "2026-10-13T15:16:53.379Z"
+ },
+ {
+  "id": 177,
+  "from": "/uploads/1/9/1/0/19102967/cilas_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:53.604Z",
+  "created_at": "2026-10-13T15:16:53.604Z"
+ },
+ {
+  "id": 178,
+  "from": "/uploads/1/9/1/0/19102967/published/ghoson__q_9cf88620e9.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/ghoson__q_9cf88620e9.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:53.778Z",
+  "created_at": "2026-10-13T15:16:53.778Z"
+ },
+ {
+  "id": 179,
+  "from": "/uploads/1/9/1/0/19102967/letterlogic_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/letterlogic_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:53.911Z",
+  "created_at": "2026-10-13T15:16:53.911Z"
+ },
+ {
+  "id": 180,
+  "from": "/uploads/1/9/1/0/19102967/img-20260330-wa0018_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/img-20260330-wa0018_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.040Z",
+  "created_at": "2026-10-13T15:16:54.040Z"
+ },
+ {
+  "id": 181,
+  "from": "/uploads/1/9/1/0/19102967/photo-from-sohair-8_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo-from-sohair-8_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.158Z",
+  "created_at": "2026-10-13T15:16:54.158Z"
+ },
+ {
+  "id": 182,
+  "from": "/uploads/1/9/1/0/19102967/p03pqrgg_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/p03pqrgg_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.299Z",
+  "created_at": "2026-10-13T15:16:54.299Z"
+ },
+ {
+  "id": 183,
+  "from": "/uploads/1/9/1/0/19102967/course-image_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/course-image_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.431Z",
+  "created_at": "2026-10-13T15:16:54.431Z"
+ },
+ {
+  "id": 184,
+  "from": "/uploads/1/9/1/0/19102967/published/abstract-concrete__q_bd74f7eca5.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/abstract-concrete__q_bd74f7eca5.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.579Z",
+  "created_at": "2026-10-13T15:16:54.579Z"
+ },
+ {
+  "id": 185,
+  "from": "/uploads/1/9/1/0/19102967/photo-from-mariam_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo-from-mariam_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.708Z",
+  "created_at": "2026-10-13T15:16:54.708Z"
+ },
+ {
+  "id": 186,
+  "from": "/uploads/1/9/1/0/19102967/hisham-course-25-photo_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/hisham-course-25-photo_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.860Z",
+  "created_at": "2026-10-13T15:16:54.860Z"
+ },
+ {
+  "id": 187,
+  "from": "/uploads/1/9/1/0/19102967/photo-from-yamen_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo-from-yamen_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:54.977Z",
+  "created_at": "2026-10-13T15:16:54.977Z"
+ },
+ {
+  "id": 188,
+  "from": "/uploads/1/9/1/0/19102967/tkd3z2hv_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/tkd3z2hv_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:55.119Z",
+  "created_at": "2026-10-13T15:16:55.119Z"
+ },
+ {
+  "id": 189,
+  "from": "/uploads/1/9/1/0/19102967/photo-yamen_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo-yamen_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:55.240Z",
+  "created_at": "2026-10-13T15:16:55.240Z"
+ },
+ {
+  "id": 190,
+  "from": "/uploads/1/9/1/0/19102967/ideology-image_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/ideology-image_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:55.370Z",
+  "created_at": "2026-10-13T15:16:55.370Z"
+ },
+ {
+  "id": 191,
+  "from": "/uploads/1/9/1/0/19102967/mariam-s-course-image_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/mariam-s-course-image_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:55.508Z",
+  "created_at": "2026-10-13T15:16:55.508Z"
+ },
+ {
+  "id": 192,
+  "from": "/uploads/1/9/1/0/19102967/image_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:55.628Z",
+  "created_at": "2026-10-13T15:16:55.628Z"
+ },
+ {
+  "id": 193,
+  "from": "/uploads/1/9/1/0/19102967/screenshot-2022-01-03-at-5-13-09-pm_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screenshot-2022-01-03-at-5-13-09-pm_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:55.771Z",
+  "created_at": "2026-10-13T15:16:55.771Z"
+ },
+ {
+  "id": 194,
+  "from": "/uploads/1/9/1/0/19102967/a-woman-s-work-is-never-done_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/a-woman-s-work-is-never-done_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:55.890Z",
+  "created_at": "2026-10-13T15:16:55.890Z"
+ },
+ {
+  "id": 195,
+  "from": "/uploads/1/9/1/0/19102967/3460-10151329963763764-1543723229-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/3460-10151329963763764-1543723229-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:56.049Z",
+  "created_at": "2026-10-13T15:16:56.049Z"
+ },
+ {
+  "id": 196,
+  "from": "/uploads/1/9/1/0/19102967/thumbnail-image0_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/thumbnail-image0_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:56.208Z",
+  "created_at": "2026-10-13T15:16:56.208Z"
+ },
+ {
+  "id": 197,
+  "from": "/uploads/1/9/1/0/19102967/1022666471_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1022666471_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:56.398Z",
+  "created_at": "2026-10-13T15:16:56.398Z"
+ },
+ {
+  "id": 198,
+  "from": "/uploads/1/9/1/0/19102967/1498125974_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1498125974_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:56.518Z",
+  "created_at": "2026-10-13T15:16:56.518Z"
+ },
+ {
+  "id": 199,
+  "from": "/uploads/1/9/1/0/19102967/cilas-22_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas-22_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:56.638Z",
+  "created_at": "2026-10-13T15:16:56.638Z"
+ },
+ {
+  "id": 200,
+  "from": "/uploads/1/9/1/0/19102967/1574948879_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1574948879_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:56.757Z",
+  "created_at": "2026-10-13T15:16:56.757Z"
+ },
+ {
+  "id": 201,
+  "from": "/uploads/1/9/1/0/19102967/christinas-world-by-andrew-wyeth_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/christinas-world-by-andrew-wyeth_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:56.888Z",
+  "created_at": "2026-10-13T15:16:56.888Z"
+ },
+ {
+  "id": 202,
+  "from": "/uploads/1/9/1/0/19102967/politics-religion_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/politics-religion_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.038Z",
+  "created_at": "2026-10-13T15:16:57.038Z"
+ },
+ {
+  "id": 203,
+  "from": "/uploads/1/9/1/0/19102967/ibn-arabi_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/ibn-arabi_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.168Z",
+  "created_at": "2026-10-13T15:16:57.168Z"
+ },
+ {
+  "id": 204,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2021-01-09-at-1-19-32-pm_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2021-01-09-at-1-19-32-pm_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.298Z",
+  "created_at": "2026-10-13T15:16:57.298Z"
+ },
+ {
+  "id": 205,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2021-01-08-at-1-06-49-pm_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2021-01-08-at-1-06-49-pm_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.420Z",
+  "created_at": "2026-10-13T15:16:57.420Z"
+ },
+ {
+  "id": 206,
+  "from": "/uploads/1/9/1/0/19102967/image-cilas_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image-cilas_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.569Z",
+  "created_at": "2026-10-13T15:16:57.569Z"
+ },
+ {
+  "id": 207,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2021-01-08-at-12-44-07-pm_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2021-01-08-at-12-44-07-pm_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.691Z",
+  "created_at": "2026-10-13T15:16:57.691Z"
+ },
+ {
+  "id": 208,
+  "from": "/uploads/1/9/1/0/19102967/field-city_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/field-city_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.808Z",
+  "created_at": "2026-10-13T15:16:57.808Z"
+ },
+ {
+  "id": 209,
+  "from": "/uploads/1/9/1/0/19102967/poets2_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/poets2_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:57.949Z",
+  "created_at": "2026-10-13T15:16:57.949Z"
+ },
+ {
+  "id": 210,
+  "from": "/uploads/1/9/1/0/19102967/415969354_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/415969354_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.068Z",
+  "created_at": "2026-10-13T15:16:58.068Z"
+ },
+ {
+  "id": 211,
+  "from": "/uploads/1/9/1/0/19102967/432394110-1551556038967490-3617759553844335732-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/432394110-1551556038967490-3617759553844335732-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.199Z",
+  "created_at": "2026-10-13T15:16:58.199Z"
+ },
+ {
+  "id": 212,
+  "from": "/uploads/1/9/1/0/19102967/cilas-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.320Z",
+  "created_at": "2026-10-13T15:16:58.320Z"
+ },
+ {
+  "id": 213,
+  "from": "/uploads/1/9/1/0/19102967/image-6483441-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image-6483441-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.448Z",
+  "created_at": "2026-10-13T15:16:58.448Z"
+ },
+ {
+  "id": 214,
+  "from": "/uploads/1/9/1/0/19102967/published/45__q_944f608ecb.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/45__q_944f608ecb.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.585Z",
+  "created_at": "2026-10-13T15:16:58.585Z"
+ },
+ {
+  "id": 215,
+  "from": "/uploads/1/9/1/0/19102967/published/end-of-history__q_2c0cebb74f.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/end-of-history__q_2c0cebb74f.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.711Z",
+  "created_at": "2026-10-13T15:16:58.711Z"
+ },
+ {
+  "id": 216,
+  "from": "/uploads/1/9/1/0/19102967/published/photo-from-sohair-9__q_9d8a938758.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo-from-sohair-9__q_9d8a938758.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.838Z",
+  "created_at": "2026-10-13T15:16:58.838Z"
+ },
+ {
+  "id": 217,
+  "from": "/uploads/1/9/1/0/19102967/messenger-creation-d002ccba-0c7d-40bf-8963-a49205c94d0c_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/messenger-creation-d002ccba-0c7d-40bf-8963-a49205c94d0c_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:58.958Z",
+  "created_at": "2026-10-13T15:16:58.958Z"
+ },
+ {
+  "id": 218,
+  "from": "/uploads/1/9/1/0/19102967/the-capture-of-the-pirate-blackbeard-1718-by-jean-leon-gerome-ferris-retouched_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/the-capture-of-the-pirate-blackbeard-1718-by-jean-leon-gerome-ferris-retouched_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:59.078Z",
+  "created_at": "2026-10-13T15:16:59.078Z"
+ },
+ {
+  "id": 219,
+  "from": "/uploads/1/9/1/0/19102967/screenshot-20240320-184509-2-1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screenshot-20240320-184509-2-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:59.208Z",
+  "created_at": "2026-10-13T15:16:59.208Z"
+ },
+ {
+  "id": 220,
+  "from": "/uploads/1/9/1/0/19102967/course-poster_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/course-poster_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:59.348Z",
+  "created_at": "2026-10-13T15:16:59.347Z"
+ },
+ {
+  "id": 221,
+  "from": "/uploads/1/9/1/0/19102967/anthro_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/anthro_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:59.473Z",
+  "created_at": "2026-10-13T15:16:59.473Z"
+ },
+ {
+  "id": 222,
+  "from": "/uploads/1/9/1/0/19102967/3-course-image_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/3-course-image_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:59.598Z",
+  "created_at": "2026-10-13T15:16:59.598Z"
+ },
+ {
+  "id": 223,
+  "from": "/uploads/1/9/1/0/19102967/image-dalipomegranates_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image-dalipomegranates_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:59.753Z",
+  "created_at": "2026-10-13T15:16:59.753Z"
+ },
+ {
+  "id": 224,
+  "from": "/uploads/1/9/1/0/19102967/bath-hubbell_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/bath-hubbell_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:16:59.898Z",
+  "created_at": "2026-10-13T15:16:59.898Z"
+ },
+ {
+  "id": 225,
+  "from": "/uploads/1/9/1/0/19102967/thinking-and-rethinking-migration-design_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/thinking-and-rethinking-migration-design_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:00.068Z",
+  "created_at": "2026-10-13T15:17:00.068Z"
+ },
+ {
+  "id": 226,
+  "from": "/uploads/1/9/1/0/19102967/btoh9_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/btoh9_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:00.229Z",
+  "created_at": "2026-10-13T15:17:00.229Z"
+ },
+ {
+  "id": 227,
+  "from": "/uploads/1/9/1/0/19102967/v3ot5hozn0asapg-369-255432-821637_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/v3ot5hozn0asapg-369-255432-821637_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:00.550Z",
+  "created_at": "2026-10-13T15:17:00.549Z"
+ },
+ {
+  "id": 228,
+  "from": "/uploads/1/9/1/0/19102967/322812510-622279679572573-3151512719798346782-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/322812510-622279679572573-3151512719798346782-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:00.729Z",
+  "created_at": "2026-10-13T15:17:00.729Z"
+ },
+ {
+  "id": 229,
+  "from": "/uploads/1/9/1/0/19102967/20143080-1-img-fix-700x700_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/20143080-1-img-fix-700x700_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:00.929Z",
+  "created_at": "2026-10-13T15:17:00.929Z"
+ },
+ {
+  "id": 230,
+  "from": "/uploads/1/9/1/0/19102967/paris-fire_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/paris-fire_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:01.058Z",
+  "created_at": "2026-10-13T15:17:01.057Z"
+ },
+ {
+  "id": 231,
+  "from": "/uploads/1/9/1/0/19102967/picture-for-on-questions-of-legality-and-legitimacy-fb_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/picture-for-on-questions-of-legality-and-legitimacy-fb_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:01.204Z",
+  "created_at": "2026-10-13T15:17:01.204Z"
+ },
+ {
+  "id": 232,
+  "from": "/uploads/1/9/1/0/19102967/sidgm_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/sidgm_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:01.339Z",
+  "created_at": "2026-10-13T15:17:01.338Z"
+ },
+ {
+  "id": 233,
+  "from": "/uploads/1/9/1/0/19102967/image010_orig.gif",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image010_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:01.541Z",
+  "created_at": "2026-10-13T15:17:01.541Z"
+ },
+ {
+  "id": 234,
+  "from": "/uploads/1/9/1/0/19102967/come-picture_orig.gif",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/come-picture_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:01.750Z",
+  "created_at": "2026-10-13T15:17:01.750Z"
+ },
+ {
+  "id": 235,
+  "from": "/uploads/1/9/1/0/19102967/image1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image1_orig-1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:01.918Z",
+  "created_at": "2026-10-13T15:17:01.918Z"
+ },
+ {
+  "id": 236,
+  "from": "/uploads/1/9/1/0/19102967/image-by-shan-yang_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image-by-shan-yang_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:02.174Z",
+  "created_at": "2026-10-13T15:17:02.174Z"
+ },
+ {
+  "id": 237,
+  "from": "/uploads/1/9/1/0/19102967/1045367166_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1045367166_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:02.365Z",
+  "created_at": "2026-10-13T15:17:02.365Z"
+ },
+ {
+  "id": 238,
+  "from": "/uploads/1/9/1/0/19102967/875533668_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/875533668_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:02.643Z",
+  "created_at": "2026-10-13T15:17:02.642Z"
+ },
+ {
+  "id": 239,
+  "from": "/uploads/1/9/1/0/19102967/1818697521_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1818697521_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:03.229Z",
+  "created_at": "2026-10-13T15:17:03.229Z"
+ },
+ {
+  "id": 240,
+  "from": "/uploads/1/9/1/0/19102967/bodleian-library-ms-pococke-375-00005-fol-18b-19a_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/bodleian-library-ms-pococke-375-00005-fol-18b-19a_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:03.783Z",
+  "created_at": "2026-10-13T15:17:03.783Z"
+ },
+ {
+  "id": 241,
+  "from": "/uploads/1/9/1/0/19102967/12b852a1502014df191c21b40d172d89_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/12b852a1502014df191c21b40d172d89_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:04.351Z",
+  "created_at": "2026-10-13T15:17:04.351Z"
+ },
+ {
+  "id": 242,
+  "from": "/uploads/1/9/1/0/19102967/debt_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/debt_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:04.949Z",
+  "created_at": "2026-10-13T15:17:04.948Z"
+ },
+ {
+  "id": 243,
+  "from": "/uploads/1/9/1/0/19102967/mate-circle_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/mate-circle_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:05.571Z",
+  "created_at": "2026-10-13T15:17:05.570Z"
+ },
+ {
+  "id": 244,
+  "from": "/uploads/1/9/1/0/19102967/foto-03-40-angicos_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/foto-03-40-angicos_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:06.399Z",
+  "created_at": "2026-10-13T15:17:06.399Z"
+ },
+ {
+  "id": 245,
+  "from": "/uploads/1/9/1/0/19102967/20220816-190909_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/20220816-190909_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:07.249Z",
+  "created_at": "2026-10-13T15:17:07.249Z"
+ },
+ {
+  "id": 246,
+  "from": "/uploads/1/9/1/0/19102967/17-21_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17-21_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:08.125Z",
+  "created_at": "2026-10-13T15:17:08.124Z"
+ },
+ {
+  "id": 247,
+  "from": "/uploads/1/9/1/0/19102967/vocabularies-of-grief-1-2257_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/vocabularies-of-grief-1-2257_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:08.429Z",
+  "created_at": "2026-10-13T15:17:08.429Z"
+ },
+ {
+  "id": 248,
+  "from": "/uploads/1/9/1/0/19102967/cilas-draft-course-the-modern-and-the-mediterranean93_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas-draft-course-the-modern-and-the-mediterranean93_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:08.570Z",
+  "created_at": "2026-10-13T15:17:08.569Z"
+ },
+ {
+  "id": 249,
+  "from": "/uploads/1/9/1/0/19102967/city-and-cinema_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/city-and-cinema_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:08.720Z",
+  "created_at": "2026-10-13T15:17:08.719Z"
+ },
+ {
+  "id": 250,
+  "from": "/uploads/1/9/1/0/19102967/published/image1__q_a8ae8ab941.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image1__q_a8ae8ab941.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:08.869Z",
+  "created_at": "2026-10-13T15:17:08.869Z"
+ },
+ {
+  "id": 251,
+  "from": "/uploads/1/9/1/0/19102967/published/oedipus-patchwork__q_2f16cbb068.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/oedipus-patchwork__q_2f16cbb068.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:09.163Z",
+  "created_at": "2026-10-13T15:17:09.163Z"
+ },
+ {
+  "id": 252,
+  "from": "/uploads/1/9/1/0/19102967/melancholia-in-the-city_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/melancholia-in-the-city_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:09.338Z",
+  "created_at": "2026-10-13T15:17:09.338Z"
+ },
+ {
+  "id": 253,
+  "from": "/uploads/1/9/1/0/19102967/published/3-course-image__q_fc57bd07ba.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/3-course-image__q_fc57bd07ba.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:09.558Z",
+  "created_at": "2026-10-13T15:17:09.558Z"
+ },
+ {
+  "id": 254,
+  "from": "/uploads/1/9/1/0/19102967/published/1754460642__q_dd41c43459.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1754460642__q_dd41c43459.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:09.729Z",
+  "created_at": "2026-10-13T15:17:09.729Z"
+ },
+ {
+  "id": 255,
+  "from": "/uploads/1/9/1/0/19102967/5933912720527179520-109_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/5933912720527179520-109_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:09.889Z",
+  "created_at": "2026-10-13T15:17:09.889Z"
+ },
+ {
+  "id": 256,
+  "from": "/uploads/1/9/1/0/19102967/image1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:10.042Z",
+  "created_at": "2026-10-13T15:17:10.042Z"
+ },
+ {
+  "id": 257,
+  "from": "/uploads/1/9/1/0/19102967/cilas-course-syllabus-9-24_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas-course-syllabus-9-24_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:10.179Z",
+  "created_at": "2026-10-13T15:17:10.179Z"
+ },
+ {
+  "id": 258,
+  "from": "/uploads/1/9/1/0/19102967/photo-from-sohair_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo-from-sohair_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:10.338Z",
+  "created_at": "2026-10-13T15:17:10.337Z"
+ },
+ {
+  "id": 259,
+  "from": "/uploads/1/9/1/0/19102967/1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:10.508Z",
+  "created_at": "2026-10-13T15:17:10.508Z"
+ },
+ {
+  "id": 260,
+  "from": "/uploads/1/9/1/0/19102967/image007_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image007_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:10.660Z",
+  "created_at": "2026-10-13T15:17:10.660Z"
+ },
+ {
+  "id": 261,
+  "from": "/uploads/1/9/1/0/19102967/image003_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image003_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:10.929Z",
+  "created_at": "2026-10-13T15:17:10.929Z"
+ },
+ {
+  "id": 262,
+  "from": "/uploads/1/9/1/0/19102967/image001_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image001_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:11.130Z",
+  "created_at": "2026-10-13T15:17:11.130Z"
+ },
+ {
+  "id": 263,
+  "from": "/uploads/1/9/1/0/19102967/image005_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image005_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:11.347Z",
+  "created_at": "2026-10-13T15:17:11.347Z"
+ },
+ {
+  "id": 264,
+  "from": "/uploads/1/9/1/0/19102967/5a4919b87e23e07e85e0c6b821da9e73_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/5a4919b87e23e07e85e0c6b821da9e73_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:11.563Z",
+  "created_at": "2026-10-13T15:17:11.563Z"
+ },
+ {
+  "id": 265,
+  "from": "/uploads/1/9/1/0/19102967/dubai-in-dunes-sukuk-project-nouakchott-mauritania-2010_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/dubai-in-dunes-sukuk-project-nouakchott-mauritania-2010_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:11.751Z",
+  "created_at": "2026-10-13T15:17:11.751Z"
+ },
+ {
+  "id": 266,
+  "from": "/uploads/1/9/1/0/19102967/media-lab-spring-azbakeya_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/media-lab-spring-azbakeya_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:12.050Z",
+  "created_at": "2026-10-13T15:17:12.050Z"
+ },
+ {
+  "id": 267,
+  "from": "/uploads/1/9/1/0/19102967/fall-21_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/fall-21_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:12.260Z",
+  "created_at": "2026-10-13T15:17:12.260Z"
+ },
+ {
+  "id": 268,
+  "from": "/uploads/1/9/1/0/19102967/762px-noon-rest-from-work-van-gogh_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/762px-noon-rest-from-work-van-gogh_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:12.398Z",
+  "created_at": "2026-10-13T15:17:12.398Z"
+ },
+ {
+  "id": 269,
+  "from": "/uploads/1/9/1/0/19102967/3_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/3_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:12.566Z",
+  "created_at": "2026-10-13T15:17:12.566Z"
+ },
+ {
+  "id": 270,
+  "from": "/uploads/1/9/1/0/19102967/222186259_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/222186259_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:12.721Z",
+  "created_at": "2026-10-13T15:17:12.721Z"
+ },
+ {
+  "id": 271,
+  "from": "/uploads/1/9/1/0/19102967/photo1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/photo1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:12.908Z",
+  "created_at": "2026-10-13T15:17:12.908Z"
+ },
+ {
+  "id": 272,
+  "from": "/uploads/1/9/1/0/19102967/754536867-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/754536867-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:13.058Z",
+  "created_at": "2026-10-13T15:17:13.058Z"
+ },
+ {
+  "id": 273,
+  "from": "/uploads/1/9/1/0/19102967/international-law-an-autopsy_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/international-law-an-autopsy_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:13.276Z",
+  "created_at": "2026-10-13T15:17:13.275Z"
+ },
+ {
+  "id": 274,
+  "from": "/uploads/1/9/1/0/19102967/4-6044343909868376598-1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/4-6044343909868376598-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:13.458Z",
+  "created_at": "2026-10-13T15:17:13.458Z"
+ },
+ {
+  "id": 275,
+  "from": "/uploads/1/9/1/0/19102967/2014671927_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/2014671927_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:13.629Z",
+  "created_at": "2026-10-13T15:17:13.629Z"
+ },
+ {
+  "id": 276,
+  "from": "/uploads/1/9/1/0/19102967/img-9661-2_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/img-9661-2_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:13.798Z",
+  "created_at": "2026-10-13T15:17:13.798Z"
+ },
+ {
+  "id": 277,
+  "from": "/uploads/1/9/1/0/19102967/image1-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image1-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:13.930Z",
+  "created_at": "2026-10-13T15:17:13.930Z"
+ },
+ {
+  "id": 278,
+  "from": "/uploads/1/9/1/0/19102967/image1-2_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image1-2_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:14.078Z",
+  "created_at": "2026-10-13T15:17:14.078Z"
+ },
+ {
+  "id": 279,
+  "from": "/uploads/1/9/1/0/19102967/image3_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image3_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:14.241Z",
+  "created_at": "2026-10-13T15:17:14.241Z"
+ },
+ {
+  "id": 280,
+  "from": "/uploads/1/9/1/0/19102967/mia-madrez-ester-hernandez_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/mia-madrez-ester-hernandez_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:14.389Z",
+  "created_at": "2026-10-13T15:17:14.388Z"
+ },
+ {
+  "id": 281,
+  "from": "/uploads/1/9/1/0/19102967/climate-change-course_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/climate-change-course_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:14.509Z",
+  "created_at": "2026-10-13T15:17:14.509Z"
+ },
+ {
+  "id": 282,
+  "from": "/uploads/1/9/1/0/19102967/cilas-course-picture_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/cilas-course-picture_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:14.671Z",
+  "created_at": "2026-10-13T15:17:14.671Z"
+ },
+ {
+  "id": 283,
+  "from": "/uploads/1/9/1/0/19102967/whatsapp-image-2019-08-05-at-2-53-31-pm_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/whatsapp-image-2019-08-05-at-2-53-31-pm_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:14.834Z",
+  "created_at": "2026-10-13T15:17:14.834Z"
+ },
+ {
+  "id": 284,
+  "from": "/uploads/1/9/1/0/19102967/796px-rembrandt-the-anatomy-lesson-of-dr-nicolaes-tulp_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/796px-rembrandt-the-anatomy-lesson-of-dr-nicolaes-tulp_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:15.090Z",
+  "created_at": "2026-10-13T15:17:15.090Z"
+ },
+ {
+  "id": 285,
+  "from": "/uploads/1/9/1/0/19102967/1531300048-214283-1531300919-noticia-normal-recorte1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1531300048-214283-1531300919-noticia-normal-recorte1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:15.360Z",
+  "created_at": "2026-10-13T15:17:15.360Z"
+ },
+ {
+  "id": 286,
+  "from": "/uploads/1/9/1/0/19102967/37818496-1964401066913055-2626317714901172224-n.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/37818496-1964401066913055-2626317714901172224-n.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:15.538Z",
+  "created_at": "2026-10-13T15:17:15.538Z"
+ },
+ {
+  "id": 287,
+  "from": "/uploads/1/9/1/0/19102967/1888417786_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1888417786_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:15.643Z",
+  "created_at": "2026-10-13T15:17:15.643Z"
+ },
+ {
+  "id": 288,
+  "from": "/uploads/1/9/1/0/19102967/00-05-reflections-c-wang-ning-1563545075_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/00-05-reflections-c-wang-ning-1563545075_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:15.828Z",
+  "created_at": "2026-10-13T15:17:15.828Z"
+ },
+ {
+  "id": 289,
+  "from": "/uploads/1/9/1/0/19102967/unnamed4234_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/unnamed4234_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:15.989Z",
+  "created_at": "2026-10-13T15:17:15.989Z"
+ },
+ {
+  "id": 290,
+  "from": "/uploads/1/9/1/0/19102967/15301059-1495258833836251-1536292942-n_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15301059-1495258833836251-1536292942-n_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:16.128Z",
+  "created_at": "2026-10-13T15:17:16.128Z"
+ },
+ {
+  "id": 291,
+  "from": "/uploads/1/9/1/0/19102967/7109816.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/7109816.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:16.299Z",
+  "created_at": "2026-10-13T15:17:16.299Z"
+ },
+ {
+  "id": 292,
+  "from": "/uploads/1/9/1/0/19102967/24300971-1690400314313133-3437124288640731160-n_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/24300971-1690400314313133-3437124288640731160-n_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:16.508Z",
+  "created_at": "2026-10-13T15:17:16.508Z"
+ },
+ {
+  "id": 293,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2017-12-04-at-07-36-37_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2017-12-04-at-07-36-37_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:16.649Z",
+  "created_at": "2026-10-13T15:17:16.649Z"
+ },
+ {
+  "id": 294,
+  "from": "/uploads/1/9/1/0/19102967/visions-of-arabs_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/visions-of-arabs_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:16.798Z",
+  "created_at": "2026-10-13T15:17:16.798Z"
+ },
+ {
+  "id": 295,
+  "from": "/uploads/1/9/1/0/19102967/___1417081511.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/___1417081511.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:16.929Z",
+  "created_at": "2026-10-13T15:17:16.929Z"
+ },
+ {
+  "id": 296,
+  "from": "/uploads/1/9/1/0/19102967/____1425165666.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/____1425165666.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:17.108Z",
+  "created_at": "2026-10-13T15:17:17.108Z"
+ },
+ {
+  "id": 297,
+  "from": "/uploads/1/9/1/0/19102967/utopia-poster-3_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/utopia-poster-3_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:17.308Z",
+  "created_at": "2026-10-13T15:17:17.308Z"
+ },
+ {
+  "id": 298,
+  "from": "/uploads/1/9/1/0/19102967/3369185.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/3369185.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:17.551Z",
+  "created_at": "2026-10-13T15:17:17.551Z"
+ },
+ {
+  "id": 299,
+  "from": "/uploads/1/9/1/0/19102967/4715817.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/4715817.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:17.790Z",
+  "created_at": "2026-10-13T15:17:17.790Z"
+ },
+ {
+  "id": 300,
+  "from": "/uploads/1/9/1/0/19102967/the-poetics-of-ethnography_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/the-poetics-of-ethnography_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:18.100Z",
+  "created_at": "2026-10-13T15:17:18.100Z"
+ },
+ {
+  "id": 301,
+  "from": "/uploads/1/9/1/0/19102967/15355975-1495275703834564-760023898-n_2.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15355975-1495275703834564-760023898-n_2.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:18.368Z",
+  "created_at": "2026-10-13T15:17:18.368Z"
+ },
+ {
+  "id": 302,
+  "from": "/uploads/1/9/1/0/19102967/15388730-1499090420119759-1375692631-o_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15388730-1499090420119759-1375692631-o_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:18.620Z",
+  "created_at": "2026-10-13T15:17:18.619Z"
+ },
+ {
+  "id": 303,
+  "from": "/uploads/1/9/1/0/19102967/sam_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/sam_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:18.879Z",
+  "created_at": "2026-10-13T15:17:18.879Z"
+ },
+ {
+  "id": 304,
+  "from": "/uploads/1/9/1/0/19102967/324980-dreambox-sat-com_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/324980-dreambox-sat-com_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:19.154Z",
+  "created_at": "2026-10-13T15:17:19.154Z"
+ },
+ {
+  "id": 305,
+  "from": "/uploads/1/9/1/0/19102967/farabi-kindi_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/farabi-kindi_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:19.378Z",
+  "created_at": "2026-10-13T15:17:19.378Z"
+ },
+ {
+  "id": 306,
+  "from": "/uploads/1/9/1/0/19102967/4506844.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/4506844.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:19.578Z",
+  "created_at": "2026-10-13T15:17:19.578Z"
+ },
+ {
+  "id": 307,
+  "from": "/uploads/1/9/1/0/19102967/1807073.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1807073.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:19.828Z",
+  "created_at": "2026-10-13T15:17:19.828Z"
+ },
+ {
+  "id": 308,
+  "from": "/uploads/1/9/1/0/19102967/1158721.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1158721.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:20.062Z",
+  "created_at": "2026-10-13T15:17:20.062Z"
+ },
+ {
+  "id": 309,
+  "from": "/uploads/1/9/1/0/19102967/15416858-1499090240119777-1134512755-n_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15416858-1499090240119777-1134512755-n_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:20.369Z",
+  "created_at": "2026-10-13T15:17:20.369Z"
+ },
+ {
+  "id": 310,
+  "from": "/uploads/1/9/1/0/19102967/brain-right_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/brain-right_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:20.910Z",
+  "created_at": "2026-10-13T15:17:20.909Z"
+ },
+ {
+  "id": 311,
+  "from": "/uploads/1/9/1/0/19102967/course-image-ash-moniz_1_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/course-image-ash-moniz_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:21.438Z",
+  "created_at": "2026-10-13T15:17:21.438Z"
+ },
+ {
+  "id": 312,
+  "from": "/uploads/1/9/1/0/19102967/7488344.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/7488344.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:22.017Z",
+  "created_at": "2026-10-13T15:17:22.017Z"
+ },
+ {
+  "id": 313,
+  "from": "/uploads/1/9/1/0/19102967/7001682_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/7001682_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:22.700Z",
+  "created_at": "2026-10-13T15:17:22.700Z"
+ },
+ {
+  "id": 314,
+  "from": "/uploads/1/9/1/0/19102967/15355975-1495275703834564-760023898-n_1.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15355975-1495275703834564-760023898-n_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:23.441Z",
+  "created_at": "2026-10-13T15:17:23.441Z"
+ },
+ {
+  "id": 315,
+  "from": "/uploads/1/9/1/0/19102967/2621487.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/2621487.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:23.958Z",
+  "created_at": "2026-10-13T15:17:23.958Z"
+ },
+ {
+  "id": 316,
+  "from": "/uploads/1/9/1/0/19102967/img-0364-dewahdan-wahdan_2_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/img-0364-dewahdan-wahdan_2_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:24.569Z",
+  "created_at": "2026-10-13T15:17:24.569Z"
+ },
+ {
+  "id": 317,
+  "from": "/uploads/1/9/1/0/19102967/15556229-1508361469192654-840220028-o_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15556229-1508361469192654-840220028-o_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:25.450Z",
+  "created_at": "2026-10-13T15:17:25.450Z"
+ },
+ {
+  "id": 318,
+  "from": "/uploads/1/9/1/0/19102967/image1328359191-4597-placeid-0-s660x390-amira-elserafy_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/image1328359191-4597-placeid-0-s660x390-amira-elserafy_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:25.975Z",
+  "created_at": "2026-10-13T15:17:25.975Z"
+ },
+ {
+  "id": 319,
+  "from": "/uploads/1/9/1/0/19102967/1083167.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1083167.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:26.619Z",
+  "created_at": "2026-10-13T15:17:26.619Z"
+ },
+ {
+  "id": 320,
+  "from": "/uploads/1/9/1/0/19102967/poetry-copyright-malak-elshazly_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/poetry-copyright-malak-elshazly_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:27.169Z",
+  "created_at": "2026-10-13T15:17:27.169Z"
+ },
+ {
+  "id": 321,
+  "from": "/uploads/1/9/1/0/19102967/28168703-1775509212468909-5118967511784658435-n_2_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/28168703-1775509212468909-5118967511784658435-n_2_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:27.873Z",
+  "created_at": "2026-10-13T15:17:27.873Z"
+ },
+ {
+  "id": 322,
+  "from": "/uploads/1/9/1/0/19102967/humanistic-educator_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/humanistic-educator_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:28.410Z",
+  "created_at": "2026-10-13T15:17:28.409Z"
+ },
+ {
+  "id": 323,
+  "from": "/uploads/1/9/1/0/19102967/van-helsing_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/van-helsing_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:29.209Z",
+  "created_at": "2026-10-13T15:17:29.209Z"
+ },
+ {
+  "id": 324,
+  "from": "/uploads/1/9/1/0/19102967/28308664-1997469187239731-1873978767-n_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/28308664-1997469187239731-1873978767-n_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:29.428Z",
+  "created_at": "2026-10-13T15:17:29.428Z"
+ },
+ {
+  "id": 325,
+  "from": "/uploads/1/9/1/0/19102967/17198629-1606816516013815-1717076067-n_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17198629-1606816516013815-1717076067-n_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:29.553Z",
+  "created_at": "2026-10-13T15:17:29.552Z"
+ },
+ {
+  "id": 326,
+  "from": "/uploads/1/9/1/0/19102967/oral-history_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/oral-history_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:29.702Z",
+  "created_at": "2026-10-13T15:17:29.701Z"
+ },
+ {
+  "id": 327,
+  "from": "/uploads/1/9/1/0/19102967/2961866.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/2961866.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:29.819Z",
+  "created_at": "2026-10-13T15:17:29.818Z"
+ },
+ {
+  "id": 328,
+  "from": "/uploads/1/9/1/0/19102967/on-placemaking_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/on-placemaking_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:29.949Z",
+  "created_at": "2026-10-13T15:17:29.949Z"
+ },
+ {
+  "id": 329,
+  "from": "/uploads/1/9/1/0/19102967/6058495.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/6058495.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:30.067Z",
+  "created_at": "2026-10-13T15:17:30.067Z"
+ },
+ {
+  "id": 330,
+  "from": "/uploads/1/9/1/0/19102967/2700906.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/2700906.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:30.240Z",
+  "created_at": "2026-10-13T15:17:30.240Z"
+ },
+ {
+  "id": 331,
+  "from": "/uploads/1/9/1/0/19102967/6412644.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/6412644.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:30.357Z",
+  "created_at": "2026-10-13T15:17:30.357Z"
+ },
+ {
+  "id": 332,
+  "from": "/uploads/1/9/1/0/19102967/__1409832586.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/__1409832586.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:30.479Z",
+  "created_at": "2026-10-13T15:17:30.479Z"
+ },
+ {
+  "id": 333,
+  "from": "/uploads/1/9/1/0/19102967/24993392-1693702423982922-3282498986909209030-n_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/24993392-1693702423982922-3282498986909209030-n_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:30.629Z",
+  "created_at": "2026-10-13T15:17:30.629Z"
+ },
+ {
+  "id": 334,
+  "from": "/uploads/1/9/1/0/19102967/3301630.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/3301630.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:30.778Z",
+  "created_at": "2026-10-13T15:17:30.778Z"
+ },
+ {
+  "id": 335,
+  "from": "/uploads/1/9/1/0/19102967/_1417188399.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/_1417188399.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:30.898Z",
+  "created_at": "2026-10-13T15:17:30.898Z"
+ },
+ {
+  "id": 336,
+  "from": "/uploads/1/9/1/0/19102967/minorities-and-the-city_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/minorities-and-the-city_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:31.047Z",
+  "created_at": "2026-10-13T15:17:31.046Z"
+ },
+ {
+  "id": 337,
+  "from": "/uploads/1/9/1/0/19102967/__1425165706.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/__1425165706.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:31.199Z",
+  "created_at": "2026-10-13T15:17:31.199Z"
+ },
+ {
+  "id": 338,
+  "from": "/uploads/1/9/1/0/19102967/659-1_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/659-1_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:31.304Z",
+  "created_at": "2026-10-13T15:17:31.304Z"
+ },
+ {
+  "id": 339,
+  "from": "/uploads/1/9/1/0/19102967/9788061.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/9788061.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:31.441Z",
+  "created_at": "2026-10-13T15:17:31.441Z"
+ },
+ {
+  "id": 340,
+  "from": "/uploads/1/9/1/0/19102967/7_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/7_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:31.559Z",
+  "created_at": "2026-10-13T15:17:31.559Z"
+ },
+ {
+  "id": 341,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2017-12-05-at-15-58-54_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2017-12-05-at-15-58-54_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:31.718Z",
+  "created_at": "2026-10-13T15:17:31.718Z"
+ },
+ {
+  "id": 342,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2017-12-04-at-06-47-16_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2017-12-04-at-06-47-16_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:31.887Z",
+  "created_at": "2026-10-13T15:17:31.887Z"
+ },
+ {
+  "id": 343,
+  "from": "/uploads/1/9/1/0/19102967/phenomenon-writings-on-the-wall-egypt-631-nadine-el-nabli_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/phenomenon-writings-on-the-wall-egypt-631-nadine-el-nabli_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:32.032Z",
+  "created_at": "2026-10-13T15:17:32.032Z"
+ },
+ {
+  "id": 344,
+  "from": "/uploads/1/9/1/0/19102967/course-image-option-002_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/course-image-option-002_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:32.178Z",
+  "created_at": "2026-10-13T15:17:32.178Z"
+ },
+ {
+  "id": 345,
+  "from": "/uploads/1/9/1/0/19102967/___1418233907.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/___1418233907.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:32.640Z",
+  "created_at": "2026-10-13T15:17:32.640Z"
+ },
+ {
+  "id": 346,
+  "from": "/uploads/1/9/1/0/19102967/7794339.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/7794339.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:33.362Z",
+  "created_at": "2026-10-13T15:17:33.362Z"
+ },
+ {
+  "id": 347,
+  "from": "/uploads/1/9/1/0/19102967/5565031.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/5565031.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:34.168Z",
+  "created_at": "2026-10-13T15:17:34.168Z"
+ },
+ {
+  "id": 348,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2017-12-05-at-16-09-31_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2017-12-05-at-16-09-31_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:34.350Z",
+  "created_at": "2026-10-13T15:17:34.350Z"
+ },
+ {
+  "id": 349,
+  "from": "/uploads/1/9/1/0/19102967/img-4718_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/img-4718_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:34.608Z",
+  "created_at": "2026-10-13T15:17:34.608Z"
+ },
+ {
+  "id": 350,
+  "from": "/uploads/1/9/1/0/19102967/act1-falling-backwards-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/act1-falling-backwards-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:34.931Z",
+  "created_at": "2026-10-13T15:17:34.930Z"
+ },
+ {
+  "id": 351,
+  "from": "/uploads/1/9/1/0/19102967/674647.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/674647.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:35.438Z",
+  "created_at": "2026-10-13T15:17:35.438Z"
+ },
+ {
+  "id": 352,
+  "from": "/uploads/1/9/1/0/19102967/6908359.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/6908359.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:35.749Z",
+  "created_at": "2026-10-13T15:17:35.749Z"
+ },
+ {
+  "id": 353,
+  "from": "/uploads/1/9/1/0/19102967/78431736-1018770925135782-7293964236617678848-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/78431736-1018770925135782-7293964236617678848-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:36.048Z",
+  "created_at": "2026-10-13T15:17:36.048Z"
+ },
+ {
+  "id": 354,
+  "from": "/uploads/1/9/1/0/19102967/5539692.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/5539692.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:36.388Z",
+  "created_at": "2026-10-13T15:17:36.388Z"
+ },
+ {
+  "id": 355,
+  "from": "/uploads/1/9/1/0/19102967/8267069.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/8267069.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:36.587Z",
+  "created_at": "2026-10-13T15:17:36.587Z"
+ },
+ {
+  "id": 356,
+  "from": "/uploads/1/9/1/0/19102967/7498737.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/7498737.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:36.718Z",
+  "created_at": "2026-10-13T15:17:36.718Z"
+ },
+ {
+  "id": 357,
+  "from": "/uploads/1/9/1/0/19102967/954_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/954_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:36.867Z",
+  "created_at": "2026-10-13T15:17:36.867Z"
+ },
+ {
+  "id": 358,
+  "from": "/uploads/1/9/1/0/19102967/zhuangzi-robin-weiss_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/zhuangzi-robin-weiss_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:36.988Z",
+  "created_at": "2026-10-13T15:17:36.987Z"
+ },
+ {
+  "id": 359,
+  "from": "/uploads/1/9/1/0/19102967/125115.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/125115.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:37.117Z",
+  "created_at": "2026-10-13T15:17:37.117Z"
+ },
+ {
+  "id": 360,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2017-12-03-at-18-39-04_2_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2017-12-03-at-18-39-04_2_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:37.239Z",
+  "created_at": "2026-10-13T15:17:37.239Z"
+ },
+ {
+  "id": 361,
+  "from": "/uploads/1/9/1/0/19102967/15128511-10157806183400444-2075547265-n_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15128511-10157806183400444-2075547265-n_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:37.358Z",
+  "created_at": "2026-10-13T15:17:37.358Z"
+ },
+ {
+  "id": 362,
+  "from": "/uploads/1/9/1/0/19102967/15320500-1495263260502475-2113408908-n.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15320500-1495263260502475-2113408908-n.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:37.488Z",
+  "created_at": "2026-10-13T15:17:37.487Z"
+ },
+ {
+  "id": 363,
+  "from": "/uploads/1/9/1/0/19102967/15369766-1499127106782757-208635662-o.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15369766-1499127106782757-208635662-o.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:37.608Z",
+  "created_at": "2026-10-13T15:17:37.608Z"
+ },
+ {
+  "id": 364,
+  "from": "/uploads/1/9/1/0/19102967/on-the-art-of-manliness_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/on-the-art-of-manliness_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:37.749Z",
+  "created_at": "2026-10-13T15:17:37.748Z"
+ },
+ {
+  "id": 365,
+  "from": "/uploads/1/9/1/0/19102967/____1417081511.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/____1417081511.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:37.877Z",
+  "created_at": "2026-10-13T15:17:37.877Z"
+ },
+ {
+  "id": 366,
+  "from": "/uploads/1/9/1/0/19102967/screen-shot-2017-12-03-at-19-36-12_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/screen-shot-2017-12-03-at-19-36-12_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.010Z",
+  "created_at": "2026-10-13T15:17:38.010Z"
+ },
+ {
+  "id": 367,
+  "from": "/uploads/1/9/1/0/19102967/1992672.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1992672.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.148Z",
+  "created_at": "2026-10-13T15:17:38.148Z"
+ },
+ {
+  "id": 368,
+  "from": "/uploads/1/9/1/0/19102967/alex-2_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/alex-2_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.338Z",
+  "created_at": "2026-10-13T15:17:38.337Z"
+ },
+ {
+  "id": 369,
+  "from": "/uploads/1/9/1/0/19102967/3072582.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/3072582.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.458Z",
+  "created_at": "2026-10-13T15:17:38.458Z"
+ },
+ {
+  "id": 370,
+  "from": "/uploads/1/9/1/0/19102967/defending-alexandria-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/defending-alexandria-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.577Z",
+  "created_at": "2026-10-13T15:17:38.577Z"
+ },
+ {
+  "id": 371,
+  "from": "/uploads/1/9/1/0/19102967/walter-benjamin-bibliothc3a8que-nationale-de-france_1_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/walter-benjamin-bibliothc3a8que-nationale-de-france_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.698Z",
+  "created_at": "2026-10-13T15:17:38.698Z"
+ },
+ {
+  "id": 372,
+  "from": "/uploads/1/9/1/0/19102967/8358494_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/8358494_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.820Z",
+  "created_at": "2026-10-13T15:17:38.819Z"
+ },
+ {
+  "id": 373,
+  "from": "/uploads/1/9/1/0/19102967/306717_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/306717_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:38.951Z",
+  "created_at": "2026-10-13T15:17:38.951Z"
+ },
+ {
+  "id": 374,
+  "from": "/uploads/1/9/1/0/19102967/9604764.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/9604764.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:39.121Z",
+  "created_at": "2026-10-13T15:17:39.121Z"
+ },
+ {
+  "id": 375,
+  "from": "/uploads/1/9/1/0/19102967/8861668.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/8861668.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:39.258Z",
+  "created_at": "2026-10-13T15:17:39.258Z"
+ },
+ {
+  "id": 376,
+  "from": "/uploads/1/9/1/0/19102967/48995934-2189791457707347-6231806240062701568-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/48995934-2189791457707347-6231806240062701568-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:39.378Z",
+  "created_at": "2026-10-13T15:17:39.377Z"
+ },
+ {
+  "id": 377,
+  "from": "/uploads/1/9/1/0/19102967/_1443523700.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/_1443523700.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:39.538Z",
+  "created_at": "2026-10-13T15:17:39.538Z"
+ },
+ {
+  "id": 378,
+  "from": "/uploads/1/9/1/0/19102967/1382021325.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1382021325.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:39.658Z",
+  "created_at": "2026-10-13T15:17:39.658Z"
+ },
+ {
+  "id": 379,
+  "from": "/uploads/1/9/1/0/19102967/1448452074.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1448452074.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:39.788Z",
+  "created_at": "2026-10-13T15:17:39.788Z"
+ },
+ {
+  "id": 380,
+  "from": "/uploads/1/9/1/0/19102967/8487613.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/8487613.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:39.928Z",
+  "created_at": "2026-10-13T15:17:39.927Z"
+ },
+ {
+  "id": 381,
+  "from": "/uploads/1/9/1/0/19102967/1382021811.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1382021811.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:40.057Z",
+  "created_at": "2026-10-13T15:17:40.057Z"
+ },
+ {
+  "id": 382,
+  "from": "/uploads/1/9/1/0/19102967/1382021586.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1382021586.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:40.201Z",
+  "created_at": "2026-10-13T15:17:40.198Z"
+ },
+ {
+  "id": 383,
+  "from": "/uploads/1/9/1/0/19102967/1425294959_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425294959_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:40.330Z",
+  "created_at": "2026-10-13T15:17:40.330Z"
+ },
+ {
+  "id": 384,
+  "from": "/uploads/1/9/1/0/19102967/28279134-1775476289138868-5520712600207102187-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/28279134-1775476289138868-5520712600207102187-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:40.480Z",
+  "created_at": "2026-10-13T15:17:40.480Z"
+ },
+ {
+  "id": 385,
+  "from": "/uploads/1/9/1/0/19102967/1424777635.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1424777635.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:40.659Z",
+  "created_at": "2026-10-13T15:17:40.659Z"
+ },
+ {
+  "id": 386,
+  "from": "/uploads/1/9/1/0/19102967/1284679.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1284679.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:40.807Z",
+  "created_at": "2026-10-13T15:17:40.807Z"
+ },
+ {
+  "id": 387,
+  "from": "/uploads/1/9/1/0/19102967/1448358406.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1448358406.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:40.940Z",
+  "created_at": "2026-10-13T15:17:40.940Z"
+ },
+ {
+  "id": 388,
+  "from": "/uploads/1/9/1/0/19102967/17265017-1431098700243297-3430972855023937155-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17265017-1431098700243297-3430972855023937155-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:41.151Z",
+  "created_at": "2026-10-13T15:17:41.151Z"
+ },
+ {
+  "id": 389,
+  "from": "/uploads/1/9/1/0/19102967/15401392-1499126146782853-1971151904-n_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15401392-1499126146782853-1971151904-n_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:41.360Z",
+  "created_at": "2026-10-13T15:17:41.360Z"
+ },
+ {
+  "id": 390,
+  "from": "/uploads/1/9/1/0/19102967/1391093517.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1391093517.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:41.558Z",
+  "created_at": "2026-10-13T15:17:41.558Z"
+ },
+ {
+  "id": 391,
+  "from": "/uploads/1/9/1/0/19102967/8527727_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/8527727_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:41.717Z",
+  "created_at": "2026-10-13T15:17:41.717Z"
+ },
+ {
+  "id": 392,
+  "from": "/uploads/1/9/1/0/19102967/24297512-1689742731045558-7600683369130640606-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/24297512-1689742731045558-7600683369130640606-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:41.848Z",
+  "created_at": "2026-10-13T15:17:41.848Z"
+ },
+ {
+  "id": 393,
+  "from": "/uploads/1/9/1/0/19102967/24312693-1689742611045570-5260165924886471384-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/24312693-1689742611045570-5260165924886471384-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.009Z",
+  "created_at": "2026-10-13T15:17:42.009Z"
+ },
+ {
+  "id": 394,
+  "from": "/uploads/1/9/1/0/19102967/15355862-1499162033445931-1917970752-n_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15355862-1499162033445931-1917970752-n_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.160Z",
+  "created_at": "2026-10-13T15:17:42.160Z"
+ },
+ {
+  "id": 395,
+  "from": "/uploads/1/9/1/0/19102967/17202689-1431104856909348-2843517810966681819-n_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17202689-1431104856909348-2843517810966681819-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.308Z",
+  "created_at": "2026-10-13T15:17:42.308Z"
+ },
+ {
+  "id": 396,
+  "from": "/uploads/1/9/1/0/19102967/1417081511.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1417081511.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.447Z",
+  "created_at": "2026-10-13T15:17:42.447Z"
+ },
+ {
+  "id": 397,
+  "from": "/uploads/1/9/1/0/19102967/2976024_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/2976024_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.578Z",
+  "created_at": "2026-10-13T15:17:42.578Z"
+ },
+ {
+  "id": 398,
+  "from": "/uploads/1/9/1/0/19102967/1395441347_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1395441347_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.697Z",
+  "created_at": "2026-10-13T15:17:42.697Z"
+ },
+ {
+  "id": 399,
+  "from": "/uploads/1/9/1/0/19102967/17190664-1431103123576188-6856993382827123931-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17190664-1431103123576188-6856993382827123931-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.829Z",
+  "created_at": "2026-10-13T15:17:42.829Z"
+ },
+ {
+  "id": 400,
+  "from": "/uploads/1/9/1/0/19102967/1390000740.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1390000740.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:42.952Z",
+  "created_at": "2026-10-13T15:17:42.952Z"
+ },
+ {
+  "id": 401,
+  "from": "/uploads/1/9/1/0/19102967/15218308-10157871627970444-1038353379-n_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15218308-10157871627970444-1038353379-n_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:43.077Z",
+  "created_at": "2026-10-13T15:17:43.077Z"
+ },
+ {
+  "id": 402,
+  "from": "/uploads/1/9/1/0/19102967/1409832586.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1409832586.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:43.219Z",
+  "created_at": "2026-10-13T15:17:43.219Z"
+ },
+ {
+  "id": 403,
+  "from": "/uploads/1/9/1/0/19102967/15310914-1495258610502940-1918083998-o_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15310914-1495258610502940-1918083998-o_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:43.348Z",
+  "created_at": "2026-10-13T15:17:43.348Z"
+ },
+ {
+  "id": 404,
+  "from": "/uploads/1/9/1/0/19102967/1425293669_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425293669_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:43.512Z",
+  "created_at": "2026-10-13T15:17:43.512Z"
+ },
+ {
+  "id": 405,
+  "from": "/uploads/1/9/1/0/19102967/15555737-1506357882726346-483657641-n_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15555737-1506357882726346-483657641-n_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:43.669Z",
+  "created_at": "2026-10-13T15:17:43.668Z"
+ },
+ {
+  "id": 406,
+  "from": "/uploads/1/9/1/0/19102967/1390000842.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1390000842.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:43.830Z",
+  "created_at": "2026-10-13T15:17:43.830Z"
+ },
+ {
+  "id": 407,
+  "from": "/uploads/1/9/1/0/19102967/8892759_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/8892759_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:43.948Z",
+  "created_at": "2026-10-13T15:17:43.948Z"
+ },
+ {
+  "id": 408,
+  "from": "/uploads/1/9/1/0/19102967/1417188399.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1417188399.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:44.108Z",
+  "created_at": "2026-10-13T15:17:44.108Z"
+ },
+ {
+  "id": 409,
+  "from": "/uploads/1/9/1/0/19102967/1425293952_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425293952_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:44.230Z",
+  "created_at": "2026-10-13T15:17:44.230Z"
+ },
+ {
+  "id": 410,
+  "from": "/uploads/1/9/1/0/19102967/1418233907.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1418233907.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:44.349Z",
+  "created_at": "2026-10-13T15:17:44.349Z"
+ },
+ {
+  "id": 411,
+  "from": "/uploads/1/9/1/0/19102967/1425295444_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425295444_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:44.452Z",
+  "created_at": "2026-10-13T15:17:44.452Z"
+ },
+ {
+  "id": 412,
+  "from": "/uploads/1/9/1/0/19102967/28168411-1775256625827501-7626150523280183671-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/28168411-1775256625827501-7626150523280183671-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:44.535Z",
+  "created_at": "2026-10-13T15:17:44.535Z"
+ },
+ {
+  "id": 413,
+  "from": "/uploads/1/9/1/0/19102967/15401376-1504324659596335-1153788156-n-2_1.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15401376-1504324659596335-1153788156-n-2_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:44.914Z",
+  "created_at": "2026-10-13T15:17:44.910Z"
+ },
+ {
+  "id": 414,
+  "from": "/uploads/1/9/1/0/19102967/5491476_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/5491476_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:45.809Z",
+  "created_at": "2026-10-13T15:17:45.809Z"
+ },
+ {
+  "id": 415,
+  "from": "/uploads/1/9/1/0/19102967/17349580-1431594920193675-5478130145707271574-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17349580-1431594920193675-5478130145707271574-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:46.670Z",
+  "created_at": "2026-10-13T15:17:46.669Z"
+ },
+ {
+  "id": 416,
+  "from": "/uploads/1/9/1/0/19102967/1391351014.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1391351014.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:47.598Z",
+  "created_at": "2026-10-13T15:17:47.598Z"
+ },
+ {
+  "id": 417,
+  "from": "/uploads/1/9/1/0/19102967/1391092046.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1391092046.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:48.298Z",
+  "created_at": "2026-10-13T15:17:48.298Z"
+ },
+ {
+  "id": 418,
+  "from": "/uploads/1/9/1/0/19102967/dsc-7820_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/dsc-7820_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:49.900Z",
+  "created_at": "2026-10-13T15:17:49.900Z"
+ },
+ {
+  "id": 419,
+  "from": "/uploads/1/9/1/0/19102967/1390000888.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1390000888.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:51.160Z",
+  "created_at": "2026-10-13T15:17:51.160Z"
+ },
+ {
+  "id": 420,
+  "from": "/uploads/1/9/1/0/19102967/49017705-2189792224373937-1328588252583559168-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/49017705-2189792224373937-1328588252583559168-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:51.511Z",
+  "created_at": "2026-10-13T15:17:51.511Z"
+ },
+ {
+  "id": 421,
+  "from": "/uploads/1/9/1/0/19102967/1467386081_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1467386081_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:52.028Z",
+  "created_at": "2026-10-13T15:17:52.028Z"
+ },
+ {
+  "id": 422,
+  "from": "/uploads/1/9/1/0/19102967/1395187967.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1395187967.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:52.430Z",
+  "created_at": "2026-10-13T15:17:52.430Z"
+ },
+ {
+  "id": 423,
+  "from": "/uploads/1/9/1/0/19102967/1793656_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1793656_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:52.568Z",
+  "created_at": "2026-10-13T15:17:52.568Z"
+ },
+ {
+  "id": 424,
+  "from": "/uploads/1/9/1/0/19102967/6742339.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/6742339.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:52.688Z",
+  "created_at": "2026-10-13T15:17:52.688Z"
+ },
+ {
+  "id": 425,
+  "from": "/uploads/1/9/1/0/19102967/68353415-1155394244670579-5901965434768326656-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/68353415-1155394244670579-5901965434768326656-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:52.852Z",
+  "created_at": "2026-10-13T15:17:52.851Z"
+ },
+ {
+  "id": 426,
+  "from": "/uploads/1/9/1/0/19102967/img-20190808-wa0001_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/img-20190808-wa0001_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:52.979Z",
+  "created_at": "2026-10-13T15:17:52.979Z"
+ },
+ {
+  "id": 427,
+  "from": "/uploads/1/9/1/0/19102967/15356143-1495263550502446-1774457090-n_1.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15356143-1495263550502446-1774457090-n_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:53.118Z",
+  "created_at": "2026-10-13T15:17:53.118Z"
+ },
+ {
+  "id": 428,
+  "from": "/uploads/1/9/1/0/19102967/4355102_1_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/4355102_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:53.239Z",
+  "created_at": "2026-10-13T15:17:53.239Z"
+ },
+ {
+  "id": 429,
+  "from": "/uploads/1/9/1/0/19102967/1448389834.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1448389834.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:53.380Z",
+  "created_at": "2026-10-13T15:17:53.379Z"
+ },
+ {
+  "id": 430,
+  "from": "/uploads/1/9/1/0/19102967/15491970-1506215729407228-1184629310-o_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15491970-1506215729407228-1184629310-o_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:53.499Z",
+  "created_at": "2026-10-13T15:17:53.499Z"
+ },
+ {
+  "id": 431,
+  "from": "/uploads/1/9/1/0/19102967/1391093656.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1391093656.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:53.634Z",
+  "created_at": "2026-10-13T15:17:53.634Z"
+ },
+ {
+  "id": 432,
+  "from": "/uploads/1/9/1/0/19102967/1425165666.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425165666.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:53.750Z",
+  "created_at": "2026-10-13T15:17:53.750Z"
+ },
+ {
+  "id": 433,
+  "from": "/uploads/1/9/1/0/19102967/28337256-1775237329162764-5557298597709500277-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/28337256-1775237329162764-5557298597709500277-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:53.869Z",
+  "created_at": "2026-10-13T15:17:53.869Z"
+ },
+ {
+  "id": 434,
+  "from": "/uploads/1/9/1/0/19102967/1425295880_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425295880_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.029Z",
+  "created_at": "2026-10-13T15:17:54.029Z"
+ },
+ {
+  "id": 435,
+  "from": "/uploads/1/9/1/0/19102967/15409646-1495258840502917-916605110-o_1.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15409646-1495258840502917-916605110-o_1.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.148Z",
+  "created_at": "2026-10-13T15:17:54.148Z"
+ },
+ {
+  "id": 436,
+  "from": "/uploads/1/9/1/0/19102967/1189786-orig_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1189786-orig_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.278Z",
+  "created_at": "2026-10-13T15:17:54.278Z"
+ },
+ {
+  "id": 437,
+  "from": "/uploads/1/9/1/0/19102967/1448361753.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1448361753.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.400Z",
+  "created_at": "2026-10-13T15:17:54.400Z"
+ },
+ {
+  "id": 438,
+  "from": "/uploads/1/9/1/0/19102967/hussein-el-hajj_1_orig.jpeg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/hussein-el-hajj_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.529Z",
+  "created_at": "2026-10-13T15:17:54.528Z"
+ },
+ {
+  "id": 439,
+  "from": "/uploads/1/9/1/0/19102967/1448360331.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1448360331.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.648Z",
+  "created_at": "2026-10-13T15:17:54.648Z"
+ },
+ {
+  "id": 440,
+  "from": "/uploads/1/9/1/0/19102967/17211870-1431105056909328-2365757377878933650-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17211870-1431105056909328-2365757377878933650-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.768Z",
+  "created_at": "2026-10-13T15:17:54.768Z"
+ },
+ {
+  "id": 441,
+  "from": "/uploads/1/9/1/0/19102967/49064839-2189791844373975-329358660855660544-n_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/49064839-2189791844373975-329358660855660544-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:54.907Z",
+  "created_at": "2026-10-13T15:17:54.907Z"
+ },
+ {
+  "id": 442,
+  "from": "/uploads/1/9/1/0/19102967/15419249-1504311559597645-1230737837-o_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/15419249-1504311559597645-1230737837-o_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.028Z",
+  "created_at": "2026-10-13T15:17:55.028Z"
+ },
+ {
+  "id": 443,
+  "from": "/uploads/1/9/1/0/19102967/1425165546.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425165546.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.172Z",
+  "created_at": "2026-10-13T15:17:55.171Z"
+ },
+ {
+  "id": 444,
+  "from": "/uploads/1/9/1/0/19102967/10959323-10155195339360626-8338015401957860093-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/10959323-10155195339360626-8338015401957860093-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.298Z",
+  "created_at": "2026-10-13T15:17:55.298Z"
+ },
+ {
+  "id": 445,
+  "from": "/uploads/1/9/1/0/19102967/4190580_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/4190580_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.419Z",
+  "created_at": "2026-10-13T15:17:55.418Z"
+ },
+ {
+  "id": 446,
+  "from": "/uploads/1/9/1/0/19102967/28235001-1775505352469295-1849919328422706486-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/28235001-1775505352469295-1849919328422706486-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.549Z",
+  "created_at": "2026-10-13T15:17:55.549Z"
+ },
+ {
+  "id": 447,
+  "from": "/uploads/1/9/1/0/19102967/1467385823_orig.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1467385823_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.668Z",
+  "created_at": "2026-10-13T15:17:55.668Z"
+ },
+ {
+  "id": 448,
+  "from": "/uploads/1/9/1/0/19102967/6715718_1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/6715718_1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.809Z",
+  "created_at": "2026-10-13T15:17:55.809Z"
+ },
+ {
+  "id": 449,
+  "from": "/uploads/1/9/1/0/19102967/5728805.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/5728805.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:55.929Z",
+  "created_at": "2026-10-13T15:17:55.929Z"
+ },
+ {
+  "id": 450,
+  "from": "/uploads/1/9/1/0/19102967/1395441906_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1395441906_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:56.088Z",
+  "created_at": "2026-10-13T15:17:56.088Z"
+ },
+ {
+  "id": 451,
+  "from": "/uploads/1/9/1/0/19102967/24991196-1693162744036890-4383998096063377050-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/24991196-1693162744036890-4383998096063377050-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:56.208Z",
+  "created_at": "2026-10-13T15:17:56.208Z"
+ },
+ {
+  "id": 452,
+  "from": "/uploads/1/9/1/0/19102967/1391093694.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1391093694.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:56.318Z",
+  "created_at": "2026-10-13T15:17:56.318Z"
+ },
+ {
+  "id": 453,
+  "from": "/uploads/1/9/1/0/19102967/24785345-1689742844378880-4038314332248184244-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/24785345-1689742844378880-4038314332248184244-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:56.499Z",
+  "created_at": "2026-10-13T15:17:56.499Z"
+ },
+ {
+  "id": 454,
+  "from": "/uploads/1/9/1/0/19102967/10644841-10154767323395553-9119527181277456794-n-1_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/10644841-10154767323395553-9119527181277456794-n-1_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:56.642Z",
+  "created_at": "2026-10-13T15:17:56.641Z"
+ },
+ {
+  "id": 455,
+  "from": "/uploads/1/9/1/0/19102967/36747175-277757266302547-5631981733252431872-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/36747175-277757266302547-5631981733252431872-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:56.778Z",
+  "created_at": "2026-10-13T15:17:56.778Z"
+ },
+ {
+  "id": 456,
+  "from": "/uploads/1/9/1/0/19102967/1395442263_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1395442263_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:56.898Z",
+  "created_at": "2026-10-13T15:17:56.898Z"
+ },
+ {
+  "id": 457,
+  "from": "/uploads/1/9/1/0/19102967/1425165706.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425165706.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.070Z",
+  "created_at": "2026-10-13T15:17:57.070Z"
+ },
+ {
+  "id": 458,
+  "from": "/uploads/1/9/1/0/19102967/1391094564.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1391094564.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.191Z",
+  "created_at": "2026-10-13T15:17:57.191Z"
+ },
+ {
+  "id": 459,
+  "from": "/uploads/1/9/1/0/19102967/24296424-1689743237712174-787318291848553539-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/24296424-1689743237712174-787318291848553539-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.349Z",
+  "created_at": "2026-10-13T15:17:57.349Z"
+ },
+ {
+  "id": 460,
+  "from": "/uploads/1/9/1/0/19102967/1425164709.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1425164709.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.478Z",
+  "created_at": "2026-10-13T15:17:57.478Z"
+ },
+ {
+  "id": 461,
+  "from": "/uploads/1/9/1/0/19102967/1381319357.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1381319357.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.618Z",
+  "created_at": "2026-10-13T15:17:57.618Z"
+ },
+ {
+  "id": 462,
+  "from": "/uploads/1/9/1/0/19102967/28238060-1775256922494138-2619577230442500091-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/28238060-1775256922494138-2619577230442500091-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.738Z",
+  "created_at": "2026-10-13T15:17:57.738Z"
+ },
+ {
+  "id": 463,
+  "from": "/uploads/1/9/1/0/19102967/45049724-10155777566176027-4141740463654699008-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/45049724-10155777566176027-4141740463654699008-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.869Z",
+  "created_at": "2026-10-13T15:17:57.869Z"
+ },
+ {
+  "id": 464,
+  "from": "/uploads/1/9/1/0/19102967/1395225589.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1395225589.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:57.989Z",
+  "created_at": "2026-10-13T15:17:57.988Z"
+ },
+ {
+  "id": 465,
+  "from": "/uploads/1/9/1/0/19102967/_1424778508.png",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/_1424778508.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:58.128Z",
+  "created_at": "2026-10-13T15:17:58.128Z"
+ },
+ {
+  "id": 466,
+  "from": "/uploads/1/9/1/0/19102967/21951095-10154676269196114-5272177370513011478-o_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/21951095-10154676269196114-5272177370513011478-o_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:58.244Z",
+  "created_at": "2026-10-13T15:17:58.244Z"
+ },
+ {
+  "id": 467,
+  "from": "/uploads/1/9/1/0/19102967/17308767-1431104923576008-6116616280950583849-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17308767-1431104923576008-6116616280950583849-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:58.379Z",
+  "created_at": "2026-10-13T15:17:58.378Z"
+ },
+ {
+  "id": 468,
+  "from": "/uploads/1/9/1/0/19102967/17155974-1431098570243310-2837688362347922184-n_orig.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/17155974-1431098570243310-2837688362347922184-n_orig.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:58.525Z",
+  "created_at": "2026-10-13T15:17:58.525Z"
+ },
+ {
+  "id": 469,
+  "from": "/uploads/1/9/1/0/19102967/1381319405.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1381319405.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:58.669Z",
+  "created_at": "2026-10-13T15:17:58.668Z"
+ },
+ {
+  "id": 470,
+  "from": "/uploads/1/9/1/0/19102967/1382064064.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1382064064.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:58.798Z",
+  "created_at": "2026-10-13T15:17:58.798Z"
+ },
+ {
+  "id": 471,
+  "from": "/uploads/1/9/1/0/19102967/1391093357.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1391093357.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:58.919Z",
+  "created_at": "2026-10-13T15:17:58.919Z"
+ },
+ {
+  "id": 472,
+  "from": "/uploads/1/9/1/0/19102967/1382021750.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1382021750.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.058Z",
+  "created_at": "2026-10-13T15:17:59.058Z"
+ },
+ {
+  "id": 473,
+  "from": "/uploads/1/9/1/0/19102967/1213420.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/1213420.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.189Z",
+  "created_at": "2026-10-13T15:17:59.189Z"
+ },
+ {
+  "id": 474,
+  "from": "/seed/images/surti-singh.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/surti-singh.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.318Z",
+  "created_at": "2026-10-13T15:17:59.318Z"
+ },
+ {
+  "id": 475,
+  "from": "/seed/images/Manish-Jain.webp",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/Manish-Jain.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.438Z",
+  "created_at": "2026-10-13T15:17:59.438Z"
+ },
+ {
+  "id": 476,
+  "from": "/seed/images/translation-as-education-cover.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/translation-as-education-cover.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.557Z",
+  "created_at": "2026-10-13T15:17:59.557Z"
+ },
+ {
+  "id": 477,
+  "from": "/seed/images/blog-berlin-ers.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/blog-berlin-ers.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.689Z",
+  "created_at": "2026-10-13T15:17:59.689Z"
+ },
+ {
+  "id": 478,
+  "from": "/seed/images/blog-normative-to-empirical.jpg",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/blog-normative-to-empirical.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.807Z",
+  "created_at": "2026-10-13T15:17:59.807Z"
+ },
+ {
+  "id": 479,
+  "from": "/seed/images/bestsellers_round_up--e1725377476935.webp",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/bestsellers_round_up--e1725377476935.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:17:59.937Z",
+  "created_at": "2026-10-13T15:17:59.937Z"
+ },
+ {
+  "id": 480,
+  "from": "/seed/images/unitierra-outdoor-sign.webp",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/unitierra-outdoor-sign.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:18:00.068Z",
+  "created_at": "2026-10-13T15:18:00.068Z"
+ },
+ {
+  "id": 481,
+  "from": "/seed/images/DSCN3456.webp",
+  "to_type": "custom",
+  "to_url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/DSCN3456.webp",
+  "type": "301",
+  "updated_at": "2026-10-13T15:18:00.190Z",
+  "created_at": "2026-10-13T15:18:00.190Z"
+ }
+]

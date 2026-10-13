@@ -1,0 +1,26 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": "6ace4bb4640ccf5c43d65907",
+  "id": "6ace4bb4640ccf5c43d65903",
+  "value": "international-school-in-egypt-or-abroad"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4bb4640ccf5c43d65907",
+  "id": "6ace4bb4640ccf5c43d65904",
+  "value": "private-school-in-egypt-or-abroad"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4bb4640ccf5c43d65907",
+  "id": "6ace4bb4640ccf5c43d65905",
+  "value": "experimental-school-in-egypt"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4bb4640ccf5c43d65907",
+  "id": "6ace4bb4640ccf5c43d65906",
+  "value": "public-government-school-in-egypt-or-abroad"
+ }
+]

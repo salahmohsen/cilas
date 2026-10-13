@@ -1,0 +1,2410 @@
+[
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 1,
+  "_locale": "en",
+  "_parent_id": 1
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 2,
+  "_locale": "en",
+  "_parent_id": 2
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 3,
+  "_locale": "en",
+  "_parent_id": 3
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 4,
+  "_locale": "en",
+  "_parent_id": 4
+ },
+ {
+  "label": "Core courses, Spring 2014, Cairo",
+  "description": null,
+  "id": 5,
+  "_locale": "en",
+  "_parent_id": 5
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2014, Cairo",
+  "description": null,
+  "id": 6,
+  "_locale": "en",
+  "_parent_id": 6
+ },
+ {
+  "label": "Core courses, Winter 2015, Cairo",
+  "description": null,
+  "id": 7,
+  "_locale": "en",
+  "_parent_id": 7
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2015, Cairo",
+  "description": null,
+  "id": 8,
+  "_locale": "en",
+  "_parent_id": 8
+ },
+ {
+  "label": "Core courses, Spring 2015, Cairo",
+  "description": null,
+  "id": 9,
+  "_locale": "en",
+  "_parent_id": 9
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2015, Cairo",
+  "description": null,
+  "id": 10,
+  "_locale": "en",
+  "_parent_id": 10
+ },
+ {
+  "label": "Core courses, Winter 2016, Cairo",
+  "description": null,
+  "id": 11,
+  "_locale": "en",
+  "_parent_id": 11
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2016, Cairo",
+  "description": null,
+  "id": 12,
+  "_locale": "en",
+  "_parent_id": 12
+ },
+ {
+  "label": "Core courses, Spring 2016, Cairo",
+  "description": null,
+  "id": 13,
+  "_locale": "en",
+  "_parent_id": 13
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2016, Cairo",
+  "description": null,
+  "id": 14,
+  "_locale": "en",
+  "_parent_id": 14
+ },
+ {
+  "label": "Core courses, Winter 2017, Cairo",
+  "description": null,
+  "id": 15,
+  "_locale": "en",
+  "_parent_id": 15
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2017, Cairo",
+  "description": null,
+  "id": 16,
+  "_locale": "en",
+  "_parent_id": 16
+ },
+ {
+  "label": "Core courses, Spring 2017, Cairo",
+  "description": null,
+  "id": 17,
+  "_locale": "en",
+  "_parent_id": 17
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2017, Cairo",
+  "description": null,
+  "id": 18,
+  "_locale": "en",
+  "_parent_id": 18
+ },
+ {
+  "label": "Core courses, Winter 2018, Cairo",
+  "description": null,
+  "id": 19,
+  "_locale": "en",
+  "_parent_id": 19
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2018, Cairo",
+  "description": null,
+  "id": 20,
+  "_locale": "en",
+  "_parent_id": 20
+ },
+ {
+  "label": "Core courses, Spring 2018, Cairo",
+  "description": null,
+  "id": 21,
+  "_locale": "en",
+  "_parent_id": 21
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2018, Cairo",
+  "description": null,
+  "id": 22,
+  "_locale": "en",
+  "_parent_id": 22
+ },
+ {
+  "label": "Core courses, Fall 2018, Alexandria",
+  "description": null,
+  "id": 23,
+  "_locale": "en",
+  "_parent_id": 23
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2018, Alexandria",
+  "description": null,
+  "id": 24,
+  "_locale": "en",
+  "_parent_id": 24
+ },
+ {
+  "label": "Core courses, Winter 2019, Alexandria",
+  "description": null,
+  "id": 25,
+  "_locale": "en",
+  "_parent_id": 25
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2019, Alexandria",
+  "description": null,
+  "id": 26,
+  "_locale": "en",
+  "_parent_id": 26
+ },
+ {
+  "label": "Core courses, Fall 2019, Alexandria",
+  "description": null,
+  "id": 27,
+  "_locale": "en",
+  "_parent_id": 27
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2019, Alexandria",
+  "description": null,
+  "id": 28,
+  "_locale": "en",
+  "_parent_id": 28
+ },
+ {
+  "label": "Core courses, Winter 2020, Alexandria",
+  "description": null,
+  "id": 29,
+  "_locale": "en",
+  "_parent_id": 29
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2020, Alexandria",
+  "description": null,
+  "id": 30,
+  "_locale": "en",
+  "_parent_id": 30
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 31,
+  "_locale": "en",
+  "_parent_id": 31
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 32,
+  "_locale": "en",
+  "_parent_id": 32
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 33,
+  "_locale": "en",
+  "_parent_id": 33
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 34,
+  "_locale": "en",
+  "_parent_id": 34
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 35,
+  "_locale": "en",
+  "_parent_id": 35
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 36,
+  "_locale": "en",
+  "_parent_id": 36
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 37,
+  "_locale": "en",
+  "_parent_id": 37
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 38,
+  "_locale": "en",
+  "_parent_id": 38
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 39,
+  "_locale": "en",
+  "_parent_id": 39
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 40,
+  "_locale": "en",
+  "_parent_id": 40
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 41,
+  "_locale": "en",
+  "_parent_id": 41
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 42,
+  "_locale": "en",
+  "_parent_id": 42
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 43,
+  "_locale": "en",
+  "_parent_id": 43
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 44,
+  "_locale": "ar",
+  "_parent_id": 43
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 45,
+  "_locale": "en",
+  "_parent_id": 44
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 46,
+  "_locale": "ar",
+  "_parent_id": 44
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 47,
+  "_locale": "en",
+  "_parent_id": 45
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 48,
+  "_locale": "ar",
+  "_parent_id": 45
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 49,
+  "_locale": "en",
+  "_parent_id": 46
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 50,
+  "_locale": "ar",
+  "_parent_id": 46
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 51,
+  "_locale": "en",
+  "_parent_id": 47
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 52,
+  "_locale": "ar",
+  "_parent_id": 47
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 53,
+  "_locale": "en",
+  "_parent_id": 48
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 54,
+  "_locale": "ar",
+  "_parent_id": 48
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 55,
+  "_locale": "en",
+  "_parent_id": 49
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 56,
+  "_locale": "ar",
+  "_parent_id": 49
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 57,
+  "_locale": "en",
+  "_parent_id": 50
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 58,
+  "_locale": "ar",
+  "_parent_id": 50
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 59,
+  "_locale": "en",
+  "_parent_id": 51
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 60,
+  "_locale": "ar",
+  "_parent_id": 51
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 61,
+  "_locale": "en",
+  "_parent_id": 52
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 62,
+  "_locale": "ar",
+  "_parent_id": 52
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 63,
+  "_locale": "en",
+  "_parent_id": 53
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 64,
+  "_locale": "ar",
+  "_parent_id": 53
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 65,
+  "_locale": "en",
+  "_parent_id": 54
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 66,
+  "_locale": "ar",
+  "_parent_id": 54
+ },
+ {
+  "label": "Core courses, Spring 2014, Cairo",
+  "description": null,
+  "id": 67,
+  "_locale": "en",
+  "_parent_id": 55
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2014, Cairo",
+  "description": null,
+  "id": 68,
+  "_locale": "en",
+  "_parent_id": 56
+ },
+ {
+  "label": "Core courses, Spring 2014, Cairo",
+  "description": null,
+  "id": 69,
+  "_locale": "en",
+  "_parent_id": 57
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 70,
+  "_locale": "ar",
+  "_parent_id": 57
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2014, Cairo",
+  "description": null,
+  "id": 71,
+  "_locale": "en",
+  "_parent_id": 58
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 72,
+  "_locale": "ar",
+  "_parent_id": 58
+ },
+ {
+  "label": "Core courses, Winter 2015, Cairo",
+  "description": null,
+  "id": 73,
+  "_locale": "en",
+  "_parent_id": 59
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2015, Cairo",
+  "description": null,
+  "id": 74,
+  "_locale": "en",
+  "_parent_id": 60
+ },
+ {
+  "label": "Core courses, Spring 2015, Cairo",
+  "description": null,
+  "id": 75,
+  "_locale": "en",
+  "_parent_id": 61
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2015, Cairo",
+  "description": null,
+  "id": 76,
+  "_locale": "en",
+  "_parent_id": 62
+ },
+ {
+  "label": "Core courses, Winter 2015, Cairo",
+  "description": null,
+  "id": 77,
+  "_locale": "en",
+  "_parent_id": 63
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 78,
+  "_locale": "ar",
+  "_parent_id": 63
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2015, Cairo",
+  "description": null,
+  "id": 79,
+  "_locale": "en",
+  "_parent_id": 64
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 80,
+  "_locale": "ar",
+  "_parent_id": 64
+ },
+ {
+  "label": "Core courses, Spring 2015, Cairo",
+  "description": null,
+  "id": 81,
+  "_locale": "en",
+  "_parent_id": 65
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 82,
+  "_locale": "ar",
+  "_parent_id": 65
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2015, Cairo",
+  "description": null,
+  "id": 83,
+  "_locale": "en",
+  "_parent_id": 66
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 84,
+  "_locale": "ar",
+  "_parent_id": 66
+ },
+ {
+  "label": "Core courses, Winter 2016, Cairo",
+  "description": null,
+  "id": 85,
+  "_locale": "en",
+  "_parent_id": 67
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2016, Cairo",
+  "description": null,
+  "id": 86,
+  "_locale": "en",
+  "_parent_id": 68
+ },
+ {
+  "label": "Core courses, Spring 2016, Cairo",
+  "description": null,
+  "id": 87,
+  "_locale": "en",
+  "_parent_id": 69
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2016, Cairo",
+  "description": null,
+  "id": 88,
+  "_locale": "en",
+  "_parent_id": 70
+ },
+ {
+  "label": "Core courses, Winter 2016, Cairo",
+  "description": null,
+  "id": 89,
+  "_locale": "en",
+  "_parent_id": 71
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 90,
+  "_locale": "ar",
+  "_parent_id": 71
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2016, Cairo",
+  "description": null,
+  "id": 91,
+  "_locale": "en",
+  "_parent_id": 72
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 92,
+  "_locale": "ar",
+  "_parent_id": 72
+ },
+ {
+  "label": "Core courses, Spring 2016, Cairo",
+  "description": null,
+  "id": 93,
+  "_locale": "en",
+  "_parent_id": 73
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 94,
+  "_locale": "ar",
+  "_parent_id": 73
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2016, Cairo",
+  "description": null,
+  "id": 95,
+  "_locale": "en",
+  "_parent_id": 74
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 96,
+  "_locale": "ar",
+  "_parent_id": 74
+ },
+ {
+  "label": "Core courses, Winter 2017, Cairo",
+  "description": null,
+  "id": 97,
+  "_locale": "en",
+  "_parent_id": 75
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2017, Cairo",
+  "description": null,
+  "id": 98,
+  "_locale": "en",
+  "_parent_id": 76
+ },
+ {
+  "label": "Core courses, Spring 2017, Cairo",
+  "description": null,
+  "id": 99,
+  "_locale": "en",
+  "_parent_id": 77
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2017, Cairo",
+  "description": null,
+  "id": 100,
+  "_locale": "en",
+  "_parent_id": 78
+ },
+ {
+  "label": "Core courses, Winter 2017, Cairo",
+  "description": null,
+  "id": 101,
+  "_locale": "en",
+  "_parent_id": 79
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 102,
+  "_locale": "ar",
+  "_parent_id": 79
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2017, Cairo",
+  "description": null,
+  "id": 103,
+  "_locale": "en",
+  "_parent_id": 80
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 104,
+  "_locale": "ar",
+  "_parent_id": 80
+ },
+ {
+  "label": "Core courses, Spring 2017, Cairo",
+  "description": null,
+  "id": 105,
+  "_locale": "en",
+  "_parent_id": 81
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 106,
+  "_locale": "ar",
+  "_parent_id": 81
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2017, Cairo",
+  "description": null,
+  "id": 107,
+  "_locale": "en",
+  "_parent_id": 82
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 108,
+  "_locale": "ar",
+  "_parent_id": 82
+ },
+ {
+  "label": "Core courses, Winter 2018, Cairo",
+  "description": null,
+  "id": 109,
+  "_locale": "en",
+  "_parent_id": 83
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2018, Cairo",
+  "description": null,
+  "id": 110,
+  "_locale": "en",
+  "_parent_id": 84
+ },
+ {
+  "label": "Core courses, Spring 2018, Cairo",
+  "description": null,
+  "id": 111,
+  "_locale": "en",
+  "_parent_id": 85
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2018, Cairo",
+  "description": null,
+  "id": 112,
+  "_locale": "en",
+  "_parent_id": 86
+ },
+ {
+  "label": "Core courses, Winter 2018, Cairo",
+  "description": null,
+  "id": 113,
+  "_locale": "en",
+  "_parent_id": 87
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 114,
+  "_locale": "ar",
+  "_parent_id": 87
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2018, Cairo",
+  "description": null,
+  "id": 115,
+  "_locale": "en",
+  "_parent_id": 88
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 116,
+  "_locale": "ar",
+  "_parent_id": 88
+ },
+ {
+  "label": "Core courses, Spring 2018, Cairo",
+  "description": null,
+  "id": 117,
+  "_locale": "en",
+  "_parent_id": 89
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 118,
+  "_locale": "ar",
+  "_parent_id": 89
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2018, Cairo",
+  "description": null,
+  "id": 119,
+  "_locale": "en",
+  "_parent_id": 90
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 120,
+  "_locale": "ar",
+  "_parent_id": 90
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 121,
+  "_locale": "en",
+  "_parent_id": 91
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 122,
+  "_locale": "ar",
+  "_parent_id": 91
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 123,
+  "_locale": "en",
+  "_parent_id": 92
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 124,
+  "_locale": "ar",
+  "_parent_id": 92
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 125,
+  "_locale": "en",
+  "_parent_id": 93
+ },
+ {
+  "label": "المقررات الأساسية",
+  "description": null,
+  "id": 126,
+  "_locale": "ar",
+  "_parent_id": 93
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 127,
+  "_locale": "en",
+  "_parent_id": 94
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل",
+  "description": null,
+  "id": 128,
+  "_locale": "ar",
+  "_parent_id": 94
+ },
+ {
+  "label": "Core courses, Fall 2018, Alexandria",
+  "description": null,
+  "id": 129,
+  "_locale": "en",
+  "_parent_id": 95
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2018, Alexandria",
+  "description": null,
+  "id": 130,
+  "_locale": "en",
+  "_parent_id": 96
+ },
+ {
+  "label": "Core courses, Winter 2019, Alexandria",
+  "description": null,
+  "id": 131,
+  "_locale": "en",
+  "_parent_id": 97
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2019, Alexandria",
+  "description": null,
+  "id": 132,
+  "_locale": "en",
+  "_parent_id": 98
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 133,
+  "_locale": "en",
+  "_parent_id": 99
+ },
+ {
+  "label": "المقررات الأساسية، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 134,
+  "_locale": "ar",
+  "_parent_id": 99
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 135,
+  "_locale": "en",
+  "_parent_id": 100
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 136,
+  "_locale": "ar",
+  "_parent_id": 100
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 137,
+  "_locale": "en",
+  "_parent_id": 101
+ },
+ {
+  "label": "المقررات الأساسية، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 138,
+  "_locale": "ar",
+  "_parent_id": 101
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 139,
+  "_locale": "en",
+  "_parent_id": 102
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 140,
+  "_locale": "ar",
+  "_parent_id": 102
+ },
+ {
+  "label": "Core courses, Fall 2018, Alexandria",
+  "description": null,
+  "id": 141,
+  "_locale": "en",
+  "_parent_id": 103
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 142,
+  "_locale": "ar",
+  "_parent_id": 103
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2018, Alexandria",
+  "description": null,
+  "id": 143,
+  "_locale": "en",
+  "_parent_id": 104
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 144,
+  "_locale": "ar",
+  "_parent_id": 104
+ },
+ {
+  "label": "Core courses, Winter 2019, Alexandria",
+  "description": null,
+  "id": 145,
+  "_locale": "en",
+  "_parent_id": 105
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 146,
+  "_locale": "ar",
+  "_parent_id": 105
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2019, Alexandria",
+  "description": null,
+  "id": 147,
+  "_locale": "en",
+  "_parent_id": 106
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 148,
+  "_locale": "ar",
+  "_parent_id": 106
+ },
+ {
+  "label": "Core courses, Fall 2019, Alexandria",
+  "description": null,
+  "id": 149,
+  "_locale": "en",
+  "_parent_id": 107
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2019, Alexandria",
+  "description": null,
+  "id": 150,
+  "_locale": "en",
+  "_parent_id": 108
+ },
+ {
+  "label": "Core courses, Winter 2020, Alexandria",
+  "description": null,
+  "id": 151,
+  "_locale": "en",
+  "_parent_id": 109
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2020, Alexandria",
+  "description": null,
+  "id": 152,
+  "_locale": "en",
+  "_parent_id": 110
+ },
+ {
+  "label": "Core courses, Fall 2019, Alexandria",
+  "description": null,
+  "id": 153,
+  "_locale": "en",
+  "_parent_id": 111
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 154,
+  "_locale": "ar",
+  "_parent_id": 111
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2019, Alexandria",
+  "description": null,
+  "id": 155,
+  "_locale": "en",
+  "_parent_id": 112
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 156,
+  "_locale": "ar",
+  "_parent_id": 112
+ },
+ {
+  "label": "Core courses, Winter 2020, Alexandria",
+  "description": null,
+  "id": 157,
+  "_locale": "en",
+  "_parent_id": 113
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 158,
+  "_locale": "ar",
+  "_parent_id": 113
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2020, Alexandria",
+  "description": null,
+  "id": 159,
+  "_locale": "en",
+  "_parent_id": 114
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 160,
+  "_locale": "ar",
+  "_parent_id": 114
+ },
+ {
+  "label": "Core courses, Fall 2019, Alexandria",
+  "description": null,
+  "id": 161,
+  "_locale": "en",
+  "_parent_id": 115
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 162,
+  "_locale": "ar",
+  "_parent_id": 115
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2019, Alexandria",
+  "description": null,
+  "id": 163,
+  "_locale": "en",
+  "_parent_id": 116
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 164,
+  "_locale": "ar",
+  "_parent_id": 116
+ },
+ {
+  "label": "Core courses, Winter 2020, Alexandria",
+  "description": null,
+  "id": 165,
+  "_locale": "en",
+  "_parent_id": 117
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 166,
+  "_locale": "ar",
+  "_parent_id": 117
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2020, Alexandria",
+  "description": null,
+  "id": 167,
+  "_locale": "en",
+  "_parent_id": 118
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 168,
+  "_locale": "ar",
+  "_parent_id": 118
+ },
+ {
+  "label": "Core courses, Fall 2019, Alexandria",
+  "description": null,
+  "id": 169,
+  "_locale": "en",
+  "_parent_id": 119
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 170,
+  "_locale": "ar",
+  "_parent_id": 119
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2019, Alexandria",
+  "description": null,
+  "id": 171,
+  "_locale": "en",
+  "_parent_id": 120
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 172,
+  "_locale": "ar",
+  "_parent_id": 120
+ },
+ {
+  "label": "Core courses, Winter 2020, Alexandria",
+  "description": null,
+  "id": 173,
+  "_locale": "en",
+  "_parent_id": 121
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 174,
+  "_locale": "ar",
+  "_parent_id": 121
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2020, Alexandria",
+  "description": null,
+  "id": 175,
+  "_locale": "en",
+  "_parent_id": 122
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 176,
+  "_locale": "ar",
+  "_parent_id": 122
+ },
+ {
+  "label": "Core courses, Fall 2019, Alexandria",
+  "description": null,
+  "id": 177,
+  "_locale": "en",
+  "_parent_id": 123
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 178,
+  "_locale": "ar",
+  "_parent_id": 123
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2019, Alexandria",
+  "description": null,
+  "id": 179,
+  "_locale": "en",
+  "_parent_id": 124
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 180,
+  "_locale": "ar",
+  "_parent_id": 124
+ },
+ {
+  "label": "Core courses, Winter 2020, Alexandria",
+  "description": null,
+  "id": 181,
+  "_locale": "en",
+  "_parent_id": 125
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 182,
+  "_locale": "ar",
+  "_parent_id": 125
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2020, Alexandria",
+  "description": null,
+  "id": 183,
+  "_locale": "en",
+  "_parent_id": 126
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 184,
+  "_locale": "ar",
+  "_parent_id": 126
+ },
+ {
+  "label": "Core courses, Fall 2018, Alexandria",
+  "description": null,
+  "id": 185,
+  "_locale": "en",
+  "_parent_id": 127
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 186,
+  "_locale": "ar",
+  "_parent_id": 127
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2018, Alexandria",
+  "description": null,
+  "id": 187,
+  "_locale": "en",
+  "_parent_id": 128
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 188,
+  "_locale": "ar",
+  "_parent_id": 128
+ },
+ {
+  "label": "Core courses, Winter 2019, Alexandria",
+  "description": null,
+  "id": 189,
+  "_locale": "en",
+  "_parent_id": 129
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 190,
+  "_locale": "ar",
+  "_parent_id": 129
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2019, Alexandria",
+  "description": null,
+  "id": 191,
+  "_locale": "en",
+  "_parent_id": 130
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 192,
+  "_locale": "ar",
+  "_parent_id": 130
+ },
+ {
+  "label": "Core courses, Fall 2018, Alexandria",
+  "description": null,
+  "id": 193,
+  "_locale": "en",
+  "_parent_id": 131
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 194,
+  "_locale": "ar",
+  "_parent_id": 131
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2018, Alexandria",
+  "description": null,
+  "id": 195,
+  "_locale": "en",
+  "_parent_id": 132
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 196,
+  "_locale": "ar",
+  "_parent_id": 132
+ },
+ {
+  "label": "Core courses, Winter 2019, Alexandria",
+  "description": null,
+  "id": 197,
+  "_locale": "en",
+  "_parent_id": 133
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 198,
+  "_locale": "ar",
+  "_parent_id": 133
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2019, Alexandria",
+  "description": null,
+  "id": 199,
+  "_locale": "en",
+  "_parent_id": 134
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 200,
+  "_locale": "ar",
+  "_parent_id": 134
+ },
+ {
+  "label": "Core courses, Fall 2018, Alexandria",
+  "description": null,
+  "id": 201,
+  "_locale": "en",
+  "_parent_id": 135
+ },
+ {
+  "label": "المقررات الأساسية، فصل الخريف",
+  "description": null,
+  "id": 202,
+  "_locale": "ar",
+  "_parent_id": 135
+ },
+ {
+  "label": "Thematic courses and labs, Fall 2018, Alexandria",
+  "description": null,
+  "id": 203,
+  "_locale": "en",
+  "_parent_id": 136
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الخريف",
+  "description": null,
+  "id": 204,
+  "_locale": "ar",
+  "_parent_id": 136
+ },
+ {
+  "label": "Core courses, Winter 2019, Alexandria",
+  "description": null,
+  "id": 205,
+  "_locale": "en",
+  "_parent_id": 137
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 206,
+  "_locale": "ar",
+  "_parent_id": 137
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2019, Alexandria",
+  "description": null,
+  "id": 207,
+  "_locale": "en",
+  "_parent_id": 138
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 208,
+  "_locale": "ar",
+  "_parent_id": 138
+ },
+ {
+  "label": "Core courses, Winter 2018, Cairo",
+  "description": null,
+  "id": 209,
+  "_locale": "en",
+  "_parent_id": 139
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 210,
+  "_locale": "ar",
+  "_parent_id": 139
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2018, Cairo",
+  "description": null,
+  "id": 211,
+  "_locale": "en",
+  "_parent_id": 140
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 212,
+  "_locale": "ar",
+  "_parent_id": 140
+ },
+ {
+  "label": "Core courses, Spring 2018, Cairo",
+  "description": null,
+  "id": 213,
+  "_locale": "en",
+  "_parent_id": 141
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 214,
+  "_locale": "ar",
+  "_parent_id": 141
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2018, Cairo",
+  "description": null,
+  "id": 215,
+  "_locale": "en",
+  "_parent_id": 142
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 216,
+  "_locale": "ar",
+  "_parent_id": 142
+ },
+ {
+  "label": "Core courses, Winter 2018, Cairo",
+  "description": null,
+  "id": 217,
+  "_locale": "en",
+  "_parent_id": 143
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 218,
+  "_locale": "ar",
+  "_parent_id": 143
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2018, Cairo",
+  "description": null,
+  "id": 219,
+  "_locale": "en",
+  "_parent_id": 144
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 220,
+  "_locale": "ar",
+  "_parent_id": 144
+ },
+ {
+  "label": "Core courses, Spring 2018, Cairo",
+  "description": null,
+  "id": 221,
+  "_locale": "en",
+  "_parent_id": 145
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 222,
+  "_locale": "ar",
+  "_parent_id": 145
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2018, Cairo",
+  "description": null,
+  "id": 223,
+  "_locale": "en",
+  "_parent_id": 146
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 224,
+  "_locale": "ar",
+  "_parent_id": 146
+ },
+ {
+  "label": "Core courses, Winter 2018, Cairo",
+  "description": null,
+  "id": 225,
+  "_locale": "en",
+  "_parent_id": 147
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 226,
+  "_locale": "ar",
+  "_parent_id": 147
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2018, Cairo",
+  "description": null,
+  "id": 227,
+  "_locale": "en",
+  "_parent_id": 148
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 228,
+  "_locale": "ar",
+  "_parent_id": 148
+ },
+ {
+  "label": "Core courses, Spring 2018, Cairo",
+  "description": null,
+  "id": 229,
+  "_locale": "en",
+  "_parent_id": 149
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 230,
+  "_locale": "ar",
+  "_parent_id": 149
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2018, Cairo",
+  "description": null,
+  "id": 231,
+  "_locale": "en",
+  "_parent_id": 150
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 232,
+  "_locale": "ar",
+  "_parent_id": 150
+ },
+ {
+  "label": "Core courses, Winter 2017, Cairo",
+  "description": null,
+  "id": 233,
+  "_locale": "en",
+  "_parent_id": 151
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 234,
+  "_locale": "ar",
+  "_parent_id": 151
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2017, Cairo",
+  "description": null,
+  "id": 235,
+  "_locale": "en",
+  "_parent_id": 152
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 236,
+  "_locale": "ar",
+  "_parent_id": 152
+ },
+ {
+  "label": "Core courses, Spring 2017, Cairo",
+  "description": null,
+  "id": 237,
+  "_locale": "en",
+  "_parent_id": 153
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 238,
+  "_locale": "ar",
+  "_parent_id": 153
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2017, Cairo",
+  "description": null,
+  "id": 239,
+  "_locale": "en",
+  "_parent_id": 154
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 240,
+  "_locale": "ar",
+  "_parent_id": 154
+ },
+ {
+  "label": "Core courses, Winter 2017, Cairo",
+  "description": null,
+  "id": 241,
+  "_locale": "en",
+  "_parent_id": 155
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 242,
+  "_locale": "ar",
+  "_parent_id": 155
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2017, Cairo",
+  "description": null,
+  "id": 243,
+  "_locale": "en",
+  "_parent_id": 156
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 244,
+  "_locale": "ar",
+  "_parent_id": 156
+ },
+ {
+  "label": "Core courses, Spring 2017, Cairo",
+  "description": null,
+  "id": 245,
+  "_locale": "en",
+  "_parent_id": 157
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 246,
+  "_locale": "ar",
+  "_parent_id": 157
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2017, Cairo",
+  "description": null,
+  "id": 247,
+  "_locale": "en",
+  "_parent_id": 158
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 248,
+  "_locale": "ar",
+  "_parent_id": 158
+ },
+ {
+  "label": "Core courses, Winter 2017, Cairo",
+  "description": null,
+  "id": 249,
+  "_locale": "en",
+  "_parent_id": 159
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 250,
+  "_locale": "ar",
+  "_parent_id": 159
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2017, Cairo",
+  "description": null,
+  "id": 251,
+  "_locale": "en",
+  "_parent_id": 160
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 252,
+  "_locale": "ar",
+  "_parent_id": 160
+ },
+ {
+  "label": "Core courses, Spring 2017, Cairo",
+  "description": null,
+  "id": 253,
+  "_locale": "en",
+  "_parent_id": 161
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 254,
+  "_locale": "ar",
+  "_parent_id": 161
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2017, Cairo",
+  "description": null,
+  "id": 255,
+  "_locale": "en",
+  "_parent_id": 162
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 256,
+  "_locale": "ar",
+  "_parent_id": 162
+ },
+ {
+  "label": "Core courses, Winter 2016, Cairo",
+  "description": null,
+  "id": 257,
+  "_locale": "en",
+  "_parent_id": 163
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 258,
+  "_locale": "ar",
+  "_parent_id": 163
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2016, Cairo",
+  "description": null,
+  "id": 259,
+  "_locale": "en",
+  "_parent_id": 164
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 260,
+  "_locale": "ar",
+  "_parent_id": 164
+ },
+ {
+  "label": "Core courses, Spring 2016, Cairo",
+  "description": null,
+  "id": 261,
+  "_locale": "en",
+  "_parent_id": 165
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 262,
+  "_locale": "ar",
+  "_parent_id": 165
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2016, Cairo",
+  "description": null,
+  "id": 263,
+  "_locale": "en",
+  "_parent_id": 166
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 264,
+  "_locale": "ar",
+  "_parent_id": 166
+ },
+ {
+  "label": "Core courses, Winter 2016, Cairo",
+  "description": null,
+  "id": 265,
+  "_locale": "en",
+  "_parent_id": 167
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 266,
+  "_locale": "ar",
+  "_parent_id": 167
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2016, Cairo",
+  "description": null,
+  "id": 267,
+  "_locale": "en",
+  "_parent_id": 168
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 268,
+  "_locale": "ar",
+  "_parent_id": 168
+ },
+ {
+  "label": "Core courses, Spring 2016, Cairo",
+  "description": null,
+  "id": 269,
+  "_locale": "en",
+  "_parent_id": 169
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 270,
+  "_locale": "ar",
+  "_parent_id": 169
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2016, Cairo",
+  "description": null,
+  "id": 271,
+  "_locale": "en",
+  "_parent_id": 170
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 272,
+  "_locale": "ar",
+  "_parent_id": 170
+ },
+ {
+  "label": "Core courses, Winter 2016, Cairo",
+  "description": null,
+  "id": 273,
+  "_locale": "en",
+  "_parent_id": 171
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 274,
+  "_locale": "ar",
+  "_parent_id": 171
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2016, Cairo",
+  "description": null,
+  "id": 275,
+  "_locale": "en",
+  "_parent_id": 172
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 276,
+  "_locale": "ar",
+  "_parent_id": 172
+ },
+ {
+  "label": "Core courses, Spring 2016, Cairo",
+  "description": null,
+  "id": 277,
+  "_locale": "en",
+  "_parent_id": 173
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 278,
+  "_locale": "ar",
+  "_parent_id": 173
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2016, Cairo",
+  "description": null,
+  "id": 279,
+  "_locale": "en",
+  "_parent_id": 174
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 280,
+  "_locale": "ar",
+  "_parent_id": 174
+ },
+ {
+  "label": "Core courses, Winter 2015, Cairo",
+  "description": null,
+  "id": 281,
+  "_locale": "en",
+  "_parent_id": 175
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 282,
+  "_locale": "ar",
+  "_parent_id": 175
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2015, Cairo",
+  "description": null,
+  "id": 283,
+  "_locale": "en",
+  "_parent_id": 176
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 284,
+  "_locale": "ar",
+  "_parent_id": 176
+ },
+ {
+  "label": "Core courses, Spring 2015, Cairo",
+  "description": null,
+  "id": 285,
+  "_locale": "en",
+  "_parent_id": 177
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 286,
+  "_locale": "ar",
+  "_parent_id": 177
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2015, Cairo",
+  "description": null,
+  "id": 287,
+  "_locale": "en",
+  "_parent_id": 178
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 288,
+  "_locale": "ar",
+  "_parent_id": 178
+ },
+ {
+  "label": "Core courses, Winter 2015, Cairo",
+  "description": null,
+  "id": 289,
+  "_locale": "en",
+  "_parent_id": 179
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 290,
+  "_locale": "ar",
+  "_parent_id": 179
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2015, Cairo",
+  "description": null,
+  "id": 291,
+  "_locale": "en",
+  "_parent_id": 180
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 292,
+  "_locale": "ar",
+  "_parent_id": 180
+ },
+ {
+  "label": "Core courses, Spring 2015, Cairo",
+  "description": null,
+  "id": 293,
+  "_locale": "en",
+  "_parent_id": 181
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 294,
+  "_locale": "ar",
+  "_parent_id": 181
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2015, Cairo",
+  "description": null,
+  "id": 295,
+  "_locale": "en",
+  "_parent_id": 182
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 296,
+  "_locale": "ar",
+  "_parent_id": 182
+ },
+ {
+  "label": "Core courses, Winter 2015, Cairo",
+  "description": null,
+  "id": 297,
+  "_locale": "en",
+  "_parent_id": 183
+ },
+ {
+  "label": "المقررات الأساسية، فصل الشتاء",
+  "description": null,
+  "id": 298,
+  "_locale": "ar",
+  "_parent_id": 183
+ },
+ {
+  "label": "Thematic courses and labs, Winter 2015, Cairo",
+  "description": null,
+  "id": 299,
+  "_locale": "en",
+  "_parent_id": 184
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الشتاء",
+  "description": null,
+  "id": 300,
+  "_locale": "ar",
+  "_parent_id": 184
+ },
+ {
+  "label": "Core courses, Spring 2015, Cairo",
+  "description": null,
+  "id": 301,
+  "_locale": "en",
+  "_parent_id": 185
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 302,
+  "_locale": "ar",
+  "_parent_id": 185
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2015, Cairo",
+  "description": null,
+  "id": 303,
+  "_locale": "en",
+  "_parent_id": 186
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 304,
+  "_locale": "ar",
+  "_parent_id": 186
+ },
+ {
+  "label": "Core courses, Spring 2014, Cairo",
+  "description": null,
+  "id": 305,
+  "_locale": "en",
+  "_parent_id": 187
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 306,
+  "_locale": "ar",
+  "_parent_id": 187
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2014, Cairo",
+  "description": null,
+  "id": 307,
+  "_locale": "en",
+  "_parent_id": 188
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 308,
+  "_locale": "ar",
+  "_parent_id": 188
+ },
+ {
+  "label": "Core courses, Spring 2014, Cairo",
+  "description": null,
+  "id": 309,
+  "_locale": "en",
+  "_parent_id": 189
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 310,
+  "_locale": "ar",
+  "_parent_id": 189
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2014, Cairo",
+  "description": null,
+  "id": 311,
+  "_locale": "en",
+  "_parent_id": 190
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 312,
+  "_locale": "ar",
+  "_parent_id": 190
+ },
+ {
+  "label": "Core courses, Spring 2014, Cairo",
+  "description": null,
+  "id": 313,
+  "_locale": "en",
+  "_parent_id": 191
+ },
+ {
+  "label": "المقررات الأساسية، فصل الربيع",
+  "description": null,
+  "id": 314,
+  "_locale": "ar",
+  "_parent_id": 191
+ },
+ {
+  "label": "Thematic courses and labs, Spring 2014, Cairo",
+  "description": null,
+  "id": 315,
+  "_locale": "en",
+  "_parent_id": 192
+ },
+ {
+  "label": "المقررات الموضوعية والمختبرات، فصل الربيع",
+  "description": null,
+  "id": 316,
+  "_locale": "ar",
+  "_parent_id": 192
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 317,
+  "_locale": "en",
+  "_parent_id": 193
+ },
+ {
+  "label": "المقررات الأساسية، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 318,
+  "_locale": "ar",
+  "_parent_id": 193
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 319,
+  "_locale": "en",
+  "_parent_id": 194
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 320,
+  "_locale": "ar",
+  "_parent_id": 194
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 321,
+  "_locale": "en",
+  "_parent_id": 195
+ },
+ {
+  "label": "المقررات الأساسية، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 322,
+  "_locale": "ar",
+  "_parent_id": 195
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 323,
+  "_locale": "en",
+  "_parent_id": 196
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 324,
+  "_locale": "ar",
+  "_parent_id": 196
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 325,
+  "_locale": "en",
+  "_parent_id": 197
+ },
+ {
+  "label": "المقررات الأساسية، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 326,
+  "_locale": "ar",
+  "_parent_id": 197
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 327,
+  "_locale": "en",
+  "_parent_id": 198
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 328,
+  "_locale": "ar",
+  "_parent_id": 198
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 329,
+  "_locale": "en",
+  "_parent_id": 199
+ },
+ {
+  "label": "المقررات الأساسية، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 330,
+  "_locale": "ar",
+  "_parent_id": 199
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 331,
+  "_locale": "en",
+  "_parent_id": 200
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 332,
+  "_locale": "ar",
+  "_parent_id": 200
+ },
+ {
+  "label": "Core courses, fall semester",
+  "description": null,
+  "id": 333,
+  "_locale": "en",
+  "_parent_id": 201
+ },
+ {
+  "label": "المقررات الأساسية، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 334,
+  "_locale": "ar",
+  "_parent_id": 201
+ },
+ {
+  "label": "Thematic courses and labs, fall semester",
+  "description": null,
+  "id": 335,
+  "_locale": "en",
+  "_parent_id": 202
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الخريف ٢٠٢٥",
+  "description": null,
+  "id": 336,
+  "_locale": "ar",
+  "_parent_id": 202
+ },
+ {
+  "label": "Core courses, spring semester",
+  "description": null,
+  "id": 337,
+  "_locale": "en",
+  "_parent_id": 203
+ },
+ {
+  "label": "المقررات الأساسية، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 338,
+  "_locale": "ar",
+  "_parent_id": 203
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 339,
+  "_locale": "en",
+  "_parent_id": 204
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 340,
+  "_locale": "ar",
+  "_parent_id": 204
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 341,
+  "_locale": "en",
+  "_parent_id": 205
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 342,
+  "_locale": "ar",
+  "_parent_id": 205
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 343,
+  "_locale": "en",
+  "_parent_id": 206
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 344,
+  "_locale": "ar",
+  "_parent_id": 206
+ }
+]

@@ -1,0 +1,32 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": "6ace4c27c5319768132470e8",
+  "id": "6ace4c27c5319768132470e3",
+  "value": "general"
+ },
+ {
+  "_order": 2,
+  "_parent_id": "6ace4c27c5319768132470e8",
+  "id": "6ace4c27c5319768132470e4",
+  "value": "admissions"
+ },
+ {
+  "_order": 3,
+  "_parent_id": "6ace4c27c5319768132470e8",
+  "id": "6ace4c27c5319768132470e5",
+  "value": "teaching"
+ },
+ {
+  "_order": 4,
+  "_parent_id": "6ace4c27c5319768132470e8",
+  "id": "6ace4c27c5319768132470e6",
+  "value": "press"
+ },
+ {
+  "_order": 5,
+  "_parent_id": "6ace4c27c5319768132470e8",
+  "id": "6ace4c27c5319768132470e7",
+  "value": "support"
+ }
+]

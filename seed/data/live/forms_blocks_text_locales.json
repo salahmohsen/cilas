@@ -1,0 +1,130 @@
+[
+ {
+  "label": "A song",
+  "default_value": null,
+  "id": 19,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d658f7",
+  "description": "Please introduce yourself through a song. Copy and paste a link into the box below. Note that we will compile these songs into a playlist and share it with all accepted students before the beginning of the program."
+ },
+ {
+  "label": "A song",
+  "default_value": null,
+  "id": 20,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d658f7",
+  "description": "Please introduce yourself through a song. Copy and paste a link into the box below. Note that we will compile these songs into a playlist and share it with all accepted students before the beginning of the program."
+ },
+ {
+  "label": "Your name",
+  "default_value": null,
+  "id": 21,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d658f8",
+  "description": "Please state your full name and, should you have one, a name you prefer to be called by."
+ },
+ {
+  "label": "Your name",
+  "default_value": null,
+  "id": 22,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d658f8",
+  "description": "Please state your full name and, should you have one, a name you prefer to be called by."
+ },
+ {
+  "label": "Phone number",
+  "default_value": null,
+  "id": 23,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d658fa",
+  "description": "Please indicate also if this is the same number you use on WhatsApp. If not, would you mind sharing your WhatsApp number?"
+ },
+ {
+  "label": "Phone number",
+  "default_value": null,
+  "id": 24,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d658fa",
+  "description": "Please indicate also if this is the same number you use on WhatsApp. If not, would you mind sharing your WhatsApp number?"
+ },
+ {
+  "label": "Home Address (from your ID)",
+  "default_value": null,
+  "id": 25,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d658fb",
+  "description": "This will help us assess your primary place of residence which we can take into account to assess your financial need/ability."
+ },
+ {
+  "label": "Home Address (from your ID)",
+  "default_value": null,
+  "id": 26,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d658fb",
+  "description": "This will help us assess your primary place of residence which we can take into account to assess your financial need/ability."
+ },
+ {
+  "label": "Email",
+  "default_value": null,
+  "id": 27,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d658fc",
+  "description": "How often do you usually check your e-mail? Would you prefer to be notified about a potential interview via WhatsApp or phone?"
+ },
+ {
+  "label": "Email",
+  "default_value": null,
+  "id": 28,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d658fc",
+  "description": "How often do you usually check your e-mail? Would you prefer to be notified about a potential interview via WhatsApp or phone?"
+ },
+ {
+  "label": "Name of your high school",
+  "default_value": null,
+  "id": 29,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65908",
+  "description": null
+ },
+ {
+  "label": "Name of your high school",
+  "default_value": null,
+  "id": 30,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65908",
+  "description": null
+ },
+ {
+  "label": "Questions, Doubts or Remarks",
+  "default_value": null,
+  "id": 31,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65917",
+  "description": null
+ },
+ {
+  "label": "Questions, Doubts or Remarks",
+  "default_value": null,
+  "id": 32,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65917",
+  "description": null
+ },
+ {
+  "label": "Name",
+  "default_value": null,
+  "id": 34,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e1",
+  "description": null
+ },
+ {
+  "label": "الاسم",
+  "default_value": null,
+  "id": 35,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e1",
+  "description": null
+ }
+]

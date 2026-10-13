@@ -1,0 +1,12 @@
+[
+ {
+  "_order": 2,
+  "_parent_id": 1,
+  "_path": "fields",
+  "id": "6ace4c27c5319768132470e2",
+  "name": "email",
+  "width": "50",
+  "required": true,
+  "block_name": null
+ }
+]

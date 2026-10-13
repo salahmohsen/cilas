@@ -1,0 +1,98 @@
+[
+ {
+  "id": 1,
+  "person_id": 18,
+  "role": "advisor",
+  "board_role": null,
+  "term_from": null,
+  "term_to": null,
+  "order": "1",
+  "legacy_url": "/advisors.html#michael-brint",
+  "updated_at": "2026-10-13T14:38:53.697Z",
+  "created_at": "2026-10-13T14:18:29.221Z"
+ },
+ {
+  "id": 2,
+  "person_id": 19,
+  "role": "advisor",
+  "board_role": null,
+  "term_from": null,
+  "term_to": null,
+  "order": "2",
+  "legacy_url": "/advisors.html#teun-dekker",
+  "updated_at": "2026-10-13T14:38:53.969Z",
+  "created_at": "2026-10-13T14:18:29.421Z"
+ },
+ {
+  "id": 3,
+  "person_id": 20,
+  "role": "advisor",
+  "board_role": null,
+  "term_from": null,
+  "term_to": null,
+  "order": "3",
+  "legacy_url": "/advisors.html#yen-chi-fan",
+  "updated_at": "2026-10-13T14:38:54.217Z",
+  "created_at": "2026-10-13T14:18:29.702Z"
+ },
+ {
+  "id": 4,
+  "person_id": 21,
+  "role": "advisor",
+  "board_role": null,
+  "term_from": null,
+  "term_to": null,
+  "order": "4",
+  "legacy_url": "/advisors.html#abdul-hayy-lammert-holdijk",
+  "updated_at": "2026-10-13T14:38:54.526Z",
+  "created_at": "2026-10-13T14:18:29.910Z"
+ },
+ {
+  "id": 5,
+  "person_id": 22,
+  "role": "advisor",
+  "board_role": null,
+  "term_from": null,
+  "term_to": null,
+  "order": "5",
+  "legacy_url": "/advisors.html#tommaso-vitale",
+  "updated_at": "2026-10-13T14:38:54.806Z",
+  "created_at": "2026-10-13T14:18:30.123Z"
+ },
+ {
+  "id": 6,
+  "person_id": 23,
+  "role": "trustee",
+  "board_role": "Chairman",
+  "term_from": null,
+  "term_to": null,
+  "order": "1",
+  "legacy_url": "/trustees.html#karim-yassin-goessinger",
+  "updated_at": "2026-10-13T14:38:55.116Z",
+  "created_at": "2026-10-13T14:18:30.331Z"
+ },
+ {
+  "id": 7,
+  "person_id": 24,
+  "role": "trustee",
+  "board_role": "Secretary",
+  "term_from": null,
+  "term_to": null,
+  "order": "2",
+  "legacy_url": "/trustees.html#amani-elshimi",
+  "updated_at": "2026-10-13T14:38:55.388Z",
+  "created_at": "2026-10-13T14:18:30.521Z"
+ },
+ {
+  "id": 8,
+  "person_id": 25,
+  "role": "trustee",
+  "board_role": "Treasurer",
+  "term_from": null,
+  "term_to": null,
+  "order": "3",
+  "legacy_url": "/trustees.html#ahmed-galal",
+  "updated_at": "2026-10-13T14:38:55.826Z",
+  "created_at": "2026-10-13T14:18:30.711Z"
+ }
+]

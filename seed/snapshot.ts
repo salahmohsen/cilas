@@ -13,11 +13,15 @@ import type { Payload } from 'payload'
  * superuser connection (a self-hosted Postgres, not Neon).
  *
  * Left out: migrations (the reset writes its own), sessions, locks and admin
- * preferences, and form submissions (applicants' personal data).
+ * preferences, form submissions (applicants' personal data), and user
+ * accounts: the repository is public, and accounts hold emails and password
+ * hashes. A restore recreates only the super admin (seed/super-admin.ts).
  */
 export const SNAPSHOT_DIR = path.join(import.meta.dirname, 'data', 'live')
 const SKIP = new Set([
   'payload_migrations',
+  'users',
+  'users_roles',
   'users_sessions',
   'payload_locked_documents',
   'payload_locked_documents_rels',

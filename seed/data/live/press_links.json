@@ -1,0 +1,107 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": 2,
+  "id": "6ace3e1abac3e623fbdf904b",
+  "language": "en",
+  "url": "https://www.opendemocracy.net/en/sitting-on-top-of-egyptian-civilisation/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3,
+  "id": "6ace3e1bbac3e623fbdf904c",
+  "language": "en",
+  "url": "https://egyptianstreets.com/2015/02/24/liberal-arts-and-sciences-institute-turns-to-crowdfunding-after-egyptian-government-blocks-funding/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 4,
+  "id": "6ace3e1bbac3e623fbdf904d",
+  "language": "en",
+  "url": "https://www.al-fanarmedia.org/2013/08/new-institute-to-offer-one-year-dose-of-the-liberal-arts/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 1,
+  "id": "6ace4692360651c012d37df1",
+  "language": "en",
+  "url": "https://www.madamasr.com/en/2019/09/18/feature/culture/attempting-to-decolonize-pedagogy-in-cilas-alexandria/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 6,
+  "id": "6ace4692360651c012d37df2",
+  "language": "en",
+  "url": "https://www.opendemocracy.net/en/sitting-on-top-of-egyptian-civilisation/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 7,
+  "id": "6ace4693360651c012d37df4",
+  "language": "en",
+  "url": "https://www.youtube.com/watch?v=aI_QYrQnTfQ"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 8,
+  "id": "6ace4693360651c012d37df6",
+  "language": "ar",
+  "url": "https://pub-f9b5aeab5ef5497793002feb6fee95be.r2.dev/media/%D9%85%D9%82%D8%A7%D9%84_%D9%81%D8%B1%D9%8A%D8%AF%D8%A9_%D9%85%D9%82%D8%A7%D8%B1.pdf"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 5,
+  "id": "6ace4694360651c012d37df9",
+  "language": "en",
+  "url": "https://mashallahnews.com/learning-on-wings/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 9,
+  "id": "6ace4694360651c012d37dfb",
+  "language": "en",
+  "url": "https://egyptianstreets.com/2015/02/24/liberal-arts-and-sciences-institute-turns-to-crowdfunding-after-egyptian-government-blocks-funding/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 10,
+  "id": "6ace4694360651c012d37dfd",
+  "language": "en",
+  "url": "http://because.bz/education/unconventional-education-heart-one-cairo-oldest-attractions"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 11,
+  "id": "6ace4695360651c012d37dff",
+  "language": "de",
+  "url": "http://www.goethe.de/ins/eg/kai/kul/mag/bil/de12183513.htm"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 11,
+  "id": "6ace4695360651c012d37e00",
+  "language": "ar",
+  "url": "http://www.goethe.de/ins/eg/kai/kul/mag/bil/de12183513.htm"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 12,
+  "id": "6ace4695360651c012d37e01",
+  "language": "en",
+  "url": "http://www.sciencespo.fr/affaires-urbaines/en/content/glm-2012-alumni-heads-cairo-institute-liberal-arts-and-sciences"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 13,
+  "id": "6ace4695360651c012d37e03",
+  "language": "en",
+  "url": "https://www.al-fanarmedia.org/2013/08/new-institute-to-offer-one-year-dose-of-the-liberal-arts/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 14,
+  "id": "6ace4696360651c012d37e05",
+  "language": "en",
+  "url": "https://www.madamasr.com/en/2014/02/02/opinion/society/looking-for-alternative-education-in-egypt/"
+ }
+]

@@ -1,0 +1,86 @@
+[
+ {
+  "question": "What is CILAS?",
+  "answer": "An independent school in Cairo, founded in 2013. It runs cycles of courses each season and the Bridge, a year-long programme in the liberal arts, and publishes the work of its community.",
+  "id": 7,
+  "_locale": "en",
+  "_parent_id": "6ace626e37f1c429412d6f9f"
+ },
+ {
+  "question": "ما سيلاس؟",
+  "answer": "مدرسة مستقلة في القاهرة تأسست عام ٢٠١٣. تقدّم دورات من المقررات كل موسم، وبرنامج الجسر، وهو برنامج في الآداب والعلوم الحرة يمتد عامًا كاملًا، وتنشر أعمال مجتمعها.",
+  "id": 8,
+  "_locale": "ar",
+  "_parent_id": "6ace626e37f1c429412d6f9f"
+ },
+ {
+  "question": "Who can apply?",
+  "answer": "Anyone who has finished high school. For the Bridge, a bachelor’s degree is recommended but not required. Single courses are open to everyone.",
+  "id": 9,
+  "_locale": "en",
+  "_parent_id": "6ace626e37f1c429412d6fa0"
+ },
+ {
+  "question": "من يمكنه التقدم؟",
+  "answer": "كل من أنهى الدراسة الثانوية. يُستحسن الحصول على شهادة جامعية للالتحاق ببرنامج الجسر لكنها ليست شرطًا. والمقررات المنفردة مفتوحة للجميع.",
+  "id": 10,
+  "_locale": "ar",
+  "_parent_id": "6ace626e37f1c429412d6fa0"
+ },
+ {
+  "question": "Do I need to take the whole Bridge year?",
+  "answer": "No. Most courses in a cycle can be taken one at a time, without joining a programme.",
+  "id": 11,
+  "_locale": "en",
+  "_parent_id": "6ace626e37f1c429412d6fa1"
+ },
+ {
+  "question": "هل عليّ الالتحاق بعام الجسر كاملًا؟",
+  "answer": "لا. يمكن أخذ معظم مقررات الدورة مقررًا مقررًا، دون الالتحاق ببرنامج.",
+  "id": 12,
+  "_locale": "ar",
+  "_parent_id": "6ace626e37f1c429412d6fa1"
+ },
+ {
+  "question": "My English isn’t perfect. Can I still join?",
+  "answer": "Yes. CILAS welcomes every kind of English and many discussions move between Arabic and English. Application forms are filled in English, as are many of the readings.",
+  "id": 13,
+  "_locale": "en",
+  "_parent_id": "6ace626e37f1c429412d6fa2"
+ },
+ {
+  "question": "لغتي الإنجليزية ليست مثالية. هل يمكنني الانضمام؟",
+  "answer": "نعم. يرحّب سيلاس بكل أشكال الإنجليزية، وتتنقل نقاشات كثيرة بين العربية والإنجليزية. تُملأ استمارات التقديم بالإنجليزية، وكذلك كثير من القراءات.",
+  "id": 14,
+  "_locale": "ar",
+  "_parent_id": "6ace626e37f1c429412d6fa2"
+ },
+ {
+  "question": "Are there scholarships?",
+  "answer": "Yes, partial scholarships for a limited number of students, based on need. Each programme’s page explains how to ask for one.",
+  "id": 15,
+  "_locale": "en",
+  "_parent_id": "6ace626e37f1c429412d6fa3"
+ },
+ {
+  "question": "هل توجد منح؟",
+  "answer": "نعم، منح جزئية لعدد محدود من الطلاب بحسب الحاجة. تشرح صفحة كل برنامج كيف تطلبها.",
+  "id": 16,
+  "_locale": "ar",
+  "_parent_id": "6ace626e37f1c429412d6fa3"
+ },
+ {
+  "question": "Where are classes held?",
+  "answer": "In Darb el-Labbana, in Cairo. Some courses also meet online.",
+  "id": 17,
+  "_locale": "en",
+  "_parent_id": "6ace626e37f1c429412d6fa4"
+ },
+ {
+  "question": "أين تُعقد الصفوف؟",
+  "answer": "في درب اللبانة بالقاهرة. وتلتقي بعض المقررات عبر الإنترنت.",
+  "id": 18,
+  "_locale": "ar",
+  "_parent_id": "6ace626e37f1c429412d6fa4"
+ }
+]

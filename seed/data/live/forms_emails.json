@@ -1,0 +1,12 @@
+[
+ {
+  "_order": 1,
+  "_parent_id": 1,
+  "id": "6ace4c27c5319768132470ea",
+  "email_to": "info@ci-las.org",
+  "cc": null,
+  "bcc": null,
+  "reply_to": "{{email}}",
+  "email_from": null
+ }
+]

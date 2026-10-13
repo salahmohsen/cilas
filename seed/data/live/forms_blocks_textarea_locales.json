@@ -1,0 +1,194 @@
+[
+ {
+  "label": "Two truths and a lie",
+  "default_value": null,
+  "id": 27,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d658f9",
+  "description": "Tell us two truths and one lie about yourself. Don't indicate which is which."
+ },
+ {
+  "label": "Two truths and a lie",
+  "default_value": null,
+  "id": 28,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d658f9",
+  "description": "Tell us two truths and one lie about yourself. Don't indicate which is which."
+ },
+ {
+  "label": "English comfort level",
+  "default_value": null,
+  "id": 29,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65909",
+  "description": "How comfortable do you feel reading, listening to and communicating in English? This will help us assign additional resources to supporting you with reading and writing assignments. Please feel free to elaborate. You can share if you feel more comfortable reading and writing over listening and speaking, or the other way around. You can mention if and what you have written in English, e.g. letters, essays, comments on social media, or whether you're used to watching English-language movies with subtitles, etc."
+ },
+ {
+  "label": "English comfort level",
+  "default_value": null,
+  "id": 30,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65909",
+  "description": "How comfortable do you feel reading, listening to and communicating in English? This will help us assign additional resources to supporting you with reading and writing assignments. Please feel free to elaborate. You can share if you feel more comfortable reading and writing over listening and speaking, or the other way around. You can mention if and what you have written in English, e.g. letters, essays, comments on social media, or whether you're used to watching English-language movies with subtitles, etc."
+ },
+ {
+  "label": "Arabic comfort level",
+  "default_value": null,
+  "id": 31,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d6590a",
+  "description": "How comfortable do you feel reading, listening to and communicating in Arabic? Sometimes class discussions mix English and Egyptian Arabic. Rest assured, however, that everything gets translated in the end. Also let us know if you're learning or are interested in learning Arabic, or if you have any experience writing fiction, journalism or poetry in Arabic, and have experience translating from English to Arabic or from Arabic to English."
+ },
+ {
+  "label": "Arabic comfort level",
+  "default_value": null,
+  "id": 32,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d6590a",
+  "description": "How comfortable do you feel reading, listening to and communicating in Arabic? Sometimes class discussions mix English and Egyptian Arabic. Rest assured, however, that everything gets translated in the end. Also let us know if you're learning or are interested in learning Arabic, or if you have any experience writing fiction, journalism or poetry in Arabic, and have experience translating from English to Arabic or from Arabic to English."
+ },
+ {
+  "label": "If you work, what is the field of your work?",
+  "default_value": null,
+  "id": 33,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d6590b",
+  "description": null
+ },
+ {
+  "label": "If you work, what is the field of your work?",
+  "default_value": null,
+  "id": 34,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d6590b",
+  "description": null
+ },
+ {
+  "label": "Educational level",
+  "default_value": null,
+  "id": 35,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d6590c",
+  "description": "Have you obtained any post-secondary (after high school) degrees or certificates? Please mention in what field and what degree, in which year and from which institution."
+ },
+ {
+  "label": "Educational level",
+  "default_value": null,
+  "id": 36,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d6590c",
+  "description": "Have you obtained any post-secondary (after high school) degrees or certificates? Please mention in what field and what degree, in which year and from which institution."
+ },
+ {
+  "label": "How would you describe your interest in CILAS?",
+  "default_value": null,
+  "id": 37,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d6590d",
+  "description": "What have you heard about CILAS? How do you understand the liberal arts? Why are you applying for a programme in the liberal arts at this point of your life? Please address these questions in at least two paragraphs."
+ },
+ {
+  "label": "How would you describe your interest in CILAS?",
+  "default_value": null,
+  "id": 38,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d6590d",
+  "description": "What have you heard about CILAS? How do you understand the liberal arts? Why are you applying for a programme in the liberal arts at this point of your life? Please address these questions in at least two paragraphs."
+ },
+ {
+  "label": "Name three books (fiction and non-fiction) you read, and you related to?",
+  "default_value": null,
+  "id": 39,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d6590e",
+  "description": null
+ },
+ {
+  "label": "Name three books (fiction and non-fiction) you read, and you related to?",
+  "default_value": null,
+  "id": 40,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d6590e",
+  "description": null
+ },
+ {
+  "label": "A cartoon-based essay",
+  "default_value": null,
+  "id": 41,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65910",
+  "description": "Write a short essay of 250 words based on the cartoon below. There is no boxes to tick, no right interpretation to offer, no particular answer to give. Rather you're invited to share your thoughts on and how you related or did not relate to this image, the/your notion of home, and happiness, jobs and work. For instance, home could refer to your living space, your personal space, your home country. Be creative!"
+ },
+ {
+  "label": "A cartoon-based essay",
+  "default_value": null,
+  "id": 42,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65910",
+  "description": "Write a short essay of 250 words based on the cartoon below. There is no boxes to tick, no right interpretation to offer, no particular answer to give. Rather you're invited to share your thoughts on and how you related or did not relate to this image, the/your notion of home, and happiness, jobs and work. For instance, home could refer to your living space, your personal space, your home country. Be creative!"
+ },
+ {
+  "label": "A reflection piece",
+  "default_value": null,
+  "id": 43,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65911",
+  "description": "When you look and ponder at this image what ideas, thoughts, feelings, reflections, and stories come up for you? Express that in a way you like; write about it in a paragraph, a story, a poem or draw something in response. Let your mind wander!\n\nIllustration credits: @eyeofnorus on instagram"
+ },
+ {
+  "label": "A reflection piece",
+  "default_value": null,
+  "id": 44,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65911",
+  "description": "When you look and ponder at this image what ideas, thoughts, feelings, reflections, and stories come up for you? Express that in a way you like; write about it in a paragraph, a story, a poem or draw something in response. Let your mind wander!\n\nIllustration credits: @eyeofnorus on instagram"
+ },
+ {
+  "label": "Below is a link for a part of (رباعيات صلاح جاهين). Enjoy listening, choose one, and let us know about your thoughts and feelings regarding it through writing.",
+  "default_value": null,
+  "id": 45,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65912",
+  "description": "https://on.soundcloud.com/xzdsM"
+ },
+ {
+  "label": "Below is a link for a part of (رباعيات صلاح جاهين). Enjoy listening, choose one, and let us know about your thoughts and feelings regarding it through writing.",
+  "default_value": null,
+  "id": 46,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65912",
+  "description": "https://on.soundcloud.com/xzdsM"
+ },
+ {
+  "label": "A review-based essay",
+  "default_value": null,
+  "id": 47,
+  "_locale": "en",
+  "_parent_id": "6ace4bb4640ccf5c43d65913",
+  "description": "Write a short, analytical essay of 250 words based on an article in English or Arabic of your interest. This could also be a book chapter and should be no less than a 1000 words long. You might find an interesting article on the following websites: https://aeon.co/; https://www.jadaliyya.com/; https://www.newyorker.com/; https://www.vice.com/ar; https://madamasr.com/en; https://thepointmag.com/; https://jacobinmag.com/, or on any website, outlet or publication of your choice. In this essay share with us how this article is of interest to you, how you relate to it and what you learned from it. Please share with us the source, author and title of the article or book chapter you chose."
+ },
+ {
+  "label": "A review-based essay",
+  "default_value": null,
+  "id": 48,
+  "_locale": "ar",
+  "_parent_id": "6ace4bb4640ccf5c43d65913",
+  "description": "Write a short, analytical essay of 250 words based on an article in English or Arabic of your interest. This could also be a book chapter and should be no less than a 1000 words long. You might find an interesting article on the following websites: https://aeon.co/; https://www.jadaliyya.com/; https://www.newyorker.com/; https://www.vice.com/ar; https://madamasr.com/en; https://thepointmag.com/; https://jacobinmag.com/, or on any website, outlet or publication of your choice. In this essay share with us how this article is of interest to you, how you relate to it and what you learned from it. Please share with us the source, author and title of the article or book chapter you chose."
+ },
+ {
+  "label": "Message",
+  "default_value": null,
+  "id": 50,
+  "_locale": "en",
+  "_parent_id": "6ace4c27c5319768132470e9",
+  "description": null
+ },
+ {
+  "label": "الرسالة",
+  "default_value": null,
+  "id": 51,
+  "_locale": "ar",
+  "_parent_id": "6ace4c27c5319768132470e9",
+  "description": null
+ }
+]

@@ -1,0 +1,992 @@
+[
+ {
+  "id": 1,
+  "person_id": 233,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#abdelhalim-hisham-abdallah",
+  "updated_at": "2026-10-13T14:38:18.117Z",
+  "created_at": "2026-10-13T14:38:18.117Z"
+ },
+ {
+  "id": 2,
+  "person_id": 234,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#abraham-liben",
+  "updated_at": "2026-10-13T14:38:18.385Z",
+  "created_at": "2026-10-13T14:38:18.385Z"
+ },
+ {
+  "id": 3,
+  "person_id": 235,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#ahmed-magdy-rabie",
+  "updated_at": "2026-10-13T14:38:18.657Z",
+  "created_at": "2026-10-13T14:38:18.657Z"
+ },
+ {
+  "id": 4,
+  "person_id": 236,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#amira-rady",
+  "updated_at": "2026-10-13T14:38:18.936Z",
+  "created_at": "2026-10-13T14:38:18.936Z"
+ },
+ {
+  "id": 5,
+  "person_id": 237,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#asmaa-kamaly",
+  "updated_at": "2026-10-13T14:38:19.241Z",
+  "created_at": "2026-10-13T14:38:19.241Z"
+ },
+ {
+  "id": 6,
+  "person_id": 63,
+  "programme_id": 2,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2013-2014.html#bas-paris",
+  "updated_at": "2026-10-13T14:38:19.531Z",
+  "created_at": "2026-10-13T14:38:19.531Z"
+ },
+ {
+  "id": 7,
+  "person_id": 238,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#dalia-hashad",
+  "updated_at": "2026-10-13T14:38:19.790Z",
+  "created_at": "2026-10-13T14:38:19.790Z"
+ },
+ {
+  "id": 8,
+  "person_id": 64,
+  "programme_id": 2,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2013-2014.html#david-tholen",
+  "updated_at": "2026-10-13T14:38:20.135Z",
+  "created_at": "2026-10-13T14:38:20.135Z"
+ },
+ {
+  "id": 9,
+  "person_id": 241,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#khadiga-mohamed",
+  "updated_at": "2026-10-13T14:38:20.515Z",
+  "created_at": "2026-10-13T14:38:20.515Z"
+ },
+ {
+  "id": 10,
+  "person_id": 242,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#marwa-morgan",
+  "updated_at": "2026-10-13T14:38:20.765Z",
+  "created_at": "2026-10-13T14:38:20.764Z"
+ },
+ {
+  "id": 11,
+  "person_id": 244,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#mohamed-aboelyazed",
+  "updated_at": "2026-10-13T14:38:21.064Z",
+  "created_at": "2026-10-13T14:38:21.064Z"
+ },
+ {
+  "id": 12,
+  "person_id": 59,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#mohamed-fayez",
+  "updated_at": "2026-10-13T14:38:21.329Z",
+  "created_at": "2026-10-13T14:38:21.328Z"
+ },
+ {
+  "id": 13,
+  "person_id": 246,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#mohamed-wahdan",
+  "updated_at": "2026-10-13T14:38:21.655Z",
+  "created_at": "2026-10-13T14:38:21.655Z"
+ },
+ {
+  "id": 14,
+  "person_id": 249,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#noha-syam",
+  "updated_at": "2026-10-13T14:38:22.006Z",
+  "created_at": "2026-10-13T14:38:22.006Z"
+ },
+ {
+  "id": 15,
+  "person_id": 79,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#radwa-salem",
+  "updated_at": "2026-10-13T14:38:22.357Z",
+  "created_at": "2026-10-13T14:38:22.357Z"
+ },
+ {
+  "id": 16,
+  "person_id": 251,
+  "programme_id": 2,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2013-2014.html#raju-hittalamani",
+  "updated_at": "2026-10-13T14:38:22.696Z",
+  "created_at": "2026-10-13T14:38:22.696Z"
+ },
+ {
+  "id": 17,
+  "person_id": 254,
+  "programme_id": 2,
+  "role": "student",
+  "legacy_url": "/cilasians-2013-2014.html#samar-al-zuairy",
+  "updated_at": "2026-10-13T14:38:23.008Z",
+  "created_at": "2026-10-13T14:38:23.008Z"
+ },
+ {
+  "id": 18,
+  "person_id": 105,
+  "programme_id": 3,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#alia-mossallam",
+  "updated_at": "2026-10-13T14:38:23.294Z",
+  "created_at": "2026-10-13T14:38:23.294Z"
+ },
+ {
+  "id": 19,
+  "person_id": 218,
+  "programme_id": 3,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#anne-mishkind",
+  "updated_at": "2026-10-13T14:38:23.555Z",
+  "created_at": "2026-10-13T14:38:23.555Z"
+ },
+ {
+  "id": 20,
+  "person_id": 137,
+  "programme_id": 3,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#ayesha-mualla",
+  "updated_at": "2026-10-13T14:38:23.796Z",
+  "created_at": "2026-10-13T14:38:23.796Z"
+ },
+ {
+  "id": 21,
+  "person_id": 239,
+  "programme_id": 3,
+  "role": "student",
+  "legacy_url": "/cilasians-2014-2015.html#dina-samy",
+  "updated_at": "2026-10-13T14:38:24.034Z",
+  "created_at": "2026-10-13T14:38:24.034Z"
+ },
+ {
+  "id": 22,
+  "person_id": 65,
+  "programme_id": 3,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#farida-makar",
+  "updated_at": "2026-10-13T14:38:24.254Z",
+  "created_at": "2026-10-13T14:38:24.254Z"
+ },
+ {
+  "id": 23,
+  "person_id": 240,
+  "programme_id": 3,
+  "role": "student",
+  "legacy_url": "/cilasians-2014-2015.html#jonah-stone",
+  "updated_at": "2026-10-13T14:38:26.776Z",
+  "created_at": "2026-10-13T14:38:26.776Z"
+ },
+ {
+  "id": 24,
+  "person_id": 23,
+  "programme_id": 3,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#karim-yassin-goessinger",
+  "updated_at": "2026-10-13T14:38:28.086Z",
+  "created_at": "2026-10-13T14:38:28.086Z"
+ },
+ {
+  "id": 25,
+  "person_id": 148,
+  "programme_id": 3,
+  "role": "student",
+  "legacy_url": "/cilasians-2014-2015.html#nariman-moustafa",
+  "updated_at": "2026-10-13T14:38:28.726Z",
+  "created_at": "2026-10-13T14:38:28.726Z"
+ },
+ {
+  "id": 26,
+  "person_id": 106,
+  "programme_id": 3,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#nayera-abdel-rahman",
+  "updated_at": "2026-10-13T14:38:28.994Z",
+  "created_at": "2026-10-13T14:38:28.994Z"
+ },
+ {
+  "id": 27,
+  "person_id": 32,
+  "programme_id": 3,
+  "role": "student",
+  "legacy_url": "/cilasians-2014-2015.html#nazih-hallouda",
+  "updated_at": "2026-10-13T14:38:29.285Z",
+  "created_at": "2026-10-13T14:38:29.285Z"
+ },
+ {
+  "id": 28,
+  "person_id": 138,
+  "programme_id": 3,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#nermine-wally",
+  "updated_at": "2026-10-13T14:38:29.505Z",
+  "created_at": "2026-10-13T14:38:29.505Z"
+ },
+ {
+  "id": 29,
+  "person_id": 250,
+  "programme_id": 3,
+  "role": "student",
+  "legacy_url": "/cilasians-2014-2015.html#olfat-sakr",
+  "updated_at": "2026-10-13T14:38:29.839Z",
+  "created_at": "2026-10-13T14:38:29.839Z"
+ },
+ {
+  "id": 30,
+  "person_id": 90,
+  "programme_id": 3,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#pam-labib",
+  "updated_at": "2026-10-13T14:38:30.074Z",
+  "created_at": "2026-10-13T14:38:30.074Z"
+ },
+ {
+  "id": 31,
+  "person_id": 93,
+  "programme_id": 3,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#rene-boer",
+  "updated_at": "2026-10-13T14:38:30.345Z",
+  "created_at": "2026-10-13T14:38:30.344Z"
+ },
+ {
+  "id": 32,
+  "person_id": 139,
+  "programme_id": 3,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2014-2015.html#shaimaa-magued",
+  "updated_at": "2026-10-13T14:38:30.584Z",
+  "created_at": "2026-10-13T14:38:30.584Z"
+ },
+ {
+  "id": 33,
+  "person_id": 255,
+  "programme_id": 3,
+  "role": "student",
+  "legacy_url": "/cilasians-2014-2015.html#sohila-mohamed",
+  "updated_at": "2026-10-13T14:38:30.828Z",
+  "created_at": "2026-10-13T14:38:30.828Z"
+ },
+ {
+  "id": 34,
+  "person_id": 144,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#dina-makram-ebeid",
+  "updated_at": "2026-10-13T14:38:31.106Z",
+  "created_at": "2026-10-13T14:38:31.106Z"
+ },
+ {
+  "id": 35,
+  "person_id": 94,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#dirk-wanrooij",
+  "updated_at": "2026-10-13T14:38:31.408Z",
+  "created_at": "2026-10-13T14:38:31.408Z"
+ },
+ {
+  "id": 36,
+  "person_id": 34,
+  "programme_id": 4,
+  "role": "student",
+  "legacy_url": "/cilasians-2015-2016.html#eman-abdelhamid-kamal",
+  "updated_at": "2026-10-13T14:38:31.665Z",
+  "created_at": "2026-10-13T14:38:31.665Z"
+ },
+ {
+  "id": 37,
+  "person_id": 29,
+  "programme_id": 4,
+  "role": "student",
+  "legacy_url": "/cilasians-2015-2016.html#eman-maarek",
+  "updated_at": "2026-10-13T14:38:31.926Z",
+  "created_at": "2026-10-13T14:38:31.926Z"
+ },
+ {
+  "id": 38,
+  "person_id": 81,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#hala-barakat",
+  "updated_at": "2026-10-13T14:38:32.188Z",
+  "created_at": "2026-10-13T14:38:32.188Z"
+ },
+ {
+  "id": 39,
+  "person_id": 16,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#i-kai-jeng",
+  "updated_at": "2026-10-13T14:38:32.507Z",
+  "created_at": "2026-10-13T14:38:32.507Z"
+ },
+ {
+  "id": 40,
+  "person_id": 98,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#ismail-fayed",
+  "updated_at": "2026-10-13T14:38:32.775Z",
+  "created_at": "2026-10-13T14:38:32.775Z"
+ },
+ {
+  "id": 41,
+  "person_id": 23,
+  "programme_id": 4,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#karim-yassin-goessinger",
+  "updated_at": "2026-10-13T14:38:33.058Z",
+  "created_at": "2026-10-13T14:38:33.058Z"
+ },
+ {
+  "id": 42,
+  "person_id": 101,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#maha-abdel-megeed",
+  "updated_at": "2026-10-13T14:38:33.405Z",
+  "created_at": "2026-10-13T14:38:33.405Z"
+ },
+ {
+  "id": 43,
+  "person_id": 99,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#mai-alkhamissi",
+  "updated_at": "2026-10-13T14:38:33.686Z",
+  "created_at": "2026-10-13T14:38:33.686Z"
+ },
+ {
+  "id": 44,
+  "person_id": 243,
+  "programme_id": 4,
+  "role": "student",
+  "legacy_url": "/cilasians-2015-2016.html#may-khaled",
+  "updated_at": "2026-10-13T14:38:33.925Z",
+  "created_at": "2026-10-13T14:38:33.925Z"
+ },
+ {
+  "id": 45,
+  "person_id": 104,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#mina-adel-ibrahim",
+  "updated_at": "2026-10-13T14:38:34.175Z",
+  "created_at": "2026-10-13T14:38:34.175Z"
+ },
+ {
+  "id": 46,
+  "person_id": 247,
+  "programme_id": 4,
+  "role": "student",
+  "legacy_url": "/cilasians-2015-2016.html#nada-sallam",
+  "updated_at": "2026-10-13T14:38:34.440Z",
+  "created_at": "2026-10-13T14:38:34.436Z"
+ },
+ {
+  "id": 47,
+  "person_id": 248,
+  "programme_id": 4,
+  "role": "student",
+  "legacy_url": "/cilasians-2015-2016.html#nesma-attiatalla",
+  "updated_at": "2026-10-13T14:38:34.775Z",
+  "created_at": "2026-10-13T14:38:34.775Z"
+ },
+ {
+  "id": 48,
+  "person_id": 252,
+  "programme_id": 4,
+  "role": "student",
+  "legacy_url": "/cilasians-2015-2016.html#raniah-al-sayed",
+  "updated_at": "2026-10-13T14:38:35.095Z",
+  "created_at": "2026-10-13T14:38:35.095Z"
+ },
+ {
+  "id": 49,
+  "person_id": 253,
+  "programme_id": 4,
+  "role": "student",
+  "legacy_url": "/cilasians-2015-2016.html#sama-singer",
+  "updated_at": "2026-10-13T14:38:35.346Z",
+  "created_at": "2026-10-13T14:38:35.346Z"
+ },
+ {
+  "id": 50,
+  "person_id": 102,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#sara-salem",
+  "updated_at": "2026-10-13T14:38:35.577Z",
+  "created_at": "2026-10-13T14:38:35.577Z"
+ },
+ {
+  "id": 51,
+  "person_id": 134,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#sara-duana-meyer",
+  "updated_at": "2026-10-13T14:38:35.817Z",
+  "created_at": "2026-10-13T14:38:35.817Z"
+ },
+ {
+  "id": 52,
+  "person_id": 215,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#wiebe-ruijtenberg",
+  "updated_at": "2026-10-13T14:38:36.047Z",
+  "created_at": "2026-10-13T14:38:36.047Z"
+ },
+ {
+  "id": 53,
+  "person_id": 212,
+  "programme_id": 4,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#yasmin-khalafallah",
+  "updated_at": "2026-10-13T14:38:36.329Z",
+  "created_at": "2026-10-13T14:38:36.329Z"
+ },
+ {
+  "id": 54,
+  "person_id": 141,
+  "programme_id": 4,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2015-2016.html#yvonne-buchheim",
+  "updated_at": "2026-10-13T14:38:36.646Z",
+  "created_at": "2026-10-13T14:38:36.646Z"
+ },
+ {
+  "id": 55,
+  "person_id": 35,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#ahmed-mongey",
+  "updated_at": "2026-10-13T14:38:36.909Z",
+  "created_at": "2026-10-13T14:38:36.909Z"
+ },
+ {
+  "id": 56,
+  "person_id": 216,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#alaa-badr",
+  "updated_at": "2026-10-13T14:38:37.245Z",
+  "created_at": "2026-10-13T14:38:37.245Z"
+ },
+ {
+  "id": 57,
+  "person_id": 130,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#ali-atef-abdelkader",
+  "updated_at": "2026-10-13T14:38:37.546Z",
+  "created_at": "2026-10-13T14:38:37.546Z"
+ },
+ {
+  "id": 58,
+  "person_id": 66,
+  "programme_id": 5,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#doaa-kaddah",
+  "updated_at": "2026-10-13T14:38:37.796Z",
+  "created_at": "2026-10-13T14:38:37.795Z"
+ },
+ {
+  "id": 59,
+  "person_id": 207,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#fernando-revelo-la-rotta",
+  "updated_at": "2026-10-13T14:38:38.086Z",
+  "created_at": "2026-10-13T14:38:38.086Z"
+ },
+ {
+  "id": 60,
+  "person_id": 213,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#guillaume-de-vaulx",
+  "updated_at": "2026-10-13T14:38:38.378Z",
+  "created_at": "2026-10-13T14:38:38.377Z"
+ },
+ {
+  "id": 61,
+  "person_id": 81,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#hala-barakat",
+  "updated_at": "2026-10-13T14:38:38.720Z",
+  "created_at": "2026-10-13T14:38:38.719Z"
+ },
+ {
+  "id": 62,
+  "person_id": 89,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#jana-holla",
+  "updated_at": "2026-10-13T14:38:38.978Z",
+  "created_at": "2026-10-13T14:38:38.978Z"
+ },
+ {
+  "id": 63,
+  "person_id": 23,
+  "programme_id": 5,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#karim-yassin-goessinger",
+  "updated_at": "2026-10-13T14:38:39.235Z",
+  "created_at": "2026-10-13T14:38:39.234Z"
+ },
+ {
+  "id": 64,
+  "person_id": 160,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#louly-seif",
+  "updated_at": "2026-10-13T14:38:39.475Z",
+  "created_at": "2026-10-13T14:38:39.475Z"
+ },
+ {
+  "id": 65,
+  "person_id": 96,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#manar-hazzaa",
+  "updated_at": "2026-10-13T14:38:39.726Z",
+  "created_at": "2026-10-13T14:38:39.725Z"
+ },
+ {
+  "id": 66,
+  "person_id": 146,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#mayada-madbouly",
+  "updated_at": "2026-10-13T14:38:40.015Z",
+  "created_at": "2026-10-13T14:38:40.014Z"
+ },
+ {
+  "id": 67,
+  "person_id": 92,
+  "programme_id": 5,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#mohamed-shawky-hassan",
+  "updated_at": "2026-10-13T14:38:40.265Z",
+  "created_at": "2026-10-13T14:38:40.265Z"
+ },
+ {
+  "id": 68,
+  "person_id": 31,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#mohamed-yahya",
+  "updated_at": "2026-10-13T14:38:40.505Z",
+  "created_at": "2026-10-13T14:38:40.505Z"
+ },
+ {
+  "id": 69,
+  "person_id": 155,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#nader-osama",
+  "updated_at": "2026-10-13T14:38:40.735Z",
+  "created_at": "2026-10-13T14:38:40.735Z"
+ },
+ {
+  "id": 70,
+  "person_id": 214,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#nourhan-tewfik",
+  "updated_at": "2026-10-13T14:38:40.975Z",
+  "created_at": "2026-10-13T14:38:40.975Z"
+ },
+ {
+  "id": 71,
+  "person_id": 70,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#omar-el-rakhawy",
+  "updated_at": "2026-10-13T14:38:41.237Z",
+  "created_at": "2026-10-13T14:38:41.236Z"
+ },
+ {
+  "id": 72,
+  "person_id": 90,
+  "programme_id": 5,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#pam-labib",
+  "updated_at": "2026-10-13T14:38:41.505Z",
+  "created_at": "2026-10-13T14:38:41.505Z"
+ },
+ {
+  "id": 73,
+  "person_id": 97,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#radwa-etman",
+  "updated_at": "2026-10-13T14:38:41.765Z",
+  "created_at": "2026-10-13T14:38:41.765Z"
+ },
+ {
+  "id": 74,
+  "person_id": 145,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#rahma-bavelaar",
+  "updated_at": "2026-10-13T14:38:42.036Z",
+  "created_at": "2026-10-13T14:38:42.036Z"
+ },
+ {
+  "id": 75,
+  "person_id": 150,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#riham-aziz",
+  "updated_at": "2026-10-13T14:38:42.275Z",
+  "created_at": "2026-10-13T14:38:42.275Z"
+ },
+ {
+  "id": 76,
+  "person_id": 100,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#rim-naguib",
+  "updated_at": "2026-10-13T14:38:42.538Z",
+  "created_at": "2026-10-13T14:38:42.538Z"
+ },
+ {
+  "id": 77,
+  "person_id": 129,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#sandra-fruebing",
+  "updated_at": "2026-10-13T14:38:42.795Z",
+  "created_at": "2026-10-13T14:38:42.795Z"
+ },
+ {
+  "id": 78,
+  "person_id": 95,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#sara-el-sayed",
+  "updated_at": "2026-10-13T14:38:43.055Z",
+  "created_at": "2026-10-13T14:38:43.055Z"
+ },
+ {
+  "id": 79,
+  "person_id": 140,
+  "programme_id": 5,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2016-2017.html#sara-elkamel",
+  "updated_at": "2026-10-13T14:38:43.297Z",
+  "created_at": "2026-10-13T14:38:43.297Z"
+ },
+ {
+  "id": 80,
+  "person_id": 62,
+  "programme_id": 6,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#ahmed-diaa",
+  "updated_at": "2026-10-13T14:38:43.606Z",
+  "created_at": "2026-10-13T14:38:43.606Z"
+ },
+ {
+  "id": 81,
+  "person_id": 151,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#alaa-el-bannan",
+  "updated_at": "2026-10-13T14:38:43.868Z",
+  "created_at": "2026-10-13T14:38:43.868Z"
+ },
+ {
+  "id": 82,
+  "person_id": 154,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#amira-elserafy",
+  "updated_at": "2026-10-13T14:38:44.165Z",
+  "created_at": "2026-10-13T14:38:44.165Z"
+ },
+ {
+  "id": 83,
+  "person_id": 158,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#ash-moniz",
+  "updated_at": "2026-10-13T14:38:44.426Z",
+  "created_at": "2026-10-13T14:38:44.425Z"
+ },
+ {
+  "id": 84,
+  "person_id": 67,
+  "programme_id": 6,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#bianca-fli",
+  "updated_at": "2026-10-13T14:38:44.656Z",
+  "created_at": "2026-10-13T14:38:44.656Z"
+ },
+ {
+  "id": 85,
+  "person_id": 217,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#celine-burnand",
+  "updated_at": "2026-10-13T14:38:44.896Z",
+  "created_at": "2026-10-13T14:38:44.896Z"
+ },
+ {
+  "id": 86,
+  "person_id": 156,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#dalia-wahdan",
+  "updated_at": "2026-10-13T14:38:45.136Z",
+  "created_at": "2026-10-13T14:38:45.135Z"
+ },
+ {
+  "id": 87,
+  "person_id": 66,
+  "programme_id": 6,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#doaa-kaddah",
+  "updated_at": "2026-10-13T14:38:45.425Z",
+  "created_at": "2026-10-13T14:38:45.425Z"
+ },
+ {
+  "id": 88,
+  "person_id": 152,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#doaa-shahin",
+  "updated_at": "2026-10-13T14:38:45.722Z",
+  "created_at": "2026-10-13T14:38:45.722Z"
+ },
+ {
+  "id": 89,
+  "person_id": 65,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#farida-makar",
+  "updated_at": "2026-10-13T14:38:45.968Z",
+  "created_at": "2026-10-13T14:38:45.968Z"
+ },
+ {
+  "id": 90,
+  "person_id": 26,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#hussein-el-hag",
+  "updated_at": "2026-10-13T14:38:46.337Z",
+  "created_at": "2026-10-13T14:38:46.336Z"
+ },
+ {
+  "id": 91,
+  "person_id": 98,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#ismail-fayed",
+  "updated_at": "2026-10-13T14:38:46.647Z",
+  "created_at": "2026-10-13T14:38:46.646Z"
+ },
+ {
+  "id": 92,
+  "person_id": 135,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#kareem-megahed",
+  "updated_at": "2026-10-13T14:38:46.977Z",
+  "created_at": "2026-10-13T14:38:46.977Z"
+ },
+ {
+  "id": 93,
+  "person_id": 92,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#mohamed-shawky-hassan",
+  "updated_at": "2026-10-13T14:38:47.286Z",
+  "created_at": "2026-10-13T14:38:47.286Z"
+ },
+ {
+  "id": 94,
+  "person_id": 132,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#nadine-el-nabli",
+  "updated_at": "2026-10-13T14:38:47.550Z",
+  "created_at": "2026-10-13T14:38:47.550Z"
+ },
+ {
+  "id": 95,
+  "person_id": 70,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#omar-el-rakhawy",
+  "updated_at": "2026-10-13T14:38:48.004Z",
+  "created_at": "2026-10-13T14:38:48.003Z"
+ },
+ {
+  "id": 96,
+  "person_id": 17,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#robin-weiss",
+  "updated_at": "2026-10-13T14:38:48.259Z",
+  "created_at": "2026-10-13T14:38:48.258Z"
+ },
+ {
+  "id": 97,
+  "person_id": 133,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#rodrigo-gratacos-brum",
+  "updated_at": "2026-10-13T14:38:48.565Z",
+  "created_at": "2026-10-13T14:38:48.565Z"
+ },
+ {
+  "id": 98,
+  "person_id": 147,
+  "programme_id": 6,
+  "role": "residential_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#sama-waly",
+  "updated_at": "2026-10-13T14:38:48.847Z",
+  "created_at": "2026-10-13T14:38:48.847Z"
+ },
+ {
+  "id": 99,
+  "person_id": 140,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#sara-elkamel",
+  "updated_at": "2026-10-13T14:38:49.116Z",
+  "created_at": "2026-10-13T14:38:49.116Z"
+ },
+ {
+  "id": 100,
+  "person_id": 159,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#shatha-elnakib",
+  "updated_at": "2026-10-13T14:38:49.496Z",
+  "created_at": "2026-10-13T14:38:49.496Z"
+ },
+ {
+  "id": 101,
+  "person_id": 141,
+  "programme_id": 6,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilasians-2017-2018.html#yvonne-buchheim",
+  "updated_at": "2026-10-13T14:38:49.766Z",
+  "created_at": "2026-10-13T14:38:49.765Z"
+ },
+ {
+  "id": 102,
+  "person_id": 47,
+  "programme_id": 7,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilas-in-alex-2018-2019.html#amir-zaki",
+  "updated_at": "2026-10-13T14:38:50.015Z",
+  "created_at": "2026-10-13T14:38:50.015Z"
+ },
+ {
+  "id": 103,
+  "person_id": 136,
+  "programme_id": 7,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilas-in-alex-2018-2019.html#gian-spina",
+  "updated_at": "2026-10-13T14:38:50.299Z",
+  "created_at": "2026-10-13T14:38:50.298Z"
+ },
+ {
+  "id": 104,
+  "person_id": 149,
+  "programme_id": 7,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilas-in-alex-2018-2019.html#mohamed-abdelkarim",
+  "updated_at": "2026-10-13T14:38:50.653Z",
+  "created_at": "2026-10-13T14:38:50.653Z"
+ },
+ {
+  "id": 105,
+  "person_id": 157,
+  "programme_id": 7,
+  "role": "visiting_fellow",
+  "legacy_url": "/cilas-in-alex-2018-2019.html#mhmd-alarby",
+  "updated_at": "2026-10-13T14:38:51.057Z",
+  "created_at": "2026-10-13T14:38:51.056Z"
+ },
+ {
+  "id": 106,
+  "person_id": 26,
+  "programme_id": 8,
+  "role": "residential_fellow",
+  "legacy_url": "/cilas-in-alex-2019-2020.html#hussein-el-hag",
+  "updated_at": "2026-10-13T14:38:51.517Z",
+  "created_at": "2026-10-13T14:38:51.517Z"
+ },
+ {
+  "id": 107,
+  "person_id": 73,
+  "programme_id": 8,
+  "role": "residential_fellow",
+  "legacy_url": "/cilas-in-alex-2019-2020.html#manar-imam",
+  "updated_at": "2026-10-13T14:38:52.026Z",
+  "created_at": "2026-10-13T14:38:52.026Z"
+ },
+ {
+  "id": 108,
+  "person_id": 72,
+  "programme_id": 8,
+  "role": "residential_fellow",
+  "legacy_url": "/cilas-in-alex-2019-2020.html#mariam-soliman",
+  "updated_at": "2026-10-13T14:38:52.407Z",
+  "created_at": "2026-10-13T14:38:52.406Z"
+ },
+ {
+  "id": 109,
+  "person_id": 245,
+  "programme_id": 8,
+  "role": "residential_fellow",
+  "legacy_url": "/cilas-in-alex-2019-2020.html#mohamed-el-araby",
+  "updated_at": "2026-10-13T14:38:52.855Z",
+  "created_at": "2026-10-13T14:38:52.855Z"
+ },
+ {
+  "id": 110,
+  "person_id": 70,
+  "programme_id": 8,
+  "role": "residential_fellow",
+  "legacy_url": "/cilas-in-alex-2019-2020.html#omar-el-rakhawy",
+  "updated_at": "2026-10-13T14:38:53.206Z",
+  "created_at": "2026-10-13T14:38:53.206Z"
+ }
+]

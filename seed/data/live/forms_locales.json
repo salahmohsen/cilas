@@ -1,0 +1,184 @@
+[
+ {
+  "submit_button_label": "Send my application",
+  "confirmation_message": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Thank you for applying to the Bridge Programme. We review applications carefully and on a rolling basis, and will be in touch about an interview.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "To apply for a partial scholarship, write to admissions@ci-las.org.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textFormat": 0
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 7,
+  "_locale": "en",
+  "_parent_id": 2
+ },
+ {
+  "submit_button_label": "أرسل طلبي",
+  "confirmation_message": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "شكرًا لتقديمك إلى برنامج الجسر. نراجع الاستمارات بعناية وأولًا بأول، وسنتواصل معك بشأن المقابلة.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "للتقديم على منحة جزئية، راسلنا على admissions@ci-las.org.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textFormat": 0
+     }
+    ],
+    "direction": "rtl"
+   }
+  },
+  "id": 8,
+  "_locale": "ar",
+  "_parent_id": 2
+ },
+ {
+  "submit_button_label": "Send message",
+  "confirmation_message": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Thank you. Your message has reached CILAS; we will reply by email.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textFormat": 0
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 11,
+  "_locale": "en",
+  "_parent_id": 1
+ },
+ {
+  "submit_button_label": "أرسل الرسالة",
+  "confirmation_message": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "شكرًا لك. وصلت رسالتك إلى سيلاس، وسنرد عليك بالبريد الإلكتروني.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textFormat": 0
+     }
+    ],
+    "direction": "rtl"
+   }
+  },
+  "id": 12,
+  "_locale": "ar",
+  "_parent_id": 1
+ }
+]
