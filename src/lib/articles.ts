@@ -33,6 +33,19 @@ export const excerptOf = (article: Pick<Article, 'body'>, max = 220): string => 
   return `${text.slice(0, text.lastIndexOf(' ', max))}…`
 }
 
+/**
+ * Whether a description repeats the article's opening, so the reader would
+ * read it twice: the page's lead is the description, and the body often
+ * starts on the same words when the description was cut from the body.
+ */
+export const repeatsOpening = (description: string, body: Article['body']): boolean => {
+  if (!body) return false
+  const lead = description.replace(/\s+/g, ' ').trim()
+  if (!lead) return false
+  const text = convertLexicalToPlaintext({ data: body }).replace(/\s+/g, ' ').trim()
+  return text.startsWith(lead.endsWith('…') ? lead.slice(0, -1) : lead)
+}
+
 /** Minutes to read at about 220 words a minute. */
 export const readingMinutes = (article: Pick<Article, 'body'>): number => {
   if (!article.body) return 0

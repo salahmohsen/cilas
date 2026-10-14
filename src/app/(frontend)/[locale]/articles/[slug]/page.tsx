@@ -33,7 +33,7 @@ import { isRtl, routing } from '@/i18n/routing'
 import { splitBody } from '@/lib/article-body'
 import { localDigits } from '@/lib/digits'
 import { footnotesOf } from '@/lib/footnotes'
-import { excerptOf, publicationOf, readingMinutes, yearOf } from '@/lib/articles'
+import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
 import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
 import type { Article, Media, Person, Publication } from '@/payload-types'
@@ -153,8 +153,12 @@ export default async function ArticlePage({ params }: Props) {
   for (const c of article.credits ?? [])
     for (const p of peopleOf(c.people)) add(p, c.label || t(`roles.${c.role}`))
   const cover = isObject<Media>(article.cover_image) ? article.cover_image : undefined
-  // The reader opens with a lead: the article's description when it has one.
-  const excerpt = article.meta?.description ?? null
+// The reader opens with a lead: the article's description when it has
+// one, in its words and not the body's opening said twice.
+const excerpt =
+  article.meta?.description && !repeatsOpening(article.meta.description, body)
+    ? article.meta.description
+    : null
 
   const year = article.published_date
     ? format.dateTime(new Date(article.published_date), 'year')
