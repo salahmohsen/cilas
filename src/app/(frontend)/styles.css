@@ -1891,50 +1891,6 @@ a.collection-item:hover {
   gap: 0.75rem;
 }
 
-/* An article in the carousel: its image, its publication, its title in the
-   reading serif, its byline. */
-.home-article {
-  display: grid;
-  gap: 0.5rem;
-  text-align: start;
-}
-.home-article-image {
-  display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  margin-bottom: 0.5rem;
-  border-radius: 1rem;
-  background: var(--muted);
-  object-fit: cover;
-  outline: 1px solid oklch(0 0 0 / 0.1);
-  outline-offset: -1px;
-}
-.dark .home-article-image {
-  outline-color: oklch(1 0 0 / 0.1);
-}
-.home-article-meta {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
-}
-.home-article-title {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  line-height: 1.2;
-  text-wrap: balance;
-}
-.home-article-title:dir(rtl) {
-  line-height: 1.6;
-}
-.home-article-byline {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-}
-.home-article:hover .home-article-title {
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 4px;
-}
-
 /* Titles stay at the serif's regular and medium weights; its heavier ones
    crowd it. Outside any layer, so it holds over Tailwind's weight utilities
    (a heading styled font-semibold for the sans gets 500). */

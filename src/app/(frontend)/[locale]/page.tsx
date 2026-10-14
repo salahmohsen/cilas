@@ -13,6 +13,7 @@ import { StatsBand } from '@/components/arc/blocks/stats-band/stats-band'
 import { ContactForm } from '@/components/contact/contact-form'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { HomeHero } from '@/components/home/home-hero'
+import { HomeArticles } from '@/components/home/home-articles'
 import { OpenNow } from '@/components/home/open-now'
 import { Link } from '@/i18n/navigation'
 import { toArticleCard } from '@/lib/article-cards'
@@ -120,16 +121,7 @@ export default async function HomePage({ params }: Props) {
                 </Link>
               )}
             </header>
-            <ArticlesGrid
-              categories={[]}
-              description=""
-              flush
-              header={false}
-              pageSize={3}
-              posts={latest}
-              showFeatured={false}
-              title={t('latestTitle')}
-            />
+            <HomeArticles posts={latest} title={t('latestTitle')} />
           </section>
         ) : null}
 

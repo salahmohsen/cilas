@@ -187,6 +187,58 @@ function Byline({ post }: { post: BlogPost }) {
   )
 }
 
+/** A card's content, shared by the grid's cards and any other place that wants a card: its image, then its category and date, its title, its excerpt and its byline. */
+export function BlogCardBody({
+  post,
+  featured = false,
+  imageLayoutId,
+  imageFallback,
+  eager = false,
+}: {
+  post: BlogPost
+  featured?: boolean
+  /** The shared image's layout id, so it morphs into the reader; left out elsewhere. */
+  imageLayoutId?: string
+  /** Shown in the image frame of a post without an image, so every card keeps its frame. */
+  imageFallback?: () => ReactNode
+  eager?: boolean
+}) {
+  return (
+    <>
+      {post.image ? (
+        <motion.div
+          layoutId={imageLayoutId}
+          transition={morph}
+          className={styles.imageFrame}
+        >
+          <img
+            className={styles.image}
+            src={post.image.src}
+            alt={post.image.alt}
+            loading={eager ? 'eager' : 'lazy'}
+          />
+        </motion.div>
+      ) : imageFallback ? (
+        <div className={styles.imageFrame} data-fallback="">
+          {imageFallback()}
+        </div>
+      ) : null}
+      <div className={styles.cardBody}>
+        <Meta post={post} />
+        <h3 className={featured ? styles.featuredTitle : styles.cardTitle} dir="auto">
+          {post.title}
+        </h3>
+        {post.excerpt ? (
+          <p className={styles.excerpt} dir="auto">
+            {post.excerpt}
+          </p>
+        ) : null}
+        <Byline post={post} />
+      </div>
+    </>
+  )
+}
+
 export function BlogGrid({
   title = 'Journal',
   description = 'Product news, design notes and engineering deep dives from the team.',
@@ -287,38 +339,13 @@ export function BlogGrid({
   const renderCard = (post: BlogPost, isFeatured = false) => {
     const href = getHref?.(post)
     const inner = (
-      <>
-        {post.image ? (
-          <motion.div
-            layoutId={reduced ? undefined : `${uid}-image-${post.id}`}
-            transition={morph}
-            className={styles.imageFrame}
-          >
-            <img
-              className={styles.image}
-              src={post.image.src}
-              alt={post.image.alt}
-              loading={isFeatured ? 'eager' : 'lazy'}
-            />
-          </motion.div>
-        ) : imageFallback ? (
-          <div className={styles.imageFrame} data-fallback="">
-            {imageFallback(post)}
-          </div>
-        ) : null}
-        <div className={styles.cardBody}>
-          <Meta post={post} />
-          <h3 className={isFeatured ? styles.featuredTitle : styles.cardTitle} dir="auto">
-            {post.title}
-          </h3>
-          {post.excerpt ? (
-            <p className={styles.excerpt} dir="auto">
-              {post.excerpt}
-            </p>
-          ) : null}
-          <Byline post={post} />
-        </div>
-      </>
+      <BlogCardBody
+        post={post}
+        featured={isFeatured}
+        eager={isFeatured}
+        imageLayoutId={reduced ? undefined : `${uid}-image-${post.id}`}
+        imageFallback={imageFallback ? () => imageFallback(post) : undefined}
+      />
     )
     const className = isFeatured ? styles.featured : styles.card
     const fades = returning !== null && (reduced || post.id !== returning)

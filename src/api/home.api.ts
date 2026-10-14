@@ -117,10 +117,10 @@ export const getOpenNow = async (
 }
 
 /**
- * The featured articles, newest first. Until any article is featured, the
- * latest ones stand in, so the section is never empty.
+ * The featured articles, and the latest six of the rest; the featured ones
+ * show as a grid, the rest to drag through. Until any article is featured,
+ * the latest ones stand in, so the section is never empty.
  */
-/** The featured articles, and the latest three of the rest; both show on the home page. */
 export const getHomeArticles = async (
   payload: Payload,
   locale: Locale,
@@ -138,7 +138,7 @@ export const getHomeArticles = async (
     })
   const [featured, latest] = await Promise.all([
     query({ featured: { equals: true } }, 0),
-    query({ featured: { not_equals: true } }, 3),
+    query({ featured: { not_equals: true } }, 6),
   ])
   return { featured: featured.docs, latest: latest.docs }
 }
