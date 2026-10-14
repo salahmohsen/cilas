@@ -27,7 +27,8 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(env.NEXT_PUBLIC_SERVER_URL),
     title: t('siteName'),
     description: t('description'),
-    icons: { icon: '/assets/images/logo.webp' },
+    // The logo in white, centred on a square at its own proportions.
+    icons: { icon: '/assets/images/favicon.png', apple: '/assets/images/apple-icon.png' },
     // A page with no image of its own shares the default one.
     openGraph: { siteName: t('siteName'), images: [DEFAULT_OG_IMAGE] },
     twitter: { card: 'summary_large_image', images: [DEFAULT_OG_IMAGE.url] },
