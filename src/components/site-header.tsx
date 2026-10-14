@@ -7,6 +7,7 @@ import { Suspense, useEffect, useRef, useState } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
+import { SiteSearch } from '@/components/site-search'
 
 /** The site's main navigation, in the site language, with links under it. */
 export function CILASSiteHeader() {
@@ -134,6 +135,7 @@ export function CILASSiteHeader() {
       secondaryAction={{ label: t('signIn'), href: '/admin' }}
       utilities={
         <>
+          <SiteSearch />
           {/* useSearchParams needs a Suspense boundary on static pages. */}
           <Suspense fallback={null}>
             <LanguageSwitch />

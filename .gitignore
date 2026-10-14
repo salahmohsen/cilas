@@ -53,3 +53,5 @@ aha/
 # Legacy site archive (Weebly ZIP + Wayback cache), kept out of git
 /migration/raw/
 
+
+typesense-data

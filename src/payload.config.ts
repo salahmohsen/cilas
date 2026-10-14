@@ -26,6 +26,7 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { formFields } from './forms/form-fields'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { typesenseSearch } from '@rubixstudios/payload-typesense'
 import type {
   GenerateDescription,
   GenerateImage,
@@ -193,5 +194,61 @@ export default buildConfig({
     }),
     storage,
     payloadTheme({ accent: '#000' }),
+    typesenseSearch({
+      // Skipped entirely until TYPESENSE_API_KEY exists, so builds and tests
+      // run fine without a Typesense server reachable.
+      disabled: !env.TYPESENSE_API_KEY,
+      typesense: {
+        apiKey: env.TYPESENSE_API_KEY ?? '',
+        nodes: [
+          {
+            host: env.TYPESENSE_HOST,
+            port: env.TYPESENSE_PORT,
+            protocol: env.TYPESENSE_PROTOCOL,
+          },
+        ],
+      },
+      // Field names must match the collection schemas. Group fields without a
+      // name (Courses) flatten to top level, so `summary`/`description` are
+      // direct doc paths. Lexical and textarea fields are flattened to plain
+      // text by the plugin.
+      collections: {
+        courses: {
+          enabled: true,
+          searchFields: ['title', 'subtitle', 'summary', 'description'],
+          displayName: 'Courses',
+        },
+        articles: {
+          enabled: true,
+          searchFields: ['title', 'body'],
+          displayName: 'Articles',
+        },
+        programmes: {
+          enabled: true,
+          searchFields: ['title', 'overview'],
+          displayName: 'Programmes',
+        },
+        publications: {
+          enabled: true,
+          searchFields: ['title'],
+          displayName: 'Publications',
+        },
+        events: {
+          enabled: true,
+          searchFields: ['title', 'description'],
+          displayName: 'Events',
+        },
+        people: {
+          enabled: true,
+          searchFields: ['name'],
+          displayName: 'People',
+        },
+        governance: {
+          enabled: true,
+          searchFields: ['title'],
+          displayName: 'Governance',
+        },
+      },
+    }),
   ],
 })
