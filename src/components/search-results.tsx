@@ -449,18 +449,19 @@ export function SearchResults({
               dir={locale === 'ar' ? 'rtl' : 'ltr'}
               className="flex-1 text-sm text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground"
             >
-              {searching && locale !== 'ar' ? (
+              {searching ? (
+                // Searching morphs only where the glyphs sit right: Latin.
                 <strong className="font-semibold text-foreground">
-                  <TextMorph>{t('searching')}</TextMorph>
-                </strong>
-              ) : searching ? (
-                <strong className="font-semibold text-foreground" dir="rtl">
-                  {t('searching')}
+                  {locale === 'ar' ? (
+                    <span dir="rtl">{t('searching')}</span>
+                  ) : (
+                    <TextMorph>{t('searching')}</TextMorph>
+                  )}
                 </strong>
               ) : locale === 'ar' ? (
                 // The Arabic line reads nested digits between Arabic words,
                 // so it stays one plain sentence rather than a rolling reel.
-                <strong className="font-semibold text-foreground">
+                <strong className="font-semibold text-foreground" dir="rtl">
                   {seconds != null
                     ? t('resultsTail', {
                         count: totalFound,
@@ -477,14 +478,16 @@ export function SearchResults({
                       spins={0}
                     />
                   </strong>{' '}
-                  <TextMorph>
+                  {/* The words after the count stay static: the morph keeps
+                      both glyph sets alive and doubles the text. */}
+                  <span>
                     {seconds != null
                       ? t('resultsTail', {
                           count: totalFound,
                           seconds: (seconds / 1000).toFixed(2),
                         })
                       : t('resultsOnly', { count: totalFound })}
-                  </TextMorph>
+                  </span>
                 </>
               )}
             </p>
