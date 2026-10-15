@@ -9,7 +9,6 @@ export const SEO_COLLECTIONS = [
   'publications',
   'articles',
   'events',
-  'press',
 ] as const
 export type SeoCollection = (typeof SEO_COLLECTIONS)[number]
 
@@ -24,7 +23,6 @@ const SOURCES: Record<SeoCollection, Source> = {
   publications: { description: ['subtitle'], image: 'cover_image' },
   articles: { richText: 'body', image: 'cover_image' },
   events: { richText: 'description' },
-  press: { description: ['excerpt'] },
 }
 
 const MAX = 160

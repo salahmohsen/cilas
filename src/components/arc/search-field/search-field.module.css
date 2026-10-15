@@ -93,3 +93,10 @@
     transition: none;
   }
 }
+
+/* The bare variant: the frameless search used inside full-screen overlays —
+   border and background gone on every screen, the row itself is the chrome. */
+.shell.bare {
+  border: none;
+  background: transparent;
+}

@@ -137,6 +137,9 @@ importers:
       tw-animate-css:
         specifier: ^1.4.0
         version: 1.4.0
+      typesense:
+        specifier: ^3.1.1
+        version: 3.1.1(@babel/runtime@7.29.7)
       typesense-instantsearch-adapter:
         specifier: ^3.0.2
         version: 3.0.2(@babel/runtime@7.29.7)

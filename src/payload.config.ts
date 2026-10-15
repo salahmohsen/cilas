@@ -39,7 +39,9 @@ import { payloadTheme } from 'payload-theme'
 import { anyone, hasRole, isAdmin } from './access'
 import { env } from './env'
 import { pathOf } from './lib/paths'
+import { TYPESENSE_SEARCH_COLLECTIONS } from './lib/search-config'
 import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from './lib/seo'
+import { typesensePanelIndex } from './plugins/typesense-index'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -208,47 +210,25 @@ export default buildConfig({
           },
         ],
       },
-      // Field names must match the collection schemas. Group fields without a
-      // name (Courses) flatten to top level, so `summary`/`description` are
-      // direct doc paths. Lexical and textarea fields are flattened to plain
-      // text by the plugin.
-      collections: {
-        courses: {
-          enabled: true,
-          searchFields: ['title', 'subtitle', 'summary', 'description'],
-          displayName: 'Courses',
-        },
-        articles: {
-          enabled: true,
-          searchFields: ['title', 'body'],
-          displayName: 'Articles',
-        },
-        programmes: {
-          enabled: true,
-          searchFields: ['title', 'overview'],
-          displayName: 'Programmes',
-        },
-        publications: {
-          enabled: true,
-          searchFields: ['title'],
-          displayName: 'Publications',
-        },
-        events: {
-          enabled: true,
-          searchFields: ['title', 'description'],
-          displayName: 'Events',
-        },
-        people: {
-          enabled: true,
-          searchFields: ['name'],
-          displayName: 'People',
-        },
-        governance: {
-          enabled: true,
-          searchFields: ['title'],
-          displayName: 'Governance',
-        },
-      },
+      // Rubix backgrounds the secondary collections the panel does not
+      // read (programmes, publications, events, governance) — the panel's
+      // three live in the panel indexer below, where both languages and
+      // the owner field are handled together.
+      collections: Object.fromEntries(
+        Object.entries(TYPESENSE_SEARCH_COLLECTIONS)
+          .filter(([slug]) => !['courses', 'articles', 'people'].includes(slug))
+          .map(([slug, config]) => [
+            slug,
+            {
+              enabled: true,
+              searchFields: [...config.searchFields],
+              displayName: config.displayName,
+            },
+          ]),
+      ),
     }),
+    // The search panel's own collections: per-language mirrors with the
+    // `owner` field resolved from the related People documents.
+    typesensePanelIndex(),
   ],
 })

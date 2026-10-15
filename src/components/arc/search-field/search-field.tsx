@@ -1,6 +1,6 @@
 'use client'
 import { forwardRef, useId, useRef } from 'react'
-import type { InputHTMLAttributes } from 'react'
+import type { InputHTMLAttributes, ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Search, X as Xmark } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
@@ -10,9 +10,32 @@ export interface SearchFieldProps extends Omit<InputHTMLAttributes<HTMLInputElem
   value: string
   onValueChange: (value: string) => void
   clearLabel?: string
+  /** Keeps the visible label out of the layout, for fields that carry no caption above them. */
+  labelHidden?: boolean
+  /**
+   * A keyboard-hint chip at the field's inner edge, shown exactly while the
+   * field is empty — the clear control owns that spot once text arrives.
+   */
+  hint?: ReactNode
+  /**
+   * Frameless on small screens: the field fills its row and the shell shows
+   * no border or background until the md breakpoint returns it.
+   */
+  bare?: boolean
 }
 export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(function SearchField(
-  { label, value, onValueChange, clearLabel = 'Clear search', id, className, ...props },
+  {
+    label,
+    value,
+    onValueChange,
+    clearLabel = 'Clear search',
+    labelHidden,
+    hint,
+    bare,
+    id,
+    className,
+    ...props
+  },
   ref,
 ) {
   const generated = useId()
@@ -31,8 +54,10 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
   }
   return (
     <div className={styles.field}>
-      <label htmlFor={controlId}>{label}</label>
-      <div className={styles.shell} data-filled={value ? 'true' : undefined}>
+      <label htmlFor={controlId} className={labelHidden ? 'sr-only' : undefined}>
+        {label}
+      </label>
+      <div className={[styles.shell, bare ? styles.bare : ''].filter(Boolean).join(' ')} data-filled={value ? 'true' : undefined}>
         <Search width={18} height={18} aria-hidden="true" />
         <input
           {...props}
@@ -43,10 +68,13 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
           onChange={(event) => onValueChange(event.target.value)}
           className={[styles.input, className].filter(Boolean).join(' ')}
         />
-        {/* The clear button has a reserved slot, so the field never changes width when it appears or leaves. */}
-        <span className={styles.clearSlot}>
-          <AnimatePresence initial={false}>
-            {value ? (
+        {/* The hint lives as a shell child only when the field is empty;
+            the clear control keeps its own reserved slot afterwards, and
+            the two are never present at once. */}
+        {hint && !value ? <span className="flex shrink-0 items-center">{hint}</span> : null}
+        {value ? (
+          <span className={styles.clearSlot}>
+            <AnimatePresence initial={false}>
               <motion.button
                 key="clear"
                 type="button"
@@ -95,9 +123,9 @@ export const SearchField = forwardRef<HTMLInputElement, SearchFieldProps>(functi
               >
                 <Xmark width={16} height={16} aria-hidden="true" />
               </motion.button>
-            ) : null}
-          </AnimatePresence>
-        </span>
+            </AnimatePresence>
+          </span>
+        ) : null}
       </div>
     </div>
   )
