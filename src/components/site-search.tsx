@@ -37,9 +37,9 @@ import { pathOf } from '@/lib/paths'
  */
 /** The panel reads one search section per collection, merged by language. */
 const SECTIONS = [
-  { id: 'courses', label: 'Courses', icon: <BookOpen width={24} height={24} /> },
-  { id: 'articles', label: 'Articles', icon: <Newspaper width={24} height={24} /> },
-  { id: 'people', label: 'People', icon: <Users width={24} height={24} /> },
+  { id: 'courses', icon: <BookOpen width={24} height={24} /> },
+  { id: 'articles', icon: <Newspaper width={24} height={24} /> },
+  { id: 'people', icon: <Users width={24} height={24} /> },
 ] as const
 type SectionId = (typeof SECTIONS)[number]['id']
 
@@ -185,6 +185,14 @@ export function SiteSearch() {
   const t = useTranslations('Search')
   const locale = useLocale()
   const router = useRouter()
+  // Labels are content names, so they ride the site language.
+  const sections = useMemo(
+    () => SECTIONS.map((section) => ({
+      ...section,
+      label: t(`type${section.id[0].toUpperCase()}${section.id.slice(1)}` as 'typeCourses' | 'typeArticles' | 'typePeople'),
+    })),
+    [t],
+  )
   const [open, setOpen] = useState(false)
   const [term, setTerm] = useState('')
   const [sort, setSort] = useState<Sort>('relevance')
@@ -210,9 +218,9 @@ export function SiteSearch() {
 
   // The panel speaks billions? No — it merges the two language mirrors
   // into one section per collection: counts add, filtering hides both.
-  const sections = useMemo<SearchSection[]>(
+  const searchSections = useMemo<SearchSection[]>(
     () =>
-      SECTIONS.map((section) => {
+      sections.map((section) => {
         const english = indexes[typesenseCollectionName(section.id, 'en')]
         const arabic = indexes[typesenseCollectionName(section.id, 'ar')]
         return {
@@ -222,7 +230,7 @@ export function SiteSearch() {
           found: (english?.found ?? 0) + (arabic?.found ?? 0),
         }
       }),
-    [indexes],
+    [sections, indexes],
   )
 
   // Flattened rows: per section, English then Arabic, keeping an index of
@@ -342,7 +350,7 @@ export function SiteSearch() {
             <SearchResults
               query={term}
               onQueryChange={setTerm}
-              sections={sections}
+              sections={searchSections}
               rows={rows}
               hiddenSections={hidden}
               onToggleSection={(id) =>

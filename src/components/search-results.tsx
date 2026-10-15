@@ -419,7 +419,7 @@ export function SearchResults({
       <div className="flex min-h-0 flex-1">
         {/* Filters */}
         <aside className="hidden w-64 shrink-0 flex-col border-e border-border px-6 py-8 md:flex">
-          <h2 className="font-sans text-md font-semibold tracking-tight">Filters</h2>
+          <h2 className="font-sans text-md font-semibold tracking-tight">{t('filters')}</h2>
           <fieldset className="mt-5 flex flex-col gap-1">
             <legend className="pb-3 text-xs font-normal text-muted-foreground">{t('type')}</legend>
             <TypeFacets
@@ -446,6 +446,7 @@ export function SearchResults({
                 announces the count without an aria-rerender storm. */}
             <p
               aria-live="polite"
+              dir={locale === 'ar' ? 'rtl' : 'ltr'}
               className="flex-1 text-sm text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground"
             >
               {searching ? (
@@ -490,16 +491,16 @@ export function SearchResults({
                 <span className="text-muted-foreground" aria-hidden="true">
                   <Search width={20} height={20} />
                 </span>
-                <strong className="text-[15px] font-medium">
+                <strong className="text-[15px] font-medium" dir="auto">
                   {searching
-                    ? 'Searching…'
+                    ? t('searching')
                     : query.trim().length < 2
-                      ? 'Type at least two letters'
-                      : `No results for “${query.trim()}”`}
+                      ? t('emptyHint')
+                      : t('noResultsTitle', { query })}
                 </strong>
                 {!searching && query.trim().length >= 2 ? (
                   <small className="text-sm text-muted-foreground">
-                    Check the spelling, or write it in the other language.
+                    {t('noResultsHint')}
                   </small>
                 ) : null}
               </div>
@@ -568,7 +569,7 @@ export function SearchResults({
                           <p className="text-[16px] font-medium leading-[1.4]">
                             <Highlight attribute={fields.title} hit={row.hit as never} />
                           </p>
-                          <p className="mt-1 text-[13px] text-muted-foreground">
+                          <p className="mt-1 text-[13px] text-muted-foreground" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
                             {row.locale !== locale ? (
                               <span lang={row.locale} dir={row.locale === 'ar' ? 'rtl' : 'ltr'}>
                                 {row.locale === 'ar' ? t('tagArabic') : t('tagEnglish')}
