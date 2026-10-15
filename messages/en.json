@@ -41,7 +41,7 @@
     "openLabel": "Search the site",
     "shortcut": "Meta+k Control+k /",
     "fieldLabel": "Search the site",
-    "placeholder": "Search docs, people and courses",
+    "placeholder": "Search articles, courses and people",
     "clearField": "Clear search",
     "close": "Close search",
     "filters": "Filters",
@@ -541,22 +541,10 @@
     "apply": "Apply",
     "details": "Details",
     "units": {
-      "days": [
-        "Days",
-        "d"
-      ],
-      "hours": [
-        "Hours",
-        "h"
-      ],
-      "minutes": [
-        "Minutes",
-        "m"
-      ],
-      "seconds": [
-        "Seconds",
-        "s"
-      ]
+      "days": ["Days", "d"],
+      "hours": ["Hours", "h"],
+      "minutes": ["Minutes", "m"],
+      "seconds": ["Seconds", "s"]
     },
     "unitSpoken": "{unit, select, days {{count, plural, one {# day} other {# days}}} hours {{count, plural, one {# hour} other {# hours}}} minutes {{count, plural, one {# minute} other {# minutes}}} other {{count, plural, one {# second} other {# seconds}}}}",
     "controls": {

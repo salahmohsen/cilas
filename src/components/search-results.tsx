@@ -16,6 +16,7 @@ import {
 } from 'react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
+import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { SearchField } from '@/components/arc/search-field/search-field'
@@ -147,6 +148,32 @@ export interface SearchResultsProps {
   onOpen: (row: SearchRow) => void
   /** Esc with an empty query — the caller decides what closing means. */
   onEscape: () => void
+}
+
+/** A row's contributors as Arc avatar members: the mirror's serialized
+ * owner pairs carry each name with its photo, and the joined `owner`
+ * string stands in when themirrors predate the pairs. */
+function ownerMembersOf(hit: Record<string, unknown>, owner: string | null): { name: string; src?: string }[] {
+  const serialized = typeof hit.owners === 'string' ? hit.owners : ''
+  if (serialized) {
+    try {
+      const parsed = JSON.parse(serialized) as Array<{ name?: unknown; photo?: unknown }>
+      const members = parsed
+        .filter((entry): entry is { name: string; photo?: string } =>
+          typeof entry.name === 'string' && entry.name.trim() !== '',
+        )
+        .map((entry) => ({
+          name: entry.name,
+          ...(typeof entry.photo === 'string' && entry.photo.startsWith('http')
+            ? { src: entry.photo }
+            : {}),
+        }))
+      if (members.length) return members
+    } catch {
+      // fall through to the joined name string
+    }
+  }
+  return (owner?.split(/,\s*/) ?? []).map((name) => ({ name }))
 }
 
 function relativeTime(timestamp: unknown, locale: string): string | null {
@@ -598,7 +625,7 @@ export function SearchResults({
                           />
                         ) : (
                           <span
-                            className={`mt-1 shrink-0 text-muted-foreground ${active ? 'text-foreground' : ''}`}
+                            className={`grid size-12 shrink-0 place-items-center rounded-xl text-muted-foreground ${active ? 'text-foreground' : ''}`}
                             aria-hidden="true"
                           >
                             {section?.icon}
@@ -608,11 +635,13 @@ export function SearchResults({
                           <p className="text-[16px] font-medium leading-[1.4]">
                             <Highlight attribute={fields.title} hit={row.hit as never} />
                           </p>
-                          <p className="mt-1 text-[13px] text-muted-foreground" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+                          <p className="mt-1 text-[13px] text-muted-foreground">
                             {(() => {
                               // The tag follows what the eye sees: a title
                               // written in the other script gets that
                               // language's tag, whichever mirror it sits in.
+                              // The line itself inherits the row's resolved
+                              // direction, so it starts where the title does.
                               const title = (row.hit.title ?? row.hit.name ?? '') as string
                               const arabicScript = /[\u0600-\u06FF]/.test(title)
                               const other =
@@ -645,19 +674,25 @@ export function SearchResults({
                             </p>
                           ) : null}
                           {owner ? (
-                            <p className="mt-3 flex items-center gap-2.5 text-[13px] text-muted-foreground">
-                              <Avatar
-                                name={owner}
-                                size="sm"
-                                src={
-                                  typeof row.hit.ownerPhoto === 'string' && row.hit.ownerPhoto
-                                    ? row.hit.ownerPhoto
-                                    : undefined
-                                }
-                              />
+                            // A div: several contributors stack Avatars,
+                            // whose group is a div and cannot live in a p.
+                            <div className="mt-3 flex items-center gap-2.5 text-[13px] text-muted-foreground">
+                              {ownerMembersOf(row.hit, owner).length > 1 ? (
+                                <AvatarGroup members={ownerMembersOf(row.hit, owner)} max={3} size="sm" label={owner} />
+                              ) : (
+                                <Avatar
+                                  name={owner}
+                                  size="sm"
+                                  src={
+                                    typeof row.hit.ownerPhoto === 'string' && row.hit.ownerPhoto
+                                      ? row.hit.ownerPhoto
+                                      : undefined
+                                  }
+                                />
+                              )}
                               <span className="text-foreground/80" dir="auto">{owner}</span>
                               {updated ? t('editedSuffix', { when: updated }) : ''}
-                            </p>
+                            </div>
                           ) : updated ? (
                             <p className="mt-3 text-[13px] text-muted-foreground">
                               {t('updated', { when: updated })}

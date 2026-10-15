@@ -59,10 +59,14 @@ const queryBy = (sectionId: string): string => {
     case 'courses':
       // `syllabus` is the flattened session flow + bibliography, so course
       // materials answer queries too — deep in the weights, behind the
-      // fields people actually title their content with.
-      return 'title,subtitle,summary,description,syllabus'
+      // fields people actually title their content with. `owner` carries
+      // every contributing person (fellows here), so a name finds their
+      // courses even when the syllabus never mentions them.
+      return 'title,subtitle,summary,owner,description,syllabus'
     case 'articles':
-      return 'title,body'
+      // `owner` joins the authors, translated-from authors and credited
+      // people, so a person's name finds everything they stand behind.
+      return 'title,owner,body'
     case 'people':
       return 'name'
     default:
@@ -70,15 +74,15 @@ const queryBy = (sectionId: string): string => {
   }
 }
 
-/** Field weights follow `query_by` order: titles rule, body text follows,
- * the syllabus blob trails. Two typos in Typesense otherwise cast film
- * blurbs as people's names. */
+/** Field weights follow `query_by` order: titles rule, names sit under
+ * titles, body text follows, the syllabus blob trails. Two typos in
+ * Typesense otherwise cast film blurbs as people's names. */
 const queryWeights = (sectionId: string): string | null => {
   switch (sectionId) {
     case 'courses':
-      return '10,8,6,8,3'
+      return '10,8,6,8,5,3'
     case 'articles':
-      return '10,3'
+      return '10,5,3'
     case 'people':
       return '10'
     default:
@@ -264,9 +268,13 @@ export function SiteSearch() {
   const rows = useMemo<SearchRow[]>(() => {
     const flat: Array<SearchRow & { updatedAt: number; label: string }> = []
     const positions = new Map<string, number>()
+    // The site language's mirror leads each section, its matches stay
+    // sharper than the other mirror's (an English title tracing the
+    // Arabic name trails the Arabic-titled work itself).
+    const mirrorOrder = locale === 'ar' ? (['ar', 'en'] as const) : (['en', 'ar'] as const)
     for (const section of SECTIONS) {
       if (hidden.has(section.id)) continue
-      for (const localeRef of ['en', 'ar'] as const) {
+      for (const localeRef of mirrorOrder) {
         const payload = indexes[typesenseCollectionName(section.id, localeRef)]
         for (const hit of payload?.hits ?? []) {
           const row: SearchRow & { updatedAt: number; label: string } = {

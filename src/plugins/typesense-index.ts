@@ -27,6 +27,7 @@ type SearchDoc = {
   createdAt: number
   updatedAt: number
   owner: string
+  owners: string
   [field: string]: number | string
 }
 
@@ -42,26 +43,63 @@ const coverImageOf = (doc: Record<string, unknown>, slug: SearchCollectionSlug):
   return mediaUrl(relation)
 }
 
-/** First related author's photo, for the author line. */
+/** The first related person's photo, for the author line: the person doc
+ * resolves at depth 1, its media upload one level deeper. */
 const ownerPhotoOf = (doc: Record<string, unknown>, slug: SearchCollectionSlug): string => {
   const source = slug === 'courses' ? doc.fellows : slug === 'articles' ? doc.authors : undefined
   const first = Array.isArray(source) ? source[0] : undefined
-  return mediaUrl(first)
+  const photo = (first as Record<string, unknown> | undefined)?.photo
+  return mediaUrl(photo)
 }
 
-/** Related People docs resolved at sync time; ids fall back to ''. */
-const ownerOf = (doc: Record<string, unknown>, slug: SearchCollectionSlug): string => {
-  const source =
-    slug === 'courses' ? doc.fellows : slug === 'articles' ? doc.authors : undefined
-  if (source == null) return ''
-  const entries = Array.isArray(source) ? source : []
-  return entries
-    .map((entry) => {
+/** Related People docs resolved at sync time; ids fall back to ''. Every
+ * contributing person joins the owner string — a course's fellows; an
+ * article's authors, the original authors of its translation and every
+ * named credit row — so searching a name surfaces their whole work.
+ * `ownersOf` also names each person's photo, serialized beside the joined
+ * string, so rows can stack the avatars of multiple contributors. */
+const personSources = (doc: Record<string, unknown>, slug: SearchCollectionSlug): unknown[] => {
+  const sources: unknown[] = []
+  if (slug === 'courses') {
+    sources.push(doc.fellows)
+  } else if (slug === 'articles') {
+    sources.push(doc.authors)
+    const translation = doc.translation as Record<string, unknown> | undefined
+    sources.push(translation?.original_authors)
+    for (const credit of (Array.isArray(doc.credits) ? doc.credits : []) as Record<string, unknown>[]) {
+      sources.push(credit.people)
+    }
+  }
+  return sources
+}
+
+type Owner = { name: string; photo: string }
+
+const ownersOf = (doc: Record<string, unknown>, slug: SearchCollectionSlug): Owner[] => {
+  const owners: Owner[] = []
+  const seen = new Set<string>()
+  for (const source of personSources(doc, slug)) {
+    const entries = source == null ? [] : Array.isArray(source) ? source : []
+    for (const entry of entries) {
       const name = (entry as Record<string, unknown> | undefined)?.name
-      return typeof name === 'string' ? name.trim() : ''
-    })
-    .filter(Boolean)
+      if (typeof name !== 'string' || !name.trim() || seen.has(name.trim())) continue
+      seen.add(name.trim())
+      owners.push({ name: name.trim(), photo: mediaUrl((entry as Record<string, unknown>).photo) })
+    }
+  }
+  return owners
+}
+
+const ownerOf = (doc: Record<string, unknown>, slug: SearchCollectionSlug): string =>
+  ownersOf(doc, slug)
+    .map((owner) => owner.name)
     .join(', ')
+
+/** The owner pairs as JSON, but no JSON separator ever shows in a name or
+ * photo url — one compact string the mimetype-safe `owners` field below. */
+const ownersFieldOf = (doc: Record<string, unknown>, slug: SearchCollectionSlug): string => {
+  const owners = ownersOf(doc, slug)
+  return owners.length ? JSON.stringify(owners) : ''
 }
 
 /** Lexical richText content flattens; textarea and arrays stay plain. */
@@ -136,6 +174,7 @@ const mapDoc = (
     createdAt: doc.createdAt ? new Date(doc.createdAt as string).getTime() : Date.now(),
     updatedAt: doc.updatedAt ? new Date(doc.updatedAt as string).getTime() : Date.now(),
     owner: ownerOf(doc, slug),
+    owners: ownersFieldOf(doc, slug),
     coverImage: coverImageOf(doc, slug),
     ownerPhoto: ownerPhotoOf(doc, slug),
   }
@@ -159,6 +198,8 @@ const baseSchema = () => [
   { name: 'updatedAt', type: 'int64' as const },
   // Not searched: the query_by only covers the content fields.
   { name: 'owner', type: 'string' as const },
+  // The owner pairs as JSON, for rows that stack several avatars.
+  { name: 'owners', type: 'string' as const, optional: true },
   { name: 'coverImage', type: 'string' as const, optional: true },
   { name: 'ownerPhoto', type: 'string' as const, optional: true },
 ]
@@ -212,7 +253,14 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
       const existing = await client.collections(name).retrieve()
       const known = new Set((existing.fields ?? []).map((field) => field.name))
       const missing = fields.filter((field) => !known.has(field))
-      if (!missing.length && known.has('owner') && known.has('coverImage') && known.has('ownerPhoto')) return
+      if (
+        !missing.length &&
+        known.has('owner') &&
+        known.has('owners') &&
+        known.has('coverImage') &&
+        known.has('ownerPhoto')
+      )
+        return
       // A schema that predates a field can only grow through a rebuild.
       await client.collections(name).delete()
       console.log(
@@ -253,6 +301,19 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
     const fields = TYPESENSE_SEARCH_COLLECTIONS[slug].searchFields
     const name = typesenseCollectionName(slug, locale)
     await ensureSchema(name, fields)
+    // The mirror may hold rows an earlier mapping left behind (schemas
+    // survive, saves only upsert); anything the fresh pass does not produce
+    // is stale and goes.
+    const seen = new Set<string>()
+    try {
+      const out = await client.collections(name).documents().export()
+      for (const line of out.split('\n')) {
+        if (line.trim()) seen.add((JSON.parse(line) as SearchDoc).id)
+      }
+    } catch (error) {
+      const status = (error as { httpStatus?: number }).httpStatus
+      if (status !== 404) console.error(`[typesense] failed to read ${name}`, error)
+    }
     let page = 1
     let hasMore = true
     let indexed = 0
@@ -261,13 +322,17 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
         collection: slug,
         locale,
         fallbackLocale: false,
-        depth: 1,
+        // Depth 2 reaches the contributing person's photo (owners resolve
+        // at depth 1, their media upload needs one level more, or the
+        // author-line avatar falls back to initials forever).
+        depth: 2,
         limit: 500,
         page,
       })
       const mapped = docs
         .map((doc) => mapDoc(doc, slug, fields))
         .filter((doc): doc is SearchDoc => doc != null)
+      for (const document of mapped) seen.delete(document.id)
       const candidates = identical
         ? mapped.filter((document) => {
             const hash = JSON.stringify(fields.map((field) => document[field]))
@@ -285,6 +350,10 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
       }
       hasMore = hasNextPage
       page += 1
+    }
+    for (const stale of seen) {
+      await remove(name, stale)
+      console.log(`[typesense] ${name}: removed stale ${stale}`)
     }
     console.log(`[typesense] ${name}: ${indexed} documents indexed`)
   }
