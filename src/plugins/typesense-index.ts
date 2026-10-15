@@ -169,7 +169,10 @@ const buildSchema = (name: string, fields: readonly string[]) => ({
 const PANEL_SLUGS = new Set<SearchCollectionSlug>(['courses', 'articles', 'people'])
 
 export const typesensePanelIndex = () => (incoming: Config): Config => {
-  if (!env.TYPESENSE_API_KEY) return incoming
+  // next build runs the payload config too, where `typesense` (the
+  // compose-network hostname) resolves nowhere: the indexer only serves
+  // runtime, so it disconnects itself on the build phase.
+  if (!env.TYPESENSE_API_KEY || process.env.NEXT_PHASE === 'phase-production-build') return incoming
 
   const client = new Client({
     apiKey: env.TYPESENSE_API_KEY,

@@ -199,7 +199,7 @@ export default buildConfig({
     typesenseSearch({
       // Skipped entirely until TYPESENSE_API_KEY exists, so builds and tests
       // run fine without a Typesense server reachable.
-      disabled: !env.TYPESENSE_API_KEY,
+      disabled: !env.TYPESENSE_API_KEY || process.env.NEXT_PHASE === 'phase-production-build',
       typesense: {
         apiKey: env.TYPESENSE_API_KEY ?? '',
         nodes: [

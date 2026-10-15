@@ -58,7 +58,7 @@
     "clearAll": "Clear all",
     "showResults": "Show results ({count, plural, one {# result} other {# results}})",
     "searching": "Searching…",
-    "resultsTail": "{count, plural, one {result} other {results}} in {seconds} seconds",
+    "resultsTail": "{count, plural, one {result in {seconds} seconds} other {results in {seconds} seconds}}",
     "resultsOnly": "{count, plural, one {result} other {results}}",
     "emptyHint": "Type at least two letters",
     "noResultsTitle": "No results for “{query}”",

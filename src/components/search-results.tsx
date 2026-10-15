@@ -453,6 +453,17 @@ export function SearchResults({
                 <strong className="font-semibold text-foreground">
                   <TextMorph>{t('searching')}</TextMorph>
                 </strong>
+              ) : locale === 'ar' ? (
+                // The Arabic line reads nested digits between Arabic words,
+                // so it stays one plain sentence rather than a rolling reel.
+                <strong className="font-semibold text-foreground">
+                  {seconds != null
+                    ? t('resultsTail', {
+                        count: totalFound,
+                        seconds: (seconds / 1000).toFixed(2),
+                      })
+                    : t('resultsOnly', { count: totalFound })}
+                </strong>
               ) : (
                 <>
                   <strong className="font-semibold text-foreground">
