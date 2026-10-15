@@ -449,9 +449,13 @@ export function SearchResults({
               dir={locale === 'ar' ? 'rtl' : 'ltr'}
               className="flex-1 text-sm text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground"
             >
-              {searching ? (
+              {searching && locale !== 'ar' ? (
                 <strong className="font-semibold text-foreground">
                   <TextMorph>{t('searching')}</TextMorph>
+                </strong>
+              ) : searching ? (
+                <strong className="font-semibold text-foreground" dir="rtl">
+                  {t('searching')}
                 </strong>
               ) : locale === 'ar' ? (
                 // The Arabic line reads nested digits between Arabic words,
