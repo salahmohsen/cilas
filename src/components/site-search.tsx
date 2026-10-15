@@ -297,8 +297,34 @@ export function SiteSearch() {
     if (sort === 'alpha') {
       return flat.sort((a, b) => a.label.localeCompare(b.label, 'en', { sensitivity: 'base' }))
     }
+    // Best match reads as one relevance list, not blocks per section: a
+    // person whose name matches the query exactly leads, and the rest
+    // round-robin so each section's top hit stays near the top.
+    const normalized = term.trim().toLowerCase()
+    const pinned: typeof flat = []
+    if (normalized) {
+      const remaining: typeof flat = []
+      for (const row of flat) {
+        if (row.sectionId === 'people' && row.label.trim().toLowerCase() === normalized) {
+          pinned.push(row)
+        } else {
+          remaining.push(row)
+        }
+      }
+      const lanes = SECTIONS.filter((section) => !hidden.has(section.id)).map((section) =>
+        remaining.filter((row) => row.sectionId === section.id),
+      )
+      const interleaved: typeof flat = []
+      for (let depth = 0; lanes.some((lane) => lane.length > depth); depth++) {
+        for (const lane of lanes) {
+          const row = lane[depth]
+          if (row) interleaved.push(row)
+        }
+      }
+      return [...pinned, ...interleaved]
+    }
     return flat
-  }, [indexes, sort, hidden, locale])
+  }, [indexes, sort, hidden, locale, term])
 
   const seconds = useMemo(() => {
     const values = SECTIONS.flatMap((section) =>

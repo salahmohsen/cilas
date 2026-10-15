@@ -246,6 +246,9 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
         hasNextPage: boolean
       }>
     },
+    /** Only for the Arabic pass: slugs whose English copy has this same
+     * content hash skip the mirror, so one document never doubles. */
+    identical?: Map<string, string>,
   ): Promise<void> => {
     const fields = TYPESENSE_SEARCH_COLLECTIONS[slug].searchFields
     const name = typesenseCollectionName(slug, locale)
@@ -265,9 +268,20 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
       const mapped = docs
         .map((doc) => mapDoc(doc, slug, fields))
         .filter((doc): doc is SearchDoc => doc != null)
+      const candidates = identical
+        ? mapped.filter((document) => {
+            const hash = JSON.stringify(fields.map((field) => document[field]))
+            return identical.get(document.slug) !== hash
+          })
+        : mapped
       if (mapped.length) {
-        await client.collections(name).documents().import(mapped, { action: 'upsert' })
-        indexed += mapped.length
+        const importable = identical
+          ? candidates
+          : mapped
+        if (importable.length) {
+          await client.collections(name).documents().import(importable, { action: 'upsert' })
+          indexed += importable.length
+        }
       }
       hasMore = hasNextPage
       page += 1
@@ -298,8 +312,41 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
               doc: Record<string, unknown>
               req?: { locale?: string }
             }) => {
+              const locale = localeOf(args.req)
               const doc = mapDoc(args.doc, slug as SearchCollectionSlug, fields)
-              if (doc) void upsert(typesenseCollectionName(slug, localeOf(args.req)), doc)
+              if (!doc) return
+              const name = typesenseCollectionName(slug, locale)
+              if (locale === 'en') {
+                void upsert(name, doc)
+                return
+              }
+              // An Arabic save skips the mirror when the English copy
+              // carries the same text — one document, one mirror.
+              void (async () => {
+                try {
+                  const english = (await client
+                    .collections(typesenseCollectionName(slug, 'en'))
+                    .documents(String(doc.id))
+                    .retrieve()) as Record<string, unknown>
+                  const fieldsOf = TYPESENSE_SEARCH_COLLECTIONS[slug as SearchCollectionSlug].searchFields
+                  const same =
+                    JSON.stringify(fieldsOf.map((field) => english[field])) ===
+                    JSON.stringify(fieldsOf.map((field) => doc[field]))
+                  if (same) {
+                    await remove(name, String(doc.id))
+                    return
+                  }
+                } catch (error) {
+                  const status = (error as { httpStatus?: number }).httpStatus
+                  if (status !== 404) {
+                    console.error(
+                      `[typesense] failed to compare ${slug}/${doc.id} before indexing`, error,
+                    )
+                    return
+                  }
+                }
+                await upsert(name, doc)
+              })()
             },
           ],
           afterDelete: [
@@ -322,12 +369,17 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
     }
     for (const slug of Object.keys(TYPESENSE_SEARCH_COLLECTIONS) as SearchCollectionSlug[]) {
       if (!PANEL_SLUGS.has(slug) || !api.collections?.[slug]) continue
+      // The English pass records each slug's content hash; the Arabic
+      // pass skips records whose hash matches, keeping bilingual
+      // entries out of both mirrors at once.
+      const identical = new Map<string, string>()
       for (const locale of ['en', 'ar'] as const) {
         try {
           await syncLocale(
             slug,
             locale,
             payload as Parameters<typeof syncLocale>[2],
+            locale === 'ar' ? identical : undefined,
           )
         } catch (error) {
           console.error(`[typesense] failed to sync ${slug} (${locale})`, error)
