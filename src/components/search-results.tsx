@@ -149,7 +149,7 @@ export interface SearchResultsProps {
   onEscape: () => void
 }
 
-function relativeTime(timestamp: unknown): string | null {
+function relativeTime(timestamp: unknown, locale: string): string | null {
   const ms =
     typeof timestamp === 'number'
       ? timestamp
@@ -158,16 +158,28 @@ function relativeTime(timestamp: unknown): string | null {
         : null
   if (ms == null || Number.isNaN(ms)) return null
   const seconds = Math.max(1, Math.round((Date.now() - ms) / 1000))
-  if (seconds < 60) return 'just now'
+  // Relative formatting follows the site language: the labels ride the
+  // message files, the numbers ride the locale's own calendar.
+  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+  const floor = (unit: Intl.RelativeTimeFormatUnit, value: number) => {
+    const rounded = Math.round(value)
+    if (rounded === 0) return null
+    return rtf.format(-rounded, unit)
+  }
+  if (seconds < 60) return rtf.format(-seconds, 'second')
   const minutes = Math.round(seconds / 60)
-  if (minutes < 60) return `${minutes} min ago`
+  if (minutes < 60) return floor('minute', minutes) ?? rtf.format(0, 'minute')
   const hours = Math.round(minutes / 60)
-  if (hours < 24) return `${hours} h ago`
+  if (hours < 24) return floor('hour', hours) ?? rtf.format(0, 'hour')
   const days = Math.round(hours / 24)
-  if (days < 7) return `${days} d ago`
+  if (days < 7) return floor('day', days) ?? rtf.format(0, 'day')
   const weeks = Math.round(days / 7)
-  if (weeks < 5) return `${weeks} wk ago`
-  return new Date(ms).toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' })
+  if (weeks < 5) return floor('week', weeks) ?? rtf.format(0, 'week')
+  return new Date(ms).toLocaleDateString(locale, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  })
 }
 
 export function SearchResults({
@@ -547,7 +559,7 @@ export function SearchResults({
                 {rows.map((row, index) => {
                   const fields = FIELDS[row.sectionId]
                   const section = sections.find((entry) => entry.id === row.sectionId)
-                  const updated = relativeTime(row.hit.updatedAt)
+                  const updated = relativeTime(row.hit.updatedAt, locale)
                   const active = cursorIndex === index
                   const arabic = row.locale === 'ar'
                   const owner = row.owner ?? null

@@ -254,6 +254,7 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
       const { docs, hasNextPage } = await payload.find({
         collection: slug,
         locale,
+        fallbackLocale: false,
         depth: 1,
         limit: 500,
         page,
