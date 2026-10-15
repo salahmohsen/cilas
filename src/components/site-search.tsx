@@ -58,7 +58,8 @@ const queryBy = (sectionId: string): string => {
   switch (sectionId) {
     case 'courses':
       // `syllabus` is the flattened session flow + bibliography, so course
-      // materials answer queries too.
+      // materials answer queries too — deep in the weights, behind the
+      // fields people actually title their content with.
       return 'title,subtitle,summary,description,syllabus'
     case 'articles':
       return 'title,body'
@@ -66,6 +67,22 @@ const queryBy = (sectionId: string): string => {
       return 'name'
     default:
       return 'title'
+  }
+}
+
+/** Field weights follow `query_by` order: titles rule, body text follows,
+ * the syllabus blob trails. Two typos in Typesense otherwise cast film
+ * blurbs as people's names. */
+const queryWeights = (sectionId: string): string | null => {
+  switch (sectionId) {
+    case 'courses':
+      return '10,8,6,8,3'
+    case 'articles':
+      return '10,3'
+    case 'people':
+      return '10'
+    default:
+      return null
   }
 }
 
@@ -98,15 +115,22 @@ const adapter = env.NEXT_PUBLIC_TYPESENSE_API_KEY
         ],
       },
       collectionSpecificSearchParameters: Object.fromEntries(
-        INDEXES.map((ref) => [
-          typesenseCollectionName(ref.sectionId, ref.locale),
-          {
-            query_by: queryBy(ref.sectionId),
-            // Snippets cover the queried body content, not only the title.
-            highlight_full_fields: queryBy(ref.sectionId).split(','),
-            snippet_threshold: 60,
-          },
-        ]),
+        INDEXES.map((ref) => {
+          const weights = queryWeights(ref.sectionId)
+          return [
+            typesenseCollectionName(ref.sectionId, ref.locale),
+            {
+              query_by: queryBy(ref.sectionId),
+              ...(weights ? { query_by_weights: weights } : {}),
+              // One typo per token: on Arabic names a two-typo threshold
+              // turns near-miss film credits into false hits.
+              num_typos: 1,
+              // Snippets cover the queried body content, not only the title.
+              highlight_full_fields: queryBy(ref.sectionId).split(','),
+              snippet_threshold: 60,
+            },
+          ]
+        }),
       ),
       additionalSearchParameters: { query_by: 'title' },
     })
