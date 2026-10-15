@@ -303,17 +303,25 @@ export function SiteSearch() {
     const normalized = term.trim().toLowerCase()
     const pinned: typeof flat = []
     if (normalized) {
+      // People matches split by strength: a person whose name equals the
+      // query leads the list; a person the query merely overlaps (ريم
+      // نجيب inside نجيب محفوظ) trails the content documents, whose
+      // full-text mentions are stronger evidence than a shared token.
+      const exactPeople: typeof flat = []
+      const weakPeople: typeof flat = []
       const remaining: typeof flat = []
       for (const row of flat) {
-        if (row.sectionId === 'people' && row.label.trim().toLowerCase() === normalized) {
-          pinned.push(row)
-        } else {
+        if (row.sectionId !== 'people') {
           remaining.push(row)
+        } else if (row.label.trim().toLowerCase() === normalized) {
+          exactPeople.push(row)
+        } else {
+          weakPeople.push(row)
         }
       }
-      const lanes = SECTIONS.filter((section) => !hidden.has(section.id)).map((section) =>
-        remaining.filter((row) => row.sectionId === section.id),
-      )
+      const lanes = SECTIONS.filter((section) => !hidden.has(section.id))
+        .filter((section) => section.id !== 'people')
+        .map((section) => remaining.filter((row) => row.sectionId === section.id))
       const interleaved: typeof flat = []
       for (let depth = 0; lanes.some((lane) => lane.length > depth); depth++) {
         for (const lane of lanes) {
@@ -321,7 +329,7 @@ export function SiteSearch() {
           if (row) interleaved.push(row)
         }
       }
-      return [...pinned, ...interleaved]
+      return [...exactPeople, ...interleaved, ...weakPeople]
     }
     return flat
   }, [indexes, sort, hidden, locale, term])
