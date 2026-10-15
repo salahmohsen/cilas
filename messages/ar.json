@@ -58,6 +58,7 @@
     "clearAll": "مسح الكل",
     "showResults": "اعرض النتائج ({count, plural, =1 {نتيجة واحدة} other {{count, number} نتيجة}})",
     "searching": "جارٍ البحث…",
+    "announce": "{count, plural, =1 {نتيجة واحدة في {seconds} ثانية} other {# نتائج في {seconds} ثانية}}",
     "resultsTail": "{count, plural, =1 {نتيجة واحدة في {seconds} ثانية} other {# نتائج في {seconds} ثانية}}",
     "resultsOnly": "{count, plural, =1 {نتيجة واحدة} other {# نتائج}}",
     "emptyHint": "اكتب حرفين على الأقل",

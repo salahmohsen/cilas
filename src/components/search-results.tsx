@@ -445,7 +445,6 @@ export function SearchResults({
             {/* Update text inside a stable region, so a polite live area
                 announces the count without an aria-rerender storm. */}
             <p
-              aria-live="polite"
               dir={locale === 'ar' ? 'rtl' : 'ltr'}
               className="flex-1 text-sm text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground"
             >
@@ -471,6 +470,16 @@ export function SearchResults({
                 </strong>
               ) : (
                 <>
+                  {/* Announcements get a clean sentence of their own: a live
+                      region would otherwise read the slot's rolling strips. */}
+                  <span className="sr-only" role="status">
+                    {seconds != null
+                      ? t('announce', {
+                          count: totalFound,
+                          seconds: (seconds / 1000).toFixed(2),
+                        })
+                      : t('announce', { count: totalFound, seconds: 0 })}
+                  </span>
                   <strong className="font-semibold text-foreground">
                     <SlotText
                       value={totalFound}
