@@ -609,12 +609,31 @@ export function SearchResults({
                             <Highlight attribute={fields.title} hit={row.hit as never} />
                           </p>
                           <p className="mt-1 text-[13px] text-muted-foreground" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
-                            {row.locale !== locale ? (
-                              <span lang={row.locale} dir={row.locale === 'ar' ? 'rtl' : 'ltr'}>
-                                {row.locale === 'ar' ? t('tagArabic') : t('tagEnglish')}
-                              </span>
-                            ) : null}
-                            {row.locale !== locale ? ' · ' : ''}
+                            {(() => {
+                              // The tag follows what the eye sees: a title
+                              // written in the other script gets that
+                              // language's tag, whichever mirror it sits in.
+                              const title = (row.hit.title ?? row.hit.name ?? '') as string
+                              const arabicScript = /[\u0600-\u06FF]/.test(title)
+                              const other =
+                                arabicScript
+                                  ? t('tagArabic')
+                                  : row.locale !== locale
+                                    ? t('tagEnglish')
+                                    : null
+                              return other ? (
+                                <span
+                                  lang={arabicScript ? 'ar' : 'en'}
+                                  dir={arabicScript ? 'rtl' : 'ltr'}
+                                >
+                                  {other}
+                                </span>
+                              ) : null
+                            })()}
+                            {(() => {
+                              const title = (row.hit.title ?? row.hit.name ?? '') as string
+                              return /[\u0600-\u06FF]/.test(title) || row.locale !== locale ? ' · ' : ''
+                            })()}
                             {section?.label}
                           </p>
                           {pickSnippet(fields, row.hit) ? (
