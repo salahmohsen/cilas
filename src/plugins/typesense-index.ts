@@ -146,7 +146,10 @@ const mapDoc = (
   if ('syllabus' in document) {
     document.syllabus = syllabusText(doc)
   }
-  return document
+  // A record with nothing searchable has no business in a mirror: it
+  // would surface there as an empty row wearing that mirror's tag.
+  const searchable = document[fields[0] ?? ''] !== ''
+  return searchable ? document : null
 }
 
 /** The base fields every mirror carries, before the searchable ones. */
@@ -259,7 +262,9 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
         limit: 500,
         page,
       })
-      const mapped = docs.map((doc) => mapDoc(doc, slug, fields)).filter((doc) => doc != null)
+      const mapped = docs
+        .map((doc) => mapDoc(doc, slug, fields))
+        .filter((doc): doc is SearchDoc => doc != null)
       if (mapped.length) {
         await client.collections(name).documents().import(mapped, { action: 'upsert' })
         indexed += mapped.length

@@ -258,15 +258,18 @@ export function SiteSearch() {
   )
 
   // Flattened rows: per section, English then Arabic, keeping an index of
-  // the language for the tag the row carries.
+  // the language for the tag the row carries. One document may live in
+  // both mirrors (bilingual entries with the same text); it then shows
+  // once, preferring the site language's own mirror.
   const rows = useMemo<SearchRow[]>(() => {
     const flat: Array<SearchRow & { updatedAt: number; label: string }> = []
+    const positions = new Map<string, number>()
     for (const section of SECTIONS) {
       if (hidden.has(section.id)) continue
       for (const localeRef of ['en', 'ar'] as const) {
         const payload = indexes[typesenseCollectionName(section.id, localeRef)]
         for (const hit of payload?.hits ?? []) {
-          flat.push({
+          const row: SearchRow & { updatedAt: number; label: string } = {
             id: `${section.id}-${localeRef}-${hit.objectID}`,
             sectionId: section.id,
             locale: localeRef,
@@ -275,7 +278,16 @@ export function SiteSearch() {
             updatedAt:
               typeof hit.updatedAt === 'number' ? hit.updatedAt : Number(hit.updatedAt ?? 0),
             label: hit.title ?? hit.name ?? hit.slug ?? '',
-          })
+          }
+          const key = `${section.id}-${hit.slug ?? hit.objectID}`
+          const at = positions.get(key)
+          if (at == null) {
+            positions.set(key, flat.length)
+            flat.push(row)
+          } else if (localeRef === locale && flat[at].locale !== locale) {
+            // The site language's copy replaces the other mirror's.
+            flat[at] = row
+          }
         }
       }
     }
@@ -286,7 +298,7 @@ export function SiteSearch() {
       return flat.sort((a, b) => a.label.localeCompare(b.label, 'en', { sensitivity: 'base' }))
     }
     return flat
-  }, [indexes, sort, hidden])
+  }, [indexes, sort, hidden, locale])
 
   const seconds = useMemo(() => {
     const values = SECTIONS.flatMap((section) =>
