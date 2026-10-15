@@ -1,6 +1,7 @@
 'use client'
 
 import { Highlight, Snippet } from 'react-instantsearch'
+import { useLocale, useTranslations } from 'next-intl'
 import { Search, SlidersHorizontal, X } from 'lucide-react'
 import {
   useCallback,
@@ -77,11 +78,6 @@ function pickSnippet(fields: { snippets: string[] }, hit: Record<string, unknown
 
 export type Sort = 'relevance' | 'newest' | 'alpha'
 
-const SORTS: { value: Sort; label: string }[] = [
-  { value: 'relevance', label: 'Best match' },
-  { value: 'newest', label: 'Newest' },
-  { value: 'alpha', label: 'A to Z' },
-]
 
 /** The facet rows themselves, shared by the desktop sidebar and the
  * mobile filters sheet. Each row pulls the 18px Arc mark out to the lane
@@ -95,6 +91,7 @@ function TypeFacets({
   hiddenSections: ReadonlySet<string>
   onToggleSection: (sectionId: string) => void
 }) {
+  const t = useTranslations('Search')
   return (
     <>
       {sections.map((section) => {
@@ -189,6 +186,8 @@ export function SearchResults({
   onOpen,
   onEscape,
 }: SearchResultsProps) {
+  const t = useTranslations('Search')
+  const locale = useLocale()
   const inputId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLUListElement>(null)
@@ -330,10 +329,10 @@ export function SearchResults({
       <div className="relative flex shrink-0 items-center gap-3 border-b border-border px-4 py-4 md:px-4">
         <div className="min-w-0 flex-1">
           <SearchField
-            label="Search the site"
+            label={t('fieldLabel')}
             labelHidden
             bare
-            placeholder="Search docs, people, and courses"
+            placeholder={t('placeholder')}
             hint={
               <kbd className="hidden size-6 items-center justify-center rounded-lg border border-border bg-muted/30 px-3 text-sm text-muted-foreground sm:inline-flex">
                 /
@@ -344,7 +343,7 @@ export function SearchResults({
               onQueryChange(value)
               setActiveIndex(null)
             }}
-            clearLabel="Clear search"
+            clearLabel={t('clearField')}
             role="combobox"
             aria-expanded={rows.length > 0}
             aria-controls={rows.length ? `${inputId}-rows` : undefined}
@@ -356,8 +355,8 @@ export function SearchResults({
         {/* Mobile lanes lose the sidebar, so the mirror bar opens the same
             facets in a bottom sheet, with the count of applied filters. */}
         <BottomSheet
-          title="Filters"
-          description="Show or hide whole content types; counts follow the query."
+          title={t('filters')}
+          description={t('filtersDescription')}
           open={filtersOpen}
           onOpenChange={setFiltersOpen}
           trigger={
@@ -367,7 +366,7 @@ export function SearchResults({
               aria-keyshortcuts={undefined}
             >
               <SlidersHorizontal width={17} height={17} strokeWidth={1.75} aria-hidden="true" />
-              <span>Filters</span>
+              <span>{t('filters')}</span>
               {hiddenSections.size > 0 ? (
                 <span className="grid place-items-center rounded-full bg-muted px-1.5 text-xs tabular-nums text-muted-foreground">
                   {hiddenSections.size}
@@ -378,7 +377,7 @@ export function SearchResults({
         >
           <div className="flex flex-col gap-6">
             <fieldset className="flex flex-col gap-1">
-              <legend className="text-xs font-normal text-muted-foreground">Type</legend>
+              <legend className="text-xs font-normal text-muted-foreground">{t('type')}</legend>
               <TypeFacets
                 sections={sections}
                 hiddenSections={hiddenSections}
@@ -395,21 +394,21 @@ export function SearchResults({
                 disabled={!filtersDirty}
                 className="inline-flex h-11 items-center rounded-full border border-border px-5 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-40"
               >
-                Clear all
+                {t('clearAll')}
               </button>
               <button
                 type="button"
                 onClick={() => setFiltersOpen(false)}
                 className="inline-flex h-11 flex-1 items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
               >
-                Show results ({totalFound})
+                {t('showResults', { count: totalFound })}
               </button>
             </div>
           </div>
         </BottomSheet>
         <button
           type="button"
-          aria-label="Close search"
+          aria-label={t('close')}
           onClick={onEscape}
           className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
         >
@@ -422,7 +421,7 @@ export function SearchResults({
         <aside className="hidden w-64 shrink-0 flex-col border-e border-border px-6 py-8 md:flex">
           <h2 className="font-sans text-md font-semibold tracking-tight">Filters</h2>
           <fieldset className="mt-5 flex flex-col gap-1">
-            <legend className="pb-3 text-xs font-normal text-muted-foreground">Type</legend>
+            <legend className="pb-3 text-xs font-normal text-muted-foreground">{t('type')}</legend>
             <TypeFacets
               sections={sections}
               hiddenSections={hiddenSections}
@@ -450,35 +449,38 @@ export function SearchResults({
               className="flex-1 text-sm text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground"
             >
               {searching ? (
-                <TextMorph as="strong" className="font-semibold text-foreground">
-                  Searching…
-                </TextMorph>
+                <strong className="font-semibold text-foreground">
+                  <TextMorph>{t('searching')}</TextMorph>
+                </strong>
               ) : (
                 <>
-                  <strong className="tabular-nums">
-                    <SlotText value={totalFound} format={(value) => value.toLocaleString('en')} />
+                  <strong className="font-semibold text-foreground">
+                    <SlotText
+                      value={totalFound}
+                      format={(value) => value.toLocaleString('en')}
+                      spins={0}
+                    />
                   </strong>{' '}
-                  {totalFound === 1 ? 'result' : 'results'}
-                  {seconds != null ? (
-                    <>
-                      {' in '}
-                      <strong className="tabular-nums">
-                        <SlotText
-                          value={(seconds / 1000).toFixed(2)}
-                          format={(value) => String(value)}
-                        />
-                      </strong>{' '}
-                      seconds
-                    </>
-                  ) : null}
+                  <TextMorph>
+                    {seconds != null
+                      ? t('resultsTail', {
+                          count: totalFound,
+                          seconds: (seconds / 1000).toFixed(2),
+                        })
+                      : t('resultsOnly', { count: totalFound })}
+                  </TextMorph>
                 </>
               )}
             </p>
             <SegmentedControl
-              label="Sort results"
+              label={t('sortLabel')}
               value={sort}
               onValueChange={(value) => onSortChange(value as Sort)}
-              options={SORTS.map(({ value, label }) => ({ value, label }))}
+              options={[
+                { value: 'relevance', label: t('sortRelevance') },
+                { value: 'newest', label: t('sortNewest') },
+                { value: 'alpha', label: t('sortAlpha') },
+              ]}
             />
           </div>
 
@@ -567,12 +569,12 @@ export function SearchResults({
                             <Highlight attribute={fields.title} hit={row.hit as never} />
                           </p>
                           <p className="mt-1 text-[13px] text-muted-foreground">
-                            {arabic ? (
-                              <span lang="ar" dir="rtl" className="font-medium">
-                                بالعربية
+                            {row.locale !== locale ? (
+                              <span lang={row.locale} dir={row.locale === 'ar' ? 'rtl' : 'ltr'}>
+                                {row.locale === 'ar' ? t('tagArabic') : t('tagEnglish')}
                               </span>
                             ) : null}
-                            {arabic ? ' · ' : ''}
+                            {row.locale !== locale ? ' · ' : ''}
                             {section?.label}
                           </p>
                           {pickSnippet(fields, row.hit) ? (
@@ -594,12 +596,12 @@ export function SearchResults({
                                     : undefined
                                 }
                               />
-                              <span className="text-foreground/80">{owner}</span>
-                              {updated ? ` edited ${updated}` : ''}
+                              <span className="text-foreground/80" dir="auto">{owner}</span>
+                              {updated ? t('editedSuffix', { when: updated }) : ''}
                             </p>
                           ) : updated ? (
                             <p className="mt-3 text-[13px] text-muted-foreground">
-                              Updated {updated}
+                              {t('updated', { when: updated })}
                             </p>
                           ) : null}
                         </div>

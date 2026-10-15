@@ -10,7 +10,7 @@ import {
 } from 'react-instantsearch'
 import TypesenseInstantsearchAdapter from 'typesense-instantsearch-adapter'
 import { BookOpen, Newspaper, Search, Users } from 'lucide-react'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
@@ -182,6 +182,7 @@ type SectionState = Partial<Record<string, HitsPayload>>
 
 /** Field + results panel, closing when focus or Escape leaves it. */
 export function SiteSearch() {
+  const t = useTranslations('Search')
   const locale = useLocale()
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -310,8 +311,8 @@ export function SiteSearch() {
     <>
       <button
         type="button"
-        aria-label="Search the site"
-        aria-keyshortcuts="Meta+k Control+k /"
+        aria-label={t('openLabel')}
+        aria-keyshortcuts={t('shortcut')}
         className="inline-flex size-8 items-center justify-center rounded-full transition-colors hover:bg-(--surface-muted)"
         onClick={() => setOpen(true)}
       >

@@ -26,7 +26,6 @@ describe('seoDefaults', () => {
       'publications',
       'articles',
       'events',
-      'press',
     ])
   })
 
@@ -58,7 +57,7 @@ describe('seoDefaults', () => {
   })
 
   it('cuts a long description at a word, with an ellipsis', () => {
-    const { description } = seoDefaults('press', { title: 'P', excerpt: long })
+    const { description } = seoDefaults('publications', { title: 'P', intro: long })
     expect(description!.length).toBeLessThanOrEqual(160)
     expect(description).toMatch(/word…$/)
   })

@@ -3,7 +3,7 @@
  * empty, in both locales; meta an editor wrote is kept. Text comes from the
  * document's own fields (src/lib/seo.ts), falling back to its longer text;
  * a locale with no text of its own takes the other's. The image is the
- * document's own; else, for a cycle, a cover among its courses; for press,
+ * document's own; else, for a cycle, a cover among its courses; and a course fallback from a cycle,
  * the outlet's logo; for an event, its course's or programme's cover; else
  * the site's default OG image, uploaded to media once.
  *
@@ -48,7 +48,6 @@ const LONG: Partial<Record<SeoCollection, string[]>> = {
   programmes: ['overview'],
   publications: ['intro'],
   events: ['description'],
-  press: ['title'],
 }
 
 const defaultImage = async (payload: Payload): Promise<number> => {
@@ -71,10 +70,6 @@ const imageFor = async (payload: Payload, collection: SeoCollection, doc: Doc, f
     const { docs } = await payload.find({ collection: 'courses', where: { and: [{ cycle: { equals: doc.id } }, { cover_image: { exists: true } }] }, limit: 1, depth: 0, overrideAccess: true })
     const cover = idOf((docs[0] as unknown as Doc | undefined)?.cover_image)
     if (cover) return cover
-  }
-  if (collection === 'press') {
-    const logo = idOf((doc.outlet as { logo?: unknown } | null | undefined)?.logo)
-    if (logo) return logo
   }
   if (collection === 'events') {
     for (const [rel, field] of [['courses', 'cover_image'], ['programmes', 'cover']] as const) {
