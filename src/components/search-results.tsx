@@ -24,6 +24,7 @@ import { SearchField } from '@/components/arc/search-field/search-field'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import SlotText from '@/components/arc/slot-text/slot-text'
 import TextMorph from '@/components/arc/text-morph/text-morph'
+import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
 
 export type SearchRow = {
   /** `${sectionId}-${locale}-${objectId}`, unique across sections. */
@@ -493,9 +494,22 @@ function SearchRowItem({
             {section?.label}
           </p>
           {snippet ? (
-            <p className="mt-2.5 line-clamp-2 text-[15px] leading-[1.45]">
+            // The snippet glides open with Read more when it overflows
+            // two lines. Only the toggle's click is kept from the row,
+            // so tapping the text itself still opens it. The inline
+            // styles hold today's row typography against the module.
+            <ExpandableText
+              lines={2}
+              moreLabel={t('readMore')}
+              lessLabel={t('showLess')}
+              className="mt-2.5"
+              style={{ fontSize: '15px', lineHeight: 1.45, color: 'inherit' }}
+              onClick={(event) => {
+                if ((event.target as HTMLElement).closest('button')) event.stopPropagation()
+              }}
+            >
               <Snippet attribute={snippet} hit={row.hit as never} />
-            </p>
+            </ExpandableText>
           ) : null}
           {owner ? (
             // A div: several contributors stack Avatars, whose group is a
@@ -837,6 +851,10 @@ export function SearchResults({
       event.preventDefault()
       setActiveIndex(rows.length ? rows.length - 1 : null)
     } else if (event.key === 'Enter' || event.key === ' ') {
+      // Focused buttons (the Read more toggle in a row, the controls in
+      // the query bar) activate themselves; the cursor never opens a
+      // row from under them.
+      if (target?.closest('button')) return
       // Enter or Space on a row opens it; Enter in the query runs the
       // best match when nothing is carried yet.
       if (activeRow) {

@@ -71,7 +71,9 @@
     "tagArabic": "العربية",
     "tagEnglish": "بالإنجليزية",
     "updated": "عُدّل {when}",
-    "editedSuffix": "عدّل {when}"
+    "editedSuffix": "عدّل {when}",
+    "readMore": "اقرأ المزيد",
+    "showLess": "إظهار أقل"
   },
   "Language": {
     "label": "اللغة",

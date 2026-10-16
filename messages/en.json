@@ -71,7 +71,9 @@
     "tagArabic": "Arabic",
     "tagEnglish": "English",
     "updated": "Updated {when}",
-    "editedSuffix": "edited {when}"
+    "editedSuffix": "edited {when}",
+    "readMore": "Read more",
+    "showLess": "Show less"
   },
   "Language": {
     "label": "Language",
