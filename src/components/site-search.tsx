@@ -35,11 +35,22 @@ import { pathOf } from '@/lib/paths'
  * search-only API key): without NEXT_PUBLIC_TYPESENSE_API_KEY the button
  * hides entirely.
  */
-/** The panel reads one search section per collection, merged by language. */
+/** The panel reads one search section per collection, merged by language.
+ * Courses facet by kind instead: one toggle per `course_type`, so the
+ * facet list never names Courses as a whole. */
 const SECTIONS = [
   { id: 'courses', icon: <BookOpen width={24} height={24} /> },
   { id: 'articles', icon: <Newspaper width={24} height={24} /> },
   { id: 'people', icon: <Users width={24} height={24} /> },
+] as const
+/** One facet per course kind, in Payload option order; its hidden id is
+ * `course:${value}` in the checkbox set, distinct from the section ids. */
+const COURSE_FACETS = [
+  { value: 'CORE', key: 'typeCore' },
+  { value: 'THEMATIC', key: 'typeThematic' },
+  { value: 'LAB', key: 'typeLab' },
+  { value: 'WORKSHOP', key: 'typeWorkshop' },
+  { value: 'SHORT', key: 'typeShort' },
 ] as const
 type SectionId = (typeof SECTIONS)[number]['id']
 
@@ -59,10 +70,11 @@ const queryBy = (sectionId: string): string => {
     case 'courses':
       // `syllabus` is the flattened session flow + bibliography, so course
       // materials answer queries too — deep in the weights, behind the
-      // fields people actually title their content with. `owner` carries
-      // every contributing person (fellows here), so a name finds their
-      // courses even when the syllabus never mentions them.
-      return 'title,subtitle,summary,owner,description,syllabus'
+      // fields people actually title their content with. `epigraph` is
+      // the pull quote (authors it names in it get found). `owner`
+      // carries every contributing person (fellows here), so a name
+      // finds their courses even when the syllabus never mentions them.
+      return 'title,subtitle,summary,epigraph,owner,description,syllabus'
     case 'articles':
       // `owner` joins the authors, translated-from authors and credited
       // people, so a person's name finds everything they stand behind.
@@ -76,11 +88,12 @@ const queryBy = (sectionId: string): string => {
 
 /** Field weights follow `query_by` order: titles rule, names sit under
  * titles, body text follows, the syllabus blob trails. Two typos in
- * Typesense otherwise cast film blurbs as people's names. */
-const queryWeights = (sectionId: string): string | null => {
+ * Typesense otherwise cast film blurbs as people's names. */const queryWeights = (sectionId: string): string | null => {
   switch (sectionId) {
     case 'courses':
-      return '10,8,6,8,5,3'
+      // Weights follow `query_by` order: epigraph sits at 7, behind the
+      // summary, ahead of the owner and the body fields.
+      return '10,8,6,7,8,5,3'
     case 'articles':
       return '10,5,3'
     case 'people':
@@ -100,8 +113,16 @@ type SiteHit = {
   objectID: string
 }
 
-/** What HitsCollector reports: the hits plus the index-level metadata. */
-type HitsPayload = { hits: SiteHit[]; found: number; ms: number | null }
+/** What HitsCollector reports: the hits plus the index-level metadata.
+ * On the courses mirrors, `typeCounts` carries the `courseType` facet
+ * histogram, so the panel can label each course-kind toggle with its
+ * per-query count. */
+type HitsPayload = {
+  hits: SiteHit[]
+  found: number
+  ms: number | null
+  typeCounts?: Record<string, number>
+}
 
 const adapter = env.NEXT_PUBLIC_TYPESENSE_API_KEY
   ? new TypesenseInstantsearchAdapter({
@@ -174,13 +195,18 @@ function HitsCollector({
 
   useEffect(() => {
     const signature = (list: SiteHit[]) => list.map((hit) => hit.objectID).join()
+    const facets = results?.facets ?? []
+    const typeCounts = facets.find((facet) => facet.name === 'courseType')?.data as
+      | Record<string, number>
+      | undefined
     onResults(key, {
       hits: items,
       found: results?.nbHits ?? items.length,
       ms: results?.processingTimeMS ?? null,
+      ...(typeCounts ? { typeCounts } : {}),
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps -- the signature lives inside onResults
-  }, [key, items, onResults, results?.nbHits, results?.processingTimeMS])
+  }, [key, items, onResults, results?.nbHits, results?.processingTimeMS, results?.facets])
 
   return null
 }
@@ -213,12 +239,14 @@ export function SiteSearch() {
   const t = useTranslations('Search')
   const locale = useLocale()
   const router = useRouter()
-  // Labels are content names, so they ride the site language.
+  // Labels are content names, so they ride the site language; course
+  // rows label from their kind's facet instead.
   const sections = useMemo(
-    () => SECTIONS.map((section) => ({
-      ...section,
-      label: t(`type${section.id[0].toUpperCase()}${section.id.slice(1)}` as 'typeCourses' | 'typeArticles' | 'typePeople'),
-    })),
+    () =>
+      SECTIONS.filter((section) => section.id !== 'courses').map((section) => ({
+        ...section,
+        label: t(`type${section.id[0].toUpperCase()}${section.id.slice(1)}` as 'typeArticles' | 'typePeople'),
+      })),
     [t],
   )
   const [open, setOpen] = useState(false)
@@ -237,29 +265,50 @@ export function SiteSearch() {
         current.hits.map((hit) => hit.objectID).join() ===
           next.hits.map((hit) => hit.objectID).join() &&
         current.found === next.found &&
-        current.ms === next.ms
+        current.ms === next.ms &&
+        JSON.stringify(current.typeCounts) === JSON.stringify(next.typeCounts)
       return same ? previous : { ...previous, [key]: next }
     })
   }, [])
 
   const close = useCallback(() => setOpen(false), [])
 
-  // The panel speaks billions? No — it merges the two language mirrors
-  // into one section per collection: counts add, filtering hides both.
-  const searchSections = useMemo<SearchSection[]>(
-    () =>
-      sections.map((section) => {
+  // The facet list: courses facet by kind (Core, Thematic, Lab, …) —
+  // counts per kind follow the query through the courseType histogram —
+  // then the plain sections. The panel speaks billions? No — it merges
+  // the two language mirrors into one facet per kind or collection:
+  // counts add, filtering hides both.
+  const searchSections = useMemo<SearchSection[]>(() => {
+    const englishCourses = indexes[typesenseCollectionName('courses', 'en')]
+    const arabicCourses = indexes[typesenseCollectionName('courses', 'ar')]
+    const histograms = [englishCourses?.typeCounts, arabicCourses?.typeCounts]
+    const faceted = histograms.some((entry) => entry != null)
+    const courseFound = (englishCourses?.found ?? 0) + (arabicCourses?.found ?? 0)
+    const courseFacets = COURSE_FACETS.map((facet) => ({
+      id: `course:${facet.value}`,
+      typeValue: facet.value,
+      label: t(facet.key as 'typeCore'),
+      icon: <BookOpen width={24} height={24} />,
+      // Before a mirror reports the histogram, fall back to the whole
+      // courses count on every facet, so the toggles stay usable.
+      found: faceted
+        ? histograms.reduce<number>((sum, entry) => sum + (entry?.[facet.value] ?? 0), 0)
+        : courseFound,
+    }))
+    return [
+      ...courseFacets,
+      ...sections.map((section) => {
         const english = indexes[typesenseCollectionName(section.id, 'en')]
         const arabic = indexes[typesenseCollectionName(section.id, 'ar')]
         return {
           id: section.id,
-          label: section.label,
           icon: section.icon,
+          label: section.label,
           found: (english?.found ?? 0) + (arabic?.found ?? 0),
         }
       }),
-    [sections, indexes],
-  )
+    ]
+  }, [sections, indexes, t])
 
   // Flattened rows: per section, English then Arabic, keeping an index of
   // the language for the tag the row carries. One document may live in
@@ -273,10 +322,16 @@ export function SiteSearch() {
     // Arabic name trails the Arabic-titled work itself).
     const mirrorOrder = locale === 'ar' ? (['ar', 'en'] as const) : (['en', 'ar'] as const)
     for (const section of SECTIONS) {
-      if (hidden.has(section.id)) continue
       for (const localeRef of mirrorOrder) {
         const payload = indexes[typesenseCollectionName(section.id, localeRef)]
         for (const hit of payload?.hits ?? []) {
+          // Courses hide per kind (`course:THEMATIC`), the rest per their
+          // section id; counts never depend on the checkboxes.
+          const facetId =
+            section.id === 'courses'
+              ? `course:${(hit as { courseType?: unknown }).courseType ?? ''}`
+              : section.id
+          if (hidden.has(facetId)) continue
           const row: SearchRow & { updatedAt: number; label: string } = {
             id: `${section.id}-${localeRef}-${hit.objectID}`,
             sectionId: section.id,
@@ -327,9 +382,14 @@ export function SiteSearch() {
           weakPeople.push(row)
         }
       }
-      const lanes = SECTIONS.filter((section) => !hidden.has(section.id))
-        .filter((section) => section.id !== 'people')
-        .map((section) => remaining.filter((row) => row.sectionId === section.id))
+      // Lanes follow the surviving rows themselves — hidden facets are
+      // already out of `remaining`, so an emptied lane drops itself.
+      const lanes: Array<typeof flat> = []
+      for (const section of SECTIONS) {
+        if (section.id === 'people') continue
+        const lane = remaining.filter((row) => row.sectionId === section.id)
+        if (lane.length) lanes.push(lane)
+      }
       const interleaved: typeof flat = []
       for (let depth = 0; lanes.some((lane) => lane.length > depth); depth++) {
         for (const lane of lanes) {
@@ -422,7 +482,17 @@ export function SiteSearch() {
                 </Index>
               ),
             )}
-            <Configure hitsPerPage={6} />
+            {/* The root Configure's `facets` state rides with every index's
+                request; every mirror carries the empty-able `courseType`
+                field, so only the courses mirrors fill the histogram and
+                the rest answer with an empty entry. The helper's own key
+                names apply (`facets`, `maxValuesPerFacet`) — the camel
+                `facetBy` alias never reaches the request. */}
+            <Configure
+              hitsPerPage={6}
+              facets={['courseType']}
+              maxValuesPerFacet={20}
+            />
             <HitsCollector reference={INDEXES[0]} onResults={onResults} />
             <StatusTracker onSearching={setSearching} onError={setError} />
             <SearchResults

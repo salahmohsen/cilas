@@ -162,6 +162,10 @@ const extractLexical = (richText: unknown): string => {
   return walk(root).trim()
 }
 
+/** The courses' Overview group, where subtitle, summary and epigraph nest. */
+const overviewGroupOf = (doc: Record<string, unknown>): Record<string, unknown> =>
+  (doc.overview as Record<string, unknown> | undefined) ?? {}
+
 const mapDoc = (
   doc: Record<string, unknown> & { id?: number | string },
   slug: SearchCollectionSlug,
@@ -177,9 +181,15 @@ const mapDoc = (
     owners: ownersFieldOf(doc, slug),
     coverImage: coverImageOf(doc, slug),
     ownerPhoto: ownerPhotoOf(doc, slug),
+    // The course's kind (CORE, THEMATIC, …), so the search panel can
+    // facet courses by type; empty on the other collections.
+    courseType: slug === 'courses' ? String(doc.course_type ?? '') : '',
   }
   for (const field of fields) {
-    document[field] = flatten(doc[field])
+    // The courses overview lives in a group, so title neighbours like
+    // subtitle, summary and epigraph nest under overview.*; the rest of
+    // the fields sit at the document root.
+    document[field] = flatten(overviewGroupOf(doc)[field] ?? doc[field])
   }
   // The derived syllabus blob for courses, not a Payload field of its own.
   if ('syllabus' in document) {
@@ -202,6 +212,8 @@ const baseSchema = () => [
   { name: 'owners', type: 'string' as const, optional: true },
   { name: 'coverImage', type: 'string' as const, optional: true },
   { name: 'ownerPhoto', type: 'string' as const, optional: true },
+  // The course kind, faceted so the panel can count courses per type.
+  { name: 'courseType', type: 'string' as const, optional: true, facet: true },
 ]
 
 const buildSchema = (name: string, fields: readonly string[]) => ({
@@ -258,7 +270,8 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
         known.has('owner') &&
         known.has('owners') &&
         known.has('coverImage') &&
-        known.has('ownerPhoto')
+        known.has('ownerPhoto') &&
+        known.has('courseType')
       )
         return
       // A schema that predates a field can only grow through a rebuild.
@@ -321,7 +334,12 @@ export const typesensePanelIndex = () => (incoming: Config): Config => {
       const { docs, hasNextPage } = await payload.find({
         collection: slug,
         locale,
-        fallbackLocale: false,
+        // The site pages themselves fall back cross-language wherever a
+        // course misses the reading locale's own text (see
+        // `getPublicPosts`); the mirrors follow the same rule, so a
+        // course quoting إيمان مرسال answers her name from the English
+        // panel too, exactly as the page shows her quote.
+        fallbackLocale: locale === 'ar' ? 'en' : 'ar',
         // Depth 2 reaches the contributing person's photo (owners resolve
         // at depth 1, their media upload needs one level more, or the
         // author-line avatar falls back to initials forever).

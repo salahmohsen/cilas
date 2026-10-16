@@ -12,7 +12,9 @@ export const TYPESENSE_SEARCH_COLLECTIONS = {
     // `syllabus` is a derived field, composed by the indexer from the
     // session flow (titles, descriptions, activities) plus every
     // bibliography entry, so searching finds readings inside courses.
-    searchFields: ['title', 'subtitle', 'summary', 'description', 'syllabus'],
+    // `epigraph` is the pull quote shown before the description — a
+    // course quoting إيمان مرسال answers a search of her name.
+    searchFields: ['title', 'subtitle', 'summary', 'epigraph', 'description', 'syllabus'],
     // The snippet field shown under a hit, when it improves the row.
     snippetField: 'description',
   },

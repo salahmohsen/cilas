@@ -12,7 +12,6 @@ import {
   type FilterField,
 } from '@/components/arc/filter-toolbar/filter-toolbar'
 import { Pagination } from '@/components/arc/pagination/pagination'
-import { SearchField } from '@/components/arc/search-field/search-field'
 import { Skeleton } from '@/components/arc/skeleton/skeleton'
 import { CourseRows } from '@/components/course-rows'
 import { COURSE_FACETS, readCourseQuery, type CourseFacet } from '@/lib/course-search'
@@ -40,11 +39,11 @@ function useSlow(active: boolean, delay = 400, min = 350) {
 }
 
 /**
- * The study list: a search over everything a course has, filters over its
- * metadata, and a page at a time. All three live in the URL
- * (`?type=thematic&q=…&page=2`); the server works the list out from it and
- * sends one page, so the browser never holds the whole catalogue. Here the
- * controls change the URL, and the list dims while the next page comes.
+ * The study list: filters over a course's metadata, and a page at a time. All
+ * live in the URL (`?type=thematic&page=2`); the server works the list out
+ * from it and sends one page, so the browser never holds the whole catalogue.
+ * Here the controls change the URL, and the list dims while the next page
+ * comes.
  */
 export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: number }) {
   const t = useTranslations('Study.filters')
@@ -55,15 +54,7 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
   const [pending, startTransition] = useTransition()
   const query = useMemo(() => readCourseQuery(new URLSearchParams(params.toString())), [params])
 
-  // The field answers at once; the URL follows when typing pauses.
-  const [text, setText] = useState(query.q ?? '')
-  const [prevQ, setPrevQ] = useState(query.q)
-  if (prevQ !== query.q) {
-    setPrevQ(query.q)
-    setText(query.q ?? '')
-  }
-
-  // Any change to the search or filters starts the list again at its first page.
+  // Any change to the filters starts the list again at its first page.
   const navigate = (change: (next: URLSearchParams) => void, keepPage = false) => {
     const next = new URLSearchParams(params.toString())
     if (!keepPage) next.delete('page')
@@ -71,21 +62,6 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
     const search = next.toString()
     startTransition(() => router.replace(search ? `${pathname}?${search}` : pathname, { scroll: false }))
   }
-
-  const wanted = text.trim()
-  useEffect(() => {
-    if (wanted === (query.q ?? '')) return
-    const timer = setTimeout(
-      () =>
-        navigate((next) => {
-          if (wanted) next.set('q', wanted)
-          else next.delete('q')
-        }),
-      350,
-    )
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [wanted])
 
   const { options } = result
   const fields: FilterField[] = COURSE_FACETS.filter((f) => options[f].length > 1).map((f) => ({
@@ -106,7 +82,6 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
     navigate((p) => (next > 1 ? p.set('page', String(next)) : p.delete('page')), true)
     listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
-  const typing = wanted !== (query.q ?? '')
   // A quick change dims the list in place; a slow one gives way to rows of
   // placeholders shaped like the rows to come.
   const slow = useSlow(pending)
@@ -114,13 +89,6 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
   return (
     <section className="study-list flex flex-col gap-6">
       <div className="flex flex-col gap-4">
-        <SearchField
-          clearLabel={t('clearSearch')}
-          label={t('search')}
-          onValueChange={setText}
-          placeholder={t('searchPlaceholder')}
-          value={text}
-        />
         <FilterToolbar
           addFilter={{
             fields,
@@ -148,7 +116,7 @@ export function StudyList({ result, pageSize }: { result: StudyPage; pageSize: n
           onRemove={(id) => navigate((next) => next.delete(id))}
         />
         <p aria-live="polite" className="text-sm text-[var(--text-secondary)]">
-          {pending || typing ? t('searching') : t('count', { count: result.total })}
+          {pending ? t('searching') : t('count', { count: result.total })}
         </p>
       </div>
 
