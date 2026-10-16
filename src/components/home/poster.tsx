@@ -7,7 +7,7 @@ import { DeadlineCountdown } from '@/components/home/deadline-countdown'
 /**
  * The four poster layouts, after the festival posters on the moodboard:
  *
- *   0 yellow  the image, then a colour panel with the label on top and the title at the foot; footer strip
+ *   0 yellow  the image, then a colour panel with the label on top and the title and credit at the foot; footer strip
  *   1 blue    a colour panel with the title on top and the credit at the foot, then the image; footer strip
  *   2 pink    the strip on top; a colour panel with the title and credit, then the image
  *   3 green   a colour bar with the title and the credit, the image across, then the strip
@@ -84,6 +84,12 @@ export function Poster({ poster }: { poster: PosterData }) {
           {title}
         </a>
       </h3>
+      {/* Layout 0 points at its label on top, so the credit follows the title instead. */}
+      {layout === 0 && credit ? (
+        <p className="poster-credit" dir="auto">
+          {credit}
+        </p>
+      ) : null}
     </div>
   )
 
