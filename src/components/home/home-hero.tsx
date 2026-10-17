@@ -71,8 +71,17 @@ export function HomeHero({
       { rootMargin: `-${header}px 0px 0px 0px` },
     )
     observer.observe(hero)
+
+    // Whatever sits above the header (the deadlines bar, until dismissed)
+    // pushes the hero down; it gives that much back, so it ends at the fold.
+    const offset = () =>
+      hero.style.setProperty('--hero-offset', `${hero.getBoundingClientRect().top + window.scrollY}px`)
+    offset()
+    const resize = new ResizeObserver(offset)
+    resize.observe(document.body)
     return () => {
       observer.disconnect()
+      resize.disconnect()
       root.removeAttribute('data-over-hero')
     }
   }, [])

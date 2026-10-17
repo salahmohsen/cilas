@@ -1612,12 +1612,15 @@ a.collection-item:hover {
   display: grid;
   grid-template-rows: 1fr auto;
   width: 100vw;
-  min-height: 100svh;
+  min-height: calc(100svh - var(--hero-offset, 0px));
   margin-inline: calc(50% - 50vw);
   margin-top: calc(-1 * var(--site-header-height, 4rem));
   overflow: hidden;
   background: var(--background);
   color: var(--foreground);
+  /* The scene's water band, and the numbers row under it (the shore). */
+  --water: clamp(5rem, 12vh, 8rem);
+  --shore: 7.5rem;
 }
 .home-hero-inner {
   display: grid;
@@ -1626,13 +1629,22 @@ a.collection-item:hover {
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
-  padding: calc(var(--site-header-height, 4rem) + 2rem) 1.5rem 2rem;
+  padding: calc(var(--site-header-height, 4rem) + 2rem) 1.5rem calc(var(--water) + 1rem);
+}
+/* On a phone the boat rides lower in the copy's way, so the copy leaves it room. */
+@media (max-width: 40rem) {
+  .home-hero {
+    --shore: 6.5rem;
+  }
+  .home-hero-inner {
+    padding-bottom: calc(var(--water) + 5rem);
+  }
 }
 .home-hero .home-hero-title {
   max-width: 15ch;
   color: inherit;
   font-family: var(--font-heading);
-  font-size: clamp(2.75rem, 7vw, 6rem);
+  font-size: clamp(2.5rem, min(7vw, 9svh), 6rem);
   font-weight: 400;
   line-height: 1.02;
   letter-spacing: -0.025em;
@@ -1674,6 +1686,7 @@ a.collection-item:hover {
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
+  min-height: var(--shore);
   padding: 0 1.5rem clamp(1.5rem, 4vh, 3rem);
 }
 .home-numbers-list {

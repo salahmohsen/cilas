@@ -58,7 +58,7 @@ export function HomeScene() {
         {BIRDS.map((bird, i) => (
           <g key={i} transform={`translate(${bird.x} ${bird.y}) scale(${bird.s})`}>
             <g className={styles.bird} style={{ ...at(0.9 + i * 0.08), '--i': i } as CSSProperties}>
-              <path d="M0 0 Q 7 -8 14 0 Q 21 -8 28 0" pathLength={1} strokeWidth={2.5} />
+              <path d="M0 0 Q 10 -12 20 0 Q 30 -12 40 0" pathLength={1} strokeWidth={3} />
             </g>
           </g>
         ))}
