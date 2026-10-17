@@ -35,20 +35,33 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage({ params }: Props) {
   const { locale } = await params
   const payload = await getPayload({ config })
-  const [t, tArticle, tArticles, format, open, articles, stats, outlets, covers, contact, faq] =
-    await Promise.all([
-      getTranslations('Home'),
-      getTranslations('Article'),
-      getTranslations('Articles'),
-      getFormatter(),
-      getOpenNow(payload, locale as Locale),
-      getHomeArticles(payload, locale as Locale),
-      getHomeStats(payload),
-      getPressOutlets(payload, locale as Locale),
-      getPublicationCovers(payload),
-      getContactForm(payload, locale as Locale),
-      getHomeFaq(payload, locale as Locale),
-    ])
+  const [
+    t,
+    tHeader,
+    tArticle,
+    tArticles,
+    format,
+    open,
+    articles,
+    stats,
+    outlets,
+    covers,
+    contact,
+    faq,
+  ] = await Promise.all([
+    getTranslations('Home'),
+    getTranslations('Header'),
+    getTranslations('Article'),
+    getTranslations('Articles'),
+    getFormatter(),
+    getOpenNow(payload, locale as Locale),
+    getHomeArticles(payload, locale as Locale),
+    getHomeStats(payload),
+    getPressOutlets(payload, locale as Locale),
+    getPublicationCovers(payload),
+    getContactForm(payload, locale as Locale),
+    getHomeFaq(payload, locale as Locale),
+  ])
 
   const toCard = (a: (typeof articles.featured)[number]) =>
     toArticleCard(a, {
@@ -86,7 +99,8 @@ export default async function HomePage({ params }: Props) {
         }
         secondary={{ label: t('readArticles'), href: '/articles' }}
         text={t('heroText')}
-        title={t('heroTitle')}
+        // The institute's name, as the header writes it, line break and all.
+        title={tHeader('brand')}
         who={t.raw('heroWho') as string[]}
       />
 

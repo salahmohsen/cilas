@@ -599,7 +599,9 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
       }}
     >
       {brand.mark ?? <ArcMark className={styles.brandMark} />}
-      <span className={styles.brandName}>{brand.name}</span>
+      <span className={styles.brandName} data-brand-name>
+        {brand.name}
+      </span>
     </Destination>
   )
 

@@ -1610,16 +1610,18 @@ a.collection-item:hover {
   background: var(--background);
   color: var(--foreground);
   /* The scene's sea, along the hero's foot; the copy stays above it. */
-  --water: 7.5rem;
+  --water: clamp(5.5rem, 14svh, 7.5rem);
+  /* Space follows the screen's height, so the copy fits a short laptop. */
+  --hero-gap: clamp(0.75rem, 2svh, 1.25rem);
 }
 .home-hero-inner {
   display: grid;
   align-content: center;
-  gap: 1.25rem;
+  gap: var(--hero-gap);
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
-  padding: 2.5rem 1.5rem calc(var(--water) + 1.5rem);
+  padding: clamp(1rem, 4svh, 2.5rem) 1.5rem calc(var(--water) + var(--hero-gap));
 }
 /* On a phone the boat rides lower in the copy's way, so the copy leaves it room. */
 @media (max-width: 40rem) {
@@ -1628,14 +1630,22 @@ a.collection-item:hover {
   }
 }
 .home-hero .home-hero-title {
-  max-width: 15ch;
   color: inherit;
   font-family: var(--font-heading);
-  font-size: clamp(2.5rem, min(7vw, 9svh), 6rem);
+  font-size: clamp(2.25rem, min(6vw, 8svh), 5.25rem);
   font-weight: 400;
   line-height: 1.02;
   letter-spacing: -0.025em;
-  text-wrap: balance;
+}
+/* One mask per line of the name; the line rises into it. The small padding
+   keeps descenders inside the mask. */
+.home-hero-line {
+  display: block;
+  overflow: clip;
+  padding-bottom: 0.08em;
+}
+.home-hero-line > span {
+  display: block;
 }
 [dir='rtl'] .home-hero-title {
   line-height: 1.5;
@@ -1664,16 +1674,16 @@ a.collection-item:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 0.75rem;
+  margin-top: calc(var(--hero-gap) * 0.5);
 }
 
 /* CILAS in numbers closes the copy, under a hairline, rising in as the scene
    finishes drawing (HomeNumbers counts up over the same moment). */
 .home-numbers {
   max-width: 34rem;
-  margin-top: 1rem;
+  margin-top: calc(var(--hero-gap) * 0.5);
   border-top: 1px solid var(--border);
-  padding-top: 1.5rem;
+  padding-top: var(--hero-gap);
 }
 .home-numbers-list {
   display: flex;
@@ -1687,7 +1697,7 @@ a.collection-item:hover {
 }
 .home-number-value {
   font-family: var(--font-heading);
-  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-size: clamp(1.75rem, min(4.5vw, 5svh), 3.25rem);
   line-height: 1;
   font-variant-numeric: tabular-nums;
 }
@@ -1696,15 +1706,54 @@ a.collection-item:hover {
   color: var(--muted-foreground);
 }
 
+/* The entrance: the name rises line by line, then the text, who it is for,
+   the actions and the numbers follow, each a beat later. Only opacity and
+   transform move, and every piece starts hidden, so nothing flashes. */
 @media (prefers-reduced-motion: no-preference) {
+  .home-hero-line > span {
+    animation: home-line-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) calc(0.1s + var(--line) * 0.12s) both;
+  }
+  .home-hero-rise {
+    animation: home-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) calc(0.4s + var(--step) * 0.08s) both;
+  }
   .home-numbers {
-    animation: home-rise 0.6s cubic-bezier(0.2, 0, 0, 1) 0.9s both;
+    animation: home-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both;
+  }
+}
+@keyframes home-line-up {
+  from {
+    translate: 0 105%;
   }
 }
 @keyframes home-rise {
   from {
     opacity: 0;
-    translate: 0 0.5rem;
+    translate: 0 0.75rem;
+  }
+}
+
+/* On the home page the hero carries the institute's name, so the header's
+   stays hidden until that one has scrolled up under it (HomeHero sets
+   data-brand-shown), then rises back in. :has() decides on the first paint,
+   so the name never shows and then hides. The mark stays throughout. */
+.site-header [data-brand-name] {
+  transition:
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    translate 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+:root:has(.home-hero):not([data-brand-shown]) .site-header [data-brand-name] {
+  opacity: 0;
+  translate: 0 0.5em;
+  filter: blur(4px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .site-header [data-brand-name] {
+    transition: opacity 0.2s linear;
+  }
+  :root:has(.home-hero):not([data-brand-shown]) .site-header [data-brand-name] {
+    translate: none;
+    filter: none;
   }
 }
 

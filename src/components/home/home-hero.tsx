@@ -1,10 +1,9 @@
 'use client'
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type CSSProperties } from 'react'
 
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
-import { TextReveal } from '@/components/arc/text-reveal/text-reveal'
 import { HomeNumbers, type HomeStat } from '@/components/home/home-numbers'
 import { HomeScene } from '@/components/home/home-scene'
 import { Link } from '@/i18n/navigation'
@@ -16,11 +15,15 @@ type Closed = { label: string; note: string; link: Action }
 /** How long each audience stays before the next takes its place. */
 const STEP = 2400
 
+/** Its place in the entrance, after the title: text, who, actions, … */
+const step = (n: number) => ({ '--step': n }) as CSSProperties
+
 /**
- * The home page's opening, the rest of the first screen: the motto over the
- * logo's felucca at sea, who CILAS is for, one after another, and the
- * institute in numbers. The list runs once and rests on its last line; with
- * reduced motion it starts there.
+ * The home page's opening, the rest of the first screen: the institute's
+ * name over the logo's felucca at sea, who CILAS is for, one after another,
+ * and the institute in numbers. The list runs once and rests on its last
+ * line; with reduced motion it starts there. The name stands in for the
+ * header's, which stays hidden until this one has scrolled away.
  */
 export function HomeHero({
   title,
@@ -31,6 +34,7 @@ export function HomeHero({
   numbers,
   locale,
 }: {
+  /** Broken into lines at each newline. */
   title: string
   text: string
   who: string[]
@@ -74,15 +78,45 @@ export function HomeHero({
     return () => resize.disconnect()
   }, [])
 
+  // data-brand-shown on <html> once the title has gone up under the header:
+  // the header's own name comes back then (see styles.css).
+  const titleRef = useRef<HTMLHeadingElement>(null)
+  useEffect(() => {
+    const heading = titleRef.current
+    if (!heading) return
+    const root = document.documentElement
+    const header = parseFloat(getComputedStyle(root).getPropertyValue('--site-header-height')) || 64
+    const observer = new IntersectionObserver(
+      (entries) =>
+        root.toggleAttribute('data-brand-shown', !entries[entries.length - 1].isIntersecting),
+      { rootMargin: `-${header}px 0px 0px 0px` },
+    )
+    observer.observe(heading)
+    return () => {
+      observer.disconnect()
+      root.removeAttribute('data-brand-shown')
+    }
+  }, [])
+
   return (
     <section aria-labelledby="home-title" className="home-hero" ref={ref}>
       <HomeScene />
       <div className="home-hero-inner">
-        <TextReveal as="h1" className="home-hero-title" id="home-title" text={title} />
-        <p className="home-hero-text">{text}</p>
+        <h1 className="home-hero-title" id="home-title" ref={titleRef}>
+          {title.split('\n').map((line, i) => (
+            // Each line rises out of its own mask, one after the other.
+            <span className="home-hero-line" key={line} style={{ '--line': i } as CSSProperties}>
+              {i > 0 ? ' ' : null}
+              <span>{line}</span>
+            </span>
+          ))}
+        </h1>
+        <p className="home-hero-text home-hero-rise" style={step(0)}>
+          {text}
+        </p>
         {/* Read once, whole, by screen readers; the moving line is for the eye. */}
         <p className="sr-only">{who.join(locale === 'ar' ? '، ' : ', ')}</p>
-        <p aria-hidden className="home-hero-who">
+        <p aria-hidden className="home-hero-who home-hero-rise" style={step(1)}>
           {locale === 'ar' ? (
             // Arabic letters join, so the line changes whole instead of letter by
             // letter. Leaving and arriving lines share one grid cell and
@@ -105,7 +139,7 @@ export function HomeHero({
             <TextMorph>{who[shown] ?? ''}</TextMorph>
           )}
         </p>
-        <div className="home-hero-actions">
+        <div className="home-hero-actions home-hero-rise" style={step(2)}>
           {'href' in primary ? (
             <Link className="home-action" data-primary href={primary.href}>
               {primary.label}
@@ -127,7 +161,7 @@ export function HomeHero({
           </Link>
         </div>
         {'note' in primary ? (
-          <p className="home-hero-note" id="home-hero-note">
+          <p className="home-hero-note home-hero-rise" id="home-hero-note" style={step(3)}>
             {primary.note} <a href={primary.link.href}>{primary.link.label}</a>
           </p>
         ) : null}

@@ -17,11 +17,41 @@ for (const path of ['/en', '/ar', '/en/articles']) {
   })
 }
 
-test('the hero ends at the fold, its numbers inside it', async ({ page }) => {
+// Two short laptop screens: the copy and its numbers still fit above the fold.
+for (const size of [
+  { width: 1280, height: 720 },
+  { width: 1366, height: 660 },
+]) {
+  test(`the hero ends at the fold, its numbers inside it (${size.width}×${size.height})`, async ({
+    page,
+  }) => {
+    test.setTimeout(120_000)
+    await page.setViewportSize(size)
+    await page.goto(`${BASE}/en`, { timeout: 90_000 })
+    const hero = page.locator('.home-hero')
+    const bottom = await hero.evaluate((el) => el.getBoundingClientRect().bottom)
+    expect(bottom).toBeLessThanOrEqual(await page.evaluate(() => window.innerHeight + 1))
+    await expect(hero.locator('.home-numbers')).toBeInViewport()
+  })
+}
+
+for (const locale of ['en', 'ar']) {
+  test(`the header's name waits for the hero's to scroll away (${locale})`, async ({ page }) => {
+    test.setTimeout(120_000)
+    await page.goto(`${BASE}/${locale}`, { timeout: 90_000 })
+    const name = page.locator('.site-header [data-brand-name]')
+    await expect(name).toHaveCSS('opacity', '0')
+
+    await page.evaluate(scrollTo, 600)
+    await expect(name).toHaveCSS('opacity', '1')
+
+    await page.evaluate(scrollTo, 0)
+    await expect(name).toHaveCSS('opacity', '0')
+  })
+}
+
+test('elsewhere the header shows its name from the start', async ({ page }) => {
   test.setTimeout(120_000)
-  await page.goto(`${BASE}/en`, { timeout: 90_000 })
-  const hero = page.locator('.home-hero')
-  const bottom = await hero.evaluate((el) => el.getBoundingClientRect().bottom)
-  expect(bottom).toBeLessThanOrEqual(await page.evaluate(() => window.innerHeight + 1))
-  await expect(hero.locator('.home-numbers')).toBeInViewport()
+  await page.goto(`${BASE}/en/articles`, { timeout: 90_000 })
+  await expect(page.locator('.site-header [data-brand-name]')).toHaveCSS('opacity', '1')
 })
