@@ -54,27 +54,83 @@ export type Sort = 'relevance' | 'newest' | 'alpha'
 /* ------------------------------------------------------------------ */
 
 /** Highlightable/snippable field per section, in the plugin's schema.
- * The snippet source is per hit: the first field whose extract carries a
- * real match, falling back to anything with readable content — so a hit
- * matched inside a course's syllabus quotes the syllabus sentence. */
+ * The snippet source is per hit: the first field that carries a real
+ * match — so a hit matched inside a course's syllabus quotes the
+ * syllabus sentence, and a title-only hit shows no snippet. */
 const FIELDS: Record<string, { title: string; snippets: string[] }> = {
   courses: { title: 'title', snippets: ['description', 'syllabus'] },
   articles: { title: 'title', snippets: ['body'] },
   people: { title: 'name', snippets: [] },
 }
 
+/** Picks the snippet attribute for a hit: the first field that Typesense
+ * actually matched inside the snippet fields. There is deliberate no
+ * fallback for a field that did not match: when Typesense skips
+ * highlighting a field, the instantsearch adapter fills its snippet
+ * result with the raw, whole field value — quote the whole essay under a
+ * title-only hit — so a row without a matched snippet field gets no
+ * snippet at all. */
 function pickSnippet(fields: { snippets: string[] }, hit: Record<string, unknown>): string | null {
-  const meta = (hit as { _snippetResult?: Record<string, unknown> })._snippetResult
-  const withValue = fields.snippets.filter((attribute) =>
-    (meta?.[attribute] as { value?: string } | undefined)?.value?.trim(),
-  )
-  if (!withValue.length) return null
+  const meta = (hit as { _snippetResult?: Record<string, pickSnippetMeta> })._snippetResult
   return (
-    withValue.find(
+    fields.snippets.find(
       (attribute) =>
-        (meta?.[attribute] as { matchLevel?: string } | undefined)?.matchLevel !== 'none',
-    ) ?? withValue[0]
+        meta?.[attribute]?.value?.includes('<mark') && meta[attribute].matchLevel !== 'none',
+    ) ?? null
   )
+}
+
+type pickSnippetMeta = {
+  value?: string
+  matchLevel?: string
+}
+
+/** Typesense cuts its affix window mid-sentence around the match.
+ * Re-cut the window at sentence boundaries, so the expanded text is the
+ * matched sentence with its nearest neighbors — the words the reader
+ * searched for, in readable form — never a torn string. The `<mark>`
+ * tags survive untouched; only the edges move. */
+const sentenceBoundaries = ['. ', '! ', '? ', '؟ ']
+
+function shapeSnippet(value: string): string {
+  if (!value.includes('<mark') || value.length <= 480) return value
+  const first = value.indexOf('<mark')
+  // Lead: back up to the last sentence boundary before the match.
+  const lead = value.slice(0, first)
+  const leadBreak = Math.max(...sentenceBoundaries.map((mark) => lead.lastIndexOf(mark)))
+  const start = leadBreak === -1 ? 0 : leadBreak + 2
+  // Trail: stop the cap on a sentence boundary, keeping at least the
+  // matched sentence itself.
+  const capped = value.slice(start, start + 560)
+  const trailBreak = Math.max(...sentenceBoundaries.map((mark) => capped.lastIndexOf(mark)))
+  // A boundary only counts when it closes past the match; sentences
+  // behind the mark were never at risk.
+  let end = capped.length
+  if (start + capped.length < value.length && trailBreak > first - start + 40) {
+    end = trailBreak + 2
+  }
+  const window = capped.slice(0, end).trim()
+  // Where the cut ate content on either side, say so with a trailing
+  // ellipsis, as Typesense's own windows do.
+  const leadEllipsis = start > 0 ? '… ' : ''
+  const trailEllipsis = start + end < value.length ? ' …' : ''
+  return `${leadEllipsis}${window}${trailEllipsis}`
+}
+
+/** A copy of the hit whose snippet value is the shaped window, since
+ * Instantsearch's `Snippet` reads the snippet result straight off the
+ * hit. */
+function withShapedSnippet(hit: SearchRow['hit'], attribute: string): SearchRow['hit'] {
+  const meta = (hit as { _snippetResult?: Record<string, pickSnippetMeta> })._snippetResult
+  const entry = meta?.[attribute]
+  if (!entry?.value) return hit
+  return {
+    ...hit,
+    _snippetResult: {
+      ...meta,
+      [attribute]: { ...entry, value: shapeSnippet(entry.value) },
+    },
+  }
 }
 
 /** A row's contributors as Arc avatar members: the mirror's serialized
@@ -508,7 +564,7 @@ function SearchRowItem({
                 if ((event.target as HTMLElement).closest('button')) event.stopPropagation()
               }}
             >
-              <Snippet attribute={snippet} hit={row.hit as never} />
+              <Snippet attribute={snippet} hit={withShapedSnippet(row.hit, snippet) as never} />
             </ExpandableText>
           ) : null}
           {owner ? (

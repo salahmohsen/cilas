@@ -150,9 +150,13 @@ const adapter = env.NEXT_PUBLIC_TYPESENSE_API_KEY
               // One typo per token: on Arabic names a two-typo threshold
               // turns near-miss film credits into false hits.
               num_typos: 1,
-              // Snippets cover the queried body content, not only the title.
-              highlight_full_fields: queryBy(ref.sectionId).split(','),
-              snippet_threshold: 60,
+              // Only the title needs the full value; the short fields
+              // stay exact around a match. Full-body highlighting puts
+              // the entire essay in every hit's payload.
+              highlight_full_fields: 'title',
+              // The snippet window around a match: affix tokens on
+              // either side (the server ignores `snippet_threshold`).
+              highlight_affix_num_tokens: 30,
             },
           ]
         }),
