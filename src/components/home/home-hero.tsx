@@ -1,11 +1,12 @@
 'use client'
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
 import { TextReveal } from '@/components/arc/text-reveal/text-reveal'
+import { HomeNumbers, type HomeStat } from '@/components/home/home-numbers'
+import { HomeScene } from '@/components/home/home-scene'
 import { Link } from '@/i18n/navigation'
 
 type Action = { label: string; href: string }
@@ -16,9 +17,11 @@ type Closed = { label: string; note: string; link: Action }
 const STEP = 2400
 
 /**
- * The home page's opening: the motto over a drawing of the CILAS classroom,
- * and who CILAS is for, one after another. The list runs once
- * and rests on its last line; with reduced motion it starts there.
+ * The home page's opening, the whole first screen: the motto over a felucca
+ * drawn in the ink of the logo, who CILAS is for, one after another, and the
+ * institute in numbers along the water. The list runs once and rests on its
+ * last line; with reduced motion it starts there. While any of it is under
+ * the header, the header stays clear.
  */
 export function HomeHero({
   title,
@@ -26,6 +29,7 @@ export function HomeHero({
   who,
   primary,
   secondary,
+  numbers,
   locale,
 }: {
   title: string
@@ -34,6 +38,7 @@ export function HomeHero({
   /** Unavailable: the button shows but does nothing, and the note says why. */
   primary: Action | Closed
   secondary: Action
+  numbers: { title: string; stats: HomeStat[] }
   locale: string
 }) {
   const reduced = useReducedMotion()
@@ -53,16 +58,28 @@ export function HomeHero({
     return () => window.clearTimeout(timer)
   }, [index, last, reduced])
 
+  // data-over-hero on <html> while the hero shows below the header's bottom edge.
+  const ref = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const hero = ref.current
+    if (!hero) return
+    const root = document.documentElement
+    const header =
+      parseFloat(getComputedStyle(root).getPropertyValue('--site-header-height')) || 64
+    const observer = new IntersectionObserver(
+      ([entry]) => root.toggleAttribute('data-over-hero', entry.isIntersecting),
+      { rootMargin: `-${header}px 0px 0px 0px` },
+    )
+    observer.observe(hero)
+    return () => {
+      observer.disconnect()
+      root.removeAttribute('data-over-hero')
+    }
+  }, [])
+
   return (
-    <section aria-labelledby="home-title" className="home-hero">
-      <Image
-        alt=""
-        className="home-hero-ground"
-        fill
-        priority
-        sizes="(min-width: 80rem) 75rem, 100vw"
-        src="/assets/images/cilas-classroom.jpg"
-      />
+    <section aria-labelledby="home-title" className="home-hero" ref={ref}>
+      <HomeScene />
       <div className="home-hero-inner">
         <TextReveal as="h1" className="home-hero-title" id="home-title" text={title} />
         <p className="home-hero-text">{text}</p>
@@ -118,6 +135,7 @@ export function HomeHero({
           </p>
         ) : null}
       </div>
+      <HomeNumbers locale={locale} stats={numbers.stats} title={numbers.title} />
     </section>
   )
 }

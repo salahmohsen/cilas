@@ -9,7 +9,6 @@ import { getHomeFaq } from '@/api/faq.api'
 import { getHomeArticles, getHomeStats, getOpenNow, getPressOutlets } from '@/api/home.api'
 import { FaqSection } from '@/components/arc/blocks/faq-section/faq-section'
 import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
-import { StatsBand } from '@/components/arc/blocks/stats-band/stats-band'
 import { ContactForm } from '@/components/contact/contact-form'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { HomeHero } from '@/components/home/home-hero'
@@ -29,8 +28,9 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * The home page: what is open for registration now, the featured articles,
- * the institute in numbers, the press and the questions people ask.
+ * The home page: the institute in numbers under the opening scene, what is
+ * open for registration now, the featured articles, the press and the
+ * questions people ask.
  */
 export default async function HomePage({ params }: Props) {
   const { locale } = await params
@@ -67,6 +67,14 @@ export default async function HomePage({ params }: Props) {
     <>
       <HomeHero
         locale={locale}
+        numbers={{
+          title: t('statsTitle'),
+          stats: [
+            { value: stats.years, label: t('statYears') },
+            { value: stats.courses, label: t('statCourses') },
+            { value: stats.fellows, label: t('statFellows') },
+          ],
+        }}
         primary={
           open.length
             ? { label: t('seeOpen'), href: '/#open' }
@@ -124,19 +132,6 @@ export default async function HomePage({ params }: Props) {
             <HomeArticles posts={latest} title={t('latestTitle')} />
           </section>
         ) : null}
-
-        <StatsBand
-          className="home-stats"
-          flush
-          locale={locale === 'ar' ? 'ar-EG' : 'en-GB'}
-          numberingSystem={locale === 'ar' ? 'arab' : 'latn'}
-          stats={[
-            { value: stats.years, label: t('statYears') },
-            { value: stats.courses, label: t('statCourses') },
-            { value: stats.fellows, label: t('statFellows') },
-          ]}
-          title={t('statsTitle')}
-        />
 
         {outlets.length ? (
           <div className="home-press">
