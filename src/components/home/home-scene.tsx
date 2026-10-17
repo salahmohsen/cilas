@@ -28,6 +28,42 @@ const swell = ({ y, length, rise }: Swell) => {
   return `M${-length} ${y}` + ` ${up} ${down}`.repeat(Math.ceil((REACH + length) / length))
 }
 
+/** The water under a row's line, down past the band's foot: it hides what sits behind it. */
+const body = (row: Swell) => `${swell(row)} V400 H${-row.length} Z`
+
+/**
+ * Rows of sea, each its line and the water under it, rolling together. The far
+ * rows go behind the boat, the near ones in front, so its hull sits in the
+ * water and dips under the near swell as it rides.
+ */
+function Sea({ rows, from }: { rows: Swell[]; from: number }) {
+  return (
+    // No viewBox: the waves are drawn in pixels, so they keep their shape at
+    // any width, and the band shows as much sea as it is wide.
+    <svg className={styles.water} fill="none" stroke="currentColor" strokeLinecap="round">
+      {rows.map((row, n) => {
+        const i = from + n
+        return (
+          <g
+            className={styles.swell}
+            key={row.y}
+            style={{ '--i': i, '--length': `${row.length}px` } as CSSProperties}
+          >
+            <path className={styles.sea} d={body(row)} />
+            <path
+              className={styles.wave}
+              d={swell(row)}
+              pathLength={1}
+              strokeWidth={row.w}
+              style={at(row.at)}
+            />
+          </g>
+        )
+      })}
+    </svg>
+  )
+}
+
 const BIRDS = [
   { x: 40, y: 120, s: 1.2 },
   { x: 150, y: 60, s: 0.9 },
@@ -64,20 +100,7 @@ export function HomeScene() {
         ))}
       </svg>
 
-      {/* No viewBox: the waves are drawn in pixels, so they keep their shape
-          at any width, and the band shows as much sea as it is wide. */}
-      <svg className={styles.water} fill="none" stroke="currentColor" strokeLinecap="round">
-        {SWELLS.map((row, i) => (
-          <path
-            className={styles.wave}
-            d={swell(row)}
-            key={row.y}
-            pathLength={1}
-            strokeWidth={row.w}
-            style={{ ...at(row.at), '--i': i, '--length': `${row.length}px` } as CSSProperties}
-          />
-        ))}
-      </svg>
+      <Sea from={0} rows={SWELLS.slice(0, 2)} />
 
       {/* The track carries the scroll-linked voyage, the boat its riding of the waves. */}
       <div className={styles.track}>
@@ -99,6 +122,8 @@ export function HomeScene() {
           </svg>
         </div>
       </div>
+
+      <Sea from={2} rows={SWELLS.slice(2)} />
     </div>
   )
 }

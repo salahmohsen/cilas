@@ -37,7 +37,9 @@
 .track {
   position: absolute;
   right: clamp(1rem, 10vw, 12rem);
-  bottom: calc(var(--water) * 0.45);
+  /* The keel 72px down the sea band: just under the near swell's line (70px
+     in HomeScene), so the hull sits in the water at any band height. */
+  bottom: calc(var(--water) - 72px);
   width: clamp(5.5rem, 11vw, 10rem);
 }
 /* A phone has no sky beside the title: the birds stay home, the boat is small. */
@@ -62,9 +64,14 @@
   transform-origin: 0% 100%;
 }
 
-/* Far rows of sea are fainter. */
+/* Far rows of sea are fainter. The water under each line is the page's own
+   colour, solid, so it hides the far rows' foot and the boat's hull. */
 .wave {
   opacity: calc(0.45 + var(--i) * 0.18);
+}
+.sea {
+  fill: var(--background);
+  stroke: none;
 }
 
 /* Every stroke is drawn, at rest, unless motion is welcome. */
@@ -95,12 +102,14 @@
   .sail {
     animation: sway 7s ease-in-out 1.6s infinite;
   }
-  /* Each row rolls on by one wavelength and starts over, seamlessly, back
-     past the boat as it makes way; near rows roll faster than far ones. */
+  /* Each row, line and water together, rolls on by one wavelength and starts
+     over, seamlessly, back past the boat as it makes way; near rows roll
+     faster than far ones. */
   .wave {
-    animation:
-      draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both,
-      roll calc(14s - var(--i) * 2.5s) linear infinite;
+    animation: draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both;
+  }
+  .swell {
+    animation: roll calc(14s - var(--i) * 2.5s) linear infinite;
   }
   .bird {
     animation: glide calc(6s + var(--i) * 0.7s) ease-in-out calc(1.6s + var(--i) * 0.3s) infinite;
