@@ -356,13 +356,6 @@ body {
   overflow-x: clip;
 }
 
-/* While the home hero is under it, the header stays clear even once scrolled
-   (HomeHero sets data-over-hero); past the hero it turns solid as everywhere. */
-:root[data-over-hero] .site-header[data-scrolled] {
-  border-bottom-color: transparent;
-  background: transparent;
-  box-shadow: none;
-}
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
@@ -1603,24 +1596,21 @@ a.collection-item:hover {
 
 /* ===================================================== home page */
 
-/* The opening fills the first screen, edge to edge, and starts under the
-   sticky header, which stays clear over it. The scene (HomeScene) draws in
-   the text colour on the page's own background, so it follows the theme. */
+/* The opening fills the rest of the first screen under the header, edge to
+   edge. The scene (HomeScene) draws in the text colour on the page's own
+   background, so it follows the theme. */
 .home-hero {
   position: relative;
   isolation: isolate;
   display: grid;
-  grid-template-rows: 1fr auto;
   width: 100vw;
   min-height: calc(100svh - var(--hero-offset, 0px));
   margin-inline: calc(50% - 50vw);
-  margin-top: calc(-1 * var(--site-header-height, 4rem));
   overflow: hidden;
   background: var(--background);
   color: var(--foreground);
-  /* The scene's water band, and the numbers row under it (the shore). */
+  /* The scene's sea, along the hero's foot; the copy stays above it. */
   --water: 7.5rem;
-  --shore: 7.5rem;
 }
 .home-hero-inner {
   display: grid;
@@ -1629,13 +1619,10 @@ a.collection-item:hover {
   width: 100%;
   max-width: 1200px;
   margin-inline: auto;
-  padding: calc(var(--site-header-height, 4rem) + 2rem) 1.5rem calc(var(--water) + 1rem);
+  padding: 2.5rem 1.5rem calc(var(--water) + 1.5rem);
 }
 /* On a phone the boat rides lower in the copy's way, so the copy leaves it room. */
 @media (max-width: 40rem) {
-  .home-hero {
-    --shore: 6.5rem;
-  }
   .home-hero-inner {
     padding-bottom: calc(var(--water) + 5rem);
   }
@@ -1680,14 +1667,13 @@ a.collection-item:hover {
   margin-top: 0.75rem;
 }
 
-/* CILAS in numbers rides the water at the hero's foot, rising in as the
-   scene finishes drawing (HomeNumbers counts up over the same moment). */
+/* CILAS in numbers closes the copy, under a hairline, rising in as the scene
+   finishes drawing (HomeNumbers counts up over the same moment). */
 .home-numbers {
-  width: 100%;
-  max-width: 1200px;
-  margin-inline: auto;
-  min-height: var(--shore);
-  padding: 0 1.5rem clamp(1.5rem, 4vh, 3rem);
+  max-width: 34rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
 }
 .home-numbers-list {
   display: flex;

@@ -17,11 +17,10 @@ type Closed = { label: string; note: string; link: Action }
 const STEP = 2400
 
 /**
- * The home page's opening, the whole first screen: the motto over a felucca
- * drawn in the ink of the logo, who CILAS is for, one after another, and the
- * institute in numbers along the water. The list runs once and rests on its
- * last line; with reduced motion it starts there. While any of it is under
- * the header, the header stays clear.
+ * The home page's opening, the rest of the first screen: the motto over the
+ * logo's felucca at sea, who CILAS is for, one after another, and the
+ * institute in numbers. The list runs once and rests on its last line; with
+ * reduced motion it starts there.
  */
 export function HomeHero({
   title,
@@ -58,22 +57,12 @@ export function HomeHero({
     return () => window.clearTimeout(timer)
   }, [index, last, reduced])
 
-  // data-over-hero on <html> while the hero shows below the header's bottom edge.
+  // Whatever sits above the hero (the deadlines bar, until dismissed, and the
+  // header) pushes it down; it gives that much back, so it ends at the fold.
   const ref = useRef<HTMLElement>(null)
   useEffect(() => {
     const hero = ref.current
     if (!hero) return
-    const root = document.documentElement
-    const header = parseFloat(getComputedStyle(root).getPropertyValue('--site-header-height')) || 64
-    const observer = new IntersectionObserver(
-      (entries) =>
-        root.toggleAttribute('data-over-hero', entries[entries.length - 1].isIntersecting),
-      { rootMargin: `-${header}px 0px 0px 0px` },
-    )
-    observer.observe(hero)
-
-    // Whatever sits above the header (the deadlines bar, until dismissed)
-    // pushes the hero down; it gives that much back, so it ends at the fold.
     const offset = () =>
       hero.style.setProperty(
         '--hero-offset',
@@ -82,11 +71,7 @@ export function HomeHero({
     offset()
     const resize = new ResizeObserver(offset)
     resize.observe(document.body)
-    return () => {
-      observer.disconnect()
-      resize.disconnect()
-      root.removeAttribute('data-over-hero')
-    }
+    return () => resize.disconnect()
   }, [])
 
   return (
@@ -146,8 +131,8 @@ export function HomeHero({
             {primary.note} <a href={primary.link.href}>{primary.link.label}</a>
           </p>
         ) : null}
+        <HomeNumbers locale={locale} stats={numbers.stats} title={numbers.title} />
       </div>
-      <HomeNumbers locale={locale} stats={numbers.stats} title={numbers.title} />
     </section>
   )
 }

@@ -27,9 +27,9 @@
 .water {
   position: absolute;
   right: 0;
-  /* --shore and --water come from .home-hero: the water runs between the
-     copy and the numbers row, and the boat rides it. */
-  bottom: var(--shore);
+  /* --water comes from .home-hero: the sea runs along its foot, under the
+     copy, and the boat rides it. */
+  bottom: 0;
   left: 0;
   width: 100%;
   height: var(--water);
@@ -37,7 +37,7 @@
 .track {
   position: absolute;
   right: clamp(1rem, 10vw, 12rem);
-  bottom: calc(var(--shore) + var(--water) * 0.45);
+  bottom: calc(var(--water) * 0.45);
   width: clamp(5.5rem, 11vw, 10rem);
 }
 /* A phone has no sky beside the title: the birds stay home, the boat is small. */
