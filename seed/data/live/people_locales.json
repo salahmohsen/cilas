@@ -74,80 +74,6 @@
   "_parent_id": 1
  },
  {
-  "name": "Mahāviveka",
-  "bio": {
-   "root": {
-    "type": "root",
-    "format": "",
-    "indent": 0,
-    "version": 1,
-    "children": [
-     {
-      "type": "paragraph",
-      "format": "",
-      "indent": 0,
-      "version": 1,
-      "children": [
-       {
-        "mode": "normal",
-        "text": "A Theravāda monk (Shwegyin Nikaya, 2017) and scholar of Buddhist psychology, Sanskrit and Pāli. Author of \"Motivation and Effort in Buddhist Soteriology\" (2019) and \"The Buddha as Messiah\" (2025).",
-        "type": "text",
-        "style": "",
-        "detail": 0,
-        "format": 0,
-        "version": 1
-       }
-      ],
-      "direction": "ltr",
-      "textStyle": "",
-      "textFormat": ""
-     }
-    ],
-    "direction": "ltr"
-   }
-  },
-  "id": 5,
-  "_locale": "en",
-  "_parent_id": 2
- },
- {
-  "name": "ماهافيكا",
-  "bio": {
-   "root": {
-    "type": "root",
-    "format": "",
-    "indent": 0,
-    "version": 1,
-    "children": [
-     {
-      "type": "paragraph",
-      "format": "",
-      "indent": 0,
-      "version": 1,
-      "children": [
-       {
-        "mode": "normal",
-        "text": "راهب ثيرافادا (شويغين نيكايا، 2017) وعالم في علم النفس البوذي واللغتين السنسكريتية والبالية. مؤلف كتاب «الدافع والجهد في النجاة البوذية» (2019) و«البوذي بوصفه المسيح» (2025).",
-        "type": "text",
-        "style": "",
-        "detail": 0,
-        "format": 0,
-        "version": 1
-       }
-      ],
-      "direction": "rtl",
-      "textStyle": "",
-      "textFormat": ""
-     }
-    ],
-    "direction": "rtl"
-   }
-  },
-  "id": 6,
-  "_locale": "ar",
-  "_parent_id": 2
- },
- {
   "name": "Yasser Abdellatif",
   "bio": {
    "root": {
@@ -6582,50 +6508,6 @@
   "id": 881,
   "_locale": "ar",
   "_parent_id": 116
- },
- {
-  "name": "Shan Yang",
-  "bio": {
-   "root": {
-    "type": "root",
-    "format": "",
-    "indent": 0,
-    "version": 1,
-    "children": [
-     {
-      "type": "paragraph",
-      "format": "",
-      "indent": 0,
-      "version": 1,
-      "children": [
-       {
-        "mode": "normal",
-        "text": "Shan Yang is a Post-MA Fellow for the 2019-2020 academic year at HUSSLab after obtaining an MA at the American University in Cairo. Her MA Comprehensive Examination covered three domains: political economy, time and temporality and the urban. She is currently working on a research project-Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers. She obtained her Bachelor's degree (2012) and first MA (2015) at Fudan University in Shanghai.",
-        "type": "text",
-        "style": "",
-        "detail": 0,
-        "format": 0,
-        "version": 1
-       }
-      ],
-      "direction": "ltr",
-      "textStyle": "",
-      "textFormat": ""
-     }
-    ],
-    "direction": "ltr"
-   }
-  },
-  "id": 882,
-  "_locale": "en",
-  "_parent_id": 115
- },
- {
-  "name": "شان يانغ",
-  "bio": null,
-  "id": 883,
-  "_locale": "ar",
-  "_parent_id": 115
  },
  {
   "name": "Nour El Safoury",
@@ -13337,13 +13219,6 @@
   "_parent_id": 259
  },
  {
-  "name": "مبادرة تبديل",
-  "bio": null,
-  "id": 1200,
-  "_locale": "en",
-  "_parent_id": 260
- },
- {
   "name": "Ahmad Aboshady",
   "bio": null,
   "id": 1201,
@@ -13425,9 +13300,127 @@
   "_parent_id": 26
  },
  {
-  "name": "يامن نوح",
+  "name": "Mahāviveka",
+  "bio": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "A Theravāda monk (Shwegyin Nikaya, 2017) and scholar of Buddhist psychology, Sanskrit and Pāli. Author of \"Motivation and Effort in Buddhist Soteriology\" (2019) and \"The Buddha as Messiah\" (2025).",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 1208,
+  "_locale": "en",
+  "_parent_id": 2
+ },
+ {
+  "name": "ماهافيكا",
+  "bio": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "راهب ثيرافادا (شويغين نيكايا، 2017) وعالم في علم النفس البوذي واللغتين السنسكريتية والبالية. مؤلف كتاب «الدافع والجهد في النجاة البوذية» (2019) و«البوذي بوصفه المسيح» (2025).",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "rtl"
+   }
+  },
+  "id": 1209,
+  "_locale": "ar",
+  "_parent_id": 2
+ },
+ {
+  "name": "Shan Yang",
+  "bio": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Shan Yang is a Post-MA Fellow for the 2019-2020 academic year at HUSSLab after obtaining an MA at the American University in Cairo. Her MA Comprehensive Examination covered three domains: political economy, time and temporality and the urban. She is currently working on a research project-Being and Living in Spaces of Global Capitalism: Time, Gender and Lifeworlds of Rural Migrant Laborers. She obtained her Bachelor's degree (2012) and first MA (2015) at Fudan University in Shanghai.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "id": 1210,
+  "_locale": "en",
+  "_parent_id": 115
+ },
+ {
+  "name": "شان يانغ",
   "bio": null,
-  "id": 1206,
+  "id": 1211,
+  "_locale": "ar",
+  "_parent_id": 115
+ },
+ {
+  "name": "Yamen Noah",
+  "bio": null,
+  "id": 1212,
   "_locale": "en",
   "_parent_id": 86
  },
@@ -13464,8 +13457,52 @@
     "direction": "rtl"
    }
   },
-  "id": 1207,
+  "id": 1213,
   "_locale": "ar",
   "_parent_id": 86
+ },
+ {
+  "name": "مبادرة تبديل",
+  "bio": null,
+  "id": 1221,
+  "_locale": "en",
+  "_parent_id": 260
+ },
+ {
+  "name": "مبادرة تبديل",
+  "bio": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "مبادرة تبديل هي مجموعة من مخططين ومصممين ومتخصصين في علوم الاجتماع والعلوم الحضرية جمعهم شغفهم بالدراجة وحماسهم لها كوسيلة تنقل نظيفة وتجمعوا لمساعدة المدن المصرية لإدراج الدراجة من ضمن خطط التصميم العمراني ودعم ثقافة الدراجات على المستوى المحلى. قامت المجموعة حتى الآن بتنظيم ورش عمل تتناول ثقافة الدراجات في بورسعيد وأسيوط مع التركيز على المشكلات الإجتماعية المحلية مثل العوائق الإجتماعية أمام السيدات لتبني وسيلة التنقل هذه أو عوائق الأمان المروري ومشكلات الحوكمة المتعلقة بالموضوع. وقامت أيضاً بتقديم مقترحات تصميمية أو مناقشات عن البنية التحتية في القاهرة والإسكندرية وإستخدام وسائل تصميمية حديثة لتقديم الأفكار المقترحة للرأي العام وصناع القرار",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "rtl"
+   }
+  },
+  "id": 1222,
+  "_locale": "ar",
+  "_parent_id": 260
  }
 ]

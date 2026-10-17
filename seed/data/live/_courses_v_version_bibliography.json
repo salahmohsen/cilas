@@ -62830,5 +62830,733 @@
   "type": "reading",
   "href": null,
   "_uuid": "6ace4c80013bc76d2006fcf5"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3425,
+  "id": 7855,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace546f013bc76d20070303"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3426,
+  "id": 7856,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace546f013bc76d20070303"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3437,
+  "id": 7858,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace546f013bc76d20070303"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3438,
+  "id": 7859,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace546f013bc76d20070303"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3441,
+  "id": 7860,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3442,
+  "id": 7861,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3443,
+  "id": 7862,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3453,
+  "id": 7863,
+  "type": "reading",
+  "href": "https://doi.org/10.4324/9780203112984",
+  "_uuid": "6ace4459dcfd747942203c4d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3453,
+  "id": 7864,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3453,
+  "id": 7865,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 3453,
+  "id": 7866,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c50"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 3453,
+  "id": 7867,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c51"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 3453,
+  "id": 7868,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c52"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 3453,
+  "id": 7869,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c53"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3454,
+  "id": 7870,
+  "type": "reading",
+  "href": "https://doi.org/10.4324/9780203112984",
+  "_uuid": "6ace4459dcfd747942203c4d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3454,
+  "id": 7871,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3454,
+  "id": 7872,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 3454,
+  "id": 7873,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c50"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 3454,
+  "id": 7874,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c51"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 3454,
+  "id": 7875,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c52"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 3454,
+  "id": 7876,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c53"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3455,
+  "id": 7877,
+  "type": "reading",
+  "href": "https://doi.org/10.4324/9780203112984",
+  "_uuid": "6ace4459dcfd747942203c4d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3455,
+  "id": 7878,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3455,
+  "id": 7879,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 3455,
+  "id": 7880,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c50"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 3455,
+  "id": 7881,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c51"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 3455,
+  "id": 7882,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c52"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 3455,
+  "id": 7883,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c53"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3530,
+  "id": 7884,
+  "type": "reading",
+  "href": "https://doi.org/10.4324/9780203112984",
+  "_uuid": "6ace4459dcfd747942203c4d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3530,
+  "id": 7885,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3530,
+  "id": 7886,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 3530,
+  "id": 7887,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c50"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 3530,
+  "id": 7888,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c51"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 3530,
+  "id": 7889,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c52"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 3530,
+  "id": 7890,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c53"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3531,
+  "id": 7891,
+  "type": "reading",
+  "href": "https://doi.org/10.4324/9780203112984",
+  "_uuid": "6ace4459dcfd747942203c4d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3531,
+  "id": 7892,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3531,
+  "id": 7893,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 3531,
+  "id": 7894,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c50"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 3531,
+  "id": 7895,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c51"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 3531,
+  "id": 7896,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c52"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 3531,
+  "id": 7897,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c53"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3532,
+  "id": 7898,
+  "type": "reading",
+  "href": "https://doi.org/10.4324/9780203112984",
+  "_uuid": "6ace4459dcfd747942203c4d"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3532,
+  "id": 7899,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4e"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3532,
+  "id": 7900,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c4f"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 3532,
+  "id": 7901,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c50"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 3532,
+  "id": 7902,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c51"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 3532,
+  "id": 7903,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c52"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 3532,
+  "id": 7904,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace4459dcfd747942203c53"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3536,
+  "id": 7905,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3537,
+  "id": 7906,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3538,
+  "id": 7907,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3539,
+  "id": 7908,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3540,
+  "id": 7909,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3541,
+  "id": 7910,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3542,
+  "id": 7911,
+  "type": "other",
+  "href": "https://collectionswa.net.au/items/4d16f9e3-3c8a-4f96-901a-30043518b9e0",
+  "_uuid": "6ace4358dcfd747942203643"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3555,
+  "id": 7912,
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system",
+  "_uuid": "6ace4623dcfd74794220472e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3555,
+  "id": 7913,
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/",
+  "_uuid": "6ace4623dcfd74794220472f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3555,
+  "id": 7914,
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing",
+  "_uuid": "6ace4623dcfd747942204730"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3556,
+  "id": 7915,
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system",
+  "_uuid": "6ace4623dcfd74794220472e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3556,
+  "id": 7916,
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/",
+  "_uuid": "6ace4623dcfd74794220472f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3556,
+  "id": 7917,
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing",
+  "_uuid": "6ace4623dcfd747942204730"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3557,
+  "id": 7918,
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system",
+  "_uuid": "6ace4623dcfd74794220472e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3557,
+  "id": 7919,
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/",
+  "_uuid": "6ace4623dcfd74794220472f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3557,
+  "id": 7920,
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing",
+  "_uuid": "6ace4623dcfd747942204730"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3558,
+  "id": 7921,
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system",
+  "_uuid": "6ace4623dcfd74794220472e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3558,
+  "id": 7922,
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/",
+  "_uuid": "6ace4623dcfd74794220472f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3558,
+  "id": 7923,
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing",
+  "_uuid": "6ace4623dcfd747942204730"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3571,
+  "id": 7924,
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think",
+  "_uuid": "6ace53cc013bc76d20070282"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3571,
+  "id": 7925,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace53cc013bc76d20070283"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3572,
+  "id": 7926,
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think",
+  "_uuid": "6ace53cc013bc76d20070282"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3572,
+  "id": 7927,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace53cc013bc76d20070283"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3573,
+  "id": 7928,
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think",
+  "_uuid": "6ace53cc013bc76d20070282"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3573,
+  "id": 7929,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace53cc013bc76d20070283"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3574,
+  "id": 7930,
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think",
+  "_uuid": "6ace53cc013bc76d20070282"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3574,
+  "id": 7931,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace53cc013bc76d20070283"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3614,
+  "id": 7932,
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think",
+  "_uuid": "6ace53cc013bc76d20070282"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3614,
+  "id": 7933,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace53cc013bc76d20070283"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3615,
+  "id": 7934,
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think",
+  "_uuid": "6ace53cc013bc76d20070282"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3615,
+  "id": 7935,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace53cc013bc76d20070283"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3616,
+  "id": 7936,
+  "type": "reading",
+  "href": "https://www.bbc.com/culture/article/20200710-the-words-that-stretch-how-we-think",
+  "_uuid": "6ace53cc013bc76d20070282"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3616,
+  "id": 7937,
+  "type": "reading",
+  "href": null,
+  "_uuid": "6ace53cc013bc76d20070283"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3632,
+  "id": 7938,
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system",
+  "_uuid": "6ace4623dcfd74794220472e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3632,
+  "id": 7939,
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/",
+  "_uuid": "6ace4623dcfd74794220472f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3632,
+  "id": 7940,
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing",
+  "_uuid": "6ace4623dcfd747942204730"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3633,
+  "id": 7941,
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system",
+  "_uuid": "6ace4623dcfd74794220472e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3633,
+  "id": 7942,
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/",
+  "_uuid": "6ace4623dcfd74794220472f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3633,
+  "id": 7943,
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing",
+  "_uuid": "6ace4623dcfd747942204730"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3634,
+  "id": 7944,
+  "type": "reading",
+  "href": "https://www.collectiveinkbooks.com/liberalis-books/our-books/odyssey-dynamic-learning-system",
+  "_uuid": "6ace4623dcfd74794220472e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3634,
+  "id": 7945,
+  "type": "reading",
+  "href": "https://kohantextilejournal.com/woven-storytelling-coptic-tapestries/",
+  "_uuid": "6ace4623dcfd74794220472f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 3634,
+  "id": 7946,
+  "type": "other",
+  "href": "https://drive.google.com/file/d/1Dm1VRen6BrbWSCHADISAhSKZls-zAhwn/view?usp=sharing",
+  "_uuid": "6ace4623dcfd747942204730"
  }
 ]

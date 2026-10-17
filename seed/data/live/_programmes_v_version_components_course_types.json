@@ -1858,5 +1858,17 @@
   "parent_id": 206,
   "value": "LAB",
   "id": 310
+ },
+ {
+  "order": 1,
+  "parent_id": 207,
+  "value": "THEMATIC",
+  "id": 311
+ },
+ {
+  "order": 2,
+  "parent_id": 207,
+  "value": "LAB",
+  "id": 312
  }
 ]

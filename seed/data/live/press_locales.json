@@ -81,26 +81,6 @@
  },
  {
   "excerpt": null,
-  "meta_title": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\" · CILAS",
-  "meta_description": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\"",
-  "meta_image_id": 392,
-  "id": 14,
-  "_locale": "en",
-  "_parent_id": 8,
-  "outlet_name": "مشاهد القاهرة"
- },
- {
-  "excerpt": null,
-  "meta_title": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\" · CILAS",
-  "meta_description": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\"",
-  "meta_image_id": 392,
-  "id": 15,
-  "_locale": "ar",
-  "_parent_id": 8,
-  "outlet_name": null
- },
- {
-  "excerpt": null,
   "meta_title": "Sitting on top of Egyptian civilisation · CILAS",
   "meta_description": "Sitting on top of Egyptian civilisation",
   "meta_image_id": 360,
@@ -137,26 +117,6 @@
   "id": 21,
   "_locale": "ar",
   "_parent_id": 1,
-  "outlet_name": null
- },
- {
-  "excerpt": null,
-  "meta_title": "On the Task of the Liberal Educator · CILAS",
-  "meta_description": "On the Task of the Liberal Educator",
-  "meta_image_id": 362,
-  "id": 23,
-  "_locale": "en",
-  "_parent_id": 7,
-  "outlet_name": "2016 Weissbourd Conference"
- },
- {
-  "excerpt": null,
-  "meta_title": "On the Task of the Liberal Educator · CILAS",
-  "meta_description": "On the Task of the Liberal Educator",
-  "meta_image_id": 362,
-  "id": 24,
-  "_locale": "ar",
-  "_parent_id": 7,
   "outlet_name": null
  },
  {
@@ -243,8 +203,8 @@
   "excerpt": null,
   "meta_title": "New institute to offer one year dose of the liberal arts · CILAS",
   "meta_description": "New institute to offer one year dose of the liberal arts",
-  "meta_image_id": 110,
-  "id": 38,
+  "meta_image_id": null,
+  "id": 43,
   "_locale": "en",
   "_parent_id": 13,
   "outlet_name": "Al-Fanar Media"
@@ -253,30 +213,70 @@
   "excerpt": null,
   "meta_title": "New institute to offer one year dose of the liberal arts · CILAS",
   "meta_description": "New institute to offer one year dose of the liberal arts",
-  "meta_image_id": 110,
-  "id": 39,
+  "meta_image_id": null,
+  "id": 44,
   "_locale": "ar",
   "_parent_id": 13,
   "outlet_name": null
  },
  {
   "excerpt": null,
-  "meta_title": "New institute to offer one year dose of the liberal arts · CILAS",
-  "meta_description": "New institute to offer one year dose of the liberal arts",
-  "meta_image_id": 110,
-  "id": 41,
+  "meta_title": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\" · CILAS",
+  "meta_description": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\"",
+  "meta_image_id": 392,
+  "id": 45,
   "_locale": "en",
-  "_parent_id": 4,
-  "outlet_name": "Al-Fanar Media"
+  "_parent_id": 8,
+  "outlet_name": "مشاهد القاهرة"
  },
  {
   "excerpt": null,
-  "meta_title": "New institute to offer one year dose of the liberal arts · CILAS",
-  "meta_description": "New institute to offer one year dose of the liberal arts",
-  "meta_image_id": 110,
-  "id": 42,
+  "meta_title": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\" · CILAS",
+  "meta_description": "حد يعرف مكان #كورس رسم لفنون تطبيقية؟\"",
+  "meta_image_id": 392,
+  "id": 46,
   "_locale": "ar",
-  "_parent_id": 4,
+  "_parent_id": 8,
   "outlet_name": null
+ },
+ {
+  "excerpt": null,
+  "meta_title": "On the Task of the Liberal Educator · CILAS",
+  "meta_description": "On the Task of the Liberal Educator",
+  "meta_image_id": null,
+  "id": 51,
+  "_locale": "en",
+  "_parent_id": 7,
+  "outlet_name": "2016 Weissbourd Conference"
+ },
+ {
+  "excerpt": null,
+  "meta_title": "On the Task of the Liberal Educator · CILAS",
+  "meta_description": "On the Task of the Liberal Educator",
+  "meta_image_id": null,
+  "id": 52,
+  "_locale": "ar",
+  "_parent_id": 7,
+  "outlet_name": null
+ },
+ {
+  "excerpt": null,
+  "meta_title": "Re-assembling the social at the Cairo Institute of Liberal Arts and Sciences · CILAS",
+  "meta_description": null,
+  "meta_image_id": 359,
+  "id": 53,
+  "_locale": "en",
+  "_parent_id": 15,
+  "outlet_name": "Re-assembling the social at the Cairo Institute of Liberal Arts and Sciences"
+ },
+ {
+  "excerpt": null,
+  "meta_title": null,
+  "meta_description": null,
+  "meta_image_id": null,
+  "id": 54,
+  "_locale": "en",
+  "_parent_id": 16,
+  "outlet_name": "Case Study: Cairo Institute for Liberal Arts and Sciences"
  }
 ]

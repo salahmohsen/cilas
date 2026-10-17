@@ -12187,5 +12187,1085 @@
   "id": 106,
   "_locale": "ar",
   "_parent_id": 65
+ },
+ {
+  "version_title": "Bridge Programme 2025–2026",
+  "version_tagline": null,
+  "version_overview": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "About CILAS and the bridge programme",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Conceived in 2013 as an alternative offering in higher education, CILAS welcomes high school graduates as well as university walkouts, students and graduates; wisdom seekers and portfolio crafters; trained engineers, economists and doctors; activists, artists and organisers; Egyptians from different provinces, new and old arrivals; or other than all of that, to name but a few of the walks of life that have come to CILAS to engage the complexity of the world we live in.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Think of CILAS as an autonomous scholarly collective rather than a corporate academic institution or a modern/colonial university. It does not issue credit points or an accredited degree. As a member of the learning community you will be supported and challenged in your inquiries. The ‘bridge’ program encourages the collaborative crafting of an intellectual, corporeal, and aesthetic portfolio. You will receive and offer guidance from and to the community as you cross the ‘bridge’ with all its discomforts, moments of joy and frustration, its paradoxes and invitations to reflect, share and grow. Alongside you will also be accompanied and mentored by a residential fellow on your learning journey.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Please don’t feel discouraged to apply if your English is not ‘proficient’. We welcome all ‘English-es’ and embrace bi-linguality in our discussions. However, we ask you to fill in the form in English as many of the assigned readings at CILAS are in English.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "The programme and its courses",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "The one-year ‘bridge’ program is divided into two semesters - a winter semester and a spring semester that are each divided into two terms. The first semester engages in intellectual and experiential inquiry whereas in the second semester seeks to apply the learning and is oriented towards production, i.e. the crafting of a portfolio through the labs in addition to the thematic courses.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "During the Winter semester all students complete a trans-disciplinary core curriculum consisting of three complementary core courses. The core curriculum introduces students to key concepts, ongoing debates and modes of inquiry in the Humanities and Social Sciences. The core courses focus on developing Historical Consciousness drawing on global, environmental and art histories. In the second core course students practice Philosophical Inquiry. They learn to appreciate arguments, paradoxes and deep reflection. The third course teaches Ethnographic Study with an emphasis on a critical understanding of knowledge production, self-reflexivity, positionality and orality.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "ul",
+      "type": "list",
+      "start": 1,
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "type": "listitem",
+        "value": 1,
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "Historical Consciousness, facilitated by Yamen Nouh",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "ltr"
+       },
+       {
+        "type": "listitem",
+        "value": 2,
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "Ethnographic Study, facilitated by Bahi Ashraf",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "ltr"
+       },
+       {
+        "type": "listitem",
+        "value": 3,
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "Philosophical Inquiry, facilitated by Hisham Fahmy",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "ltr"
+       }
+      ],
+      "listType": "bullet",
+      "direction": "ltr"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "These three core courses are open to programme students only.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "In the spring semester students join a lab and two thematic courses that are on offer. Thematic courses respond to students’ concerns and interests. Thematic courses build on the core curriculum in that they contextualise and probe issues that emerged from the core curriculum. In parallel to thematic coursework students join a ‘lab’ to experiment with tactics and strategies of research writing; the translation of texts; the creation of spaces and audio-visual content; and the engagement with different modes of learning.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Opposed to a pedagogy of consumption, CILAS operates under a pedagogy of attunement and respectful discovery. This is to say that what we cover at CILAS matters less than what we discover together. Discussion Based Learning is the main teaching/learning methodology at CILAS and relies heavily on the participation and solidarity of everyone. Students are expected to attend at least 80% of classes (nine out of twelve classes per semester).",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "At the end of the spring semester students present their findings and insights to the public on A Day at CILAS.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Dates and schedule",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "The year starts with a pre-orientation/mezzat of readings, recordings and viewings followed by a ‘three-day orientation’ in the beginning of the third week of December and ends on 3rd of April. The rest of April is dedicated to self-directed study in conversation with the residential fellow.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "The classes schedule is three set days per week (Saturday, Tuesday, and Thursday; from 10:30 am for three hours in the morning period or from 5:30 pm for three hours in the evening period), in the winter (first) semester for all students based on their chosen period. And in the spring (second) semester it changes according to each student’s chosen courses and labs. To warm up for the second semester, a retreat is organized for students and teaching fellows outside of Cairo for 2-3 days.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "Fees and partial scholarships",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "We are keen on offering a financially independent liberal arts program. To effectively give voice to members of the community, we aim to grow as self-sufficient as possible. Localising our sources of income has made it possible for us to continue autonomously, and it is only reliant on the contributions of the students. We uphold self-reliance to sustain our programs therefore we expect students to respect their financial commitment and fulfill their due payments in time knowing that this has critical effects on how CILAS operates. The full year tuition is 30,000 EGP with an option to be paid in three installments in the third week of December, the first week of February, and the third week of April. CILAS recognizes the importance of a sliding scale that is sensitive to people’s financial needs and abilities so there is a possibility of offering partial scholarships for a limited number of students, you can apply by sending an email admissions@ci-las.org after filling the application form.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": 0
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "version_schedule_note": "Saturday, Tuesday and Thursday, from 10:30 am or from 5:30 pm, for three hours (winter semester).",
+  "version_requirements": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "High school completed. A Bachelor’s degree is recommended but not required.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "ltr",
+      "textStyle": "",
+      "textFormat": ""
+     }
+    ],
+    "direction": "ltr"
+   }
+  },
+  "version_pricing_note": "In the third week of December, the first week of February and the third week of April.",
+  "version_meta_title": "Bridge Programme 2025–2026 · CILAS",
+  "version_meta_description": "About CILAS and the bridge programme Conceived in 2013 as an alternative offering in higher education, CILAS welcomes high school graduates as well as…",
+  "version_meta_image_id": 392,
+  "id": 107,
+  "_locale": "en",
+  "_parent_id": 66
+ },
+ {
+  "version_title": "برنامج الجسر ٢٠٢٥–٢٠٢٦",
+  "version_tagline": null,
+  "version_overview": {
+   "root": {
+    "type": "root",
+    "format": "",
+    "indent": 0,
+    "version": 1,
+    "children": [
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "عن سيلاس وبرنامج الجسر",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "معهد القاهرة للعلوم والآداب الحرة، واختصاره سيلاس، أنشئ في عام ٢٠١٣ كاختيار بديل للتعليم العالي. ترحب سيلاس بخريجي الثانوية كما ترحب بالمنسحبين من الجامعات والطلاب فيها والخريجين، الساعين للحكمة أو اكتساب الخبرة، المهندسين والاقتصاديين والأطباء والفنانين والمنظمين، أو غير ذلك كله، المصريين من مختلف المحافظات والوافدين الجدد والقدامى، كل من سبق، على سبيل المثال لا الحصر، هم ممن أتوا لسيلاس من مختلف دروب الحياة للاشتباك مع تعقيدات العالم الذي نحيا فيه.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "برنامج الجسر هو تجربة تعلم ممتدة لفترة عام دراسي كامل في مقر سيلاس (offline) وقائمة على أسلوب التعلم بالمناقشة (Discussion-based learning) في مجالات العلوم الاجتماعية والإنسانيات بتشابكاتها مع المواضيع المختلفة. ويتم تنظيم أنشطة متنوعة على مدار العام بعضها متاح للجميع وبعضها مخصص لطلاب برنامج الجسر فقط.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "ينضم الطلاب إلى سيلاس من خلفيات مختلفة، وعادةً ما يمرون برحلة تعليمية مكثفة يتفاعلون فيها مع مجموعة متنوعة من المدارس الفكرية. يقبل البرنامج من قد يكون لديهم خبرة سابقة في العلوم الاجتماعية والإنسانية كما يرحب بمن يود استكشافها للمرة الأولى.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "يقدم الميسرون التوجيه والملاحظات والإرشاد خلال تلك الرحلة لمساعدة الطلاب في احتواء اهتماماتهم وشكوكهم واستفساراتهم وكذلك إعدادهم لمساعيهم المستقبلية خارج نطاق سيلاس.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "ورجاء لا تشعروا بالإحباط والخوف من التقديم إذا كانت انجليزيتكم ليست طلقة، نحن نرحب بالجميع وبكل مستوياتهم في اللغة، كما أننا نتبنى ثنائية اللغة في المناقشات، ولكن مع ذلك نود لو تملئوا استمارة التقديم بالإنجليزية حيث أن معظم القراءات في سيلاس تكون باللغة الإنجليزية.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "عن البرنامج والمساقات",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "ينقسم برنامج السنة الدراسية الكاملة لفصلين:",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "تتفاعل مساقات الفصل الأول مع التساؤلات الفكرية والتجريبية في العلوم الاجتماعية والإنسانيات من خلال الثلاث مساقات الأساسية",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "ul",
+      "type": "list",
+      "start": 1,
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "type": "listitem",
+        "value": 1,
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "الوعي التاريخي: ييسره يامن نوح",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "rtl"
+       },
+       {
+        "type": "listitem",
+        "value": 2,
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "الدراسات الإثنوغرافية: ييسره باهي أشرف",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "rtl"
+       },
+       {
+        "type": "listitem",
+        "value": 3,
+        "format": "",
+        "indent": 0,
+        "version": 1,
+        "children": [
+         {
+          "mode": "normal",
+          "text": "التساؤلات الفلسفية: ييسره هشام فهمي",
+          "type": "text",
+          "style": "",
+          "detail": 0,
+          "format": 0,
+          "version": 1
+         }
+        ],
+        "direction": "rtl"
+       }
+      ],
+      "listType": "bullet",
+      "direction": "rtl"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "وهذه المساقات الثلاث متاحة فقط لطلاب البرنامج",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "في الفصل الثاني نسعى لتطبيق التعلم ليس فقط من خلال التعرض لمساقات عن مواضيع نوعية/تيمية متخصصة تتفرع من مجالات الفصل الأول الثلاث ولكن أيضاً عبر التركيز على الإنتاج من خلال معامل ومختبرات سيلاس ولكل شخص حرية اختيار مساقين ومختبر حسب رغبتهم من المساقات المتاحة خلال الفصل الثاني وفقاً لاهتماماتهم. يُعلَن عن المساقات المتاحة بعد انتهاء الفصل الأول وكذلك يُفتَح باب التسجيل والحضور للطلاب الزائرين من خارج البرنامج.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "بخلاف التعلم الاستهلاكي، يعمل سيلاس في إطار التعلم بالانسجام والاكتشاف، فيمكنك القول بأن ما نتعلمه في سيلاس لا يهم بقدر ما نكتشفه معًا، التعلم عن طريق المناقشة هو الطريقة الرئيسية للتدريس والتعلم في سيلاس التي تعتمد بشدة على مشاركة الجميع وتضامنهم، نتوقع من الطلاب الحضور بنسبة ٨٠ بالمئة على الأقل من الجلسات.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "في نهاية الفصل الربيعي يقدم الطلاب رؤاهم والنتائج خلال معرض مفتوح للجمهور في (يوم في سيلاس).",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "التواريخ والمواعيد",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "يبدأ الفصل الدراسي الأول في الأسبوع الثالث من شهر ديسمبر وينتهي في بداية إبريل.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "للاستعداد للفصل الدراسي الثاني، يتم تنظيم مخيم للطلاب وزملاء التدريس خارج القاهرة لمدة يومين أو ثلاثة أيام.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "يبدأ الفصل الدراسي الثاني في النصف الثاني من شهر إبريل.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "جدول الحصص هو ثلاثة أيام محددة في الأسبوع: السبت والثلاثاء والخميس، من الساعة ١٠:٣٠ صباحاً ولمدة ثلاث ساعات في الفترة الصباحية أو من الساعة ٥:٣٠ مساءً ولمدة ثلاث ساعات للفترة المسائية وذلك في الفصل الدراسي الشتوي (الأول) لجميع الطلاب بناء على الفترة التي يختارونها.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "في الفصل الدراسي الثاني تتغير المواعيد وفقًا للمساقات والمختبرات التي يختارها كل طالب.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "tag": "h3",
+      "type": "heading",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "الرسوم والمنح الجزئية",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl"
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "تبلغ الرسوم الدراسية للعام بأكمله ٣٠ ألف جنيه مصري مع إمكانية دفعها على ثلاث دفعات: في الأسبوع الثالث من ديسمبر والأسبوع الأول من فبراير والأسبوع الثالث من إبريل.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     },
+     {
+      "type": "paragraph",
+      "format": "",
+      "indent": 0,
+      "version": 1,
+      "children": [
+       {
+        "mode": "normal",
+        "text": "تعرف سيلاس أهمية وجود مقياس متدرج لرسوم تعليمها يراعي احتياجات الناس وقدراتهم. لذا هناك إمكانية تقديم منح جزئية لعدد محدود من الطلاب، يمكنك التقديم لها عن طريق إرسال بريد إلكتروني على admissions@ci-las.org بعد الانتهاء من تقديم استمارة التقديم للبرنامج.",
+        "type": "text",
+        "style": "",
+        "detail": 0,
+        "format": 0,
+        "version": 1
+       }
+      ],
+      "direction": "rtl",
+      "textStyle": "",
+      "textFormat": 0
+     }
+    ],
+    "direction": "rtl"
+   }
+  },
+  "version_schedule_note": "السبت والثلاثاء والخميس، من ١٠:٣٠ صباحًا أو من ٥:٣٠ مساءً، لمدة ثلاث ساعات (الفصل الشتوي).",
+  "version_requirements": null,
+  "version_pricing_note": "في الأسبوع الثالث من ديسمبر والأسبوع الأول من فبراير والأسبوع الثالث من إبريل.",
+  "version_meta_title": "برنامج الجسر ٢٠٢٥–٢٠٢٦ · CILAS",
+  "version_meta_description": "عن سيلاس وبرنامج الجسر معهد القاهرة للعلوم والآداب الحرة، واختصاره سيلاس، أنشئ في عام ٢٠١٣ كاختيار بديل للتعليم العالي. ترحب سيلاس بخريجي الثانوية كما ترحب…",
+  "version_meta_image_id": 392,
+  "id": 108,
+  "_locale": "ar",
+  "_parent_id": 66
+ },
+ {
+  "version_title": "Bridge Programme 2020–2021",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": "Unverified year: no cohort page in the archive",
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2020–2021 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 109,
+  "_locale": "en",
+  "_parent_id": 67
+ },
+ {
+  "version_title": "برنامج الجسر ٢٠٢٠-٢٠٢١ ",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": null,
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2020–2021 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 110,
+  "_locale": "ar",
+  "_parent_id": 67
+ },
+ {
+  "version_title": "Bridge Programme 2020–2021",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": "Unverified year: no cohort page in the archive",
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2020–2021 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 111,
+  "_locale": "en",
+  "_parent_id": 68
+ },
+ {
+  "version_title": "برنامج الجسر ٢٠٢٠–٢٠٢١ ",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": null,
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2020–2021 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 112,
+  "_locale": "ar",
+  "_parent_id": 68
+ },
+ {
+  "version_title": "Bridge Programme 2023–2024",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": "Unverified year: no cohort page in the archive",
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2023–2024 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 113,
+  "_locale": "en",
+  "_parent_id": 69
+ },
+ {
+  "version_title": "برنامج الجسر ٢٠٢٣–٢٠٢٤ ",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": null,
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2023–2024 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 114,
+  "_locale": "ar",
+  "_parent_id": 69
+ },
+ {
+  "version_title": "Bridge Programme 2024–2025",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": "Unverified year: no cohort page in the archive",
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2024–2025 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 115,
+  "_locale": "en",
+  "_parent_id": 70
+ },
+ {
+  "version_title": "برنامج الجسر ٢٠٢٤–٢٠٢٥ ",
+  "version_tagline": null,
+  "version_overview": null,
+  "version_schedule_note": null,
+  "version_requirements": null,
+  "version_pricing_note": null,
+  "version_meta_title": "Bridge Programme 2024–2025 · CILAS",
+  "version_meta_description": null,
+  "version_meta_image_id": 392,
+  "id": 116,
+  "_locale": "ar",
+  "_parent_id": 70
  }
 ]

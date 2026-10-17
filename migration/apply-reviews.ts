@@ -287,13 +287,19 @@ const main = async () => {
   const { default: config } = await import('../src/payload.config')
   const payload = await getPayload({ config: await config })
   const log: string[] = []
+  // A new course's review already holds its id in this database; mapping it
+  // through review-index.json would send it to whichever course had that id.
+  const created = new Set<CourseReview>()
   if (!only.size) {
     await applyCycles(payload, log)
     await applyPeople(payload, log)
-    for (const review of await createNewCourses(payload, log)) reviews.push(review)
+    for (const review of await createNewCourses(payload, log)) {
+      created.add(review)
+      reviews.push(review)
+    }
   }
   for (const review of reviews) {
-    const id = await courseId(payload, review.id)
+    const id = created.has(review) ? review.id : await courseId(payload, review.id)
     if (id === null) {
       log.push(`- review ${review.id} (${index.courses[String(review.id)]}): no such course`)
       continue

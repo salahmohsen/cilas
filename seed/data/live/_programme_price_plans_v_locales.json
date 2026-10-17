@@ -130,5 +130,17 @@
   "id": 22,
   "_locale": "ar",
   "_parent_id": 14
+ },
+ {
+  "label": "Three installments",
+  "id": 23,
+  "_locale": "en",
+  "_parent_id": 15
+ },
+ {
+  "label": "ثلاث دفعات",
+  "id": 24,
+  "_locale": "ar",
+  "_parent_id": 15
  }
 ]

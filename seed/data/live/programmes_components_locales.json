@@ -366,14 +366,14 @@
  {
   "label": "Thematic courses and labs, spring semester",
   "description": null,
-  "id": 223,
+  "id": 225,
   "_locale": "en",
   "_parent_id": "6ace3db3bac3e623fbdf9032"
  },
  {
   "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
   "description": null,
-  "id": 224,
+  "id": 226,
   "_locale": "ar",
   "_parent_id": "6ace3db3bac3e623fbdf9032"
  }

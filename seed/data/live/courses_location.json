@@ -1,12 +1,6 @@
 [
  {
   "order": 1,
-  "parent_id": 296,
-  "value": "OFFLINE",
-  "id": 976
- },
- {
-  "order": 1,
   "parent_id": 291,
   "value": "OFFLINE",
   "id": 980
@@ -16,12 +10,6 @@
   "parent_id": 290,
   "value": "OFFLINE",
   "id": 981
- },
- {
-  "order": 1,
-  "parent_id": 289,
-  "value": "OFFLINE",
-  "id": 982
  },
  {
   "order": 1,
@@ -37,63 +25,9 @@
  },
  {
   "order": 1,
-  "parent_id": 286,
-  "value": "OFFLINE",
-  "id": 985
- },
- {
-  "order": 1,
   "parent_id": 285,
   "value": "OFFLINE",
   "id": 986
- },
- {
-  "order": 1,
-  "parent_id": 284,
-  "value": "ONLINE",
-  "id": 987
- },
- {
-  "order": 1,
-  "parent_id": 283,
-  "value": "OFFLINE",
-  "id": 988
- },
- {
-  "order": 1,
-  "parent_id": 282,
-  "value": "ONLINE",
-  "id": 989
- },
- {
-  "order": 1,
-  "parent_id": 281,
-  "value": "OFFLINE",
-  "id": 990
- },
- {
-  "order": 1,
-  "parent_id": 280,
-  "value": "OFFLINE",
-  "id": 991
- },
- {
-  "order": 1,
-  "parent_id": 279,
-  "value": "ONLINE",
-  "id": 992
- },
- {
-  "order": 1,
-  "parent_id": 278,
-  "value": "OFFLINE",
-  "id": 993
- },
- {
-  "order": 1,
-  "parent_id": 277,
-  "value": "OFFLINE",
-  "id": 994
  },
  {
   "order": 1,
@@ -136,24 +70,6 @@
   "parent_id": 270,
   "value": "ONLINE",
   "id": 1001
- },
- {
-  "order": 1,
-  "parent_id": 269,
-  "value": "ONLINE",
-  "id": 1002
- },
- {
-  "order": 1,
-  "parent_id": 268,
-  "value": "ONLINE",
-  "id": 1003
- },
- {
-  "order": 1,
-  "parent_id": 267,
-  "value": "ONLINE",
-  "id": 1004
  },
  {
   "order": 1,
@@ -319,18 +235,6 @@
  },
  {
   "order": 1,
-  "parent_id": 219,
-  "value": "HYBRID",
-  "id": 1032
- },
- {
-  "order": 2,
-  "parent_id": 219,
-  "value": "ONLINE",
-  "id": 1033
- },
- {
-  "order": 1,
   "parent_id": 218,
   "value": "OFFLINE",
   "id": 1034
@@ -346,12 +250,6 @@
   "parent_id": 216,
   "value": "OFFLINE",
   "id": 1036
- },
- {
-  "order": 1,
-  "parent_id": 215,
-  "value": "OFFLINE",
-  "id": 1037
  },
  {
   "order": 1,
@@ -442,18 +340,6 @@
   "parent_id": 200,
   "value": "ONLINE",
   "id": 1052
- },
- {
-  "order": 1,
-  "parent_id": 199,
-  "value": "HYBRID",
-  "id": 1053
- },
- {
-  "order": 1,
-  "parent_id": 198,
-  "value": "OFFLINE",
-  "id": 1054
  },
  {
   "order": 1,
@@ -637,12 +523,6 @@
  },
  {
   "order": 1,
-  "parent_id": 168,
-  "value": "OFFLINE",
-  "id": 1085
- },
- {
-  "order": 1,
   "parent_id": 167,
   "value": "ONLINE",
   "id": 1086
@@ -736,12 +616,6 @@
   "parent_id": 153,
   "value": "ONLINE",
   "id": 1101
- },
- {
-  "order": 1,
-  "parent_id": 152,
-  "value": "OFFLINE",
-  "id": 1102
  },
  {
   "order": 1,
@@ -871,12 +745,6 @@
  },
  {
   "order": 1,
-  "parent_id": 82,
-  "value": "ONLINE",
-  "id": 1124
- },
- {
-  "order": 1,
   "parent_id": 81,
   "value": "OFFLINE",
   "id": 1125
@@ -907,12 +775,6 @@
  },
  {
   "order": 1,
-  "parent_id": 77,
-  "value": "OFFLINE",
-  "id": 1130
- },
- {
-  "order": 1,
   "parent_id": 76,
   "value": "ONLINE",
   "id": 1131
@@ -928,12 +790,6 @@
   "parent_id": 74,
   "value": "OFFLINE",
   "id": 1133
- },
- {
-  "order": 1,
-  "parent_id": 73,
-  "value": "ONLINE",
-  "id": 1134
  },
  {
   "order": 1,
@@ -1027,12 +883,6 @@
  },
  {
   "order": 1,
-  "parent_id": 59,
-  "value": "ONLINE",
-  "id": 1150
- },
- {
-  "order": 1,
   "parent_id": 58,
   "value": "ONLINE",
   "id": 1151
@@ -1054,12 +904,6 @@
   "parent_id": 38,
   "value": "OFFLINE",
   "id": 1154
- },
- {
-  "order": 1,
-  "parent_id": 35,
-  "value": "OFFLINE",
-  "id": 1155
  },
  {
   "order": 1,
@@ -1105,18 +949,6 @@
  },
  {
   "order": 1,
-  "parent_id": 27,
-  "value": "OFFLINE",
-  "id": 1163
- },
- {
-  "order": 2,
-  "parent_id": 27,
-  "value": "ONLINE",
-  "id": 1164
- },
- {
-  "order": 1,
   "parent_id": 26,
   "value": "OFFLINE",
   "id": 1165
@@ -1153,26 +985,182 @@
  },
  {
   "order": 1,
-  "parent_id": 3,
+  "parent_id": 296,
   "value": "OFFLINE",
-  "id": 1171
- },
- {
-  "order": 1,
-  "parent_id": 2,
-  "value": "OFFLINE",
-  "id": 1172
- },
- {
-  "order": 1,
-  "parent_id": 1,
-  "value": "OFFLINE",
-  "id": 1173
+  "id": 1175
  },
  {
   "order": 1,
   "parent_id": 295,
   "value": "OFFLINE",
-  "id": 1174
+  "id": 1176
+ },
+ {
+  "order": 1,
+  "parent_id": 82,
+  "value": "ONLINE",
+  "id": 1182
+ },
+ {
+  "order": 1,
+  "parent_id": 289,
+  "value": "OFFLINE",
+  "id": 1183
+ },
+ {
+  "order": 1,
+  "parent_id": 297,
+  "value": "OFFLINE",
+  "id": 1195
+ },
+ {
+  "order": 1,
+  "parent_id": 284,
+  "value": "ONLINE",
+  "id": 1196
+ },
+ {
+  "order": 1,
+  "parent_id": 283,
+  "value": "OFFLINE",
+  "id": 1197
+ },
+ {
+  "order": 1,
+  "parent_id": 282,
+  "value": "ONLINE",
+  "id": 1198
+ },
+ {
+  "order": 1,
+  "parent_id": 281,
+  "value": "OFFLINE",
+  "id": 1199
+ },
+ {
+  "order": 1,
+  "parent_id": 280,
+  "value": "OFFLINE",
+  "id": 1200
+ },
+ {
+  "order": 1,
+  "parent_id": 279,
+  "value": "ONLINE",
+  "id": 1201
+ },
+ {
+  "order": 1,
+  "parent_id": 278,
+  "value": "OFFLINE",
+  "id": 1202
+ },
+ {
+  "order": 1,
+  "parent_id": 286,
+  "value": "OFFLINE",
+  "id": 1223
+ },
+ {
+  "order": 1,
+  "parent_id": 277,
+  "value": "OFFLINE",
+  "id": 1224
+ },
+ {
+  "order": 1,
+  "parent_id": 269,
+  "value": "ONLINE",
+  "id": 1225
+ },
+ {
+  "order": 1,
+  "parent_id": 268,
+  "value": "ONLINE",
+  "id": 1226
+ },
+ {
+  "order": 1,
+  "parent_id": 267,
+  "value": "ONLINE",
+  "id": 1227
+ },
+ {
+  "order": 1,
+  "parent_id": 219,
+  "value": "HYBRID",
+  "id": 1228
+ },
+ {
+  "order": 2,
+  "parent_id": 219,
+  "value": "ONLINE",
+  "id": 1229
+ },
+ {
+  "order": 1,
+  "parent_id": 215,
+  "value": "OFFLINE",
+  "id": 1230
+ },
+ {
+  "order": 1,
+  "parent_id": 199,
+  "value": "HYBRID",
+  "id": 1231
+ },
+ {
+  "order": 1,
+  "parent_id": 198,
+  "value": "OFFLINE",
+  "id": 1232
+ },
+ {
+  "order": 1,
+  "parent_id": 168,
+  "value": "OFFLINE",
+  "id": 1233
+ },
+ {
+  "order": 1,
+  "parent_id": 152,
+  "value": "OFFLINE",
+  "id": 1234
+ },
+ {
+  "order": 1,
+  "parent_id": 77,
+  "value": "OFFLINE",
+  "id": 1235
+ },
+ {
+  "order": 1,
+  "parent_id": 73,
+  "value": "ONLINE",
+  "id": 1236
+ },
+ {
+  "order": 1,
+  "parent_id": 59,
+  "value": "ONLINE",
+  "id": 1237
+ },
+ {
+  "order": 1,
+  "parent_id": 35,
+  "value": "OFFLINE",
+  "id": 1238
+ },
+ {
+  "order": 1,
+  "parent_id": 27,
+  "value": "OFFLINE",
+  "id": 1239
+ },
+ {
+  "order": 2,
+  "parent_id": 27,
+  "value": "ONLINE",
+  "id": 1240
  }
 ]

@@ -16570,24 +16570,6 @@
  },
  {
   "_order": 1,
-  "_parent_id": 3316,
-  "id": 1844,
-  "weekday": "thu",
-  "start_time": "17:00",
-  "end_time": "21:00",
-  "_uuid": "6ace4c4ef3c5ff6a73662a4e"
- },
- {
-  "_order": 2,
-  "_parent_id": 3316,
-  "id": 1845,
-  "weekday": "sat",
-  "start_time": "17:00",
-  "end_time": "21:00",
-  "_uuid": "6ace4c4ef3c5ff6a73662a4f"
- },
- {
-  "_order": 1,
   "_parent_id": 3321,
   "id": 1846,
   "weekday": "wed",
@@ -16855,5 +16837,1076 @@
   "start_time": "18:00",
   "end_time": "22:00",
   "_uuid": "6ace4c40c3bb2868f3faf325"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3316,
+  "id": 1876,
+  "weekday": "thu",
+  "start_time": "17:00",
+  "end_time": "21:00",
+  "_uuid": "6ace4c4ef3c5ff6a73662a4e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3316,
+  "id": 1877,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "21:00",
+  "_uuid": "6ace4c4ef3c5ff6a73662a4f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3422,
+  "id": 1878,
+  "weekday": "thu",
+  "start_time": "17:00",
+  "end_time": "21:00",
+  "_uuid": "6ace4c4ef3c5ff6a73662a4e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3422,
+  "id": 1879,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "21:00",
+  "_uuid": "6ace4c4ef3c5ff6a73662a4f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3423,
+  "id": 1880,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "22:00",
+  "_uuid": "6ace4c40c3bb2868f3faf325"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3424,
+  "id": 1881,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "22:00",
+  "_uuid": "6ace4c40c3bb2868f3faf325"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3425,
+  "id": 1882,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace5474013bc76d20070304"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3426,
+  "id": 1883,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace5474013bc76d20070304"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3427,
+  "id": 1887,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3428,
+  "id": 1888,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3429,
+  "id": 1889,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3430,
+  "id": 1890,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3431,
+  "id": 1894,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3432,
+  "id": 1895,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3433,
+  "id": 1896,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3434,
+  "id": 1897,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3435,
+  "id": 1898,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3436,
+  "id": 1899,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f42013bc76d2006fe46"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3437,
+  "id": 1901,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace5474013bc76d20070304"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3438,
+  "id": 1902,
+  "weekday": "thu",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace5474013bc76d20070304"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3444,
+  "id": 1903,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3445,
+  "id": 1904,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3446,
+  "id": 1905,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3489,
+  "id": 1906,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3490,
+  "id": 1907,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3512,
+  "id": 1908,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3513,
+  "id": 1909,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3514,
+  "id": 1910,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ad3aead33e3aa717bc96912"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3543,
+  "id": 1911,
+  "weekday": "mon",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace53d4013bc76d20070285"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3544,
+  "id": 1912,
+  "weekday": "mon",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace53d4013bc76d20070285"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3545,
+  "id": 1913,
+  "weekday": "mon",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace53d4013bc76d20070285"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3546,
+  "id": 1914,
+  "weekday": "mon",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace53d4013bc76d20070285"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3547,
+  "id": 1915,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace408677ead72d7244aacb"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3548,
+  "id": 1916,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace408677ead72d7244aacb"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3549,
+  "id": 1917,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace408677ead72d7244aacb"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3550,
+  "id": 1918,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace408677ead72d7244aacb"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3551,
+  "id": 1919,
+  "weekday": "mon",
+  "start_time": "11:30",
+  "end_time": "13:30",
+  "_uuid": "6ace51f9013bc76d2007007f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3552,
+  "id": 1920,
+  "weekday": "mon",
+  "start_time": "11:30",
+  "end_time": "13:30",
+  "_uuid": "6ace51f9013bc76d2007007f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3553,
+  "id": 1921,
+  "weekday": "mon",
+  "start_time": "11:30",
+  "end_time": "13:30",
+  "_uuid": "6ace51f9013bc76d2007007f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3554,
+  "id": 1922,
+  "weekday": "mon",
+  "start_time": "11:30",
+  "end_time": "13:30",
+  "_uuid": "6ace51f9013bc76d2007007f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3555,
+  "id": 1923,
+  "weekday": "sun",
+  "start_time": "18:30",
+  "end_time": "20:30",
+  "_uuid": "6ace40b177ead72d7244aad8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3556,
+  "id": 1924,
+  "weekday": "sun",
+  "start_time": "18:30",
+  "end_time": "20:30",
+  "_uuid": "6ace40b177ead72d7244aad8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3557,
+  "id": 1925,
+  "weekday": "sun",
+  "start_time": "18:30",
+  "end_time": "20:30",
+  "_uuid": "6ace40b177ead72d7244aad8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3558,
+  "id": 1926,
+  "weekday": "sun",
+  "start_time": "18:30",
+  "end_time": "20:30",
+  "_uuid": "6ace40b177ead72d7244aad8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3559,
+  "id": 1927,
+  "weekday": "wed",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace528b013bc76d200700f2"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3560,
+  "id": 1928,
+  "weekday": "wed",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace528b013bc76d200700f2"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3561,
+  "id": 1929,
+  "weekday": "wed",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace528b013bc76d200700f2"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3562,
+  "id": 1930,
+  "weekday": "wed",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace528b013bc76d200700f2"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3567,
+  "id": 1931,
+  "weekday": "tue",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace413a77ead72d7244aaee"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3568,
+  "id": 1932,
+  "weekday": "tue",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace413a77ead72d7244aaee"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3569,
+  "id": 1933,
+  "weekday": "tue",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace413a77ead72d7244aaee"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3570,
+  "id": 1934,
+  "weekday": "tue",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace413a77ead72d7244aaee"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3571,
+  "id": 1935,
+  "weekday": "wed",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace53d0013bc76d20070284"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3572,
+  "id": 1936,
+  "weekday": "wed",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace53d0013bc76d20070284"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3573,
+  "id": 1937,
+  "weekday": "wed",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace53d0013bc76d20070284"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3574,
+  "id": 1938,
+  "weekday": "wed",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace53d0013bc76d20070284"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3579,
+  "id": 1939,
+  "weekday": "thu",
+  "start_time": "16:00",
+  "end_time": "18:00",
+  "_uuid": "6ace53c8013bc76d20070273"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3580,
+  "id": 1940,
+  "weekday": "thu",
+  "start_time": "16:00",
+  "end_time": "18:00",
+  "_uuid": "6ace53c8013bc76d20070273"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3581,
+  "id": 1941,
+  "weekday": "thu",
+  "start_time": "16:00",
+  "end_time": "18:00",
+  "_uuid": "6ace53c8013bc76d20070273"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3582,
+  "id": 1942,
+  "weekday": "thu",
+  "start_time": "16:00",
+  "end_time": "18:00",
+  "_uuid": "6ace53c8013bc76d20070273"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3583,
+  "id": 1943,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f16013bc76d2006fe03"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3584,
+  "id": 1944,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f16013bc76d2006fe03"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3585,
+  "id": 1945,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f16013bc76d2006fe03"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3586,
+  "id": 1946,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f16013bc76d2006fe03"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3587,
+  "id": 1947,
+  "weekday": "sat",
+  "start_time": "10:00",
+  "end_time": "12:00",
+  "_uuid": "6ace51fe013bc76d20070080"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3587,
+  "id": 1948,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace51fe013bc76d20070081"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3588,
+  "id": 1949,
+  "weekday": "sat",
+  "start_time": "10:00",
+  "end_time": "12:00",
+  "_uuid": "6ace51fe013bc76d20070080"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3588,
+  "id": 1950,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace51fe013bc76d20070081"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3589,
+  "id": 1951,
+  "weekday": "sat",
+  "start_time": "10:00",
+  "end_time": "12:00",
+  "_uuid": "6ace51fe013bc76d20070080"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3589,
+  "id": 1952,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace51fe013bc76d20070081"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3590,
+  "id": 1953,
+  "weekday": "sat",
+  "start_time": "10:00",
+  "end_time": "12:00",
+  "_uuid": "6ace51fe013bc76d20070080"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3590,
+  "id": 1954,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace51fe013bc76d20070081"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3591,
+  "id": 1955,
+  "weekday": "tue",
+  "start_time": "18:30",
+  "end_time": "21:00",
+  "_uuid": "6ace4f01013bc76d2006fdff"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3592,
+  "id": 1956,
+  "weekday": "tue",
+  "start_time": "18:30",
+  "end_time": "21:00",
+  "_uuid": "6ace4f01013bc76d2006fdff"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3593,
+  "id": 1957,
+  "weekday": "tue",
+  "start_time": "18:30",
+  "end_time": "21:00",
+  "_uuid": "6ace4f01013bc76d2006fdff"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3594,
+  "id": 1958,
+  "weekday": "tue",
+  "start_time": "18:30",
+  "end_time": "21:00",
+  "_uuid": "6ace4f01013bc76d2006fdff"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3599,
+  "id": 1959,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace3f1e77ead72d7244aaa1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3600,
+  "id": 1960,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace3f1e77ead72d7244aaa1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3601,
+  "id": 1961,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace3f1e77ead72d7244aaa1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3602,
+  "id": 1962,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace3f1e77ead72d7244aaa1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3611,
+  "id": 1963,
+  "weekday": "mon",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace53d4013bc76d20070285"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3612,
+  "id": 1964,
+  "weekday": "mon",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace53d4013bc76d20070285"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3613,
+  "id": 1965,
+  "weekday": "mon",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace53d4013bc76d20070285"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3614,
+  "id": 1966,
+  "weekday": "wed",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace53d0013bc76d20070284"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3615,
+  "id": 1967,
+  "weekday": "wed",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace53d0013bc76d20070284"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3616,
+  "id": 1968,
+  "weekday": "wed",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace53d0013bc76d20070284"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3617,
+  "id": 1969,
+  "weekday": "thu",
+  "start_time": "16:00",
+  "end_time": "18:00",
+  "_uuid": "6ace53c8013bc76d20070273"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3618,
+  "id": 1970,
+  "weekday": "thu",
+  "start_time": "16:00",
+  "end_time": "18:00",
+  "_uuid": "6ace53c8013bc76d20070273"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3619,
+  "id": 1971,
+  "weekday": "thu",
+  "start_time": "16:00",
+  "end_time": "18:00",
+  "_uuid": "6ace53c8013bc76d20070273"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3620,
+  "id": 1972,
+  "weekday": "wed",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace528b013bc76d200700f2"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3621,
+  "id": 1973,
+  "weekday": "wed",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace528b013bc76d200700f2"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3622,
+  "id": 1974,
+  "weekday": "wed",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace528b013bc76d200700f2"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3623,
+  "id": 1975,
+  "weekday": "tue",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace413a77ead72d7244aaee"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3624,
+  "id": 1976,
+  "weekday": "tue",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace413a77ead72d7244aaee"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3625,
+  "id": 1977,
+  "weekday": "tue",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace413a77ead72d7244aaee"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3626,
+  "id": 1978,
+  "weekday": "sat",
+  "start_time": "10:00",
+  "end_time": "12:00",
+  "_uuid": "6ace51fe013bc76d20070080"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3626,
+  "id": 1979,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace51fe013bc76d20070081"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3627,
+  "id": 1980,
+  "weekday": "sat",
+  "start_time": "10:00",
+  "end_time": "12:00",
+  "_uuid": "6ace51fe013bc76d20070080"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3627,
+  "id": 1981,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace51fe013bc76d20070081"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3628,
+  "id": 1982,
+  "weekday": "sat",
+  "start_time": "10:00",
+  "end_time": "12:00",
+  "_uuid": "6ace51fe013bc76d20070080"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 3628,
+  "id": 1983,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace51fe013bc76d20070081"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3629,
+  "id": 1984,
+  "weekday": "mon",
+  "start_time": "11:30",
+  "end_time": "13:30",
+  "_uuid": "6ace51f9013bc76d2007007f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3630,
+  "id": 1985,
+  "weekday": "mon",
+  "start_time": "11:30",
+  "end_time": "13:30",
+  "_uuid": "6ace51f9013bc76d2007007f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3631,
+  "id": 1986,
+  "weekday": "mon",
+  "start_time": "11:30",
+  "end_time": "13:30",
+  "_uuid": "6ace51f9013bc76d2007007f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3632,
+  "id": 1987,
+  "weekday": "sun",
+  "start_time": "18:30",
+  "end_time": "20:30",
+  "_uuid": "6ace40b177ead72d7244aad8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3633,
+  "id": 1988,
+  "weekday": "sun",
+  "start_time": "18:30",
+  "end_time": "20:30",
+  "_uuid": "6ace40b177ead72d7244aad8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3634,
+  "id": 1989,
+  "weekday": "sun",
+  "start_time": "18:30",
+  "end_time": "20:30",
+  "_uuid": "6ace40b177ead72d7244aad8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3635,
+  "id": 1990,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace408677ead72d7244aacb"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3636,
+  "id": 1991,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace408677ead72d7244aacb"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3637,
+  "id": 1992,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:00",
+  "_uuid": "6ace408677ead72d7244aacb"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3638,
+  "id": 1993,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f16013bc76d2006fe03"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3639,
+  "id": 1994,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f16013bc76d2006fe03"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3640,
+  "id": 1995,
+  "weekday": "sat",
+  "start_time": "18:00",
+  "end_time": "20:30",
+  "_uuid": "6ace4f16013bc76d2006fe03"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3641,
+  "id": 1996,
+  "weekday": "tue",
+  "start_time": "18:30",
+  "end_time": "21:00",
+  "_uuid": "6ace4f01013bc76d2006fdff"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3642,
+  "id": 1997,
+  "weekday": "tue",
+  "start_time": "18:30",
+  "end_time": "21:00",
+  "_uuid": "6ace4f01013bc76d2006fdff"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3643,
+  "id": 1998,
+  "weekday": "tue",
+  "start_time": "18:30",
+  "end_time": "21:00",
+  "_uuid": "6ace4f01013bc76d2006fdff"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3644,
+  "id": 1999,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace3f1e77ead72d7244aaa1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3645,
+  "id": 2000,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace3f1e77ead72d7244aaa1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 3646,
+  "id": 2001,
+  "weekday": "sat",
+  "start_time": "17:00",
+  "end_time": "19:00",
+  "_uuid": "6ace3f1e77ead72d7244aaa1"
  }
 ]

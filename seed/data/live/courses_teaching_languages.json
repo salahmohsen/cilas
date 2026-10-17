@@ -1,18 +1,6 @@
 [
  {
   "order": 1,
-  "parent_id": 296,
-  "value": "ar",
-  "id": 371
- },
- {
-  "order": 2,
-  "parent_id": 296,
-  "value": "en",
-  "id": 372
- },
- {
-  "order": 1,
   "parent_id": 294,
   "value": "ar",
   "id": 378
@@ -37,12 +25,6 @@
  },
  {
   "order": 1,
-  "parent_id": 289,
-  "value": "en",
-  "id": 384
- },
- {
-  "order": 1,
   "parent_id": 288,
   "value": "en",
   "id": 385
@@ -55,63 +37,9 @@
  },
  {
   "order": 1,
-  "parent_id": 286,
-  "value": "en",
-  "id": 387
- },
- {
-  "order": 1,
   "parent_id": 285,
   "value": "en",
   "id": 388
- },
- {
-  "order": 1,
-  "parent_id": 284,
-  "value": "en",
-  "id": 389
- },
- {
-  "order": 1,
-  "parent_id": 283,
-  "value": "en",
-  "id": 390
- },
- {
-  "order": 1,
-  "parent_id": 282,
-  "value": "en",
-  "id": 391
- },
- {
-  "order": 1,
-  "parent_id": 281,
-  "value": "en",
-  "id": 392
- },
- {
-  "order": 1,
-  "parent_id": 280,
-  "value": "en",
-  "id": 393
- },
- {
-  "order": 1,
-  "parent_id": 279,
-  "value": "en",
-  "id": 394
- },
- {
-  "order": 1,
-  "parent_id": 278,
-  "value": "en",
-  "id": 395
- },
- {
-  "order": 1,
-  "parent_id": 277,
-  "value": "ar",
-  "id": 396
  },
  {
   "order": 1,
@@ -154,24 +82,6 @@
   "parent_id": 270,
   "value": "en",
   "id": 403
- },
- {
-  "order": 1,
-  "parent_id": 269,
-  "value": "en",
-  "id": 404
- },
- {
-  "order": 1,
-  "parent_id": 268,
-  "value": "en",
-  "id": 405
- },
- {
-  "order": 1,
-  "parent_id": 267,
-  "value": "en",
-  "id": 406
  },
  {
   "order": 1,
@@ -517,12 +427,6 @@
  },
  {
   "order": 1,
-  "parent_id": 219,
-  "value": "en",
-  "id": 464
- },
- {
-  "order": 1,
   "parent_id": 218,
   "value": "ar",
   "id": 465
@@ -538,12 +442,6 @@
   "parent_id": 216,
   "value": "en",
   "id": 467
- },
- {
-  "order": 1,
-  "parent_id": 215,
-  "value": "en",
-  "id": 468
  },
  {
   "order": 1,
@@ -640,18 +538,6 @@
   "parent_id": 200,
   "value": "en",
   "id": 484
- },
- {
-  "order": 1,
-  "parent_id": 199,
-  "value": "en",
-  "id": 485
- },
- {
-  "order": 1,
-  "parent_id": 198,
-  "value": "en",
-  "id": 486
  },
  {
   "order": 1,
@@ -859,12 +745,6 @@
  },
  {
   "order": 1,
-  "parent_id": 168,
-  "value": "en",
-  "id": 521
- },
- {
-  "order": 1,
   "parent_id": 167,
   "value": "en",
   "id": 522
@@ -952,12 +832,6 @@
   "parent_id": 153,
   "value": "en",
   "id": 536
- },
- {
-  "order": 1,
-  "parent_id": 152,
-  "value": "en",
-  "id": 537
  },
  {
   "order": 1,
@@ -1483,12 +1357,6 @@
  },
  {
   "order": 1,
-  "parent_id": 82,
-  "value": "ar",
-  "id": 625
- },
- {
-  "order": 1,
   "parent_id": 81,
   "value": "en",
   "id": 626
@@ -1513,12 +1381,6 @@
  },
  {
   "order": 1,
-  "parent_id": 77,
-  "value": "en",
-  "id": 630
- },
- {
-  "order": 1,
   "parent_id": 76,
   "value": "en",
   "id": 631
@@ -1534,12 +1396,6 @@
   "parent_id": 74,
   "value": "en",
   "id": 633
- },
- {
-  "order": 1,
-  "parent_id": 73,
-  "value": "en",
-  "id": 634
  },
  {
   "order": 1,
@@ -1636,12 +1492,6 @@
   "parent_id": 60,
   "value": "en",
   "id": 650
- },
- {
-  "order": 1,
-  "parent_id": 59,
-  "value": "en",
-  "id": 651
  },
  {
   "order": 1,
@@ -1813,12 +1663,6 @@
  },
  {
   "order": 1,
-  "parent_id": 35,
-  "value": "en",
-  "id": 680
- },
- {
-  "order": 1,
   "parent_id": 34,
   "value": "ar",
   "id": 681
@@ -1858,12 +1702,6 @@
   "parent_id": 28,
   "value": "en",
   "id": 687
- },
- {
-  "order": 1,
-  "parent_id": 27,
-  "value": "en",
-  "id": 688
  },
  {
   "order": 1,
@@ -2023,14 +1861,224 @@
  },
  {
   "order": 1,
+  "parent_id": 296,
+  "value": "ar",
+  "id": 717
+ },
+ {
+  "order": 2,
+  "parent_id": 296,
+  "value": "en",
+  "id": 718
+ },
+ {
+  "order": 1,
   "parent_id": 295,
   "value": "ar",
-  "id": 715
+  "id": 719
  },
  {
   "order": 2,
   "parent_id": 295,
   "value": "en",
-  "id": 716
+  "id": 720
+ },
+ {
+  "order": 1,
+  "parent_id": 82,
+  "value": "ar",
+  "id": 726
+ },
+ {
+  "order": 1,
+  "parent_id": 289,
+  "value": "en",
+  "id": 727
+ },
+ {
+  "order": 1,
+  "parent_id": 304,
+  "value": "en",
+  "id": 746
+ },
+ {
+  "order": 1,
+  "parent_id": 303,
+  "value": "en",
+  "id": 747
+ },
+ {
+  "order": 1,
+  "parent_id": 302,
+  "value": "en",
+  "id": 748
+ },
+ {
+  "order": 1,
+  "parent_id": 301,
+  "value": "en",
+  "id": 749
+ },
+ {
+  "order": 1,
+  "parent_id": 300,
+  "value": "en",
+  "id": 750
+ },
+ {
+  "order": 1,
+  "parent_id": 299,
+  "value": "en",
+  "id": 751
+ },
+ {
+  "order": 1,
+  "parent_id": 298,
+  "value": "en",
+  "id": 752
+ },
+ {
+  "order": 1,
+  "parent_id": 297,
+  "value": "ar",
+  "id": 753
+ },
+ {
+  "order": 1,
+  "parent_id": 284,
+  "value": "en",
+  "id": 754
+ },
+ {
+  "order": 1,
+  "parent_id": 283,
+  "value": "en",
+  "id": 755
+ },
+ {
+  "order": 1,
+  "parent_id": 282,
+  "value": "en",
+  "id": 756
+ },
+ {
+  "order": 1,
+  "parent_id": 281,
+  "value": "en",
+  "id": 757
+ },
+ {
+  "order": 1,
+  "parent_id": 280,
+  "value": "en",
+  "id": 758
+ },
+ {
+  "order": 1,
+  "parent_id": 279,
+  "value": "en",
+  "id": 759
+ },
+ {
+  "order": 1,
+  "parent_id": 278,
+  "value": "en",
+  "id": 760
+ },
+ {
+  "order": 1,
+  "parent_id": 286,
+  "value": "en",
+  "id": 779
+ },
+ {
+  "order": 1,
+  "parent_id": 277,
+  "value": "en",
+  "id": 780
+ },
+ {
+  "order": 1,
+  "parent_id": 269,
+  "value": "en",
+  "id": 781
+ },
+ {
+  "order": 1,
+  "parent_id": 268,
+  "value": "en",
+  "id": 782
+ },
+ {
+  "order": 1,
+  "parent_id": 267,
+  "value": "en",
+  "id": 783
+ },
+ {
+  "order": 1,
+  "parent_id": 219,
+  "value": "en",
+  "id": 784
+ },
+ {
+  "order": 1,
+  "parent_id": 215,
+  "value": "en",
+  "id": 785
+ },
+ {
+  "order": 1,
+  "parent_id": 199,
+  "value": "en",
+  "id": 786
+ },
+ {
+  "order": 1,
+  "parent_id": 198,
+  "value": "en",
+  "id": 787
+ },
+ {
+  "order": 1,
+  "parent_id": 168,
+  "value": "en",
+  "id": 788
+ },
+ {
+  "order": 1,
+  "parent_id": 152,
+  "value": "en",
+  "id": 789
+ },
+ {
+  "order": 1,
+  "parent_id": 77,
+  "value": "en",
+  "id": 790
+ },
+ {
+  "order": 1,
+  "parent_id": 73,
+  "value": "en",
+  "id": 791
+ },
+ {
+  "order": 1,
+  "parent_id": 59,
+  "value": "en",
+  "id": 792
+ },
+ {
+  "order": 1,
+  "parent_id": 35,
+  "value": "en",
+  "id": 793
+ },
+ {
+  "order": 1,
+  "parent_id": 27,
+  "value": "en",
+  "id": 794
  }
 ]

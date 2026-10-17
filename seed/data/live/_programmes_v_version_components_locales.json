@@ -2406,5 +2406,19 @@
   "id": 344,
   "_locale": "ar",
   "_parent_id": 206
+ },
+ {
+  "label": "Thematic courses and labs, spring semester",
+  "description": null,
+  "id": 345,
+  "_locale": "en",
+  "_parent_id": 207
+ },
+ {
+  "label": "المقررات الموضوعية والمعامل، الربيع ٢٠٢٦",
+  "description": null,
+  "id": 346,
+  "_locale": "ar",
+  "_parent_id": 207
  }
 ]

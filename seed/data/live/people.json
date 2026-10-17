@@ -14,9 +14,9 @@
   "generate_slug": false,
   "slug": "mahaviveka",
   "photo_id": null,
-  "website": null,
+  "website": "https://mahaviveka.wordpress.com/",
   "legacy_url": null,
-  "updated_at": "2026-10-13T14:17:25.940Z",
+  "updated_at": "2026-10-14T03:02:17.700Z",
   "created_at": "2026-10-13T14:17:25.713Z"
  },
  {
@@ -856,7 +856,7 @@
   "photo_id": null,
   "website": null,
   "legacy_url": "/82032024-cilas-cairo-spring-semester8203.html#yamn-nwh",
-  "updated_at": "2026-10-13T15:58:12.761Z",
+  "updated_at": "2026-10-15T05:48:28.532Z",
   "created_at": "2026-10-13T14:21:59.880Z"
  },
  {
@@ -1143,10 +1143,10 @@
   "id": 115,
   "generate_slug": false,
   "slug": "shan-yang",
-  "photo_id": null,
+  "photo_id": 402,
   "website": null,
   "legacy_url": "/fall-2021.html#shan-yang",
-  "updated_at": "2026-10-13T14:39:48.654Z",
+  "updated_at": "2026-10-15T02:20:31.426Z",
   "created_at": "2026-10-13T14:25:41.825Z"
  },
  {
@@ -2593,10 +2593,10 @@
   "id": 260,
   "generate_slug": false,
   "slug": "mbadra-tbdyl",
-  "photo_id": null,
+  "photo_id": 406,
   "website": null,
   "legacy_url": null,
-  "updated_at": "2026-10-13T15:21:26.889Z",
+  "updated_at": "2026-10-17T17:27:56.570Z",
   "created_at": "2026-10-13T15:21:26.889Z"
  },
  {

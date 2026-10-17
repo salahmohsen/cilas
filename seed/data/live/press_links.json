@@ -15,13 +15,6 @@
  },
  {
   "_order": 1,
-  "_parent_id": 4,
-  "id": "6ace3e1bbac3e623fbdf904d",
-  "language": "en",
-  "url": "https://www.al-fanarmedia.org/2013/08/new-institute-to-offer-one-year-dose-of-the-liberal-arts/"
- },
- {
-  "_order": 1,
   "_parent_id": 1,
   "id": "6ace4692360651c012d37df1",
   "language": "en",
@@ -103,5 +96,19 @@
   "id": "6ace4696360651c012d37e05",
   "language": "en",
   "url": "https://www.madamasr.com/en/2014/02/02/opinion/society/looking-for-alternative-education-in-egypt/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 15,
+  "id": "6acecdccd5adfd205ee27e2f",
+  "language": "en",
+  "url": "https://www.madamasr.com/en/2015/03/17/feature/culture/re-assembling-the-social-at-the-cairo-institute-of-liberal-arts-and-sciences/"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16,
+  "id": "6acecec3d5adfd205ee27e30",
+  "language": "en",
+  "url": "https://worldhumanitiesreport.org/wp-content/uploads/2023/05/WHR-AR_8.case-study_CILAS.pdf"
  }
 ]

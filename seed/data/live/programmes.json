@@ -10,14 +10,14 @@
   "registration_method": "form",
   "registration_form_id": 2,
   "registration_url": null,
-  "registration_deadline": "2025-11-29T00:00:00.000Z",
+  "registration_deadline": "2027-11-29T12:00:00.000Z",
   "registration_archived_registration_url": null,
   "pricing_min": "30000",
   "pricing_max": null,
   "pricing_currency": "EGP",
   "pricing_need_based_deductions": true,
   "legacy_url": null,
-  "updated_at": "2026-10-13T16:52:34.422Z",
+  "updated_at": "2026-10-13T17:58:33.710Z",
   "created_at": "2026-10-13T14:18:27.144Z",
   "_status": "published"
  },
@@ -193,9 +193,9 @@
   "pricing_currency": "EGP",
   "pricing_need_based_deductions": null,
   "legacy_url": null,
-  "updated_at": "2026-10-13T14:38:16.787Z",
+  "updated_at": "2026-10-15T23:52:30.155Z",
   "created_at": "2026-10-13T14:38:16.787Z",
-  "_status": "draft"
+  "_status": "published"
  },
  {
   "id": 10,
@@ -215,9 +215,9 @@
   "pricing_currency": "EGP",
   "pricing_need_based_deductions": null,
   "legacy_url": null,
-  "updated_at": "2026-10-13T14:38:17.257Z",
+  "updated_at": "2026-10-15T23:52:56.156Z",
   "created_at": "2026-10-13T14:38:17.257Z",
-  "_status": "draft"
+  "_status": "published"
  },
  {
   "id": 11,
@@ -237,8 +237,8 @@
   "pricing_currency": "EGP",
   "pricing_need_based_deductions": null,
   "legacy_url": null,
-  "updated_at": "2026-10-13T14:38:17.719Z",
+  "updated_at": "2026-10-15T23:53:33.765Z",
   "created_at": "2026-10-13T14:38:17.718Z",
-  "_status": "draft"
+  "_status": "published"
  }
 ]

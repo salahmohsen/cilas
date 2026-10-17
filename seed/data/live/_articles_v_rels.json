@@ -3318,5 +3318,1221 @@
   "path": "version.credits.0.people",
   "people_id": 26,
   "articles_id": null
+ },
+ {
+  "id": 416,
+  "order": 1,
+  "parent_id": 105,
+  "path": "version.authors",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 417,
+  "order": 1,
+  "parent_id": 106,
+  "path": "version.authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 418,
+  "order": 1,
+  "parent_id": 107,
+  "path": "version.authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 419,
+  "order": 1,
+  "parent_id": 108,
+  "path": "version.authors",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 420,
+  "order": 1,
+  "parent_id": 109,
+  "path": "version.authors",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 421,
+  "order": 1,
+  "parent_id": 110,
+  "path": "version.authors",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 422,
+  "order": 1,
+  "parent_id": 111,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 423,
+  "order": 1,
+  "parent_id": 111,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 424,
+  "order": 1,
+  "parent_id": 111,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 425,
+  "order": 1,
+  "parent_id": 112,
+  "path": "version.authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 426,
+  "order": 1,
+  "parent_id": 112,
+  "path": "version.credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 427,
+  "order": 1,
+  "parent_id": 112,
+  "path": "version.translation.original_authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 428,
+  "order": 1,
+  "parent_id": 113,
+  "path": "version.authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 429,
+  "order": 2,
+  "parent_id": 113,
+  "path": "version.authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 430,
+  "order": 3,
+  "parent_id": 113,
+  "path": "version.authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 431,
+  "order": 1,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 41,
+  "articles_id": null
+ },
+ {
+  "id": 432,
+  "order": 2,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 44,
+  "articles_id": null
+ },
+ {
+  "id": 433,
+  "order": 3,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 45,
+  "articles_id": null
+ },
+ {
+  "id": 434,
+  "order": 4,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 435,
+  "order": 5,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 43,
+  "articles_id": null
+ },
+ {
+  "id": 436,
+  "order": 6,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 46,
+  "articles_id": null
+ },
+ {
+  "id": 437,
+  "order": 7,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 438,
+  "order": 8,
+  "parent_id": 113,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 439,
+  "order": 1,
+  "parent_id": 113,
+  "path": "version.translation.original_authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 440,
+  "order": 2,
+  "parent_id": 113,
+  "path": "version.translation.original_authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 441,
+  "order": 3,
+  "parent_id": 113,
+  "path": "version.translation.original_authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 442,
+  "order": 1,
+  "parent_id": 114,
+  "path": "version.authors",
+  "people_id": 16,
+  "articles_id": null
+ },
+ {
+  "id": 443,
+  "order": 1,
+  "parent_id": 114,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 444,
+  "order": 1,
+  "parent_id": 115,
+  "path": "version.authors",
+  "people_id": 16,
+  "articles_id": null
+ },
+ {
+  "id": 445,
+  "order": 1,
+  "parent_id": 115,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 446,
+  "order": 1,
+  "parent_id": 116,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 447,
+  "order": 1,
+  "parent_id": 116,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 448,
+  "order": 1,
+  "parent_id": 116,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 449,
+  "order": 1,
+  "parent_id": 117,
+  "path": "version.authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 450,
+  "order": 1,
+  "parent_id": 117,
+  "path": "version.credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 451,
+  "order": 1,
+  "parent_id": 117,
+  "path": "version.translation.original_authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 452,
+  "order": 1,
+  "parent_id": 118,
+  "path": "version.authors",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 453,
+  "order": 1,
+  "parent_id": 119,
+  "path": "version.authors",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 454,
+  "order": 1,
+  "parent_id": 120,
+  "path": "version.authors",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 455,
+  "order": 1,
+  "parent_id": 121,
+  "path": "version.authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 456,
+  "order": 1,
+  "parent_id": 121,
+  "path": "version.credits.0.people",
+  "people_id": 29,
+  "articles_id": null
+ },
+ {
+  "id": 457,
+  "order": 2,
+  "parent_id": 121,
+  "path": "version.credits.0.people",
+  "people_id": 49,
+  "articles_id": null
+ },
+ {
+  "id": 458,
+  "order": 3,
+  "parent_id": 121,
+  "path": "version.credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 459,
+  "order": 4,
+  "parent_id": 121,
+  "path": "version.credits.0.people",
+  "people_id": 31,
+  "articles_id": null
+ },
+ {
+  "id": 460,
+  "order": 5,
+  "parent_id": 121,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 461,
+  "order": 6,
+  "parent_id": 121,
+  "path": "version.credits.0.people",
+  "people_id": 33,
+  "articles_id": null
+ },
+ {
+  "id": 462,
+  "order": 1,
+  "parent_id": 121,
+  "path": "version.translation.original_authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 463,
+  "order": 1,
+  "parent_id": 122,
+  "path": "version.authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 464,
+  "order": 1,
+  "parent_id": 122,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 465,
+  "order": 1,
+  "parent_id": 123,
+  "path": "version.authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 466,
+  "order": 1,
+  "parent_id": 123,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 467,
+  "order": 1,
+  "parent_id": 124,
+  "path": "version.authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 468,
+  "order": 1,
+  "parent_id": 124,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 469,
+  "order": 1,
+  "parent_id": 125,
+  "path": "version.authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 470,
+  "order": 1,
+  "parent_id": 125,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 471,
+  "order": 1,
+  "parent_id": 126,
+  "path": "version.authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 472,
+  "order": 1,
+  "parent_id": 126,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 473,
+  "order": 1,
+  "parent_id": 127,
+  "path": "version.authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 474,
+  "order": 1,
+  "parent_id": 127,
+  "path": "version.credits.0.people",
+  "people_id": 29,
+  "articles_id": null
+ },
+ {
+  "id": 475,
+  "order": 2,
+  "parent_id": 127,
+  "path": "version.credits.0.people",
+  "people_id": 49,
+  "articles_id": null
+ },
+ {
+  "id": 476,
+  "order": 3,
+  "parent_id": 127,
+  "path": "version.credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 477,
+  "order": 4,
+  "parent_id": 127,
+  "path": "version.credits.0.people",
+  "people_id": 31,
+  "articles_id": null
+ },
+ {
+  "id": 478,
+  "order": 5,
+  "parent_id": 127,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 479,
+  "order": 6,
+  "parent_id": 127,
+  "path": "version.credits.0.people",
+  "people_id": 33,
+  "articles_id": null
+ },
+ {
+  "id": 480,
+  "order": 1,
+  "parent_id": 127,
+  "path": "version.translation.original_authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 481,
+  "order": 1,
+  "parent_id": 128,
+  "path": "version.authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 482,
+  "order": 1,
+  "parent_id": 128,
+  "path": "version.credits.0.people",
+  "people_id": 29,
+  "articles_id": null
+ },
+ {
+  "id": 483,
+  "order": 2,
+  "parent_id": 128,
+  "path": "version.credits.0.people",
+  "people_id": 49,
+  "articles_id": null
+ },
+ {
+  "id": 484,
+  "order": 3,
+  "parent_id": 128,
+  "path": "version.credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 485,
+  "order": 4,
+  "parent_id": 128,
+  "path": "version.credits.0.people",
+  "people_id": 31,
+  "articles_id": null
+ },
+ {
+  "id": 486,
+  "order": 5,
+  "parent_id": 128,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 487,
+  "order": 6,
+  "parent_id": 128,
+  "path": "version.credits.0.people",
+  "people_id": 33,
+  "articles_id": null
+ },
+ {
+  "id": 488,
+  "order": 1,
+  "parent_id": 128,
+  "path": "version.translation.original_authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 489,
+  "order": 1,
+  "parent_id": 129,
+  "path": "version.authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 490,
+  "order": 1,
+  "parent_id": 129,
+  "path": "version.credits.0.people",
+  "people_id": 29,
+  "articles_id": null
+ },
+ {
+  "id": 491,
+  "order": 2,
+  "parent_id": 129,
+  "path": "version.credits.0.people",
+  "people_id": 49,
+  "articles_id": null
+ },
+ {
+  "id": 492,
+  "order": 3,
+  "parent_id": 129,
+  "path": "version.credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 493,
+  "order": 4,
+  "parent_id": 129,
+  "path": "version.credits.0.people",
+  "people_id": 31,
+  "articles_id": null
+ },
+ {
+  "id": 494,
+  "order": 5,
+  "parent_id": 129,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 495,
+  "order": 6,
+  "parent_id": 129,
+  "path": "version.credits.0.people",
+  "people_id": 33,
+  "articles_id": null
+ },
+ {
+  "id": 496,
+  "order": 1,
+  "parent_id": 129,
+  "path": "version.translation.original_authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 497,
+  "order": 1,
+  "parent_id": 130,
+  "path": "version.authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 498,
+  "order": 2,
+  "parent_id": 130,
+  "path": "version.authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 499,
+  "order": 3,
+  "parent_id": 130,
+  "path": "version.authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 500,
+  "order": 1,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 41,
+  "articles_id": null
+ },
+ {
+  "id": 501,
+  "order": 2,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 44,
+  "articles_id": null
+ },
+ {
+  "id": 502,
+  "order": 3,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 45,
+  "articles_id": null
+ },
+ {
+  "id": 503,
+  "order": 4,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 504,
+  "order": 5,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 43,
+  "articles_id": null
+ },
+ {
+  "id": 505,
+  "order": 6,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 46,
+  "articles_id": null
+ },
+ {
+  "id": 506,
+  "order": 7,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 507,
+  "order": 8,
+  "parent_id": 130,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 508,
+  "order": 1,
+  "parent_id": 130,
+  "path": "version.translation.original_authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 509,
+  "order": 2,
+  "parent_id": 130,
+  "path": "version.translation.original_authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 510,
+  "order": 3,
+  "parent_id": 130,
+  "path": "version.translation.original_authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 511,
+  "order": 1,
+  "parent_id": 131,
+  "path": "version.authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 512,
+  "order": 1,
+  "parent_id": 131,
+  "path": "version.credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 513,
+  "order": 1,
+  "parent_id": 131,
+  "path": "version.translation.original_authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 514,
+  "order": 1,
+  "parent_id": 132,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 515,
+  "order": 1,
+  "parent_id": 132,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 516,
+  "order": 1,
+  "parent_id": 132,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 517,
+  "order": 1,
+  "parent_id": 133,
+  "path": "version.authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 518,
+  "order": 1,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 35,
+  "articles_id": null
+ },
+ {
+  "id": 519,
+  "order": 2,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 36,
+  "articles_id": null
+ },
+ {
+  "id": 520,
+  "order": 3,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 521,
+  "order": 4,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 37,
+  "articles_id": null
+ },
+ {
+  "id": 522,
+  "order": 5,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 38,
+  "articles_id": null
+ },
+ {
+  "id": 523,
+  "order": 6,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 39,
+  "articles_id": null
+ },
+ {
+  "id": 524,
+  "order": 7,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 40,
+  "articles_id": null
+ },
+ {
+  "id": 525,
+  "order": 8,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 32,
+  "articles_id": null
+ },
+ {
+  "id": 526,
+  "order": 9,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 27,
+  "articles_id": null
+ },
+ {
+  "id": 527,
+  "order": 10,
+  "parent_id": 133,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 528,
+  "order": 1,
+  "parent_id": 133,
+  "path": "version.translation.original_authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 529,
+  "order": 1,
+  "parent_id": 134,
+  "path": "version.authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 530,
+  "order": 2,
+  "parent_id": 134,
+  "path": "version.authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 531,
+  "order": 3,
+  "parent_id": 134,
+  "path": "version.authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 532,
+  "order": 1,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 41,
+  "articles_id": null
+ },
+ {
+  "id": 533,
+  "order": 2,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 44,
+  "articles_id": null
+ },
+ {
+  "id": 534,
+  "order": 3,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 45,
+  "articles_id": null
+ },
+ {
+  "id": 535,
+  "order": 4,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 536,
+  "order": 5,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 43,
+  "articles_id": null
+ },
+ {
+  "id": 537,
+  "order": 6,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 46,
+  "articles_id": null
+ },
+ {
+  "id": 538,
+  "order": 7,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 539,
+  "order": 8,
+  "parent_id": 134,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 540,
+  "order": 1,
+  "parent_id": 134,
+  "path": "version.translation.original_authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 541,
+  "order": 1,
+  "parent_id": 135,
+  "path": "version.authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 542,
+  "order": 1,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 35,
+  "articles_id": null
+ },
+ {
+  "id": 543,
+  "order": 2,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 36,
+  "articles_id": null
+ },
+ {
+  "id": 544,
+  "order": 3,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 545,
+  "order": 4,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 37,
+  "articles_id": null
+ },
+ {
+  "id": 546,
+  "order": 5,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 38,
+  "articles_id": null
+ },
+ {
+  "id": 547,
+  "order": 6,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 39,
+  "articles_id": null
+ },
+ {
+  "id": 548,
+  "order": 7,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 40,
+  "articles_id": null
+ },
+ {
+  "id": 549,
+  "order": 8,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 32,
+  "articles_id": null
+ },
+ {
+  "id": 550,
+  "order": 9,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 27,
+  "articles_id": null
+ },
+ {
+  "id": 551,
+  "order": 10,
+  "parent_id": 135,
+  "path": "version.credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 552,
+  "order": 1,
+  "parent_id": 135,
+  "path": "version.translation.original_authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 553,
+  "order": 1,
+  "parent_id": 136,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 554,
+  "order": 1,
+  "parent_id": 136,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 555,
+  "order": 1,
+  "parent_id": 136,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 556,
+  "order": 1,
+  "parent_id": 137,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 557,
+  "order": 1,
+  "parent_id": 137,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 558,
+  "order": 1,
+  "parent_id": 137,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 559,
+  "order": 1,
+  "parent_id": 138,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 560,
+  "order": 1,
+  "parent_id": 138,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 561,
+  "order": 1,
+  "parent_id": 138,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 562,
+  "order": 1,
+  "parent_id": 139,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 563,
+  "order": 1,
+  "parent_id": 139,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 564,
+  "order": 1,
+  "parent_id": 139,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 565,
+  "order": 1,
+  "parent_id": 140,
+  "path": "version.authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 566,
+  "order": 1,
+  "parent_id": 140,
+  "path": "version.credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 567,
+  "order": 1,
+  "parent_id": 140,
+  "path": "version.translation.original_authors",
+  "people_id": 58,
+  "articles_id": null
  }
 ]

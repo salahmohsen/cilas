@@ -1,13 +1,5 @@
 [
  {
-  "id": 251,
-  "order": 1,
-  "parent_id": 15,
-  "path": "authors",
-  "people_id": 23,
-  "articles_id": null
- },
- {
   "id": 252,
   "order": 1,
   "parent_id": 14,
@@ -24,342 +16,6 @@
   "articles_id": null
  },
  {
-  "id": 254,
-  "order": 1,
-  "parent_id": 12,
-  "path": "authors",
-  "people_id": 42,
-  "articles_id": null
- },
- {
-  "id": 255,
-  "order": 1,
-  "parent_id": 11,
-  "path": "authors",
-  "people_id": 58,
-  "articles_id": null
- },
- {
-  "id": 256,
-  "order": 1,
-  "parent_id": 11,
-  "path": "credits.0.people",
-  "people_id": 34,
-  "articles_id": null
- },
- {
-  "id": 257,
-  "order": 1,
-  "parent_id": 11,
-  "path": "translation.original_authors",
-  "people_id": 58,
-  "articles_id": null
- },
- {
-  "id": 258,
-  "order": 1,
-  "parent_id": 10,
-  "path": "authors",
-  "people_id": 57,
-  "articles_id": null
- },
- {
-  "id": 259,
-  "order": 1,
-  "parent_id": 10,
-  "path": "credits.0.people",
-  "people_id": 29,
-  "articles_id": null
- },
- {
-  "id": 260,
-  "order": 2,
-  "parent_id": 10,
-  "path": "credits.0.people",
-  "people_id": 49,
-  "articles_id": null
- },
- {
-  "id": 261,
-  "order": 3,
-  "parent_id": 10,
-  "path": "credits.0.people",
-  "people_id": 30,
-  "articles_id": null
- },
- {
-  "id": 262,
-  "order": 4,
-  "parent_id": 10,
-  "path": "credits.0.people",
-  "people_id": 31,
-  "articles_id": null
- },
- {
-  "id": 263,
-  "order": 5,
-  "parent_id": 10,
-  "path": "credits.0.people",
-  "people_id": 26,
-  "articles_id": null
- },
- {
-  "id": 264,
-  "order": 6,
-  "parent_id": 10,
-  "path": "credits.0.people",
-  "people_id": 33,
-  "articles_id": null
- },
- {
-  "id": 265,
-  "order": 1,
-  "parent_id": 10,
-  "path": "translation.original_authors",
-  "people_id": 57,
-  "articles_id": null
- },
- {
-  "id": 266,
-  "order": 1,
-  "parent_id": 9,
-  "path": "authors",
-  "people_id": 56,
-  "articles_id": null
- },
- {
-  "id": 267,
-  "order": 1,
-  "parent_id": 9,
-  "path": "credits.0.people",
-  "people_id": 30,
-  "articles_id": null
- },
- {
-  "id": 268,
-  "order": 1,
-  "parent_id": 9,
-  "path": "translation.original_authors",
-  "people_id": 56,
-  "articles_id": null
- },
- {
-  "id": 269,
-  "order": 1,
-  "parent_id": 8,
-  "path": "authors",
-  "people_id": 55,
-  "articles_id": null
- },
- {
-  "id": 270,
-  "order": 1,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 35,
-  "articles_id": null
- },
- {
-  "id": 271,
-  "order": 2,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 36,
-  "articles_id": null
- },
- {
-  "id": 272,
-  "order": 3,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 28,
-  "articles_id": null
- },
- {
-  "id": 273,
-  "order": 4,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 37,
-  "articles_id": null
- },
- {
-  "id": 274,
-  "order": 5,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 38,
-  "articles_id": null
- },
- {
-  "id": 275,
-  "order": 6,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 39,
-  "articles_id": null
- },
- {
-  "id": 276,
-  "order": 7,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 40,
-  "articles_id": null
- },
- {
-  "id": 277,
-  "order": 8,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 32,
-  "articles_id": null
- },
- {
-  "id": 278,
-  "order": 9,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 27,
-  "articles_id": null
- },
- {
-  "id": 279,
-  "order": 10,
-  "parent_id": 8,
-  "path": "credits.0.people",
-  "people_id": 26,
-  "articles_id": null
- },
- {
-  "id": 280,
-  "order": 1,
-  "parent_id": 8,
-  "path": "translation.original_authors",
-  "people_id": 55,
-  "articles_id": null
- },
- {
-  "id": 281,
-  "order": 1,
-  "parent_id": 7,
-  "path": "authors",
-  "people_id": 52,
-  "articles_id": null
- },
- {
-  "id": 282,
-  "order": 2,
-  "parent_id": 7,
-  "path": "authors",
-  "people_id": 53,
-  "articles_id": null
- },
- {
-  "id": 283,
-  "order": 3,
-  "parent_id": 7,
-  "path": "authors",
-  "people_id": 54,
-  "articles_id": null
- },
- {
-  "id": 284,
-  "order": 1,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 41,
-  "articles_id": null
- },
- {
-  "id": 285,
-  "order": 2,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 44,
-  "articles_id": null
- },
- {
-  "id": 286,
-  "order": 3,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 45,
-  "articles_id": null
- },
- {
-  "id": 287,
-  "order": 4,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 42,
-  "articles_id": null
- },
- {
-  "id": 288,
-  "order": 5,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 43,
-  "articles_id": null
- },
- {
-  "id": 289,
-  "order": 6,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 46,
-  "articles_id": null
- },
- {
-  "id": 290,
-  "order": 7,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 28,
-  "articles_id": null
- },
- {
-  "id": 291,
-  "order": 8,
-  "parent_id": 7,
-  "path": "credits.0.people",
-  "people_id": 26,
-  "articles_id": null
- },
- {
-  "id": 292,
-  "order": 1,
-  "parent_id": 7,
-  "path": "translation.original_authors",
-  "people_id": 52,
-  "articles_id": null
- },
- {
-  "id": 293,
-  "order": 2,
-  "parent_id": 7,
-  "path": "translation.original_authors",
-  "people_id": 53,
-  "articles_id": null
- },
- {
-  "id": 294,
-  "order": 3,
-  "parent_id": 7,
-  "path": "translation.original_authors",
-  "people_id": 54,
-  "articles_id": null
- },
- {
-  "id": 295,
-  "order": 1,
-  "parent_id": 6,
-  "path": "authors",
-  "people_id": 26,
-  "articles_id": null
- },
- {
   "id": 296,
   "order": 1,
   "parent_id": 5,
@@ -371,22 +27,6 @@
   "id": 297,
   "order": 1,
   "parent_id": 5,
-  "path": "credits.0.people",
-  "people_id": 26,
-  "articles_id": null
- },
- {
-  "id": 298,
-  "order": 1,
-  "parent_id": 4,
-  "path": "authors",
-  "people_id": 16,
-  "articles_id": null
- },
- {
-  "id": 299,
-  "order": 1,
-  "parent_id": 4,
   "path": "credits.0.people",
   "people_id": 26,
   "articles_id": null
@@ -424,7 +64,47 @@
   "articles_id": null
  },
  {
-  "id": 304,
+  "id": 308,
+  "order": 1,
+  "parent_id": 15,
+  "path": "authors",
+  "people_id": 23,
+  "articles_id": null
+ },
+ {
+  "id": 334,
+  "order": 1,
+  "parent_id": 4,
+  "path": "authors",
+  "people_id": 16,
+  "articles_id": null
+ },
+ {
+  "id": 335,
+  "order": 1,
+  "parent_id": 4,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 343,
+  "order": 1,
+  "parent_id": 6,
+  "path": "authors",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 344,
+  "order": 1,
+  "parent_id": 12,
+  "path": "authors",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 361,
   "order": 1,
   "parent_id": 1,
   "path": "authors",
@@ -432,11 +112,315 @@
   "articles_id": null
  },
  {
-  "id": 305,
+  "id": 362,
   "order": 1,
   "parent_id": 1,
   "path": "credits.0.people",
   "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 379,
+  "order": 1,
+  "parent_id": 10,
+  "path": "authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 380,
+  "order": 1,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 29,
+  "articles_id": null
+ },
+ {
+  "id": 381,
+  "order": 2,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 49,
+  "articles_id": null
+ },
+ {
+  "id": 382,
+  "order": 3,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 383,
+  "order": 4,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 31,
+  "articles_id": null
+ },
+ {
+  "id": 384,
+  "order": 5,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 385,
+  "order": 6,
+  "parent_id": 10,
+  "path": "credits.0.people",
+  "people_id": 33,
+  "articles_id": null
+ },
+ {
+  "id": 386,
+  "order": 1,
+  "parent_id": 10,
+  "path": "translation.original_authors",
+  "people_id": 57,
+  "articles_id": null
+ },
+ {
+  "id": 401,
+  "order": 1,
+  "parent_id": 9,
+  "path": "authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 402,
+  "order": 1,
+  "parent_id": 9,
+  "path": "credits.0.people",
+  "people_id": 30,
+  "articles_id": null
+ },
+ {
+  "id": 403,
+  "order": 1,
+  "parent_id": 9,
+  "path": "translation.original_authors",
+  "people_id": 56,
+  "articles_id": null
+ },
+ {
+  "id": 419,
+  "order": 1,
+  "parent_id": 7,
+  "path": "authors",
+  "people_id": 52,
+  "articles_id": null
+ },
+ {
+  "id": 420,
+  "order": 2,
+  "parent_id": 7,
+  "path": "authors",
+  "people_id": 53,
+  "articles_id": null
+ },
+ {
+  "id": 421,
+  "order": 3,
+  "parent_id": 7,
+  "path": "authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 422,
+  "order": 1,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 41,
+  "articles_id": null
+ },
+ {
+  "id": 423,
+  "order": 2,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 44,
+  "articles_id": null
+ },
+ {
+  "id": 424,
+  "order": 3,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 45,
+  "articles_id": null
+ },
+ {
+  "id": 425,
+  "order": 4,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 42,
+  "articles_id": null
+ },
+ {
+  "id": 426,
+  "order": 5,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 43,
+  "articles_id": null
+ },
+ {
+  "id": 427,
+  "order": 6,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 46,
+  "articles_id": null
+ },
+ {
+  "id": 428,
+  "order": 7,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 429,
+  "order": 8,
+  "parent_id": 7,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 430,
+  "order": 1,
+  "parent_id": 7,
+  "path": "translation.original_authors",
+  "people_id": 54,
+  "articles_id": null
+ },
+ {
+  "id": 431,
+  "order": 1,
+  "parent_id": 8,
+  "path": "authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 432,
+  "order": 1,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 35,
+  "articles_id": null
+ },
+ {
+  "id": 433,
+  "order": 2,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 36,
+  "articles_id": null
+ },
+ {
+  "id": 434,
+  "order": 3,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 28,
+  "articles_id": null
+ },
+ {
+  "id": 435,
+  "order": 4,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 37,
+  "articles_id": null
+ },
+ {
+  "id": 436,
+  "order": 5,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 38,
+  "articles_id": null
+ },
+ {
+  "id": 437,
+  "order": 6,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 39,
+  "articles_id": null
+ },
+ {
+  "id": 438,
+  "order": 7,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 40,
+  "articles_id": null
+ },
+ {
+  "id": 439,
+  "order": 8,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 32,
+  "articles_id": null
+ },
+ {
+  "id": 440,
+  "order": 9,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 27,
+  "articles_id": null
+ },
+ {
+  "id": 441,
+  "order": 10,
+  "parent_id": 8,
+  "path": "credits.0.people",
+  "people_id": 26,
+  "articles_id": null
+ },
+ {
+  "id": 442,
+  "order": 1,
+  "parent_id": 8,
+  "path": "translation.original_authors",
+  "people_id": 55,
+  "articles_id": null
+ },
+ {
+  "id": 455,
+  "order": 1,
+  "parent_id": 11,
+  "path": "authors",
+  "people_id": 58,
+  "articles_id": null
+ },
+ {
+  "id": 456,
+  "order": 1,
+  "parent_id": 11,
+  "path": "credits.0.people",
+  "people_id": 34,
+  "articles_id": null
+ },
+ {
+  "id": 457,
+  "order": 1,
+  "parent_id": 11,
+  "path": "translation.original_authors",
+  "people_id": 58,
   "articles_id": null
  }
 ]

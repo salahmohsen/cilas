@@ -60,102 +60,6 @@
   "_parent_id": "6ace4611dcfd7479422046e7"
  },
  {
-  "description": "Overview lecture",
-  "id": 1873,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203503"
- },
- {
-  "description": "Class discussion on initial impressions. Introduce students to the course’s goals and key questions.",
-  "id": 1874,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203504"
- },
- {
-  "description": "Small-group discussions on examples of cultural hegemony today, followed by a class debate on how power structures maintain dominance.",
-  "id": 1875,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203507"
- },
- {
-  "description": "Debate game based on Spivak’s question; students argue for or against the idea that subaltern voices can be heard authentically.",
-  "id": 1876,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203509"
- },
- {
-  "description": "Source analysis workshop where students examine historical documents and identify gaps or missing voices.",
-  "id": 1877,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd74794220350b"
- },
- {
-  "description": "Simulation game where students brainstorm subtle acts of resistance; follow up with a discussion on the power of “hidden transcripts.”",
-  "id": 1878,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd74794220350e"
- },
- {
-  "description": "Primary Source Analysis: Students examine sources like Egyptian nationalist songs, folk poetry, and oral histories documenting the experiences of everyday Egyptians under colonial rule.",
-  "id": 1879,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203513"
- },
- {
-  "description": "Role-Playing Simulation: Students role-play different subaltern groups (e.g., urban workers, rural peasants) reacting to British policies like land confiscations, forced labor, or conscription during World War I.",
-  "id": 1880,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203514"
- },
- {
-  "description": "Debrief: Group discussion on the role of subaltern resistance in shaping Egyptian national identity and how subaltern perspectives differ from elite-driven nationalist narratives.",
-  "id": 1881,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203515"
- },
- {
-  "description": "Story Mapping project where students present on subaltern experiences from different regions; place these stories on a shared map and discuss patterns.",
-  "id": 1882,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203517"
- },
- {
-  "description": "Gallery Walk where students showcase the stories, sources, and subaltern histories they’ve researched; conclude with a reflection on how the course has shifted their perspectives on history.",
-  "id": 1883,
-  "_locale": "en",
-  "_parent_id": "6ace4329dcfd747942203519"
- },
- {
-  "description": "Guest Speaker: Zahraa Abdellah, Author.",
-  "id": 1884,
-  "_locale": "en",
-  "_parent_id": "6ace4620dcfd74794220470f"
- },
- {
-  "description": "In our final discussion, we are going to survey what we read, wrote and concluded.",
-  "id": 1885,
-  "_locale": "en",
-  "_parent_id": "6ace4620dcfd747942204714"
- },
- {
-  "description": "Presentations are expected to illustrate individual projects about marginalized women authors. Students are encouraged to find unconventional texts such as orally transmitted texts, diaries and letters.",
-  "id": 1886,
-  "_locale": "en",
-  "_parent_id": "6ace4620dcfd747942204715"
- },
- {
-  "description": "Collective artistic production",
-  "id": 1887,
-  "_locale": "en",
-  "_parent_id": "6ace460adcfd7479422046b1"
- },
- {
-  "description": "Each student will give a 10-minute presentation on a topic of their choosing, followed by a Q&A session with the class.",
-  "id": 1888,
-  "_locale": "en",
-  "_parent_id": "6ace4358dcfd747942203641"
- },
- {
   "description": "They will read and watch the first assignment during the session, and then discuss both.",
   "id": 1889,
   "_locale": "en",
@@ -364,114 +268,6 @@
   "id": 1923,
   "_locale": "en",
   "_parent_id": "6ace43fcdcfd747942203a26"
- },
- {
-  "description": "Student presentations (creative project on how spirituality is included in people’s everyday)",
-  "id": 1924,
-  "_locale": "en",
-  "_parent_id": "6ace457fdcfd74794220436e"
- },
- {
-  "description": "Introductions – materials for class",
-  "id": 1925,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203918"
- },
- {
-  "description": "Socratic questioning",
-  "id": 1926,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203919"
- },
- {
-  "description": "short lecture",
-  "id": 1927,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd74794220391a"
- },
- {
-  "description": "In the field exploration – learning to nature journal",
-  "id": 1928,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd74794220391c"
- },
- {
-  "description": "Socratic questioning",
-  "id": 1929,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd74794220391e"
- },
- {
-  "description": "short activities",
-  "id": 1930,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd74794220391f"
- },
- {
-  "description": "lecture",
-  "id": 1931,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203920"
- },
- {
-  "description": "discussions",
-  "id": 1932,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203921"
- },
- {
-  "description": "Short game",
-  "id": 1933,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203923"
- },
- {
-  "description": "lecture",
-  "id": 1934,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203924"
- },
- {
-  "description": "activity",
-  "id": 1935,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203925"
- },
- {
-  "description": "nature walk",
-  "id": 1936,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203926"
- },
- {
-  "description": "Lecture",
-  "id": 1937,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203928"
- },
- {
-  "description": "design charette",
-  "id": 1938,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd747942203929"
- },
- {
-  "description": "discussion",
-  "id": 1939,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd74794220392a"
- },
- {
-  "description": "Short deliverables and presentations",
-  "id": 1940,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd74794220392c"
- },
- {
-  "description": "discussions",
-  "id": 1941,
-  "_locale": "en",
-  "_parent_id": "6ace43cadcfd74794220392d"
  },
  {
   "description": "Student works presentations (Details TBA)",
@@ -912,180 +708,6 @@
   "_parent_id": "6ace529b013bc76d20070100"
  },
  {
-  "description": "Short lecture and guided discussion",
-  "id": 2015,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220331c"
- },
- {
-  "description": "Discussion of short theoretical readings",
-  "id": 2016,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220331d"
- },
- {
-  "description": "Reflective writing on what “the ancient” means and how that idea has been constructed.",
-  "id": 2017,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220331e"
- },
- {
-  "description": "Short lecture providing context",
-  "id": 2018,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203321"
- },
- {
-  "description": "Close discussion of the text",
-  "id": 2019,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203322"
- },
- {
-  "description": "Write a dialogue with an aspect of your inner life.",
-  "id": 2020,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203323"
- },
- {
-  "description": "Short lecture",
-  "id": 2021,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203326"
- },
- {
-  "description": "Discussion of the text",
-  "id": 2022,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203327"
- },
- {
-  "description": "Write a narrative describing an unexpected encounter or moment of guidance.",
-  "id": 2023,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203328"
- },
- {
-  "description": "Short lecture",
-  "id": 2024,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220332c"
- },
- {
-  "description": "Discussion of the readings",
-  "id": 2025,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220332d"
- },
- {
-  "description": "Write a short lament or dialogue about injustice or uncertainty.",
-  "id": 2026,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220332e"
- },
- {
-  "description": "Short lecture",
-  "id": 2027,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203331"
- },
- {
-  "description": "Discussion of the text",
-  "id": 2028,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203332"
- },
- {
-  "description": "Write a reflective poem on mortality, memory, or legacy.",
-  "id": 2029,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203333"
- },
- {
-  "description": "Short lecture",
-  "id": 2030,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203336"
- },
- {
-  "description": "Discussion of the text",
-  "id": 2031,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203337"
- },
- {
-  "description": "Write an allegorical poem or short story using animals, landscapes, or symbolic figures to represent inner transformation.",
-  "id": 2032,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203338"
- },
- {
-  "description": "Short lecture",
-  "id": 2033,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220333b"
- },
- {
-  "description": "Discussion of the text",
-  "id": 2034,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220333c"
- },
- {
-  "description": "Write a creation narrative that embraces ambiguity or multiple possibilities.",
-  "id": 2035,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220333d"
- },
- {
-  "description": "Short lecture",
-  "id": 2036,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203340"
- },
- {
-  "description": "Discussion of the materials",
-  "id": 2037,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203341"
- },
- {
-  "description": "Create an imaginative allegorical narrative in which a world is transformed through the interaction of landscapes and substances (such as water, milk, oil, juice, or sand), using human, animal, or non-human forces to explore themes of tension, balance, and creation.",
-  "id": 2038,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203342"
- },
- {
-  "description": "Short lecture",
-  "id": 2039,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203345"
- },
- {
-  "description": "Discussion of the poems",
-  "id": 2040,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203346"
- },
- {
-  "description": "Write a reflective or poetic piece that centers a woman as a thinker or producer of knowledge in an ancient or imagined setting.",
-  "id": 2041,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203347"
- },
- {
-  "description": "Student presentations",
-  "id": 2042,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd747942203349"
- },
- {
-  "description": "Collective reflection on how the relationship between poetry, philosophy, and lived experience has reshaped our understanding of the ancient world",
-  "id": 2043,
-  "_locale": "en",
-  "_parent_id": "6ace42d2dcfd74794220334a"
- },
- {
   "description": "ماذا تعني القراءة التاريخية للفكر الديني؟",
   "id": 2044,
   "_locale": "ar",
@@ -1150,12 +772,6 @@
   "id": 2054,
   "_locale": "en",
   "_parent_id": "6ace5272013bc76d200700cc"
- },
- {
-  "description": "Final Project Presentations. Projects will be presented during the final week of class.",
-  "id": 2055,
-  "_locale": "en",
-  "_parent_id": "6ace4454dcfd747942203c44"
  },
  {
   "description": "We could watch a short film or a series of clips, followed by a friendly discussion to introduce the course and get to know each other.",
@@ -1438,24 +1054,6 @@
   "id": 2102,
   "_locale": "en",
   "_parent_id": "6ace443edcfd747942203bb4"
- },
- {
-  "description": "Workshopping for creative projects",
-  "id": 2103,
-  "_locale": "en",
-  "_parent_id": "6ace4354dcfd747942203627"
- },
- {
-  "description": "Final presentations",
-  "id": 2104,
-  "_locale": "en",
-  "_parent_id": "6ace4354dcfd747942203629"
- },
- {
-  "description": "Final discussion",
-  "id": 2105,
-  "_locale": "en",
-  "_parent_id": "6ace4354dcfd74794220362a"
  },
  {
   "description": "In class exercise: Listen and Analyze the song “Tom’s Diner” and write a fieldnote.",
@@ -2122,42 +1720,6 @@
   "id": 2216,
   "_locale": "en",
   "_parent_id": "6ace4442dcfd747942203bc6"
- },
- {
-  "description": "Drawing inspiration from Chazal (sens-plastique), Blake (fourfold vision), Keats (negative inspiration).",
-  "id": 2217,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd747942204719"
- },
- {
-  "description": "White room exercise; moving narrator exercise.",
-  "id": 2218,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd74794220471d"
- },
- {
-  "description": "Revelation structure; Chinese circular structure",
-  "id": 2219,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd747942204721"
- },
- {
-  "description": "Mapping emotional story lines; Playing with the emotional flow of plants, fluids, stone",
-  "id": 2220,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd747942204725"
- },
- {
-  "description": "Evocation and inspiration. Transparency and transmission. Rhetoric and rhythm.",
-  "id": 2221,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd74794220472a"
- },
- {
-  "description": "Share your story: creative project presentation. Open-ended session.",
-  "id": 2222,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd74794220472c"
  },
  {
   "description": "Workshop: Introductory performance exercises focusing on storytelling through body language and voice.",
@@ -3126,216 +2688,6 @@
   "_parent_id": "6ace4f49013bc76d2006fe77"
  },
  {
-  "description": "افتتاحية (نبذة عامة عن المساق وأهدافه وشكل العمل)\nتعارف\nالتوقعات (المجموعة بالكامل)",
-  "id": 2384,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220354c"
- },
- {
-  "description": "ما تعريف كلمتي \"قهر\" و\"مقهور\"؟ (عصف ذهني - المجموعة بالكامل)",
-  "id": 2385,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220354d"
- },
- {
-  "description": "أمثلة لقاهر ومقهور من حياتنا اليومية (مناقشات في مجموعات عمل)",
-  "id": 2386,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220354e"
- },
- {
-  "description": "عرض عمل كل مجموعة لـ\"أمثلة لقاهر ومقهور من حياتنا اليومية\" + مناقشة العرض (مناقشات مع المجموعة بالكامل)",
-  "id": 2387,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220354f"
- },
- {
-  "description": "ما هي الخصائص النفسية والسلوكية لكل من \"القاهر\" و\"المقهور\"؟ (مناقشات في مجموعات عمل)",
-  "id": 2388,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203550"
- },
- {
-  "description": "عرض عمل كل مجموعة لـ\"الخصائص النفسية والسلوكية لكل من \"القاهر\" و\"المقهور\" + مناقشة العرض (مناقشات مع المجموعة بالكامل)",
-  "id": 2389,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203551"
- },
- {
-  "description": "تقديم العمل المنزلي المطلوب:\nكيف يمكن إنهاء حالة القهر؟ كيف يمكن للمقهور أن يتحرر؟ (عمل منزلي فردي)",
-  "id": 2390,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203552"
- },
- {
-  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- كيف يمكن إنهاء حالة القهر؟ كيف يمكن للمقهور أن يتحرر؟\n2- قراءة المقدمة والفصل الأول من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\nختام اليوم checkout (المجموعة بالكامل)",
-  "id": 2391,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203553"
- },
- {
-  "description": "عرض العمل المنزلي \"الإجابة عن سؤال: كيف يمكن إنهاء حالة القهر؟ كيف يمكن للمقهور أن يتحرر؟\" (مناقشات مع المجموعة بالكامل)",
-  "id": 2392,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203557"
- },
- {
-  "description": "تقديم من كل فرد الإشكاليات المثارة في مقدمة والفصل الأول من الكتاب\nما هي الخصائص النفسية والسلوكية لكل من \"القاهر\" و\"المقهور\" وفقًا لباولو فريري؟ (مناقشات مع المجموعة بالكامل)",
-  "id": 2393,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203558"
- },
- {
-  "description": "وفقًا لباولو فريري:\n1- من هم المقهورين (المتعلمين)؟\n2- من هم المربون؟\n3- عن ماذا الكتاب؟ وموجه لمن؟\n4- كيفية إجراء عملية \"تربية المقهورين\"؟ (مناقشات مع المجموعة بالكامل)",
-  "id": 2394,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203559"
- },
- {
-  "description": "إشكالية الصياغة الذكورية المكتوب بها الكتاب (مناقشات مع المجموعة بالكامل)",
-  "id": 2395,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220355a"
- },
- {
-  "description": "تقديم العمل المنزلي المطلوب:\nلماذا خص باولو فريري الرجال فقط بالنضال في كتابه؟ (المجموعة بالكامل)",
-  "id": 2396,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220355b"
- },
- {
-  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- لماذا خص باولو فريري الرجال فقط بالنضال في كتابه؟\n2- قراءة الفصل الثاني من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\n3- تحديد المصطلحات غير المفهومة\nختام اليوم checkout (المجموعة بالكامل)",
-  "id": 2397,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220355c"
- },
- {
-  "description": "عرض العمل المنزلي \"الإجابة عن سؤال: \"لماذا خص باولو فريري الرجال فقط بالنضال في كتابه؟\"\" (مناقشات مع المجموعة بالكامل)",
-  "id": 2398,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203560"
- },
- {
-  "description": "تقديم من كل فرد الإشكاليات المثارة في الفصل الثاني من الكتاب\nالمصطلحات (مناقشات مع المجموعة بالكامل)",
-  "id": 2399,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203561"
- },
- {
-  "description": "عرض الأربع أنواع من الوعي لأربع أشخاص، من خلال سؤالهم: لماذا الدولار أغلى بكثير من الجنيه المصري؟\nأنواع الوعي:\nالوعي اللازم\nالوعي المتعدي الساذج\nالوعي المتعدي السحري\nالوعي المتعدي النقدي\nsemi-intransitivity of consciousness\ntransitivity of consciousness\nNaïve transitivity of consciousness\nMagic transitivity of consciousness\nCritical transitivity of consciousness (مناقشات مع المجموعة بالكامل)",
-  "id": 2400,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203562"
- },
- {
-  "description": "تحديد أفراد أو فئات من مجتمعنا مطلوب تشكيل لديهم وعي متعدي نقدي، وتجاه أي موضوعات؟ (مناقشات في مجموعات عمل)",
-  "id": 2401,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203563"
- },
- {
-  "description": "عرض عمل كل مجموعة \"فئات من مجتمعنا مطلوب تشكيل لديهم وعي متعدي نقدي، وتجاه أي موضوعات؟\" + مناقشة (مناقشات مع المجموعة بالكامل)",
-  "id": 2402,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203564"
- },
- {
-  "description": "تقديم العمل المنزلي المطلوب:\nالإتيان بأمثلة لمربين من حياتنا الواقعية، ووصف شكل ممارستهم التربوية من حيث بنكية أم حوارية، من النماذج التالية:\nناشط سياسي – داعية ديني – إعلامي – مدرس في مدرسة (عمل منزلي فردي)",
-  "id": 2403,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203565"
- },
- {
-  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- الإتيان بأمثلة لمربين من حياتنا الواقعية\n- قراءة الفصل الثالث من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\nختام اليوم checkout (المجموعة بالكامل)",
-  "id": 2404,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203566"
- },
- {
-  "description": "عرض العمل المنزلي \"أمثلة لمربين من حياتنا الواقعية، ووصف شكل ممارستهم التربوية من حيث بنكية أم حوارية، من النماذج التالية: ناشط سياسي – داعية ديني – إعلامي – مدرس في مدرسة\" (مناقشات مع المجموعة بالكامل)",
-  "id": 2405,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220356a"
- },
- {
-  "description": "تقديم من كل فرد الإشكاليات المثارة في الفصل الثالث من الكتاب (مناقشات مع المجموعة بالكامل)",
-  "id": 2406,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220356b"
- },
- {
-  "description": "تعليم القراءة والكتابة (قراءة الكلمة من أجل قراءة العالم) (المجموعة بالكامل)",
-  "id": 2407,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220356c"
- },
- {
-  "description": "تقديم العمل المنزلي المطلوب:\nكيف يكون التعليم نقدي (قراءة الكلمة من أجل قراءة العالم)؟\nتقديم دروس من المواد التالية:\nلغة عربية – لغة إنجليزية – رياضيات – فيزياء – كيمياء – أحياء – دراسات اجتماعية. (عمل منزلي فردي)",
-  "id": 2408,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220356d"
- },
- {
-  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- كيف يكون التعليم نقدي (قراءة الكلمة من أجل قراءة العالم)؟\n2- قراءة الفصل الرابع من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\nختام اليوم checkout (المجموعة بالكامل)",
-  "id": 2409,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220356e"
- },
- {
-  "description": "عرض العمل المنزلي \"كيف يكون التعليم نقدي (قراءة الكلمة من أجل قراءة العالم)؟\" (مناقشات مع المجموعة بالكامل)",
-  "id": 2410,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203572"
- },
- {
-  "description": "تقديم من كل فرد الإشكاليات المثارة في الفصل الرابع من الكتاب (مناقشات مع المجموعة بالكامل)",
-  "id": 2411,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203573"
- },
- {
-  "description": "تعليم ا (unclear) (المجموعة بالكامل)",
-  "id": 2412,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203574"
- },
- {
-  "description": "تقديم العمل المنزلي المطلوب:\n1- ما هو مسرح المنتدى؟\n2- المشروع النهائي: اختيار فئة نريد تشكيل الوعي النقدي لديها (تربيتها)، وتحديد التالي: ما هي الفئة – ما هي المعرفة التي نريد تشكليها لديهم – نوع الوعي الذي لديهم – لماذا اخترناها – كيف يمكن الوصول إليها – سكريبت للحوار الذي سنديره معها لتوعيتها... (عمل منزلي فردي)",
-  "id": 2413,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203575"
- },
- {
-  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- مسرح المنتدى\n2- المشروع النهائي\nختام اليوم checkout (المجموعة بالكامل)",
-  "id": 2414,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203576"
- },
- {
-  "description": "عرض العمل المنزلي \"مسرح المنتدى\" (مناقشات مع المجموعة بالكامل)",
-  "id": 2415,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203578"
- },
- {
-  "description": "عرض العمل المنزلي \"المشروع النهائي\" (مناقشات مع المجموعة بالكامل)",
-  "id": 2416,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd747942203579"
- },
- {
-  "description": "عرض العمل المنزلي \"المشروع النهائي\" (مناقشات مع المجموعة بالكامل)",
-  "id": 2417,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220357a"
- },
- {
-  "description": "تلخيص اليوم\nتلخيص المساق\nتقييم المساق (المجموعة بالكامل)",
-  "id": 2418,
-  "_locale": "ar",
-  "_parent_id": "6ace4338dcfd74794220357b"
- },
- {
   "description": "d. Share a Goha story in class next week.",
   "id": 2419,
   "_locale": "en",
@@ -3358,18 +2710,6 @@
   "id": 2422,
   "_locale": "en",
   "_parent_id": "6ace4f2e013bc76d2006fe40"
- },
- {
-  "description": "In class activity: Mini presentation or essay on a spiritual ritual or the history of a practice.",
-  "id": 2423,
-  "_locale": "en",
-  "_parent_id": "6ace4464dcfd747942203ca8"
- },
- {
-  "description": "Creative project on a spiritual practice.",
-  "id": 2424,
-  "_locale": "en",
-  "_parent_id": "6ace4464dcfd747942203cae"
  },
  {
   "description": "مناقشة ختامية \"ماذا بعد ؟\"",
@@ -3544,5 +2884,659 @@
   "id": 2453,
   "_locale": "en",
   "_parent_id": "6ace4331dcfd74794220352f"
+ },
+ {
+  "description": "افتتاحية (نبذة عامة عن المساق وأهدافه وشكل العمل)\nتعارف\nالتوقعات (المجموعة بالكامل)",
+  "id": 2593,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220354c"
+ },
+ {
+  "description": "ما تعريف كلمتي \"قهر\" و\"مقهور\"؟ (عصف ذهني - المجموعة بالكامل)",
+  "id": 2594,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220354d"
+ },
+ {
+  "description": "أمثلة لقاهر ومقهور من حياتنا اليومية (مناقشات في مجموعات عمل)",
+  "id": 2595,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220354e"
+ },
+ {
+  "description": "عرض عمل كل مجموعة لـ\"أمثلة لقاهر ومقهور من حياتنا اليومية\" + مناقشة العرض (مناقشات مع المجموعة بالكامل)",
+  "id": 2596,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220354f"
+ },
+ {
+  "description": "ما هي الخصائص النفسية والسلوكية لكل من \"القاهر\" و\"المقهور\"؟ (مناقشات في مجموعات عمل)",
+  "id": 2597,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203550"
+ },
+ {
+  "description": "عرض عمل كل مجموعة لـ\"الخصائص النفسية والسلوكية لكل من \"القاهر\" و\"المقهور\" + مناقشة العرض (مناقشات مع المجموعة بالكامل)",
+  "id": 2598,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203551"
+ },
+ {
+  "description": "تقديم العمل المنزلي المطلوب:\nكيف يمكن إنهاء حالة القهر؟ كيف يمكن للمقهور أن يتحرر؟ (عمل منزلي فردي)",
+  "id": 2599,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203552"
+ },
+ {
+  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- كيف يمكن إنهاء حالة القهر؟ كيف يمكن للمقهور أن يتحرر؟\n2- قراءة المقدمة والفصل الأول من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\nختام اليوم checkout (المجموعة بالكامل)",
+  "id": 2600,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203553"
+ },
+ {
+  "description": "عرض العمل المنزلي \"الإجابة عن سؤال: كيف يمكن إنهاء حالة القهر؟ كيف يمكن للمقهور أن يتحرر؟\" (مناقشات مع المجموعة بالكامل)",
+  "id": 2601,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203557"
+ },
+ {
+  "description": "تقديم من كل فرد الإشكاليات المثارة في مقدمة والفصل الأول من الكتاب\nما هي الخصائص النفسية والسلوكية لكل من \"القاهر\" و\"المقهور\" وفقًا لباولو فريري؟ (مناقشات مع المجموعة بالكامل)",
+  "id": 2602,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203558"
+ },
+ {
+  "description": "وفقًا لباولو فريري:\n1- من هم المقهورين (المتعلمين)؟\n2- من هم المربون؟\n3- عن ماذا الكتاب؟ وموجه لمن؟\n4- كيفية إجراء عملية \"تربية المقهورين\"؟ (مناقشات مع المجموعة بالكامل)",
+  "id": 2603,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203559"
+ },
+ {
+  "description": "إشكالية الصياغة الذكورية المكتوب بها الكتاب (مناقشات مع المجموعة بالكامل)",
+  "id": 2604,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220355a"
+ },
+ {
+  "description": "تقديم العمل المنزلي المطلوب:\nلماذا خص باولو فريري الرجال فقط بالنضال في كتابه؟ (المجموعة بالكامل)",
+  "id": 2605,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220355b"
+ },
+ {
+  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- لماذا خص باولو فريري الرجال فقط بالنضال في كتابه؟\n2- قراءة الفصل الثاني من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\n3- تحديد المصطلحات غير المفهومة\nختام اليوم checkout (المجموعة بالكامل)",
+  "id": 2606,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220355c"
+ },
+ {
+  "description": "عرض العمل المنزلي \"الإجابة عن سؤال: \"لماذا خص باولو فريري الرجال فقط بالنضال في كتابه؟\"\" (مناقشات مع المجموعة بالكامل)",
+  "id": 2607,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203560"
+ },
+ {
+  "description": "تقديم من كل فرد الإشكاليات المثارة في الفصل الثاني من الكتاب\nالمصطلحات (مناقشات مع المجموعة بالكامل)",
+  "id": 2608,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203561"
+ },
+ {
+  "description": "عرض الأربع أنواع من الوعي لأربع أشخاص، من خلال سؤالهم: لماذا الدولار أغلى بكثير من الجنيه المصري؟\nأنواع الوعي:\nالوعي اللازم\nالوعي المتعدي الساذج\nالوعي المتعدي السحري\nالوعي المتعدي النقدي\nsemi-intransitivity of consciousness\ntransitivity of consciousness\nNaïve transitivity of consciousness\nMagic transitivity of consciousness\nCritical transitivity of consciousness (مناقشات مع المجموعة بالكامل)",
+  "id": 2609,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203562"
+ },
+ {
+  "description": "تحديد أفراد أو فئات من مجتمعنا مطلوب تشكيل لديهم وعي متعدي نقدي، وتجاه أي موضوعات؟ (مناقشات في مجموعات عمل)",
+  "id": 2610,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203563"
+ },
+ {
+  "description": "عرض عمل كل مجموعة \"فئات من مجتمعنا مطلوب تشكيل لديهم وعي متعدي نقدي، وتجاه أي موضوعات؟\" + مناقشة (مناقشات مع المجموعة بالكامل)",
+  "id": 2611,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203564"
+ },
+ {
+  "description": "تقديم العمل المنزلي المطلوب:\nالإتيان بأمثلة لمربين من حياتنا الواقعية، ووصف شكل ممارستهم التربوية من حيث بنكية أم حوارية، من النماذج التالية:\nناشط سياسي – داعية ديني – إعلامي – مدرس في مدرسة (عمل منزلي فردي)",
+  "id": 2612,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203565"
+ },
+ {
+  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- الإتيان بأمثلة لمربين من حياتنا الواقعية\n- قراءة الفصل الثالث من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\nختام اليوم checkout (المجموعة بالكامل)",
+  "id": 2613,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203566"
+ },
+ {
+  "description": "عرض العمل المنزلي \"أمثلة لمربين من حياتنا الواقعية، ووصف شكل ممارستهم التربوية من حيث بنكية أم حوارية، من النماذج التالية: ناشط سياسي – داعية ديني – إعلامي – مدرس في مدرسة\" (مناقشات مع المجموعة بالكامل)",
+  "id": 2614,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220356a"
+ },
+ {
+  "description": "تقديم من كل فرد الإشكاليات المثارة في الفصل الثالث من الكتاب (مناقشات مع المجموعة بالكامل)",
+  "id": 2615,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220356b"
+ },
+ {
+  "description": "تعليم القراءة والكتابة (قراءة الكلمة من أجل قراءة العالم) (المجموعة بالكامل)",
+  "id": 2616,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220356c"
+ },
+ {
+  "description": "تقديم العمل المنزلي المطلوب:\nكيف يكون التعليم نقدي (قراءة الكلمة من أجل قراءة العالم)؟\nتقديم دروس من المواد التالية:\nلغة عربية – لغة إنجليزية – رياضيات – فيزياء – كيمياء – أحياء – دراسات اجتماعية. (عمل منزلي فردي)",
+  "id": 2617,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220356d"
+ },
+ {
+  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- كيف يكون التعليم نقدي (قراءة الكلمة من أجل قراءة العالم)؟\n2- قراءة الفصل الرابع من كتاب \"تربية المقهورين\" وتحديد الإشكاليات المثارة\nختام اليوم checkout (المجموعة بالكامل)",
+  "id": 2618,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220356e"
+ },
+ {
+  "description": "عرض العمل المنزلي \"كيف يكون التعليم نقدي (قراءة الكلمة من أجل قراءة العالم)؟\" (مناقشات مع المجموعة بالكامل)",
+  "id": 2619,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203572"
+ },
+ {
+  "description": "تقديم من كل فرد الإشكاليات المثارة في الفصل الرابع من الكتاب (مناقشات مع المجموعة بالكامل)",
+  "id": 2620,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203573"
+ },
+ {
+  "description": "تعليم ا (unclear) (المجموعة بالكامل)",
+  "id": 2621,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203574"
+ },
+ {
+  "description": "تقديم العمل المنزلي المطلوب:\n1- ما هو مسرح المنتدى؟\n2- المشروع النهائي: اختيار فئة نريد تشكيل الوعي النقدي لديها (تربيتها)، وتحديد التالي: ما هي الفئة – ما هي المعرفة التي نريد تشكليها لديهم – نوع الوعي الذي لديهم – لماذا اخترناها – كيف يمكن الوصول إليها – سكريبت للحوار الذي سنديره معها لتوعيتها... (عمل منزلي فردي)",
+  "id": 2622,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203575"
+ },
+ {
+  "description": "تلخيص اليوم\nالعمل المطلوب:\n1- مسرح المنتدى\n2- المشروع النهائي\nختام اليوم checkout (المجموعة بالكامل)",
+  "id": 2623,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203576"
+ },
+ {
+  "description": "عرض العمل المنزلي \"مسرح المنتدى\" (مناقشات مع المجموعة بالكامل)",
+  "id": 2624,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203578"
+ },
+ {
+  "description": "عرض العمل المنزلي \"المشروع النهائي\" (مناقشات مع المجموعة بالكامل)",
+  "id": 2625,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd747942203579"
+ },
+ {
+  "description": "تلخيص اليوم\nتلخيص المساق\nتقييم المساق (المجموعة بالكامل)",
+  "id": 2626,
+  "_locale": "ar",
+  "_parent_id": "6ace4338dcfd74794220357b"
+ },
+ {
+  "description": "Guest Speaker: Zahraa Abdellah, Author.",
+  "id": 2635,
+  "_locale": "en",
+  "_parent_id": "6ace4620dcfd74794220470f"
+ },
+ {
+  "description": "In our final discussion, we are going to survey what we read, wrote and concluded.",
+  "id": 2636,
+  "_locale": "en",
+  "_parent_id": "6ace4620dcfd747942204714"
+ },
+ {
+  "description": "Presentations are expected to illustrate individual projects about marginalized women authors. Students are encouraged to find unconventional texts such as orally transmitted texts, diaries and letters.",
+  "id": 2637,
+  "_locale": "en",
+  "_parent_id": "6ace4620dcfd747942204715"
+ },
+ {
+  "description": "Collective artistic production",
+  "id": 2638,
+  "_locale": "en",
+  "_parent_id": "6ace460adcfd7479422046b1"
+ },
+ {
+  "description": "Overview lecture",
+  "id": 2712,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203503"
+ },
+ {
+  "description": "Class discussion on initial impressions. Introduce students to the course’s goals and key questions.",
+  "id": 2713,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203504"
+ },
+ {
+  "description": "Small-group discussions on examples of cultural hegemony today, followed by a class debate on how power structures maintain dominance.",
+  "id": 2714,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203507"
+ },
+ {
+  "description": "Debate game based on Spivak’s question; students argue for or against the idea that subaltern voices can be heard authentically.",
+  "id": 2715,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203509"
+ },
+ {
+  "description": "Source analysis workshop where students examine historical documents and identify gaps or missing voices.",
+  "id": 2716,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd74794220350b"
+ },
+ {
+  "description": "Simulation game where students brainstorm subtle acts of resistance; follow up with a discussion on the power of “hidden transcripts.”",
+  "id": 2717,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd74794220350e"
+ },
+ {
+  "description": "Primary Source Analysis: Students examine sources like Egyptian nationalist songs, folk poetry, and oral histories documenting the experiences of everyday Egyptians under colonial rule.",
+  "id": 2718,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203513"
+ },
+ {
+  "description": "Role-Playing Simulation: Students role-play different subaltern groups (e.g., urban workers, rural peasants) reacting to British policies like land confiscations, forced labor, or conscription during World War I.",
+  "id": 2719,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203514"
+ },
+ {
+  "description": "Debrief: Group discussion on the role of subaltern resistance in shaping Egyptian national identity and how subaltern perspectives differ from elite-driven nationalist narratives.",
+  "id": 2720,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203515"
+ },
+ {
+  "description": "Story Mapping project where students present on subaltern experiences from different regions; place these stories on a shared map and discuss patterns.",
+  "id": 2721,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203517"
+ },
+ {
+  "description": "Gallery Walk where students showcase the stories, sources, and subaltern histories they’ve researched; conclude with a reflection on how the course has shifted their perspectives on history.",
+  "id": 2722,
+  "_locale": "en",
+  "_parent_id": "6ace4329dcfd747942203519"
+ },
+ {
+  "description": "Each student will give a 10-minute presentation on a topic of their choosing, followed by a Q&A session with the class.",
+  "id": 2723,
+  "_locale": "en",
+  "_parent_id": "6ace4358dcfd747942203641"
+ },
+ {
+  "description": "Student presentations (creative project on how spirituality is included in people’s everyday)",
+  "id": 2724,
+  "_locale": "en",
+  "_parent_id": "6ace457fdcfd74794220436e"
+ },
+ {
+  "description": "Introductions – materials for class",
+  "id": 2725,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203918"
+ },
+ {
+  "description": "Socratic questioning",
+  "id": 2726,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203919"
+ },
+ {
+  "description": "short lecture",
+  "id": 2727,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd74794220391a"
+ },
+ {
+  "description": "In the field exploration – learning to nature journal",
+  "id": 2728,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd74794220391c"
+ },
+ {
+  "description": "Socratic questioning",
+  "id": 2729,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd74794220391e"
+ },
+ {
+  "description": "short activities",
+  "id": 2730,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd74794220391f"
+ },
+ {
+  "description": "lecture",
+  "id": 2731,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203920"
+ },
+ {
+  "description": "discussions",
+  "id": 2732,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203921"
+ },
+ {
+  "description": "Short game",
+  "id": 2733,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203923"
+ },
+ {
+  "description": "lecture",
+  "id": 2734,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203924"
+ },
+ {
+  "description": "activity",
+  "id": 2735,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203925"
+ },
+ {
+  "description": "nature walk",
+  "id": 2736,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203926"
+ },
+ {
+  "description": "Lecture",
+  "id": 2737,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203928"
+ },
+ {
+  "description": "design charette",
+  "id": 2738,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd747942203929"
+ },
+ {
+  "description": "discussion",
+  "id": 2739,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd74794220392a"
+ },
+ {
+  "description": "Short deliverables and presentations",
+  "id": 2740,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd74794220392c"
+ },
+ {
+  "description": "discussions",
+  "id": 2741,
+  "_locale": "en",
+  "_parent_id": "6ace43cadcfd74794220392d"
+ },
+ {
+  "description": "Short lecture and guided discussion",
+  "id": 2742,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "description": "Discussion of short theoretical readings",
+  "id": 2743,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "description": "Reflective writing on what “the ancient” means and how that idea has been constructed.",
+  "id": 2744,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "description": "Short lecture providing context",
+  "id": 2745,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203321"
+ },
+ {
+  "description": "Close discussion of the text",
+  "id": 2746,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203322"
+ },
+ {
+  "description": "Write a dialogue with an aspect of your inner life.",
+  "id": 2747,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203323"
+ },
+ {
+  "description": "Short lecture",
+  "id": 2748,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203326"
+ },
+ {
+  "description": "Discussion of the text",
+  "id": 2749,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203327"
+ },
+ {
+  "description": "Write a narrative describing an unexpected encounter or moment of guidance.",
+  "id": 2750,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203328"
+ },
+ {
+  "description": "Short lecture",
+  "id": 2751,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "description": "Discussion of the readings",
+  "id": 2752,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "description": "Write a short lament or dialogue about injustice or uncertainty.",
+  "id": 2753,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "description": "Short lecture",
+  "id": 2754,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203331"
+ },
+ {
+  "description": "Discussion of the text",
+  "id": 2755,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203332"
+ },
+ {
+  "description": "Write a reflective poem on mortality, memory, or legacy.",
+  "id": 2756,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203333"
+ },
+ {
+  "description": "Short lecture",
+  "id": 2757,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203336"
+ },
+ {
+  "description": "Discussion of the text",
+  "id": 2758,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203337"
+ },
+ {
+  "description": "Write an allegorical poem or short story using animals, landscapes, or symbolic figures to represent inner transformation.",
+  "id": 2759,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203338"
+ },
+ {
+  "description": "Short lecture",
+  "id": 2760,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "description": "Discussion of the text",
+  "id": 2761,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "description": "Write a creation narrative that embraces ambiguity or multiple possibilities.",
+  "id": 2762,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "description": "Short lecture",
+  "id": 2763,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203340"
+ },
+ {
+  "description": "Discussion of the materials",
+  "id": 2764,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203341"
+ },
+ {
+  "description": "Create an imaginative allegorical narrative in which a world is transformed through the interaction of landscapes and substances (such as water, milk, oil, juice, or sand), using human, animal, or non-human forces to explore themes of tension, balance, and creation.",
+  "id": 2765,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203342"
+ },
+ {
+  "description": "Short lecture",
+  "id": 2766,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203345"
+ },
+ {
+  "description": "Discussion of the poems",
+  "id": 2767,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203346"
+ },
+ {
+  "description": "Write a reflective or poetic piece that centers a woman as a thinker or producer of knowledge in an ancient or imagined setting.",
+  "id": 2768,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203347"
+ },
+ {
+  "description": "Student presentations",
+  "id": 2769,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd747942203349"
+ },
+ {
+  "description": "Collective reflection on how the relationship between poetry, philosophy, and lived experience has reshaped our understanding of the ancient world",
+  "id": 2770,
+  "_locale": "en",
+  "_parent_id": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "description": "Final Project Presentations. Projects will be presented during the final week of class.",
+  "id": 2771,
+  "_locale": "en",
+  "_parent_id": "6ace4454dcfd747942203c44"
+ },
+ {
+  "description": "Workshopping for creative projects",
+  "id": 2772,
+  "_locale": "en",
+  "_parent_id": "6ace4354dcfd747942203627"
+ },
+ {
+  "description": "Final presentations",
+  "id": 2773,
+  "_locale": "en",
+  "_parent_id": "6ace4354dcfd747942203629"
+ },
+ {
+  "description": "Final discussion",
+  "id": 2774,
+  "_locale": "en",
+  "_parent_id": "6ace4354dcfd74794220362a"
+ },
+ {
+  "description": "Drawing inspiration from Chazal (sens-plastique), Blake (fourfold vision), Keats (negative inspiration).",
+  "id": 2775,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd747942204719"
+ },
+ {
+  "description": "White room exercise; moving narrator exercise.",
+  "id": 2776,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd74794220471d"
+ },
+ {
+  "description": "Revelation structure; Chinese circular structure",
+  "id": 2777,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd747942204721"
+ },
+ {
+  "description": "Mapping emotional story lines; Playing with the emotional flow of plants, fluids, stone",
+  "id": 2778,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd747942204725"
+ },
+ {
+  "description": "Evocation and inspiration. Transparency and transmission. Rhetoric and rhythm.",
+  "id": 2779,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd74794220472a"
+ },
+ {
+  "description": "Share your story: creative project presentation. Open-ended session.",
+  "id": 2780,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd74794220472c"
+ },
+ {
+  "description": "In class activity: Mini presentation or essay on a spiritual ritual or the history of a practice.",
+  "id": 2781,
+  "_locale": "en",
+  "_parent_id": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "description": "Creative project on a spiritual practice.",
+  "id": 2782,
+  "_locale": "en",
+  "_parent_id": "6ace4464dcfd747942203cae"
  }
 ]

@@ -28,13 +28,6 @@
   "_parent_id": "6ace462ddcfd747942204762"
  },
  {
-  "title": "Songs of Innocence and of Experience",
-  "note": null,
-  "id": 2309,
-  "_locale": "en",
-  "_parent_id": "6ace546f013bc76d20070303"
- },
- {
   "title": "And still she’s dreaming",
   "note": "Faten Abu Bakr, oil and acrylic on canvas. Cover image.",
   "id": 2310,
@@ -49,81 +42,11 @@
   "_parent_id": "6ace438bdcfd747942203786"
  },
  {
-  "title": "Heritage and Social Media: Understanding heritage in a participatory culture",
-  "note": "Main reference. Giaccardi, E. (Ed.). (2012). 1st ed. Routledge.",
-  "id": 2312,
-  "_locale": "en",
-  "_parent_id": "6ace4459dcfd747942203c4d"
- },
- {
-  "title": "Understanding, fostering, and supporting cultures of participation",
-  "note": "Optional. Fischer, G. (2011). Interactions, 18(3): 42–53.",
-  "id": 2313,
-  "_locale": "en",
-  "_parent_id": "6ace4459dcfd747942203c4e"
- },
- {
-  "title": "Things we value",
-  "note": "Optional. Giaccardi, E. (2011). Interactions, 18(1): 17–21.",
-  "id": 2314,
-  "_locale": "en",
-  "_parent_id": "6ace4459dcfd747942203c4f"
- },
- {
-  "title": "Heritage matters: Designing for current and future values through digital and social technologies",
-  "note": "Optional. Giaccardi, E., Churchill, E. and Liu, S.B. (2012). Proceedings of CHI 2012, New York: ACM Press.",
-  "id": 2315,
-  "_locale": "en",
-  "_parent_id": "6ace4459dcfd747942203c50"
- },
- {
-  "title": "Greenfield, A. (2006)",
-  "note": "Optional. Title not given in the flow.",
-  "id": 2316,
-  "_locale": "en",
-  "_parent_id": "6ace4459dcfd747942203c51"
- },
- {
-  "title": "Rethinking the museum: Cultural heritage and the Internet of Things",
-  "note": "Optional. Van Oost, O. (2012). In C. van den Akker (ed.) Museum Transfigurations. Curation and Co-creation of Collections in the Digital Age, Oxford and New York: Berghahn Books.",
-  "id": 2317,
-  "_locale": "en",
-  "_parent_id": "6ace4459dcfd747942203c52"
- },
- {
-  "title": "Understanding Heritage in Practice",
-  "note": "Optional. West, S. (2010) (ed.). Milton Keynes: The Open University.",
-  "id": 2318,
-  "_locale": "en",
-  "_parent_id": "6ace4459dcfd747942203c53"
- },
- {
-  "title": "Citadel Hospital, Cairo, 1915",
-  "note": "Cover image. Credit: Australian Army Museum of Western Australia.",
-  "id": 2319,
-  "_locale": "en",
-  "_parent_id": "6ace4358dcfd747942203643"
- },
- {
   "title": "Slavs and Tatars",
   "note": "“Slavs and Tatars.” Installation view. May You Live in Interesting Times (Venezia Biennale 2019).",
   "id": 2320,
   "_locale": "en",
   "_parent_id": "6ace53f8013bc76d200702ba"
- },
- {
-  "title": "The words that stretch how we think",
-  "note": "Pre-course reading. BBC Culture, 2020.",
-  "id": 2321,
-  "_locale": "en",
-  "_parent_id": "6ace53cc013bc76d20070282"
- },
- {
-  "title": "The Conduit Metaphor",
-  "note": "Reddy. Pre-course reading.",
-  "id": 2322,
-  "_locale": "en",
-  "_parent_id": "6ace53cc013bc76d20070283"
  },
  {
   "title": "Bandhold, H & Lindgren, M (2009). Scenario planning: the Link between Future and Strategy. London: Palgrave Macmillan",
@@ -2189,27 +2112,6 @@
   "id": 2617,
   "_locale": "en",
   "_parent_id": "6ace4442dcfd747942203bd3"
- },
- {
-  "title": "Odyssey: Dynamic learning journey",
-  "note": "Co-authored with David Pinto. Link on page 3 of the document; the approach is described in this book.",
-  "id": 2618,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd74794220472e"
- },
- {
-  "title": "Woven storytelling: Coptic tapestries",
-  "note": "Link on page 3; cited in session 5 (Coptic tapestry designs). Title taken from the address, not the visible link text.",
-  "id": 2619,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd74794220472f"
- },
- {
-  "title": "Shared Google Drive file",
-  "note": "Link on page 3. Its visible text and the unit it belongs to could not be identified from the extraction.",
-  "id": 2620,
-  "_locale": "en",
-  "_parent_id": "6ace4623dcfd747942204730"
  },
  {
   "title": "Long Table Etiquette",
@@ -4597,5 +4499,96 @@
   "id": 2961,
   "_locale": "en",
   "_parent_id": "6ace4c80013bc76d2006fcf5"
+ },
+ {
+  "title": "Songs of Innocence and of Experience",
+  "note": null,
+  "id": 2963,
+  "_locale": "en",
+  "_parent_id": "6ace546f013bc76d20070303"
+ },
+ {
+  "title": "Heritage and Social Media: Understanding heritage in a participatory culture",
+  "note": "Main reference. Giaccardi, E. (Ed.). (2012). 1st ed. Routledge.",
+  "id": 2972,
+  "_locale": "en",
+  "_parent_id": "6ace4459dcfd747942203c4d"
+ },
+ {
+  "title": "Understanding, fostering, and supporting cultures of participation",
+  "note": "Optional. Fischer, G. (2011). Interactions, 18(3): 42–53.",
+  "id": 2973,
+  "_locale": "en",
+  "_parent_id": "6ace4459dcfd747942203c4e"
+ },
+ {
+  "title": "Things we value",
+  "note": "Optional. Giaccardi, E. (2011). Interactions, 18(1): 17–21.",
+  "id": 2974,
+  "_locale": "en",
+  "_parent_id": "6ace4459dcfd747942203c4f"
+ },
+ {
+  "title": "Heritage matters: Designing for current and future values through digital and social technologies",
+  "note": "Optional. Giaccardi, E., Churchill, E. and Liu, S.B. (2012). Proceedings of CHI 2012, New York: ACM Press.",
+  "id": 2975,
+  "_locale": "en",
+  "_parent_id": "6ace4459dcfd747942203c50"
+ },
+ {
+  "title": "Greenfield, A. (2006)",
+  "note": "Optional. Title not given in the flow.",
+  "id": 2976,
+  "_locale": "en",
+  "_parent_id": "6ace4459dcfd747942203c51"
+ },
+ {
+  "title": "Rethinking the museum: Cultural heritage and the Internet of Things",
+  "note": "Optional. Van Oost, O. (2012). In C. van den Akker (ed.) Museum Transfigurations. Curation and Co-creation of Collections in the Digital Age, Oxford and New York: Berghahn Books.",
+  "id": 2977,
+  "_locale": "en",
+  "_parent_id": "6ace4459dcfd747942203c52"
+ },
+ {
+  "title": "Understanding Heritage in Practice",
+  "note": "Optional. West, S. (2010) (ed.). Milton Keynes: The Open University.",
+  "id": 2978,
+  "_locale": "en",
+  "_parent_id": "6ace4459dcfd747942203c53"
+ },
+ {
+  "title": "The words that stretch how we think",
+  "note": "Pre-course reading. BBC Culture, 2020.",
+  "id": 2986,
+  "_locale": "en",
+  "_parent_id": "6ace53cc013bc76d20070282"
+ },
+ {
+  "title": "The Conduit Metaphor",
+  "note": "Reddy. Pre-course reading.",
+  "id": 2987,
+  "_locale": "en",
+  "_parent_id": "6ace53cc013bc76d20070283"
+ },
+ {
+  "title": "Odyssey: Dynamic learning journey",
+  "note": "Co-authored with David Pinto. Link on page 3 of the document; the approach is described in this book.",
+  "id": 2988,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd74794220472e"
+ },
+ {
+  "title": "Woven storytelling: Coptic tapestries",
+  "note": "Link on page 3; cited in session 5 (Coptic tapestry designs). Title taken from the address, not the visible link text.",
+  "id": 2989,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd74794220472f"
+ },
+ {
+  "title": "Shared Google Drive file",
+  "note": "Link on page 3. Its visible text and the unit it belongs to could not be identified from the extraction.",
+  "id": 2990,
+  "_locale": "en",
+  "_parent_id": "6ace4623dcfd747942204730"
  }
 ]

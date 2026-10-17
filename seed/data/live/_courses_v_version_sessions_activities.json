@@ -44497,5 +44497,6172 @@
   "id": 6357,
   "kind": "presentation",
   "_uuid": "6ace4331dcfd74794220352f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16126,
+  "id": 6463,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16126,
+  "id": 6464,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16126,
+  "id": 6465,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16126,
+  "id": 6466,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16126,
+  "id": 6467,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16126,
+  "id": 6468,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16126,
+  "id": 6469,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16126,
+  "id": 6470,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16127,
+  "id": 6471,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16127,
+  "id": 6472,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16127,
+  "id": 6473,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16127,
+  "id": 6474,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16127,
+  "id": 6475,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16127,
+  "id": 6476,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16128,
+  "id": 6477,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16128,
+  "id": 6478,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16128,
+  "id": 6479,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16128,
+  "id": 6480,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16128,
+  "id": 6481,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16128,
+  "id": 6482,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16128,
+  "id": 6483,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16129,
+  "id": 6484,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16129,
+  "id": 6485,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16129,
+  "id": 6486,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16129,
+  "id": 6487,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16129,
+  "id": 6488,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16130,
+  "id": 6489,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16130,
+  "id": 6490,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16130,
+  "id": 6491,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16130,
+  "id": 6492,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16130,
+  "id": 6493,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16131,
+  "id": 6494,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16131,
+  "id": 6495,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16131,
+  "id": 6496,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220357a"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16131,
+  "id": 6497,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16132,
+  "id": 6498,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16132,
+  "id": 6499,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16132,
+  "id": 6500,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16132,
+  "id": 6501,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16132,
+  "id": 6502,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16132,
+  "id": 6503,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16132,
+  "id": 6504,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16132,
+  "id": 6505,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16133,
+  "id": 6506,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16133,
+  "id": 6507,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16133,
+  "id": 6508,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16133,
+  "id": 6509,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16133,
+  "id": 6510,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16133,
+  "id": 6511,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16134,
+  "id": 6512,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16134,
+  "id": 6513,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16134,
+  "id": 6514,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16134,
+  "id": 6515,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16134,
+  "id": 6516,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16134,
+  "id": 6517,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16134,
+  "id": 6518,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16135,
+  "id": 6519,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16135,
+  "id": 6520,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16135,
+  "id": 6521,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16135,
+  "id": 6522,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16135,
+  "id": 6523,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16136,
+  "id": 6524,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16136,
+  "id": 6525,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16136,
+  "id": 6526,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16136,
+  "id": 6527,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16136,
+  "id": 6528,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16137,
+  "id": 6529,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16137,
+  "id": 6530,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16137,
+  "id": 6531,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220357a"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16137,
+  "id": 6532,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16138,
+  "id": 6533,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16138,
+  "id": 6534,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16138,
+  "id": 6535,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16138,
+  "id": 6536,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16138,
+  "id": 6537,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16138,
+  "id": 6538,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16138,
+  "id": 6539,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16138,
+  "id": 6540,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16139,
+  "id": 6541,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16139,
+  "id": 6542,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16139,
+  "id": 6543,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16139,
+  "id": 6544,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16139,
+  "id": 6545,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16139,
+  "id": 6546,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16140,
+  "id": 6547,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16140,
+  "id": 6548,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16140,
+  "id": 6549,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16140,
+  "id": 6550,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16140,
+  "id": 6551,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16140,
+  "id": 6552,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16140,
+  "id": 6553,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16141,
+  "id": 6554,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16141,
+  "id": 6555,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16141,
+  "id": 6556,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16141,
+  "id": 6557,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16141,
+  "id": 6558,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16142,
+  "id": 6559,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16142,
+  "id": 6560,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16142,
+  "id": 6561,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16142,
+  "id": 6562,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16142,
+  "id": 6563,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16143,
+  "id": 6564,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16143,
+  "id": 6565,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16143,
+  "id": 6566,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220357a"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16143,
+  "id": 6567,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16144,
+  "id": 6568,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16144,
+  "id": 6569,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16144,
+  "id": 6570,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16144,
+  "id": 6571,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16144,
+  "id": 6572,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16144,
+  "id": 6573,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16144,
+  "id": 6574,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16144,
+  "id": 6575,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16145,
+  "id": 6576,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16145,
+  "id": 6577,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16145,
+  "id": 6578,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16145,
+  "id": 6579,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16145,
+  "id": 6580,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16145,
+  "id": 6581,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16146,
+  "id": 6582,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16146,
+  "id": 6583,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16146,
+  "id": 6584,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16146,
+  "id": 6585,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16146,
+  "id": 6586,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16146,
+  "id": 6587,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16146,
+  "id": 6588,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16147,
+  "id": 6589,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16147,
+  "id": 6590,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16147,
+  "id": 6591,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16147,
+  "id": 6592,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16147,
+  "id": 6593,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16148,
+  "id": 6594,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16148,
+  "id": 6595,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16148,
+  "id": 6596,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16148,
+  "id": 6597,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16148,
+  "id": 6598,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16149,
+  "id": 6599,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16149,
+  "id": 6600,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16149,
+  "id": 6601,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220357a"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16149,
+  "id": 6602,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16168,
+  "id": 6708,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16168,
+  "id": 6709,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16168,
+  "id": 6710,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16168,
+  "id": 6711,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16168,
+  "id": 6712,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16168,
+  "id": 6713,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16168,
+  "id": 6714,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16168,
+  "id": 6715,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16169,
+  "id": 6716,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16169,
+  "id": 6717,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16169,
+  "id": 6718,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16169,
+  "id": 6719,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16169,
+  "id": 6720,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16169,
+  "id": 6721,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16170,
+  "id": 6722,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16170,
+  "id": 6723,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16170,
+  "id": 6724,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16170,
+  "id": 6725,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16170,
+  "id": 6726,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16170,
+  "id": 6727,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16170,
+  "id": 6728,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16171,
+  "id": 6729,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16171,
+  "id": 6730,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16171,
+  "id": 6731,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16171,
+  "id": 6732,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16171,
+  "id": 6733,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16172,
+  "id": 6734,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16172,
+  "id": 6735,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16172,
+  "id": 6736,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16172,
+  "id": 6737,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16172,
+  "id": 6738,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16173,
+  "id": 6739,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16173,
+  "id": 6740,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16173,
+  "id": 6741,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220357a"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16173,
+  "id": 6742,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16174,
+  "id": 6743,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16174,
+  "id": 6744,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16174,
+  "id": 6745,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16174,
+  "id": 6746,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16174,
+  "id": 6747,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16174,
+  "id": 6748,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16174,
+  "id": 6749,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16174,
+  "id": 6750,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16175,
+  "id": 6751,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16175,
+  "id": 6752,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16175,
+  "id": 6753,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16175,
+  "id": 6754,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16175,
+  "id": 6755,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16175,
+  "id": 6756,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16176,
+  "id": 6757,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16176,
+  "id": 6758,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16176,
+  "id": 6759,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16176,
+  "id": 6760,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16176,
+  "id": 6761,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16176,
+  "id": 6762,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16176,
+  "id": 6763,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16177,
+  "id": 6764,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16177,
+  "id": 6765,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16177,
+  "id": 6766,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16177,
+  "id": 6767,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16177,
+  "id": 6768,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16178,
+  "id": 6769,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16178,
+  "id": 6770,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16178,
+  "id": 6771,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16178,
+  "id": 6772,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16178,
+  "id": 6773,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16179,
+  "id": 6774,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16179,
+  "id": 6775,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16179,
+  "id": 6776,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220357a"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16179,
+  "id": 6777,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16180,
+  "id": 6778,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16180,
+  "id": 6779,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16180,
+  "id": 6780,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16180,
+  "id": 6781,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16180,
+  "id": 6782,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16180,
+  "id": 6783,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16180,
+  "id": 6784,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16180,
+  "id": 6785,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16181,
+  "id": 6786,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16181,
+  "id": 6787,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16181,
+  "id": 6788,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16181,
+  "id": 6789,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16181,
+  "id": 6790,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16181,
+  "id": 6791,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16182,
+  "id": 6792,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16182,
+  "id": 6793,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16182,
+  "id": 6794,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16182,
+  "id": 6795,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16182,
+  "id": 6796,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16182,
+  "id": 6797,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16182,
+  "id": 6798,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16183,
+  "id": 6799,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16183,
+  "id": 6800,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16183,
+  "id": 6801,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16183,
+  "id": 6802,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16183,
+  "id": 6803,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16184,
+  "id": 6804,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16184,
+  "id": 6805,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16184,
+  "id": 6806,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16184,
+  "id": 6807,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16184,
+  "id": 6808,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16185,
+  "id": 6809,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16185,
+  "id": 6810,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16185,
+  "id": 6811,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16186,
+  "id": 6812,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16186,
+  "id": 6813,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16186,
+  "id": 6814,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16186,
+  "id": 6815,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16186,
+  "id": 6816,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16186,
+  "id": 6817,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16186,
+  "id": 6818,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16186,
+  "id": 6819,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16187,
+  "id": 6820,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16187,
+  "id": 6821,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16187,
+  "id": 6822,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16187,
+  "id": 6823,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16187,
+  "id": 6824,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16187,
+  "id": 6825,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16188,
+  "id": 6826,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16188,
+  "id": 6827,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16188,
+  "id": 6828,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16188,
+  "id": 6829,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16188,
+  "id": 6830,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16188,
+  "id": 6831,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16188,
+  "id": 6832,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16189,
+  "id": 6833,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16189,
+  "id": 6834,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16189,
+  "id": 6835,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16189,
+  "id": 6836,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16189,
+  "id": 6837,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16190,
+  "id": 6838,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16190,
+  "id": 6839,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16190,
+  "id": 6840,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16190,
+  "id": 6841,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16190,
+  "id": 6842,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16191,
+  "id": 6843,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16191,
+  "id": 6844,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16191,
+  "id": 6845,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16192,
+  "id": 6846,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16192,
+  "id": 6847,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16192,
+  "id": 6848,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16192,
+  "id": 6849,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16192,
+  "id": 6850,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16192,
+  "id": 6851,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16192,
+  "id": 6852,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16192,
+  "id": 6853,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16193,
+  "id": 6854,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16193,
+  "id": 6855,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16193,
+  "id": 6856,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16193,
+  "id": 6857,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16193,
+  "id": 6858,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16193,
+  "id": 6859,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16194,
+  "id": 6860,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16194,
+  "id": 6861,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16194,
+  "id": 6862,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16194,
+  "id": 6863,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16194,
+  "id": 6864,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16194,
+  "id": 6865,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16194,
+  "id": 6866,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16195,
+  "id": 6867,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16195,
+  "id": 6868,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16195,
+  "id": 6869,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16195,
+  "id": 6870,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16195,
+  "id": 6871,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16196,
+  "id": 6872,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16196,
+  "id": 6873,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16196,
+  "id": 6874,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16196,
+  "id": 6875,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16196,
+  "id": 6876,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16197,
+  "id": 6877,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16197,
+  "id": 6878,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16197,
+  "id": 6879,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16198,
+  "id": 6880,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220354c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16198,
+  "id": 6881,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220354d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16198,
+  "id": 6882,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd74794220354e"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16198,
+  "id": 6883,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220354f"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16198,
+  "id": 6884,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203550"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16198,
+  "id": 6885,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203551"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16198,
+  "id": 6886,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203552"
+ },
+ {
+  "_order": 8,
+  "_parent_id": 16198,
+  "id": 6887,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203553"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16199,
+  "id": 6888,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203557"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16199,
+  "id": 6889,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203558"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16199,
+  "id": 6890,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203559"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16199,
+  "id": 6891,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220355a"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16199,
+  "id": 6892,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355b"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16199,
+  "id": 6893,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220355c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16200,
+  "id": 6894,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203560"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16200,
+  "id": 6895,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203561"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16200,
+  "id": 6896,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203562"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16200,
+  "id": 6897,
+  "kind": "exercise",
+  "_uuid": "6ace4338dcfd747942203563"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16200,
+  "id": 6898,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203564"
+ },
+ {
+  "_order": 6,
+  "_parent_id": 16200,
+  "id": 6899,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203565"
+ },
+ {
+  "_order": 7,
+  "_parent_id": 16200,
+  "id": 6900,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203566"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16201,
+  "id": 6901,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd74794220356a"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16201,
+  "id": 6902,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd74794220356b"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16201,
+  "id": 6903,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356c"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16201,
+  "id": 6904,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356d"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16201,
+  "id": 6905,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220356e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16202,
+  "id": 6906,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203572"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16202,
+  "id": 6907,
+  "kind": "discussion",
+  "_uuid": "6ace4338dcfd747942203573"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16202,
+  "id": 6908,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203574"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16202,
+  "id": 6909,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203575"
+ },
+ {
+  "_order": 5,
+  "_parent_id": 16202,
+  "id": 6910,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd747942203576"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16203,
+  "id": 6911,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203578"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16203,
+  "id": 6912,
+  "kind": "presentation",
+  "_uuid": "6ace4338dcfd747942203579"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16203,
+  "id": 6913,
+  "kind": "other",
+  "_uuid": "6ace4338dcfd74794220357b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16309,
+  "id": 6947,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16311,
+  "id": 6948,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16311,
+  "id": 6949,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16317,
+  "id": 6950,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16319,
+  "id": 6951,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16319,
+  "id": 6952,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16327,
+  "id": 6953,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16335,
+  "id": 6954,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16343,
+  "id": 6955,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16350,
+  "id": 6956,
+  "kind": "exercise",
+  "_uuid": "6ace460adcfd7479422046b1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16357,
+  "id": 6957,
+  "kind": "exercise",
+  "_uuid": "6ace460adcfd7479422046b1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16364,
+  "id": 6958,
+  "kind": "exercise",
+  "_uuid": "6ace460adcfd7479422046b1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16463,
+  "id": 6959,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16465,
+  "id": 6960,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16465,
+  "id": 6961,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16471,
+  "id": 6962,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16473,
+  "id": 6963,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16473,
+  "id": 6964,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16479,
+  "id": 6965,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16481,
+  "id": 6966,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16481,
+  "id": 6967,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16523,
+  "id": 6968,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16525,
+  "id": 6969,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16525,
+  "id": 6970,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16531,
+  "id": 6971,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16533,
+  "id": 6972,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16533,
+  "id": 6973,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16539,
+  "id": 6974,
+  "kind": "other",
+  "_uuid": "6ace4620dcfd74794220470f"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16541,
+  "id": 6975,
+  "kind": "discussion",
+  "_uuid": "6ace4620dcfd747942204714"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16541,
+  "id": 6976,
+  "kind": "presentation",
+  "_uuid": "6ace4620dcfd747942204715"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16641,
+  "id": 6977,
+  "kind": "exercise",
+  "_uuid": "6ace460adcfd7479422046b1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16648,
+  "id": 6978,
+  "kind": "exercise",
+  "_uuid": "6ace460adcfd7479422046b1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16655,
+  "id": 6979,
+  "kind": "exercise",
+  "_uuid": "6ace460adcfd7479422046b1"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16663,
+  "id": 6980,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16671,
+  "id": 6981,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16679,
+  "id": 6982,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16687,
+  "id": 6983,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16695,
+  "id": 6984,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16703,
+  "id": 6985,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16711,
+  "id": 6986,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16718,
+  "id": 6987,
+  "kind": "presentation",
+  "_uuid": "6ace457fdcfd74794220436e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16725,
+  "id": 6988,
+  "kind": "presentation",
+  "_uuid": "6ace457fdcfd74794220436e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16732,
+  "id": 6989,
+  "kind": "presentation",
+  "_uuid": "6ace457fdcfd74794220436e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16739,
+  "id": 6990,
+  "kind": "presentation",
+  "_uuid": "6ace457fdcfd74794220436e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16750,
+  "id": 6991,
+  "kind": "exercise",
+  "_uuid": "6ace4354dcfd747942203627"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16751,
+  "id": 6992,
+  "kind": "presentation",
+  "_uuid": "6ace4354dcfd747942203629"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16751,
+  "id": 6993,
+  "kind": "discussion",
+  "_uuid": "6ace4354dcfd74794220362a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16762,
+  "id": 6994,
+  "kind": "exercise",
+  "_uuid": "6ace4354dcfd747942203627"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16763,
+  "id": 6995,
+  "kind": "presentation",
+  "_uuid": "6ace4354dcfd747942203629"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16763,
+  "id": 6996,
+  "kind": "discussion",
+  "_uuid": "6ace4354dcfd74794220362a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16774,
+  "id": 6997,
+  "kind": "exercise",
+  "_uuid": "6ace4354dcfd747942203627"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16775,
+  "id": 6998,
+  "kind": "presentation",
+  "_uuid": "6ace4354dcfd747942203629"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16775,
+  "id": 6999,
+  "kind": "discussion",
+  "_uuid": "6ace4354dcfd74794220362a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16786,
+  "id": 7000,
+  "kind": "exercise",
+  "_uuid": "6ace4354dcfd747942203627"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16787,
+  "id": 7001,
+  "kind": "presentation",
+  "_uuid": "6ace4354dcfd747942203629"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16787,
+  "id": 7002,
+  "kind": "discussion",
+  "_uuid": "6ace4354dcfd74794220362a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16788,
+  "id": 7003,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204719"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16789,
+  "id": 7004,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220471d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16790,
+  "id": 7005,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204721"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16791,
+  "id": 7006,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204725"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16792,
+  "id": 7007,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220472a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16793,
+  "id": 7008,
+  "kind": "presentation",
+  "_uuid": "6ace4623dcfd74794220472c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16794,
+  "id": 7009,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204719"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16795,
+  "id": 7010,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220471d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16796,
+  "id": 7011,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204721"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16797,
+  "id": 7012,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204725"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16798,
+  "id": 7013,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220472a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16799,
+  "id": 7014,
+  "kind": "presentation",
+  "_uuid": "6ace4623dcfd74794220472c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16800,
+  "id": 7015,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204719"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16801,
+  "id": 7016,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220471d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16802,
+  "id": 7017,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204721"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16803,
+  "id": 7018,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204725"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16804,
+  "id": 7019,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220472a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16805,
+  "id": 7020,
+  "kind": "presentation",
+  "_uuid": "6ace4623dcfd74794220472c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16806,
+  "id": 7021,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204719"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16807,
+  "id": 7022,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220471d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16808,
+  "id": 7023,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204721"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16809,
+  "id": 7024,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204725"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16810,
+  "id": 7025,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220472a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16811,
+  "id": 7026,
+  "kind": "presentation",
+  "_uuid": "6ace4623dcfd74794220472c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16812,
+  "id": 7027,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16812,
+  "id": 7028,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16812,
+  "id": 7029,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16813,
+  "id": 7030,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203321"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16813,
+  "id": 7031,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203322"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16813,
+  "id": 7032,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203323"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16814,
+  "id": 7033,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16814,
+  "id": 7034,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203327"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16814,
+  "id": 7035,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203328"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16815,
+  "id": 7036,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16815,
+  "id": 7037,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16815,
+  "id": 7038,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16816,
+  "id": 7039,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203331"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16816,
+  "id": 7040,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203332"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16816,
+  "id": 7041,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203333"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16817,
+  "id": 7042,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203336"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16817,
+  "id": 7043,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203337"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16817,
+  "id": 7044,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203338"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16818,
+  "id": 7045,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16818,
+  "id": 7046,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16818,
+  "id": 7047,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16819,
+  "id": 7048,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203340"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16819,
+  "id": 7049,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203341"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16819,
+  "id": 7050,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203342"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16820,
+  "id": 7051,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203345"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16820,
+  "id": 7052,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203346"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16820,
+  "id": 7053,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203347"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16821,
+  "id": 7054,
+  "kind": "presentation",
+  "_uuid": "6ace42d2dcfd747942203349"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16821,
+  "id": 7055,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16822,
+  "id": 7056,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16822,
+  "id": 7057,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16822,
+  "id": 7058,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16823,
+  "id": 7059,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203321"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16823,
+  "id": 7060,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203322"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16823,
+  "id": 7061,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203323"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16824,
+  "id": 7062,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16824,
+  "id": 7063,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203327"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16824,
+  "id": 7064,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203328"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16825,
+  "id": 7065,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16825,
+  "id": 7066,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16825,
+  "id": 7067,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16826,
+  "id": 7068,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203331"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16826,
+  "id": 7069,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203332"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16826,
+  "id": 7070,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203333"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16827,
+  "id": 7071,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203336"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16827,
+  "id": 7072,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203337"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16827,
+  "id": 7073,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203338"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16828,
+  "id": 7074,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16828,
+  "id": 7075,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16828,
+  "id": 7076,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16829,
+  "id": 7077,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203340"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16829,
+  "id": 7078,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203341"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16829,
+  "id": 7079,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203342"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16830,
+  "id": 7080,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203345"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16830,
+  "id": 7081,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203346"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16830,
+  "id": 7082,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203347"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16831,
+  "id": 7083,
+  "kind": "presentation",
+  "_uuid": "6ace42d2dcfd747942203349"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16831,
+  "id": 7084,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16832,
+  "id": 7085,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16832,
+  "id": 7086,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16832,
+  "id": 7087,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16833,
+  "id": 7088,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203321"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16833,
+  "id": 7089,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203322"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16833,
+  "id": 7090,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203323"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16834,
+  "id": 7091,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16834,
+  "id": 7092,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203327"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16834,
+  "id": 7093,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203328"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16835,
+  "id": 7094,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16835,
+  "id": 7095,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16835,
+  "id": 7096,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16836,
+  "id": 7097,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203331"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16836,
+  "id": 7098,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203332"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16836,
+  "id": 7099,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203333"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16837,
+  "id": 7100,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203336"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16837,
+  "id": 7101,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203337"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16837,
+  "id": 7102,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203338"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16838,
+  "id": 7103,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16838,
+  "id": 7104,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16838,
+  "id": 7105,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16839,
+  "id": 7106,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203340"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16839,
+  "id": 7107,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203341"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16839,
+  "id": 7108,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203342"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16840,
+  "id": 7109,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203345"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16840,
+  "id": 7110,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203346"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16840,
+  "id": 7111,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203347"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16841,
+  "id": 7112,
+  "kind": "presentation",
+  "_uuid": "6ace42d2dcfd747942203349"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16841,
+  "id": 7113,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16842,
+  "id": 7114,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16842,
+  "id": 7115,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16842,
+  "id": 7116,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16843,
+  "id": 7117,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203321"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16843,
+  "id": 7118,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203322"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16843,
+  "id": 7119,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203323"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16844,
+  "id": 7120,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16844,
+  "id": 7121,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203327"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16844,
+  "id": 7122,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203328"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16845,
+  "id": 7123,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16845,
+  "id": 7124,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16845,
+  "id": 7125,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16846,
+  "id": 7126,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203331"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16846,
+  "id": 7127,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203332"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16846,
+  "id": 7128,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203333"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16847,
+  "id": 7129,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203336"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16847,
+  "id": 7130,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203337"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16847,
+  "id": 7131,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203338"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16848,
+  "id": 7132,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16848,
+  "id": 7133,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16848,
+  "id": 7134,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16849,
+  "id": 7135,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203340"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16849,
+  "id": 7136,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203341"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16849,
+  "id": 7137,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203342"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16850,
+  "id": 7138,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203345"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16850,
+  "id": 7139,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203346"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16850,
+  "id": 7140,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203347"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16851,
+  "id": 7141,
+  "kind": "presentation",
+  "_uuid": "6ace42d2dcfd747942203349"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16851,
+  "id": 7142,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16852,
+  "id": 7143,
+  "kind": "other",
+  "_uuid": "6ace4329dcfd747942203503"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16852,
+  "id": 7144,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203504"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16853,
+  "id": 7145,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203507"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16854,
+  "id": 7146,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203509"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16855,
+  "id": 7147,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16856,
+  "id": 7148,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16857,
+  "id": 7149,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203513"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16857,
+  "id": 7150,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203514"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16857,
+  "id": 7151,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203515"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16858,
+  "id": 7152,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203517"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16859,
+  "id": 7153,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203519"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16860,
+  "id": 7154,
+  "kind": "other",
+  "_uuid": "6ace4329dcfd747942203503"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16860,
+  "id": 7155,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203504"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16861,
+  "id": 7156,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203507"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16862,
+  "id": 7157,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203509"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16863,
+  "id": 7158,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16864,
+  "id": 7159,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16865,
+  "id": 7160,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203513"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16865,
+  "id": 7161,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203514"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16865,
+  "id": 7162,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203515"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16866,
+  "id": 7163,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203517"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16867,
+  "id": 7164,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203519"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16868,
+  "id": 7165,
+  "kind": "other",
+  "_uuid": "6ace4329dcfd747942203503"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16868,
+  "id": 7166,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203504"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16869,
+  "id": 7167,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203507"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16870,
+  "id": 7168,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203509"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16871,
+  "id": 7169,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16872,
+  "id": 7170,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16873,
+  "id": 7171,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203513"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16873,
+  "id": 7172,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203514"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16873,
+  "id": 7173,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203515"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16874,
+  "id": 7174,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203517"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16875,
+  "id": 7175,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203519"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16876,
+  "id": 7176,
+  "kind": "other",
+  "_uuid": "6ace4329dcfd747942203503"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16876,
+  "id": 7177,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203504"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16877,
+  "id": 7178,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203507"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16878,
+  "id": 7179,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203509"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16879,
+  "id": 7180,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16880,
+  "id": 7181,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16881,
+  "id": 7182,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203513"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16881,
+  "id": 7183,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203514"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16881,
+  "id": 7184,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203515"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16882,
+  "id": 7185,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203517"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16883,
+  "id": 7186,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203519"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16895,
+  "id": 7187,
+  "kind": "presentation",
+  "_uuid": "6ace4454dcfd747942203c44"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16907,
+  "id": 7188,
+  "kind": "presentation",
+  "_uuid": "6ace4454dcfd747942203c44"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16919,
+  "id": 7189,
+  "kind": "presentation",
+  "_uuid": "6ace4454dcfd747942203c44"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16931,
+  "id": 7190,
+  "kind": "presentation",
+  "_uuid": "6ace4454dcfd747942203c44"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16976,
+  "id": 7191,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203918"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16976,
+  "id": 7192,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203919"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16976,
+  "id": 7193,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd74794220391a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16977,
+  "id": 7194,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd74794220391c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16978,
+  "id": 7195,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220391e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16978,
+  "id": 7196,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd74794220391f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16978,
+  "id": 7197,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203920"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16978,
+  "id": 7198,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203921"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16979,
+  "id": 7199,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203923"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16979,
+  "id": 7200,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203924"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16979,
+  "id": 7201,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203925"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16979,
+  "id": 7202,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd747942203926"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16980,
+  "id": 7203,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203928"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16980,
+  "id": 7204,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203929"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16980,
+  "id": 7205,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16981,
+  "id": 7206,
+  "kind": "presentation",
+  "_uuid": "6ace43cadcfd74794220392c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16981,
+  "id": 7207,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16983,
+  "id": 7208,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203918"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16983,
+  "id": 7209,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203919"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16983,
+  "id": 7210,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd74794220391a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16984,
+  "id": 7211,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd74794220391c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16985,
+  "id": 7212,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220391e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16985,
+  "id": 7213,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd74794220391f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16985,
+  "id": 7214,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203920"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16985,
+  "id": 7215,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203921"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16986,
+  "id": 7216,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203923"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16986,
+  "id": 7217,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203924"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16986,
+  "id": 7218,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203925"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16986,
+  "id": 7219,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd747942203926"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16987,
+  "id": 7220,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203928"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16987,
+  "id": 7221,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203929"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16987,
+  "id": 7222,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16988,
+  "id": 7223,
+  "kind": "presentation",
+  "_uuid": "6ace43cadcfd74794220392c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16988,
+  "id": 7224,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16990,
+  "id": 7225,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203918"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16990,
+  "id": 7226,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203919"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16990,
+  "id": 7227,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd74794220391a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16991,
+  "id": 7228,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd74794220391c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16992,
+  "id": 7229,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220391e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16992,
+  "id": 7230,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd74794220391f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16992,
+  "id": 7231,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203920"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16992,
+  "id": 7232,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203921"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16993,
+  "id": 7233,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203923"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16993,
+  "id": 7234,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203924"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16993,
+  "id": 7235,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203925"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16993,
+  "id": 7236,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd747942203926"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16994,
+  "id": 7237,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203928"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16994,
+  "id": 7238,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203929"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16994,
+  "id": 7239,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16995,
+  "id": 7240,
+  "kind": "presentation",
+  "_uuid": "6ace43cadcfd74794220392c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16995,
+  "id": 7241,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16997,
+  "id": 7242,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203918"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16997,
+  "id": 7243,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203919"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16997,
+  "id": 7244,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd74794220391a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16998,
+  "id": 7245,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd74794220391c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 16999,
+  "id": 7246,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220391e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 16999,
+  "id": 7247,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd74794220391f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 16999,
+  "id": 7248,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203920"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 16999,
+  "id": 7249,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203921"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17000,
+  "id": 7250,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203923"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17000,
+  "id": 7251,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203924"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17000,
+  "id": 7252,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203925"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17000,
+  "id": 7253,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd747942203926"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17001,
+  "id": 7254,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203928"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17001,
+  "id": 7255,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203929"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17001,
+  "id": 7256,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17002,
+  "id": 7257,
+  "kind": "presentation",
+  "_uuid": "6ace43cadcfd74794220392c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17002,
+  "id": 7258,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17089,
+  "id": 7259,
+  "kind": "presentation",
+  "_uuid": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17091,
+  "id": 7260,
+  "kind": "other",
+  "_uuid": "6ace4464dcfd747942203cae"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17097,
+  "id": 7261,
+  "kind": "presentation",
+  "_uuid": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17099,
+  "id": 7262,
+  "kind": "other",
+  "_uuid": "6ace4464dcfd747942203cae"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17105,
+  "id": 7263,
+  "kind": "presentation",
+  "_uuid": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17107,
+  "id": 7264,
+  "kind": "other",
+  "_uuid": "6ace4464dcfd747942203cae"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17113,
+  "id": 7265,
+  "kind": "presentation",
+  "_uuid": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17115,
+  "id": 7266,
+  "kind": "other",
+  "_uuid": "6ace4464dcfd747942203cae"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17167,
+  "id": 7267,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17175,
+  "id": 7268,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17176,
+  "id": 7269,
+  "kind": "other",
+  "_uuid": "6ace4329dcfd747942203503"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17176,
+  "id": 7270,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203504"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17177,
+  "id": 7271,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203507"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17178,
+  "id": 7272,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203509"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17179,
+  "id": 7273,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17180,
+  "id": 7274,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17181,
+  "id": 7275,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203513"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17181,
+  "id": 7276,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203514"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17181,
+  "id": 7277,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203515"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17182,
+  "id": 7278,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203517"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17183,
+  "id": 7279,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203519"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17184,
+  "id": 7280,
+  "kind": "other",
+  "_uuid": "6ace4329dcfd747942203503"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17184,
+  "id": 7281,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203504"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17185,
+  "id": 7282,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203507"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17186,
+  "id": 7283,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203509"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17187,
+  "id": 7284,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17188,
+  "id": 7285,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17189,
+  "id": 7286,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203513"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17189,
+  "id": 7287,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203514"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17189,
+  "id": 7288,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203515"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17190,
+  "id": 7289,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203517"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17191,
+  "id": 7290,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203519"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17192,
+  "id": 7291,
+  "kind": "other",
+  "_uuid": "6ace4329dcfd747942203503"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17192,
+  "id": 7292,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203504"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17193,
+  "id": 7293,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203507"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17194,
+  "id": 7294,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203509"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17195,
+  "id": 7295,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350b"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17196,
+  "id": 7296,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd74794220350e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17197,
+  "id": 7297,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203513"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17197,
+  "id": 7298,
+  "kind": "exercise",
+  "_uuid": "6ace4329dcfd747942203514"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17197,
+  "id": 7299,
+  "kind": "discussion",
+  "_uuid": "6ace4329dcfd747942203515"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17198,
+  "id": 7300,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203517"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17199,
+  "id": 7301,
+  "kind": "presentation",
+  "_uuid": "6ace4329dcfd747942203519"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17207,
+  "id": 7302,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17215,
+  "id": 7303,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17223,
+  "id": 7304,
+  "kind": "presentation",
+  "_uuid": "6ace4358dcfd747942203641"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17230,
+  "id": 7305,
+  "kind": "presentation",
+  "_uuid": "6ace457fdcfd74794220436e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17237,
+  "id": 7306,
+  "kind": "presentation",
+  "_uuid": "6ace457fdcfd74794220436e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17244,
+  "id": 7307,
+  "kind": "presentation",
+  "_uuid": "6ace457fdcfd74794220436e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17263,
+  "id": 7308,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203918"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17263,
+  "id": 7309,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203919"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17263,
+  "id": 7310,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd74794220391a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17264,
+  "id": 7311,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd74794220391c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17265,
+  "id": 7312,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220391e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17265,
+  "id": 7313,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd74794220391f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17265,
+  "id": 7314,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203920"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17265,
+  "id": 7315,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203921"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17266,
+  "id": 7316,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203923"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17266,
+  "id": 7317,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203924"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17266,
+  "id": 7318,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203925"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17266,
+  "id": 7319,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd747942203926"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17267,
+  "id": 7320,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203928"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17267,
+  "id": 7321,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203929"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17267,
+  "id": 7322,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17268,
+  "id": 7323,
+  "kind": "presentation",
+  "_uuid": "6ace43cadcfd74794220392c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17268,
+  "id": 7324,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17270,
+  "id": 7325,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203918"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17270,
+  "id": 7326,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203919"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17270,
+  "id": 7327,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd74794220391a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17271,
+  "id": 7328,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd74794220391c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17272,
+  "id": 7329,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220391e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17272,
+  "id": 7330,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd74794220391f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17272,
+  "id": 7331,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203920"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17272,
+  "id": 7332,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203921"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17273,
+  "id": 7333,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203923"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17273,
+  "id": 7334,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203924"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17273,
+  "id": 7335,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203925"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17273,
+  "id": 7336,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd747942203926"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17274,
+  "id": 7337,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203928"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17274,
+  "id": 7338,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203929"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17274,
+  "id": 7339,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17275,
+  "id": 7340,
+  "kind": "presentation",
+  "_uuid": "6ace43cadcfd74794220392c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17275,
+  "id": 7341,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17277,
+  "id": 7342,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203918"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17277,
+  "id": 7343,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203919"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17277,
+  "id": 7344,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd74794220391a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17278,
+  "id": 7345,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd74794220391c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17279,
+  "id": 7346,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220391e"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17279,
+  "id": 7347,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd74794220391f"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17279,
+  "id": 7348,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203920"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17279,
+  "id": 7349,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd747942203921"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17280,
+  "id": 7350,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203923"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17280,
+  "id": 7351,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203924"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17280,
+  "id": 7352,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203925"
+ },
+ {
+  "_order": 4,
+  "_parent_id": 17280,
+  "id": 7353,
+  "kind": "field_visit",
+  "_uuid": "6ace43cadcfd747942203926"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17281,
+  "id": 7354,
+  "kind": "other",
+  "_uuid": "6ace43cadcfd747942203928"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17281,
+  "id": 7355,
+  "kind": "exercise",
+  "_uuid": "6ace43cadcfd747942203929"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17281,
+  "id": 7356,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17282,
+  "id": 7357,
+  "kind": "presentation",
+  "_uuid": "6ace43cadcfd74794220392c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17282,
+  "id": 7358,
+  "kind": "discussion",
+  "_uuid": "6ace43cadcfd74794220392d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17284,
+  "id": 7359,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17284,
+  "id": 7360,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17284,
+  "id": 7361,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17285,
+  "id": 7362,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203321"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17285,
+  "id": 7363,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203322"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17285,
+  "id": 7364,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203323"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17286,
+  "id": 7365,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17286,
+  "id": 7366,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203327"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17286,
+  "id": 7367,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203328"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17287,
+  "id": 7368,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17287,
+  "id": 7369,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17287,
+  "id": 7370,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17288,
+  "id": 7371,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203331"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17288,
+  "id": 7372,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203332"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17288,
+  "id": 7373,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203333"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17289,
+  "id": 7374,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203336"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17289,
+  "id": 7375,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203337"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17289,
+  "id": 7376,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203338"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17290,
+  "id": 7377,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17290,
+  "id": 7378,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17290,
+  "id": 7379,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17291,
+  "id": 7380,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203340"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17291,
+  "id": 7381,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203341"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17291,
+  "id": 7382,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203342"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17292,
+  "id": 7383,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203345"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17292,
+  "id": 7384,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203346"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17292,
+  "id": 7385,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203347"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17293,
+  "id": 7386,
+  "kind": "presentation",
+  "_uuid": "6ace42d2dcfd747942203349"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17293,
+  "id": 7387,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17294,
+  "id": 7388,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17294,
+  "id": 7389,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17294,
+  "id": 7390,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17295,
+  "id": 7391,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203321"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17295,
+  "id": 7392,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203322"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17295,
+  "id": 7393,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203323"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17296,
+  "id": 7394,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17296,
+  "id": 7395,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203327"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17296,
+  "id": 7396,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203328"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17297,
+  "id": 7397,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17297,
+  "id": 7398,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17297,
+  "id": 7399,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17298,
+  "id": 7400,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203331"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17298,
+  "id": 7401,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203332"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17298,
+  "id": 7402,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203333"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17299,
+  "id": 7403,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203336"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17299,
+  "id": 7404,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203337"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17299,
+  "id": 7405,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203338"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17300,
+  "id": 7406,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17300,
+  "id": 7407,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17300,
+  "id": 7408,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17301,
+  "id": 7409,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203340"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17301,
+  "id": 7410,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203341"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17301,
+  "id": 7411,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203342"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17302,
+  "id": 7412,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203345"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17302,
+  "id": 7413,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203346"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17302,
+  "id": 7414,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203347"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17303,
+  "id": 7415,
+  "kind": "presentation",
+  "_uuid": "6ace42d2dcfd747942203349"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17303,
+  "id": 7416,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17304,
+  "id": 7417,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220331c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17304,
+  "id": 7418,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220331d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17304,
+  "id": 7419,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220331e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17305,
+  "id": 7420,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203321"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17305,
+  "id": 7421,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203322"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17305,
+  "id": 7422,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203323"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17306,
+  "id": 7423,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203326"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17306,
+  "id": 7424,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203327"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17306,
+  "id": 7425,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203328"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17307,
+  "id": 7426,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220332c"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17307,
+  "id": 7427,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220332d"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17307,
+  "id": 7428,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220332e"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17308,
+  "id": 7429,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203331"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17308,
+  "id": 7430,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203332"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17308,
+  "id": 7431,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203333"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17309,
+  "id": 7432,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203336"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17309,
+  "id": 7433,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203337"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17309,
+  "id": 7434,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203338"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17310,
+  "id": 7435,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd74794220333b"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17310,
+  "id": 7436,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220333c"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17310,
+  "id": 7437,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd74794220333d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17311,
+  "id": 7438,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203340"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17311,
+  "id": 7439,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203341"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17311,
+  "id": 7440,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203342"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17312,
+  "id": 7441,
+  "kind": "other",
+  "_uuid": "6ace42d2dcfd747942203345"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17312,
+  "id": 7442,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd747942203346"
+ },
+ {
+  "_order": 3,
+  "_parent_id": 17312,
+  "id": 7443,
+  "kind": "exercise",
+  "_uuid": "6ace42d2dcfd747942203347"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17313,
+  "id": 7444,
+  "kind": "presentation",
+  "_uuid": "6ace42d2dcfd747942203349"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17313,
+  "id": 7445,
+  "kind": "discussion",
+  "_uuid": "6ace42d2dcfd74794220334a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17325,
+  "id": 7446,
+  "kind": "presentation",
+  "_uuid": "6ace4454dcfd747942203c44"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17337,
+  "id": 7447,
+  "kind": "presentation",
+  "_uuid": "6ace4454dcfd747942203c44"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17349,
+  "id": 7448,
+  "kind": "presentation",
+  "_uuid": "6ace4454dcfd747942203c44"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17396,
+  "id": 7449,
+  "kind": "exercise",
+  "_uuid": "6ace4354dcfd747942203627"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17397,
+  "id": 7450,
+  "kind": "presentation",
+  "_uuid": "6ace4354dcfd747942203629"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17397,
+  "id": 7451,
+  "kind": "discussion",
+  "_uuid": "6ace4354dcfd74794220362a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17408,
+  "id": 7452,
+  "kind": "exercise",
+  "_uuid": "6ace4354dcfd747942203627"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17409,
+  "id": 7453,
+  "kind": "presentation",
+  "_uuid": "6ace4354dcfd747942203629"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17409,
+  "id": 7454,
+  "kind": "discussion",
+  "_uuid": "6ace4354dcfd74794220362a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17420,
+  "id": 7455,
+  "kind": "exercise",
+  "_uuid": "6ace4354dcfd747942203627"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17421,
+  "id": 7456,
+  "kind": "presentation",
+  "_uuid": "6ace4354dcfd747942203629"
+ },
+ {
+  "_order": 2,
+  "_parent_id": 17421,
+  "id": 7457,
+  "kind": "discussion",
+  "_uuid": "6ace4354dcfd74794220362a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17422,
+  "id": 7458,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204719"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17423,
+  "id": 7459,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220471d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17424,
+  "id": 7460,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204721"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17425,
+  "id": 7461,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204725"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17426,
+  "id": 7462,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220472a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17427,
+  "id": 7463,
+  "kind": "presentation",
+  "_uuid": "6ace4623dcfd74794220472c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17428,
+  "id": 7464,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204719"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17429,
+  "id": 7465,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220471d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17430,
+  "id": 7466,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204721"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17431,
+  "id": 7467,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204725"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17432,
+  "id": 7468,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220472a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17433,
+  "id": 7469,
+  "kind": "presentation",
+  "_uuid": "6ace4623dcfd74794220472c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17434,
+  "id": 7470,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204719"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17435,
+  "id": 7471,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220471d"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17436,
+  "id": 7472,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204721"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17437,
+  "id": 7473,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd747942204725"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17438,
+  "id": 7474,
+  "kind": "exercise",
+  "_uuid": "6ace4623dcfd74794220472a"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17439,
+  "id": 7475,
+  "kind": "presentation",
+  "_uuid": "6ace4623dcfd74794220472c"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17469,
+  "id": 7476,
+  "kind": "presentation",
+  "_uuid": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17471,
+  "id": 7477,
+  "kind": "other",
+  "_uuid": "6ace4464dcfd747942203cae"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17477,
+  "id": 7478,
+  "kind": "presentation",
+  "_uuid": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17479,
+  "id": 7479,
+  "kind": "other",
+  "_uuid": "6ace4464dcfd747942203cae"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17485,
+  "id": 7480,
+  "kind": "presentation",
+  "_uuid": "6ace4464dcfd747942203ca8"
+ },
+ {
+  "_order": 1,
+  "_parent_id": 17487,
+  "id": 7481,
+  "kind": "other",
+  "_uuid": "6ace4464dcfd747942203cae"
  }
 ]
