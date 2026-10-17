@@ -1,5 +1,6 @@
-/* Behind the hero's copy, edge to edge. Mirrored on Arabic pages, so the
-   boat sits at the reading end and sails on that way. */
+/* Behind the hero's copy, edge to edge. The logo's boat faces left, its bow
+   low on that side, so it sits at the right and sails left, into the page.
+   Mirrored on Arabic pages, where it sits at the left and sails right. */
 .scene {
   position: absolute;
   inset: 0;
@@ -48,6 +49,10 @@
     width: 3.5rem;
   }
 }
+.boat {
+  /* It rocks about its keel. */
+  transform-origin: 50% 95%;
+}
 .boat svg {
   width: 100%;
   height: auto;
@@ -85,13 +90,13 @@
   /* Then the scene breathes: the boat rides the water, the sail leans, the
      water drifts and the birds glide, each out of step with the rest. */
   .boat {
-    animation: bob 6s ease-in-out 1.6s infinite;
+    animation: ride 5s ease-in-out 1.6s infinite;
   }
   .sail {
     animation: sway 7s ease-in-out 1.6s infinite;
   }
-  /* Each row rolls on by one wavelength and starts over, seamlessly; near
-     rows roll faster than far ones. */
+  /* Each row rolls on by one wavelength and starts over, seamlessly, back
+     past the boat as it makes way; near rows roll faster than far ones. */
   .wave {
     animation:
       draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both,
@@ -102,7 +107,8 @@
   }
 }
 
-/* Scrolling away, the boat sails off and the water ebbs into the page. */
+/* Scrolling away, the boat sails on over the swell and the water ebbs into
+   the page. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     .track {
@@ -123,9 +129,24 @@
     stroke-dashoffset: 1;
   }
 }
-@keyframes bob {
+@keyframes ride {
+  /* Up the face of a wave bow first, over the crest, down the back. */
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+  25% {
+    translate: 0 -5px;
+    rotate: -2.5deg;
+  }
   50% {
-    translate: 0 6px;
+    translate: 0 1px;
+    rotate: 0deg;
+  }
+  75% {
+    translate: 0 4px;
+    rotate: 2deg;
   }
 }
 @keyframes sway {
@@ -160,8 +181,18 @@
   }
 }
 @keyframes sail-out {
+  /* Forward and over the swell: rising and falling as it goes. */
+  25% {
+    translate: -12vw -10px;
+  }
+  50% {
+    translate: -24vw 4px;
+  }
+  75% {
+    translate: -36vw -8px;
+  }
   to {
-    translate: 45vw 0;
+    translate: -48vw 0;
   }
 }
 @keyframes ebb {

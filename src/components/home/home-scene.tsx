@@ -74,12 +74,12 @@ export function HomeScene() {
             key={row.y}
             pathLength={1}
             strokeWidth={row.w}
-            style={{ ...at(row.at), '--i': i, '--length': `${-row.length}px` } as CSSProperties}
+            style={{ ...at(row.at), '--i': i, '--length': `${row.length}px` } as CSSProperties}
           />
         ))}
       </svg>
 
-      {/* The track carries the scroll-linked sail-out, the boat its bobbing. */}
+      {/* The track carries the scroll-linked voyage, the boat its riding of the waves. */}
       <div className={styles.track}>
         <div className={styles.boat}>
           <svg fill="currentColor" fillRule="evenodd" viewBox={LOGO_VIEWBOX}>
