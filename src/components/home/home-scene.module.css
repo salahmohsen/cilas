@@ -1,0 +1,133 @@
+/* Behind the hero's copy, edge to edge. Mirrored on Arabic pages, so the
+   boat sits at the reading end and sails on that way. */
+.scene {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  color: var(--foreground);
+  pointer-events: none;
+}
+[dir='rtl'] .scene {
+  scale: -1 1;
+}
+.scene svg {
+  display: block;
+}
+
+.birds {
+  position: absolute;
+  top: calc(var(--site-header-height, 4rem) + 8%);
+  right: 6%;
+  width: min(36rem, 55vw);
+  height: auto;
+  opacity: 0.75;
+}
+.water {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 22%;
+}
+.track {
+  position: absolute;
+  right: clamp(1rem, 10vw, 12rem);
+  bottom: 12%;
+  width: clamp(8rem, 22vw, 18rem);
+}
+@media (max-width: 40rem) {
+  .track {
+    bottom: 26%;
+  }
+}
+.boat svg {
+  width: 100%;
+  height: auto;
+}
+.sail {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+}
+
+/* Every stroke is drawn, at rest, unless motion is welcome. */
+.scene path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Ink draws in, each stroke at its own moment. */
+  .scene path {
+    animation: draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both;
+  }
+  /* Then the scene breathes: the boat rides the water, the sail leans, the
+     water drifts and the birds glide, each out of step with the rest. */
+  .boat {
+    animation: bob 6s ease-in-out 1.6s infinite;
+  }
+  .sail {
+    animation: sway 7s ease-in-out 1.6s infinite;
+  }
+  .scene .wave {
+    animation:
+      draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both,
+      drift calc(9s + var(--i) * 2s) ease-in-out 1.4s infinite;
+  }
+  .bird {
+    animation: glide calc(6s + var(--i) * 0.7s) ease-in-out calc(1.6s + var(--i) * 0.3s) infinite;
+  }
+}
+
+/* Scrolling away, the boat sails off and the water ebbs into the page. */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .track {
+      animation: sail-out linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 90vh;
+    }
+    .water {
+      animation: ebb linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 90vh;
+    }
+  }
+}
+
+@keyframes draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+@keyframes bob {
+  50% {
+    translate: 0 6px;
+  }
+}
+@keyframes sway {
+  50% {
+    rotate: -1.5deg;
+  }
+}
+@keyframes drift {
+  50% {
+    translate: 24px 0;
+  }
+}
+@keyframes glide {
+  50% {
+    translate: 14px -8px;
+  }
+}
+@keyframes sail-out {
+  to {
+    translate: 45vw 0;
+  }
+}
+@keyframes ebb {
+  to {
+    opacity: 0;
+  }
+}
