@@ -115,6 +115,7 @@ export function CILASSiteHeader() {
   return (
     <SiteHeader
       ref={headerRef}
+      className="site-header"
       brand={{
         name: t('brand'),
         href: href('/'),

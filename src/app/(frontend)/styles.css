@@ -349,6 +349,20 @@
 html {
   scroll-padding-top: calc(var(--site-header-height, 4rem) + 1.5rem);
 }
+
+/* The home hero runs edge to edge at 100vw, which counts the scrollbar; clip,
+   unlike hidden, makes no scroll container, so the sticky header still sticks. */
+body {
+  overflow-x: clip;
+}
+
+/* While the home hero is under it, the header stays clear even once scrolled
+   (HomeHero sets data-over-hero); past the hero it turns solid as everywhere. */
+:root[data-over-hero] .site-header[data-scrolled] {
+  border-bottom-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
 @media (prefers-reduced-motion: no-preference) {
   html {
     scroll-behavior: smooth;
