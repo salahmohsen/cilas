@@ -40,7 +40,10 @@ export const env = createEnv({
 
     // Where the browser asks Typesense directly (InstantSearch). Needs a
     // public Typesense address and a search-only API key — never the admin
-    // key. Without the key the site hides the search field entirely.
+    // key — scoped to the search collections and their generations:
+    //   { "actions": ["documents:search"],
+    //     "collections": ["^(courses|articles|people)(_[0-9a-f]{8})?$"] }
+    // Without the key the site hides the search field entirely.
     NEXT_PUBLIC_TYPESENSE_HOST: z.string().default('localhost'),
     NEXT_PUBLIC_TYPESENSE_PORT: z.coerce.number().default(8108),
     NEXT_PUBLIC_TYPESENSE_PROTOCOL: z.enum(['http', 'https']).default('http'),

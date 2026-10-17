@@ -43,7 +43,8 @@
     "fieldLabel": "ابحث في الموقع",
     "placeholder": "ابحث في المقررات والأشخاص والمقالات",
     "clearField": "مسح البحث",
-    "close": "إغلاق البحث",
+    "close": "إغلاق",
+    "closeSearch": "إغلاق البحث",
     "filters": "تصنيف",
     "filtersDescription": "أظهر أو أخفِ أنواع المحتوى وأنواع المقررات، وتتبع الأعداد ما يُكتب.",
     "type": "النوع",
@@ -58,7 +59,6 @@
     "typeShort": "المقررات القصيرة",
     "typeArticles": "المقالات",
     "typePeople": "الأشخاص",
-    "appliesTo": "يسري على العربية والإنجليزية معًا.",
     "clearAll": "مسح الكل",
     "showResults": "اعرض النتائج ({count, plural, =1 {نتيجة واحدة} other {{count, number} نتيجة}})",
     "searching": "جارٍ البحث…",
@@ -73,7 +73,12 @@
     "updated": "عُدّل {when}",
     "editedSuffix": "عدّل {when}",
     "readMore": "اقرأ المزيد",
-    "showLess": "إظهار أقل"
+    "showLess": "إظهار أقل",
+    "resultsLabel": "نتائج البحث",
+    "showing": "{shown, number} من {total, number}",
+    "showMore": "اعرض نتائج أكثر",
+    "errorTitle": "البحث غير متاح الآن",
+    "errorHint": "تعذّر الاتصال بخدمة البحث. حاول مرة أخرى بعد قليل."
   },
   "Language": {
     "label": "اللغة",

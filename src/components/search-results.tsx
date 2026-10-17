@@ -2,7 +2,7 @@
 
 import { Highlight, Snippet } from 'react-instantsearch'
 import { useLocale, useTranslations } from 'next-intl'
-import { Search, SlidersHorizontal, X } from 'lucide-react'
+import { RotateCw, Search, SlidersHorizontal, X } from 'lucide-react'
 import {
   useCallback,
   useEffect,
@@ -10,7 +10,6 @@ import {
   useLayoutEffect,
   useRef,
   useState,
-  type CSSProperties,
   type KeyboardEvent as ReactKeyboardEvent,
   type ReactNode,
   type RefObject,
@@ -18,230 +17,107 @@ import {
 
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
-import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
+import { Checkbox } from '@/components/arc/checkbox/checkbox'
+import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
 import { SearchField } from '@/components/arc/search-field/search-field'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import SlotText from '@/components/arc/slot-text/slot-text'
 import TextMorph from '@/components/arc/text-morph/text-morph'
-import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
+import type { SearchLocale, SearchSort } from '@/lib/search-config'
+import {
+  contributorsOf,
+  isSearchLocale,
+  scriptOf,
+  shapeSnippet,
+  snippetFieldOf,
+  titleFieldOf,
+  titleOf,
+  type SearchHit,
+  type SearchRow,
+} from '@/lib/search-rows'
 
-export type SearchRow = {
-  /** `${sectionId}-${locale}-${objectId}`, unique across sections. */
-  id: string
-  sectionId: string
-  locale: 'en' | 'ar'
-  hit: Record<string, unknown> & { objectID: string }
-  /** The author or teacher, resolved from the related People docs. */
-  owner?: string | null
-}
-
-export type SearchSection = {
+/** One checkbox in the Type filter: a course kind or a collection. */
+export type SearchFacet = {
   id: string
   label: string
-  icon: ReactNode
-  /** Total matches, counted independently of the checkboxes. */
+  /** Matches for the query, counted whatever the checkboxes say. */
   found: number
-  /** For a course-type facet: the raw `courseType` value the hit
-   * carries, so a row inside the courses index resolves to its facet. */
-  typeValue?: string
 }
 
-export type Sort = 'relevance' | 'newest' | 'alpha'
+/** What a row shows of the facet it belongs to. */
+export type RowSection = { label: string; icon: ReactNode }
 
-/* ------------------------------------------------------------------ */
-/* Typesense field schema + pure helpers                               */
-/* ------------------------------------------------------------------ */
+const formatCount = (value: number) => value.toLocaleString('en')
 
-/** Highlightable/snippable field per section, in the plugin's schema.
- * The snippet source is per hit: the first field that carries a real
- * match — so a hit matched inside a course's syllabus quotes the
- * syllabus sentence, and a title-only hit shows no snippet. */
-const FIELDS: Record<string, { title: string; snippets: string[] }> = {
-  courses: { title: 'title', snippets: ['description', 'syllabus'] },
-  articles: { title: 'title', snippets: ['body'] },
-  people: { title: 'name', snippets: [] },
-}
-
-/** Picks the snippet attribute for a hit: the first field that Typesense
- * actually matched inside the snippet fields. There is deliberate no
- * fallback for a field that did not match: when Typesense skips
- * highlighting a field, the instantsearch adapter fills its snippet
- * result with the raw, whole field value — quote the whole essay under a
- * title-only hit — so a row without a matched snippet field gets no
- * snippet at all. */
-function pickSnippet(fields: { snippets: string[] }, hit: Record<string, unknown>): string | null {
-  const meta = (hit as { _snippetResult?: Record<string, pickSnippetMeta> })._snippetResult
-  return (
-    fields.snippets.find(
-      (attribute) =>
-        meta?.[attribute]?.value?.includes('<mark') && meta[attribute].matchLevel !== 'none',
-    ) ?? null
-  )
-}
-
-type pickSnippetMeta = {
-  value?: string
-  matchLevel?: string
-}
-
-/** Typesense cuts its affix window mid-sentence around the match.
- * Re-cut the window at sentence boundaries, so the expanded text is the
- * matched sentence with its nearest neighbors — the words the reader
- * searched for, in readable form — never a torn string. The `<mark>`
- * tags survive untouched; only the edges move. */
-const sentenceBoundaries = ['. ', '! ', '? ', '؟ ']
-
-function shapeSnippet(value: string): string {
-  if (!value.includes('<mark') || value.length <= 480) return value
-  const first = value.indexOf('<mark')
-  // Lead: back up to the last sentence boundary before the match.
-  const lead = value.slice(0, first)
-  const leadBreak = Math.max(...sentenceBoundaries.map((mark) => lead.lastIndexOf(mark)))
-  const start = leadBreak === -1 ? 0 : leadBreak + 2
-  // Trail: stop the cap on a sentence boundary, keeping at least the
-  // matched sentence itself.
-  const capped = value.slice(start, start + 560)
-  const trailBreak = Math.max(...sentenceBoundaries.map((mark) => capped.lastIndexOf(mark)))
-  // A boundary only counts when it closes past the match; sentences
-  // behind the mark were never at risk.
-  let end = capped.length
-  if (start + capped.length < value.length && trailBreak > first - start + 40) {
-    end = trailBreak + 2
+/** "3 hours ago", in the site language; past four weeks, the date. */
+function relativeTime(timestamp: number | undefined, locale: string): string | null {
+  if (!timestamp) return null
+  const seconds = Math.max(1, Math.round((Date.now() - timestamp) / 1000))
+  const format = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+  const steps: Array<[Intl.RelativeTimeFormatUnit, number, number]> = [
+    ['second', 1, 60],
+    ['minute', 60, 60],
+    ['hour', 3600, 24],
+    ['day', 86400, 7],
+    ['week', 604800, 5],
+  ]
+  for (const [unit, size, limit] of steps) {
+    const value = Math.round(seconds / size)
+    if (value < limit) return format.format(-value, unit)
   }
-  const window = capped.slice(0, end).trim()
-  // Where the cut ate content on either side, say so with a trailing
-  // ellipsis, as Typesense's own windows do.
-  const leadEllipsis = start > 0 ? '… ' : ''
-  const trailEllipsis = start + end < value.length ? ' …' : ''
-  return `${leadEllipsis}${window}${trailEllipsis}`
+  return new Date(timestamp).toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })
 }
 
-/** A copy of the hit whose snippet value is the shaped window, since
- * Instantsearch's `Snippet` reads the snippet result straight off the
- * hit. */
-function withShapedSnippet(hit: SearchRow['hit'], attribute: string): SearchRow['hit'] {
-  const meta = (hit as { _snippetResult?: Record<string, pickSnippetMeta> })._snippetResult
-  const entry = meta?.[attribute]
+/** A copy of the hit whose snippet is re-cut at sentence boundaries:
+ * InstantSearch's `Snippet` reads the snippet straight off the hit. */
+function withShapedSnippet(hit: SearchHit, attribute: string): SearchHit {
+  const entry = hit._snippetResult?.[attribute]
   if (!entry?.value) return hit
-  return {
-    ...hit,
-    _snippetResult: {
-      ...meta,
-      [attribute]: { ...entry, value: shapeSnippet(entry.value) },
-    },
-  }
-}
-
-/** A row's contributors as Arc avatar members: the mirror's serialized
- * owner pairs carry each name with its photo, and the joined `owner`
- * string stands in when the mirrors predate the pairs. */
-function ownerMembersOf(
-  hit: Record<string, unknown>,
-  owner: string | null,
-): { name: string; src?: string }[] {
-  const serialized = typeof hit.owners === 'string' ? hit.owners : ''
-  if (serialized) {
-    try {
-      const parsed = JSON.parse(serialized) as Array<{ name?: unknown; photo?: unknown }>
-      const members = parsed
-        .filter(
-          (entry): entry is { name: string; photo?: string } =>
-            typeof entry.name === 'string' && entry.name.trim() !== '',
-        )
-        .map((entry) => ({
-          name: entry.name,
-          ...(typeof entry.photo === 'string' && entry.photo.startsWith('http')
-            ? { src: entry.photo }
-            : {}),
-        }))
-      if (members.length) return members
-    } catch {
-      // fall through to the joined name string
-    }
-  }
-  return (owner?.split(/,\s*/) ?? []).map((name) => ({ name }))
-}
-
-function relativeTime(timestamp: unknown, locale: string): string | null {
-  const ms =
-    typeof timestamp === 'number'
-      ? timestamp
-      : typeof timestamp === 'string' && /^\d+$/.test(timestamp)
-        ? Number(timestamp)
-        : null
-  if (ms == null || Number.isNaN(ms)) return null
-  const seconds = Math.max(1, Math.round((Date.now() - ms) / 1000))
-  // Relative formatting follows the site language: the labels ride the
-  // message files, the numbers ride the locale's own calendar.
-  const rtf = new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
-  const floor = (unit: Intl.RelativeTimeFormatUnit, value: number) => {
-    const rounded = Math.round(value)
-    if (rounded === 0) return null
-    return rtf.format(-rounded, unit)
-  }
-  if (seconds < 60) return rtf.format(-seconds, 'second')
-  const minutes = Math.round(seconds / 60)
-  if (minutes < 60) return floor('minute', minutes) ?? rtf.format(0, 'minute')
-  const hours = Math.round(minutes / 60)
-  if (hours < 24) return floor('hour', hours) ?? rtf.format(0, 'hour')
-  const days = Math.round(hours / 24)
-  if (days < 7) return floor('day', days) ?? rtf.format(0, 'day')
-  const weeks = Math.round(days / 7)
-  if (weeks < 5) return floor('week', weeks) ?? rtf.format(0, 'week')
-  return new Date(ms).toLocaleDateString(locale, {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  })
+  return { ...hit, _snippetResult: { ...hit._snippetResult, [attribute]: { ...entry, value: shapeSnippet(entry.value) } } }
 }
 
 /* ------------------------------------------------------------------ */
-/* Filters: facet rows, mobile sheet body, desktop sidebar             */
+/* Filters                                                             */
 /* ------------------------------------------------------------------ */
 
-/** The facet rows themselves, shared by the desktop sidebar and the
- * mobile filters sheet. Each row pulls the 18px Arc mark out to the lane
- * edge while its 44px touch target stays whole. */
-function TypeFacets({
-  sections,
-  hiddenSections,
-  onToggleSection,
-}: {
-  sections: SearchSection[]
-  hiddenSections: ReadonlySet<string>
-  onToggleSection: (sectionId: string) => void
-}) {
+type FilterProps = {
+  facets: SearchFacet[]
+  hiddenFacets: ReadonlySet<string>
+  onToggleFacet: (id: string) => void
+  onClearFilters: () => void
+}
+
+/** The facet rows, shared by the desktop sidebar and the mobile sheet. The
+ * 18px Arc mark sits on the lane edge; its 44px touch target stays whole. */
+function TypeFacets({ facets, hiddenFacets, onToggleFacet }: Omit<FilterProps, 'onClearFilters'>) {
   return (
     <>
-      {sections.map((section) => {
-        const checked = !hiddenSections.has(section.id)
-        const disabled = section.found === 0
+      {facets.map((facet) => {
+        const checked = !hiddenFacets.has(facet.id)
+        const disabled = facet.found === 0 && checked
         return (
-          <div
-            key={section.id}
-            className={`flex items-center rounded-lg pe-1 ${disabled ? 'opacity-40' : ''}`}
-          >
+          <div key={facet.id} className={`flex items-center rounded-lg pe-1 ${disabled ? 'opacity-40' : ''}`}>
             <Checkbox
               checked={checked}
               disabled={disabled}
-              onCheckedChange={() => {
-                onToggleSection(section.id)
-              }}
-              aria-label={section.label}
+              onCheckedChange={() => onToggleFacet(facet.id)}
+              aria-label={facet.label}
               className="-ms-3.25"
             />
+            {/* The name toggles too; the checkbox carries the accessible name. */}
             <span
-              className="flex-1 cursor-pointer text-sm font-medium"
+              className={`flex-1 text-sm font-medium ${disabled ? '' : 'cursor-pointer'}`}
+              aria-hidden="true"
               onClick={() => {
-                if (!disabled) onToggleSection(section.id)
+                if (!disabled) onToggleFacet(facet.id)
               }}
             >
-              {section.label}
+              {facet.label}
             </span>
             <SlotText
-              value={section.found}
-              format={(value) => value.toLocaleString('en')}
+              value={facet.found}
+              format={formatCount}
               spins={0}
               duration={0.6}
               className="text-sm tabular-nums text-muted-foreground"
@@ -253,43 +129,23 @@ function TypeFacets({
   )
 }
 
-/* The clear/show actions of the mobile filters sheet. */
-function FilterSheetBody({
-  sections,
-  hiddenSections,
-  onToggleSection,
-  onClearFilters,
-  filtersDirty,
-  totalFound,
-  onClose,
-}: {
-  sections: SearchSection[]
-  hiddenSections: ReadonlySet<string>
-  onToggleSection: (sectionId: string) => void
-  onClearFilters: () => void
-  filtersDirty: boolean
-  totalFound: number
-  onClose: () => void
-}) {
+/** The mobile filters sheet: the facets, then clear and show actions. */
+function FilterSheetBody({ total, onClose, ...props }: FilterProps & { total: number; onClose: () => void }) {
   const t = useTranslations('Search')
   return (
     <div className="flex flex-col gap-6">
       <fieldset className="flex flex-col gap-1">
         <legend className="text-xs font-normal text-muted-foreground">{t('type')}</legend>
-        <TypeFacets
-          sections={sections}
-          hiddenSections={hiddenSections}
-          onToggleSection={onToggleSection}
-        />
+        <TypeFacets {...props} />
       </fieldset>
       <div className="flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={() => {
-            onClearFilters()
+            props.onClearFilters()
             onClose()
           }}
-          disabled={!filtersDirty}
+          disabled={props.hiddenFacets.size === 0}
           className="inline-flex h-11 items-center rounded-full border border-border px-5 text-sm font-medium transition-colors hover:bg-muted disabled:opacity-40"
         >
           {t('clearAll')}
@@ -299,46 +155,30 @@ function FilterSheetBody({
           onClick={onClose}
           className="inline-flex h-11 flex-1 items-center justify-center rounded-full bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
         >
-          {t('showResults', { count: totalFound })}
+          {t('showResults', { count: total })}
         </button>
       </div>
     </div>
   )
 }
 
-/* The desktop filter lane. */
-function FiltersSidebar({
-  sections,
-  hiddenSections,
-  onToggleSection,
-  onClearFilters,
-  filtersDirty,
-}: {
-  sections: SearchSection[]
-  hiddenSections: ReadonlySet<string>
-  onToggleSection: (sectionId: string) => void
-  onClearFilters: () => void
-  filtersDirty: boolean
-}) {
+/** The desktop filter lane. */
+function FiltersSidebar(props: FilterProps) {
   const t = useTranslations('Search')
   return (
     <aside className="hidden w-64 shrink-0 flex-col border-e border-border px-6 py-8 md:flex">
       <h2 className="font-sans text-md font-semibold tracking-tight">{t('filters')}</h2>
       <fieldset className="mt-5 flex flex-col gap-1">
         <legend className="pb-3 text-xs font-normal text-muted-foreground">{t('type')}</legend>
-        <TypeFacets
-          sections={sections}
-          hiddenSections={hiddenSections}
-          onToggleSection={onToggleSection}
-        />
+        <TypeFacets {...props} />
       </fieldset>
-      {filtersDirty ? (
+      {props.hiddenFacets.size > 0 ? (
         <button
           type="button"
-          onClick={onClearFilters}
-          className="self-start text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
+          onClick={props.onClearFilters}
+          className="mt-4 self-start text-sm text-muted-foreground underline underline-offset-4 transition-colors hover:text-foreground"
         >
-          Clear all
+          {t('clearAll')}
         </button>
       ) : null}
     </aside>
@@ -346,7 +186,7 @@ function FiltersSidebar({
 }
 
 /* ------------------------------------------------------------------ */
-/* Results: header (count + sort), empty state, one row                */
+/* Results: header, states, rows, footer                               */
 /* ------------------------------------------------------------------ */
 
 /** The found-count line and the sort control. */
@@ -354,82 +194,49 @@ function ResultsHeader({
   locale,
   searching,
   seconds,
-  totalFound,
+  total,
   sort,
   onSortChange,
 }: {
-  locale: string
+  locale: SearchLocale
   searching: boolean
   seconds: number | null
-  totalFound: number
-  sort: Sort
-  onSortChange: (sort: Sort) => void
+  total: number
+  sort: SearchSort
+  onSortChange: (sort: SearchSort) => void
 }) {
   const t = useTranslations('Search')
+  const tail =
+    seconds != null
+      ? t('resultsTail', { count: total, seconds: seconds.toFixed(2) })
+      : t('resultsOnly', { count: total })
   return (
-    <div className="flex flex-col items-start md:flex-row shrink-0 md:items-center gap-4 px-7 pb-2 pt-6">
-      {/* Update text inside a stable region, so a polite live area
-          announces the count without an aria-rerender storm. */}
-      <p
-        dir={locale === 'ar' ? 'rtl' : 'ltr'}
-        className="flex-1 text-sm text-muted-foreground [&_strong]:font-semibold [&_strong]:text-foreground"
-      >
-        {searching ? (
-          // Searching morphs only where the glyphs sit right: Latin.
-          <strong className="font-semibold text-foreground">
-            {locale === 'ar' ? (
-              <span dir="rtl">{t('searching')}</span>
-            ) : (
-              <TextMorph>{t('searching')}</TextMorph>
-            )}
-          </strong>
-        ) : locale === 'ar' ? (
-          // The Arabic line reads nested digits between Arabic words,
-          // so it stays one plain sentence rather than a rolling reel.
-          <strong className="font-semibold text-foreground" dir="rtl">
-            {seconds != null
-              ? t('resultsTail', {
-                  count: totalFound,
-                  seconds: (seconds / 1000).toFixed(2),
-                })
-              : t('resultsOnly', { count: totalFound })}
-          </strong>
-        ) : (
-          <>
-            {/* Announcements get a clean sentence of their own: a live
-                region would otherwise read the slot's rolling strips. */}
-            <span className="sr-only" role="status">
-              {seconds != null
-                ? t('announce', {
-                    count: totalFound,
-                    seconds: (seconds / 1000).toFixed(2),
-                  })
-                : t('announce', { count: totalFound, seconds: 0 })}
-            </span>
-            <strong className="font-semibold text-foreground">
-              <SlotText
-                value={totalFound}
-                format={(value) => value.toLocaleString('en')}
-                spins={0}
-              />
-            </strong>{' '}
-            {/* The words after the count stay static: the morph keeps
-                both glyph sets alive and doubles the text. */}
-            <span>
-              {seconds != null
-                ? t('resultsTail', {
-                    count: totalFound,
-                    seconds: (seconds / 1000).toFixed(2),
-                  })
-                : t('resultsOnly', { count: totalFound })}
-            </span>
-          </>
-        )}
+    <div className="flex shrink-0 flex-col items-start gap-4 px-7 pb-2 pt-6 md:flex-row md:items-center">
+      <p className="flex-1 text-sm text-muted-foreground" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
+        {/* A clean sentence for screen readers: the slot's rolling strips
+            would otherwise be read out digit by digit. */}
+        <span className="sr-only" role="status">
+          {searching ? t('searching') : t('announce', { count: total, seconds: (seconds ?? 0).toFixed(2) })}
+        </span>
+        <strong className="font-semibold text-foreground" aria-hidden="true">
+          {searching ? (
+            // The morph only renders Latin glyphs cleanly.
+            locale === 'ar' ? t('searching') : <TextMorph>{t('searching')}</TextMorph>
+          ) : locale === 'ar' ? (
+            // Arabic reads the digits inside the sentence, so it stays one
+            // plain line rather than a rolling reel.
+            tail
+          ) : (
+            <>
+              <SlotText value={total} format={formatCount} spins={0} /> <span className="font-normal text-muted-foreground">{tail}</span>
+            </>
+          )}
+        </strong>
       </p>
       <SegmentedControl
         label={t('sortLabel')}
         value={sort}
-        onValueChange={(value) => onSortChange(value as Sort)}
+        onValueChange={(value) => onSortChange(value as SearchSort)}
         options={[
           { value: 'relevance', label: t('sortRelevance') },
           { value: 'newest', label: t('sortNewest') },
@@ -440,30 +247,39 @@ function ResultsHeader({
   )
 }
 
-/* The empty / too-short-query panel. */
-function SearchEmptyState({ searching, query }: { searching: boolean; query: string }) {
+/** Nothing to list: still searching, no match, or Typesense unreachable. */
+function SearchEmptyState({
+  searching,
+  failed,
+  query,
+}: {
+  searching: boolean
+  failed: boolean
+  query: string
+}) {
   const t = useTranslations('Search')
+  const [title, hint] = searching
+    ? [t('searching'), null]
+    : failed
+      ? [t('errorTitle'), t('errorHint')]
+      : query.trim().length < 2
+        ? [t('emptyHint'), null]
+        : [t('noResultsTitle', { query }), t('noResultsHint')]
   return (
     <div className="grid place-items-center gap-3 px-6 py-20 text-center" role="status">
       <span className="text-muted-foreground" aria-hidden="true">
-        <Search width={20} height={20} />
+        {failed && !searching ? <RotateCw width={20} height={20} /> : <Search width={20} height={20} />}
       </span>
       <strong className="text-[15px] font-medium" dir="auto">
-        {searching
-          ? t('searching')
-          : query.trim().length < 2
-            ? t('emptyHint')
-            : t('noResultsTitle', { query })}
+        {title}
       </strong>
-      {!searching && query.trim().length >= 2 ? (
-        <small className="text-sm text-muted-foreground">{t('noResultsHint')}</small>
-      ) : null}
+      {hint ? <small className="max-w-sm text-sm text-muted-foreground">{hint}</small> : null}
     </div>
   )
 }
 
-/** One result row: media, highlighted title, language tag, snippet, and
- * the contributor line with relative time. */
+/** One result: media, highlighted title, language tag, snippet, then the
+ * contributors and the last edit. */
 function SearchRowItem({
   row,
   index,
@@ -476,31 +292,25 @@ function SearchRowItem({
 }: {
   row: SearchRow
   index: number
-  section?: SearchSection
+  section: RowSection
   active: boolean
-  locale: string
+  locale: SearchLocale
   inputId: string
   onHover: (index: number) => void
   onOpen: (row: SearchRow) => void
 }) {
   const t = useTranslations('Search')
-  const fields = FIELDS[row.sectionId]
-  const updated = relativeTime(row.hit.updatedAt, locale)
-  const owner = row.owner ?? null
-  // Row media: covers for docs (fallback icon), the person's own photo
-  // for people (fallback initials).
-  const media =
-    typeof row.hit.coverImage === 'string' && row.hit.coverImage ? row.hit.coverImage : null
-  const isPerson = row.sectionId === 'people'
-  const snippet = pickSnippet(fields, row.hit)
-  const title = (row.hit.title ?? row.hit.name ?? '') as string
-  const arabicScript = /[\u0600-\u06FF]/.test(title)
-  // The tag follows what the eye sees: a title written in the other
-  // script gets that language's tag, whichever mirror it sits in. The
-  // line itself inherits the row's resolved direction, so it starts
-  // where the title does.
-  const otherTag = arabicScript ? t('tagArabic') : row.locale !== locale ? t('tagEnglish') : null
-  const tagSeparator = arabicScript || row.locale !== locale ? ' · ' : ''
+  const { hit } = row
+  const isPerson = row.collection === 'people'
+  const titleField = titleFieldOf(row, locale)
+  const title = titleOf(row, locale)
+  const snippetField = snippetFieldOf(row, locale)
+  const contributors = contributorsOf(hit, locale)
+  const owner = contributors.map((entry) => entry.name).join(', ')
+  const updated = relativeTime(hit.updatedAt, locale)
+  // The tag follows what the eye sees: a title in the other script says so.
+  const titleLocale = scriptOf(title)
+  const otherLanguage = titleLocale !== locale
 
   return (
     <li
@@ -515,45 +325,38 @@ function SearchRowItem({
     >
       <div className="flex items-start gap-3 md:gap-4" dir="auto">
         {isPerson ? (
-          <Avatar
-            name={owner ?? (row.hit.name as string | undefined) ?? ''}
-            src={media ?? undefined}
-            size="md"
-            className="shrink-0"
-          />
-        ) : media ? (
+          <Avatar name={title} src={hit.coverImage || undefined} size="md" className="shrink-0" />
+        ) : hit.coverImage ? (
           <img
-            src={media}
+            src={hit.coverImage}
             alt=""
             loading="lazy"
-            className="hidden size-12 shrink-0 rounded-xl object-cover ring-1 ring-black/10 dark:ring-white/10 md:block"
+            className="hidden size-12 shrink-0 rounded-xl object-cover ring-1 ring-black/10 md:block dark:ring-white/10"
           />
         ) : (
           <span
             className={`hidden size-12 shrink-0 place-items-center rounded-xl text-muted-foreground md:grid ${active ? 'text-foreground' : ''}`}
             aria-hidden="true"
           >
-            {section?.icon}
+            {section.icon}
           </span>
         )}
         <div className="min-w-0 flex-1">
-          <p className="text-[16px] font-medium leading-[1.4]">
-            <Highlight attribute={fields.title} hit={row.hit as never} />
+          <p className="text-[16px] leading-[1.4] font-medium" lang={titleLocale}>
+            <Highlight attribute={titleField} hit={hit as never} />
           </p>
           <p className="mt-1 text-[13px] text-muted-foreground">
-            {otherTag ? (
-              <span lang={arabicScript ? 'ar' : 'en'} dir={arabicScript ? 'rtl' : 'ltr'}>
-                {otherTag}
-              </span>
+            {otherLanguage ? (
+              <>
+                <span lang={locale}>{t(titleLocale === 'ar' ? 'tagArabic' : 'tagEnglish')}</span>
+                {' · '}
+              </>
             ) : null}
-            {tagSeparator}
-            {section?.label}
+            {section.label}
           </p>
-          {snippet ? (
-            // The snippet glides open with Read more when it overflows
-            // two lines. Only the toggle's click is kept from the row,
-            // so tapping the text itself still opens it. The inline
-            // styles hold today's row typography against the module.
+          {snippetField ? (
+            // Read more opens a snippet past two lines. Only the toggle's
+            // click stays out of the row, so tapping the text still opens it.
             <ExpandableText
               lines={2}
               moreLabel={t('readMore')}
@@ -564,33 +367,18 @@ function SearchRowItem({
                 if ((event.target as HTMLElement).closest('button')) event.stopPropagation()
               }}
             >
-              <Snippet attribute={snippet} hit={withShapedSnippet(row.hit, snippet) as never} />
+              <Snippet attribute={snippetField} hit={withShapedSnippet(hit, snippetField) as never} />
             </ExpandableText>
           ) : null}
           {owner ? (
-            // A div: several contributors stack Avatars, whose group is a
-            // div and cannot live in a p. The name truncates instead of
-            // wrapping; the time gets its own line below, so the line
-            // never bends around it.
+            // A div: several contributors stack avatars, whose group is a
+            // div itself. The names truncate rather than wrap.
             <div className="mt-2.5 flex items-center gap-2.5 text-[13px] text-muted-foreground">
               <span className="shrink-0">
-                {ownerMembersOf(row.hit, owner).length > 1 ? (
-                  <AvatarGroup
-                    members={ownerMembersOf(row.hit, owner)}
-                    max={3}
-                    size="sm"
-                    label={owner}
-                  />
+                {contributors.length > 1 ? (
+                  <AvatarGroup members={contributors} max={3} size="sm" label={owner} />
                 ) : (
-                  <Avatar
-                    name={owner}
-                    size="sm"
-                    src={
-                      typeof row.hit.ownerPhoto === 'string' && row.hit.ownerPhoto
-                        ? row.hit.ownerPhoto
-                        : undefined
-                    }
-                  />
+                  <Avatar name={owner} size="sm" src={contributors[0]?.src} />
                 )}
               </span>
               <span className="min-w-0 truncate text-foreground/80" dir="auto">
@@ -609,14 +397,48 @@ function SearchRowItem({
   )
 }
 
+/** How many rows show out of all matches, and the way to load more. */
+function ResultsFooter({
+  shown,
+  total,
+  hasMore,
+  searching,
+  onShowMore,
+}: {
+  shown: number
+  total: number
+  hasMore: boolean
+  searching: boolean
+  onShowMore: () => void
+}) {
+  const t = useTranslations('Search')
+  return (
+    <div className="flex flex-col items-center gap-3 px-7 pt-2 pb-10">
+      <p className="text-[13px] text-muted-foreground tabular-nums">{t('showing', { shown, total })}</p>
+      {hasMore ? (
+        // Never disabled: a disabled button drops focus out of the panel,
+        // and Escape with it. A click while loading simply waits.
+        <button
+          type="button"
+          onClick={() => {
+            if (!searching) onShowMore()
+          }}
+          aria-busy={searching}
+          className="inline-flex h-10 items-center rounded-full border border-border px-5 text-sm font-medium transition-colors hover:bg-muted aria-busy:opacity-60"
+        >
+          {t('showMore')}
+        </button>
+      ) : null}
+    </div>
+  )
+}
+
 /* ------------------------------------------------------------------ */
-/* Query bar (field + mobile filters sheet + close)                    */
+/* Query bar                                                           */
 /* ------------------------------------------------------------------ */
 
-/** The query bar, built from the Arc search field: the field keeps its
- * own smoothing and focus behaviour, the `/` hint lives inside the
- * shell exactly while the field is empty, and a structure border closes
- * the bar from the content lanes beneath. */
+/** The Arc search field with the `/` hint, the mobile filters sheet and
+ * the close button. */
 function SearchQueryBar({
   query,
   onQueryChange,
@@ -624,34 +446,26 @@ function SearchQueryBar({
   inputRef,
   activeId,
   hasRows,
-  sections,
-  hiddenSections,
-  onToggleSection,
-  onClearFilters,
-  filtersDirty,
-  totalFound,
-  onEscape,
-}: {
+  total,
+  onClose,
+  ...filters
+}: FilterProps & {
   query: string
   onQueryChange: (query: string) => void
   inputId: string
   inputRef: RefObject<HTMLInputElement | null>
   activeId: string | undefined
   hasRows: boolean
-  sections: SearchSection[]
-  hiddenSections: ReadonlySet<string>
-  onToggleSection: (sectionId: string) => void
-  onClearFilters: () => void
-  filtersDirty: boolean
-  totalFound: number
-  onEscape: () => void
+  total: number
+  onClose: () => void
 }) {
   const t = useTranslations('Search')
-  // The mobile filters sheet rides on this state so "Show results" closes it.
+  // Rides on state so Show results closes the sheet.
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const applied = filters.hiddenFacets.size
 
   return (
-    <div className="relative flex shrink-0 items-center gap-3 border-b border-border px-4 py-4 md:px-4">
+    <div className="relative flex shrink-0 items-center gap-3 border-b border-border px-4 py-4">
       <div className="min-w-0 flex-1">
         <SearchField
           label={t('fieldLabel')}
@@ -674,8 +488,7 @@ function SearchQueryBar({
           className="text-[17px]"
         />
       </div>
-      {/* Mobile lanes lose the sidebar, so the mirror bar opens the same
-          facets in a bottom sheet, with the count of applied filters. */}
+      {/* Mobile has no sidebar: the same facets open in a bottom sheet. */}
       <BottomSheet
         title={t('filters')}
         description={t('filtersDescription')}
@@ -685,35 +498,38 @@ function SearchQueryBar({
           <button
             type="button"
             className="inline-flex h-10 shrink-0 items-center gap-2 rounded-full border border-border px-4 text-sm font-medium transition-colors hover:bg-muted md:hidden"
-            aria-keyshortcuts={undefined}
           >
             <SlidersHorizontal width={17} height={17} strokeWidth={1.75} aria-hidden="true" />
             <span>{t('filters')}</span>
-            {hiddenSections.size > 0 ? (
-              <span className="grid place-items-center rounded-full bg-muted px-1.5 text-xs tabular-nums text-muted-foreground">
-                {hiddenSections.size}
+            {applied > 0 ? (
+              <span className="grid place-items-center rounded-full bg-muted px-1.5 text-xs text-muted-foreground tabular-nums">
+                {applied}
               </span>
             ) : null}
           </button>
         }
       >
-        <FilterSheetBody
-          sections={sections}
-          hiddenSections={hiddenSections}
-          onToggleSection={onToggleSection}
-          onClearFilters={onClearFilters}
-          filtersDirty={filtersDirty}
-          totalFound={totalFound}
-          onClose={() => setFiltersOpen(false)}
-        />
+        <FilterSheetBody {...filters} total={total} onClose={() => setFiltersOpen(false)} />
       </BottomSheet>
+      {/* A full-screen panel has no backdrop to click away to, so on
+          desktop leaving it takes a word, paired with its Escape key. On
+          phones the icon keeps the field wide; the Filters button sits
+          between it and the field's own clear X there. */}
       <button
         type="button"
-        aria-label={t('close')}
-        onClick={onEscape}
-        className="inline-flex size-10 shrink-0 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        onClick={onClose}
+        aria-label={t('closeSearch')}
+        aria-keyshortcuts="Escape"
+        className="inline-flex size-10 shrink-0 items-center justify-center gap-2 rounded-full text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground md:w-auto md:px-3"
       >
-        <X width={20} height={20} aria-hidden="true" />
+        <X width={20} height={20} aria-hidden="true" className="md:hidden" />
+        <span className="hidden md:inline">{t('close')}</span>
+        <kbd
+          aria-hidden="true"
+          className="hidden h-6 items-center rounded-md border border-border bg-muted/30 px-1.5 font-sans text-xs text-muted-foreground md:inline-flex"
+        >
+          Esc
+        </kbd>
       </button>
     </div>
   )
@@ -723,70 +539,62 @@ function SearchQueryBar({
 /* Hooks: the gliding cursor fill, the `/` shortcut                    */
 /* ------------------------------------------------------------------ */
 
-/** One neutral fill glides between rows: keyboard moves step, pointer
- * moves jump straight. Measured imperatively so a cursor move never
- * cascades a render; reduced motion keeps it a plain crossfade. */
+/** One neutral fill glides between rows. Measured imperatively, so a cursor
+ * move never re-renders the list; reduced motion drops the transition. */
 function useCursorFill(inputId: string, activeRow: SearchRow | null) {
   const listRef = useRef<HTMLUListElement>(null)
-  const fillTarget = useRef<HTMLDivElement>(null)
-  // The scroll listener reads the last cursor through this ref; passive
-  // effects run after layout effects, so the active row also lands here
-  // every time the cursor measurer fires.
+  const fillRef = useRef<HTMLDivElement>(null)
+  // The scroll listener reads the latest cursor through this ref.
   const activeRowRef = useRef<SearchRow | null>(null)
-  const measureFill = useCallback(
+
+  const measure = useCallback(
     (current: SearchRow | null) => {
       activeRowRef.current = current
-      const fill = fillTarget.current
-      const container = listRef.current
-      if (!fill || !container) return
+      const fill = fillRef.current
+      const list = listRef.current
+      if (!fill || !list) return
       const row = current ? document.getElementById(`${inputId}-row-${current.id}`) : null
       if (!row) {
         fill.style.opacity = '0'
         return
       }
-      // Rects in the same snapshot: the list scroll happens on the wrapper,
-      // not the list itself, so no scroll offset enters the arithmetic.
-      const containerTop = container.getBoundingClientRect().top
-      const rowRect = row.getBoundingClientRect()
-      const move: CSSProperties = {
-        transform: `translateY(${rowRect.top - containerTop}px)`,
-        height: `${rowRect.height}px`,
-        opacity: '1',
-      }
-      for (const [property, value] of Object.entries(move)) {
-        fill.style.setProperty(property, value)
-      }
+      const rect = row.getBoundingClientRect()
+      fill.style.transform = `translateY(${rect.top - list.getBoundingClientRect().top}px)`
+      fill.style.height = `${rect.height}px`
+      fill.style.opacity = '1'
     },
     [inputId],
   )
-  useLayoutEffect(() => {
-    measureFill(activeRow)
-  }, [activeRow, measureFill])
-  // Scrolling and resizes move the rows under the fill; keep it glued.
+
+  useLayoutEffect(() => measure(activeRow), [activeRow, measure])
+
+  // Scrolling, resizing and expanding snippets move rows under the fill.
   useEffect(() => {
-    const scroller = listRef.current?.parentElement
-    if (!scroller) return
-    const onScroll = () => measureFill(activeRowRef.current)
-    const observer = new ResizeObserver(onScroll)
+    const list = listRef.current
+    const scroller = list?.parentElement
+    if (!list || !scroller) return
+    const remeasure = () => measure(activeRowRef.current)
+    const observer = new ResizeObserver(remeasure)
     observer.observe(scroller)
-    scroller.addEventListener('scroll', onScroll, { passive: true })
+    observer.observe(list)
+    scroller.addEventListener('scroll', remeasure, { passive: true })
     return () => {
-      scroller.removeEventListener('scroll', onScroll)
+      scroller.removeEventListener('scroll', remeasure)
       observer.disconnect()
     }
-  }, [measureFill])
+  }, [measure])
 
-  return { listRef, fillTarget }
+  return { listRef, fillRef }
 }
 
-/** `/` focuses the field from anywhere, unless another field is speaking. */
+/** `/` focuses the field from anywhere in the panel, unless another field
+ * has the keyboard. */
 function useSlashFocus(inputRef: RefObject<HTMLInputElement | null>) {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== '/' || event.metaKey || event.ctrlKey || event.altKey) return
       const target = event.target as HTMLElement | null
-      const tag = target?.tagName?.toLowerCase()
-      if (tag === 'input' || tag === 'textarea' || target?.isContentEditable) return
+      if (target?.closest('input, textarea, select, [contenteditable="true"]')) return
       event.preventDefault()
       inputRef.current?.focus()
     }
@@ -802,209 +610,194 @@ function useSlashFocus(inputRef: RefObject<HTMLInputElement | null>) {
 export interface SearchResultsProps {
   query: string
   onQueryChange: (query: string) => void
-  sections: SearchSection[]
-  rows: SearchRow[]
-  /** Unchecked sections, whose rows hide while counts still show. */
-  hiddenSections: ReadonlySet<string>
-  onToggleSection: (sectionId: string) => void
+  facets: SearchFacet[]
+  /** Unchecked facets: their rows hide while their counts still show. */
+  hiddenFacets: ReadonlySet<string>
+  onToggleFacet: (id: string) => void
   onClearFilters: () => void
-  filtersDirty: boolean
+  rows: SearchRow[]
+  sectionOf: (row: SearchRow) => RowSection
+  /** All matches across the checked facets. */
+  total: number
+  hasMore: boolean
+  onShowMore: () => void
   seconds: number | null
   searching: boolean
-  sort: Sort
-  onSortChange: (sort: Sort) => void
+  failed: boolean
+  sort: SearchSort
+  onSortChange: (sort: SearchSort) => void
   onOpen: (row: SearchRow) => void
-  /** Esc with an empty query — the caller decides what closing means. */
-  onEscape: () => void
+  onClose: () => void
 }
 
 /**
- * The faceted site search panel: a query bar, a filter sidebar, and one
- * flowing list of results. Presentation and interaction live here; the
- * Typesense wiring (queries, hits, found counts, timing) arrives through
- * props, inside the InstantSearch context this panel is mounted in.
- *
- * Design follows the Arc `search-results` block: the query field with a
- * clear control and a `/` hint, a filter sidebar whose counts follow the
- * query disjunctively, one list of mixed results with the matched words
- * marked, and a keyboard cursor that glides between rows.
+ * The faceted search panel: a query bar, a filter sidebar, and one list of
+ * mixed results with the matched words marked and a keyboard cursor that
+ * glides between rows. Presentation only; the Typesense wiring arrives
+ * through props, inside the InstantSearch context the panel is mounted in.
  */
 export function SearchResults({
   query,
   onQueryChange,
-  sections,
-  rows,
-  hiddenSections,
-  onToggleSection,
+  facets,
+  hiddenFacets,
+  onToggleFacet,
   onClearFilters,
-  filtersDirty,
+  rows,
+  sectionOf,
+  total,
+  hasMore,
+  onShowMore,
   seconds,
   searching,
+  failed,
   sort,
   onSortChange,
   onOpen,
-  onEscape,
+  onClose,
 }: SearchResultsProps) {
-  const locale = useLocale()
+  const t = useTranslations('Search')
+  const siteLocale = useLocale()
+  const locale = isSearchLocale(siteLocale) ? siteLocale : 'en'
   const inputId = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
+  const filters = { facets, hiddenFacets, onToggleFacet, onClearFilters }
 
-  const totalFound = sections
-    .filter((section) => !hiddenSections.has(section.id))
-    .reduce((sum, section) => sum + section.found, 0)
-
-  // The list is live data: a fresh answer can drop the cursor out of
-  // range entirely, so clamp during render instead of through an effect.
-  const cursorIndex =
-    activeIndex == null ? null : rows.length === 0 ? null : Math.min(activeIndex, rows.length - 1)
-
-  const activeRow = cursorIndex == null ? null : rows[cursorIndex]
+  // Fresh results can leave the cursor out of range: clamp while rendering.
+  const cursor = activeIndex == null || rows.length === 0 ? null : Math.min(activeIndex, rows.length - 1)
+  const activeRow = cursor == null ? null : rows[cursor]
   const activeId = activeRow ? `${inputId}-row-${activeRow.id}` : undefined
 
-  const { listRef, fillTarget } = useCursorFill(inputId, activeRow)
+  const { listRef, fillRef } = useCursorFill(inputId, activeRow)
   useSlashFocus(inputRef)
 
-  // The facet a row belongs to: its own section id, or, for course rows,
-  // the course-type facet the hit's courseType value lands in.
-  const sectionOfRow = (row: SearchRow) => {
-    const direct = sections.find((entry) => entry.id === row.sectionId)
-    if (direct || row.sectionId !== 'courses') return direct
-    const type = typeof row.hit.courseType === 'string' ? row.hit.courseType : ''
-    return sections.find((entry) => entry.typeValue === type)
-  }
-
-  // Once the panel settles, the field owns focus, for typing or editing.
   useEffect(() => {
     inputRef.current?.focus({ preventScroll: true })
   }, [])
 
-  function handleContainerKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
-    // While the reader types in the field, j and k are letters and Home
-    // and End belong to the caret; the arrows still step into the list
-    // from there, like any combobox.
-    const target = event.target as HTMLElement | null
-    const typing =
-      target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA' || target?.isContentEditable || false
-    if (typing && (event.key === 'j' || event.key === 'k' || event.key === 'Home' || event.key === 'End')) {
-      return
-    }
-    if (event.key === 'ArrowDown' || (!typing && event.key === 'j')) {
+  // Keep the cursor's row in view as the keyboard moves it.
+  useEffect(() => {
+    if (activeId) document.getElementById(activeId)?.scrollIntoView({ block: 'nearest' })
+  }, [activeId])
+
+  const move = (to: number | null) => setActiveIndex(rows.length && to != null ? to : null)
+
+  function onKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    const target = event.target as HTMLElement
+    // In the field, j/k are letters and Home/End move the caret; the
+    // arrows still step into the list, as in any combobox.
+    const typing = Boolean(target.closest('input, textarea, [contenteditable="true"]'))
+    const key = event.key
+    if (key === 'ArrowDown' || (!typing && key === 'j')) {
       event.preventDefault()
-      setActiveIndex((index) => (rows.length ? Math.min((index ?? -1) + 1, rows.length - 1) : null))
-    } else if (event.key === 'ArrowUp' || (!typing && event.key === 'k')) {
+      move(Math.min((cursor ?? -1) + 1, rows.length - 1))
+    } else if (key === 'ArrowUp' || (!typing && key === 'k')) {
       event.preventDefault()
-      // Arrow up on the first result returns to the query.
-      setActiveIndex((index) => (rows.length ? Math.max((index ?? 0) - 1, 0) : null))
-      if (cursorIndex === 0 && (event.key === 'ArrowUp' || event.key === 'k')) {
-        setActiveIndex(null)
-        inputRef.current?.focus()
-      }
-    } else if (!typing && event.key === 'Home') {
-      event.preventDefault()
-      setActiveIndex(rows.length ? 0 : null)
-    } else if (!typing && event.key === 'End') {
-      event.preventDefault()
-      setActiveIndex(rows.length ? rows.length - 1 : null)
-    } else if (event.key === 'Enter' || event.key === ' ') {
-      // Focused buttons (the Read more toggle in a row, the controls in
-      // the query bar) activate themselves; the cursor never opens a
-      // row from under them.
-      if (target?.closest('button')) return
-      // Enter or Space on a row opens it; Enter in the query runs the
-      // best match when nothing is carried yet.
-      if (activeRow) {
-        event.preventDefault()
-        onOpen(activeRow)
-      }
-    } else if (event.key === 'Escape') {
-      if (query) {
-        event.preventDefault()
-        onQueryChange('')
-        setActiveIndex(null)
+      // Up from the first row returns to the query.
+      if (cursor === 0) {
+        move(null)
         inputRef.current?.focus()
       } else {
-        event.preventDefault()
-        onEscape()
+        move(Math.max((cursor ?? 0) - 1, 0))
+      }
+    } else if (!typing && key === 'Home') {
+      event.preventDefault()
+      move(0)
+    } else if (!typing && key === 'End') {
+      event.preventDefault()
+      move(rows.length - 1)
+    } else if (key === 'Enter' || (!typing && key === ' ')) {
+      // Focused buttons (Read more, Show more, the bar's controls) act
+      // for themselves; the cursor never opens a row from under them.
+      if (target.closest('button') || !activeRow) return
+      event.preventDefault()
+      onOpen(activeRow)
+    } else if (key === 'Escape') {
+      event.preventDefault()
+      if (query) {
+        onQueryChange('')
+        move(null)
+        inputRef.current?.focus()
+      } else {
+        onClose()
       }
     }
-    document.getElementById(activeId ?? '')?.scrollIntoView({ block: 'nearest' })
   }
 
   return (
     <div
       tabIndex={-1}
-      onKeyDown={handleContainerKeyDown}
-      className="flex h-full w-full flex-col overflow-hidden bg-popover/98 text-popover-foreground outline-none [&_mark]:rounded-[5px] [&_mark]:bg-muted [&_mark]:px-0.75 [&_mark]:py-0.5 [&_mark]:font-semibold [&_mark]:text-foreground"
+      onKeyDown={onKeyDown}
+      className="flex h-full w-full flex-col overflow-hidden bg-popover text-popover-foreground outline-none [&_mark]:rounded-[5px] [&_mark]:bg-muted [&_mark]:px-0.75 [&_mark]:py-0.5 [&_mark]:font-semibold [&_mark]:text-foreground"
     >
       <SearchQueryBar
+        {...filters}
         query={query}
         onQueryChange={(value) => {
           onQueryChange(value)
-          setActiveIndex(null)
+          move(null)
         }}
         inputId={inputId}
         inputRef={inputRef}
         activeId={activeId}
         hasRows={rows.length > 0}
-        sections={sections}
-        hiddenSections={hiddenSections}
-        onToggleSection={onToggleSection}
-        onClearFilters={onClearFilters}
-        filtersDirty={filtersDirty}
-        totalFound={totalFound}
-        onEscape={onEscape}
+        total={total}
+        onClose={onClose}
       />
 
       <div className="flex min-h-0 flex-1">
-        <FiltersSidebar
-          sections={sections}
-          hiddenSections={hiddenSections}
-          onToggleSection={onToggleSection}
-          onClearFilters={onClearFilters}
-          filtersDirty={filtersDirty}
-        />
+        <FiltersSidebar {...filters} />
 
         <div className="flex min-w-0 flex-1 flex-col" aria-busy={searching}>
           <ResultsHeader
             locale={locale}
             searching={searching}
             seconds={seconds}
-            totalFound={totalFound}
+            total={total}
             sort={sort}
             onSortChange={onSortChange}
           />
 
           <div className="relative min-h-0 flex-1 overflow-y-auto overscroll-contain">
             {rows.length === 0 ? (
-              <SearchEmptyState searching={searching} query={query} />
+              <SearchEmptyState searching={searching} failed={failed} query={query} />
             ) : (
-              <ul
-                ref={listRef}
-                role="listbox"
-                aria-label="Search results"
-                className="relative flex flex-col gap-1 px-4 py-4"
-              >
-                {/* The gliding cursor fill; reduced motion falls back. */}
-                <div
-                  ref={fillTarget}
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-1 top-0 rounded-2xl bg-muted/60 opacity-0 transition-[transform,height,opacity] duration-150 motion-reduce:transition-none"
-                />
-                {rows.map((row, index) => (
-                  <SearchRowItem
-                    key={row.id}
-                    row={row}
-                    index={index}
-                    section={sectionOfRow(row)}
-                    active={cursorIndex === index}
-                    locale={locale}
-                    inputId={inputId}
-                    onHover={setActiveIndex}
-                    onOpen={onOpen}
+              <>
+                <ul
+                  ref={listRef}
+                  id={`${inputId}-rows`}
+                  role="listbox"
+                  aria-label={t('resultsLabel')}
+                  className="relative flex flex-col gap-1 px-4 py-4"
+                >
+                  <div
+                    ref={fillRef}
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-1 top-0 rounded-2xl bg-muted/60 opacity-0 transition-[transform,height,opacity] duration-150 motion-reduce:transition-none"
                   />
-                ))}
-              </ul>
+                  {rows.map((row, index) => (
+                    <SearchRowItem
+                      key={row.id}
+                      row={row}
+                      index={index}
+                      section={sectionOf(row)}
+                      active={cursor === index}
+                      locale={locale}
+                      inputId={inputId}
+                      onHover={setActiveIndex}
+                      onOpen={onOpen}
+                    />
+                  ))}
+                </ul>
+                <ResultsFooter
+                  shown={rows.length}
+                  total={total}
+                  hasMore={hasMore}
+                  searching={searching}
+                  onShowMore={onShowMore}
+                />
+              </>
             )}
           </div>
         </div>

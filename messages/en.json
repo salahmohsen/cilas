@@ -43,7 +43,8 @@
     "fieldLabel": "Search the site",
     "placeholder": "Search articles, courses and people",
     "clearField": "Clear search",
-    "close": "Close search",
+    "close": "Close",
+    "closeSearch": "Close search",
     "filters": "Filters",
     "filtersDescription": "Show or hide sections and course kinds; counts follow the query.",
     "type": "Type",
@@ -58,7 +59,6 @@
     "typeShort": "Short courses",
     "typeArticles": "Articles",
     "typePeople": "People",
-    "appliesTo": "Applies to English and Arabic alike.",
     "clearAll": "Clear all",
     "showResults": "Show results ({count, plural, one {# result} other {# results}})",
     "searching": "Searching…",
@@ -73,7 +73,12 @@
     "updated": "Updated {when}",
     "editedSuffix": "edited {when}",
     "readMore": "Read more",
-    "showLess": "Show less"
+    "showLess": "Show less",
+    "resultsLabel": "Search results",
+    "showing": "Showing {shown, number} of {total, number}",
+    "showMore": "Show more results",
+    "errorTitle": "Search is not available now",
+    "errorHint": "The connection to the search service failed. Try again in a moment."
   },
   "Language": {
     "label": "Language",

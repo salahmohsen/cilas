@@ -1,0 +1,136 @@
+import { describe, expect, it } from 'vitest'
+
+import { searchParametersOf } from '@/lib/search-config'
+import { fieldsOf, physicalNameOf } from '@/plugins/typesense/schema'
+import {
+  contributorsOf,
+  lexicalText,
+  syllabusText,
+  toSearchDocument,
+} from '@/plugins/typesense/documents'
+
+const paragraph = (...children: object[]) => ({ type: 'paragraph', children })
+const text = (value: string) => ({ type: 'text', text: value })
+const richText = (...children: object[]) => ({ root: { type: 'root', children } })
+
+const person = (id: number, name: string | null, photo?: string) => ({
+  id,
+  name,
+  photo: photo ? { url: photo } : null,
+})
+
+describe('lexicalText', () => {
+  it('keeps inline runs together and ends each block on its own line', () => {
+    const body = richText(
+      paragraph(text('un'), text('believ'), text('able')),
+      { type: 'heading', children: [text('Next')] },
+    )
+    expect(lexicalText(body)).toBe('unbelievable\nNext')
+  })
+
+  it('reads line breaks and skips empty blocks', () => {
+    const body = richText(paragraph(text('one'), { type: 'linebreak' }, text('two')), paragraph())
+    expect(lexicalText(body)).toBe('one\ntwo')
+  })
+})
+
+describe('syllabusText', () => {
+  it('reads sessions, activities and bibliographies once, in order', () => {
+    const course = {
+      sessions: [
+        {
+          session_title: 'Reading Plato',
+          description: richText(paragraph(text('Book one'))),
+          activities: [{ description: 'Walk' }],
+          bibliography: [{ title: 'Republic', note: 'Chapter 1' }],
+        },
+      ],
+      bibliography: [{ title: 'Republic' }, { title: 'Laws' }],
+    }
+    expect(syllabusText(course)).toBe('Reading Plato\nBook one\nWalk\nRepublic\nChapter 1\nLaws')
+  })
+})
+
+describe('contributorsOf', () => {
+  it('matches each person across languages by id', () => {
+    const en = { authors: [person(1, 'Iman Mersal', 'https://cdn/iman.webp')], credits: [{ people: [person(2, 'Ali')] }] }
+    const ar = { authors: [person(1, 'إيمان مرسال')], credits: [{ people: [person(2, null)] }] }
+    expect(contributorsOf('articles', { en, ar })).toEqual([
+      { name: { en: 'Iman Mersal', ar: 'إيمان مرسال' }, photo: 'https://cdn/iman.webp' },
+      { name: { en: 'Ali' } },
+    ])
+  })
+
+  it('ignores relations that stayed ids', () => {
+    expect(contributorsOf('courses', { en: { fellows: [3, 4] }, ar: {} })).toEqual([])
+  })
+})
+
+describe('toSearchDocument', () => {
+  const course = {
+    id: 7,
+    slug: 'reading-plato',
+    updatedAt: '2026-01-02T00:00:00.000Z',
+    course_type: 'CORE',
+    cover_image: { url: 'https://cdn/cover.webp' },
+    title: 'Reading Plato',
+    fellows: [person(1, 'Iman Mersal')],
+    sessions: [{ session_title: 'Shared title' }],
+  }
+
+  it('folds both language copies into one record', () => {
+    const document = toSearchDocument('courses', {
+      en: course,
+      ar: { ...course, title: 'قراءة أفلاطون', fellows: [person(1, 'إيمان مرسال')] },
+    })
+    expect(document).toMatchObject({
+      id: '7',
+      slug: 'reading-plato',
+      updatedAt: Date.parse('2026-01-02T00:00:00.000Z'),
+      courseType: 'CORE',
+      coverImage: 'https://cdn/cover.webp',
+      title_en: 'Reading Plato',
+      title_ar: 'قراءة أفلاطون',
+      owner_en: 'Iman Mersal',
+      owner_ar: 'إيمان مرسال',
+      sortTitle_en: 'reading plato',
+      sortTitle_ar: 'قراءة أفلاطون',
+      // Unlocalized text lives in the English field only.
+      syllabus_en: 'Shared title',
+      syllabus_ar: '',
+    })
+  })
+
+  it('falls back to the other title for sorting', () => {
+    const document = toSearchDocument('courses', { en: course, ar: { ...course, title: null } })
+    expect(document?.title_ar).toBe('')
+    expect(document?.sortTitle_ar).toBe('reading plato')
+  })
+
+  it('keeps an Arabic-only document', () => {
+    const document = toSearchDocument('people', { en: { id: 2, name: null }, ar: { id: 2, name: 'علي' } })
+    expect(document).toMatchObject({ name_en: '', name_ar: 'علي', sortTitle_en: 'علي' })
+  })
+
+  it('drops a document with no title in either language', () => {
+    expect(toSearchDocument('articles', { en: { id: 3, title: '' }, ar: {} })).toBeNull()
+  })
+
+  it('fills every schema field', () => {
+    const document = toSearchDocument('courses', { en: course, ar: {} })!
+    for (const field of fieldsOf('courses')) expect(document).toHaveProperty(field.name)
+  })
+})
+
+describe('search schema', () => {
+  it('queries both languages of every field, weights aligned', () => {
+    const { query_by, query_by_weights } = searchParametersOf('articles')
+    expect(query_by).toBe('title_en,title_ar,owner_en,owner_ar,body_en,body_ar')
+    expect(query_by_weights).toBe('10,10,5,5,3,3')
+  })
+
+  it('names the physical collection after its schema', () => {
+    expect(physicalNameOf('people')).toMatch(/^people_[0-9a-f]{8}$/)
+    expect(physicalNameOf('people')).not.toBe(physicalNameOf('articles'))
+  })
+})

@@ -26,7 +26,6 @@ import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { formFields } from './forms/form-fields'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
-import { typesenseSearch } from '@rubixstudios/payload-typesense'
 import type {
   GenerateDescription,
   GenerateImage,
@@ -39,9 +38,8 @@ import { payloadTheme } from 'payload-theme'
 import { anyone, hasRole, isAdmin } from './access'
 import { env } from './env'
 import { pathOf } from './lib/paths'
-import { TYPESENSE_SEARCH_COLLECTIONS } from './lib/search-config'
 import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from './lib/seo'
-import { typesensePanelIndex } from './plugins/typesense-index'
+import { typesenseSearch } from './plugins/typesense'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -196,39 +194,8 @@ export default buildConfig({
     }),
     storage,
     payloadTheme({ accent: '#000' }),
-    typesenseSearch({
-      // Skipped entirely until TYPESENSE_API_KEY exists, so builds and tests
-      // run fine without a Typesense server reachable.
-      disabled: !env.TYPESENSE_API_KEY || process.env.NEXT_PHASE === 'phase-production-build',
-      typesense: {
-        apiKey: env.TYPESENSE_API_KEY ?? '',
-        nodes: [
-          {
-            host: env.TYPESENSE_HOST,
-            port: env.TYPESENSE_PORT,
-            protocol: env.TYPESENSE_PROTOCOL,
-          },
-        ],
-      },
-      // Rubix backgrounds the secondary collections the panel does not
-      // read (programmes, publications, events, governance) — the panel's
-      // three live in the panel indexer below, where both languages and
-      // the owner field are handled together.
-      collections: Object.fromEntries(
-        Object.entries(TYPESENSE_SEARCH_COLLECTIONS)
-          .filter(([slug]) => !['courses', 'articles', 'people'].includes(slug))
-          .map(([slug, config]) => [
-            slug,
-            {
-              enabled: true,
-              searchFields: [...config.searchFields],
-              displayName: config.displayName,
-            },
-          ]),
-      ),
-    }),
-    // The search panel's own collections: per-language mirrors with the
-    // `owner` field resolved from the related People documents.
-    typesensePanelIndex(),
+    // Site search: bilingual Typesense collections of the public courses,
+    // articles and people. Off without TYPESENSE_API_KEY (builds, tests).
+    typesenseSearch(),
   ],
 })
