@@ -1,32 +1,32 @@
 import type { CSSProperties } from 'react'
 
+import { LOGO, LOGO_VIEWBOX } from './home-scene-logo'
 import styles from './home-scene.module.css'
 
-/** Seconds into the draw-in each stroke starts. */
-type Stroke = { d: string; w: number; at: number }
+/** One row of sea: its height in the band, wavelength and height of a wave (px), ink weight. */
+type Swell = { y: number; length: number; rise: number; w: number; at: number }
 
-const WAVES: Stroke[] = [
-  { d: 'M-40 30 C 200 18, 420 42, 700 28 S 1200 16, 1640 32', w: 2.5, at: 0 },
-  { d: 'M120 62 C 380 50, 640 74, 900 60 S 1350 50, 1560 64', w: 2, at: 0.12 },
-  { d: 'M-20 92 C 260 84, 520 102, 820 90 S 1300 80, 1620 96', w: 1.5, at: 0.24 },
-  { d: 'M300 112 C 520 106, 760 118, 1040 110', w: 1, at: 0.36 },
+// Far rows are low, short and faint; near rows, tall and long.
+const SWELLS: Swell[] = [
+  { y: 18, length: 90, rise: 6, w: 1.5, at: 0 },
+  { y: 42, length: 120, rise: 9, w: 2, at: 0.1 },
+  { y: 70, length: 150, rise: 12, w: 2.5, at: 0.2 },
+  { y: 102, length: 190, rise: 15, w: 3, at: 0.3 },
 ]
 
-// The sail of the CILAS logo: a mast, a leaning edge, brush stripes rising to it.
-const SAIL: Stroke[] = [
-  { d: 'M98 12 L92 212', w: 5, at: 0.3 },
-  { d: 'M98 14 C 122 72, 150 140, 172 204 L 94 208', w: 4, at: 0.4 },
-  { d: 'M96 54 L110 44', w: 8, at: 0.55 },
-  { d: 'M95 86 L121 74', w: 9, at: 0.62 },
-  { d: 'M95 120 L134 106', w: 10, at: 0.69 },
-  { d: 'M94 156 L147 140', w: 11, at: 0.76 },
-  { d: 'M93 188 L160 172', w: 12, at: 0.83 },
-]
+/** The widest screen the sea has to cover, plus one wave to drift into. */
+const REACH = 3000
 
-const HULL: Stroke[] = [
-  { d: 'M28 212 L194 208', w: 5, at: 0.45 },
-  { d: 'M28 214 C 74 246, 150 248, 194 208', w: 10, at: 0.5 },
-]
+/**
+ * A row of waves from one wavelength before the edge. Each wave rises slow
+ * from a round trough to a pointed crest and falls back, as swell does.
+ */
+const swell = ({ y, length, rise }: Swell) => {
+  const half = length / 2
+  const up = `c${half * 0.55} 0 ${half * 0.85} ${-rise * 0.55} ${half} ${-rise}`
+  const down = `c${half * 0.15} ${rise * 0.45} ${half * 0.45} ${rise} ${half} ${rise}`
+  return `M${-length} ${y}` + ` ${up} ${down}`.repeat(Math.ceil((REACH + length) / length))
+}
 
 const BIRDS = [
   { x: 40, y: 120, s: 1.2 },
@@ -40,8 +40,8 @@ const BIRDS = [
 const at = (seconds: number) => ({ '--at': `${seconds}s` }) as CSSProperties
 
 /**
- * The home hero's scene in the ink of the CILAS logo: birds in the sky, a
- * felucca on the water. Strokes take the text colour, so it follows the theme;
+ * The home hero's scene in the ink of the CILAS logo: birds in the sky, and
+ * the logo's own felucca riding rows of waves. Strokes take the text colour, so it follows the theme;
  * all motion is CSS, and none of it runs with reduced motion.
  */
 export function HomeScene() {
@@ -64,23 +64,17 @@ export function HomeScene() {
         ))}
       </svg>
 
-      <svg
-        className={styles.water}
-        fill="none"
-        preserveAspectRatio="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        viewBox="0 0 1600 120"
-      >
-        {WAVES.map((wave, i) => (
+      {/* No viewBox: the waves are drawn in pixels, so they keep their shape
+          at any width, and the band shows as much sea as it is wide. */}
+      <svg className={styles.water} fill="none" stroke="currentColor" strokeLinecap="round">
+        {SWELLS.map((row, i) => (
           <path
             className={styles.wave}
-            d={wave.d}
-            key={i}
+            d={swell(row)}
+            key={row.y}
             pathLength={1}
-            strokeWidth={wave.w}
-            style={{ ...at(wave.at), '--i': i } as CSSProperties}
-            vectorEffect="non-scaling-stroke"
+            strokeWidth={row.w}
+            style={{ ...at(row.at), '--i': i, '--length': `${-row.length}px` } as CSSProperties}
           />
         ))}
       </svg>
@@ -88,20 +82,19 @@ export function HomeScene() {
       {/* The track carries the scroll-linked sail-out, the boat its bobbing. */}
       <div className={styles.track}>
         <div className={styles.boat}>
-          <svg
-            fill="none"
-            stroke="currentColor"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            viewBox="0 0 200 260"
-          >
+          <svg fill="currentColor" fillRule="evenodd" viewBox={LOGO_VIEWBOX}>
             <g className={styles.sail}>
-              {SAIL.map((stroke, i) => (
-                <path d={stroke.d} key={i} pathLength={1} strokeWidth={stroke.w} style={at(stroke.at)} />
+              {LOGO.filter((shape) => shape.part !== 'hull').map((shape) => (
+                <path
+                  className={styles[shape.part]}
+                  d={shape.d}
+                  key={shape.d}
+                  style={at(shape.at)}
+                />
               ))}
             </g>
-            {HULL.map((stroke, i) => (
-              <path d={stroke.d} key={i} pathLength={1} strokeWidth={stroke.w} style={at(stroke.at)} />
+            {LOGO.filter((shape) => shape.part === 'hull').map((shape) => (
+              <path className={styles.hull} d={shape.d} key={shape.d} style={at(shape.at)} />
             ))}
           </svg>
         </div>

@@ -36,8 +36,8 @@
 .track {
   position: absolute;
   right: clamp(1rem, 10vw, 12rem);
-  bottom: calc(var(--shore) + var(--water) * 0.6);
-  width: clamp(7rem, 15vw, 13rem);
+  bottom: calc(var(--shore) + var(--water) * 0.45);
+  width: clamp(5.5rem, 11vw, 10rem);
 }
 /* A phone has no sky beside the title: the birds stay home, the boat is small. */
 @media (max-width: 40rem) {
@@ -45,7 +45,7 @@
     display: none;
   }
   .track {
-    width: 5.5rem;
+    width: 3.5rem;
   }
 }
 .boat svg {
@@ -57,16 +57,30 @@
   transform-origin: 0% 100%;
 }
 
+/* Far rows of sea are fainter. */
+.wave {
+  opacity: calc(0.45 + var(--i) * 0.18);
+}
+
 /* Every stroke is drawn, at rest, unless motion is welcome. */
-.scene path {
+.wave,
+.bird path {
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Ink draws in, each stroke at its own moment. */
-  .scene path {
+  /* Ink goes down, each stroke at its own moment: lines draw along, the
+     logo's shapes are brushed on, the yard upward, the bands and hull across. */
+  .bird path {
     animation: draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both;
+  }
+  .yard {
+    animation: brush-up 0.6s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both;
+  }
+  .band,
+  .hull {
+    animation: brush-across 0.5s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both;
   }
   /* Then the scene breathes: the boat rides the water, the sail leans, the
      water drifts and the birds glide, each out of step with the rest. */
@@ -76,10 +90,12 @@
   .sail {
     animation: sway 7s ease-in-out 1.6s infinite;
   }
-  .scene .wave {
+  /* Each row rolls on by one wavelength and starts over, seamlessly; near
+     rows roll faster than far ones. */
+  .wave {
     animation:
       draw 0.9s cubic-bezier(0.4, 0, 0.2, 1) var(--at, 0s) both,
-      drift calc(9s + var(--i) * 2s) ease-in-out 1.4s infinite;
+      roll calc(14s - var(--i) * 2.5s) linear infinite;
   }
   .bird {
     animation: glide calc(6s + var(--i) * 0.7s) ease-in-out calc(1.6s + var(--i) * 0.3s) infinite;
@@ -117,9 +133,25 @@
     rotate: -1.5deg;
   }
 }
-@keyframes drift {
-  50% {
-    translate: 24px 0;
+@keyframes brush-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes brush-across {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0);
+  }
+}
+@keyframes roll {
+  to {
+    translate: var(--length) 0;
   }
 }
 @keyframes glide {

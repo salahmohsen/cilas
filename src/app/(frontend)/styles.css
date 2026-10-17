@@ -1619,7 +1619,7 @@ a.collection-item:hover {
   background: var(--background);
   color: var(--foreground);
   /* The scene's water band, and the numbers row under it (the shore). */
-  --water: clamp(5rem, 12vh, 8rem);
+  --water: 7.5rem;
   --shore: 7.5rem;
 }
 .home-hero-inner {
