@@ -13,6 +13,11 @@ for (const locale of ['en', 'ar']) {
 
     await expect(header).toHaveCSS('background-color', CLEAR)
 
+    // Scrolled, so solid anywhere else, but still over the hero: clear.
+    await page.evaluate(scrollTo, 250)
+    await expect(header).toHaveAttribute('data-scrolled', /.*/)
+    await expect(header).toHaveCSS('background-color', CLEAR)
+
     await page.evaluate(scrollTo, await page.evaluate(() => window.innerHeight * 1.5))
     await expect(header).not.toHaveCSS('background-color', CLEAR)
 

@@ -64,10 +64,10 @@ export function HomeHero({
     const hero = ref.current
     if (!hero) return
     const root = document.documentElement
-    const header =
-      parseFloat(getComputedStyle(root).getPropertyValue('--site-header-height')) || 64
+    const header = parseFloat(getComputedStyle(root).getPropertyValue('--site-header-height')) || 64
     const observer = new IntersectionObserver(
-      ([entry]) => root.toggleAttribute('data-over-hero', entry.isIntersecting),
+      (entries) =>
+        root.toggleAttribute('data-over-hero', entries[entries.length - 1].isIntersecting),
       { rootMargin: `-${header}px 0px 0px 0px` },
     )
     observer.observe(hero)
@@ -75,7 +75,10 @@ export function HomeHero({
     // Whatever sits above the header (the deadlines bar, until dismissed)
     // pushes the hero down; it gives that much back, so it ends at the fold.
     const offset = () =>
-      hero.style.setProperty('--hero-offset', `${hero.getBoundingClientRect().top + window.scrollY}px`)
+      hero.style.setProperty(
+        '--hero-offset',
+        `${hero.getBoundingClientRect().top + window.scrollY}px`,
+      )
     offset()
     const resize = new ResizeObserver(offset)
     resize.observe(document.body)
