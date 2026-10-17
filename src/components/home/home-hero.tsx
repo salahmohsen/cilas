@@ -21,9 +21,10 @@ const step = (n: number) => ({ '--step': n }) as CSSProperties
 /**
  * The home page's opening, the rest of the first screen: the institute's
  * name over the logo's felucca at sea, who CILAS is for, one after another,
- * and the institute in numbers. The list runs once and rests on its last
- * line; with reduced motion it starts there. The name stands in for the
- * header's, which stays hidden until this one has scrolled away.
+ * and the institute in numbers. The list goes round without end; with
+ * reduced motion it stays still, on its last line. The name and the boat
+ * stand in for the header's brand, which stays hidden until the name has
+ * scrolled away.
  */
 export function HomeHero({
   title,
@@ -56,10 +57,10 @@ export function HomeHero({
       setIndex(last)
       return
     }
-    if (index >= last) return
-    const timer = window.setTimeout(() => setIndex((i) => i + 1), STEP)
+    // Round and round: after the last line comes the first again.
+    const timer = window.setTimeout(() => setIndex((i) => (i + 1) % who.length), STEP)
     return () => window.clearTimeout(timer)
-  }, [index, last, reduced])
+  }, [index, last, reduced, who.length])
 
   // Whatever sits above the hero (the deadlines bar, until dismissed, and the
   // header) pushes it down; it gives that much back, so it ends at the fold.
@@ -79,7 +80,7 @@ export function HomeHero({
   }, [])
 
   // data-brand-shown on <html> once the title has gone up under the header:
-  // the header's own name comes back then (see styles.css).
+  // the header's brand, mark and name, comes back then (see styles.css).
   const titleRef = useRef<HTMLHeadingElement>(null)
   useEffect(() => {
     const heading = titleRef.current

@@ -599,9 +599,7 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
       }}
     >
       {brand.mark ?? <ArcMark className={styles.brandMark} />}
-      <span className={styles.brandName} data-brand-name>
-        {brand.name}
-      </span>
+      <span className={styles.brandName}>{brand.name}</span>
     </Destination>
   )
 
@@ -618,7 +616,9 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
         onPointerEnter={onRegionPointerEnter}
       >
         <div className={styles.bar}>
-          <div className={styles.brandSlot}>{brandNode}</div>
+          <div className={styles.brandSlot} data-brand>
+            {brandNode}
+          </div>
           <LayoutGroup id={id}>
             <nav
               className={styles.nav}

@@ -36,22 +36,27 @@ for (const size of [
 }
 
 for (const locale of ['en', 'ar']) {
-  test(`the header's name waits for the hero's to scroll away (${locale})`, async ({ page }) => {
+  test(`the header's brand waits for the hero's name to scroll away (${locale})`, async ({
+    page,
+  }) => {
     test.setTimeout(120_000)
     await page.goto(`${BASE}/${locale}`, { timeout: 90_000 })
-    const name = page.locator('.site-header [data-brand-name]')
-    await expect(name).toHaveCSS('opacity', '0')
+    const brand = page.locator('.site-header [data-brand]')
+    await expect(brand).toHaveCSS('opacity', '0')
+    // Hidden, the brand link is out of the tab order too.
+    await expect(brand.locator('a')).toBeHidden()
 
     await page.evaluate(scrollTo, 600)
-    await expect(name).toHaveCSS('opacity', '1')
+    await expect(brand).toHaveCSS('opacity', '1')
+    await expect(brand.locator('a')).toBeVisible()
 
     await page.evaluate(scrollTo, 0)
-    await expect(name).toHaveCSS('opacity', '0')
+    await expect(brand).toHaveCSS('opacity', '0')
   })
 }
 
-test('elsewhere the header shows its name from the start', async ({ page }) => {
+test('elsewhere the header shows its brand from the start', async ({ page }) => {
   test.setTimeout(120_000)
   await page.goto(`${BASE}/en/articles`, { timeout: 90_000 })
-  await expect(page.locator('.site-header [data-brand-name]')).toHaveCSS('opacity', '1')
+  await expect(page.locator('.site-header [data-brand]')).toHaveCSS('opacity', '1')
 })

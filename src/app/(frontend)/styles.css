@@ -1732,26 +1732,28 @@ a.collection-item:hover {
   }
 }
 
-/* On the home page the hero carries the institute's name, so the header's
-   stays hidden until that one has scrolled up under it (HomeHero sets
-   data-brand-shown), then rises back in. :has() decides on the first paint,
-   so the name never shows and then hides. The mark stays throughout. */
-.site-header [data-brand-name] {
+/* On the home page the hero carries the institute's name and its boat, so
+   the header's brand, mark and name, stays hidden until that name has
+   scrolled up under it (HomeHero sets data-brand-shown), then rises back in.
+   :has() decides on the first paint, so the brand never shows and then hides.
+   Hidden, it is also out of the tab order and the accessibility tree:
+   visibility turns off once the fade has run, and back on at once. */
+.site-header [data-brand] {
   transition:
     opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
     translate 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-    filter 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    filter 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s linear 0s;
 }
-:root:has(.home-hero):not([data-brand-shown]) .site-header [data-brand-name] {
+:root:has(.home-hero):not([data-brand-shown]) .site-header [data-brand] {
+  visibility: hidden;
   opacity: 0;
   translate: 0 0.5em;
   filter: blur(4px);
+  transition-delay: 0s, 0s, 0s, 0.45s;
 }
 @media (prefers-reduced-motion: reduce) {
-  .site-header [data-brand-name] {
-    transition: opacity 0.2s linear;
-  }
-  :root:has(.home-hero):not([data-brand-shown]) .site-header [data-brand-name] {
+  :root:has(.home-hero):not([data-brand-shown]) .site-header [data-brand] {
     translate: none;
     filter: none;
   }
