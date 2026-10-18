@@ -18,6 +18,7 @@ import * as migration_20261018_165545_about_page_segment_setting from './2026101
 import * as migration_20261018_174136_drop_about_page from './20261018_174136_drop_about_page';
 import * as migration_20261018_175500_backfill_publication_versions from './20261018_175500_backfill_publication_versions';
 import * as migration_20261018_180514_card_stack_replaces_foreword from './20261018_180514_card_stack_replaces_foreword';
+import * as migration_20261018_183643_article_autosave from './20261018_183643_article_autosave';
 
 export const migrations = [
   {
@@ -118,6 +119,11 @@ export const migrations = [
   {
     up: migration_20261018_180514_card_stack_replaces_foreword.up,
     down: migration_20261018_180514_card_stack_replaces_foreword.down,
-    name: '20261018_180514_card_stack_replaces_foreword'
+    name: '20261018_180514_card_stack_replaces_foreword',
+  },
+  {
+    up: migration_20261018_183643_article_autosave.up,
+    down: migration_20261018_183643_article_autosave.down,
+    name: '20261018_183643_article_autosave'
   },
 ];

@@ -6,8 +6,7 @@ import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
-type Tracked =
-  'people' | 'articles' | 'publications' | 'press' | 'spaces' | 'cycles' | 'courses'
+type Tracked = 'people' | 'articles' | 'publications' | 'press' | 'spaces' | 'cycles' | 'courses'
 
 let payload: Payload
 const created: Array<{ collection: Tracked; id: number }> = []
@@ -166,6 +165,35 @@ describe('publishing', () => {
           overrideAccess: false,
         }),
       ).rejects.toThrow(/main save button/)
+    })
+
+    it('keeps the review status on an autosave that changes it', async () => {
+      const draft = track(
+        'articles',
+        await payload.create({
+          collection: 'articles',
+          data: {
+            title: 'Autosave Probe',
+            slug: 'autosave-probe',
+            authors: [],
+            tier: 'owner',
+            review: { status: 'draft' },
+          },
+          user: author,
+          overrideAccess: false,
+        }),
+      )
+      const saved = await payload.update({
+        collection: 'articles',
+        id: draft.id,
+        data: { title: 'Autosave Probe, edited', review: { status: 'submitted' } },
+        draft: true,
+        autosave: true,
+        user: author,
+        overrideAccess: false,
+      })
+      expect(saved.title).toBe('Autosave Probe, edited')
+      expect(saved.review?.status).toBe('draft')
     })
   })
 

@@ -78,7 +78,7 @@ export const Courses: CollectionConfig = {
   versions: {
     drafts: {
       autosave: {
-        interval: 300,
+        interval: 2000,
       },
     },
   },

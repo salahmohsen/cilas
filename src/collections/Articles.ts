@@ -50,6 +50,7 @@ export const addSelfAsAuthor: CollectionBeforeValidateHook<Article> = ({
 }
 
 const DRAFT_SAVE = 'articleDraftSave'
+const AUTOSAVE = 'articleAutosave'
 
 /**
  * Records whether this write is a draft save ("Save draft", `draft: true`).
@@ -60,9 +61,14 @@ const DRAFT_SAVE = 'articleDraftSave'
  */
 export const recordDraftSave: CollectionBeforeOperationHook = ({ args, operation, req }) => {
   if (operation !== 'create' && operation !== 'update') return
-  const { data, draft } = args as { data?: { _status?: unknown }; draft?: boolean }
+  const { autosave, data, draft } = args as {
+    autosave?: boolean
+    data?: { _status?: unknown }
+    draft?: boolean
+  }
   req.context[DRAFT_SAVE] =
     operation === 'create' ? Boolean(draft) : Boolean(draft) && data?._status !== 'published'
+  req.context[AUTOSAVE] = Boolean(autosave)
 }
 
 /**
@@ -80,14 +86,20 @@ export const applyReview: CollectionBeforeChangeHook<Article> = ({
   // article's history. A new article always starts from draft.
   const from: ReviewState =
     operation === 'create' ? 'draft' : (originalDoc?.review?.status ?? 'draft')
-  const to: ReviewState = data.review?.status ?? from
+  let to: ReviewState = data.review?.status ?? from
 
   // A draft save writes only a version: the main document keeps its old
   // review status and _status, while emails would announce the new one. An
   // author could also keep editing a "submitted" article whose main doc still
   // reads draft. So the review status only changes on a full save.
   if (to !== from && req.context?.[DRAFT_SAVE]) {
-    throw new APIError('Change the review status with the main save button, not Save draft.', 400)
+    // An autosave runs while the editor picks the new status: it keeps the
+    // old one, and the main save applies the new.
+    if (req.context[AUTOSAVE]) {
+      to = from
+      data = { ...data, review: { ...data.review, status: from } }
+    } else
+      throw new APIError('Change the review status with the main save button, not Save draft.', 400)
   }
 
   const result = reviewPatch({
@@ -144,7 +156,8 @@ export const Articles: CollectionConfig = {
     update: isAdminOrOwnWhile(ownsViaAuthors, WITH_AUTHOR),
     delete: isAdminOrOwnWhile(ownsViaAuthors, WITH_AUTHOR),
   },
-  versions: { drafts: true },
+  // Autosave feeds the live preview as the editor writes.
+  versions: { drafts: { autosave: { interval: 2000 } } },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'authors', 'review.status', 'tier'],
