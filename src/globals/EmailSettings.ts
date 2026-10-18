@@ -115,6 +115,21 @@ export const EmailSettings: GlobalConfig = {
             },
           ],
         },
+        {
+          label: 'Newsletter',
+          fields: [
+            {
+              name: 'segment_id',
+              label: 'Resend segment ID',
+              type: 'text',
+              admin: {
+                placeholder: 'e.g. 78261eea-8f8b-4381-83c6-79fa7120f1cf',
+                description:
+                  'The Resend segment that signups join and newsletters go to: Resend → Contacts → Segments → the segment → its ID. Empty: the RESEND_AUDIENCE_ID server setting. The API key stays a server setting (RESEND_API_KEY), as it is a secret.',
+              },
+            },
+          ],
+        },
         { label: 'Texts', fields: [{ name: 'texts', type: 'group', fields: textGroups }] },
       ],
     },

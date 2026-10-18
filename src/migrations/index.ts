@@ -14,6 +14,7 @@ import * as migration_20261018_100126_email_tagline from './20261018_100126_emai
 import * as migration_20261018_102716_newsletter_sections from './20261018_102716_newsletter_sections';
 import * as migration_20261018_102744_drop_newsletter_picks from './20261018_102744_drop_newsletter_picks';
 import * as migration_20261018_162245_picks_by_type_space_address from './20261018_162245_picks_by_type_space_address';
+import * as migration_20261018_165545_about_page_segment_setting from './20261018_165545_about_page_segment_setting';
 
 export const migrations = [
   {
@@ -94,6 +95,11 @@ export const migrations = [
   {
     up: migration_20261018_162245_picks_by_type_space_address.up,
     down: migration_20261018_162245_picks_by_type_space_address.down,
-    name: '20261018_162245_picks_by_type_space_address'
+    name: '20261018_162245_picks_by_type_space_address',
+  },
+  {
+    up: migration_20261018_165545_about_page_segment_setting.up,
+    down: migration_20261018_165545_about_page_segment_setting.down,
+    name: '20261018_165545_about_page_segment_setting'
   },
 ];

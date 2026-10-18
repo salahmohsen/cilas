@@ -3,7 +3,7 @@ import { DefaultTemplate } from '@payloadcms/next/templates'
 import type { AdminViewServerProps } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { env } from '@/env'
+import { LIST_OFF, newsletterList } from '@/lib/newsletter-list'
 import { accountContactCount, FREE_CONTACT_LIMIT, listContacts, type Contact } from '@/lib/resend-contacts'
 
 import { SubscribersTable } from './subscribers-table'
@@ -39,16 +39,15 @@ export async function SubscribersView({ initPageResult, params, searchParams, us
 
   // Custom views are not protected by Payload's access rules.
   if (!isAdminUser(user)) return template(<p>Only admins can see the newsletter list.</p>)
-  if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID) {
-    return template(<p>The newsletter list is off: set RESEND_API_KEY and RESEND_AUDIENCE_ID.</p>)
-  }
+  const list = await newsletterList(initPageResult.req.payload)
+  if (!list) return template(<p>{LIST_OFF}</p>)
 
   let contacts: Contact[]
   let stored: number | null
   try {
     ;[contacts, stored] = await Promise.all([
-      listContacts(env.RESEND_API_KEY, env.RESEND_AUDIENCE_ID),
-      accountContactCount(env.RESEND_API_KEY),
+      listContacts(list.apiKey, list.segmentId),
+      accountContactCount(list.apiKey),
     ])
   } catch (error) {
     return template(<p>Resend did not answer: {(error as Error).message}</p>)

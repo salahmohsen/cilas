@@ -1,6 +1,9 @@
 import * as z from 'zod'
 
-import { env } from '@/env'
+import config from '@payload-config'
+import { getPayload } from 'payload'
+
+import { newsletterList } from '@/lib/newsletter-list'
 import { subscribe } from '@/lib/resend-contacts'
 
 const Body = z.object({ email: z.email() })
@@ -11,7 +14,8 @@ const Body = z.object({ email: z.email() })
  * unsubscribes are the provider's job.
  */
 export async function POST(request: Request) {
-  if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID) {
+  const list = await newsletterList(await getPayload({ config }))
+  if (!list) {
     return Response.json({ error: 'Newsletter signup is not configured' }, { status: 503 })
   }
   const parsed = Body.safeParse(await request.json().catch(() => null))
@@ -20,7 +24,7 @@ export async function POST(request: Request) {
   }
 
   // An address already on the list counts as success: the visitor's intent is met.
-  const ok = await subscribe(env.RESEND_API_KEY, env.RESEND_AUDIENCE_ID, parsed.data.email).catch(() => false)
+  const ok = await subscribe(list.apiKey, list.segmentId, parsed.data.email).catch(() => false)
   if (!ok) {
     return Response.json({ error: 'Could not subscribe right now' }, { status: 502 })
   }

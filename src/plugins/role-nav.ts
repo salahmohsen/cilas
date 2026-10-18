@@ -24,13 +24,21 @@ const hiddenFor =
     return view === null || !VISIBLE[view].includes(slug)
   }
 
+/** Collections the menu lists first, in this order; the rest keep theirs. */
+const FIRST = ['users']
+
+const rank = (slug: string) => (FIRST.includes(slug) ? FIRST.indexOf(slug) : FIRST.length)
+
 /** Last in `plugins`, so it also covers the collections other plugins add. */
 export const roleNav = (): Plugin => (config) => ({
   ...config,
-  collections: config.collections?.map((collection) => ({
-    ...collection,
-    admin: { ...collection.admin, hidden: hiddenFor(collection.slug, collection.admin?.hidden) },
-  })),
+  collections: config.collections
+    ?.map((collection) => ({
+      ...collection,
+      admin: { ...collection.admin, hidden: hiddenFor(collection.slug, collection.admin?.hidden) },
+    }))
+    // A stable sort: listed slugs move up, everything else stays as it was.
+    .sort((a, b) => rank(a.slug) - rank(b.slug)),
   globals: config.globals?.map((global) => ({
     ...global,
     admin: { ...global.admin, hidden: hiddenFor(global.slug, global.admin?.hidden) },

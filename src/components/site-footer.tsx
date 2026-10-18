@@ -61,7 +61,6 @@ export function SiteFooter({ socials = [] }: { socials?: SocialLink[] }) {
           title: t('institute'),
           links: [
             { label: t('about'), href: href('/about') },
-            { label: t('spaces'), href: href('/spaces') },
             { label: t('contact'), href: href('/contact') },
           ],
         },

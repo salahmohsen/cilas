@@ -6,6 +6,7 @@ import { newsletterMail } from '@/emails/newsletter'
 import { getEmailSettings } from '@/emails/settings'
 import { env } from '@/env'
 import { sendBroadcast } from '@/lib/broadcast'
+import { LIST_OFF, newsletterList } from '@/lib/newsletter-list'
 import { accountContactCount, FREE_CONTACT_LIMIT } from '@/lib/resend-contacts'
 
 const issueOf = (req: PayloadRequest, id: number) => issueForEmail(req.payload, id, req)
@@ -36,16 +37,12 @@ const test = guarded(async (req, id) => {
 
 /** The issue to every subscriber, once; then it is published to the archive. */
 const send = guarded(async (req, id) => {
-  if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID) {
-    return Response.json(
-      { error: 'Sending is off: RESEND_API_KEY or RESEND_AUDIENCE_ID is not set.' },
-      { status: 503 },
-    )
-  }
+  const list = await newsletterList(req.payload, req)
+  if (!list) return Response.json({ error: LIST_OFF }, { status: 503 })
   const issue = await issueOf(req, id)
   if (issue.sent_at) return Response.json({ error: 'This issue was already sent.' }, { status: 409 })
   // Resend refuses broadcasts once the account stores more contacts than the plan allows.
-  const stored = await accountContactCount(env.RESEND_API_KEY)
+  const stored = await accountContactCount(list.apiKey)
   if (stored !== null && stored > FREE_CONTACT_LIMIT) {
     return Response.json(
       {
@@ -59,8 +56,8 @@ const send = guarded(async (req, id) => {
     unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}',
   })
   const broadcastId = await sendBroadcast({
-    apiKey: env.RESEND_API_KEY,
-    segmentId: env.RESEND_AUDIENCE_ID,
+    apiKey: list.apiKey,
+    segmentId: list.segmentId,
     from: `${settings.fromName} <${env.EMAIL_FROM_ADDRESS}>`,
     replyTo: settings.replyTo,
     subject: mail.subject,

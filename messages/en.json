@@ -504,6 +504,13 @@
     "draft": "Your answers are kept on this device until you send them.",
     "fix": "{count, plural, one {One question still needs an answer.} other {# questions still need an answer.}}"
   },
+  "About": {
+    "spaces": "Our spaces",
+    "spacesText": "Where CILAS has taught, now and before.",
+    "current": "Current space",
+    "former": "Former space",
+    "map": "Open in Google Maps"
+  },
   "Apply": {
     "metaTitle": "Apply to the Bridge Programme",
     "title": "Apply to the Bridge Programme",

@@ -3,7 +3,7 @@ import { headers as getHeaders } from 'next/headers.js'
 import { getPayload } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { env } from '@/env'
+import { LIST_OFF, newsletterList } from '@/lib/newsletter-list'
 import { contactsCsv, listContacts } from '@/lib/resend-contacts'
 
 /**
@@ -14,13 +14,10 @@ export async function GET(request: Request) {
   const payload = await getPayload({ config })
   const { user } = await payload.auth({ headers: await getHeaders() })
   if (!isAdminUser(user)) return new Response('Admins only', { status: 403 })
-  if (!env.RESEND_API_KEY || !env.RESEND_AUDIENCE_ID) {
-    return new Response('The newsletter list is off: RESEND_API_KEY or RESEND_AUDIENCE_ID is not set.', {
-      status: 503,
-    })
-  }
+  const list = await newsletterList(payload)
+  if (!list) return new Response(LIST_OFF, { status: 503 })
   const all = new URL(request.url).searchParams.get('all') === '1'
-  const contacts = await listContacts(env.RESEND_API_KEY, env.RESEND_AUDIENCE_ID)
+  const contacts = await listContacts(list.apiKey, list.segmentId)
   const day = new Date().toISOString().slice(0, 10)
   return new Response(contactsCsv(contacts, { all }), {
     headers: {
