@@ -2,6 +2,7 @@
 // React Email renders with react-dom/server, which needs Node's streams.
 import { describe, expect, it } from 'vitest'
 
+import { cardOf } from '@/emails/cards'
 import { MessageEmail } from '@/emails/message'
 import { renderEmail } from '@/emails/render'
 import { DEFAULT_TEXTS, fill, paragraphs, withDefaults } from '@/emails/settings'
@@ -109,5 +110,52 @@ describe('transactional mails', () => {
   it('links the reset button to the token', async () => {
     const mail = await resetMail(settings, { email: 'm@x.co', token: 'abc', site })
     expect(mail.html).toContain('href="https://ci-las.org/admin/reset/abc"')
+  })
+})
+
+describe('cardOf', () => {
+  const site = 'https://ci-las.org'
+  const labels = { site, read: 'Read more', apply: 'Apply' }
+
+  it('makes a course card with its cycle and summary', () => {
+    const card = cardOf(
+      {
+        relationTo: 'courses',
+        value: {
+          id: 1,
+          title: 'Reading Plato',
+          slug: 'reading-plato',
+          summary: 'Book by book.',
+          cover_image: { url: 'https://cdn.test/plato.jpg', alt: 'Plato' },
+          cycle: { season: 'fall', start_year: 2026 },
+        },
+      },
+      'Starts 3 Nov',
+      labels,
+    )
+    expect(card).toEqual({
+      kind: 'Course',
+      title: 'Reading Plato',
+      meta: 'Fall 2026',
+      text: 'Book by book.',
+      note: 'Starts 3 Nov',
+      image: { url: 'https://cdn.test/plato.jpg', alt: 'Plato' },
+      url: 'https://ci-las.org/en/study/reading-plato',
+      button: 'Read more',
+    })
+  })
+
+  it('links a Bridge programme to the Bridge page with Apply', () => {
+    const card = cardOf(
+      { relationTo: 'programmes', value: { id: 2, title: 'Bridge 2026', kind: 'bridge', tagline: 'A year.' } },
+      null,
+      labels,
+    )
+    expect(card).toMatchObject({ kind: 'Programme', url: 'https://ci-las.org/en/study/bridge', button: 'Apply' })
+  })
+
+  it('skips a pick that is not populated, or a programme with no page', () => {
+    expect(cardOf({ relationTo: 'articles', value: 5 }, null, labels)).toBeNull()
+    expect(cardOf({ relationTo: 'programmes', value: { id: 3, title: 'Residency', kind: 'residency' } }, null, labels)).toBeNull()
   })
 })
