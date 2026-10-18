@@ -8,6 +8,9 @@
     "label": "CILAS main navigation",
     "signIn": "Sign in",
     "dashboard": "Dashboard",
+    "account": "Account menu",
+    "signOut": "Sign out",
+    "signingOut": "Signing out",
     "apply": "Apply",
     "study": {
       "label": "Study",

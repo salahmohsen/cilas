@@ -84,6 +84,8 @@ export interface UserMenuProps {
   /** The trigger button, for returning focus after the menu is swapped out. */
   ref?: Ref<HTMLButtonElement>
   className?: string
+  /** Text in the site's language. `account` names the trigger, before the person's name. */
+  labels?: { account?: string; signOut?: string; signingOut?: string }
 }
 
 type Highlight = { top: number; height: number; tone?: string; glide: boolean }
@@ -337,6 +339,11 @@ export function UserMenu({
   portal = true,
   ref,
   className,
+  labels: {
+    account = 'Account menu',
+    signOut: signOutLabel = 'Sign out',
+    signingOut: signingOutLabel = 'Signing out',
+  } = {},
 }: UserMenuProps) {
   const id = useId()
   const menuId = `${id}-menu`
@@ -741,7 +748,7 @@ export function UserMenu({
           className={styles.item}
           data-stop="item"
           data-tone="danger"
-          data-label="Sign out"
+          data-label={signOutLabel}
           variants={row}
           aria-busy={signingOut || undefined}
           onPointerMove={onItemPointerMove}
@@ -755,7 +762,7 @@ export function UserMenu({
             )}
           </span>
           <span className={styles.itemLabel}>
-            <Rise text={signingOut ? 'Signing out' : 'Sign out'} reduced={reduced} />
+            <Rise text={signingOut ? signingOutLabel : signOutLabel} reduced={reduced} />
           </span>
           {signOutKeys && <Keys keys={signOutKeys} />}
         </motion.button>
@@ -834,7 +841,7 @@ export function UserMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
-        aria-label={`Account menu, ${user.name}${showStatus ? `, ${statusLabel(status)}` : ''}`}
+        aria-label={`${account}, ${user.name}${showStatus ? `, ${statusLabel(status)}` : ''}`}
         onClick={onTriggerClick}
         onKeyDown={onTriggerKeyDown}
       >

@@ -1,11 +1,12 @@
 'use client'
 
-import { BookOpen, Calendar, Newspaper, Users } from 'lucide-react'
+import { BookOpen, Calendar, LayoutDashboard, Newspaper, Users } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { Suspense, useEffect, useRef, useState } from 'react'
 
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
+import { UserMenu, type UserMenuUser } from '@/components/arc/user-menu/user-menu'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { SiteSearch } from '@/components/site-search'
 
@@ -30,15 +31,25 @@ export function CILASSiteHeader() {
   }, [])
 
   // The header is cached for everyone, so it asks who is signed in: a
-  // signed-in account gets its dashboard instead of "Sign in".
-  const [signedIn, setSignedIn] = useState(false)
+  // signed-in account gets its account menu instead of "Sign in". Depth 1
+  // brings the linked person's name; an account with no person shows its email.
+  const [account, setAccount] = useState<UserMenuUser | null>(null)
   useEffect(() => {
     let live = true
-    fetch('/api/users/me', { credentials: 'include' })
+    fetch('/api/users/me?depth=1', { credentials: 'include' })
       .then((res) => (res.ok ? res.json() : null))
-      .then((body: { user?: unknown } | null) => {
-        if (live) setSignedIn(Boolean(body?.user))
-      })
+      .then(
+        (
+          body: {
+            user?: { email: string; person?: { name?: string } | number | null } | null
+          } | null,
+        ) => {
+          const user = body?.user
+          if (!live || !user) return
+          const name = typeof user.person === 'object' ? user.person?.name : undefined
+          setAccount({ name: name || user.email, email: user.email })
+        },
+      )
       .catch(() => {})
     return () => {
       live = false
@@ -149,11 +160,7 @@ export function CILASSiteHeader() {
       items={items}
       label={t('label')}
       primaryAction={applyPath ? { label: t('apply'), href: href(applyPath) } : null}
-      secondaryAction={
-        signedIn
-          ? { label: t('dashboard'), href: '/admin' }
-          : { label: t('signIn'), href: href('/login') }
-      }
+      secondaryAction={account ? null : { label: t('signIn'), href: href('/login') }}
       utilities={
         <>
           <SiteSearch />
@@ -162,6 +169,29 @@ export function CILASSiteHeader() {
             <LanguageSwitch />
           </Suspense>
           <ThemeToggle />
+          {account && (
+            <UserMenu
+              user={account}
+              // The header's own toggle sets the theme.
+              showTheme={false}
+              items={[
+                {
+                  label: t('dashboard'),
+                  icon: <LayoutDashboard size={16} />,
+                  // The admin has its own root layout, so it needs a full load.
+                  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+                  onSelect: () => window.location.assign('/admin'),
+                },
+              ]}
+              // Reload so nothing of the account stays on the page.
+              onSignOut={() =>
+                fetch('/api/users/logout', { method: 'POST', credentials: 'include' }).then(() =>
+                  window.location.reload(),
+                )
+              }
+              labels={{ account: t('account'), signOut: t('signOut'), signingOut: t('signingOut') }}
+            />
+          )}
         </>
       }
       variant="mega"
