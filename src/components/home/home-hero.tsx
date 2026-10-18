@@ -1,11 +1,10 @@
 'use client'
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
 import { HomeNumbers, type HomeStat } from '@/components/home/home-numbers'
-import { HomeScene } from '@/components/home/home-scene'
 import { Link } from '@/i18n/navigation'
 
 type Action = { label: string; href: string }
@@ -14,6 +13,14 @@ type Closed = { label: string; note: string; link: Action }
 
 /** How long each audience stays before the next takes its place. */
 const STEP = 2400
+
+/**
+ * Sets --hero-offset (see the effect below) while the HTML is still being
+ * parsed, so the first paint already has the hero's final height and nothing
+ * moves when the page hydrates. It runs where it stands, first in the hero.
+ */
+const OFFSET_NOW =
+  "(function(h){h.style.setProperty('--hero-offset',h.getBoundingClientRect().top+scrollY+'px')})(document.currentScript.parentElement)"
 
 /** Its place in the entrance, after the title: text, who, actions, … */
 const step = (n: number) => ({ '--step': n }) as CSSProperties
@@ -33,6 +40,7 @@ export function HomeHero({
   primary,
   secondary,
   numbers,
+  scene,
   locale,
 }: {
   /** Broken into lines at each newline. */
@@ -43,6 +51,8 @@ export function HomeHero({
   primary: Action | Closed
   secondary: Action
   numbers: { title: string; stats: HomeStat[] }
+  /** The drawing behind it all (HomeScene), rendered on the server. */
+  scene: ReactNode
   locale: string
 }) {
   const reduced = useReducedMotion()
@@ -101,7 +111,8 @@ export function HomeHero({
 
   return (
     <section aria-labelledby="home-title" className="home-hero" ref={ref}>
-      <HomeScene />
+      <script dangerouslySetInnerHTML={{ __html: OFFSET_NOW }} />
+      {scene}
       <div className="home-hero-inner">
         <h1 className="home-hero-title" id="home-title" ref={titleRef}>
           {title.split('\n').map((line, i) => (

@@ -1720,6 +1720,19 @@ a.collection-item:hover {
     animation: home-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.9s both;
   }
 }
+/* The text under the name only rises, never fades: shown from the first
+   paint, it is the page's largest content (LCP) on a phone, and an element
+   that starts at opacity 0 never counts as one. */
+@media (prefers-reduced-motion: no-preference) {
+  .home-hero-text.home-hero-rise {
+    animation-name: home-lift;
+  }
+}
+@keyframes home-lift {
+  from {
+    translate: 0 0.75rem;
+  }
+}
 @keyframes home-line-up {
   from {
     translate: 0 105%;

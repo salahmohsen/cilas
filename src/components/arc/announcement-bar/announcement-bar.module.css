@@ -48,6 +48,12 @@
   align-items: center;
   justify-content: center;
 }
+/* Alone, a face stays in the flow, so the bar has its real height from the
+   first paint (in the server's HTML too), not the viewport's minimum until
+   the face has measured itself. Only while two overlap are both lifted out. */
+.face:only-child {
+  position: relative;
+}
 .message {
   display: flex;
   flex-wrap: wrap;
