@@ -98,6 +98,16 @@ export default buildConfig({
     : undefined,
   admin: {
     user: Users.slug,
+    components: {
+      // Admin → Subscribers: the newsletter list from Resend, with CSV export.
+      // Reached from the Newsletters list (src/components/admin/subscribers-link.tsx).
+      views: {
+        subscribers: {
+          Component: '/components/admin/subscribers-view#SubscribersView',
+          path: '/subscribers',
+        },
+      },
+    },
     importMap: {
       baseDir: path.resolve(dirname),
     },

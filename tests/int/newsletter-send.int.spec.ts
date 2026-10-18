@@ -59,17 +59,35 @@ describe('sending a newsletter issue', () => {
     expect((await call('send', null)).status).toBe(403)
   })
 
+  /** Resend, mocked: the broadcast, and the account's stored contacts. */
+  const mockResend = (contacts: number) => {
+    const realFetch = globalThis.fetch
+    return vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
+      const url = String(input)
+      if (url === 'https://api.resend.com/broadcasts') return Promise.resolve(Response.json({ id: 'b_probe' }))
+      if (url.startsWith('https://api.resend.com/segments/metrics')) {
+        return Promise.resolve(Response.json({ totals: { all_contacts: contacts } }))
+      }
+      return realFetch(input, init)
+    })
+  }
+
+  it.runIf(Boolean(env.RESEND_API_KEY && env.RESEND_AUDIENCE_ID))(
+    'stops above the free plan’s contact limit',
+    async () => {
+      const fetch = mockResend(1200)
+      const res = await call('send')
+      expect(res.status).toBe(409)
+      expect((await res.json()).error).toContain('1200 contacts')
+      expect(fetch.mock.calls.some(([u]) => String(u) === 'https://api.resend.com/broadcasts')).toBe(false)
+      fetch.mockRestore()
+    },
+  )
+
   it.runIf(Boolean(env.RESEND_API_KEY && env.RESEND_AUDIENCE_ID))(
     'sends once, then publishes the issue',
     async () => {
-      const realFetch = globalThis.fetch
-      const fetch = vi
-        .spyOn(globalThis, 'fetch')
-        .mockImplementation((input, init) =>
-          String(input) === 'https://api.resend.com/broadcasts'
-            ? Promise.resolve(Response.json({ id: 'b_probe' }))
-            : realFetch(input, init),
-        )
+      const fetch = mockResend(640)
       expect((await call('send')).status).toBe(200)
       const sent = fetch.mock.calls.find(([u]) => String(u).includes('/broadcasts'))!
       expect(JSON.parse(sent[1]!.body as string).html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')

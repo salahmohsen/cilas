@@ -33,6 +33,7 @@ import { VisualEditorController as VisualEditorController_3a8e3d5bdeeaec64e402b6
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { NewsletterActions as NewsletterActions_b0970b01e42603472424e6e40dd0fd9e } from '../../../components/admin/newsletter-actions'
+import { SubscribersLink as SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f } from '../../../components/admin/subscribers-link'
 import { SubmissionDecision as SubmissionDecision_eee555a74fc1831b93e9205174d718a0 } from '../../../components/admin/submission-decision'
 import { ExportListMenuItem as ExportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
@@ -55,6 +56,7 @@ import { ImportExportProvider as ImportExportProvider_cdf7e044479f899a31f804427d
 import { AvatarProvider as AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { ThemeProvider as ThemeProvider_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
 import { ListQuickActions as ListQuickActions_f436cf2a4719114d9e44505773a04007 } from 'payload-theme/client'
+import { SubscribersView as SubscribersView_82e10948fdeb08928ce643cc0b1632a7 } from '../../../components/admin/subscribers-view'
 import { Dashboard as Dashboard_37fe5310e1c82b2fade6b239ca4c79e5 } from 'payload-theme/rsc'
 import { VisualEditorView as VisualEditorView_0dcc31907b7bffb0624a38194b3c7196 } from 'payload-inline-visual-editor/rsc'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
@@ -97,6 +99,7 @@ export const importMap = {
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "/components/admin/newsletter-actions#NewsletterActions": NewsletterActions_b0970b01e42603472424e6e40dd0fd9e,
+  "/components/admin/subscribers-link#SubscribersLink": SubscribersLink_8812e7bc4e59e86dbe460c3e3c68a83f,
   "/components/admin/submission-decision#SubmissionDecision": SubmissionDecision_eee555a74fc1831b93e9205174d718a0,
   "@payloadcms/plugin-import-export/rsc#ExportListMenuItem": ExportListMenuItem_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#FormatField": FormatField_cdf7e044479f899a31f804427d568b36,
@@ -119,6 +122,7 @@ export const importMap = {
   "payload-theme/rsc#AvatarProvider": AvatarProvider_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-theme/client#ThemeProvider": ThemeProvider_f436cf2a4719114d9e44505773a04007,
   "payload-theme/client#ListQuickActions": ListQuickActions_f436cf2a4719114d9e44505773a04007,
+  "/components/admin/subscribers-view#SubscribersView": SubscribersView_82e10948fdeb08928ce643cc0b1632a7,
   "payload-theme/rsc#Dashboard": Dashboard_37fe5310e1c82b2fade6b239ca4c79e5,
   "payload-inline-visual-editor/rsc#VisualEditorView": VisualEditorView_0dcc31907b7bffb0624a38194b3c7196,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1,

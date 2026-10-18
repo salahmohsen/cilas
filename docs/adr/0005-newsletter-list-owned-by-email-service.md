@@ -10,3 +10,11 @@ the segment in `RESEND_AUDIENCE_ID`. Payload stores the broadcast id and the
 send time; the list, consent and unsubscribes stay in Resend. All emails share
 one React Email layout whose logo, color, sender, footer and texts are in the
 Email settings global.
+
+Admins see the list in Admin → Subscribers (reached from the Newsletters
+list), read live from Resend, and export it as CSV in Mailchimp's columns
+(subscribed people only, or everyone with a status). Signup uses Resend's
+Contacts API with the segment; the Audiences API is deprecated. Broadcasts
+do not use the transactional quota (100 a day on the free plan); the free
+plan stops broadcasts once the account stores more than 1,000 contacts, so
+"Send to subscribers" checks that count first.

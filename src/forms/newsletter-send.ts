@@ -6,6 +6,7 @@ import { newsletterMail } from '@/emails/newsletter'
 import { getEmailSettings } from '@/emails/settings'
 import { env } from '@/env'
 import { sendBroadcast } from '@/lib/broadcast'
+import { accountContactCount, FREE_CONTACT_LIMIT } from '@/lib/resend-contacts'
 
 const issueOf = (req: PayloadRequest, id: number) => issueForEmail(req.payload, id, req)
 
@@ -43,6 +44,16 @@ const send = guarded(async (req, id) => {
   }
   const issue = await issueOf(req, id)
   if (issue.sent_at) return Response.json({ error: 'This issue was already sent.' }, { status: 409 })
+  // Resend refuses broadcasts once the account stores more contacts than the plan allows.
+  const stored = await accountContactCount(env.RESEND_API_KEY)
+  if (stored !== null && stored > FREE_CONTACT_LIMIT) {
+    return Response.json(
+      {
+        error: `Resend holds ${stored} contacts; the free plan sends newsletters to ${FREE_CONTACT_LIMIT} at most. Delete unsubscribed contacts in Resend, upgrade the plan, or export the list to Mailchimp (Admin → Subscribers).`,
+      },
+      { status: 409 },
+    )
+  }
   const settings = await getEmailSettings(req.payload, req)
   const mail = await newsletterMail(issue, settings, {
     unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}',

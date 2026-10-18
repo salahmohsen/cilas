@@ -1,12 +1,13 @@
 import * as z from 'zod'
 
 import { env } from '@/env'
+import { subscribe } from '@/lib/resend-contacts'
 
 const Body = z.object({ email: z.email() })
 
 /**
  * Adds an address to the newsletter list. The list lives in the email
- * service's audience, not in Payload (ADR 0005): no account, and consent and
+ * service's segment, not in Payload (ADR 0005): no account, and consent and
  * unsubscribes are the provider's job.
  */
 export async function POST(request: Request) {
@@ -18,13 +19,9 @@ export async function POST(request: Request) {
     return Response.json({ error: 'A valid email address is required' }, { status: 400 })
   }
 
-  const res = await fetch(`https://api.resend.com/audiences/${env.RESEND_AUDIENCE_ID}/contacts`, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email: parsed.data.email, unsubscribed: false }),
-  })
-  // Already on the list counts as success: the visitor's intent is met.
-  if (!res.ok && res.status !== 409) {
+  // An address already on the list counts as success: the visitor's intent is met.
+  const ok = await subscribe(env.RESEND_API_KEY, env.RESEND_AUDIENCE_ID, parsed.data.email).catch(() => false)
+  if (!ok) {
     return Response.json({ error: 'Could not subscribe right now' }, { status: 502 })
   }
   return Response.json({ ok: true })
