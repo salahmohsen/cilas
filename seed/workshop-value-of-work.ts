@@ -53,6 +53,7 @@ const seedPerson = async (): Promise<number> => {
     collection: 'people',
     data: {
       name: 'Ghosoun Ismail',
+      visible: true,
       slug: slugify('Ghosoun Ismail'),
       bio: lexical(bio),
     },

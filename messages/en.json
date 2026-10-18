@@ -507,6 +507,8 @@
   "Apply": {
     "metaTitle": "Apply to the Bridge Programme",
     "title": "Apply to the Bridge Programme",
+    "courseTitle": "Apply to {title}",
+    "courseClosed": "Applications for this course are closed.",
     "year": "{year}",
     "deadline": "Applications are open until {date}.",
     "closed": "Applications for {year} closed on {date}. The questions stay here so you can prepare for the next year.",

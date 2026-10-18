@@ -174,6 +174,9 @@ export type Cilasian = PersonCard & { places: CilasianPlace[] }
 export const getCilasians = async (payload: Payload, locale: Locale): Promise<Cilasian[]> => {
   const { docs } = await payload.find({
     collection: 'memberships',
+    // The read skips access for the draft programmes' titles, so hidden
+    // people (accepted applicants) are left out here.
+    where: { 'person.visible': { equals: true } },
     depth: 2,
     pagination: false,
     populate: { ...personPopulate, programmes: { title: true } },

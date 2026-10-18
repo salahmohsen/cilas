@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, isAdmin, isAdminUser, personOf } from '@/access'
+import { isAdmin, isAdminUser, personOf, readPeople } from '@/access'
 import { slugField } from '@/fields/slug'
 import { socialFields } from '@/fields/social'
 import { importFields } from '@/fields/import'
@@ -21,7 +21,7 @@ export const People: CollectionConfig = {
     defaultColumns: ['name', 'updatedAt'],
   },
   access: {
-    read: anyone,
+    read: readPeople,
     create: isAdmin,
     // A signed-in person may keep their own profile current.
     update: ({ req }) => {
@@ -39,6 +39,20 @@ export const People: CollectionConfig = {
   fields: [
     { name: 'name', type: 'text', required: true, localized: true },
     slugField({ useAsSlug: 'name' }),
+    {
+      // Off for new people, applicants accepted from a form among them.
+      // Archive imports and the seed turn it on.
+      name: 'visible',
+      type: 'checkbox',
+      label: 'Show on the site',
+      defaultValue: false,
+      index: true,
+      access: { update: ({ req }) => isAdminUser(req.user) },
+      admin: {
+        position: 'sidebar',
+        description: 'Off: no profile page, and left out of lists and search.',
+      },
+    },
     {
       name: 'photo',
       type: 'upload',

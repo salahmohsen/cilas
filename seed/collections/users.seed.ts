@@ -501,6 +501,7 @@ export const seedUsers = async (payload: Payload, ctx: SeedContext): Promise<voi
         collection: 'people',
         data: {
           name: seed.name,
+          visible: true,
           slug: slugify(seed.name),
           bio: lexical(seed.bio),
           website: seed.website ?? null,

@@ -70,11 +70,14 @@ export function PayloadForm({
   back,
   lang,
   disabled = false,
+  target,
 }: {
   form: Form
   notes?: Record<string, ReactNode>
   confirmation: ReactNode
   back?: { href: string; label: string }
+  /** What the applicant applies to; admins accept the submission into it. */
+  target?: { relationTo: 'programmes' | 'courses'; value: number }
   /** The questions' language, when it is not the page's. */
   lang?: string
   /** The questions are shown to read, not to answer (applications closed). */
@@ -130,6 +133,7 @@ export function PayloadForm({
                 headers: { 'Content-Type': 'application/json', ...headers },
                 body: JSON.stringify({
                   form: form.id,
+                  target,
                   submissionData: questions.map((q) => ({
                     field: q.name,
                     value: readable(q, value[q.name] ?? emptyFor(q)),

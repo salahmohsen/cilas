@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from 'react'
 
+/** An external registration link opens in a new tab; the site's apply page does not. */
+export const newTab = (url: string) =>
+  /^https?:/.test(url) ? { rel: 'noopener', target: '_blank' } : {}
+
 /**
  * Applying, kept in reach once the course details have scrolled away: on wide
  * screens a block that sticks at the end of the side column, on narrow ones a
@@ -49,7 +53,7 @@ export function RegisterBar({
         </span>
         {price ? <span className="course-register-price">{price}</span> : null}
       </div>
-      <a className="course-apply" href={applyUrl} rel="noopener" target="_blank">
+      <a className="course-apply" href={applyUrl} {...newTab(applyUrl)}>
         {applyLabel}
       </a>
     </div>

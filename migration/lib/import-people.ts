@@ -98,6 +98,7 @@ export const importPeople = async (
           collection: 'people',
           data: {
             name: p.name,
+            visible: true,
             slug: await freeSlug(payload, 'people', slugify(p.name)),
             ...(legacyTaken ? {} : { legacy_url: p.legacy_url }),
           },

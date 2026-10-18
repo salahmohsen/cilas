@@ -29,6 +29,7 @@ const SKIP = new Set([
   'payload_preferences_rels',
   'form_submissions',
   'form_submissions_submission_data',
+  'form_submissions_rels',
 ])
 
 type Client = { query: (sql: string, params?: unknown[]) => Promise<{ rows: Record<string, unknown>[] }> }
@@ -109,6 +110,11 @@ export const restoreSnapshot = async (payload: Payload, dir = SNAPSHOT_DIR): Pro
         await pool.query(`insert into ${ident(table)} (${keys.map(ident).join(', ')}) values ${values.join(', ')}`, params)
       }
       rows += data.length
+      // Snapshots from before `people.visible` showed everyone; the column's
+      // default hides new people, so restore them as shown.
+      if (table === 'people' && !('visible' in data[0]) && columns.has('visible')) {
+        await pool.query(`update people set visible = true`)
+      }
     }
     await pool.query(`set session_replication_role = origin`)
     // Each serial id continues after the highest restored id.

@@ -194,6 +194,10 @@ export interface Person {
    */
   generateSlug?: boolean | null;
   slug: string;
+  /**
+   * Off: no profile page, and left out of lists and search.
+   */
+  visible?: boolean | null;
   photo?: (number | null) | Media;
   bio?: {
     root: {
@@ -1593,8 +1597,60 @@ export interface FormSubmission {
         id?: string | null;
       }[]
     | null;
+  /**
+   * What the applicant applied to.
+   */
+  target?:
+    | ({
+        relationTo: 'programmes';
+        value: number | Programme;
+      } | null)
+    | ({
+        relationTo: 'courses';
+        value: number | Course;
+      } | null);
+  status?: ('new' | 'accepted' | 'rejected') | null;
+  decided_at?: string | null;
+  result?: {
+    user?: (number | null) | User;
+    person?: (number | null) | Person;
+    membership?: (number | null) | Membership;
+    enrollment?: (number | null) | Enrollment;
+  };
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  /**
+   * Set by Google sign-in.
+   */
+  sub?: string | null;
+  person?: (number | null) | Person;
+  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1718,38 +1774,6 @@ export interface Redirect {
   type: '301' | '302';
   updatedAt: string;
   createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
- */
-export interface User {
-  id: number;
-  /**
-   * Set by Google sign-in.
-   */
-  sub?: string | null;
-  person?: (number | null) | Person;
-  roles: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[];
-  updatedAt: string;
-  createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  resetPasswordRequestedAt?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
-  password?: string | null;
-  collection: 'users';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1989,6 +2013,7 @@ export interface PeopleSelect<T extends boolean = true> {
   name?: T;
   generateSlug?: T;
   slug?: T;
+  visible?: T;
   photo?: T;
   bio?: T;
   website?: T;
@@ -2824,6 +2849,17 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
         field?: T;
         value?: T;
         id?: T;
+      };
+  target?: T;
+  status?: T;
+  decided_at?: T;
+  result?:
+    | T
+    | {
+        user?: T;
+        person?: T;
+        membership?: T;
+        enrollment?: T;
       };
   updatedAt?: T;
   createdAt?: T;

@@ -229,7 +229,7 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
           (
             await payload.create({
               collection: 'people',
-              data: { name, slug: await freeSlug(payload, 'people', slugify(name)) },
+              data: { name, visible: true, slug: await freeSlug(payload, 'people', slugify(name)) },
               overrideAccess: true,
             })
           ).id),

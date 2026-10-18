@@ -100,6 +100,7 @@ export default async function ApplyPage({ params }: Props) {
         form={form}
         lang="en"
         notes={notes}
+        target={{ relationTo: 'programmes', value: year.programme.id }}
       />
     </div>
   )

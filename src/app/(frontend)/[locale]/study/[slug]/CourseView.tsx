@@ -36,7 +36,7 @@ import { registrationStatus } from '@/lib/registration'
 import { expandSchedule, sessionsInOrder, type Meeting } from '@/lib/schedule'
 import type { Course, Media, Person, Space } from '@/payload-types'
 
-import { RegisterBar } from './RegisterBar'
+import { newTab, RegisterBar } from './RegisterBar'
 
 /** A course in the same cycle, as the end of the page lists it. */
 export type RelatedCourse = {
@@ -125,7 +125,16 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   const firstMeeting = meetings.find((m) => !m.cancelled)
   const price = priceLabel(pricingFor(course, cycle))
   const open = registrationStatus(course.registration, cycle?.registration) === 'open'
-  const applyUrl = open ? (course.registration?.url ?? null) : null
+  // A site form opens the course's apply page; an external link opens in a new tab.
+  const method = course.registration?.method ?? cycle?.registration?.method
+  const siteForm = course.registration?.form ?? cycle?.registration?.form
+  const applyUrl = !open
+    ? null
+    : method === 'form'
+      ? siteForm
+        ? `/${locale}/study/${course.slug}/apply`
+        : null
+      : (course.registration?.url ?? null)
 
   /** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
   const dayLabel = (day: string, weekday: 'short' | 'long' = 'short'): string =>
@@ -286,7 +295,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
         {price ? <span className="text-sm text-(--text-secondary)">{price}</span> : null}
       </div>
       {applyUrl ? (
-        <a className="course-apply" data-primary href={applyUrl} rel="noopener" target="_blank">
+        <a className="course-apply" data-primary href={applyUrl} {...newTab(applyUrl)}>
           {t('apply')}
         </a>
       ) : null}

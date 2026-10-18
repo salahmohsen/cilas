@@ -55,6 +55,7 @@ const seedPerson = async (): Promise<number> => {
     collection: 'people',
     data: {
       name: 'Aysha al-Hurr',
+      visible: true,
       slug: slugify('Aysha al-Hurr'),
       bio: lexical(bio),
     },

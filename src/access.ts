@@ -89,6 +89,17 @@ export const anyone: Access = () => true
 
 export const isAuthenticated: Access = ({ req }) => Boolean(req.user)
 
+/**
+ * People shown on the site, plus the reader's own person. Admins read
+ * everyone, hidden applicants included.
+ */
+export const readPeople: Access = ({ req }) => {
+  if (isAdminUser(req.user)) return true
+  const visible: Where = { visible: { equals: true } }
+  const own = personOf(req.user)
+  return own === null ? visible : { or: [visible, { id: { equals: own } }] }
+}
+
 /** admin + super_admin. Gates write on the editorial collections. */
 export const isAdmin: Access = ({ req }) => isAdminUser(req.user)
 

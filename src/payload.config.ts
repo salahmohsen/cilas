@@ -25,6 +25,7 @@ import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { formFields } from './forms/form-fields'
+import { applicationEndpoints, applicationFields, checkTarget } from './forms/applications'
 import { requireTurnstile } from './forms/spam-check'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
@@ -164,7 +165,11 @@ export default buildConfig({
       // Applications are read by admins only; anyone may send one.
       formSubmissionOverrides: {
         access: { read: isAdmin, update: isAdmin, delete: isAdmin },
-        hooks: { beforeChange: [requireTurnstile(env.TURNSTILE_SECRET_KEY)] },
+        admin: { defaultColumns: ['form', 'target', 'status', 'createdAt'] },
+        // Applications: admins accept or reject them from the submission.
+        fields: ({ defaultFields }) => [...defaultFields, ...applicationFields],
+        endpoints: applicationEndpoints,
+        hooks: { beforeChange: [requireTurnstile(env.TURNSTILE_SECRET_KEY), checkTarget] },
       },
     }),
     // Admins export form submissions (applications, contact messages) as CSV
