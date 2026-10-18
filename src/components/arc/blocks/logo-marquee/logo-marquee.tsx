@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef, useState } from 'react'
+import Image from 'next/image'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { Pause, Play } from 'lucide-react'
 import { Button } from '../../button/button'
@@ -113,8 +114,17 @@ function BrandList({
     >
       {brands.map((brand, index) => {
         const content = brand.logo ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img className={styles.brandLogo} src={brand.logo} alt={brand.name} draggable={false} />
+          // Resized for its small slot (2.25rem tall, at most 10rem wide); the
+          // CSS keeps each logo's own proportions once it has loaded.
+          <Image
+            className={styles.brandLogo}
+            src={brand.logo}
+            alt={brand.name}
+            width={320}
+            height={72}
+            sizes="10rem"
+            draggable={false}
+          />
         ) : (
           <>
             <BrandMark brand={brand} tone={tone} />

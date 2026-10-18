@@ -1,6 +1,7 @@
 'use client'
 
 import { ArrowRight } from 'lucide-react'
+import Image from 'next/image'
 
 import { DeadlineCountdown } from '@/components/home/deadline-countdown'
 
@@ -41,9 +42,15 @@ export function Poster({ poster }: { poster: PosterData }) {
   const { layout, label, title, credit, image, meta, details, action, href } = poster
   const picture = (
     <div className="poster-image">
-      {/* Covers come from the storage host, as on course pages. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img alt={image?.alt ?? ''} draggable={false} src={image?.src ?? FALLBACK} />
+      {/* Resized for the poster from the storage host's original, and only
+          fetched as it nears the screen: the posters sit below the fold. */}
+      <Image
+        alt={image?.alt ?? ''}
+        draggable={false}
+        fill
+        sizes="(min-width: 75rem) 46rem, (min-width: 48rem) 62vw, 100vw"
+        src={image?.src ?? FALLBACK}
+      />
     </div>
   )
   const strip = (

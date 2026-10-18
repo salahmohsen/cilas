@@ -10,10 +10,20 @@ import { fileURLToPath } from 'url'
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
+// Uploads live on R2; next/image may resize them from there.
+const r2 = new URL(process.env.R2_PUBLIC_URL!)
+
 const nextConfig: NextConfig = {
   // A self-contained server for the Docker image (Dockerfile, Dokploy).
   output: 'standalone',
   images: {
+    remotePatterns: [
+      {
+        protocol: r2.protocol.replace(':', '') as 'http' | 'https',
+        hostname: r2.hostname,
+        pathname: `${r2.pathname.replace(/\/$/, '')}/**`,
+      },
+    ],
     localPatterns: [
       {
         pathname: '/api/media/file/**',
