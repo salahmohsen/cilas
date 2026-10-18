@@ -228,8 +228,8 @@
   width: 1.25rem;
   height: 1.25rem;
 }
-/* A flex box like the copyright beside it, so a notice that is an icon and
-   text centres on the same line, not on a taller inline line box. */
+/* A flex box, so a notice that is an icon and text centres on the text's
+   line, not on a taller inline line box. */
 .notice {
   display: inline-flex;
   align-items: center;
@@ -244,20 +244,8 @@
   font-size: var(--text-xs);
 }
 .copyright {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.375rem;
   color: var(--text-muted);
   font-size: var(--text-sm);
-}
-/* The © icon, its ring the size of a 1rem icon beside it, such as the
-   licence's: lucide draws a 20-unit circle on a 24-unit grid, so the svg is
-   1.2rem, and pulls in at the sides by the grid's spare 0.1rem. */
-.copyMark {
-  flex-shrink: 0;
-  width: 1.2rem;
-  height: 1.2rem;
-  margin-inline: -0.1rem;
 }
 .status {
   display: inline-flex;
