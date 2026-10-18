@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-/** An external registration link opens in a new tab; the site's apply page does not. */
-export const newTab = (url: string) =>
-  /^https?:/.test(url) ? { rel: 'noopener', target: '_blank' } : {}
+import { newTab } from './new-tab'
 
 /**
  * Applying, kept in reach once the course details have scrolled away: on wide

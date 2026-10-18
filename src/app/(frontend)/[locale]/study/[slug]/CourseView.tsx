@@ -38,7 +38,8 @@ import { editableIn, type Editable } from '@/lib/editable'
 import { expandSchedule, sessionsInOrder, type Meeting } from '@/lib/schedule'
 import type { Course, Media, Person, Space } from '@/payload-types'
 
-import { newTab, RegisterBar } from './RegisterBar'
+import { newTab } from './new-tab'
+import { RegisterBar } from './RegisterBar'
 
 /** A course in the same cycle, as the end of the page lists it. */
 export type RelatedCourse = {
