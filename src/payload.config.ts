@@ -236,6 +236,8 @@ export default buildConfig({
       collections: {
         courses: { blockOps: { add: true, duplicate: true, remove: true, move: true } },
         articles: true,
+        // The email preview (/api/email-preview) loads the site SDK itself.
+        newsletters: { blockOps: { add: true, duplicate: true, remove: true, move: true } },
       },
     }),
     // What each role sees in the admin nav. Last, so it covers plugin collections.

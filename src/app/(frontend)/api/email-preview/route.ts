@@ -25,6 +25,8 @@ export async function GET(request: Request) {
   const settings = await getEmailSettings(payload)
   const site = env.NEXT_PUBLIC_SERVER_URL
   let html: string
+  // The visual editor's site SDK, for a newsletter only (scripts/visual-editor-sdk.mjs).
+  let editor = ''
 
   if (url.searchParams.get('kind') === 'newsletter') {
     const id = Number(url.searchParams.get('id'))
@@ -32,7 +34,8 @@ export async function GET(request: Request) {
       return new Response('Save the issue to see its preview.', { status: 404 })
     }
     const issue = await issueForEmail(payload, id)
-    html = (await newsletterMail(issue, settings, { unsubscribe: '#unsubscribe' })).html
+    html = (await newsletterMail(issue, settings, { unsubscribe: '#unsubscribe', editId: id })).html
+    editor = 'sdk'
   } else {
     const sample = { name: 'Mona Adel', email: 'mona@example.com', site }
     const mails = await Promise.all([
@@ -56,7 +59,14 @@ export async function GET(request: Request) {
       if (e.origin === ${origin} && e.data && e.data.type === 'payload-document-event') location.reload();
     });
   </script>`
-  const page = html.includes('</body>') ? html.replace('</body>', `${reload}</body>`) : html + reload
+  const sdk = editor
+    ? `<script type="module">
+    import { initVisualEditing } from '/assets/visual-editor/sdk.js';
+    if (window.self !== window.top) initVisualEditing({ serverURL: ${origin}, draft: true });
+  </script>`
+    : ''
+  const scripts = reload + sdk
+  const page = html.includes('</body>') ? html.replace('</body>', `${scripts}</body>`) : html + scripts
   return new Response(page, {
     headers: { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' },
   })
