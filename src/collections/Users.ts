@@ -10,6 +10,15 @@ import { getEmailSettings, withDefaults } from '@/emails/settings'
 import { resetMail } from '@/emails/transactional'
 import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
+
+/** An account's roles; Mailing lists pick members by them too. */
+export const ROLE_OPTIONS = [
+  { label: 'Super Admin', value: 'super_admin' },
+  { label: 'Admin', value: 'admin' },
+  { label: 'Fellow', value: 'fellow' },
+  { label: 'Member', value: 'member' },
+  { label: 'Non-Degree-Seeking Student', value: 'non_degree_seeking' },
+] as const
 import type { User } from '@/payload-types'
 
 /**
@@ -49,7 +58,11 @@ export const resetPasswordEmail = async ({
   req,
   token,
   user,
-}: { req?: PayloadRequest; token?: string; user?: { email?: string | null } } = {}): Promise<string> =>
+}: {
+  req?: PayloadRequest
+  token?: string
+  user?: { email?: string | null }
+} = {}): Promise<string> =>
   (
     await resetMail(await settingsFor(req), {
       email: user?.email ?? '',
@@ -71,7 +84,10 @@ export const Users: CollectionConfig = {
     defaultColumns: ['email', 'person', 'roles'],
   },
   auth: {
-    forgotPassword: { generateEmailHTML: resetPasswordEmail, generateEmailSubject: resetPasswordSubject },
+    forgotPassword: {
+      generateEmailHTML: resetPasswordEmail,
+      generateEmailSubject: resetPasswordSubject,
+    },
   },
   access: {
     update: isAdmin,
@@ -111,13 +127,7 @@ export const Users: CollectionConfig = {
           required: true,
           defaultValue: 'member',
           hasMany: true,
-          options: [
-            { label: 'Super Admin', value: 'super_admin' },
-            { label: 'Admin', value: 'admin' },
-            { label: 'Fellow', value: 'fellow' },
-            { label: 'Member', value: 'member' },
-            { label: 'Non-Degree-Seeking Student', value: 'non_degree_seeking' },
-          ],
+          options: [...ROLE_OPTIONS],
         },
       ],
     },

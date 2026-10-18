@@ -81,6 +81,7 @@ export interface Config {
     press: Press;
     events: Event;
     newsletters: Newsletter;
+    'mailing-lists': MailingList;
     spaces: Space;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -125,6 +126,7 @@ export interface Config {
     press: PressSelect<false> | PressSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
     newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
+    'mailing-lists': MailingListsSelect<false> | MailingListsSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -1701,12 +1703,60 @@ export interface Newsletter {
           }
       )[]
     | null;
+  /**
+   * Empty: the signup list. A synced list is brought up to date just before sending.
+   */
+  send_to?: (number | null) | MailingList;
   sent_at?: string | null;
   broadcast_id?: string | null;
   legacy_url?: string | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Who newsletters go to. Each list is a segment in Resend; a person on several lists counts once toward the plan’s contacts.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mailing-lists".
+ */
+export interface MailingList {
+  id: number;
+  name: string;
+  /**
+   * Signup form: visitors join from the site. Synced from members: CILAS accounts, picked below; people without an account are left out.
+   */
+  source: 'signup' | 'members';
+  /**
+   * An account joins when it matches any of these.
+   */
+  members?: {
+    everyone?: boolean | null;
+    /**
+     * Every account with one of these roles, e.g. all fellows.
+     */
+    roles?: ('super_admin' | 'admin' | 'fellow' | 'member' | 'non_degree_seeking')[] | null;
+    courses?: (number | Course)[] | null;
+    course_people?: ('students' | 'fellows')[] | null;
+    /**
+     * Everyone with a place in the programme: students and resident fellows of a Bridge cohort.
+     */
+    programmes?: (number | Programme)[] | null;
+    users?: (number | User)[] | null;
+  };
+  /**
+   * Empty: a segment is made in Resend on save. Paste one to use a segment you have.
+   */
+  segment_id?: string | null;
+  /**
+   * Optional: the kind of email this list gets (Resend → Contacts → Topics). People who opt out of the topic are skipped, and keep their other lists.
+   */
+  topic_id?: string | null;
+  member_count?: number | null;
+  last_synced?: string | null;
+  sync_note?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2039,6 +2089,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'newsletters';
         value: number | Newsletter;
+      } | null)
+    | ({
+        relationTo: 'mailing-lists';
+        value: number | MailingList;
       } | null)
     | ({
         relationTo: 'spaces';
@@ -2803,12 +2857,38 @@ export interface NewslettersSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  send_to?: T;
   sent_at?: T;
   broadcast_id?: T;
   legacy_url?: T;
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "mailing-lists_select".
+ */
+export interface MailingListsSelect<T extends boolean = true> {
+  name?: T;
+  source?: T;
+  members?:
+    | T
+    | {
+        everyone?: T;
+        roles?: T;
+        courses?: T;
+        course_people?: T;
+        programmes?: T;
+        users?: T;
+      };
+  segment_id?: T;
+  topic_id?: T;
+  member_count?: T;
+  last_synced?: T;
+  sync_note?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3256,10 +3336,6 @@ export interface EmailSetting {
    * The small print under the social icons: the address, for one. The icons come from Site settings → Contact.
    */
   footer?: string | null;
-  /**
-   * The Resend segment that signups join and newsletters go to: Resend → Contacts → Segments → the segment → its ID. Empty: the RESEND_AUDIENCE_ID server setting. The API key stays a server setting (RESEND_API_KEY), as it is a secret.
-   */
-  segment_id?: string | null;
   texts?: {
     /**
      * Placeholders: {name}, {email}, {title}. Leave a field empty to use the text shown in it.
@@ -3364,7 +3440,6 @@ export interface EmailSettingsSelect<T extends boolean = true> {
   signoff?: T;
   address_space?: T;
   footer?: T;
-  segment_id?: T;
   texts?:
     | T
     | {
@@ -3455,6 +3530,7 @@ export interface TaskCreateCollectionExport {
       | 'press'
       | 'events'
       | 'newsletters'
+      | 'mailing-lists'
       | 'spaces'
       | 'forms'
       | 'form-submissions'

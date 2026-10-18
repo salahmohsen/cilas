@@ -40,7 +40,10 @@ export function SubmissionDecision() {
     return <p className="field-description">Accepted. See the result below.</p>
   }
 
-  const what = target.relationTo === 'programmes' ? 'a membership in the programme' : 'an enrollment in the course'
+  const what =
+    target.relationTo === 'programmes'
+      ? 'a membership in the programme'
+      : 'an enrollment in the course'
   const slug = (action: string) => `submission-${action}-${id}`
 
   const run = async (action: 'accept' | 'reject') => {
@@ -49,7 +52,10 @@ export function SubmissionDecision() {
       method: 'POST',
       credentials: 'include',
     }).catch(() => null)
-    const body = (await res?.json().catch(() => null)) as { error?: string; emailed?: boolean } | null
+    const body = (await res?.json().catch(() => null)) as {
+      error?: string
+      emailed?: boolean
+    } | null
     if (!res?.ok) {
       setBusy(false)
       toast.error(body?.error ?? 'The decision failed. Try again.')
@@ -65,11 +71,21 @@ export function SubmissionDecision() {
   return (
     <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '1rem' }}>
       <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-        <Button buttonStyle="primary" disabled={busy} margin={false} onClick={() => openModal(slug('accept'))}>
+        <Button
+          buttonStyle="primary"
+          disabled={busy}
+          margin={false}
+          onClick={() => openModal(slug('accept'))}
+        >
           Accept
         </Button>
         {status === 'new' ? (
-          <Button buttonStyle="secondary" disabled={busy} margin={false} onClick={() => openModal(slug('reject'))}>
+          <Button
+            buttonStyle="secondary"
+            disabled={busy}
+            margin={false}
+            onClick={() => openModal(slug('reject'))}
+          >
             Reject
           </Button>
         ) : null}

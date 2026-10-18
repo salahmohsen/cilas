@@ -6,6 +6,8 @@
 export async function sendBroadcast(args: {
   apiKey: string
   segmentId: string
+  /** People who opted out of this topic are skipped. */
+  topicId?: string | null
   from: string
   replyTo: string | null
   subject: string
@@ -18,6 +20,7 @@ export async function sendBroadcast(args: {
     headers: { Authorization: `Bearer ${args.apiKey}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       segment_id: args.segmentId,
+      ...(args.topicId ? { topic_id: args.topicId } : {}),
       from: args.from,
       ...(args.replyTo ? { reply_to: args.replyTo } : {}),
       subject: args.subject,

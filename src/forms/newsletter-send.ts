@@ -6,7 +6,8 @@ import { newsletterMail } from '@/emails/newsletter'
 import { getEmailSettings } from '@/emails/settings'
 import { env } from '@/env'
 import { sendBroadcast } from '@/lib/broadcast'
-import { LIST_OFF, newsletterList } from '@/lib/newsletter-list'
+import { syncList } from '@/lib/list-sync'
+import { LIST_OFF, mailingList, newsletterList } from '@/lib/newsletter-list'
 import { accountContactCount, FREE_CONTACT_LIMIT } from '@/lib/resend-contacts'
 
 const issueOf = (req: PayloadRequest, id: number) => issueForEmail(req.payload, id, req)
@@ -16,7 +17,8 @@ const guarded =
   async (req) => {
     if (!isAdminUser(req.user)) return Response.json({ error: 'Admins only.' }, { status: 403 })
     const id = Number(req.routeParams?.id)
-    if (!Number.isInteger(id)) return Response.json({ error: 'Save the issue first.' }, { status: 404 })
+    if (!Number.isInteger(id))
+      return Response.json({ error: 'Save the issue first.' }, { status: 404 })
     try {
       return await run(req, id)
     } catch (error) {
@@ -27,20 +29,49 @@ const guarded =
 
 /** The issue as it stands, to the admin who asked. */
 const test = guarded(async (req, id) => {
-  const mail = await newsletterMail(await issueOf(req, id), await getEmailSettings(req.payload, req), {
-    unsubscribe: `${env.NEXT_PUBLIC_SERVER_URL}/en`,
-  })
+  const mail = await newsletterMail(
+    await issueOf(req, id),
+    await getEmailSettings(req.payload, req),
+    {
+      unsubscribe: `${env.NEXT_PUBLIC_SERVER_URL}/en`,
+    },
+  )
   const to = req.user!.email
-  await req.payload.sendEmail({ to, subject: `[Test] ${mail.subject}`, html: mail.html, text: mail.text })
+  await req.payload.sendEmail({
+    to,
+    subject: `[Test] ${mail.subject}`,
+    html: mail.html,
+    text: mail.text,
+  })
   return Response.json({ ok: true, to })
 })
 
 /** The issue to every subscriber, once; then it is published to the archive. */
 const send = guarded(async (req, id) => {
-  const list = await newsletterList(req.payload, req)
-  if (!list) return Response.json({ error: LIST_OFF }, { status: 503 })
   const issue = await issueOf(req, id)
-  if (issue.sent_at) return Response.json({ error: 'This issue was already sent.' }, { status: 409 })
+  if (issue.sent_at)
+    return Response.json({ error: 'This issue was already sent.' }, { status: 409 })
+  const chosen = issue.send_to
+  const listId = typeof chosen === 'object' && chosen ? chosen.id : chosen
+  const list = listId
+    ? await mailingList(req.payload, listId, req)
+    : await newsletterList(req.payload, req)
+  if (!list) {
+    return Response.json(
+      { error: listId ? 'The chosen mailing list has no Resend segment.' : LIST_OFF },
+      { status: 503 },
+    )
+  }
+  // A synced list first takes in who joined or left since its last sync.
+  if (list.source === 'members' && list.id) {
+    const doc = await req.payload.findByID({
+      collection: 'mailing-lists',
+      id: list.id,
+      depth: 0,
+      overrideAccess: true,
+    })
+    await syncList(req.payload, doc)
+  }
   // Resend refuses broadcasts once the account stores more contacts than the plan allows.
   const stored = await accountContactCount(list.apiKey)
   if (stored !== null && stored > FREE_CONTACT_LIMIT) {
@@ -58,6 +89,7 @@ const send = guarded(async (req, id) => {
   const broadcastId = await sendBroadcast({
     apiKey: list.apiKey,
     segmentId: list.segmentId,
+    topicId: list.topicId,
     from: `${settings.fromName} <${env.EMAIL_FROM_ADDRESS}>`,
     replyTo: settings.replyTo,
     subject: mail.subject,

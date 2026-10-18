@@ -17,6 +17,7 @@ import { Governance } from './collections/Governance'
 import { Articles } from './collections/Articles'
 import { Press } from './collections/Press'
 import { Events } from './collections/Events'
+import { MailingLists } from './collections/MailingLists'
 import { Newsletters } from './collections/Newsletters'
 import { Spaces } from './collections/Spaces'
 import { Publications } from './collections/Publications'
@@ -139,6 +140,7 @@ export default buildConfig({
     Press,
     Events,
     Newsletters,
+    MailingLists,
     Spaces,
   ],
   globals: [SiteSettings, EmailSettings],

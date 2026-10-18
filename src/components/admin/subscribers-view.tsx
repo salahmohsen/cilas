@@ -3,8 +3,15 @@ import { DefaultTemplate } from '@payloadcms/next/templates'
 import type { AdminViewServerProps } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { LIST_OFF, newsletterList } from '@/lib/newsletter-list'
-import { accountContactCount, FREE_CONTACT_LIMIT, listContacts, type Contact } from '@/lib/resend-contacts'
+import Link from 'next/link'
+
+import { LIST_OFF, mailingList, newsletterList, type ListTarget } from '@/lib/newsletter-list'
+import {
+  accountContactCount,
+  FREE_CONTACT_LIMIT,
+  listContacts,
+  type Contact,
+} from '@/lib/resend-contacts'
 
 import { SubscribersTable } from './subscribers-table'
 
@@ -18,7 +25,12 @@ const box = {
  * Admin → Subscribers: the newsletter list, read live from Resend (ADR 0005),
  * with the free plan's contact limit and CSV exports for Mailchimp.
  */
-export async function SubscribersView({ initPageResult, params, searchParams, user }: AdminViewServerProps) {
+export async function SubscribersView({
+  initPageResult,
+  params,
+  searchParams,
+  user,
+}: AdminViewServerProps) {
   const template = (children: React.ReactNode) => (
     <DefaultTemplate
       i18n={initPageResult.req.i18n}
@@ -39,8 +51,52 @@ export async function SubscribersView({ initPageResult, params, searchParams, us
 
   // Custom views are not protected by Payload's access rules.
   if (!isAdminUser(user)) return template(<p>Only admins can see the newsletter list.</p>)
-  const list = await newsletterList(initPageResult.req.payload)
-  if (!list) return template(<p>{LIST_OFF}</p>)
+  const payload = initPageResult.req.payload
+  const { docs: lists } = await payload.find({
+    collection: 'mailing-lists',
+    sort: 'name',
+    depth: 0,
+    pagination: false,
+    overrideAccess: true,
+  })
+  // ?list=<id> picks a Mailing list; without it, the signup list.
+  const asked = Number(new URLSearchParams(searchParams as Record<string, string>).get('list'))
+  const list: ListTarget | null = asked
+    ? await mailingList(payload, asked)
+    : await newsletterList(payload)
+  const tabs = lists.length > 1 && (
+    <nav
+      aria-label="Mailing lists"
+      style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', margin: '16px 0' }}
+    >
+      {lists.map((l) => {
+        const current = l.id === list?.id
+        return (
+          <Link
+            aria-current={current ? 'page' : undefined}
+            href={`/admin/subscribers?list=${l.id}`}
+            key={l.id}
+            style={{
+              ...box,
+              padding: '6px 12px',
+              fontWeight: current ? 600 : 400,
+              background: current ? 'var(--theme-elevation-100)' : undefined,
+              textDecoration: 'none',
+            }}
+          >
+            {l.name}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+  if (!list)
+    return template(
+      <>
+        {tabs}
+        <p>{LIST_OFF}</p>
+      </>,
+    )
 
   let contacts: Contact[]
   let stored: number | null
@@ -61,9 +117,20 @@ export async function SubscribersView({ initPageResult, params, searchParams, us
   return template(
     <>
       <p style={{ color: 'var(--theme-elevation-500)', marginTop: 0 }}>
+        {list.source === 'members'
+          ? `${list.name}: synced from CILAS accounts (Mailing lists). `
+          : `${list.name}: the signup list. `}
         The list lives in Resend; people unsubscribe from the link in each newsletter.
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '12px', margin: '20px 0' }}>
+      {tabs}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: '12px',
+          margin: '20px 0',
+        }}
+      >
         <div style={box}>
           <div style={{ fontSize: '28px', fontWeight: 600 }}>{subscribed}</div>
           <div>Subscribed</div>
@@ -83,14 +150,21 @@ export async function SubscribersView({ initPageResult, params, searchParams, us
             aria-valuemin={0}
             aria-valuemax={FREE_CONTACT_LIMIT}
             aria-valuenow={total}
-            style={{ height: '6px', borderRadius: '3px', background: 'var(--theme-elevation-100)', marginTop: '10px' }}
+            style={{
+              height: '6px',
+              borderRadius: '3px',
+              background: 'var(--theme-elevation-100)',
+              marginTop: '10px',
+            }}
           >
             <div
               style={{
                 width: `${share}%`,
                 height: '100%',
                 borderRadius: '3px',
-                background: near ? 'var(--theme-warning-500, #d97706)' : 'var(--theme-success-500, #16a34a)',
+                background: near
+                  ? 'var(--theme-warning-500, #d97706)'
+                  : 'var(--theme-success-500, #16a34a)',
               }}
             />
           </div>
@@ -98,12 +172,12 @@ export async function SubscribersView({ initPageResult, params, searchParams, us
       </div>
       {near ? (
         <p style={{ ...box, borderColor: 'var(--theme-warning-500, #d97706)' }}>
-          Near the free plan’s limit. Above {FREE_CONTACT_LIMIT} stored contacts Resend refuses to send newsletters
-          until the plan is upgraded. You can delete long-unsubscribed contacts in Resend, or export the list to
-          Mailchimp.
+          Near the free plan’s limit. Above {FREE_CONTACT_LIMIT} stored contacts Resend refuses to
+          send newsletters until the plan is upgraded. You can delete long-unsubscribed contacts in
+          Resend, or export the list to Mailchimp.
         </p>
       ) : null}
-      <SubscribersTable contacts={contacts} />
+      <SubscribersTable contacts={contacts} list={list.id} />
     </>,
   )
 }

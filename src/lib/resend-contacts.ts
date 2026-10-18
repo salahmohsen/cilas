@@ -1,7 +1,7 @@
 /**
- * The newsletter list, which lives in Resend (ADR 0005): contacts are global
- * to the account and grouped in segments; `RESEND_AUDIENCE_ID` holds the
- * newsletter's segment (Resend renamed Audiences to Segments in Nov 2025).
+ * The newsletter lists, which live in Resend (ADR 0005): contacts are global
+ * to the account and grouped in segments, one per mailing list (Resend
+ * renamed Audiences to Segments in Nov 2025).
  */
 
 const API = 'https://api.resend.com'
@@ -22,13 +22,76 @@ export type Contact = {
   unsubscribed: boolean
 }
 
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+/**
+ * Resend allows 10 requests a second for the whole team, transactional mail
+ * included: a 429 waits as long as its retry-after says, three times at most.
+ */
 const request = async (apiKey: string, path: string, init: RequestInit = {}) => {
-  const res = await fetch(`${API}${path}`, {
-    ...init,
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json', ...init.headers },
+  for (let attempt = 0; ; attempt++) {
+    const res = await fetch(`${API}${path}`, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        ...init.headers,
+      },
+    })
+    if (res.status === 429 && attempt < 3) {
+      await wait(Math.max(1, Number(res.headers.get('retry-after')) || 1) * 1000)
+      continue
+    }
+    const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
+    return { ok: res.ok, status: res.status, body }
+  }
+}
+
+/** A new segment, named as the list; returns its id. */
+export const createSegment = async (apiKey: string, name: string): Promise<string> => {
+  const { ok, status, body } = await request(apiKey, '/segments', {
+    method: 'POST',
+    body: JSON.stringify({ name }),
   })
-  const body = (await res.json().catch(() => ({}))) as Record<string, unknown>
-  return { ok: res.ok, status: res.status, body }
+  if (!ok || typeof body.id !== 'string')
+    throw new Error((body.message as string) ?? `Resend answered ${status}`)
+  return body.id
+}
+
+/**
+ * Puts a member in a segment without touching their consent: a new contact
+ * starts subscribed, an existing one keeps an unsubscribe they made.
+ */
+export const addToSegment = async (apiKey: string, segmentId: string, email: string) => {
+  const created = await request(apiKey, '/contacts', {
+    method: 'POST',
+    body: JSON.stringify({ email, segments: [{ id: segmentId }] }),
+  })
+  if (created.ok) return true
+  const added = await request(
+    apiKey,
+    `/contacts/${encodeURIComponent(email)}/segments/${segmentId}`,
+    { method: 'POST' },
+  )
+  return added.ok
+}
+
+/** Takes a contact out of a segment; the contact stays, for its other lists. */
+export const removeFromSegment = async (apiKey: string, segmentId: string, email: string) =>
+  (
+    await request(apiKey, `/contacts/${encodeURIComponent(email)}/segments/${segmentId}`, {
+      method: 'DELETE',
+    })
+  ).ok
+
+/** Spaces calls out to about five a second, half the team's limit. */
+export const paced = async <T>(items: T[], run: (item: T) => Promise<boolean>) => {
+  let failed = 0
+  for (const item of items) {
+    if (!(await run(item))) failed++
+    await wait(200)
+  }
+  return failed
 }
 
 /**
@@ -43,9 +106,14 @@ export const subscribe = async (apiKey: string, segmentId: string, email: string
   })
   if (created.ok) return true
   const contact = encodeURIComponent(email)
-  const added = await request(apiKey, `/contacts/${contact}/segments/${segmentId}`, { method: 'POST' })
+  const added = await request(apiKey, `/contacts/${contact}/segments/${segmentId}`, {
+    method: 'POST',
+  })
   if (!added.ok) return false
-  await request(apiKey, `/contacts/${contact}`, { method: 'PATCH', body: JSON.stringify({ unsubscribed: false }) })
+  await request(apiKey, `/contacts/${contact}`, {
+    method: 'PATCH',
+    body: JSON.stringify({ unsubscribed: false }),
+  })
   return true
 }
 
@@ -92,7 +160,13 @@ export const contactsCsv = (contacts: Contact[], { all = false }: { all?: boolea
       ...(all ? [c.unsubscribed ? 'unsubscribed' : 'subscribed'] : []),
     ].join(','),
   )
-  const header = ['Email Address', 'First Name', 'Last Name', 'Subscribed At', ...(all ? ['Status'] : [])].join(',')
+  const header = [
+    'Email Address',
+    'First Name',
+    'Last Name',
+    'Subscribed At',
+    ...(all ? ['Status'] : []),
+  ].join(',')
   // A byte-order mark, so Excel reads Arabic names as UTF-8.
   return `﻿${[header, ...rows].join('\r\n')}\r\n`
 }

@@ -14,7 +14,14 @@ import { PICK_TYPES } from './pick-types'
  */
 export const issueForEmail = async (payload: Payload, id: number, req?: PayloadRequest) => {
   const local = { overrideAccess: true, locale: 'en' as const, req }
-  const issue = (await payload.findByID({ collection: 'newsletters', id, depth: 2, draft: true, ...local })) as Issue & {
+  const issue = (await payload.findByID({
+    collection: 'newsletters',
+    id,
+    depth: 2,
+    draft: true,
+    ...local,
+  })) as Issue & {
+    send_to?: number | { id: number } | null
     title: string
     sent_at?: string | null
   }

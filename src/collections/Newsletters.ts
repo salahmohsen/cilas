@@ -44,7 +44,12 @@ export const Newsletters: CollectionConfig = {
       type: 'text',
       admin: { description: 'The line mail apps show after the subject. Empty: the title.' },
     },
-    { name: 'body', type: 'richText', localized: true, admin: { description: 'The intro, above the picks.' } },
+    {
+      name: 'body',
+      type: 'richText',
+      localized: true,
+      admin: { description: 'The intro, above the picks.' },
+    },
     {
       name: 'sections',
       type: 'blocks',
@@ -69,25 +74,30 @@ export const Newsletters: CollectionConfig = {
                   required: true,
                   defaultValue: 'course',
                   options: PICK_TYPES.map(({ value, label }) => ({ value, label })),
-                  admin: { description: 'Choose the type first; the next field lists only that type.' },
+                  admin: {
+                    description: 'Choose the type first; the next field lists only that type.',
+                  },
                 },
                 // One field per type, shown for its type only: a short list to search.
-                ...PICK_TYPES.map(
-                  ({ value, label, relationTo, filter }): Field => ({
-                    name: value,
-                    label,
-                    type: 'relationship',
-                    relationTo,
-                    ...(filter ? { filterOptions: () => filter } : {}),
-                    admin: { condition: (_, sibling) => sibling?.type === value },
-                    validate: (v: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
-                      siblingData?.type !== value || v ? true : `Choose the ${label.toLowerCase()}.`,
-                  }),
-                ),
+                ...PICK_TYPES.map(({ value, label, relationTo, filter }): Field => ({
+                  name: value,
+                  label,
+                  type: 'relationship',
+                  relationTo,
+                  ...(filter ? { filterOptions: () => filter } : {}),
+                  admin: { condition: (_, sibling) => sibling?.type === value },
+                  validate: (
+                    v: unknown,
+                    { siblingData }: { siblingData: Record<string, unknown> },
+                  ) =>
+                    siblingData?.type !== value || v ? true : `Choose the ${label.toLowerCase()}.`,
+                })),
                 {
                   name: 'note',
                   type: 'text',
-                  admin: { description: 'One line under the card, e.g. “Applications close 3 Nov”.' },
+                  admin: {
+                    description: 'One line under the card, e.g. “Applications close 3 Nov”.',
+                  },
                 },
               ],
             },
@@ -123,7 +133,11 @@ export const Newsletters: CollectionConfig = {
           labels: { singular: 'Quote', plural: 'Quotes' },
           fields: [
             { name: 'text', type: 'textarea', required: true },
-            { name: 'attribution', type: 'text', admin: { description: 'Who said it, e.g. “Ghosoun Ismail, fellow”.' } },
+            {
+              name: 'attribution',
+              type: 'text',
+              admin: { description: 'Who said it, e.g. “Ghosoun Ismail, fellow”.' },
+            },
           ],
         },
         {
@@ -132,6 +146,17 @@ export const Newsletters: CollectionConfig = {
           fields: [{ name: 'body', type: 'richText', required: true }],
         },
       ],
+    },
+    {
+      name: 'send_to',
+      label: 'Send to',
+      type: 'relationship',
+      relationTo: 'mailing-lists',
+      admin: {
+        position: 'sidebar',
+        description:
+          'Empty: the signup list. A synced list is brought up to date just before sending.',
+      },
     },
     {
       name: 'actions',

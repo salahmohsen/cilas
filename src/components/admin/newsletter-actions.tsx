@@ -11,7 +11,7 @@ import {
 } from '@payloadcms/ui'
 import { useState } from 'react'
 
-/** "Send test to me" and "Send to subscribers" on a newsletter issue (src/forms/newsletter-send.ts). */
+/** "Send test to me" and "Send to the list" on a newsletter issue (src/forms/newsletter-send.ts). */
 export function NewsletterActions() {
   const { id } = useDocumentInfo()
   const { openModal } = useModal()
@@ -45,17 +45,34 @@ export function NewsletterActions() {
   const slug = `newsletter-send-${id}`
   return (
     <div style={{ display: 'grid', gap: '0.5rem', marginBlock: '1rem' }}>
-      {modified ? <p className="field-description">Save first: tests and sends use the saved issue.</p> : null}
-      <Button buttonStyle="secondary" disabled={busy || modified} margin={false} onClick={() => call('test')}>
+      {modified ? (
+        <p className="field-description">Save first: tests and sends use the saved issue.</p>
+      ) : null}
+      <Button
+        buttonStyle="secondary"
+        disabled={busy || modified}
+        margin={false}
+        onClick={() => call('test')}
+      >
         Send test to me
       </Button>
-      <Button buttonStyle="primary" disabled={busy || modified} margin={false} onClick={() => openModal(slug)}>
-        Send to subscribers
+      <Button
+        buttonStyle="primary"
+        disabled={busy || modified}
+        margin={false}
+        onClick={() => openModal(slug)}
+      >
+        Send to the list
       </Button>
       <ConfirmationModal
         modalSlug={slug}
-        heading="Send this issue to every subscriber?"
-        body={<p>This sends the saved issue now and publishes it to the archive. You cannot send it again.</p>}
+        heading="Send this issue to its mailing list?"
+        body={
+          <p>
+            This sends the saved issue now to the list in “Send to” (empty: the signup list) and
+            publishes it to the archive. You cannot send it again.
+          </p>
+        }
         confirmLabel="Send"
         confirmingLabel="Sending…"
         onConfirm={() => call('send')}
