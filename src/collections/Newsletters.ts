@@ -1,9 +1,10 @@
-import type { CollectionConfig, Where } from 'payload'
+import type { CollectionConfig, Field } from 'payload'
 
 import { isAdmin, publishedOrAdmin } from '@/access'
 import { slugField } from '@/fields/slug'
 import { importFields } from '@/fields/import'
 import { newsletterEndpoints } from '@/forms/newsletter-send'
+import { PICK_TYPES } from '@/emails/pick-types'
 
 /**
  * The archive of issues CILAS has sent. Subscribers live in Resend Audiences,
@@ -62,21 +63,26 @@ export const Newsletters: CollectionConfig = {
               labels: { singular: 'Pick', plural: 'Picks' },
               fields: [
                 {
-                  name: 'item',
-                  type: 'relationship',
-                  relationTo: ['courses', 'articles', 'publications', 'cycles', 'events', 'programmes'],
+                  name: 'type',
+                  type: 'select',
                   required: true,
-                  // Only what a visitor can open.
-                  filterOptions: ({ relationTo }): Where | true => {
-                    if (relationTo === 'programmes') return { kind: { equals: 'bridge' } }
-                    if (relationTo === 'cycles') return true
-                    if (relationTo === 'publications') return { _status: { equals: 'published' } }
-                    return { and: [{ _status: { equals: 'published' } }, { tier: { equals: 'public' } }] }
-                  },
-                  admin: {
-                    description: 'A course, an article, an article collection, a cycle (with its courses), an event or the Bridge.',
-                  },
+                  defaultValue: 'course',
+                  options: PICK_TYPES.map(({ value, label }) => ({ value, label })),
+                  admin: { description: 'Choose the type first; the next field lists only that type.' },
                 },
+                // One field per type, shown for its type only: a short list to search.
+                ...PICK_TYPES.map(
+                  ({ value, label, relationTo, filter }): Field => ({
+                    name: value,
+                    label,
+                    type: 'relationship',
+                    relationTo,
+                    ...(filter ? { filterOptions: () => filter } : {}),
+                    admin: { condition: (_, sibling) => sibling?.type === value },
+                    validate: (v: unknown, { siblingData }: { siblingData: Record<string, unknown> }) =>
+                      siblingData?.type !== value || v ? true : `Choose the ${label.toLowerCase()}.`,
+                  }),
+                ),
                 {
                   name: 'note',
                   type: 'text',

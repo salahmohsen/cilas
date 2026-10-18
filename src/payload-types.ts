@@ -659,6 +659,14 @@ export interface Space {
   slug: string;
   state?: ('current' | 'former') | null;
   city?: string | null;
+  /**
+   * The street address, e.g. “10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt”.
+   */
+  address?: string | null;
+  /**
+   * Shown with the address, e.g. in the emails’ footer.
+   */
+  map_url?: string | null;
   opened_year?: number | null;
   closed_year?: number | null;
   description?: {
@@ -1599,33 +1607,15 @@ export interface Newsletter {
             items?:
               | {
                   /**
-                   * A course, an article, an article collection, a cycle (with its courses), an event or the Bridge.
+                   * Choose the type first; the next field lists only that type.
                    */
-                  item:
-                    | {
-                        relationTo: 'courses';
-                        value: number | Course;
-                      }
-                    | {
-                        relationTo: 'articles';
-                        value: number | Article;
-                      }
-                    | {
-                        relationTo: 'publications';
-                        value: number | Publication;
-                      }
-                    | {
-                        relationTo: 'cycles';
-                        value: number | Cycle;
-                      }
-                    | {
-                        relationTo: 'events';
-                        value: number | Event;
-                      }
-                    | {
-                        relationTo: 'programmes';
-                        value: number | Programme;
-                      };
+                  type: 'course' | 'article' | 'publication' | 'cycle' | 'event' | 'programme';
+                  course?: (number | null) | Course;
+                  article?: (number | null) | Article;
+                  publication?: (number | null) | Publication;
+                  cycle?: (number | null) | Cycle;
+                  event?: (number | null) | Event;
+                  programme?: (number | null) | Programme;
                   /**
                    * One line under the card, e.g. “Applications close 3 Nov”.
                    */
@@ -2748,7 +2738,13 @@ export interface NewslettersSelect<T extends boolean = true> {
               items?:
                 | T
                 | {
-                    item?: T;
+                    type?: T;
+                    course?: T;
+                    article?: T;
+                    publication?: T;
+                    cycle?: T;
+                    event?: T;
+                    programme?: T;
                     note?: T;
                     id?: T;
                   };
@@ -2803,6 +2799,8 @@ export interface SpacesSelect<T extends boolean = true> {
   slug?: T;
   state?: T;
   city?: T;
+  address?: T;
+  map_url?: T;
   opened_year?: T;
   closed_year?: T;
   description?: T;
@@ -3256,6 +3254,10 @@ export interface EmailSetting {
    */
   signoff?: string | null;
   /**
+   * The space whose address and Google Maps link end each email. Edit them in Spaces. Bulk email must carry a postal address.
+   */
+  address_space?: (number | null) | Space;
+  /**
    * The small print under the social icons: the address, for one. The icons come from Site settings → Contact.
    */
   footer?: string | null;
@@ -3361,6 +3363,7 @@ export interface EmailSettingsSelect<T extends boolean = true> {
   reply_to?: T;
   tagline?: T;
   signoff?: T;
+  address_space?: T;
   footer?: T;
   texts?:
     | T

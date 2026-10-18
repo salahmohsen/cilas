@@ -1,14 +1,14 @@
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
 import { Column, Heading, Img, Link, Row, Section, Text } from 'react-email'
 
-import { cardOf, type Card, type PickRelation } from './cards'
+import { cardOf, type Card } from './cards'
 import { Box, EmailLayout } from './layout'
 import { renderEmail } from './render'
+import { pickItemOf } from './pick-types'
 import type { EmailSettings } from './settings'
 import { editableIn, type Editable } from '@/lib/editable'
-import { colors, type } from './theme'
+import { colors, link, linkCss, type } from './theme'
 
-type PickItem = { relationTo: PickRelation; value: unknown }
 type Media = { url?: string | null; alt?: string | null } | number | null | undefined
 
 type Row = { id?: string | null }
@@ -18,7 +18,7 @@ export type Section = Row &
     | {
         blockType: 'picks'
         heading?: string | null
-        items?: Array<Row & { item?: PickItem | null; note?: string | null }> | null
+        items?: Array<Row & Record<string, unknown> & { type?: string | null; note?: string | null }> | null
       }
     | { blockType: 'text'; body?: unknown }
     | {
@@ -54,10 +54,13 @@ const monthOf = (date?: string | null) =>
  */
 const richHtml = (data: unknown) =>
   data
-    ? convertLexicalToHTML({ data: data as never }).replace(
-        /<(p|h[1-6]|li|blockquote|ul|ol)(\s|>)/g,
-        (_, tag: string, next: string) => `<${tag} dir="auto"${next}`,
-      )
+    ? convertLexicalToHTML({ data: data as never })
+        .replace(
+          /<(p|h[1-6]|li|blockquote|ul|ol)(\s|>)/g,
+          (_, tag: string, next: string) => `<${tag} dir="auto"${next}`,
+        )
+        // Links in the site's style, not the mail app's blue.
+        .replace(/<a /g, `<a style="${linkCss}" `)
     : ''
 
 const urlOf = (media: Media) => {
@@ -69,14 +72,13 @@ const urlOf = (media: Media) => {
 
 function CardText({
   card,
-  accent,
   pe,
   path,
 }: {
   card: Card
-  accent: string
   pe: Editable
-  path: string
+  /** The pick's data path; none for a course listed under its cycle. */
+  path?: string
 }) {
   return (
     <>
@@ -98,36 +100,16 @@ function CardText({
           {card.text}
         </Text>
       ) : null}
-      {card.list.length ? (
-        <Text style={{ ...type[16], margin: '0 0 8px' }}>
-          {card.list.map((c, i) => (
-            <span key={c.url}>
-              {i > 0 ? <br /> : null}
-              {'· '}
-              <Link href={c.url} dir="auto" style={{ color: colors.fg2, textDecoration: 'none' }}>
-                {c.title}
-              </Link>
-            </span>
-          ))}
-        </Text>
-      ) : null}
       {card.note ? (
         <Text
           dir="auto"
           style={{ ...type[16], color: colors.fg, margin: '0 0 8px' }}
-          {...pe(`${path}.note`)}
+          {...(path ? pe(`${path}.note`) : {})}
         >
           {card.note}
         </Text>
       ) : null}
-      <Link
-        href={card.url}
-        style={{
-          ...type[16],
-          color: accent === '#000000' ? colors.fg : accent,
-          textDecoration: 'underline',
-        }}
-      >
+      <Link href={card.url} style={{ ...type[16], ...link }}>
         {card.button} →
       </Link>
     </>
@@ -139,7 +121,6 @@ function CardRow({
   card,
   flip,
   last,
-  accent,
   pe,
   path,
   id,
@@ -147,18 +128,17 @@ function CardRow({
   card: Card
   flip: boolean
   last: boolean
-  accent: string
   pe: Editable
-  /** The pick's data path, e.g. `sections.0.items.2`. */
-  path: string
+  /** The pick's data path, e.g. `sections.0.items.2`; none for a course under its cycle. */
+  path?: string
   id?: string | null
 }) {
   const bottom = last ? '0' : '36px'
-  const row = pe(path, { row: { id } })
+  const row = path ? pe(path, { row: { id } }) : {}
   if (!card.image) {
     return (
       <Section style={{ marginBottom: bottom }} {...row}>
-        <CardText card={card} accent={accent} pe={pe} path={path} />
+        <CardText card={card} pe={pe} path={path} />
       </Section>
     )
   }
@@ -185,7 +165,7 @@ function CardRow({
   )
   const words = (
     <Column key="words" className="m-col" style={{ width: '52%', verticalAlign: 'middle' }}>
-      <CardText card={card} accent={accent} pe={pe} path={path} />
+      <CardText card={card} pe={pe} path={path} />
     </Column>
   )
   return (
@@ -210,10 +190,14 @@ function Picks({
 }: SectionProps<'picks'> & { settings: EmailSettings }) {
   const t = settings.texts.newsletter
   const labels = { site: settings.site, read: t.read, apply: t.apply }
-  // Each card keeps its place in the data, for the editor.
+  // Each card keeps its place in the data, for the editor. A cycle is a
+  // heading card, then a full card for each of its courses.
   const cards = (section.items ?? []).flatMap((p, at) => {
-    const card = p.item ? cardOf(p.item, p.note, labels) : null
-    return card ? [{ card, at, id: p.id }] : []
+    const item = pickItemOf(p)
+    const card = item ? cardOf(item, p.note, labels) : null
+    if (!card) return []
+    const own = { card, path: `${path}.items.${at}` as string | undefined, id: p.id }
+    return [own, ...card.children.map((child) => ({ card: child, path: undefined, id: undefined }))]
   })
     if (!cards.length && !pe.on) return null
   return (
@@ -230,15 +214,14 @@ function Picks({
         {...pe.container(`${path}.items`)}
         style={cards.length ? undefined : { minHeight: '48px' }}
       >
-        {cards.map(({ card, at, id }, i) => (
+        {cards.map(({ card, path: cardPath, id }, i) => (
           <CardRow
-            key={card.url + at}
+            key={`${card.url}${i}`}
             card={card}
             flip={i % 2 === 1}
             last={i === cards.length - 1}
-            accent={settings.accent}
             pe={pe}
-            path={`${path}.items.${at}`}
+            path={cardPath}
             id={id}
           />
         ))}

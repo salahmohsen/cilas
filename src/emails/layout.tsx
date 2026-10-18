@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { Body, Column, Container, Font, Head, Html, Img, Link, Preview, Row, Section, Text } from 'react-email'
 
 import type { EmailSettings } from './settings'
-import { colors, font, mobileCss, type } from './theme'
+import { colors, font, link, mobileCss, type } from './theme'
 
 const INTER = 'https://fonts.gstatic.com/s/inter/v20/UcCO3FwrK3iLTeHuS_nVMrMxCp50SjIw2boKoduKmMEVu'
 const WEIGHTS = { 400: 'OKfMZg', 500: 'I6fMZg', 600: 'GKYMZg' } as const
@@ -120,6 +120,14 @@ export function EmailLayout({
                     {line}
                   </span>
                 ))}
+                <br />
+                {settings.address.url ? (
+                  <Link href={settings.address.url} style={{ ...link, color: colors.fg3 }}>
+                    {settings.address.text}
+                  </Link>
+                ) : (
+                  settings.address.text
+                )}
               </Text>
               {unsubscribe ? (
                 <Text style={{ ...type[11], margin: 0, textAlign: 'center' }}>

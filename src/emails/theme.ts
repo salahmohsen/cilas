@@ -24,6 +24,20 @@ export const type = {
   32: { fontSize: '32px', fontWeight: 600, letterSpacing: '-0.64px', lineHeight: '1.25', color: colors.fg },
 } as const
 
+/**
+ * Links as the site draws them: the text's own colour, underlined in a light
+ * tint of it, a little below the line — never the mail app's default blue.
+ */
+export const link = {
+  color: colors.fg,
+  textDecoration: 'underline',
+  textDecorationColor: '#C4C5C9',
+  textUnderlineOffset: '3px',
+} as const
+
+/** The same, as a style attribute for links inside converted rich text. */
+export const linkCss = 'color:#14171E;text-decoration:underline;text-decoration-color:#C4C5C9;text-underline-offset:3px'
+
 export const button = (accent: string) =>
   ({
     backgroundColor: accent,

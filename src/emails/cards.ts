@@ -12,8 +12,8 @@ export type Card = {
   text: string | null
   note: string | null
   image: { url: string; alt: string } | null
-  /** A cycle's courses. */
-  list: Array<{ title: string; url: string }>
+  /** A cycle's courses, each a full card. */
+  children: Card[]
   url: string
   button: string
 }
@@ -85,7 +85,7 @@ export const cardOf = (
   const doc = pick.value as Doc | null
   if (!doc || typeof doc !== 'object' || !doc.title) return null
   const site = labels.site.replace(/\/+$/, '')
-  const base = { title: doc.title, note: note?.trim() || null, byline: null, list: [], button: labels.read }
+  const base = { title: doc.title, note: note?.trim() || null, byline: null, children: [], button: labels.read }
 
   switch (pick.relationTo) {
     case 'courses': {
@@ -96,7 +96,8 @@ export const cardOf = (
         kind: 'Course',
         byline: namesOf(doc.fellows),
         meta: cycleLabel(doc.cycle),
-        text: (doc.summary as string | null) || (doc.subtitle as string | null) || null,
+        // The description's start, as the course page opens; else its card line.
+        text: excerpt(doc.description, 260) || (doc.summary as string | null) || (doc.subtitle as string | null) || null,
         image: imageOf(doc.cover_image, doc.title),
         url: `${site}${path}`,
       }
@@ -129,12 +130,12 @@ export const cardOf = (
     }
     case 'cycles': {
       const c = doc as Doc & { season?: string; start_year?: number }
-      // The cycle's public courses, from its `courses` join.
+      // The cycle's public courses, each as its own card (src/emails/issue.ts loads them).
       const courses = (((doc.courses as { docs?: unknown[] } | null)?.docs ?? []) as Doc[])
         .filter((course) => course && typeof course === 'object' && isPublic(course))
         .flatMap((course) => {
-          const path = pathOf('courses', course, 'en')
-          return path && course.title ? [{ title: course.title, url: `${site}${path}` }] : []
+          const card = cardOf({ relationTo: 'courses', value: course }, null, labels)
+          return card ? [card] : []
         })
       const query = c.season && c.start_year ? `?season=${c.season}&year=${c.start_year}` : ''
       return {
@@ -143,8 +144,9 @@ export const cardOf = (
         meta: courses.length ? `${courses.length} ${courses.length === 1 ? 'course' : 'courses'}` : null,
         text: null,
         image: null,
-        list: courses,
+        children: courses,
         url: `${site}/en/study${query}`,
+        button: 'All courses of the cycle',
       }
     }
     case 'events':

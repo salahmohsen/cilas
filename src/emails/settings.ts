@@ -55,6 +55,8 @@ export type EmailSettings = {
   /** The last line of a newsletter, above the footer. */
   signoff: string
   footer: string
+  /** The chosen space's address and map link (Email settings → Address). */
+  address: { text: string; url: string | null }
   /** From Site settings → Contact, each with its icon (scripts/email-assets.mjs). */
   social: SocialLink[]
   texts: Texts
@@ -69,12 +71,16 @@ export type StoredEmailSettings = {
   tagline?: string | null
   signoff?: string | null
   footer?: string | null
+  address_space?: unknown
   texts?: { [K in keyof Texts]?: { [F in keyof Texts[K]]?: string | null } | null } | null
 }
 
-// A postal address: bulk email must carry one (CAN-SPAM).
-const DEFAULT_FOOTER =
-  'Cairo Institute of Liberal Arts and Sciences (CILAS)\n10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt'
+const DEFAULT_FOOTER = 'Cairo Institute of Liberal Arts and Sciences (CILAS)'
+// A postal address: bulk email must carry one (CAN-SPAM). Used when no space is chosen.
+const DEFAULT_ADDRESS = {
+  text: '10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt',
+  url: 'https://www.google.com/maps/search/?api=1&query=10%20Darb%20El%20Labana%2C%20El%20Darb%20El%20Ahmar%2C%20Cairo',
+}
 const DEFAULT_SIGNOFF = 'From CILAS, with love.'
 const DEFAULT_TAGLINE = 'A pedagogy of discovery and attunement.'
 const PLATFORMS: Record<string, string> = {
@@ -85,6 +91,12 @@ const PLATFORMS: Record<string, string> = {
 }
 
 type StoredSocial = Array<{ platform?: string | null; url?: string | null }> | null | undefined
+
+const addressOf = (space: unknown): EmailSettings['address'] | null => {
+  const s = space as { address?: string | null; map_url?: string | null } | null
+  if (!s || typeof s !== 'object' || !s.address?.trim()) return null
+  return { text: s.address.trim(), url: s.map_url?.startsWith('http') ? s.map_url : null }
+}
 
 export const withDefaults = (
   stored: StoredEmailSettings,
@@ -112,6 +124,7 @@ export const withDefaults = (
     tagline: stored.tagline?.trim() || DEFAULT_TAGLINE,
     signoff: stored.signoff?.trim() || DEFAULT_SIGNOFF,
     footer: stored.footer?.trim() || DEFAULT_FOOTER,
+    address: addressOf(stored.address_space) ?? DEFAULT_ADDRESS,
     social: (social ?? []).flatMap((s) =>
       s.platform && PLATFORMS[s.platform] && s.url?.startsWith('http')
         ? [{ platform: PLATFORMS[s.platform], url: s.url, icon: `${origin}/assets/email/${s.platform}.png` }]

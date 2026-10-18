@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
+import { httpUrl } from '@/fields/validators'
 import { anyone, isAdmin } from '../access'
 import { importFields } from '@/fields/import'
 import {
@@ -36,6 +37,19 @@ export const Spaces: CollectionConfig = {
       ],
     },
     { name: 'city', type: 'text', localized: true }, // names the space's cycles: "Spring 2026, Cairo"
+    {
+      name: 'address',
+      type: 'text',
+      localized: true,
+      admin: { description: 'The street address, e.g. “10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt”.' },
+    },
+    {
+      name: 'map_url',
+      label: 'Google Maps link',
+      type: 'text',
+      validate: (value: unknown) => (value ? httpUrl(value) : true),
+      admin: { description: 'Shown with the address, e.g. in the emails’ footer.' },
+    },
     {
       type: 'row',
       fields: [

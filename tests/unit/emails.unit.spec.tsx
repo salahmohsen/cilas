@@ -140,7 +140,7 @@ describe('cardOf', () => {
       kind: 'Course',
       title: 'Reading Plato',
       byline: null,
-      list: [],
+      children: [],
       meta: 'Fall 2026',
       text: 'Book by book.',
       note: 'Starts 3 Nov',
@@ -186,13 +186,27 @@ describe('newsletterMail', () => {
             blockType: 'picks',
             items: [
               {
-                item: {
-                  relationTo: 'courses',
-                  value: { id: 1, title: 'Reading Plato', slug: 'reading-plato', fellows: [{ name: 'Mona' }, { name: 'Ali' }] },
+                type: 'course',
+                course: {
+                  id: 1,
+                  title: 'Reading Plato',
+                  slug: 'reading-plato',
+                  fellows: [{ name: 'Mona' }, { name: 'Ali' }],
+                  description: paragraph('Plato, book by book, in Cairo.'),
                 },
                 note: 'Starts 3 Nov',
               },
-              { item: { relationTo: 'articles', value: 9 }, note: null },
+              { type: 'article', article: 9, note: null },
+              {
+                type: 'cycle',
+                cycle: {
+                  id: 5,
+                  title: 'Fall 2026',
+                  season: 'fall',
+                  start_year: 2026,
+                  courses: { docs: [{ id: 2, title: 'Urban Culture', slug: 'urban', _status: 'published', tier: 'public' }] },
+                },
+              },
             ],
           },
           {
@@ -210,11 +224,16 @@ describe('newsletterMail', () => {
     expect(mail.html).toContain('<p dir="auto"')
     expect(mail.html).toContain('by <!-- -->Mona and Ali')
     expect(mail.html).toContain('Starts 3 Nov')
+    expect(mail.html).toContain('Plato, book by book, in Cairo.')
+    expect(mail.html).toContain('Urban Culture')
+    expect(mail.html).toContain('href="https://ci-las.org/en/study/urban"')
+    expect(mail.html).not.toMatch(/color:\s*#0000ee|color:\s*blue/i)
     expect(mail.html).toContain('https://cdn.test/a.jpg')
     expect(mail.html).toContain('يوم في سيلاس')
     expect(mail.html).toContain('Learning is a commons.')
     expect(mail.html).toContain('From CILAS, with love.')
     expect(mail.html).toContain('10 Darb El Labana')
+    expect(mail.html).toContain('https://www.google.com/maps/search/')
     expect(mail.html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')
     expect(mail.html.indexOf('Reading Plato')).toBeLessThan(mail.html.indexOf('Learning is a commons.'))
   })
@@ -264,9 +283,11 @@ describe('cards for collections, cycles and events', () => {
     expect(card).toMatchObject({
       kind: 'Cycle',
       meta: '1 course',
-      list: [{ title: 'Open', url: 'https://ci-las.org/en/study/open' }],
       url: 'https://ci-las.org/en/study?season=fall&year=2026',
     })
+    expect(card!.children.map((c) => [c.kind, c.title, c.url])).toEqual([
+      ['Course', 'Open', 'https://ci-las.org/en/study/open'],
+    ])
   })
 
   it('gives an event its day, time and place', () => {
@@ -350,5 +371,16 @@ describe('the layout’s brand', () => {
     expect(html).toContain('https://ci-las.org/assets/email/youtube.png')
     expect(html).toContain('href="https://x.com/cilas"')
     expect(html).toContain('max-width: 600px')
+  })
+})
+
+describe('the footer address', () => {
+  it('comes from the chosen space, linked to its map', () => {
+    const s = withDefaults({ address_space: { address: 'Somewhere 1, Cairo', map_url: 'https://maps.test/x' } })
+    expect(s.address).toEqual({ text: 'Somewhere 1, Cairo', url: 'https://maps.test/x' })
+  })
+
+  it('falls back to the institute’s address', () => {
+    expect(withDefaults({ address_space: { address: '' } }).address.text).toContain('Darb El Labana')
   })
 })
