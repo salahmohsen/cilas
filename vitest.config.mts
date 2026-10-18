@@ -13,6 +13,7 @@ export default defineConfig({
     testTimeout: 120_000,
     include: [
       'tests/unit/**/*.unit.spec.ts',
+      'tests/unit/**/*.unit.spec.tsx',
       'tests/int/**/*.int.spec.ts',
     ],
     server: {
