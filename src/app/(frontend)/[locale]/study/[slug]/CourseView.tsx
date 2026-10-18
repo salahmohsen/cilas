@@ -33,6 +33,8 @@ import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
 import type { Season } from '@/lib/cycle'
 import { priceLabel, pricingFor } from '@/lib/pricing'
 import { registrationStatus } from '@/lib/registration'
+import { EditorFields, labelOf } from '@/components/editor-fields'
+import { editableIn, type Editable } from '@/lib/editable'
 import { expandSchedule, sessionsInOrder, type Meeting } from '@/lib/schedule'
 import type { Course, Media, Person, Space } from '@/payload-types'
 
@@ -61,7 +63,9 @@ export const MATERIAL_ICONS: Record<MaterialType, LucideIcon> = {
 }
 const MATERIAL_ORDER: MaterialType[] = ['reading', 'watch', 'listen', 'prompt', 'other']
 
-type ActivityKind = NonNullable<NonNullable<Course['sessions']>[number]['activities']>[number]['kind']
+type ActivityKind = NonNullable<
+  NonNullable<Course['sessions']>[number]['activities']
+>[number]['kind']
 
 /** What happens in the session: talked over, visited, practised, watched together, presented. */
 const ACTIVITY_ICONS: Record<ActivityKind, LucideIcon> = {
@@ -79,7 +83,10 @@ const isObject = <T,>(v: unknown): v is T => typeof v === 'object' && v !== null
 const textOf = (node: unknown): string => {
   if (!isObject<{ text?: unknown; children?: unknown[]; root?: unknown }>(node)) return ''
   if (node.root) return textOf(node.root)
-  return [typeof node.text === 'string' ? node.text : '', ...(node.children ?? []).map(textOf)].join(' ')
+  return [
+    typeof node.text === 'string' ? node.text : '',
+    ...(node.children ?? []).map(textOf),
+  ].join(' ')
 }
 
 /** The direction a course's own text reads in: it may be in the other language than the page. */
@@ -100,20 +107,32 @@ const RELATED_SHOWN = 6
  * Knows nothing about the admin, live preview or draft mode — it renders the
  * course it is given, so the public page and the live-preview iframe share it.
  */
-export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }> = ({ course, related = [] }) => {
+export const CourseView: React.FC<{
+  course: Course
+  related?: RelatedCourse[]
+  /** In the admin's live preview: mark fields for the visual editor. */
+  editable?: boolean
+}> = ({ course, related = [], editable = false }) => {
+  const pe = editableIn(editable)
   const t = useTranslations('Course')
   const tf = useTranslations('Study.filters')
   const ts = useTranslations('Share')
   const format = useFormatter()
   const locale = useLocale()
 
-  const cover = isObject<Media>(course.cover_image) && course.cover_image.url ? course.cover_image : null
+  const cover =
+    isObject<Media>(course.cover_image) && course.cover_image.url ? course.cover_image : null
   const cycle = isObject<NonNullable<Course['cycle']> & object>(course.cycle) ? course.cycle : null
   const space = cycle && isObject<Space>(cycle.space) ? cycle.space : null
   const season = (cycle?.season ?? null) as Season | null
   const SeasonIcon = season ? SEASON_ICONS[season] : null
   const cycleLabel = cycle
-    ? [`${tf(`seasons.${season}`)} ${localDigits(cycle.start_year, locale)}`, space?.city ?? space?.name].filter(Boolean).join(locale === 'ar' ? '، ' : ', ')
+    ? [
+        `${tf(`seasons.${season}`)} ${localDigits(cycle.start_year, locale)}`,
+        space?.city ?? space?.name,
+      ]
+        .filter(Boolean)
+        .join(locale === 'ar' ? '، ' : ', ')
     : null
   const typeLabel = tf(`types.${course.course_type.toLowerCase()}`)
   const fellows = (course.fellows ?? []).filter(isObject<Person>)
@@ -153,25 +172,42 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
     course.session_unit === 'week' ? t('week', { number: n }) : t('session', { number: n })
 
   // Every material, for the sidebar's count by kind.
-  const allMaterials = [...sessions.flatMap((s) => s.bibliography ?? []), ...(course.bibliography ?? [])]
-  const counts = MATERIAL_ORDER.map((type) => ({ type, count: allMaterials.filter((m) => m.type === type).length })).filter(
-    (c) => c.count > 0,
-  )
+  const allMaterials = [
+    ...sessions.flatMap((s) => s.bibliography ?? []),
+    ...(course.bibliography ?? []),
+  ]
+  const counts = MATERIAL_ORDER.map((type) => ({
+    type,
+    count: allMaterials.filter((m) => m.type === type).length,
+  })).filter((c) => c.count > 0)
 
   // The weekly meeting time, from the first meeting of each slot.
   const slots = (course.schedule?.slots ?? []).flatMap((slot) => {
-    const first = meetings.find((m) => !m.cancelled && cairoWeekday(m.date) === slot.weekday && m.start_time === slot.start_time)
-    return first ? [{ day: weekdayName(first.date), time: localDigits(`${slot.start_time}–${slot.end_time}`, locale) }] : []
+    const first = meetings.find(
+      (m) =>
+        !m.cancelled && cairoWeekday(m.date) === slot.weekday && m.start_time === slot.start_time,
+    )
+    return first
+      ? [
+          {
+            day: weekdayName(first.date),
+            time: localDigits(`${slot.start_time}–${slot.end_time}`, locale),
+          },
+        ]
+      : []
   })
   const comma = locale === 'ar' ? '، ' : ', '
 
-  const facts: Array<{ icon: LucideIcon; label: string; value: React.ReactNode }> = [
-    ...(cycleLabel && SeasonIcon ? [{ icon: SeasonIcon, label: t('cycle'), value: cycleLabel }] : []),
+  const facts: Array<{ icon: LucideIcon; label: string; value: React.ReactNode; path: string }> = [
+    ...(cycleLabel && SeasonIcon
+      ? [{ icon: SeasonIcon, label: t('cycle'), value: cycleLabel, path: 'cycle' }]
+      : []),
     ...(firstMeeting
       ? [
           {
             icon: CalendarDays,
             label: t('starts'),
+            path: 'schedule',
             value:
               course.schedule?.start_precision === 'week'
                 ? t('weekOf', { date: dayLabel(firstMeeting.date) })
@@ -184,6 +220,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           {
             icon: Clock,
             label: t('meets'),
+            path: 'schedule.slots',
             // A slot a line; the time held in its digits' direction, so it never reads backwards.
             value: slots.map(({ day, time }) => (
               <span className="block" key={`${day}${time}`}>
@@ -202,7 +239,11 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           {
             icon: ListOrdered,
             label: t('length'),
-            value: course.session_unit === 'week' ? t('weeks', { count: sessions.length }) : t('sessions', { count: sessions.length }),
+            path: 'session_unit',
+            value:
+              course.session_unit === 'week'
+                ? t('weeks', { count: sessions.length })
+                : t('sessions', { count: sessions.length }),
           },
         ]
       : []),
@@ -211,6 +252,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           {
             icon: MapPin,
             label: t('format'),
+            path: 'location',
             value: course.location.map((l) => tf(`formats.${l.toLowerCase()}`)).join(' / '),
           },
         ]
@@ -220,7 +262,10 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           {
             icon: Languages,
             label: t('language'),
-            value: course.language_note || course.teaching_languages!.map((l) => tf(`languages.${l}`)).join(' / '),
+            path: course.language_note ? 'language_note' : 'teaching_languages',
+            value:
+              course.language_note ||
+              course.teaching_languages!.map((l) => tf(`languages.${l}`)).join(' / '),
           },
         ]
       : []),
@@ -228,7 +273,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
 
   // The side column names who teaches; their bios are read in the main text.
   const facultyCard = (
-    <section aria-labelledby="course-fellows" className="course-side">
+    <section aria-labelledby="course-fellows" className="course-side" {...pe('fellows')}>
       <h2 className="course-side-heading" id="course-fellows">
         {t('taughtBy')}
       </h2>
@@ -254,7 +299,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
 
   // Each fellow with their whole bio: who teaches a course matters to it.
   const fellowsSection = fellows.length ? (
-    <section aria-labelledby="course-teachers" className="mt-12">
+    <section aria-labelledby="course-teachers" className="mt-12" {...pe('fellows')}>
       <h2 className="course-heading" id="course-teachers">
         {t('whoTeaches')}
       </h2>
@@ -263,12 +308,20 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           const hasBio = Boolean(textOf(person.bio).trim())
           return (
             <li className="course-fellow" key={person.id}>
-              <Link aria-hidden className="course-fellow-photo" href={`/people/${person.slug}`} tabIndex={-1}>
+              <Link
+                aria-hidden
+                className="course-fellow-photo"
+                href={`/people/${person.slug}`}
+                tabIndex={-1}
+              >
                 <Avatar name={person.name} size="lg" src={photoOf(person)} />
               </Link>
               <div className="course-fellow-head">
                 <h3 className="text-base font-medium">
-                  <Link className="underline-offset-4 hover:underline" href={`/people/${person.slug}`}>
+                  <Link
+                    className="underline-offset-4 hover:underline"
+                    href={`/people/${person.slug}`}
+                  >
                     {person.name}
                   </Link>
                 </h3>
@@ -289,10 +342,14 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
   const factsCard = (
     <section aria-label={t('details')} className="course-side">
       <div className="flex items-center justify-between gap-3">
-        <span className="course-status" data-open={open || undefined}>
+        <span className="course-status" data-open={open || undefined} {...pe('registration')}>
           {open ? t('open') : t('closed')}
         </span>
-        {price ? <span className="text-sm text-(--text-secondary)">{price}</span> : null}
+        {price ? (
+          <span className="text-sm text-(--text-secondary)" {...pe('pricing_override')}>
+            {price}
+          </span>
+        ) : null}
       </div>
       {applyUrl ? (
         <a className="course-apply" data-primary href={applyUrl} {...newTab(applyUrl)}>
@@ -301,9 +358,18 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       ) : null}
       {facts.length ? (
         <dl className="course-facts">
-          {facts.map(({ icon: Icon, label, value }) => (
-            <div className="grid grid-cols-[1.25rem_1fr] items-start gap-x-3" key={label}>
-              <Icon aria-hidden className="mt-0.5 text-(--text-muted)" size={16} strokeWidth={1.5} />
+          {facts.map(({ icon: Icon, label, value, path }) => (
+            <div
+              className="grid grid-cols-[1.25rem_1fr] items-start gap-x-3"
+              key={label}
+              {...pe(path)}
+            >
+              <Icon
+                aria-hidden
+                className="mt-0.5 text-(--text-muted)"
+                size={16}
+                strokeWidth={1.5}
+              />
               <div>
                 <dt className="text-xs text-(--text-muted)">{label}</dt>
                 <dd className="text-sm">{value}</dd>
@@ -339,21 +405,70 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       <h2 className="course-side-heading" id="course-share">
         {ts('heading')}
       </h2>
-      <ShareBar label={ts('course')} path={`/${locale}/study/${course.slug}`} title={course.title} />
+      <ShareBar
+        label={ts('course')}
+        path={`/${locale}/study/${course.slug}`}
+        title={course.title}
+      />
     </section>
   )
 
   return (
     <div
       className={`course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0 ${applyUrl ? 'max-lg:pb-28' : ''}`}
+      {...pe.scope({ collection: 'courses', id: course.id })}
     >
       {applyUrl ? (
         <div className="lg:hidden">
-          <RegisterBar applyLabel={t('apply')} applyUrl={applyUrl} price={price} status={t('open')} variant="bar" />
+          <RegisterBar
+            applyLabel={t('apply')}
+            applyUrl={applyUrl}
+            price={price}
+            status={t('open')}
+            variant="bar"
+          />
         </div>
       ) : null}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
         <article aria-labelledby="course-title" className="min-w-0">
+          {editable ? (
+            <EditorFields
+              pe={pe}
+              fields={[
+                { label: 'Card summary', path: 'summary', value: course.summary },
+                { label: 'Visibility', path: 'tier', value: course.tier },
+                { label: 'Slug', path: 'slug', value: course.slug },
+                {
+                  label: 'Registration',
+                  path: 'registration',
+                  value: course.registration?.method ?? 'From its cycle',
+                },
+                {
+                  label: 'Deadline',
+                  path: 'registration.deadline',
+                  value: course.registration?.deadline?.slice(0, 10),
+                },
+                { label: 'Session unit', path: 'session_unit', value: course.session_unit },
+                {
+                  label: 'Syllabus tentative',
+                  path: 'syllabus_tentative',
+                  value: course.syllabus_tentative ? 'Yes' : 'No',
+                },
+                {
+                  label: 'Teaching languages',
+                  path: 'teaching_languages',
+                  value: course.teaching_languages?.join(', '),
+                },
+                { label: 'SEO title', path: 'meta.title', value: course.meta?.title },
+                {
+                  label: 'SEO description',
+                  path: 'meta.description',
+                  value: course.meta?.description,
+                },
+                { label: 'SEO image', path: 'meta.image', value: labelOf(course.meta?.image) },
+              ]}
+            />
+          ) : null}
           <Link
             className="inline-flex items-center gap-2 text-sm text-(--text-secondary) hover:text-(--text-primary)"
             href={`/study?type=${course.course_type.toLowerCase()}`}
@@ -364,16 +479,30 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
 
           <header className="mt-8">
             <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-(--text-secondary)">
-              {SeasonIcon ? <SeasonIcon aria-hidden className="course-season" data-season={season} size={16} strokeWidth={1.5} /> : null}
-              {cycleLabel ? <span>{cycleLabel}</span> : null}
+              {SeasonIcon ? (
+                <SeasonIcon
+                  aria-hidden
+                  className="course-season"
+                  data-season={season}
+                  size={16}
+                  strokeWidth={1.5}
+                />
+              ) : null}
+              {cycleLabel ? <span {...pe('cycle')}>{cycleLabel}</span> : null}
               <span aria-hidden="true">·</span>
-              <span>{typeLabel}</span>
+              <span {...pe('course_type')}>{typeLabel}</span>
             </p>
-            <h1 className="course-title mt-3" dir={dir} id="course-title" lang={lang}>
+            <h1
+              className="course-title mt-3"
+              dir={dir}
+              id="course-title"
+              lang={lang}
+              {...pe('title')}
+            >
               {course.title}
             </h1>
             {course.subtitle ? (
-              <p className="mt-3 text-lg text-(--text-secondary)" dir="auto">
+              <p className="mt-3 text-lg text-(--text-secondary)" dir="auto" {...pe('subtitle')}>
                 {course.subtitle}
               </p>
             ) : null}
@@ -381,7 +510,12 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
 
           {cover?.url ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img alt={cover.alt ?? ''} className="course-cover mt-8" src={cover.url} />
+            <img
+              alt={cover.alt ?? ''}
+              className="course-cover mt-8"
+              src={cover.url}
+              {...pe('cover_image')}
+            />
           ) : null}
 
           {/* Narrow screens: the facts and the fellows come before the text. */}
@@ -391,7 +525,7 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           </div>
 
           {course.epigraph ? (
-            <div className="article-prose mt-10">
+            <div className="article-prose mt-10" {...pe('epigraph')}>
               <blockquote>
                 <p dir="auto">{course.epigraph}</p>
               </blockquote>
@@ -403,14 +537,18 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
               <h2 className="course-heading" id="course-about">
                 {t('about')}
               </h2>
-              <div dir={dir} lang={lang}>
+              <div dir={dir} lang={lang} {...pe('description')}>
                 <RichTextField className="article-prose mt-4" data={course.description} />
               </div>
             </section>
           ) : null}
 
           {course.facilitator_note ? (
-            <section aria-labelledby="course-note" className="course-note mt-10">
+            <section
+              aria-labelledby="course-note"
+              className="course-note mt-10"
+              {...pe('facilitator_note')}
+            >
               <h2 className="font-sans text-sm font-medium" id="course-note">
                 {t('note')}
               </h2>
@@ -425,7 +563,11 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
           ) : null}
 
           {course.content_warning ? (
-            <p className="mt-6 border-s-2 border-foreground ps-4 text-sm" role="note">
+            <p
+              className="mt-6 border-s-2 border-foreground ps-4 text-sm"
+              role="note"
+              {...pe('content_warning')}
+            >
               <span className="font-medium">{t('contentWarning')}</span> {course.content_warning}
             </p>
           ) : null}
@@ -439,48 +581,103 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
                   {t('flow')}
                 </h2>
                 {course.syllabus_tentative ? (
-                  <p className="text-sm text-[var(--text-muted)]">{t('tentative')}</p>
+                  <p className="text-sm text-[var(--text-muted)]" {...pe('syllabus_tentative')}>
+                    {t('tentative')}
+                  </p>
                 ) : null}
               </div>
-              <ol className="mt-4 grid gap-2">
+              <ol className="mt-4 grid gap-2" {...pe.container('sessions')}>
                 {sessions.map((session, i) => {
+                  // Sessions show in their `order`; the editor needs their place in the data.
+                  const at = Math.max(
+                    0,
+                    (course.sessions ?? []).findIndex((s) => s.id === session.id),
+                  )
                   const own = meetings.filter((m) => m.session === i + 1)
                   const materials = session.bibliography ?? []
                   const activities = session.activities ?? []
-                  const hasBody = Boolean(session.description || materials.length || activities.length)
+                  const hasBody = Boolean(
+                    session.description || materials.length || activities.length,
+                  )
                   return (
-                    <li key={session.id ?? i}>
-                      <details className="course-session" open={i === 0 && hasBody}>
+                    <li
+                      key={session.id ?? i}
+                      {...pe(`sessions.${at}`, { row: { id: session.id } })}
+                    >
+                      {/* The visual editor cannot open a closed session, so all are open while editing. */}
+                      <details className="course-session" open={editable || (i === 0 && hasBody)}>
                         <summary>
-                          <span className="course-session-number">{localDigits(String(i + 1).padStart(2, '0'), locale)}</span>
+                          <span className="course-session-number">
+                            {localDigits(String(i + 1).padStart(2, '0'), locale)}
+                          </span>
                           <span className="min-w-0 flex-1">
-                            <span className="block font-medium" dir="auto">
+                            <span
+                              className="block font-medium"
+                              dir="auto"
+                              {...pe(`sessions.${at}.session_title`)}
+                            >
                               {session.session_title || unitLabel(i + 1)}
                               {session.cancelled ? ` (${t('cancelled')})` : ''}
                             </span>
-                            <span className="mt-0.5 block text-xs text-(--text-muted)">
+                            <span
+                              className="mt-0.5 block text-xs text-(--text-muted)"
+                              {...pe(`sessions.${at}.dates`)}
+                            >
                               {[
                                 session.session_title ? unitLabel(i + 1) : null,
                                 own.length ? own.map(meetingLabel).join(', ') : null,
-                                materials.length ? t('materialCount', { count: materials.length }) : null,
+                                materials.length
+                                  ? t('materialCount', { count: materials.length })
+                                  : null,
                               ]
                                 .filter(Boolean)
                                 .join(' · ')}
                             </span>
                           </span>
-                          {hasBody ? <ChevronDown aria-hidden className="course-session-chevron" size={18} strokeWidth={1.5} /> : null}
+                          {hasBody ? (
+                            <ChevronDown
+                              aria-hidden
+                              className="course-session-chevron"
+                              size={18}
+                              strokeWidth={1.5}
+                            />
+                          ) : null}
                         </summary>
-                        {hasBody ? (
+                        {hasBody || editable ? (
                           <div className="course-session-body" dir={dir} lang={lang}>
                             {session.description ? (
-                              <RichTextField className="article-prose article-prose--notes" data={session.description} />
+                              <div {...pe(`sessions.${at}.description`)}>
+                                <RichTextField
+                                  className="article-prose article-prose--notes"
+                                  data={session.description}
+                                />
+                              </div>
+                            ) : editable ? (
+                              // Something to double-click while the session has no text yet.
+                              <p
+                                className="text-sm text-(--text-muted)"
+                                dir="ltr"
+                                lang="en"
+                                {...pe(`sessions.${at}.description`)}
+                              >
+                                Description
+                              </p>
                             ) : null}
-                            {materials.length ? <MaterialList items={materials} /> : null}
-                            {activities.length ? (
+                            {materials.length || editable ? (
+                              <MaterialList
+                                items={materials}
+                                path={`sessions.${at}.bibliography`}
+                                pe={pe}
+                              />
+                            ) : null}
+                            {activities.length || editable ? (
                               <div>
                                 <p className="text-xs text-(--text-muted)">{t('activities')}</p>
                                 {/* Laid out as the materials are: the kind's icon in its own column. */}
-                                <ul className="mt-2 grid gap-2.5">
+                                <ul
+                                  className={`mt-2 grid gap-2.5 ${activities.length ? '' : 'min-h-8'}`}
+                                  {...pe.container(`sessions.${at}.activities`)}
+                                >
                                   {activities.map((a, j) => {
                                     const Icon = ACTIVITY_ICONS[a.kind] ?? Shapes
                                     return (
@@ -488,12 +685,24 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
                                         className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug"
                                         dir="auto"
                                         key={a.id ?? j}
+                                        {...pe(`sessions.${at}.activities.${j}`, {
+                                          row: { id: a.id },
+                                        })}
                                       >
-                                        <Icon aria-hidden className="mt-0.5 text-(--text-muted)" size={16} strokeWidth={1.5} />
+                                        <Icon
+                                          aria-hidden
+                                          className="mt-0.5 text-(--text-muted)"
+                                          size={16}
+                                          strokeWidth={1.5}
+                                        />
                                         <span>
-                                          <span className="font-medium">{t(`activityKinds.${a.kind}`)}</span>
+                                          <span className="font-medium">
+                                            {t(`activityKinds.${a.kind}`)}
+                                          </span>
                                           {a.description ? (
-                                            <span className="block text-(--text-secondary)">{a.description}</span>
+                                            <span className="block text-(--text-secondary)">
+                                              {a.description}
+                                            </span>
                                           ) : null}
                                         </span>
                                       </li>
@@ -512,13 +721,13 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
             </section>
           ) : null}
 
-          {course.bibliography?.length ? (
+          {course.bibliography?.length || editable ? (
             <section aria-labelledby="course-bibliography" className="mt-12">
               <h2 className="course-heading" id="course-bibliography">
                 {t('bibliography')}
               </h2>
               <div className="mt-4">
-                <MaterialList items={course.bibliography} />
+                <MaterialList items={course.bibliography ?? []} path="bibliography" pe={pe} />
               </div>
             </section>
           ) : null}
@@ -534,8 +743,14 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
             {shareCard}
           </div>
           {applyUrl ? (
-            <div className="sticky top-[5.5rem]">
-              <RegisterBar applyLabel={t('apply')} applyUrl={applyUrl} price={price} status={t('open')} variant="side" />
+            <div className="sticky top-22">
+              <RegisterBar
+                applyLabel={t('apply')}
+                applyUrl={applyUrl}
+                price={price}
+                status={t('open')}
+                variant="side"
+              />
             </div>
           ) : null}
         </aside>
@@ -544,7 +759,15 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
       {related.length && cycleLabel ? (
         <section aria-labelledby="course-related" className="mt-20 border-t border-border pt-10">
           <h2 className="course-heading flex items-center gap-2" id="course-related">
-            {SeasonIcon ? <SeasonIcon aria-hidden className="course-season" data-season={season} size={18} strokeWidth={1.5} /> : null}
+            {SeasonIcon ? (
+              <SeasonIcon
+                aria-hidden
+                className="course-season"
+                data-season={season}
+                size={18}
+                strokeWidth={1.5}
+              />
+            ) : null}
             {t('alsoIn', { cycle: cycleLabel })}
           </h2>
           <ul className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -559,12 +782,19 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
                       <SeasonIcon aria-hidden size={28} strokeWidth={1.25} />
                     ) : null}
                   </span>
-                  <span className="mt-3 block text-xs text-[var(--text-muted)]">{tf(`types.${r.type.toLowerCase()}`)}</span>
-                  <span className="mt-1 block font-medium underline-offset-4 group-hover:underline" dir="auto">
+                  <span className="mt-3 block text-xs text-(--text-muted)">
+                    {tf(`types.${r.type.toLowerCase()}`)}
+                  </span>
+                  <span
+                    className="mt-1 block font-medium underline-offset-4 group-hover:underline"
+                    dir="auto"
+                  >
                     {r.title}
                   </span>
                   {r.fellows.length ? (
-                    <span className="mt-1 block text-sm text-[var(--text-secondary)]">{r.fellows.join(', ')}</span>
+                    <span className="mt-1 block text-sm text-(--text-secondary)">
+                      {r.fellows.join(', ')}
+                    </span>
                   ) : null}
                 </Link>
               </li>
@@ -589,10 +819,10 @@ export const CourseView: React.FC<{ course: Course; related?: RelatedCourse[] }>
  * note. Each item reads in its own direction, so an Arabic reading on an
  * English page has its icon at its own start, beside its text.
  */
-function MaterialList({ items }: { items: Material[] }) {
+function MaterialList({ items, path, pe }: { items: Material[]; path: string; pe: Editable }) {
   const t = useTranslations('Course')
   return (
-    <ul className="grid gap-2.5">
+    <ul className={`grid gap-2.5 ${items.length ? '' : 'min-h-8'}`} {...pe.container(path)}>
       {items.map((m, i) => {
         if (!m?.title) return null
         const Icon = MATERIAL_ICONS[m.type] ?? Link2
@@ -601,17 +831,33 @@ function MaterialList({ items }: { items: Material[] }) {
             className="grid grid-cols-[1.25rem_1fr] gap-x-3 text-sm leading-snug"
             dir={directionOf(`${m.title} ${m.note ?? ''}`)}
             key={m.id ?? i}
+            {...pe(`${path}.${i}`, { row: { id: m.id } })}
           >
-            <Icon aria-label={t(`materialTypes.${m.type}`)} className="mt-0.5 text-(--text-muted)" role="img" size={16} strokeWidth={1.5} />
+            <Icon
+              aria-label={t(`materialTypes.${m.type}`)}
+              className="mt-0.5 text-(--text-muted)"
+              role="img"
+              size={16}
+              strokeWidth={1.5}
+            />
             <span>
               {m.href ? (
-                <a className="underline decoration-(--border-strong,var(--border)) underline-offset-4 hover:decoration-current" href={m.href} rel="noopener" target="_blank">
-                  {m.title}
+                <a
+                  className="underline decoration-(--border-strong,var(--border)) underline-offset-4 hover:decoration-current"
+                  href={m.href}
+                  rel="noopener"
+                  target="_blank"
+                >
+                  <span {...pe(`${path}.${i}.title`)}>{m.title}</span>
                 </a>
               ) : (
-                <span>{m.title}</span>
+                <span {...pe(`${path}.${i}.title`)}>{m.title}</span>
               )}
-              {m.note ? <span className="block text-(--text-muted)">{m.note}</span> : null}
+              {m.note ? (
+                <span className="block text-(--text-muted)" {...pe(`${path}.${i}.note`)}>
+                  {m.note}
+                </span>
+              ) : null}
             </span>
           </li>
         )

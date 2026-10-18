@@ -143,9 +143,11 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ar') | ('en' | 'ar')[];
   globals: {
     'site-settings': SiteSetting;
+    'llms-txt-settings': LlmsTxtSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'llms-txt-settings': LlmsTxtSettingsSelect<false> | LlmsTxtSettingsSelect<true>;
   };
   locale: 'en' | 'ar';
   widgets: {
@@ -3068,6 +3070,22 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * Controls the content of /llms.txt and /llms-full.txt.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "llms-txt-settings".
+ */
+export interface LlmsTxtSetting {
+  id: number;
+  enabled?: boolean | null;
+  /**
+   * Shown at the top of llms.txt instead of the plugin siteDescription option, when set.
+   */
+  introOverride?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
@@ -3092,6 +3110,17 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         answer?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "llms-txt-settings_select".
+ */
+export interface LlmsTxtSettingsSelect<T extends boolean = true> {
+  enabled?: T;
+  introOverride?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

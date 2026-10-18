@@ -1,4 +1,5 @@
 import config from '@payload-config'
+import { VisualEditing } from '@payload-inline-visual-editor/react'
 import { ArrowLeft, ArrowUpRight, Languages } from 'lucide-react'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
@@ -24,6 +25,7 @@ import {
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
+import { EditorFields, labelOf } from '@/components/editor-fields'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
@@ -31,8 +33,10 @@ import { ShareBar } from '@/components/share-bar'
 import { OrbitCardStack } from '@/components/ui/orbit-card-stack'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
+import { env } from '@/env'
 import { splitBody } from '@/lib/article-body'
 import { localDigits } from '@/lib/digits'
+import { editableIn } from '@/lib/editable'
 import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
 import { ogImages } from '@/lib/og'
@@ -78,6 +82,8 @@ export async function articleMetadata({ locale, slug, user }: View): Promise<Met
 export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
   const locale = siteLocale as Locale
   const { isEnabled: preview } = await draftMode()
+  // In the admin's live preview, mark the fields for the visual editor.
+  const pe = editableIn(preview)
   const payload = await getPayload({ config })
 
   const reading = await getArticleForReading(payload, slug, { locale, preview, user })
@@ -161,20 +167,50 @@ const excerpt =
   // reading tools sit around it.
   return (
     <div className={grid.root}>
-      {preview && <RefreshRouteOnSave />}
+      {preview && (
+        <>
+          <RefreshRouteOnSave />
+          <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} />
+        </>
+      )}
       <ReadingProgress target="article-text" />
       <div className={grid.inner}>
         <div className="xl:grid xl:grid-cols-[17rem_minmax(0,760px)] xl:justify-center xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}
           <aside className="hidden xl:block">
             <div className="sticky top-24 max-h-[calc(100vh-7rem)] space-y-10 overflow-y-auto pe-2">
-              <ContributorList contributors={contributors} title={t('people')} />
+              <div {...pe('authors')}>
+                <ContributorList contributors={contributors} title={t('people')} />
+              </div>
               {hasContents && <ArticleContents container="article-text" sections={sections} />}
               <TextSize target="article-text" />
             </div>
           </aside>
 
-          <article aria-labelledby="article-title" className={grid.reader}>
+          <article
+            aria-labelledby="article-title"
+            className={grid.reader}
+            {...pe.scope({ collection: 'articles', id: article.id })}
+          >
+            {preview ? (
+              <EditorFields
+                pe={pe}
+                fields={[
+                  { label: 'Visibility', path: 'tier', value: article.tier },
+                  { label: 'Slug', path: 'slug', value: article.slug },
+                  { label: 'Featured', path: 'featured', value: article.featured ? 'Yes' : 'No' },
+                  { label: 'Tags', path: 'tags', value: article.tags?.map((x) => x.tag).join(', ') },
+                  { label: 'Related articles', path: 'related_articles', value: article.related_articles?.map(labelOf).join(', ') },
+                  { label: 'Original language', path: 'translation.original_language', value: article.translation?.original_language },
+                  { label: 'Original title', path: 'translation.original_title', value: article.translation?.original_title },
+                  { label: 'Original authors', path: 'translation.original_authors', value: article.translation?.original_authors?.map(labelOf).join(', ') },
+                  { label: 'Original source', path: 'translation.original_source', value: article.translation?.original_source },
+                  { label: 'SEO title', path: 'meta.title', value: article.meta?.title },
+                  { label: 'SEO description', path: 'meta.description', value: article.meta?.description },
+                  { label: 'SEO image', path: 'meta.image', value: labelOf(article.meta?.image) },
+                ]}
+              />
+            ) : null}
             <Link
               className={grid.back}
               href={pub ? `/articles?publication=${pub.slug}` : '/articles'}
@@ -187,7 +223,9 @@ const excerpt =
               <p className={grid.meta} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
                 <span>{pub?.title ?? tl(contentLocale)}</span>
                 <span aria-hidden="true">·</span>
-                <time dateTime={article.published_date ?? article.createdAt}>{year}</time>
+                <time dateTime={article.published_date ?? article.createdAt} {...pe('published_date')}>
+                  {year}
+                </time>
                 {minutes > 0 && (
                   <>
                     <span aria-hidden="true">·</span>
@@ -195,20 +233,20 @@ const excerpt =
                   </>
                 )}
               </p>
-              <h1 className={`${grid.readerTitle} article-title`} id="article-title">
+              <h1 className={`${grid.readerTitle} article-title`} id="article-title" {...pe('title')}>
                 {title}
               </h1>
             </header>
 
             {cover?.url && (
-              <div className={`${grid.readerImage} article-cover`}>
+              <div className={`${grid.readerImage} article-cover`} {...pe('cover_image')}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img alt={cover.alt} className={`${grid.image} article-cover-image`} src={cover.url} />
               </div>
             )}
 
             {/* Narrow screens: the tools fold into the column. */}
-            <div className="flex flex-col gap-6 xl:hidden">
+            <div className="flex flex-col gap-6 xl:hidden" {...pe('authors')}>
               <ContributorList contributors={contributors} title={t('people')} />
               {hasContents && <ArticleContents container="article-text" sections={sections} />}
               <TextSize target="article-text" />
@@ -251,12 +289,14 @@ const excerpt =
             <div className="grid gap-5" dir={contentDir} id="article-text" lang={contentLocale}>
               {excerpt && <p className="article-lead">{excerpt}</p>}
               {text ? (
-                <RichTextField
-                  className="article-prose"
-                  data={text}
-                  footnoteLabel={t('footnote')}
-                  footnotes={footnotes}
-                />
+                <div {...pe('body')}>
+                  <RichTextField
+                    className="article-prose"
+                    data={text}
+                    footnoteLabel={t('footnote')}
+                    footnotes={footnotes}
+                  />
+                </div>
               ) : (
                 <p className="opacity-60">—</p>
               )}

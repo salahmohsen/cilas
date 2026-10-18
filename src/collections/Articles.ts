@@ -151,7 +151,9 @@ export const Articles: CollectionConfig = {
     // Through /api/preview, which checks the editor and turns on draft mode,
     // as courses do.
     livePreview: {
-      url: ({ data }) => `/api/preview?collection=articles&slug=${data?.slug ?? ''}`,
+      // The page in the editor's language, so what shows is what the fields hold.
+      url: ({ data, locale }) =>
+        `/api/preview?collection=articles&slug=${data?.slug ?? ''}&locale=${locale?.code ?? 'en'}`,
     },
   },
   hooks: {

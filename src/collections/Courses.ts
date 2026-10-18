@@ -230,6 +230,7 @@ export const Courses: CollectionConfig = {
                 },
                 {
                   name: 'session_title',
+                  label: 'Session title',
                   type: 'text',
                   localized: true,
                   admin: { width: '55%' },
@@ -392,7 +393,9 @@ export const Courses: CollectionConfig = {
     // editor, enables draft mode, and only then redirects to the course, which
     // is what lets the page render an unpublished draft.
     livePreview: {
-      url: ({ data }) => `/api/preview?collection=courses&slug=${data?.slug ?? ''}`,
+      // The page in the editor's language, so what shows is what the fields hold.
+      url: ({ data, locale }) =>
+        `/api/preview?collection=courses&slug=${data?.slug ?? ''}&locale=${locale?.code ?? 'en'}`,
     },
   },
   hooks: {

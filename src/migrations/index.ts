@@ -7,6 +7,7 @@ import * as migration_20261018_044627_google_sign_in from './20261018_044627_goo
 import * as migration_20261018_051000_drop_press_seo from './20261018_051000_drop_press_seo';
 import * as migration_20261018_073550_contact_spam_check_exports from './20261018_073550_contact_spam_check_exports';
 import * as migration_20261018_080439_applications_people_visible from './20261018_080439_applications_people_visible';
+import * as migration_20261018_085018_sitemap_llms_visual_editor from './20261018_085018_sitemap_llms_visual_editor';
 
 export const migrations = [
   {
@@ -52,6 +53,11 @@ export const migrations = [
   {
     up: migration_20261018_080439_applications_people_visible.up,
     down: migration_20261018_080439_applications_people_visible.down,
-    name: '20261018_080439_applications_people_visible'
+    name: '20261018_080439_applications_people_visible',
+  },
+  {
+    up: migration_20261018_085018_sitemap_llms_visual_editor.up,
+    down: migration_20261018_085018_sitemap_llms_visual_editor.down,
+    name: '20261018_085018_sitemap_llms_visual_editor'
   },
 ];

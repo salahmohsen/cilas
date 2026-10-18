@@ -43,6 +43,8 @@ import { env } from './env'
 import { pathOf } from './lib/paths'
 import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from './lib/seo'
 import { googleAuth } from './plugins/google-auth'
+import { llmsTxt } from './plugins/llms'
+import { visualEditor } from 'payload-inline-visual-editor'
 import { roleNav } from './plugins/role-nav'
 import { typesenseSearch } from './plugins/typesense'
 
@@ -224,6 +226,17 @@ export default buildConfig({
     // articles and people. Off without TYPESENSE_API_KEY (builds, tests).
     typesenseSearch(),
     googleAuth(),
+    // /llms.txt and /llms-full.txt for language models (src/plugins/llms.ts).
+    llmsTxt(),
+    // Click-to-edit in live preview, and a full-screen editor at
+    // /admin/visual-editor/:collection/:id. The pages mark their fields
+    // (src/lib/editable.ts); sessions can be added and reordered on the page.
+    visualEditor({
+      collections: {
+        courses: { blockOps: { add: true, duplicate: true, remove: true, move: true } },
+        articles: true,
+      },
+    }),
     // What each role sees in the admin nav. Last, so it covers plugin collections.
     roleNav(),
   ],

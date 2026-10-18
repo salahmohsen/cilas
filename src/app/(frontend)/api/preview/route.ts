@@ -61,8 +61,12 @@ export async function GET(request: Request) {
   draft.enable()
 
   // pathOf, not a hand-built path: the course route has moved before.
-  // The editor's saved site language, else English.
-  const saved = request.headers.get('cookie')?.match(/(?:^|;\s*)NEXT_LOCALE=(en|ar)/)?.[1]
+  // The language being edited (live preview passes it), else the editor's
+  // saved site language, else English.
+  const asked = searchParams.get('locale')
+  const saved =
+    (asked === 'en' || asked === 'ar' ? asked : null) ??
+    request.headers.get('cookie')?.match(/(?:^|;\s*)NEXT_LOCALE=(en|ar)/)?.[1]
   // A programme has no page of its own: the Bridge page shows the one it is given.
   const path =
     collection === 'programmes'

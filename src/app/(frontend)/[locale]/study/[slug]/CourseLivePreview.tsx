@@ -1,5 +1,6 @@
 'use client'
 
+import { VisualEditing } from '@payload-inline-visual-editor/react'
 import { useLivePreview } from '@payloadcms/live-preview-react'
 import React from 'react'
 
@@ -31,5 +32,12 @@ export const CourseLivePreview: React.FC<{ initialData: Course; related?: Relate
     depth: 2,
   })
 
-  return <CourseView course={data} related={related} />
+  // Rendered only in draft mode (page.tsx), so the editor marks the fields
+  // and edits the draft.
+  return (
+    <>
+      <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} />
+      <CourseView course={data} editable related={related} />
+    </>
+  )
 }
