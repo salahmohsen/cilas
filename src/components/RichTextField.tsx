@@ -21,7 +21,9 @@ const SOURCE_LEAD = /^\s*[—–~-]\s*/
  * `--theme-*` custom properties.
  *
  * `footnotes` numbers the footnote inline blocks (see lib/footnotes.ts); each
- * renders as a mark with a hover card.
+ * renders as a mark with a hover card. `blocks` draws block nodes by their
+ * block type, from data the caller has already loaded (the article page's
+ * Card stacks): this component also renders inside client components.
  */
 export const RichTextField: React.FC<{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +31,9 @@ export const RichTextField: React.FC<{
   className?: string
   footnotes?: Footnote[]
   footnoteLabel?: string
-}> = ({ data, className, footnotes = [], footnoteLabel = 'Note' }) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  blocks?: Record<string, (fields: any) => React.ReactNode>
+}> = ({ data, className, footnotes = [], footnoteLabel = 'Note', blocks = {} }) => {
   if (!data) return null
 
   const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
@@ -55,6 +59,12 @@ export const RichTextField: React.FC<{
         </blockquote>
       )
     },
+    blocks: Object.fromEntries(
+      Object.entries(blocks).map(([type, draw]) => [
+        type,
+        ({ node }: { node: { fields: unknown } }) => draw(node.fields),
+      ]),
+    ),
     inlineBlocks: {
       footnote: ({ node }: { node: SerializedInlineBlockNode<FootnoteBlock> }) => {
         const f = footnotes.find((x) => x.id === node.fields.id)

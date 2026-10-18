@@ -206,6 +206,8 @@
     "readingNow": "تقرؤه الآن",
     "foreword": "تقديم",
     "essayOf": "{n, number, digits} من {total, number, digits}",
+    "stackArticles": "مقالات ذات صلة",
+    "stackCourses": "مقررات",
     "collectionStack": "مقالات {title}"
   },
   "Study": {

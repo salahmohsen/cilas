@@ -21,6 +21,7 @@ import {
 } from '@/access'
 import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
+import { CardStack } from '@/blocks/card-stack'
 import { Footnote } from '@/blocks/footnote'
 import { creditsField } from '@/fields/credits'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
@@ -173,7 +174,8 @@ export const Articles: CollectionConfig = {
       editor: lexicalEditor({
         features: ({ defaultFeatures }) => [
           ...defaultFeatures,
-          BlocksFeature({ inlineBlocks: [Footnote] }),
+          // Card stacks are blocks of their own, between paragraphs.
+          BlocksFeature({ blocks: [CardStack], inlineBlocks: [Footnote] }),
         ],
       }),
     },

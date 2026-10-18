@@ -84,12 +84,6 @@ export const Publications: CollectionConfig = {
     { name: 'subtitle', type: 'text', localized: true },
     { name: 'intro', type: 'richText', localized: true },
     {
-      name: 'foreword',
-      type: 'relationship',
-      relationTo: 'articles',
-      admin: { description: 'A signed essay, so it is an article.' },
-    },
-    {
       name: 'articles',
       type: 'relationship',
       relationTo: 'articles',

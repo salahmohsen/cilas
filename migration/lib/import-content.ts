@@ -342,7 +342,6 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         slug: slugify(p.title_en),
         ...(p.subtitle_en ? { subtitle: p.subtitle_en } : {}),
         ...(rich(p.intro_en, 'ltr') ? { intro: rich(p.intro_en, 'ltr') } : {}),
-        ...(foreword ? { foreword } : {}),
         ...(articles.length ? { articles } : {}),
         credits: await creditRows(p.credits, p.legacy_url, 'en'),
         ...(p.license ? { license: p.license } : {}),

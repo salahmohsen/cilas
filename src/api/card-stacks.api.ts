@@ -1,0 +1,136 @@
+import type { Payload, Where } from 'payload'
+
+import type { Locale, Reader } from '@/api/articles.api'
+import type { OrbitStackItem } from '@/components/ui/orbit-card-stack'
+import { pathOf } from '@/lib/paths'
+import type { Article, Course, Cycle, Media, Person, Publication } from '@/payload-types'
+
+/** One Card stack block of an article's text, ready to draw. */
+export type ResolvedStack = { label: string; items: OrbitStackItem[] }
+
+type StackFields = {
+  id?: string
+  blockType?: string
+  source?: 'publication' | 'articles' | 'courses' | 'cycle'
+  publication?: number | Publication | null
+  articles?: Array<number | Article> | null
+  courses?: Array<number | Course> | null
+  cycle?: number | Cycle | null
+  label?: string | null
+}
+
+const idOf = (v: unknown): number | null =>
+  typeof v === 'number' ? v : v && typeof v === 'object' && 'id' in v ? (v as { id: number }).id : null
+
+/** Every Card stack block in a Lexical body, at any depth. */
+const stacksIn = (node: unknown, found: StackFields[] = []): StackFields[] => {
+  if (!node || typeof node !== 'object') return found
+  const n = node as { type?: string; fields?: StackFields; children?: unknown[]; root?: unknown }
+  if (n.type === 'block' && n.fields?.blockType === 'cardStack') found.push(n.fields)
+  for (const child of n.children ?? []) stacksIn(child, found)
+  if (n.root) stacksIn(n.root, found)
+  return found
+}
+
+const coverOf = (m: unknown) => {
+  const media = m as Media | null
+  return media && typeof media === 'object' && media.url ? { image: media.url, imageAlt: media.alt ?? '' } : {}
+}
+
+const names = (people: unknown) =>
+  ((people as Array<Person | number> | null | undefined) ?? [])
+    .flatMap((p) => (typeof p === 'object' && p?.name ? [p.name] : []))
+    .join(', ')
+
+const courseItem = (c: Course): OrbitStackItem => {
+  const cycle = typeof c.cycle === 'object' && c.cycle ? c.cycle.title : null
+  return {
+    name: c.title,
+    role: names(c.fellows),
+    description: c.summary || c.subtitle || '',
+    href: pathOf('courses', c) ?? '#',
+    ...coverOf(c.cover_image),
+    ...(cycle ? { stat: cycle } : {}),
+  }
+}
+
+/**
+ * The Card stack blocks of an article's body, each with its cards, read as
+ * this reader may: only published items they can open. Keyed by block id.
+ * `articleItem` draws an article card as the page draws its others; the open
+ * article is left out of its own stack.
+ */
+export const resolveCardStacks = async (
+  payload: Payload,
+  body: unknown,
+  {
+    locale,
+    user,
+    current,
+    articleItem,
+    labels,
+  }: {
+    locale: Locale
+    user: Reader
+    current: number
+    articleItem: (a: Article, index: number, total: number) => OrbitStackItem
+    labels: { collection: (title: string) => string; articles: string; courses: string }
+  },
+): Promise<Record<string, ResolvedStack>> => {
+  const read = { locale, fallbackLocale: (locale === 'ar' ? 'en' : 'ar') as Locale, overrideAccess: false, user }
+  const findArticles = async (ids: number[]) => {
+    if (!ids.length) return []
+    const { docs } = await payload.find({
+      collection: 'articles',
+      where: { and: [{ id: { in: ids } }, { _status: { equals: 'published' } }] },
+      depth: 2,
+      pagination: false,
+      ...read,
+    })
+    return ids.flatMap((id) => docs.filter((d) => d.id === id && d.id !== current))
+  }
+  const findCourses = async (where: Where, ids?: number[]) => {
+    const { docs } = await payload.find({
+      collection: 'courses',
+      where: { and: [where, { _status: { equals: 'published' } }, { tier: { equals: 'public' } }] },
+      depth: 1,
+      pagination: false,
+      sort: 'title',
+      ...read,
+    })
+    return ids ? ids.flatMap((id) => docs.filter((d) => d.id === id)) : docs
+  }
+
+  const out: Record<string, ResolvedStack> = {}
+  for (const block of stacksIn(body)) {
+    if (!block.id) continue
+    let items: OrbitStackItem[] = []
+    let label = block.label?.trim() || ''
+    if (block.source === 'publication') {
+      const pubId = idOf(block.publication)
+      const pub = pubId
+        ? await payload.findByID({ collection: 'publications', id: pubId, depth: 0, ...read }).catch(() => null)
+        : null
+      if (pub) {
+        const order = (pub.articles ?? []).map(idOf).filter((id): id is number => id !== null)
+        const articles = await findArticles(order)
+        items = articles.map((a, i) => articleItem(a, i, articles.length))
+        label ||= labels.collection(pub.title)
+      }
+    } else if (block.source === 'articles') {
+      const articles = await findArticles((block.articles ?? []).map(idOf).filter((id): id is number => id !== null))
+      items = articles.map((a, i) => articleItem(a, i, articles.length))
+      label ||= labels.articles
+    } else if (block.source === 'courses') {
+      const ids = (block.courses ?? []).map(idOf).filter((id): id is number => id !== null)
+      items = ids.length ? (await findCourses({ id: { in: ids } }, ids)).map(courseItem) : []
+      label ||= labels.courses
+    } else if (block.source === 'cycle') {
+      const cycleId = idOf(block.cycle)
+      items = cycleId ? (await findCourses({ cycle: { equals: cycleId } })).map(courseItem) : []
+      label ||= typeof block.cycle === 'object' && block.cycle?.title ? block.cycle.title : labels.courses
+    }
+    if (items.length) out[block.id] = { label, items }
+  }
+  return out
+}

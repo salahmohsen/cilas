@@ -269,7 +269,8 @@ describe('publishing content import', () => {
   it('writes the publication, press, event and newsletter', async () => {
     const pub = (await payload.find({ collection: 'publications', where: { legacy_url: { equals: L.publication } }, depth: 0, overrideAccess: true })).docs[0]
     const pair = await article(L.pair)
-    expect(pub.foreword).toBe(pair.id)
+    // The foreword leads the collection's list (it opens with a Card stack block).
+    expect(pub.articles?.[0]).toBe(pair.id)
     expect(pub.articles).toHaveLength(2)
     expect(pub.license).toBe('cc_by_nc_sa')
 

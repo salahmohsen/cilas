@@ -1340,10 +1340,6 @@ export interface Publication {
     [k: string]: unknown;
   } | null;
   /**
-   * A signed essay, so it is an article.
-   */
-  foreword?: (number | null) | Article;
-  /**
    * In reading order.
    */
   articles?: (number | Article)[] | null;
@@ -2585,7 +2581,6 @@ export interface PublicationsSelect<T extends boolean = true> {
   slug?: T;
   subtitle?: T;
   intro?: T;
-  foreword?: T;
   articles?: T;
   credits?:
     | T
@@ -3504,6 +3499,30 @@ export interface TaskCreateCollectionImport {
     maxLimit?: number | null;
   };
   output?: unknown;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CardStackBlock".
+ */
+export interface CardStackBlock {
+  source: 'publication' | 'articles' | 'courses' | 'cycle';
+  publication?: (number | null) | Publication;
+  /**
+   * In the order the stack shows them.
+   */
+  articles?: (number | Article)[] | null;
+  /**
+   * In the order the stack shows them.
+   */
+  courses?: (number | Course)[] | null;
+  cycle?: (number | null) | Cycle;
+  /**
+   * Read out to screen readers, e.g. “Essays in this collection”. Empty: a label from the source.
+   */
+  label?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cardStack';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

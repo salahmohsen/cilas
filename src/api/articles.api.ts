@@ -158,10 +158,8 @@ export const getRelatedArticles = async (
 
 export type ArticleCollection = {
   publication: Publication
-  /** Every article of the publication, in its order (the foreword first). */
+  /** Every article of the publication, in its order. */
   articles: Article[]
-  /** Whether the open article is the publication's introduction. */
-  isForeword: boolean
 }
 
 /**
@@ -194,8 +192,7 @@ export const getArticleCollection = async (
     user,
   })
   const articles = order.map((id) => docs.find((d) => d.id === id)).filter((d): d is Article => Boolean(d))
-  const foreword = publication.foreword ? idOf(publication.foreword) : undefined
-  return { publication, articles, isForeword: foreword === article.id }
+  return { publication, articles }
 }
 
 /**

@@ -206,6 +206,8 @@
     "readingNow": "Reading now",
     "foreword": "Foreword",
     "essayOf": "{n} of {total}",
+    "stackArticles": "Related articles",
+    "stackCourses": "Courses",
     "collectionStack": "The essays of {title}"
   },
   "Study": {

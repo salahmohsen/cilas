@@ -30,7 +30,8 @@ import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { ShareBar } from '@/components/share-bar'
-import { OrbitCardStack } from '@/components/ui/orbit-card-stack'
+import { ArticleCardStack } from '@/components/article/article-card-stack'
+import { resolveCardStacks } from '@/api/card-stacks.api'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
@@ -112,6 +113,28 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
       publicationCovers,
     })
   const { text, notes, noteCount, sections } = splitBody(body)
+  // The Card stack blocks in the text, loaded before it is drawn.
+  const stacks = await resolveCardStacks(payload, text, {
+    locale,
+    user,
+    current: article.id,
+    articleItem: (a, i, total) => {
+      const c = card(a)
+      return {
+        name: c.title,
+        role: c.author.name,
+        description: c.excerpt,
+        href: pathOf('articles', a) ?? '#',
+        ...(c.image ? { image: c.image.src, imageAlt: c.image.alt } : {}),
+        stat: t('essayOf', { n: i + 1, total }),
+      }
+    },
+    labels: {
+      collection: (title) => t('collectionStack', { title }),
+      articles: t('stackArticles'),
+      courses: t('stackCourses'),
+    },
+  })
   const footnotes = footnotesOf(text)
   const fallback = contentLocale !== locale
   const contentDir = isRtl(contentLocale) ? 'rtl' : 'ltr'
@@ -259,31 +282,6 @@ const excerpt =
               </p>
             )}
 
-            {/* The introduction opens onto the collection it introduces. */}
-            {collection?.isForeword && (
-              <OrbitCardStack
-                // Desktop only: on a phone the fan has no room, and the
-                // collection is listed at the end of the article anyway.
-                className="hidden overflow-x-clip p-0 lg:flex xl:overflow-visible"
-                dir={isRtl(locale) ? 'rtl' : 'ltr'}
-                items={collection.articles
-                  .filter((a) => a.id !== article.id)
-                  .map((a, i, rest) => {
-                    const c = card(a)
-                    return {
-                      name: c.title,
-                      role: c.author.name,
-                      description: c.excerpt,
-                      href: pathOf('articles', a) ?? '#',
-                      ...(c.image ? { image: c.image.src, imageAlt: c.image.alt } : {}),
-                      stat: t('essayOf', { n: i + 1, total: rest.length }),
-                    }
-                  })}
-                label={t('collectionStack', { title: collection.publication.title })}
-                spread={Math.min(150, 380 / Math.max(1, collection.articles.length - 2))}
-              />
-            )}
-
             {/* Not grid.readerBody: its paragraph rules are for short previews and
                 would override the essay's measure, size and spacing. */}
             <div className="grid gap-5" dir={contentDir} id="article-text" lang={contentLocale}>
@@ -291,6 +289,14 @@ const excerpt =
               {text ? (
                 <div {...pe('body')}>
                   <RichTextField
+                    blocks={{
+                      cardStack: (fields: { id?: string }) => {
+                        const stack = fields.id ? stacks[fields.id] : undefined
+                        return stack ? (
+                          <ArticleCardStack dir={isRtl(locale) ? 'rtl' : 'ltr'} items={stack.items} label={stack.label} />
+                        ) : null
+                      },
+                    }}
                     className="article-prose"
                     data={text}
                     footnoteLabel={t('footnote')}
@@ -383,11 +389,7 @@ const excerpt =
             {collection && (
               <CollectionList
                 current={article.id}
-                labels={{
-                  title: t('inCollection'),
-                  current: t('readingNow'),
-                  foreword: t('foreword'),
-                }}
+                labels={{ title: t('inCollection'), current: t('readingNow') }}
                 locale={locale}
                 publication={collection.publication}
                 items={collection.articles.map((a) => ({
@@ -395,11 +397,6 @@ const excerpt =
                   title: card(a).title,
                   authors: card(a).author.name,
                   href: pathOf('articles', a) ?? '#',
-                  foreword: collection.publication.foreword
-                    ? (typeof collection.publication.foreword === 'object'
-                        ? collection.publication.foreword.id
-                        : collection.publication.foreword) === a.id
-                    : false,
                 }))}
               />
             )}
@@ -433,9 +430,9 @@ function CollectionList({
   locale,
 }: {
   publication: Publication
-  items: Array<{ id: number; title: string; authors: string; href: string; foreword: boolean }>
+  items: Array<{ id: number; title: string; authors: string; href: string }>
   current: number
-  labels: { title: string; current: string; foreword: string }
+  labels: { title: string; current: string }
   locale: string
 }) {
   return (
@@ -454,14 +451,7 @@ function CollectionList({
           const here = item.id === current
           const body = (
             <>
-              <span
-                aria-label={item.foreword ? labels.foreword : undefined}
-                className="collection-number"
-              >
-                {item.foreword
-                  ? '—'
-                  : localDigits(String(i + (items[0]?.foreword ? 0 : 1)).padStart(2, '0'), locale)}
-              </span>
+              <span className="collection-number">{localDigits(String(i + 1).padStart(2, '0'), locale)}</span>
               <span className="min-w-0">
                 <span className="block font-medium" dir="auto">
                   {item.title}
