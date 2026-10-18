@@ -61,6 +61,7 @@ describe('MessageEmail', () => {
     expect(html).toContain('href="https://ci-las.org/en/login"')
     expect(html).toContain('#614500')
     expect(html).toContain('CILAS, Cairo')
+    expect(html).toContain('A pedagogy of discovery and attunement.')
     expect(text).toContain('Dear Mona,')
     expect(text).toContain('https://ci-las.org/en/login')
   })
@@ -177,8 +178,8 @@ describe('newsletterMail', () => {
           { item: { relationTo: 'articles', value: 9 }, note: null },
         ],
       },
-      withDefaults({}),
-      { site: 'https://ci-las.org', unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}' },
+      withDefaults({}, { site: 'https://ci-las.org' }),
+      { unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}' },
     )
     expect(mail.subject).toBe('October at CILAS')
     expect(mail.html).toContain('Reading Plato')
@@ -223,5 +224,30 @@ describe('sendBroadcast', () => {
       Response.json({ message: 'Segment not found' }, { status: 404 }),
     )
     await expect(sendBroadcast(args)).rejects.toThrow('Segment not found')
+  })
+})
+
+describe('the layout’s brand', () => {
+  it('uses the sail and the site’s social links when the global has none', async () => {
+    const settings = withDefaults(
+      {},
+      {
+        site: 'https://ci-las.org/',
+        social: [
+          { platform: 'youtube', url: 'https://youtube.com/@cilas' },
+          { platform: 'twitter', url: 'https://x.com/cilas' },
+          { platform: 'youtube', url: 'not a link' },
+        ],
+      },
+    )
+    expect(settings.logo.url).toBe('https://ci-las.org/assets/email/logo.png')
+    expect(settings.social).toEqual([
+      { platform: 'YouTube', url: 'https://youtube.com/@cilas', icon: 'https://ci-las.org/assets/email/youtube.png' },
+      { platform: 'X', url: 'https://x.com/cilas', icon: 'https://ci-las.org/assets/email/twitter.png' },
+    ])
+    const { html } = await renderEmail(<MessageEmail settings={settings} preview="x" paragraphs={['Hi']} />)
+    expect(html).toContain('https://ci-las.org/assets/email/youtube.png')
+    expect(html).toContain('href="https://x.com/cilas"')
+    expect(html).toContain('max-width: 600px')
   })
 })

@@ -10,6 +10,7 @@ import * as migration_20261018_080439_applications_people_visible from './202610
 import * as migration_20261018_085018_sitemap_llms_visual_editor from './20261018_085018_sitemap_llms_visual_editor';
 import * as migration_20261018_093732_email_settings from './20261018_093732_email_settings';
 import * as migration_20261018_094315_emails_newsletter_picks from './20261018_094315_emails_newsletter_picks';
+import * as migration_20261018_100126_email_tagline from './20261018_100126_email_tagline';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20261018_094315_emails_newsletter_picks.up,
     down: migration_20261018_094315_emails_newsletter_picks.down,
-    name: '20261018_094315_emails_newsletter_picks'
+    name: '20261018_094315_emails_newsletter_picks',
+  },
+  {
+    up: migration_20261018_100126_email_tagline.up,
+    down: migration_20261018_100126_email_tagline.down,
+    name: '20261018_100126_email_tagline'
   },
 ];

@@ -38,7 +38,7 @@ export async function GET(request: Request) {
       locale: 'en',
       overrideAccess: true,
     })
-    html = (await newsletterMail(issue as Issue, settings, { site, unsubscribe: '#unsubscribe' })).html
+    html = (await newsletterMail(issue as Issue, settings, { unsubscribe: '#unsubscribe' })).html
   } else {
     const sample = { name: 'Mona Adel', email: 'mona@example.com', site }
     const mails = await Promise.all([
@@ -50,7 +50,7 @@ export async function GET(request: Request) {
       .map(
         (m) =>
           `<h2 style="font:600 14px system-ui;margin:24px 16px 8px">${m.subject.replace(/</g, '&lt;')}</h2>` +
-          `<iframe title="${escapeAttr(m.subject)}" style="width:100%;height:560px;border:0" srcdoc="${escapeAttr(m.html)}"></iframe>`,
+          `<iframe title="${escapeAttr(m.subject)}" style="width:100%;height:900px;border:0" srcdoc="${escapeAttr(m.html)}"></iframe>`,
       )
       .join('')}</body></html>`
   }

@@ -24,6 +24,8 @@ export const acceptanceMail = async (
     <MessageEmail
       settings={settings}
       preview={subject}
+      heading={subject}
+      kicker="Admissions"
       paragraphs={body}
       button={{ label: t.button, url: `${origin(data.site)}/en/login` }}
     />,
@@ -52,6 +54,8 @@ export const reviewMail = async (
     <MessageEmail
       settings={settings}
       preview={subject}
+      heading={subject}
+      kicker="Article review"
       paragraphs={paragraphs(fill(t[key], { title }))}
       note={withNote ? { label: t.note_label, text: note } : null}
     />,
@@ -73,6 +77,8 @@ export const resetMail = async (
     <MessageEmail
       settings={settings}
       preview={subject}
+      heading={subject}
+      kicker="Account"
       paragraphs={paragraphs(fill(t.body, { email: data.email }))}
       button={{ label: t.button, url: `${origin(data.site)}/admin/reset/${data.token}` }}
     />,

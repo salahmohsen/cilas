@@ -14,21 +14,38 @@ export const colors = {
 
 export const font = "Inter, 'IBM Plex Sans Arabic', system-ui, Arial, sans-serif"
 
+/** Barebone's type scale: size, weight, tracking and leading together. */
 export const type = {
-  small: { fontSize: '13px', lineHeight: '1.5', color: colors.fg3 },
-  body: { fontSize: '16px', lineHeight: '1.6', color: colors.fg2 },
-  title: { fontSize: '20px', lineHeight: '1.3', fontWeight: 600, color: colors.fg },
-  heading: { fontSize: '28px', lineHeight: '1.25', fontWeight: 600, color: colors.fg },
+  11: { fontSize: '11px', fontWeight: 420, letterSpacing: '-0.033px', lineHeight: '1.5', color: colors.fg3 },
+  13: { fontSize: '13px', fontWeight: 420, letterSpacing: '-0.039px', lineHeight: '1.5', color: colors.fg3 },
+  16: { fontSize: '16px', fontWeight: 420, letterSpacing: '-0.048px', lineHeight: '1.5', color: colors.fg2 },
+  20: { fontSize: '20px', fontWeight: 600, letterSpacing: '-0.06px', lineHeight: '1.3', color: colors.fg },
+  28: { fontSize: '28px', fontWeight: 600, letterSpacing: '-0.084px', lineHeight: '1.3', color: colors.fg },
+  32: { fontSize: '32px', fontWeight: 600, letterSpacing: '-0.64px', lineHeight: '1.25', color: colors.fg },
 } as const
 
 export const button = (accent: string) =>
   ({
     backgroundColor: accent,
     color: '#FFFFFF',
-    borderRadius: '6px',
-    padding: '12px 22px',
-    fontSize: '15px',
+    borderRadius: '8px',
+    padding: '16px 28px',
+    fontSize: '16px',
+    lineHeight: '24px',
     fontWeight: 500,
     textDecoration: 'none',
     display: 'inline-block',
   }) as const
+
+/**
+ * Narrow screens. Gmail, Apple Mail and Outlook apps read this from the head;
+ * the rest get the desktop layout, which still fits at 640 px.
+ */
+export const mobileCss = `
+@media (max-width: 600px) {
+  .m-container { margin-top: 0 !important; }
+  .m-frame { padding-left: 8px !important; padding-right: 8px !important; }
+  .m-box { padding: 40px 16px !important; margin-bottom: 8px !important; }
+  .m-col { display: block !important; width: 100% !important; max-width: 100% !important; padding: 0 0 24px 0 !important; }
+  .m-img { max-width: 100% !important; }
+}`

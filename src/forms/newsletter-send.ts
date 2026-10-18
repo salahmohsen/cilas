@@ -35,7 +35,6 @@ const guarded =
 /** The issue as it stands, to the admin who asked. */
 const test = guarded(async (req, id) => {
   const mail = await newsletterMail(await issueOf(req, id), await getEmailSettings(req.payload, req), {
-    site: env.NEXT_PUBLIC_SERVER_URL,
     unsubscribe: `${env.NEXT_PUBLIC_SERVER_URL}/en`,
   })
   const to = req.user!.email
@@ -55,7 +54,6 @@ const send = guarded(async (req, id) => {
   if (issue.sent_at) return Response.json({ error: 'This issue was already sent.' }, { status: 409 })
   const settings = await getEmailSettings(req.payload, req)
   const mail = await newsletterMail(issue, settings, {
-    site: env.NEXT_PUBLIC_SERVER_URL,
     unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}',
   })
   const broadcastId = await sendBroadcast({

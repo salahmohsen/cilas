@@ -3122,7 +3122,7 @@ export interface SiteSetting {
 export interface EmailSetting {
   id: number;
   /**
-   * PNG or JPG, about 240 px wide. Outlook does not show WebP or SVG.
+   * PNG or JPG, about 64 px tall, shown beside the name. Empty: the CILAS sail. Outlook does not show WebP or SVG.
    */
   logo?: (number | null) | Media;
   /**
@@ -3138,7 +3138,11 @@ export interface EmailSetting {
    */
   reply_to?: string | null;
   /**
-   * The small print at the end of each email.
+   * One line above the social icons at the end of each email.
+   */
+  tagline?: string | null;
+  /**
+   * The small print under the social icons: the address, for one. The icons come from Site settings → Contact.
    */
   footer?: string | null;
   texts?: {
@@ -3178,6 +3182,7 @@ export interface EmailSetting {
      * Button and link labels in newsletter issues. Leave a field empty to use the text shown in it.
      */
     newsletter?: {
+      in_this_issue?: string | null;
       read?: string | null;
       apply?: string | null;
       unsubscribe?: string | null;
@@ -3240,6 +3245,7 @@ export interface EmailSettingsSelect<T extends boolean = true> {
   accent?: T;
   from_name?: T;
   reply_to?: T;
+  tagline?: T;
   footer?: T;
   texts?:
     | T
@@ -3276,6 +3282,7 @@ export interface EmailSettingsSelect<T extends boolean = true> {
         newsletter?:
           | T
           | {
+              in_this_issue?: T;
               read?: T;
               apply?: T;
               unsubscribe?: T;

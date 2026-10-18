@@ -55,7 +55,10 @@ export const EmailSettings: GlobalConfig = {
               name: 'logo',
               type: 'upload',
               relationTo: 'media',
-              admin: { description: 'PNG or JPG, about 240 px wide. Outlook does not show WebP or SVG.' },
+              admin: {
+                description:
+                  'PNG or JPG, about 64 px tall, shown beside the name. Empty: the CILAS sail. Outlook does not show WebP or SVG.',
+              },
             },
             {
               name: 'accent',
@@ -75,9 +78,21 @@ export const EmailSettings: GlobalConfig = {
               admin: { description: 'Where replies go. Empty: to the sending address.' },
             },
             {
+              name: 'tagline',
+              type: 'text',
+              admin: {
+                placeholder: 'A pedagogy of discovery and attunement.',
+                description: 'One line above the social icons at the end of each email.',
+              },
+            },
+            {
               name: 'footer',
               type: 'textarea',
-              admin: { rows: 3, description: 'The small print at the end of each email.' },
+              admin: {
+                rows: 3,
+                description:
+                  'The small print under the social icons: the address, for one. The icons come from Site settings → Contact.',
+              },
             },
           ],
         },

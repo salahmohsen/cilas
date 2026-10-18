@@ -1,5 +1,7 @@
 import type { Payload, PayloadRequest } from 'payload'
 
+import { env } from '@/env'
+
 /**
  * What every email reads from the Email settings global, with a default for
  * each empty field. Texts carry {placeholders} that `fill` replaces.
@@ -31,6 +33,7 @@ export const DEFAULT_TEXTS = {
     button: 'Choose a new password',
   },
   newsletter: {
+    in_this_issue: 'In this issue',
     read: 'Read more',
     apply: 'Apply',
     unsubscribe: 'Unsubscribe',
@@ -39,12 +42,19 @@ export const DEFAULT_TEXTS = {
 
 type Texts = { [K in keyof typeof DEFAULT_TEXTS]: { [F in keyof (typeof DEFAULT_TEXTS)[K]]: string } }
 
+export type SocialLink = { platform: string; url: string; icon: string }
+
 export type EmailSettings = {
-  logo: { url: string; alt: string } | null
+  /** The site's origin, for links and the images in public/assets/email. */
+  site: string
+  logo: { url: string; alt: string }
   accent: string
   fromName: string
   replyTo: string | null
+  tagline: string
   footer: string
+  /** From Site settings → Contact, each with its icon (scripts/email-assets.mjs). */
+  social: SocialLink[]
   texts: Texts
 }
 
@@ -54,13 +64,27 @@ export type StoredEmailSettings = {
   accent?: string | null
   from_name?: string | null
   reply_to?: string | null
+  tagline?: string | null
   footer?: string | null
   texts?: { [K in keyof Texts]?: { [F in keyof Texts[K]]?: string | null } | null } | null
 }
 
-const DEFAULT_FOOTER = 'Cairo Institute for Liberal Arts and Sciences (CILAS)\nCairo, Egypt'
+const DEFAULT_FOOTER = 'Cairo Institute of Liberal Arts and Sciences (CILAS)\nCairo, Egypt'
+const DEFAULT_TAGLINE = 'A pedagogy of discovery and attunement.'
+const PLATFORMS: Record<string, string> = {
+  facebook: 'Facebook',
+  twitter: 'X',
+  youtube: 'YouTube',
+  instagram: 'Instagram',
+}
 
-export const withDefaults = (stored: StoredEmailSettings): EmailSettings => {
+type StoredSocial = Array<{ platform?: string | null; url?: string | null }> | null | undefined
+
+export const withDefaults = (
+  stored: StoredEmailSettings,
+  { site = 'https://ci-las.org', social = [] }: { site?: string; social?: StoredSocial } = {},
+): EmailSettings => {
+  const origin = site.replace(/\/+$/, '')
   const texts = {} as Record<string, Record<string, string>>
   for (const [group, fields] of Object.entries(DEFAULT_TEXTS)) {
     const saved = (stored.texts as Record<string, Record<string, string | null> | null> | null)?.[group]
@@ -71,25 +95,36 @@ export const withDefaults = (stored: StoredEmailSettings): EmailSettings => {
   }
   const logo = stored.logo as { url?: string | null; alt?: string | null } | null | undefined
   return {
-    logo: logo && typeof logo === 'object' && logo.url ? { url: logo.url, alt: logo.alt || 'CILAS' } : null,
+    site: origin,
+    logo:
+      logo && typeof logo === 'object' && logo.url
+        ? { url: logo.url, alt: logo.alt || 'CILAS' }
+        : { url: `${origin}/assets/email/logo.png`, alt: 'CILAS' },
     accent: /^#[0-9a-f]{6}$/i.test(stored.accent ?? '') ? stored.accent! : '#000000',
     fromName: stored.from_name?.trim() || 'CILAS',
     replyTo: stored.reply_to?.trim() || null,
+    tagline: stored.tagline?.trim() || DEFAULT_TAGLINE,
     footer: stored.footer?.trim() || DEFAULT_FOOTER,
+    social: (social ?? []).flatMap((s) =>
+      s.platform && PLATFORMS[s.platform] && s.url?.startsWith('http')
+        ? [{ platform: PLATFORMS[s.platform], url: s.url, icon: `${origin}/assets/email/${s.platform}.png` }]
+        : [],
+    ),
     texts: texts as Texts,
   }
 }
 
-/** The global, read past access, with defaults filled in. */
-export const getEmailSettings = async (payload: Payload, req?: PayloadRequest) =>
-  withDefaults(
-    (await payload.findGlobal({
-      slug: 'email-settings',
-      depth: 1,
-      overrideAccess: true,
-      req,
-    })) as StoredEmailSettings,
-  )
+/** The global, read past access, with defaults filled in and the site's social links. */
+export const getEmailSettings = async (payload: Payload, req?: PayloadRequest) => {
+  const [stored, site] = await Promise.all([
+    payload.findGlobal({ slug: 'email-settings', depth: 1, overrideAccess: true, req }),
+    payload.findGlobal({ slug: 'site-settings', depth: 0, overrideAccess: true, req }),
+  ])
+  return withDefaults(stored as StoredEmailSettings, {
+    site: env.NEXT_PUBLIC_SERVER_URL,
+    social: site.social_links,
+  })
+}
 
 /** Replaces each {key} with its value; unknown keys stay as written. */
 export const fill = (template: string, values: Record<string, string>): string =>
