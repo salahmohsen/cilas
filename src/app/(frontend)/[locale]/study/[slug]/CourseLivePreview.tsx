@@ -5,6 +5,7 @@ import { useLivePreview } from '@payloadcms/live-preview-react'
 import React from 'react'
 
 import { CourseView, type RelatedCourse } from './CourseView'
+import { useInAdminFrame } from '@/components/admin-frame-only'
 import { clientEnv as env } from '@/env.client'
 import type { Course } from '@/payload-types'
 
@@ -33,11 +34,13 @@ export const CourseLivePreview: React.FC<{ initialData: Course; related?: Relate
   })
 
   // Rendered only in draft mode (page.tsx), so the editor marks the fields
-  // and edits the draft.
+  // and edits the draft; the marks only inside the admin, as draft mode
+  // outlives the preview.
+  const inAdmin = useInAdminFrame()
   return (
     <>
-      <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} />
-      <CourseView course={data} editable related={related} />
+      {inAdmin ? <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} /> : null}
+      <CourseView course={data} editable={inAdmin} related={related} />
     </>
   )
 }

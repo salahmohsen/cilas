@@ -25,6 +25,7 @@ import {
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
+import { AdminFrameOnly } from '@/components/admin-frame-only'
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
@@ -177,12 +178,12 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
   for (const c of article.credits ?? [])
     for (const p of peopleOf(c.people)) add(p, c.label || t(`roles.${c.role}`))
   const cover = isObject<Media>(article.cover_image) ? article.cover_image : undefined
-// The reader opens with a lead: the article's description when it has
-// one, in its words and not the body's opening said twice.
-const excerpt =
-  article.meta?.description && !repeatsOpening(article.meta.description, body)
-    ? article.meta.description
-    : null
+  // The reader opens with a lead: the article's description when it has
+  // one, in its words and not the body's opening said twice.
+  const excerpt =
+    article.meta?.description && !repeatsOpening(article.meta.description, body)
+      ? article.meta.description
+      : null
 
   const year = article.published_date
     ? format.dateTime(new Date(article.published_date), 'year')
@@ -195,10 +196,10 @@ const excerpt =
   return (
     <div className={grid.root}>
       {preview && (
-        <>
+        <AdminFrameOnly>
           <RefreshRouteOnSave />
           <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} />
-        </>
+        </AdminFrameOnly>
       )}
       <ReadingProgress target="article-text" />
       <div className={grid.inner}>
@@ -220,23 +221,53 @@ const excerpt =
             {...pe.scope({ collection: 'articles', id: article.id })}
           >
             {preview ? (
-              <EditorFields
-                pe={pe}
-                fields={[
-                  { label: 'Visibility', path: 'tier', value: article.tier },
-                  { label: 'Slug', path: 'slug', value: article.slug },
-                  { label: 'Featured', path: 'featured', value: article.featured ? 'Yes' : 'No' },
-                  { label: 'Tags', path: 'tags', value: article.tags?.map((x) => x.tag).join(', ') },
-                  { label: 'Related articles', path: 'related_articles', value: article.related_articles?.map(labelOf).join(', ') },
-                  { label: 'Original language', path: 'translation.original_language', value: article.translation?.original_language },
-                  { label: 'Original title', path: 'translation.original_title', value: article.translation?.original_title },
-                  { label: 'Original authors', path: 'translation.original_authors', value: article.translation?.original_authors?.map(labelOf).join(', ') },
-                  { label: 'Original source', path: 'translation.original_source', value: article.translation?.original_source },
-                  { label: 'SEO title', path: 'meta.title', value: article.meta?.title },
-                  { label: 'SEO description', path: 'meta.description', value: article.meta?.description },
-                  { label: 'SEO image', path: 'meta.image', value: labelOf(article.meta?.image) },
-                ]}
-              />
+              <AdminFrameOnly>
+                <EditorFields
+                  pe={pe}
+                  fields={[
+                    { label: 'Visibility', path: 'tier', value: article.tier },
+                    { label: 'Slug', path: 'slug', value: article.slug },
+                    { label: 'Featured', path: 'featured', value: article.featured ? 'Yes' : 'No' },
+                    {
+                      label: 'Tags',
+                      path: 'tags',
+                      value: article.tags?.map((x) => x.tag).join(', '),
+                    },
+                    {
+                      label: 'Related articles',
+                      path: 'related_articles',
+                      value: article.related_articles?.map(labelOf).join(', '),
+                    },
+                    {
+                      label: 'Original language',
+                      path: 'translation.original_language',
+                      value: article.translation?.original_language,
+                    },
+                    {
+                      label: 'Original title',
+                      path: 'translation.original_title',
+                      value: article.translation?.original_title,
+                    },
+                    {
+                      label: 'Original authors',
+                      path: 'translation.original_authors',
+                      value: article.translation?.original_authors?.map(labelOf).join(', '),
+                    },
+                    {
+                      label: 'Original source',
+                      path: 'translation.original_source',
+                      value: article.translation?.original_source,
+                    },
+                    { label: 'SEO title', path: 'meta.title', value: article.meta?.title },
+                    {
+                      label: 'SEO description',
+                      path: 'meta.description',
+                      value: article.meta?.description,
+                    },
+                    { label: 'SEO image', path: 'meta.image', value: labelOf(article.meta?.image) },
+                  ]}
+                />
+              </AdminFrameOnly>
             ) : null}
             <Link
               className={grid.back}
@@ -250,7 +281,10 @@ const excerpt =
               <p className={grid.meta} dir={isRtl(locale) ? 'rtl' : 'ltr'} lang={locale}>
                 <span>{pub?.title ?? tl(contentLocale)}</span>
                 <span aria-hidden="true">·</span>
-                <time dateTime={article.published_date ?? article.createdAt} {...pe('published_date')}>
+                <time
+                  dateTime={article.published_date ?? article.createdAt}
+                  {...pe('published_date')}
+                >
                   {year}
                 </time>
                 {minutes > 0 && (
@@ -260,7 +294,11 @@ const excerpt =
                   </>
                 )}
               </p>
-              <h1 className={`${grid.readerTitle} article-title`} id="article-title" {...pe('title')}>
+              <h1
+                className={`${grid.readerTitle} article-title`}
+                id="article-title"
+                {...pe('title')}
+              >
                 {title}
               </h1>
             </header>
@@ -268,7 +306,11 @@ const excerpt =
             {cover?.url && (
               <div className={`${grid.readerImage} article-cover`} {...pe('cover_image')}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img alt={cover.alt} className={`${grid.image} article-cover-image`} src={cover.url} />
+                <img
+                  alt={cover.alt}
+                  className={`${grid.image} article-cover-image`}
+                  src={cover.url}
+                />
               </div>
             )}
 
@@ -297,7 +339,11 @@ const excerpt =
                       cardStack: (fields: { id?: string }) => {
                         const stack = fields.id ? stacks[fields.id] : undefined
                         return stack ? (
-                          <ArticleCardStack dir={isRtl(locale) ? 'rtl' : 'ltr'} items={stack.items} label={stack.label} />
+                          <ArticleCardStack
+                            dir={isRtl(locale) ? 'rtl' : 'ltr'}
+                            items={stack.items}
+                            label={stack.label}
+                          />
                         ) : null
                       },
                     }}
@@ -471,7 +517,9 @@ function CollectionList({
           const here = item.id === current
           const body = (
             <>
-              <span className="collection-number">{localDigits(String(i + 1).padStart(2, '0'), locale)}</span>
+              <span className="collection-number">
+                {localDigits(String(i + 1).padStart(2, '0'), locale)}
+              </span>
               <span className="min-w-0">
                 <span className="block font-medium" dir="auto">
                   {item.title}
