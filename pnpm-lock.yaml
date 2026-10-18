@@ -17,6 +17,9 @@ importers:
       '@marsidev/react-turnstile':
         specifier: 1.6.2
         version: 1.6.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@payload-inline-visual-editor/core':
+        specifier: 1.0.1
+        version: 1.0.1
       '@payload-inline-visual-editor/react':
         specifier: 1.0.1
         version: 1.0.1(react@19.2.6)
@@ -198,6 +201,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: 4.5.2
         version: 4.5.2(vite@7.3.6(@types/node@22.19.9)(jiti@2.7.0)(lightningcss@1.32.0)(sass@1.105.1)(tsx@4.22.4))
+      esbuild:
+        specifier: 0.25.12
+        version: 0.25.12
       eslint:
         specifier: ^9.16.0
         version: 9.39.5(jiti@2.7.0)
