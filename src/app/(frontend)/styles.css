@@ -733,6 +733,16 @@ a.bridge-year:hover > :first-child {
   opacity: 0.6;
   cursor: progress;
 }
+/* The forms' honeypot (components/forms/spam-check.tsx): clipped to nothing,
+   not display: none, which some bots skip. */
+.spam-check-honeypot {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  opacity: 0;
+}
 .payload-form-status {
   font-size: 0.875rem;
   color: var(--text-muted);

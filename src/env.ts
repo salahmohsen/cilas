@@ -30,6 +30,10 @@ export const env = createEnv({
     GOOGLE_CLIENT_ID: z.string().min(1).optional(),
     GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
 
+    // Optional: Cloudflare Turnstile's secret. With it, /api/form-submissions
+    // refuses a post without a good token. Set it with the site key below.
+    TURNSTILE_SECRET_KEY: z.string().min(1).optional(),
+
     TYPESENSE_API_KEY: z.string().min(1).optional(),
     TYPESENSE_HOST: z.string().default('localhost'),
     TYPESENSE_PORT: z.coerce.number().default(8108),
@@ -53,6 +57,10 @@ export const env = createEnv({
     NEXT_PUBLIC_TYPESENSE_PORT: z.coerce.number().default(8108),
     NEXT_PUBLIC_TYPESENSE_PROTOCOL: z.enum(['http', 'https']).default('http'),
     NEXT_PUBLIC_TYPESENSE_API_KEY: z.string().min(1).optional(),
+
+    // The Turnstile widget on the site's forms. Without it the forms send no
+    // token, so a set TURNSTILE_SECRET_KEY would refuse every submission.
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().min(1).optional(),
   },
 
   experimental__runtimeEnv: {
@@ -62,6 +70,8 @@ export const env = createEnv({
     NEXT_PUBLIC_TYPESENSE_PORT: process.env.NEXT_PUBLIC_TYPESENSE_PORT,
     NEXT_PUBLIC_TYPESENSE_PROTOCOL: process.env.NEXT_PUBLIC_TYPESENSE_PROTOCOL,
     NEXT_PUBLIC_TYPESENSE_API_KEY: process.env.NEXT_PUBLIC_TYPESENSE_API_KEY,
+
+    NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
   },
 
   // Stops a blank R2_SECRET_ACCESS_KEY in .env passing as an empty string and

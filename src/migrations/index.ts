@@ -5,6 +5,7 @@ import * as migration_20261013_165133_remove_unused_fields from './20261013_1651
 import * as migration_20261018_042322_publication_drafts from './20261018_042322_publication_drafts';
 import * as migration_20261018_044627_google_sign_in from './20261018_044627_google_sign_in';
 import * as migration_20261018_051000_drop_press_seo from './20261018_051000_drop_press_seo';
+import * as migration_20261018_073550_contact_spam_check_exports from './20261018_073550_contact_spam_check_exports';
 
 export const migrations = [
   {
@@ -35,11 +36,16 @@ export const migrations = [
   {
     up: migration_20261018_044627_google_sign_in.up,
     down: migration_20261018_044627_google_sign_in.down,
-    name: '20261018_044627_google_sign_in'
+    name: '20261018_044627_google_sign_in',
   },
   {
     up: migration_20261018_051000_drop_press_seo.up,
     down: migration_20261018_051000_drop_press_seo.down,
     name: '20261018_051000_drop_press_seo',
+  },
+  {
+    up: migration_20261018_073550_contact_spam_check_exports.up,
+    down: migration_20261018_073550_contact_spam_check_exports.down,
+    name: '20261018_073550_contact_spam_check_exports'
   },
 ];

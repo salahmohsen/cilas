@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 
 import { ContactSection } from '@/components/arc/blocks/contact-section/contact-section'
+import { useSpamCheck } from '@/components/forms/spam-check'
 
 /**
  * The contact page's form: Arc's contact section in the page's language,
@@ -22,6 +23,7 @@ export function ContactForm({
   flush?: boolean
 }) {
   const t = useTranslations('Contact')
+  const spam = useSpamCheck()
   return (
     <ContactSection
       description={t('text')}
@@ -52,20 +54,26 @@ export function ContactForm({
         copyEmail: t('copyEmail'),
         copied: t('copied'),
       }}
+      formExtra={spam.fields}
       onSubmit={async (message) => {
-        const res = await fetch('/api/form-submissions', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            form: formId,
-            submissionData: (['name', 'email', 'topic', 'message'] as const).map((field) => ({
-              field,
-              value: message[field],
-            })),
-          }),
-        })
-        // The section shows its failure note and keeps what was written.
-        if (!res.ok) throw new Error(`Contact form: ${res.status}`)
+        if (spam.isBot()) return
+        try {
+          const res = await fetch('/api/form-submissions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...(await spam.headers()) },
+            body: JSON.stringify({
+              form: formId,
+              submissionData: (['name', 'email', 'topic', 'message'] as const).map((field) => ({
+                field,
+                value: message[field],
+              })),
+            }),
+          })
+          // The section shows its failure note and keeps what was written.
+          if (!res.ok) throw new Error(`Contact form: ${res.status}`)
+        } finally {
+          spam.reset()
+        }
       }}
       title={t('title')}
       topics={topics}

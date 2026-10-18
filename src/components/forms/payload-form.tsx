@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { Input } from '@/components/arc/input/input'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
+import { useSpamCheck } from '@/components/forms/spam-check'
 import { Link } from '@/i18n/navigation'
 import type { Form, Media } from '@/payload-types'
 
@@ -86,6 +87,7 @@ export function PayloadForm({
   const [sent, setSent] = useState(false)
   const [failed, setFailed] = useState(false)
   const top = useRef<HTMLDivElement>(null)
+  const spam = useSpamCheck()
 
   const check = (q: Question, value: Answer): string | undefined => {
     const empty = Array.isArray(value)
@@ -118,17 +120,25 @@ export function PayloadForm({
     defaultValues: Object.fromEntries(questions.map((q) => [q.name, emptyFor(q)])) as Values,
     onSubmit: async ({ value }) => {
       setFailed(false)
-      const res = await fetch('/api/form-submissions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          form: form.id,
-          submissionData: questions.map((q) => ({
-            field: q.name,
-            value: readable(q, value[q.name] ?? emptyFor(q)),
-          })),
-        }),
-      }).catch(() => null)
+      const res = spam.isBot()
+        ? new Response(null)
+        : await spam
+            .headers()
+            .then((headers) =>
+              fetch('/api/form-submissions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...headers },
+                body: JSON.stringify({
+                  form: form.id,
+                  submissionData: questions.map((q) => ({
+                    field: q.name,
+                    value: readable(q, value[q.name] ?? emptyFor(q)),
+                  })),
+                }),
+              }),
+            )
+            .catch(() => null)
+      spam.reset()
       if (!res?.ok) {
         setFailed(true)
         return
@@ -380,6 +390,7 @@ export function PayloadForm({
         })}
       </fieldset>
 
+      {disabled ? null : spam.fields}
       {disabled ? null : (
         <api.Subscribe
           selector={(s) =>

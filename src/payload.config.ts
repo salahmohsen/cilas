@@ -23,7 +23,9 @@ import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
+import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { formFields } from './forms/form-fields'
+import { requireTurnstile } from './forms/spam-check'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import type {
@@ -162,7 +164,27 @@ export default buildConfig({
       // Applications are read by admins only; anyone may send one.
       formSubmissionOverrides: {
         access: { read: isAdmin, update: isAdmin, delete: isAdmin },
+        hooks: { beforeChange: [requireTurnstile(env.TURNSTILE_SECRET_KEY)] },
       },
+    }),
+    // Admins export form submissions (applications, contact messages) as CSV
+    // or JSON. Downloads only: nothing is saved, and no import.
+    importExportPlugin({
+      collections: [
+        {
+          slug: 'form-submissions',
+          export: { disableJobsQueue: true, disableSave: true },
+          import: false,
+        },
+      ],
+      overrideExportCollection: ({ collection }) => ({
+        ...collection,
+        access: { ...collection.access, read: isAdmin, create: isAdmin, delete: isAdmin },
+      }),
+      overrideImportCollection: ({ collection }) => ({
+        ...collection,
+        access: { ...collection.access, read: isAdmin, create: isAdmin, delete: isAdmin },
+      }),
     }),
     seoPlugin({
       collections: [...SEO_COLLECTIONS],

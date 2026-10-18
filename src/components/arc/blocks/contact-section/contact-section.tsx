@@ -126,6 +126,8 @@ export interface ContactSectionProps {
   email?: string | null
   /** Drops the section's own width and padding, so it sits in the page's gutter. */
   flush?: boolean
+  /** Shown inside the form, above the send row: a spam check, for one. */
+  formExtra?: ReactNode
   className?: string
 }
 
@@ -356,11 +358,13 @@ function ContactForm({
   onSubmit,
   reduced,
   labels,
+  extra,
 }: {
   topics: string[]
   onSubmit?: ContactSectionProps['onSubmit']
   reduced: boolean
   labels: ContactLabels
+  extra?: ReactNode
 }) {
   const [values, setValues] = useState({ name: '', email: '', message: '' })
   const [topic, setTopic] = useState(topics[0] ?? '')
@@ -539,6 +543,7 @@ function ContactForm({
               </motion.p>
             )}
           </AnimatePresence>
+          {extra}
           <div className={styles.submitRow}>
             <p className={styles.fine}>{labels.fine}</p>
             <Button type="submit" variant="primary" loading={phase === 'sending'}>
@@ -938,6 +943,7 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(funct
     labels: labelsProp,
     email = 'hello@example.com',
     flush = false,
+    formExtra,
     className,
   },
   ref,
@@ -1005,7 +1011,13 @@ export const ContactSection = forwardRef<HTMLElement, ContactSectionProps>(funct
           )}
         </div>
         {variant === 'form' && (
-          <ContactForm topics={topics} onSubmit={onSubmit} reduced={reduced} labels={labels} />
+          <ContactForm
+            topics={topics}
+            onSubmit={onSubmit}
+            reduced={reduced}
+            labels={labels}
+            extra={formExtra}
+          />
         )}
         {variant === 'channels' && (
           <Channels
