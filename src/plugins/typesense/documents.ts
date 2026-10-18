@@ -51,6 +51,9 @@ export const lexicalText = (richText: unknown): string => {
     if (!record) return ''
     if (typeof record.text === 'string') return record.text
     if (record.type === 'linebreak') return '\n'
+    // A mention's words are part of the sentence (src/blocks/mention.ts).
+    const fields = asRecord(record.fields)
+    if (record.type === 'inlineBlock' && fields?.blockType === 'mention') return String(fields.label ?? '')
     const inner = asArray(record.children).map(walk).join('')
     return INLINE_NODES.has(String(record.type)) ? inner : `${inner}\n`
   }

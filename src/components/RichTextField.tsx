@@ -33,7 +33,10 @@ export const RichTextField: React.FC<{
   footnoteLabel?: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   blocks?: Record<string, (fields: any) => React.ReactNode>
-}> = ({ data, className, footnotes = [], footnoteLabel = 'Note', blocks = {} }) => {
+  /** As `blocks`, for inline blocks other than footnotes (the article page's mentions). */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  inlineBlocks?: Record<string, (fields: any) => React.ReactNode>
+}> = ({ data, className, footnotes = [], footnoteLabel = 'Note', blocks = {}, inlineBlocks = {} }) => {
   if (!data) return null
 
   const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
@@ -66,6 +69,12 @@ export const RichTextField: React.FC<{
       ]),
     ),
     inlineBlocks: {
+      ...Object.fromEntries(
+        Object.entries(inlineBlocks).map(([type, draw]) => [
+          type,
+          ({ node }: { node: { fields: unknown } }) => draw(node.fields),
+        ]),
+      ),
       footnote: ({ node }: { node: SerializedInlineBlockNode<FootnoteBlock> }) => {
         const f = footnotes.find((x) => x.id === node.fields.id)
         return f ? <FootnoteMark label={footnoteLabel} note={f.note} number={f.number} /> : null

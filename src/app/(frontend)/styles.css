@@ -260,6 +260,10 @@
   & :where(a) {
     @apply decoration-1 underline-offset-[3px];
   }
+  /* A mention opens a preview on hover: a dotted line tells it from a plain link. */
+  & :where(a.article-mention) {
+    @apply decoration-dotted;
+  }
 }
 
 /* The essay's notes, folded under the text. */

@@ -32,6 +32,8 @@ import { RichTextField } from '@/components/RichTextField'
 import { ShareBar } from '@/components/share-bar'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { resolveCardStacks } from '@/api/card-stacks.api'
+import { resolveMentions } from '@/api/mentions.api'
+import { MentionLink } from '@/components/article/mention-link'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
@@ -113,6 +115,8 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
       publicationCovers,
     })
   const { text, notes, noteCount, sections } = splitBody(body)
+  // The mentions in the text, read as this reader may, before it is drawn.
+  const mentions = await resolveMentions(payload, text, { locale, user })
   // The Card stack blocks in the text, loaded before it is drawn.
   const stacks = await resolveCardStacks(payload, text, {
     locale,
@@ -295,6 +299,22 @@ const excerpt =
                         return stack ? (
                           <ArticleCardStack dir={isRtl(locale) ? 'rtl' : 'ltr'} items={stack.items} label={stack.label} />
                         ) : null
+                      },
+                    }}
+                    inlineBlocks={{
+                      // A mention of something this reader cannot open stays its words.
+                      mention: (fields: { id?: string; label?: string }) => {
+                        const m = fields.id ? mentions[fields.id] : undefined
+                        return m ? (
+                          <MentionLink
+                            href={m.href}
+                            kindLabel={t(`mentionKinds.${m.preview.kind}`)}
+                            label={fields.label ?? m.preview.title}
+                            preview={m.preview}
+                          />
+                        ) : (
+                          (fields.label ?? null)
+                        )
                       },
                     }}
                     className="article-prose"

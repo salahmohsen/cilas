@@ -206,6 +206,14 @@
     "readingNow": "Reading now",
     "foreword": "Foreword",
     "essayOf": "{n} of {total}",
+    "mentionKinds": {
+      "person": "Person",
+      "article": "Article",
+      "course": "Course",
+      "event": "Event",
+      "publication": "Collection",
+      "programme": "Programme"
+    },
     "stackArticles": "Related articles",
     "stackCourses": "Courses",
     "collectionStack": "The essays of {title}"

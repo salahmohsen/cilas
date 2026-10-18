@@ -1,4 +1,4 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { plainText } from '@/lib/plaintext'
 
 import { pathOf } from '@/lib/paths'
 
@@ -72,7 +72,7 @@ const peopleOf = (people: unknown, site: string): Person[] =>
 /** The start of a rich text, for a card. */
 const excerpt = (body: unknown, length = 180) => {
   if (!body || typeof body !== 'object') return null
-  const text = convertLexicalToPlaintext({ data: body as never })
+  const text = plainText({ data: body as never })
     .replace(/\s+/g, ' ')
     .trim()
   return text.length > length ? `${text.slice(0, length).replace(/\s+\S*$/, '')}…` : text || null

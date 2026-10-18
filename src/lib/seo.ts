@@ -1,4 +1,4 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { plainText } from '@/lib/plaintext'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
 
 /** Collections with SEO fields (docs/schema.md, Plugins). */
@@ -56,7 +56,7 @@ export const seoDefaults = (
   const text =
     source.description?.map((f) => doc[f]).find((v): v is string => typeof v === 'string' && !!v) ??
     (source.richText && doc[source.richText]
-      ? convertLexicalToPlaintext({ data: doc[source.richText] as SerializedEditorState })
+      ? plainText({ data: doc[source.richText] as SerializedEditorState })
       : undefined)
   if (text) result.description = clip(text)
 

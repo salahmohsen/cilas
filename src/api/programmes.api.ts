@@ -1,4 +1,4 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
 
 import type { Course, Cycle, Media, Person, Programme } from '@/payload-types'
@@ -9,7 +9,7 @@ const obj = <T,>(v: unknown): T | null => (typeof v === 'object' && v !== null ?
 
 const plain = (data: unknown): string =>
   data && typeof data === 'object' && 'root' in data
-    ? convertLexicalToPlaintext({ data: data as Parameters<typeof convertLexicalToPlaintext>[0]['data'] })
+    ? plainText({ data: data as Parameters<typeof plainText>[0]['data'] })
     : ''
 const clip = (text: string, max = 220) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text)
 

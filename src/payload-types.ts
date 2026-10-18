@@ -3550,6 +3550,26 @@ export interface FootnoteBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MentionBlock".
+ */
+export interface MentionBlock {
+  /**
+   * The words shown in the text, e.g. “Ghosoun Ismail”.
+   */
+  label: string;
+  type: 'person' | 'article' | 'course' | 'event' | 'publication' | 'programme';
+  person?: (number | null) | Person;
+  article?: (number | null) | Article;
+  course?: (number | null) | Course;
+  event?: (number | null) | Event;
+  publication?: (number | null) | Publication;
+  programme?: (number | null) | Programme;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mention';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "auth".
  */
 export interface Auth {

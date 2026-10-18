@@ -1,4 +1,4 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { plainText } from '@/lib/plaintext'
 
 import type { Article } from '@/payload-types'
 
@@ -9,7 +9,7 @@ type Node = Body['root']['children'][number]
 const NOTES_HEADINGS = new Set(['Notes', 'ملاحظات'])
 
 const textOf = (node: Node): string =>
-  convertLexicalToPlaintext({ data: { root: { type: 'root', children: [node], direction: null, format: '', indent: 0, version: 1 } } })
+  plainText({ data: { root: { type: 'root', children: [node], direction: null, format: '', indent: 0, version: 1 } } })
     .replace(/\s+/g, ' ')
     .trim()
 

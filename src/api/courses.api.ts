@@ -1,4 +1,4 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { plainText } from '@/lib/plaintext'
 import type { Payload, Where } from 'payload'
 
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
@@ -44,7 +44,7 @@ export const getPublicPosts = async (payload: Payload, locale: Locale = 'en') =>
 
 const plain = (data: unknown): string =>
   data && typeof data === 'object' && 'root' in data
-    ? convertLexicalToPlaintext({ data: data as Parameters<typeof convertLexicalToPlaintext>[0]['data'] })
+    ? plainText({ data: data as Parameters<typeof plainText>[0]['data'] })
     : ''
 
 const obj = <T>(value: unknown): T | null => (value && typeof value === 'object' ? (value as T) : null)

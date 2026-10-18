@@ -1,4 +1,4 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { plainText } from '@/lib/plaintext'
 import type { Payload } from 'payload'
 
 import type { Locale } from '@/api/articles.api'
@@ -133,7 +133,7 @@ export const getFellows = async (payload: Payload, locale: Locale): Promise<Fell
         slug: f.slug,
         name: f.name,
         ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? f.name } } : {}),
-        bio: f.bio ? convertLexicalToPlaintext({ data: f.bio }).replace(/\s+/g, ' ').trim() : '',
+        bio: f.bio ? plainText({ data: f.bio }).replace(/\s+/g, ' ').trim() : '',
         courses: [course],
       })
     }
@@ -153,7 +153,7 @@ const cardOf = (p: Person): PersonCard => {
     slug: p.slug ?? String(p.id),
     name: p.name,
     ...(photo ? { photo: { url: photo.url!, alt: photo.alt ?? p.name } } : {}),
-    bio: p.bio ? convertLexicalToPlaintext({ data: p.bio }).replace(/\s+/g, ' ').trim() : '',
+    bio: p.bio ? plainText({ data: p.bio }).replace(/\s+/g, ' ').trim() : '',
   }
 }
 

@@ -1,4 +1,4 @@
-import { convertLexicalToPlaintext } from '@payloadcms/richtext-lexical/plaintext'
+import { plainText } from '@/lib/plaintext'
 
 import type { Article, Person, Publication } from '@/payload-types'
 
@@ -24,7 +24,7 @@ export const publicationOf = (article: Pick<Article, 'publications'>): Publicati
 export const excerptOf = (article: Pick<Article, 'body'>, max = 220): string => {
   if (!article.body) return ''
   const firstParagraph = article.body.root.children.find((n) => n.type === 'paragraph')
-  const text = convertLexicalToPlaintext({
+  const text = plainText({
     data: { root: { ...article.body.root, children: firstParagraph ? [firstParagraph] : [] } },
   })
     .replace(/\s+/g, ' ')
@@ -42,14 +42,14 @@ export const repeatsOpening = (description: string, body: Article['body']): bool
   if (!body) return false
   const lead = description.replace(/\s+/g, ' ').trim()
   if (!lead) return false
-  const text = convertLexicalToPlaintext({ data: body }).replace(/\s+/g, ' ').trim()
+  const text = plainText({ data: body }).replace(/\s+/g, ' ').trim()
   return text.startsWith(lead.endsWith('…') ? lead.slice(0, -1) : lead)
 }
 
 /** Minutes to read at about 220 words a minute. */
 export const readingMinutes = (article: Pick<Article, 'body'>): number => {
   if (!article.body) return 0
-  const words = convertLexicalToPlaintext({ data: article.body }).split(/\s+/).filter(Boolean).length
+  const words = plainText({ data: article.body }).split(/\s+/).filter(Boolean).length
   return Math.max(1, Math.round(words / 220))
 }
 

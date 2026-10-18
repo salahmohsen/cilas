@@ -23,6 +23,7 @@ import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
 import { CardStack } from '@/blocks/card-stack'
 import { Footnote } from '@/blocks/footnote'
+import { Mention } from '@/blocks/mention'
 import { creditsField } from '@/fields/credits'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { slugField } from '@/fields/slug'
@@ -170,12 +171,12 @@ export const Articles: CollectionConfig = {
       name: 'body',
       type: 'richText',
       localized: true,
-      // Footnotes are inline blocks: inserted where they belong in the text.
+      // Footnotes and mentions are inline blocks: inserted where they belong in the text.
       editor: lexicalEditor({
         features: ({ defaultFeatures }) => [
           ...defaultFeatures,
           // Card stacks are blocks of their own, between paragraphs.
-          BlocksFeature({ blocks: [CardStack], inlineBlocks: [Footnote] }),
+          BlocksFeature({ blocks: [CardStack], inlineBlocks: [Footnote, Mention] }),
         ],
       }),
     },

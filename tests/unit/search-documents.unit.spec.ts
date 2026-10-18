@@ -134,3 +134,25 @@ describe('search schema', () => {
     expect(physicalNameOf('people')).not.toBe(physicalNameOf('articles'))
   })
 })
+
+describe('mentions in rich text', () => {
+  it('keep their words in the searchable text', async () => {
+    const { lexicalText } = await import('@/plugins/typesense/documents')
+    const body = {
+      root: {
+        children: [
+          {
+            type: 'paragraph',
+            children: [
+              { type: 'text', text: 'A course by ' },
+              { type: 'inlineBlock', fields: { blockType: 'mention', label: 'Ghosoun Ismail', type: 'person', person: 3 } },
+              { type: 'text', text: ', with a note.' },
+              { type: 'inlineBlock', fields: { blockType: 'footnote', note: {} } },
+            ],
+          },
+        ],
+      },
+    }
+    expect(lexicalText(body)).toBe('A course by Ghosoun Ismail, with a note.')
+  })
+})
