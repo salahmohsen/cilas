@@ -16,6 +16,7 @@ import * as migration_20261018_102744_drop_newsletter_picks from './20261018_102
 import * as migration_20261018_162245_picks_by_type_space_address from './20261018_162245_picks_by_type_space_address';
 import * as migration_20261018_165545_about_page_segment_setting from './20261018_165545_about_page_segment_setting';
 import * as migration_20261018_174136_drop_about_page from './20261018_174136_drop_about_page';
+import * as migration_20261018_175500_backfill_publication_versions from './20261018_175500_backfill_publication_versions';
 
 export const migrations = [
   {
@@ -107,5 +108,10 @@ export const migrations = [
     up: migration_20261018_174136_drop_about_page.up,
     down: migration_20261018_174136_drop_about_page.down,
     name: '20261018_174136_drop_about_page'
+  },
+  {
+    up: migration_20261018_175500_backfill_publication_versions.up,
+    down: migration_20261018_175500_backfill_publication_versions.down,
+    name: '20261018_175500_backfill_publication_versions',
   },
 ];
