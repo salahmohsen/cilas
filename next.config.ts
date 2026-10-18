@@ -16,6 +16,10 @@ const r2 = new URL(process.env.R2_PUBLIC_URL!)
 const nextConfig: NextConfig = {
   // A self-contained server for the Docker image (Dockerfile, Dokploy).
   output: 'standalone',
+  // The first pages of a build wait for Payload to start in each worker and
+  // for a free database connection, and passed the 60-second default; Next
+  // then rendered them again. Later pages take well under a second.
+  staticPageGenerationTimeout: 180,
   images: {
     remotePatterns: [
       {
