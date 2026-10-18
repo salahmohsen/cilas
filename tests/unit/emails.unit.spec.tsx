@@ -4,6 +4,7 @@ import { describe, expect, it } from 'vitest'
 
 import { cardOf } from '@/emails/cards'
 import { MessageEmail } from '@/emails/message'
+import { newsletterMail } from '@/emails/newsletter'
 import { renderEmail } from '@/emails/render'
 import { DEFAULT_TEXTS, fill, paragraphs, withDefaults } from '@/emails/settings'
 import { acceptanceMail, resetMail, reviewMail } from '@/emails/transactional'
@@ -157,5 +158,32 @@ describe('cardOf', () => {
   it('skips a pick that is not populated, or a programme with no page', () => {
     expect(cardOf({ relationTo: 'articles', value: 5 }, null, labels)).toBeNull()
     expect(cardOf({ relationTo: 'programmes', value: { id: 3, title: 'Residency', kind: 'residency' } }, null, labels)).toBeNull()
+  })
+})
+
+describe('newsletterMail', () => {
+  it('renders the intro, one card per pick and the unsubscribe link', async () => {
+    const mail = await newsletterMail(
+      {
+        title: 'October at CILAS',
+        preheader: 'Two new courses',
+        body: null,
+        picks: [
+          {
+            item: { relationTo: 'courses', value: { id: 1, title: 'Reading Plato', slug: 'reading-plato' } },
+            note: 'Starts 3 Nov',
+          },
+          { item: { relationTo: 'articles', value: 9 }, note: null },
+        ],
+      },
+      withDefaults({}),
+      { site: 'https://ci-las.org', unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}' },
+    )
+    expect(mail.subject).toBe('October at CILAS')
+    expect(mail.html).toContain('Reading Plato')
+    expect(mail.html).toContain('Starts 3 Nov')
+    expect(mail.html).toContain('Two new courses')
+    expect(mail.html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')
+    expect(mail.html).toContain('href="https://ci-las.org/en/study/reading-plato"')
   })
 })
