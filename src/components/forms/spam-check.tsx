@@ -39,6 +39,8 @@ export function useSpamCheck() {
           siteKey={siteKey}
           className="spam-check-widget"
           options={{
+            // Groups these checks in Cloudflare's Turnstile analytics.
+            action: 'turnstile-spin-v1',
             appearance: 'interaction-only',
             language: locale,
             size: 'flexible',
