@@ -1696,9 +1696,11 @@ a.collection-item:hover {
   gap: 0.25rem;
 }
 .home-number-value {
-  font-family: var(--font-heading);
+  font-family: var(--font-text);
   font-size: clamp(1.75rem, min(4.5vw, 5svh), 3.25rem);
+  font-weight: 500;
   line-height: 1;
+  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
 }
 .home-number-label {

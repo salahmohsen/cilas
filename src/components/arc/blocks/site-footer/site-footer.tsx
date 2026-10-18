@@ -397,7 +397,10 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
     <div className={styles.bottom}>
       <div className={styles.bottomStart}>
         <span className={styles.copyright}>
-          © {year} {brand.name}
+          <span className={styles.copyMark}>©</span>
+          <span>
+            {year} {brand.name}
+          </span>
         </span>
         {legal.length > 0 && (
           <ul className={styles.inline} aria-label="Legal">
@@ -460,7 +463,10 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
         </div>
         <div className={styles.minimalRow}>
           <span className={styles.copyright}>
-            © {year} {brand.name}. {tagline}
+            <span className={styles.copyMark}>©</span>
+            <span>
+              {year} {brand.name}. {tagline}
+            </span>
           </span>
           <div className={styles.bottomEnd}>
             {statusNode}

@@ -240,8 +240,20 @@
   font-size: var(--text-xs);
 }
 .copyright {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
   color: var(--text-muted);
   font-size: var(--text-sm);
+}
+/* The © drawn as large as a 1rem icon beside it (a licence mark, say): its
+   ink is three quarters of its em, so 1rem / 0.75 gives a 1rem circle. A
+   lighter weight keeps its stroke as fine as the icon's once enlarged. */
+.copyMark {
+  flex-shrink: 0;
+  font-size: calc(1rem / 0.75);
+  font-weight: 300;
+  line-height: 1;
 }
 .status {
   display: inline-flex;
