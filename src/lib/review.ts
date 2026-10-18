@@ -81,34 +81,3 @@ export const notifyOn = (from: ReviewState, to: ReviewState): 'admins' | 'author
   if (to === 'approved' || to === 'changes_requested' || to === 'rejected') return 'authors'
   return null
 }
-
-const MESSAGES: Partial<Record<ReviewState, { subject: string; text: string }>> = {
-  submitted: { subject: 'Submitted for review', text: 'was submitted for review.' },
-  approved: { subject: 'Published', text: 'was approved and is now published.' },
-  changes_requested: {
-    subject: 'Changes requested',
-    text: 'needs changes before it can be published.',
-  },
-  rejected: { subject: 'Not accepted', text: 'was not accepted for publication.' },
-}
-
-/** States whose email carries the editor's note. */
-const NOTE_STATES: ReviewState[] = ['changes_requested', 'rejected']
-
-/**
- * Plain-text notification for a review state. The editor's note only goes out
- * with a request for changes or a rejection; it stays on the article
- * afterwards, so a later submission or approval must not repeat it.
- */
-export const reviewEmail = (
-  state: ReviewState,
-  title: string,
-  note?: string | null,
-): { subject: string; text: string } => {
-  const message = MESSAGES[state] ?? { subject: 'Review update', text: `is now ${LABELS[state]}.` }
-  const withNote = note && NOTE_STATES.includes(state)
-  return {
-    subject: `${message.subject}: ${title}`,
-    text: `"${title}" ${message.text}${withNote ? `\n\nNote from the editor:\n${note}` : ''}`,
-  }
-}

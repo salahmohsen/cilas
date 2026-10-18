@@ -55,7 +55,7 @@ describe('proxy', () => {
 describe('resetPasswordEmail', () => {
   it('links to the reset page with an absolute URL', async () => {
     const { resetPasswordEmail } = await import('@/collections/Users')
-    expect(resetPasswordEmail({ token: 'abc123' })).toContain(
+    expect(await resetPasswordEmail({ token: 'abc123' })).toContain(
       'href="http://localhost:3000/admin/reset/abc123"',
     )
   })

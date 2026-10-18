@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { canMove, notifyOn, reviewEmail, reviewPatch } from '@/lib/review'
+import { canMove, notifyOn, reviewPatch } from '@/lib/review'
 
 const now = new Date('2026-10-10T12:00:00.000Z')
 
@@ -89,33 +89,5 @@ describe('notifyOn', () => {
   it('stays quiet when nothing moved or the move needs no one', () => {
     expect(notifyOn('submitted', 'submitted')).toBeNull()
     expect(notifyOn('approved', 'draft')).toBeNull()
-  })
-})
-
-describe('reviewEmail', () => {
-  it('names the article and includes the note', () => {
-    expect(reviewEmail('changes_requested', 'On Ignorance', 'Shorten the intro.')).toEqual({
-      subject: 'Changes requested: On Ignorance',
-      text: '"On Ignorance" needs changes before it can be published.\n\nNote from the editor:\nShorten the intro.',
-    })
-  })
-
-  it('includes the note on a rejection', () => {
-    expect(reviewEmail('rejected', 'On Ignorance', 'Out of scope.').text).toContain(
-      'Note from the editor:\nOut of scope.',
-    )
-  })
-
-  it.each(['submitted', 'approved'] as const)('leaves a stale note out of a %s email', (state) => {
-    expect(reviewEmail(state, 'On Ignorance', 'Shorten the intro.').text).not.toContain(
-      'Shorten the intro.',
-    )
-  })
-
-  it('leaves the note out when there is none', () => {
-    expect(reviewEmail('submitted', 'On Ignorance', null)).toEqual({
-      subject: 'Submitted for review: On Ignorance',
-      text: '"On Ignorance" was submitted for review.',
-    })
   })
 })

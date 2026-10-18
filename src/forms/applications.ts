@@ -14,7 +14,8 @@ import {
 
 import { isAdminUser, personOf, type Role } from '@/access'
 import { env } from '@/env'
-import { acceptanceEmail } from '@/lib/acceptance-mail'
+import { getEmailSettings } from '@/emails/settings'
+import { acceptanceMail } from '@/emails/transactional'
 import { slugify } from '@/lib/slugify'
 import type { FormSubmission } from '@/payload-types'
 
@@ -135,7 +136,7 @@ type Accepted = {
   membership?: number
   enrollment?: number
   /** For the email, sent once the transaction commits. */
-  mail: Parameters<typeof acceptanceEmail>[0]
+  mail: { name: string; email: string; title: string; newAccount: boolean; site: string }
 }
 
 const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null> => {
@@ -240,13 +241,11 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
     ...local,
   })
 
-  const titleIn = async (locale: 'en' | 'ar') =>
-    (await payload.findByID({ collection: kind, id: targetId, locale, fallbackLocale: 'en', ...local }))
-      .title ?? ''
-  const [en, ar] = await Promise.all([titleIn('en'), titleIn('ar')])
+  // All mail is in English.
+  const target = await payload.findByID({ collection: kind, id: targetId, locale: 'en', ...local })
   return {
     ...result,
-    mail: { ...applicant, title: { en, ar }, newAccount, site: env.NEXT_PUBLIC_SERVER_URL },
+    mail: { ...applicant, title: target.title ?? '', newAccount, site: env.NEXT_PUBLIC_SERVER_URL },
   }
 }
 
@@ -284,7 +283,8 @@ const decide =
     let emailed = false
     if (done) {
       try {
-        await req.payload.sendEmail(acceptanceEmail(done.mail))
+        const mail = await acceptanceMail(await getEmailSettings(req.payload, req), done.mail)
+        await req.payload.sendEmail({ to: done.mail.email, ...mail })
         emailed = true
       } catch (error) {
         req.payload.logger.error({ err: error, msg: `Acceptance email for submission ${id} failed` })

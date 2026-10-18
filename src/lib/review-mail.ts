@@ -1,6 +1,8 @@
 import type { PayloadRequest } from 'payload'
 
-import { reviewEmail, type ReviewState } from '@/lib/review'
+import { getEmailSettings } from '@/emails/settings'
+import { reviewMail } from '@/emails/transactional'
+import type { ReviewState } from '@/lib/review'
 
 const emailsOf = (docs: Array<{ email?: string | null }>): string[] =>
   docs.map((d) => d.email).filter((e): e is string => Boolean(e))
@@ -42,7 +44,8 @@ export const sendReviewEmail = async (
 ): Promise<void> => {
   if (!to.length) return
   try {
-    await req.payload.sendEmail({ to, ...reviewEmail(state, title, note) })
+    const mail = await reviewMail(await getEmailSettings(req.payload, req), state, title, note)
+    await req.payload.sendEmail({ to, ...mail })
   } catch (error) {
     req.payload.logger.error({ err: error, msg: `Review email for "${title}" failed` })
   }

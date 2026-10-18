@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { MessageEmail } from '@/emails/message'
 import { renderEmail } from '@/emails/render'
 import { DEFAULT_TEXTS, fill, paragraphs, withDefaults } from '@/emails/settings'
+import { acceptanceMail, resetMail, reviewMail } from '@/emails/transactional'
 
 describe('fill', () => {
   it('puts values into {placeholders} and leaves unknown ones', () => {
@@ -66,5 +67,47 @@ describe('MessageEmail', () => {
       <MessageEmail settings={settings} preview="x" paragraphs={['<b>Mona</b>']} />,
     )
     expect(html).toContain('&lt;b&gt;Mona&lt;/b&gt;')
+  })
+})
+
+describe('transactional mails', () => {
+  const settings = withDefaults({})
+  const site = 'https://ci-las.org/'
+
+  it('tells a new account how to sign in', async () => {
+    const mail = await acceptanceMail(settings, {
+      name: 'Mona',
+      email: 'mona@example.com',
+      title: 'Bridge 2026',
+      newAccount: true,
+      site,
+    })
+    expect(mail.subject).toBe('You are accepted to Bridge 2026')
+    expect(mail.html).toContain('We made a CILAS account for mona@example.com')
+    expect(mail.html).toContain('href="https://ci-las.org/en/login"')
+  })
+
+  it('uses the admin’s own text', async () => {
+    const mail = await acceptanceMail(
+      withDefaults({ texts: { acceptance: { subject: 'Welcome, {name}!' } } }),
+      { name: 'Mona', email: 'm@x.co', title: 'T', newAccount: false, site },
+    )
+    expect(mail.subject).toBe('Welcome, Mona!')
+    expect(mail.html).toContain('Sign in with your CILAS account as usual.')
+  })
+
+  it('adds the editor’s note only where the state carries one', async () => {
+    const asked = await reviewMail(settings, 'changes_requested', 'Essay', 'Shorten it')
+    expect(asked.subject).toBe('Changes requested: Essay')
+    expect(asked.text).toContain('Shorten it')
+    const approved = await reviewMail(settings, 'approved', 'Essay', 'Shorten it')
+    expect(approved.text).not.toContain('Shorten it')
+    const submitted = await reviewMail(settings, 'submitted', 'Essay', null)
+    expect(submitted.subject).toBe('Submitted for review: Essay')
+  })
+
+  it('links the reset button to the token', async () => {
+    const mail = await resetMail(settings, { email: 'm@x.co', token: 'abc', site })
+    expect(mail.html).toContain('href="https://ci-las.org/admin/reset/abc"')
   })
 })
