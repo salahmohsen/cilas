@@ -9,6 +9,7 @@ import * as migration_20261018_073550_contact_spam_check_exports from './2026101
 import * as migration_20261018_080439_applications_people_visible from './20261018_080439_applications_people_visible';
 import * as migration_20261018_085018_sitemap_llms_visual_editor from './20261018_085018_sitemap_llms_visual_editor';
 import * as migration_20261018_093732_email_settings from './20261018_093732_email_settings';
+import * as migration_20261018_094315_emails_newsletter_picks from './20261018_094315_emails_newsletter_picks';
 
 export const migrations = [
   {
@@ -64,6 +65,11 @@ export const migrations = [
   {
     up: migration_20261018_093732_email_settings.up,
     down: migration_20261018_093732_email_settings.down,
-    name: '20261018_093732_email_settings'
+    name: '20261018_093732_email_settings',
+  },
+  {
+    up: migration_20261018_094315_emails_newsletter_picks.up,
+    down: migration_20261018_094315_emails_newsletter_picks.down,
+    name: '20261018_094315_emails_newsletter_picks'
   },
 ];

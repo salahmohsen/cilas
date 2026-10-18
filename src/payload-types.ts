@@ -1567,6 +1567,13 @@ export interface Newsletter {
   slug: string;
   issue_date: string;
   cover_image?: (number | null) | Media;
+  /**
+   * The line mail apps show after the subject. Empty: the title.
+   */
+  preheader?: string | null;
+  /**
+   * The intro, above the picks.
+   */
   body?: {
     root: {
       type: string;
@@ -1582,6 +1589,33 @@ export interface Newsletter {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * Courses, articles and the Bridge to show as cards, in this order. 8 or fewer keeps the email under Gmail’s size limit.
+   */
+  picks?:
+    | {
+        item:
+          | {
+              relationTo: 'courses';
+              value: number | Course;
+            }
+          | {
+              relationTo: 'articles';
+              value: number | Article;
+            }
+          | {
+              relationTo: 'programmes';
+              value: number | Programme;
+            };
+        /**
+         * One line under the card, e.g. “Applications close 3 Nov”.
+         */
+        note?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  sent_at?: string | null;
+  broadcast_id?: string | null;
   legacy_url?: string | null;
   updatedAt: string;
   createdAt: string;
@@ -2633,7 +2667,17 @@ export interface NewslettersSelect<T extends boolean = true> {
   slug?: T;
   issue_date?: T;
   cover_image?: T;
+  preheader?: T;
   body?: T;
+  picks?:
+    | T
+    | {
+        item?: T;
+        note?: T;
+        id?: T;
+      };
+  sent_at?: T;
+  broadcast_id?: T;
   legacy_url?: T;
   updatedAt?: T;
   createdAt?: T;

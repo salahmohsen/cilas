@@ -32,6 +32,7 @@ import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 }
 import { VisualEditorController as VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed } from 'payload-inline-visual-editor/client'
 import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
 import { FixedToolbarFeatureClient as FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
+import { NewsletterActions as NewsletterActions_b0970b01e42603472424e6e40dd0fd9e } from '../../../components/admin/newsletter-actions'
 import { SubmissionDecision as SubmissionDecision_eee555a74fc1831b93e9205174d718a0 } from '../../../components/admin/submission-decision'
 import { ExportListMenuItem as ExportListMenuItem_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
 import { FormatField as FormatField_cdf7e044479f899a31f804427d568b36 } from '@payloadcms/plugin-import-export/rsc'
@@ -95,6 +96,7 @@ export const importMap = {
   "payload-inline-visual-editor/client#VisualEditorController": VisualEditorController_3a8e3d5bdeeaec64e402b668680114ed,
   "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
   "@payloadcms/richtext-lexical/client#FixedToolbarFeatureClient": FixedToolbarFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
+  "/components/admin/newsletter-actions#NewsletterActions": NewsletterActions_b0970b01e42603472424e6e40dd0fd9e,
   "/components/admin/submission-decision#SubmissionDecision": SubmissionDecision_eee555a74fc1831b93e9205174d718a0,
   "@payloadcms/plugin-import-export/rsc#ExportListMenuItem": ExportListMenuItem_cdf7e044479f899a31f804427d568b36,
   "@payloadcms/plugin-import-export/rsc#FormatField": FormatField_cdf7e044479f899a31f804427d568b36,

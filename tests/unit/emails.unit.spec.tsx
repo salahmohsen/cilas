@@ -1,6 +1,6 @@
 // @vitest-environment node
 // React Email renders with react-dom/server, which needs Node's streams.
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { cardOf } from '@/emails/cards'
 import { MessageEmail } from '@/emails/message'
@@ -8,6 +8,7 @@ import { newsletterMail } from '@/emails/newsletter'
 import { renderEmail } from '@/emails/render'
 import { DEFAULT_TEXTS, fill, paragraphs, withDefaults } from '@/emails/settings'
 import { acceptanceMail, resetMail, reviewMail } from '@/emails/transactional'
+import { sendBroadcast } from '@/lib/broadcast'
 
 describe('fill', () => {
   it('puts values into {placeholders} and leaves unknown ones', () => {
@@ -185,5 +186,42 @@ describe('newsletterMail', () => {
     expect(mail.html).toContain('Two new courses')
     expect(mail.html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')
     expect(mail.html).toContain('href="https://ci-las.org/en/study/reading-plato"')
+  })
+})
+
+describe('sendBroadcast', () => {
+  afterEach(() => vi.restoreAllMocks())
+  const args = {
+    apiKey: 'key',
+    segmentId: 'seg',
+    from: 'CILAS <news@ci-las.org>',
+    replyTo: null,
+    subject: 'October',
+    html: '<p>x</p>',
+    text: 'x',
+    name: 'October at CILAS',
+  }
+
+  it('creates and sends a Resend broadcast to the segment', async () => {
+    const fetch = vi.spyOn(globalThis, 'fetch').mockResolvedValue(Response.json({ id: 'b_1' }))
+    expect(await sendBroadcast(args)).toBe('b_1')
+    const [url, init] = fetch.mock.calls[0]!
+    expect(url).toBe('https://api.resend.com/broadcasts')
+    expect(JSON.parse(init!.body as string)).toEqual({
+      segment_id: 'seg',
+      from: 'CILAS <news@ci-las.org>',
+      subject: 'October',
+      html: '<p>x</p>',
+      text: 'x',
+      name: 'October at CILAS',
+      send: true,
+    })
+  })
+
+  it('throws Resend’s message on failure', async () => {
+    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+      Response.json({ message: 'Segment not found' }, { status: 404 }),
+    )
+    await expect(sendBroadcast(args)).rejects.toThrow('Segment not found')
   })
 })
