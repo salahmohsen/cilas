@@ -4,6 +4,7 @@ import { useLocale, useTranslations } from 'next-intl'
 import { useTheme } from 'next-themes'
 import { useSearchParams } from 'next/navigation'
 import { useSyncExternalStore } from 'react'
+import { flushSync } from 'react-dom'
 
 import { ThemeSwitch } from '@/components/arc/theme-switch/theme-switch'
 import { Link, usePathname } from '@/i18n/navigation'
@@ -37,7 +38,9 @@ export function LanguageSwitch() {
 /**
  * One icon that morphs between sun and moon. Until the visitor picks, the
  * theme follows the system (next-themes' `system`); a click stores the
- * opposite of what is showing.
+ * opposite of what is showing. The new theme spreads from the button in a
+ * circle (Arc's reveal), unless the browser lacks view transitions or the
+ * visitor asks for reduced motion.
  */
 export function ThemeToggle() {
   const t = useTranslations('Theme')
@@ -54,7 +57,20 @@ export function ThemeToggle() {
     <ThemeSwitch
       iconOnly
       label={theme === 'dark' ? t('toLight') : t('toDark')}
-      onThemeChange={(next) => setTheme(next)}
+      onThemeChange={(next, _variant, trigger) => {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        if (!document.startViewTransition || reduced) return setTheme(next)
+        const { left, top, width, height } = trigger.getBoundingClientRect()
+        const root = document.documentElement
+        root.style.setProperty('--reveal-x', `${left + width / 2}px`)
+        root.style.setProperty('--reveal-y', `${top + height / 2}px`)
+        root.dataset.themeReveal = ''
+        // next-themes writes the theme in an effect; flushSync runs it inside
+        // the transition, so the new snapshot already has the new theme.
+        document
+          .startViewTransition(() => flushSync(() => setTheme(next)))
+          .finished.finally(() => delete root.dataset.themeReveal)
+      }}
       theme={theme}
     />
   )
