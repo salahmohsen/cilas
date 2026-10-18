@@ -14,6 +14,7 @@ import {
 } from 'simple-icons'
 
 import type { Place } from '@/api/place.api'
+import { subscribeToNewsletter } from '@/lib/newsletter-subscribe'
 import type { SocialLink } from '@/api/social.api'
 import { SiteFooter as ArcSiteFooter } from '@/components/arc/blocks/site-footer/site-footer'
 
@@ -26,7 +27,13 @@ const PLATFORMS: Record<SocialLink['platform'], { icon: SimpleIcon; label: strin
 }
 
 /** The site footer: where to go next, the newsletter, the social accounts and the licence line. */
-export function SiteFooter({ socials = [], place = null }: { socials?: SocialLink[]; place?: Place | null }) {
+export function SiteFooter({
+  socials = [],
+  place = null,
+}: {
+  socials?: SocialLink[]
+  place?: Place | null
+}) {
   const t = useTranslations('Footer')
   const brand = useTranslations('Header')
   const locale = useLocale()
@@ -62,7 +69,9 @@ export function SiteFooter({ socials = [], place = null }: { socials?: SocialLin
           title: t('institute'),
           links: [
             // The current space's address, linked to its map (Spaces → Google Maps link).
-            ...(place?.mapUrl ? [{ label: place.address, href: place.mapUrl, external: true }] : []),
+            ...(place?.mapUrl
+              ? [{ label: place.address, href: place.mapUrl, external: true }]
+              : []),
             { label: t('contact'), href: href('/contact') },
           ],
         },
@@ -113,16 +122,7 @@ export function SiteFooter({ socials = [], place = null }: { socials?: SocialLin
           failed: t('newsletter.failed'),
           done: t('newsletter.done'),
         },
-        onSubscribe: async (email) => {
-          const res = await fetch('/api/newsletter', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email }),
-          })
-          // The Arc form shows its error state when this throws.
-          if (!res.ok)
-            throw new Error((await res.json().catch(() => null))?.error ?? 'Subscribe failed')
-        },
+        onSubscribe: subscribeToNewsletter,
       }}
       // Icons only, from Site settings; the platform names their links.
       socials={socials.map(({ platform, url }) => ({

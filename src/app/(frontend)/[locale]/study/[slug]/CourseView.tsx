@@ -113,7 +113,9 @@ export const CourseView: React.FC<{
   related?: RelatedCourse[]
   /** In the admin's live preview: mark fields for the visual editor. */
   editable?: boolean
-}> = ({ course, related = [], editable = false }) => {
+  /** At the end of the text, e.g. the newsletter signup. */
+  after?: React.ReactNode
+}> = ({ course, related = [], editable = false, after }) => {
   const pe = editableIn(editable)
   const t = useTranslations('Course')
   const tf = useTranslations('Study.filters')
@@ -732,6 +734,7 @@ export const CourseView: React.FC<{
               </div>
             </section>
           ) : null}
+          {after}
         </article>
 
         <aside className="hidden lg:flex lg:flex-col lg:gap-10">

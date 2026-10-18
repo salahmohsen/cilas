@@ -1,6 +1,15 @@
 'use client'
 
-import { forwardRef, useEffect, useId, useRef, useState } from 'react'
+import {
+  createContext,
+  forwardRef,
+  useContext,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, useAnimate, useReducedMotion } from 'motion/react'
@@ -38,6 +47,8 @@ export interface NewsletterSignupProps {
   publication?: NewsletterPublication | null
   /** Called with a valid, trimmed email. Reject to show an error and keep the email; resolve to show the success state. */
   onSubscribe?: (email: string) => void | Promise<void>
+  /** The built-in strings, for another language. Any left out stay English. */
+  text?: Partial<NewsletterText>
   className?: string
 }
 
@@ -46,19 +57,53 @@ type Problem = { kind: 'invalid' | 'failed'; text: string }
 type Bezier = [number, number, number, number]
 const enter = [...motionTokens.ease.enter] as Bezier
 const standard = [...motionTokens.ease.standard] as Bezier
-const MESSAGES = {
+/** Every built-in string, so a host can translate the block. */
+export interface NewsletterText {
+  empty: string
+  format: string
+  failed: string
+  emailLabel: string
+  retry: string
+  sending: string
+  subscribed: string
+  /** The confirmation line after a successful signup. */
+  done: string
+  again: string
+  sentTo: (email: string) => string
+  issue: (number: number) => string
+  issueLabel: (name: string, number: number) => string
+  to: string
+  minutes: (minutes: number) => string
+  readers: string
+  includingYou: string
+}
+const DEFAULT_TEXT: NewsletterText = {
   empty: 'Enter your email address',
   format: 'Enter an email like name@company.com',
   failed: "That didn't go through. Your email is kept, so try again.",
+  emailLabel: 'Email address',
+  retry: 'Try again',
+  sending: 'Subscribing',
+  subscribed: 'Subscribed',
+  done: 'Check your inbox to confirm.',
+  again: 'Use a different email',
+  sentTo: (email) => `The link went to ${email}.`,
+  issue: (number) => `Issue ${number}`,
+  issueLabel: (name, number) => `${name}, issue ${number}`,
+  to: 'To',
+  minutes: (minutes) => `${minutes} min`,
+  readers: 'readers',
+  includingYou: ', including you',
 }
+const TextContext = createContext<NewsletterText>(DEFAULT_TEXT)
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/
 /** How far each issue behind the front one peeks out above it. */
 const STEP = 12
 
-function validate(value: string): Problem | null {
+function validate(value: string, text: NewsletterText): Problem | null {
   const email = value.trim()
-  if (!email) return { kind: 'invalid', text: MESSAGES.empty }
-  if (!EMAIL.test(email)) return { kind: 'invalid', text: MESSAGES.format }
+  if (!email) return { kind: 'invalid', text: text.empty }
+  if (!EMAIL.test(email)) return { kind: 'invalid', text: text.format }
   return null
 }
 
@@ -109,11 +154,12 @@ function Swap({
 
 /** One issue: masthead, recipient line, subject, and three stories with thumbnails. */
 function IssueCard({ issue, name, to }: { issue: NewsletterIssue; name: string; to?: string }) {
+  const text = useContext(TextContext)
   return (
     <>
       <header className={styles.issueHead}>
         <span className={styles.masthead}>{name}</span>
-        <span className={styles.issueNumber}>Issue {issue.number}</span>
+        <span className={styles.issueNumber}>{text.issue(issue.number)}</span>
       </header>
       <p className={styles.issueMeta}>
         <span className={styles.issueDate}>{issue.date}</span>
@@ -121,25 +167,35 @@ function IssueCard({ issue, name, to }: { issue: NewsletterIssue; name: string; 
           <>
             <span aria-hidden="true">&middot;</span>
             <span className={styles.recipient}>
-              To <span className={styles.recipientEmail}>{to}</span>
+              {text.to} <span className={styles.recipientEmail}>{to}</span>
             </span>
           </>
         )}
       </p>
-      <h3 className={styles.subject}>{issue.subject}</h3>
+      <h3 className={styles.subject} dir="auto">
+        {issue.subject}
+      </h3>
       <ul className={styles.stories}>
         {issue.stories.slice(0, 3).map((story) => (
           <li key={story.title} className={styles.story}>
-            <Image
-              className={styles.thumb}
-              src={story.image}
-              alt=""
-              width={88}
-              height={88}
-              sizes="44px"
-            />
-            <span className={styles.storyTitle}>{story.title}</span>
-            <span className={styles.minutes}>{story.minutes} min</span>
+            {story.image ? (
+              <Image
+                className={styles.thumb}
+                src={story.image}
+                alt=""
+                width={88}
+                height={88}
+                sizes="44px"
+              />
+            ) : (
+              <span className={styles.thumb} aria-hidden="true" />
+            )}
+            <span className={styles.storyTitle} dir="auto">
+              {story.title}
+            </span>
+            {story.minutes ? (
+              <span className={styles.minutes}>{text.minutes(story.minutes)}</span>
+            ) : null}
           </li>
         ))}
       </ul>
@@ -180,6 +236,7 @@ function IssueStack({
   reduced: boolean
   compact?: boolean
 }) {
+  const text = useContext(TextContext)
   const issues = (
     delivered ? [publication.upcoming, ...publication.recent] : publication.recent
   ).slice(0, 3)
@@ -199,7 +256,7 @@ function IssueStack({
               className={styles.issue}
               data-depth={depth}
               aria-hidden={depth > 0 ? true : undefined}
-              aria-label={depth === 0 ? `${publication.name}, issue ${issue.number}` : undefined}
+              aria-label={depth === 0 ? text.issueLabel(publication.name, issue.number) : undefined}
               custom={placement}
               variants={stackVariants}
               initial="away"
@@ -227,6 +284,7 @@ function Readers({
   done: boolean
   reduced: boolean
 }) {
+  const text = useContext(TextContext)
   return (
     <div className={styles.readers}>
       <span className={styles.faces} aria-hidden="true">
@@ -238,7 +296,7 @@ function Readers({
         <span className={styles.count}>
           <AnimatedCounter value={readers.count + (done ? 1 : 0)} />
         </span>{' '}
-        readers
+        {text.readers}
         <AnimatePresence initial={false}>
           {/* The phrase opens its own width on the no-overshoot spring, so the centred line glides instead of jumping sideways. */}
           {done && (
@@ -261,7 +319,7 @@ function Readers({
                     }
               }
             >
-              , including you
+              {text.includingYou}
             </motion.span>
           )}
         </AnimatePresence>
@@ -288,10 +346,12 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
       readers = newsletterReaders,
       publication = newsletterPublication,
       onSubscribe,
+      text: textProp,
       className,
     },
     ref,
   ) {
+    const text = useMemo(() => ({ ...DEFAULT_TEXT, ...textProp }), [textProp])
     const id = useId()
     const reduced = !!useReducedMotion()
     const [email, setEmail] = useState('')
@@ -323,7 +383,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
       event.preventDefault()
       if (busy.current || phase !== 'idle') return
       setTried(true)
-      const found = validate(email)
+      const found = validate(email, text)
       setProblem(found)
       if (found) {
         shake()
@@ -341,7 +401,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
         setPhase('done')
       } catch {
         setPhase('idle')
-        setProblem({ kind: 'failed', text: MESSAGES.failed })
+        setProblem({ kind: 'failed', text: text.failed })
         shake()
       } finally {
         busy.current = false
@@ -375,14 +435,14 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
       ),
       retry: (
         <>
-          Try again
+          {text.retry}
           <ArrowRight size={16} strokeWidth={1.75} aria-hidden="true" />
         </>
       ),
       sending: (
         <>
           <span className={styles.spinner} aria-hidden="true" />
-          Subscribing
+          {text.sending}
         </>
       ),
       done: (
@@ -404,12 +464,12 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
               />
             </svg>
           </span>
-          Subscribed
+          {text.subscribed}
         </>
       ),
     }
 
-    const doneText = 'Check your inbox to confirm.'
+    const doneText = text.done
     const note = (
       <>
         {privacyNote}
@@ -429,10 +489,10 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
         {privacyNote}
         {privacyLink && ` ${privacyLink.label}`}
       </>,
-      `${doneText} Use a different email`,
-      MESSAGES.empty,
-      MESSAGES.format,
-      MESSAGES.failed,
+      `${doneText} ${text.again}`,
+      text.empty,
+      text.format,
+      text.failed,
     ]
     const form = (
       <form className={styles.form} onSubmit={submit} noValidate aria-label={title ?? copy.title}>
@@ -443,7 +503,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
           data-done={done ? '' : undefined}
         >
           <label htmlFor={`${id}-email`} className={styles.srOnly}>
-            Email address
+            {text.emailLabel}
           </label>
           <input
             ref={input}
@@ -464,12 +524,12 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
             onBlur={() => {
               if (email.trim() && !tried && phase === 'idle') {
                 setTried(true)
-                setProblem(validate(email))
+                setProblem(validate(email, text))
               }
             }}
             onChange={(event) => {
               setEmail(event.target.value)
-              if (tried) setProblem(validate(event.target.value))
+              if (tried) setProblem(validate(event.target.value, text))
               else if (problem) setProblem(null)
             }}
           />
@@ -489,7 +549,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
                   {key === 'done' ? (
                     <>
                       <span className={styles.check} />
-                      Subscribed
+                      {text.subscribed}
                     </>
                   ) : (
                     labels[key]
@@ -539,9 +599,9 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
                 (done ? (
                   <>
                     {doneText}
-                    <span className={styles.srOnly}> The link went to {sentTo}.</span>{' '}
+                    <span className={styles.srOnly}> {text.sentTo(sentTo)}</span>{' '}
                     <button ref={again} type="button" className={styles.textButton} onClick={reset}>
-                      Use a different email
+                      {text.again}
                     </button>
                   </>
                 ) : (
@@ -557,66 +617,70 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
 
     if (variant === 'card') {
       return (
-        <section ref={ref} className={root} data-variant="card" aria-labelledby={`${id}-title`}>
-          {/* The shell spans the section so a host layout can set its gutter without reaching into the card. */}
-          <div className={styles.cardShell}>
-            <div className={styles.card}>
-              {publication && (
-                <div className={styles.tray}>
+        <TextContext.Provider value={text}>
+          <section ref={ref} className={root} data-variant="card" aria-labelledby={`${id}-title`}>
+            {/* The shell spans the section so a host layout can set its gutter without reaching into the card. */}
+            <div className={styles.cardShell}>
+              <div className={styles.card}>
+                {publication && (
+                  <div className={styles.tray}>
+                    <IssueStack
+                      publication={publication}
+                      delivered={done}
+                      to={sentTo}
+                      reduced={reduced}
+                      compact
+                    />
+                  </div>
+                )}
+                <div className={styles.cardBody}>
+                  <h2 id={`${id}-title`} className={styles.cardTitle}>
+                    {title ?? copy.title}
+                  </h2>
+                  <p className={styles.description}>{description ?? copy.description}</p>
+                  {form}
+                  {readers && <Readers readers={readers} done={done} reduced={reduced} />}
+                </div>
+              </div>
+            </div>
+          </section>
+        </TextContext.Provider>
+      )
+    }
+
+    return (
+      <TextContext.Provider value={text}>
+        <section
+          ref={ref}
+          className={root}
+          data-variant="inline"
+          data-aside={publication || readers ? '' : undefined}
+          aria-labelledby={`${id}-title`}
+        >
+          <div className={styles.inline}>
+            <div className={styles.intro}>
+              <h2 id={`${id}-title`} className={styles.title}>
+                {title ?? copy.title}
+              </h2>
+              <p className={styles.description}>{description ?? copy.description}</p>
+              {form}
+            </div>
+            {(publication || readers) && (
+              <div className={styles.aside}>
+                {publication && (
                   <IssueStack
                     publication={publication}
                     delivered={done}
                     to={sentTo}
                     reduced={reduced}
-                    compact
                   />
-                </div>
-              )}
-              <div className={styles.cardBody}>
-                <h2 id={`${id}-title`} className={styles.cardTitle}>
-                  {title ?? copy.title}
-                </h2>
-                <p className={styles.description}>{description ?? copy.description}</p>
-                {form}
+                )}
                 {readers && <Readers readers={readers} done={done} reduced={reduced} />}
               </div>
-            </div>
+            )}
           </div>
         </section>
-      )
-    }
-
-    return (
-      <section
-        ref={ref}
-        className={root}
-        data-variant="inline"
-        data-aside={publication || readers ? '' : undefined}
-        aria-labelledby={`${id}-title`}
-      >
-        <div className={styles.inline}>
-          <div className={styles.intro}>
-            <h2 id={`${id}-title`} className={styles.title}>
-              {title ?? copy.title}
-            </h2>
-            <p className={styles.description}>{description ?? copy.description}</p>
-            {form}
-          </div>
-          {(publication || readers) && (
-            <div className={styles.aside}>
-              {publication && (
-                <IssueStack
-                  publication={publication}
-                  delivered={done}
-                  to={sentTo}
-                  reduced={reduced}
-                />
-              )}
-              {readers && <Readers readers={readers} done={done} reduced={reduced} />}
-            </div>
-          )}
-        </div>
-      </section>
+      </TextContext.Provider>
     )
   },
 )

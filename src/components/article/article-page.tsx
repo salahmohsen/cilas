@@ -35,6 +35,7 @@ import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { resolveCardStacks } from '@/api/card-stacks.api'
 import { resolveMentions } from '@/api/mentions.api'
 import { MentionLink } from '@/components/article/mention-link'
+import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
@@ -466,6 +467,8 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                 }))}
               />
             )}
+
+            {!preview && <NewsletterSignupEnd locale={locale} />}
           </article>
         </div>
       </div>

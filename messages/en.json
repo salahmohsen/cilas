@@ -633,5 +633,22 @@
     "failed": "Sign-in did not work. Try again.",
     "showPassword": "Show password",
     "hidePassword": "Hide password"
+  },
+  "NewsletterSignup": {
+    "title": "Get the CILAS newsletter",
+    "description": "New courses, open calls and articles from CILAS, in your inbox.",
+    "privacy": "A few times a year. Unsubscribe with one click.",
+    "name": "CILAS",
+    "next": "Next issue",
+    "nextSubject": "New at CILAS",
+    "emailLabel": "Email address",
+    "retry": "Try again",
+    "sending": "Subscribing",
+    "again": "Use a different email",
+    "sentTo": "Signed up as {email}.",
+    "issue": "Issue {number}",
+    "issueLabel": "{name}, issue {number}",
+    "to": "To",
+    "minutes": "{minutes} min"
   }
 }

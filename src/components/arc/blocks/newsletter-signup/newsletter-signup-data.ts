@@ -3,8 +3,10 @@ import { avatar, photo, type PersonId, type PhotoId } from '../../lib/media'
 /** One story teased in an issue. `image` is a small square-cropped thumbnail. */
 export interface NewsletterStory {
   title: string
-  image: string
-  minutes: number
+  /** Without one the thumbnail is a plain tile. */
+  image?: string | null
+  /** Read time; left out for things that are not read, like a course. */
+  minutes?: number | null
 }
 
 /** One issue of the newsletter, as it appears on the stack. */

@@ -44,7 +44,13 @@ export function RegisterBar({
   }, [])
 
   return (
-    <div aria-hidden={!shown || undefined} className="course-register" data-shown={shown || undefined} data-variant={variant} inert={!shown}>
+    <div
+      aria-hidden={!shown || undefined}
+      className="course-register"
+      data-shown={shown || undefined}
+      data-variant={variant}
+      inert={!shown}
+    >
       <div className="min-w-0">
         <span className="course-status" data-open>
           {status}

@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
 
+import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
@@ -132,7 +133,13 @@ export default async function CoursePage({ params }: Params) {
   })
 
   if (!isPreview) {
-    return <CourseView course={course} related={related} />
+    return (
+      <CourseView
+        after={<NewsletterSignupEnd locale={locale as 'en' | 'ar'} />}
+        course={course}
+        related={related}
+      />
+    )
   }
 
   /*
