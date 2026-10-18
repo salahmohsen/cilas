@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { isAdmin, isAdminOrOwn, ownsViaPerson } from '@/access'
+import { isAdmin, readEnrollments } from '@/access'
 
 /**
  * A person's place in one course (CONTEXT.md). Joining a programme's
@@ -13,7 +13,8 @@ export const Enrollments: CollectionConfig = {
     defaultColumns: ['person', 'course', 'status', 'slot'],
   },
   access: {
-    read: isAdminOrOwn(ownsViaPerson),
+    // A fellow also reads the enrollments in the courses they teach.
+    read: readEnrollments,
     create: isAdmin,
     update: isAdmin,
     delete: isAdmin,
@@ -41,8 +42,8 @@ export const Enrollments: CollectionConfig = {
       admin: { description: 'Which group they attend, e.g. "evening".' },
     },
     {
-      // Narratives in lieu of grades. Only admins and the student can read
-      // enrollments at all.
+      // Narratives in lieu of grades. Only admins, the student and the
+      // course's fellows can read enrollments at all.
       name: 'assessment',
       type: 'richText',
       localized: true,

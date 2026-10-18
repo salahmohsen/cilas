@@ -14,6 +14,7 @@ import {
   isAdminOrOwnVersions,
   isAdminOrOwnWhile,
   isAdminUser,
+  ownList,
   ownsViaAuthors,
   personOf,
   readTiers,
@@ -145,6 +146,8 @@ export const Articles: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'authors', 'review.status', 'tier'],
+    // A non-admin lists the articles they wrote, not every public one.
+    baseFilter: ownList(ownsViaAuthors),
     // Through /api/preview, which checks the editor and turns on draft mode,
     // as courses do.
     livePreview: {

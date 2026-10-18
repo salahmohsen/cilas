@@ -2,15 +2,22 @@ import type { Access, Where } from 'payload'
 import { describe, expect, it } from 'vitest'
 
 import {
+  adminPublishes,
+  adminViewOf,
   canAuthor,
+  canProposePublication,
   isAdminOrOwn,
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
   isAdminOrOwnWhile,
+  ownList,
   ownsViaAuthors,
+  ownsViaEditors,
   ownsViaFellows,
   ownsViaPerson,
   publishedOrAdmin,
+  publishedOrOwn,
+  readEnrollments,
   readTiers,
 } from '@/access'
 import type { User } from '@/payload-types'
@@ -195,5 +202,115 @@ describe('isAdminOrOwnWhile', () => {
 
   it('refuses an account with no person', () => {
     expect(run(rule, user(['member']))).toBe(false)
+  })
+})
+
+describe('adminViewOf', () => {
+  it.each([
+    [['super_admin'], 'admin'],
+    [['admin', 'fellow'], 'admin'],
+    [['member', 'fellow'], 'fellow'],
+    [['member'], 'student'],
+    [['non_degree_seeking'], 'student'],
+    [[], null],
+  ] as const)('gives %j the %s view', (roles, view) => {
+    expect(adminViewOf(user([...roles]))).toBe(view)
+  })
+
+  it('gives anonymous visitors no view', () => {
+    expect(adminViewOf(null)).toBeNull()
+  })
+})
+
+describe('adminPublishes', () => {
+  const rule = adminPublishes(() => true)
+  const publish = (u: User | null) =>
+    rule({ req: { user: u }, data: { _status: 'published' } } as never)
+
+  it('refuses a non-admin publish', () => {
+    expect(publish(user(['fellow'], { person: 42 }))).toBe(false)
+  })
+
+  it('lets an admin publish', () => {
+    expect(publish(user(['admin']))).toBe(true)
+  })
+
+  it('leaves draft saves to the wrapped rule', () => {
+    expect(rule({ req: { user: user(['fellow']) }, data: { _status: 'draft' } } as never)).toBe(
+      true,
+    )
+    expect(run(rule, user(['fellow']))).toBe(true)
+  })
+})
+
+describe('readEnrollments', () => {
+  it('lets admins read every enrollment', () => {
+    expect(run(readEnrollments, user(['admin']))).toBe(true)
+  })
+
+  it('lets a student read only their own', () => {
+    expect(run(readEnrollments, user(['member'], { person: 7 }))).toEqual({
+      person: { equals: 7 },
+    })
+  })
+
+  it('lets a fellow also read the enrollments in courses they teach', () => {
+    expect(run(readEnrollments, user(['member', 'fellow'], { person: 42 }))).toEqual({
+      or: [{ person: { equals: 42 } }, { 'course.fellows': { contains: 42 } }],
+    })
+  })
+
+  it('refuses an account with no person', () => {
+    expect(run(readEnrollments, user(['fellow']))).toBe(false)
+  })
+})
+
+describe('ownList', () => {
+  const filter = ownList(ownsViaFellows)
+  const list = (u: User | null) => filter({ req: { user: u } } as never)
+
+  it('does not filter for admins', () => {
+    expect(list(user(['admin']))).toBeNull()
+  })
+
+  it('lists only what a fellow owns', () => {
+    expect(list(user(['fellow'], { person: 42 }))).toEqual({ fellows: { contains: 42 } })
+  })
+
+  it('lists nothing for an account with no person', () => {
+    expect(list(user(['fellow']))).toEqual({ id: { equals: 0 } })
+  })
+})
+
+describe('publishedOrOwn', () => {
+  const rule = publishedOrOwn(ownsViaEditors)
+  const published = { _status: { equals: 'published' } }
+
+  it('shows anonymous visitors what is published', () => {
+    expect(run(rule, null)).toEqual(published)
+  })
+
+  it('also shows an editor their own drafts', () => {
+    expect(run(rule, user(['member'], { person: 7 }))).toEqual({
+      or: [published, { editors: { contains: 7 } }],
+    })
+  })
+
+  it('lets admins read everything', () => {
+    expect(run(rule, user(['admin']))).toBe(true)
+  })
+})
+
+describe('canProposePublication', () => {
+  it.each(['member', 'non_degree_seeking'] as const)('lets a linked %s propose', (role) => {
+    expect(run(canProposePublication, user([role], { person: 7 }))).toBe(true)
+  })
+
+  it('refuses a fellow', () => {
+    expect(run(canProposePublication, user(['member', 'fellow'], { person: 7 }))).toBe(false)
+  })
+
+  it('refuses a student with no person', () => {
+    expect(run(canProposePublication, user(['member']))).toBe(false)
   })
 })

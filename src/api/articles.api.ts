@@ -1,8 +1,15 @@
 import type { Payload, Where } from 'payload'
 
-import type { Article, Media, Publication } from '@/payload-types'
+import type { Article, Media, Publication, User } from '@/payload-types'
 
 export type Locale = 'en' | 'ar'
+
+/**
+ * Who is reading. Null is an anonymous visitor: the cached pages read as one,
+ * so `community` articles never reach them. The signed-in pages pass the
+ * account, and access rules then add what it may read.
+ */
+export type Reader = User | null
 
 const otherLocale = (locale: Locale): Locale => (locale === 'ar' ? 'en' : 'ar')
 
@@ -13,7 +20,11 @@ const otherLocale = (locale: Locale): Locale => (locale === 'ar' ? 'en' : 'ar')
  * the site language falls back to the other language (CONTEXT.md, content
  * language).
  */
-export const getPublishedArticles = async (payload: Payload, locale: Locale = 'en') =>
+export const getPublishedArticles = async (
+  payload: Payload,
+  locale: Locale = 'en',
+  user: Reader = null,
+) =>
   payload.find({
     collection: 'articles',
     where: { _status: { equals: 'published' } },
@@ -23,6 +34,7 @@ export const getPublishedArticles = async (payload: Payload, locale: Locale = 'e
     locale,
     fallbackLocale: otherLocale(locale),
     overrideAccess: false,
+    user,
   })
 
 const hasBody = (a?: Pick<Article, 'body'> | null): boolean => Boolean(a?.body?.root?.children?.length)
@@ -44,12 +56,13 @@ export type ArticleReading = {
  * One article as a visitor reads it. The page stays in the site language;
  * when the article has no text in it, its body (and title) come from its
  * content language. In preview (draft mode) the latest draft is read with
- * access bypassed.
+ * access bypassed; otherwise access rules apply, so a `community` article
+ * opens only for a signed-in reader.
  */
 export const getArticleForReading = async (
   payload: Payload,
   slug: string,
-  { locale, preview = false }: { locale: Locale; preview?: boolean },
+  { locale, preview = false, user = null }: { locale: Locale; preview?: boolean; user?: Reader },
 ): Promise<ArticleReading | undefined> => {
   const read = (l: Locale) =>
     payload
@@ -63,7 +76,9 @@ export const getArticleForReading = async (
         locale: l,
         fallbackLocale: false,
         draft: preview,
+        // The Local API skips access rules unless told otherwise.
         overrideAccess: preview,
+        user,
       })
       .then((r) => r.docs[0])
 
@@ -98,6 +113,7 @@ export const getRelatedArticles = async (
   article: Article,
   locale: Locale,
   limit = 3,
+  user: Reader = null,
 ): Promise<Article[]> => {
   const idOf = (v: number | { id: number }) => (typeof v === 'object' ? v.id : v)
   const picked: Article[] = []
@@ -113,6 +129,7 @@ export const getRelatedArticles = async (
       locale,
       fallbackLocale: otherLocale(locale),
       overrideAccess: false,
+      user,
     })
     const ordered = order ? order.map((id) => docs.find((d) => d.id === id)).filter((d): d is Article => Boolean(d)) : docs
     for (const doc of ordered) {
@@ -156,6 +173,7 @@ export const getArticleCollection = async (
   payload: Payload,
   article: Article,
   locale: Locale,
+  user: Reader = null,
 ): Promise<ArticleCollection | undefined> => {
   const idOf = (v: number | { id: number }) => (typeof v === 'object' ? v.id : v)
   const publication = (article.publications?.docs ?? []).find(
@@ -173,6 +191,7 @@ export const getArticleCollection = async (
     locale,
     fallbackLocale: otherLocale(locale),
     overrideAccess: false,
+    user,
   })
   const articles = order.map((id) => docs.find((d) => d.id === id)).filter((d): d is Article => Boolean(d))
   const foreword = publication.foreword ? idOf(publication.foreword) : undefined

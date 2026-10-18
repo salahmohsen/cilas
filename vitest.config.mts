@@ -17,10 +17,11 @@ export default defineConfig({
     ],
     server: {
       deps: {
-        // payload-theme ships extensionless relative imports (`from './theme'`).
+        // payload-theme and payload-oauth2 ship extensionless relative imports
+        // (`from './theme'`).
         // Next's bundler resolves those; vitest's native ESM loader does not, so
         // without inlining it every int test fails to import payload.config.
-        inline: ['payload-theme'],
+        inline: ['payload-theme', 'payload-oauth2'],
       },
     },
   },

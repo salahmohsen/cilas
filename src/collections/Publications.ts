@@ -1,10 +1,38 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
-import { anyone, isAdmin } from '@/access'
+import {
+  type Role,
+  adminPublishes,
+  canProposePublication,
+  isAdminOrOwnAndDraft,
+  isAdminOrOwnVersions,
+  isAdminUser,
+  ownList,
+  ownsViaEditors,
+  personOf,
+  publishedOrOwn,
+} from '@/access'
+import { toPersonIds } from '@/lib/fellow-role'
+import type { Publication } from '@/payload-types'
 import { creditsField } from '@/fields/credits'
 import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
 import { importFields } from '@/fields/import'
+
+/** As `addSelfAsAuthor` on articles: a student keeps access to what they propose. */
+export const addSelfAsEditor: CollectionBeforeValidateHook<Publication> = ({
+  data,
+  req,
+  operation,
+}) => {
+  const self = personOf(req.user)
+  if (!data || operation !== 'create' || isAdminUser(req.user) || self === null) return data
+  const editors = toPersonIds(data.editors)
+  return editors.includes(self) ? data : { ...data, editors: [...editors, self] }
+}
+
+/** Students edit their own drafts. Publishing is the admin's approval. */
+const OWNER_ROLES: { allow: Role[] } = { allow: ['member', 'non_degree_seeking'] }
 
 /**
  * An edited collection of articles, often produced by a course or lab
@@ -13,14 +41,21 @@ import { importFields } from '@/fields/import'
 export const Publications: CollectionConfig = {
   slug: 'publications',
   access: {
-    read: anyone,
-    create: isAdmin,
-    update: isAdmin,
-    delete: isAdmin,
+    read: publishedOrOwn(ownsViaEditors),
+    readVersions: isAdminOrOwnVersions(ownsViaEditors),
+    create: adminPublishes(canProposePublication),
+    update: adminPublishes(isAdminOrOwnAndDraft(ownsViaEditors, OWNER_ROLES)),
+    delete: isAdminOrOwnAndDraft(ownsViaEditors, OWNER_ROLES),
   },
+  versions: { drafts: true },
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'kind'],
+    defaultColumns: ['title', 'kind', 'editors', '_status'],
+    // A student lists the publications they edit, not every published one.
+    baseFilter: ownList(ownsViaEditors),
+  },
+  hooks: {
+    beforeValidate: [addSelfAsEditor],
   },
   fields: [
     {
@@ -33,6 +68,14 @@ export const Publications: CollectionConfig = {
         { label: 'Research', value: 'research' },
         { label: 'Other', value: 'other' },
       ],
+      admin: { position: 'sidebar' },
+    },
+    {
+      // Who may edit it before it is published. Not the printed credits.
+      name: 'editors',
+      type: 'relationship',
+      relationTo: 'people',
+      hasMany: true,
       admin: { position: 'sidebar' },
     },
     { name: 'cover_image', type: 'upload', relationTo: 'media', admin: { position: 'sidebar' } },

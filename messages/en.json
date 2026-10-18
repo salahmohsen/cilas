@@ -7,6 +7,7 @@
     "brand": "Cairo Institute of\nLiberal Arts and Sciences",
     "label": "CILAS main navigation",
     "signIn": "Sign in",
+    "dashboard": "Dashboard",
     "apply": "Apply",
     "study": {
       "label": "Study",
@@ -603,5 +604,21 @@
     "replyFact": "Replies by email, usually within a few days",
     "copyEmail": "Copy the email address",
     "copied": "Copied"
+  },
+  "Login": {
+    "metaTitle": "Sign in — CILAS",
+    "title": "Sign in to CILAS",
+    "intro": "Use your Google account or your email and password.",
+    "google": "Continue with Google",
+    "or": "or",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "forgot": "Forgot your password?",
+    "wrong": "The email or password is not correct.",
+    "googleRefused": "We could not sign you in with Google. Use the Google account with the same email as your CILAS account.",
+    "failed": "Sign-in did not work. Try again.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   }
 }

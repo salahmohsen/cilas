@@ -25,6 +25,11 @@ export const env = createEnv({
     // Optional: the Resend audience newsletter signups join (ADR 0005).
     RESEND_AUDIENCE_ID: z.string().min(1).optional(),
 
+    // Optional: "Continue with Google" on the login page. Without both, the
+    // button is hidden. Callback: <NEXT_PUBLIC_SERVER_URL>/api/users/oauth/google/callback
+    GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+    GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
+
     TYPESENSE_API_KEY: z.string().min(1).optional(),
     TYPESENSE_HOST: z.string().default('localhost'),
     TYPESENSE_PORT: z.coerce.number().default(8108),

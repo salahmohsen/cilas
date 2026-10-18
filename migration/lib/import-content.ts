@@ -347,6 +347,8 @@ export const importContent = async (payload: Payload, data: ArchiveContent): Pro
         credits: await creditRows(p.credits, p.legacy_url, 'en'),
         ...(p.license ? { license: p.license } : {}),
         ...(p.print_edition_url ? { print_edition_url: p.print_edition_url } : {}),
+        // Published works from the archive, as the articles above.
+        _status: 'published',
         legacy_url: p.legacy_url,
       },
     )

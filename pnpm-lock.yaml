@@ -110,6 +110,9 @@ importers:
       payload:
         specifier: 3.90.2
         version: 3.90.2(graphql@16.14.2)(typescript@5.7.3)
+      payload-oauth2:
+        specifier: ^1.0.21
+        version: 1.0.21(payload@3.90.2(graphql@16.14.2)(typescript@5.7.3))
       payload-theme:
         specifier: ^0.9.4
         version: 0.9.4(34e5e74ddb924a6ffbdff8dd1f85d644)
@@ -5572,6 +5575,12 @@ packages:
 
   pathe@2.0.3:
     resolution: {integrity: sha512-WUjGcAqP1gQacoQe+OBJsFA7Ld4DyXuUIjZ5cc75cLHvJ7dtNsTugphxIADwspS+AraAUePCKrSVtPLFj/F88w==}
+
+  payload-oauth2@1.0.21:
+    resolution: {integrity: sha512-YSdgiob3o/HN4od0n0FqMoZyENBC2z0YTPLT7DNtpbwUxCnP81Y5lHzIt1tYmGMzPYiA47pJLnsqT7z9UCyNbg==}
+    hasBin: true
+    peerDependencies:
+      payload: ^3
 
   payload-theme@0.9.4:
     resolution: {integrity: sha512-BvBk4NMzRVpAfbTLlSw8OpPnTJg4NJDY0P5ub6i9qfAMZg0T8XhVUTtFOKQu+F+NadJCdZY+g1EPbGM62T0CFw==}
@@ -12480,6 +12489,10 @@ snapshots:
   path-type@4.0.0: {}
 
   pathe@2.0.3: {}
+
+  payload-oauth2@1.0.21(payload@3.90.2(graphql@16.14.2)(typescript@5.7.3)):
+    dependencies:
+      payload: 3.90.2(graphql@16.14.2)(typescript@5.7.3)
 
   payload-theme@0.9.4(34e5e74ddb924a6ffbdff8dd1f85d644):
     dependencies:

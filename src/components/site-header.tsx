@@ -29,6 +29,22 @@ export function CILASSiteHeader() {
     return () => observer.disconnect()
   }, [])
 
+  // The header is cached for everyone, so it asks who is signed in: a
+  // signed-in account gets its dashboard instead of "Sign in".
+  const [signedIn, setSignedIn] = useState(false)
+  useEffect(() => {
+    let live = true
+    fetch('/api/users/me', { credentials: 'include' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((body: { user?: unknown } | null) => {
+        if (live) setSignedIn(Boolean(body?.user))
+      })
+      .catch(() => {})
+    return () => {
+      live = false
+    }
+  }, [])
+
   // Apply shows only while something is open, and leads to it (see /api/open).
   const [applyPath, setApplyPath] = useState<string | null>(null)
   useEffect(() => {
@@ -133,7 +149,11 @@ export function CILASSiteHeader() {
       items={items}
       label={t('label')}
       primaryAction={applyPath ? { label: t('apply'), href: href(applyPath) } : null}
-      secondaryAction={{ label: t('signIn'), href: '/admin' }}
+      secondaryAction={
+        signedIn
+          ? { label: t('dashboard'), href: '/admin' }
+          : { label: t('signIn'), href: href('/login') }
+      }
       utilities={
         <>
           <SiteSearch />

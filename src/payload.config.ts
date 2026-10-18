@@ -35,10 +35,12 @@ import type {
 import { s3Storage } from '@payloadcms/storage-s3'
 import { payloadTheme } from 'payload-theme'
 
-import { anyone, hasRole, isAdmin } from './access'
+import { anyone, isAdmin } from './access'
 import { env } from './env'
 import { pathOf } from './lib/paths'
 import { SEO_COLLECTIONS, seoDefaults, type SeoCollection } from './lib/seo'
+import { googleAuth } from './plugins/google-auth'
+import { roleNav } from './plugins/role-nav'
 import { typesenseSearch } from './plugins/typesense'
 
 const filename = fileURLToPath(import.meta.url)
@@ -186,10 +188,7 @@ export default buildConfig({
       overrides: {
         // The default lets any signed-in account rewrite where old links go.
         access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
-        admin: {
-          group: 'Site',
-          hidden: ({ user }) => !hasRole(user, 'admin', 'super_admin'),
-        },
+        admin: { group: 'Site' },
       },
     }),
     storage,
@@ -197,5 +196,8 @@ export default buildConfig({
     // Site search: bilingual Typesense collections of the public courses,
     // articles and people. Off without TYPESENSE_API_KEY (builds, tests).
     typesenseSearch(),
+    googleAuth(),
+    // What each role sees in the admin nav. Last, so it covers plugin collections.
+    roleNav(),
   ],
 })

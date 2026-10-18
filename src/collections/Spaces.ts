@@ -60,6 +60,5 @@ export const Spaces: CollectionConfig = {
   ],
   admin: {
     useAsTitle: 'name',
-    hidden: (ctx) => !ctx.user?.roles.includes('super_admin') && !ctx.user?.roles.includes('admin'),
   },
 }

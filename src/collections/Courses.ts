@@ -1,8 +1,10 @@
 import {
+  adminPublishes,
   canSetTier,
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
   isAdminOrSuperAdminOrFellow,
+  ownList,
   ownsViaFellows,
   readTiers,
 } from '@/access'
@@ -68,8 +70,9 @@ export const Courses: CollectionConfig = {
     read: readTiers(ownsViaFellows, { drafts: true }),
     // Without this, any signed-in account reads drafts via the versions endpoint.
     readVersions: isAdminOrOwnVersions(ownsViaFellows),
-    create: isAdminOrSuperAdminOrFellow,
-    update: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),
+    // A fellow saves drafts; an admin approves a course by publishing it.
+    create: adminPublishes(isAdminOrSuperAdminOrFellow),
+    update: adminPublishes(isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] })),
     delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),
   },
   versions: {
@@ -382,6 +385,8 @@ export const Courses: CollectionConfig = {
 
   admin: {
     useAsTitle: 'title',
+    // A fellow lists the courses they teach, not every public one.
+    baseFilter: ownList(ownsViaFellows),
     // The admin iframe loads this URL directly, so it must go through
     // /api/preview rather than the page itself: that route authenticates the
     // editor, enables draft mode, and only then redirects to the course, which

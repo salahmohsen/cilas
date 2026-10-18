@@ -1,4 +1,4 @@
-import type { Access, FieldAccess, Where } from 'payload'
+import type { Access, BaseFilter, FieldAccess, Where } from 'payload'
 import { appendVersionToQueryKey } from 'payload'
 import type { User } from '@/payload-types'
 
@@ -31,6 +31,19 @@ export const isAdminUser = (user: RoleHolder): boolean => hasRole(user, 'admin',
 export const isFellowUser = (user: RoleHolder): boolean => hasRole(user, 'fellow')
 
 /**
+ * Which admin panel an account gets, from the strongest role it holds. A
+ * fellow also holds `member`, so `fellow` is tested before `student`.
+ */
+export type AdminView = 'admin' | 'fellow' | 'student'
+
+export const adminViewOf = (user: RoleHolder): AdminView | null => {
+  if (isAdminUser(user)) return 'admin'
+  if (isFellowUser(user)) return 'fellow'
+  if (hasRole(user, 'member', 'non_degree_seeking')) return 'student'
+  return null
+}
+
+/**
  * The person a signed-in account acts as, or null when the account is not
  * linked. `person` arrives as an id, or populated when depth > 0.
  */
@@ -60,6 +73,10 @@ export const ownsViaFellows: Ownership = (user) => {
 export const ownsViaAuthors: Ownership = (user) => {
   const person = personOf(user)
   return person === null ? false : { authors: { contains: person } }
+}
+export const ownsViaEditors: Ownership = (user) => {
+  const person = personOf(user)
+  return person === null ? false : { editors: { contains: person } }
 }
 export const ownsViaPerson: Ownership = (user) => {
   const person = personOf(user)
@@ -147,9 +164,68 @@ export const isAdminOrOwnWhile =
     return owns ? { and: [owns, where] } : false
   }
 
+/**
+ * Wraps an access rule so only admins may publish. Payload asks the update
+ * (or create) rule with `_status: 'published'` to decide whether to show the
+ * Publish button, so a non-admin gets "Save draft" only, and the API refuses
+ * a publish from them as well.
+ */
+export const adminPublishes =
+  (access: Access): Access =>
+  (args) => {
+    const data = args.data as { _status?: unknown } | undefined
+    if (data?._status === 'published' && !isAdminUser(args.req.user)) return false
+    return access(args)
+  }
+
+/**
+ * Who may propose a publication: students (`member`, `non_degree_seeking`)
+ * and admins. A student needs a linked person, as with `canAuthor`.
+ */
+export const canProposePublication: Access = ({ req }) => {
+  if (isAdminUser(req.user)) return true
+  return adminViewOf(req.user) === 'student' && personOf(req.user) !== null
+}
+
+/** Enrollments a user may read: their own, and those in courses they teach. */
+export const readEnrollments: Access = ({ req }) => {
+  if (isAdminUser(req.user)) return true
+  const person = personOf(req.user)
+  if (person === null) return false
+  const own: Where = { person: { equals: person } }
+  return isFellowUser(req.user)
+    ? { or: [own, { 'course.fellows': { contains: person } }] }
+    : own
+}
+
+/**
+ * Admin list filter: a non-admin lists only the documents they own, not every
+ * public one they may read. The site keeps reading through `access.read`.
+ */
+export const ownList =
+  (owned: Ownership): BaseFilter =>
+  ({ req }) => {
+    if (!req.user || isAdminUser(req.user)) return null
+    // No linked person: own nothing. No row has id 0.
+    return owned(req.user) || { id: { equals: 0 } }
+  }
+
 /** For drafts-enabled collections with no tier: the public reads what is published. */
 export const publishedOrAdmin: Access = ({ req }) =>
   isAdminUser(req.user) || { _status: { equals: 'published' } }
+
+/**
+ * For drafts-enabled collections with an owner but no tier: the public reads
+ * what is published, an owner also their own drafts.
+ */
+export const publishedOrOwn =
+  (owned: Ownership): Access =>
+  ({ req }) => {
+    if (isAdminUser(req.user)) return true
+    const published: Where = { _status: { equals: 'published' } }
+    const owns = req.user ? owned(req.user) : false
+    return owns ? { or: [published, owns] } : published
+  }
 
 /**
  * Read rule for a tiered document, keyed on the `tier` field:
