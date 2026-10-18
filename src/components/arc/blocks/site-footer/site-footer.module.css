@@ -80,17 +80,16 @@
   display: grid;
   gap: var(--space-2);
 }
+/* Inline, not flex: a link that wraps (an address) keeps its arrow after the last word. */
 .link {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
+  display: inline-block;
   border: 0;
   padding: 2px 0;
   background: none;
   color: var(--text-secondary);
   font: inherit;
   font-size: var(--text-sm);
-  text-align: left;
+  text-align: start;
   text-decoration: none;
   cursor: pointer;
   transition: color var(--duration-fast) var(--ease-standard);
@@ -100,6 +99,9 @@
   color: var(--foreground);
 }
 .external {
+  display: inline;
+  margin-inline-start: 3px;
+  vertical-align: -1px;
   color: var(--text-muted);
   transition: transform var(--duration-fast) var(--ease-standard);
 }
