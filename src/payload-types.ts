@@ -143,10 +143,12 @@ export interface Config {
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('en' | 'ar') | ('en' | 'ar')[];
   globals: {
     'site-settings': SiteSetting;
+    'email-settings': EmailSetting;
     'llms-txt-settings': LlmsTxtSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
     'llms-txt-settings': LlmsTxtSettingsSelect<false> | LlmsTxtSettingsSelect<true>;
   };
   locale: 'en' | 'ar';
@@ -3070,6 +3072,77 @@ export interface SiteSetting {
   createdAt?: string | null;
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-settings".
+ */
+export interface EmailSetting {
+  id: number;
+  /**
+   * PNG or JPG, about 240 px wide. Outlook does not show WebP or SVG.
+   */
+  logo?: (number | null) | Media;
+  /**
+   * Button color, as #rrggbb.
+   */
+  accent?: string | null;
+  /**
+   * The sender name people see.
+   */
+  from_name?: string | null;
+  /**
+   * Where replies go. Empty: to the sending address.
+   */
+  reply_to?: string | null;
+  /**
+   * The small print at the end of each email.
+   */
+  footer?: string | null;
+  texts?: {
+    /**
+     * Placeholders: {name}, {email}, {title}. Leave a field empty to use the text shown in it.
+     */
+    acceptance?: {
+      subject?: string | null;
+      body?: string | null;
+      new_account?: string | null;
+      existing_account?: string | null;
+      button?: string | null;
+    };
+    /**
+     * Placeholder: {title}. Leave a field empty to use the text shown in it.
+     */
+    review?: {
+      submitted_subject?: string | null;
+      submitted?: string | null;
+      approved_subject?: string | null;
+      approved?: string | null;
+      changes_requested_subject?: string | null;
+      changes_requested?: string | null;
+      rejected_subject?: string | null;
+      rejected?: string | null;
+      note_label?: string | null;
+    };
+    /**
+     * Placeholder: {email}. Leave a field empty to use the text shown in it.
+     */
+    reset?: {
+      subject?: string | null;
+      body?: string | null;
+      button?: string | null;
+    };
+    /**
+     * Button and link labels in newsletter issues. Leave a field empty to use the text shown in it.
+     */
+    newsletter?: {
+      read?: string | null;
+      apply?: string | null;
+      unsubscribe?: string | null;
+    };
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Controls the content of /llms.txt and /llms-full.txt.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3109,6 +3182,60 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         question?: T;
         answer?: T;
         id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "email-settings_select".
+ */
+export interface EmailSettingsSelect<T extends boolean = true> {
+  logo?: T;
+  accent?: T;
+  from_name?: T;
+  reply_to?: T;
+  footer?: T;
+  texts?:
+    | T
+    | {
+        acceptance?:
+          | T
+          | {
+              subject?: T;
+              body?: T;
+              new_account?: T;
+              existing_account?: T;
+              button?: T;
+            };
+        review?:
+          | T
+          | {
+              submitted_subject?: T;
+              submitted?: T;
+              approved_subject?: T;
+              approved?: T;
+              changes_requested_subject?: T;
+              changes_requested?: T;
+              rejected_subject?: T;
+              rejected?: T;
+              note_label?: T;
+            };
+        reset?:
+          | T
+          | {
+              subject?: T;
+              body?: T;
+              button?: T;
+            };
+        newsletter?:
+          | T
+          | {
+              read?: T;
+              apply?: T;
+              unsubscribe?: T;
+            };
       };
   updatedAt?: T;
   createdAt?: T;

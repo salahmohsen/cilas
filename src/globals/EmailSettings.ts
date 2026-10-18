@@ -1,0 +1,88 @@
+import type { Field, GlobalConfig } from 'payload'
+
+import { isAdmin } from '@/access'
+import { DEFAULT_TEXTS } from '@/emails/settings'
+
+const HINTS: Record<string, string> = {
+  acceptance: 'Placeholders: {name}, {email}, {title}.',
+  review: 'Placeholder: {title}.',
+  reset: 'Placeholder: {email}.',
+  newsletter: 'Button and link labels in newsletter issues.',
+}
+
+const LABELS: Record<string, string> = {
+  acceptance: 'Application accepted',
+  review: 'Article review',
+  reset: 'Password reset',
+  newsletter: 'Newsletter',
+}
+
+/** One group per email; each field shows its default and is used when empty. */
+const textGroups: Field[] = Object.entries(DEFAULT_TEXTS).map(([group, fields]) => ({
+  name: group,
+  label: LABELS[group],
+  type: 'group',
+  admin: { description: `${HINTS[group]} Leave a field empty to use the text shown in it.` },
+  fields: Object.entries(fields).map(([name, fallback]): Field => {
+    const long = fallback.length > 60
+    return long
+      ? { name, type: 'textarea', admin: { placeholder: fallback, rows: 4 } }
+      : { name, type: 'text', admin: { placeholder: fallback } }
+  }),
+}))
+
+/**
+ * How CILAS's emails look and what they say: the newsletter and every
+ * transactional email. English only. Open the live preview to see the
+ * transactional emails with sample data.
+ */
+export const EmailSettings: GlobalConfig = {
+  slug: 'email-settings',
+  label: 'Email settings',
+  admin: {
+    group: 'Site',
+    livePreview: { url: '/api/email-preview?kind=messages' },
+  },
+  access: { read: isAdmin, update: isAdmin },
+  fields: [
+    {
+      type: 'tabs',
+      tabs: [
+        {
+          label: 'Brand',
+          fields: [
+            {
+              name: 'logo',
+              type: 'upload',
+              relationTo: 'media',
+              admin: { description: 'PNG or JPG, about 240 px wide. Outlook does not show WebP or SVG.' },
+            },
+            {
+              name: 'accent',
+              type: 'text',
+              admin: { placeholder: '#000000', description: 'Button color, as #rrggbb.' },
+              validate: (value: string | null | undefined) =>
+                !value || /^#[0-9a-f]{6}$/i.test(value) ? true : 'Write the color as #rrggbb.',
+            },
+            {
+              name: 'from_name',
+              type: 'text',
+              admin: { placeholder: 'CILAS', description: 'The sender name people see.' },
+            },
+            {
+              name: 'reply_to',
+              type: 'email',
+              admin: { description: 'Where replies go. Empty: to the sending address.' },
+            },
+            {
+              name: 'footer',
+              type: 'textarea',
+              admin: { rows: 3, description: 'The small print at the end of each email.' },
+            },
+          ],
+        },
+        { label: 'Texts', fields: [{ name: 'texts', type: 'group', fields: textGroups }] },
+      ],
+    },
+  ],
+}
