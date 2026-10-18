@@ -3,7 +3,7 @@
 import { forwardRef, useId, useLayoutEffect, useRef, useState } from 'react'
 import type { FormEvent, ReactNode } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { ArrowUpRight, Check } from 'lucide-react'
+import { ArrowUpRight, Check, Copyright } from 'lucide-react'
 import { Button } from '../../button/button'
 import SegmentedControl from '../../segmented-control/segmented-control'
 import { motionTokens } from '../../lib/motion-tokens'
@@ -397,7 +397,7 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
     <div className={styles.bottom}>
       <div className={styles.bottomStart}>
         <span className={styles.copyright}>
-          <span className={styles.copyMark}>©</span>
+          <Copyright className={styles.copyMark} role="img" aria-label="©" />
           <span>
             {year} {brand.name}
           </span>
@@ -463,7 +463,7 @@ export const SiteFooter = forwardRef<HTMLElement, SiteFooterProps>(function Site
         </div>
         <div className={styles.minimalRow}>
           <span className={styles.copyright}>
-            <span className={styles.copyMark}>©</span>
+            <Copyright className={styles.copyMark} role="img" aria-label="©" />
             <span>
               {year} {brand.name}. {tagline}
             </span>

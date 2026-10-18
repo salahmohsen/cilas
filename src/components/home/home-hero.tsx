@@ -110,7 +110,10 @@ export function HomeHero({
   }, [])
 
   return (
-    <section aria-labelledby="home-title" className="home-hero" ref={ref}>
+    // The script below sets the section's --hero-offset before React hydrates,
+    // so the client finds a style attribute the server never rendered; on
+    // purpose, and the effect above keeps it, so React need not warn.
+    <section aria-labelledby="home-title" className="home-hero" ref={ref} suppressHydrationWarning>
       <script dangerouslySetInnerHTML={{ __html: OFFSET_NOW }} />
       {scene}
       <div className="home-hero-inner">
