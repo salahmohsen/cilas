@@ -21,8 +21,12 @@
   top: calc(var(--site-header-height, 4rem) + 8%);
   right: 6%;
   width: min(36rem, 55vw);
-  height: auto;
+  aspect-ratio: 3;
   opacity: 0.75;
+}
+.bird {
+  position: absolute;
+  height: auto;
 }
 .water {
   position: absolute;
@@ -31,8 +35,14 @@
      copy, and the boat rides it. */
   bottom: 0;
   left: 0;
-  width: 100%;
   height: var(--water);
+  overflow: hidden;
+}
+/* A row starts one wavelength left of the edge, and rolls that far right. */
+.swell {
+  position: absolute;
+  top: 0;
+  left: calc(var(--length) * -1);
 }
 .track {
   position: absolute;
@@ -52,6 +62,7 @@
   }
 }
 .boat {
+  position: relative;
   /* It rocks about its keel. */
   transform-origin: 50% 95%;
 }
@@ -59,9 +70,14 @@
   width: 100%;
   height: auto;
 }
+/* The hull lies over the sail's frame, in the same place. */
+.hullFrame {
+  position: absolute;
+  inset: 0;
+}
 .sail {
-  transform-box: fill-box;
-  transform-origin: 0% 100%;
+  /* It leans from the foot of the yard. */
+  transform-origin: 4% 88%;
 }
 
 /* Far rows of sea are fainter. The water under each line is the page's own
@@ -110,6 +126,7 @@
   }
   .swell {
     animation: roll calc(14s - var(--i) * 2.5s) linear infinite;
+    will-change: translate;
   }
   .bird {
     animation: glide calc(6s + var(--i) * 0.7s) ease-in-out calc(1.6s + var(--i) * 0.3s) infinite;

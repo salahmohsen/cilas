@@ -4,7 +4,7 @@ import { useLivePreview } from '@payloadcms/live-preview-react'
 import React from 'react'
 
 import { CourseView, type RelatedCourse } from './CourseView'
-import { env } from '@/env'
+import { clientEnv as env } from '@/env.client'
 import type { Course } from '@/payload-types'
 
 /**

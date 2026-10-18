@@ -4,7 +4,7 @@ import { RefreshRouteOnSave as PayloadLivePreview } from '@payloadcms/live-previ
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-import { env } from '@/env'
+import { clientEnv as env } from '@/env.client'
 
 /**
  * Re-renders the route when Payload autosaves, so the live-preview iframe

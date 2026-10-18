@@ -12,6 +12,7 @@ import { LogoMarquee } from '@/components/arc/blocks/logo-marquee/logo-marquee'
 import { ContactForm } from '@/components/contact/contact-form'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { HomeHero } from '@/components/home/home-hero'
+import { HomeScene } from '@/components/home/home-scene'
 import { HomeArticles } from '@/components/home/home-articles'
 import { OpenNow } from '@/components/home/open-now'
 import { Link } from '@/i18n/navigation'
@@ -80,6 +81,7 @@ export default async function HomePage({ params }: Props) {
     <>
       <HomeHero
         locale={locale}
+        scene={<HomeScene />}
         numbers={{
           title: t('statsTitle'),
           stats: [
