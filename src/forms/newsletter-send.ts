@@ -1,22 +1,13 @@
 import type { PayloadHandler, PayloadRequest } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { newsletterMail, type Issue } from '@/emails/newsletter'
+import { issueForEmail } from '@/emails/issue'
+import { newsletterMail } from '@/emails/newsletter'
 import { getEmailSettings } from '@/emails/settings'
 import { env } from '@/env'
 import { sendBroadcast } from '@/lib/broadcast'
 
-/** The issue's latest draft, its picks populated for the cards. */
-const issueOf = async (req: PayloadRequest, id: number) =>
-  (await req.payload.findByID({
-    collection: 'newsletters',
-    id,
-    depth: 2,
-    draft: true,
-    locale: 'en',
-    overrideAccess: true,
-    req,
-  })) as Issue & { title: string; sent_at?: string | null }
+const issueOf = (req: PayloadRequest, id: number) => issueForEmail(req.payload, id, req)
 
 const guarded =
   (run: (req: PayloadRequest, id: number) => Promise<Response>): PayloadHandler =>

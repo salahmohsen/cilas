@@ -1590,29 +1590,98 @@ export interface Newsletter {
     [k: string]: unknown;
   } | null;
   /**
-   * Courses, articles and the Bridge to show as cards, in this order. 8 or fewer keeps the email under Gmail’s size limit.
+   * After the intro, in this order. Keep the email short: Gmail cuts emails over about 100 KB, so use 8 picks or fewer and a few gallery images.
    */
-  picks?:
-    | {
-        item:
-          | {
-              relationTo: 'courses';
-              value: number | Course;
-            }
-          | {
-              relationTo: 'articles';
-              value: number | Article;
-            }
-          | {
-              relationTo: 'programmes';
-              value: number | Programme;
+  sections?:
+    | (
+        | {
+            heading?: string | null;
+            items?:
+              | {
+                  /**
+                   * A course, an article, an article collection, a cycle (with its courses), an event or the Bridge.
+                   */
+                  item:
+                    | {
+                        relationTo: 'courses';
+                        value: number | Course;
+                      }
+                    | {
+                        relationTo: 'articles';
+                        value: number | Article;
+                      }
+                    | {
+                        relationTo: 'publications';
+                        value: number | Publication;
+                      }
+                    | {
+                        relationTo: 'cycles';
+                        value: number | Cycle;
+                      }
+                    | {
+                        relationTo: 'events';
+                        value: number | Event;
+                      }
+                    | {
+                        relationTo: 'programmes';
+                        value: number | Programme;
+                      };
+                  /**
+                   * One line under the card, e.g. “Applications close 3 Nov”.
+                   */
+                  note?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'picks';
+          }
+        | {
+            heading?: string | null;
+            columns?: ('2' | '3') | null;
+            images?:
+              | {
+                  image: number | Media;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'gallery';
+          }
+        | {
+            text: string;
+            /**
+             * Who said it, e.g. “Ghosoun Ismail, fellow”.
+             */
+            attribution?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'quote';
+          }
+        | {
+            body: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
             };
-        /**
-         * One line under the card, e.g. “Applications close 3 Nov”.
-         */
-        note?: string | null;
-        id?: string | null;
-      }[]
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+      )[]
     | null;
   sent_at?: string | null;
   broadcast_id?: string | null;
@@ -2669,12 +2738,53 @@ export interface NewslettersSelect<T extends boolean = true> {
   cover_image?: T;
   preheader?: T;
   body?: T;
-  picks?:
+  sections?:
     | T
     | {
-        item?: T;
-        note?: T;
-        id?: T;
+        picks?:
+          | T
+          | {
+              heading?: T;
+              items?:
+                | T
+                | {
+                    item?: T;
+                    note?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        gallery?:
+          | T
+          | {
+              heading?: T;
+              columns?: T;
+              images?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        quote?:
+          | T
+          | {
+              text?: T;
+              attribution?: T;
+              id?: T;
+              blockName?: T;
+            };
+        text?:
+          | T
+          | {
+              body?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   sent_at?: T;
   broadcast_id?: T;
@@ -3142,6 +3252,10 @@ export interface EmailSetting {
    */
   tagline?: string | null;
   /**
+   * The last line of each newsletter, above the footer.
+   */
+  signoff?: string | null;
+  /**
    * The small print under the social icons: the address, for one. The icons come from Site settings → Contact.
    */
   footer?: string | null;
@@ -3246,6 +3360,7 @@ export interface EmailSettingsSelect<T extends boolean = true> {
   from_name?: T;
   reply_to?: T;
   tagline?: T;
+  signoff?: T;
   footer?: T;
   texts?:
     | T

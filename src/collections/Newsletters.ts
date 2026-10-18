@@ -44,29 +44,85 @@ export const Newsletters: CollectionConfig = {
     },
     { name: 'body', type: 'richText', localized: true, admin: { description: 'The intro, above the picks.' } },
     {
-      name: 'picks',
-      type: 'array',
-      labels: { singular: 'Pick', plural: 'Picks' },
+      name: 'sections',
+      type: 'blocks',
       admin: {
         description:
-          'Courses, articles and the Bridge to show as cards, in this order. 8 or fewer keeps the email under Gmail’s size limit.',
+          'After the intro, in this order. Keep the email short: Gmail cuts emails over about 100 KB, so use 8 picks or fewer and a few gallery images.',
       },
-      fields: [
+      blocks: [
         {
-          name: 'item',
-          type: 'relationship',
-          relationTo: ['courses', 'articles', 'programmes'],
-          required: true,
-          // Only what a visitor can open: published and public, or the Bridge.
-          filterOptions: ({ relationTo }): Where =>
-            relationTo === 'programmes'
-              ? { kind: { equals: 'bridge' } }
-              : { and: [{ _status: { equals: 'published' } }, { tier: { equals: 'public' } }] },
+          slug: 'picks',
+          labels: { singular: 'Picks', plural: 'Picks' },
+          fields: [
+            { name: 'heading', type: 'text', admin: { placeholder: 'In this issue' } },
+            {
+              name: 'items',
+              type: 'array',
+              labels: { singular: 'Pick', plural: 'Picks' },
+              fields: [
+                {
+                  name: 'item',
+                  type: 'relationship',
+                  relationTo: ['courses', 'articles', 'publications', 'cycles', 'events', 'programmes'],
+                  required: true,
+                  // Only what a visitor can open.
+                  filterOptions: ({ relationTo }): Where | true => {
+                    if (relationTo === 'programmes') return { kind: { equals: 'bridge' } }
+                    if (relationTo === 'cycles') return true
+                    if (relationTo === 'publications') return { _status: { equals: 'published' } }
+                    return { and: [{ _status: { equals: 'published' } }, { tier: { equals: 'public' } }] }
+                  },
+                  admin: {
+                    description: 'A course, an article, an article collection, a cycle (with its courses), an event or the Bridge.',
+                  },
+                },
+                {
+                  name: 'note',
+                  type: 'text',
+                  admin: { description: 'One line under the card, e.g. “Applications close 3 Nov”.' },
+                },
+              ],
+            },
+          ],
         },
         {
-          name: 'note',
-          type: 'text',
-          admin: { description: 'One line under the card, e.g. “Applications close 3 Nov”.' },
+          slug: 'gallery',
+          labels: { singular: 'Gallery', plural: 'Galleries' },
+          fields: [
+            { name: 'heading', type: 'text' },
+            {
+              name: 'columns',
+              type: 'select',
+              defaultValue: '2',
+              options: [
+                { label: '2 columns', value: '2' },
+                { label: '3 columns (one column on phones)', value: '3' },
+              ],
+            },
+            {
+              name: 'images',
+              type: 'array',
+              minRows: 1,
+              fields: [
+                { name: 'image', type: 'upload', relationTo: 'media', required: true },
+                { name: 'caption', type: 'text' },
+              ],
+            },
+          ],
+        },
+        {
+          slug: 'quote',
+          labels: { singular: 'Quote', plural: 'Quotes' },
+          fields: [
+            { name: 'text', type: 'textarea', required: true },
+            { name: 'attribution', type: 'text', admin: { description: 'Who said it, e.g. “Ghosoun Ismail, fellow”.' } },
+          ],
+        },
+        {
+          slug: 'text',
+          labels: { singular: 'Text', plural: 'Texts' },
+          fields: [{ name: 'body', type: 'richText', required: true }],
         },
       ],
     },

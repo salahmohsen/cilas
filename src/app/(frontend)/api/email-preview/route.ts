@@ -3,7 +3,8 @@ import { headers as getHeaders } from 'next/headers.js'
 import { getPayload } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { newsletterMail, type Issue } from '@/emails/newsletter'
+import { issueForEmail } from '@/emails/issue'
+import { newsletterMail } from '@/emails/newsletter'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail, resetMail, reviewMail } from '@/emails/transactional'
 import { env } from '@/env'
@@ -30,15 +31,8 @@ export async function GET(request: Request) {
     if (!url.searchParams.get('id') || !Number.isInteger(id)) {
       return new Response('Save the issue to see its preview.', { status: 404 })
     }
-    const issue = await payload.findByID({
-      collection: 'newsletters',
-      id,
-      depth: 2,
-      draft: true,
-      locale: 'en',
-      overrideAccess: true,
-    })
-    html = (await newsletterMail(issue as Issue, settings, { unsubscribe: '#unsubscribe' })).html
+    const issue = await issueForEmail(payload, id)
+    html = (await newsletterMail(issue, settings, { unsubscribe: '#unsubscribe' })).html
   } else {
     const sample = { name: 'Mona Adel', email: 'mona@example.com', site }
     const mails = await Promise.all([

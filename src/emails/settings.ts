@@ -52,6 +52,8 @@ export type EmailSettings = {
   fromName: string
   replyTo: string | null
   tagline: string
+  /** The last line of a newsletter, above the footer. */
+  signoff: string
   footer: string
   /** From Site settings → Contact, each with its icon (scripts/email-assets.mjs). */
   social: SocialLink[]
@@ -65,11 +67,15 @@ export type StoredEmailSettings = {
   from_name?: string | null
   reply_to?: string | null
   tagline?: string | null
+  signoff?: string | null
   footer?: string | null
   texts?: { [K in keyof Texts]?: { [F in keyof Texts[K]]?: string | null } | null } | null
 }
 
-const DEFAULT_FOOTER = 'Cairo Institute of Liberal Arts and Sciences (CILAS)\nCairo, Egypt'
+// A postal address: bulk email must carry one (CAN-SPAM).
+const DEFAULT_FOOTER =
+  'Cairo Institute of Liberal Arts and Sciences (CILAS)\n10 Darb El Labana, El Darb El Ahmar, Cairo 11311, Egypt'
+const DEFAULT_SIGNOFF = 'From CILAS, with love.'
 const DEFAULT_TAGLINE = 'A pedagogy of discovery and attunement.'
 const PLATFORMS: Record<string, string> = {
   facebook: 'Facebook',
@@ -104,6 +110,7 @@ export const withDefaults = (
     fromName: stored.from_name?.trim() || 'CILAS',
     replyTo: stored.reply_to?.trim() || null,
     tagline: stored.tagline?.trim() || DEFAULT_TAGLINE,
+    signoff: stored.signoff?.trim() || DEFAULT_SIGNOFF,
     footer: stored.footer?.trim() || DEFAULT_FOOTER,
     social: (social ?? []).flatMap((s) =>
       s.platform && PLATFORMS[s.platform] && s.url?.startsWith('http')

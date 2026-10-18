@@ -139,6 +139,8 @@ describe('cardOf', () => {
     expect(card).toEqual({
       kind: 'Course',
       title: 'Reading Plato',
+      byline: null,
+      list: [],
       meta: 'Fall 2026',
       text: 'Book by book.',
       note: 'Starts 3 Nov',
@@ -164,29 +166,128 @@ describe('cardOf', () => {
 })
 
 describe('newsletterMail', () => {
-  it('renders the intro, one card per pick and the unsubscribe link', async () => {
+  const settings = withDefaults({}, { site: 'https://ci-las.org' })
+  const paragraph = (text: string) => ({
+    root: {
+      type: 'root', version: 1, format: '', indent: 0, direction: null,
+      children: [{ type: 'paragraph', version: 1, format: '', indent: 0, direction: null, textFormat: 0, textStyle: '',
+        children: [{ type: 'text', version: 1, text, format: 0, mode: 'normal', style: '', detail: 0 }] }],
+    },
+  })
+
+  it('renders the intro, the sections in order, the sign-off and the unsubscribe link', async () => {
     const mail = await newsletterMail(
       {
         title: 'October at CILAS',
         preheader: 'Two new courses',
-        body: null,
-        picks: [
+        body: paragraph('مرحبا بكم في سيلاس'),
+        sections: [
           {
-            item: { relationTo: 'courses', value: { id: 1, title: 'Reading Plato', slug: 'reading-plato' } },
-            note: 'Starts 3 Nov',
+            blockType: 'picks',
+            items: [
+              {
+                item: {
+                  relationTo: 'courses',
+                  value: { id: 1, title: 'Reading Plato', slug: 'reading-plato', fellows: [{ name: 'Mona' }, { name: 'Ali' }] },
+                },
+                note: 'Starts 3 Nov',
+              },
+              { item: { relationTo: 'articles', value: 9 }, note: null },
+            ],
           },
-          { item: { relationTo: 'articles', value: 9 }, note: null },
+          {
+            blockType: 'gallery',
+            columns: '3',
+            images: [{ image: { url: 'https://cdn.test/a.jpg', alt: 'A' }, caption: 'يوم في سيلاس' }, { image: 4 }],
+          },
+          { blockType: 'quote', text: 'Learning is a commons.', attribution: 'A fellow' },
         ],
       },
-      withDefaults({}, { site: 'https://ci-las.org' }),
+      settings,
       { unsubscribe: '{{{RESEND_UNSUBSCRIBE_URL}}}' },
     )
     expect(mail.subject).toBe('October at CILAS')
-    expect(mail.html).toContain('Reading Plato')
+    expect(mail.html).toContain('<p dir="auto"')
+    expect(mail.html).toContain('by <!-- -->Mona and Ali')
     expect(mail.html).toContain('Starts 3 Nov')
-    expect(mail.html).toContain('Two new courses')
+    expect(mail.html).toContain('https://cdn.test/a.jpg')
+    expect(mail.html).toContain('يوم في سيلاس')
+    expect(mail.html).toContain('Learning is a commons.')
+    expect(mail.html).toContain('From CILAS, with love.')
+    expect(mail.html).toContain('10 Darb El Labana')
     expect(mail.html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')
-    expect(mail.html).toContain('href="https://ci-las.org/en/study/reading-plato"')
+    expect(mail.html.indexOf('Reading Plato')).toBeLessThan(mail.html.indexOf('Learning is a commons.'))
+  })
+})
+
+describe('cards for collections, cycles and events', () => {
+  const labels = { site: 'https://ci-las.org', read: 'Read more', apply: 'Apply' }
+
+  it('links an article collection to its list', () => {
+    const card = cardOf(
+      {
+        relationTo: 'publications',
+        value: { id: 3, title: 'Bridge Papers', slug: 'bridge-papers', editors: [{ name: 'Sara' }], articles: [1, 2] },
+      },
+      null,
+      labels,
+    )
+    expect(card).toMatchObject({
+      kind: 'Collection',
+      byline: 'Sara',
+      meta: '2 texts',
+      url: 'https://ci-las.org/en/articles?publication=bridge-papers',
+    })
+  })
+
+  it('lists a cycle’s public courses only', () => {
+    const card = cardOf(
+      {
+        relationTo: 'cycles',
+        value: {
+          id: 5,
+          title: 'Fall 2026',
+          season: 'fall',
+          start_year: 2026,
+          courses: {
+            docs: [
+              { id: 1, title: 'Open', slug: 'open', _status: 'published', tier: 'public' },
+              { id: 2, title: 'Draft', slug: 'draft', _status: 'draft', tier: 'public' },
+              { id: 3, title: 'Members', slug: 'members', _status: 'published', tier: 'community' },
+            ],
+          },
+        },
+      },
+      null,
+      labels,
+    )
+    expect(card).toMatchObject({
+      kind: 'Cycle',
+      meta: '1 course',
+      list: [{ title: 'Open', url: 'https://ci-las.org/en/study/open' }],
+      url: 'https://ci-las.org/en/study?season=fall&year=2026',
+    })
+  })
+
+  it('gives an event its day, time and place', () => {
+    const card = cardOf(
+      {
+        relationTo: 'events',
+        value: {
+          id: 7,
+          title: 'Balcony gathering',
+          schedule: { start_date: '2026-07-24T00:00:00.000Z', slots: [{ start_time: '14:00', end_time: '18:30' }] },
+          space: { name: 'CILAS, Darb El Ahmar' },
+        },
+      },
+      null,
+      labels,
+    )
+    expect(card).toMatchObject({
+      kind: 'Event',
+      meta: 'Friday 24 July 2026, 14:00–18:30 · CILAS, Darb El Ahmar',
+      url: 'https://ci-las.org/en/calendar',
+    })
   })
 })
 

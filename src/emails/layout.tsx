@@ -17,7 +17,8 @@ export function Box({ children, center = false }: { children: ReactNode; center?
         borderRadius: '10px',
         padding: '56px 44px',
         marginBottom: '24px',
-        textAlign: center ? 'center' : 'left',
+        // No left alignment: each paragraph (dir="auto") aligns to its own start.
+        ...(center ? { textAlign: 'center' as const } : {}),
       }}
     >
       {children}

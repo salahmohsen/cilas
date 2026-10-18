@@ -86,6 +86,15 @@ export const EmailSettings: GlobalConfig = {
               },
             },
             {
+              name: 'signoff',
+              label: 'Sign-off',
+              type: 'text',
+              admin: {
+                placeholder: 'From CILAS, with love.',
+                description: 'The last line of each newsletter, above the footer.',
+              },
+            },
+            {
               name: 'footer',
               type: 'textarea',
               admin: {
