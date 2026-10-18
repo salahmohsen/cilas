@@ -1,7 +1,7 @@
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
 import { Column, Heading, Img, Link, Row, Section, Text } from 'react-email'
 
-import { cardOf, type Card } from './cards'
+import { cardOf, type Card, type Person } from './cards'
 import { Box, EmailLayout } from './layout'
 import { renderEmail } from './render'
 import { pickItemOf } from './pick-types'
@@ -18,7 +18,9 @@ export type Section = Row &
     | {
         blockType: 'picks'
         heading?: string | null
-        items?: Array<Row & Record<string, unknown> & { type?: string | null; note?: string | null }> | null
+        items?: Array<
+          Row & Record<string, unknown> & { type?: string | null; note?: string | null }
+        > | null
       }
     | { blockType: 'text'; body?: unknown }
     | {
@@ -70,31 +72,44 @@ const urlOf = (media: Media) => {
     : null
 }
 
-function CardText({
-  card,
-  pe,
-  path,
-}: {
-  card: Card
-  pe: Editable
-  /** The pick's data path; none for a course listed under its cycle. */
-  path?: string
-}) {
+/** "by A, B and C", each name linked to its profile when it has one. */
+function Byline({ people, size = 16 }: { people: Person[]; size?: 13 | 16 }) {
+  if (!people.length) return null
+  return (
+    <Text dir="auto" style={{ ...type[size], color: colors.fg, margin: '0 0 8px' }}>
+      by{' '}
+      {people.map((p, i) => (
+        <span key={`${p.name}${i}`}>
+          {i > 0 ? (i === people.length - 1 ? ' and ' : ', ') : null}
+          {p.url ? (
+            <Link href={p.url} style={{ ...link, color: colors.fg }}>
+              {p.name}
+            </Link>
+          ) : (
+            p.name
+          )}
+        </span>
+      ))}
+    </Text>
+  )
+}
+
+/** A text cut at a word, for the compact cards of a cycle's courses. */
+const shorten = (text: string | null, length: number) =>
+  text && text.length > length ? `${text.slice(0, length).replace(/\s+\S*$/, '')}…` : text
+
+function CardText({ card, pe, path }: { card: Card; pe: Editable; path?: string }) {
   return (
     <>
       <Text style={{ ...type[13], margin: '0 0 4px' }}>
         {[card.kind, card.meta].filter(Boolean).join(' · ')}
       </Text>
-      <Text dir="auto" style={{ ...type[20], margin: '0 0 4px' }}>
+      <Text dir="auto" style={{ ...type[20], margin: '0 0 6px' }}>
         <Link href={card.url} style={{ color: colors.fg, textDecoration: 'none' }}>
           {card.title}
         </Link>
       </Text>
-      {card.byline ? (
-        <Text dir="auto" style={{ ...type[16], color: colors.fg, margin: '0 0 8px' }}>
-          by {card.byline}
-        </Text>
-      ) : null}
+      <Byline people={card.byline} />
       {card.text ? (
         <Text dir="auto" style={{ ...type[16], margin: '0 0 8px' }}>
           {card.text}
@@ -116,62 +131,106 @@ function CardText({
   )
 }
 
-/** A pick as a row: its image on one side, its words on the other, sides alternating. */
-function CardRow({
+/** One pick: its image full width on top, its words below. */
+function StackedCard({
   card,
-  flip,
   last,
   pe,
   path,
   id,
 }: {
   card: Card
-  flip: boolean
   last: boolean
   pe: Editable
-  /** The pick's data path, e.g. `sections.0.items.2`; none for a course under its cycle. */
-  path?: string
+  /** The pick's data path, e.g. `sections.0.items.2`. */
+  path: string
   id?: string | null
 }) {
-  const bottom = last ? '0' : '36px'
-  const row = path ? pe(path, { row: { id } }) : {}
-  if (!card.image) {
-    return (
-      <Section style={{ marginBottom: bottom }} {...row}>
-        <CardText card={card} pe={pe} path={path} />
-      </Section>
-    )
-  }
-  const image = (
-    <Column
-      key="image"
-      className="m-col"
-      style={{
-        width: '48%',
-        verticalAlign: 'middle',
-        [flip ? 'paddingLeft' : 'paddingRight']: '20px',
-      }}
-    >
-      <Link href={card.url}>
-        <Img
-          className="m-img"
-          src={card.image.url}
-          alt={card.image.alt}
-          width={260}
-          style={{ display: 'block', width: '100%', maxWidth: '260px', borderRadius: '12px' }}
-        />
-      </Link>
-    </Column>
-  )
-  const words = (
-    <Column key="words" className="m-col" style={{ width: '52%', verticalAlign: 'middle' }}>
-      <CardText card={card} pe={pe} path={path} />
-    </Column>
-  )
   return (
-    <Row style={{ marginBottom: bottom }} {...row}>
-      {flip ? [words, image] : [image, words]}
-    </Row>
+    <Section style={{ marginBottom: last ? 0 : '44px' }} {...pe(path, { row: { id } })}>
+      {card.image ? (
+        <Link href={card.url}>
+          <Img
+            className="m-img"
+            src={card.image.url}
+            alt={card.image.alt}
+            width={552}
+            style={{ display: 'block', width: '100%', borderRadius: '12px', marginBottom: '20px' }}
+          />
+        </Link>
+      ) : null}
+      <CardText card={card} pe={pe} path={path} />
+      {card.children.length ? <CourseGrid cards={card.children} /> : null}
+    </Section>
+  )
+}
+
+/** A cycle's courses: compact cards, two to a row (one on phones). */
+function CourseGrid({ cards }: { cards: Card[] }) {
+  const rows: Card[][] = []
+  for (let i = 0; i < cards.length; i += 2) rows.push(cards.slice(i, i + 2))
+  return (
+    <Section style={{ marginTop: '28px' }}>
+      {rows.map((row, r) => (
+        <Row key={r} style={{ marginBottom: r === rows.length - 1 ? 0 : '28px' }}>
+          {[0, 1].map((c) => {
+            const card = row[c]
+            return (
+              <Column
+                key={c}
+                className="m-col"
+                style={{
+                  width: '50%',
+                  verticalAlign: 'top',
+                  [c === 0 ? 'paddingRight' : 'paddingLeft']: '10px',
+                }}
+              >
+                {card ? (
+                  <>
+                    {card.image ? (
+                      <Link href={card.url}>
+                        <Img
+                          className="m-img"
+                          src={card.image.thumb}
+                          alt={card.image.alt}
+                          width={266}
+                          style={{
+                            display: 'block',
+                            width: '100%',
+                            borderRadius: '10px',
+                            marginBottom: '12px',
+                          }}
+                        />
+                      </Link>
+                    ) : null}
+                    <Text
+                      dir="auto"
+                      style={{ ...type[16], fontWeight: 600, color: colors.fg, margin: '0 0 4px' }}
+                    >
+                      <Link href={card.url} style={{ color: colors.fg, textDecoration: 'none' }}>
+                        {card.title}
+                      </Link>
+                    </Text>
+                    <Byline people={card.byline} size={13} />
+                    {card.text ? (
+                      <Text
+                        dir="auto"
+                        style={{ ...type[13], color: colors.fg2, margin: '0 0 6px' }}
+                      >
+                        {shorten(card.text, 110)}
+                      </Text>
+                    ) : null}
+                    <Link href={card.url} style={{ ...type[13], ...link }}>
+                      {card.button} →
+                    </Link>
+                  </>
+                ) : null}
+              </Column>
+            )
+          })}
+        </Row>
+      ))}
+    </Section>
   )
 }
 
@@ -190,22 +249,19 @@ function Picks({
 }: SectionProps<'picks'> & { settings: EmailSettings }) {
   const t = settings.texts.newsletter
   const labels = { site: settings.site, read: t.read, apply: t.apply }
-  // Each card keeps its place in the data, for the editor. A cycle is a
-  // heading card, then a full card for each of its courses.
+  // Each card keeps its place in the data, for the editor.
   const cards = (section.items ?? []).flatMap((p, at) => {
     const item = pickItemOf(p)
     const card = item ? cardOf(item, p.note, labels) : null
-    if (!card) return []
-    const own = { card, path: `${path}.items.${at}` as string | undefined, id: p.id }
-    return [own, ...card.children.map((child) => ({ card: child, path: undefined, id: undefined }))]
+    return card ? [{ card, at, id: p.id }] : []
   })
-    if (!cards.length && !pe.on) return null
+  if (!cards.length && !pe.on) return null
   return (
     <Box>
       <Heading
         as="h2"
         dir="auto"
-        style={{ ...type[28], margin: '0 0 36px' }}
+        style={{ ...type[28], margin: '0 0 32px' }}
         {...pe(`${path}.heading`)}
       >
         {section.heading || t.in_this_issue}
@@ -214,14 +270,13 @@ function Picks({
         {...pe.container(`${path}.items`)}
         style={cards.length ? undefined : { minHeight: '48px' }}
       >
-        {cards.map(({ card, path: cardPath, id }, i) => (
-          <CardRow
-            key={`${card.url}${i}`}
+        {cards.map(({ card, at, id }, i) => (
+          <StackedCard
+            key={`${card.url}${at}`}
             card={card}
-            flip={i % 2 === 1}
             last={i === cards.length - 1}
             pe={pe}
-            path={cardPath}
+            path={`${path}.items.${at}`}
             id={id}
           />
         ))}
@@ -237,7 +292,7 @@ function Gallery({ section, pe, path }: SectionProps<'gallery'>) {
     const image = urlOf(i.image)
     return image ? [{ ...image, caption: i.caption?.trim() || null, at, id: i.id }] : []
   })
-    if (!images.length && !pe.on) return null
+  if (!images.length && !pe.on) return null
   const rows: (typeof images)[] = []
   for (let i = 0; i < images.length; i += columns) rows.push(images.slice(i, i + columns))
   const width = `${Math.floor(100 / columns)}%`

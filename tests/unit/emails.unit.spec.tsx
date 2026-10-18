@@ -139,12 +139,13 @@ describe('cardOf', () => {
     expect(card).toEqual({
       kind: 'Course',
       title: 'Reading Plato',
-      byline: null,
+      byline: [],
       children: [],
       meta: 'Fall 2026',
       text: 'Book by book.',
       note: 'Starts 3 Nov',
-      image: { url: 'https://cdn.test/plato.jpg', alt: 'Plato' },
+      // No crop on record: the grid falls back to the full image.
+      image: { url: 'https://cdn.test/plato.jpg', alt: 'Plato', thumb: 'https://cdn.test/plato.jpg' },
       url: 'https://ci-las.org/en/study/reading-plato',
       button: 'Read more',
     })
@@ -191,7 +192,10 @@ describe('newsletterMail', () => {
                   id: 1,
                   title: 'Reading Plato',
                   slug: 'reading-plato',
-                  fellows: [{ name: 'Mona' }, { name: 'Ali' }],
+                  fellows: [
+                    { name: 'Mona', slug: 'mona', visible: true },
+                    { name: 'Ali', slug: 'ali', visible: false },
+                  ],
                   description: paragraph('Plato, book by book, in Cairo.'),
                 },
                 note: 'Starts 3 Nov',
@@ -222,7 +226,10 @@ describe('newsletterMail', () => {
     )
     expect(mail.subject).toBe('October at CILAS')
     expect(mail.html).toContain('<p dir="auto"')
-    expect(mail.html).toContain('by <!-- -->Mona and Ali')
+    // A visible fellow links to their profile; a hidden one is plain text.
+    expect(mail.html).toMatch(/href="https:\/\/ci-las.org\/en\/people\/mona"[^>]*>Mona<\/a>/)
+    expect(mail.html).not.toContain('/en/people/ali')
+    expect(mail.html).toContain('Ali')
     expect(mail.html).toContain('Starts 3 Nov')
     expect(mail.html).toContain('Plato, book by book, in Cairo.')
     expect(mail.html).toContain('Urban Culture')
@@ -246,14 +253,20 @@ describe('cards for collections, cycles and events', () => {
     const card = cardOf(
       {
         relationTo: 'publications',
-        value: { id: 3, title: 'Bridge Papers', slug: 'bridge-papers', editors: [{ name: 'Sara' }], articles: [1, 2] },
+        value: {
+          id: 3,
+          title: 'Bridge Papers',
+          slug: 'bridge-papers',
+          editors: [{ name: 'Sara', slug: 'sara' }],
+          articles: [1, 2],
+        },
       },
       null,
       labels,
     )
     expect(card).toMatchObject({
       kind: 'Collection',
-      byline: 'Sara',
+      byline: [{ name: 'Sara', url: 'https://ci-las.org/en/people/sara' }],
       meta: '2 texts',
       url: 'https://ci-las.org/en/articles?publication=bridge-papers',
     })

@@ -6,47 +6,75 @@ import { pathOf } from '@/lib/paths'
 export type Card = {
   kind: 'Course' | 'Article' | 'Collection' | 'Cycle' | 'Programme' | 'Event'
   title: string
-  /** "by" whom: a course's fellows, a collection's editors. */
-  byline: string | null
+  /** "by" whom: a course's fellows, an article's authors, a collection's editors. */
+  byline: Person[]
   meta: string | null
   text: string | null
   note: string | null
-  image: { url: string; alt: string } | null
+  /** `thumb` is the 4:3 crop (Media's `thumbnail` size), so grid cards line up. */
+  image: { url: string; alt: string; thumb: string } | null
   /** A cycle's courses, each a full card. */
   children: Card[]
   url: string
   button: string
 }
 
-export type PickRelation = 'courses' | 'articles' | 'publications' | 'cycles' | 'programmes' | 'events'
+export type PickRelation =
+  'courses' | 'articles' | 'publications' | 'cycles' | 'programmes' | 'events'
 type Pick = { relationTo: PickRelation; value: unknown }
 type Doc = Record<string, unknown> & { id: number; title?: string; slug?: string | null }
 
 const imageOf = (media: unknown, alt: string) => {
-  const m = media as { url?: string | null; alt?: string | null } | null
-  return m && typeof m === 'object' && m.url?.startsWith('http') ? { url: m.url, alt: m.alt || alt } : null
+  const m = media as {
+    url?: string | null
+    alt?: string | null
+    sizes?: { thumbnail?: { url?: string | null } }
+  } | null
+  if (!m || typeof m !== 'object' || !m.url?.startsWith('http')) return null
+  const thumb = m.sizes?.thumbnail?.url
+  return { url: m.url, alt: m.alt || alt, thumb: thumb?.startsWith('http') ? thumb : m.url }
 }
 
-const SEASONS: Record<string, string> = { fall: 'Fall', winter: 'Winter', spring: 'Spring', summer: 'Summer' }
+const SEASONS: Record<string, string> = {
+  fall: 'Fall',
+  winter: 'Winter',
+  spring: 'Spring',
+  summer: 'Summer',
+}
 
 const cycleLabel = (cycle: unknown) => {
   const c = cycle as { season?: string; start_year?: number } | null
-  return c && typeof c === 'object' && c.season ? `${SEASONS[c.season] ?? c.season} ${c.start_year ?? ''}`.trim() : null
+  return c && typeof c === 'object' && c.season
+    ? `${SEASONS[c.season] ?? c.season} ${c.start_year ?? ''}`.trim()
+    : null
 }
 
-/** "A", "A and B", "A, B and C" from populated people. */
-const namesOf = (people: unknown): string | null => {
-  const names = ((people as Array<{ name?: string } | number> | null | undefined) ?? [])
-    .map((p) => (typeof p === 'object' ? p?.name : null))
-    .filter((n): n is string => Boolean(n))
-  if (!names.length) return null
-  return names.length === 1 ? names[0]! : `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`
-}
+export type Person = { name: string; url: string | null }
+
+/** Populated people, each linked to their profile when it is on the site. */
+const peopleOf = (people: unknown, site: string): Person[] =>
+  (
+    (people as
+      | Array<{ name?: string; slug?: string | null; visible?: boolean | null } | number>
+      | null
+      | undefined) ?? []
+  ).flatMap((p) =>
+    typeof p === 'object' && p?.name
+      ? [
+          {
+            name: p.name,
+            url: p.slug && p.visible !== false ? `${site}/en/people/${p.slug}` : null,
+          },
+        ]
+      : [],
+  )
 
 /** The start of a rich text, for a card. */
 const excerpt = (body: unknown, length = 180) => {
   if (!body || typeof body !== 'object') return null
-  const text = convertLexicalToPlaintext({ data: body as never }).replace(/\s+/g, ' ').trim()
+  const text = convertLexicalToPlaintext({ data: body as never })
+    .replace(/\s+/g, ' ')
+    .trim()
   return text.length > length ? `${text.slice(0, length).replace(/\s+\S*$/, '')}…` : text || null
 }
 
@@ -55,17 +83,24 @@ const isPublic = (doc: Record<string, unknown>) =>
 
 /** "Thursday 24 July 2026, 14:00–18:30": an event's first day and time, Cairo time. */
 const whenOf = (schedule: unknown) => {
-  const s = schedule as { start_date?: string; slots?: Array<{ start_time?: string; end_time?: string }> } | null
+  const s = schedule as {
+    start_date?: string
+    slots?: Array<{ start_time?: string; end_time?: string }>
+  } | null
   if (!s?.start_date) return null
-  const day = new Date(s.start_date).toLocaleDateString('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    timeZone: 'Africa/Cairo',
-  }).replace(',', '')
+  const day = new Date(s.start_date)
+    .toLocaleDateString('en-GB', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: 'Africa/Cairo',
+    })
+    .replace(',', '')
   const slot = s.slots?.[0]
-  return slot?.start_time ? `${day}, ${slot.start_time}${slot.end_time ? `–${slot.end_time}` : ''}` : day
+  return slot?.start_time
+    ? `${day}, ${slot.start_time}${slot.end_time ? `–${slot.end_time}` : ''}`
+    : day
 }
 
 const placeOf = (doc: Doc) => {
@@ -85,7 +120,13 @@ export const cardOf = (
   const doc = pick.value as Doc | null
   if (!doc || typeof doc !== 'object' || !doc.title) return null
   const site = labels.site.replace(/\/+$/, '')
-  const base = { title: doc.title, note: note?.trim() || null, byline: null, children: [], button: labels.read }
+  const base = {
+    title: doc.title,
+    note: note?.trim() || null,
+    byline: [],
+    children: [],
+    button: labels.read,
+  }
 
   switch (pick.relationTo) {
     case 'courses': {
@@ -94,10 +135,14 @@ export const cardOf = (
       return {
         ...base,
         kind: 'Course',
-        byline: namesOf(doc.fellows),
+        byline: peopleOf(doc.fellows, site),
         meta: cycleLabel(doc.cycle),
         // The description's start, as the course page opens; else its card line.
-        text: excerpt(doc.description, 260) || (doc.summary as string | null) || (doc.subtitle as string | null) || null,
+        text:
+          excerpt(doc.description, 180) ||
+          (doc.summary as string | null) ||
+          (doc.subtitle as string | null) ||
+          null,
         image: imageOf(doc.cover_image, doc.title),
         url: `${site}${path}`,
       }
@@ -108,7 +153,7 @@ export const cardOf = (
       return {
         ...base,
         kind: 'Article',
-        byline: namesOf(doc.authors),
+        byline: peopleOf(doc.authors, site),
         meta: null,
         text: excerpt(doc.body),
         image: imageOf(doc.cover_image, doc.title),
@@ -121,7 +166,7 @@ export const cardOf = (
       return {
         ...base,
         kind: 'Collection',
-        byline: namesOf(doc.editors),
+        byline: peopleOf(doc.editors, site),
         meta: count ? `${count} ${count === 1 ? 'text' : 'texts'}` : null,
         text: (doc.subtitle as string | null) || excerpt(doc.intro),
         image: imageOf(doc.cover_image, doc.title),
@@ -141,7 +186,9 @@ export const cardOf = (
       return {
         ...base,
         kind: 'Cycle',
-        meta: courses.length ? `${courses.length} ${courses.length === 1 ? 'course' : 'courses'}` : null,
+        meta: courses.length
+          ? `${courses.length} ${courses.length === 1 ? 'course' : 'courses'}`
+          : null,
         text: null,
         image: null,
         children: courses,
