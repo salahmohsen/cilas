@@ -13,6 +13,7 @@ import {
   type SimpleIcon,
 } from 'simple-icons'
 
+import type { Place } from '@/api/place.api'
 import type { SocialLink } from '@/api/social.api'
 import { SiteFooter as ArcSiteFooter } from '@/components/arc/blocks/site-footer/site-footer'
 
@@ -25,7 +26,7 @@ const PLATFORMS: Record<SocialLink['platform'], { icon: SimpleIcon; label: strin
 }
 
 /** The site footer: where to go next, the newsletter, the social accounts and the licence line. */
-export function SiteFooter({ socials = [] }: { socials?: SocialLink[] }) {
+export function SiteFooter({ socials = [], place = null }: { socials?: SocialLink[]; place?: Place | null }) {
   const t = useTranslations('Footer')
   const brand = useTranslations('Header')
   const locale = useLocale()
@@ -60,7 +61,8 @@ export function SiteFooter({ socials = [] }: { socials?: SocialLink[] }) {
         {
           title: t('institute'),
           links: [
-            { label: t('about'), href: href('/about') },
+            // The current space's address, linked to its map (Spaces → Google Maps link).
+            ...(place?.mapUrl ? [{ label: place.address, href: place.mapUrl, external: true }] : []),
             { label: t('contact'), href: href('/contact') },
           ],
         },

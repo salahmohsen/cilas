@@ -22,7 +22,6 @@ import { Spaces } from './collections/Spaces'
 import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { EmailSettings } from './globals/EmailSettings'
-import { About } from './globals/About'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
@@ -142,7 +141,7 @@ export default buildConfig({
     Newsletters,
     Spaces,
   ],
-  globals: [SiteSettings, EmailSettings, About],
+  globals: [SiteSettings, EmailSettings],
   localization: {
     locales: [
       { label: 'English', code: 'en' },

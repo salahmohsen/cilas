@@ -144,13 +144,11 @@ export interface Config {
   globals: {
     'site-settings': SiteSetting;
     'email-settings': EmailSetting;
-    about: About;
     'llms-txt-settings': LlmsTxtSetting;
   };
   globalsSelect: {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'email-settings': EmailSettingsSelect<false> | EmailSettingsSelect<true>;
-    about: AboutSelect<false> | AboutSelect<true>;
     'llms-txt-settings': LlmsTxtSettingsSelect<false> | LlmsTxtSettingsSelect<true>;
   };
   locale: 'en' | 'ar';
@@ -3314,39 +3312,6 @@ export interface EmailSetting {
   createdAt?: string | null;
 }
 /**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "about".
- */
-export interface About {
-  id: number;
-  title: string;
-  /**
-   * The opening lines, set larger under the title.
-   */
-  intro?: string | null;
-  cover?: (number | null) | Media;
-  /**
-   * The page itself: headings, paragraphs, lists and links.
-   */
-  body?: {
-    root: {
-      type: string;
-      children: {
-        type: any;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
  * Controls the content of /llms.txt and /llms-full.txt.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3446,19 +3411,6 @@ export interface EmailSettingsSelect<T extends boolean = true> {
               unsubscribe?: T;
             };
       };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "about_select".
- */
-export interface AboutSelect<T extends boolean = true> {
-  title?: T;
-  intro?: T;
-  cover?: T;
-  body?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

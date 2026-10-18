@@ -20,7 +20,6 @@ const STATIC: SitePage[] = [
   { path: '/governance' },
   { path: '/calendar' },
   { path: '/contact' },
-  { path: '/about' },
 ]
 
 /**

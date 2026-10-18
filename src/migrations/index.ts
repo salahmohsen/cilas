@@ -15,6 +15,7 @@ import * as migration_20261018_102716_newsletter_sections from './20261018_10271
 import * as migration_20261018_102744_drop_newsletter_picks from './20261018_102744_drop_newsletter_picks';
 import * as migration_20261018_162245_picks_by_type_space_address from './20261018_162245_picks_by_type_space_address';
 import * as migration_20261018_165545_about_page_segment_setting from './20261018_165545_about_page_segment_setting';
+import * as migration_20261018_174136_drop_about_page from './20261018_174136_drop_about_page';
 
 export const migrations = [
   {
@@ -100,6 +101,11 @@ export const migrations = [
   {
     up: migration_20261018_165545_about_page_segment_setting.up,
     down: migration_20261018_165545_about_page_segment_setting.down,
-    name: '20261018_165545_about_page_segment_setting'
+    name: '20261018_165545_about_page_segment_setting',
+  },
+  {
+    up: migration_20261018_174136_drop_about_page.up,
+    down: migration_20261018_174136_drop_about_page.down,
+    name: '20261018_174136_drop_about_page'
   },
 ];
