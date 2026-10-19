@@ -23,6 +23,7 @@ import * as migration_20261018_192058_mailing_lists from './20261018_192058_mail
 import * as migration_20261019_120000_accounts_get_a_person from './20261019_120000_accounts_get_a_person';
 import * as migration_20261019_122625_review_for_courses_and_publications from './20261019_122625_review_for_courses_and_publications';
 import * as migration_20261019_123324_applicant_questions_and_file_uploads from './20261019_123324_applicant_questions_and_file_uploads';
+import * as migration_20261019_131806_notifications from './20261019_131806_notifications';
 
 export const migrations = [
   {
@@ -148,6 +149,11 @@ export const migrations = [
   {
     up: migration_20261019_123324_applicant_questions_and_file_uploads.up,
     down: migration_20261019_123324_applicant_questions_and_file_uploads.down,
-    name: '20261019_123324_applicant_questions_and_file_uploads'
+    name: '20261019_123324_applicant_questions_and_file_uploads',
+  },
+  {
+    up: migration_20261019_131806_notifications.up,
+    down: migration_20261019_131806_notifications.down,
+    name: '20261019_131806_notifications'
   },
 ];

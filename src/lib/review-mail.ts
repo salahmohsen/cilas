@@ -5,11 +5,13 @@ import { reviewMail } from '@/emails/transactional'
 import { env } from '@/env'
 import type { ReviewState } from '@/lib/review'
 
-const emailsOf = (docs: Array<{ email?: string | null }>): string[] =>
-  docs.map((d) => d.email).filter((e): e is string => Boolean(e))
+export type Recipient = { id: number; email: string }
 
-/** Accounts that review submissions. */
-export const adminEmails = async (req: PayloadRequest): Promise<string[]> => {
+const recipientsOf = (docs: Array<{ id: number; email?: string | null }>): Recipient[] =>
+  docs.flatMap((d) => (d.email ? [{ id: d.id, email: d.email }] : []))
+
+/** Accounts that review submissions: admins and super admins. */
+export const adminRecipients = async (req: PayloadRequest): Promise<Recipient[]> => {
   const { docs } = await req.payload.find({
     collection: 'users',
     where: { roles: { in: ['admin', 'super_admin'] } },
@@ -18,11 +20,14 @@ export const adminEmails = async (req: PayloadRequest): Promise<string[]> => {
     overrideAccess: true,
     req,
   })
-  return emailsOf(docs)
+  return recipientsOf(docs)
 }
 
-/** Accounts linked to a document's owners (authors, fellows, editors); people without one get no mail. */
-export const authorEmails = async (req: PayloadRequest, people: number[]): Promise<string[]> => {
+/** Accounts linked to a document's owners (authors, fellows, editors); people without one get nothing. */
+export const ownerRecipients = async (
+  req: PayloadRequest,
+  people: number[],
+): Promise<Recipient[]> => {
   if (!people.length) return []
   const { docs } = await req.payload.find({
     collection: 'users',
@@ -32,7 +37,7 @@ export const authorEmails = async (req: PayloadRequest, people: number[]): Promi
     overrideAccess: true,
     req,
   })
-  return emailsOf(docs)
+  return recipientsOf(docs)
 }
 
 /** Sends one review notification. A failed send is logged, never thrown. */

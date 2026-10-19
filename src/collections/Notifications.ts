@@ -1,0 +1,56 @@
+import type { Access, CollectionConfig, PayloadHandler } from 'payload'
+
+/** Each account sees, marks and clears only its own notifications. */
+const own: Access = ({ req }) => (req.user ? { recipient: { equals: req.user.id } } : false)
+
+/** "Mark all read": every unread notification of the signed-in account. */
+const readAll: PayloadHandler = async (req) => {
+  if (!req.user) return Response.json({ error: 'Sign in first.' }, { status: 401 })
+  await req.payload.update({
+    collection: 'notifications',
+    where: { and: [{ recipient: { equals: req.user.id } }, { read_at: { exists: false } }] },
+    data: { read_at: new Date().toISOString() },
+    overrideAccess: true,
+  })
+  return Response.json({ ok: true })
+}
+
+/**
+ * What happened that an account should know: a submission waiting for an
+ * admin, a decision on an owner's work, a new application. Shown under the
+ * bell in the admin's top bar (src/components/admin/notification-bell.tsx),
+ * beside the emails. Written by the server only (src/lib/notify.ts).
+ */
+export const Notifications: CollectionConfig = {
+  slug: 'notifications',
+  admin: { hidden: true, useAsTitle: 'title' },
+  access: { read: own, update: own, delete: own, create: () => false },
+  defaultSort: '-createdAt',
+  endpoints: [{ path: '/read-all', method: 'post', handler: readAll }],
+  fields: [
+    {
+      name: 'recipient',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
+    {
+      name: 'kind',
+      type: 'select',
+      required: true,
+      options: ['submitted', 'approved', 'changes_requested', 'rejected', 'application'].map(
+        (value) => ({
+          value,
+          label: value.replace('_', ' '),
+        }),
+      ),
+      access: { update: () => false },
+    },
+    { name: 'title', type: 'text', required: true, access: { update: () => false } },
+    { name: 'link', type: 'text', access: { update: () => false } },
+    // The one thing a reader changes: when they read it.
+    { name: 'read_at', type: 'date', index: true },
+  ],
+}

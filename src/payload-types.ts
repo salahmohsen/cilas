@@ -83,6 +83,7 @@ export interface Config {
     newsletters: Newsletter;
     'mailing-lists': MailingList;
     'submission-files': SubmissionFile;
+    notifications: Notification;
     spaces: Space;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -129,6 +130,7 @@ export interface Config {
     newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
     'mailing-lists': MailingListsSelect<false> | MailingListsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
+    notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -1977,6 +1979,20 @@ export interface SubmissionFile {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications".
+ */
+export interface Notification {
+  id: number;
+  recipient: number | User;
+  kind: 'submitted' | 'approved' | 'changes_requested' | 'rejected' | 'application';
+  title: string;
+  link?: string | null;
+  read_at?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -2314,6 +2330,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'submission-files';
         value: number | SubmissionFile;
+      } | null)
+    | ({
+        relationTo: 'notifications';
+        value: number | Notification;
       } | null)
     | ({
         relationTo: 'spaces';
@@ -3270,6 +3290,19 @@ export interface SubmissionFilesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "notifications_select".
+ */
+export interface NotificationsSelect<T extends boolean = true> {
+  recipient?: T;
+  kind?: T;
+  title?: T;
+  link?: T;
+  read_at?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "spaces_select".
  */
 export interface SpacesSelect<T extends boolean = true> {
@@ -3923,6 +3956,7 @@ export interface TaskCreateCollectionExport {
       | 'newsletters'
       | 'mailing-lists'
       | 'submission-files'
+      | 'notifications'
       | 'spaces'
       | 'forms'
       | 'form-submissions'

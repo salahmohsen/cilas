@@ -8,7 +8,8 @@ import type {
 
 import { isAdminUser } from '@/access'
 import { canMove, notifyOn, type ReviewState } from '@/lib/review'
-import { adminEmails, authorEmails, sendReviewEmail } from '@/lib/review-mail'
+import { notify, type NotificationKind } from '@/lib/notify'
+import { adminRecipients, ownerRecipients, sendReviewEmail } from '@/lib/review-mail'
 
 const DRAFT_SAVE = 'reviewDraftSave'
 const AUTOSAVE = 'reviewAutosave'
@@ -92,6 +93,14 @@ const applyReview =
     }
   }
 
+/** The line under the bell for each move. */
+const NOTES: Partial<Record<ReviewState, (noun: string, title: string) => string>> = {
+  submitted: (noun, title) => `A ${noun} waits for review: “${title}”`,
+  approved: (noun, title) => `Your ${noun} “${title}” was approved and published`,
+  changes_requested: (noun, title) => `Changes were asked for on your ${noun} “${title}”`,
+  rejected: (noun, title) => `Your ${noun} “${title}” was not accepted`,
+}
+
 /**
  * Emails admins on a submission and owners on a decision, with a link to the
  * document in the admin. Only for writes by a signed-in account: server
@@ -104,8 +113,9 @@ const notifyReview =
     const state: ReviewState = doc.review?.status ?? 'draft'
     const audience = notifyOn(previousDoc?.review?.status ?? 'draft', state)
     if (!audience) return doc
-    const to =
-      audience === 'admins' ? await adminEmails(req) : await authorEmails(req, ownersOf(doc))
+    const people =
+      audience === 'admins' ? await adminRecipients(req) : await ownerRecipients(req, ownersOf(doc))
+    const to = people.map((p) => p.email)
     await sendReviewEmail(
       req,
       to,
@@ -115,6 +125,17 @@ const notifyReview =
       {
         noun,
         path: `/admin/collections/${collection}/${doc.id}`,
+      },
+    )
+    // The same news under the bell (src/components/admin/notification-bell.tsx).
+    const title = doc.title ?? `Untitled ${noun}`
+    await notify(
+      req.payload,
+      people.map((p) => p.id),
+      {
+        kind: state as NotificationKind,
+        title: NOTES[state]?.(noun, title) ?? title,
+        link: `/admin/collections/${collection}/${doc.id}`,
       },
     )
     return doc

@@ -18,6 +18,7 @@ import { Articles } from './collections/Articles'
 import { Press } from './collections/Press'
 import { Events } from './collections/Events'
 import { MailingLists } from './collections/MailingLists'
+import { Notifications } from './collections/Notifications'
 import { SubmissionFiles } from './collections/SubmissionFiles'
 import { Newsletters } from './collections/Newsletters'
 import { Spaces } from './collections/Spaces'
@@ -28,6 +29,7 @@ import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { formFields } from './forms/form-fields'
+import { notifyNewApplication } from './forms/notify-application'
 import { submitWithFiles } from './forms/submit-with-files'
 import { applicationEndpoints, applicationFields, checkTarget } from './forms/applications'
 import { requireTurnstile } from './forms/spam-check'
@@ -119,6 +121,8 @@ export default buildConfig({
       },
       // The dashboard opens with what waits for review, for admins.
       beforeDashboard: ['/components/admin/review-queue#ReviewQueueWidget'],
+      // The notifications bell in the top bar (src/collections/Notifications.ts).
+      actions: ['/components/admin/notification-bell#NotificationBell'],
     },
     importMap: {
       baseDir: path.resolve(dirname),
@@ -153,6 +157,7 @@ export default buildConfig({
     Newsletters,
     MailingLists,
     SubmissionFiles,
+    Notifications,
     Spaces,
   ],
   globals: [SiteSettings, EmailSettings],
@@ -200,7 +205,10 @@ export default buildConfig({
           ...applicationEndpoints,
           { path: '/with-files', method: 'post', handler: submitWithFiles },
         ],
-        hooks: { beforeChange: [requireTurnstile(env.TURNSTILE_SECRET_KEY), checkTarget] },
+        hooks: {
+          beforeChange: [requireTurnstile(env.TURNSTILE_SECRET_KEY), checkTarget],
+          afterChange: [notifyNewApplication],
+        },
       },
     }),
     // Admins export form submissions (applications, contact messages) as CSV
