@@ -1,12 +1,4 @@
-import type {
-  CollectionAfterChangeHook,
-  CollectionBeforeChangeHook,
-  CollectionBeforeOperationHook,
-  CollectionBeforeValidateHook,
-  CollectionConfig,
-  Where,
-} from 'payload'
-import { APIError } from 'payload'
+import type { CollectionBeforeValidateHook, CollectionConfig, Where } from 'payload'
 
 import {
   canAuthor,
@@ -28,8 +20,8 @@ import { creditsField } from '@/fields/credits'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { slugField } from '@/fields/slug'
 import { toPersonIds } from '@/lib/fellow-role'
-import { notifyOn, reviewPatch, type ReviewState } from '@/lib/review'
-import { adminEmails, authorEmails, sendReviewEmail } from '@/lib/review-mail'
+import { reviewFields } from '@/fields/review'
+import { reviewHooks, type ReviewOptions } from '@/lib/review-hooks'
 import type { Article } from '@/payload-types'
 import { importFields } from '@/fields/import'
 
@@ -49,97 +41,23 @@ export const addSelfAsAuthor: CollectionBeforeValidateHook<Article> = ({
   return authors.includes(self) ? data : { ...data, authors: [...authors, self] }
 }
 
-const DRAFT_SAVE = 'articleDraftSave'
-const AUTOSAVE = 'articleAutosave'
-
-/**
- * Records whether this write is a draft save ("Save draft", `draft: true`).
- * Payload decides that from the operation args before any hook runs, and
- * beforeChange never sees it, so it is passed on through `req.context`.
- * Mirrors Payload's own test: on update a draft write that sets `_status:
- * 'published'` is a publish, not a draft save.
- */
-export const recordDraftSave: CollectionBeforeOperationHook = ({ args, operation, req }) => {
-  if (operation !== 'create' && operation !== 'update') return
-  const { autosave, data, draft } = args as {
-    autosave?: boolean
-    data?: { _status?: unknown }
-    draft?: boolean
+/** On approval an article takes the admin's tier, else the requested one, and a date. */
+const approveArticle: ReviewOptions['onApprove'] = ({ data, originalDoc, now }) => {
+  const tier = (data.tier ?? originalDoc?.tier) as string | null | undefined
+  const requested = (data.requested_tier ?? originalDoc?.requested_tier) as
+    string | null | undefined
+  return {
+    tier: tier && tier !== 'owner' ? tier : (requested ?? 'community'),
+    published_date: data.published_date ?? originalDoc?.published_date ?? now.toISOString(),
   }
-  req.context[DRAFT_SAVE] =
-    operation === 'create' ? Boolean(draft) : Boolean(draft) && data?._status !== 'published'
-  req.context[AUTOSAVE] = Boolean(autosave)
 }
 
-/**
- * Applies the review rules (src/lib/review.ts) to every write. Server calls
- * with no user (seeds, imports) are trusted like an admin.
- */
-export const applyReview: CollectionBeforeChangeHook<Article> = ({
-  data,
-  operation,
-  originalDoc,
-  req,
-}) => {
-  const trusted = !req.user || isAdminUser(req.user)
-  // On create, `originalDoc` is the duplicate source (if any), not this
-  // article's history. A new article always starts from draft.
-  const from: ReviewState =
-    operation === 'create' ? 'draft' : (originalDoc?.review?.status ?? 'draft')
-  let to: ReviewState = data.review?.status ?? from
-
-  // A draft save writes only a version: the main document keeps its old
-  // review status and _status, while emails would announce the new one. An
-  // author could also keep editing a "submitted" article whose main doc still
-  // reads draft. So the review status only changes on a full save.
-  if (to !== from && req.context?.[DRAFT_SAVE]) {
-    // An autosave runs while the editor picks the new status: it keeps the
-    // old one, and the main save applies the new.
-    if (req.context[AUTOSAVE]) {
-      to = from
-      data = { ...data, review: { ...data.review, status: from } }
-    } else
-      throw new APIError('Change the review status with the main save button, not Save draft.', 400)
-  }
-
-  const result = reviewPatch({
-    from,
-    to,
-    trusted,
-    data: {
-      tier: data.tier ?? originalDoc?.tier,
-      requested_tier: data.requested_tier ?? originalDoc?.requested_tier,
-      published_date: data.published_date ?? originalDoc?.published_date,
-    },
-    now: new Date(),
-  })
-  if ('error' in result) throw new APIError(result.error, 403)
-
-  return { ...data, ...result.patch }
-}
-
-/**
- * Emails admins on submission and authors on a decision. Only for writes made
- * by a signed-in account: trusted server writes (seed, archive import) are
- * silent, and a caller can also opt out with `context.skipReviewEmail`.
- */
-export const notifyReview: CollectionAfterChangeHook<Article> = async ({
-  doc,
-  previousDoc,
-  req,
-}) => {
-  if (!req.user || req.context?.skipReviewEmail) return doc
-  const state: ReviewState = doc.review?.status ?? 'draft'
-  const audience = notifyOn(previousDoc?.review?.status ?? 'draft', state)
-  if (!audience) return doc
-
-  const to =
-    audience === 'admins'
-      ? await adminEmails(req)
-      : await authorEmails(req, toPersonIds(doc.authors))
-  await sendReviewEmail(req, to, state, doc.title, doc.review?.review_note)
-  return doc
-}
+const articleReview = reviewHooks({
+  noun: 'article',
+  collection: 'articles',
+  ownersOf: (doc) => toPersonIds(doc.authors as Article['authors']),
+  onApprove: approveArticle,
+})
 
 /** Review states in which the article is still with its author. */
 const WITH_AUTHOR: Where = { 'review.status': { in: ['draft', 'changes_requested'] } }
@@ -173,10 +91,8 @@ export const Articles: CollectionConfig = {
     },
   },
   hooks: {
-    beforeOperation: [recordDraftSave],
+    ...articleReview,
     beforeValidate: [addSelfAsAuthor],
-    beforeChange: [applyReview],
-    afterChange: [notifyReview],
   },
   fields: [
     { name: 'title', type: 'text', required: true, localized: true },
@@ -208,43 +124,7 @@ export const Articles: CollectionConfig = {
       type: 'collapsible',
       admin: { position: 'sidebar' },
       fields: [
-        {
-          name: 'review',
-          type: 'group',
-          fields: [
-            {
-              name: 'status',
-              type: 'select',
-              required: true,
-              defaultValue: 'draft',
-              options: [
-                { label: 'Draft', value: 'draft' },
-                { label: 'Submitted', value: 'submitted' },
-                { label: 'Changes requested', value: 'changes_requested' },
-                { label: 'Approved', value: 'approved' },
-                { label: 'Rejected', value: 'rejected' },
-              ],
-              // A draft save only writes a version, so applyReview rejects one that
-              // changes this field: submit with the main button. It stays unpublished.
-              admin: {
-                description:
-                  'Ready for an editor? Choose Submitted, then save with the main button. Save draft cannot change this.',
-              },
-              // A copy goes through review again.
-              hooks: { beforeDuplicate: [() => 'draft'] },
-            },
-            {
-              name: 'review_note',
-              type: 'textarea',
-              access: { create: canSetTier, update: canSetTier },
-              hooks: { beforeDuplicate: [() => null] },
-              admin: {
-                description:
-                  'The editor’s note to the author when asking for changes, e.g. “Shorten the second section.”',
-              },
-            },
-          ],
-        },
+        ...reviewFields('article', { required: true }),
         {
           name: 'requested_tier',
           type: 'select',

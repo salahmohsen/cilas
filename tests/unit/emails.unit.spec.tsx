@@ -39,7 +39,6 @@ describe('withDefaults', () => {
   })
 })
 
-
 describe('MessageEmail', () => {
   const settings = withDefaults({
     logo: { url: 'https://cdn.test/logo.png', alt: 'CILAS' },
@@ -145,7 +144,11 @@ describe('cardOf', () => {
       text: 'Book by book.',
       note: 'Starts 3 Nov',
       // No crop on record: the grid falls back to the full image.
-      image: { url: 'https://cdn.test/plato.jpg', alt: 'Plato', thumb: 'https://cdn.test/plato.jpg' },
+      image: {
+        url: 'https://cdn.test/plato.jpg',
+        alt: 'Plato',
+        thumb: 'https://cdn.test/plato.jpg',
+      },
       url: 'https://ci-las.org/en/study/reading-plato',
       button: 'Read more',
     })
@@ -153,16 +156,29 @@ describe('cardOf', () => {
 
   it('links a Bridge programme to the Bridge page with Apply', () => {
     const card = cardOf(
-      { relationTo: 'programmes', value: { id: 2, title: 'Bridge 2026', kind: 'bridge', tagline: 'A year.' } },
+      {
+        relationTo: 'programmes',
+        value: { id: 2, title: 'Bridge 2026', kind: 'bridge', tagline: 'A year.' },
+      },
       null,
       labels,
     )
-    expect(card).toMatchObject({ kind: 'Programme', url: 'https://ci-las.org/en/study/bridge', button: 'Apply' })
+    expect(card).toMatchObject({
+      kind: 'Programme',
+      url: 'https://ci-las.org/en/study/bridge',
+      button: 'Apply',
+    })
   })
 
   it('skips a pick that is not populated, or a programme with no page', () => {
     expect(cardOf({ relationTo: 'articles', value: 5 }, null, labels)).toBeNull()
-    expect(cardOf({ relationTo: 'programmes', value: { id: 3, title: 'Residency', kind: 'residency' } }, null, labels)).toBeNull()
+    expect(
+      cardOf(
+        { relationTo: 'programmes', value: { id: 3, title: 'Residency', kind: 'residency' } },
+        null,
+        labels,
+      ),
+    ).toBeNull()
   })
 })
 
@@ -170,9 +186,25 @@ describe('newsletterMail', () => {
   const settings = withDefaults({}, { site: 'https://ci-las.org' })
   const paragraph = (text: string) => ({
     root: {
-      type: 'root', version: 1, format: '', indent: 0, direction: null,
-      children: [{ type: 'paragraph', version: 1, format: '', indent: 0, direction: null, textFormat: 0, textStyle: '',
-        children: [{ type: 'text', version: 1, text, format: 0, mode: 'normal', style: '', detail: 0 }] }],
+      type: 'root',
+      version: 1,
+      format: '',
+      indent: 0,
+      direction: null,
+      children: [
+        {
+          type: 'paragraph',
+          version: 1,
+          format: '',
+          indent: 0,
+          direction: null,
+          textFormat: 0,
+          textStyle: '',
+          children: [
+            { type: 'text', version: 1, text, format: 0, mode: 'normal', style: '', detail: 0 },
+          ],
+        },
+      ],
     },
   })
 
@@ -208,7 +240,17 @@ describe('newsletterMail', () => {
                   title: 'Fall 2026',
                   season: 'fall',
                   start_year: 2026,
-                  courses: { docs: [{ id: 2, title: 'Urban Culture', slug: 'urban', _status: 'published', tier: 'public' }] },
+                  courses: {
+                    docs: [
+                      {
+                        id: 2,
+                        title: 'Urban Culture',
+                        slug: 'urban',
+                        _status: 'published',
+                        tier: 'public',
+                      },
+                    ],
+                  },
                 },
               },
             ],
@@ -216,7 +258,10 @@ describe('newsletterMail', () => {
           {
             blockType: 'gallery',
             columns: '3',
-            images: [{ image: { url: 'https://cdn.test/a.jpg', alt: 'A' }, caption: 'يوم في سيلاس' }, { image: 4 }],
+            images: [
+              { image: { url: 'https://cdn.test/a.jpg', alt: 'A' }, caption: 'يوم في سيلاس' },
+              { image: 4 },
+            ],
           },
           { blockType: 'quote', text: 'Learning is a commons.', attribution: 'A fellow' },
         ],
@@ -242,7 +287,9 @@ describe('newsletterMail', () => {
     expect(mail.html).toContain('10 Darb El Labana')
     expect(mail.html).toContain('https://www.google.com/maps/search/')
     expect(mail.html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')
-    expect(mail.html.indexOf('Reading Plato')).toBeLessThan(mail.html.indexOf('Learning is a commons.'))
+    expect(mail.html.indexOf('Reading Plato')).toBeLessThan(
+      mail.html.indexOf('Learning is a commons.'),
+    )
   })
 })
 
@@ -310,7 +357,10 @@ describe('cards for collections, cycles and events', () => {
         value: {
           id: 7,
           title: 'Balcony gathering',
-          schedule: { start_date: '2026-07-24T00:00:00.000Z', slots: [{ start_time: '14:00', end_time: '18:30' }] },
+          schedule: {
+            start_date: '2026-07-24T00:00:00.000Z',
+            slots: [{ start_time: '14:00', end_time: '18:30' }],
+          },
           space: { name: 'CILAS, Darb El Ahmar' },
         },
       },
@@ -377,10 +427,20 @@ describe('the layout’s brand', () => {
     )
     expect(settings.logo.url).toBe('https://ci-las.org/assets/email/logo.png')
     expect(settings.social).toEqual([
-      { platform: 'YouTube', url: 'https://youtube.com/@cilas', icon: 'https://ci-las.org/assets/email/youtube.png' },
-      { platform: 'X', url: 'https://x.com/cilas', icon: 'https://ci-las.org/assets/email/twitter.png' },
+      {
+        platform: 'YouTube',
+        url: 'https://youtube.com/@cilas',
+        icon: 'https://ci-las.org/assets/email/youtube.png',
+      },
+      {
+        platform: 'X',
+        url: 'https://x.com/cilas',
+        icon: 'https://ci-las.org/assets/email/twitter.png',
+      },
     ])
-    const { html } = await renderEmail(<MessageEmail settings={settings} preview="x" paragraphs={['Hi']} />)
+    const { html } = await renderEmail(
+      <MessageEmail settings={settings} preview="x" paragraphs={['Hi']} />,
+    )
     expect(html).toContain('https://ci-las.org/assets/email/youtube.png')
     expect(html).toContain('href="https://x.com/cilas"')
     expect(html).toContain('max-width: 600px')
@@ -389,11 +449,29 @@ describe('the layout’s brand', () => {
 
 describe('the footer address', () => {
   it('comes from the chosen space, linked to its map', () => {
-    const s = withDefaults({ address_space: { address: 'Somewhere 1, Cairo', map_url: 'https://maps.test/x' } })
+    const s = withDefaults({
+      address_space: { address: 'Somewhere 1, Cairo', map_url: 'https://maps.test/x' },
+    })
     expect(s.address).toEqual({ text: 'Somewhere 1, Cairo', url: 'https://maps.test/x' })
   })
 
   it('falls back to the institute’s address', () => {
-    expect(withDefaults({ address_space: { address: '' } }).address.text).toContain('Darb El Labana')
+    expect(withDefaults({ address_space: { address: '' } }).address.text).toContain(
+      'Darb El Labana',
+    )
+  })
+})
+
+describe('reviewMail for courses and publications', () => {
+  it('names what is reviewed and links to it in the admin', async () => {
+    const settings = withDefaults({})
+    const mail = await reviewMail(settings, 'submitted', 'World Cinema', null, {
+      noun: 'course',
+      url: 'https://cilas.test/admin/collections/courses/7',
+    })
+    expect(mail.subject).toBe('Submitted for review: World Cinema')
+    expect(mail.html).toContain('Course review')
+    expect(mail.html).toContain('https://cilas.test/admin/collections/courses/7')
+    expect(mail.text).toContain('Open the course')
   })
 })

@@ -164,7 +164,7 @@ describe('publishing', () => {
           user: author,
           overrideAccess: false,
         }),
-      ).rejects.toThrow(/main save button/)
+      ).rejects.toThrow(/Submit for review/)
     })
 
     it('keeps the review status on an autosave that changes it', async () => {

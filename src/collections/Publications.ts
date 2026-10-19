@@ -13,8 +13,10 @@ import {
   publishedOrOwn,
 } from '@/access'
 import { toPersonIds } from '@/lib/fellow-role'
+import { reviewHooks } from '@/lib/review-hooks'
 import type { Publication } from '@/payload-types'
 import { creditsField } from '@/fields/credits'
+import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
 import { importFields } from '@/fields/import'
@@ -30,6 +32,13 @@ export const addSelfAsEditor: CollectionBeforeValidateHook<Publication> = ({
   const editors = toPersonIds(data.editors)
   return editors.includes(self) ? data : { ...data, editors: [...editors, self] }
 }
+
+/** A student or fellow submits a publication; an admin approves (publishes) it. */
+const publicationReview = reviewHooks({
+  noun: 'publication',
+  collection: 'publications',
+  ownersOf: (doc) => toPersonIds(doc.editors as Publication['editors']),
+})
 
 /** Students and fellows edit their own drafts. Publishing is the admin's approval. */
 const OWNER_ROLES: { allow: Role[] } = { allow: ['member', 'non_degree_seeking', 'fellow'] }
@@ -55,9 +64,16 @@ export const Publications: CollectionConfig = {
     baseFilter: ownList(ownsViaEditors),
   },
   hooks: {
+    ...publicationReview,
     beforeValidate: [addSelfAsEditor],
   },
   fields: [
+    {
+      label: 'Review',
+      type: 'collapsible',
+      admin: { position: 'sidebar' },
+      fields: reviewFields('publication'),
+    },
     {
       name: 'kind',
       type: 'select',

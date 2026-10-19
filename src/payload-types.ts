@@ -333,6 +333,16 @@ export interface Media {
  */
 export interface Course {
   id: number;
+  review?: {
+    /**
+     * Ready? Use “Submit for review”: an admin is emailed, and approves the course, asks for changes or declines it. Approving publishes it.
+     */
+    status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
+    /**
+     * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
+     */
+    review_note?: string | null;
+  };
   /**
    * Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins).
    */
@@ -1239,11 +1249,11 @@ export interface Article {
   cover_image?: (number | null) | Media;
   review: {
     /**
-     * Ready for an editor? Choose Submitted, then save with the main button. Save draft cannot change this.
+     * Ready? Use “Submit for review”: an admin is emailed, and approves the article, asks for changes or declines it. Approving publishes it.
      */
     status: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
     /**
-     * The editor’s note to the author when asking for changes, e.g. “Shorten the second section.”
+     * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
      */
     review_note?: string | null;
   };
@@ -1316,6 +1326,16 @@ export interface Article {
  */
 export interface Publication {
   id: number;
+  review?: {
+    /**
+     * Ready? Use “Submit for review”: an admin is emailed, and approves the publication, asks for changes or declines it. Approving publishes it.
+     */
+    status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
+    /**
+     * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
+     */
+    review_note?: string | null;
+  };
   kind: 'essay_collection' | 'translation_booklet' | 'research' | 'other';
   editors?: (number | Person)[] | null;
   cover_image?: (number | null) | Media;
@@ -2268,6 +2288,12 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "courses_select".
  */
 export interface CoursesSelect<T extends boolean = true> {
+  review?:
+    | T
+    | {
+        status?: T;
+        review_note?: T;
+      };
   tier?: T;
   course_type?: T;
   cycle?: T;
@@ -2627,6 +2653,12 @@ export interface ArticlesSelect<T extends boolean = true> {
  * via the `definition` "publications_select".
  */
 export interface PublicationsSelect<T extends boolean = true> {
+  review?:
+    | T
+    | {
+        status?: T;
+        review_note?: T;
+      };
   kind?: T;
   editors?: T;
   cover_image?: T;

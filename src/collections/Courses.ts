@@ -15,8 +15,10 @@ import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
+import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
+import { reviewHooks } from '@/lib/review-hooks'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
@@ -66,6 +68,13 @@ export const addSelfAsFellow: CollectionBeforeValidateHook<Course> = ({ data, re
   return fellows.includes(self) ? data : { ...data, fellows: [...fellows, self] }
 }
 
+/** A fellow submits a course; an admin approves (publishes) it, asks for changes or declines. */
+const courseReview = reviewHooks({
+  noun: 'course',
+  collection: 'courses',
+  ownersOf: (doc) => toPersonIds(doc.fellows as Course['fellows']),
+})
+
 /** afterChange never fires for a delete, so revocation needs its own hook. */
 export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = async ({
   doc,
@@ -99,6 +108,12 @@ export const Courses: CollectionConfig = {
     },
   },
   fields: [
+    {
+      label: 'Review',
+      type: 'collapsible',
+      admin: { position: 'sidebar' },
+      fields: reviewFields('course'),
+    },
     {
       // `tier` is who may see this, not whether it is published — that is
       // Payload's `_status`. Named distinctly so the two never read alike.
@@ -415,8 +430,10 @@ export const Courses: CollectionConfig = {
     },
   },
   hooks: {
+    beforeOperation: courseReview.beforeOperation,
     beforeValidate: [addSelfAsFellow],
-    afterChange: [propagateFellowRole, revalidateCoursesAfterChange],
+    beforeChange: courseReview.beforeChange,
+    afterChange: [...courseReview.afterChange, propagateFellowRole, revalidateCoursesAfterChange],
     afterDelete: [revokeDeletedCourseFellows, revalidateCoursesAfterDelete],
   },
 }

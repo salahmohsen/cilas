@@ -45,9 +45,14 @@ export const reviewMail = async (
   state: ReviewState,
   title: string,
   note?: string | null,
+  /** What is reviewed and, with `url`, a button that opens it in the admin. */
+  about: { noun?: string; url?: string } = {},
 ): Promise<Mail> => {
+  const noun = about.noun ?? 'article'
   const t = settings.texts.review
-  const key: ReviewKey = REVIEW_KEYS.includes(state as ReviewKey) ? (state as ReviewKey) : 'submitted'
+  const key: ReviewKey = REVIEW_KEYS.includes(state as ReviewKey)
+    ? (state as ReviewKey)
+    : 'submitted'
   const subject = fill(t[`${key}_subject`], { title })
   const withNote = note && NOTE_STATES.includes(state)
   const rendered = await renderEmail(
@@ -55,9 +60,10 @@ export const reviewMail = async (
       settings={settings}
       preview={subject}
       heading={subject}
-      kicker="Article review"
+      kicker={`${noun[0]!.toUpperCase()}${noun.slice(1)} review`}
       paragraphs={paragraphs(fill(t[key], { title }))}
       note={withNote ? { label: t.note_label, text: note } : null}
+      button={about.url ? { label: `Open the ${noun}`, url: about.url } : undefined}
     />,
   )
   return { subject, ...rendered }

@@ -2,6 +2,7 @@ import type { PayloadRequest } from 'payload'
 
 import { getEmailSettings } from '@/emails/settings'
 import { reviewMail } from '@/emails/transactional'
+import { env } from '@/env'
 import type { ReviewState } from '@/lib/review'
 
 const emailsOf = (docs: Array<{ email?: string | null }>): string[] =>
@@ -20,7 +21,7 @@ export const adminEmails = async (req: PayloadRequest): Promise<string[]> => {
   return emailsOf(docs)
 }
 
-/** Accounts linked to an article's authors; authors without one get no mail. */
+/** Accounts linked to a document's owners (authors, fellows, editors); people without one get no mail. */
 export const authorEmails = async (req: PayloadRequest, people: number[]): Promise<string[]> => {
   if (!people.length) return []
   const { docs } = await req.payload.find({
@@ -41,10 +42,17 @@ export const sendReviewEmail = async (
   state: ReviewState,
   title: string,
   note?: string | null,
+  about: { noun?: string; path?: string } = {},
 ): Promise<void> => {
   if (!to.length) return
   try {
-    const mail = await reviewMail(await getEmailSettings(req.payload, req), state, title, note)
+    const url = about.path
+      ? `${env.NEXT_PUBLIC_SERVER_URL.replace(/\/+$/, '')}${about.path}`
+      : undefined
+    const mail = await reviewMail(await getEmailSettings(req.payload, req), state, title, note, {
+      noun: about.noun,
+      url,
+    })
     await req.payload.sendEmail({ to, ...mail })
   } catch (error) {
     req.payload.logger.error({ err: error, msg: `Review email for "${title}" failed` })
