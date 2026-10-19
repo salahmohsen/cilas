@@ -241,9 +241,9 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
       sheetUtilities={
         <>
           <Suspense fallback={null}>
-            <LanguageSwitch />
+            <LanguageSwitch full />
           </Suspense>
-          <ThemeToggle />
+          <ThemeToggle full />
         </>
       }
       variant="mega"

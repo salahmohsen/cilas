@@ -127,7 +127,7 @@ const HOVER_INTENT = 70,
   LEAVE_GRACE = 180,
   TRAVEL = 36
 /** Matches the container query in site-header.module.css. */
-const COLLAPSE_BELOW = 760
+const COLLAPSE_BELOW = 1024
 
 /** Whether the page reads right to left: the menus' order, and the side panels slide from, follow it. */
 const isRtl = (): boolean =>

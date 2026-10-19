@@ -3,7 +3,7 @@
   width: auto;
   padding-inline: var(--space-3);
 }
-.iconOnly {
+.themeSwitch.iconOnly {
   width: 36px;
   min-width: 36px;
   height: 36px;
@@ -19,7 +19,7 @@
   .themeSwitch:hover:not(:disabled) {
     border-color: var(--border-strong);
   }
-  .iconOnly:hover:not(:disabled) {
+  .themeSwitch.iconOnly:hover:not(:disabled) {
     border-color: transparent;
     background: var(--surface-muted);
     box-shadow: none;

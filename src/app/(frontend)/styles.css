@@ -2483,12 +2483,12 @@ h3 {
     color: var(--foreground);
   }
 }
-/* Search reads as a field from 1024px up: the word, then its shortcut. */
+/* Search reads as a field once the header has room (1200px): the word, then its shortcut. */
 .site-search-label,
 .site-search-keys {
   display: none;
 }
-@media (min-width: 1024px) {
+@container site-header (min-width: 1200px) {
   .site-search-trigger {
     min-width: 168px;
     justify-content: flex-start;
@@ -2528,7 +2528,7 @@ h3 {
 .site-wide-only {
   display: contents;
 }
-@container site-header (max-width: 759px) {
+@container site-header (max-width: 1023px) {
   .site-wide-only {
     display: none;
   }
@@ -2538,5 +2538,30 @@ h3 {
   .site-control {
     height: 40px;
     min-width: 40px;
+  }
+}
+
+/* In the menu sheet (narrow screens): language and theme as two full-width
+   buttons with words, styled as the sheet's own actions below them. */
+.site-sheet-button {
+  display: inline-flex;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding-inline: 14px;
+  background: transparent;
+  color: var(--foreground);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+@media (hover: hover) and (pointer: fine) {
+  .site-sheet-button:hover {
+    background: var(--surface-muted);
   }
 }
