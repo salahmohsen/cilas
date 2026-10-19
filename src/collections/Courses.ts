@@ -38,7 +38,8 @@ import {
  * `courses.fellows` lists people, but the `fellow` role lives on the account
  * linked to each person, so granting and revoking means writing to `users` —
  * the course's own field cannot do it. afterChange, not beforeChange, so
- * accounts are only touched once the course write has landed.
+ * accounts are only touched once the course write has landed. Granting waits
+ * for the course to be published, so a draft cannot make anyone a fellow.
  */
 export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   doc,
@@ -48,8 +49,14 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   const before = toPersonIds(previousDoc?.fellows)
   const after = toPersonIds(doc.fellows)
 
-  for (const id of after.filter((id) => !before.includes(id))) {
-    await grantFellow(req.payload, id)
+  // The role follows publication: a fellow may list a co-fellow on a draft,
+  // but only an admin's approval makes that person a fellow. On publishing,
+  // everyone listed gets it; on a published course, whoever is added.
+  if (doc._status === 'published') {
+    const justPublished = previousDoc?._status !== 'published'
+    for (const id of justPublished ? after : after.filter((id) => !before.includes(id))) {
+      await grantFellow(req.payload, id)
+    }
   }
 
   for (const id of before.filter((id) => !after.includes(id))) {

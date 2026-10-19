@@ -19,6 +19,10 @@ export const People: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'updatedAt'],
+    // Everyone but an admin lists only their own profile, which they keep
+    // current; the site still reads every shown person through `read`.
+    baseFilter: ({ req }) =>
+      !req.user || isAdminUser(req.user) ? null : { id: { equals: personOf(req.user) ?? 0 } },
   },
   access: {
     read: readPeople,

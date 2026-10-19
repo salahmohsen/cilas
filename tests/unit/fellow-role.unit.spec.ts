@@ -44,8 +44,11 @@ const stubPayload = (accounts: Account[], teaching: number[] = []) => {
   return { payload: payload as unknown as Payload, updates }
 }
 
-const course = (id: number, fellows: Array<number | { id: number }>): Course =>
-  ({ id, fellows }) as unknown as Course
+const course = (
+  id: number,
+  fellows: Array<number | { id: number }>,
+  _status: 'draft' | 'published' = 'published',
+): Course => ({ id, fellows, _status }) as unknown as Course
 
 type ChangeArgs = Parameters<typeof propagateFellowRole>[0]
 
@@ -81,6 +84,22 @@ describe('propagateFellowRole', () => {
     const { payload, updates } = stubPayload(linked(['member']))
 
     await propagateFellowRole(onChange(payload, course(1, [50]), course(1, [])))
+
+    expect(updates).toEqual([{ id: 5, data: { roles: ['member', 'fellow'] } }])
+  })
+
+  it('grants nothing while the course is a draft: an admin approves co-fellows by publishing', async () => {
+    const { payload, updates } = stubPayload(linked(['member']))
+
+    await propagateFellowRole(onChange(payload, course(1, [50], 'draft'), course(1, [], 'draft')))
+
+    expect(updates).toEqual([])
+  })
+
+  it('grants everyone listed when the course is published', async () => {
+    const { payload, updates } = stubPayload(linked(['member']))
+
+    await propagateFellowRole(onChange(payload, course(1, [50]), course(1, [50], 'draft')))
 
     expect(updates).toEqual([{ id: 5, data: { roles: ['member', 'fellow'] } }])
   })

@@ -24,6 +24,7 @@ import * as migration_20261019_120000_accounts_get_a_person from './20261019_120
 import * as migration_20261019_122625_review_for_courses_and_publications from './20261019_122625_review_for_courses_and_publications';
 import * as migration_20261019_123324_applicant_questions_and_file_uploads from './20261019_123324_applicant_questions_and_file_uploads';
 import * as migration_20261019_131806_notifications from './20261019_131806_notifications';
+import * as migration_20261019_140000_published_owners_are_public from './20261019_140000_published_owners_are_public';
 
 export const migrations = [
   {
@@ -155,5 +156,10 @@ export const migrations = [
     up: migration_20261019_131806_notifications.up,
     down: migration_20261019_131806_notifications.down,
     name: '20261019_131806_notifications'
+  },
+  {
+    up: migration_20261019_140000_published_owners_are_public.up,
+    down: migration_20261019_140000_published_owners_are_public.down,
+    name: '20261019_140000_published_owners_are_public',
   },
 ];

@@ -127,8 +127,15 @@ export const Users: CollectionConfig = {
       generateEmailSubject: resetPasswordSubject,
     },
   },
+  // Payload's default for a missing rule is "any signed-in account", which
+  // would let a student read everyone's email, make a super admin or delete
+  // accounts. Admins manage accounts; everyone else reads only their own.
   access: {
+    read: ({ req }) =>
+      isAdminUser(req.user) ? true : req.user ? { id: { equals: req.user.id } } : false,
+    create: isAdmin,
     update: isAdmin,
+    delete: isAdmin,
   },
   hooks: {
     beforeChange: [ensurePerson, syncFellowRoleOnLink],

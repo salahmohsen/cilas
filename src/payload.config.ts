@@ -194,6 +194,10 @@ export default buildConfig({
   plugins: [
     formBuilderPlugin({
       fields: formFields,
+      // The forms themselves, with their emails and redirects, are admin work.
+      formOverrides: {
+        access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
+      },
       // Applications are read by admins only; anyone may send one.
       formSubmissionOverrides: {
         access: { read: isAdmin, update: isAdmin, delete: isAdmin },

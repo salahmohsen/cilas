@@ -8,8 +8,10 @@ import { adminViewOf, type AdminView } from '@/access'
  * open in drawers, so a fellow can pick a cycle or upload a cover image.
  */
 const VISIBLE: Record<Exclude<AdminView, 'admin'>, readonly string[]> = {
-  fellow: ['courses', 'articles', 'publications', 'enrollments'],
-  student: ['articles', 'publications'],
+  // People shows a non-admin only their own profile (People's baseFilter);
+  // Enrollments only theirs, or those of the courses they teach.
+  fellow: ['courses', 'articles', 'publications', 'enrollments', 'people'],
+  student: ['articles', 'publications', 'enrollments', 'people'],
 }
 
 /** Collections and globals type `user` differently; both carry `roles`. */

@@ -141,9 +141,30 @@ const notifyReview =
     return doc
   }
 
+/**
+ * Whoever has published work has a public profile: on approval, the owners'
+ * people are shown on the site (People → Show on the site). An admin can
+ * hide one again afterwards.
+ */
+const publishOwners =
+  ({ ownersOf }: ReviewOptions): CollectionAfterChangeHook =>
+  async ({ doc, previousDoc, req }) => {
+    if (doc.review?.status !== 'approved' || previousDoc?.review?.status === 'approved') return doc
+    const people = ownersOf(doc)
+    if (!people.length) return doc
+    await req.payload.update({
+      collection: 'people',
+      where: { and: [{ id: { in: people } }, { visible: { not_equals: true } }] },
+      data: { visible: true },
+      overrideAccess: true,
+      req,
+    })
+    return doc
+  }
+
 /** The review path's hooks, to spread into a collection's `hooks`. */
 export const reviewHooks = (options: ReviewOptions) => ({
   beforeOperation: [recordDraftSave],
   beforeChange: [applyReview(options)],
-  afterChange: [notifyReview(options)],
+  afterChange: [publishOwners(options), notifyReview(options)],
 })

@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { isAdmin, isAuthenticated } from '@/access'
+
 import { importFields } from '@/fields/import'
 
 export const Media: CollectionConfig = {
@@ -7,6 +9,11 @@ export const Media: CollectionConfig = {
 
   access: {
     read: () => true,
+    // Anyone signed in uploads (an author's cover image); only admins change
+    // or remove what is there, as one image can serve many pages.
+    create: isAuthenticated,
+    update: isAdmin,
+    delete: isAdmin,
   },
   fields: [
     {
