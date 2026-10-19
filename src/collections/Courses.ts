@@ -9,6 +9,7 @@ import {
   ownsViaFellows,
   personOf,
   readTiers,
+  WITH_OWNER,
 } from '@/access'
 import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
@@ -96,8 +97,11 @@ export const Courses: CollectionConfig = {
     readVersions: isAdminOrOwnVersions(ownsViaFellows),
     // A fellow saves drafts; an admin approves a course by publishing it.
     create: adminPublishes(canTeach),
-    update: adminPublishes(isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] })),
-    delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),
+    // A fellow edits while the course is with them; submitted, it waits for the admin.
+    update: adminPublishes(
+      isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'], while: WITH_OWNER }),
+    ),
+    delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'], while: WITH_OWNER }),
   },
   versions: {
     drafts: {

@@ -20,6 +20,7 @@ import {
   publishedOrOwn,
   readEnrollments,
   readTiers,
+  WITH_OWNER,
 } from '@/access'
 import type { User } from '@/payload-types'
 
@@ -332,5 +333,16 @@ describe('canTeach', () => {
 
   it('refuses members', () => {
     expect(run(canTeach, user(['member'], { person: 7 }))).toBe(false)
+  })
+})
+
+describe('isAdminOrOwnAndDraft while with the owner', () => {
+  it('lets an owner edit only a draft still with them, not one submitted', () => {
+    const rule = isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'], while: WITH_OWNER })
+    const where = run(rule, user(['fellow'], { person: 7 })) as Where
+    expect(where).toEqual({
+      and: [{ fellows: { contains: 7 } }, { _status: { equals: 'draft' } }, WITH_OWNER],
+    })
+    expect(WITH_OWNER).toEqual({ 'review.status': { in: ['draft', 'changes_requested'] } })
   })
 })

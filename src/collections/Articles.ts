@@ -1,4 +1,4 @@
-import type { CollectionBeforeValidateHook, CollectionConfig, Where } from 'payload'
+import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
 import {
   canAuthor,
@@ -10,6 +10,7 @@ import {
   ownsViaAuthors,
   personOf,
   readTiers,
+  WITH_OWNER,
 } from '@/access'
 import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 
@@ -59,9 +60,6 @@ const articleReview = reviewHooks({
   onApprove: approveArticle,
 })
 
-/** Review states in which the article is still with its author. */
-const WITH_AUTHOR: Where = { 'review.status': { in: ['draft', 'changes_requested'] } }
-
 /** A piece of writing by members of the community, published after review. */
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -71,8 +69,8 @@ export const Articles: CollectionConfig = {
     create: canAuthor,
     // Authors edit or delete only while the article is with them, not once
     // submitted. `_status` alone would let them delete a submitted article.
-    update: isAdminOrOwnWhile(ownsViaAuthors, WITH_AUTHOR),
-    delete: isAdminOrOwnWhile(ownsViaAuthors, WITH_AUTHOR),
+    update: isAdminOrOwnWhile(ownsViaAuthors, WITH_OWNER),
+    delete: isAdminOrOwnWhile(ownsViaAuthors, WITH_OWNER),
   },
   // Autosave feeds the live preview as the editor writes.
   // Save draft shows beside autosave, so an author always has a button to press.
@@ -161,6 +159,8 @@ export const Articles: CollectionConfig = {
           type: 'checkbox',
           label: 'Feature on home page',
           access: { create: canSetTier, update: canSetTier },
+          // An editor's choice: authors do not see it.
+          admin: { condition: (_, __, { user }) => isAdminUser(user) },
           hooks: { beforeDuplicate: [() => false] },
         },
       ],

@@ -1,7 +1,6 @@
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
 import {
-  type Role,
   adminPublishes,
   canProposePublication,
   isAdminOrOwnAndDraft,
@@ -11,6 +10,8 @@ import {
   ownsViaEditors,
   personOf,
   publishedOrOwn,
+  type Role,
+  WITH_OWNER,
 } from '@/access'
 import { toPersonIds } from '@/lib/fellow-role'
 import { reviewHooks } from '@/lib/review-hooks'
@@ -53,8 +54,11 @@ export const Publications: CollectionConfig = {
     read: publishedOrOwn(ownsViaEditors),
     readVersions: isAdminOrOwnVersions(ownsViaEditors),
     create: adminPublishes(canProposePublication),
-    update: adminPublishes(isAdminOrOwnAndDraft(ownsViaEditors, OWNER_ROLES)),
-    delete: isAdminOrOwnAndDraft(ownsViaEditors, OWNER_ROLES),
+    // An owner edits while it is with them; submitted, it waits for the admin.
+    update: adminPublishes(
+      isAdminOrOwnAndDraft(ownsViaEditors, { ...OWNER_ROLES, while: WITH_OWNER }),
+    ),
+    delete: isAdminOrOwnAndDraft(ownsViaEditors, { ...OWNER_ROLES, while: WITH_OWNER }),
   },
   versions: { drafts: true },
   admin: {

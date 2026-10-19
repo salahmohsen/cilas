@@ -119,7 +119,7 @@ export const canTeach: Access = ({ req }) =>
  * the fellows listed on it, not by any logged-in user who happens to be linked.
  */
 export const isAdminOrOwnAndDraft =
-  (owned: Ownership, { allow }: { allow?: Role[] } = {}): Access =>
+  (owned: Ownership, { allow, while: also }: { allow?: Role[]; while?: Where } = {}): Access =>
   ({ req }) => {
     if (isAdminUser(req.user)) return true
     if (!req.user) return false
@@ -128,10 +128,17 @@ export const isAdminOrOwnAndDraft =
     const owns = owned(req.user)
     if (!owns) return false
 
-    // Both constraints must hold. `owns && { _status }` would evaluate to the
+    // Every constraint must hold. `owns && { _status }` would evaluate to the
     // second object alone and drop ownership entirely.
-    return { and: [owns, { _status: { equals: 'draft' } }] }
+    return { and: [owns, { _status: { equals: 'draft' } }, ...(also ? [also] : [])] }
   }
+
+/**
+ * Review states in which a document is still with its owner: before it is
+ * submitted, or once changes are asked for. Submitted, it waits for the
+ * admin unchanged, so what is approved is what was submitted.
+ */
+export const WITH_OWNER: Where = { 'review.status': { in: ['draft', 'changes_requested'] } }
 
 /** Admins see every row; a signed-in account only the rows it owns. */
 export const isAdminOrOwn =
