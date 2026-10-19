@@ -82,6 +82,7 @@ export interface Config {
     events: Event;
     newsletters: Newsletter;
     'mailing-lists': MailingList;
+    'submission-files': SubmissionFile;
     spaces: Space;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -127,6 +128,7 @@ export interface Config {
     events: EventsSelect<false> | EventsSelect<true>;
     newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
     'mailing-lists': MailingListsSelect<false> | MailingListsSelect<true>;
+    'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     spaces: SpacesSelect<false> | SpacesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -437,6 +439,159 @@ export interface Course {
     deadline?: string | null;
     archived_registration_url?: string | null;
   };
+  /**
+   * Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.
+   */
+  applicant_questions?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            /**
+             * An image the question asks about, shown above the answer.
+             */
+            image?: (number | null) | Media;
+            /**
+             * The fewest words an answer may have.
+             */
+            minWords?: number | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'radio';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkboxGroup';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            /**
+             * The kinds of file allowed.
+             */
+            accept: ('pdf' | 'word' | 'image')[];
+            maxSizeMB?: number | null;
+            multiple?: boolean | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'fileUpload';
+          }
+      )[]
+    | null;
   /**
    * Only when this course costs something other than its cycle’s price.
    */
@@ -925,6 +1080,24 @@ export interface Form {
             id?: string | null;
             blockName?: string | null;
             blockType: 'checkboxGroup';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            /**
+             * Help text under the question.
+             */
+            description?: string | null;
+            /**
+             * The kinds of file allowed.
+             */
+            accept: ('pdf' | 'word' | 'image')[];
+            maxSizeMB?: number | null;
+            multiple?: boolean | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'fileUpload';
           }
       )[]
     | null;
@@ -1780,6 +1953,30 @@ export interface MailingList {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submission-files".
+ */
+export interface SubmissionFile {
+  id: number;
+  /**
+   * The question it answers.
+   */
+  field?: string | null;
+  prefix?: string | null;
+  _objectKey?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -2115,6 +2312,10 @@ export interface PayloadLockedDocument {
         value: number | MailingList;
       } | null)
     | ({
+        relationTo: 'submission-files';
+        value: number | SubmissionFile;
+      } | null)
+    | ({
         relationTo: 'spaces';
         value: number | Space;
       } | null)
@@ -2332,6 +2533,131 @@ export interface CoursesSelect<T extends boolean = true> {
         url?: T;
         deadline?: T;
         archived_registration_url?: T;
+      };
+  applicant_questions?:
+    | T
+    | {
+        text?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        textarea?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              description?: T;
+              image?: T;
+              minWords?: T;
+              id?: T;
+              blockName?: T;
+            };
+        radio?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        checkboxGroup?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        checkbox?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              defaultValue?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        select?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              placeholder?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        number?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        fileUpload?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              description?: T;
+              accept?: T;
+              maxSizeMB?: T;
+              multiple?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
       };
   pricing_override?:
     | T
@@ -2924,6 +3250,26 @@ export interface MailingListsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "submission-files_select".
+ */
+export interface SubmissionFilesSelect<T extends boolean = true> {
+  field?: T;
+  prefix?: T;
+  _objectKey?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "spaces_select".
  */
 export interface SpacesSelect<T extends boolean = true> {
@@ -3099,6 +3445,19 @@ export interface FormsSelect<T extends boolean = true> {
                   };
               required?: T;
               description?: T;
+              id?: T;
+              blockName?: T;
+            };
+        fileUpload?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              description?: T;
+              accept?: T;
+              maxSizeMB?: T;
+              multiple?: T;
+              required?: T;
               id?: T;
               blockName?: T;
             };
@@ -3563,6 +3922,7 @@ export interface TaskCreateCollectionExport {
       | 'events'
       | 'newsletters'
       | 'mailing-lists'
+      | 'submission-files'
       | 'spaces'
       | 'forms'
       | 'form-submissions'

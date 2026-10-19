@@ -18,6 +18,7 @@ import { Articles } from './collections/Articles'
 import { Press } from './collections/Press'
 import { Events } from './collections/Events'
 import { MailingLists } from './collections/MailingLists'
+import { SubmissionFiles } from './collections/SubmissionFiles'
 import { Newsletters } from './collections/Newsletters'
 import { Spaces } from './collections/Spaces'
 import { Publications } from './collections/Publications'
@@ -27,6 +28,7 @@ import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
 import { formFields } from './forms/form-fields'
+import { submitWithFiles } from './forms/submit-with-files'
 import { applicationEndpoints, applicationFields, checkTarget } from './forms/applications'
 import { requireTurnstile } from './forms/spam-check'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -62,6 +64,8 @@ const storage = s3Storage({
       generateFileURL: ({ filename, prefix }) =>
         `${env.R2_PUBLIC_URL.replace(/\/+$/, '')}/${prefix}/${encodeURIComponent(filename)}`,
     },
+    // Applicants' files: no public URL; Payload serves them to admins only.
+    'submission-files': { disableLocalStorage: true, prefix: 'applications' },
   },
   bucket: env.R2_BUCKET,
   config: {
@@ -141,6 +145,7 @@ export default buildConfig({
     Events,
     Newsletters,
     MailingLists,
+    SubmissionFiles,
     Spaces,
   ],
   globals: [SiteSettings, EmailSettings],
@@ -183,7 +188,11 @@ export default buildConfig({
         admin: { defaultColumns: ['form', 'target', 'status', 'createdAt'] },
         // Applications: admins accept or reject them from the submission.
         fields: ({ defaultFields }) => [...defaultFields, ...applicationFields],
-        endpoints: applicationEndpoints,
+        // Applications (accept, reject) and the submissions that carry files.
+        endpoints: [
+          ...applicationEndpoints,
+          { path: '/with-files', method: 'post', handler: submitWithFiles },
+        ],
         hooks: { beforeChange: [requireTurnstile(env.TURNSTILE_SECRET_KEY), checkTarget] },
       },
     }),

@@ -100,7 +100,8 @@ export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation,
           .findByID({ collection: relationTo, id, depth: 1, overrideAccess: true, req })
           .catch(() => null)
   // A course without its own form uses its cycle's.
-  const cycle = target && 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
+  const cycle =
+    target && 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
   const form = target?.registration?.form ?? cycle?.registration?.form
   if (!target || idOf(form) !== idOf(data.form)) {
     throw new APIError('This form is not the registration form of what it names.', 400)
@@ -119,8 +120,7 @@ export const rolesAfterAccept = (roles: Role[], kind: TargetKind): Role[] => {
 export const applicantOf = (
   answers: FormSubmission['submissionData'],
 ): { name: string; email: string } | { error: string } => {
-  const answer = (field: string) =>
-    answers?.find((a) => a.field === field)?.value?.trim() ?? ''
+  const answer = (field: string) => answers?.find((a) => a.field === field)?.value?.trim() ?? ''
   const name = answer('name')
   const email = answer('email').toLowerCase()
   if (!name) return { error: 'The submission has no "name" answer.' }
@@ -144,7 +144,8 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   const local = { req, overrideAccess: true, depth: 0 } as const
   const submission = await payload.findByID({ collection: 'form-submissions', id, ...local })
   if (submission.status === 'accepted') return null
-  if (!submission.target) throw new APIError('This submission is not for a programme or a course.', 400)
+  if (!submission.target)
+    throw new APIError('This submission is not for a programme or a course.', 400)
   const applicant = applicantOf(submission.submissionData)
   if ('error' in applicant) throw new APIError(applicant.error, 400)
 
@@ -221,7 +222,12 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
     })
     const enrollment = docs[0]
     if (enrollment?.status === 'applied') {
-      await payload.update({ collection: 'enrollments', id: enrollment.id, data: { status: 'accepted' }, ...local })
+      await payload.update({
+        collection: 'enrollments',
+        id: enrollment.id,
+        data: { status: 'accepted' },
+        ...local,
+      })
     }
     result.enrollment =
       enrollment?.id ??
@@ -268,7 +274,8 @@ const decide =
   async (req) => {
     if (!isAdminUser(req.user)) return Response.json({ error: 'Admins only.' }, { status: 403 })
     const id = Number(req.routeParams?.id)
-    if (!Number.isInteger(id)) return Response.json({ error: 'No such submission.' }, { status: 404 })
+    if (!Number.isInteger(id))
+      return Response.json({ error: 'No such submission.' }, { status: 404 })
     const owns = await initTransaction(req)
     let done: Accepted | null
     try {
@@ -276,7 +283,8 @@ const decide =
       if (owns) await commitTransaction(req)
     } catch (error) {
       if (owns) await killTransaction(req)
-      if (error instanceof APIError) return Response.json({ error: error.message }, { status: error.status })
+      if (error instanceof APIError)
+        return Response.json({ error: error.message }, { status: error.status })
       throw error
     }
     // After the commit, so a failed send never undoes the acceptance.
@@ -287,7 +295,10 @@ const decide =
         await req.payload.sendEmail({ to: done.mail.email, ...mail })
         emailed = true
       } catch (error) {
-        req.payload.logger.error({ err: error, msg: `Acceptance email for submission ${id} failed` })
+        req.payload.logger.error({
+          err: error,
+          msg: `Acceptance email for submission ${id} failed`,
+        })
       }
     }
     return Response.json({ ok: true, emailed })

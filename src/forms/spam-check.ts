@@ -1,6 +1,7 @@
 import { APIError, type CollectionBeforeChangeHook } from 'payload'
 
 import { isAdminUser } from '@/access'
+import { TURNSTILE_VERIFIED } from '@/forms/submit-with-files'
 import { TURNSTILE_HEADER, verifyTurnstile } from '@/lib/turnstile'
 
 /**
@@ -13,6 +14,8 @@ export const requireTurnstile =
   async ({ data, operation, req }) => {
     if (!secret || operation !== 'create') return data
     if (req.payloadAPI === 'local' || isAdminUser(req.user)) return data
+    // The files endpoint (src/forms/submit-with-files.ts) has spent the token already.
+    if (req.context?.[TURNSTILE_VERIFIED]) return data
     const token = req.headers.get(TURNSTILE_HEADER)
     const ip =
       req.headers.get('cf-connecting-ip') ??

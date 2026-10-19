@@ -22,6 +22,7 @@ import * as migration_20261018_183643_article_autosave from './20261018_183643_a
 import * as migration_20261018_192058_mailing_lists from './20261018_192058_mailing_lists';
 import * as migration_20261019_120000_accounts_get_a_person from './20261019_120000_accounts_get_a_person';
 import * as migration_20261019_122625_review_for_courses_and_publications from './20261019_122625_review_for_courses_and_publications';
+import * as migration_20261019_123324_applicant_questions_and_file_uploads from './20261019_123324_applicant_questions_and_file_uploads';
 
 export const migrations = [
   {
@@ -142,6 +143,11 @@ export const migrations = [
   {
     up: migration_20261019_122625_review_for_courses_and_publications.up,
     down: migration_20261019_122625_review_for_courses_and_publications.down,
-    name: '20261019_122625_review_for_courses_and_publications'
+    name: '20261019_122625_review_for_courses_and_publications',
+  },
+  {
+    up: migration_20261019_123324_applicant_questions_and_file_uploads.up,
+    down: migration_20261019_123324_applicant_questions_and_file_uploads.down,
+    name: '20261019_123324_applicant_questions_and_file_uploads'
   },
 ];

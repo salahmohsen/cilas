@@ -39,8 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 /**
- * Applying to a course through its site form: its own, or its cycle's. The
- * submission names the course, so an admin can accept it into an enrollment.
+ * Applying to a course through its site form: its own, or its cycle's, then
+ * the course's own questions (Questions for applicants). The submission names
+ * the course, so an admin can accept it into an enrollment.
  */
 export default async function CourseApplyPage({ params }: Props) {
   const { locale, slug } = await params
@@ -55,13 +56,20 @@ export default async function CourseApplyPage({ params }: Props) {
   const formRef = course.registration?.form ?? cycle?.registration?.form
   if (method !== 'form' || !formRef) notFound()
 
-  const form: Form = await payload.findByID({
+  const shared: Form = await payload.findByID({
     collection: 'forms',
     id: typeof formRef === 'object' ? formRef.id : formRef,
     depth: 1,
     locale: lang,
     fallbackLocale: 'en',
   })
+  // The course's own questions after the form's. Their names take a prefix,
+  // so none can overwrite an answer to the shared form.
+  const extra = (course.applicant_questions ?? []).map((q) => ({
+    ...q,
+    name: `course_${q.name}`,
+  })) as unknown as NonNullable<Form['fields']>
+  const form: Form = { ...shared, fields: [...(shared.fields ?? []), ...extra] }
 
   const open = registrationStatus(course.registration, cycle?.registration) === 'open'
   const deadlineDay = course.registration?.deadline ?? cycle?.registration?.deadline

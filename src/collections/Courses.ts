@@ -14,6 +14,7 @@ import { bibliographyField } from '@/fields/bibliography'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { pricingField } from '@/fields/pricing'
 import { registrationField } from '@/fields/registration'
+import { courseQuestionBlocks } from '@/forms/form-fields'
 import { scheduleField, timeRangeFields } from '@/fields/schedule'
 import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
@@ -234,6 +235,19 @@ export const Courses: CollectionConfig = {
     },
     scheduleField(),
     registrationField(),
+    {
+      name: 'applicant_questions',
+      label: 'Questions for applicants',
+      type: 'blocks',
+      blocks: courseQuestionBlocks(),
+      labels: { singular: 'Question', plural: 'Questions' },
+      admin: {
+        // A website form only: an external link (a Google Form) asks its own.
+        condition: (data) => data?.registration?.method !== 'external',
+        description:
+          'Extra questions for this course, asked after the website form’s own. They go live when an admin publishes the course. Not used when applications go to an external link, such as a Google Form.',
+      },
+    },
     pricingField({
       name: 'pricing_override',
       label: 'Price override',

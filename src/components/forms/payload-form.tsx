@@ -6,23 +6,35 @@ import { useTranslations } from 'next-intl'
 import { Fragment, useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
+import { FileUpload, type FileUploadItem } from '@/components/arc/file-upload/file-upload'
 import { Input } from '@/components/arc/input/input'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { useSpamCheck } from '@/components/forms/spam-check'
 import { Link } from '@/i18n/navigation'
+import { acceptAttribute, acceptedLabel, maxBytes, maxCount } from '@/lib/form-files'
 import type { Form, Media } from '@/payload-types'
 
 type Block = NonNullable<Form['fields']>[number]
 type Question = Exclude<Block, { blockType: 'message' }>
-type Answer = string | string[] | boolean
+type Answer = string | string[] | boolean | FileUploadItem[]
 type Values = Record<string, Answer>
 
 const isQuestion = (b: Block): b is Question =>
   b.blockType !== 'message' && 'name' in b && Boolean(b.name)
 const wordsIn = (text: string) => text.trim().split(/\s+/).filter(Boolean).length
 const emptyFor = (q: Question): Answer =>
-  q.blockType === 'checkboxGroup' ? [] : q.blockType === 'checkbox' ? false : ''
+  q.blockType === 'checkboxGroup' || q.blockType === 'fileUpload'
+    ? []
+    : q.blockType === 'checkbox'
+      ? false
+      : ''
+const isFiles = (q: Question) => q.blockType === 'fileUpload'
+/** The files a question holds that passed the picker's checks. */
+const goodFiles = (value: Answer | undefined) =>
+  Array.isArray(value)
+    ? (value as FileUploadItem[]).filter((i) => typeof i === 'object' && !i.error)
+    : []
 const optionsOf = (q: Question) => ('options' in q && q.options ? q.options : [])
 const fieldId = (name: string) => `field-${name}`
 
@@ -93,6 +105,11 @@ export function PayloadForm({
   const spam = useSpamCheck()
 
   const check = (q: Question, value: Answer): string | undefined => {
+    if (isFiles(q)) {
+      const items = (value as FileUploadItem[]) ?? []
+      if (items.some((i) => i.error)) return t('fileInvalid')
+      return q.required && !items.length ? t('required') : undefined
+    }
     const empty = Array.isArray(value)
       ? value.length === 0
       : value === false || String(value).trim() === ''
@@ -114,7 +131,9 @@ export function PayloadForm({
   // Answers as the admin reads them: the chosen options' labels, not their values.
   const readable = (q: Question, value: Answer): string => {
     const label = (v: string) => optionsOf(q).find((o) => o.value === v)?.label ?? v
-    if (Array.isArray(value)) return value.map(label).join(', ')
+    // Files: the server writes their download links in.
+    if (isFiles(q)) return ''
+    if (Array.isArray(value)) return (value as string[]).map(label).join(', ')
     if (typeof value === 'boolean') return value ? 'Yes' : 'No'
     return q.blockType === 'radio' ? label(value) : value
   }
@@ -123,24 +142,37 @@ export function PayloadForm({
     defaultValues: Object.fromEntries(questions.map((q) => [q.name, emptyFor(q)])) as Values,
     onSubmit: async ({ value }) => {
       setFailed(false)
+      const sent = {
+        form: form.id,
+        target,
+        submissionData: questions.map((q) => ({
+          field: q.name,
+          value: readable(q, value[q.name] ?? emptyFor(q)),
+        })),
+      }
+      // With files, answers and files go in one request: the spam check's
+      // token passes once (src/forms/submit-with-files.ts).
+      const files = questions.flatMap((q) =>
+        isFiles(q) ? goodFiles(value[q.name]).map((i) => [q.name, i.file] as const) : [],
+      )
+      const send = (headers: Record<string, string>) => {
+        if (!files.length) {
+          return fetch('/api/form-submissions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...headers },
+            body: JSON.stringify(sent),
+          })
+        }
+        const body = new FormData()
+        body.set('payload', JSON.stringify(sent))
+        for (const [name, file] of files) body.append(`file:${name}`, file, file.name)
+        return fetch('/api/form-submissions/with-files', { method: 'POST', headers, body })
+      }
       const res = spam.isBot()
         ? new Response(null)
         : await spam
             .headers()
-            .then((headers) =>
-              fetch('/api/form-submissions', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', ...headers },
-                body: JSON.stringify({
-                  form: form.id,
-                  target,
-                  submissionData: questions.map((q) => ({
-                    field: q.name,
-                    value: readable(q, value[q.name] ?? emptyFor(q)),
-                  })),
-                }),
-              }),
-            )
+            .then(send)
             .catch(() => null)
       spam.reset()
       if (!res?.ok) {
@@ -166,20 +198,30 @@ export function PayloadForm({
       const saved = JSON.parse(localStorage.getItem(draftKey) ?? 'null') as Values | null
       if (saved)
         for (const q of questions)
-          if (q.name in saved) api.setFieldValue(q.name, saved[q.name]!, { dontUpdateMeta: true })
+          if (q.name in saved && !isFiles(q))
+            api.setFieldValue(q.name, saved[q.name]!, { dontUpdateMeta: true })
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
   const values = useSelector(api.store, (s) => s.values)
+  // As one string, so the effect below sees it change only when the questions do.
+  const fileNames = questions
+    .filter(isFiles)
+    .map((q) => q.name)
+    .join('\n')
   useEffect(() => {
     if (disabled || sent) return
     const id = setTimeout(() => {
       try {
-        localStorage.setItem(draftKey, JSON.stringify(values))
+        // Files cannot be kept on the device; the rest of the answers are.
+        const kept = Object.fromEntries(
+          Object.entries(values).filter(([name]) => !fileNames.split('\n').includes(name)),
+        )
+        localStorage.setItem(draftKey, JSON.stringify(kept))
       } catch {}
     }, 500)
     return () => clearTimeout(id)
-  }, [values, draftKey, disabled, sent])
+  }, [values, draftKey, disabled, sent, fileNames])
 
   const attempts = useSelector(api.store, (s) => s.submissionAttempts)
   const errorOf = (field: AnyFieldApi) =>
@@ -215,6 +257,34 @@ export function PayloadForm({
     const error = errorOf(field)
     const description = ('description' in q && q.description) || undefined
     switch (q.blockType) {
+      case 'fileUpload': {
+        const items = (field.state.value as FileUploadItem[]) ?? []
+        const help = t('fileHelp', {
+          kinds: acceptedLabel(q),
+          size: Math.round(maxBytes(q) / 1048576),
+        })
+        return (
+          <div id={fieldId(q.name)} tabIndex={-1}>
+            <FileUpload
+              accept={acceptAttribute(q)}
+              description={description ? `${description} ${help}` : help}
+              label={label(q)}
+              maxSize={maxBytes(q)}
+              multiple={maxCount(q) > 1}
+              onChange={(next) => {
+                field.handleChange(next.slice(-maxCount(q)))
+                field.handleBlur()
+              }}
+              value={items}
+            />
+            {error ? (
+              <p className="payload-form-error" role="alert">
+                {error}
+              </p>
+            ) : null}
+          </div>
+        )
+      }
       case 'textarea': {
         const image = typeof q.image === 'object' && q.image ? (q.image as Media) : null
         const count = wordsIn(String(field.state.value ?? ''))

@@ -510,7 +510,9 @@
     "sending": "Sending…",
     "failed": "We couldn’t send your answers. Check your connection and try again; nothing you wrote is lost.",
     "draft": "Your answers are kept on this device until you send them.",
-    "fix": "{count, plural, one {One question still needs an answer.} other {# questions still need an answer.}}"
+    "fix": "{count, plural, one {One question still needs an answer.} other {# questions still need an answer.}}",
+    "fileHelp": "{kinds}, up to {size} MB each.",
+    "fileInvalid": "Remove the files marked with a problem."
   },
   "Apply": {
     "metaTitle": "Apply to the Bridge Programme",
