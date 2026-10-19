@@ -14,6 +14,7 @@ const STATIC: SitePage[] = [
   { path: '' },
   { path: '/study' },
   { path: '/study/bridge' },
+  { path: '/apply' },
   { path: '/articles' },
   { path: '/people/fellows' },
   { path: '/people/cilasians' },

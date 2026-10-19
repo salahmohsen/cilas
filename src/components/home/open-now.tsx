@@ -10,7 +10,11 @@ import { posterLayouts } from '@/lib/posters'
  * What people can register for today, a poster each, turning on their own.
  * The page leaves the section out when nothing is open.
  */
-export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: string }) {
+/**
+ * What is open as posters, the nearest deadline first: shared by the home
+ * page's carousel and the Open for registration page (/apply).
+ */
+export async function openPosters(items: OpenItem[], locale: string): Promise<PosterData[]> {
   const [t, format] = await Promise.all([getTranslations('Home'), getFormatter()])
   const day = (iso: string) =>
     format.dateTime(new Date(`${iso}T12:00:00Z`), {
@@ -22,7 +26,7 @@ export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: st
     })
   const and = locale === 'ar' ? ' و' : ' & '
   const layouts = posterLayouts(items.length)
-  const posters: PosterData[] = items.map((item, i) => ({
+  return items.map((item, i) => ({
     id: `${item.kind}-${item.href}`,
     href: `/${locale}${item.href}`,
     layout: layouts[i]!,
@@ -36,7 +40,10 @@ export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: st
     details: item.when ? [item.when] : [],
     action: t('apply'),
   }))
+}
 
+export async function OpenNow({ items, locale }: { items: OpenItem[]; locale: string }) {
+  const [t, posters] = await Promise.all([getTranslations('Home'), openPosters(items, locale)])
   return (
     <section aria-labelledby="home-open" className="home-section" id="open">
       <header className="home-section-header">

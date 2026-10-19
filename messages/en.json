@@ -594,7 +594,8 @@
       "outlets": "Outlets"
     },
     "with": "With {names}",
-    "noneOpenLink": "Sign up for the newsletter to hear when it opens."
+    "noneOpenLink": "Sign up for the newsletter to hear when it opens.",
+    "browseCourses": "Browse every course"
   },
   "Contact": {
     "metaTitle": "Contact",
