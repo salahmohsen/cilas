@@ -41,7 +41,9 @@
     },
     "calendar": {
       "label": "التقويم"
-    }
+    },
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة"
   },
   "Search": {
     "openLabel": "ابحث في الموقع",

@@ -41,7 +41,9 @@
     },
     "calendar": {
       "label": "Calendar"
-    }
+    },
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "Search": {
     "openLabel": "Search the site",

@@ -1,13 +1,13 @@
 .trigger {
   position: relative;
   display: grid;
-  width: 42px;
-  height: 42px;
+  width: 36px;
+  height: 36px;
   place-items: center;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  background: var(--surface);
-  color: var(--foreground);
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
   cursor: pointer;
   transition:
     border-color var(--duration-fast) var(--ease-standard),
@@ -15,13 +15,13 @@
 }
 .trigger[data-state='open'],
 .trigger:active {
-  border-color: var(--border-strong);
   background: var(--surface-muted);
+  color: var(--foreground);
 }
 @media (hover: hover) and (pointer: fine) {
   .trigger:hover {
-    border-color: var(--border-strong);
     background: var(--surface-muted);
+    color: var(--foreground);
   }
 }
 .trigger > span:first-child {

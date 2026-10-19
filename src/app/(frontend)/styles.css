@@ -2521,3 +2521,22 @@ h3 {
   color: var(--text-muted);
   font: 500 11px/1 var(--font-body);
 }
+
+/* Language and theme sit in the bar on wide headers and in the menu sheet on
+   narrow ones, so a phone's bar keeps search, notifications, account, Apply
+   and the menu. The header is the size container (Arc's site-header). */
+.site-wide-only {
+  display: contents;
+}
+@container site-header (max-width: 759px) {
+  .site-wide-only {
+    display: none;
+  }
+}
+/* Touch screens get larger targets (WCAG 2.5.8 asks 24px; 40px suits a thumb). */
+@media (pointer: coarse) {
+  .site-control {
+    height: 40px;
+    min-width: 40px;
+  }
+}

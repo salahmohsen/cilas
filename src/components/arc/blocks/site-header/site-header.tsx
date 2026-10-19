@@ -104,6 +104,10 @@ export interface SiteHeaderProps {
   label?: string
   /** Compact controls shown beside the actions at every width (language, theme). */
   utilities?: ReactNode
+  /** Controls the menu sheet shows on narrow screens, above its actions (e.g. language and theme moved off a crowded bar). */
+  sheetUtilities?: ReactNode
+  /** The menu button's names, for another language. */
+  menuLabels?: { open: string; close: string }
   className?: string
 }
 
@@ -126,7 +130,8 @@ const HOVER_INTENT = 70,
 const COLLAPSE_BELOW = 760
 
 /** Whether the page reads right to left: the menus' order, and the side panels slide from, follow it. */
-const isRtl = (): boolean => typeof document !== 'undefined' && document.documentElement.dir === 'rtl'
+const isRtl = (): boolean =>
+  typeof document !== 'undefined' && document.documentElement.dir === 'rtl'
 
 /** Panel content slides in from the side of the newly opened item; opening from closed drops in from the bar. */
 const faceVariants: Variants = {
@@ -343,6 +348,8 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
     scrollThreshold = 8,
     label = 'Main',
     utilities,
+    sheetUtilities,
+    menuLabels = { open: 'Open menu', close: 'Close menu' },
     className,
   },
   ref,
@@ -726,7 +733,7 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
               className={styles.menuButton}
               aria-expanded={menuOpen}
               aria-controls={`${id}-sheet`}
-              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-label={menuOpen ? menuLabels.close : menuLabels.open}
               onClick={() => {
                 if (menuOpen) closeMenu()
                 else setMenuOpen(true)
@@ -1009,6 +1016,9 @@ export const SiteHeader = forwardRef<HTMLElement, SiteHeaderProps>(function Site
                     )
                   })}
                 </ul>
+                {sheetUtilities ? (
+                  <div className={styles.sheetUtilities}>{sheetUtilities}</div>
+                ) : null}
                 {(secondaryAction || primaryAction) && (
                   <motion.div
                     className={styles.sheetActions}

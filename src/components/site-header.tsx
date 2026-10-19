@@ -202,11 +202,14 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
       utilities={
         <>
           <SiteSearch />
-          {/* useSearchParams needs a Suspense boundary on static pages. */}
-          <Suspense fallback={null}>
-            <LanguageSwitch />
-          </Suspense>
-          <ThemeToggle />
+          {/* On narrow screens these two move into the menu sheet (sheetUtilities). */}
+          <span className="site-wide-only">
+            {/* useSearchParams needs a Suspense boundary on static pages. */}
+            <Suspense fallback={null}>
+              <LanguageSwitch />
+            </Suspense>
+            <ThemeToggle />
+          </span>
           {/* Decisions on their work and new submissions, the same as in the admin. */}
           {account && <SiteNotifications />}
           {account && (
@@ -232,6 +235,15 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
               labels={{ account: t('account'), signOut: t('signOut'), signingOut: t('signingOut') }}
             />
           )}
+        </>
+      }
+      menuLabels={{ open: t('openMenu'), close: t('closeMenu') }}
+      sheetUtilities={
+        <>
+          <Suspense fallback={null}>
+            <LanguageSwitch />
+          </Suspense>
+          <ThemeToggle />
         </>
       }
       variant="mega"
