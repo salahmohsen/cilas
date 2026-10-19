@@ -22,7 +22,9 @@
       "workshopsDescription": "Short skill/experiment offerings with varied schedules. Focused, hands-on sessions for specific craft or inquiry.",
       "featureTitle": "Bridge Programme",
       "featureDescription": "One-year flagship liberal arts programme (2 semesters, 15+ hrs/week). Discussion-based, trans-disciplinary coursework across Historical Consciousness, Philosophical & Poetic Inquiry, and Ethnographic Study.",
-      "featureImageAlt": "All CILAS courses"
+      "featureImageAlt": "All CILAS courses",
+      "short": "Short Courses",
+      "shortDescription": "A few weeks on one subject, open to everyone."
     },
     "people": {
       "label": "People",

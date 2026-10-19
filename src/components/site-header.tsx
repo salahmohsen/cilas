@@ -93,6 +93,11 @@ export function CILASSiteHeader() {
           href: href('/study?type=workshop'),
           description: t('study.workshopsDescription'),
         },
+        {
+          label: t('study.short'),
+          href: href('/study?type=short'),
+          description: t('study.shortDescription'),
+        },
       ],
       feature: {
         title: t('study.featureTitle'),
