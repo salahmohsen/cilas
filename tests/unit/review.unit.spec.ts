@@ -17,6 +17,14 @@ describe('canMove', () => {
     expect(canMove('submitted', 'submitted', false)).toBe(true)
   })
 
+  it('lets an author submit a change to a published document, once decided', () => {
+    expect(canMove('approved', 'submitted', false)).toBe(false)
+    expect(canMove('approved', 'submitted', false, true)).toBe(true)
+    expect(canMove('rejected', 'submitted', false, true)).toBe(true)
+    expect(canMove('submitted', 'approved', false, true)).toBe(false)
+    expect(canMove('approved', 'draft', false, true)).toBe(false)
+  })
+
   it('lets an admin make any move', () => {
     expect(canMove('draft', 'approved', true)).toBe(true)
     expect(canMove('approved', 'rejected', true)).toBe(true)
@@ -72,9 +80,9 @@ describe('reviewPatch', () => {
   })
 
   it('leaves an already approved article alone', () => {
-    expect(
-      reviewPatch({ from: 'approved', to: 'approved', trusted: true, data: {}, now }),
-    ).toEqual({ patch: {} })
+    expect(reviewPatch({ from: 'approved', to: 'approved', trusted: true, data: {}, now })).toEqual(
+      { patch: {} },
+    )
   })
 })
 

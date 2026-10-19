@@ -11,6 +11,7 @@ import {
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
   isAdminOrOwnWhile,
+  OWNER_EDITS,
   ownList,
   ownsViaAuthors,
   ownsViaEditors,
@@ -344,5 +345,19 @@ describe('isAdminOrOwnAndDraft while with the owner', () => {
       and: [{ fellows: { contains: 7 } }, { _status: { equals: 'draft' } }, WITH_OWNER],
     })
     expect(WITH_OWNER).toEqual({ 'review.status': { in: ['draft', 'changes_requested'] } })
+  })
+})
+
+describe('OWNER_EDITS', () => {
+  it('lets an owner reach their drafts and published documents; the review hooks decide', () => {
+    const rule = isAdminOrOwnWhile(ownsViaFellows, OWNER_EDITS, { allow: ['fellow'] })
+    expect(run(rule, user(['fellow'], { person: 7 }))).toEqual({
+      and: [{ fellows: { contains: 7 } }, { _status: { in: ['draft', 'published'] } }],
+    })
+  })
+
+  it('keeps the ownership path to the allowed roles', () => {
+    const rule = isAdminOrOwnWhile(ownsViaFellows, OWNER_EDITS, { allow: ['fellow'] })
+    expect(run(rule, user(['member'], { person: 7 }))).toBe(false)
   })
 })

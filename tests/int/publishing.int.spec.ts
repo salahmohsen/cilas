@@ -3,6 +3,7 @@
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import { getReviewQueue } from '@/lib/review-queue'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
@@ -194,6 +195,142 @@ describe('publishing', () => {
       })
       expect(saved.title).toBe('Autosave Probe, edited')
       expect(saved.review?.status).toBe('draft')
+    })
+  })
+
+  describe('a published article', () => {
+    let liveId: number
+    const live = () =>
+      payload.findByID({ collection: 'articles', id: liveId, draft: false, overrideAccess: true })
+    // `author` is set in beforeAll, after this describe is collected.
+    const as = (user: User) => ({ user, overrideAccess: false }) as const
+
+    beforeAll(async () => {
+      vi.spyOn(payload, 'sendEmail').mockResolvedValue(undefined)
+      liveId = track(
+        'articles',
+        await payload.create({
+          collection: 'articles',
+          data: {
+            title: 'Live Probe',
+            slug: 'live-probe',
+            authors: [personId],
+            tier: 'public',
+            review: { status: 'approved' },
+            _status: 'published',
+          },
+          overrideAccess: true,
+        }),
+      ).id
+      expect((await live()).review?.status).toBe('approved')
+    })
+
+    it('keeps the published version when its author edits it', async () => {
+      const saved = await payload.update({
+        collection: 'articles',
+        id: liveId,
+        data: { title: 'Live Probe, edited' },
+        ...as(author),
+      })
+      expect(saved.title).toBe('Live Probe, edited')
+      const doc = await live()
+      expect(doc._status).toBe('published')
+      expect(doc.title).toBe('Live Probe')
+    })
+
+    it('refuses its author deleting it', async () => {
+      await expect(
+        payload.delete({ collection: 'articles', id: liveId, ...as(author) }),
+      ).rejects.toThrow()
+      expect((await live()).id).toBe(liveId)
+    })
+
+    it('refuses its author a bulk edit', async () => {
+      await expect(
+        payload.update({
+          collection: 'articles',
+          where: { id: { equals: liveId } },
+          data: { title: 'Bulk' },
+          ...as(author),
+        }),
+      ).rejects.toThrow(/one document at a time/)
+    })
+
+    it('queues a submitted change and locks it, while the site keeps the published one', async () => {
+      await payload.update({
+        collection: 'articles',
+        id: liveId,
+        data: { review: { status: 'submitted', request: 'changes' } },
+        ...as(author),
+      })
+      expect((await live()).title).toBe('Live Probe')
+      const queued = (await getReviewQueue(payload)).find(
+        (i) => i.kind === 'article' && i.id === liveId,
+      )
+      expect(queued?.title).toBe('Live Probe, edited')
+
+      await expect(
+        payload.update({
+          collection: 'articles',
+          id: liveId,
+          data: { title: 'Sneaky edit' },
+          ...as(author),
+        }),
+      ).rejects.toThrow(/waits for review/)
+    })
+
+    it('keeps the published version when an admin asks for changes', async () => {
+      await payload.update({
+        collection: 'articles',
+        id: liveId,
+        data: { _status: 'draft', review: { status: 'changes_requested', review_note: 'Shorter' } },
+        ...as(admin),
+      })
+      const doc = await live()
+      expect(doc._status).toBe('published')
+      expect(doc.title).toBe('Live Probe')
+    })
+
+    it('publishes the change only when an admin approves it', async () => {
+      await payload.update({
+        collection: 'articles',
+        id: liveId,
+        data: { title: 'Live Probe, shorter', review: { status: 'submitted', request: 'changes' } },
+        ...as(author),
+      })
+      expect((await live()).title).toBe('Live Probe')
+      await payload.update({
+        collection: 'articles',
+        id: liveId,
+        data: { _status: 'published', review: { status: 'approved' } },
+        ...as(admin),
+      })
+      const doc = await live()
+      expect(doc.title).toBe('Live Probe, shorter')
+      expect(doc.review?.request ?? null).toBeNull()
+    })
+
+    it('takes it down only when an admin approves a removal, then lets the author delete it', async () => {
+      await payload.update({
+        collection: 'articles',
+        id: liveId,
+        data: { review: { status: 'submitted', request: 'removal' } },
+        ...as(author),
+      })
+      expect((await live())._status).toBe('published')
+      const queued = (await getReviewQueue(payload)).find(
+        (i) => i.kind === 'article' && i.id === liveId,
+      )
+      expect(queued?.title).toBe('Remove from the site: Live Probe, shorter')
+
+      await payload.update({
+        collection: 'articles',
+        id: liveId,
+        data: { _status: 'draft', review: { status: 'draft' } },
+        ...as(admin),
+      })
+      expect((await live())._status).toBe('draft')
+      await payload.delete({ collection: 'articles', id: liveId, ...as(author) })
     })
   })
 

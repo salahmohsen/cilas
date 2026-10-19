@@ -22,6 +22,15 @@ const AUTHOR_MOVES: Record<ReviewState, ReviewState[]> = {
   rejected: [],
 }
 
+/**
+ * On a published document an owner submits a change, or a removal, from where
+ * the last decision left it: approved, or a change declined.
+ */
+const LIVE_AUTHOR_MOVES: Partial<Record<ReviewState, ReviewState[]>> = {
+  approved: ['submitted'],
+  rejected: ['submitted'],
+}
+
 const LABELS: Record<ReviewState, string> = {
   draft: 'draft',
   submitted: 'submitted',
@@ -30,9 +39,23 @@ const LABELS: Record<ReviewState, string> = {
   rejected: 'rejected',
 }
 
-/** Authors may only submit; admins (and trusted server calls) may do anything. */
-export const canMove = (from: ReviewState, to: ReviewState, trusted: boolean): boolean =>
-  from === to || trusted || AUTHOR_MOVES[from].includes(to)
+/**
+ * Authors may only submit; admins (and trusted server calls) may do anything.
+ * `live`: the document is published, and the move is about a change to it.
+ */
+export const canMove = (
+  from: ReviewState,
+  to: ReviewState,
+  trusted: boolean,
+  live = false,
+): boolean =>
+  from === to ||
+  trusted ||
+  AUTHOR_MOVES[from].includes(to) ||
+  (live && (LIVE_AUTHOR_MOVES[from] ?? []).includes(to))
+
+/** What an owner asks of a published document: a change, or that it come down. */
+export type ReviewRequest = 'changes' | 'removal'
 
 type ReviewData = {
   tier?: Tier | null

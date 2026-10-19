@@ -343,6 +343,10 @@ export interface Course {
      */
     status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
     /**
+     * What the owner asks of the published course.
+     */
+    request?: ('changes' | 'removal') | null;
+    /**
      * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
      */
     review_note?: string | null;
@@ -1428,6 +1432,10 @@ export interface Article {
      */
     status: 'draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected';
     /**
+     * What the owner asks of the published article.
+     */
+    request?: ('changes' | 'removal') | null;
+    /**
      * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
      */
     review_note?: string | null;
@@ -1506,6 +1514,10 @@ export interface Publication {
      * Ready? Use “Submit for review”: an admin is emailed, and approves the publication, asks for changes or declines it. Approving publishes it.
      */
     status?: ('draft' | 'submitted' | 'changes_requested' | 'approved' | 'rejected') | null;
+    /**
+     * What the owner asks of the published publication.
+     */
+    request?: ('changes' | 'removal') | null;
     /**
      * The editor’s note to the owner when asking for changes or declining, e.g. “Shorten the second section.” It goes in the email.
      */
@@ -2513,6 +2525,7 @@ export interface CoursesSelect<T extends boolean = true> {
     | T
     | {
         status?: T;
+        request?: T;
         review_note?: T;
       };
   tier?: T;
@@ -2950,6 +2963,7 @@ export interface ArticlesSelect<T extends boolean = true> {
     | T
     | {
         status?: T;
+        request?: T;
         review_note?: T;
       };
   requested_tier?: T;
@@ -3003,6 +3017,7 @@ export interface PublicationsSelect<T extends boolean = true> {
     | T
     | {
         status?: T;
+        request?: T;
         review_note?: T;
       };
   kind?: T;

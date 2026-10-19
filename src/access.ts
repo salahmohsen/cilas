@@ -140,6 +140,20 @@ export const isAdminOrOwnAndDraft =
  */
 export const WITH_OWNER: Where = { 'review.status': { in: ['draft', 'changes_requested'] } }
 
+/**
+ * When an owner may edit a reviewed document: a draft, or a published one.
+ * Edits to a published document only ever save a draft beside it
+ * (src/lib/review-hooks.ts), so the site keeps showing what was approved
+ * until an admin approves the change. Deleting stays draft-only: published
+ * work comes down through a removal request.
+ *
+ * Payload tests this rule on the latest draft version too, and edits that
+ * version when it passes, else the published one, dropping the owner's
+ * draft. So no review status is refused here: the review hooks refuse an
+ * edit to a submitted document, or to a decided one never published.
+ */
+export const OWNER_EDITS: Where = { _status: { in: ['draft', 'published'] } }
+
 /** Admins see every row; a signed-in account only the rows it owns. */
 export const isAdminOrOwn =
   (owned: Ownership): Access =>
@@ -176,13 +190,15 @@ export const canAuthor: Access = ({ req }) => {
 
 /**
  * Admins edit anything; an owner only while the document also matches
- * `while` (e.g. an article still with its author, not yet submitted).
+ * `where` (e.g. an article still with its author, not yet submitted).
+ * `allow` narrows who may take the ownership path, as in `isAdminOrOwnAndDraft`.
  */
 export const isAdminOrOwnWhile =
-  (owned: Ownership, where: Where): Access =>
+  (owned: Ownership, where: Where, { allow }: { allow?: Role[] } = {}): Access =>
   ({ req }) => {
     if (isAdminUser(req.user)) return true
     if (!req.user) return false
+    if (allow && !hasRole(req.user, ...allow)) return false
     const owns = owned(req.user)
     return owns ? { and: [owns, where] } : false
   }

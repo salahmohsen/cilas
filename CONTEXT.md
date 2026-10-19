@@ -142,7 +142,7 @@ _Avoid_: Post, blog post
 An article shown under another as further reading: those an editor picked, then others from the same publication, then ones sharing a tag, then others by the same author — at most three, and only ones the reader may see.
 
 **Review**:
-The approval path an article goes through: draft, submitted, changes requested, then approved or rejected.
+The approval path an article, course or publication goes through: draft, submitted, changes requested, then approved or rejected. Once it is published, its owners change it or take it down only through review: the site keeps the approved version until an admin approves the change or the removal.
 
 **Publication**:
 An edited collection of articles, often produced by a course or lab, with a foreword and credits.

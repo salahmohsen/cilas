@@ -7,18 +7,26 @@ import type {
 } from 'payload'
 
 import { isAdminUser } from '@/access'
-import { canMove, notifyOn, type ReviewState } from '@/lib/review'
+import { canMove, notifyOn, type ReviewRequest, type ReviewState } from '@/lib/review'
 import { notify, type NotificationKind } from '@/lib/notify'
 import { adminRecipients, ownerRecipients, sendReviewEmail } from '@/lib/review-mail'
 
 const DRAFT_SAVE = 'reviewDraftSave'
 const AUTOSAVE = 'reviewAutosave'
+const LIVE = 'reviewLive'
+
+/** Decisions that leave a published document as it is: the change waits, or is sent back. */
+const HELD: ReviewState[] = ['submitted', 'changes_requested', 'rejected']
 
 type Doc = {
   id?: number
   title?: string | null
   _status?: 'draft' | 'published' | null
-  review?: { status?: ReviewState | null; review_note?: string | null } | null
+  review?: {
+    status?: ReviewState | null
+    request?: ReviewRequest | null
+    review_note?: string | null
+  } | null
 } & Record<string, unknown>
 
 export type ReviewOptions = {
@@ -32,21 +40,67 @@ export type ReviewOptions = {
 }
 
 /**
- * Records whether a write is a draft save ("Save draft", autosave). Payload
- * decides that from the operation args before any hook runs, and beforeChange
- * never sees it, so it goes on through `req.context`. A draft write that sets
- * `_status: 'published'` is a publish, as in Payload's own test.
+ * Keeps a published document as approved: an owner's edit to it, and an
+ * admin's "Request changes" or "Decline" on such an edit, save a draft beside
+ * it rather than overwrite it. Only approval publishes the draft; until then
+ * the site shows the published one. Bulk edits have no one document to keep,
+ * so owners make them one at a time. A restored version is a draft for them
+ * too.
+ *
+ * Then records whether the write is a draft save ("Save draft", autosave).
+ * Payload decides that from the operation args before any hook runs, and
+ * beforeChange never sees it, so it goes on through `req.context`. A draft
+ * write that sets `_status: 'published'` is a publish, as in Payload's own
+ * test.
  */
-const recordDraftSave: CollectionBeforeOperationHook = ({ args, operation, req }) => {
-  if (operation !== 'create' && operation !== 'update') return
-  const { autosave, data, draft } = args as {
-    autosave?: boolean
-    data?: { _status?: unknown }
-    draft?: boolean
+const recordDraftSave: CollectionBeforeOperationHook = async ({
+  args,
+  collection,
+  operation,
+  req,
+}) => {
+  if (operation !== 'create' && operation !== 'update' && operation !== 'restoreVersion') {
+    return args
   }
+  const trusted = !req.user || isAdminUser(req.user)
+  const write = args as {
+    autosave?: boolean
+    data?: Doc
+    draft?: boolean
+    id?: number | string
+  }
+  req.context[LIVE] = false
+
+  if (operation === 'restoreVersion') {
+    if (!trusted) write.draft = true
+    req.context[DRAFT_SAVE] = Boolean(write.draft)
+    req.context[AUTOSAVE] = false
+    return args
+  }
+  if (operation === 'update' && write.id === undefined && !trusted) {
+    throw new APIError('Edit one document at a time.', 403)
+  }
+  if (operation === 'update' && write.id !== undefined) {
+    const held = !trusted || HELD.includes(write.data?.review?.status as ReviewState)
+    if (held && write.data?._status !== 'published') {
+      const live = await req.payload.db.findOne<Doc & { id: number }>({
+        collection: collection.slug,
+        where: { id: { equals: write.id } },
+        req,
+      })
+      if (live?._status === 'published') {
+        write.draft = true
+        req.context[LIVE] = true
+      }
+    }
+  }
+
   req.context[DRAFT_SAVE] =
-    operation === 'create' ? Boolean(draft) : Boolean(draft) && data?._status !== 'published'
-  req.context[AUTOSAVE] = Boolean(autosave)
+    operation === 'create'
+      ? Boolean(write.draft)
+      : Boolean(write.draft) && write.data?._status !== 'published'
+  req.context[AUTOSAVE] = Boolean(write.autosave)
+  return args
 }
 
 /**
@@ -59,30 +113,58 @@ const applyReview =
   ({ noun, onApprove }: ReviewOptions): CollectionBeforeChangeHook =>
   ({ data, operation, originalDoc, req }) => {
     const trusted = !req.user || isAdminUser(req.user)
-    // On create, `originalDoc` is a duplicate's source, not this document's history.
+    // Set by recordDraftSave: a write to a published document, kept as a draft.
+    const live = Boolean(req.context?.[LIVE])
+    // On create, `originalDoc` is a duplicate's source, not this document's
+    // history. On a published document it is the latest draft, if there is one.
     const from: ReviewState =
       operation === 'create' ? 'draft' : (originalDoc?.review?.status ?? 'draft')
     let to: ReviewState = data.review?.status ?? from
 
     // A draft save writes only a version, while emails would announce the new
     // status: the status changes on a full save only. An autosave, which runs
-    // while the editor picks it, keeps the old one.
+    // while the editor picks it, keeps the old one. On a published document
+    // every write is a draft save, so there the buttons may change it.
     if (to !== from && req.context?.[DRAFT_SAVE]) {
-      if (!req.context[AUTOSAVE]) {
+      if (req.context[AUTOSAVE]) {
+        to = from
+        data = { ...data, review: { ...data.review, status: from } }
+      } else if (!live) {
         throw new APIError('Submit with the “Submit for review” button, not Save draft.', 400)
       }
-      to = from
-      data = { ...data, review: { ...data.review, status: from } }
     }
     if (trusted && data._status === 'published' && to === from && to !== 'approved') to = 'approved'
 
-    if (!canMove(from, to, trusted)) {
+    // Submitted, a change to a published document waits for the admin
+    // unchanged, as a submitted draft does (WITH_OWNER).
+    if (!trusted && from === 'submitted') {
+      throw new APIError(
+        `This ${noun} waits for review. An admin decides before it changes again.`,
+        403,
+      )
+    }
+    // Decided, a draft that was never published stays as the admin left it
+    // (WITH_OWNER), as a submitted one does; OWNER_EDITS leaves both to us.
+    if (
+      !trusted &&
+      !live &&
+      operation === 'update' &&
+      (from === 'approved' || from === 'rejected')
+    ) {
+      throw new APIError(`This ${noun} was ${from}. Only an admin can change it now.`, 403)
+    }
+    if (!canMove(from, to, trusted, live)) {
       throw new APIError(
         `Only an admin can move a ${from.replace('_', ' ')} ${noun} to ${to.replace('_', ' ')}.`,
         403,
       )
     }
-    const review = { ...data.review, status: to }
+    // What the owner asks of a published document holds only while it waits.
+    const request: ReviewRequest | null =
+      live && to === 'submitted'
+        ? (data.review?.request ?? originalDoc?.review?.request ?? 'changes')
+        : null
+    const review = { ...data.review, status: to, request }
     if (to !== 'approved') return { ...data, review, _status: 'draft' }
     if (from === 'approved') return { ...data, review }
     return {
@@ -101,41 +183,56 @@ const NOTES: Partial<Record<ReviewState, (noun: string, title: string) => string
   rejected: (noun, title) => `Your ${noun} “${title}” was not accepted`,
 }
 
+/** The bell's lines for a removal request and its outcome. */
+const REMOVAL_NOTES: Partial<Record<ReviewState, (noun: string, title: string) => string>> = {
+  submitted: (noun, title) => `Removal asked for a published ${noun}: “${title}”`,
+  draft: (noun, title) => `Your ${noun} “${title}” was taken off the site, as you asked`,
+  rejected: (noun, title) => `Your ${noun} “${title}” stays on the site`,
+}
+
 /**
  * Emails admins on a submission and owners on a decision, with a link to the
  * document in the admin. Only for writes by a signed-in account: server
- * writes are silent, and `context.skipReviewEmail` opts out.
+ * writes are silent, and `context.skipReviewEmail` opts out. A change to a
+ * published document is all draft saves, and is announced like any other.
  */
 const notifyReview =
   ({ noun, collection, ownersOf }: ReviewOptions): CollectionAfterChangeHook =>
   async ({ doc, previousDoc, req }) => {
-    if (!req.user || req.context?.skipReviewEmail || req.context?.[DRAFT_SAVE]) return doc
+    if (!req.user || req.context?.skipReviewEmail) return doc
+    if (req.context?.[DRAFT_SAVE] && !req.context[LIVE]) return doc
     const state: ReviewState = doc.review?.status ?? 'draft'
-    const audience = notifyOn(previousDoc?.review?.status ?? 'draft', state)
+    const before: ReviewState = previousDoc?.review?.status ?? 'draft'
+    const removal = (state === 'submitted' ? doc : previousDoc)?.review?.request === 'removal'
+    // An approved removal takes the document down to a draft: tell its owners.
+    const audience =
+      removal && before === 'submitted' && state === 'draft' ? 'authors' : notifyOn(before, state)
     if (!audience) return doc
     const people =
       audience === 'admins' ? await adminRecipients(req) : await ownerRecipients(req, ownersOf(doc))
-    const to = people.map((p) => p.email)
-    await sendReviewEmail(
-      req,
-      to,
-      state,
-      doc.title ?? `Untitled ${noun}`,
-      doc.review?.review_note,
-      {
-        noun,
-        path: `/admin/collections/${collection}/${doc.id}`,
-      },
-    )
-    // The same news under the bell (src/components/admin/notification-bell.tsx).
     const title = doc.title ?? `Untitled ${noun}`
+    const path = `/admin/collections/${collection}/${doc.id}`
+    // The emails have a text per decision, and none says "taken down": an
+    // approved removal is told under the bell only.
+    if (!(removal && state === 'draft')) {
+      await sendReviewEmail(
+        req,
+        people.map((p) => p.email),
+        state,
+        removal ? `${title} (removal from the site)` : title,
+        doc.review?.review_note,
+        { noun, path },
+      )
+    }
+    // The same news under the bell (src/components/admin/notification-bell.tsx).
+    const line = (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title) ?? title
     await notify(
       req.payload,
       people.map((p) => p.id),
       {
-        kind: state as NotificationKind,
-        title: NOTES[state]?.(noun, title) ?? title,
-        link: `/admin/collections/${collection}/${doc.id}`,
+        kind: (removal && state === 'draft' ? 'approved' : state) as NotificationKind,
+        title: line,
+        link: path,
       },
     )
     return doc

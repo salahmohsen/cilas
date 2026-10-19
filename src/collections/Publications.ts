@@ -5,8 +5,10 @@ import {
   canProposePublication,
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
+  isAdminOrOwnWhile,
   isAdminUser,
   ownList,
+  OWNER_EDITS,
   ownsViaEditors,
   personOf,
   publishedOrOwn,
@@ -55,9 +57,8 @@ export const Publications: CollectionConfig = {
     readVersions: isAdminOrOwnVersions(ownsViaEditors),
     create: adminPublishes(canProposePublication),
     // An owner edits while it is with them; submitted, it waits for the admin.
-    update: adminPublishes(
-      isAdminOrOwnAndDraft(ownsViaEditors, { ...OWNER_ROLES, while: WITH_OWNER }),
-    ),
+    // Published, their edits are a draft for review beside it.
+    update: adminPublishes(isAdminOrOwnWhile(ownsViaEditors, OWNER_EDITS, OWNER_ROLES)),
     delete: isAdminOrOwnAndDraft(ownsViaEditors, { ...OWNER_ROLES, while: WITH_OWNER }),
   },
   versions: { drafts: true },

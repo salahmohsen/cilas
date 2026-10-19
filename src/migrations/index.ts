@@ -26,6 +26,7 @@ import * as migration_20261019_123324_applicant_questions_and_file_uploads from 
 import * as migration_20261019_131806_notifications from './20261019_131806_notifications';
 import * as migration_20261019_140000_published_owners_are_public from './20261019_140000_published_owners_are_public';
 import * as migration_20261019_141427_navigation_switches from './20261019_141427_navigation_switches';
+import * as migration_20261019_224849_review_request from './20261019_224849_review_request';
 
 export const migrations = [
   {
@@ -166,6 +167,11 @@ export const migrations = [
   {
     up: migration_20261019_141427_navigation_switches.up,
     down: migration_20261019_141427_navigation_switches.down,
-    name: '20261019_141427_navigation_switches'
+    name: '20261019_141427_navigation_switches',
+  },
+  {
+    up: migration_20261019_224849_review_request.up,
+    down: migration_20261019_224849_review_request.down,
+    name: '20261019_224849_review_request'
   },
 ];

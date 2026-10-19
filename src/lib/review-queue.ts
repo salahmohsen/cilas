@@ -36,21 +36,47 @@ export const getReviewQueue = async (payload: Payload): Promise<QueueItem[]> => 
   const [reviewed, applications] = await Promise.all([
     Promise.all(
       REVIEWED.map(async ({ kind, collection, owners }) => {
-        const { docs } = await payload.find({
-          collection,
-          where: { 'review.status': { equals: 'submitted' } },
-          select: { title: true, updatedAt: true, [owners]: true },
-          populate: { people: { name: true } },
-          ...local,
+        // A change to a published document waits as its latest draft
+        // (src/lib/review-hooks.ts), so it is found among the versions.
+        const [{ docs }, { docs: versions }] = await Promise.all([
+          payload.find({
+            collection,
+            where: { 'review.status': { equals: 'submitted' } },
+            select: { title: true, updatedAt: true, review: true, [owners]: true },
+            populate: { people: { name: true } },
+            ...local,
+          }),
+          payload.findVersions({
+            collection,
+            where: {
+              and: [
+                { latest: { equals: true } },
+                { 'version.review.status': { equals: 'submitted' } },
+              ],
+            },
+            populate: { people: { name: true } },
+            ...local,
+          }),
+        ])
+        const waiting = new Map<number, Record<string, unknown>>()
+        for (const v of versions) {
+          const ref = v.parent as unknown as number | { id: number }
+          const parent = typeof ref === 'object' ? ref.id : ref
+          waiting.set(parent, { ...(v.version as unknown as Record<string, unknown>), id: parent })
+        }
+        for (const d of docs) waiting.set(d.id, d as unknown as Record<string, unknown>)
+        return [...waiting.values()].map((d): QueueItem => {
+          const title = (d.title as string | null | undefined) || `Untitled ${kind}`
+          const removal = (d.review as { request?: string } | null)?.request === 'removal'
+          return {
+            kind,
+            id: d.id as number,
+            title: removal ? `Remove from the site: ${title}` : title,
+            by: namesOf(d[owners]),
+            since: d.updatedAt as string,
+            href: `/admin/collections/${collection}/${d.id}`,
+          }
         })
-        return docs.map((d): QueueItem => ({
-          kind,
-          id: d.id,
-          title: (d as { title?: string | null }).title || `Untitled ${kind}`,
-          by: namesOf((d as unknown as Record<string, unknown>)[owners]),
-          since: d.updatedAt,
-          href: `/admin/collections/${collection}/${d.id}`,
-        }))
       }),
     ),
     payload.find({

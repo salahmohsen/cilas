@@ -41,6 +41,22 @@ export const reviewFields = (
         hooks: { beforeDuplicate: [() => 'draft'] },
       },
       {
+        // Set by the "Submit changes" and "Request removal" buttons on a
+        // published document; empty on a first submission.
+        name: 'request',
+        type: 'select',
+        options: [
+          { label: 'Publish changes', value: 'changes' },
+          { label: 'Remove from the site', value: 'removal' },
+        ],
+        hooks: { beforeDuplicate: [() => null] },
+        admin: {
+          readOnly: true,
+          condition: (data) => Boolean(data?.review?.request),
+          description: `What the owner asks of the published ${noun}.`,
+        },
+      },
+      {
         name: 'review_note',
         type: 'textarea',
         access: { create: canSetTier, update: canSetTier },

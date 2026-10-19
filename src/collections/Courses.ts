@@ -5,7 +5,9 @@ import {
   isAdminUser,
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
+  isAdminOrOwnWhile,
   ownList,
+  OWNER_EDITS,
   ownsViaFellows,
   personOf,
   readTiers,
@@ -104,10 +106,9 @@ export const Courses: CollectionConfig = {
     readVersions: isAdminOrOwnVersions(ownsViaFellows),
     // A fellow saves drafts; an admin approves a course by publishing it.
     create: adminPublishes(canTeach),
-    // A fellow edits while the course is with them; submitted, it waits for the admin.
-    update: adminPublishes(
-      isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'], while: WITH_OWNER }),
-    ),
+    // A fellow edits while the course is with them; submitted, it waits for the
+    // admin. Published, their edits are a draft for review beside it.
+    update: adminPublishes(isAdminOrOwnWhile(ownsViaFellows, OWNER_EDITS, { allow: ['fellow'] })),
     delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'], while: WITH_OWNER }),
   },
   versions: {
