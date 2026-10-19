@@ -157,7 +157,8 @@ export const Articles: CollectionConfig = {
     delete: isAdminOrOwnWhile(ownsViaAuthors, WITH_AUTHOR),
   },
   // Autosave feeds the live preview as the editor writes.
-  versions: { drafts: { autosave: { interval: 2000 } } },
+  // Save draft shows beside autosave, so an author always has a button to press.
+  versions: { drafts: { autosave: { interval: 2000, showSaveDraftButton: true } } },
   admin: {
     useAsTitle: 'title',
     defaultColumns: ['title', 'authors', 'review.status', 'tier'],

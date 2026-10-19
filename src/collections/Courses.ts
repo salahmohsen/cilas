@@ -93,6 +93,8 @@ export const Courses: CollectionConfig = {
     drafts: {
       autosave: {
         interval: 2000,
+        // A fellow cannot publish, so without it they would see no button at all.
+        showSaveDraftButton: true,
       },
     },
   },
