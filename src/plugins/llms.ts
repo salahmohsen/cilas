@@ -11,7 +11,7 @@ import { env } from '@/env'
  * English. The Arabic pages are one switch away on each linked page.
  */
 export const llmsOptions: LlmsTxtPluginOptions = {
-  siteName: 'CILAS: Cairo Institute for Liberal Arts and Sciences',
+  siteName: 'CILAS: Cairo Institute of Liberal Arts and Sciences',
   siteDescription:
     'An independent school in Cairo that runs seasonal cycles of courses, longer programmes such as the Bridge, and publishes work by its community. Its archive goes back to 2013.',
   siteURL: env.NEXT_PUBLIC_SERVER_URL,
