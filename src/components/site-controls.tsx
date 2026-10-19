@@ -24,7 +24,7 @@ export function LanguageSwitch() {
   return (
     <Link
       aria-label={t('switchToLabel')}
-      className="inline-flex h-8 min-w-8 items-center justify-center rounded-full px-2.5 text-sm font-medium transition-colors hover:bg-[var(--surface-muted)]"
+      className="site-control"
       href={search ? `${pathname}?${search}` : pathname}
       hrefLang={other}
       lang={other}
@@ -51,7 +51,7 @@ export function ThemeToggle() {
     () => true,
     () => false,
   )
-  if (!mounted || !resolvedTheme) return <span aria-hidden className="inline-block size-8" />
+  if (!mounted || !resolvedTheme) return <span aria-hidden className="inline-block size-9" />
   const theme = resolvedTheme === 'dark' ? 'dark' : 'light'
   return (
     <ThemeSwitch

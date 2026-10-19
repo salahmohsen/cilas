@@ -82,7 +82,8 @@
     "showing": "Showing {shown, number} of {total, number}",
     "showMore": "Show more results",
     "errorTitle": "Search is not available now",
-    "errorHint": "The connection to the search service failed. Try again in a moment."
+    "errorHint": "The connection to the search service failed. Try again in a moment.",
+    "button": "Search"
   },
   "Language": {
     "label": "Language",

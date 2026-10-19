@@ -3,7 +3,7 @@
 import { Search } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 import dynamic from 'next/dynamic'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { createPortal } from 'react-dom'
 
 import { clientEnv as env } from '@/env.client'
@@ -23,11 +23,25 @@ const load = () => import('@/components/site-search-panel')
 const preload = () => void load()
 const SearchPanel = dynamic(() => load().then((m) => m.SearchPanel), { ssr: false })
 
+const noSubscription = () => () => {}
+
+/**
+ * Whether the visitor's keyboard has ⌘ (Apple), for the shortcut the button
+ * shows. The server renders ⌘; other systems swap to Ctrl once hydrated.
+ */
+const useIsMac = () =>
+  useSyncExternalStore(
+    noSubscription,
+    () => /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent),
+    () => true,
+  )
+
 /** The search button and, while open, the panel. */
 export function SiteSearch() {
   const [open, setOpen] = useState(false)
   const trigger = useRef<HTMLButtonElement>(null)
   const t = useTranslations('Search')
+  const mac = useIsMac()
 
   const close = useCallback(() => {
     setOpen(false)
@@ -74,13 +88,22 @@ export function SiteSearch() {
         aria-keyshortcuts={t('shortcut')}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="inline-flex size-8 items-center justify-center rounded-full transition-colors hover:bg-(--surface-muted)"
+        className="site-control site-search-trigger"
         onClick={() => setOpen(true)}
         // Start fetching the panel as the reader heads for the button.
         onFocus={preload}
         onPointerEnter={preload}
       >
         <Search width={16} height={16} strokeWidth={1.75} aria-hidden="true" />
+        {/* From 1024px up: a field with its shortcut (src/app/(frontend)/styles.css). */}
+        <span aria-hidden="true" className="site-search-label">
+          {t('button')}
+        </span>
+        <span aria-hidden="true" className="site-search-keys" dir="ltr">
+          {(mac ? ['⌘', 'K'] : ['Ctrl', 'K']).map((key) => (
+            <kbd key={key}>{key}</kbd>
+          ))}
+        </span>
       </button>
       {/* Portalled: the header's own stacking context would otherwise let
           the page show through the panel. */}

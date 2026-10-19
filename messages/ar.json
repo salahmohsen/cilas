@@ -82,7 +82,8 @@
     "showing": "{shown, number} من {total, number}",
     "showMore": "اعرض نتائج أكثر",
     "errorTitle": "البحث غير متاح الآن",
-    "errorHint": "تعذّر الاتصال بخدمة البحث. حاول مرة أخرى بعد قليل."
+    "errorHint": "تعذّر الاتصال بخدمة البحث. حاول مرة أخرى بعد قليل.",
+    "button": "بحث"
   },
   "Language": {
     "label": "اللغة",
