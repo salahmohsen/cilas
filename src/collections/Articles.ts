@@ -1,6 +1,7 @@
 import type { CollectionBeforeValidateHook, CollectionConfig } from 'payload'
 
 import {
+  adminPublishes,
   canAuthor,
   canSetTier,
   isAdminOrOwnVersions,
@@ -66,10 +67,11 @@ export const Articles: CollectionConfig = {
   access: {
     read: readTiers(ownsViaAuthors, { drafts: true }),
     readVersions: isAdminOrOwnVersions(ownsViaAuthors),
-    create: canAuthor,
+    // Only an admin publishes: authors get Save draft and Submit for review.
+    create: adminPublishes(canAuthor),
     // Authors edit or delete only while the article is with them, not once
     // submitted. `_status` alone would let them delete a submitted article.
-    update: isAdminOrOwnWhile(ownsViaAuthors, WITH_OWNER),
+    update: adminPublishes(isAdminOrOwnWhile(ownsViaAuthors, WITH_OWNER)),
     delete: isAdminOrOwnWhile(ownsViaAuthors, WITH_OWNER),
   },
   // Autosave feeds the live preview as the editor writes.
