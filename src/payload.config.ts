@@ -111,7 +111,14 @@ export default buildConfig({
           Component: '/components/admin/subscribers-view#SubscribersView',
           path: '/subscribers',
         },
+        // Admin → Reviews: what waits for an admin (src/lib/review-queue.ts).
+        reviews: {
+          Component: '/components/admin/review-queue#ReviewQueueView',
+          path: '/reviews',
+        },
       },
+      // The dashboard opens with what waits for review, for admins.
+      beforeDashboard: ['/components/admin/review-queue#ReviewQueueWidget'],
     },
     importMap: {
       baseDir: path.resolve(dirname),
