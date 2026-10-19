@@ -20,6 +20,7 @@ import * as migration_20261018_175500_backfill_publication_versions from './2026
 import * as migration_20261018_180514_card_stack_replaces_foreword from './20261018_180514_card_stack_replaces_foreword';
 import * as migration_20261018_183643_article_autosave from './20261018_183643_article_autosave';
 import * as migration_20261018_192058_mailing_lists from './20261018_192058_mailing_lists';
+import * as migration_20261019_120000_accounts_get_a_person from './20261019_120000_accounts_get_a_person';
 
 export const migrations = [
   {
@@ -131,5 +132,10 @@ export const migrations = [
     up: migration_20261018_192058_mailing_lists.up,
     down: migration_20261018_192058_mailing_lists.down,
     name: '20261018_192058_mailing_lists'
+  },
+  {
+    up: migration_20261019_120000_accounts_get_a_person.up,
+    down: migration_20261019_120000_accounts_get_a_person.down,
+    name: '20261019_120000_accounts_get_a_person'
   },
 ];

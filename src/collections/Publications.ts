@@ -19,7 +19,7 @@ import { slugField } from '@/fields/slug'
 import { httpUrl } from '@/fields/validators'
 import { importFields } from '@/fields/import'
 
-/** As `addSelfAsAuthor` on articles: a student keeps access to what they propose. */
+/** As `addSelfAsAuthor` on articles: a student or fellow keeps access to what they propose. */
 export const addSelfAsEditor: CollectionBeforeValidateHook<Publication> = ({
   data,
   req,
@@ -31,8 +31,8 @@ export const addSelfAsEditor: CollectionBeforeValidateHook<Publication> = ({
   return editors.includes(self) ? data : { ...data, editors: [...editors, self] }
 }
 
-/** Students edit their own drafts. Publishing is the admin's approval. */
-const OWNER_ROLES: { allow: Role[] } = { allow: ['member', 'non_degree_seeking'] }
+/** Students and fellows edit their own drafts. Publishing is the admin's approval. */
+const OWNER_ROLES: { allow: Role[] } = { allow: ['member', 'non_degree_seeking', 'fellow'] }
 
 /**
  * An edited collection of articles, often produced by a course or lab

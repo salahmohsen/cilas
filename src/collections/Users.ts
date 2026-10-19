@@ -5,11 +5,14 @@ import type {
   PayloadRequest,
 } from 'payload'
 
+import { randomBytes } from 'node:crypto'
+
 import { isAdmin, isAdminUser, personOf, type Role } from '@/access'
 import { getEmailSettings, withDefaults } from '@/emails/settings'
 import { resetMail } from '@/emails/transactional'
 import { env } from '@/env'
 import { teaches, withFellowRole } from '@/lib/fellow-role'
+import { slugify } from '@/lib/slugify'
 
 /** An account's roles; Mailing lists pick members by them too. */
 export const ROLE_OPTIONS = [
@@ -26,6 +29,38 @@ import type { User } from '@/payload-types'
  * course hooks cover the other direction (a course listing a person).
  * beforeChange, so the role lands in the same write as the link.
  */
+/**
+ * Every account but an admin's owns its work through a person (CONTEXT.md):
+ * an account without one gets a hidden person, named from its email, in the
+ * same write. Without it a fellow could not reach the course they propose,
+ * nor write an article. An admin can rename or show the person later.
+ */
+export const ensurePerson: CollectionBeforeChangeHook<User> = async ({
+  data,
+  originalDoc,
+  req,
+}) => {
+  const roles = (data.roles ?? originalDoc?.roles ?? ['member']) as Role[]
+  if (isAdminUser({ roles }) || personOf(data) !== null) return data
+  if (!('person' in data) && personOf(originalDoc) !== null) return data
+  const email = (data.email ?? originalDoc?.email ?? '') as string
+  const name =
+    email
+      .split('@')[0]
+      ?.replace(/[._-]+/g, ' ')
+      .trim() || 'CILAS member'
+  const person = await req.payload.create({
+    collection: 'people',
+    data: {
+      name,
+      slug: `${slugify(name) || 'member'}-${randomBytes(3).toString('hex')}`,
+      visible: false,
+    },
+    req,
+  })
+  return { ...data, person: person.id }
+}
+
 export const syncFellowRoleOnLink: CollectionBeforeChangeHook<User> = async ({
   data,
   originalDoc,
@@ -40,6 +75,9 @@ export const syncFellowRoleOnLink: CollectionBeforeChangeHook<User> = async ({
   const isTeaching = after !== null && (await teaches(req.payload, after))
   const current = (data.roles ?? originalDoc?.roles ?? ['member']) as Role[]
   if (current.includes('fellow') === isTeaching) return data
+  // A first link only adds the role: a new fellow, given a person, has not
+  // taught yet and keeps the role an admin gave them to propose a course.
+  if (before === null && !isTeaching) return data
 
   return { ...data, roles: withFellowRole(current, isTeaching) }
 }
@@ -93,7 +131,7 @@ export const Users: CollectionConfig = {
     update: isAdmin,
   },
   hooks: {
-    beforeChange: [syncFellowRoleOnLink],
+    beforeChange: [ensurePerson, syncFellowRoleOnLink],
   },
   fields: [
     {

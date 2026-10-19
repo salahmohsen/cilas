@@ -8,7 +8,7 @@ import { adminViewOf, type AdminView } from '@/access'
  * open in drawers, so a fellow can pick a cycle or upload a cover image.
  */
 const VISIBLE: Record<Exclude<AdminView, 'admin'>, readonly string[]> = {
-  fellow: ['courses', 'articles', 'enrollments'],
+  fellow: ['courses', 'articles', 'publications', 'enrollments'],
   student: ['articles', 'publications'],
 }
 

@@ -1,11 +1,13 @@
 import {
   adminPublishes,
   canSetTier,
+  canTeach,
+  isAdminUser,
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
-  isAdminOrSuperAdminOrFellow,
   ownList,
   ownsViaFellows,
+  personOf,
   readTiers,
 } from '@/access'
 import { bibliographyField } from '@/fields/bibliography'
@@ -18,6 +20,7 @@ import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
+  CollectionBeforeValidateHook,
   CollectionConfig,
 } from 'payload'
 import type { Course } from '@/payload-types'
@@ -52,6 +55,17 @@ export const propagateFellowRole: CollectionAfterChangeHook<Course> = async ({
   return doc
 }
 
+/**
+ * As `addSelfAsAuthor` on articles: a fellow who proposes a course teaches
+ * it, so they keep access to the draft they made. Admins add fellows by hand.
+ */
+export const addSelfAsFellow: CollectionBeforeValidateHook<Course> = ({ data, req, operation }) => {
+  const self = personOf(req.user)
+  if (!data || operation !== 'create' || isAdminUser(req.user) || self === null) return data
+  const fellows = toPersonIds(data.fellows)
+  return fellows.includes(self) ? data : { ...data, fellows: [...fellows, self] }
+}
+
 /** afterChange never fires for a delete, so revocation needs its own hook. */
 export const revokeDeletedCourseFellows: CollectionAfterDeleteHook<Course> = async ({
   doc,
@@ -71,7 +85,7 @@ export const Courses: CollectionConfig = {
     // Without this, any signed-in account reads drafts via the versions endpoint.
     readVersions: isAdminOrOwnVersions(ownsViaFellows),
     // A fellow saves drafts; an admin approves a course by publishing it.
-    create: adminPublishes(isAdminOrSuperAdminOrFellow),
+    create: adminPublishes(canTeach),
     update: adminPublishes(isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] })),
     delete: isAdminOrOwnAndDraft(ownsViaFellows, { allow: ['fellow'] }),
   },
@@ -399,6 +413,7 @@ export const Courses: CollectionConfig = {
     },
   },
   hooks: {
+    beforeValidate: [addSelfAsFellow],
     afterChange: [propagateFellowRole, revalidateCoursesAfterChange],
     afterDelete: [revokeDeletedCourseFellows, revalidateCoursesAfterDelete],
   },

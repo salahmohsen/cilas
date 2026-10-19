@@ -6,6 +6,7 @@ import {
   adminViewOf,
   canAuthor,
   canProposePublication,
+  canTeach,
   isAdminOrOwn,
   isAdminOrOwnAndDraft,
   isAdminOrOwnVersions,
@@ -306,11 +307,30 @@ describe('canProposePublication', () => {
     expect(run(canProposePublication, user([role], { person: 7 }))).toBe(true)
   })
 
-  it('refuses a fellow', () => {
-    expect(run(canProposePublication, user(['member', 'fellow'], { person: 7 }))).toBe(false)
+  it('lets a linked fellow propose; only an admin publishes', () => {
+    expect(run(canProposePublication, user(['member', 'fellow'], { person: 7 }))).toBe(true)
+  })
+
+  it('refuses a fellow with no person', () => {
+    expect(run(canProposePublication, user(['fellow']))).toBe(false)
   })
 
   it('refuses a student with no person', () => {
     expect(run(canProposePublication, user(['member']))).toBe(false)
+  })
+})
+
+describe('canTeach', () => {
+  it('lets admins and linked fellows propose a course', () => {
+    expect(run(canTeach, user(['admin']))).toBe(true)
+    expect(run(canTeach, user(['fellow'], { person: 7 }))).toBe(true)
+  })
+
+  it('refuses a fellow with no person, who could not reach the draft', () => {
+    expect(run(canTeach, user(['fellow']))).toBe(false)
+  })
+
+  it('refuses members', () => {
+    expect(run(canTeach, user(['member'], { person: 7 }))).toBe(false)
   })
 })

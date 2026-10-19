@@ -103,10 +103,15 @@ export const readPeople: Access = ({ req }) => {
 /** admin + super_admin. Gates write on the editorial collections. */
 export const isAdmin: Access = ({ req }) => isAdminUser(req.user)
 
-export const isAdminOrSuperAdminOrFellow: Access = ({ req }) =>
-  hasRole(req.user, 'admin', 'super_admin', 'fellow')
-
 export const isFellow: Access = ({ req }) => isFellowUser(req.user)
+
+/**
+ * Who may propose a course: admins, and fellows with a linked person, since a
+ * course is owned through its fellows and an unlinked account could never
+ * open the draft it made.
+ */
+export const canTeach: Access = ({ req }) =>
+  isAdminUser(req.user) || (isFellowUser(req.user) && personOf(req.user) !== null)
 
 /**
  * Admins edit any document; everyone else only documents they own.
@@ -190,12 +195,14 @@ export const adminPublishes =
   }
 
 /**
- * Who may propose a publication: students (`member`, `non_degree_seeking`)
- * and admins. A student needs a linked person, as with `canAuthor`.
+ * Who may propose a publication: students (`member`, `non_degree_seeking`),
+ * fellows and admins. A non-admin needs a linked person, as with `canAuthor`.
+ * Only an admin publishes it (`adminPublishes`).
  */
 export const canProposePublication: Access = ({ req }) => {
   if (isAdminUser(req.user)) return true
-  return adminViewOf(req.user) === 'student' && personOf(req.user) !== null
+  const view = adminViewOf(req.user)
+  return (view === 'student' || view === 'fellow') && personOf(req.user) !== null
 }
 
 /** Enrollments a user may read: their own, and those in courses they teach. */
@@ -204,9 +211,7 @@ export const readEnrollments: Access = ({ req }) => {
   const person = personOf(req.user)
   if (person === null) return false
   const own: Where = { person: { equals: person } }
-  return isFellowUser(req.user)
-    ? { or: [own, { 'course.fellows': { contains: person } }] }
-    : own
+  return isFellowUser(req.user) ? { or: [own, { 'course.fellows': { contains: person } }] } : own
 }
 
 /**
