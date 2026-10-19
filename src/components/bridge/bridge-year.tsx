@@ -6,6 +6,7 @@ import type { ReactNode } from 'react'
 import { bridgeYearPath, type BridgeYear } from '@/api/programmes.api'
 import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { BridgeCourses } from '@/components/bridge/bridge-courses'
+import { RegisterBar } from '@/app/(frontend)/[locale]/study/[slug]/RegisterBar'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { RichTextField } from '@/components/RichTextField'
 import { ShareBar } from '@/components/share-bar'
@@ -66,6 +67,9 @@ export async function BridgeYearView({
         ? `${money(pricing.min)}–${money(pricing.max)}`
         : money(pricing.min)
       : null
+  // Where the sticky Apply leads, as the details' own button does (RegisterBar).
+  const stickyApply =
+    !current || !open ? null : viaForm ? `/${locale}/study/bridge/apply` : applyUrl
   const plan = programme.pricing?.payment_plans?.[0]
   const instalments = plan?.installments ?? []
   const testimonial = programme.testimonials?.[0]
@@ -274,8 +278,22 @@ export async function BridgeYearView({
     )
 
   return (
-    <div className="course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+    <div
+      className={`course-page mx-auto w-full max-w-6xl px-4 py-10 sm:px-8 sm:py-14 xl:px-0 ${stickyApply ? 'max-lg:pb-28' : ''}`}
+    >
       {preview ? <RefreshRouteOnSave /> : null}
+      {/* As on a course page: once the details' Apply has scrolled away, a bar along the bottom on narrow screens. */}
+      {stickyApply ? (
+        <div className="lg:hidden">
+          <RegisterBar
+            applyLabel={tc('apply')}
+            applyUrl={stickyApply}
+            price={price}
+            status={tc('open')}
+            variant="bar"
+          />
+        </div>
+      ) : null}
       <div className="lg:grid lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-14">
         <article aria-labelledby="bridge-title" className="min-w-0">
           <header>
@@ -355,8 +373,23 @@ export async function BridgeYearView({
         </article>
 
         <aside className="hidden lg:flex lg:flex-col lg:gap-10">
-          {details}
-          {side('wide')}
+          {/* Not sticky: the column can be taller than the screen. Only applying
+              follows the reader down, at the column's end, as on a course page. */}
+          <div className="grid gap-10">
+            {details}
+            {side('wide')}
+          </div>
+          {stickyApply ? (
+            <div className="sticky top-22">
+              <RegisterBar
+                applyLabel={tc('apply')}
+                applyUrl={stickyApply}
+                price={price}
+                status={tc('open')}
+                variant="side"
+              />
+            </div>
+          ) : null}
         </aside>
       </div>
     </div>
