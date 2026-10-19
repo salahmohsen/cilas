@@ -28,10 +28,10 @@ export type {
   NewsletterPublication,
   NewsletterStory,
 } from './newsletter-signup-data'
-export type NewsletterVariant = 'inline' | 'card'
+export type NewsletterVariant = 'inline' | 'card' | 'panel'
 
 export interface NewsletterSignupProps {
-  /** `inline` puts the copy and form beside the issue stack; `card` is a self-contained card with the stack in a tray on top. */
+  /** `inline` puts the copy and form beside the issue stack; `card` is a self-contained card with the stack in a tray on top; `panel` is the inline layout as a bordered surface that fits a text column. */
   variant?: NewsletterVariant
   title?: string
   description?: string
@@ -364,7 +364,8 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
     const busy = useRef(false)
     const refocus = useRef(false)
     const [pill, animatePill] = useAnimate<HTMLDivElement>()
-    const copy = newsletterCopy[variant]
+    // The panel is the inline layout, so it takes the inline sample copy.
+    const copy = newsletterCopy[variant === 'card' ? 'card' : 'inline']
 
     useEffect(() => {
       if (phase === 'idle' && refocus.current) {
@@ -509,6 +510,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
             ref={input}
             id={`${id}-email`}
             className={styles.input}
+            dir="ltr"
             type="email"
             name="email"
             inputMode="email"
@@ -653,7 +655,7 @@ export const NewsletterSignup = forwardRef<HTMLElement, NewsletterSignupProps>(
         <section
           ref={ref}
           className={root}
-          data-variant="inline"
+          data-variant={variant}
           data-aside={publication || readers ? '' : undefined}
           aria-labelledby={`${id}-title`}
         >

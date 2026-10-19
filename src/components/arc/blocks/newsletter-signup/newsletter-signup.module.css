@@ -320,6 +320,62 @@
   background: var(--background);
 }
 
+/* An address reads left to right in any language; in Arabic it sits at the field's start. */
+.input:dir(rtl),
+.newsletter:dir(rtl) .input {
+  text-align: right;
+}
+/* The arrow points the way the line reads. */
+.newsletter:dir(rtl) .submit svg {
+  transform: scaleX(-1);
+}
+
+/* Panel: the inline layout as a bordered surface that spans a text column, e.g. the end of an article or a course. */
+.newsletter[data-variant='panel'] .inline {
+  max-width: none;
+  gap: var(--space-8) var(--space-10);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  padding: var(--space-8);
+  background: var(--surface);
+}
+.newsletter[data-variant='panel'][data-aside] .inline {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 300px);
+}
+.newsletter[data-variant='panel'] .intro {
+  max-width: none;
+  align-content: center;
+}
+.newsletter[data-variant='panel'] .title {
+  font-size: clamp(1.5rem, 1rem + 1.6cqi, var(--text-3xl));
+}
+.newsletter[data-variant='panel'] .description {
+  font-size: var(--text-base);
+}
+.newsletter[data-variant='panel'] .intro .form {
+  margin-top: var(--space-6);
+}
+.newsletter[data-variant='panel'] .stack {
+  max-width: 300px;
+}
+.newsletter[data-variant='panel'] .issue {
+  box-shadow: none;
+}
+/* Too narrow for both: the form alone; the stack is decoration. */
+@container newsletter (max-width: 720px) {
+  .newsletter[data-variant='panel'][data-aside] .inline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .newsletter[data-variant='panel'] .aside {
+    display: none;
+  }
+}
+@container newsletter (max-width: 520px) {
+  .newsletter[data-variant='panel'] .inline {
+    padding: var(--space-6);
+  }
+}
+
 /* The pill: one field that holds the input and the button. */
 .form {
   container: signup / inline-size;
@@ -335,7 +391,8 @@
   gap: 6px;
   border: 1px solid var(--border-strong);
   border-radius: 999px;
-  padding: 5px 5px 5px 22px;
+  padding-block: 5px;
+  padding-inline: 22px 5px;
   background: var(--surface);
   transition:
     border-color var(--duration-fast) var(--ease-standard),
@@ -544,7 +601,7 @@
     padding: var(--space-6);
   }
   .note {
-    padding-left: 4px;
+    padding-inline-start: 4px;
   }
 }
 @container newsletter (max-width: 400px) {

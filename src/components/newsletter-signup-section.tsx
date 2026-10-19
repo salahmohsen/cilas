@@ -1,16 +1,18 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 
 import {
   NewsletterSignup,
   type NewsletterPublication,
 } from '@/components/arc/blocks/newsletter-signup/newsletter-signup'
+import { localDigits } from '@/lib/digits'
 import { subscribeToNewsletter } from '@/lib/newsletter-subscribe'
 
 /**
- * The newsletter signup at the end of an article or a course: the card, with
- * the last issues stacked above the form (src/api/newsletter-stack.api.ts).
+ * The newsletter signup at the end of an article or a course: a panel as wide
+ * as the text, the form beside the last issues (src/api/newsletter-stack.api.ts);
+ * where the column is narrow, the form alone.
  */
 export function NewsletterSignupSection({
   publication,
@@ -19,10 +21,13 @@ export function NewsletterSignupSection({
 }) {
   const t = useTranslations('NewsletterSignup')
   const f = useTranslations('Footer.newsletter')
+  const locale = useLocale()
+  // The site writes numbers in the page's own digits.
+  const digits = (n: number) => localDigits(n, locale)
   return (
     <NewsletterSignup
       buttonLabel={f('subscribe')}
-      className="not-prose mt-12"
+      className="not-prose mt-16"
       description={t('description')}
       onSubscribe={subscribeToNewsletter}
       placeholder={f('placeholder')}
@@ -41,13 +46,13 @@ export function NewsletterSignupSection({
         sending: t('sending'),
         again: t('again'),
         sentTo: (email) => t('sentTo', { email }),
-        issue: (number) => t('issue', { number }),
-        issueLabel: (name, number) => t('issueLabel', { name, number }),
+        issue: (number) => t('issue', { number: digits(number) }),
+        issueLabel: (name, number) => t('issueLabel', { name, number: digits(number) }),
         to: t('to'),
-        minutes: (minutes) => t('minutes', { minutes }),
+        minutes: (minutes) => t('minutes', { minutes: digits(minutes) }),
       }}
       title={t('title')}
-      variant="card"
+      variant="panel"
     />
   )
 }
