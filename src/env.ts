@@ -22,8 +22,6 @@ export const env = createEnv({
     // Optional: without it Payload logs emails to the console (fine in dev).
     RESEND_API_KEY: z.string().min(1).optional(),
     EMAIL_FROM_ADDRESS: z.email().default('noreply@ci-las.org'),
-    // Optional: the Resend audience newsletter signups join (ADR 0005).
-    RESEND_AUDIENCE_ID: z.string().min(1).optional(),
 
     // Optional: "Continue with Google" on the login page. Without both, the
     // button is hidden. Callback: <NEXT_PUBLIC_SERVER_URL>/api/users/oauth/google/callback

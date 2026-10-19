@@ -10,6 +10,7 @@ import type { Newsletter, User } from '@/payload-types'
 let payload: Payload
 let admin: User
 let issue: Newsletter
+let list: { id: number } | null = null
 const ADMIN = 'newsletter-admin-probe@cilas.test'
 
 /** Calls a newsletter endpoint the way the sidebar buttons do. */
@@ -33,9 +34,26 @@ describe('sending a newsletter issue', () => {
       collection: 'users',
       data: { email: ADMIN, password: 'probe-password-1', roles: ['admin'] },
     })
+    // A list of its own, with a made-up segment, so no real list is touched.
+    await payload.delete({ collection: 'mailing-lists', where: { name: { equals: 'Probe list' } } })
+    list = await payload.create({
+      collection: 'mailing-lists',
+      data: {
+        name: 'Probe list',
+        source: 'members',
+        segment_id: 'seg_probe',
+        members: { users: [] },
+      },
+      context: { mailingListSyncWrite: true },
+    })
     issue = await payload.create({
       collection: 'newsletters',
-      data: { title: 'Probe issue', slug: 'probe-issue', issue_date: '2026-10-18' },
+      data: {
+        title: 'Probe issue',
+        slug: 'probe-issue',
+        issue_date: '2026-10-18',
+        send_to: list.id,
+      },
       draft: true,
     })
   })
@@ -43,6 +61,8 @@ describe('sending a newsletter issue', () => {
   afterAll(async () => {
     vi.restoreAllMocks()
     await payload.delete({ collection: 'newsletters', id: issue.id }).catch(() => undefined)
+    if (list)
+      await payload.delete({ collection: 'mailing-lists', id: list.id }).catch(() => undefined)
     await payload.delete({ collection: 'users', id: admin.id }).catch(() => undefined)
     await payload.destroy()
   })
@@ -64,7 +84,12 @@ describe('sending a newsletter issue', () => {
     const realFetch = globalThis.fetch
     return vi.spyOn(globalThis, 'fetch').mockImplementation((input, init) => {
       const url = String(input)
-      if (url === 'https://api.resend.com/broadcasts') return Promise.resolve(Response.json({ id: 'b_probe' }))
+      if (url === 'https://api.resend.com/broadcasts')
+        return Promise.resolve(Response.json({ id: 'b_probe' }))
+      // The probe list's segment, read by the sync before the send: empty.
+      if (url.startsWith('https://api.resend.com/segments/seg_probe/contacts')) {
+        return Promise.resolve(Response.json({ data: [], has_more: false }))
+      }
       if (url.startsWith('https://api.resend.com/segments/metrics')) {
         return Promise.resolve(Response.json({ totals: { all_contacts: contacts } }))
       }
@@ -72,28 +97,24 @@ describe('sending a newsletter issue', () => {
     })
   }
 
-  it.runIf(Boolean(env.RESEND_API_KEY && env.RESEND_AUDIENCE_ID))(
-    'stops above the free plan’s contact limit',
-    async () => {
-      const fetch = mockResend(1200)
-      const res = await call('send')
-      expect(res.status).toBe(409)
-      expect((await res.json()).error).toContain('1200 contacts')
-      expect(fetch.mock.calls.some(([u]) => String(u) === 'https://api.resend.com/broadcasts')).toBe(false)
-      fetch.mockRestore()
-    },
-  )
+  it.runIf(Boolean(env.RESEND_API_KEY))('stops above the free plan’s contact limit', async () => {
+    const fetch = mockResend(1200)
+    const res = await call('send')
+    expect(res.status).toBe(409)
+    expect((await res.json()).error).toContain('1200 contacts')
+    expect(fetch.mock.calls.some(([u]) => String(u) === 'https://api.resend.com/broadcasts')).toBe(
+      false,
+    )
+    fetch.mockRestore()
+  })
 
-  it.runIf(Boolean(env.RESEND_API_KEY && env.RESEND_AUDIENCE_ID))(
-    'sends once, then publishes the issue',
-    async () => {
-      const fetch = mockResend(640)
-      expect((await call('send')).status).toBe(200)
-      const sent = fetch.mock.calls.find(([u]) => String(u).includes('/broadcasts'))!
-      expect(JSON.parse(sent[1]!.body as string).html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')
-      const after = await payload.findByID({ collection: 'newsletters', id: issue.id, depth: 0 })
-      expect(after).toMatchObject({ _status: 'published', broadcast_id: 'b_probe' })
-      expect((await call('send')).status).toBe(409)
-    },
-  )
+  it.runIf(Boolean(env.RESEND_API_KEY))('sends once, then publishes the issue', async () => {
+    const fetch = mockResend(640)
+    expect((await call('send')).status).toBe(200)
+    const sent = fetch.mock.calls.find(([u]) => String(u).includes('/broadcasts'))!
+    expect(JSON.parse(sent[1]!.body as string).html).toContain('{{{RESEND_UNSUBSCRIBE_URL}}}')
+    const after = await payload.findByID({ collection: 'newsletters', id: issue.id, depth: 0 })
+    expect(after).toMatchObject({ _status: 'published', broadcast_id: 'b_probe' })
+    expect((await call('send')).status).toBe(409)
+  })
 })

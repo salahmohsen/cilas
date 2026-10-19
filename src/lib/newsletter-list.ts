@@ -4,7 +4,7 @@ import { env } from '@/env'
 
 /** A mailing list as Resend sees it: the key (a secret, so env only), its segment and topic. */
 export type ListTarget = {
-  id: number | null
+  id: number
   name: string
   source: 'signup' | 'members'
   apiKey: string
@@ -34,8 +34,8 @@ const targetOf = (list: ListDoc): ListTarget | null =>
 
 /**
  * The list the site's signup forms add to: the Mailing list whose source is
- * the signup form, or else the RESEND_AUDIENCE_ID env variable. Null when
- * signup is not set up.
+ * the signup form (Admin → Mailing lists). Null when there is none, or no
+ * RESEND_API_KEY on the server: then signup is off.
  */
 export const newsletterList = async (
   payload: Payload,
@@ -52,17 +52,7 @@ export const newsletterList = async (
     })
     .catch(() => ({ docs: [] }))
   const list = docs[0] as ListDoc | undefined
-  if (list) return targetOf(list)
-  return env.RESEND_API_KEY && env.RESEND_AUDIENCE_ID
-    ? {
-        id: null,
-        name: 'Newsletter',
-        source: 'signup',
-        apiKey: env.RESEND_API_KEY,
-        segmentId: env.RESEND_AUDIENCE_ID,
-        topicId: null,
-      }
-    : null
+  return list ? targetOf(list) : null
 }
 
 /** A Mailing list by id, ready to send to; null when it is missing or has no segment. */
