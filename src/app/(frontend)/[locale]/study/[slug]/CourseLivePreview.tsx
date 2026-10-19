@@ -21,10 +21,11 @@ import type { Course } from '@/payload-types'
  * `depth` must match the depth of the server component's query exactly, or
  * relationships and uploads will not populate.
  */
-export const CourseLivePreview: React.FC<{ initialData: Course; related?: RelatedCourse[] }> = ({
-  initialData,
-  related,
-}) => {
+export const CourseLivePreview: React.FC<{
+  initialData: Course
+  related?: RelatedCourse[]
+  after?: React.ReactNode
+}> = ({ initialData, related, after }) => {
   const { data } = useLivePreview<Course>({
     initialData,
     // Read from env, not `window.location.origin`: these pages are statically
@@ -40,7 +41,7 @@ export const CourseLivePreview: React.FC<{ initialData: Course; related?: Relate
   return (
     <>
       {inAdmin ? <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} /> : null}
-      <CourseView course={data} editable={inAdmin} related={related} />
+      <CourseView after={after} course={data} editable={inAdmin} related={related} />
     </>
   )
 }

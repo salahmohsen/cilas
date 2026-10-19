@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
 
+import { OutsideAdminFrame } from '@/components/admin-frame-only'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { CourseLivePreview } from './CourseLivePreview'
@@ -132,14 +133,15 @@ export default async function CoursePage({ params }: Params) {
     }
   })
 
+  // In draft mode too (the cookie outlives a preview), but not in the admin's frame.
+  const newsletter = (
+    <OutsideAdminFrame>
+      <NewsletterSignupEnd locale={locale as 'en' | 'ar'} />
+    </OutsideAdminFrame>
+  )
+
   if (!isPreview) {
-    return (
-      <CourseView
-        after={<NewsletterSignupEnd locale={locale as 'en' | 'ar'} />}
-        course={course}
-        related={related}
-      />
-    )
+    return <CourseView after={newsletter} course={course} related={related} />
   }
 
   /*
@@ -164,7 +166,7 @@ export default async function CoursePage({ params }: Params) {
   return (
     <>
       <RefreshRouteOnSave />
-      <CourseLivePreview initialData={drafts[0] ?? course} related={related} />
+      <CourseLivePreview after={newsletter} initialData={drafts[0] ?? course} related={related} />
     </>
   )
 }

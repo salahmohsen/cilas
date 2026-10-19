@@ -16,3 +16,8 @@ export const useInAdminFrame = () => useSyncExternalStore(noop, framed, () => fa
 export function AdminFrameOnly({ children }: { children: React.ReactNode }) {
   return useInAdminFrame() ? children : null
 }
+
+/** Its children everywhere but the admin's preview frame: what visitors see, editors too. */
+export function OutsideAdminFrame({ children }: { children: React.ReactNode }) {
+  return useInAdminFrame() ? null : children
+}

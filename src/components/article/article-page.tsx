@@ -25,7 +25,7 @@ import {
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import { toArticleCard } from '@/lib/article-cards'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
-import { AdminFrameOnly } from '@/components/admin-frame-only'
+import { AdminFrameOnly, OutsideAdminFrame } from '@/components/admin-frame-only'
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
@@ -468,7 +468,10 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
               />
             )}
 
-            {!preview && <NewsletterSignupEnd locale={locale} />}
+            {/* Not in the admin's preview frame; an editor's own tab shows it, as visitors see it. */}
+            <OutsideAdminFrame>
+              <NewsletterSignupEnd locale={locale} />
+            </OutsideAdminFrame>
           </article>
         </div>
       </div>
