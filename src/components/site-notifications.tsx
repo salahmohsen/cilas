@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormatter, useLocale, useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useCallback, useEffect, useState } from 'react'
 import { formatDistanceToNow, isYesterday } from 'date-fns'
 
@@ -57,7 +57,6 @@ const relativeTime = (date: Date) => {
  */
 export function SiteNotifications() {
   const t = useTranslations('Notifications')
-  const format = useFormatter()
   const locale = useLocale()
   const [items, setItems] = useState<NotificationItem[] | null>(null)
 
@@ -75,7 +74,7 @@ export function SiteNotifications() {
         href: n.link ?? undefined,
       })),
     )
-  }, [format])
+  }, [])
 
   useEffect(() => {
     const first = setTimeout(() => void load(), 0)
