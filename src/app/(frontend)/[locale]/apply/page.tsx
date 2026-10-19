@@ -1,13 +1,13 @@
 import config from '@payload-config'
 import type { Metadata } from 'next'
-import { getTranslations } from 'next-intl/server'
+import { getFormatter, getTranslations } from 'next-intl/server'
 import { getPayload } from 'payload'
 
 import type { Locale } from '@/api/articles.api'
 import { getOpenNow } from '@/api/home.api'
-import { Poster } from '@/components/home/poster'
-import { openPosters } from '@/components/home/open-now'
+import { OpenGrid, type OpenPost } from '@/components/open-grid'
 import { Link } from '@/i18n/navigation'
+import { numberingSystemOf } from '@/lib/digits'
 
 // What is open follows deadlines: worked out every five minutes, as /api/open is.
 export const revalidate = 300
@@ -27,26 +27,50 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ApplyPage({ params }: Props) {
   const { locale } = await params
   const payload = await getPayload({ config })
-  const [t, items] = await Promise.all([
+  const [t, format, items] = await Promise.all([
     getTranslations('Home'),
+    getFormatter(),
     getOpenNow(payload, locale as Locale),
   ])
-  const posters = await openPosters(items, locale)
+  const day = (iso: string) =>
+    format.dateTime(new Date(`${iso}T12:00:00Z`), {
+      day: 'numeric',
+      month: 'long',
+      timeZone: 'Africa/Cairo',
+      numberingSystem: numberingSystemOf(locale),
+    })
+  const and = locale === 'ar' ? ' و' : ' & '
+
+  const posts: OpenPost[] = items.map((item, i) => {
+    const kind = item.kind === 'programme' ? t('programme') : (item.type ?? t('programme'))
+    return {
+      id: `${item.kind}-${i}`,
+      href: `/${locale}${item.href}`,
+      title: item.title,
+      excerpt: item.when ?? '',
+      category: kind,
+      label: kind,
+      // The deadline stands where a post's date would; the given order keeps ours.
+      date: item.deadline ?? '9999-12-31',
+      dateLabel: item.deadline ? t('closesOn', { date: day(item.deadline) }) : t('noDeadline'),
+      readTime: 0,
+      readTimeLabel: '',
+      author: { name: item.fellows?.length ? item.fellows.join(and) : 'CILAS' },
+      image: item.image,
+      // A programme (the Bridge) leads, as the large card.
+      featured: item.kind === 'programme',
+    }
+  })
+  const categories = ['All', ...new Set(posts.map((p) => p.category))]
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-10 px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
       <header className="home-section-header">
         <h1 className="home-heading">{t('openTitle')}</h1>
-        <p className="home-lead">{posters.length ? t('openText') : t('noneOpen')}</p>
+        <p className="home-lead">{posts.length ? t('openText') : t('noneOpen')}</p>
       </header>
-      {posters.length ? (
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {posters.map((poster) => (
-            <li key={poster.id}>
-              <Poster poster={poster} />
-            </li>
-          ))}
-        </ul>
+      {posts.length ? (
+        <OpenGrid categories={categories} posts={posts} title={t('openTitle')} />
       ) : (
         <p>
           <Link className="bridge-link" href="/study">
