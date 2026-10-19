@@ -24,6 +24,7 @@ import {
   type Variants,
 } from 'motion/react'
 import {
+  ArrowUpRight,
   Bell,
   Check,
   CheckCheck,
@@ -47,6 +48,65 @@ export interface NotificationItem {
   tone?: 'info' | 'success' | 'warning'
   /** A local portrait asset for person-generated updates. */
   actor?: { name: string; photo: string }
+  /** Where the update leads; shown as an Open action in its details. */
+  href?: string
+}
+
+/** Every built-in string, so a host can translate the panel. Any left out stay English. */
+export interface NotificationText {
+  summary: (unread: number) => string
+  caughtUp: string
+  close: string
+  show: string
+  all: string
+  unread: string
+  allNotifications: string
+  unreadNotifications: string
+  markAllRead: string
+  unreadSuffix: string
+  showDetails: string
+  hideDetails: string
+  details: string
+  markRead: string
+  markUnread: string
+  dismiss: string
+  open: string
+  nothingUnread: string
+  allClear: string
+  seenEvery: string
+  newAppear: string
+  viewAll: string
+  read: string
+  clearRead: string
+  triggerUnread: (unread: number) => string
+}
+
+const DEFAULT_TEXT: NotificationText = {
+  summary: (n) => `${n} update${n === 1 ? '' : 's'} waiting for you`,
+  caughtUp: 'You’re all caught up',
+  close: 'Close notifications',
+  show: 'Show notifications',
+  all: 'All',
+  unread: 'Unread',
+  allNotifications: 'All notifications',
+  unreadNotifications: 'Unread notifications',
+  markAllRead: 'Mark all read',
+  unreadSuffix: ', unread',
+  showDetails: 'Show details',
+  hideDetails: 'Hide details',
+  details: 'This update is ready to review.',
+  markRead: 'Mark read',
+  markUnread: 'Mark unread',
+  dismiss: 'Dismiss',
+  open: 'Open',
+  nothingUnread: 'Nothing unread',
+  allClear: 'All clear',
+  seenEvery: 'You’ve seen every update.',
+  newAppear: 'New updates will appear here.',
+  viewAll: 'View all updates',
+  read: 'read',
+  clearRead: 'Clear read',
+  triggerUnread: (n) => `, ${n} unread`,
 }
 
 export interface NotificationCenterProps {
@@ -57,6 +117,10 @@ export interface NotificationCenterProps {
   open?: boolean
   onOpenChange?: (open: boolean) => void
   avoidCollisions?: boolean
+  /** The built-in strings, for another language. */
+  text?: Partial<NotificationText>
+  /** Called when an update's Open action is followed. */
+  onOpenItem?: (notification: NotificationItem) => void
 }
 
 type View = 'all' | 'unread'
@@ -256,11 +320,20 @@ export function NotificationCenter({
   open,
   onOpenChange,
   avoidCollisions = true,
+  text: textProp,
+  onOpenItem,
 }: NotificationCenterProps) {
+  const text = { ...DEFAULT_TEXT, ...textProp }
   const reduce = useReducedMotion()
   const layoutId = useId()
   const [internalOpen, setInternalOpen] = useState(false)
   const [items, setItems] = useState(initial)
+  // A new list from the host (it looked again) replaces the panel's copy.
+  const [seed, setSeed] = useState(initial)
+  if (seed !== initial) {
+    setSeed(initial)
+    setItems(initial)
+  }
   const [view, setView] = useState<View>('all')
   const [expandedId, setExpandedId] = useState<string | null>(null)
   const [bulk, setBulk] = useState(false)
@@ -271,9 +344,7 @@ export function NotificationCenter({
   const unreadCount = useMemo(() => items.filter((item) => !item.read).length, [items])
   const readCount = items.length - unreadCount
   const visible = view === 'unread' ? items.filter((item) => !item.read) : items
-  const summary = unreadCount
-    ? `${unreadCount} update${unreadCount === 1 ? '' : 's'} waiting for you`
-    : 'You’re all caught up'
+  const summary = unreadCount ? text.summary(unreadCount) : text.caughtUp
 
   function setOpen(next: boolean) {
     if (open === undefined) setInternalOpen(next)
@@ -335,7 +406,7 @@ export function NotificationCenter({
         <button
           className={styles.trigger}
           type="button"
-          aria-label={`${label}${unreadCount ? `, ${unreadCount} unread` : ''}`}
+          aria-label={`${label}${unreadCount ? text.triggerUnread(unreadCount) : ''}`}
         >
           <motion.span
             animate={{ rotate: isOpen && !reduce ? -12 : 0 }}
@@ -386,13 +457,13 @@ export function NotificationCenter({
                 <SwapText reduce={reduce}>{summary}</SwapText>
               </p>
             </div>
-            <PopoverPrimitive.Close className={styles.close} aria-label="Close notifications">
+            <PopoverPrimitive.Close className={styles.close} aria-label={text.close}>
               <X size={17} strokeWidth={1.75} aria-hidden="true" />
             </PopoverPrimitive.Close>
           </div>
 
           <div className={styles.toolbar}>
-            <div className={styles.viewSwitch} role="group" aria-label="Show notifications">
+            <div className={styles.viewSwitch} role="group" aria-label={text.show}>
               {(['all', 'unread'] as const).map((next) => (
                 <button
                   key={next}
@@ -413,7 +484,7 @@ export function NotificationCenter({
                       transition={reduce ? instant : motionTokens.spring.morph}
                     />
                   )}
-                  <span>{next === 'all' ? 'All' : 'Unread'}</span>
+                  <span>{next === 'all' ? text.all : text.unread}</span>
                 </button>
               ))}
             </div>
@@ -442,7 +513,7 @@ export function NotificationCenter({
                   transition={reduce ? instant : enter}
                 >
                   <CheckCheck size={15} strokeWidth={1.75} aria-hidden="true" />
-                  <span>Mark all read</span>
+                  <span>{text.markAllRead}</span>
                 </motion.button>
               )}
             </AnimatePresence>
@@ -452,7 +523,7 @@ export function NotificationCenter({
           <div
             className={styles.list}
             role="list"
-            aria-label={view === 'all' ? 'All notifications' : 'Unread notifications'}
+            aria-label={view === 'all' ? text.allNotifications : text.unreadNotifications}
           >
             <AnimatePresence initial={false} custom={bulk}>
               {visible.map((item, index) => (
@@ -502,7 +573,7 @@ export function NotificationCenter({
                         type="button"
                         className={styles.itemToggle}
                         aria-expanded={expandedId === item.id}
-                        aria-label={`${item.title}${item.read ? '' : ', unread'}. ${expandedId === item.id ? 'Hide details' : 'Show details'}`}
+                        aria-label={`${item.title}${item.read ? '' : text.unreadSuffix}. ${expandedId === item.id ? text.hideDetails : text.showDetails}`}
                         onClick={() =>
                           setExpandedId((current) => (current === item.id ? null : item.id))
                         }
@@ -538,8 +609,7 @@ export function NotificationCenter({
                           </AnimatePresence>
                         </span>
                         <span className={styles.itemPreview}>
-                          {item.description ??
-                            (item.actor ? `From ${item.actor.name}` : 'View update details')}
+                          {item.description ?? (item.actor ? item.actor.name : text.showDetails)}
                         </span>
                       </button>
                       <time className={styles.time}>{item.time}</time>
@@ -564,13 +634,14 @@ export function NotificationCenter({
                           }
                           transition={height}
                         >
-                          <p>
-                            {item.description ??
-                              (item.actor
-                                ? `${item.actor.name} shared an update with you.`
-                                : 'This update is ready to review.')}
-                          </p>
+                          <p>{item.description ?? text.details}</p>
                           <div className={styles.itemActions}>
+                            {item.href ? (
+                              <a href={item.href} onClick={() => onOpenItem?.(item)}>
+                                <ArrowUpRight size={14} strokeWidth={1.75} aria-hidden="true" />
+                                {text.open}
+                              </a>
+                            ) : null}
                             <button type="button" onClick={() => toggleRead(item)}>
                               <MorphWidth reduce={reduce} morphKey={item.read ? 'read' : 'unread'}>
                                 <span className={styles.actionIcon}>
@@ -596,13 +667,13 @@ export function NotificationCenter({
                                   </AnimatePresence>
                                 </span>
                                 <SwapText reduce={reduce}>
-                                  {item.read ? 'Mark unread' : 'Mark read'}
+                                  {item.read ? text.markUnread : text.markRead}
                                 </SwapText>
                               </MorphWidth>
                             </button>
                             <button type="button" onClick={() => dismiss(item)}>
                               <X size={14} strokeWidth={1.75} aria-hidden="true" />
-                              Dismiss
+                              {text.dismiss}
                             </button>
                           </div>
                         </motion.div>
@@ -645,14 +716,12 @@ export function NotificationCenter({
                     <CircleCheck size={24} strokeWidth={1.5} aria-hidden="true" />
                     <strong>
                       <SwapText reduce={reduce}>
-                        {view === 'unread' ? 'Nothing unread' : 'All clear'}
+                        {view === 'unread' ? text.nothingUnread : text.allClear}
                       </SwapText>
                     </strong>
                     <p>
                       <SwapText reduce={reduce}>
-                        {view === 'unread'
-                          ? 'You’ve seen every update.'
-                          : 'New updates will appear here.'}
+                        {view === 'unread' ? text.seenEvery : text.newAppear}
                       </SwapText>
                     </p>
                     {view === 'unread' && items.length > 0 && (
@@ -663,7 +732,7 @@ export function NotificationCenter({
                           setView('all')
                         }}
                       >
-                        View all updates
+                        {text.viewAll}
                       </button>
                     )}
                   </motion.div>
@@ -692,10 +761,10 @@ export function NotificationCenter({
               >
                 <div className={styles.footer}>
                   <span>
-                    <RollingCount value={readCount} reduce={reduce} /> read
+                    <RollingCount value={readCount} reduce={reduce} /> {text.read}
                   </span>
                   <button type="button" onClick={clearRead}>
-                    Clear read
+                    {text.clearRead}
                   </button>
                 </div>
               </motion.div>

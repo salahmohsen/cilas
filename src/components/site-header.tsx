@@ -8,6 +8,7 @@ import { Suspense, useEffect, useRef, useState } from 'react'
 import { SiteHeader } from '@/components/arc/blocks/site-header/site-header'
 import { UserMenu, type UserMenuUser } from '@/components/arc/user-menu/user-menu'
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
+import { SiteNotifications } from '@/components/site-notifications'
 import { SiteSearch } from '@/components/site-search'
 import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
 
@@ -206,6 +207,8 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
             <LanguageSwitch />
           </Suspense>
           <ThemeToggle />
+          {/* Decisions on their work and new submissions, the same as in the admin. */}
+          {account && <SiteNotifications />}
           {account && (
             <UserMenu
               user={account}

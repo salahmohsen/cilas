@@ -656,5 +656,33 @@
     "issueLabel": "{name}، العدد {number}",
     "to": "إلى",
     "minutes": "{minutes} د"
+  },
+  "Notifications": {
+    "label": "الإشعارات",
+    "summary": "{count, plural, =1 {تحديث واحد بانتظارك} other {{shown} تحديثات بانتظارك}}",
+    "caughtUp": "لا جديد الآن",
+    "close": "إغلاق الإشعارات",
+    "show": "عرض الإشعارات",
+    "all": "الكل",
+    "unread": "غير المقروءة",
+    "allNotifications": "كل الإشعارات",
+    "unreadNotifications": "الإشعارات غير المقروءة",
+    "markAllRead": "تعليم الكل كمقروء",
+    "unreadSuffix": "، غير مقروء",
+    "showDetails": "عرض التفاصيل",
+    "hideDetails": "إخفاء التفاصيل",
+    "details": "افتحه لترى ما تغيّر.",
+    "markRead": "تعليم كمقروء",
+    "markUnread": "تعليم كغير مقروء",
+    "dismiss": "إزالة",
+    "open": "فتح",
+    "nothingUnread": "لا شيء غير مقروء",
+    "allClear": "لا إشعارات",
+    "seenEvery": "اطّلعت على كل التحديثات.",
+    "newAppear": "تظهر هنا القرارات بشأن عملك والطلبات الجديدة.",
+    "viewAll": "عرض كل التحديثات",
+    "read": "مقروءة",
+    "clearRead": "إزالة المقروءة",
+    "triggerUnread": "{count, plural, =1 {، واحد غير مقروء} other {، {shown} غير مقروءة}}"
   }
 }

@@ -656,5 +656,33 @@
     "issueLabel": "{name}, issue {number}",
     "to": "To",
     "minutes": "{minutes} min"
+  },
+  "Notifications": {
+    "label": "Notifications",
+    "summary": "{count, plural, one {{shown} update waits for you} other {{shown} updates wait for you}}",
+    "caughtUp": "You’re all caught up",
+    "close": "Close notifications",
+    "show": "Show notifications",
+    "all": "All",
+    "unread": "Unread",
+    "allNotifications": "All notifications",
+    "unreadNotifications": "Unread notifications",
+    "markAllRead": "Mark all read",
+    "unreadSuffix": ", unread",
+    "showDetails": "Show details",
+    "hideDetails": "Hide details",
+    "details": "Open it to see what changed.",
+    "markRead": "Mark read",
+    "markUnread": "Mark unread",
+    "dismiss": "Dismiss",
+    "open": "Open",
+    "nothingUnread": "Nothing unread",
+    "allClear": "All clear",
+    "seenEvery": "You’ve seen every update.",
+    "newAppear": "Decisions on your work and new submissions show here.",
+    "viewAll": "View all updates",
+    "read": "read",
+    "clearRead": "Clear read",
+    "triggerUnread": "{count, plural, one {, {shown} unread} other {, {shown} unread}}"
   }
 }

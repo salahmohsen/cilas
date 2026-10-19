@@ -322,7 +322,8 @@
   gap: 6px;
   padding-bottom: 5px;
 }
-.itemActions button {
+.itemActions button,
+.itemActions a {
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -336,6 +337,7 @@
   font: inherit;
   font-size: var(--text-xs);
   line-height: 1;
+  text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
   transition:
@@ -343,7 +345,8 @@
     border-color var(--duration-fast) var(--ease-standard),
     background var(--duration-fast) var(--ease-standard);
 }
-.itemActions button:active {
+.itemActions button:active,
+.itemActions a:active {
   transform: scale(0.97);
 }
 /* Quick press, spring release: the resting transition above carries the spring back. */
@@ -465,7 +468,8 @@
   .footer button:hover {
     color: var(--foreground);
   }
-  .itemActions button:hover {
+  .itemActions button:hover,
+  .itemActions a:hover {
     border-color: var(--border-strong);
     background: var(--surface);
   }
