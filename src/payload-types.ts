@@ -3710,6 +3710,21 @@ export interface SiteSetting {
       }[]
     | null;
   /**
+   * Untick an item to take it out of the header and footer menus. Its page stays reachable by link.
+   */
+  navigation?: {
+    thematic?: boolean | null;
+    labs?: boolean | null;
+    workshops?: boolean | null;
+    short?: boolean | null;
+    bridge?: boolean | null;
+    fellows?: boolean | null;
+    cilasians?: boolean | null;
+    governance?: boolean | null;
+    articles?: boolean | null;
+    calendar?: boolean | null;
+  };
+  /**
    * Shown on the home page, in this order.
    */
   faq?:
@@ -3839,6 +3854,20 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         platform?: T;
         url?: T;
         id?: T;
+      };
+  navigation?:
+    | T
+    | {
+        thematic?: T;
+        labs?: T;
+        workshops?: T;
+        short?: T;
+        bridge?: T;
+        fellows?: T;
+        cilasians?: T;
+        governance?: T;
+        articles?: T;
+        calendar?: T;
       };
   faq?:
     | T

@@ -5,6 +5,21 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
    DROP TABLE "about" CASCADE;
   DROP TABLE "about_locales" CASCADE;`)
 
+  // The Payload calls below read Site settings with today's fields. On a
+  // fresh database, columns added by later migrations do not exist yet, so
+  // they are made here first (the later migration skips them).
+  await db.execute(sql`
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_thematic" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_labs" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_workshops" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_short" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_bridge" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_fellows" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_cilasians" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_governance" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_articles" boolean DEFAULT true;
+  ALTER TABLE "site_settings" ADD COLUMN IF NOT EXISTS "navigation_calendar" boolean DEFAULT true;`)
+
   // What only the About page said moves to the home page's questions
   // (Site settings → FAQ), once: existing questions keep their text.
   const en = await payload.findGlobal({ slug: 'site-settings', locale: 'en', depth: 0, req, overrideAccess: true })

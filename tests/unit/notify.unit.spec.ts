@@ -23,3 +23,13 @@ describe('notify', () => {
     expect(error).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('navigationOf', () => {
+  it('shows every item unless an admin unticked it', async () => {
+    const { navigationOf } = await import('@/lib/navigation')
+    const nav = navigationOf({ governance: false, calendar: null })
+    expect(nav.governance).toBe(false)
+    expect(nav.calendar).toBe(true)
+    expect(nav.articles).toBe(true)
+  })
+})

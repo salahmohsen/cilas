@@ -14,6 +14,7 @@ import {
 } from 'simple-icons'
 
 import type { Place } from '@/api/place.api'
+import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
 import { subscribeToNewsletter } from '@/lib/newsletter-subscribe'
 import type { SocialLink } from '@/api/social.api'
 import { SiteFooter as ArcSiteFooter } from '@/components/arc/blocks/site-footer/site-footer'
@@ -31,11 +32,14 @@ export function SiteFooter({
   socials = [],
   place = null,
   newsletter = true,
+  nav = ALL_SHOWN,
 }: {
   socials?: SocialLink[]
   place?: Place | null
   /** Whether signup is set up (a signup Mailing list and the Resend key); off, the form is left out. */
   newsletter?: boolean
+  /** What the menus show (Site settings → Navigation). */
+  nav?: Navigation
 }) {
   const t = useTranslations('Footer')
   const brand = useTranslations('Header')
@@ -63,9 +67,9 @@ export function SiteFooter({
           title: t('explore'),
           links: [
             { label: t('study'), href: href('/study') },
-            { label: t('articles'), href: href('/articles') },
+            ...(nav.articles ? [{ label: t('articles'), href: href('/articles') }] : []),
             { label: t('people'), href: href('/people') },
-            { label: t('calendar'), href: href('/calendar') },
+            ...(nav.calendar ? [{ label: t('calendar'), href: href('/calendar') }] : []),
           ],
         },
         {
