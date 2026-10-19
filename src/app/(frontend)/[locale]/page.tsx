@@ -17,6 +17,7 @@ import { HomeArticles } from '@/components/home/home-articles'
 import { OpenNow } from '@/components/home/open-now'
 import { Link } from '@/i18n/navigation'
 import { toArticleCard } from '@/lib/article-cards'
+import { newsletterList } from '@/lib/newsletter-list'
 
 // What is open changes with deadlines: worked out again every five minutes.
 export const revalidate = 300
@@ -49,6 +50,7 @@ export default async function HomePage({ params }: Props) {
     covers,
     contact,
     faq,
+    signup,
   ] = await Promise.all([
     getTranslations('Home'),
     getTranslations('Header'),
@@ -62,6 +64,7 @@ export default async function HomePage({ params }: Props) {
     getPublicationCovers(payload),
     getContactForm(payload, locale as Locale),
     getHomeFaq(payload, locale as Locale),
+    newsletterList(payload),
   ])
 
   const toCard = (a: (typeof articles.featured)[number]) =>
@@ -96,7 +99,8 @@ export default async function HomePage({ params }: Props) {
             : {
                 label: t('seeOpen'),
                 note: t('noneOpen'),
-                link: { label: t('noneOpenLink'), href: '#newsletter' },
+                // To the footer's signup, which shows only when there is a list.
+                ...(signup ? { link: { label: t('noneOpenLink'), href: '#newsletter' } } : {}),
               }
         }
         secondary={{ label: t('readArticles'), href: '/articles' }}

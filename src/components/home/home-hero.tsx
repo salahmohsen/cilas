@@ -9,7 +9,7 @@ import { Link } from '@/i18n/navigation'
 
 type Action = { label: string; href: string }
 /** The main action while it can't be taken: its label, and why, with where to go instead. */
-type Closed = { label: string; note: string; link: Action }
+type Closed = { label: string; note: string; link?: Action }
 
 /** How long each audience stays before the next takes its place. */
 const STEP = 2400
@@ -177,7 +177,13 @@ export function HomeHero({
         </div>
         {'note' in primary ? (
           <p className="home-hero-note home-hero-rise" id="home-hero-note" style={step(3)}>
-            {primary.note} <a href={primary.link.href}>{primary.link.label}</a>
+            {primary.note}
+            {primary.link ? (
+              <>
+                {' '}
+                <a href={primary.link.href}>{primary.link.label}</a>
+              </>
+            ) : null}
           </p>
         ) : null}
         <HomeNumbers locale={locale} stats={numbers.stats} title={numbers.title} />

@@ -8,6 +8,9 @@ import '../styles.css'
 import { SiteDeadlines } from '@/components/site-deadlines'
 import { getSocialLinks } from '@/api/social.api'
 import { SiteFooter } from '@/components/site-footer'
+import config from '@payload-config'
+import { getPayload } from 'payload'
+
 import { getCurrentPlace } from '@/api/place.api'
 import { CILASSiteHeader } from '@/components/site-header'
 import { ThemeProvider } from '@/components/theme-provider'
@@ -15,6 +18,7 @@ import { DirectionProvider } from '@/components/ui/direction'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
 import { fontVariables } from '@/lib/fonts'
+import { newsletterList } from '@/lib/newsletter-list'
 import { DEFAULT_OG_IMAGE } from '@/lib/og'
 
 export function generateStaticParams() {
@@ -39,7 +43,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   const direction = isRtl(locale) ? 'rtl' : 'ltr'
-  const [socials, place] = await Promise.all([getSocialLinks(), getCurrentPlace(locale === 'ar' ? 'ar' : 'en')])
+  const [socials, place, list] = await Promise.all([
+    getSocialLinks(),
+    getCurrentPlace(locale === 'ar' ? 'ar' : 'en'),
+    // The footer's signup shows only when there is a list to join.
+    getPayload({ config }).then((payload) => newsletterList(payload)),
+  ])
 
   return (
     // next-themes sets data-theme and the class before React hydrates.
@@ -61,7 +70,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <main className="mx-auto min-h-[60vh] max-w-300">{children}</main>
               {/* The same width as the page content. */}
               <div className="mx-auto max-w-300">
-                <SiteFooter place={place} socials={socials} />
+                <SiteFooter newsletter={Boolean(list)} place={place} socials={socials} />
               </div>
             </DirectionProvider>
           </NextIntlClientProvider>

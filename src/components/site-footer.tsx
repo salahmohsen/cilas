@@ -30,9 +30,12 @@ const PLATFORMS: Record<SocialLink['platform'], { icon: SimpleIcon; label: strin
 export function SiteFooter({
   socials = [],
   place = null,
+  newsletter = true,
 }: {
   socials?: SocialLink[]
   place?: Place | null
+  /** Whether signup is set up (a signup Mailing list and the Resend key); off, the form is left out. */
+  newsletter?: boolean
 }) {
   const t = useTranslations('Footer')
   const brand = useTranslations('Header')
@@ -110,20 +113,24 @@ export function SiteFooter({
           </a>
         </span>
       }
-      newsletter={{
-        title: t('newsletterTitle'),
-        description: t('newsletterText'),
-        placeholder: t('newsletter.placeholder'),
-        labels: {
-          subscribe: t('newsletter.subscribe'),
-          subscribed: t('newsletter.subscribed'),
-          empty: t('newsletter.empty'),
-          invalid: t('newsletter.invalid'),
-          failed: t('newsletter.failed'),
-          done: t('newsletter.done'),
-        },
-        onSubscribe: subscribeToNewsletter,
-      }}
+      newsletter={
+        newsletter
+          ? {
+              title: t('newsletterTitle'),
+              description: t('newsletterText'),
+              placeholder: t('newsletter.placeholder'),
+              labels: {
+                subscribe: t('newsletter.subscribe'),
+                subscribed: t('newsletter.subscribed'),
+                empty: t('newsletter.empty'),
+                invalid: t('newsletter.invalid'),
+                failed: t('newsletter.failed'),
+                done: t('newsletter.done'),
+              },
+              onSubscribe: subscribeToNewsletter,
+            }
+          : null
+      }
       // Icons only, from Site settings; the platform names their links.
       socials={socials.map(({ platform, url }) => ({
         label: PLATFORMS[platform].label,
