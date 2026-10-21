@@ -227,6 +227,7 @@ export const saveProfile = async (
     }
     if (started) await commitTransaction(req)
   } catch (error) {
+    // If Postgres aborted the transaction, this delete fails too and the stored file stays.
     // Delete the media row inside the transaction, with the same req, so the
     // storage plugin's delete hook removes the stored file as well.
     if (mediaId) {

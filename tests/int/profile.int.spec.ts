@@ -326,24 +326,32 @@ describe('profile', () => {
     expect(await storedBio()).toContain('"format":8')
   })
 
-  it('drops upload placeholders from a member bio', async () => {
-    await saveProfile(
-      payload,
-      me,
-      base({ bio: { en: 'Hello\n\n![media:1]()\n\n![ media:1]()', ar: '' } }),
-    )
-    expect(await storedBio()).not.toContain('"type":"upload"')
-  })
-
-  it('keeps an unchanged bio that holds an uploaded image', async () => {
+  it('drops upload placeholders from a member bio', async (ctx) => {
     const found = await payload.find({ collection: 'media', limit: 1, overrideAccess: true })
     const media = found.docs[0]
-    if (!media) return // No media doc in this database to reference; nothing to check.
+    if (!media) ctx.skip()
+    const id = media!.id
+    expect(
+      await saveProfile(
+        payload,
+        me,
+        base({ bio: { en: `Hello\n\n![media:${id}]()\n\n![ media:${id}]()`, ar: '' } }),
+      ),
+    ).toEqual({ ok: true })
+    const stored = await storedBio()
+    expect(stored).toContain('Hello')
+    expect(stored).not.toContain('"type":"upload"')
+  })
+
+  it('keeps an unchanged bio that holds an uploaded image', async (ctx) => {
+    const found = await payload.find({ collection: 'media', limit: 1, overrideAccess: true })
+    const media = found.docs[0]
+    if (!media) ctx.skip()
     await payload.update({
       collection: 'people',
       id: people[0]!,
       locale: 'en',
-      data: { bio: lexicalOf({ text: 'Before', format: 0 }, { upload: media.id }) } as never,
+      data: { bio: lexicalOf({ text: 'Before', format: 0 }, { upload: media!.id }) } as never,
       overrideAccess: true,
     })
     const view = await readProfile(payload, me)
