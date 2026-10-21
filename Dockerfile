@@ -59,6 +59,12 @@ COPY . .
 # Uncomment the following line in case you want to disable telemetry during the build.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
+# Bring the database up to the schema this code expects, once, before the
+# build: `next build` reads Payload to prerender pages, so it needs the new
+# tables. A failed migration fails the deploy and the running site stays as
+# it was. Payload's `prodMigrations` would instead run in every build worker.
+RUN pnpm db:migrate
+
 RUN \
   if [ -f yarn.lock ]; then yarn run build; \
   elif [ -f package-lock.json ]; then npm run build; \
