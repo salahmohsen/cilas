@@ -1,6 +1,6 @@
 'use client'
 
-import { startTransition, useActionState, useRef, useState } from 'react'
+import { startTransition, useActionState, useEffect, useRef, useState } from 'react'
 
 import type { ProfileState } from '@/app/(frontend)/[locale]/profile/actions'
 import { Button } from '@/components/arc/button/button'
@@ -32,6 +32,11 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
   const [state, submit, pending] = useActionState(action, { status: 'idle' } as ProfileState)
   const [bioEn, setBioEn] = useState(profile.bio.en)
   const [bioAr, setBioAr] = useState(profile.bio.ar)
+  const photoInput = useRef<HTMLInputElement>(null)
+  // A saved photo is not sent again by the next save.
+  useEffect(() => {
+    if (state.status === 'saved' && photoInput.current) photoInput.current.value = ''
+  }, [state])
   const [submits, setSubmits] = useState(0)
   const [photoTooBig, setPhotoTooBig] = useState(false)
   // The editor's own rendering of each stored bio, found on first use (it needs the
@@ -50,7 +55,9 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
     state.status === 'error' && state.error === error ? m.errors[error] : undefined
   const photoError = photoTooBig ? m.errors.photo : fieldError('photo')
   const lineError =
-    state.status === 'error' && !['name', 'name-ar', 'website', 'photo'].includes(state.error)
+    !pending &&
+    state.status === 'error' &&
+    !['name', 'name-ar', 'website', 'photo'].includes(state.error)
       ? m.errors[state.error]
       : undefined
 
@@ -187,6 +194,7 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
           label={m.photo}
           description={m.photoHint}
           name="photo"
+          ref={photoInput}
           type="file"
           accept="image/jpeg,image/png,image/webp"
           error={photoError}
@@ -197,7 +205,7 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
         <Button type="submit" loading={pending}>
           {m.save}
         </Button>
-        {state.status === 'saved' && (
+        {!pending && state.status === 'saved' && (
           <p key={submits} role="status" className="text-sm">
             {m.saved}
           </p>
