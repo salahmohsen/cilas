@@ -32,6 +32,7 @@ import { ContributorList, PersonLink, type Contributor } from '@/components/pers
 import { RichTextField } from '@/components/RichTextField'
 import { ShareBar } from '@/components/share-bar'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
+import { ArticleCardGrid } from '@/components/article/article-card-grid'
 import { resolveCardStacks } from '@/api/card-stacks.api'
 import { resolveMentions } from '@/api/mentions.api'
 import { MentionLink } from '@/components/article/mention-link'
@@ -96,13 +97,14 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
   const { article, contentLocale, body, title, other } = reading
 
   const publicationCovers = await getPublicationCovers(payload)
-  const [t, tl, tArticles, tShare, format, collection] = await Promise.all([
+  const [t, tl, tArticles, tShare, format, collection, tf] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
     getTranslations('Articles'),
     getTranslations('Share'),
     getFormatter(),
     getArticleCollection(payload, article, locale, user),
+    getTranslations('Study.filters'),
   ])
   // A collection's article ends with the whole collection, in its order;
   // any other article with related ones.
@@ -135,10 +137,12 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
         stat: t('essayOf', { n: i + 1, total }),
       }
     },
+    articleCard: card,
     labels: {
       collection: (title) => t('collectionStack', { title }),
       articles: t('stackArticles'),
       courses: t('stackCourses'),
+      courseType: (type) => tf(`types.${type.toLowerCase()}`),
     },
   })
   const footnotes = footnotesOf(text)
@@ -339,13 +343,21 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                     blocks={{
                       cardStack: (fields: { id?: string }) => {
                         const stack = fields.id ? stacks[fields.id] : undefined
-                        return stack ? (
+                        if (!stack) return null
+                        return stack.layout === 'grid' ? (
+                          <ArticleCardGrid
+                            categories={stack.categories}
+                            label={stack.label}
+                            posts={stack.posts}
+                            seasons={stack.seasons}
+                          />
+                        ) : (
                           <ArticleCardStack
                             dir={isRtl(locale) ? 'rtl' : 'ltr'}
                             items={stack.items}
                             label={stack.label}
                           />
-                        ) : null
+                        )
                       },
                     }}
                     inlineBlocks={{
