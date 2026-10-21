@@ -338,7 +338,6 @@ export async function up({ db }: MigrateUpArgs): Promise<void> {
   ALTER INDEX IF EXISTS "spaces_locales_pkey" RENAME TO "places_locales_pkey";
   ALTER INDEX IF EXISTS "spaces_images_pkey" RENAME TO "places_images_pkey";
   ALTER TYPE "public"."enum_spaces_state" RENAME TO "enum_places_state";
-  ALTER TYPE "public"."enum_spaces_import_status" RENAME TO "enum_places_import_status";
 
   ALTER TABLE "cycles" RENAME COLUMN "space_id" TO "place_id";
   ALTER TABLE "events" RENAME COLUMN "space_id" TO "place_id";
@@ -399,7 +398,6 @@ export async function down({ db }: MigrateDownArgs): Promise<void> {
   ALTER TABLE "events" RENAME COLUMN "place_id" TO "space_id";
   ALTER TABLE "cycles" RENAME COLUMN "place_id" TO "space_id";
 
-  ALTER TYPE "public"."enum_places_import_status" RENAME TO "enum_spaces_import_status";
   ALTER TYPE "public"."enum_places_state" RENAME TO "enum_spaces_state";
   ALTER INDEX IF EXISTS "places_images_pkey" RENAME TO "spaces_images_pkey";
   ALTER INDEX IF EXISTS "places_locales_pkey" RENAME TO "spaces_locales_pkey";
