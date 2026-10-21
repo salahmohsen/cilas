@@ -1,16 +1,34 @@
 import type { Payload, Where } from 'payload'
 
 import type { Locale, Reader } from '@/api/articles.api'
+import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid-data'
 import type { OrbitStackItem } from '@/components/ui/orbit-card-stack'
+import { COURSE_TYPE_OPTIONS, type CourseType } from '@/fields/course-type'
+import type { ArticleCard } from '@/lib/article-cards'
+import type { Season } from '@/lib/cycle'
 import { pathOf } from '@/lib/paths'
 import type { Article, Course, Cycle, Media, Person, Publication } from '@/payload-types'
 
+/** A grid card: a blog-grid post with the page it opens. */
+export type GridPost = BlogPost & { href: string }
+
 /** One Card stack block of an article's text, ready to draw. */
-export type ResolvedStack = { label: string; items: OrbitStackItem[] }
+export type ResolvedStack = {
+  label: string
+  layout: 'stack' | 'grid'
+  items: OrbitStackItem[]
+  /** The grid's cards; empty for a stack. */
+  posts: GridPost[]
+  /** Course type names for the grid's tabs; empty when fewer than two types. */
+  categories: string[]
+  /** Course slug → its cycle's season, for a grid card without a cover. */
+  seasons: Record<string, Season>
+}
 
 type StackFields = {
   id?: string
   blockType?: string
+  layout?: 'stack' | 'grid' | null
   source?: 'publication' | 'articles' | 'courses' | 'cycle'
   publication?: number | Publication | null
   articles?: Array<number | Article> | null
@@ -54,11 +72,43 @@ const courseItem = (c: Course): OrbitStackItem => {
   }
 }
 
+/** A course as a grid card: its type is its tab and its label. */
+const coursePost = (c: Course, locale: Locale, typeName: (type: CourseType) => string): GridPost => {
+  const type = typeName(c.course_type)
+  const cover = coverOf(c.cover_image)
+  return {
+    id: c.slug ?? String(c.id),
+    href: pathOf('courses', c, locale) ?? '#',
+    title: c.title,
+    excerpt: c.summary || c.subtitle || '',
+    category: type,
+    label: type,
+    date: '',
+    dateLabel: '',
+    readTime: 0,
+    readTimeLabel: '',
+    author: { name: names(c.fellows) },
+    ...(cover.image ? { image: { src: cover.image, alt: cover.imageAlt ?? '' } } : {}),
+  }
+}
+
+/** One tab per course type present, in the types' own order; none for a single type. */
+const typeTabs = (courses: Course[], typeName: (type: CourseType) => string): string[] => {
+  const present = COURSE_TYPE_OPTIONS.map((o) => o.value).filter((v) => courses.some((c) => c.course_type === v))
+  return present.length > 1 ? present.map(typeName) : []
+}
+
+const seasonsOf = (courses: Course[]): Record<string, Season> =>
+  Object.fromEntries(
+    courses.flatMap((c) => (typeof c.cycle === 'object' && c.cycle?.season && c.slug ? [[c.slug, c.cycle.season]] : [])),
+  )
+
 /**
  * The Card stack blocks of an article's body, each with its cards, read as
  * this reader may: only published items they can open. Keyed by block id.
- * `articleItem` draws an article card as the page draws its others; the open
- * article is left out of its own stack.
+ * `articleItem` draws an article card as the page draws its others, and
+ * `articleCard` the same article as a grid card; the open article is left
+ * out of its own stack.
  */
 export const resolveCardStacks = async (
   payload: Payload,
@@ -68,13 +118,20 @@ export const resolveCardStacks = async (
     user,
     current,
     articleItem,
+    articleCard,
     labels,
   }: {
     locale: Locale
     user: Reader
     current: number
     articleItem: (a: Article, index: number, total: number) => OrbitStackItem
-    labels: { collection: (title: string) => string; articles: string; courses: string }
+    articleCard: (a: Article) => ArticleCard
+    labels: {
+      collection: (title: string) => string
+      articles: string
+      courses: string
+      courseType: (type: CourseType) => string
+    }
   },
 ): Promise<Record<string, ResolvedStack>> => {
   const read = { locale, fallbackLocale: (locale === 'ar' ? 'en' : 'ar') as Locale, overrideAccess: false, user }
@@ -104,7 +161,8 @@ export const resolveCardStacks = async (
   const out: Record<string, ResolvedStack> = {}
   for (const block of stacksIn(body)) {
     if (!block.id) continue
-    let items: OrbitStackItem[] = []
+    let articles: Article[] = []
+    let courses: Course[] = []
     let label = block.label?.trim() || ''
     if (block.source === 'publication') {
       const pubId = idOf(block.publication)
@@ -112,25 +170,32 @@ export const resolveCardStacks = async (
         ? await payload.findByID({ collection: 'publications', id: pubId, depth: 0, ...read }).catch(() => null)
         : null
       if (pub) {
-        const order = (pub.articles ?? []).map(idOf).filter((id): id is number => id !== null)
-        const articles = await findArticles(order)
-        items = articles.map((a, i) => articleItem(a, i, articles.length))
+        articles = await findArticles((pub.articles ?? []).map(idOf).filter((id): id is number => id !== null))
         label ||= labels.collection(pub.title)
       }
     } else if (block.source === 'articles') {
-      const articles = await findArticles((block.articles ?? []).map(idOf).filter((id): id is number => id !== null))
-      items = articles.map((a, i) => articleItem(a, i, articles.length))
+      articles = await findArticles((block.articles ?? []).map(idOf).filter((id): id is number => id !== null))
       label ||= labels.articles
     } else if (block.source === 'courses') {
       const ids = (block.courses ?? []).map(idOf).filter((id): id is number => id !== null)
-      items = ids.length ? (await findCourses({ id: { in: ids } }, ids)).map(courseItem) : []
+      courses = ids.length ? await findCourses({ id: { in: ids } }, ids) : []
       label ||= labels.courses
     } else if (block.source === 'cycle') {
       const cycleId = idOf(block.cycle)
-      items = cycleId ? (await findCourses({ cycle: { equals: cycleId } })).map(courseItem) : []
+      courses = cycleId ? await findCourses({ cycle: { equals: cycleId } }) : []
       label ||= typeof block.cycle === 'object' && block.cycle?.title ? block.cycle.title : labels.courses
     }
-    if (items.length) out[block.id] = { label, items }
+    const items = [...articles.map((a, i) => articleItem(a, i, articles.length)), ...courses.map(courseItem)]
+    if (!items.length) continue
+    const grid = block.layout === 'grid'
+    out[block.id] = {
+      label,
+      layout: grid ? 'grid' : 'stack',
+      items,
+      posts: grid ? [...articles.map((a) => articleCard(a)), ...courses.map((c) => coursePost(c, locale, labels.courseType))] : [],
+      categories: grid ? typeTabs(courses, labels.courseType) : [],
+      seasons: grid ? seasonsOf(courses) : {},
+    }
   }
   return out
 }
