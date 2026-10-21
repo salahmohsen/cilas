@@ -4051,6 +4051,10 @@ export interface TaskCreateCollectionImport {
  * via the `definition` "CardStackBlock".
  */
 export interface CardStackBlock {
+  /**
+   * Grid: for announcing a cycle or several courses.
+   */
+  layout: 'stack' | 'grid';
   source: 'publication' | 'articles' | 'courses' | 'cycle';
   publication?: (number | null) | Publication;
   /**

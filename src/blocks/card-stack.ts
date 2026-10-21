@@ -1,15 +1,27 @@
 import type { Block } from 'payload'
 
 /**
- * A fan of cards inside an article's text (the orbit card stack): an article
- * collection's articles, chosen articles or courses, or a cycle's courses.
- * The site shows only published, public items, and a list on phones.
+ * Cards inside an article's text: an article collection's articles, chosen
+ * articles or courses, or a cycle's courses. As a stack, the orbit card fan
+ * (a list on phones); as a grid, Arc's blog grid with tabs by course type.
+ * The site shows only published, public items.
  */
 export const CardStack: Block = {
   slug: 'cardStack',
   interfaceName: 'CardStackBlock',
-  labels: { singular: 'Card stack', plural: 'Card stacks' },
+  labels: { singular: 'Cards (stack or grid)', plural: 'Cards' },
   fields: [
+    {
+      name: 'layout',
+      type: 'select',
+      required: true,
+      defaultValue: 'stack',
+      options: [
+        { label: 'Stack', value: 'stack' },
+        { label: 'Grid', value: 'grid' },
+      ],
+      admin: { description: 'Grid: for announcing a cycle or several courses.' },
+    },
     {
       name: 'source',
       type: 'select',
