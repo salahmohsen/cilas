@@ -104,9 +104,9 @@ const whenOf = (schedule: unknown) => {
 }
 
 const placeOf = (doc: Doc) => {
-  const space = doc.space as { name?: string } | null
+  const place = doc.place as { name?: string } | null
   const venue = doc.external_venue as { name?: string } | null
-  if (space && typeof space === 'object' && space.name) return space.name
+  if (place && typeof place === 'object' && place.name) return place.name
   if (venue?.name) return venue.name
   return doc.online_url ? 'Online' : null
 }

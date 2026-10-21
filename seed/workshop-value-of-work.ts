@@ -84,7 +84,7 @@ const seedCycle = async (): Promise<number> =>
         data: {
           season: 'fall',
           start_year: 2026,
-          space: 1, // Darb el-Labbana
+          place: 1, // Darb el-Labbana
           start_date: '2026-10-01',
         },
         overrideAccess: true,

@@ -16,21 +16,21 @@ describe('archive import foundations', () => {
 
   afterAll(async () => {
     for (const id of created) {
-      await payload.delete({ collection: 'spaces', id, overrideAccess: true }).catch(() => undefined)
+      await payload.delete({ collection: 'places', id, overrideAccess: true }).catch(() => undefined)
     }
     await payload.destroy()
   })
 
   it('refuses a second document with the same legacy URL', async () => {
     const first = await payload.create({
-      collection: 'spaces',
+      collection: 'places',
       data: { name: 'Legacy Probe', slug: 'legacy-probe', legacy_url: '/probe.html#a' },
       overrideAccess: true,
     })
     created.push(first.id)
     await expect(
       payload.create({
-        collection: 'spaces',
+        collection: 'places',
         data: { name: 'Legacy Probe 2', slug: 'legacy-probe-2', legacy_url: '/probe.html#a' },
         overrideAccess: true,
       }),

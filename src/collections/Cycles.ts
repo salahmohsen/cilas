@@ -14,7 +14,7 @@ import {
 
 /**
  * Title, slug and academic year are derived, never typed (ADR 0003). The
- * place in the title is the space's city, so it needs a lookup.
+ * place in the title is the place's city, so it needs a lookup.
  */
 export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
   data,
@@ -27,12 +27,12 @@ export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
   const start_year = merged.start_year as number | undefined
   if (!season || !start_year) return data
 
-  const spaceId = typeof merged.space === 'object' ? merged.space?.id : merged.space
-  const space = spaceId
+  const placeId = typeof merged.place === 'object' ? merged.place?.id : merged.place
+  const place = placeId
     ? await req.payload
         .findByID({
-          collection: 'spaces',
-          id: spaceId,
+          collection: 'places',
+          id: placeId,
           depth: 0,
           // Title and slug are not localized: always name the place in the
           // default locale, whatever locale the editor is working in.
@@ -42,7 +42,7 @@ export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
         .catch(() => null)
     : null
 
-  const title = cycleTitle({ season, start_year, place: space?.city || space?.name })
+  const title = cycleTitle({ season, start_year, place: place?.city || place?.name })
   return {
     ...data,
     title,
@@ -51,7 +51,7 @@ export const deriveCycleIdentity: CollectionBeforeValidateHook = async ({
   }
 }
 
-/** One intake of courses in a season, start year and space (CONTEXT.md). */
+/** One intake of courses in a season, start year and place (CONTEXT.md). */
 export const Cycles: CollectionConfig = {
   slug: 'cycles',
   access: {
@@ -65,8 +65,8 @@ export const Cycles: CollectionConfig = {
     defaultColumns: ['title', 'academic_year', 'start_date'],
   },
   defaultSort: '-start_date',
-  // One intake per season, year and space (ADR 0003).
-  indexes: [{ fields: ['season', 'start_year', 'space'], unique: true }],
+  // One intake per season, year and place (ADR 0003, ADR 0007).
+  indexes: [{ fields: ['season', 'start_year', 'place'], unique: true }],
   hooks: {
     beforeValidate: [deriveCycleIdentity],
     // Its names show in the cached study list.
@@ -108,9 +108,9 @@ export const Cycles: CollectionConfig = {
           },
         },
         {
-          name: 'space',
+          name: 'place',
           type: 'relationship',
-          relationTo: 'spaces',
+          relationTo: 'places',
           required: true,
           admin: { width: '34%' },
         },

@@ -84,11 +84,11 @@ export const Events: CollectionConfig = {
       label: 'Where',
       type: 'collapsible',
       fields: [
-        { name: 'space', type: 'relationship', relationTo: 'spaces' },
+        { name: 'place', type: 'relationship', relationTo: 'places' },
         {
           name: 'external_venue',
           type: 'group',
-          admin: { description: 'Only when it is not at a CILAS space.' },
+          admin: { description: 'Only when it is not at a CILAS place.' },
           fields: [
             { name: 'name', type: 'text', localized: true },
             { name: 'address', type: 'text', localized: true },

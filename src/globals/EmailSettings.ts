@@ -95,13 +95,13 @@ export const EmailSettings: GlobalConfig = {
               },
             },
             {
-              name: 'address_space',
+              name: 'address_place',
               label: 'Address',
               type: 'relationship',
-              relationTo: 'spaces',
+              relationTo: 'places',
               admin: {
                 description:
-                  'The space whose address and Google Maps link end each email. Edit them in Spaces. Bulk email must carry a postal address.',
+                  'The place whose address and Google Maps link end each email. Edit them in Places. Bulk email must carry a postal address.',
               },
             },
             {

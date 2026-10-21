@@ -22,7 +22,7 @@ const cleanup = async () => {
   await del('redirects', { from: { like: '/uploads/proberedirects/' } })
   await del('courses', { legacy_url: { like: P } })
   await del('cycles', { legacy_url: { like: P } })
-  await del('spaces', { slug: { equals: 'probe-redirects-space' } })
+  await del('places', { slug: { equals: 'probe-redirects-place' } })
 }
 
 describe('importRedirects', () => {
@@ -37,14 +37,14 @@ describe('importRedirects', () => {
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
     await cleanup()
-    const space = await payload.create({
-      collection: 'spaces',
-      data: { name: 'Probe Redirects Space', slug: 'probe-redirects-space', city: 'Probeville' },
+    const place = await payload.create({
+      collection: 'places',
+      data: { name: 'Probe Redirects Place', slug: 'probe-redirects-place', city: 'Probeville' },
       overrideAccess: true,
     })
     const cycle = await payload.create({
       collection: 'cycles',
-      data: { season: 'fall', start_year: 2088, space: space.id, legacy_url: L.cycle },
+      data: { season: 'fall', start_year: 2088, place: place.id, legacy_url: L.cycle },
       overrideAccess: true,
     })
     const course = await payload.create({

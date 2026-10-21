@@ -29,7 +29,7 @@ export const CONTENT_COLLECTIONS: CollectionSlug[] = [
   'press',
   'events',
   'newsletters',
-  'spaces',
+  'places',
   'memberships',
   'people',
 ]

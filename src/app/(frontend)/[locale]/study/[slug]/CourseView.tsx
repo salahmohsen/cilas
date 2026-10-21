@@ -36,7 +36,7 @@ import { registrationStatus } from '@/lib/registration'
 import { EditorFields, labelOf } from '@/components/editor-fields'
 import { editableIn, type Editable } from '@/lib/editable'
 import { expandSchedule, sessionsInOrder, type Meeting } from '@/lib/schedule'
-import type { Course, Media, Person, Space } from '@/payload-types'
+import type { Course, Media, Person, Place } from '@/payload-types'
 
 import { newTab } from './new-tab'
 import { RegisterBar } from './RegisterBar'
@@ -126,13 +126,13 @@ export const CourseView: React.FC<{
   const cover =
     isObject<Media>(course.cover_image) && course.cover_image.url ? course.cover_image : null
   const cycle = isObject<NonNullable<Course['cycle']> & object>(course.cycle) ? course.cycle : null
-  const space = cycle && isObject<Space>(cycle.space) ? cycle.space : null
+  const place = cycle && isObject<Place>(cycle.place) ? cycle.place : null
   const season = (cycle?.season ?? null) as Season | null
   const SeasonIcon = season ? SEASON_ICONS[season] : null
   const cycleLabel = cycle
     ? [
         `${tf(`seasons.${season}`)} ${localDigits(cycle.start_year, locale)}`,
-        space?.city ?? space?.name,
+        place?.city ?? place?.name,
       ]
         .filter(Boolean)
         .join(locale === 'ar' ? '، ' : ', ')

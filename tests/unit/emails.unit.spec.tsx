@@ -361,7 +361,7 @@ describe('cards for collections, cycles and events', () => {
             start_date: '2026-07-24T00:00:00.000Z',
             slots: [{ start_time: '14:00', end_time: '18:30' }],
           },
-          space: { name: 'CILAS, Darb El Ahmar' },
+          place: { name: 'CILAS, Darb El Ahmar' },
         },
       },
       null,
@@ -448,15 +448,15 @@ describe('the layout’s brand', () => {
 })
 
 describe('the footer address', () => {
-  it('comes from the chosen space, linked to its map', () => {
+  it('comes from the chosen place, linked to its map', () => {
     const s = withDefaults({
-      address_space: { address: 'Somewhere 1, Cairo', map_url: 'https://maps.test/x' },
+      address_place: { address: 'Somewhere 1, Cairo', map_url: 'https://maps.test/x' },
     })
     expect(s.address).toEqual({ text: 'Somewhere 1, Cairo', url: 'https://maps.test/x' })
   })
 
   it('falls back to the institute’s address', () => {
-    expect(withDefaults({ address_space: { address: '' } }).address.text).toContain(
+    expect(withDefaults({ address_place: { address: '' } }).address.text).toContain(
       'Darb El Labana',
     )
   })

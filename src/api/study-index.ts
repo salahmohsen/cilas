@@ -14,7 +14,7 @@ type Locale = 'en' | 'ar'
 /**
  * The study list with its search words, built once per language and kept
  * until a course changes (or five minutes pass, for changes to the people,
- * cycles and spaces it names). Labels come straight from the messages: a
+ * cycles and places it names). Labels come straight from the messages: a
  * cached function cannot read the request.
  */
 export const getStudyIndex = unstable_cache(

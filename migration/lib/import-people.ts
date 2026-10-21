@@ -150,7 +150,7 @@ export const importPeople = async (
   // 2. Programmes, as drafts, with the cycles of their year and city.
   const spaceIds = new Map<string, number>()
   for (const name of new Set(Object.values(SPACES_BY_PLACE).flat())) {
-    const { docs } = await payload.find({ collection: 'spaces', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
+    const { docs } = await payload.find({ collection: 'places', where: { name: { equals: name } }, limit: 1, depth: 0, overrideAccess: true })
     if (docs[0]) spaceIds.set(name, docs[0].id as number)
   }
   const programmesBefore = await count(payload, 'programmes')
@@ -161,7 +161,7 @@ export const importPeople = async (
     const { docs } = spaces.length
       ? await payload.find({
           collection: 'cycles',
-          where: { and: [{ academic_year: { equals: year } }, { space: { in: spaces } }] },
+          where: { and: [{ academic_year: { equals: year } }, { place: { in: spaces } }] },
           pagination: false,
           depth: 0,
           overrideAccess: true,

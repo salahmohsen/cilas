@@ -208,16 +208,16 @@ const createNewCourses = async (payload: Payload, log: string[]): Promise<Course
     const c = NewCourse.parse(JSON.parse(readFileSync(path.join(dir, f), 'utf8')))
     log.push(`### new ${c.legacy_url}`, ...c.notes.map((n) => `- ${n}`))
     if (dry) continue
-    const space = (await payload.find({ collection: 'spaces', where: { name: { equals: c.cycle.space } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]
-    if (!space) throw new Error(`no space ${c.cycle.space}`)
+    const place = (await payload.find({ collection: 'places', where: { name: { equals: c.cycle.space } }, limit: 1, depth: 0, overrideAccess: true })).docs[0]
+    if (!place) throw new Error(`no place ${c.cycle.space}`)
     const cycle = await upsert(
       payload,
       'cycles',
-      { and: [{ season: { equals: c.cycle.season } }, { start_year: { equals: c.cycle.start_year } }, { space: { equals: space.id } }] },
+      { and: [{ season: { equals: c.cycle.season } }, { start_year: { equals: c.cycle.start_year } }, { place: { equals: place.id } }] },
       {
         season: c.cycle.season,
         start_year: c.cycle.start_year,
-        space: space.id,
+        place: place.id,
         ...(c.cycle.start_date ? { start_date: c.cycle.start_date } : {}),
       },
     )

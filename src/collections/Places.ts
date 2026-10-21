@@ -9,8 +9,9 @@ import {
   revalidateCoursesAfterDelete,
 } from '@/lib/revalidate-courses'
 
-export const Spaces: CollectionConfig = {
-  slug: 'spaces',
+/** A physical site where CILAS has taught (CONTEXT.md: Place; ADR 0007). */
+export const Places: CollectionConfig = {
+  slug: 'places',
   access: {
     read: anyone,
     create: isAdmin,
@@ -24,10 +25,10 @@ export const Spaces: CollectionConfig = {
   },
   fields: [
     { name: 'name', type: 'text', required: true },
-    // Spaces have no `title`; the name is the human-readable label.
+    // Places have no `title`; the name is the human-readable label.
     slugField({ useAsSlug: 'name' }),
     {
-      // Not a visibility tier — whether the space is still in use. Renamed from
+      // Not a visibility tier — whether the place is still in use. Renamed from
       // `status` so it is never confused with Payload's `_status`.
       name: 'state',
       type: 'select',
@@ -36,7 +37,7 @@ export const Spaces: CollectionConfig = {
         { label: 'Former', value: 'former' },
       ],
     },
-    { name: 'city', type: 'text', localized: true }, // names the space's cycles: "Spring 2026, Cairo"
+    { name: 'city', type: 'text', localized: true }, // names the place's cycles: "Spring 2026, Cairo"
     {
       name: 'address',
       type: 'text',

@@ -4,7 +4,7 @@ import type {
   Course,
   Event,
   Publication,
-  Space,
+  Place,
   User,
 } from '@/payload-types'
 import type { CourseType } from '@/fields/course-type'
@@ -65,8 +65,8 @@ export type FieldOfStudySeed = {
 export type CycleSeed = {
   season: 'fall' | 'winter' | 'spring' | 'summer'
   start_year: number
-  /** Space name, resolved to an id. */
-  space: string
+  /** Place name, resolved to an id. */
+  place: string
   start_date: string
   deadline: string
 }
@@ -157,15 +157,15 @@ export type EventSeed = {
   tier: Event['tier']
   schedule: ScheduleSeed
   description?: string
-  /** Space name, resolved to an id. */
-  space?: string
+  /** Place name, resolved to an id. */
+  place?: string
   /** Fixture emails of the speakers' people. */
   speakers?: string[]
 }
 
-/* ================================================================= spaces */
+/* ================================================================= places */
 
-export type SpaceSeed = Omit<Draft<Space>, 'description' | 'slug'> & {
+export type PlaceSeed = Omit<Draft<Place>, 'description' | 'slug'> & {
   description?: string
   city_ar?: string
 }
@@ -187,8 +187,8 @@ export type SeedContext = {
   programmes: IdMap
   /** Publication titles, resolved to ids. */
   publications: IdMap
-  /** Space names, resolved to ids. */
-  spaces: IdMap
+  /** Place names, resolved to ids. */
+  places: IdMap
 }
 
 export const createSeedContext = (): SeedContext => ({
@@ -198,5 +198,5 @@ export const createSeedContext = (): SeedContext => ({
   courses: {},
   programmes: {},
   publications: {},
-  spaces: {},
+  places: {},
 })

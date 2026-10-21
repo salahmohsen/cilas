@@ -21,7 +21,7 @@ import { MailingLists } from './collections/MailingLists'
 import { Notifications } from './collections/Notifications'
 import { SubmissionFiles } from './collections/SubmissionFiles'
 import { Newsletters } from './collections/Newsletters'
-import { Spaces } from './collections/Spaces'
+import { Places } from './collections/Places'
 import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { EmailSettings } from './globals/EmailSettings'
@@ -158,7 +158,7 @@ export default buildConfig({
     MailingLists,
     SubmissionFiles,
     Notifications,
-    Spaces,
+    Places,
   ],
   globals: [SiteSettings, EmailSettings],
   localization: {

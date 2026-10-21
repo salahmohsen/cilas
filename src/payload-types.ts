@@ -84,7 +84,7 @@ export interface Config {
     'mailing-lists': MailingList;
     'submission-files': SubmissionFile;
     notifications: Notification;
-    spaces: Space;
+    places: Place;
     forms: Form;
     'form-submissions': FormSubmission;
     exports: Export;
@@ -131,7 +131,7 @@ export interface Config {
     'mailing-lists': MailingListsSelect<false> | MailingListsSelect<true>;
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
-    spaces: SpacesSelect<false> | SpacesSelect<true>;
+    places: PlacesSelect<false> | PlacesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
@@ -771,7 +771,7 @@ export interface Cycle {
    * The year it starts in. A winter cycle counts by its January: Dec 2025–Feb 2026 is 2026.
    */
   start_year: number;
-  space: number | Space;
+  place: number | Place;
   start_date?: string | null;
   academic_year?: string | null;
   registration?: {
@@ -852,9 +852,9 @@ export interface Cycle {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "spaces".
+ * via the `definition` "places".
  */
-export interface Space {
+export interface Place {
   id: number;
   name: string;
   /**
@@ -1711,9 +1711,9 @@ export interface Event {
      */
     note?: string | null;
   };
-  space?: (number | null) | Space;
+  place?: (number | null) | Place;
   /**
-   * Only when it is not at a CILAS space.
+   * Only when it is not at a CILAS place.
    */
   external_venue?: {
     name?: string | null;
@@ -2348,8 +2348,8 @@ export interface PayloadLockedDocument {
         value: number | Notification;
       } | null)
     | ({
-        relationTo: 'spaces';
-        value: number | Space;
+        relationTo: 'places';
+        value: number | Place;
       } | null)
     | ({
         relationTo: 'forms';
@@ -2880,7 +2880,7 @@ export interface CyclesSelect<T extends boolean = true> {
   slug?: T;
   season?: T;
   start_year?: T;
-  space?: T;
+  place?: T;
   start_date?: T;
   academic_year?: T;
   registration?:
@@ -3119,7 +3119,7 @@ export interface EventsSelect<T extends boolean = true> {
         end_date?: T;
         note?: T;
       };
-  space?: T;
+  place?: T;
   external_venue?:
     | T
     | {
@@ -3318,9 +3318,9 @@ export interface NotificationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "spaces_select".
+ * via the `definition` "places_select".
  */
-export interface SpacesSelect<T extends boolean = true> {
+export interface PlacesSelect<T extends boolean = true> {
   name?: T;
   generateSlug?: T;
   slug?: T;
@@ -3783,9 +3783,9 @@ export interface EmailSetting {
    */
   signoff?: string | null;
   /**
-   * The space whose address and Google Maps link end each email. Edit them in Spaces. Bulk email must carry a postal address.
+   * The place whose address and Google Maps link end each email. Edit them in Places. Bulk email must carry a postal address.
    */
-  address_space?: (number | null) | Space;
+  address_place?: (number | null) | Place;
   /**
    * The small print under the social icons: the address, for one. The icons come from Site settings → Contact.
    */
@@ -3906,7 +3906,7 @@ export interface EmailSettingsSelect<T extends boolean = true> {
   reply_to?: T;
   tagline?: T;
   signoff?: T;
-  address_space?: T;
+  address_place?: T;
   footer?: T;
   texts?:
     | T
@@ -4001,7 +4001,7 @@ export interface TaskCreateCollectionExport {
       | 'mailing-lists'
       | 'submission-files'
       | 'notifications'
-      | 'spaces'
+      | 'places'
       | 'forms'
       | 'form-submissions'
       | 'exports'

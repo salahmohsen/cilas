@@ -7,7 +7,7 @@ import { getReviewQueue } from '@/lib/review-queue'
 import config from '@/payload.config'
 import type { User } from '@/payload-types'
 
-type Tracked = 'people' | 'articles' | 'publications' | 'press' | 'spaces' | 'cycles' | 'courses'
+type Tracked = 'people' | 'articles' | 'publications' | 'press' | 'places' | 'cycles' | 'courses'
 
 let payload: Payload
 const created: Array<{ collection: Tracked; id: number }> = []
@@ -335,13 +335,13 @@ describe('publishing', () => {
   })
 
   it('lets a fellow read the versions of a course they teach', async () => {
-    const space = track(
-      'spaces',
+    const place = track(
+      'places',
       await payload.create({
-        collection: 'spaces',
+        collection: 'places',
         data: {
-          name: 'Publishing Probe Space',
-          slug: 'publishing-probe-space',
+          name: 'Publishing Probe Place',
+          slug: 'publishing-probe-place',
           city: 'Probeville',
         },
         overrideAccess: true,
@@ -351,7 +351,7 @@ describe('publishing', () => {
       'cycles',
       await payload.create({
         collection: 'cycles',
-        data: { season: 'fall', start_year: 2033, space: space.id, start_date: '2033-10-04' },
+        data: { season: 'fall', start_year: 2033, place: place.id, start_date: '2033-10-04' },
         overrideAccess: true,
       }),
     )

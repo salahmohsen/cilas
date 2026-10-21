@@ -7,7 +7,7 @@ import { localDigits } from '@/lib/digits'
 import { registrationStatus } from '@/lib/registration'
 import { slugify } from '@/lib/slugify'
 import { searchWords, type StudyCourse } from '@/lib/course-search'
-import type { Course, Cycle, Media, Person, Space } from '@/payload-types'
+import type { Course, Cycle, Media, Person, Place } from '@/payload-types'
 
 type Locale = 'en' | 'ar'
 
@@ -17,8 +17,8 @@ type Locale = 'en' | 'ar'
  */
 const populate = {
   people: { name: true, slug: true },
-  cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, space: true, registration: true },
-  spaces: { name: true, city: true, slug: true },
+  cycles: { title: true, season: true, start_year: true, start_date: true, academic_year: true, place: true, registration: true },
+  places: { name: true, city: true, slug: true },
   media: { url: true, alt: true, filename: true, prefix: true },
 } as const
 
@@ -79,7 +79,7 @@ export const getStudyCourses = async (
   t: (key: string) => string,
 ): Promise<StudyCourse[]> => {
   const other: Locale = locale === 'ar' ? 'en' : 'ar'
-  const [{ docs }, { docs: otherDocs }, { docs: spaces }] = await Promise.all([
+  const [{ docs }, { docs: otherDocs }, { docs: places }] = await Promise.all([
     getPublicPosts(payload, locale),
     payload.find({
       collection: 'courses',
@@ -93,9 +93,9 @@ export const getStudyCourses = async (
       fallbackLocale: false,
     }),
     // A place is its city, keyed in English so the list's URL works in both languages.
-    payload.find({ collection: 'spaces', depth: 0, pagination: false, locale: 'en', select: { city: true, name: true } }),
+    payload.find({ collection: 'places', depth: 0, pagination: false, locale: 'en', select: { city: true, name: true } }),
   ])
-  const placeKey = new Map(spaces.map((s) => [s.id, slugify(s.city ?? s.name)]))
+  const placeKey = new Map(places.map((s) => [s.id, slugify(s.city ?? s.name)]))
   const otherTexts = new Map(otherDocs.map((d) => [d.id, courseTexts(d)]))
 
   const typeLabel = (value: string) => t(`types.${value.toLowerCase()}`)
@@ -103,9 +103,9 @@ export const getStudyCourses = async (
   return docs
     .map((c): StudyCourse => {
       const cycle = obj<Cycle>(c.cycle)
-      const space = obj<Space>(cycle?.space)
+      const site = obj<Place>(cycle?.place)
       const cover = obj<Media>(c.cover_image)
-      const place = space ? (space.city ?? space.name) : null
+      const place = site ? (site.city ?? site.name) : null
       const season = cycle?.season
       const cycleLabel = cycle
         ? [`${t(`seasons.${season}`)} ${localDigits(cycle.start_year, locale)}`, place].filter(Boolean).join(locale === 'ar' ? '، ' : ', ')
@@ -141,7 +141,7 @@ export const getStudyCourses = async (
                 : {}),
             }
           : {}),
-        ...(space && place ? { place: [{ value: placeKey.get(space.id) ?? String(space.id), label: place }] } : {}),
+        ...(site && place ? { place: [{ value: placeKey.get(site.id) ?? String(site.id), label: place }] } : {}),
         fellow: fellows,
         format: formats,
         language: languages,

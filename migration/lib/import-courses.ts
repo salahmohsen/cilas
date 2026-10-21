@@ -152,11 +152,11 @@ export const importCourses = async (
   payload: Payload,
   { cycles, courses }: { cycles: ArchiveCycle[]; courses: ArchiveCourse[] },
 ): Promise<{ cycles: number; courses: number; people: number; skipped: string[] }> => {
-  const spaces = new Map<string, number>()
+  const places = new Map<string, number>()
   for (const name of new Set(cycles.map((c) => c.space))) {
-    spaces.set(
+    places.set(
       name,
-      await upsert(payload, 'spaces', { name: { equals: name } }, { name, slug: slugify(name) }),
+      await upsert(payload, 'places', { name: { equals: name } }, { name, slug: slugify(name) }),
     )
   }
 
@@ -166,7 +166,7 @@ export const importCourses = async (
     cycleYears.set(c.key, c.start_year)
     cycleIds.set(
       c.key,
-      // One cycle per season, year and space (unique index), so match an
+      // One cycle per season, year and place (unique index), so match an
       // existing one, e.g. from the dev seed, as well as an earlier import.
       await upsert(
         payload,
@@ -178,7 +178,7 @@ export const importCourses = async (
               and: [
                 { season: { equals: c.season } },
                 { start_year: { equals: c.start_year } },
-                { space: { equals: spaces.get(c.space) } },
+                { place: { equals: places.get(c.space) } },
               ],
             },
           ],
@@ -186,7 +186,7 @@ export const importCourses = async (
         {
           season: c.season,
           start_year: c.start_year,
-          space: spaces.get(c.space),
+          place: places.get(c.space),
           ...(c.start_date ? { start_date: c.start_date } : {}),
           ...(c.deadline ? { registration: { deadline: c.deadline } } : {}),
           legacy_url: c.legacy_url,

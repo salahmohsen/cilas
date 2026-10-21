@@ -1,9 +1,9 @@
 import type { Payload } from 'payload'
 import { slugify } from '@/lib/slugify'
-import type { SeedContext, SpaceSeed } from '../seed.type'
+import type { SeedContext, PlaceSeed } from '../seed.type'
 import { getOrCreateId, lexical } from '../seed.utils'
 
-export const spacesData: SpaceSeed[] = [
+export const placesData: PlaceSeed[] = [
   {
     name: 'Darb el-Labbana',
     state: 'current',
@@ -28,12 +28,12 @@ export const spacesData: SpaceSeed[] = [
   },
 ]
 
-export const seedSpaces = async (payload: Payload, ctx: SeedContext): Promise<void> => {
-  for (const space of spacesData) {
-    const { name, description, city_ar, ...rest } = space
-    const id = await getOrCreateId(payload, 'spaces', { name: { equals: name } }, () =>
+export const seedPlaces = async (payload: Payload, ctx: SeedContext): Promise<void> => {
+  for (const place of placesData) {
+    const { name, description, city_ar, ...rest } = place
+    const id = await getOrCreateId(payload, 'places', { name: { equals: name } }, () =>
       payload.create({
-        collection: 'spaces',
+        collection: 'places',
         data: {
           ...rest,
           name,
@@ -45,14 +45,14 @@ export const seedSpaces = async (payload: Payload, ctx: SeedContext): Promise<vo
     )
     if (city_ar) {
       await payload.update({
-        collection: 'spaces',
+        collection: 'places',
         id,
         data: { city: city_ar },
         locale: 'ar',
         overrideAccess: true,
       })
     }
-    ctx.spaces[name] = id
-    console.log('space:', name)
+    ctx.places[name] = id
+    console.log('place:', name)
   }
 }

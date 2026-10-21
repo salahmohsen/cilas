@@ -75,7 +75,7 @@ export function SiteFooter({
         {
           title: t('institute'),
           links: [
-            // The current space's address, linked to its map (Spaces → Google Maps link).
+            // The current place's address, linked to its map (Places → Google Maps link).
             ...(place?.mapUrl
               ? [{ label: place.address, href: place.mapUrl, external: true }]
               : []),

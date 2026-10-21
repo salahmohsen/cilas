@@ -7,7 +7,7 @@ import config from '@/payload.config'
 import { cairoDay } from '@/lib/cairo-day'
 import type { User } from '@/payload-types'
 
-type Tracked = 'spaces' | 'cycles' | 'courses' | 'people' | 'enrollments' | 'programmes' | 'users'
+type Tracked = 'places' | 'cycles' | 'courses' | 'people' | 'enrollments' | 'programmes' | 'users'
 
 let payload: Payload
 const created: Array<{ collection: Tracked; id: number }> = []
@@ -23,11 +23,11 @@ describe('time, place and teaching', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
-    const space = track(
-      'spaces',
+    const place = track(
+      'places',
       await payload.create({
-        collection: 'spaces',
-        data: { name: 'Probe Space', slug: 'probe-space', city: 'Probeville' },
+        collection: 'places',
+        data: { name: 'Probe Place', slug: 'probe-place', city: 'Probeville' },
         overrideAccess: true,
       }),
     )
@@ -35,7 +35,7 @@ describe('time, place and teaching', () => {
       'cycles',
       await payload.create({
         collection: 'cycles',
-        data: { season: 'spring', start_year: 2031, space: space.id, start_date: '2031-03-04' },
+        data: { season: 'spring', start_year: 2031, place: place.id, start_date: '2031-03-04' },
         overrideAccess: true,
       }),
     ).id
@@ -78,7 +78,7 @@ describe('time, place and teaching', () => {
     await payload.destroy()
   })
 
-  it('builds the cycle title, slug and academic year from its space', async () => {
+  it('builds the cycle title, slug and academic year from its place', async () => {
     const cycle = await payload.findByID({
       collection: 'cycles',
       id: cycleId,
