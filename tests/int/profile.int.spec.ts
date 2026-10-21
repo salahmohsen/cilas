@@ -256,4 +256,100 @@ describe('profile', () => {
       error: 'name-ar',
     })
   })
+
+  const lexicalOf = (
+    ...paragraphs: Array<{ text: string; format: number } | { upload: number }>
+  ) => ({
+    root: {
+      type: 'root',
+      format: '',
+      indent: 0,
+      version: 1,
+      direction: 'ltr',
+      children: paragraphs.map((item) =>
+        'upload' in item
+          ? {
+              type: 'upload',
+              relationTo: 'media',
+              value: item.upload,
+              fields: {},
+              version: 3,
+              format: '',
+            }
+          : {
+              type: 'paragraph',
+              format: '',
+              indent: 0,
+              version: 1,
+              direction: 'ltr',
+              children: [
+                {
+                  type: 'text',
+                  text: item.text,
+                  format: item.format,
+                  detail: 0,
+                  mode: 'normal',
+                  style: '',
+                  version: 1,
+                },
+              ],
+            },
+      ),
+    },
+  })
+
+  const storedBio = async () =>
+    JSON.stringify(
+      (
+        (await payload.findByID({
+          collection: 'people',
+          id: people[0]!,
+          locale: 'en',
+          overrideAccess: true,
+        })) as { bio?: unknown }
+      ).bio,
+    )
+
+  it('keeps an unchanged bio with CRLF line endings', async () => {
+    await payload.update({
+      collection: 'people',
+      id: people[0]!,
+      locale: 'en',
+      data: { bio: lexicalOf({ text: 'One', format: 8 }, { text: 'Two', format: 8 }) } as never,
+      overrideAccess: true,
+    })
+    const view = await readProfile(payload, me)
+    const crlf = view!.bio.en.replace(/\n/g, '\r\n')
+    expect(await saveProfile(payload, me, base({ bio: { en: crlf, ar: view!.bio.ar } }))).toEqual({
+      ok: true,
+    })
+    expect(await storedBio()).toContain('"format":8')
+  })
+
+  it('drops upload placeholders from a member bio', async () => {
+    await saveProfile(
+      payload,
+      me,
+      base({ bio: { en: 'Hello\n\n![media:1]()\n\n![ media:1]()', ar: '' } }),
+    )
+    expect(await storedBio()).not.toContain('"type":"upload"')
+  })
+
+  it('keeps an unchanged bio that holds an uploaded image', async () => {
+    const found = await payload.find({ collection: 'media', limit: 1, overrideAccess: true })
+    const media = found.docs[0]
+    if (!media) return // No media doc in this database to reference; nothing to check.
+    await payload.update({
+      collection: 'people',
+      id: people[0]!,
+      locale: 'en',
+      data: { bio: lexicalOf({ text: 'Before', format: 0 }, { upload: media.id }) } as never,
+      overrideAccess: true,
+    })
+    const view = await readProfile(payload, me)
+    expect(
+      await saveProfile(payload, me, base({ bio: view!.bio, website: 'https://image.example' })),
+    ).toEqual({ ok: true })
+    expect(await storedBio()).toContain('"type":"upload"')
+  })
 })

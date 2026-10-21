@@ -49,9 +49,15 @@ const httpUrl = z
   .trim()
   .regex(/^https?:\/\/\S+$/i)
 
+const unixEol = (value: string): string => value.replace(/\r\n?/g, '\n')
+
 const schema = z.object({
   name: z.object({ en: z.string().trim().min(1).max(120), ar: z.string().trim().max(120) }),
-  bio: z.object({ en: z.string().max(5000), ar: z.string().max(5000) }),
+  // Browsers send multi-line values with \r\n; stored bios export with \n.
+  bio: z.object({
+    en: z.string().max(5000).transform(unixEol),
+    ar: z.string().max(5000).transform(unixEol),
+  }),
   website: z.union([z.literal(''), httpUrl]),
   socialLinks: z.array(z.object({ platform: z.enum(SOCIAL_PLATFORMS), url: httpUrl })).max(8),
 })
@@ -67,7 +73,8 @@ const FIELD_ERROR: Record<keyof ProfileInput, ProfileError> = {
 }
 
 // Members must not embed uploads by id: `![collection:id]()` placeholders are dropped.
-const UPLOAD_PLACEHOLDER = /!\[[\w-]+:[^\]]*\]\(\)/g
+// The pattern is the one Payload's own Markdown import uses for uploads.
+const UPLOAD_PLACEHOLDER = /!\[[^\]:]+:[^\]]+\]\(\)/g
 const stripUploads = (markdown: string): string => markdown.replace(UPLOAD_PLACEHOLDER, '')
 
 /** True when every Markdown link or image points at http:, https: or mailto:. */
@@ -95,13 +102,8 @@ const toLexical = async (payload: Payload, markdown: string) =>
 const textOf = (value: unknown, locale: Locale): string =>
   value && typeof value === 'object' ? String((value as Record<string, unknown>)[locale] ?? '') : ''
 
-/**
- * The signed-in member's own person, as the profile page edits it, or null
- * when the account has no person. Read through access rules, as the member.
- */
-export const readProfile = async (payload: Payload, user: User): Promise<ProfileView | null> => {
-  const id = personOf(user)
-  if (id === null) return null
+/** The member's own person as the member sees it, with each bio exported to Markdown. */
+const loadOwn = async (payload: Payload, user: User, id: number) => {
   const person = await payload.findByID({
     collection: 'people',
     id,
@@ -110,16 +112,27 @@ export const readProfile = async (payload: Payload, user: User): Promise<Profile
     user,
     overrideAccess: false,
   })
-  const bio = (person as { bio?: unknown }).bio
+  const bio = (person as { bio?: Record<string, unknown> }).bio
+  return {
+    person,
+    bio: { en: await toMarkdown(payload, bio?.en), ar: await toMarkdown(payload, bio?.ar) },
+  }
+}
+
+/**
+ * The signed-in member's own person, as the profile page edits it, or null
+ * when the account has no person. Read through access rules, as the member.
+ */
+export const readProfile = async (payload: Payload, user: User): Promise<ProfileView | null> => {
+  const id = personOf(user)
+  if (id === null) return null
+  const { person, bio } = await loadOwn(payload, user, id)
   const photo = typeof person.photo === 'object' && person.photo?.url ? person.photo : null
   return {
     personId: person.id,
     visible: Boolean(person.visible),
     name: { en: textOf(person.name, 'en'), ar: textOf(person.name, 'ar') },
-    bio: {
-      en: await toMarkdown(payload, (bio as Record<string, unknown> | undefined)?.en),
-      ar: await toMarkdown(payload, (bio as Record<string, unknown> | undefined)?.ar),
-    },
+    bio,
     website: person.website ?? '',
     socialLinks: (person.social_links ?? []).map(({ platform, url }) => ({ platform, url })),
     photo: photo ? { url: photo.url!, alt: photo.alt } : null,
@@ -153,25 +166,17 @@ export const saveProfile = async (
     return { ok: false, error: 'photo' }
   }
 
-  const stored = await payload.findByID({
-    collection: 'people',
-    id,
-    locale: 'all',
-    depth: 0,
-    user,
-    overrideAccess: false,
-  })
+  const { person: stored, bio: storedBio } = await loadOwn(payload, user, id)
 
-  // A payload `name` cannot be cleared in Arabic through the access-checked path.
+  // Payload refuses an empty required name in Arabic, so a stored one cannot be cleared here.
   if (!name.ar && textOf(stored.name, 'ar')) return { ok: false, error: 'name-ar' }
 
   // Write a bio only when the member changed it: Markdown cannot carry every
   // node an admin may have used, so an untouched bio must not be rewritten.
-  const storedBio = (stored as { bio?: Record<string, unknown> }).bio
   const bioData: Partial<Record<Locale, Awaited<ReturnType<typeof toLexical>>>> = {}
   for (const locale of ['en', 'ar'] as const) {
     const markdown = bio[locale].trim()
-    if (markdown === (await toMarkdown(payload, storedBio?.[locale]))) continue
+    if (markdown === storedBio[locale]) continue
     const clean = stripUploads(markdown)
     if (!linksAreSafe(clean)) return { ok: false, error: 'bio' }
     bioData[locale] = await toLexical(payload, clean)
@@ -222,13 +227,14 @@ export const saveProfile = async (
     }
     if (started) await commitTransaction(req)
   } catch (error) {
-    if (started) await killTransaction(req)
-    // The file in storage is outside the transaction, so remove its record by hand.
+    // Delete the media row inside the transaction, with the same req, so the
+    // storage plugin's delete hook removes the stored file as well.
     if (mediaId) {
       await payload
-        .delete({ collection: 'media', id: mediaId, overrideAccess: true })
+        .delete({ collection: 'media', id: mediaId, req, overrideAccess: true })
         .catch(() => undefined)
     }
+    if (started) await killTransaction(req)
     throw error
   }
   return { ok: true }
