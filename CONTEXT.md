@@ -7,7 +7,7 @@ The Cairo Institute for Liberal Arts and Sciences: an independent school that ru
 ### Time and place
 
 **Cycle**:
-One intake of courses in a given season, start year and space (e.g. Spring 2026, Cairo). It holds every course type offered in that intake.
+One intake of courses in a given season, start year and place (e.g. Spring 2026, Cairo). It holds every course type offered in that intake.
 _Avoid_: Term, trimester, semester (as entity names)
 
 **Season**:
@@ -17,9 +17,9 @@ _Avoid_: Trimester
 **Academic year**:
 A September-to-August year (e.g. 2025–2026), derived from when a cycle starts, never entered by hand.
 
-**Space**:
+**Place**:
 A physical site where CILAS has taught, such as Darb El Labbana in Cairo or Al Manshiya in Alexandria. It is either current or former.
-_Avoid_: Venue, campus, branch
+_Avoid_: Space (that is a discussion area), venue, campus, branch, location (that is how a course meets: offline, online or hybrid)
 
 ### Programmes
 
@@ -160,6 +160,43 @@ A one-off or recurring gathering that is not a course: talk, open day, screening
 
 **Newsletter**:
 An issue CILAS sends to subscribers and keeps in its archive. The subscriber list lives with the email service, not on the site.
+
+### Spaces
+
+**Space**:
+A closed discussion area on the site where members of one community write to each other. Kinds: course space, cohort space, community space.
+_Avoid_: Group, channel, room, forum
+
+**Course space**:
+The space of one course, for its fellows and enrolled people. It becomes a read-only archive after the course ends.
+
+**Cohort space**:
+The space of one year of the Bridge Programme, for the CILASians of that year. It stays open after the year as their alumni space.
+
+**Community space**:
+The one space for everyone with an account linked to a person.
+
+**Post**:
+One entry in a space: a discussion, a question or an announcement.
+_Avoid_: Thread, topic, article (that is reviewed writing)
+
+**Announcement**:
+A post from a fellow or an admin that is pinned and reaches every member of the space.
+
+**Comment**:
+A reply to a post, or to another comment.
+_Avoid_: Reply (as an entity name), answer
+
+**Highlight**:
+A mark that a post's author or a moderator puts on a comment to point readers to it. A post can have many; none of them is "the" answer.
+_Avoid_: Accepted answer, endorsement, solution
+
+**Moderator**:
+Who keeps a space in order: the course's fellows in a course space, the programme's residential fellows in a cohort space, and admins everywhere.
+
+**Pulse**:
+The short, confidential survey that members of a space answer twice, early and at the end, about belonging, learning and the space itself.
+_Avoid_: Evaluation, feedback form
 
 ### Reading the site
 
