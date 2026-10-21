@@ -395,8 +395,15 @@ body {
 }
 
 /* The page's own prose: the reading face, a touch smaller than an essay's. */
+.course-page {
+  /* One text voice for the page: the description and the fellow bios share it. */
+  --course-text-size: 1.1rem;
+}
 .course-page .article-prose {
-  font-size: 1.1rem;
+  font-size: var(--course-text-size);
+  /* A capped prose box centers in the column, so the description and the
+     fellow bios keep one pair of edges whatever the page's direction runs. */
+  margin-inline: auto;
 }
 
 .course-cover {
@@ -477,10 +484,13 @@ body {
 }
 .course-fellow-bio {
   grid-column: 1 / -1;
-  max-width: 65ch;
-  margin-top: 1rem;
-  font-size: 0.975rem;
+  /* The description's own measure and size, so a bio sits on the same edges
+     as the text around it. */
+  max-width: 68ch;
+  font-size: var(--course-text-size);
   line-height: 1.7;
+  margin-top: 1rem;
+  margin-inline: auto;
   color: var(--text-secondary);
   text-wrap: pretty;
 }

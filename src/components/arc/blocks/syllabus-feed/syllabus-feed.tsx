@@ -189,11 +189,13 @@ function EntryRow({
   entry,
   open,
   onToggle,
+  registerRow,
   reduce,
 }: {
   entry: SyllabusEntry
   open: boolean
   onToggle: () => void
+  registerRow?: (element: HTMLButtonElement | null) => void
   reduce: boolean
 }) {
   const t = useTranslations('Course')
@@ -234,6 +236,7 @@ function EntryRow({
         aria-expanded={open}
         aria-controls={panelId}
         onClick={onToggle}
+        ref={registerRow}
       >
         <span className={styles.meta}>
           <span className={styles.number} {...entry.attrs?.no}>
@@ -369,6 +372,7 @@ export function SyllabusFeed({
   const scrollRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const groupRefs = useRef(new Map<string, HTMLElement>())
+  const rowRefs = useRef(new Map<string, HTMLButtonElement>())
   const frame = useRef(0)
 
   const entries_ = useMemo(() => entries ?? [], [entries])
@@ -449,6 +453,12 @@ export function SyllabusFeed({
     if (frame.current) return
     frame.current = requestAnimationFrame(() => {
       frame.current = 0
+      const scroller = scrollRef.current
+      if (scroller) {
+        // The top fade only earns its place once content is scrolled away.
+        if (scroller.scrollTop > 8) scroller.setAttribute('data-scrolled', '')
+        else scroller.removeAttribute('data-scrolled')
+      }
       sync()
     })
   }, [sync])
@@ -474,9 +484,32 @@ export function SyllabusFeed({
     })
   }
   function toggleEntry(id: string) {
-    setOpen((previous) =>
-      previous.includes(id) ? previous.filter((item) => item !== id) : [...previous, id],
-    )
+    setOpen((previous) => {
+      const opening = !previous.includes(id)
+      // Opening a panel below shifts the list; keep the row's own header in
+      // view, or the panel reads as an orphan without its title.
+      if (opening) revealRow(id)
+      return opening ? [...previous, id] : previous.filter((item) => item !== id)
+    })
+  }
+
+  /** Scroll the toggled row into the scroller's window when it is clipped. */
+  function revealRow(id: string) {
+    const scroller = scrollRef.current
+    const row = rowRefs.current.get(id)
+    if (!scroller || !row) return
+    const rowRect = row.getBoundingClientRect()
+    const base = scroller.getBoundingClientRect().top
+    const start = scroller.scrollTop + (rowRect.top - base)
+    const end = start + rowRect.height
+    const limit = scroller.scrollTop + scroller.clientHeight
+    const above = start < scroller.scrollTop + 4
+    const below = end > limit - 4
+    if (!above && !below) return
+    scroller.scrollTo({
+      top: above ? start - 12 : end - scroller.clientHeight + 12,
+      behavior: reduce ? 'auto' : 'smooth',
+    })
   }
   function jumpTo(key: string) {
     const scroller = scrollRef.current
@@ -602,29 +635,32 @@ export function SyllabusFeed({
               <span>{wordThis(current?.items.length ?? 0)}</span>
             </motion.span>
           </div>
-          <nav className={styles.monthNav} aria-label={t('feedJump')}>
-            {shown.map((group) => {
-              const selected = group.key === current?.key
-              return (
-                <button
-                  key={group.key}
-                  type="button"
-                  aria-label={t('feedJumpTo', { month: group.label })}
-                  aria-current={selected ? 'true' : undefined}
-                  onClick={() => jumpTo(group.key)}
-                >
-                  {selected && (
-                    <motion.span
-                      layoutId={`${uid}-month`}
-                      className={styles.monthPill}
-                      transition={reduce ? instant : motionTokens.spring.morph}
-                    />
-                  )}
-                  <span className={styles.monthShort}>{group.short}</span>
-                </button>
-              )
-            })}
-          </nav>
+          {/* A rail needs more than one month to be worth its place. */}
+          {shown.length > 1 && (
+            <nav className={styles.monthNav} aria-label={t('feedJump')}>
+              {shown.map((group) => {
+                const selected = group.key === current?.key
+                return (
+                  <button
+                    key={group.key}
+                    type="button"
+                    aria-label={t('feedJumpTo', { month: group.label })}
+                    aria-current={selected ? 'true' : undefined}
+                    onClick={() => jumpTo(group.key)}
+                  >
+                    {selected && (
+                      <motion.span
+                        layoutId={`${uid}-month`}
+                        className={styles.monthPill}
+                        transition={reduce ? instant : motionTokens.spring.morph}
+                      />
+                    )}
+                    <span className={styles.monthShort}>{group.short}</span>
+                  </button>
+                )
+              })}
+            </nav>
+          )}
         </div>
       )}
 
@@ -673,6 +709,10 @@ export function SyllabusFeed({
                         entry={entry}
                         open={open.includes(entry.id)}
                         onToggle={() => toggleEntry(entry.id)}
+                        registerRow={(element: HTMLButtonElement | null) => {
+                          if (element) rowRefs.current.set(entry.id, element)
+                          else rowRefs.current.delete(entry.id)
+                        }}
                         reduce={reduce}
                       />
                     ))}

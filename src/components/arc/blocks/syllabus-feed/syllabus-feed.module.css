@@ -254,6 +254,25 @@
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
   mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
 }
+/* Once content has scrolled away, shade both edges so a cut row reads as
+   designed rather than broken. */
+.scroller[data-scrolled],
+.scroller[data-scrolled='true'] {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 28px,
+    #000 calc(100% - 36px),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 28px,
+    #000 calc(100% - 36px),
+    transparent
+  );
+}
 .list {
   position: relative;
 }
