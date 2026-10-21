@@ -902,6 +902,7 @@ In both files, inside `"Header"`, after `"dashboard"`: en `"profile": "Profile",
   "noPerson": "This account has no profile. Admins edit people in the admin.",
   "errors": {
     "name": "Write your name in English.",
+    "name-ar": "Your Arabic name can be changed but not emptied. Write it, or ask an admin to remove it.",
     "bio": "The text about you is too long.",
     "website": "The website must start with http:// or https://.",
     "social": "Each social link must start with http:// or https://, eight at most.",
@@ -937,6 +938,7 @@ In both files, inside `"Header"`, after `"dashboard"`: en `"profile": "Profile",
   "noPerson": "لا يوجد ملف شخصي لهذا الحساب. يحرر المشرفون الأشخاص من لوحة الإدارة.",
   "errors": {
     "name": "اكتب اسمك بالإنجليزية.",
+    "name-ar": "يمكنك تغيير اسمك بالعربية لكن لا يمكنك تركه فارغًا. اكتبه، أو اطلب من المشرف حذفه.",
     "bio": "النبذة طويلة جدًا.",
     "website": "يجب أن يبدأ الموقع بـ http:// أو https://.",
     "social": "يجب أن يبدأ كل رابط بـ http:// أو https://، ثمانية روابط على الأكثر.",
@@ -1140,7 +1142,7 @@ export default async function ProfilePage({ params }: Props) {
     'public', 'private', 'nameEn', 'nameAr', 'bioEn', 'bioAr', 'website', 'social',
     'platform', 'url', 'addLink', 'removeLink', 'photo', 'photoHint', 'save', 'saved',
   ] as const
-  const errors = ['name', 'bio', 'website', 'social', 'photo', 'no-person'] as const
+  const errors = ['name', 'name-ar', 'bio', 'website', 'social', 'photo', 'no-person'] as const
   const messages = {
     ...Object.fromEntries(keys.map((k) => [k, t(k)])),
     errors: Object.fromEntries(errors.map((k) => [k, t(`errors.${k}`)])),
