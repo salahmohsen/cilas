@@ -358,7 +358,18 @@
       "short": "Short courses"
     },
     "allInCycle": "See all {count} courses of this cycle",
-    "whoTeaches": "Who teaches it"
+    "whoTeaches": "Who teaches it",
+    "feedFilterBy": "Filter the syllabus",
+    "feedMaterial": "To prepare",
+    "feedShowAll": "Show all",
+    "feedOf": "of",
+    "feedWord": "{count, plural, one {session} other {sessions}}",
+    "feedSr": "Showing {text}",
+    "feedJump": "Jump to month",
+    "feedJumpTo": "Jump to {month}",
+    "feedNoMatch": "No sessions match these filters.",
+    "feedEmpty": "The sessions have not been announced yet.",
+    "feedUnscheduled": "Sessions without a date"
   },
   "NotFound": {
     "title": "Page not found",
@@ -576,10 +587,22 @@
     "apply": "Apply",
     "details": "Details",
     "units": {
-      "days": ["Days", "d"],
-      "hours": ["Hours", "h"],
-      "minutes": ["Minutes", "m"],
-      "seconds": ["Seconds", "s"]
+      "days": [
+        "Days",
+        "d"
+      ],
+      "hours": [
+        "Hours",
+        "h"
+      ],
+      "minutes": [
+        "Minutes",
+        "m"
+      ],
+      "seconds": [
+        "Seconds",
+        "s"
+      ]
     },
     "unitSpoken": "{unit, select, days {{count, plural, one {# day} other {# days}}} hours {{count, plural, one {# hour} other {# hours}}} minutes {{count, plural, one {# minute} other {# minutes}}} other {{count, plural, one {# second} other {# seconds}}}}",
     "controls": {
