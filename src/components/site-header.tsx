@@ -1,6 +1,6 @@
 'use client'
 
-import { BookOpen, Calendar, LayoutDashboard, Newspaper, Users } from 'lucide-react'
+import { BookOpen, Calendar, LayoutDashboard, Newspaper, UserRound, Users } from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { Suspense, useEffect, useRef, useState } from 'react'
@@ -10,12 +10,14 @@ import { UserMenu, type UserMenuUser } from '@/components/arc/user-menu/user-men
 import { LanguageSwitch, ThemeToggle } from '@/components/site-controls'
 import { SiteNotifications } from '@/components/site-notifications'
 import { SiteSearch } from '@/components/site-search'
+import { useRouter } from '@/i18n/navigation'
 import { ALL_SHOWN, type Navigation } from '@/lib/navigation'
 
 /** The site's main navigation, in the site language, with links under it. */
 export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
   const t = useTranslations('Header')
   const locale = useLocale()
+  const router = useRouter()
   // Arc's header renders plain anchors, so each href carries the language.
   const href = (path: string) => `/${locale}${path === '/' ? '' : path}`
 
@@ -218,6 +220,11 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
               // The header's own toggle sets the theme.
               showTheme={false}
               items={[
+                {
+                  label: t('profile'),
+                  icon: <UserRound size={16} />,
+                  onSelect: () => router.push('/profile'),
+                },
                 {
                   label: t('dashboard'),
                   icon: <LayoutDashboard size={16} />,
