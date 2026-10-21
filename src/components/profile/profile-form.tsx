@@ -1,11 +1,12 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useActionState, useRef, useState } from 'react'
 
 import type { ProfileState } from '@/app/(frontend)/[locale]/profile/actions'
 import { Button } from '@/components/arc/button/button'
 import { Input } from '@/components/arc/input/input'
 import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
+import { bioBaseline, bioToSend } from '@/components/profile/bio'
 import { SOCIAL_PLATFORMS } from '@/fields/social'
 import type { ProfileError, ProfileView } from '@/lib/profile'
 
@@ -43,6 +44,13 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
   const [state, submit, pending] = useActionState(action, { status: 'idle' } as ProfileState)
   const [bioEn, setBioEn] = useState(profile.bio.en)
   const [bioAr, setBioAr] = useState(profile.bio.ar)
+  // The editor's own rendering of each stored bio, found on first use: it needs the browser.
+  const baselines = useRef<{ en?: string; ar?: string }>({})
+  const bioFor = (locale: 'en' | 'ar', edited: string) => {
+    const original = profile.bio[locale]
+    baselines.current[locale] ??= bioBaseline(original)
+    return bioToSend(original, edited, baselines.current[locale])
+  }
   const [links, setLinks] = useState(profile.socialLinks)
 
   return (
@@ -58,7 +66,7 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
           <RichTextEditor
             aria-label={m.bioEn}
             defaultMarkdown={profile.bio.en}
-            onChange={(value) => setBioEn(value.markdown)}
+            onChange={(value) => setBioEn(bioFor('en', value.markdown))}
           />
         </div>
         <input type="hidden" name="bio_en" value={bioEn} />
@@ -69,7 +77,7 @@ export function ProfileForm({ profile, messages: m, action }: Props) {
           <RichTextEditor
             aria-label={m.bioAr}
             defaultMarkdown={profile.bio.ar}
-            onChange={(value) => setBioAr(value.markdown)}
+            onChange={(value) => setBioAr(bioFor('ar', value.markdown))}
           />
         </div>
         <input type="hidden" name="bio_ar" value={bioAr} />
