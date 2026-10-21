@@ -4,7 +4,12 @@ import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { ProfileForm, type ProfileMessages } from '@/components/profile/profile-form'
+import {
+  PROFILE_ERROR_KEYS,
+  PROFILE_MESSAGE_KEYS,
+  type ProfileMessages,
+} from '@/components/profile/messages'
+import { ProfileForm } from '@/components/profile/profile-form'
 import { readProfile } from '@/lib/profile'
 import { currentReader } from '@/lib/reader'
 
@@ -26,29 +31,14 @@ export default async function ProfilePage({ params }: Props) {
   const t = await getTranslations('Profile')
   const profile = await readProfile(await getPayload({ config }), user)
 
-  const keys = [
-    'public',
-    'private',
-    'nameEn',
-    'nameAr',
-    'bioEn',
-    'bioAr',
-    'website',
-    'social',
-    'platform',
-    'url',
-    'addLink',
-    'removeLink',
-    'photo',
-    'photoHint',
-    'save',
-    'saved',
-  ] as const
-  const errors = ['name', 'name-ar', 'bio', 'website', 'social', 'photo', 'no-person'] as const
+  const pick = <K extends string>(keys: readonly K[], prefix = '') =>
+    Object.fromEntries(
+      keys.map((k) => [k, (t as (key: string) => string)(`${prefix}${k}`)]),
+    ) as Record<K, string>
   const messages = {
-    ...Object.fromEntries(keys.map((k) => [k, t(k)])),
-    errors: Object.fromEntries(errors.map((k) => [k, t(`errors.${k}`)])),
-  } as ProfileMessages
+    ...pick(PROFILE_MESSAGE_KEYS),
+    errors: pick(PROFILE_ERROR_KEYS, 'errors.'),
+  } satisfies ProfileMessages
 
   return (
     <div className="mx-auto grid max-w-2xl gap-6 px-4 py-12">

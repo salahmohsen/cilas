@@ -20,6 +20,10 @@ const nextConfig: NextConfig = {
   // for a free database connection, and passed the 60-second default; Next
   // then rendered them again. Later pages take well under a second.
   staticPageGenerationTimeout: 180,
+  // The profile form sends a photo of up to 5 MB; the default limit is 1 MB.
+  experimental: {
+    serverActions: { bodySizeLimit: '6mb' },
+  },
   images: {
     remotePatterns: [
       {

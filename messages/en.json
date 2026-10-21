@@ -653,7 +653,7 @@
     "errors": {
       "name": "Write your name in English.",
       "name-ar": "Your Arabic name can be changed but not emptied. Write it, or ask an admin to remove it.",
-      "bio": "The text about you is too long.",
+      "bio": "The text about you is too long, or has a link that does not start with http:// or https://.",
       "website": "The website must start with http:// or https://.",
       "social": "Each social link must start with http:// or https://, eight at most.",
       "photo": "The photo must be JPG, PNG or WebP, up to 5 MB.",

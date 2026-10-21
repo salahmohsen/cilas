@@ -8,6 +8,7 @@ import {
   revalidateCoursesAfterChange,
   revalidateCoursesAfterDelete,
 } from '@/lib/revalidate-courses'
+import { revalidatePersonAfterChange } from '@/lib/revalidate-people'
 
 /**
  * Everyone who appears on the site: fellows, CILASians, authors, advisors,
@@ -35,9 +36,9 @@ export const People: CollectionConfig = {
     },
     delete: isAdmin,
   },
-  // Its names show in the cached study list.
+  // Its names show in the cached study list; its pages are built ahead.
   hooks: {
-    afterChange: [revalidateCoursesAfterChange],
+    afterChange: [revalidateCoursesAfterChange, revalidatePersonAfterChange],
     afterDelete: [revalidateCoursesAfterDelete],
   },
   fields: [

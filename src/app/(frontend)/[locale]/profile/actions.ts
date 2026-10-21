@@ -1,6 +1,7 @@
 'use server'
 
 import config from '@payload-config'
+import { refresh } from 'next/cache'
 import { getPayload } from 'payload'
 
 import { saveProfile, type ProfileError, type ProfileInput } from '@/lib/profile'
@@ -43,5 +44,8 @@ export async function saveProfileAction(
 
   const payload = await getPayload({ config })
   const result = await saveProfile(payload, user, input, photo)
-  return result.ok ? { status: 'saved' } : { status: 'error', error: result.error }
+  if (!result.ok) return { status: 'error', error: result.error }
+  // Bring the stored values and the new photo to the page.
+  refresh()
+  return { status: 'saved' }
 }
