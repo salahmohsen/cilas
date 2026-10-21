@@ -98,6 +98,7 @@ const typeTabs = (courses: Course[], typeName: (type: CourseType) => string): st
   return present.length > 1 ? present.map(typeName) : []
 }
 
+/** Each course's cycle season, by slug. */
 const seasonsOf = (courses: Course[]): Record<string, Season> =>
   Object.fromEntries(
     courses.flatMap((c) => (typeof c.cycle === 'object' && c.cycle?.season && c.slug ? [[c.slug, c.cycle.season]] : [])),

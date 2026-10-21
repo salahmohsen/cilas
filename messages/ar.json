@@ -224,7 +224,8 @@
     },
     "stackArticles": "مقالات ذات صلة",
     "stackCourses": "مقررات",
-    "collectionStack": "مقالات {title}"
+    "collectionStack": "مقالات {title}",
+    "gridFilterBy": "تصفية حسب نوع المقرر"
   },
   "Study": {
     "heroQuote": "ما نغطيه في سيلاس أقل أهمية مما يكتشفه الطالب.",

@@ -224,7 +224,8 @@
     },
     "stackArticles": "Related articles",
     "stackCourses": "Courses",
-    "collectionStack": "The essays of {title}"
+    "collectionStack": "The essays of {title}",
+    "gridFilterBy": "Filter by course type"
   },
   "Study": {
     "heroQuote": "What we cover at CILAS matters less than what a student discovers.",
