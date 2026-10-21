@@ -25,7 +25,8 @@ export const CourseLivePreview: React.FC<{
   initialData: Course
   related?: RelatedCourse[]
   after?: React.ReactNode
-}> = ({ initialData, related, after }) => {
+  email?: string | null
+}> = ({ initialData, related, after, email }) => {
   const { data } = useLivePreview<Course>({
     initialData,
     // Read from env, not `window.location.origin`: these pages are statically
@@ -41,7 +42,7 @@ export const CourseLivePreview: React.FC<{
   return (
     <>
       {inAdmin ? <VisualEditing draft serverURL={env.NEXT_PUBLIC_SERVER_URL} /> : null}
-      <CourseView after={after} course={data} editable={inAdmin} related={related} />
+      <CourseView after={after} course={data} editable={inAdmin} email={email} related={related} />
     </>
   )
 }

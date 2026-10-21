@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
 
+import { getContactEmail } from '@/api/contact.api'
 import { OutsideAdminFrame } from '@/components/admin-frame-only'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
@@ -140,8 +141,11 @@ export default async function CoursePage({ params }: Params) {
     </OutsideAdminFrame>
   )
 
+  // The institute's email, the share bar's mail recipient.
+  const email = await getContactEmail()
+
   if (!isPreview) {
-    return <CourseView after={newsletter} course={course} related={related} />
+    return <CourseView after={newsletter} course={course} email={email} related={related} />
   }
 
   /*
@@ -166,7 +170,12 @@ export default async function CoursePage({ params }: Params) {
   return (
     <>
       <RefreshRouteOnSave />
-      <CourseLivePreview after={newsletter} initialData={drafts[0] ?? course} related={related} />
+      <CourseLivePreview
+        after={newsletter}
+        email={email}
+        initialData={drafts[0] ?? course}
+        related={related}
+      />
     </>
   )
 }

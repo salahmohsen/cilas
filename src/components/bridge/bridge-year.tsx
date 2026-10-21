@@ -4,6 +4,7 @@ import { getFormatter, getTranslations } from 'next-intl/server'
 import type { ReactNode } from 'react'
 
 import { bridgeYearPath, type BridgeYear } from '@/api/programmes.api'
+import { getContactEmail } from '@/api/contact.api'
 import type { BlogPost } from '@/components/arc/blocks/blog-grid/blog-grid'
 import { BridgeCourses } from '@/components/bridge/bridge-courses'
 import { RegisterBar } from '@/app/(frontend)/[locale]/study/[slug]/RegisterBar'
@@ -37,6 +38,8 @@ export async function BridgeYearView({
   preview?: boolean
 }) {
   const { programme, cover, semesters } = year
+  // The institute's email, the share bar's mail recipient; a failed read leaves the mail unaddressed.
+  const email = await getContactEmail()
   const [t, tc, tf, ts, ta, format] = await Promise.all([
     getTranslations('Bridge'),
     getTranslations('Course'),
@@ -210,6 +213,7 @@ export async function BridgeYearView({
         {ts('heading')}
       </h2>
       <ShareBar
+        email={email}
         label={t('share')}
         path={`/${locale}${current ? '/study/bridge' : bridgeYearPath(programme.slug ?? '')}`}
         title={programme.title}

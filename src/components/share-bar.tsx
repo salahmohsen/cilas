@@ -41,6 +41,7 @@ export function ShareBar({
   title,
   label,
   file,
+  email,
 }: {
   /** The page's path, `/en/study/…`: the address is made from wherever the site is served. */
   path: string
@@ -48,6 +49,8 @@ export function ShareBar({
   /** The group's accessible name, such as "Share this course". */
   label: string
   file?: ShareFile
+  /** The institute's info address (Site settings), the mail share's recipient. Empty: an unaddressed mail. */
+  email?: string | null
 }) {
   const t = useTranslations('Share')
   // Known only in the browser: the server renders the apps, and on a phone
@@ -91,7 +94,7 @@ export function ShareBar({
             label: t('email'),
             icon: <Mail />,
             onSelect: () => {
-              window.location.href = `mailto:?subject=${text}&body=${encoded()}`
+              window.location.href = `mailto:${email ?? ''}?subject=${text}&body=${encoded()}`
             },
           },
         ]),

@@ -16,6 +16,7 @@ import {
   type Locale,
   type Reader,
 } from '@/api/articles.api'
+import { getContactEmail } from '@/api/contact.api'
 import {
   ArticleContents,
   ArticleNotes,
@@ -97,6 +98,8 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
   const { article, contentLocale, body, title, other } = reading
 
   const publicationCovers = await getPublicationCovers(payload)
+  // The institute's email, the share bar's mail recipient.
+  const email = await getContactEmail()
   const [t, tl, tArticles, tShare, format, collection, tf] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
@@ -432,6 +435,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                 {tShare('heading')}
               </h2>
               <ShareBar
+                email={email}
                 file={
                   pub?.print_edition_url
                     ? { href: pub.print_edition_url, label: t('printEdition'), kind: 'print' }

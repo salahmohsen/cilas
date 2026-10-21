@@ -119,7 +119,9 @@ export const CourseView: React.FC<{
   editable?: boolean
   /** At the end of the text, e.g. the newsletter signup. */
   after?: React.ReactNode
-}> = ({ course, related = [], editable = false, after }) => {
+  /** The institute's info address (Site settings), the share bar's mail recipient. */
+  email?: string | null
+}> = ({ course, related = [], editable = false, after, email }) => {
   const pe = editableIn(editable)
   const t = useTranslations('Course')
   const tf = useTranslations('Study.filters')
@@ -490,6 +492,7 @@ export const CourseView: React.FC<{
         label={ts('course')}
         path={`/${locale}/study/${course.slug}`}
         title={course.title}
+        email={email}
       />
     </section>
   )
