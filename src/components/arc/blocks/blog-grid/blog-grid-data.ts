@@ -11,7 +11,7 @@ export type BlogPost = {
   date: string
   /** Minutes to read. */
   readTime: number
-  /** Shown instead of the formatted date, e.g. in the reader's language. */
+  /** Shown instead of the formatted date, e.g. in the reader's language; empty hides it. */
   dateLabel?: string
   /** Shown instead of "N min read"; empty hides it. */
   readTimeLabel?: string

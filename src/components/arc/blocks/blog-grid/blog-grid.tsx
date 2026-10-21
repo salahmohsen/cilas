@@ -154,32 +154,42 @@ function Meta({ post }: { post: BlogPost }) {
   return (
     <p className={styles.meta}>
       <span>{post.label ?? post.category}</span>
-      <span aria-hidden="true">·</span>
-      <time dateTime={post.date}>{post.dateLabel ?? formatDate(post.date)}</time>
+      {post.dateLabel !== '' && (
+        <>
+          <span aria-hidden="true">·</span>
+          <time dateTime={post.date}>{post.dateLabel ?? formatDate(post.date)}</time>
+        </>
+      )}
     </p>
   )
 }
 
 function Byline({ post }: { post: BlogPost }) {
+  const named = post.author.name.trim() !== ''
+  if (!named && post.readTimeLabel === '') return null
   return (
     <div className={styles.byline}>
-      {post.author.avatar ? (
-        <img
-          className={styles.avatar}
-          src={post.author.avatar}
-          alt=""
-          width={24}
-          height={24}
-          loading="lazy"
-        />
-      ) : (
-        <span className={styles.avatar} aria-hidden="true">
-          {post.author.name.trim().charAt(0)}
-        </span>
+      {named && (
+        <>
+          {post.author.avatar ? (
+            <img
+              className={styles.avatar}
+              src={post.author.avatar}
+              alt=""
+              width={24}
+              height={24}
+              loading="lazy"
+            />
+          ) : (
+            <span className={styles.avatar} aria-hidden="true">
+              {post.author.name.trim().charAt(0)}
+            </span>
+          )}
+          <span className={styles.authorName} dir="auto">
+            {post.author.name}
+          </span>
+        </>
       )}
-      <span className={styles.authorName} dir="auto">
-        {post.author.name}
-      </span>
       {post.readTimeLabel !== '' && (
         <span className={styles.readTime}>{post.readTimeLabel ?? `${post.readTime} min read`}</span>
       )}

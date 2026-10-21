@@ -124,9 +124,10 @@ describe('resolveCardStacks', () => {
   })
 
   it('keeps the chosen order in a grid, and shows no tabs for one course type', async () => {
-    const stacks = await resolveCardStacks(payload, body(block({ id: 'g', layout: 'grid', source: 'courses', courses: [10] })), options as never)
-    expect(stacks.g!.posts.map((p) => p.id)).toEqual(['plato'])
-    expect(stacks.g!.categories).toEqual([])
+    const ordered = await resolveCardStacks(payload, body(block({ id: 'g', layout: 'grid', source: 'courses', courses: [11, 10] })), options as never)
+    expect(ordered.g!.posts.map((p) => p.id)).toEqual(['archives', 'plato'])
+    const single = await resolveCardStacks(payload, body(block({ id: 'g', layout: 'grid', source: 'courses', courses: [10] })), options as never)
+    expect(single.g!.categories).toEqual([])
   })
 
   it('draws chosen articles as grid posts without tabs', async () => {

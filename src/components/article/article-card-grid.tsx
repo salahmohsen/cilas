@@ -28,7 +28,7 @@ export function ArticleCardGrid({
   const ta = useTranslations('Article')
   const locale = useLocale()
   return (
-    <section aria-label={label} className="not-prose my-8">
+    <div className="not-prose my-8">
       <BlogGrid
         categories={categories}
         defaultCategory="All"
@@ -59,6 +59,6 @@ export function ArticleCardGrid({
         showFeatured={false}
         title={label}
       />
-    </section>
+    </div>
   )
 }
