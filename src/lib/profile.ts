@@ -4,7 +4,13 @@ import {
   editorConfigFactory,
 } from '@payloadcms/richtext-lexical'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
-import type { Payload } from 'payload'
+import {
+  commitTransaction,
+  createLocalReq,
+  initTransaction,
+  killTransaction,
+  type Payload,
+} from 'payload'
 import { z } from 'zod'
 
 import { personOf } from '@/access'
@@ -35,13 +41,13 @@ export type ProfileInput = {
 }
 
 /** A field the page names in its error message, or the account has no person. */
-export type ProfileError = 'name' | 'bio' | 'website' | 'social' | 'photo' | 'no-person'
+export type ProfileError = 'name' | 'bio' | 'website' | 'social' | 'name-ar' | 'photo' | 'no-person'
 
+// Same rule as the collection's own URL validator, so Payload never rejects what passes here.
 const httpUrl = z
-  .string()
-  .trim()
   .url()
-  .regex(/^https?:\/\//i)
+  .trim()
+  .regex(/^https?:\/\/\S+$/i)
 
 const schema = z.object({
   name: z.object({ en: z.string().trim().min(1).max(120), ar: z.string().trim().max(120) }),
@@ -53,6 +59,24 @@ const schema = z.object({
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp']
 const PHOTO_MAX_BYTES = 5 * 1024 * 1024
 
+const FIELD_ERROR: Record<keyof ProfileInput, ProfileError> = {
+  name: 'name',
+  bio: 'bio',
+  website: 'website',
+  socialLinks: 'social',
+}
+
+// Members must not embed uploads by id: `![collection:id]()` placeholders are dropped.
+const UPLOAD_PLACEHOLDER = /!\[[\w-]+:[^\]]*\]\(\)/g
+const stripUploads = (markdown: string): string => markdown.replace(UPLOAD_PLACEHOLDER, '')
+
+/** True when every Markdown link or image points at http:, https: or mailto:. */
+const linksAreSafe = (markdown: string): boolean =>
+  [...markdown.matchAll(/\]\(\s*<?([^)\s>]*)/g)].every(([, url]) =>
+    /^(https?:|mailto:)/i.test(url ?? ''),
+  )
+
+// The `bio` field uses the global `lexicalEditor()`, so the default editor config matches it.
 const editorConfig = (payload: Payload) => editorConfigFactory.default({ config: payload.config })
 
 const toMarkdown = async (payload: Payload, data: unknown): Promise<string> =>
@@ -118,43 +142,94 @@ export const saveProfile = async (
 
   const parsed = schema.safeParse(input)
   if (!parsed.success) {
-    const field = String(parsed.error.issues[0]?.path[0] ?? 'name')
-    return { ok: false, error: (field === 'socialLinks' ? 'social' : field) as ProfileError }
+    const field = parsed.error.issues[0]?.path[0] as keyof ProfileInput | undefined
+    return { ok: false, error: (field && FIELD_ERROR[field]) || 'name' }
   }
   const { name, bio, website, socialLinks } = parsed.data
 
-  let photoId: number | undefined
-  if (photo) {
-    if (!PHOTO_TYPES.includes(photo.mimetype) || photo.size > PHOTO_MAX_BYTES) {
-      return { ok: false, error: 'photo' }
-    }
-    const media = await payload.create({
-      collection: 'media',
-      data: { alt: name.en },
-      file: photo,
-      user,
-      overrideAccess: false,
-    })
-    photoId = media.id
+  // Check the photo first, so a refused file never costs a write.
+  // The size comes from the bytes, not from what the client claims.
+  if (photo && (!PHOTO_TYPES.includes(photo.mimetype) || photo.data.length > PHOTO_MAX_BYTES)) {
+    return { ok: false, error: 'photo' }
   }
 
-  const asMember = { collection: 'people', id, user, overrideAccess: false } as const
-  await payload.update({
-    ...asMember,
-    locale: 'en',
-    data: {
-      name: name.en,
-      bio: await toLexical(payload, bio.en),
-      website: website || null,
-      social_links: socialLinks,
-      ...(photoId ? { photo: photoId } : {}),
-    },
+  const stored = await payload.findByID({
+    collection: 'people',
+    id,
+    locale: 'all',
+    depth: 0,
+    user,
+    overrideAccess: false,
   })
-  await payload.update({
-    ...asMember,
-    locale: 'ar',
-    // An empty Arabic name falls back to the English one on the site.
-    data: { ...(name.ar ? { name: name.ar } : {}), bio: await toLexical(payload, bio.ar) },
-  })
+
+  // A payload `name` cannot be cleared in Arabic through the access-checked path.
+  if (!name.ar && textOf(stored.name, 'ar')) return { ok: false, error: 'name-ar' }
+
+  // Write a bio only when the member changed it: Markdown cannot carry every
+  // node an admin may have used, so an untouched bio must not be rewritten.
+  const storedBio = (stored as { bio?: Record<string, unknown> }).bio
+  const bioData: Partial<Record<Locale, Awaited<ReturnType<typeof toLexical>>>> = {}
+  for (const locale of ['en', 'ar'] as const) {
+    const markdown = bio[locale].trim()
+    if (markdown === (await toMarkdown(payload, storedBio?.[locale]))) continue
+    const clean = stripUploads(markdown)
+    if (!linksAreSafe(clean)) return { ok: false, error: 'bio' }
+    bioData[locale] = await toLexical(payload, clean)
+  }
+
+  const req = await createLocalReq({ user }, payload)
+  const started = await initTransaction(req)
+  let mediaId: number | undefined
+  try {
+    let photoId: number | undefined
+    if (photo) {
+      try {
+        const media = await payload.create({
+          collection: 'media',
+          data: { alt: name.en },
+          file: photo,
+          req,
+          user,
+          overrideAccess: false,
+        })
+        mediaId = media.id
+        photoId = media.id
+      } catch {
+        if (started) await killTransaction(req)
+        return { ok: false, error: 'photo' }
+      }
+    }
+
+    const asMember = { collection: 'people', id, req, user, overrideAccess: false } as const
+    await payload.update({
+      ...asMember,
+      locale: 'en',
+      data: {
+        name: name.en,
+        ...('en' in bioData ? { bio: bioData.en } : {}),
+        website: website || null,
+        social_links: socialLinks,
+        ...(photoId ? { photo: photoId } : {}),
+      },
+    })
+    // An empty Arabic name is left alone (it is empty already); the site falls back to English.
+    const arData = {
+      ...(name.ar ? { name: name.ar } : {}),
+      ...('ar' in bioData ? { bio: bioData.ar } : {}),
+    }
+    if (Object.keys(arData).length) {
+      await payload.update({ ...asMember, locale: 'ar', data: arData })
+    }
+    if (started) await commitTransaction(req)
+  } catch (error) {
+    if (started) await killTransaction(req)
+    // The file in storage is outside the transaction, so remove its record by hand.
+    if (mediaId) {
+      await payload
+        .delete({ collection: 'media', id: mediaId, overrideAccess: true })
+        .catch(() => undefined)
+    }
+    throw error
+  }
   return { ok: true }
 }
