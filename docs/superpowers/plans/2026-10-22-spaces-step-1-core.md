@@ -27,9 +27,9 @@
 
 - Work on the current branch (`spaces-feature`); commit as each task lands.
 - All database work happens on the local docker Postgres that Task 0 brings up. The database in `.env` (`192.168.1.34:5442/cilas`) is the dokploy production database — it is never read, written, migrated, or connected to in this plan. Before every `pnpm db:*` and seed, prefix `DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev`. An exported `DATABASE_URL` wins over `.env` in this repo (Node's `process.loadEnvFile` does not overwrite an already-set variable; Next treats real env vars above `.env`), so the prefix is the whole safety story. Task 0 also writes a gitignored `.env.local` with the same local URL, so Next processes (`pnpm dev`, the admin) read the local database without a prefix — Next loads `.env.local` over `.env`. Their loaders differ: the Payload CLI reads env the way Next does (including `.env.local`, via `@next/env`; a real env var still wins), while `seed/index.ts` and vitest read only `.env`. The exported prefix is mandatory for those two either way — Task 0's guard makes refusal structural rather than remembered.
-- Never run `pnpm db:migrate:create` or `pnpm db:migrate` yourself. Ask the user to run them with `! <command>` (with the local `DATABASE_URL` prefix above) and wait.
+- Supervisor runs `pnpm db:migrate`, `pnpm db:seed` and `pnpm db:migrate:create` against the local 5433 container (user delegation, 2026-10-23; the earlier rule asked the user). Every generated migration file is read before it is applied, and wherever a task's spec needs columns the registered collections do not have yet, the supervisor creates and applies a named migration just before that verification. The `.env` production database remains off-limits.
 - Integration tests need the migrated local schema: `DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run --config ./vitest.config.mts <file>` with that `DATABASE_URL`. Unit tests need no DB: `tests/unit` runs without one.
-- Known failures that are not yours: `publishing.int.spec.ts › duplicates an approved article as a fresh draft` fails on `main` already. `applications` and `import-media` int files fail only when the whole int folder runs at once; they pass alone.
+- Known failures that are not yours: `publishing.int.spec.ts › duplicates an approved article as a fresh draft` fails on `main` already. `applications` and `import-media` int files fail only when the whole int folder runs at once; they pass alone. Measured 2026-10-23 on the freshly rebuilt local DB: five of seventeen `publishing.int.spec.ts` tests fail (`publishes the change only when an admin approves it`, `queues a submitted change and locks it, while the site keeps the published one`, `takes it down only when an admin approves a removal, then lets the author delete it`, `duplicates an approved article as a fresh draft`, `lets the author submit, emails admins, then locks the article to them`). The first spaces commits touch neither site-settings nor publishing code, and the spec imports no site-settings, so these are treated as the rebuilt DB's pre-existing baseline (inferred, not proven) and reclassified at the Task 17 gate.
 - After any collection change: `pnpm payload generate:types`.
 - Format with `pnpm exec prettier --write <files>`, lint with `pnpm exec eslint <files>`, typecheck with `pnpm exec tsc --noEmit -p .`.
 - Install the two new dependencies before Task 1: `pnpm add react-markdown remark-gfm`.
@@ -152,7 +152,7 @@ Ask the user: "Please run `! DATABASE_URL=postgres://cilas:dev@localhost:5433/ci
 DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run --config ./vitest.config.mts tests/int/teaching.int.spec.ts
 ```
 
-Expected: green except the known `duplicates an approved article as a fresh draft` failure.
+Expected: green. Measured 2026-10-23: 7/7 pass. The plan first blamed this file for the `duplicates an approved article as a fresh draft` failure; that test lives in `tests/int/publishing.int.spec.ts`, so if it is cited here, cite the file.
 
 - [ ] **Step 5: Commit**
 
@@ -855,6 +855,10 @@ export const writePostWhere = async (
 ): Promise<Where | boolean> => readableWhere(payload, user, 'space')
 ```
 
+- [ ] **Step 5b: The tables arrive here, not at Task 4**
+
+`push` is false in `src/payload.config.ts` and the spec in this task makes real rows in `spaces` and `space-posts`, so the tables must exist before Step 6 can pass. The supervisor (user delegation, 2026-10-23) runs `db:migrate:create spaces_core` right after Step 5 registration, reads the generated file (expected: `CREATE TABLE`s for the eight space tables, `ADD COLUMN`s for the Task 1 site-settings fields, their enums, and the two unique indexes on `spaces`; no drops), applies it with `db:migrate`, then confirms with `db:migrate:create spaces_core_check` writing nothing. Task 4's Step 7 therefore adds only the posts/comments column diff.
+
 - [ ] **Step 6: Generate types, run the spec, fix, commit**
 
 ```bash
@@ -1190,11 +1194,9 @@ Wire the hooks in place (follow each file's hook-array style):
 - `src/collections/Courses.ts`: join `ensureSpaceForCourse` into the existing `afterChange` array (line ~462).
 - `src/collections/Programmes.ts`: if it has no `hooks`, add `hooks: { afterChange: [ensureSpaceForProgramme] }`.
 
-- [ ] **Step 7: Migration**
+- [ ] **Step 7: Migration (column diff only)**
 
-Tell the user: "Please run `! DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm db:migrate:create spaces_core`". Wait. Read the generated SQL: expected `CREATE TABLE`s for the new space tables **plus `ADD COLUMN`s for the Task 1 site-settings fields** (their columns land with the next diff whatever it is), their enums, and indexes; **no drops**. (If Payload also proposes types/tables for the stub collections, accept tables for collections whose fields exist; the empty-stub ones without fields will come with their fields in Task 5 — if generated SQL locks in empty tables now, that is fine, later diffs add columns.)
-
-Then ask: "Please run `! DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm db:migrate`." Then checkpoint: ask the user to run `! DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm db:migrate:create spaces_core_check`. Expected `Done` with no changes written. If it writes files, read them, fix the collections, delete the check migration files and their line in `src/migrations/index.ts`, and have the user run `! DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm payload migrate:down` then `! DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm db:migrate` again.
+The tables and the site-settings columns arrived in Task 2's `spaces_core`, so the supervisor runs `db:migrate:create spaces_posts` here. Read the generated SQL: expected `ADD COLUMN`s for the real space-posts and space-comments fields plus any columns still missing from the stub tables, their enums; no drops and no new `CREATE TABLE`s for the space tables. Then `db:migrate`, then `db:migrate:create spaces_posts_check` expected to write nothing. If the check writes files, read them, fix the collections, delete the check files and their `src/migrations/index.ts` line, run `pnpm payload migrate:down`, then `pnpm db:migrate` again.
 
 - [ ] **Step 8: Extend the int spec, generate types, verify, commit**
 
@@ -1328,7 +1330,7 @@ Check `FILE_KINDS` exists in `src/lib/form-files.ts` with `mime` arrays (it is t
 
 - [ ] **Step 2: Migration (tables only)**
 
-The tables come with the next `db:migrate:create` checkpoint (Task 8, Step 6). No separate migration here — nothing queries files until the actions exist.
+The table arrived (empty) in Task 2's `spaces_core`. The supervisor adds the file columns with `db:migrate:create space_files` before this task's verification, because the spec here reads `space-files` rows. The write actions still come later (Task 8) exactly as written.
 
 - [ ] **Step 3: Commit**
 
@@ -2481,7 +2483,7 @@ DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run 
 DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run --config ./vitest.config.mts tests/int/spaces-core.int.spec.ts tests/int/spaces-write.int.spec.ts tests/int/publishing.int.spec.ts tests/int/teaching.int.spec.ts tests/int/profile.int.spec.ts
 ```
 
-Expected: unit suite green; the numbered int specs green except the known `duplicates an approved article as a fresh draft`.
+Expected: unit suite green; every numbered int spec green. The `publishing.int.spec.ts` failures of 2026-10-23 (five, listed in the ground rules) are not among the numbered files; reclassify them at this gate since every numbered spec must pass.
 
 - [ ] **Step 2: Nothing else broke in the admin**
 
