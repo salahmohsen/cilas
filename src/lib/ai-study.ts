@@ -74,7 +74,7 @@ ${url}
 
 I have read the course page and researched the sources.
 
-A — Discovery path (session by session)
+A — Discovery path (session by session discussion, CILAS style)
 B — Concise briefing
 C — Full long-form article
 
