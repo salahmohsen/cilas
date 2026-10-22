@@ -494,7 +494,17 @@
     "facebook": "Facebook",
     "x": "X",
     "telegram": "Telegram",
-    "email": "Email"
+    "email": "Email",
+    "aiHeading": "Study with AI",
+    "ai": "Study this course with AI",
+    "aiArticle": "Discuss this article with AI",
+    "aiNote": "Opens the assistant in a new tab, its prompt prefilled: it fetches this page and runs it CILAS-style.",
+    "providers": {
+      "claude": "Claude",
+      "gemini": "Gemini",
+      "grok": "Grok",
+      "chatgpt": "ChatGPT"
+    }
   },
   "Bridge": {
     "metaTitle": "Bridge Programme",

@@ -31,6 +31,7 @@ import { photoOf } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { SEASON_ICONS } from '@/components/season-icon'
 import { ShareBar } from '@/components/share-bar'
+import { StudyWithAI } from '@/components/study-with-ai'
 import { Link } from '@/i18n/navigation'
 import { weekdayOf as cairoWeekday } from '@/lib/cairo-day'
 import { localDigits, numberingSystemOf, timeDir } from '@/lib/digits'
@@ -494,6 +495,14 @@ export const CourseView: React.FC<{
         title={course.title}
         email={email}
       />
+      {/* With AI under sharing: the same pill, each assistant prefilled to run this course. */}
+      <h2 className="course-side-heading mt-10" id="course-ai">
+        {ts('aiHeading')}
+      </h2>
+      <div className="mt-4 grid gap-2">
+        <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
+        <p className="text-xs text-(--text-muted)">{ts('aiNote')}</p>
+      </div>
     </section>
   )
 

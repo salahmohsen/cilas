@@ -32,6 +32,7 @@ import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { ContributorList, PersonLink, type Contributor } from '@/components/person/contributors'
 import { RichTextField } from '@/components/RichTextField'
 import { ShareBar } from '@/components/share-bar'
+import { StudyWithAI } from '@/components/study-with-ai'
 import { ArticleCardStack } from '@/components/article/article-card-stack'
 import { ArticleCardGrid } from '@/components/article/article-card-grid'
 import { resolveCardStacks } from '@/api/card-stacks.api'
@@ -469,6 +470,16 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                 path={pathOf('articles', article, locale) ?? ''}
                 title={title}
               />
+              {/* With AI under sharing: the same pill, each assistant prefilled to fetch this page. */}
+              <div className="mt-2 grid gap-3">
+                <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-ai">
+                  {tShare('aiHeading')}
+                </h2>
+                <div className="grid gap-2">
+                  <StudyWithAI kind="article" path={pathOf('articles', article, locale) ?? ''} />
+                  <p className="text-xs text-[var(--text-muted)]">{tShare('aiNote')}</p>
+                </div>
+              </div>
             </section>
 
             {/* The original this text translates, with a way to read it. */}
