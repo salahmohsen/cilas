@@ -478,7 +478,11 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                 {tShare('aiHeading')}
               </h2>
               <StudyWithAI kind="article" path={pathOf('articles', article, locale) ?? ''} />
-              <p className="text-xs text-[var(--text-muted)]">{tShare('aiNote')}</p>
+              <ol className="grid gap-1 list-decimal list-inside text-xs leading-relaxed text-[var(--text-muted)]">
+                {(tShare.raw('aiSteps') as string[]).map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
             </section>
 
             {/* The original this text translates, with a way to read it. */}

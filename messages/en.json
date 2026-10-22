@@ -498,7 +498,11 @@
     "aiHeading": "Take it with AI",
     "ai": "Take this course with AI",
     "aiArticle": "Read this article with AI",
-    "aiNote": "Opens the assistant in a new tab, prompt prefilled: it fetches this page and runs it CILAS-style.",
+    "aiSteps": [
+      "Choose your preferred AI assistant.",
+      "A new tab will open with a prompt prepared for this page.",
+      "Press Send to begin exploring the page through dialogue, CILAS-style."
+    ],
     "providers": {
       "claude": "Claude",
       "gemini": "Gemini",

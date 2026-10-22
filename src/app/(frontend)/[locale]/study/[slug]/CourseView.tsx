@@ -505,7 +505,11 @@ export const CourseView: React.FC<{
         {ts('aiHeading')}
       </h2>
       <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
-      <p className="text-xs text-(--text-muted)">{ts('aiNote')}</p>
+      <ol className="grid gap-1 list-decimal list-inside text-xs leading-relaxed text-(--text-muted)">
+        {(ts.raw('aiSteps') as string[]).map((step) => (
+          <li key={step}>{step}</li>
+        ))}
+      </ol>
     </section>
   )
 
