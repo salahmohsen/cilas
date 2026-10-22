@@ -178,6 +178,10 @@
 
 .article-prose {
   @apply prose prose-neutral max-w-[68ch] font-sans leading-[1.7];
+  /* The editor keeps a "line" break as a literal \n inside one text node and
+     shows it via pre-wrap; HTML output would collapse it to a space. Mirroring
+     the editor's own white-space keeps the site wrapping like the dashboard. */
+  white-space: pre-wrap;
   /* --reading-scale is set by the A−/A+ control on the text's container. */
   font-size: calc(1.125rem * var(--reading-scale, 1));
   /* Every prose colour follows the site's tokens, so light and dark both work
