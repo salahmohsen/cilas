@@ -316,13 +316,15 @@ describe('spaces core', () => {
     // missing @/lib/spaces import (Step 2); a Payload validation error met
     // instead is filled from that fixture and is not a plan bug.
     track('courses', (course as { id: number }).id)
-    await payload.create({ collection: 'enrollments', data: { course: (course as { id: number }).id, person: personOf(student), status: 'confirmed' }, overrideAccess: true })
+    const enrollment = await payload.create({ collection: 'enrollments', data: { course: (course as { id: number }).id, person: personOf(student), status: 'confirmed' }, overrideAccess: true })
+    track('enrollments', enrollment.id as number)
 
     programmeId = (
       await payload.create({ collection: 'programmes', data: { title: 'Probe Bridge', slug: 'probe-bridge', kind: 'bridge', _status: 'published' }, overrideAccess: true })
     ).id as number
     track('programmes', programmeId)
-    await payload.create({ collection: 'memberships', data: { programme: programmeId, person: personOf(student), role: 'student' }, overrideAccess: true })
+    const membership = await payload.create({ collection: 'memberships', data: { programme: programmeId, person: personOf(student), role: 'student' }, overrideAccess: true })
+    track('memberships', membership.id as number)
 
     const mkSpace = async (data: Partial<Space>) =>
       payload.create({ collection: 'spaces', data: data as never, overrideAccess: true }) as Promise<Space>
@@ -342,9 +344,14 @@ describe('spaces core', () => {
 
   afterAll(async () => {
     await payload.updateGlobal({ slug: 'site-settings', data: { spaces_mode: 'off' }, overrideAccess: true })
-    for (const [collection, ids] of tracked) {
-      for (const id of [...ids].reverse()) {
-        await payload.delete({ collection, id, overrideAccess: true }).catch(() => undefined)
+    // Children delete before parents: Payload's required-relation FKs
+    // restrict, so a parent deleted first leaks the row silently otherwise.
+    for (const collection of ['spaces', 'space-posts', 'space-comments', 'space-files', 'space-reactions', 'space-consents', 'space-visits', 'space-preferences', 'enrollments', 'memberships', 'courses', 'programmes', 'cycles', 'places', 'users', 'people'] as const) {
+      const ids = [...(tracked.get(collection) ?? [])].reverse()
+      for (const id of ids) {
+        await payload
+          .delete({ collection: collection as never, id, overrideAccess: true })
+          .catch((i) => console.error(`cleanup ${collection} ${id}`, i))
       }
     }
     await payload.destroy()
@@ -489,7 +496,7 @@ export const spacesSettings = async (payload: Payload): Promise<SpacesSettings> 
 // Pure, DB-free facts the caller gathers (this head block ends at `SpaceFacts`):
 
 export type SpaceFacts = {
-  /** persons listed on the space's course */
+  /** course ids where the person is a listed fellow */
   courseFellows?: number[] | null
   /** enrolled course ids for the person */
   enrolledCourses?: number[] | null
@@ -565,15 +572,15 @@ export const membershipOf = (
 }
 
 /**
- * Gathers the facts for one person with as few queries as possible: the
- * enrollments and memberships by person, the courses' fellows by the spaces
- * the caller asks about. `spaces` is every space the caller may check.
+ * Gathers the facts for one person with as few queries as possible:
+ * enrollments by person, programme memberships by person, and the courses
+ * that list the person as a fellow. `spaces` is every space the caller asks
+ * about.
  */
 export const factsFor = async (
   payload: Payload,
   personId: number | null,
   spaces: Pick<SpaceLike, 'kind' | 'course' | 'programme'>[],
-  { enrichFellows = true }: { enrichFellows?: boolean } = {},
 ): Promise<SpaceFacts> => {
   const facts: SpaceFacts & { _programsFresh?: number[] } = { hasPerson: personId !== null }
   const courseIds = new Set(spaces.filter((s) => s.kind === 'course').map((s) => idOf(s.course)!).filter(Boolean))
@@ -604,16 +611,30 @@ export const factsFor = async (
       // visiting fellows are members, not moderators.
       facts.fellowProgrammes = [...new Set(docs.filter((m) => m.role === 'residential_fellow').map((m) => idOf(m.programme as never)!))]
     }
+    // The course-fellow question by one query: the course ids that list this
+    // person as a fellow, keyed so membershipOf joins them against the
+    // space's own course id. Reading fellows per-space from the course doc
+    // would put person ids into courseFellows, and ids from different tables
+    // must never share a comparison.
+    if (courseIds.size) {
+      const { docs: fellowDocs } = await payload.find({
+        collection: 'courses',
+        where: { and: [{ id: { in: [...courseIds] } }, { fellows: { in: [personId] } }] },
+        select: { slug: true },
+        depth: 0,
+        draft: true,
+        pagination: false,
+        overrideAccess: true,
+      })
+      facts.courseFellows = [...new Set(fellowDocs.map((c) => c.id as number))]
+    }
   }
-  // Fellows of courses are read on the spaces themselves, in the second pass.
-  facts.enrichFellows = enrichFellows // typed away below; kept for signature clarity
-  void facts.enrichFellows
-  return facts as SpaceFacts
+  return facts
 }
 
 /**
- * Membership of one user (an account) in one space, with the fellows of the
- * courses read from those spaces. This is the call every rule and page uses.
+ * Membership of one user (an account) in one space. This is the call every
+ * rule and page uses.
  */
 export const membership = async (
   payload: Payload,
@@ -623,28 +644,9 @@ export const membership = async (
   const isAdmin = user ? isAdminUser(user as never) : false
   if (!user) return { role: 'none' }
   const person = personOf(user)
-  if (space.kind === 'course' && person !== null) {
-    const doc = await payload.findByID({
-      collection: 'courses',
-      id: idOf(space.course)!,
-      select: { fellows: true },
-      depth: 0,
-      draft: true,
-      overrideAccess: true,
-    })
-    const fellows = (doc.fellows ?? []).map((p) => idOf(p as never)!)
-    const facts = await factsFor(
-      payload,
-      person,
-      [space],
-      { enrichFellows: false },
-    )
-    const merged = membershipOf(space, { ...facts, courseFellows: fellows })
-    return merged
-  }
   if (person === null) return isAdmin ? { role: 'moderator' } : { role: 'none' }
-  const fallback = await factsFor(payload, person, [space], { enrichFellows: false })
-  return membershipOf(space, fallback)
+  const facts = await factsFor(payload, person, [space])
+  return membershipOf(space, facts, { isAdmin })
 }
 
 /* ------------------------------------------------- Where-builders & rules */
@@ -677,19 +679,6 @@ export const readableSpaceIds = async (payload: Payload, user: null | { roles?: 
     // (relations null out on delete). Nobody reads that ghost: skip it
     // instead of findById(null) throwing inside a read rule.
     if (s.kind === 'course' && idOf(s.course as never) == null) continue
-    if (s.kind === 'course' && person !== null) {
-      const doc = await payload.findByID({
-        collection: 'courses',
-        id: idOf(s.course as never)!,
-        select: { fellows: true },
-        depth: 0,
-        draft: true,
-        overrideAccess: true,
-      })
-      const fellows = (doc.fellows ?? []).map((p) => idOf(p as never)!)
-      if (membershipOf(s as SpaceLike, { ...facts, courseFellows: fellows }).role !== 'none') readable.push(s.id)
-      continue
-    }
     if (membershipOf(s as SpaceLike, facts).role !== 'none') readable.push(s.id)
   }
   return readable
@@ -730,7 +719,7 @@ export const readSpaces: Access = async ({ req }) =>
 
 - [ ] **Step 4: Register the collections (stubs for the write path)**
 
-Create the six collection files now as **stubs** (Tasks 4–7 fill them; registration must exist for `generate:types` and the int spec above to run at all). Each file exports a `CollectionConfig` with `slug`, no fields yet, `admin: { hidden: true }` — Task 4 (`SpacePosts`) is the first to gain real fields, but do not edit `payload.config.ts` twice: register all eight slugs now (`spaces`, `space-posts`, `space-comments`, `space-files`, `space-reactions`, `space-consents`, `space-visits`, `space-preferences`) and mark stubs clearly with `// filled in Task N of docs/superpowers/plans/2026-10-22-spaces-step-1-core.md`.
+Create the seven stub files now (the eight-slug registration list minus `spaces`). Every stub exports a `CollectionConfig` with `slug`, `admin: { hidden: true }` and the plan's `// filled in Task N` pointer comment (`SpacePosts` and `SpaceComments` Task 4, `SpaceFiles` Task 5, `SpaceReactions` Task 6, `SpaceConsents`, `SpaceVisits`, `SpacePreferences` Task 7), keeping the other stubs at `fields: []`. `SpacePosts.ts` is the one exception, because the int spec of this task both hits its REST floor and queries its `space` field: its `access` carries `read: () => false` with `create`, `update` and `delete` admin-only through `isAdminUser`, and its one field is `{ name: 'space', type: 'relationship', relationTo: 'spaces', index: true }`. Task 4 replaces the file wholesale. Register all eight slugs in `src/payload.config.ts` imports and entries, appended in the file's existing order (never reordered, do not edit that file twice).
 
 - [ ] `src/collections/Spaces.ts` is **not** a stub — write it fully here:
 
