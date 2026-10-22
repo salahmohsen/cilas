@@ -16,6 +16,15 @@ import { seedSiteSettings } from './collections/site-settings.seed'
 import { hasSnapshot, restoreSnapshot } from './snapshot'
 
 process.loadEnvFile('.env')
+
+// The seed wipes and re-creates content, so it only ever runs against the
+// local docker Postgres of this branch.
+if (!process.env.DATABASE_URL?.includes('@localhost:5433/')) {
+  throw new Error(
+    'Refusing to seed: DATABASE_URL must point at localhost:5433/cilas_dev. Export DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev.',
+  )
+}
+
 const { default: config } = await import('../src/payload.config')
 
 const payload: Payload = await getPayload({ config })

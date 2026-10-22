@@ -28,6 +28,19 @@ services:
     logging:
       driver: none
 
+  # The spaces step's local Postgres: port 5433, cilas_dev. Never
+  # `docker compose up` the payload service — it carries the production .env.
+  db:
+    image: postgres:16-alpine
+    ports:
+      - '5433:5432'
+    environment:
+      POSTGRES_USER: cilas
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: cilas_dev
+    volumes:
+      - cilas_dev:/var/lib/postgresql/data
+
   # Uncomment the following to use postgres
   # postgres:
   #   restart: always
@@ -41,3 +54,4 @@ volumes:
   data:
   # pgdata:
   node_modules:
+  cilas_dev:
