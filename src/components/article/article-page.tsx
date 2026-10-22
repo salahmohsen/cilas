@@ -47,7 +47,7 @@ import { localDigits } from '@/lib/digits'
 import { editableIn } from '@/lib/editable'
 import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
-import { articleSchema, absoluteUrl } from '@/lib/schema'
+import { articleSchema, absoluteUrl, breadcrumbSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
 import type { Article, Media, Person, Publication } from '@/payload-types'
@@ -202,6 +202,12 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
     authors: writers,
     publisherName: tm('siteName'),
   })
+  // Where the article sits on the site: home, the collection, the article.
+  const crumbs = breadcrumbSchema([
+    { name: tm('siteName'), path: '/' },
+    { name: tArticles('title'), path: `/${locale}/articles` },
+    { name: title, path: pathOf('articles', article, locale) },
+  ])
   // The reader opens with a lead: the article's description when it has
   // one, in its words and not the body's opening said twice.
   const excerpt =
@@ -227,7 +233,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
       )}
       <ReadingProgress target="article-text" />
       {/* The article itself, as data a search engine reads. */}
-      <Schema data={schema} />
+      <Schema data={[schema, crumbs]} />
       <div className={grid.inner}>
         <div className="xl:grid xl:grid-cols-[17rem_minmax(0,760px)] xl:justify-center xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}

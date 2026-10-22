@@ -150,6 +150,8 @@ export const getCachedSchemaEvents = unstable_cache(
         online_url: true,
         agenda: true,
         speakers: true,
+        pricing: true,
+        registration: true,
       },
       populate: {
         places: { name: true, address: true, map_url: true },

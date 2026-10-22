@@ -98,6 +98,12 @@ export const organizationSchema = ({
     : {}),
 })
 
+/** A stored date or timestamp as an ISO 8601 instant; null when it is no date. */
+const stamp = (value: string | null | undefined): string | undefined => {
+  const date = value ? new Date(value) : null
+  return date && !Number.isNaN(date.getTime()) ? date.toISOString() : undefined
+}
+
 /** The site itself, for the sticky site name in search results. */
 export const websiteSchema = ({ siteName, locale }: { siteName: string; locale: string }) => ({
   '@context': CONTEXT,
@@ -106,6 +112,28 @@ export const websiteSchema = ({ siteName, locale }: { siteName: string; locale: 
   url: absoluteUrl('/'),
   inLanguage: locale,
 })
+
+/** Where the page sits in the site: home, the section that lists it, it. */
+export const breadcrumbSchema = (crumbs: { name: string; path?: string | null }[]) => ({
+  '@context': CONTEXT,
+  '@type': 'BreadcrumbList',
+  itemListElement: crumbs.map((crumb, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: crumb.name,
+    ...(crumb.path ? { item: absoluteUrl(crumb.path) } : {}),
+  })),
+})
+
+/** A page that links out to items (the course list): each entry, in its order. */
+export const itemListSchema = (urls: string[]) =>
+  urls.length < 3
+    ? null // A carousel needs at least three courses to list.
+    : {
+        '@context': CONTEXT,
+        '@type': 'ItemList',
+        itemListElement: urls.map((url, i) => ({ '@type': 'ListItem', position: i + 1, url })),
+      }
 
 /**
  * An article as its reading page shows it: its writers and cover, and the
@@ -131,10 +159,6 @@ export const articleSchema = ({
   authors: Person[]
   publisherName: string
 }) => {
-  const stamp = (value: string | null | undefined): string | undefined => {
-    const date = value ? new Date(value) : null
-    return date && !Number.isNaN(date.getTime()) ? date.toISOString() : undefined
-  }
   const page = pathOf('articles', article, locale)
   return {
     '@context': CONTEXT,
@@ -155,7 +179,7 @@ export const articleSchema = ({
   }
 }
 
-/** A person's profile: who they are and where else they appear. */
+/** A person's profile page: the Person is what the page is about. */
 export const personSchema = ({ person, locale }: { person: Person; locale: string }) => {
   const bio = plainOf(person.bio)
   const photoUrl =
@@ -166,12 +190,17 @@ export const personSchema = ({ person, locale }: { person: Person; locale: strin
   const page = pathOf('people', person, locale)
   return {
     '@context': CONTEXT,
-    '@type': 'Person',
-    name: person.name,
-    ...(page ? { url: absoluteUrl(page) } : {}),
-    ...(bio ? { description: bio } : {}),
-    ...(photoUrl ? { image: absoluteUrl(photoUrl) } : {}),
-    ...(sameAs.length ? { sameAs } : {}),
+    '@type': 'ProfilePage',
+    dateModified: stamp(person.updatedAt),
+    dateCreated: stamp(person.createdAt),
+    mainEntity: {
+      '@type': 'Person',
+      name: person.name,
+      ...(page ? { url: absoluteUrl(page) } : {}),
+      ...(bio ? { description: bio } : {}),
+      ...(photoUrl ? { image: absoluteUrl(photoUrl) } : {}),
+      ...(sameAs.length ? { sameAs } : {}),
+    },
   }
 }
 
@@ -197,6 +226,8 @@ export const eventSchema = ({
     | 'online_url'
     | 'agenda'
     | 'speakers'
+    | 'pricing'
+    | 'registration'
   >
   locale: string
   siteName: string
@@ -221,18 +252,24 @@ export const eventSchema = ({
     first && last
       ? { startDate: isoOf(first.date, first.start_time), endDate: isoOf(last.date, last.end_time) }
       : null
-  // No weekly times: the day it starts, running the agenda's hours.
+  // No weekly times: the day it starts, running the agenda's hours when the
+  // agenda has times, else the bare day (Google wants no made-up midnight).
   const day =
     !first && event.schedule?.start_precision !== 'week' && event.schedule?.start_date
       ? cairoDay(event.schedule.start_date)
       : null
-  const times = exact ?? (day
-    ? {
-        startDate: isoOf(day, event.agenda?.[0]?.start_time ?? '00:00'),
-        endDate: isoOf(day, event.agenda?.at(-1)?.end_time ?? '00:00'),
-      }
-    : null)
+  const agendaOpen = event.agenda?.[0]?.start_time
+  const agendaClose = event.agenda?.at(-1)?.end_time
+  const times = exact ??
+    (day
+      ? agendaOpen && agendaClose
+        ? { startDate: isoOf(day, agendaOpen), endDate: isoOf(day, agendaClose) }
+        : { startDate: day, endDate: day }
+      : null)
   if (!times) return null
+
+  // The price when it is set (0 is free), and the form to register elsewhere.
+  const price = typeof event.pricing?.min === 'number' ? event.pricing.min : null
 
   const speakers = (event.speakers ?? [])
     .flatMap((s) => (typeof s.person === 'object' ? [s.person] : []))
@@ -274,6 +311,16 @@ export const eventSchema = ({
     ],
     ...times,
     ...(speakers.length ? { performer: speakers } : {}),
+    ...(price !== null
+      ? {
+          offers: {
+            '@type': 'Offer',
+            price,
+            priceCurrency: event.pricing?.currency ?? 'EGP',
+            ...(event.registration?.url ? { url: absoluteUrl(event.registration.url) } : {}),
+          },
+        }
+      : {}),
     organizer: { '@type': 'EducationalOrganization', name: siteName, url: absoluteUrl('/') },
   }
 }

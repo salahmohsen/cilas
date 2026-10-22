@@ -13,8 +13,9 @@ import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
 import { Schema } from '@/components/schema'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
+import { pathOf } from '@/lib/paths'
+import { breadcrumbSchema, courseSchema } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
-import { courseSchema } from '@/lib/schema'
 import { seoDefaults } from '@/lib/seo'
 import type { Course, Media, Person } from '@/payload-types'
 
@@ -149,7 +150,7 @@ export default async function CoursePage({ params }: Params) {
 
   if (!isPreview) {
     // The course as data a search engine reads; the admin's preview skips it.
-    const tm = await getTranslations('Meta')
+    const [tm, ts] = await Promise.all([getTranslations('Meta'), getTranslations('Study')])
     const schema = courseSchema({
       course,
       locale,
@@ -158,9 +159,15 @@ export default async function CoursePage({ params }: Params) {
         typeof p === 'object' && p ? [p] : [],
       ),
     })
+    // Where it sits: home, the study list, this course.
+    const crumb = breadcrumbSchema([
+      { name: tm('siteName'), path: '/' },
+      { name: ts('title'), path: `/${locale}/study` },
+      { name: course.title, path: pathOf('courses', course, locale) },
+    ])
     return (
       <>
-        {schema ? <Schema data={schema} /> : null}
+        <Schema data={schema ? [schema, crumb] : [crumb]} />
         <CourseView after={newsletter} course={course} email={email} related={related} />
       </>
     )

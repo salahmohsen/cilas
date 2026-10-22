@@ -15,7 +15,7 @@ import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { toArticleCard, toCourseCard } from '@/lib/article-cards'
 import { pathOf } from '@/lib/paths'
-import { personSchema } from '@/lib/schema'
+import { breadcrumbSchema, personSchema } from '@/lib/schema'
 import type { Media } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
@@ -56,7 +56,7 @@ export default async function PersonPage({ params }: Props) {
 
   const other: Locale = locale === 'ar' ? 'en' : 'ar'
   const publicationCovers = await getPublicationCovers(payload)
-  const [t, tArticle, tArticles, tCourse, format, contributions, otherName] = await Promise.all([
+  const [t, tArticle, tArticles, tCourse, format, contributions, otherName, tm] = await Promise.all([
     getTranslations('Person'),
     getTranslations('Article'),
     getTranslations('Articles'),
@@ -74,6 +74,12 @@ export default async function PersonPage({ params }: Props) {
       })
       .then((p) => p?.name ?? null)
       .catch(() => null),
+    getTranslations('Meta'),
+  ])
+  // Where the page sits on the site: home, then this person.
+  const crumbs = breadcrumbSchema([
+    { name: tm('siteName'), path: '/' },
+    { name: person.name, path: pathOf('people', person, locale) },
   ])
   const photo =
     typeof person.photo === 'object' && person.photo ? (person.photo as Media) : undefined
@@ -92,7 +98,7 @@ export default async function PersonPage({ params }: Props) {
   return (
     <div className={grid.root}>
       {/* The person, as data a search engine reads. */}
-      <Schema data={personSchema({ person, locale })} />
+      <Schema data={[personSchema({ person, locale }), crumbs]} />
       <div className={grid.inner}>
         <div className={grid.reader}>
           <Link className={grid.back} href="/articles">

@@ -4,7 +4,9 @@ import { Suspense } from 'react'
 
 import { getStudyPage, STUDY_PAGE_SIZE } from '@/api/study-index'
 import { readCourseQuery } from '@/lib/course-search'
+import { Schema } from '@/components/schema'
 import { StudyList } from '@/components/study-list'
+import { itemListSchema, absoluteUrl } from '@/lib/schema'
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -22,12 +24,18 @@ export default async function CoursesPage({ params, searchParams }: Props) {
   )
   const result = await getStudyPage(lang, readCourseQuery(url), Number(url.get('page')) || 1)
 
+  // What a search engine reads: the courses this page of the list shows, in
+  // its order, each entry pointing at its course page (the paired summary
+  // page Google's course-list carousel asks for).
+  const list = itemListSchema(result.rows.map((row) => absoluteUrl(row.href)))
+
   // The whole catalogue, for the header: every course, and the first year.
   const all = result.options.type.reduce((n, o) => n + o.count, 0)
   const firstYear = result.options.year.at(-1)?.value
 
   return (
     <div className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 py-10 sm:px-8 sm:py-14 xl:px-0">
+      {list ? <Schema data={list} /> : null}
       <header className="study-header">
         <div className="study-header-text">
           <h1 className="study-title">{t('title')}</h1>
