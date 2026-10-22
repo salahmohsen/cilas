@@ -3740,6 +3740,19 @@ export interface SiteSetting {
     calendar?: boolean | null;
   };
   /**
+   * Off: space pages return not found and writes are refused; data stays. Trial: only the chosen courses, plus the community and cohort checkboxes. On: every space.
+   */
+  spaces_mode: 'off' | 'trial' | 'on';
+  /**
+   * In Trial, only these courses have a space.
+   */
+  spaces_trial_courses?: (number | Course)[] | null;
+  spaces_trial_community?: boolean | null;
+  /**
+   * In Trial, only these programmes have a cohort space.
+   */
+  spaces_trial_cohorts?: (number | Programme)[] | null;
+  /**
    * Shown on the home page, in this order.
    */
   faq?:
@@ -3884,6 +3897,10 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         articles?: T;
         calendar?: T;
       };
+  spaces_mode?: T;
+  spaces_trial_courses?: T;
+  spaces_trial_community?: T;
+  spaces_trial_cohorts?: T;
   faq?:
     | T
     | {

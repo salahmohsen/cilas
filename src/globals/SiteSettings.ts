@@ -51,6 +51,58 @@ export const SiteSettings: GlobalConfig = {
       })),
     },
     {
+      // ADR 0009: spaces ship behind this switch; Off is the launch default.
+      label: 'Spaces',
+      type: 'group',
+      fields: [
+        {
+          name: 'spaces_mode',
+          type: 'select',
+          required: true,
+          defaultValue: 'off',
+          options: [
+            { label: 'Off', value: 'off' },
+            { label: 'Trial', value: 'trial' },
+            { label: 'On', value: 'on' },
+          ],
+          admin: {
+            description:
+              'Off: space pages return not found and writes are refused; data stays. Trial: only the chosen courses, plus the community and cohort checkboxes. On: every space.',
+          },
+        },
+        {
+          name: 'spaces_trial_courses',
+          type: 'relationship',
+          relationTo: 'courses',
+          hasMany: true,
+          admin: {
+            condition: (data) => (data as { spaces_mode?: unknown }).spaces_mode === 'trial',
+            description: 'In Trial, only these courses have a space.',
+          },
+        },
+        {
+          name: 'spaces_trial_community',
+          label: 'Community space',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            condition: (data) => (data as { spaces_mode?: unknown }).spaces_mode === 'trial',
+          },
+        },
+        {
+          name: 'spaces_trial_cohorts',
+          label: 'Cohort spaces',
+          type: 'relationship',
+          relationTo: 'programmes',
+          hasMany: true,
+          admin: {
+            condition: (data) => (data as { spaces_mode?: unknown }).spaces_mode === 'trial',
+            description: 'In Trial, only these programmes have a cohort space.',
+          },
+        },
+      ],
+    },
+    {
       // The home page's "Questions people ask"; each language its own.
       name: 'faq',
       label: 'FAQ',
