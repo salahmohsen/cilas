@@ -126,3 +126,41 @@ export const getCachedCalendarItems = unstable_cache(
   ['calendar-items'],
   { tags: [COURSES_TAG], revalidate: 3600 },
 )
+
+/**
+ * Public events with what their JSON-LD needs resolved (the place, the
+ * speakers' names), per language. Cached alone: an event write revalidates
+ * nothing (no hook), so the hour's window rules here, as it does for the
+ * calendar itself.
+ */
+export const getCachedSchemaEvents = unstable_cache(
+  async (locale: Locale) => {
+    const payload = await getPayload({ config })
+    const { docs } = await payload.find({
+      collection: 'events',
+      where: { tier: { equals: 'public' } },
+      depth: 2,
+      pagination: false,
+      select: {
+        title: true,
+        description: true,
+        schedule: true,
+        place: true,
+        external_venue: true,
+        online_url: true,
+        agenda: true,
+        speakers: true,
+      },
+      populate: {
+        places: { name: true, address: true, map_url: true },
+        people: { name: true, slug: true },
+      },
+      locale,
+      fallbackLocale: locale === 'ar' ? 'en' : 'ar',
+      overrideAccess: false,
+    })
+    return docs
+  },
+  ['schema-events'],
+  { tags: [COURSES_TAG], revalidate: 3600 },
+)

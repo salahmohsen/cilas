@@ -1,6 +1,7 @@
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { draftMode } from 'next/headers'
+import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import React from 'react'
@@ -9,9 +10,11 @@ import { getContactEmail } from '@/api/contact.api'
 import { OutsideAdminFrame } from '@/components/admin-frame-only'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
 import { RefreshRouteOnSave } from '@/components/RefreshRouteOnSave'
+import { Schema } from '@/components/schema'
 import { CourseLivePreview } from './CourseLivePreview'
 import { CourseView, type RelatedCourse } from './CourseView'
 import { ogImages } from '@/lib/og'
+import { courseSchema } from '@/lib/schema'
 import { seoDefaults } from '@/lib/seo'
 import type { Course, Media, Person } from '@/payload-types'
 
@@ -145,7 +148,22 @@ export default async function CoursePage({ params }: Params) {
   const email = await getContactEmail()
 
   if (!isPreview) {
-    return <CourseView after={newsletter} course={course} email={email} related={related} />
+    // The course as data a search engine reads; the admin's preview skips it.
+    const tm = await getTranslations('Meta')
+    const schema = courseSchema({
+      course,
+      locale,
+      siteName: tm('siteName'),
+      instructors: (course.fellows ?? []).flatMap((p) =>
+        typeof p === 'object' && p ? [p] : [],
+      ),
+    })
+    return (
+      <>
+        {schema ? <Schema data={schema} /> : null}
+        <CourseView after={newsletter} course={course} email={email} related={related} />
+      </>
+    )
   }
 
   /*

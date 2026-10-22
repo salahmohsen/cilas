@@ -10,10 +10,12 @@ import { getContributions, getPerson } from '@/api/people.api'
 import { ArticlesGrid } from '@/components/article/articles-grid'
 import grid from '@/components/arc/blocks/blog-grid/blog-grid.module.css'
 import { RichTextField } from '@/components/RichTextField'
+import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { toArticleCard, toCourseCard } from '@/lib/article-cards'
 import { pathOf } from '@/lib/paths'
+import { personSchema } from '@/lib/schema'
 import type { Media } from '@/payload-types'
 
 type Props = { params: Promise<{ locale: string; slug: string }> }
@@ -89,6 +91,8 @@ export default async function PersonPage({ params }: Props) {
 
   return (
     <div className={grid.root}>
+      {/* The person, as data a search engine reads. */}
+      <Schema data={personSchema({ person, locale })} />
       <div className={grid.inner}>
         <div className={grid.reader}>
           <Link className={grid.back} href="/articles">

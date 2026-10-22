@@ -38,6 +38,7 @@ import { resolveCardStacks } from '@/api/card-stacks.api'
 import { resolveMentions } from '@/api/mentions.api'
 import { MentionLink } from '@/components/article/mention-link'
 import { NewsletterSignupEnd } from '@/components/newsletter-signup-end'
+import { Schema } from '@/components/schema'
 import { Link } from '@/i18n/navigation'
 import { isRtl, routing } from '@/i18n/routing'
 import { env } from '@/env'
@@ -46,6 +47,7 @@ import { localDigits } from '@/lib/digits'
 import { editableIn } from '@/lib/editable'
 import { footnotesOf } from '@/lib/footnotes'
 import { excerptOf, publicationOf, readingMinutes, repeatsOpening, yearOf } from '@/lib/articles'
+import { articleSchema, absoluteUrl } from '@/lib/schema'
 import { ogImages } from '@/lib/og'
 import { pathOf } from '@/lib/paths'
 import type { Article, Media, Person, Publication } from '@/payload-types'
@@ -100,7 +102,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
   const publicationCovers = await getPublicationCovers(payload)
   // The institute's email, the share bar's mail recipient.
   const email = await getContactEmail()
-  const [t, tl, tArticles, tShare, format, collection, tf] = await Promise.all([
+  const [t, tl, tArticles, tShare, format, collection, tf, tm] = await Promise.all([
     getTranslations('Article'),
     getTranslations('Language'),
     getTranslations('Articles'),
@@ -108,6 +110,7 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
     getFormatter(),
     getArticleCollection(payload, article, locale, user),
     getTranslations('Study.filters'),
+    getTranslations('Meta'),
   ])
   // A collection's article ends with the whole collection, in its order;
   // any other article with related ones.
@@ -186,6 +189,19 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
   for (const c of article.credits ?? [])
     for (const p of peopleOf(c.people)) add(p, c.label || t(`roles.${c.role}`))
   const cover = isObject<Media>(article.cover_image) ? article.cover_image : undefined
+  // What a search engine reads (JSON-LD): the same facts the page shows —
+  // the cover, the SEO description or the opening's excerpt, the writers.
+  const metaImage = isObject<Media>(article.meta?.image) ? article.meta.image : cover
+  const schema = articleSchema({
+    article,
+    locale,
+    inLanguage: contentLocale,
+    title,
+    description: article.meta?.description || excerptOf({ body }, 160),
+    image: metaImage?.url ? absoluteUrl(metaImage.url) : null,
+    authors: writers,
+    publisherName: tm('siteName'),
+  })
   // The reader opens with a lead: the article's description when it has
   // one, in its words and not the body's opening said twice.
   const excerpt =
@@ -210,6 +226,8 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
         </AdminFrameOnly>
       )}
       <ReadingProgress target="article-text" />
+      {/* The article itself, as data a search engine reads. */}
+      <Schema data={schema} />
       <div className={grid.inner}>
         <div className="xl:grid xl:grid-cols-[17rem_minmax(0,760px)] xl:justify-center xl:gap-16">
           {/* Margin: the contents, sticky beside the column on wide screens. */}

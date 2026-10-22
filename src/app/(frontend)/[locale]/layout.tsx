@@ -13,6 +13,7 @@ import { getPayload } from 'payload'
 
 import { getCurrentPlace } from '@/api/place.api'
 import { CILASSiteHeader } from '@/components/site-header'
+import { Schema } from '@/components/schema'
 import { ThemeProvider } from '@/components/theme-provider'
 import { DirectionProvider } from '@/components/ui/direction'
 import { isRtl, routing } from '@/i18n/routing'
@@ -20,6 +21,7 @@ import { env } from '@/env'
 import { fontVariables } from '@/lib/fonts'
 import { newsletterList } from '@/lib/newsletter-list'
 import { DEFAULT_OG_IMAGE } from '@/lib/og'
+import { organizationSchema, websiteSchema } from '@/lib/schema'
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -43,7 +45,8 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getLocale()
   const direction = isRtl(locale) ? 'rtl' : 'ltr'
-  const [socials, place, list, nav] = await Promise.all([
+  const [t, socials, place, list, nav] = await Promise.all([
+    getTranslations('Meta'),
     getSocialLinks(),
     getCurrentPlace(locale === 'ar' ? 'ar' : 'en'),
     // The footer's signup shows only when there is a list to join.
@@ -62,6 +65,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <body>
+        {/* Search engines read this, not people: the institute and the site. */}
+        <Schema
+          data={[
+            organizationSchema({
+              siteName: t('siteName'),
+              description: t('description'),
+              location: place ? { address: place.address, mapUrl: place.mapUrl } : undefined,
+              sameAs: socials.map((s) => s.url),
+            }),
+            websiteSchema({ siteName: t('siteName'), locale }),
+          ]}
+        />
         <ThemeProvider>
           <NextIntlClientProvider>
             <DirectionProvider direction={direction}>
