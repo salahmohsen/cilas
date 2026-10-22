@@ -243,12 +243,13 @@
 }
 
 /* The scroller: a fixed-height window the syllabus scrolls inside, so the
-   panel never takes over the whole page. */
+   panel never takes over the whole page. Leaving overscroll-behavior as the
+   default lets scroll chaining work: hitting the card's top or bottom edge
+   hands the gesture to the page. */
 .scroller {
   position: relative;
   height: 560px;
   overflow-y: auto;
-  overscroll-behavior: contain;
   scrollbar-width: thin;
   outline: none;
   -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 36px), transparent);
