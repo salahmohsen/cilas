@@ -28,6 +28,8 @@ import * as migration_20261019_140000_published_owners_are_public from './202610
 import * as migration_20261019_141427_navigation_switches from './20261019_141427_navigation_switches';
 import * as migration_20261019_224849_review_request from './20261019_224849_review_request';
 import * as migration_20261021_152008_rename_spaces_to_places from './20261021_152008_rename_spaces_to_places';
+import * as migration_20261022_213723_spaces_core from './20261022_213723_spaces_core';
+import * as migration_20261022_214801_space_posts_space from './20261022_214801_space_posts_space';
 
 export const migrations = [
   {
@@ -178,6 +180,16 @@ export const migrations = [
   {
     up: migration_20261021_152008_rename_spaces_to_places.up,
     down: migration_20261021_152008_rename_spaces_to_places.down,
-    name: '20261021_152008_rename_spaces_to_places'
+    name: '20261021_152008_rename_spaces_to_places',
+  },
+  {
+    up: migration_20261022_213723_spaces_core.up,
+    down: migration_20261022_213723_spaces_core.down,
+    name: '20261022_213723_spaces_core',
+  },
+  {
+    up: migration_20261022_214801_space_posts_space.up,
+    down: migration_20261022_214801_space_posts_space.down,
+    name: '20261022_214801_space_posts_space'
   },
 ];

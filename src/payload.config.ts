@@ -22,6 +22,14 @@ import { Notifications } from './collections/Notifications'
 import { SubmissionFiles } from './collections/SubmissionFiles'
 import { Newsletters } from './collections/Newsletters'
 import { Places } from './collections/Places'
+import { Spaces } from './collections/Spaces'
+import { SpacePosts } from './collections/SpacePosts'
+import { SpaceComments } from './collections/SpaceComments'
+import { SpaceFiles } from './collections/SpaceFiles'
+import { SpaceReactions } from './collections/SpaceReactions'
+import { SpaceConsents } from './collections/SpaceConsents'
+import { SpaceVisits } from './collections/SpaceVisits'
+import { SpacePreferences } from './collections/SpacePreferences'
 import { Publications } from './collections/Publications'
 import { SiteSettings } from './globals/SiteSettings'
 import { EmailSettings } from './globals/EmailSettings'
@@ -159,6 +167,14 @@ export default buildConfig({
     SubmissionFiles,
     Notifications,
     Places,
+    Spaces,
+    SpacePosts,
+    SpaceComments,
+    SpaceFiles,
+    SpaceReactions,
+    SpaceConsents,
+    SpaceVisits,
+    SpacePreferences,
   ],
   globals: [SiteSettings, EmailSettings],
   localization: {

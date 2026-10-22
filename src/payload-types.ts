@@ -85,6 +85,14 @@ export interface Config {
     'submission-files': SubmissionFile;
     notifications: Notification;
     places: Place;
+    spaces: Space;
+    'space-posts': SpacePost;
+    'space-comments': SpaceComment;
+    'space-files': SpaceFile;
+    'space-reactions': SpaceReaction;
+    'space-consents': SpaceConsent;
+    'space-visits': SpaceVisit;
+    'space-preferences': SpacePreference;
     forms: Form;
     'form-submissions': FormSubmission;
     exports: Export;
@@ -132,6 +140,14 @@ export interface Config {
     'submission-files': SubmissionFilesSelect<false> | SubmissionFilesSelect<true>;
     notifications: NotificationsSelect<false> | NotificationsSelect<true>;
     places: PlacesSelect<false> | PlacesSelect<true>;
+    spaces: SpacesSelect<false> | SpacesSelect<true>;
+    'space-posts': SpacePostsSelect<false> | SpacePostsSelect<true>;
+    'space-comments': SpaceCommentsSelect<false> | SpaceCommentsSelect<true>;
+    'space-files': SpaceFilesSelect<false> | SpaceFilesSelect<true>;
+    'space-reactions': SpaceReactionsSelect<false> | SpaceReactionsSelect<true>;
+    'space-consents': SpaceConsentsSelect<false> | SpaceConsentsSelect<true>;
+    'space-visits': SpaceVisitsSelect<false> | SpaceVisitsSelect<true>;
+    'space-preferences': SpacePreferencesSelect<false> | SpacePreferencesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
@@ -2005,6 +2021,91 @@ export interface Notification {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "spaces".
+ */
+export interface Space {
+  id: number;
+  kind: 'community' | 'cohort' | 'course';
+  course?: (number | null) | Course;
+  programme?: (number | null) | Programme;
+  posting?: ('open' | 'members_comment' | 'fellows_only') | null;
+  /**
+   * Reopens a course space archived 2 weeks after its last meeting.
+   */
+  reopened?: boolean | null;
+  /**
+   * Set by the system when the space opens; moderators edit the post itself.
+   */
+  introduction_post?: (number | null) | SpacePost;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-posts".
+ */
+export interface SpacePost {
+  id: number;
+  space?: (number | null) | Space;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-comments".
+ */
+export interface SpaceComment {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-files".
+ */
+export interface SpaceFile {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-reactions".
+ */
+export interface SpaceReaction {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-consents".
+ */
+export interface SpaceConsent {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-visits".
+ */
+export interface SpaceVisit {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-preferences".
+ */
+export interface SpacePreference {
+  id: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
  */
 export interface FormSubmission {
@@ -2350,6 +2451,38 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'places';
         value: number | Place;
+      } | null)
+    | ({
+        relationTo: 'spaces';
+        value: number | Space;
+      } | null)
+    | ({
+        relationTo: 'space-posts';
+        value: number | SpacePost;
+      } | null)
+    | ({
+        relationTo: 'space-comments';
+        value: number | SpaceComment;
+      } | null)
+    | ({
+        relationTo: 'space-files';
+        value: number | SpaceFile;
+      } | null)
+    | ({
+        relationTo: 'space-reactions';
+        value: number | SpaceReaction;
+      } | null)
+    | ({
+        relationTo: 'space-consents';
+        value: number | SpaceConsent;
+      } | null)
+    | ({
+        relationTo: 'space-visits';
+        value: number | SpaceVisit;
+      } | null)
+    | ({
+        relationTo: 'space-preferences';
+        value: number | SpacePreference;
       } | null)
     | ({
         relationTo: 'forms';
@@ -3343,6 +3476,77 @@ export interface PlacesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "spaces_select".
+ */
+export interface SpacesSelect<T extends boolean = true> {
+  kind?: T;
+  course?: T;
+  programme?: T;
+  posting?: T;
+  reopened?: T;
+  introduction_post?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-posts_select".
+ */
+export interface SpacePostsSelect<T extends boolean = true> {
+  space?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-comments_select".
+ */
+export interface SpaceCommentsSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-files_select".
+ */
+export interface SpaceFilesSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-reactions_select".
+ */
+export interface SpaceReactionsSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-consents_select".
+ */
+export interface SpaceConsentsSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-visits_select".
+ */
+export interface SpaceVisitsSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-preferences_select".
+ */
+export interface SpacePreferencesSelect<T extends boolean = true> {
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "forms_select".
  */
 export interface FormsSelect<T extends boolean = true> {
@@ -4019,6 +4223,14 @@ export interface TaskCreateCollectionExport {
       | 'submission-files'
       | 'notifications'
       | 'places'
+      | 'spaces'
+      | 'space-posts'
+      | 'space-comments'
+      | 'space-files'
+      | 'space-reactions'
+      | 'space-consents'
+      | 'space-visits'
+      | 'space-preferences'
       | 'forms'
       | 'form-submissions'
       | 'exports'
