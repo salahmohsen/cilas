@@ -495,14 +495,17 @@ export const CourseView: React.FC<{
         title={course.title}
         email={email}
       />
-      {/* With AI under sharing: the same pill, each assistant prefilled to run this course. */}
-      <h2 className="course-side-heading mt-10" id="course-ai">
+    </section>
+  )
+
+  // Taking the course with AI: its own card, at Share's spacing and rhythm.
+  const aiCard = (
+    <section aria-labelledby="course-ai" className="course-side">
+      <h2 className="course-side-heading" id="course-ai">
         {ts('aiHeading')}
       </h2>
-      <div className="mt-4 grid gap-2">
-        <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
-        <p className="text-xs text-(--text-muted)">{ts('aiNote')}</p>
-      </div>
+      <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} />
+      <p className="text-xs text-(--text-muted)">{ts('aiNote')}</p>
     </section>
   )
 
@@ -615,6 +618,7 @@ export const CourseView: React.FC<{
           <div className="mt-10 grid gap-10 lg:hidden">
             {factsCard}
             {shareCard}
+            {aiCard}
           </div>
 
           {course.epigraph ? (
@@ -692,6 +696,7 @@ export const CourseView: React.FC<{
             {fellows.length ? facultyCard : null}
             {materialsCard}
             {shareCard}
+            {aiCard}
           </div>
           {applyUrl ? (
             <div className="sticky top-22">

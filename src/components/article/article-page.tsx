@@ -470,16 +470,15 @@ export async function ArticlePage({ locale: siteLocale, slug, user }: View) {
                 path={pathOf('articles', article, locale) ?? ''}
                 title={title}
               />
-              {/* With AI under sharing: the same pill, each assistant prefilled to fetch this page. */}
-              <div className="mt-2 grid gap-3">
-                <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-ai">
-                  {tShare('aiHeading')}
-                </h2>
-                <div className="grid gap-2">
-                  <StudyWithAI kind="article" path={pathOf('articles', article, locale) ?? ''} />
-                  <p className="text-xs text-[var(--text-muted)]">{tShare('aiNote')}</p>
-                </div>
-              </div>
+            </section>
+
+            {/* Taking it with AI, its own section at the tools' spacing. */}
+            <section aria-labelledby="article-ai" className="mt-6 grid gap-3 border-t border-border pt-6">
+              <h2 className="font-sans text-sm text-[var(--text-muted)]" id="article-ai">
+                {tShare('aiHeading')}
+              </h2>
+              <StudyWithAI kind="article" path={pathOf('articles', article, locale) ?? ''} />
+              <p className="text-xs text-[var(--text-muted)]">{tShare('aiNote')}</p>
             </section>
 
             {/* The original this text translates, with a way to read it. */}
