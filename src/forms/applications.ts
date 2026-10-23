@@ -17,6 +17,7 @@ import { env } from '@/env'
 import { getEmailSettings } from '@/emails/settings'
 import { acceptanceMail } from '@/emails/transactional'
 import { slugify } from '@/lib/slugify'
+import { registrationStatus } from '@/lib/registration'
 import type { FormSubmission } from '@/payload-types'
 
 /**
@@ -106,6 +107,15 @@ export const checkTarget: CollectionBeforeChangeHook = async ({ data, operation,
   if (!target || idOf(form) !== idOf(data.form)) {
     throw new APIError('This form is not the registration form of what it names.', 400)
   }
+  // The page hides the button at the deadline; this repeats the rule where
+  // the API cannot skip it. Local callers (seeds, backfills) may still add
+  // one, the way they may add a historic submission at all.
+  if (
+    req.payloadAPI !== 'local' &&
+    registrationStatus(target.registration, cycle?.registration) !== 'open'
+  ) {
+    throw new APIError('This is not open for applications.', 400)
+  }
   return data
 }
 
@@ -161,27 +171,12 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
   })
   let user = found.docs[0]
   const newAccount = !user
-  if (!user) {
-    user = await payload.create({
-      collection: 'users',
-      data: {
-        email: applicant.email,
-        // Nobody knows it: they sign in with Google or set one by reset.
-        password: randomBytes(24).toString('base64url'),
-        roles: rolesAfterAccept([], kind),
-      },
-      ...local,
-    })
-  } else {
-    const roles = rolesAfterAccept(user.roles, kind)
-    if (roles.length !== user.roles.length) {
-      user = await payload.update({ collection: 'users', id: user.id, data: { roles }, ...local })
-    }
-  }
-
-  // The person: the account's own, or a new hidden one.
-  let person = personOf(user)
-  if (person === null) {
+  let result: Omit<Accepted, 'mail'>
+  // The person: the account's own, or a new hidden one named from the
+  // application. The name comes from the answer, not the email — the Users
+  // hook would name one from the email, so it is created here first, linked
+  // into the same write.
+  const createPerson = async () => {
     const created = await payload.create({
       collection: 'people',
       // A hidden person has no page, so a unique slug is enough.
@@ -192,15 +187,38 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
       },
       ...local,
     })
-    person = created.id
-    await payload.update({ collection: 'users', id: user.id, data: { person }, ...local })
+    return created.id
   }
-
-  const result: Omit<Accepted, 'mail'> = { user: user.id, person }
+  if (!user) {
+    const personId = await createPerson()
+    user = await payload.create({
+      collection: 'users',
+      data: {
+        email: applicant.email,
+        // Nobody knows it: they sign in with Google or set one by reset.
+        password: randomBytes(24).toString('base64url'),
+        roles: rolesAfterAccept([], kind),
+        person: personId,
+      },
+      ...local,
+    })
+    result = { user: user.id, person: personId }
+  } else {
+    let personId = personOf(user)
+    if (personId === null) {
+      personId = await createPerson()
+      await payload.update({ collection: 'users', id: user.id, data: { person: personId }, ...local })
+    }
+    result = { user: user.id, person: personId }
+    const roles = rolesAfterAccept(user.roles, kind)
+    if (roles.length !== user.roles.length) {
+      user = await payload.update({ collection: 'users', id: user.id, data: { roles }, ...local })
+    }
+  }
   if (kind === 'programmes') {
     const { docs } = await payload.find({
       collection: 'memberships',
-      where: { and: [{ person: { equals: person } }, { programme: { equals: targetId } }] },
+      where: { and: [{ person: { equals: result.person } }, { programme: { equals: targetId } }] },
       limit: 1,
       ...local,
     })
@@ -209,14 +227,14 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
       (
         await payload.create({
           collection: 'memberships',
-          data: { person, programme: targetId, role: 'student' },
+          data: { person: result.person, programme: targetId, role: 'student' },
           ...local,
         })
       ).id
   } else {
     const { docs } = await payload.find({
       collection: 'enrollments',
-      where: { and: [{ person: { equals: person } }, { course: { equals: targetId } }] },
+      where: { and: [{ person: { equals: result.person } }, { course: { equals: targetId } }] },
       limit: 1,
       ...local,
     })
@@ -234,7 +252,7 @@ const accept = async (req: PayloadRequest, id: number): Promise<Accepted | null>
       (
         await payload.create({
           collection: 'enrollments',
-          data: { person, course: targetId, status: 'accepted', source: 'registration_form' },
+          data: { person: result.person, course: targetId, status: 'accepted', source: 'registration_form' },
           ...local,
         })
       ).id

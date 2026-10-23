@@ -34,6 +34,9 @@ export const Notifications: CollectionConfig = {
       relationTo: 'users',
       required: true,
       index: true,
+      // Deleting the account clears its bell (the cascade the migration
+      // 20261023_083500 sets: the adapter's default SET NULL cannot apply to
+      // a required recipient).
       access: { update: () => false },
     },
     {

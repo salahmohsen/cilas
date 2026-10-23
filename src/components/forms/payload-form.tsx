@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { FileUpload, type FileUploadItem } from '@/components/arc/file-upload/file-upload'
 import { Input } from '@/components/arc/input/input'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
+import { Select } from '@/components/arc/select/select'
 import { Textarea } from '@/components/arc/textarea/textarea'
 import { useSpamCheck } from '@/components/forms/spam-check'
 import { Link } from '@/i18n/navigation'
@@ -104,6 +105,38 @@ export function PayloadForm({
   const top = useRef<HTMLDivElement>(null)
   const spam = useSpamCheck()
 
+  /**
+   * Who is signed in, so their name and email fill the two default questions
+   * and lock them. The ask comes back only with a session cookie, like the
+   * site header's account menu.
+   */
+  const [me, setMe] = useState<{ name: string | null; email: string } | null>(null)
+  useEffect(() => {
+    if (disabled) return
+    let live = true
+    fetch('/api/users/me?depth=1', { credentials: 'include' })
+      .then((res) => (res.ok ? res.json() : null))
+      .then(
+        (
+          body: {
+            user?: { email?: string; person?: { name?: string } | number | null } | null
+          } | null,
+        ) => {
+          const user = body?.user
+          if (!live || !user?.email) return
+          const name = typeof user.person === 'object' ? (user.person?.name ?? null) : null
+          setMe({ name, email: user.email })
+        },
+      )
+      .catch(() => {})
+    return () => {
+      live = false
+    }
+  }, [disabled])
+  /** A question the account fills: email always signed in, name with a person. */
+  const locked = (q: Question) =>
+    Boolean(me) && (q.name === 'email' || (q.name === 'name' && Boolean(me?.name)))
+
   const check = (q: Question, value: Answer): string | undefined => {
     if (isFiles(q)) {
       const items = (value as FileUploadItem[]) ?? []
@@ -135,7 +168,7 @@ export function PayloadForm({
     if (isFiles(q)) return ''
     if (Array.isArray(value)) return (value as string[]).map(label).join(', ')
     if (typeof value === 'boolean') return value ? 'Yes' : 'No'
-    return q.blockType === 'radio' ? label(value) : value
+    return q.blockType === 'radio' || q.blockType === 'select' ? label(value) : value
   }
 
   const api = useForm({
@@ -209,19 +242,34 @@ export function PayloadForm({
     .filter(isFiles)
     .map((q) => q.name)
     .join('\n')
+  /** The default questions an account holds, as one string for the effects. */
+  const givenNames = questions
+    .filter((q) => q.name === 'email' || q.name === 'name')
+    .map((q) => q.name)
+    .join('\n')
+  // When the identity arrives it wins over any draft: the account's answers
+  // are set and nothing of theirs sits in the draft on a shared device.
+  useEffect(() => {
+    if (me) {
+      if (givenNames.includes('email')) api.setFieldValue('email', me.email)
+      if (me.name && givenNames.includes('name')) api.setFieldValue('name', me.name)
+    }
+  }, [me, api, givenNames])
   useEffect(() => {
     if (disabled || sent) return
     const id = setTimeout(() => {
       try {
-        // Files cannot be kept on the device; the rest of the answers are.
+        // Files cannot be kept on the device; the rest of the answers are,
+        // except what a signed-in account holds (its identity, not a draft).
+        const skip = me ? [...givenNames.split('\n'), ...fileNames.split('\n')] : fileNames.split('\n')
         const kept = Object.fromEntries(
-          Object.entries(values).filter(([name]) => !fileNames.split('\n').includes(name)),
+          Object.entries(values).filter(([name]) => !skip.includes(name) && name !== ''),
         )
         localStorage.setItem(draftKey, JSON.stringify(kept))
       } catch {}
     }, 500)
     return () => clearTimeout(id)
-  }, [values, draftKey, disabled, sent, fileNames])
+  }, [values, draftKey, disabled, sent, fileNames, me, givenNames])
 
   const attempts = useSelector(api.store, (s) => s.submissionAttempts)
   const errorOf = (field: AnyFieldApi) =>
@@ -387,6 +435,25 @@ export function PayloadForm({
           </fieldset>
         )
       }
+      case 'select': {
+        return (
+          <div id={fieldId(q.name)} tabIndex={-1}>
+            <Select
+              description={description ?? undefined}
+              label={label(q)}
+              onValueChange={(v) => field.handleChange(v)}
+              options={optionsOf(q).map((o) => ({ value: o.value, label: o.label }))}
+              placeholder={q.placeholder || undefined}
+              value={String(field.state.value ?? '')}
+            />
+            {error ? (
+              <p className="payload-form-error" role="alert">
+                {error}
+              </p>
+            ) : null}
+          </div>
+        )
+      }
       case 'checkbox':
         return (
           <Checkbox
@@ -400,6 +467,7 @@ export function PayloadForm({
       default:
         return (
           <Input
+            disabled={locked(q)}
             error={error}
             lead={
               description ? (

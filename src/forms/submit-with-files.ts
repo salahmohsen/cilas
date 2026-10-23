@@ -3,6 +3,7 @@ import type { PayloadHandler, PayloadRequest } from 'payload'
 import { SUBMISSION_FILE_LIMIT } from '@/collections/SubmissionFiles'
 import { env } from '@/env'
 import { fileAllowed, maxBytes, maxCount, type FileRule } from '@/lib/form-files'
+import { registrationStatus } from '@/lib/registration'
 import { TURNSTILE_HEADER, verifyTurnstile } from '@/lib/turnstile'
 
 /** Set on the submission this endpoint makes, whose Turnstile token it has already spent. */
@@ -66,6 +67,25 @@ export const submitWithFiles: PayloadHandler = async (req) => {
   })()
   if (!data || !sent?.form || !Array.isArray(sent.submissionData))
     return fail('The form could not be read.')
+
+  // The same closed-registration rule the plain submissions' hook applies.
+  // This endpoint writes through the Local API, which that hook skips, so
+  // the rule repeats here, and before any file row exists to clean up.
+  if (sent.target) {
+    const target = await req.payload
+      .findByID({
+        collection: sent.target.relationTo,
+        id: sent.target.value,
+        depth: 1,
+        overrideAccess: true,
+      })
+      .catch(() => null)
+    const cycle =
+      target && 'cycle' in target && typeof target.cycle === 'object' ? target.cycle : null
+    if (target && registrationStatus(target.registration, cycle?.registration) !== 'open') {
+      return fail('Applications are closed.')
+    }
+  }
 
   const questions = await fileQuestionsOf(req, sent)
   const files = new Map<string, File[]>()

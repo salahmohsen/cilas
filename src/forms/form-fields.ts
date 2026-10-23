@@ -1,7 +1,8 @@
 import { fields as builtIn } from '@payloadcms/plugin-form-builder'
-import type { Block, Field } from 'payload'
+import type { Block, CollectionBeforeChangeHook, Field } from 'payload'
 
 import { DEFAULT_SIZE_MB, FILE_KINDS, MAX_FILES, MAX_SIZE_MB } from '@/lib/form-files'
+import type { Form } from '@/payload-types'
 
 /**
  * The form builder's fields as CILAS's forms use them. Questions carry a help
@@ -122,3 +123,35 @@ export const formFields = {
   fileUpload,
   message: true,
 } as const
+
+/**
+ * The two answers every form asks first (ensureNameEmail): who the person is,
+ * and the address an acceptance mails. Acceptance (src/forms/applications.ts)
+ * reads exactly these field names, so no form can exist without them and no
+ * admin can delete or rename them.
+ */
+export type NameEmailBlock = {
+  blockType: 'text' | 'email'
+  name: string
+  label: string
+  required: true
+}
+
+export const nameEmailBlocks: NameEmailBlock[] = [
+  { blockType: 'text', name: 'name', label: 'Name', required: true },
+  { blockType: 'email', name: 'email', label: 'Email', required: true },
+]
+
+/**
+ * Putting the two questions back stands for an admin's delete or rename: the
+ * saved form always carries name and email, in that order, before anything.
+ */
+export const ensureNameEmail: CollectionBeforeChangeHook<Form> = ({ data }) => ({
+  ...data,
+  fields: [
+    ...(nameEmailBlocks as unknown as NonNullable<Form['fields']>),
+    ...(data.fields ?? []).filter((b) =>
+      'name' in b ? b.name !== 'name' && b.name !== 'email' : true,
+    ),
+  ],
+})

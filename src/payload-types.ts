@@ -368,7 +368,7 @@ export interface Course {
     review_note?: string | null;
   };
   /**
-   * Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins).
+   * Who sees it: Public (everyone), Community (signed-in members) or Owner only (its fellows and admins). A published course also needs a tier above Owner, else its public page disappears.
    */
   tier: 'owner' | 'community' | 'public';
   /**

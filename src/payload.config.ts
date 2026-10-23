@@ -36,7 +36,7 @@ import { EmailSettings } from './globals/EmailSettings'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { importExportPlugin } from '@payloadcms/plugin-import-export'
-import { formFields } from './forms/form-fields'
+import { ensureNameEmail, formFields } from './forms/form-fields'
 import { notifyNewApplication } from './forms/notify-application'
 import { submitWithFiles } from './forms/submit-with-files'
 import { applicationEndpoints, applicationFields, checkTarget } from './forms/applications'
@@ -214,6 +214,8 @@ export default buildConfig({
       // The forms themselves, with their emails and redirects, are admin work.
       formOverrides: {
         access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
+        // Any form asks name and email first; no admin deletes or renames them.
+        hooks: { beforeChange: [ensureNameEmail] },
       },
       // Applications are read by admins only; anyone may send one.
       formSubmissionOverrides: {

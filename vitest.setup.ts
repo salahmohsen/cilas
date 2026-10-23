@@ -2,6 +2,8 @@
 
 // Load .env files
 import 'dotenv/config'
+// DOM assertions (`toBeDisabled`, `toBeInTheDocument`, …) in unit tests.
+import '@testing-library/jest-dom/vitest'
 
 // Integration specs need the migrated local schema. dotenv reads .env only,
 // and .env still names the production database, so refusal is structural:
