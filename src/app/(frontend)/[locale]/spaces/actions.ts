@@ -1,0 +1,328 @@
+'use server'
+
+import config from '@payload-config'
+import { getLocale } from 'next-intl/server'
+import { revalidatePath } from 'next/cache'
+import { getPayload } from 'payload'
+
+import { currentReader } from '@/lib/reader'
+import {
+  commentCreate,
+  commentEdit,
+  commentRemove,
+  consentAccept,
+  fileAdd,
+  postCreate,
+  postEdit,
+  postModify,
+  postRemove,
+  preferenceSet,
+  reactionToggle,
+  spaceSettingsSet,
+  stepMark,
+  visitRecord,
+  type StepKey,
+  type WriteError,
+} from '@/lib/spaces-write'
+
+/**
+ * Errors come back as keys; the pages map them to next-intl strings.
+ * `auth` means no signed-in account reached the action.
+ */
+export type SpacesWriteState = { status: 'ok' } | { status: 'error'; error: WriteError | 'auth' }
+
+const err = (error: WriteError | 'auth'): SpacesWriteState => ({ status: 'error', error })
+
+const text = (form: FormData, key: string) => String(form.get(key) ?? '')
+
+const num = (form: FormData, key: string): number | null => {
+  const raw = form.get(key)
+  if (raw === null || raw === '') return null
+  const n = Number(raw)
+  return Number.isFinite(n) ? n : null
+}
+
+const bool = (form: FormData, key: string): boolean | undefined => {
+  const raw = form.get(key)
+  if (raw === null || raw === '') return undefined
+  return Boolean(raw)
+}
+
+const fileOf = async (
+  form: FormData,
+): Promise<{ data: Buffer; mimetype: string; name: string; size: number } | undefined> => {
+  const f = form.get('file')
+  return f instanceof File && f.size > 0
+    ? {
+        data: Buffer.from(await f.arrayBuffer()),
+        mimetype: f.type,
+        name: f.name,
+        size: f.size,
+      }
+    : undefined
+}
+
+const revalidate = async () => {
+  const locale = await getLocale()
+  revalidatePath(`/${locale}/spaces`)
+  revalidatePath('/')
+}
+
+export async function postCreateAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const space = num(form, 'space')
+  if (!space) return err('space')
+  const kind = text(form, 'kind') === 'announcement' ? 'announcement' : 'discussion'
+  const file = await fileOf(form)
+  const payload = await getPayload({ config })
+  const result = await postCreate({
+    payload,
+    user,
+    space,
+    kind,
+    body: text(form, 'body'),
+    files: file ? [file] : undefined,
+  })
+  if (!result.ok) return err(result.error)
+  await result.notify?.()
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function postEditAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const id = num(form, 'post')
+  if (!id) return err('not-found')
+  const payload = await getPayload({ config })
+  const result = await postEdit({ payload, user, id, body: text(form, 'body') })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function postRemoveAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const id = num(form, 'post')
+  if (!id) return err('not-found')
+  const payload = await getPayload({ config })
+  const result = await postRemove({ payload, user, id })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function postModifyAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const id = num(form, 'post')
+  if (!id) return err('not-found')
+  const payload = await getPayload({ config })
+  const result = await postModify({
+    payload,
+    user,
+    id,
+    pinned: bool(form, 'pinned'),
+    locked: bool(form, 'locked'),
+  })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function commentCreateAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const post = num(form, 'post')
+  if (!post) return err('not-found')
+  const file = await fileOf(form)
+  const payload = await getPayload({ config })
+  const result = await commentCreate({
+    payload,
+    user,
+    post,
+    parent: num(form, 'parent'),
+    body: text(form, 'body'),
+    files: file ? [file] : undefined,
+  })
+  if (!result.ok) return err(result.error)
+  await result.notify?.()
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function commentEditAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const id = num(form, 'comment')
+  if (!id) return err('not-found')
+  const payload = await getPayload({ config })
+  const result = await commentEdit({ payload, user, id, body: text(form, 'body') })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function commentRemoveAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const id = num(form, 'comment')
+  if (!id) return err('not-found')
+  const payload = await getPayload({ config })
+  const result = await commentRemove({ payload, user, id })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function fileAddAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const post = num(form, 'post')
+  const comment = num(form, 'comment')
+  if (!post && !comment) return err('not-found')
+  const file = await fileOf(form)
+  if (!file) return err('file-type')
+  const payload = await getPayload({ config })
+  const result = await fileAdd({
+    payload,
+    user,
+    post: post ?? undefined,
+    comment: comment ?? undefined,
+    file,
+  })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function reactionToggleAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const post = num(form, 'post')
+  const comment = num(form, 'comment')
+  if (!post && !comment) return err('not-found')
+  const payload = await getPayload({ config })
+  const result = await reactionToggle({
+    payload,
+    user,
+    post: post ?? undefined,
+    comment: comment ?? undefined,
+    reaction: text(form, 'reaction'),
+    on: text(form, 'on') === 'true',
+  })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function consentAcceptAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  void form
+  const payload = await getPayload({ config })
+  const result = await consentAccept({ payload, user })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function visitRecordAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const space = num(form, 'space')
+  if (!space) return err('space')
+  const payload = await getPayload({ config })
+  const result = await visitRecord({ payload, user, space })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function stepMarkAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const space = num(form, 'space')
+  if (!space) return err('space')
+  const step = text(form, 'step') as StepKey
+  const payload = await getPayload({ config })
+  const result = await stepMark({ payload, user, space, step, value: bool(form, 'value') ?? true })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function preferenceSetAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const digest = text(form, 'digest') as 'daily' | 'weekly' | 'off'
+  const payload = await getPayload({ config })
+  const result = await preferenceSet({ payload, user, digest })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function spaceSettingsSetAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const space = num(form, 'space')
+  if (!space) return err('space')
+  const posting = text(form, 'posting') || undefined
+  const reopen = form.get('reopen')
+  const payload = await getPayload({ config })
+  const result = await spaceSettingsSet({
+    payload,
+    user,
+    space,
+    posting: posting ? (posting as 'open' | 'members_comment' | 'fellows_only') : undefined,
+    reopened: reopen === null ? undefined : Boolean(reopen),
+  })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
