@@ -2017,6 +2017,7 @@ export interface Notification {
     | 'approved'
     | 'changes_requested'
     | 'rejected'
+    | 'removed'
     | 'application'
     | 'mention'
     | 'comment'
@@ -2026,6 +2027,9 @@ export interface Notification {
     | 'report'
     | 'question';
   title: string;
+  description?: string | null;
+  actor_name?: string | null;
+  actor_photo?: string | null;
   link?: string | null;
   read_at?: string | null;
   updatedAt: string;
@@ -3504,6 +3508,9 @@ export interface NotificationsSelect<T extends boolean = true> {
   recipient?: T;
   kind?: T;
   title?: T;
+  description?: T;
+  actor_name?: T;
+  actor_photo?: T;
   link?: T;
   read_at?: T;
   updatedAt?: T;
