@@ -16,7 +16,8 @@ export const SpaceVisits: CollectionConfig = {
     // another member's visit row (the REST surface matches the intent).
     create: ({ req }) =>
       req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
-    update: ({ req }) => ({ account: { equals: (req.user as { id: number }).id } }),
+    update: ({ req }) =>
+      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
     delete: () => false, // retention handled with the purge in step 3
   },
   admin: { hidden: true },

@@ -11,7 +11,8 @@ export const SpacePreferences: CollectionConfig = {
     read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
     create: ({ req }) =>
       req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
-    update: ({ req }) => ({ account: { equals: (req.user as { id: number }).id } }),
+    update: ({ req }) =>
+      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
     delete: () => false,
   },
   admin: { hidden: true },
