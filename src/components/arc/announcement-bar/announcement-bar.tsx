@@ -12,7 +12,7 @@ import {
   useTransform,
 } from 'motion/react'
 import type { AnimationPlaybackControls, Transition, Variants } from 'motion/react'
-import { ArrowRight, ChevronDown, ChevronUp, Pause, Play, X } from 'lucide-react'
+import { ArrowRight, X } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './announcement-bar.module.css'
 
@@ -149,7 +149,6 @@ function parts(ms: number) {
     s: total % 60,
   }
 }
-const pad = (value: number) => String(value).padStart(2, '0')
 
 /**
  * One character cell. A changed digit drops in from above while the old one falls away, like a counter winding down.
@@ -222,7 +221,7 @@ function Countdown({
   }, [target])
   const { d, h, m, s } = parts(now === null ? 0 : target - now)
   const pending = now === null
-  const spoken = pending ? '' : `${d ? `${d} days ` : ''}${h} hours ${m} minutes`
+  const spoken = pending ? '' : `${d ? `${d} ${d === 1 ? 'day' : 'days'} ` : ''}${h} ${h === 1 ? 'hour' : 'hours'} ${m} ${m === 1 ? 'minute' : 'minutes'}`
   const digits = (value: string, key: string) =>
     value
       .split('')
@@ -244,25 +243,19 @@ function Countdown({
         data-pending={pending || undefined}
       >
         {d ? (
-          <>
-            <span className={styles.unit}>
-              {digits(String(d), 'd')}
-              <span className={styles.unitMark} aria-hidden="true">
-                d
-              </span>
-            </span>
-            <span className={styles.gap} aria-hidden="true" />
-          </>
+          <span className={styles.unit}>
+            {digits(String(d), 'd')} {d === 1 ? 'Day' : 'Days'}
+          </span>
         ) : null}
-        {digits(pad(h), 'h')}
-        <span className={styles.sep} aria-hidden="true">
-          :
+        <span className={styles.unit}>
+          {digits(String(h), 'h')} {h === 1 ? 'Hour' : 'Hours'}
         </span>
-        {digits(pad(m), 'm')}
-        <span className={styles.sep} aria-hidden="true">
-          :
+        <span className={styles.unit}>
+          {digits(String(m), 'm')} {m === 1 ? 'Minute' : 'Minutes'}
         </span>
-        {digits(pad(s), 's')}
+        <span className={styles.unit}>
+          {digits(String(s), 's')} {s === 1 ? 'Second' : 'Seconds'}
+        </span>
       </span>
     </span>
   )
@@ -484,8 +477,6 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
 
     const announcement = messages[current]
     if (!announcement) return null
-    const navigable = controls && total > 1
-    const controlCount = (navigable ? 2 + (rotating ? 1 : 0) : 0) + (dismissible ? 1 : 0)
 
     return (
       <AnimatePresence initial={false}>
@@ -531,7 +522,7 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
             <div
               className={styles.bar}
               data-tone={tone}
-              style={{ '--controls': controlCount } as CSSProperties}
+              style={{ '--controls': dismissible ? 1 : 0 } as CSSProperties}
             >
               <div className={styles.side} aria-hidden="true" />
               <motion.div
@@ -556,56 +547,6 @@ export const AnnouncementBar = forwardRef<HTMLElement, AnnouncementBarProps>(
                 </AnimatePresence>
               </motion.div>
               <div className={styles.controls}>
-                {navigable ? (
-                  <>
-                    <button
-                      type="button"
-                      className={styles.icon}
-                      aria-label={labels.previous}
-                      aria-controls={`${uid}-slides`}
-                      onClick={() => go(-1)}
-                    >
-                      <ChevronUp size={16} strokeWidth={1.75} aria-hidden="true" />
-                    </button>
-                    {rotating ? (
-                      <button
-                        type="button"
-                        className={styles.ring}
-                        aria-label={userPaused ? labels.resume : labels.pause}
-                        aria-pressed={userPaused}
-                        onClick={() => setUserPaused((paused) => !paused)}
-                      >
-                        <svg viewBox="0 0 20 20" aria-hidden="true">
-                          <circle cx="10" cy="10" r="8" className={styles.ringTrack} />
-                          <motion.circle
-                            cx="10"
-                            cy="10"
-                            r="8"
-                            className={styles.ringFill}
-                            strokeDasharray={RING}
-                            style={{ strokeDashoffset: dash }}
-                          />
-                        </svg>
-                        <span className={styles.ringIcon}>
-                          {userPaused ? (
-                            <Play size={9} strokeWidth={2.4} aria-hidden="true" />
-                          ) : (
-                            <Pause size={9} strokeWidth={2.4} aria-hidden="true" />
-                          )}
-                        </span>
-                      </button>
-                    ) : null}
-                    <button
-                      type="button"
-                      className={styles.icon}
-                      aria-label={labels.next}
-                      aria-controls={`${uid}-slides`}
-                      onClick={() => go(1)}
-                    >
-                      <ChevronDown size={16} strokeWidth={1.75} aria-hidden="true" />
-                    </button>
-                  </>
-                ) : null}
                 {dismissible ? (
                   <button
                     type="button"

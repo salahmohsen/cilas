@@ -235,12 +235,16 @@
   }
 }
 
-/* Narrow bars drop the mirror column and read from the start edge. */
+/* Narrow bars drop the mirror column and read from the start edge. On a phone
+   the rotation controls disappear and only the dismiss X stays. */
 @container (max-width: 560px) {
   .bar {
     grid-template-columns: 0 minmax(0, 1fr) auto;
     gap: 0 var(--space-2);
     padding-left: 14px;
+  }
+  .navControls {
+    display: none;
   }
   .face {
     justify-content: flex-start;

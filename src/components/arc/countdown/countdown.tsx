@@ -392,7 +392,7 @@ export function Countdown({
             ) : (
               <motion.span key="running" className={styles.units} {...swap}>
                 {parts.map((part, group) => {
-                  const text = String(part.value).padStart(2, '0')
+                  const text = String(part.value)
                   const bases = basesFor(part.unit, group === 0, text.length)
                   return (
                     <span key={part.unit} className={styles.unit}>

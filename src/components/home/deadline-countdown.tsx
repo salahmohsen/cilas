@@ -23,7 +23,9 @@ export function DeadlineCountdown({
 }) {
   const t = useTranslations('Home')
   const locale = useLocale()
-  const names = Object.fromEntries(UNITS.map((u) => [u, t.raw(`units.${u}`) as [string, string]]))
+  const names = Object.fromEntries(
+    UNITS.map((u) => [u, [t.raw(`units.${u}`)[0], t.raw(`units.${u}`)[0]] as [string, string]]),
+  )
   return (
     <Countdown
       completeLabel={t('closed')}
