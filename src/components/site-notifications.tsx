@@ -76,19 +76,30 @@ export function SiteNotifications() {
     if (!res?.ok) return
     const { docs } = (await res.json()) as { docs: Stored[] }
     setItems(
-      docs.map((n) => ({
-        id: String(n.id),
-        title: n.title === EVENT_NAMES[n.kind] ? t(`kinds.${n.kind}`) : n.title,
-        description: n.description ?? undefined,
-        actor:
-          n.actor_name || n.actor_photo
-            ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
-            : undefined,
-        time: relativeTime(new Date(n.createdAt)),
-        read: Boolean(n.read_at),
-        tone: TONES[n.kind],
-        href: n.link ?? undefined,
-      })),
+      docs.map((n) => {
+        // The kind carries the short label; rows written before the registry
+        // keep their old sentence as the detail line instead of the title.
+        const known = n.kind in EVENT_NAMES
+        const label = known ? t(`kinds.${n.kind}`) : n.title
+        const detail =
+          n.description ??
+          (!known || n.title === EVENT_NAMES[n.kind] || n.title.startsWith('{')
+            ? undefined
+            : n.title)
+        return {
+          id: String(n.id),
+          title: label,
+          description: detail,
+          actor:
+            n.actor_name || n.actor_photo
+              ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
+              : undefined,
+          time: relativeTime(new Date(n.createdAt)),
+          read: Boolean(n.read_at),
+          tone: TONES[n.kind],
+          href: n.link ?? undefined,
+        }
+      }),
     )
   }, [t])
 

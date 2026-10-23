@@ -4,14 +4,23 @@ import { useAuth } from '@payloadcms/ui'
 import { Bell } from 'lucide-react'
 import { useCallback, useEffect, useId, useRef, useState } from 'react'
 
+import { EVENT_NAMES, type NotificationKind } from '@/lib/notify'
+
 type Note = {
   id: number
+  kind?: string
   title: string
   description?: string | null
   link?: string | null
   read_at?: string | null
   createdAt: string
 }
+
+/** Rows written before the registry keep their old sentence as the detail line. */
+const labelOf = (note: Note) => (note.kind && note.kind in EVENT_NAMES ? EVENT_NAMES[note.kind as NotificationKind] : note.title)
+const detailOf = (note: Note) =>
+  note.description ??
+  (note.title === labelOf(note) || note.title.startsWith('{') ? undefined : note.title)
 
 const API = '/api/notifications'
 
@@ -218,8 +227,8 @@ export function NotificationBell() {
                       }}
                     />
                     <span dir="auto" style={{ fontWeight: n.read_at ? 400 : 600 }}>
-                      {n.title}
-                      {n.description ? (
+                      {labelOf(n)}
+                      {detailOf(n) ? (
                         <span
                           dir="auto"
                           style={{
@@ -230,7 +239,7 @@ export function NotificationBell() {
                             marginTop: 2,
                           }}
                         >
-                          {n.description}
+                          {detailOf(n)}
                         </span>
                       ) : null}
                     </span>
