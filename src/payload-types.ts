@@ -2116,6 +2116,11 @@ export interface SpaceFile {
  */
 export interface SpaceReaction {
   id: number;
+  space: number | Space;
+  account: number | User;
+  post?: (number | null) | SpacePost;
+  comment?: (number | null) | SpaceComment;
+  reaction: 'agree' | 'thank_you' | 'insightful' | 'same_question';
   updatedAt: string;
   createdAt: string;
 }
@@ -3590,6 +3595,11 @@ export interface SpaceFilesSelect<T extends boolean = true> {
  * via the `definition` "space-reactions_select".
  */
 export interface SpaceReactionsSelect<T extends boolean = true> {
+  space?: T;
+  account?: T;
+  post?: T;
+  comment?: T;
+  reaction?: T;
   updatedAt?: T;
   createdAt?: T;
 }
