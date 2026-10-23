@@ -2012,7 +2012,19 @@ export interface SubmissionFile {
 export interface Notification {
   id: number;
   recipient: number | User;
-  kind: 'submitted' | 'approved' | 'changes_requested' | 'rejected' | 'application';
+  kind:
+    | 'submitted'
+    | 'approved'
+    | 'changes_requested'
+    | 'rejected'
+    | 'application'
+    | 'mention'
+    | 'comment'
+    | 'reply'
+    | 'announcement'
+    | 'moderation'
+    | 'report'
+    | 'question';
   title: string;
   link?: string | null;
   read_at?: string | null;

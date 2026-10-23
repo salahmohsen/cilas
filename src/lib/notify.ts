@@ -1,7 +1,18 @@
 import type { Payload } from 'payload'
 
 export type NotificationKind =
-  'submitted' | 'approved' | 'changes_requested' | 'rejected' | 'application'
+  | 'submitted'
+  | 'approved'
+  | 'changes_requested'
+  | 'rejected'
+  | 'application'
+  | 'mention'
+  | 'comment'
+  | 'reply'
+  | 'announcement'
+  | 'moderation'
+  | 'report'
+  | 'question'
 
 /**
  * Leaves a notification for each account, beside the email it gets. A failed
