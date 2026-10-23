@@ -76,6 +76,7 @@ const storage = s3Storage({
     },
     // Applicants' files: no public URL; Payload serves them to admins only.
     'submission-files': { disableLocalStorage: true, prefix: 'applications' },
+    'space-files': { disableLocalStorage: true, prefix: 'spaces' },
   },
   bucket: env.R2_BUCKET,
   config: {

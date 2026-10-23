@@ -2093,8 +2093,22 @@ export interface SpaceComment {
  */
 export interface SpaceFile {
   id: number;
+  space: number | Space;
+  post?: (number | null) | SpacePost;
+  comment?: (number | null) | SpaceComment;
+  prefix?: string | null;
+  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename: string;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3554,8 +3568,22 @@ export interface SpaceCommentsSelect<T extends boolean = true> {
  * via the `definition` "space-files_select".
  */
 export interface SpaceFilesSelect<T extends boolean = true> {
+  space?: T;
+  post?: T;
+  comment?: T;
+  prefix?: T;
+  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
