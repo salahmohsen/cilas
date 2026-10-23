@@ -7,6 +7,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 type Note = {
   id: number
   title: string
+  description?: string | null
   link?: string | null
   read_at?: string | null
   createdAt: string
@@ -218,6 +219,20 @@ export function NotificationBell() {
                     />
                     <span dir="auto" style={{ fontWeight: n.read_at ? 400 : 600 }}>
                       {n.title}
+                      {n.description ? (
+                        <span
+                          dir="auto"
+                          style={{
+                            display: 'block',
+                            fontSize: 12,
+                            fontWeight: 400,
+                            color: 'var(--theme-elevation-500)',
+                            marginTop: 2,
+                          }}
+                        >
+                          {n.description}
+                        </span>
+                      ) : null}
                     </span>
                     <span style={{ color: 'var(--theme-elevation-500)', fontSize: 12 }}>
                       {ago(n.createdAt)}

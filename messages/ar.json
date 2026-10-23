@@ -757,6 +757,20 @@
     "viewAll": "عرض كل التحديثات",
     "read": "مقروءة",
     "clearRead": "إزالة المقروءة",
-    "triggerUnread": "{count, plural, =1 {، واحد غير مقروء} other {، {shown} غير مقروءة}}"
+    "triggerUnread": "{count, plural, =1 {، واحد غير مقروء} other {، {shown} غير مقروءة}}",
+    "kinds": {
+      "submitted": "طلب مراجعة",
+      "approved": "تم الاعتماد",
+      "changes_requested": "مطلوب تغييرات",
+      "rejected": "مرفوض",
+      "removed": "تم الحذف",
+      "application": "طلب تقديم جديد",
+      "mention": "أُشير إليك",
+      "comment": "تعليق جديد",
+      "reply": "رد جديد",
+      "announcement": "إعلان جديد",
+      "moderation": "ملاحظة إشراف",
+      "report": "بلاغ جديد"
+    }
   }
 }

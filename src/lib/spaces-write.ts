@@ -113,6 +113,22 @@ const spaceLink = (locale: string, space: SpaceLike, postId: number): string => 
   return `/${locale}/spaces/${space.kind}/${slug}/posts/${postId}`
 }
 
+/** The space's display name, quoted, for notification detail text. */
+const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> => {
+  if (space.kind === 'community') return '“the community space”'
+  const slug = space.kind === 'course' ? idOf(space.course) : idOf(space.programme)
+  if (slug === null) return '“the space”'
+  const doc = (await payload
+    .findByID({
+      collection: space.kind === 'course' ? 'courses' : 'programmes',
+      id: slug,
+      depth: 0,
+      overrideAccess: true,
+    })
+    .catch(() => null)) as { title?: string } | null
+  return doc?.title ? `“${doc.title}”` : '“the space”'
+}
+
 // --- postCreate ---
 
 export const postCreate = async (
@@ -179,14 +195,17 @@ export const postCreate = async (
   const postId = (post as { id: number }).id
 
   const notifyFn = async () => {
-    const { notify } = await import('@/lib/notify')
+    const { actorOf, notify } = await import('@/lib/notify')
+    const actor = await actorOf(payload, personOf(user))
+    const context = await spaceNameOf(payload, space)
     if (kind === 'announcement') {
       const people = await spacePeople(payload, spaceId)
       const accountIds = people.map((p) => p.accountId).filter((id): id is number => id !== null)
       await notify(payload, accountIds, {
         kind: 'announcement',
-        title: JSON.stringify({ key: 'space.announcement', args: {} }),
+        description: `A new announcement in ${context}`,
         link: spaceLink('en', space, postId),
+        actor,
       })
     }
     const mentionedIds = mentioned.mentioned
@@ -205,8 +224,9 @@ export const postCreate = async (
         .map((u) => (u as { id: number }).id)
       await notify(payload, accountIds, {
         kind: 'mention',
-        title: JSON.stringify({ key: 'space.mention', args: {} }),
+        description: `${actor?.name ?? 'Someone'} mentioned you in ${context}`,
         link: spaceLink('en', space, postId),
+        actor,
       })
     }
   }
@@ -412,7 +432,9 @@ export const commentCreate = async (
   })
 
   const notifyFn = async () => {
-    const { notify } = await import('@/lib/notify')
+    const { actorOf, notify } = await import('@/lib/notify')
+    const actor = await actorOf(payload, personOf(user))
+    const context = await spaceNameOf(payload, space)
     if (!parent && (postData as { author?: number | { id: number } | null }).author) {
       const authorId =
         typeof (postData as { author: number | { id: number } | null }).author === 'object'
@@ -431,8 +453,9 @@ export const commentCreate = async (
         .filter((id) => id !== user.id)
       await notify(payload, commentTargets, {
         kind: 'comment',
-        title: JSON.stringify({ key: 'space.comment', args: {} }),
+        description: `${actor?.name ?? 'Someone'} commented on your post in ${context}`,
         link: spaceLink('en', space, postId),
+        actor,
       })
     }
     if (parent) {
@@ -458,8 +481,9 @@ export const commentCreate = async (
           .filter((id) => id !== user.id)
         await notify(payload, replyTargets, {
           kind: 'reply',
-          title: JSON.stringify({ key: 'space.reply', args: {} }),
+          description: `${actor?.name ?? 'Someone'} replied to your comment in ${context}`,
           link: spaceLink('en', space, postId),
+          actor,
         })
       }
     }
@@ -477,8 +501,9 @@ export const commentCreate = async (
         .map((u) => (u as { id: number }).id)
       await notify(payload, accountIds, {
         kind: 'mention',
-        title: JSON.stringify({ key: 'space.mention', args: {} }),
+        description: `${actor?.name ?? 'Someone'} mentioned you in ${context}`,
         link: spaceLink('en', space, postId),
+        actor,
       })
     }
   }

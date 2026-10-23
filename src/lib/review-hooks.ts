@@ -6,9 +6,9 @@ import type {
   CollectionSlug,
 } from 'payload'
 
-import { isAdminUser } from '@/access'
+import { isAdminUser, personOf } from '@/access'
 import { canMove, notifyOn, type ReviewRequest, type ReviewState } from '@/lib/review'
-import { notify, type NotificationKind } from '@/lib/notify'
+import { actorOf, notify, type NotificationKind } from '@/lib/notify'
 import { adminRecipients, ownerRecipients, sendReviewEmail } from '@/lib/review-mail'
 
 const DRAFT_SAVE = 'reviewDraftSave'
@@ -224,15 +224,19 @@ const notifyReview =
         { noun, path },
       )
     }
-    // The same news under the bell (src/components/admin/notification-bell.tsx).
+    // The bell (src/components/admin/notification-bell.tsx) takes the short
+    // name by kind, and `line` is the detail under it.
     const line = (removal ? REMOVAL_NOTES : NOTES)[state]?.(noun, title) ?? title
+    // The bell's avatar is the submitter's for admins, the decider's for owners.
+    const actingPerson = audience === 'admins' ? ownersOf(doc)[0] : personOf(req.user)
     await notify(
       req.payload,
       people.map((p) => p.id),
       {
-        kind: (removal && state === 'draft' ? 'approved' : state) as NotificationKind,
-        title: line,
+        kind: (removal && state === 'draft' ? 'removed' : state) as NotificationKind,
+        description: line,
         link: path,
+        actor: await actorOf(req.payload, actingPerson),
       },
     )
     return doc

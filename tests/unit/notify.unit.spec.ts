@@ -10,14 +10,20 @@ describe('notify', () => {
     const payload = { create, logger: { error } } as unknown as Payload
     await notify(payload, [3, 3, 9], {
       kind: 'submitted',
-      title: 'A course waits',
+      description: 'A course waits for review: “Test”',
       link: '/admin/x',
     })
     expect(create).toHaveBeenCalledTimes(2)
     expect(create).toHaveBeenCalledWith(
       expect.objectContaining({
         collection: 'notifications',
-        data: expect.objectContaining({ recipient: 3 }),
+        data: expect.objectContaining({
+          recipient: 3,
+          kind: 'submitted',
+          title: 'Review requested',
+          description: 'A course waits for review: “Test”',
+          link: '/admin/x',
+        }),
       }),
     )
     expect(error).toHaveBeenCalledTimes(1)

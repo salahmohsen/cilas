@@ -9,23 +9,34 @@ import {
   type NotificationItem,
 } from '@/components/arc/notification-center/notification-center'
 import { localDigits } from '@/lib/digits'
+import { EVENT_NAMES, type NotificationKind } from '@/lib/notify'
 
 type Stored = {
   id: number
-  kind: 'submitted' | 'approved' | 'changes_requested' | 'rejected' | 'application'
+  kind: NotificationKind
   title: string
+  description?: string | null
   link?: string | null
   read_at?: string | null
+  actor_name?: string | null
+  actor_photo?: string | null
   createdAt: string
 }
 
 const API = '/api/notifications'
-const TONES: Record<Stored['kind'], NotificationItem['tone']> = {
+const TONES: Record<NotificationKind, NotificationItem['tone']> = {
   submitted: 'info',
   application: 'info',
   approved: 'success',
   changes_requested: 'warning',
   rejected: 'warning',
+  removed: 'info',
+  mention: 'info',
+  comment: 'info',
+  reply: 'info',
+  announcement: 'info',
+  moderation: 'warning',
+  report: 'warning',
 }
 
 const call = (path: string, init?: RequestInit) =>
@@ -67,14 +78,19 @@ export function SiteNotifications() {
     setItems(
       docs.map((n) => ({
         id: String(n.id),
-        title: n.title,
+        title: n.title === EVENT_NAMES[n.kind] ? t(`kinds.${n.kind}`) : n.title,
+        description: n.description ?? undefined,
+        actor:
+          n.actor_name || n.actor_photo
+            ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
+            : undefined,
         time: relativeTime(new Date(n.createdAt)),
         read: Boolean(n.read_at),
         tone: TONES[n.kind],
         href: n.link ?? undefined,
       })),
     )
-  }, [])
+  }, [t])
 
   useEffect(() => {
     const first = setTimeout(() => void load(), 0)

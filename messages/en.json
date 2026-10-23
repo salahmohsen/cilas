@@ -757,6 +757,20 @@
     "viewAll": "View all updates",
     "read": "read",
     "clearRead": "Clear read",
-    "triggerUnread": "{count, plural, one {, {shown} unread} other {, {shown} unread}}"
+    "triggerUnread": "{count, plural, one {, {shown} unread} other {, {shown} unread}}",
+    "kinds": {
+      "submitted": "Review requested",
+      "approved": "Approved",
+      "changes_requested": "Changes requested",
+      "rejected": "Rejected",
+      "removed": "Removed",
+      "application": "New application",
+      "mention": "Mentioned you",
+      "comment": "New comment",
+      "reply": "New reply",
+      "announcement": "New announcement",
+      "moderation": "Moderation issue",
+      "report": "New report"
+    }
   }
 }

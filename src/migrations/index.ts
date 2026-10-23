@@ -34,6 +34,7 @@ import * as migration_20261022_220718_space_notification_kinds from './20261022_
 import * as migration_20261023_053200_spaces_posts from './20261023_053200_spaces_posts';
 import * as migration_20261023_054520_space_files from './20261023_054520_space_files';
 import * as migration_20261023_054735_spaces_small from './20261023_054735_spaces_small';
+import * as migration_20261023_112000_notifications_details from './20261023_112000_notifications_details';
 
 export const migrations = [
   {
@@ -215,5 +216,10 @@ export const migrations = [
     up: migration_20261023_054735_spaces_small.up,
     down: migration_20261023_054735_spaces_small.down,
     name: '20261023_054735_spaces_small'
+  },
+  {
+    up: migration_20261023_112000_notifications_details.up,
+    down: migration_20261023_112000_notifications_details.down,
+    name: '20261023_112000_notifications_details'
   },
 ];

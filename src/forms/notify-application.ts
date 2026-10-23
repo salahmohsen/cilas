@@ -1,5 +1,6 @@
 import type { CollectionAfterChangeHook } from 'payload'
 
+import { applicantOf } from '@/forms/applications'
 import { notify } from '@/lib/notify'
 import { adminRecipients } from '@/lib/review-mail'
 
@@ -18,12 +19,17 @@ export const notifyNewApplication: CollectionAfterChangeHook = async ({ doc, ope
     .findByID({ collection: relationTo, id, depth: 0, overrideAccess: true })
     .catch(() => null)
   const admins = await adminRecipients(req)
+  // A public-form applicant has no person row yet, so there is no avatar.
+  const applicant = applicantOf(doc.submissionData)
+  const applicantName = 'name' in applicant ? applicant.name : undefined
   await notify(
     req.payload,
     admins.map((a) => a.id),
     {
       kind: 'application',
-      title: `New application to “${target?.title ?? relationTo}”`,
+      description: applicantName
+        ? `${applicantName} applied to “${target?.title ?? relationTo}”`
+        : `An application to “${target?.title ?? relationTo}”`,
       link: `/admin/collections/form-submissions/${doc.id}`,
     },
   )

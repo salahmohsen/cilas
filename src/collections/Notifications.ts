@@ -45,6 +45,7 @@ export const Notifications: CollectionConfig = {
         'approved',
         'changes_requested',
         'rejected',
+        'removed',
         'application',
         'mention',
         'comment',
@@ -60,6 +61,11 @@ export const Notifications: CollectionConfig = {
       access: { update: () => false },
     },
     { name: 'title', type: 'text', required: true, access: { update: () => false } },
+    // The row's detail line, written at event time (the label stays short).
+    { name: 'description', type: 'text', access: { update: () => false } },
+    // The actor as a snapshot (src/lib/notify.ts actorOf), so reading needs no join.
+    { name: 'actor_name', type: 'text', access: { update: () => false } },
+    { name: 'actor_photo', type: 'text', access: { update: () => false } },
     { name: 'link', type: 'text', access: { update: () => false } },
     // The one thing a reader changes: when they read it.
     { name: 'read_at', type: 'date', index: true },
