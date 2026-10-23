@@ -886,12 +886,12 @@ In `src/collections/Notifications.ts`, the `kind` options become:
         options: [
           ...[
             'submitted', 'approved', 'changes_requested', 'rejected', 'application',
-            'mention', 'comment', 'reply', 'announcement', 'moderation', 'report',
+            'mention', 'comment', 'reply', 'announcement', 'moderation', 'report', 'question',
           ].map((value) => ({ value, label: value.replace('_', ' ') })),
         ],
 ```
 
-In `src/lib/notify.ts`, `NotificationKind` grows to include `'mention' | 'comment' | 'reply' | 'announcement' | 'moderation' | 'report'`. Run `pnpm payload generate:types`.
+In `src/lib/notify.ts`, `NotificationKind` grows to include `'mention' | 'comment' | 'reply' | 'announcement' | 'moderation' | 'report' | 'question'` (question rides along per the ground rules, so step 2 adds no second enum migration). Run `pnpm payload generate:types`.
 
 - [ ] **Step 2: Ask the user to generate the migration**
 
