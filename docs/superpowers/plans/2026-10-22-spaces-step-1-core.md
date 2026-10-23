@@ -1912,6 +1912,12 @@ describe('post body rendering (spec §5)', () => {
 
 - [ ] **Step 2: Run — fail, then write the component**
 
+Measured (2026-10-23): the test names carry straight apostrophes inside
+single-quoted strings (`it('renders the editor's blocks…')`), so the spec
+writes them double-quoted; and `` `${children}` ?? '' `` in the `a`
+renderer is an unreachable fallback (a template literal is never
+nullish, TS2869), so the component reads `` `${children}` `` alone.
+
 `DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run --config ./vitest.config.mts tests/unit/post-body.unit.spec.tsx`
 
 `src/components/space/post-body.tsx`:
