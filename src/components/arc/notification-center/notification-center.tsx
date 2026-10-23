@@ -48,6 +48,8 @@ export interface NotificationItem {
   tone?: 'info' | 'success' | 'warning'
   /** A local portrait asset for person-generated updates. */
   actor?: { name: string; photo: string }
+  /** The event's own glyph, shown when there is no actor. */
+  icon?: ReactNode
   /** Where the update leads; shown as an Open action in its details. */
   href?: string
 }
@@ -299,15 +301,18 @@ function MorphWidth({
 
 function NotificationVisual({ item }: { item: NotificationItem }) {
   if (item.actor) return <Avatar name={item.actor.name} src={item.actor.photo} size="md" />
+  const glyph =
+    item.icon ??
+    (item.tone === 'warning' ? (
+      <TriangleAlert size={18} strokeWidth={1.7} />
+    ) : item.tone === 'success' ? (
+      <CircleCheck size={18} strokeWidth={1.7} />
+    ) : (
+      <MessageCircle size={18} strokeWidth={1.7} />
+    ))
   return (
     <span className={[styles.eventIcon, styles[item.tone ?? 'info']].join(' ')} aria-hidden="true">
-      {item.tone === 'warning' ? (
-        <TriangleAlert size={18} strokeWidth={1.7} />
-      ) : item.tone === 'success' ? (
-        <CircleCheck size={18} strokeWidth={1.7} />
-      ) : (
-        <MessageCircle size={18} strokeWidth={1.7} />
-      )}
+      {glyph}
     </span>
   )
 }

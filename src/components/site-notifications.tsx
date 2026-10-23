@@ -1,8 +1,22 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { formatDistanceToNow, isYesterday } from 'date-fns'
+import {
+  AtSign,
+  CircleCheck,
+  CircleX,
+  FileSearch,
+  Flag,
+  Megaphone,
+  MessageCircle,
+  PenLine,
+  Reply,
+  Shield,
+  Trash2,
+  UserPlus,
+} from 'lucide-react'
 
 import {
   NotificationCenter,
@@ -37,6 +51,22 @@ const TONES: Record<NotificationKind, NotificationItem['tone']> = {
   announcement: 'info',
   moderation: 'warning',
   report: 'warning',
+}
+
+/** The glyph each event kind shows when no actor portrait exists. */
+const ICONS: Record<NotificationKind, ReactNode> = {
+  submitted: <FileSearch size={18} strokeWidth={1.7} />,
+  approved: <CircleCheck size={18} strokeWidth={1.7} />,
+  changes_requested: <PenLine size={18} strokeWidth={1.7} />,
+  rejected: <CircleX size={18} strokeWidth={1.7} />,
+  removed: <Trash2 size={18} strokeWidth={1.7} />,
+  application: <UserPlus size={18} strokeWidth={1.7} />,
+  mention: <AtSign size={18} strokeWidth={1.7} />,
+  comment: <MessageCircle size={18} strokeWidth={1.7} />,
+  reply: <Reply size={18} strokeWidth={1.7} />,
+  announcement: <Megaphone size={18} strokeWidth={1.7} />,
+  moderation: <Shield size={18} strokeWidth={1.7} />,
+  report: <Flag size={18} strokeWidth={1.7} />,
 }
 
 const call = (path: string, init?: RequestInit) =>
@@ -94,6 +124,7 @@ export function SiteNotifications() {
             n.actor_name || n.actor_photo
               ? { name: n.actor_name ?? '', photo: n.actor_photo ?? '' }
               : undefined,
+          icon: known ? ICONS[n.kind] : undefined,
           time: relativeTime(new Date(n.createdAt)),
           read: Boolean(n.read_at),
           tone: TONES[n.kind],
