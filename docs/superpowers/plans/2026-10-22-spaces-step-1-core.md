@@ -2096,6 +2096,23 @@ Layout: two rows — row 1 breadcrumb + badge + actions; row 2 title + avatars +
 
 - [ ] **Step 3: Commit**
 
+Measured (2026-10-23), before the commit below:
+
+- The tab row renders as links (`aria-current="page"`, like the calendar's
+  view switch): Arc's `tabs` is a Radix value/`onValueChange` controller
+  with no hrefs, and space routes are pages — an interactive Tabs in the
+  header would click without navigating.
+- Two optional props join the listing: `tabsLabel`/`membersLabel`, because
+  the new `nav` and the reused `AvatarGroup` need translated accessible
+  names that bilingual pages must supply.
+- The fold marks `data-folded` and animates one `grid-template-rows`
+  track (1fr → 0fr) with a reduced-motion branch; the component does not
+  position itself, so a sticky page wrapper stays the page's choice.
+- Names also show on focus, not only hover (the hover-content line of the
+  checklist); long-press stays the pages' wiring (spec §4).
+- Chips keep Arc's `--control-height-sm` (36px) like `chip-group`; the
+  44px touch-target line yields to the library's own chip precedent.
+
 ```bash
 pnpm exec tsc --noEmit -p . && pnpm exec eslint src/components/arc/reactions src/components/arc/page-header
 git add src/components/arc src/components/space
