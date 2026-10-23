@@ -323,4 +323,11 @@ describe('spaces core', () => {
     expect((post as { body: string }).body).toContain('What question brings you here?')
     expect((post as { author: unknown }).author).toBeNull()
   })
+
+  it('consent is per account and version, unique', async () => {
+    const data = { account: (student as { id: number }).id, version: 1, accepted_at: new Date().toISOString() } as never
+    const made = await payload.create({ collection: 'space-consents', data, overrideAccess: true })
+    track('space-consents', made.id)
+    await expect(payload.create({ collection: 'space-consents', data, overrideAccess: true })).rejects.toThrow()
+  })
 })

@@ -1,8 +1,41 @@
 import type { CollectionConfig } from 'payload'
 
-// filled in Task 7 of docs/superpowers/plans/2026-10-22-spaces-step-1-core.md
+/**
+ * One row per account (spec §8): the digest choice, daily by default; the
+ * sending job arrives in step 3 and reads this.
+ */
 export const SpacePreferences: CollectionConfig = {
   slug: 'space-preferences',
-  fields: [],
+  labels: { singular: 'Preference', plural: 'Preferences' },
+  access: {
+    read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
+    create: ({ req }) =>
+      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
+    update: ({ req }) => ({ account: { equals: (req.user as { id: number }).id } }),
+    delete: () => false,
+  },
   admin: { hidden: true },
+  fields: [
+    {
+      name: 'account',
+      type: 'relationship',
+      relationTo: 'users',
+      required: true,
+      index: true,
+      access: { update: () => false },
+    },
+    {
+      name: 'digest',
+      label: 'Email digest',
+      type: 'select',
+      required: true,
+      defaultValue: 'daily',
+      options: [
+        { label: 'Daily at 08:00 Cairo', value: 'daily' },
+        { label: 'Weekly', value: 'weekly' },
+        { label: 'Off', value: 'off' },
+      ],
+    },
+  ],
+  indexes: [{ fields: ['account'], unique: true }],
 }

@@ -33,6 +33,7 @@ import * as migration_20261022_214801_space_posts_space from './20261022_214801_
 import * as migration_20261022_220718_space_notification_kinds from './20261022_220718_space_notification_kinds';
 import * as migration_20261023_053200_spaces_posts from './20261023_053200_spaces_posts';
 import * as migration_20261023_054520_space_files from './20261023_054520_space_files';
+import * as migration_20261023_054735_spaces_small from './20261023_054735_spaces_small';
 
 export const migrations = [
   {
@@ -208,6 +209,11 @@ export const migrations = [
   {
     up: migration_20261023_054520_space_files.up,
     down: migration_20261023_054520_space_files.down,
-    name: '20261023_054520_space_files'
+    name: '20261023_054520_space_files',
+  },
+  {
+    up: migration_20261023_054735_spaces_small.up,
+    down: migration_20261023_054735_spaces_small.down,
+    name: '20261023_054735_spaces_small'
   },
 ];

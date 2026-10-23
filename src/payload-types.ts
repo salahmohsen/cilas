@@ -2130,6 +2130,9 @@ export interface SpaceReaction {
  */
 export interface SpaceConsent {
   id: number;
+  account: number | User;
+  version: number;
+  accepted_at: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -2139,6 +2142,14 @@ export interface SpaceConsent {
  */
 export interface SpaceVisit {
   id: number;
+  account: number | User;
+  space: number | Space;
+  last_visited_at: string;
+  saw_privacy?: boolean | null;
+  introduced?: boolean | null;
+  read_pinned?: boolean | null;
+  checked_profile?: boolean | null;
+  chose_digest?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2148,6 +2159,8 @@ export interface SpaceVisit {
  */
 export interface SpacePreference {
   id: number;
+  account: number | User;
+  digest: 'daily' | 'weekly' | 'off';
   updatedAt: string;
   createdAt: string;
 }
@@ -3608,6 +3621,9 @@ export interface SpaceReactionsSelect<T extends boolean = true> {
  * via the `definition` "space-consents_select".
  */
 export interface SpaceConsentsSelect<T extends boolean = true> {
+  account?: T;
+  version?: T;
+  accepted_at?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3616,6 +3632,14 @@ export interface SpaceConsentsSelect<T extends boolean = true> {
  * via the `definition` "space-visits_select".
  */
 export interface SpaceVisitsSelect<T extends boolean = true> {
+  account?: T;
+  space?: T;
+  last_visited_at?: T;
+  saw_privacy?: T;
+  introduced?: T;
+  read_pinned?: T;
+  checked_profile?: T;
+  chose_digest?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3624,6 +3648,8 @@ export interface SpaceVisitsSelect<T extends boolean = true> {
  * via the `definition` "space-preferences_select".
  */
 export interface SpacePreferencesSelect<T extends boolean = true> {
+  account?: T;
+  digest?: T;
   updatedAt?: T;
   createdAt?: T;
 }
