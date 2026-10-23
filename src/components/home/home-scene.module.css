@@ -133,13 +133,14 @@
   }
 }
 
-/* Scrolling away, the boat sails on over the swell and the water ebbs into
-   the page. */
+/* Scrolling away, the boat sails on over the swell to the header's brand mark
+   (HomeHero measures it into --sail-x/-y/--sail-scale), the water ebbs into
+   the page, and the boat fades with the water, on the very same range. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
     .track {
-      animation: sail-out linear both;
-      animation-timeline: scroll(root);
+      animation: sail-out linear both, ebb linear both;
+      animation-timeline: scroll(root), scroll(root);
       animation-range: 0 90vh;
     }
     .water {
@@ -207,18 +208,20 @@
   }
 }
 @keyframes sail-out {
-  /* Forward and over the swell: rising and falling as it goes. */
+  /* On toward the mark, rising and falling as it goes, each stop a share of
+     the measured flight, and landing at the mark's own size. */
   25% {
-    translate: -12vw -10px;
+    translate: calc(var(--sail-x, -48vw) * 0.3) calc(var(--sail-y, 0px) * 0.25 - 10px);
   }
   50% {
-    translate: -24vw 4px;
+    translate: calc(var(--sail-x, -48vw) * 0.55) calc(var(--sail-y, 0px) * 0.55 + 4px);
   }
   75% {
-    translate: -36vw -8px;
+    translate: calc(var(--sail-x, -48vw) * 0.8) calc(var(--sail-y, 0px) * 0.8 - 8px);
   }
   to {
-    translate: -48vw 0;
+    translate: var(--sail-x, -48vw) var(--sail-y, 0px);
+    scale: var(--sail-scale, 1);
   }
 }
 @keyframes ebb {

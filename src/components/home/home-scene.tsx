@@ -120,8 +120,9 @@ export function HomeScene() {
 
       <Sea from={0} rows={SWELLS.slice(0, 2)} />
 
-      {/* The track carries the scroll-linked voyage, the boat its riding of the waves. */}
-      <div className={styles.track}>
+      {/* The track carries the scroll-linked voyage, the boat its riding of the waves.
+          HomeHero measures it to aim the voyage at the header's brand mark. */}
+      <div className={styles.track} data-sail-track>
         <div className={styles.boat}>
           {/* The sail and the hull, two svgs in one frame: the sail leans as a
               whole element (see Sea), over a hull that stays put. */}

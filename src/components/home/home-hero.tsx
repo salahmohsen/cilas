@@ -1,7 +1,7 @@
 'use client'
 
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react'
 
 import { TextMorph } from '@/components/arc/text-morph/text-morph'
 import { HomeNumbers, type HomeStat } from '@/components/home/home-numbers'
@@ -13,6 +13,84 @@ type Closed = { label: string; note: string; link?: Action }
 
 /** How long each audience stays before the next takes its place. */
 const STEP = 2400
+
+/** An element's used translate in px, so a rect held by a running animation can be read back to rest. */
+function usedTranslate(el: Element) {
+  const parts = getComputedStyle(el).translate.split(' ')
+  const x = parseFloat(parts[0])
+  const y = parts.length > 1 ? parseFloat(parts[1]) : NaN
+  return [Number.isNaN(x) ? 0 : x, Number.isNaN(y) ? 0 : y] as [number, number]
+}
+
+/** An element's used scale, which stands at 1 when it isn't scaling. */
+function usedScale(el: Element) {
+  const scale = parseFloat(getComputedStyle(el).scale)
+  return Number.isNaN(scale) ? 1 : scale
+}
+
+/**
+ * Points the scene's boat at the header's brand mark: measuring both, it sets
+ * --sail-x, --sail-y and --sail-scale on the boat's track, so sail-out (in
+ * home-scene.module.css) lands the boat on the mark, sized like it. On Arabic
+ * pages the scene is mirrored, so the local flight reads the other way. Runs
+ * once laid out and again on any resize, so a load of type or a turn of the
+ * window re-aims the flight.
+ */
+function useSailAim(hero: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const track = hero.current?.querySelector<HTMLElement>('[data-sail-track]')
+    const brand = document.querySelector<HTMLElement>('.site-header [data-brand]')
+    const mark = brand?.querySelector<HTMLImageElement>('img')
+    if (!track || !brand || !mark) return
+    const aim = () => {
+      // The scene is mirrored on Arabic pages, which flips every local
+      // x-delta's sign on screen: -1 there, 1 in left-to-right.
+      const mirror = document.documentElement.dir === 'rtl' ? -1 : 1
+      // A scroll-driven animation holds its share of the flight in the rect
+      // while the page sits mid-scroll, so the track's own translate comes
+      // off, back to the boat's place at rest; scale is about the boat's
+      // center, so it never moves that center.
+      const [tx, ty] = usedTranslate(track)
+      const boat = track.getBoundingClientRect()
+      const boatX = boat.x + boat.width / 2 - mirror * tx
+      const boatY = boat.y + boat.height / 2 - ty + window.scrollY
+      // Hidden while the hero's name is on screen, the brand sits 0.5em low;
+      // its own translate lifts the mark back to where it rests shown. And the
+      // header sticks at the top once the deadlines bar above it has scrolled
+      // away, which it long has by the flight's end: the mark is read where
+      // the header is stuck, not wherever the bar has left it.
+      const [brandTx, brandTy] = usedTranslate(brand)
+      const markRect = mark.getBoundingClientRect()
+      const stuckFrom = brand.closest('header')?.offsetTop ?? 0
+      const markX = markRect.x + markRect.width / 2 - brandTx
+      const markY =
+        markRect.y + markRect.height / 2 - brandTy + window.scrollY - Math.max(window.scrollY, stuckFrom)
+      // The flight ends when its range does, 90vh scrolled: the boat must
+      // also catch up the distance its own rest place has travelled by then.
+      // In the mirrored scene a local leftward translate sails it right.
+      const x = mirror * (markX - boatX)
+      const y = markY - boatY + window.innerHeight * 0.9
+      const scaleToMark = Math.min(
+        0.5,
+        Math.max(0.08, markRect.height / Math.max(boat.height / usedScale(track), 1)),
+      )
+      track.style.setProperty('--sail-x', `${x.toFixed(1)}px`)
+      track.style.setProperty('--sail-y', `${y.toFixed(1)}px`)
+      track.style.setProperty('--sail-scale', `${scaleToMark.toFixed(3)}`)
+    }
+    aim()
+    // A late-loading mark would sit elsewhere than first measured.
+    if (!mark.complete) mark.addEventListener('load', aim, { once: true })
+    const resize = new ResizeObserver(aim)
+    resize.observe(document.body)
+    window.addEventListener('resize', aim)
+    return () => {
+      mark.removeEventListener('load', aim)
+      resize.disconnect()
+      window.removeEventListener('resize', aim)
+    }
+  }, [hero])
+}
 
 /**
  * Sets --hero-offset (see the effect below) while the HTML is still being
@@ -108,6 +186,13 @@ export function HomeHero({
       root.removeAttribute('data-brand-shown')
     }
   }, [])
+
+  // The voyage home: the scene's boat flies to the header's brand mark over
+  // the scroll (sail-out in home-scene.module.css), which needs the flight in
+  // px. This measures the mark and the boat and sets --sail-x, --sail-y and
+  // --sail-scale on the boat's track, so the boat lands on the mark, sized
+  // like it, and fades away with the water on the very same scroll range.
+  useSailAim(ref)
 
   return (
     // The script below sets the section's --hero-offset before React hydrates,
