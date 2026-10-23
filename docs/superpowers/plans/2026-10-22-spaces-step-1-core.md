@@ -2144,11 +2144,16 @@ import { insertMentionMarkdown } from '@/components/arc/rich-text-editor/rich-te
 
 describe('the @ member trigger (spec §5)', () => {
   it('a chosen member inserts [@Name](/people/{id}) at the caret', () => {
-    const md = 'Salam [@Nadim Id](/people/42)! hello'
-    expect(insertMentionMarkdown('Salam @nad hello', 7, { id: 42, name: 'Nadim Id' })).toBe(md)
+    const md = 'Salam [@Nadim Id](/people/42) hello'
+    expect(insertMentionMarkdown('Salam @nad hello', 10, { id: 42, name: 'Nadim Id' })).toBe(md)
   })
 })
 ```
+
+Measured 2026-10-23: the original expect carried a `!` absent from the input, and
+caret 7 sat mid-token (`@n`); the real splice scans back to the `@` and replaces
+through the caret, so the test pins caret 10 — the token's end, where the caret
+rests when a member picks from the panel.
 
 - [ ] **Step 2: Wire the trigger — minimal, mechanical generalization of the slash path**
 
@@ -2162,6 +2167,10 @@ The editor sits at ~2,600 lines and must not climb. First **extract** the slash 
 6. On member select from the panel: closes, restores focus, inserts. / people rows render as `@`-prefixed rows from the panel's `mentionSuggestions`, presented in the same positioning the slash panel has (reuse the same panel JSX fork the slash menu renders when `mention` is open — do not fight the CSS).
 
 Playable-Space note: `RichTextMentionSuggestion` doesn't exist anywhere; the plan does not conjure a parallel menu system. The single `Slash` type mutates only enough to drive both.
+
+Measured 2026-10-23 reconcile: "beside" reads contradictory against "do not fork" — one open menu at a time is the actual state machine, so the extraction lands one
+`useSlashTrigger` hook + one `SlashPanel`, and `Slash` gains `kind: 'slash' | 'mention'` instead of a mirrored second state cluster. Both menus share the
+keyboard block, geometry and panel rows; the marker character (`/` or `@`) opens its kind, and choosing a mention row splices `[@Name](/people/{id})` text.
 
 - [ ] **Step 3: comment-thread is not used by spaces — no changes**
 
