@@ -4,6 +4,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { personOf } from '@/access'
 import { membership, readableWhere, writePostWhere } from '@/lib/spaces'
+import { mySpaces, participation, spaceFeed, spaceLanding } from '@/lib/spaces-data'
 import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
 
@@ -325,9 +326,254 @@ describe('spaces core', () => {
   })
 
   it('consent is per account and version, unique', async () => {
-    const data = { account: (student as { id: number }).id, version: 1, accepted_at: new Date().toISOString() } as never
+    const data = {
+      account: (student as { id: number }).id,
+      version: 1,
+      accepted_at: new Date().toISOString(),
+    } as never
     const made = await payload.create({ collection: 'space-consents', data, overrideAccess: true })
     track('space-consents', made.id)
-    await expect(payload.create({ collection: 'space-consents', data, overrideAccess: true })).rejects.toThrow()
+    await expect(
+      payload.create({ collection: 'space-consents', data, overrideAccess: true }),
+    ).rejects.toThrow()
+  })
+
+  it('my spaces lists the summaries and counts unread against the visit stamp', async () => {
+    // Before any visit row: every non-own post is unread (the intro post).
+    const before = await mySpaces(payload, student, 'en')
+    expect(before.cohorts.map((s) => s.title)).toEqual(['Probe Bridge'])
+    expect(before.cohorts[0]?.href).toBe('/en/spaces/cohort/probe-bridge')
+    expect(before.courses.map((s) => s.title)).toEqual(['Probe Course'])
+    expect(before.courses[0]?.href).toBe('/en/spaces/course/probe-space-course')
+    expect(before.courses[0]?.unread).toBe(1)
+    expect(before.community?.title).toBe('Community')
+    expect(before.community?.href).toBe('/en/spaces/community')
+
+    // The fellow posts an older row; the student posts their own; the visit
+    // stamp lands; then a newer fellow row. Only the newer one is unread —
+    // rows older than the stamp do not count and own posts never do.
+    const older = await payload.create({
+      collection: 'space-posts',
+      data: {
+        space: courseSpace.id,
+        kind: 'discussion',
+        body: 'older row',
+        author: personOf(fellow) as number,
+      },
+      overrideAccess: true,
+    })
+    track('space-posts', older.id)
+    const studentPost = await payload.create({
+      collection: 'space-posts',
+      data: {
+        space: courseSpace.id,
+        kind: 'question',
+        body: 'own row',
+        author: personOf(student) as number,
+      },
+      overrideAccess: true,
+    })
+    track('space-posts', studentPost.id)
+    const visit = await payload.create({
+      collection: 'space-visits',
+      data: {
+        account: (student as { id: number }).id,
+        space: courseSpace.id,
+        last_visited_at: new Date().toISOString(),
+      },
+      overrideAccess: true,
+    })
+    track('space-visits', visit.id)
+    const newer = await payload.create({
+      collection: 'space-posts',
+      data: {
+        space: courseSpace.id,
+        kind: 'discussion',
+        body: 'newer row',
+        author: personOf(fellow) as number,
+      },
+      overrideAccess: true,
+    })
+    track('space-posts', newer.id)
+    const after = await mySpaces(payload, student, 'en')
+    expect(after.courses[0]?.unread).toBe(1)
+    expect(after.courses[0]?.lastActivity).toBeTruthy()
+  })
+
+  it('the feed sorts pinned first and rolls up comments and reactions', async () => {
+    const older = await payload.find({
+      collection: 'space-posts',
+      depth: 0,
+      overrideAccess: true,
+      where: { and: [{ space: { equals: courseSpace.id } }, { body: { equals: 'older row' } }] },
+    })
+    const newer = await payload.find({
+      collection: 'space-posts',
+      depth: 0,
+      overrideAccess: true,
+      where: { and: [{ space: { equals: courseSpace.id } }, { body: { equals: 'newer row' } }] },
+    })
+    const olderId = (older.docs[0] as { id: number }).id
+    const newerId = (newer.docs[0] as { id: number }).id
+    const fellowComment = await payload.create({
+      collection: 'space-comments',
+      data: {
+        space: courseSpace.id,
+        post: olderId,
+        author: personOf(fellow) as number,
+        body: 'first reply',
+      },
+      overrideAccess: true,
+    })
+    track('space-comments', fellowComment.id)
+    const studentComment = await payload.create({
+      collection: 'space-comments',
+      data: {
+        space: courseSpace.id,
+        post: olderId,
+        author: personOf(student) as number,
+        body: 'second reply',
+      },
+      overrideAccess: true,
+    })
+    track('space-comments', studentComment.id)
+    const myReaction = await payload.create({
+      collection: 'space-reactions',
+      data: {
+        space: courseSpace.id,
+        account: (student as { id: number }).id,
+        post: olderId,
+        reaction: 'agree',
+      },
+      overrideAccess: true,
+    })
+    track('space-reactions', myReaction.id)
+    const firstReaction = await payload.create({
+      collection: 'space-reactions',
+      data: {
+        space: courseSpace.id,
+        account: (fellow as { id: number }).id,
+        post: olderId,
+        reaction: 'insightful',
+      },
+      overrideAccess: true,
+    })
+    track('space-reactions', firstReaction.id)
+    const secondReaction = await payload.create({
+      collection: 'space-reactions',
+      data: {
+        space: courseSpace.id,
+        account: (fellow as { id: number }).id,
+        post: newerId,
+        reaction: 'same_question',
+      },
+      overrideAccess: true,
+    })
+    track('space-reactions', secondReaction.id)
+
+    // A pinned, authorless row (the CILAS announcement shape). Posted last,
+    // so "pinned first" can only come from the sort, not the creation order.
+    const pinned = await payload.create({
+      collection: 'space-posts',
+      data: { space: courseSpace.id, kind: 'announcement', body: 'pinned flag', pinned: true },
+      overrideAccess: true,
+    })
+    track('space-posts', pinned.id)
+    // The write path lifts `last_activity_at` on activity (spec §7); the raw
+    // fixture stamps it by hand to hold the same order assertion: the
+    // discussed row carries the newest activity among unpinned rows.
+    await payload.update({
+      collection: 'space-posts',
+      id: olderId,
+      data: { last_activity_at: new Date(Date.now() + 60_000).toISOString() },
+      overrideAccess: true,
+    })
+
+    const feed = await spaceFeed(payload, student, courseSpace)
+    const idxOf = (id: number | undefined) => feed.rows.findIndex((r) => r.post.id === id)
+    expect(feed.archived).toBe(false)
+    // Pinned leads even though the discussed row's activity is newer; then
+    // last activity decides.
+    expect(feed.rows[0]?.post.id).toBe(pinned.id)
+    expect(idxOf(olderId)).toBe(1)
+    expect(idxOf(newerId)).toBeGreaterThan(1)
+    const row = feed.rows[idxOf(olderId)]
+    expect(row?.commentCount).toBe(2)
+    expect(row?.reactions.counts).toEqual({ agree: 1, insightful: 1 })
+    expect(row?.reactions.mine).toEqual(['agree'])
+    expect(row?.authorName).toBe('Probe Fellow')
+    // The intro post carries no author: the page reads it as CILAS.
+    expect(feed.rows.some((r) => r.authorName === null)).toBe(true)
+  })
+
+  it('participation counts posts, comments, reactions and the last visit', async () => {
+    const rows = await participation(payload, courseSpace)
+    const fellowRow = rows.find((r) => r.name === 'Probe Fellow')
+    const studentRow = rows.find((r) => r.name === 'Probe Student')
+    expect(fellowRow?.posts).toBe(2)
+    expect(fellowRow?.comments).toBe(1)
+    expect(fellowRow?.reactions).toBe(2)
+    expect(fellowRow?.lastVisit).toBeNull()
+    expect(studentRow?.posts).toBe(1)
+    expect(studentRow?.comments).toBe(1)
+    expect(studentRow?.reactions).toBe(1)
+    expect(studentRow?.lastVisit).toBeTruthy()
+  })
+
+  it('landing resolves each kind by its document slug and gates by the switch', async () => {
+    const courseLanding = await spaceLanding(payload, student, 'course', 'probe-space-course')
+    expect(courseLanding?.space.id).toBe(courseSpace.id)
+    expect(courseLanding?.course?.title).toBe('Probe Course')
+    const cohortLanding = await spaceLanding(payload, student, 'cohort', 'probe-bridge')
+    expect(cohortLanding?.space.id).toBe(cohortSpace.id)
+    expect(cohortLanding?.programme?.title).toBe('Probe Bridge')
+    const communityLanding = await spaceLanding(payload, student, 'community', '')
+    expect(communityLanding?.space.id).toBe(community.id)
+    // The stranger's membership stops at the community.
+    expect(await spaceLanding(payload, stranger, 'course', 'probe-space-course')).toBeNull()
+    expect(await spaceLanding(payload, student, 'course', 'not-a-course')).toBeNull()
+    // The switch closes every landing and empties My spaces.
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { spaces_mode: 'off' },
+      overrideAccess: true,
+    })
+    expect(await spaceLanding(payload, student, 'community', '')).toBeNull()
+    expect(await mySpaces(payload, student, 'en')).toEqual({
+      community: null,
+      cohorts: [],
+      courses: [],
+    })
+    await payload.updateGlobal({
+      slug: 'site-settings',
+      data: { spaces_mode: 'on' },
+      overrideAccess: true,
+    })
+  })
+
+  it('a course space archives after its last meeting and reopens on demand', async () => {
+    // The course's last meeting 30 days back — well past the 14-day window.
+    const ago = new Date(Date.now() - 30 * 86_400_000).toISOString().slice(0, 10)
+    await payload.update({
+      collection: 'courses',
+      id: course.id,
+      data: {
+        sessions: [{ order: 1, dates: [{ date: ago, start_time: '18:00', end_time: '20:00' }] }],
+      },
+      overrideAccess: true,
+    })
+    const feed = await spaceFeed(payload, student, courseSpace)
+    expect(feed.lastMeeting).toBeTruthy()
+    expect(feed.daysSince).toBeGreaterThanOrEqual(28)
+    expect(feed.archived).toBe(true)
+    // Reopening holds the archive open.
+    await payload.update({
+      collection: 'spaces',
+      id: courseSpace.id,
+      data: { reopened: true },
+      overrideAccess: true,
+    })
+    const reopened = await spaceFeed(payload, student, courseSpace)
+    expect(reopened.archived).toBe(false)
   })
 })

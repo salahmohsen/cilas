@@ -1,5 +1,7 @@
 import type { Access, Payload, Where } from 'payload'
 
+import { cache } from 'react'
+
 import { isAdminUser, personOf } from '@/access'
 import { ENROLLED } from '@/lib/list-members'
 
@@ -46,9 +48,17 @@ const relIds = (v: Array<number | { id: number }> | null | undefined) =>
 const idOf = (v: number | { id: number } | null | undefined) =>
   v == null ? null : typeof v === 'object' ? v.id : v
 
-/** The settings as they read right now. */
-export const spacesSettings = async (payload: Payload): Promise<SpacesSettings> =>
-  (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })) as SpacesSettings
+/**
+ * The settings as they read right now. `cache` makes one settings read per
+ * render, however many rules and page sections call it (spec §1: the switch
+ * is read as it is, once).
+ */
+export const spacesSettings = cache(async (payload: Payload): Promise<SpacesSettings> => {
+  return (await payload.findGlobal({
+    slug: 'site-settings',
+    overrideAccess: true,
+  })) as SpacesSettings
+})
 
 export const mode = (settings: SpacesSettings | null | undefined) => settings?.spaces_mode ?? 'off'
 
@@ -213,37 +223,41 @@ type SpaceIds = number[] | true | false
 /**
  * The ids of the spaces this account can read right now, `true` for admin/
  * none, `false` for no user. Everything else builds Where clauses on top.
+ * `cache` keeps this to one membership read per render — the rules and the
+ * pages all ask.
  */
-export const readableSpaceIds = async (
-  payload: Payload,
-  user: null | { roles?: readonly string[]; person?: unknown },
-  settings?: SpacesSettings,
-): Promise<SpaceIds> => {
-  if (!user) return false
-  if (isAdminUser(user as never)) return true
-  const stored = settings ?? (await spacesSettings(payload))
-  if (mode(stored) === 'off') return false
-  const person = personOf(user)
-  const { docs } = await payload.find({
-    collection: 'spaces',
-    depth: 0,
-    draft: true,
-    pagination: false,
-    overrideAccess: true,
-  })
-  const envelope: Pick<SpaceLike, 'kind' | 'course' | 'programme'>[] = docs
-  const facts = await factsFor(payload, person, envelope)
-  const open = docs.filter((s) => spaceOpenOn(s as SpaceLike, stored))
-  const readable: number[] = []
-  for (const s of open) {
-    // A course row deleted since its space was made leaves `course: null`
-    // (relations null out on delete). Nobody reads that ghost: skip it
-    // instead of findById(null) throwing inside a read rule.
-    if (s.kind === 'course' && idOf(s.course as never) == null) continue
-    if (membershipOf(s as SpaceLike, facts).role !== 'none') readable.push(s.id)
-  }
-  return readable
-}
+export const readableSpaceIds = cache(
+  async (
+    payload: Payload,
+    user: null | { roles?: readonly string[]; person?: unknown },
+    settings?: SpacesSettings,
+  ): Promise<SpaceIds> => {
+    if (!user) return false
+    if (isAdminUser(user as never)) return true
+    const stored = settings ?? (await spacesSettings(payload))
+    if (mode(stored) === 'off') return false
+    const person = personOf(user)
+    const { docs } = await payload.find({
+      collection: 'spaces',
+      depth: 0,
+      draft: true,
+      pagination: false,
+      overrideAccess: true,
+    })
+    const envelope: Pick<SpaceLike, 'kind' | 'course' | 'programme'>[] = docs
+    const facts = await factsFor(payload, person, envelope)
+    const open = docs.filter((s) => spaceOpenOn(s as SpaceLike, stored))
+    const readable: number[] = []
+    for (const s of open) {
+      // A course row deleted since its space was made leaves `course: null`
+      // (relations null out on delete). Nobody reads that ghost: skip it
+      // instead of findById(null) throwing inside a read rule.
+      if (s.kind === 'course' && idOf(s.course as never) == null) continue
+      if (membershipOf(s as SpaceLike, facts).role !== 'none') readable.push(s.id)
+    }
+    return readable
+  },
+)
 
 /** Access rules assembled once, reused by the collections (spec §1). */
 
