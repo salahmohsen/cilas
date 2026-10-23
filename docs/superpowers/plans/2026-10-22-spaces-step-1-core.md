@@ -346,7 +346,7 @@ describe('spaces core', () => {
     await payload.updateGlobal({ slug: 'site-settings', data: { spaces_mode: 'off' }, overrideAccess: true })
     // Children delete before parents: Payload's required-relation FKs
     // restrict, so a parent deleted first leaks the row silently otherwise.
-    for (const collection of ['spaces', 'space-posts', 'space-comments', 'space-files', 'space-reactions', 'space-consents', 'space-visits', 'space-preferences', 'enrollments', 'memberships', 'courses', 'programmes', 'cycles', 'places', 'users', 'people'] as const) {
+    for (const collection of ['space-posts', 'space-comments', 'space-files', 'space-reactions', 'space-consents', 'space-visits', 'space-preferences', 'spaces', 'enrollments', 'memberships', 'courses', 'programmes', 'cycles', 'places', 'users', 'people'] as const) {
       const ids = [...(tracked.get(collection) ?? [])].reverse()
       for (const id of ids) {
         await payload
@@ -937,7 +937,7 @@ describe('space lifecycle (spec §11)', () => {
       schedule: {
         start_date: '2026-09-01',
         weeks: 4,
-        slots: [{ weekday: 'tuesday', start_time: '18:00', end_time: '20:00' }],
+        slots: [{ weekday: 'tue', start_time: '18:00', end_time: '20:00' }],
       },
     } as never)
     expect(last).toBe('2026-09-22')
@@ -1136,7 +1136,7 @@ export const ensureSpaceForCourse: CollectionAfterChangeHook<Course> = async ({ 
     where: { course: { equals: doc.id } },
     overrideAccess: true,
   })
-  if (noSpace.totalDocs === 0) await createSpace(req.payload, 'course', { course: doc.id })
+  if (noSpace.totalDocs === 0) await createSpace(req.payload, req, 'course', { course: doc.id })
 }
 
 export const ensureSpaceForProgramme: CollectionAfterChangeHook<Programme> = async ({ doc, req, previousDoc }) => {
@@ -1150,11 +1150,12 @@ export const ensureSpaceForProgramme: CollectionAfterChangeHook<Programme> = asy
     where: { programme: { equals: doc.id } },
     overrideAccess: true,
   })
-  if (noSpace.totalDocs === 0) await createSpace(req.payload, 'cohort', { programme: doc.id })
+  if (noSpace.totalDocs === 0) await createSpace(req.payload, req, 'cohort', { programme: doc.id })
 }
 
 const createSpace = async (
   payload: Payload,
+  req: Parameters<CollectionAfterChangeHook<Course>>[0]['req'],
   kind: 'course' | 'cohort',
   rel: { course?: number; programme?: number },
 ) => {
@@ -1162,17 +1163,20 @@ const createSpace = async (
     collection: 'spaces',
     data: { kind, ...rel } as never,
     overrideAccess: true,
+    req,
   })
   const post = await payload.create({
     collection: 'space-posts',
     data: { space: space.id, author: null, kind: 'discussion', body: INTRO } as never,
     overrideAccess: true,
+    req,
   })
   await payload.update({
     collection: 'spaces',
     id: space.id,
     data: { introduction_post: post.id } as never,
     overrideAccess: true,
+    req,
   })
   return space
 }
@@ -1199,11 +1203,14 @@ In `tests/int/spaces-core.int.spec.ts`, add inside the existing describe:
       overrideAccess: true,
     })
     expect(docs.length).toBe(1)
+    track('spaces', (docs[0] as { id: number }).id)
     const introId = (docs[0] as { introduction_post?: { id: number } | number }).introduction_post
     expect(introId).toBeTruthy()
+    const postId = typeof introId === 'object' ? introId.id : introId!
+    track('space-posts', postId)
     const post = await payload.findByID({
       collection: 'space-posts',
-      id: typeof introId === 'object' ? introId.id : introId!,
+      id: postId,
       overrideAccess: true,
     })
     expect((post as { body: string }).body).toContain('What question brings you here?')
