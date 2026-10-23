@@ -15,17 +15,15 @@ import {
   readTiers,
   WITH_OWNER,
 } from '@/access'
-import { BlocksFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
+import { lexicalEditor } from '@payloadcms/richtext-lexical'
 
-import { CardStack } from '@/blocks/card-stack'
-import { Footnote } from '@/blocks/footnote'
-import { Mention } from '@/blocks/mention'
 import { creditsField } from '@/fields/credits'
 import { LANGUAGE_OPTIONS } from '@/fields/language'
 import { slugField } from '@/fields/slug'
 import { toPersonIds } from '@/lib/fellow-role'
 import { reviewFields } from '@/fields/review'
 import { reviewHooks, type ReviewOptions } from '@/lib/review-hooks'
+import { articleBodyFeatures } from '@/lexical/article-body'
 import type { Article } from '@/payload-types'
 import { importFields } from '@/fields/import'
 
@@ -106,13 +104,7 @@ export const Articles: CollectionConfig = {
       type: 'richText',
       localized: true,
       // Footnotes and mentions are inline blocks: inserted where they belong in the text.
-      editor: lexicalEditor({
-        features: ({ defaultFeatures }) => [
-          ...defaultFeatures,
-          // Card stacks are blocks of their own, between paragraphs.
-          BlocksFeature({ blocks: [CardStack], inlineBlocks: [Footnote, Mention] }),
-        ],
-      }),
+      editor: lexicalEditor({ features: articleBodyFeatures }),
     },
     {
       name: 'authors',
