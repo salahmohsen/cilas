@@ -7,7 +7,6 @@ import {
   useId,
   useImperativeHandle,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -27,7 +26,7 @@ import {
   useReducedMotion,
   useTransform,
 } from 'motion/react'
-import type { Transition, Variants } from 'motion/react'
+import type { Variants } from 'motion/react'
 import {
   ArrowLeft,
   Bold,
@@ -35,20 +34,24 @@ import {
   Code,
   Heading1,
   Heading2,
-  Heading3,
   Italic,
   Link,
-  List,
-  ListOrdered,
-  Minus,
-  Pilcrow,
   Quote,
-  SquareCode,
   Strikethrough,
   Unlink,
 } from 'lucide-react'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './rich-text-editor.module.css'
+import {
+  GLIDE,
+  physical,
+  SlashPanel,
+  pruneMenu,
+  slashOptionId,
+  useSlashTrigger,
+} from './slash-trigger'
+
+export { insertMentionMarkdown } from './slash-trigger'
 
 /* ------------------------------------------------------------------------------------------------
  * Markdown and HTML. Small, dependency free converters for the subset the editor writes.
@@ -892,6 +895,10 @@ export interface RichTextEditorProps {
   placeholder?: string
   /** The hint on an empty line while typing. */
   blockHint?: string
+  /** Members the @ trigger proposes; without it @ stays an ordinary character. */
+  mentionSuggestions?: { id: number; name: string }[]
+  /** The accessible name of the @ menu's listbox. */
+  mentionOpenLabel?: string
   readOnly?: boolean
   autoFocus?: boolean
   'aria-label'?: string
@@ -907,8 +914,8 @@ type Formats = {
   link: string | null
   block: string
 }
-type SlashItem = { type: BlockType; label: string; hint: string; keywords: string; icon: ReactNode }
-type Slash = {
+export type Slash = {
+  kind: 'slash' | 'mention'
   node: Text
   offset: number
   query: string
@@ -920,82 +927,10 @@ type Slash = {
 type Snapshot = { html: string; selection: Offsets | null; kind: 'type' | 'command'; at: number }
 
 const icon = { size: 16, strokeWidth: 1.75, 'aria-hidden': true } as const
-const SLASH_ITEMS: SlashItem[] = [
-  {
-    type: 'p',
-    label: 'Text',
-    hint: '',
-    keywords: 'paragraph plain body',
-    icon: <Pilcrow {...icon} />,
-  },
-  {
-    type: 'h1',
-    label: 'Heading 1',
-    hint: '#',
-    keywords: 'title h1 large',
-    icon: <Heading1 {...icon} />,
-  },
-  {
-    type: 'h2',
-    label: 'Heading 2',
-    hint: '##',
-    keywords: 'subtitle h2 section',
-    icon: <Heading2 {...icon} />,
-  },
-  {
-    type: 'h3',
-    label: 'Heading 3',
-    hint: '###',
-    keywords: 'h3 small',
-    icon: <Heading3 {...icon} />,
-  },
-  {
-    type: 'ul',
-    label: 'Bulleted list',
-    hint: '-',
-    keywords: 'bullet unordered ul points',
-    icon: <List {...icon} />,
-  },
-  {
-    type: 'ol',
-    label: 'Numbered list',
-    hint: '1.',
-    keywords: 'ordered ol steps numbers',
-    icon: <ListOrdered {...icon} />,
-  },
-  {
-    type: 'blockquote',
-    label: 'Quote',
-    hint: '>',
-    keywords: 'blockquote citation callout',
-    icon: <Quote {...icon} />,
-  },
-  {
-    type: 'pre',
-    label: 'Code block',
-    hint: '```',
-    keywords: 'pre snippet monospace',
-    icon: <SquareCode {...icon} />,
-  },
-  {
-    type: 'hr',
-    label: 'Divider',
-    hint: '---',
-    keywords: 'rule hr line separator',
-    icon: <Minus {...icon} />,
-  },
-]
-
 const { spring, duration, ease, blur } = motionTokens
 const enter = [...ease.enter] as [number, number, number, number]
 const standard = [...ease.standard] as [number, number, number, number]
-const physical = (visualDuration: number, bounce: number): Transition => {
-  const root = (2 * Math.PI) / (visualDuration * 1.2)
-  return { type: 'spring', stiffness: root * root, damping: 2 * (1 - bounce) * root, mass: 1 }
-}
-const MORPH = physical(spring.morph.visualDuration, 0.12),
-  GLIDE = physical(0.3, 0.08),
-  GROW = physical(spring.smooth.visualDuration, 0)
+const MORPH = physical(spring.morph.visualDuration, 0.12)
 const TRAVEL = 18
 
 const faceVariants: Variants = {
@@ -1113,6 +1048,8 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       onHistoryChange,
       placeholder = 'Start writing',
       blockHint = 'Type / for blocks',
+      mentionSuggestions,
+      mentionOpenLabel,
       readOnly = false,
       autoFocus = false,
       'aria-label': ariaLabel = 'Editor',
@@ -1295,16 +1232,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       )
 
       const open = slashRef.current
-      if (open) {
-        const valid =
-          range.collapsed &&
-          range.startContainer === open.node &&
-          range.startOffset > open.offset &&
-          open.node.data[open.offset] === '/'
-        const query = valid ? open.node.data.slice(open.offset + 1, range.startOffset) : ''
-        if (!valid || query.length > 24 || /^\s/.test(query) || /\s\s/.test(query)) setSlash(null)
-        else if (query !== open.query) setSlash({ ...open, query })
-      }
+      if (open) setSlash(pruneMenu(open, range))
 
       const inCode = !!start?.closest('pre')
       if (range.collapsed || dragging.current || inCode || slashRef.current || readOnly) {
@@ -1476,56 +1404,6 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       return false
     }, [])
 
-    const openSlashIfTyped = useCallback((data: string | null) => {
-      const editor = editorRef.current,
-        root = rootRef.current
-      const selection = window.getSelection()
-      if (data !== '/' || !editor || !root || !selection?.rangeCount) return
-      const range = selection.getRangeAt(0)
-      const node = range.startContainer
-      if (!range.collapsed || !isText(node) || node.parentElement?.closest('pre, code')) return
-      const offset = range.startOffset - 1
-      if (
-        node.data[offset] !== '/' ||
-        (offset > 0 && !/[\s\u00a0\u200b]/.test(node.data[offset - 1]!))
-      )
-        return
-      const mark = document.createRange()
-      mark.setStart(node, offset)
-      mark.setEnd(node, offset + 1)
-      const rect = mark.getBoundingClientRect(),
-        box = root.getBoundingClientRect()
-      const band = clipBand(root)
-      const above =
-        band.bottom - rect.bottom < 330 && rect.top - band.top > band.bottom - rect.bottom
-      const room = above ? rect.top - band.top - 12 : band.bottom - rect.bottom - 12
-      setSlash({
-        node,
-        offset,
-        query: '',
-        x: Math.max(0, Math.min(rect.left - box.left - 8, box.width - 244)),
-        y: above ? rect.top - box.top - 6 : rect.bottom - box.top + 6,
-        above,
-        max: Math.max(150, room),
-      })
-      setSlashActive(0)
-      setBar(null)
-    }, [])
-
-    const slashResults = useMemo(() => {
-      const query = slash?.query.trim().toLowerCase() ?? ''
-      if (!query) return SLASH_ITEMS
-      return SLASH_ITEMS.filter(
-        (item) =>
-          `${item.label} ${item.keywords}`
-            .toLowerCase()
-            .split(/\s+/)
-            .some((word) => word.startsWith(query)) || item.label.toLowerCase().includes(query),
-      )
-    }, [slash?.query])
-    const slashIndex = Math.min(slashActive, Math.max(0, slashResults.length - 1))
-    const slashOpen = !!slash && slashResults.length > 0
-
     const applyBlock = useCallback((type: BlockType, target?: HTMLElement | null) => {
       const editor = editorRef.current
       const selection = window.getSelection()
@@ -1566,27 +1444,24 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       }
     }, [])
 
-    const chooseSlash = (item: SlashItem | undefined) => {
-      const open = slashRef.current
-      const editor = editorRef.current
-      if (!item || !open || !editor) return
-      const selection = window.getSelection()
-      const caret =
-        selection?.rangeCount && selection.getRangeAt(0).startContainer === open.node
-          ? selection.getRangeAt(0).startOffset
-          : open.offset + 1 + open.query.length
-      setSlash(null)
-      run(() => {
-        open.node.deleteData(open.offset, Math.max(1, caret - open.offset))
-        const block = blockAt(editor, open.node)
-        placeCaret(open.node, open.offset)
-        if (block) {
-          ensureFilled(block)
-          applyBlock(item.type, block)
-        }
-      })
-      setAnnounce(`${item.label} added`)
-    }
+    const slashT = useSlashTrigger({
+      slash,
+      setSlash,
+      slashActive,
+      setSlashActive,
+      slashRef,
+      editorRef,
+      rootRef,
+      clipBand,
+      setBar,
+      run,
+      applyBlock,
+      blockAt,
+      placeCaret,
+      ensureFilled,
+      announce: setAnnounce,
+      members: mentionSuggestions,
+    })
 
     /* Inline marks and links. */
     const toggleMark = (mark: 'bold' | 'italic' | 'strike' | 'code') =>
@@ -1921,7 +1796,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       } else record('type', native.data === ' ' || native.inputType !== lastInput.current)
       lastInput.current = native.inputType
       emit()
-      if (!converted && native.inputType === 'insertText') openSlashIfTyped(native.data)
+      if (!converted && native.inputType === 'insertText') slashT.openIfTyped(native.data)
       sync()
     }
 
@@ -1932,27 +1807,7 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       if (readOnly) return
       const mod = event.metaKey || event.ctrlKey
       const key = event.key.toLowerCase()
-      if (slashOpen) {
-        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-          event.preventDefault()
-          setSlashActive(
-            (slashIndex + (event.key === 'ArrowDown' ? 1 : -1) + slashResults.length) %
-              slashResults.length,
-          )
-          return
-        }
-        if (event.key === 'Enter' || event.key === 'Tab') {
-          event.preventDefault()
-          chooseSlash(slashResults[slashIndex])
-          return
-        }
-        if (event.key === 'Escape') {
-          event.preventDefault()
-          event.stopPropagation()
-          setSlash(null)
-          return
-        }
-      }
+      if (slashT.menuKey(event)) return
       if (mod && key === 'z') {
         event.preventDefault()
         if (event.shiftKey) redo()
@@ -2239,62 +2094,6 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
     useEffect(() => () => cancelAnimationFrame(placedFrame.current), [])
     const direction = face === 'link' ? 1 : -1
 
-    /* Slash menu geometry: the highlight glides between rows and the panel springs to its rows. */
-    const listRef = useRef<HTMLUListElement>(null)
-    const hy = useMotionValue(0),
-      hh = useMotionValue(0),
-      panelHeight = useMotionValue<number | 'auto'>('auto')
-    const panelBody = useRef<HTMLDivElement>(null)
-    const slashPanel = useRef<HTMLDivElement>(null)
-    const slashMax = slash?.max ?? 320
-    const panelSized = useRef(false)
-    const highlightPlaced = useRef(false)
-    useLayoutEffect(() => {
-      const row = listRef.current?.querySelector<HTMLElement>(`[data-index="${slashIndex}"]`)
-      if (!row) return
-      if (reduced || !highlightPlaced.current || hh.get() === 0) {
-        hy.jump(row.offsetTop)
-        hh.jump(row.offsetHeight)
-        highlightPlaced.current = true
-        return
-      }
-      animate(hy, row.offsetTop, GLIDE)
-      animate(hh, row.offsetHeight, GLIDE)
-      // A short panel scrolls to keep the active row in view.
-      const panel = slashPanel.current
-      if (panel) {
-        const top = row.offsetTop + 6,
-          bottom = top + row.offsetHeight
-        if (top - 6 < panel.scrollTop) panel.scrollTop = top - 6
-        else if (bottom + 6 > panel.scrollTop + panel.clientHeight)
-          panel.scrollTop = bottom + 6 - panel.clientHeight
-      }
-    }, [hh, hy, reduced, slashIndex, slashResults, slashOpen])
-    useLayoutEffect(() => {
-      // The highlight keeps its row while the menu fades out; the next open places it fresh.
-      if (!slashOpen) {
-        panelSized.current = false
-        highlightPlaced.current = false
-        return
-      }
-      const body = panelBody.current
-      if (!body) return
-      const fit = () => {
-        const target = Math.min(body.offsetHeight, slashMax)
-        if (!panelSized.current || reduced) {
-          panelHeight.jump(target)
-          panelSized.current = true
-          return
-        }
-        animate(panelHeight, target, GROW)
-      }
-      fit()
-      if (typeof ResizeObserver === 'undefined') return
-      const observer = new ResizeObserver(fit)
-      observer.observe(body)
-      return () => observer.disconnect()
-    }, [hh, panelHeight, reduced, slashMax, slashOpen])
-
     const onToolbarKey = (event: ReactKeyboardEvent<HTMLDivElement>) => {
       if (face !== 'format') return
       const buttons = Array.from(event.currentTarget.querySelectorAll<HTMLButtonElement>('button'))
@@ -2311,7 +2110,6 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
       }
     }
 
-    const optionId = (index: number) => `${uid}-slash-${index}`
     const cssVars = {
       '--placeholder': JSON.stringify(placeholder),
       '--hint': JSON.stringify(blockHint),
@@ -2333,8 +2131,10 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
           aria-multiline="true"
           aria-label={ariaLabel}
           aria-readonly={readOnly || undefined}
-          aria-controls={slashOpen ? `${uid}-slash` : undefined}
-          aria-activedescendant={slashOpen ? optionId(slashIndex) : undefined}
+          aria-controls={slashT.slashOpen ? `${uid}-slash` : undefined}
+          aria-activedescendant={
+            slashT.slashOpen ? slashOptionId(uid, slashT.slashIndex) : undefined
+          }
           data-empty={empty || undefined}
           spellCheck
           onInput={onInput}
@@ -2522,73 +2322,18 @@ export const RichTextEditor = forwardRef<RichTextEditorHandle, RichTextEditorPro
         </AnimatePresence>
 
         <AnimatePresence>
-          {slashOpen && slash && (
-            <motion.div
-              key={`${slash.offset}-${slash.y}`}
-              ref={slashPanel}
-              className={styles.slash}
-              data-above={slash.above || undefined}
-              style={{
-                left: slash.x,
-                top: slash.y,
-                height: panelHeight,
-                maxHeight: slashMax,
-                transformOrigin: slash.above ? '16px 100%' : '16px 0',
-              }}
-              initial={
-                reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: slash.above ? 4 : -4 }
-              }
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={
-                reduced
-                  ? { opacity: 0 }
-                  : {
-                      opacity: 0,
-                      scale: 0.97,
-                      transition: { duration: duration.exit * 0.8, ease: standard },
-                    }
-              }
-              transition={
-                reduced
-                  ? { duration: duration.fast }
-                  : { ...spring.snappy, opacity: { duration: duration.fast, ease: enter } }
-              }
-              onMouseDown={(event) => event.preventDefault()}
-            >
-              <div ref={panelBody} className={styles.slashBody}>
-                <ul
-                  ref={listRef}
-                  id={`${uid}-slash`}
-                  role="listbox"
-                  aria-label="Blocks"
-                  className={styles.slashList}
-                >
-                  <motion.li
-                    aria-hidden="true"
-                    className={styles.slashHighlight}
-                    style={{ y: hy, height: hh }}
-                  />
-                  {slashResults.map((item, index) => (
-                    <li
-                      key={item.type}
-                      id={optionId(index)}
-                      role="option"
-                      aria-selected={index === slashIndex}
-                      data-index={index}
-                      className={styles.slashOption}
-                      onPointerMove={() => {
-                        if (index !== slashIndex) setSlashActive(index)
-                      }}
-                      onClick={() => chooseSlash(item)}
-                    >
-                      <span className={styles.slashIcon}>{item.icon}</span>
-                      <span className={styles.slashLabel}>{item.label}</span>
-                      {item.hint && <kbd className={styles.slashHint}>{item.hint}</kbd>}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
+          {slashT.slashOpen && slashT.slash && (
+            <SlashPanel
+              key={`${slashT.slash.offset}-${slashT.slash.y}`}
+              uid={uid}
+              slash={slashT.slash}
+              results={slashT.slashResults}
+              index={slashT.slashIndex}
+              reduced={reduced}
+              label={slashT.slash.kind === 'mention' ? (mentionOpenLabel ?? 'Members') : 'Blocks'}
+              setActive={setSlashActive}
+              choose={slashT.choose}
+            />
           )}
         </AnimatePresence>
       </div>
