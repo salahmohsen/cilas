@@ -5,6 +5,7 @@ export type RegistrationMethod = (typeof REGISTRATION_METHODS)[number]
 
 export type Registration = {
   method?: RegistrationMethod | null
+  url?: string | null
   deadline?: string | null
 }
 

@@ -2,7 +2,9 @@
  * Taking a page to study with AI: the prompts and the deep links that make a
  * chat assistant open as the page's own fellow. The prompt is built here and
  * handed to the assistant prefilled, and it asks the assistant to fetch the
- * page it was opened from, so the prompt stays short and never needs images.
+ * page's llms.txt twin first (the same content in plain markdown, built per
+ * page beside the routes), falling back to the page itself, so the prompt
+ * stays short and never needs images.
  *
  * The provider links prefill a first message. Verified once (2026-10):
  * - `\nhttps://claude.ai/new?q=` prefills a new conversation |
@@ -48,12 +50,14 @@ export const aiLink = (id: ProviderId, kind: StudyKind, url: string): string => 
 }
 
 /**
- * The study prompt for a page. The assistant fetches the page itself and
- * runs CILAS's way of teaching — discovery and attunement in discussion,
+ * The study prompt for a page. The assistant fetches the page's llms.txt twin
+ * and runs CILAS's way of teaching — discovery and attunement in discussion,
  * never a lecture — as taken from the institute's own words.
  */
 export const promptForPage = (kind: StudyKind, url: string): string =>
   kind === 'course' ? coursePrompt(url) : articlePrompt(url)
+
+const fileUrl = (url: string): string => `${url.replace(/\/+$/, '')}/llms.txt`
 
 /** The course's fellow: the whole journey, session by session. */
 const coursePrompt = (
@@ -67,7 +71,8 @@ Knowledge is made together through discussion, deep listening, disagreement, wri
 The course page is this URL:
 ${url}
 
-1. Fetch the full page.
+1. Fetch this file. It is the complete content of the page, converted to plain markdown with all links: ${fileUrl(url)}.
+   If that fetch fails, fetch the page itself: ${url}
 2. Extract: title, cycle, practical facts, description, fellow bio, complete syllabus.
 3. Research every source named in the syllabus.
 4. Then output ONLY this short choice (nothing else):
@@ -123,7 +128,8 @@ CILAS articles are written in the same spirit as its courses: they invite discov
 The article page is this URL (English or Arabic):
 ${url}
 
-1. Fetch the full page.
+1. Fetch this file. It is the complete content of the page, converted to plain markdown with all links: ${fileUrl(url)}.
+   If that fetch fails, fetch the page itself: ${url}
 2. Extract: title, author(s), series (if any, e.g. "Translation as Education", "On the Emergence of Pigeon Towers"), approximate length, and the complete text.
 3. Then output ONLY this short choice:
 
