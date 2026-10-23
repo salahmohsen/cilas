@@ -23,6 +23,7 @@ import { reviewFields } from '@/fields/review'
 import { slugField } from '@/fields/slug'
 import { grantFellow, revokeIfUnteaching, toPersonIds } from '@/lib/fellow-role'
 import { reviewHooks } from '@/lib/review-hooks'
+import { ensureSpaceForCourse } from '@/lib/space-hooks'
 import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
@@ -459,7 +460,12 @@ export const Courses: CollectionConfig = {
     beforeOperation: courseReview.beforeOperation,
     beforeValidate: [addSelfAsFellow],
     beforeChange: courseReview.beforeChange,
-    afterChange: [...courseReview.afterChange, propagateFellowRole, revalidateCoursesAfterChange],
+    afterChange: [
+      ...courseReview.afterChange,
+      propagateFellowRole,
+      revalidateCoursesAfterChange,
+      ensureSpaceForCourse,
+    ],
     afterDelete: [revokeDeletedCourseFellows, revalidateCoursesAfterDelete],
   },
 }

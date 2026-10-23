@@ -2058,7 +2058,16 @@ export interface Space {
  */
 export interface SpacePost {
   id: number;
-  space?: (number | null) | Space;
+  space: number | Space;
+  author?: (number | null) | Person;
+  kind: 'discussion' | 'question' | 'announcement';
+  body: string;
+  pinned?: boolean | null;
+  locked?: boolean | null;
+  announcement_email_sent?: boolean | null;
+  edited_at?: string | null;
+  last_activity_at?: string | null;
+  deleted_at?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -2068,6 +2077,13 @@ export interface SpacePost {
  */
 export interface SpaceComment {
   id: number;
+  space: number | Space;
+  post: number | SpacePost;
+  parent?: (number | null) | SpaceComment;
+  author?: (number | null) | Person;
+  body: string;
+  edited_at?: string | null;
+  deleted_at?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -3506,6 +3522,15 @@ export interface SpacesSelect<T extends boolean = true> {
  */
 export interface SpacePostsSelect<T extends boolean = true> {
   space?: T;
+  author?: T;
+  kind?: T;
+  body?: T;
+  pinned?: T;
+  locked?: T;
+  announcement_email_sent?: T;
+  edited_at?: T;
+  last_activity_at?: T;
+  deleted_at?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -3514,6 +3539,13 @@ export interface SpacePostsSelect<T extends boolean = true> {
  * via the `definition` "space-comments_select".
  */
 export interface SpaceCommentsSelect<T extends boolean = true> {
+  space?: T;
+  post?: T;
+  parent?: T;
+  author?: T;
+  body?: T;
+  edited_at?: T;
+  deleted_at?: T;
   updatedAt?: T;
   createdAt?: T;
 }

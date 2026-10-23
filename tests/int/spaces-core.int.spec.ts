@@ -118,10 +118,28 @@ describe('spaces core', () => {
       }) as Promise<Space>
     community = await mkSpace({ kind: 'community' })
     track('spaces', community.id)
-    courseSpace = await mkSpace({ kind: 'course', course: (course as { id: number }).id })
+    const { docs: _courseSpaces } = await payload.find({
+      collection: 'spaces',
+      where: { course: { equals: (course as { id: number }).id } },
+      overrideAccess: true,
+    })
+    courseSpace = _courseSpaces[0] as Space
     track('spaces', courseSpace.id)
-    cohortSpace = await mkSpace({ kind: 'cohort', programme: programmeId })
+    const _courseIntro = (courseSpace as { introduction_post?: { id: number } | number })
+      .introduction_post
+    if (_courseIntro)
+      track('space-posts', typeof _courseIntro === 'object' ? _courseIntro.id : _courseIntro)
+    const { docs: _cohortSpaces } = await payload.find({
+      collection: 'spaces',
+      where: { programme: { equals: programmeId } },
+      overrideAccess: true,
+    })
+    cohortSpace = _cohortSpaces[0] as Space
     track('spaces', cohortSpace.id)
+    const _cohortIntro = (cohortSpace as { introduction_post?: { id: number } | number })
+      .introduction_post
+    if (_cohortIntro)
+      track('space-posts', typeof _cohortIntro === 'object' ? _cohortIntro.id : _cohortIntro)
     // Settings: everything on.
     await payload.updateGlobal({
       slug: 'site-settings',
@@ -139,7 +157,6 @@ describe('spaces core', () => {
     // Children delete before parents: Payload's required-relation FKs
     // restrict, so a parent deleted first leaks the row silently otherwise.
     for (const collection of [
-      'spaces',
       'space-posts',
       'space-comments',
       'space-files',
@@ -147,6 +164,7 @@ describe('spaces core', () => {
       'space-consents',
       'space-visits',
       'space-preferences',
+      'spaces',
       'enrollments',
       'memberships',
       'courses',
@@ -283,5 +301,26 @@ describe('spaces core', () => {
         (p) => p.space.id === community.id,
       ),
     ).toBe(true)
+  })
+
+  it('a published course owns its space and its intro post', async () => {
+    const { docs } = await payload.find({
+      collection: 'spaces',
+      where: { course: { equals: (course as { id: number }).id } },
+      overrideAccess: true,
+    })
+    expect(docs.length).toBe(1)
+    track('spaces', (docs[0] as { id: number }).id)
+    const introId = (docs[0] as { introduction_post?: { id: number } | number }).introduction_post
+    expect(introId).toBeTruthy()
+    const postId = typeof introId === 'object' ? introId.id : introId!
+    track('space-posts', postId)
+    const post = await payload.findByID({
+      collection: 'space-posts',
+      id: postId,
+      overrideAccess: true,
+    })
+    expect((post as { body: string }).body).toContain('What question brings you here?')
+    expect((post as { author: unknown }).author).toBeNull()
   })
 })
