@@ -1795,6 +1795,31 @@ The small writes above, which Task 13's pages and checklist call: `consentAccept
 
 - [ ] **Step 4: Run the int spec, reconcile, commit**
 
+Measured reconcile (2026-10-23, space-feature branch), read before the listing above:
+
+- `postCreate` refuses a member's announcement with `announcement` (the
+  posting-level check alone says `posting-level`, which names the wrong door
+  to the UI); the lifecycle read-only check and membership precede it in the
+  fixed rule order.
+- An announcement is pinned by the *action's* create data. The collection
+  `beforeChange` hook's `data` mutation does not reach the row through the
+  Local API, so the pairing is: action sets `pinned`, hook stays as the
+  admin/REST path's backstop.
+- A post with replies keeps its tombstone with `body: ' '` — SpacePosts'
+  required textarea refuses `''`, so "body emptied" lands as a single space.
+- Membership reality the fixture mirrors: the community space admits every
+  signed-in account with a person (a "stranger" is only outside a course or
+  cohort space), and the consent gate applies to admins too — the fixture
+  accepts the notice for every account it posts with.
+- The file gates (`file-count`, `file-size`, `file-type`) all fire before
+  Payload's upload path, so no test needs to move bytes through the bucket:
+  the count test seeds the five-row cap straight into the local table, and
+  the mime/size refuses happen before create.
+- Local API population returns `introduction_post` as an object; the spec
+  normalizes before tracking, and every fixture row that another row binds
+  to (enrollment, membership, intro posts, fresh consent) is tracked, or
+  child-first cleanup fails and residue stays.
+
 ```bash
 pnpm payload generate:types
 DATABASE_URL=postgres://cilas:dev@localhost:5433/cilas_dev pnpm exec vitest run --config ./vitest.config.mts tests/int/spaces-write.int.spec.ts
