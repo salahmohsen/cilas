@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { getPayload, type Payload } from 'payload'
+import { getPayload, type Payload, type Where } from 'payload'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 import { personOf } from '@/access'
@@ -539,7 +539,7 @@ describe('spaces core', () => {
     expect(studentRow?.reactions).toBe(1)
     expect(studentRow?.lastVisit).toBeTruthy()
     // Every live post and comment written this run, the CILAS intro post too, lands in the current week.
-    const live = {
+    const live: Where = {
       and: [{ space: { equals: courseSpace.id } }, { deleted_at: { exists: false } }],
     }
     const written =

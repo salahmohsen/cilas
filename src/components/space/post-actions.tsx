@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Lock, LockOpen, Pencil, Pin, PinOff, Trash2 } from 'lucide-react'
+import { Ellipsis, Lock, LockOpen, Pencil, Pin, PinOff, Trash2 } from 'lucide-react'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { ConfirmMorph, type ConfirmMorphState } from '@/components/arc/confirm-morph/confirm-morph'
@@ -94,7 +94,7 @@ export function PostActions({
   return (
     <>
       {deleting === 'idle' ? (
-        <DropdownMenu label={t('more')} items={items} />
+        <DropdownMenu label={t('more')} items={items} icon={<Ellipsis size={18} />} iconOnly />
       ) : (
         <ConfirmMorph
           label={t('delete')}

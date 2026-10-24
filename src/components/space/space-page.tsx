@@ -12,17 +12,17 @@ import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import type { Course, Programme, Space, User } from '@/payload-types'
 import { NOTICE } from '@/lib/space-consent'
-import { membership } from '@/lib/spaces'
-import { memberState, moderatorPeople, participation, spaceFeed } from '@/lib/spaces-data'
-import { spaceRoster, visitRecord } from '@/lib/spaces-write'
+import { mayComment, membership } from '@/lib/spaces'
+import { memberState, participation, spaceFeed } from '@/lib/spaces-data'
+import { visitRecord } from '@/lib/spaces-write'
 
 import { Composer } from './composer'
 import { FeedFilter } from './feed-filter'
-import { FeedRow, type Person } from './feed-row'
+import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { LoadMore } from './load-more'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
-import type { PersonCard } from './person-hover'
+import { spacePeopleCards } from './space-people'
 import { SpaceRail } from './space-rail'
 import { SpaceSettings } from './space-settings'
 import styles from './space.module.css'
@@ -55,13 +55,12 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   if (mem.role === 'none') notFound()
   const moderator = mem.role === 'moderator'
 
-  const [t, tp, feed, state, roster, moderatorIds, numbers, jar] = await Promise.all([
+  const [t, tp, feed, state, { cards, byId, moderators }, numbers, jar] = await Promise.all([
     getTranslations('Spaces'),
     getTranslations('SpacePost'),
     spaceFeed(payload, user, space),
     memberState(payload, user, space.id),
-    spaceRoster({ payload, user, space: space.id, locale: locale === 'ar' ? 'ar' : 'en' }),
-    moderatorPeople(payload, space),
+    spacePeopleCards(payload, user, space, locale),
     moderator ? participation(payload, space) : Promise.resolve(null),
     cookies(),
   ])
@@ -78,26 +77,20 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   const notice = NOTICE[locale === 'ar' ? 'ar' : 'en']
   const viewerPerson = personOf(user)
 
-  const members = roster.ok ? roster.data.members : []
-  const cards: PersonCard[] = members
-    .map((m) => ({
-      id: m.personId,
-      name: m.name,
-      photo: m.photo?.url ?? null,
-      role: moderatorIds.has(m.personId) ? t('fellow') : t('member'),
-      bio: m.bio,
-      links: m.links,
-      href: m.slug ? `/${locale}/people/${m.slug}` : null,
-    }))
-    .sort(
-      (a, b) =>
-        Number(moderatorIds.has(b.id)) - Number(moderatorIds.has(a.id)) ||
-        a.name.localeCompare(b.name, locale),
-    )
-  const people = new Map<number, Person>(cards.map((c) => [c.id, c]))
-  const me = (viewerPerson != null && people.get(viewerPerson)) || {
+  const me = (viewerPerson != null && byId.get(viewerPerson)) || {
     name: user.email,
     photo: null,
+  }
+  const context: FeedContext = {
+    archived: feed.archived,
+    viewer: { personId: viewerPerson, moderator, me: { name: me.name, photo: me.photo } },
+    moderators,
+    people: byId,
+    cards,
+    mayComment: mayComment(mem, space.posting ?? 'open'),
+    consented: state.consented,
+    notice,
+    now: renderedAt,
   }
 
   const announcements = feed.rows.filter((r) => r.post.kind === 'announcement')
@@ -133,10 +126,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
       row={r}
       position={position}
       total={listed.length}
-      archived={feed.archived}
-      viewer={{ personId: viewerPerson, moderator }}
-      moderators={moderatorIds}
-      people={people}
+      context={context}
       postHref={`${path}/posts/${r.post.id}`}
     />
   )
@@ -198,7 +188,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
             moderator={moderator}
             archived={feed.archived}
             me={me}
-            mentions={members.map((m) => ({ id: m.personId, name: m.name }))}
+            mentions={cards.map((c) => ({ id: c.id, name: c.name }))}
             consented={state.consented}
             notice={notice}
           />

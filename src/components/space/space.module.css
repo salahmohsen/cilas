@@ -1,9 +1,15 @@
 .page {
+  /* Mentions and links in posts read in one link colour. */
+  --mention: oklch(0.5 0.17 255);
   width: 100%;
   margin-inline: auto;
   padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-8)) var(--space-8);
   display: grid;
   gap: var(--space-6);
+}
+
+:global([data-theme='dark']) .page {
+  --mention: oklch(0.78 0.11 255);
 }
 
 .page > * {
@@ -135,7 +141,7 @@
 
 .post {
   display: grid;
-  gap: var(--space-3);
+  gap: var(--space-4);
   padding: var(--space-4);
   border: 1px solid var(--border);
   border-radius: var(--radius-surface);
@@ -296,11 +302,34 @@
   cursor: pointer;
 }
 
-.postActions {
+.postLabels {
   margin-inline-start: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+/* Photo, then two lines: the name over when it was posted. */
+.byline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.bylineText {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.bylineName {
   display: flex;
   align-items: center;
   gap: var(--space-2);
+  min-width: 0;
 }
 
 .memberList {
@@ -599,4 +628,207 @@
   padding-top: var(--space-2);
   font-size: var(--text-xs);
   color: var(--text-secondary);
+}
+
+/* Markdown in a post: the editor's blocks, set in the space's text face. */
+.markdown {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-body, 1.6);
+  overflow-wrap: anywhere;
+}
+
+.markdown > * {
+  margin: 0;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3 {
+  font-weight: 600;
+  line-height: 1.3;
+  text-wrap: balance;
+}
+
+.markdown h1 {
+  font-size: var(--text-2xl);
+}
+
+.markdown h2 {
+  font-size: var(--text-xl);
+}
+
+.markdown h3 {
+  font-size: var(--text-lg);
+}
+
+.markdown ul,
+.markdown ol {
+  display: grid;
+  gap: var(--space-1);
+  padding-inline-start: var(--space-6);
+}
+
+.markdown ul {
+  list-style: disc;
+}
+
+.markdown ol {
+  list-style: decimal;
+}
+
+.markdown blockquote {
+  padding-inline-start: var(--space-4);
+  border-inline-start: 3px solid var(--border-strong);
+  color: var(--text-secondary);
+}
+
+.markdown code {
+  padding: 0.1em 0.35em;
+  border-radius: var(--radius-control);
+  background: var(--surface-muted);
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 0.9em;
+}
+
+.markdown pre {
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  background: var(--surface-muted);
+  overflow-x: auto;
+  direction: ltr;
+}
+
+.markdown pre code {
+  padding: 0;
+  background: none;
+}
+
+.markdown hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+}
+
+.markdown a:not(.mentionLink) {
+  color: var(--mention);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* A mention reads as a link to the person, with their card on hover. */
+.mentionLink {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--mention);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.mentionLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The thread under a post, from the feed or the post page. */
+.threadWrap {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.earlier {
+  justify-self: start;
+  padding: var(--space-1) 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.earlier:hover {
+  color: var(--foreground);
+}
+
+.attach,
+.chipClose {
+  display: inline-grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.attach {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+}
+
+.attach:hover {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+/* A link's preview: the page's image, then its site, title and summary. */
+.linkCard {
+  display: grid;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface);
+  color: var(--foreground);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.linkCard:hover {
+  background: var(--surface-muted);
+}
+
+.linkImage {
+  width: 100%;
+  aspect-ratio: 1.91;
+  object-fit: cover;
+  border-bottom: 1px solid var(--border-subtle);
+  background: var(--surface-muted);
+}
+
+.linkText {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  min-width: 0;
+}
+
+.linkHost {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.linkTitle {
+  font-weight: 500;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.linkDescription {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

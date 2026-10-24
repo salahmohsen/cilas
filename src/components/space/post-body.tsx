@@ -1,12 +1,15 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+import { PersonHover, type PersonCard } from './person-hover'
+import styles from './space.module.css'
+
 /**
  * Spec §5: `react-markdown`, allowed elements limited to what the editor
  * makes, `remark-gfm` for strikethrough only. `/people/{id}` links become
- * mention chips with the person's current name; other links open in a new
- * tab; raw HTML never renders (react-markdown default). Every block sits
- * with dir="auto".
+ * mention links with the person's current name and card; other links open
+ * in a new tab; raw HTML never renders (react-markdown default). Every block
+ * sits with dir="auto".
  */
 const ALLOWED = [
   'p',
@@ -29,19 +32,12 @@ const ALLOWED = [
 
 export type PostBodyProps = {
   body: string
-  /** person id → current name, for chips (spec: chips show current names) */
-  people?: Record<number, string>
-  /**
-   * person id → href or null. Person pages resolve by slug (and only when
-   * the person is public), so the stored `/people/{id}` link renders as a
-   * public-page link through this map when there is one, else as a plain
-   * chip. The stored text never changes (spec §5).
-   */
-  peopleLinks?: Record<number, string | null>
+  /** The space's people by id: a mention shows the current name and opens the card. */
+  people?: Map<number, PersonCard>
 }
 
-export const PostBody = ({ body, people = {}, peopleLinks = {} }: PostBodyProps) => (
-  <div className="space-y-3">
+export const PostBody = ({ body, people }: PostBodyProps) => (
+  <div className={styles.markdown}>
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
       allowedElements={[...ALLOWED]}
@@ -52,20 +48,28 @@ export const PostBody = ({ body, people = {}, peopleLinks = {} }: PostBodyProps)
         h2: ({ children }) => <h2 dir="auto">{children}</h2>,
         h3: ({ children }) => <h3 dir="auto">{children}</h3>,
         li: ({ children }) => <li dir="auto">{children}</li>,
+        blockquote: ({ children }) => <blockquote dir="auto">{children}</blockquote>,
         a: ({ href, children }) => {
-          const text = `${children}`
           if (href?.startsWith('/people/')) {
-            const id = Number(href.split('/').pop())
-            const to = peopleLinks[id] ?? null
-            const chip = (
-              <span className="mention-chip" dir="auto">
-                @{people[id] ?? text.replace(/^@/, '')}
-              </span>
+            const person = people?.get(Number(href.split('/').pop()))
+            const name = person?.name ?? `${children}`.replace(/^@/, '')
+            if (!person) return <span className={styles.mentionLink}>{name}</span>
+            return (
+              <PersonHover person={person}>
+                {person.href ? (
+                  <a href={person.href} className={styles.mentionLink}>
+                    {name}
+                  </a>
+                ) : (
+                  <button type="button" className={styles.mentionLink}>
+                    {name}
+                  </button>
+                )}
+              </PersonHover>
             )
-            return to ? <a href={to}>{chip}</a> : chip
           }
           return (
-            <a href={href} target="_blank" rel="noreferrer">
+            <a href={href} target="_blank" rel="noopener noreferrer">
               {children}
             </a>
           )

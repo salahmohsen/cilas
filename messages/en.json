@@ -896,7 +896,9 @@
     "files": "Files",
     "deletedNotice": "This post was deleted. Its comments stay.",
     "lockedNotice": "Comments are locked on this post.",
-    "commentsModeratorsOnly": "Only moderators comment in this space."
+    "commentsModeratorsOnly": "Only moderators comment in this space.",
+    "postActions": "Post actions",
+    "copied": "Copied"
   },
   "SpaceComment": {
     "write": "Comment",
@@ -992,5 +994,48 @@
     "newsletterHint": "Pick articles and send them to a mailing list.",
     "siteSettings": "Site settings",
     "siteSettingsHint": "Navigation, spaces and the site's contact details."
+  },
+  "SpaceReactions": {
+    "label": "Reactions",
+    "add": "Add reaction",
+    "picker": "Add a reaction",
+    "agree": "Agree",
+    "thank_you": "Thank you",
+    "insightful": "Insightful",
+    "same_question": "Same question",
+    "pill": "{option}, {count, plural, one {# reaction} other {# reactions}}{own, select, true {, including yours} other {}}",
+    "added": "Added {option}. {count, plural, one {# reaction} other {# reactions}}.",
+    "removed": "Removed {option}. {count, plural, =0 {} one {# reaction left.} other {# reactions left.}}"
+  },
+  "SpaceThread": {
+    "thread": "Comments",
+    "count": "{count, plural, one {# comment} other {# comments}}",
+    "empty": "No comments yet. Start the conversation below.",
+    "placeholder": "Write a comment, or @mention someone",
+    "now": "Just now",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "send": "Send",
+    "save": "Save",
+    "editComment": "Edit comment",
+    "edited": "edited",
+    "deleteConfirm": "Delete this comment?",
+    "deletedText": "This comment was deleted",
+    "deletedComment": "Deleted comment",
+    "replyingTo": "Replying to {name}",
+    "cancelReply": "Cancel reply",
+    "showReplies": "{count, plural, one {Show # reply} other {Show # replies}}",
+    "hideReplies": "Hide replies",
+    "addReaction": "Add reaction",
+    "closeReactions": "Close reactions",
+    "reactions": "Reactions",
+    "reactionCount": "{reaction}, {count}{you, select, true {, including you} other {}}",
+    "mentions": "Members",
+    "formerMember": "Former member",
+    "showEarlier": "{count, plural, one {Show # earlier comment} other {Show # earlier comments}}",
+    "attach": "Attach a file",
+    "removeFile": "Remove the file"
   }
 }

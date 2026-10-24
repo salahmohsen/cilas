@@ -165,6 +165,23 @@ export interface CommentThreadProps {
   nowLabel?: string
   /** Words for localization. Leave out any key to keep its English default. */
   labels?: CommentThreadLabels
+  /** Shows Resolve in the header. Defaults to true. */
+  resolvable?: boolean
+  /** Shows the composer and Reply. False leaves the thread to read and react to. Defaults to true. */
+  canReply?: boolean
+  /** Who may edit or delete a comment. Defaults to its author. */
+  canEdit?: (comment: ThreadComment) => boolean
+  canDelete?: (comment: ThreadComment) => boolean
+  /** Renders an author's name, such as inside a hover card. */
+  renderName?: (author: CommentAuthor) => ReactNode
+  /** Renders a highlighted "@Full Name", such as a link. */
+  renderMention?: (person: CommentAuthor, text: string) => ReactNode
+  /** Extra content under a comment's body, such as an attachment. */
+  renderExtra?: (comment: ThreadComment) => ReactNode
+  /** Extra content beside the composer's send button, such as an attach button. */
+  composerExtra?: ReactNode
+  /** Change it to move focus into the composer, such as from a Comment button outside the thread. */
+  composerFocusKey?: number
   className?: string
 }
 
@@ -278,7 +295,15 @@ function Avatar({ author, size = 28 }: { author: CommentAuthor; size?: number })
 }
 
 /** Highlights "@Full Name" for known people. */
-function Body({ text, people }: { text: string; people: CommentAuthor[] }) {
+function Body({
+  text,
+  people,
+  renderMention,
+}: {
+  text: string
+  people: CommentAuthor[]
+  renderMention?: (person: CommentAuthor, text: string) => ReactNode
+}) {
   const parts = useMemo(() => {
     const names = people
       .map((person) => person.name)
@@ -288,11 +313,16 @@ function Body({ text, people }: { text: string; people: CommentAuthor[] }) {
     return text.split(new RegExp(`(@(?:${names.join('|')}))`, 'g'))
   }, [people, text])
   return (
-    <p className={styles.body}>
+    <p className={styles.body} dir="auto">
       {parts.map((part, index) =>
         index % 2 ? (
           <span key={index} className={styles.mention}>
-            {part}
+            {renderMention
+              ? renderMention(
+                  people.find((person) => `@${person.name}` === part)!,
+                  part,
+                )
+              : part}
           </span>
         ) : (
           part
@@ -401,6 +431,7 @@ interface ComposerProps {
   onSubmit: (body: string) => void
   onCancel?: () => void
   leading?: ReactNode
+  trailing?: ReactNode
   compact?: boolean
   cancelLabel: string
   mentionsLabel: string
@@ -417,6 +448,7 @@ function Composer({
   onSubmit,
   onCancel,
   leading,
+  trailing,
   compact,
   cancelLabel,
   mentionsLabel,
@@ -587,6 +619,7 @@ function Composer({
         </AnimatePresence>
       </div>
       <div className={styles.composerActions}>
+        {trailing}
         {onCancel && (
           <button type="button" className={styles.ghost} onClick={onCancel}>
             {cancelLabel}
@@ -628,6 +661,15 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     maxDepth = 2,
     nowLabel = 'Just now',
     labels,
+    resolvable = true,
+    canReply = true,
+    canEdit,
+    canDelete,
+    renderName,
+    renderMention,
+    renderExtra,
+    composerExtra,
+    composerFocusKey,
     className,
   },
   forwardedRef,
@@ -770,6 +812,8 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
 
   const renderComment = (comment: ThreadComment, depth: number): ReactNode => {
     const mine = comment.author.id === currentUser.id
+    const editable = canEdit ? canEdit(comment) : mine
+    const deletable = canDelete ? canDelete(comment) : mine
     const replies = comment.replies ?? []
     const collapsed = !!ui.collapsed[comment.id]
     const editing = ui.editing === comment.id,
@@ -794,7 +838,9 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
             ) : (
               <>
                 <header className={styles.meta}>
-                  <span className={styles.name}>{comment.author.name}</span>
+                  <span className={styles.name}>
+                    {renderName ? renderName(comment.author) : comment.author.name}
+                  </span>
                   <span className={styles.time}>
                     {comment.createdAt}
                     {comment.edited && ` · ${t.edited}`}
@@ -824,7 +870,12 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                       </motion.div>
                     ) : (
                       <motion.div key="view" {...swap}>
-                        <Body text={comment.body} people={mentionable} />
+                        <Body
+                          text={comment.body}
+                          people={mentionable}
+                          renderMention={renderMention}
+                        />
+                        {renderExtra?.(comment)}
 
                         <div className={styles.footer}>
                           {(comment.reactions ?? []).length > 0 && (
@@ -998,17 +1049,19 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                                 >
                                   <SmilePlus size={15} strokeWidth={1.75} aria-hidden="true" />
                                 </button>
-                                <button
-                                  type="button"
-                                  className={styles.action}
-                                  onClick={() => {
-                                    setReplyTo({ id: comment.id, name: comment.author.name })
-                                    setFocusKey((key) => key + 1)
-                                  }}
-                                >
-                                  {t.reply}
-                                </button>
-                                {mine && (
+                                {canReply && (
+                                  <button
+                                    type="button"
+                                    className={styles.action}
+                                    onClick={() => {
+                                      setReplyTo({ id: comment.id, name: comment.author.name })
+                                      setFocusKey((key) => key + 1)
+                                    }}
+                                  >
+                                    {t.reply}
+                                  </button>
+                                )}
+                                {editable && (
                                   <button
                                     type="button"
                                     className={styles.action}
@@ -1024,7 +1077,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                                     {t.edit}
                                   </button>
                                 )}
-                                {mine && (
+                                {deletable && (
                                   <button
                                     type="button"
                                     className={styles.action}
@@ -1159,16 +1212,18 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                   {title && <h3 className={styles.title}>{title}</h3>}
                   <span className={styles.subtitle}>{t.commentCount(total)}</span>
                 </div>
-                <button
-                  type="button"
-                  className={styles.resolve}
-                  data-resolve
-                  disabled={!total}
-                  onClick={() => setResolved(true)}
-                >
-                  <Check size={15} strokeWidth={1.75} aria-hidden="true" />
-                  {t.resolve}
-                </button>
+                {resolvable && (
+                  <button
+                    type="button"
+                    className={styles.resolve}
+                    data-resolve
+                    disabled={!total}
+                    onClick={() => setResolved(true)}
+                  >
+                    <Check size={15} strokeWidth={1.75} aria-hidden="true" />
+                    {t.resolve}
+                  </button>
+                )}
               </header>
 
               {list.length > 0 ? (
@@ -1181,39 +1236,46 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                 <p className={styles.empty}>{t.empty}</p>
               )}
 
-              <div className={styles.composerArea}>
-                <AnimatePresence initial={false}>
-                  {replyTo && (
-                    <motion.div key="replying" className={styles.replying} {...grow}>
-                      <span className={styles.replyingInner}>
-                        <CornerDownRight size={13} strokeWidth={1.75} aria-hidden="true" />
-                        <span>
-                          {highlight(t.replyingTo(replyTo.name), replyTo.name, styles.replyingName)}
+              {canReply && (
+                <div className={styles.composerArea}>
+                  <AnimatePresence initial={false}>
+                    {replyTo && (
+                      <motion.div key="replying" className={styles.replying} {...grow}>
+                        <span className={styles.replyingInner}>
+                          <CornerDownRight size={13} strokeWidth={1.75} aria-hidden="true" />
+                          <span>
+                            {highlight(
+                              t.replyingTo(replyTo.name),
+                              replyTo.name,
+                              styles.replyingName,
+                            )}
+                          </span>
+                          <button
+                            type="button"
+                            className={styles.iconAction}
+                            aria-label={t.cancelReply}
+                            onClick={() => setReplyTo(null)}
+                          >
+                            <X size={14} strokeWidth={1.75} aria-hidden="true" />
+                          </button>
                         </span>
-                        <button
-                          type="button"
-                          className={styles.iconAction}
-                          aria-label={t.cancelReply}
-                          onClick={() => setReplyTo(null)}
-                        >
-                          <X size={14} strokeWidth={1.75} aria-hidden="true" />
-                        </button>
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <Composer
-                  people={mentionable}
-                  placeholder={placeholder}
-                  submitLabel={t.send}
-                  cancelLabel={t.cancel}
-                  mentionsLabel={t.mentions}
-                  focusKey={focusKey}
-                  onSubmit={addReply}
-                  onCancel={replyTo ? () => setReplyTo(null) : undefined}
-                  leading={<Avatar author={currentUser} />}
-                />
-              </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  <Composer
+                    people={mentionable}
+                    placeholder={placeholder}
+                    submitLabel={t.send}
+                    cancelLabel={t.cancel}
+                    mentionsLabel={t.mentions}
+                    focusKey={focusKey + (composerFocusKey ?? 0)}
+                    onSubmit={addReply}
+                    onCancel={replyTo ? () => setReplyTo(null) : undefined}
+                    leading={<Avatar author={currentUser} />}
+                    trailing={composerExtra}
+                  />
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>

@@ -17,34 +17,42 @@ describe('post body rendering (spec §5)', () => {
     expect(container.querySelector('h1')?.textContent).toBe('Title')
   })
 
-  it("a /people/{id} link becomes a mention chip with the person's current name", () => {
+  it("a /people/{id} link becomes a link with the person's current name", () => {
     const { container } = render(
-      <PostBody
-        body={'Salam [@Nadim](/people/42)!'}
-        people={{ 42: 'Nadim Id' }}
-        peopleLinks={{ 42: '/en/people/nadim' }}
-      />,
+      <PostBody body={'Salam [@Nadim](/people/42)!'} people={people({ 42: '/en/people/nadim' })} />,
     )
-    const chip = container.querySelector('a[href="/en/people/nadim"]')
-    expect(chip?.textContent).toContain('@Nadim Id')
+    const link = container.querySelector('a[href="/en/people/nadim"]')
+    expect(link?.textContent).toBe('Nadim Id')
   })
 
-  it('a person without a public page renders a plain chip, never a 404 link', () => {
+  it('a person without a public page gets no link, never a 404', () => {
     const { container } = render(
-      <PostBody
-        body={'Salam [@Yara](/people/43)'}
-        people={{ 43: 'Yara' }}
-        peopleLinks={{ 43: null }}
-      />,
+      <PostBody body={'Salam [@Yara](/people/43)'} people={people({ 43: null })} />,
     )
-    expect(container.querySelector('span.mention-chip')?.textContent).toContain('@Yara')
-    expect(container.querySelector('a.mention-chip')).toBeNull()
+    expect(container.textContent).toContain('Yara')
+    expect(container.querySelector('a[href^="/people"]')).toBeNull()
+    expect(container.querySelector('a[href*="people"]')).toBeNull()
   })
 
-  it('a mention chip keeps dir="auto" like every post and name (spec §5)', () => {
-    const { container } = render(
-      <PostBody body={'عيد مبارك [@نديم](/people/42)'} people={{ 42: 'نديم' }} />,
-    )
+  it('every block keeps dir="auto" (spec §5)', () => {
+    const { container } = render(<PostBody body={'عيد مبارك [@نديم](/people/42)'} />)
     expect([...container.querySelectorAll('[dir="auto"]')].length).toBeGreaterThan(0)
   })
 })
+
+const NAMES: Record<number, string> = { 42: 'Nadim Id', 43: 'Yara' }
+const people = (hrefs: Record<number, string | null>) =>
+  new Map(
+    Object.entries(hrefs).map(([id, href]) => [
+      Number(id),
+      {
+        id: Number(id),
+        name: NAMES[Number(id)]!,
+        photo: null,
+        role: 'Member',
+        bio: null,
+        links: [],
+        href,
+      },
+    ]),
+  )

@@ -1,7 +1,7 @@
 import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
-import type { ReactionCounts, ReactionKind } from '@/components/arc/reactions/reactions'
+import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
 import { archivedNow, courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
 import { NOTICE_VERSION } from '@/lib/space-consent'
 import { spacePeople } from '@/lib/space-members'
@@ -303,8 +303,10 @@ export type FeedRow = {
   /** The author's person id, for the photo and the moderator badge */
   authorId: number | null
   commentCount: number
-  /** The two newest comments, oldest first, for the card's preview */
-  latestComments: { id: number; authorId: number | null; body: string; createdAt: string }[]
+  /** The whole thread, oldest first, so a member replies from the feed itself */
+  comments: TopComment[]
+  /** Files on the post itself, not on its comments */
+  files: SpaceFileRef[]
   reactions: Reactions
 }
 
@@ -341,54 +343,45 @@ export const spaceFeed = async (
   })
 
   const postIds = docs.map((p) => p.id)
-  const commentCountOf = new Map<number, number>()
-  const latestOf = new Map<number, FeedRow['latestComments']>()
-  let reactionsOf = new Map<number, Reactions>()
-  if (postIds.length) {
-    const { docs: comments } = await payload.find({
-      collection: 'space-comments',
-      user: user ?? undefined,
-      depth: 0,
-      pagination: false,
-      overrideAccess: false,
-      select: { post: true, author: true, body: true, createdAt: true },
-      sort: 'createdAt',
-      where: {
-        and: [{ post: { in: postIds } }, { deleted_at: { exists: false } }],
-      },
-    })
-    for (const c of comments) {
-      const pid = relId(c.post)
-      if (pid == null) continue
-      commentCountOf.set(pid, (commentCountOf.get(pid) ?? 0) + 1)
-      const latest = latestOf.get(pid) ?? []
-      latest.push({
-        id: c.id,
-        authorId: relId(c.author as never),
-        body: c.body,
-        createdAt: c.createdAt,
-      })
-      latestOf.set(pid, latest.slice(-2))
-    }
-
-    const { docs: reactions } = await payload.find({
-      collection: 'space-reactions',
-      user: user ?? undefined,
-      depth: 0,
-      pagination: false,
-      overrideAccess: false,
-      select: { post: true, account: true, reaction: true },
-      where: { post: { in: postIds } },
-    })
-    reactionsOf = tally(reactions, (r) => relId(r.post), user)
+  const [threads, { docs: reactions }, { docs: postFiles }] = await Promise.all([
+    postThreads(payload, user, postIds),
+    postIds.length
+      ? payload.find({
+          collection: 'space-reactions',
+          user: user ?? undefined,
+          depth: 0,
+          pagination: false,
+          overrideAccess: false,
+          select: { post: true, comment: true, account: true, reaction: true },
+          where: { and: [{ post: { in: postIds } }, { comment: { exists: false } }] },
+        })
+      : Promise.resolve({ docs: [] }),
+    postIds.length
+      ? payload.find({
+          collection: 'space-files',
+          user: user ?? undefined,
+          depth: 0,
+          pagination: false,
+          overrideAccess: false,
+          sort: 'createdAt',
+          where: { and: [{ post: { in: postIds } }, { comment: { exists: false } }] },
+        })
+      : Promise.resolve({ docs: [] }),
+  ])
+  const reactionsOf = tally(reactions, (r) => relId(r.post), user)
+  const filesOf = new Map<number, SpaceFileRef[]>()
+  for (const f of postFiles) {
+    const pid = relId(f.post as never)
+    if (pid != null) filesOf.set(pid, [...(filesOf.get(pid) ?? []), fileRef(f)])
   }
 
   const rows: FeedRow[] = docs.map((p) => ({
     post: p,
     authorName: typeof p.author === 'object' && p.author ? p.author.name : null,
     authorId: relId(p.author as never),
-    commentCount: commentCountOf.get(p.id) ?? 0,
-    latestComments: latestOf.get(p.id) ?? [],
+    commentCount: threads.get(p.id)?.count ?? 0,
+    comments: threads.get(p.id)?.comments ?? [],
+    files: filesOf.get(p.id) ?? [],
     reactions: reactionsOf.get(p.id) ?? NO_REACTIONS,
   }))
   return { rows, settings, archived, lastMeeting, daysSince }
@@ -435,6 +428,82 @@ const fileRef = (f: {
 })
 
 /**
+ * The threads of several posts at once (spec §4), read through the
+ * collections' rules: three reads however many posts. Replies sit one level
+ * under their comment; a deleted comment stays as a placeholder (spec §3).
+ */
+export const postThreads = async (
+  payload: Payload,
+  user: null | User,
+  postIds: number[],
+): Promise<Map<number, { comments: TopComment[]; count: number }>> => {
+  const out = new Map<number, { comments: TopComment[]; count: number }>()
+  if (!postIds.length) return out
+  const { docs: comments } = await payload.find({
+    collection: 'space-comments',
+    user: user ?? undefined,
+    depth: 0,
+    pagination: false,
+    overrideAccess: false,
+    sort: 'createdAt',
+    where: { post: { in: postIds } },
+  })
+  const commentIds = comments.map((c) => c.id)
+  const [{ docs: reactions }, { docs: files }] = commentIds.length
+    ? await Promise.all([
+        payload.find({
+          collection: 'space-reactions',
+          user: user ?? undefined,
+          depth: 0,
+          pagination: false,
+          overrideAccess: false,
+          select: { comment: true, account: true, reaction: true },
+          where: { comment: { in: commentIds } },
+        }),
+        payload.find({
+          collection: 'space-files',
+          user: user ?? undefined,
+          depth: 0,
+          pagination: false,
+          overrideAccess: false,
+          where: { comment: { in: commentIds } },
+        }),
+      ])
+    : [{ docs: [] }, { docs: [] }]
+  const onComment = tally(reactions, (r) => relId(r.comment), user)
+  const fileOf = new Map(files.map((f) => [relId(f.comment as never)!, fileRef(f)]))
+
+  const node = (c: (typeof comments)[number]): ThreadComment => ({
+    id: c.id,
+    authorId: relId(c.author as never),
+    body: c.deleted_at ? '' : c.body,
+    createdAt: c.createdAt,
+    edited: !!c.edited_at,
+    deleted: !!c.deleted_at,
+    file: c.deleted_at ? null : (fileOf.get(c.id) ?? null),
+    reactions: onComment.get(c.id) ?? NO_REACTIONS,
+  })
+  const repliesOf = new Map<number, ThreadComment[]>()
+  for (const c of comments) {
+    const parent = relId(c.parent as never)
+    if (parent != null) repliesOf.set(parent, [...(repliesOf.get(parent) ?? []), node(c)])
+  }
+  for (const c of comments) {
+    const pid = relId(c.post)
+    if (pid == null) continue
+    const entry = out.get(pid) ?? { comments: [], count: 0 }
+    if (!c.deleted_at) entry.count++
+    // A deleted comment with no live replies leaves no trace in the thread.
+    if (c.parent == null) {
+      const replies = repliesOf.get(c.id) ?? []
+      if (!c.deleted_at || replies.length) entry.comments.push({ ...node(c), replies })
+    }
+    out.set(pid, entry)
+  }
+  return out
+}
+
+/**
  * One post with its whole thread (spec §4), read through the collections'
  * rules. Null when the post is not in this space or the reader cannot see
  * it, so the page renders "not found".
@@ -456,26 +525,9 @@ export const postView = async (
     .catch(() => null)
   if (!post || relId(post.space as never) !== space.id) return null
 
-  const [{ archived }, { docs: comments }] = await Promise.all([
+  const [{ archived }, threads, { docs: reactions }, { docs: files }] = await Promise.all([
     archiveState(payload, space),
-    payload.find({
-      collection: 'space-comments',
-      user: user ?? undefined,
-      depth: 0,
-      pagination: false,
-      overrideAccess: false,
-      sort: 'createdAt',
-      where: { post: { equals: post.id } },
-    }),
-  ])
-  const commentIds = comments.map((c) => c.id)
-  const onTargets: Where = {
-    or: [
-      { post: { equals: post.id } },
-      ...(commentIds.length ? [{ comment: { in: commentIds } }] : []),
-    ],
-  }
-  const [{ docs: reactions }, { docs: files }] = await Promise.all([
+    postThreads(payload, user, [post.id]),
     payload.find({
       collection: 'space-reactions',
       user: user ?? undefined,
@@ -483,7 +535,7 @@ export const postView = async (
       pagination: false,
       overrideAccess: false,
       select: { post: true, comment: true, account: true, reaction: true },
-      where: onTargets,
+      where: { and: [{ post: { equals: post.id } }, { comment: { exists: false } }] },
     }),
     payload.find({
       collection: 'space-files',
@@ -492,33 +544,11 @@ export const postView = async (
       pagination: false,
       overrideAccess: false,
       sort: 'createdAt',
-      where: onTargets,
+      where: { post: { equals: post.id } },
     }),
   ])
-  const onPost = tally(reactions, (r) => (r.comment == null ? relId(r.post) : null), user)
-  const onComment = tally(reactions, (r) => relId(r.comment), user)
-  const fileOf = new Map(
-    files.filter((f) => f.comment != null).map((f) => [relId(f.comment as never)!, fileRef(f)]),
-  )
-
-  const node = (c: (typeof comments)[number]): ThreadComment => ({
-    id: c.id,
-    authorId: relId(c.author as never),
-    body: c.deleted_at ? '' : c.body,
-    createdAt: c.createdAt,
-    edited: !!c.edited_at,
-    deleted: !!c.deleted_at,
-    file: c.deleted_at ? null : (fileOf.get(c.id) ?? null),
-    reactions: onComment.get(c.id) ?? NO_REACTIONS,
-  })
-  const repliesOf = new Map<number, ThreadComment[]>()
-  for (const c of comments) {
-    const parent = relId(c.parent as never)
-    if (parent != null) repliesOf.set(parent, [...(repliesOf.get(parent) ?? []), node(c)])
-  }
-  const thread = comments
-    .filter((c) => c.parent == null)
-    .map((c) => ({ ...node(c), replies: repliesOf.get(c.id) ?? [] }))
+  const onPost = tally(reactions, (r) => relId(r.post), user)
+  const thread = threads.get(post.id)
 
   const deleted = !!post.deleted_at
   return {
@@ -526,12 +556,13 @@ export const postView = async (
       post: deleted ? { ...post, body: '' } : post,
       authorName: typeof post.author === 'object' && post.author ? post.author.name : null,
       authorId: relId(post.author as never),
-      commentCount: comments.filter((c) => !c.deleted_at).length,
-      latestComments: [],
+      commentCount: thread?.count ?? 0,
+      comments: thread?.comments ?? [],
+      files: [],
       reactions: onPost.get(post.id) ?? NO_REACTIONS,
     },
-    files: deleted ? [] : files.filter((f) => f.post != null).map(fileRef),
-    comments: thread,
+    files: deleted ? [] : files.filter((f) => f.comment == null).map(fileRef),
+    comments: thread?.comments ?? [],
     deleted,
     archived,
   }

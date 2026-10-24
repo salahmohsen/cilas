@@ -202,3 +202,17 @@
     transition: opacity var(--duration-instant) linear;
   }
 }
+/* A quiet square trigger, such as an ellipsis on a card. */
+.trigger.iconOnly {
+  justify-content: center;
+  width: var(--control-height-sm);
+  padding: 0;
+  border-color: transparent;
+  background: transparent;
+  color: var(--text-secondary);
+}
+.trigger.iconOnly:hover,
+.trigger.iconOnly[data-state='open'] {
+  background: var(--surface-muted);
+  color: var(--foreground);
+}

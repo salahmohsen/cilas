@@ -896,7 +896,9 @@
     "files": "الملفات",
     "deletedNotice": "حُذف هذا المنشور. تبقى تعليقاته.",
     "lockedNotice": "التعليقات مغلقة على هذا المنشور.",
-    "commentsModeratorsOnly": "التعليق في هذه المساحة للمشرفين فقط."
+    "commentsModeratorsOnly": "التعليق في هذه المساحة للمشرفين فقط.",
+    "postActions": "إجراءات المنشور",
+    "copied": "نُسخ"
   },
   "SpaceComment": {
     "write": "علِّق",
@@ -992,5 +994,48 @@
     "newsletterHint": "اختر مقالات وأرسلها إلى قائمة بريدية.",
     "siteSettings": "إعدادات الموقع",
     "siteSettingsHint": "التنقل والمساحات وبيانات الاتصال بالموقع."
+  },
+  "SpaceReactions": {
+    "label": "التفاعلات",
+    "add": "أضف تفاعلًا",
+    "picker": "اختر تفاعلًا",
+    "agree": "أوافق",
+    "thank_you": "شكرًا",
+    "insightful": "مفيد",
+    "same_question": "عندي السؤال نفسه",
+    "pill": "{option}، {count, plural, one {تفاعل واحد} two {تفاعلان} few {# تفاعلات} many {# تفاعلًا} other {# تفاعل}}{own, select, true {، منها تفاعلك} other {}}",
+    "added": "أضفت {option}. {count, plural, one {تفاعل واحد} two {تفاعلان} few {# تفاعلات} many {# تفاعلًا} other {# تفاعل}}.",
+    "removed": "أزلت {option}."
+  },
+  "SpaceThread": {
+    "thread": "التعليقات",
+    "count": "{count, plural, zero {لا تعليقات} one {تعليق واحد} two {تعليقان} few {# تعليقات} many {# تعليقًا} other {# تعليق}}",
+    "empty": "لا تعليقات بعد. ابدأ الحديث في الأسفل.",
+    "placeholder": "اكتب تعليقًا، أو أشر إلى أحد بـ @",
+    "now": "الآن",
+    "reply": "رد",
+    "edit": "عدّل",
+    "delete": "احذف",
+    "cancel": "إلغاء",
+    "send": "أرسل",
+    "save": "احفظ",
+    "editComment": "عدّل التعليق",
+    "edited": "معدّل",
+    "deleteConfirm": "أتحذف هذا التعليق؟",
+    "deletedText": "حُذف هذا التعليق",
+    "deletedComment": "تعليق محذوف",
+    "replyingTo": "ترد على {name}",
+    "cancelReply": "ألغِ الرد",
+    "showReplies": "{count, plural, one {اعرض ردًا واحدًا} two {اعرض ردين} few {اعرض # ردود} many {اعرض # ردًا} other {اعرض # رد}}",
+    "hideReplies": "أخفِ الردود",
+    "addReaction": "أضف تفاعلًا",
+    "closeReactions": "أغلق التفاعلات",
+    "reactions": "التفاعلات",
+    "reactionCount": "{reaction}، {count}{you, select, true {، منها تفاعلك} other {}}",
+    "mentions": "الأعضاء",
+    "formerMember": "عضو سابق",
+    "showEarlier": "{count, plural, one {اعرض تعليقًا سابقًا} two {اعرض تعليقين سابقين} few {اعرض # تعليقات سابقة} many {اعرض # تعليقًا سابقًا} other {اعرض # تعليق سابق}}",
+    "attach": "أرفق ملفًا",
+    "removeFile": "أزل الملف"
   }
 }
