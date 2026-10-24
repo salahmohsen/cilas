@@ -47,3 +47,36 @@ export const addDays = (day: string, n: number): string => {
 }
 
 export const weekdayOf = (day: string): Weekday => BY_JS_DAY[toUTC(day).getUTCDay()]
+
+const cairoClock = new Intl.DateTimeFormat('en-US', {
+  timeZone: CAIRO,
+  hourCycle: 'h23',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+})
+
+/** Minutes Cairo is ahead of UTC at that instant (120 in winter, 180 in summer). */
+const cairoOffset = (instant: number): number => {
+  const parts = Object.fromEntries(
+    cairoClock.formatToParts(new Date(instant)).map((p) => [p.type, p.value]),
+  )
+  const wall = Date.UTC(+parts.year, +parts.month - 1, +parts.day, +parts.hour, +parts.minute)
+  return Math.round((wall - Math.floor(instant / 60_000) * 60_000) / 60_000)
+}
+
+/**
+ * The instant a Cairo wall-clock day and time name, as an ISO string, or
+ * null for a day or time that is not real. The offset is read twice, so a
+ * time beside a daylight-saving change lands on the right side of it.
+ */
+export const cairoInstant = (day: string, time: string): string | null => {
+  if (!cairoDay(day) || !/^([01]\d|2[0-3]):[0-5]\d$/.test(time)) return null
+  const [y, m, d] = day.split('-').map(Number) as [number, number, number]
+  const [h, min] = time.split(':').map(Number) as [number, number]
+  const wall = Date.UTC(y, m - 1, d, h, min)
+  const first = wall - cairoOffset(wall) * 60_000
+  return new Date(wall - cairoOffset(first) * 60_000).toISOString()
+}

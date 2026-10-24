@@ -2,19 +2,24 @@
 
 import type { NoticePart } from '@/lib/space-consent'
 import { useEffect, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Check, Paperclip, Send } from 'lucide-react'
+import { Check, Paperclip, Plus, Send, X } from 'lucide-react'
 
 import { ActionSwap } from '@/components/arc/action-swap/action-swap'
 import { Alert } from '@/components/arc/alert/alert'
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
+import { Checkbox } from '@/components/arc/checkbox/checkbox'
+import { DatePicker } from '@/components/arc/date-picker/date-picker'
 import { FileDropzone } from '@/components/arc/file-dropzone/file-dropzone'
-import { RadioGroup } from '@/components/arc/radio-group/radio-group'
+import { Input } from '@/components/arc/input/input'
 import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
+import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
+import { TimePicker } from '@/components/arc/time-picker/time-picker'
 import { postCreateAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { VOTE_OPTIONS } from '@/lib/space-post-kinds'
 
 import { ConsentSheet } from './consent-sheet'
 import styles from './space.module.css'
@@ -29,6 +34,9 @@ const PHONE = '(max-width: 1023px)'
 
 type Me = { name: string; photo: string | null }
 
+/** The kinds this member may start here, in the order the type switch shows them. */
+export type PostKind = 'discussion' | 'event' | 'vote' | 'announcement'
+
 /**
  * The only way to write a post (spec §5). Collapsed to one line so readers
  * meet posts first; inline on desktop, a bottom sheet on phones. The draft
@@ -36,7 +44,7 @@ type Me = { name: string; photo: string | null }
  */
 export function Composer({
   space,
-  moderator,
+  kinds,
   archived,
   me,
   mentions,
@@ -44,7 +52,8 @@ export function Composer({
   notice,
 }: {
   space: number
-  moderator: boolean
+  /** Empty when the posting level keeps this member to reading and commenting */
+  kinds: PostKind[]
   archived: boolean
   me: Me
   mentions: { id: number; name: string }[]
@@ -66,6 +75,7 @@ export function Composer({
     return () => window.removeEventListener(COMPOSE_EVENT, onCompose)
   }, [consented])
 
+  if (kinds.length === 0) return null
   if (archived)
     return (
       <Alert tone="info" title={t('readOnlyNotice')}>
@@ -76,7 +86,7 @@ export function Composer({
   const form = (
     <ComposerForm
       space={space}
-      moderator={moderator}
+      kinds={kinds}
       mentions={mentions}
       onCancel={() => setOpen(null)}
       onPublished={() => {
@@ -122,28 +132,59 @@ export function Composer({
   )
 }
 
+/** An event's place and Cairo day and time; a vote's options and whether more than one may be chosen. */
+type Extra = {
+  location: string
+  day: Date | undefined
+  time: string
+  options: string[]
+  multiple: boolean
+}
+
+const EMPTY_EXTRA: Extra = {
+  location: '',
+  day: undefined,
+  time: '18:00',
+  options: ['', ''],
+  multiple: false,
+}
+
+/** The day as the Cairo calendar names it, read from the picker's local midnight. */
+const dayOf = (date: Date) =>
+  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+
 function ComposerForm({
   space,
-  moderator,
+  kinds,
   mentions,
   onCancel,
   onPublished,
 }: {
   space: number
-  moderator: boolean
+  kinds: PostKind[]
   mentions: { id: number; name: string }[]
   onCancel: () => void
   onPublished: () => void
 }) {
   const t = useTranslations('SpacePost')
+  const locale = useLocale()
   const router = useRouter()
   const draftKey = `space-draft-${space}`
   const [initial] = useState(() => localStorage.getItem(draftKey) ?? '')
   const [body, setBody] = useState({ markdown: initial, empty: initial.trim() === '' })
-  const [kind, setKind] = useState('discussion')
+  const [kind, setKind] = useState<PostKind>(kinds[0] ?? 'discussion')
+  const [extra, setExtra] = useState<Extra>(EMPTY_EXTRA)
   const [showFiles, setShowFiles] = useState(false)
   const [files, setFiles] = useState<File[]>([])
   const [error, setError] = useState<string | null>(null)
+  const set = (patch: Partial<Extra>) => setExtra((current) => ({ ...current, ...patch }))
+  const options = extra.options.map((o) => o.trim()).filter(Boolean)
+  const ready =
+    !body.empty &&
+    (kind !== 'event' || (extra.location.trim() !== '' && extra.day !== undefined)) &&
+    (kind !== 'vote' || options.length >= VOTE_OPTIONS.min)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
   const publish = async () => {
     setError(null)
@@ -151,6 +192,15 @@ function ComposerForm({
     data.set('space', String(space))
     data.set('kind', kind)
     data.set('body', body.markdown)
+    if (kind === 'event' && extra.day) {
+      data.set('location', extra.location)
+      data.set('day', dayOf(extra.day))
+      data.set('time', extra.time)
+    }
+    if (kind === 'vote') {
+      for (const option of options) data.append('option', option)
+      data.set('multiple', String(extra.multiple))
+    }
     for (const f of files) data.append('file', f)
     const result = await postCreateAction({ status: 'ok' }, data)
     if (result.status === 'error') {
@@ -165,10 +215,18 @@ function ComposerForm({
   return (
     <section aria-label={t('newPost')} className={styles.group}>
       <div className={styles.groupBody}>
+        {kinds.length > 1 && (
+          <SegmentedControl
+            label={t('kindLabel')}
+            value={kind}
+            onValueChange={(next) => setKind(next as PostKind)}
+            options={kinds.map((k) => ({ value: k, label: t(`kind_${k}`) }))}
+          />
+        )}
         <RichTextEditor
           autoFocus
           aria-label={t('newPost')}
-          placeholder={t('placeholder')}
+          placeholder={t(`placeholder_${kind}`)}
           defaultMarkdown={initial}
           mentionSuggestions={mentions}
           onChange={(v) => {
@@ -177,20 +235,89 @@ function ComposerForm({
             else localStorage.setItem(draftKey, v.markdown)
           }}
         />
-        {moderator && (
-          <RadioGroup
-            label={t('kindLabel')}
-            value={kind}
-            onValueChange={setKind}
-            options={[
-              { value: 'discussion', label: t('discussion'), description: t('discussionHint') },
-              {
-                value: 'announcement',
-                label: t('placeAnnouncementLabel'),
-                description: t('announcementHint'),
-              },
-            ]}
-          />
+        {kind === 'announcement' && <p className={styles.meta}>{t('announcementHint')}</p>}
+        {kind === 'event' && (
+          <div className={styles.eventFields}>
+            <Input
+              label={t('eventLocation')}
+              placeholder={t('eventLocationHint')}
+              value={extra.location}
+              maxLength={200}
+              onChange={(e) => set({ location: e.currentTarget.value })}
+            />
+            <DatePicker
+              label={t('eventDay')}
+              placeholder={t('eventDayPlaceholder')}
+              value={extra.day}
+              onChange={(day) => set({ day })}
+              minDate={today}
+              locale={locale}
+              showToday
+              labels={{
+                today: t('calendarToday'),
+                previous: t('calendarPrevious'),
+                next: t('calendarNext'),
+                clear: t('calendarClear'),
+                choose: t('eventDayPlaceholder'),
+                selected: (date) => t('calendarSelected', { date }),
+              }}
+            />
+            <TimePicker
+              label={t('eventTime')}
+              description={t('eventTimeHint')}
+              value={extra.time}
+              onChange={(time) => set({ time })}
+              minuteStep={15}
+              format={locale === 'ar' ? '24h' : '12h'}
+            />
+          </div>
+        )}
+        {kind === 'vote' && (
+          <fieldset className={styles.voteFields}>
+            <legend className={styles.fieldLegend}>{t('voteOptions')}</legend>
+            {extra.options.map((option, index) => (
+              <div key={index} className={styles.optionRow}>
+                <Input
+                  label={t('voteOption', { n: index + 1 })}
+                  value={option}
+                  maxLength={VOTE_OPTIONS.length}
+                  onChange={(e) => {
+                    const next = [...extra.options]
+                    next[index] = e.currentTarget.value
+                    set({ options: next })
+                  }}
+                />
+                {extra.options.length > VOTE_OPTIONS.min && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    aria-label={t('voteRemoveOption', { n: index + 1 })}
+                    onClick={() => set({ options: extra.options.filter((_, i) => i !== index) })}
+                  >
+                    <X size={16} aria-hidden="true" />
+                  </Button>
+                )}
+              </div>
+            ))}
+            {extra.options.length < VOTE_OPTIONS.max && (
+              <div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => set({ options: [...extra.options, ''] })}
+                >
+                  <Plus size={16} aria-hidden="true" />
+                  {t('voteAddOption')}
+                </Button>
+              </div>
+            )}
+            <Checkbox
+              label={t('voteMultiple')}
+              description={t('voteMultipleHint')}
+              checked={extra.multiple}
+              onCheckedChange={(v) => set({ multiple: v === true })}
+            />
+          </fieldset>
         )}
         {showFiles && (
           <FileDropzone multiple maxFiles={5} label={t('filesDrop')} onFilesChange={setFiles} />
@@ -214,7 +341,7 @@ function ComposerForm({
           </Button>
         </span>
         <ActionSwap
-          disabled={body.empty}
+          disabled={!ready}
           failureLabel={t('failed')}
           states={[
             { id: 'idle', label: t('publish'), icon: <Send size={16} />, tone: 'accent' },

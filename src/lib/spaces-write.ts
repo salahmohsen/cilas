@@ -5,6 +5,7 @@ import { archivedNow } from '@/lib/space-lifecycle'
 import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
 import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
+import { EVENT_LOCATION_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
 import type { User } from '@/payload-types'
@@ -221,9 +222,6 @@ export type PostShape =
   | { kind: 'discussion' | 'announcement' }
   | { kind: 'event'; event: { location: string; startsAt: string } }
   | { kind: 'vote'; vote: { options: string[]; multiple: boolean } }
-
-export const EVENT_LOCATION_MAX = 200
-export const VOTE_OPTIONS = { min: 2, max: 10, length: 120 } as const
 
 /**
  * The extra columns an event or a vote stores, or null when they break a

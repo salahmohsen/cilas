@@ -10,6 +10,7 @@ import { absoluteUrl } from '@/lib/schema'
 import type { NoticePart } from '@/lib/space-consent'
 import type { FeedRow as FeedRowData, SpaceFileRef } from '@/lib/spaces-data'
 
+import { EventDetails } from './event-details'
 import { LinkCard } from './link-card'
 import { PersonHover, type PersonCard } from './person-hover'
 import { PostActions } from './post-actions'
@@ -151,6 +152,9 @@ export async function PostHead({
             {t('announcement')}
           </Badge>
         )}
+        {(post.kind === 'event' || post.kind === 'vote') && (
+          <Badge size="sm">{t(`kind_${post.kind}`)}</Badge>
+        )}
         {post.locked && (
           <Badge size="sm" tone="warning">
             {t('locked')}
@@ -211,6 +215,9 @@ export async function FeedRow({
           <PostBody body={post.body} people={context.people} />
         </Folded>
       </div>
+      {post.kind === 'event' && post.event_starts_at && (
+        <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
+      )}
       {link && (
         <Suspense fallback={null}>
           <LinkCard url={link} />

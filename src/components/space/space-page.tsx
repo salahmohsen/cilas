@@ -14,9 +14,9 @@ import type { Course, Programme, Space, User } from '@/payload-types'
 import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
 import { memberState, participation, spaceFeed } from '@/lib/spaces-data'
-import { visitRecord } from '@/lib/spaces-write'
+import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
 
-import { Composer } from './composer'
+import { Composer, type PostKind } from './composer'
 import { FeedFilter } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
@@ -81,6 +81,12 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
     name: user.email,
     photo: null,
   }
+  // The same rules postCreate enforces, so the type switch never offers a closed door.
+  const kinds = (['discussion', 'event', 'vote', 'announcement'] as const).filter(
+    (k): k is PostKind =>
+      postingAllows(space.posting ?? 'open', mem.role, k) &&
+      (k !== 'event' || eventsAllow(space.events, mem.role)),
+  )
   const context: FeedContext = {
     archived: feed.archived,
     viewer: { personId: viewerPerson, moderator, me: { name: me.name, photo: me.photo } },
@@ -162,6 +168,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
               <SpaceSettings
                 space={space.id}
                 posting={space.posting ?? 'open'}
+                events={space.events ?? 'members'}
                 archived={feed.archived}
               />
             )}
@@ -185,7 +192,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
           />
           <Composer
             space={space.id}
-            moderator={moderator}
+            kinds={kinds}
             archived={feed.archived}
             me={me}
             mentions={cards.map((c) => ({ id: c.id, name: c.name }))}

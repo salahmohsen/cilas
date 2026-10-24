@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 
 import { personOf } from '@/access'
 import { routing } from '@/i18n/routing'
+import { cairoInstant } from '@/lib/cairo-day'
 import { currentReader } from '@/lib/reader'
 import {
   commentCreate,
@@ -23,7 +24,9 @@ import {
   STEP_KEYS,
   stepMark,
   visitRecord,
+  voteSet,
   type PostFile,
+  type PostShape,
   type StepKey,
   type WriteError,
 } from '@/lib/spaces-write'
@@ -73,6 +76,34 @@ const revalidate = async () => {
   for (const locale of routing.locales) revalidatePath(`/${locale}/spaces`, 'layout')
 }
 
+/**
+ * The post's kind and what it adds, read from the composer's fields. An
+ * event's day and time are Cairo wall-clock (ADR 0002); null when they do
+ * not name a real moment. The rules themselves live in postCreate.
+ */
+const shapeOf = (form: FormData): PostShape | null => {
+  switch (text(form, 'kind')) {
+    case 'announcement':
+      return { kind: 'announcement' }
+    case 'event': {
+      const startsAt = cairoInstant(text(form, 'day'), text(form, 'time'))
+      return startsAt
+        ? { kind: 'event', event: { location: text(form, 'location'), startsAt } }
+        : null
+    }
+    case 'vote':
+      return {
+        kind: 'vote',
+        vote: {
+          options: form.getAll('option').map((o) => String(o)),
+          multiple: bool(form, 'multiple') ?? false,
+        },
+      }
+    default:
+      return { kind: 'discussion' }
+  }
+}
+
 export async function postCreateAction(
   _prev: SpacesWriteState,
   form: FormData,
@@ -81,14 +112,15 @@ export async function postCreateAction(
   if (!user || user.collection !== 'users') return err('auth')
   const space = num(form, 'space')
   if (!space) return err('space')
-  const kind = text(form, 'kind') === 'announcement' ? 'announcement' : 'discussion'
+  const shape = shapeOf(form)
+  if (!shape) return err(text(form, 'kind') === 'vote' ? 'vote' : 'event')
   const files = await filesOf(form)
   const payload = await getPayload({ config })
   const result = await postCreate({
     payload,
     user,
     space,
-    kind,
+    ...shape,
     body: text(form, 'body'),
     files,
   })
@@ -250,6 +282,26 @@ export async function reactionToggleAction(
   return { status: 'ok' }
 }
 
+export async function voteSetAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const post = num(form, 'post')
+  if (!post) return err('not-found')
+  const payload = await getPayload({ config })
+  const result = await voteSet({
+    payload,
+    user,
+    post,
+    options: form.getAll('option').map((o) => String(o)),
+  })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
 export async function consentAcceptAction(
   _prev: SpacesWriteState,
   form: FormData,
@@ -319,6 +371,7 @@ export async function spaceSettingsSetAction(
   const space = num(form, 'space')
   if (!space) return err('space')
   const posting = text(form, 'posting') || undefined
+  const events = text(form, 'events')
   const reopen = form.get('reopen')
   const payload = await getPayload({ config })
   const result = await spaceSettingsSet({
@@ -326,6 +379,7 @@ export async function spaceSettingsSetAction(
     user,
     space,
     posting: posting ? (posting as 'open' | 'members_comment' | 'fellows_only') : undefined,
+    events: events === 'members' || events === 'moderators' ? events : undefined,
     reopened: parseBool(reopen),
   })
   if (!result.ok) return err(result.error)

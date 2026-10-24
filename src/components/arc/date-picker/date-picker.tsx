@@ -5,7 +5,7 @@ import type { ButtonHTMLAttributes, FocusEvent, KeyboardEvent } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import type { Variants } from 'motion/react'
 import { CalendarDays, ChevronDown } from 'lucide-react'
-import { Calendar, type CalendarDateMatcher } from '../calendar/calendar'
+import { Calendar, type CalendarDateMatcher, type CalendarLabels } from '../calendar/calendar'
 import { motionTokens } from '../lib/motion-tokens'
 import styles from './date-picker.module.css'
 
@@ -25,6 +25,10 @@ export interface DatePickerProps extends Omit<
   format?: Intl.DateTimeFormatOptions
   /** Adds a Today button to the calendar header. */
   showToday?: boolean
+  /** Words for localization, passed on to the calendar too. Keys left out keep their English default. */
+  labels?: Partial<
+    CalendarLabels & { clear: string; choose: string; selected: (date: string) => string }
+  >
 }
 
 const monthStart = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1)
@@ -85,6 +89,7 @@ export function DatePicker({
   locale = 'en-US',
   format = { month: 'short', day: 'numeric', year: 'numeric' },
   showToday,
+  labels,
   id,
   className,
   disabled,
@@ -290,10 +295,11 @@ export function DatePicker({
                 disabledDates={disabledDates}
                 locale={locale}
                 showToday={showToday}
+                labels={labels}
               />
               <div className={styles.footer}>
                 <button type="button" onClick={() => selectDate(undefined)} disabled={!value}>
-                  Clear
+                  {labels?.clear ?? 'Clear'}
                 </button>
                 <span className={styles.status}>
                   <AnimatePresence initial={false}>
@@ -304,7 +310,11 @@ export function DatePicker({
                       animate="center"
                       exit="exit"
                     >
-                      {value ? `Selected ${formatter.format(value)}` : 'Choose a day'}
+                      {value
+                        ? (labels?.selected ?? ((date) => `Selected ${date}`))(
+                            formatter.format(value),
+                          )
+                        : (labels?.choose ?? 'Choose a day')}
                     </motion.span>
                   </AnimatePresence>
                 </span>

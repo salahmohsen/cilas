@@ -15,20 +15,23 @@ import { spaceSettingsSetAction } from '@/app/(frontend)/[locale]/spaces/actions
 import { saveErrorKey } from './composer'
 import styles from './space.module.css'
 
-/** Moderators only (spec §11): the posting level, and reopening an archived course space. */
+/** Moderators only (spec §11): the posting level, who starts events, and reopening an archived course space. */
 export function SpaceSettings({
   space,
   posting,
+  events,
   archived,
 }: {
   space: number
   posting: string
+  events: string
   archived: boolean
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('SpacePost')
   const router = useRouter()
   const [level, setLevel] = useState(posting)
+  const [who, setWho] = useState(events)
   const [reopen, setReopen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   return (
@@ -51,6 +54,15 @@ export function SpaceSettings({
               { value: 'fellows_only', label: t('posting_fellows_only') },
             ]}
           />
+          <RadioGroup
+            label={t('eventsSetting')}
+            value={who}
+            onValueChange={setWho}
+            options={[
+              { value: 'members', label: t('events_members') },
+              { value: 'moderators', label: t('events_moderators') },
+            ]}
+          />
           {archived && (
             <Checkbox
               label={t('reopen')}
@@ -71,6 +83,7 @@ export function SpaceSettings({
               const form = new FormData()
               form.set('space', String(space))
               form.set('posting', level)
+              form.set('events', who)
               if (archived && reopen) form.set('reopen', 'true')
               const result = await spaceSettingsSetAction({ status: 'ok' }, form)
               if (result.status === 'error') {

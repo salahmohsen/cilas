@@ -275,3 +275,7 @@
     scale: none;
   }
 }
+/* The arrows point the way the months run, so they turn around in right-to-left text. */
+.navButton:dir(rtl) svg {
+  transform: scaleX(-1);
+}

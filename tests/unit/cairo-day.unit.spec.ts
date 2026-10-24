@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { addDays, cairoDay, weekdayOf } from '@/lib/cairo-day'
+import { addDays, cairoDay, cairoInstant, weekdayOf } from '@/lib/cairo-day'
 
 describe('cairoDay', () => {
   it('passes a plain day through', () => {
@@ -40,5 +40,17 @@ describe('weekdayOf', () => {
     expect(weekdayOf('2026-03-07')).toBe('sat')
     expect(weekdayOf('2026-03-06')).toBe('fri')
     expect(weekdayOf('2026-03-08')).toBe('sun')
+  })
+})
+
+describe('cairoInstant', () => {
+  it('reads a Cairo wall-clock time in winter and in summer', () => {
+    expect(cairoInstant('2026-01-15', '18:00')).toBe('2026-01-15T16:00:00.000Z')
+    expect(cairoInstant('2026-07-01', '18:00')).toBe('2026-07-01T15:00:00.000Z')
+  })
+
+  it('refuses a day or a time that is not real', () => {
+    expect(cairoInstant('2026-02-30', '10:00')).toBeNull()
+    expect(cairoInstant('2026-03-01', '24:00')).toBeNull()
   })
 })

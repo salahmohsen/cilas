@@ -15,6 +15,7 @@ import { mayComment, membership } from '@/lib/spaces'
 import { memberState, postView } from '@/lib/spaces-data'
 
 import { commentsOpen, FileChip, PostHead, type FeedContext } from './feed-row'
+import { EventDetails } from './event-details'
 import { LinkCard } from './link-card'
 import { PostBody } from './post-body'
 import { PostFoot } from './post-foot'
@@ -116,6 +117,9 @@ export async function PostPage({
               <PostBody body={post.body} people={byId} />
             )}
           </div>
+          {!deleted && post.kind === 'event' && post.event_starts_at && (
+            <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
+          )}
           {!deleted && firstLink(post.body) && (
             <Suspense fallback={null}>
               <LinkCard url={firstLink(post.body)!} />

@@ -31,6 +31,20 @@ export interface CalendarProps {
   className?: string
   /** Adds a Today button that slides back to the current month and selects today when it is available. */
   showToday?: boolean
+  /** Words for localization. Keys left out keep their English default. */
+  labels?: Partial<CalendarLabels>
+}
+
+export interface CalendarLabels {
+  today: string
+  previous: string
+  next: string
+}
+
+const CALENDAR_LABELS: CalendarLabels = {
+  today: 'Today',
+  previous: 'Previous month',
+  next: 'Next month',
 }
 
 const startOfDay = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate())
@@ -192,7 +206,9 @@ export function Calendar({
   locale = 'en-US',
   className,
   showToday = false,
+  labels,
 }: CalendarProps) {
+  const words = { ...CALENDAR_LABELS, ...labels }
   const titleId = useId()
   const today = useToday()
   // Motion preference only counts after hydration, so server and client markup agree.
@@ -257,13 +273,14 @@ export function Calendar({
     () => new Intl.DateTimeFormat(locale, { weekday: 'short' }),
     [locale],
   )
-  const weekdays = useMemo(
-    () =>
-      Array.from({ length: 7 }, (_, index) =>
-        weekdayFormatter.format(new Date(2024, 0, 7 + index)),
-      ),
-    [weekdayFormatter],
-  )
+  // Two letters name a weekday in most languages; where they cannot tell the days apart (Arabic short names all begin "ال"), the narrow form does.
+  const weekdays = useMemo(() => {
+    const days = Array.from({ length: 7 }, (_, index) => new Date(2024, 0, 7 + index))
+    const short = days.map((day) => weekdayFormatter.format(day).slice(0, 2))
+    if (new Set(short).size === 7) return short
+    const narrow = new Intl.DateTimeFormat(locale, { weekday: 'narrow' })
+    return days.map((day) => narrow.format(day))
+  }, [weekdayFormatter, locale])
   const monthLabel = month ? formatter.format(month) : ''
   // The selected disc glides between days, so each number flips color as the disc actually passes it:
   // the day it leaves waits longer on short hops, the day it lands on waits longer on long ones.
@@ -470,18 +487,18 @@ export function Calendar({
               aria-disabled={todayIdle || undefined}
               aria-label={
                 today
-                  ? `Today, ${today.toLocaleDateString(locale, { dateStyle: 'full' })}`
-                  : 'Today'
+                  ? `${words.today}, ${today.toLocaleDateString(locale, { dateStyle: 'full' })}`
+                  : words.today
               }
               onClick={goToToday}
             >
-              Today
+              {words.today}
             </button>
           )}
           <button
             type="button"
             className={styles.navButton}
-            aria-label="Previous month"
+            aria-label={words.previous}
             aria-disabled={previousDisabled || undefined}
             onClick={() => {
               if (!previousDisabled && previousMonth) changeMonth(previousMonth)
@@ -492,7 +509,7 @@ export function Calendar({
           <button
             type="button"
             className={styles.navButton}
-            aria-label="Next month"
+            aria-label={words.next}
             aria-disabled={nextDisabled || undefined}
             onClick={() => {
               if (!nextDisabled && nextMonth) changeMonth(nextMonth)
@@ -504,7 +521,7 @@ export function Calendar({
       </div>
       <div className={styles.weekdays} aria-hidden="true">
         {weekdays.map((day, index) => (
-          <span key={`${day}-${index}`}>{day.slice(0, 2)}</span>
+          <span key={`${day}-${index}`}>{day}</span>
         ))}
       </div>
       <div className={styles.monthViewport} ref={viewportRef}>
