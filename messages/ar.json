@@ -931,7 +931,21 @@
     "calendarPrevious": "الشهر السابق",
     "calendarNext": "الشهر التالي",
     "calendarClear": "امسح",
-    "calendarSelected": "اخترت {date}"
+    "calendarSelected": "اخترت {date}",
+    "voteLabel": "اختيارك",
+    "voteHintSingle": "اختر خيارًا واحدًا.",
+    "voteHintMultiple": "اختر خيارًا أو أكثر.",
+    "voteSubmit": "صوّت",
+    "voteSave": "احفظ التصويت",
+    "voteCancel": "إلغاء",
+    "voteChange": "غيّر تصويتك",
+    "voteWithdraw": "اسحب تصويتك",
+    "voteYours": "اختيارك",
+    "voteCount": "{count, plural, zero {لا أصوات} one {صوت واحد} two {صوتان} few {# أصوات} many {# صوتًا} other {# صوت}}",
+    "voteVoters": "{count, plural, =0 {لا أصوات بعد} one {صوّت عضو واحد} two {صوّت عضوان} few {صوّت # أعضاء} many {صوّت # عضوًا} other {صوّت # عضو}}",
+    "voteSaved": "حُفظ تصويتك.",
+    "voteWithdrawn": "سُحب تصويتك.",
+    "voteInvalid": "هذا الاختيار غير ممكن في هذا التصويت."
   },
   "SpaceComment": {
     "write": "علِّق",

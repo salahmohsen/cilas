@@ -1057,6 +1057,27 @@ describe('spaces write', () => {
     })
     for (const r of rows.docs) track('space-votes', r.id)
     expect(rows.docs.map((r) => r.option).sort()).toEqual([ids[0], ids[2]].sort())
+    // The page reads counts and distinct voters; only the reader's own choice is named.
+    await voteSet({ payload, user: student, post: multiple.data.id, options: [ids[0]!] })
+    for (const r of (
+      await payload.find({
+        collection: 'space-votes',
+        where: { post: { equals: multiple.data.id } },
+        overrideAccess: true,
+      })
+    ).docs)
+      track('space-votes', r.id)
+    const seen = await postView(payload, student, courseSpace, multiple.data.id)
+    expect(seen?.row.vote).toEqual({
+      multiple: true,
+      options: [
+        { id: ids[0], label: 'Tea', count: 2 },
+        { id: ids[1], label: 'Coffee', count: 0 },
+        { id: ids[2], label: 'Water', count: 1 },
+      ],
+      voters: 2,
+      mine: [ids[0]],
+    })
 
     // A locked vote takes no more choices; a discussion is not a vote.
     await postModify({ payload, user: fellow, id: multiple.data.id, locked: true })

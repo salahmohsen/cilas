@@ -931,7 +931,21 @@
     "calendarPrevious": "Previous month",
     "calendarNext": "Next month",
     "calendarClear": "Clear",
-    "calendarSelected": "Selected {date}"
+    "calendarSelected": "Selected {date}",
+    "voteLabel": "Your choice",
+    "voteHintSingle": "Choose one option.",
+    "voteHintMultiple": "Choose one or more options.",
+    "voteSubmit": "Vote",
+    "voteSave": "Save vote",
+    "voteCancel": "Cancel",
+    "voteChange": "Change vote",
+    "voteWithdraw": "Withdraw vote",
+    "voteYours": "Your choice",
+    "voteCount": "{count, plural, one {# vote} other {# votes}}",
+    "voteVoters": "{count, plural, =0 {No votes yet} one {# member voted} other {# members voted}}",
+    "voteSaved": "Your vote is saved.",
+    "voteWithdrawn": "Your vote is withdrawn.",
+    "voteInvalid": "This choice is not possible in this vote."
   },
   "SpaceComment": {
     "write": "Comment",

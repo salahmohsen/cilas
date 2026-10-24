@@ -11,6 +11,7 @@ import type { NoticePart } from '@/lib/space-consent'
 import type { FeedRow as FeedRowData, SpaceFileRef } from '@/lib/spaces-data'
 
 import { EventDetails } from './event-details'
+import { VotePoll } from './vote-poll'
 import { LinkCard } from './link-card'
 import { PersonHover, type PersonCard } from './person-hover'
 import { PostActions } from './post-actions'
@@ -217,6 +218,9 @@ export async function FeedRow({
       </div>
       {post.kind === 'event' && post.event_starts_at && (
         <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
+      )}
+      {row.vote && (
+        <VotePoll post={post.id} vote={row.vote} disabled={context.archived || !!post.locked} />
       )}
       {link && (
         <Suspense fallback={null}>

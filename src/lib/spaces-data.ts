@@ -295,6 +295,50 @@ const tally = <R extends { reaction: string; account?: number | { id: number } |
   return out
 }
 
+/** A vote post's options with their counts. Voters stay anonymous: only the reader's own choice is named. */
+export type VoteView = {
+  multiple: boolean
+  options: { id: string; label: string; count: number }[]
+  /** Distinct accounts with at least one choice */
+  voters: number
+  /** The reader's chosen option ids */
+  mine: string[]
+}
+
+/** Every vote post's tally in one read, through the reader's access like reactions. */
+const voteViews = async (
+  payload: Payload,
+  user: null | User,
+  posts: SpacePost[],
+): Promise<Map<number, VoteView>> => {
+  const out = new Map<number, VoteView>()
+  const polls = posts.filter((p) => p.kind === 'vote' && !p.deleted_at)
+  if (!polls.length) return out
+  const { docs } = await payload.find({
+    collection: 'space-votes',
+    user: user ?? undefined,
+    depth: 0,
+    pagination: false,
+    overrideAccess: false,
+    select: { post: true, account: true, option: true },
+    where: { post: { in: polls.map((p) => p.id) } },
+  })
+  for (const p of polls) {
+    const rows = docs.filter((v) => relId(v.post) === p.id)
+    out.set(p.id, {
+      multiple: !!p.vote_multiple,
+      options: (p.vote_options ?? []).flatMap((o) =>
+        o.id
+          ? [{ id: o.id, label: o.label, count: rows.filter((v) => v.option === o.id).length }]
+          : [],
+      ),
+      voters: new Set(rows.map((v) => relId(v.account))).size,
+      mine: user ? rows.filter((v) => relId(v.account) === user.id).map((v) => v.option) : [],
+    })
+  }
+  return out
+}
+
 /** One row of the space feed (spec §7): the post with its roll-up counts. */
 export type FeedRow = {
   post: SpacePost
@@ -308,6 +352,7 @@ export type FeedRow = {
   /** Files on the post itself, not on its comments */
   files: SpaceFileRef[]
   reactions: Reactions
+  vote: VoteView | null
 }
 
 /**
@@ -343,8 +388,9 @@ export const spaceFeed = async (
   })
 
   const postIds = docs.map((p) => p.id)
-  const [threads, { docs: reactions }, { docs: postFiles }] = await Promise.all([
+  const [threads, votes, { docs: reactions }, { docs: postFiles }] = await Promise.all([
     postThreads(payload, user, postIds),
+    voteViews(payload, user, docs),
     postIds.length
       ? payload.find({
           collection: 'space-reactions',
@@ -383,6 +429,7 @@ export const spaceFeed = async (
     comments: threads.get(p.id)?.comments ?? [],
     files: filesOf.get(p.id) ?? [],
     reactions: reactionsOf.get(p.id) ?? NO_REACTIONS,
+    vote: votes.get(p.id) ?? null,
   }))
   return { rows, settings, archived, lastMeeting, daysSince }
 }
@@ -525,9 +572,10 @@ export const postView = async (
     .catch(() => null)
   if (!post || relId(post.space as never) !== space.id) return null
 
-  const [{ archived }, threads, { docs: reactions }, { docs: files }] = await Promise.all([
+  const [{ archived }, threads, votes, { docs: reactions }, { docs: files }] = await Promise.all([
     archiveState(payload, space),
     postThreads(payload, user, [post.id]),
+    voteViews(payload, user, [post]),
     payload.find({
       collection: 'space-reactions',
       user: user ?? undefined,
@@ -560,6 +608,7 @@ export const postView = async (
       comments: thread?.comments ?? [],
       files: [],
       reactions: onPost.get(post.id) ?? NO_REACTIONS,
+      vote: votes.get(post.id) ?? null,
     },
     files: deleted ? [] : files.filter((f) => f.comment == null).map(fileRef),
     comments: thread?.comments ?? [],

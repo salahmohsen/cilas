@@ -1,0 +1,222 @@
+.poll {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.hint {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* Choosing: Arc's radio-group rows, with a box mark when several choices are allowed. */
+.group {
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+.options {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+}
+.highlight {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  box-sizing: border-box;
+  border: 1px solid var(--control-on);
+  border-radius: var(--radius-control);
+  background: color-mix(in oklab, var(--control-on) 5%, transparent);
+  opacity: 0;
+  pointer-events: none;
+}
+.option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: var(--space-2) var(--space-3);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+@media (hover: hover) and (pointer: fine) {
+  .option:hover {
+    background: var(--surface-muted);
+  }
+}
+.option:active {
+  background: var(--surface-muted);
+}
+/* Several rows can be on at once, so each carries the highlight's look itself; so does the server paint. */
+.options[data-multiple] .option:has(input:checked),
+.options:not([data-ready]) .option:has(input:checked) {
+  border-color: var(--control-on);
+  background: color-mix(in oklab, var(--control-on) 5%, transparent);
+}
+.option input {
+  position: absolute;
+  opacity: 0;
+}
+/* The input is invisible, so the row carries Arc's keyboard outline. */
+.option:has(input:focus-visible) {
+  outline: var(--focus-outline-width, 2px) solid
+    var(--focus-outline, color-mix(in oklab, var(--accent-strong) 72%, transparent));
+  outline-offset: var(--focus-outline-offset, 2px);
+}
+.option > :not(input) {
+  position: relative;
+  z-index: 2;
+}
+.mark {
+  display: grid;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--border-strong);
+  border-radius: 50%;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-spring) var(--ease-spring);
+}
+.mark[data-shape='box'] {
+  border-radius: 5px;
+}
+.glyph {
+  display: grid;
+  place-items: center;
+  color: var(--control-glyph);
+}
+.mark[data-shape='dot'] .glyph {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--control-glyph);
+}
+.option:active .mark {
+  transform: scale(0.88);
+  transition: transform 100ms var(--ease-standard);
+}
+.option:has(input:checked) .mark {
+  border-color: var(--control-on);
+  background: var(--control-on);
+}
+.optionLabel {
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+  transition: color var(--duration-standard) var(--ease-standard);
+}
+.option:has(input:checked) .optionLabel {
+  color: var(--foreground);
+}
+
+/* Results: the row is the track; a bar inset inside it fills to the option's share. */
+.results {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.result {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 40px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface-muted);
+  font-size: var(--text-sm);
+}
+.track {
+  position: absolute;
+  inset: 3px;
+  display: flex;
+}
+.bar {
+  border-radius: calc(var(--radius-control) - 3px);
+  background: color-mix(in oklab, var(--foreground) 9%, transparent);
+}
+.result[data-mine] .bar {
+  background: color-mix(in oklab, var(--accent) 24%, transparent);
+}
+.result > :not(.track) {
+  position: relative;
+}
+.resultLabel {
+  flex: 1;
+  min-width: 0;
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+.result[data-lead] .resultLabel {
+  color: var(--foreground);
+  font-weight: 500;
+}
+.resultMine {
+  flex: 0 0 auto;
+  color: var(--foreground);
+}
+.resultCount {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+.resultPercent {
+  flex: 0 0 auto;
+  min-width: 4ch;
+  text-align: end;
+  color: var(--foreground);
+  font-variant-numeric: tabular-nums;
+}
+
+.error {
+  margin: 0;
+  color: var(--danger, oklch(0.58 0.2 25));
+  font-size: var(--text-sm);
+}
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.voters {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+}
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  margin-inline-start: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .option,
+  .mark,
+  .optionLabel {
+    transition: none;
+  }
+  .option:active .mark {
+    transform: none;
+  }
+}

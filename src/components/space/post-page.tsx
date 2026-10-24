@@ -16,6 +16,7 @@ import { memberState, postView } from '@/lib/spaces-data'
 
 import { commentsOpen, FileChip, PostHead, type FeedContext } from './feed-row'
 import { EventDetails } from './event-details'
+import { VotePoll } from './vote-poll'
 import { LinkCard } from './link-card'
 import { PostBody } from './post-body'
 import { PostFoot } from './post-foot'
@@ -119,6 +120,9 @@ export async function PostPage({
           </div>
           {!deleted && post.kind === 'event' && post.event_starts_at && (
             <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
+          )}
+          {!deleted && row.vote && (
+            <VotePoll post={post.id} vote={row.vote} disabled={archived || !!post.locked} />
           )}
           {!deleted && firstLink(post.body) && (
             <Suspense fallback={null}>
