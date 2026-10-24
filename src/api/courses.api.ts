@@ -1,6 +1,7 @@
 import { plainText } from '@/lib/plaintext'
 import type { Payload, Where } from 'payload'
 
+import type { SiteTier } from '@/access'
 import { COURSE_TYPE_OPTIONS } from '@/fields/course-type'
 import { SEASONS } from '@/lib/cycle'
 import { localDigits } from '@/lib/digits'
@@ -22,21 +23,27 @@ const populate = {
   media: { url: true, alt: true, filename: true, prefix: true },
 } as const
 
-const visible: Where = { and: [{ tier: { equals: 'public' } }, { _status: { equals: 'published' } }] }
+/**
+ * The gate of every read here. The study index is cached for all readers of
+ * a tier set, so it reads with no user and `visible` alone decides.
+ */
+const visible = (tiers: SiteTier[]): Where => ({
+  and: [{ tier: { in: tiers } }, { _status: { equals: 'published' } }],
+})
 
 /**
- * Published public courses. Drafts (imported courses awaiting review among
- * them) stay off the list, matching what `/study/<slug>` will show.
+ * Published courses in these tiers. Drafts (imported courses awaiting review
+ * among them) stay off the list, matching what `/study/<slug>` will show.
  */
-export const getPublicPosts = async (payload: Payload, locale: Locale = 'en') =>
+export const getListedCourses = async (payload: Payload, locale: Locale, tiers: SiteTier[]) =>
   payload.find({
     collection: 'courses',
-    where: visible,
+    where: visible(tiers),
     depth: 2,
     populate,
     joins: false,
     pagination: false,
-    overrideAccess: false,
+    overrideAccess: true,
     locale,
     // A course without text in the site language shows its own (CONTEXT.md).
     fallbackLocale: locale === 'ar' ? 'en' : 'ar',
@@ -69,7 +76,7 @@ const courseTexts = (c: Course): string[] => [
 ]
 
 /**
- * The study list: published public courses, newest cycle first, each with
+ * The study list: published courses in these tiers, newest cycle first, each with
  * its filter values labelled in the site language and its search words from
  * both languages, so a reader finds a course by any name it goes by.
  */
@@ -77,18 +84,19 @@ export const getStudyCourses = async (
   payload: Payload,
   locale: Locale,
   t: (key: string) => string,
+  tiers: SiteTier[],
 ): Promise<StudyCourse[]> => {
   const other: Locale = locale === 'ar' ? 'en' : 'ar'
   const [{ docs }, { docs: otherDocs }, { docs: places }] = await Promise.all([
-    getPublicPosts(payload, locale),
+    getListedCourses(payload, locale, tiers),
     payload.find({
       collection: 'courses',
-      where: visible,
+      where: visible(tiers),
       depth: 1,
       populate,
       joins: false,
       pagination: false,
-      overrideAccess: false,
+      overrideAccess: true,
       locale: other,
       fallbackLocale: false,
     }),

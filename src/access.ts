@@ -319,6 +319,13 @@ export const readTiers =
     return { or: visible }
   }
 
+/** A tier the site lists. `owner` work shows only in the admin and its preview. */
+export type SiteTier = 'public' | 'community'
+
+/** The tiers a site page shows its reader: `community` needs an account. */
+export const siteTiers = (reader: unknown): SiteTier[] =>
+  reader ? ['public', 'community'] : ['public']
+
 /* =========================================================== field rules */
 
 /**

@@ -40,8 +40,29 @@ describe('proxy', () => {
     )
   })
 
+  it('serves signed-in readers the pages that list community courses', () => {
+    const signedIn = { 'payload-token': 'token' }
+    expect(rewrite(proxy(request('/en', signedIn)))).toBe('http://localhost:3000/en/signed-in')
+    expect(rewrite(proxy(request('/ar/apply', signedIn)))).toBe('http://localhost:3000/ar/signed-in/apply')
+    expect(rewrite(proxy(request('/en/study/on-cities', signedIn)))).toBe(
+      'http://localhost:3000/en/signed-in/study/on-cities',
+    )
+    expect(rewrite(proxy(request('/en/study/on-cities/apply', signedIn)))).toBe(
+      'http://localhost:3000/en/signed-in/study/on-cities/apply',
+    )
+  })
+
+  it('keeps the Bridge pages cached for signed-in readers', () => {
+    const signedIn = { 'payload-token': 'token' }
+    for (const path of ['/en/study/bridge', '/en/study/bridge/apply', '/en/study/bridge/2025']) {
+      expect(rewrite(proxy(request(path, signedIn)))).toBeNull()
+    }
+  })
+
   it('keeps anonymous visitors on the cached pages', () => {
     expect(rewrite(proxy(request('/en/articles/on-pigeons')))).toBeNull()
+    expect(rewrite(proxy(request('/en/study/on-cities')))).toBeNull()
+    expect(rewrite(proxy(request('/en/apply')))).toBeNull()
   })
 
   it('sends the admin login to the site login, keeping where to return', () => {

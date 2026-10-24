@@ -1,5 +1,6 @@
 import type { Payload, Where } from 'payload'
 
+import { siteTiers } from '@/access'
 import { bridgeYearPath, listBridgeYears } from '@/api/programmes.api'
 import { getStudyIndex } from '@/api/study-index'
 import { registrationStatus } from '@/lib/registration'
@@ -30,14 +31,16 @@ export type OpenItem = {
 /**
  * Everything open for registration now, programmes first, then courses by
  * the nearest deadline. Courses come from the study index, which follows
- * deadlines every few minutes.
+ * deadlines every few minutes: public ones, and community ones for a
+ * signed-in `reader`. Owner-only courses never show.
  */
 export const getOpenNow = async (
   payload: Payload,
   locale: Locale,
+  reader: unknown = null,
 ): Promise<OpenItem[]> => {
   const [index, { docs: programmes }, years] = await Promise.all([
-    getStudyIndex(locale),
+    getStudyIndex(locale, siteTiers(reader)),
     payload.find({
       collection: 'programmes',
       where: {

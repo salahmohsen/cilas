@@ -8,8 +8,13 @@ const intl = createMiddleware(routing)
 /** Old Weebly pages (`/x.html`) and uploads, handled by the legacy catch-all. */
 const LEGACY = /\.html$|^\/uploads\//
 
-/** The article pages that show `community` articles to a signed-in reader. */
-const ARTICLES = /^\/(en|ar)(\/articles(?:\/[^/]+)?)\/?$/
+/**
+ * The pages that show `community` work to a signed-in reader: home and Open
+ * for registration (what is open), the articles, and a course with its
+ * application. The Bridge has its own pages under /study and stays cached.
+ */
+const SIGNED_IN =
+  /^\/(en|ar)((?:\/articles(?:\/[^/]+)?|\/apply|\/study\/(?!bridge(?:\/|$))[^/]+(?:\/apply)?)?)\/?$/
 
 /** Payload's login cookie (no `cookiePrefix` is set). */
 const SESSION_COOKIE = 'payload-token'
@@ -44,13 +49,13 @@ export default function proxy(request: NextRequest) {
     url.pathname = `/${savedLocale(request)}${pathname}`
     return NextResponse.rewrite(url)
   }
-  // A signed-in reader gets the uncached article pages, which also show
-  // `community` articles; everyone else keeps the cached ones. A stale cookie
-  // just renders as anonymous there.
-  const article = ARTICLES.exec(pathname)
-  if (article && request.cookies.has(SESSION_COOKIE)) {
+  // A signed-in reader gets the uncached pages, which also show `community`
+  // work; everyone else keeps the cached ones. A stale cookie just renders
+  // as anonymous there.
+  const page = SIGNED_IN.exec(pathname)
+  if (page && request.cookies.has(SESSION_COOKIE)) {
     const url = request.nextUrl.clone()
-    url.pathname = `/${article[1]}/signed-in${article[2]}`
+    url.pathname = `/${page[1]}/signed-in${page[2]}`
     return NextResponse.rewrite(url)
   }
   return intl(request)
