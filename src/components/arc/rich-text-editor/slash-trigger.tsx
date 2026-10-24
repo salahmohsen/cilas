@@ -122,14 +122,26 @@ export const SLASH_ITEMS: SlashItem[] = [
 const MARKERS = { slash: '/', mention: '@' } as const
 
 /** `[@Name](/people/{id})` replaces the running `@query` token ending at `caret`; text with no trigger passes through. */
-export const insertMentionMarkdown = (
-  text: string,
+/**
+ * Replaces the "@query" before the caret with a link to the person that shows
+ * only their name; the Markdown export writes it back as `[@Name](/people/{id})`.
+ * Returns the text node after the link, which starts with a space for the caret.
+ */
+export const insertMentionLink = (
+  node: Text,
   caret: number,
   person: { id: number; name: string },
-): string => {
-  const at = text.lastIndexOf('@', caret - 1)
-  if (at < 0) return text
-  return `${text.slice(0, at)}[@${person.name}](/people/${person.id})${text.slice(caret)}`
+): Text | null => {
+  const at = node.data.lastIndexOf('@', caret - 1)
+  if (at < 0) return null
+  const after = node.splitText(caret)
+  node.deleteData(at, caret - at)
+  const link = node.ownerDocument.createElement('a')
+  link.setAttribute('href', `/people/${person.id}`)
+  link.textContent = person.name
+  after.parentNode!.insertBefore(link, after)
+  if (!/^\s/.test(after.data)) after.insertData(0, ' ')
+  return after
 }
 
 /** The menu survives only while the caret keeps heading its same trigger token; an invalid or drifting query closes it. */
@@ -273,12 +285,8 @@ export function useSlashTrigger({
       const person = item.person
       setSlash(null)
       run(() => {
-        open.node.data = insertMentionMarkdown(
-          open.node.data,
-          Math.min(caret, open.node.data.length),
-          person,
-        )
-        placeCaret(open.node, open.offset + `[@${person.name}](/people/${person.id})`.length)
+        const after = insertMentionLink(open.node, Math.min(caret, open.node.data.length), person)
+        if (after) placeCaret(after, 1)
       })
       announce(`${person.name} mentioned`)
       return

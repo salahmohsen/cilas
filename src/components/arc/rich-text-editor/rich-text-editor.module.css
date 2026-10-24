@@ -368,3 +368,9 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+/* A mention shows the person's name in the link colour, like it reads once posted. */
+.editor a[href^='/people/'] {
+  color: var(--mention, var(--accent-strong));
+  font-weight: 500;
+  text-decoration: none;
+}

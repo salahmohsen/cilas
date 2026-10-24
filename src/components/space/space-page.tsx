@@ -177,7 +177,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
               introduced: state.steps?.introduced ?? false,
               read_pinned: state.steps?.read_pinned ?? false,
               checked_profile: state.steps?.checked_profile ?? false,
-              chose_digest: state.digest != null,
+              chose_digest: state.digest != null || (state.steps?.chose_digest ?? false),
             }}
             pinnedId={pinnedPost?.post.id ?? null}
             profileHref={`/${locale}/profile`}

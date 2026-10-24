@@ -1,23 +1,32 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from 'vitest'
 
-import { insertMentionMarkdown } from '@/components/arc/rich-text-editor/rich-text-editor'
+import {
+  htmlToMarkdown,
+  insertMentionLink,
+  markdownToHtml,
+} from '@/components/arc/rich-text-editor/rich-text-editor'
 
 describe('the @ member trigger (spec §5)', () => {
-  it('a chosen member inserts [@Name](/people/{id}) at the caret', () => {
-    const md = 'Salam [@Nadim Id](/people/42) hello'
-    expect(insertMentionMarkdown('Salam @nad hello', 10, { id: 42, name: 'Nadim Id' })).toBe(md)
+  it('a chosen member replaces "@query" with a link that shows only the name', () => {
+    const p = document.createElement('p')
+    p.textContent = 'Salam @nad hello'
+    const after = insertMentionLink(p.firstChild as Text, 10, { id: 42, name: 'Nadim Id' })
+    expect(p.innerHTML).toBe('Salam <a href="/people/42">Nadim Id</a> hello')
+    expect(after?.data).toBe(' hello')
   })
 
-  it('a caret before any @ leaves the text alone', () => {
-    expect(insertMentionMarkdown('no trigger here', 6, { id: 42, name: 'Nadim Id' })).toBe(
-      'no trigger here',
-    )
+  it('no "@" before the caret leaves the text alone', () => {
+    const p = document.createElement('p')
+    p.textContent = 'no trigger here'
+    expect(insertMentionLink(p.firstChild as Text, 6, { id: 42, name: 'Nadim' })).toBeNull()
+    expect(p.textContent).toBe('no trigger here')
   })
 
-  it('the chosen member lands where the query started, tail preserved', () => {
-    expect(insertMentionMarkdown('Salam @n hello', 8, { id: 7, name: 'Hala Salam' })).toBe(
-      'Salam [@Hala Salam](/people/7) hello',
-    )
+  it('the stored form survives a round trip through the editor', () => {
+    const md = 'Salam [@Nadim Id](/people/42) and [a site](https://cilas.org)'
+    const html = markdownToHtml(md)
+    expect(html).toContain('<a href="/people/42">Nadim Id</a>')
+    expect(htmlToMarkdown(html)).toBe(md)
   })
 })

@@ -928,8 +928,8 @@
     "readPinned": "Read the pinned announcement",
     "checkProfile": "Check your name and photo",
     "digest": "Choose your email digest",
-    "hide": "Hide steps",
-    "progress": "{done} of {total} done",
+    "hide": "Hide",
+    "progress": "<done></done> of {total} done",
     "daily": "Daily",
     "weekly": "Weekly",
     "off": "No email",
@@ -953,7 +953,11 @@
     "introduceAction": "Write it",
     "introduceHelp": "Say who you are and what brings you here.",
     "doneTitle": "You are all set",
-    "acceptHelp": "Needed before your first post. The full notice is in About, under Privacy."
+    "acceptHelp": "Needed before your first post. The full notice is in About, under Privacy.",
+    "show": "Show",
+    "completed": "<count></count> completed",
+    "stepsToDo": "Steps to do",
+    "completedSteps": "Completed steps"
   },
   "Participation": {
     "title": "Participation",

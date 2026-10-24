@@ -168,6 +168,19 @@
   --font-title: var(--font-text);
   --font-heading: var(--font-text);
   --font-display: var(--font-text);
+  /* shadcn's --accent is a near-white hover tint; Arc's components draw their primary actions,
+     own reactions and charts with --accent, so spaces get Arc's values back. */
+  --accent: oklch(33% 0 0);
+  --accent-strong: oklch(24% 0 0);
+  --accent-subtle: oklch(33% 0 0 / 0.1);
+  --accent-foreground: oklch(100% 0 0);
+}
+
+:root[data-theme='dark']:has([data-page='spaces']) {
+  --accent: oklch(80% 0 0);
+  --accent-strong: oklch(91% 0 0);
+  --accent-subtle: oklch(80% 0 0 / 0.13);
+  --accent-foreground: oklch(14% 0 0);
 }
 
 /* Fix filter-toolbar empty state: chips container collapses with no in-flow flex children */

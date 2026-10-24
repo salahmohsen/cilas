@@ -928,8 +928,8 @@
     "readPinned": "اقرأ الإعلان المثبت",
     "checkProfile": "تحقّق من اسمك وصورتك",
     "digest": "اختار النشرة البريدية",
-    "hide": "أخفِ الخطوات",
-    "progress": "{done} من {total} مكتمل",
+    "hide": "أخفِ",
+    "progress": "<done></done> من {total} مكتمل",
     "daily": "يوميًا",
     "weekly": "أسبوعيًا",
     "off": "بلا بريد",
@@ -953,7 +953,11 @@
     "introduceAction": "اكتبه",
     "introduceHelp": "قل من أنت وما الذي جاء بك.",
     "doneTitle": "اكتملت خطواتك",
-    "acceptHelp": "مطلوب قبل منشورك الأول. الإشعار كاملًا في قسم حول، تحت الخصوصية."
+    "acceptHelp": "مطلوب قبل منشورك الأول. الإشعار كاملًا في قسم حول، تحت الخصوصية.",
+    "show": "اعرض",
+    "completed": "<count></count> مكتملة",
+    "stepsToDo": "خطوات متبقية",
+    "completedSteps": "خطوات مكتملة"
   },
   "Participation": {
     "title": "المشاركة",

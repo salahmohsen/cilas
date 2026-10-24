@@ -51,7 +51,7 @@ import {
   useSlashTrigger,
 } from './slash-trigger'
 
-export { insertMentionMarkdown } from './slash-trigger'
+export { insertMentionLink } from './slash-trigger'
 
 /* ------------------------------------------------------------------------------------------------
  * Markdown and HTML. Small, dependency free converters for the subset the editor writes.
@@ -60,6 +60,7 @@ export { insertMentionMarkdown } from './slash-trigger'
 export type BlockType = 'p' | 'h1' | 'h2' | 'h3' | 'ul' | 'ol' | 'blockquote' | 'pre' | 'hr'
 
 const ZWSP = /\u200b/g
+const MENTION_HREF = /^\/people\/\d+$/
 const escapeHtml = (value: string) =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const safeUrl = (url: string) => /^(https?:|mailto:|tel:|\/|#)/i.test(url.trim())
@@ -80,7 +81,9 @@ function inlineMarkdown(text: string) {
     (_, code: string) => `\u0000${codes.push(code) - 1}\u0000`,
   )
   out = out.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (_, label: string, url: string) =>
-    safeUrl(url) ? `<a href="${url}">${label}</a>` : label,
+    safeUrl(url)
+      ? `<a href="${url}">${MENTION_HREF.test(url) ? label.replace(/^@/, '') : label}</a>`
+      : label,
   )
   out = out.replace(/(\*\*|__)(?=\S)([\s\S]*?\S)\1/g, '<strong>$2</strong>')
   out = out.replace(/~~(?=\S)([\s\S]*?\S)~~/g, '<s>$1</s>')
@@ -218,9 +221,15 @@ function inlineToMarkdown(node: Node): string {
       case 'CODE':
         out += `\`${(element.textContent ?? '').replace(ZWSP, '')}\``
         break
-      case 'A':
-        out += `[${inlineToMarkdown(element)}](${element.getAttribute('href') ?? ''})`
+      case 'A': {
+        const href = element.getAttribute('href') ?? ''
+        // A mention shows only the name; it is stored as `[@Name](/people/{id})`.
+        const label = MENTION_HREF.test(href)
+          ? `@${(element.textContent ?? '').replace(ZWSP, '').replace(/^@/, '').replace(/[[\]]/g, '')}`
+          : inlineToMarkdown(element)
+        out += `[${label}](${href})`
         break
+      }
       case 'UL':
       case 'OL':
         break

@@ -1,5 +1,6 @@
 'use client'
 
+import { useRef } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
@@ -53,7 +54,8 @@ export function OnboardingChecklist({
 }) {
   const t = useTranslations('SpaceChecklist')
   const router = useRouter()
-  const mark = (step: keyof Steps) => call(stepMarkAction, { space: String(space), step })
+  const mark = (step: keyof Steps, value = true) =>
+    call(stepMarkAction, { space: String(space), step, value: String(value) })
 
   const all = [
     {
@@ -114,7 +116,28 @@ export function OnboardingChecklist({
     },
   ]
   const done = all.filter((s) => steps[s.id as keyof Steps]).map((s) => s.id)
+  const saved = useRef(new Set(done))
   if (done.length === all.length) return null
+
+  /**
+   * A box ticked by hand is saved like a finished action, so the checklist
+   * reads the same on the next visit and leaves once every step is done.
+   * Accepting the notice cannot be undone from here; it stays accepted.
+   */
+  const persist = async (completed: string[]) => {
+    const next = new Set(completed)
+    const changes = all
+      .map((s) => s.id as keyof Steps)
+      .filter((id) => next.has(id) !== saved.current.has(id))
+    saved.current = next
+    for (const id of changes) {
+      const on = next.has(id)
+      if (id === 'saw_privacy') {
+        if (on && !steps.saw_privacy) await call(consentAcceptAction)
+      } else await mark(id, on)
+    }
+    if (changes.length) router.refresh()
+  }
 
   return (
     <ArcChecklist
@@ -123,6 +146,15 @@ export function OnboardingChecklist({
       steps={all}
       defaultCompleted={done}
       defaultHidden={hidden}
+      onCompletedChange={(completed) => void persist(completed)}
+      labels={{
+        progress: (n, total) => t.rich('progress', { total, done: () => n }),
+        hide: t('hide'),
+        show: t('show'),
+        completed: (count) => t.rich('completed', { count: () => count }),
+        stepsToDo: t('stepsToDo'),
+        completedSteps: t('completedSteps'),
+      }}
       onHiddenChange={(next) => {
         document.cookie = `${CHECKLIST_COOKIE}=${next ? '1' : ''}; path=/; max-age=${next ? 31_536_000 : 0}; samesite=lax`
       }}
