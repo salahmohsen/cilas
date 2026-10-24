@@ -19,6 +19,7 @@ export function DigestForm({ digest }: { digest: 'daily' | 'weekly' | 'off' | nu
     <div className={styles.column}>
       <RadioGroup
         label={t('digestLabel')}
+        labelHidden
         value={choice}
         onValueChange={setChoice}
         options={[

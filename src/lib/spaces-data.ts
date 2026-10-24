@@ -4,6 +4,7 @@ import { personOf } from '@/access'
 import type { ReactionCounts, ReactionKind } from '@/components/arc/reactions/reactions'
 import { archivedNow, courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
 import { NOTICE_VERSION } from '@/lib/space-consent'
+import { spacePeople } from '@/lib/space-members'
 import {
   mode,
   readableSpaceIds,
@@ -609,37 +610,51 @@ export type ParticipationRow = {
   lastVisit: string | null
 }
 
+/** Posts and comments written in one week, Monday to Sunday in UTC. */
+export type ParticipationWeek = { start: string; posts: number; comments: number }
+
+export type Participation = { rows: ParticipationRow[]; weeks: ParticipationWeek[] }
+
+const WEEKS = 12
+const DAY = 86_400_000
+
+/** The Monday, 00:00 UTC, of the week holding the date. */
+const weekStart = (iso: string | Date): number => {
+  const d = new Date(iso)
+  const midnight = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate())
+  return midnight - ((d.getUTCDay() + 6) % 7) * DAY
+}
+
 /**
- * The space's participation numbers (spec §13), one row per person. Read for
- * the moderator page only — the caller has already checked the role, so this
- * overrides access to count the space's activity. Small N: four parallel
- * reads, then one users read and one people read map accounts to names.
+ * The space's participation numbers (spec §13): one row per member, including
+ * the ones who never came, plus anyone who wrote here and left; and the last
+ * twelve weeks of posts and comments. Read for the moderator page only — the
+ * caller has already checked the role, so this overrides access.
  */
 export const participation = async (
   payload: Payload,
   space: number | { id: number },
-): Promise<ParticipationRow[]> => {
+  now: Date = new Date(),
+): Promise<Participation> => {
   const spaceId = typeof space === 'object' ? space.id : space
-  const [posts, comments, reactions, visits] = await Promise.all([
+  const live: Where = { and: [{ space: { equals: spaceId } }, { deleted_at: { exists: false } }] }
+  const [members, posts, comments, reactions, visits, accounts] = await Promise.all([
+    spacePeople(payload, spaceId),
     payload.find({
       collection: 'space-posts',
       depth: 0,
       pagination: false,
       overrideAccess: true,
-      select: { author: true },
-      where: {
-        and: [{ space: { equals: spaceId } }, { deleted_at: { exists: false } }],
-      },
+      select: { author: true, createdAt: true },
+      where: live,
     }),
     payload.find({
       collection: 'space-comments',
       depth: 0,
       pagination: false,
       overrideAccess: true,
-      select: { author: true },
-      where: {
-        and: [{ space: { equals: spaceId } }, { deleted_at: { exists: false } }],
-      },
+      select: { author: true, createdAt: true },
+      where: live,
     }),
     payload.find({
       collection: 'space-reactions',
@@ -657,62 +672,82 @@ export const participation = async (
       select: { account: true, last_visited_at: true },
       where: { space: { equals: spaceId } },
     }),
+    // Reactions and visits name accounts; the summary names people.
+    payload.find({ collection: 'users', depth: 0, pagination: false, overrideAccess: true }),
   ])
 
-  // Reactions and visits name accounts; the summary names people.
-  const { docs: accounts } = await payload.find({
-    collection: 'users',
-    depth: 0,
-    pagination: false,
-    overrideAccess: true,
-  })
   const personOfAccount = new Map<number, number | null>()
-  for (const a of accounts) personOfAccount.set(a.id, personOf(a))
+  for (const a of accounts.docs) personOfAccount.set(a.id, personOf(a))
   const accountPerson = (a: number | null | undefined) =>
     a != null ? (personOfAccount.get(a) ?? null) : null
 
-  const postCount = new Map<number, number>()
-  const commentCount = new Map<number, number>()
-  const reactionCount = new Map<number, number>()
-  const lastVisitOf = new Map<number, string>()
-  const personIds = new Set<number>()
-  const bump = (pid: number | null, count: Map<number, number>) => {
-    if (pid == null) return
-    personIds.add(pid)
-    count.set(pid, (count.get(pid) ?? 0) + 1)
+  const rows = new Map<number, ParticipationRow>(
+    members.map((m) => [
+      m.id,
+      { personId: m.id, name: m.name, posts: 0, comments: 0, reactions: 0, lastVisit: null },
+    ]),
+  )
+  const row = (pid: number): ParticipationRow => {
+    let r = rows.get(pid)
+    if (!r) {
+      r = { personId: pid, name: '', posts: 0, comments: 0, reactions: 0, lastVisit: null }
+      rows.set(pid, r)
+    }
+    return r
   }
-  for (const p of posts.docs) bump(relId(p.author), postCount)
-  for (const c of comments.docs) bump(relId(c.author), commentCount)
-  for (const r of reactions.docs) bump(accountPerson(relId(r.account)), reactionCount)
+  for (const p of posts.docs) {
+    const pid = relId(p.author)
+    if (pid != null) row(pid).posts++
+  }
+  for (const c of comments.docs) {
+    const pid = relId(c.author)
+    if (pid != null) row(pid).comments++
+  }
+  for (const r of reactions.docs) {
+    const pid = accountPerson(relId(r.account))
+    if (pid != null) row(pid).reactions++
+  }
   for (const v of visits.docs) {
     const pid = accountPerson(relId(v.account))
-    if (pid != null) {
-      personIds.add(pid)
-      lastVisitOf.set(pid, v.last_visited_at)
-    }
+    if (pid != null) row(pid).lastVisit = v.last_visited_at
   }
 
-  const names = new Map<number, string>()
-  if (personIds.size) {
+  // People who wrote here but are no longer members still need a name.
+  const unnamed = [...rows.values()].filter((r) => !r.name).map((r) => r.personId)
+  if (unnamed.length) {
     const { docs: people } = await payload.find({
       collection: 'people',
       depth: 0,
       pagination: false,
       overrideAccess: true,
-      where: { id: { in: [...personIds] } },
+      where: { id: { in: unnamed } },
     })
-    for (const p of people) names.set(p.id, p.name)
+    for (const p of people) row(p.id).name = p.name
   }
-  return [...personIds]
-    .map((personId) => ({
-      personId,
-      name: names.get(personId) ?? '',
-      posts: postCount.get(personId) ?? 0,
-      comments: commentCount.get(personId) ?? 0,
-      reactions: reactionCount.get(personId) ?? 0,
-      lastVisit: lastVisitOf.get(personId) ?? null,
-    }))
-    .sort((a, b) => a.name.localeCompare(b.name))
+
+  const last = weekStart(now)
+  const weeks: ParticipationWeek[] = Array.from({ length: WEEKS }, (_, i) => ({
+    start: new Date(last - (WEEKS - 1 - i) * 7 * DAY).toISOString().slice(0, 10),
+    posts: 0,
+    comments: 0,
+  }))
+  const slot = (iso: string) => {
+    const index = WEEKS - 1 - Math.round((last - weekStart(iso)) / (7 * DAY))
+    return index >= 0 && index < WEEKS ? weeks[index] : undefined
+  }
+  for (const p of posts.docs) {
+    const w = slot(p.createdAt)
+    if (w) w.posts++
+  }
+  for (const c of comments.docs) {
+    const w = slot(c.createdAt)
+    if (w) w.comments++
+  }
+
+  return {
+    rows: [...rows.values()].sort((a, b) => a.name.localeCompare(b.name)),
+    weeks,
+  }
 }
 
 /** The member's own state in one space: the checklist marks, the consent stamp, the digest choice. */

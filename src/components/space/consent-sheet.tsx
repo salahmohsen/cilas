@@ -1,11 +1,13 @@
 'use client'
 
+import type { NoticePart } from '@/lib/space-consent'
 import { useTranslations } from 'next-intl'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Dialog, DialogContent } from '@/components/arc/dialog/dialog'
 import { consentAcceptAction } from '@/app/(frontend)/[locale]/spaces/actions'
 
+import { NoticeText } from './notice-text'
 import styles from './space.module.css'
 
 /**
@@ -20,7 +22,7 @@ export function ConsentSheet({
 }: {
   open: boolean
   onOpenChange: (open: boolean) => void
-  notice: string
+  notice: NoticePart[]
   onAccepted: () => void
 }) {
   const t = useTranslations('SpaceConsent')
@@ -28,9 +30,7 @@ export function ConsentSheet({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent title={t('title')}>
         <div className={styles.column}>
-          <p dir="auto" className={styles.prose}>
-            {notice}
-          </p>
+          <NoticeText notice={notice} />
           <div>
             <ActionButton
               label={t('accept')}

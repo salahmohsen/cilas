@@ -8,8 +8,8 @@ import { Info } from 'lucide-react'
 import { personOf } from '@/access'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
+import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
-import { PageHeader } from '@/components/arc/page-header/page-header'
 import type { Course, Programme, Space, User } from '@/payload-types'
 import { NOTICE } from '@/lib/space-consent'
 import { membership } from '@/lib/spaces'
@@ -22,7 +22,8 @@ import { FeedRow, type Person } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { LoadMore } from './load-more'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
-import { SpaceRail, uniqueByName } from './space-rail'
+import type { PersonCard } from './person-hover'
+import { SpaceRail } from './space-rail'
 import { SpaceSettings } from './space-settings'
 import styles from './space.module.css'
 
@@ -59,7 +60,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
     getTranslations('SpacePost'),
     spaceFeed(payload, user, space),
     memberState(payload, user, space.id),
-    spaceRoster({ payload, user, space: space.id }),
+    spaceRoster({ payload, user, space: space.id, locale: locale === 'ar' ? 'ar' : 'en' }),
     moderatorPeople(payload, space),
     moderator ? participation(payload, space) : Promise.resolve(null),
     cookies(),
@@ -78,9 +79,22 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   const viewerPerson = personOf(user)
 
   const members = roster.ok ? roster.data.members : []
-  const people = new Map<number, Person>(
-    members.map((m) => [m.personId, { name: m.name, photo: m.photo?.url ?? null }]),
-  )
+  const cards: PersonCard[] = members
+    .map((m) => ({
+      id: m.personId,
+      name: m.name,
+      photo: m.photo?.url ?? null,
+      role: moderatorIds.has(m.personId) ? t('fellow') : t('member'),
+      bio: m.bio,
+      links: m.links,
+      href: m.slug ? `/${locale}/people/${m.slug}` : null,
+    }))
+    .sort(
+      (a, b) =>
+        Number(moderatorIds.has(b.id)) - Number(moderatorIds.has(a.id)) ||
+        a.name.localeCompare(b.name, locale),
+    )
+  const people = new Map<number, Person>(cards.map((c) => [c.id, c]))
   const me = (viewerPerson != null && people.get(viewerPerson)) || {
     name: user.email,
     photo: null,
@@ -107,12 +121,9 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
       posting={space.posting ?? 'open'}
       notice={notice}
       digest={state.digest}
-      members={members.map((m) => ({
-        personId: m.personId,
-        name: m.name,
-        photo: m.photo?.url ?? null,
-        fellow: moderatorIds.has(m.personId),
-      }))}
+      members={cards}
+      viewerId={viewerPerson}
+      now={renderedAt}
       participation={numbers}
     />
   )
@@ -131,19 +142,18 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   )
 
   return (
-    <div className={`${styles.page} ${styles.wide}`}>
-      <PageHeader
-        breadcrumb={[{ label: t('title'), href: `/${locale}/spaces` }, { label: title }]}
-        title={title}
-        badge={
-          feed.archived
-            ? { text: t('archived'), tone: 'muted' }
-            : { text: t('open'), tone: 'success' }
-        }
-        members={uniqueByName(members).map((m) => ({ name: m.name, src: m.photo?.url ?? null }))}
-        membersLabel={t('membersLabel')}
-        actions={
-          <>
+    <div className={`${styles.page}`}>
+      <header className={styles.spaceHead}>
+        <Breadcrumb items={[{ label: t('title'), href: `/${locale}/spaces` }, { label: title }]} />
+        <div className={styles.titleRow}>
+          <h1 className={styles.spaceTitle}>
+            <bdi>{title}</bdi>
+          </h1>
+          <span className={styles.status} data-open={!feed.archived}>
+            <span className={styles.statusDot} aria-hidden="true" />
+            {feed.archived ? t('archived') : t('open')}
+          </span>
+          <span className={styles.headActions}>
             <span className={styles.phoneOnly}>
               <BottomSheet
                 title={t('about')}
@@ -165,9 +175,9 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
                 archived={feed.archived}
               />
             )}
-          </>
-        }
-      />
+          </span>
+        </div>
+      </header>
       <div className={styles.layout}>
         <main className={styles.feed} aria-label={title}>
           <OnboardingChecklist

@@ -1,7 +1,7 @@
 .page {
   width: 100%;
   margin-inline: auto;
-  padding: var(--space-8) clamp(var(--space-4), 4vw, var(--space-8));
+  padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-8)) var(--space-8);
   display: grid;
   gap: var(--space-6);
 }
@@ -199,10 +199,6 @@
   min-width: 0;
 }
 
-.wide {
-  /* max-width: inherit; */
-}
-
 .rail {
   display: none;
 }
@@ -213,7 +209,8 @@
 
 @media (min-width: 1024px) {
   .layout {
-    grid-template-columns: minmax(0, 1fr) 300px;
+    /* The feed keeps a reading width; the rail takes the rest of the row. */
+    grid-template-columns: minmax(0, 680px) minmax(300px, 1fr);
     align-items: start;
   }
 
@@ -328,6 +325,9 @@
 }
 
 .cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
   gap: var(--space-4);
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -390,4 +390,213 @@
 
 .narrow {
   max-width: 760px;
+}
+
+/* The space's own head: where it sits, its name and whether it is open. */
+.spaceHead {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  min-width: 0;
+}
+
+.spaceTitle {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  line-height: var(--leading-tight, 1.2);
+  text-wrap: balance;
+  min-width: 0;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--danger);
+}
+
+.status[data-open='true'] .statusDot {
+  background: var(--success);
+}
+
+.headActions {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* The accordion's own top rule meets the prose; its last rule would only double the card edge. */
+.accordionFlush > * > :last-child {
+  border-bottom: 0;
+}
+
+/* Questions and answers, one block each. */
+.notice {
+  display: grid;
+  gap: var(--space-3);
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.notice dt {
+  font-weight: 500;
+  color: var(--foreground);
+}
+
+.notice dd {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+/* The full member list: one person a row, divided. */
+.people {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding-block: var(--space-3);
+}
+
+.person + .person {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.personName {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.personLinks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.personLink {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+}
+
+.personLink:hover {
+  color: var(--foreground);
+  background: var(--surface-muted);
+}
+
+/* Participation needs the room of a table, not a side panel. */
+.wideDialog[role='dialog'] {
+  width: min(calc(100vw - var(--space-8)), 960px);
+}
+
+.charts {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.chartBox {
+  /* The site's shadcn theme sets --accent to a near-white hover tint; Arc's charts draw with it. */
+  --accent: var(--series-1);
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+}
+
+/* My spaces: each space and each shortcut is one link, centered like a tile. */
+.tileItem {
+  display: grid;
+  min-width: 0;
+}
+
+.tile {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: var(--space-2);
+  min-height: 148px;
+  padding: var(--space-6) var(--space-5);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface);
+  color: var(--foreground);
+  text-align: center;
+  text-decoration: none;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.tile:hover {
+  background: var(--surface-muted);
+  border-color: var(--border-strong);
+}
+
+.tileIcon {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-pill);
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.tileTitle {
+  font-size: var(--text-base);
+  font-weight: 500;
+  text-wrap: balance;
+}
+
+.tileText {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-wrap: pretty;
+}
+
+.tileMeta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
 }

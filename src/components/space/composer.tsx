@@ -1,5 +1,6 @@
 'use client'
 
+import type { NoticePart } from '@/lib/space-consent'
 import { useEffect, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
@@ -48,7 +49,7 @@ export function Composer({
   me: Me
   mentions: { id: number; name: string }[]
   consented: boolean
-  notice: string
+  notice: NoticePart[]
 }) {
   const t = useTranslations('SpacePost')
   const ts = useTranslations('Spaces')

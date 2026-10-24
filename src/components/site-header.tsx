@@ -1,6 +1,14 @@
 'use client'
 
-import { BookOpen, Calendar, LayoutDashboard, Newspaper, UserRound, Users } from 'lucide-react'
+import {
+  BookOpen,
+  Calendar,
+  LayoutDashboard,
+  MessagesSquare,
+  Newspaper,
+  UserRound,
+  Users,
+} from 'lucide-react'
 import { useLocale, useTranslations } from 'next-intl'
 import Image from 'next/image'
 import { Suspense, useEffect, useRef, useState } from 'react'
@@ -38,6 +46,7 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
   // signed-in account gets its account menu instead of "Sign in". Depth 1
   // brings the linked person's name; an account with no person shows its email.
   const [account, setAccount] = useState<UserMenuUser | null>(null)
+  const [spaces, setSpaces] = useState(false)
   useEffect(() => {
     let live = true
     fetch('/api/users/me?depth=1', { credentials: 'include' })
@@ -52,6 +61,12 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
           if (!live || !user) return
           const name = typeof user.person === 'object' ? user.person?.name : undefined
           setAccount({ name: name || user.email, email: user.email })
+          // Spaces shows only to an account that can read one (see /api/spaces).
+          return fetch('/api/spaces', { credentials: 'include' })
+            .then((res) => (res.ok ? res.json() : null))
+            .then((entry: { spaces?: boolean } | null) => {
+              if (live) setSpaces(entry?.spaces === true)
+            })
         },
       )
       .catch(() => {})
@@ -176,6 +191,9 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
       : []),
     ...(nav.calendar
       ? [{ value: 'calendar', label: t('calendar.label'), href: href('/calendar'), icon: Calendar }]
+      : []),
+    ...(spaces
+      ? [{ value: 'spaces', label: t('spaces.label'), href: href('/spaces'), icon: MessagesSquare }]
       : []),
   ]
 

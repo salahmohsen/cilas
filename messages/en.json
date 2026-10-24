@@ -44,7 +44,10 @@
       "label": "Calendar"
     },
     "openMenu": "Open menu",
-    "closeMenu": "Close menu"
+    "closeMenu": "Close menu",
+    "spaces": {
+      "label": "Spaces"
+    }
   },
   "Search": {
     "openLabel": "Search the site",
@@ -817,7 +820,11 @@
     "showing": "{shown} of {total} posts",
     "noAnnouncements": "No announcements yet",
     "noAnnouncementsHint": "Announcements from the moderator appear here.",
-    "archivedWhy": "This course ended more than 14 days ago, so the space is read-only. You can still read every post."
+    "archivedWhy": "This course ended more than 14 days ago, so the space is read-only. You can still read every post.",
+    "you": "You",
+    "searchMembers": "Search by name",
+    "clearSearch": "Clear search",
+    "noMemberMatch": "No member has that name."
   },
   "SpacePost": {
     "newPost": "New post",
@@ -953,6 +960,37 @@
     "comments": "Comments",
     "reactions": "Reactions",
     "lastVisit": "Last visit",
-    "never": "Never"
+    "never": "Never",
+    "description": "Who takes part in this space, and how.",
+    "since": "12 weeks since {date}",
+    "week": "Week",
+    "weekOf": "Week of {date}",
+    "activity": "Posts and comments",
+    "weeklyAverage": "Weekly average",
+    "thisWeek": "That week",
+    "reach": "Members by what they did",
+    "people": "people",
+    "wrote": "Wrote something",
+    "onlyRead": "Only read or reacted",
+    "tableCaption": "Each member's posts, comments, reactions and last visit"
+  },
+  "SpaceShortcuts": {
+    "title": "Things you can do",
+    "writeArticle": "Write an article",
+    "writeArticleHint": "Start a draft. An editor reviews it before it goes live.",
+    "myArticles": "Your articles",
+    "myArticlesHint": "Drafts, submissions and published pieces.",
+    "editProfile": "Edit your profile",
+    "editProfileHint": "Your name, photo, bio and links, as members see them.",
+    "proposeCourse": "Propose a course",
+    "proposeCourseHint": "Send a course outline for the next cycle.",
+    "myCourses": "Your courses",
+    "myCoursesHint": "The courses you teach and their schedules.",
+    "applications": "Applications",
+    "applicationsHint": "New submissions to the open calls.",
+    "newsletter": "Write a newsletter",
+    "newsletterHint": "Pick articles and send them to a mailing list.",
+    "siteSettings": "Site settings",
+    "siteSettingsHint": "Navigation, spaces and the site's contact details."
   }
 }

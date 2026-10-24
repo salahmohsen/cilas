@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
+import { Settings } from 'lucide-react'
 
 import { ActionButton } from '@/components/arc/action-button/action-button'
 import { Button } from '@/components/arc/button/button'
@@ -34,6 +35,7 @@ export function SpaceSettings({
     <Popover>
       <PopoverTrigger asChild>
         <Button variant="secondary" size="sm">
+          <Settings size={16} aria-hidden="true" />
           {t('settingsForModerator')}
         </Button>
       </PopoverTrigger>

@@ -2,7 +2,7 @@ import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
-import { mentionSafelist, spacePeople } from '@/lib/space-members'
+import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
 import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
@@ -996,18 +996,31 @@ export const spaceSettingsSet = async (
 
 // --- spaceRoster ---
 
+export type RosterMember = {
+  personId: number
+  name: string
+  photo: { url: string; alt: string } | null
+  /** The public profile path, only for a person shown on the site. */
+  slug: string | null
+  bio: string | null
+  links: PersonLink[]
+}
+
 export const spaceRoster = async (
-  i: Input<{ space: number }>,
-): Promise<
-  WriteResult<{
-    members: Array<{ personId: number; name: string; photo: { url: string; alt: string } | null }>
-  }>
-> => {
-  const { payload, user, space: spaceId } = i
+  i: Input<{ space: number; locale?: 'en' | 'ar' }>,
+): Promise<WriteResult<{ members: RosterMember[] }>> => {
+  const { payload, user, space: spaceId, locale } = i
   const g = await gate(payload, user, spaceId)
   if (g.stop) return err((g as { error: WriteError }).error)
   if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
-  const people = await spacePeople(payload, spaceId)
-  const members = people.map((p) => ({ personId: p.id, name: p.name, photo: p.photo }))
+  const people = await spacePeople(payload, spaceId, locale)
+  const members = people.map((p) => ({
+    personId: p.id,
+    name: p.name,
+    photo: p.photo,
+    slug: p.visible ? p.slug : null,
+    bio: p.bio,
+    links: p.links,
+  }))
   return { ok: true, data: { members } }
 }

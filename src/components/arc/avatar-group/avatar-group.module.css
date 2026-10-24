@@ -127,3 +127,20 @@
     transition: none;
   }
 }
+/* A face or count that is a button keeps the look of the plain stack. */
+button.lift {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+button.overflow {
+  border: 2px solid var(--surface);
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+button.overflow:hover {
+  color: var(--foreground);
+}

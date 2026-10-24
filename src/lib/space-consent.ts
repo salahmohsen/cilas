@@ -5,15 +5,32 @@
  */
 export const NOTICE_VERSION = 1
 
-export const NOTICE: Record<'en' | 'ar', string> = {
-  en:
-    'What spaces store: your posts, comments, reactions and files, with your name ' +
-    'and photo. Who sees them: the members of each space you write in, and the ' +
-    'fellow moderating it. How long: deleted content is restorable for 30 days, ' +
-    'then purged. Your name and photo stay visible until you change your profile.',
-  ar:
-    'ما تحفظه المساحات: منشوراتك وتعليقاتك وتفاعلاتك وملفاتك، مع اسمك وصورتك. ' +
-    'من يراها: أعضاء كل مساحة تكتب فيها، والأستاذ المشرف عليها. المدة: المحتوى ' +
-    'المحذوف يُستعاد خلال ٣٠ يومًا، ثم يُحذف نهائيًا. يبقى اسمك وصورتك ظاهرين حتى ' +
-    'تغيّر ملفك الشخصي.',
+/** One part of the notice: the question it answers, and the answer. */
+export type NoticePart = { title: string; text: string }
+
+export const NOTICE: Record<'en' | 'ar', NoticePart[]> = {
+  en: [
+    {
+      title: 'What spaces store',
+      text: 'Your posts, comments, reactions and files, with your name and photo.',
+    },
+    {
+      title: 'Who sees them',
+      text: 'The members of each space you write in, and the fellow moderating it.',
+    },
+    {
+      title: 'How long',
+      text: 'Deleted content is restorable for 30 days, then purged.',
+    },
+    {
+      title: 'Your name and photo',
+      text: 'They stay visible until you change your profile.',
+    },
+  ],
+  ar: [
+    { title: 'ما تحفظه المساحات', text: 'منشوراتك وتعليقاتك وتفاعلاتك وملفاتك، مع اسمك وصورتك.' },
+    { title: 'من يراها', text: 'أعضاء كل مساحة تكتب فيها، والأستاذ المشرف عليها.' },
+    { title: 'المدة', text: 'المحتوى المحذوف يُستعاد خلال ٣٠ يومًا، ثم يُحذف نهائيًا.' },
+    { title: 'اسمك وصورتك', text: 'يبقيان ظاهرين حتى تغيّر ملفك الشخصي.' },
+  ],
 }

@@ -1,7 +1,12 @@
 import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
+import type { SOCIAL_PLATFORMS } from '@/fields/social'
 import { ENROLLED } from '@/lib/list-members'
+import { plainText } from '@/lib/plaintext'
+
+/** Where to find a person: their website first, then each social profile. */
+export type PersonLink = { kind: 'website' | (typeof SOCIAL_PLATFORMS)[number]; url: string }
 
 export type SpacePersonRow = {
   accountId: number | null
@@ -10,6 +15,17 @@ export type SpacePersonRow = {
   photo: { alt: string; url: string } | null
   slug: string
   visible: boolean
+  /** Plain text in the requested language, clipped for a hover card. */
+  bio: string | null
+  links: PersonLink[]
+}
+
+const BIO_MAX = 220
+
+const clip = (text: string): string | null => {
+  const flat = text.replace(/\s+/g, ' ').trim()
+  if (!flat) return null
+  return flat.length > BIO_MAX ? `${flat.slice(0, BIO_MAX - 1).trimEnd()}…` : flat
 }
 
 /**
@@ -101,7 +117,11 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
  * join exists. Used by the roster, the mention suggestions and the
  * announcement recipients.
  */
-export const spacePeople = async (payload: Payload, spaceId: number): Promise<SpacePersonRow[]> => {
+export const spacePeople = async (
+  payload: Payload,
+  spaceId: number,
+  locale: 'en' | 'ar' = 'en',
+): Promise<SpacePersonRow[]> => {
   const memberIds = await mentionSafelist(payload, spaceId)
   if (memberIds.size === 0) return []
 
@@ -109,6 +129,7 @@ export const spacePeople = async (payload: Payload, spaceId: number): Promise<Sp
     collection: 'people',
     where: { id: { in: [...memberIds] } },
     depth: 1,
+    locale,
     overrideAccess: true,
     pagination: false,
     limit: 10000,
@@ -130,7 +151,14 @@ export const spacePeople = async (payload: Payload, spaceId: number): Promise<Sp
 
   return people.map((p) => {
     const photo = (p as { photo?: { url?: string; alt?: string } | number | null }).photo
+    const bio = p.bio ? clip(plainText({ data: p.bio })) : null
+    const links: PersonLink[] = [
+      ...(p.website ? [{ kind: 'website' as const, url: p.website }] : []),
+      ...(p.social_links ?? []).map((l) => ({ kind: l.platform, url: l.url })),
+    ]
     return {
+      bio,
+      links,
       accountId: accountByPerson.get((p as { id: number }).id) ?? null,
       id: (p as { id: number }).id,
       name: (p as { name?: string }).name ?? '',

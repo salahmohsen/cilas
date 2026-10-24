@@ -527,7 +527,7 @@ describe('spaces core', () => {
   })
 
   it('participation counts posts, comments, reactions and the last visit', async () => {
-    const rows = await participation(payload, courseSpace)
+    const { rows, weeks } = await participation(payload, courseSpace)
     const fellowRow = rows.find((r) => r.name === 'Probe Fellow')
     const studentRow = rows.find((r) => r.name === 'Probe Student')
     expect(fellowRow?.posts).toBe(2)
@@ -538,6 +538,17 @@ describe('spaces core', () => {
     expect(studentRow?.comments).toBe(1)
     expect(studentRow?.reactions).toBe(1)
     expect(studentRow?.lastVisit).toBeTruthy()
+    // Every live post and comment written this run, the CILAS intro post too, lands in the current week.
+    const live = {
+      and: [{ space: { equals: courseSpace.id } }, { deleted_at: { exists: false } }],
+    }
+    const written =
+      (await payload.count({ collection: 'space-posts', where: live, overrideAccess: true }))
+        .totalDocs +
+      (await payload.count({ collection: 'space-comments', where: live, overrideAccess: true }))
+        .totalDocs
+    expect(weeks).toHaveLength(12)
+    expect(weeks.at(-1)!.posts + weeks.at(-1)!.comments).toBe(written)
   })
 
   it('landing resolves each kind by its document slug and gates by the switch', async () => {

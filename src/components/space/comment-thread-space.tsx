@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { Paperclip } from 'lucide-react'
 
+import type { NoticePart } from '@/lib/space-consent'
 import type { MentionPerson } from '@/components/arc/mention-input/mention-input'
 import type { SpaceFileRef, ThreadComment, TopComment } from '@/lib/spaces-data'
 
@@ -47,7 +48,7 @@ export async function CommentThread({
   /** Open, unlocked, not archived, and the posting level lets this member comment */
   canComment: boolean
   consented: boolean
-  notice: string
+  notice: NoticePart[]
 }) {
   const [t, tp] = await Promise.all([getTranslations('SpaceComment'), getTranslations('SpacePost')])
   const names = Object.fromEntries([...people].map(([id, p]) => [id, p.name]))

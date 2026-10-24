@@ -5,6 +5,8 @@ import { motionTokens } from '../lib/motion-tokens'
 import styles from './radio-group.module.css'
 export interface RadioGroupProps {
   label: string
+  /** Keeps the legend for screen readers only, when a heading nearby already names the group. */
+  labelHidden?: boolean
   options: { value: string; label: string; description?: string }[]
   value: string
   onValueChange: (value: string) => void
@@ -51,6 +53,7 @@ function place(
 /** One highlight travels to the chosen row while the new dot springs in and the old one shrinks away, so a change reads as a single physical move. Arrow keys take the same path. Rows and text never resize. */
 export function RadioGroup({
   label,
+  labelHidden = false,
   options,
   value,
   onValueChange,
@@ -91,7 +94,11 @@ export function RadioGroup({
   }, [options.length])
   return (
     <fieldset
-      aria-describedby={[description ? `${id}-description` : '', error ? `${id}-error` : ''].filter(Boolean).join(' ') || undefined}
+      aria-describedby={
+        [description ? `${id}-description` : '', error ? `${id}-error` : '']
+          .filter(Boolean)
+          .join(' ') || undefined
+      }
       aria-invalid={error ? true : undefined}
       className={styles.group}
       disabled={disabled}
@@ -99,7 +106,7 @@ export function RadioGroup({
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) onBlur?.()
       }}
     >
-      <legend>{label}</legend>
+      <legend className={labelHidden ? 'sr-only' : undefined}>{label}</legend>
       {description ? (
         <p className={styles.description} id={`${id}-description`}>
           {description}
