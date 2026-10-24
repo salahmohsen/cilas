@@ -1,9 +1,7 @@
-import { differenceInCalendarDays } from 'date-fns'
-
 import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
-import { courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
+import { archivedNow } from '@/lib/space-lifecycle'
 import { mentionSafelist, spacePeople } from '@/lib/space-members'
 import { spacesSettings, mode, spaceOpenOn, membership } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
@@ -37,6 +35,20 @@ export type PostFile = { data: Buffer; mimetype: string; name: string; size: num
 
 export type StepKey =
   'saw_privacy' | 'introduced' | 'read_pinned' | 'checked_profile' | 'chose_digest'
+
+export const STEP_KEYS: readonly StepKey[] = [
+  'saw_privacy',
+  'introduced',
+  'read_pinned',
+  'checked_profile',
+  'chose_digest',
+]
+
+/** Spec §6: 5 files per post, 1 per comment. */
+const FILE_LIMITS = { post: 5, comment: 1 } as const
+
+/** What a tombstoned row keeps in its required body field. */
+const TOMBSTONE_BODY = ' '
 
 type Input<T> = { payload: Payload; user: NonNullable<User> } & T
 
@@ -78,7 +90,12 @@ const idOf = (v: number | { id: number } | null | undefined): number | null =>
 
 const err = <E extends WriteError>(error: E): WriteResult<never> => ({ ok: false, error })
 
-const gate = async (payload: Payload, user: NonNullable<User>, spaceId: number) => {
+const gate = async (
+  payload: Payload,
+  user: NonNullable<User>,
+  spaceId: number,
+  opts: { write?: boolean } = {},
+) => {
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off')
     return { stop: true as const, error: 'mode' as WriteError, space: null }
@@ -91,6 +108,17 @@ const gate = async (payload: Payload, user: NonNullable<User>, spaceId: number) 
   if (!space) return { stop: true as const, error: 'space' as WriteError, space: null }
   if (!spaceOpenOn(space, settings))
     return { stop: true as const, error: 'mode' as WriteError, space: space as SpaceLike }
+  if (opts.write && space.kind === 'course') {
+    const courseId = idOf(space.course)
+    const course =
+      courseId === null
+        ? null
+        : ((await payload
+            .findByID({ collection: 'courses', id: courseId, depth: 0, overrideAccess: true })
+            .catch(() => null)) as { schedule?: unknown; sessions?: unknown } | null)
+    if (archivedNow(space, course))
+      return { stop: true as const, error: 'read-only' as WriteError, space: space as SpaceLike }
+  }
   return { stop: false as const, space: space as SpaceLike, settings }
 }
 
@@ -105,6 +133,60 @@ const consentOf = async (payload: Payload, user: NonNullable<User>): Promise<boo
       })
     ).totalDocs > 0
   )
+}
+
+/** Type, size and count checks for files joining a post or comment that already holds `existing`. */
+const fileError = (files: PostFile[], existing: number, limit: number): WriteError | null => {
+  for (const f of files) {
+    const kindEntry = Object.values(FILE_KINDS as Record<string, { mime: readonly string[] }>).find(
+      (k) => (k.mime as readonly string[]).includes(f.mimetype),
+    )
+    if (!kindEntry) return 'file-type'
+    if (f.size > SPACE_FILE_LIMIT) return 'file-size'
+  }
+  return existing + files.length > limit ? 'file-count' : null
+}
+
+const storeFile = async (
+  payload: Payload,
+  spaceId: number,
+  target: { post: number } | { comment: number },
+  file: PostFile,
+): Promise<number> => {
+  const created = await payload.create({
+    collection: 'space-files',
+    data: {
+      space: spaceId,
+      post: 'post' in target ? target.post : null,
+      comment: 'comment' in target ? target.comment : null,
+      filename: file.name,
+    } as never,
+    file: { data: file.data, mimetype: file.mimetype, name: file.name, size: file.size } as never,
+    overrideAccess: true,
+  })
+  return (created as { id: number }).id
+}
+
+/** Stores every file on a just-created row; a storage failure removes the row and its files. */
+const storeFilesOrRollback = async (
+  payload: Payload,
+  spaceId: number,
+  collection: 'space-posts' | 'space-comments',
+  rowId: number,
+  files: PostFile[],
+) => {
+  const target = collection === 'space-posts' ? { post: rowId } : { comment: rowId }
+  const stored: number[] = []
+  try {
+    for (const f of files) stored.push(await storeFile(payload, spaceId, target, f))
+  } catch (e) {
+    for (const id of stored)
+      await payload
+        .delete({ collection: 'space-files', id, overrideAccess: true })
+        .catch(() => undefined)
+    await payload.delete({ collection, id: rowId, overrideAccess: true }).catch(() => undefined)
+    throw e
+  }
 }
 
 const spaceLink = (locale: string, space: SpaceLike, postId: number): string => {
@@ -140,16 +222,10 @@ export const postCreate = async (
   }>,
 ): Promise<WriteResult<{ id: number }>> => {
   const { payload, user, space: spaceId, kind, body, files } = i
-  const g = await gate(payload, user, spaceId)
+  const g = await gate(payload, user, spaceId, { write: true })
   if (g.stop) return err(g.error)
   const space = g.space
   const mem = await membership(payload, user, space)
-  const last = await courseLastMeeting({
-    schedule: (space as { schedule?: unknown }).schedule,
-    sessions: (space as { sessions?: unknown }).sessions,
-  })
-  const days = last ? differenceInCalendarDays(new Date(), new Date(last)) : null
-  if (readOnly(space, last, days)) return err('read-only')
   if (mem.role === 'none') return err('not-member')
   // Announcements are the moderator's voice; distinguish the refusal from
   // the posting level's (spec §3) so the UI can say which door is closed.
@@ -161,21 +237,8 @@ export const postCreate = async (
 
   if (!(await consentOf(payload, user))) return err('consent')
 
-  if (files && files.length > 0) {
-    for (const f of files) {
-      const kindEntry = Object.values(
-        FILE_KINDS as Record<string, { mime: readonly string[] }>,
-      ).find((k) => (k.mime as readonly string[]).includes(f.mimetype))
-      if (!kindEntry) return err('file-type')
-      if (f.size > SPACE_FILE_LIMIT) return err('file-size')
-    }
-    const { totalDocs } = await payload.count({
-      collection: 'space-files',
-      where: { post: { exists: false }, space: { equals: spaceId } },
-      overrideAccess: true,
-    })
-    if (totalDocs + files.length > 5) return err('file-count')
-  }
+  const fileIssue = files?.length ? fileError(files, 0, FILE_LIMITS.post) : null
+  if (fileIssue) return err(fileIssue)
 
   const personId = personOf(user)
   const post = await payload.create({
@@ -193,6 +256,7 @@ export const postCreate = async (
     overrideAccess: true,
   })
   const postId = (post as { id: number }).id
+  if (files?.length) await storeFilesOrRollback(payload, spaceId, 'space-posts', postId, files)
 
   const notifyFn = async () => {
     const { actorOf, notify } = await import('@/lib/notify')
@@ -245,13 +309,21 @@ export const postEdit = async (
     id,
     depth: 0,
     overrideAccess: true,
-  })) as { space: number | { id: number }; author: number | { id: number } | null } | null
+  })) as {
+    space: number | { id: number }
+    author: number | { id: number } | null
+    deleted_at?: string | null
+    locked?: boolean
+  } | null
   if (!post) return err('not-found')
   const spaceId = typeof post.space === 'object' ? post.space.id : post.space
-  const g = await gate(payload, user, spaceId)
+  const g = await gate(payload, user, spaceId, { write: true })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
   const mem = await membership(payload, user, space)
+  if (mem.role === 'none') return err('not-member')
+  if (post.deleted_at) return err('not-found')
+  if (post.locked) return err('locked')
   const isAuthor =
     post.author !== null &&
     (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
@@ -313,7 +385,7 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
     await payload.update({
       collection: 'space-posts',
       id,
-      data: { deleted_at: new Date().toISOString(), body: ' ' } as never,
+      data: { deleted_at: new Date().toISOString(), body: TOMBSTONE_BODY } as never,
       overrideAccess: true,
     })
   } else {
@@ -374,25 +446,28 @@ export const commentCreate = async (
   })) as {
     space: number | { id: number }
     locked?: boolean
+    deleted_at?: string | null
     author?: number | { id: number } | null
   } | null
   if (!postData) return err('not-found')
   const spaceId = typeof postData.space === 'object' ? postData.space.id : postData.space
-  const g = await gate(payload, user, spaceId)
+  const g = await gate(payload, user, spaceId, { write: true })
   if (g.stop) return err((g as { error: WriteError }).error)
   const space = g.space
   const mem = await membership(payload, user, space)
   if (mem.role === 'none') return err('not-member')
+  if (postData.deleted_at) return err('not-found')
   if (postData.locked) return err('locked')
 
   if (parent) {
-    const parentComment = (await payload.findByID({
-      collection: 'space-comments',
-      id: parent,
-      depth: 0,
-      overrideAccess: true,
-    })) as { parent?: number | { id: number } | null } | null
-    if (parentComment?.parent) return err('depth')
+    const parentComment = (await payload
+      .findByID({ collection: 'space-comments', id: parent, depth: 0, overrideAccess: true })
+      .catch(() => null)) as {
+      post?: number | { id: number } | null
+      parent?: number | { id: number } | null
+    } | null
+    if (!parentComment || idOf(parentComment.post) !== postId) return err('not-found')
+    if (parentComment.parent) return err('depth')
   }
 
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
@@ -400,21 +475,8 @@ export const commentCreate = async (
 
   if (!(await consentOf(payload, user))) return err('consent')
 
-  if (files && files.length > 0) {
-    for (const f of files) {
-      const kindEntry = Object.values(
-        FILE_KINDS as Record<string, { mime: readonly string[] }>,
-      ).find((k) => (k.mime as readonly string[]).includes(f.mimetype))
-      if (!kindEntry) return err('file-type')
-      if (f.size > SPACE_FILE_LIMIT) return err('file-size')
-    }
-    const { totalDocs } = await payload.count({
-      collection: 'space-files',
-      where: { comment: { exists: true }, space: { equals: spaceId } },
-      overrideAccess: true,
-    })
-    if (totalDocs + files.length > 2) return err('file-count')
-  }
+  const fileIssue = files?.length ? fileError(files, 0, FILE_LIMITS.comment) : null
+  if (fileIssue) return err(fileIssue)
 
   const personId = personOf(user)
   const comment = await payload.create({
@@ -423,6 +485,8 @@ export const commentCreate = async (
     overrideAccess: true,
   })
   const commentId = (comment as { id: number }).id
+  if (files?.length)
+    await storeFilesOrRollback(payload, spaceId, 'space-comments', commentId, files)
 
   await payload.update({
     collection: 'space-posts',
@@ -522,11 +586,27 @@ export const commentEdit = async (
     id,
     depth: 0,
     overrideAccess: true,
-  })) as { space: number | { id: number }; author: number | { id: number } | null } | null
+  })) as {
+    space: number | { id: number }
+    post: number | { id: number }
+    author: number | { id: number } | null
+    deleted_at?: string | null
+  } | null
   if (!comment) return err('not-found')
   const spaceId = typeof comment.space === 'object' ? comment.space.id : comment.space
-  const g = await gate(payload, user, spaceId)
+  const g = await gate(payload, user, spaceId, { write: true })
   if (g.stop) return err((g as { error: WriteError }).error)
+  const mem = await membership(payload, user, g.space)
+  if (mem.role === 'none') return err('not-member')
+  if (comment.deleted_at) return err('not-found')
+  const parentPost = (await payload.findByID({
+    collection: 'space-posts',
+    id: idOf(comment.post)!,
+    depth: 0,
+    overrideAccess: true,
+  })) as { deleted_at?: string | null; locked?: boolean }
+  if (parentPost.deleted_at) return err('not-found')
+  if (parentPost.locked) return err('locked')
   const isAuthor =
     comment.author !== null &&
     (typeof comment.author === 'object' ? comment.author.id : comment.author) === personOf(user)
@@ -573,7 +653,7 @@ export const commentRemove = async (i: Input<{ id: number }>): Promise<WriteResu
     await payload.update({
       collection: 'space-comments',
       id,
-      data: { deleted_at: new Date().toISOString(), body: '' } as never,
+      data: { deleted_at: new Date().toISOString(), body: TOMBSTONE_BODY } as never,
       overrideAccess: true,
     })
   } else {
@@ -609,19 +689,23 @@ export const fileAdd = async (
     id: targetId!,
     depth: 0,
     overrideAccess: true,
-  })) as { space: number | { id: number } } | null
+  })) as {
+    space: number | { id: number }
+    author?: number | { id: number } | null
+    deleted_at?: string | null
+    locked?: boolean
+  } | null
   if (!doc) return err('not-found')
   const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
-  const g = await gate(payload, user, spaceId)
+  const g = await gate(payload, user, spaceId, { write: true })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
   if (mem.role === 'none') return err('not-member')
-
-  const kindEntry = Object.values(FILE_KINDS as Record<string, { mime: readonly string[] }>).find(
-    (k) => (k.mime as readonly string[]).includes(file.mimetype),
-  )
-  if (!kindEntry) return err('file-type')
-  if (file.size > SPACE_FILE_LIMIT) return err('file-size')
+  if (doc.deleted_at) return err('not-found')
+  if (doc.locked) return err('locked')
+  const isAuthor = doc.author != null && idOf(doc.author) === personOf(user)
+  if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
+  if (!(await consentOf(payload, user))) return err('consent')
 
   const countField = isPost ? 'post' : 'comment'
   const { totalDocs } = await payload.count({
@@ -629,21 +713,16 @@ export const fileAdd = async (
     where: { [countField]: { equals: targetId } },
     overrideAccess: true,
   })
-  const limit = isPost ? 5 : 2
-  if (totalDocs >= limit) return err('file-count')
+  const issue = fileError([file], totalDocs, isPost ? FILE_LIMITS.post : FILE_LIMITS.comment)
+  if (issue) return err(issue)
 
-  const created = await payload.create({
-    collection: 'space-files',
-    data: {
-      space: spaceId,
-      post: post ?? null,
-      comment: comment ?? null,
-      filename: file.name,
-    } as never,
-    file: { data: file.data, mimetype: file.mimetype, name: file.name, size: file.size } as never,
-    overrideAccess: true,
-  })
-  return { ok: true, data: { id: (created as { id: number }).id } }
+  const id = await storeFile(
+    payload,
+    spaceId,
+    isPost ? { post: targetId! } : { comment: targetId! },
+    file,
+  )
+  return { ok: true, data: { id } }
 }
 
 // --- reactionToggle ---
@@ -663,7 +742,7 @@ export const reactionToggle = async (
   })) as { space: number | { id: number } } | null
   if (!doc) return err('not-found')
   const spaceId = typeof doc.space === 'object' ? doc.space.id : doc.space
-  const g = await gate(payload, user, spaceId)
+  const g = await gate(payload, user, spaceId, { write: true })
   if (g.stop) return err((g as { error: WriteError }).error)
   const mem = await membership(payload, user, g.space)
   if (mem.role === 'none') return err('not-member')
@@ -751,10 +830,26 @@ export const consentAccept = async (i: Input<object>): Promise<WriteResult<true>
   return { ok: true, data: true }
 }
 
+/** The space row, if the caller belongs to it; visits and checklist marks need this. */
+const memberSpace = async (
+  payload: Payload,
+  user: NonNullable<User>,
+  spaceId: number,
+): Promise<{ ok: true } | { ok: false; error: WriteError }> => {
+  const space = (await payload
+    .findByID({ collection: 'spaces', id: spaceId, depth: 0, overrideAccess: true })
+    .catch(() => null)) as SpaceLike | null
+  if (!space) return { ok: false, error: 'space' }
+  const mem = await membership(payload, user, space)
+  return mem.role === 'none' ? { ok: false, error: 'not-member' } : { ok: true }
+}
+
 // --- visitRecord ---
 
 export const visitRecord = async (i: Input<{ space: number }>): Promise<WriteResult<true>> => {
   const { payload, user, space } = i
+  const target = await memberSpace(payload, user, space)
+  if (!target.ok) return err(target.error)
   const { docs } = await payload.find({
     collection: 'space-visits',
     where: { and: [{ account: { equals: user.id } }, { space: { equals: space } }] },
@@ -785,6 +880,9 @@ export const stepMark = async (
   i: Input<{ space: number; step: StepKey; value: boolean }>,
 ): Promise<WriteResult<true>> => {
   const { payload, user, space, step, value } = i
+  if (!STEP_KEYS.includes(step)) return err('not-found')
+  const target = await memberSpace(payload, user, space)
+  if (!target.ok) return err(target.error)
   const { docs } = await payload.find({
     collection: 'space-visits',
     where: { and: [{ account: { equals: user.id } }, { space: { equals: space } }] },
@@ -907,6 +1005,7 @@ export const spaceRoster = async (
   const { payload, user, space: spaceId } = i
   const g = await gate(payload, user, spaceId)
   if (g.stop) return err((g as { error: WriteError }).error)
+  if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
   const people = await spacePeople(payload, spaceId)
   const members = people.map((p) => ({ personId: p.id, name: p.name, photo: p.photo }))
   return { ok: true, data: { members } }

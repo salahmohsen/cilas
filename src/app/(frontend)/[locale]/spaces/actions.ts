@@ -1,10 +1,10 @@
 'use server'
 
 import config from '@payload-config'
-import { getLocale } from 'next-intl/server'
 import { revalidatePath } from 'next/cache'
 import { getPayload } from 'payload'
 
+import { routing } from '@/i18n/routing'
 import { currentReader } from '@/lib/reader'
 import {
   commentCreate,
@@ -19,8 +19,10 @@ import {
   preferenceSet,
   reactionToggle,
   spaceSettingsSet,
+  STEP_KEYS,
   stepMark,
   visitRecord,
+  type PostFile,
   type StepKey,
   type WriteError,
 } from '@/lib/spaces-write'
@@ -42,30 +44,32 @@ const num = (form: FormData, key: string): number | null => {
   return Number.isFinite(n) ? n : null
 }
 
-const bool = (form: FormData, key: string): boolean | undefined => {
-  const raw = form.get(key)
-  if (raw === null || raw === '') return undefined
-  return Boolean(raw)
+const parseBool = (raw: FormDataEntryValue | null): boolean | undefined => {
+  const v = typeof raw === 'string' ? raw.trim().toLowerCase() : ''
+  if (v === 'true' || v === 'on' || v === '1') return true
+  if (v === 'false' || v === '0') return false
+  return undefined
 }
 
-const fileOf = async (
-  form: FormData,
-): Promise<{ data: Buffer; mimetype: string; name: string; size: number } | undefined> => {
-  const f = form.get('file')
-  return f instanceof File && f.size > 0
-    ? {
+const bool = (form: FormData, key: string): boolean | undefined => parseBool(form.get(key))
+
+const filesOf = async (form: FormData): Promise<PostFile[]> =>
+  Promise.all(
+    form
+      .getAll('file')
+      .filter((f): f is File => f instanceof File && f.size > 0)
+      .map(async (f) => ({
         data: Buffer.from(await f.arrayBuffer()),
         mimetype: f.type,
         name: f.name,
         size: f.size,
-      }
-    : undefined
-}
+      })),
+  )
 
+// Server actions cannot read the route locale, so both trees refresh.
+// 'layout' covers every page under /spaces, not only My spaces.
 const revalidate = async () => {
-  const locale = await getLocale()
-  revalidatePath(`/${locale}/spaces`)
-  revalidatePath('/')
+  for (const locale of routing.locales) revalidatePath(`/${locale}/spaces`, 'layout')
 }
 
 export async function postCreateAction(
@@ -77,7 +81,7 @@ export async function postCreateAction(
   const space = num(form, 'space')
   if (!space) return err('space')
   const kind = text(form, 'kind') === 'announcement' ? 'announcement' : 'discussion'
-  const file = await fileOf(form)
+  const files = await filesOf(form)
   const payload = await getPayload({ config })
   const result = await postCreate({
     payload,
@@ -85,7 +89,7 @@ export async function postCreateAction(
     space,
     kind,
     body: text(form, 'body'),
-    files: file ? [file] : undefined,
+    files,
   })
   if (!result.ok) return err(result.error)
   await result.notify?.()
@@ -152,7 +156,7 @@ export async function commentCreateAction(
   if (!user || user.collection !== 'users') return err('auth')
   const post = num(form, 'post')
   if (!post) return err('not-found')
-  const file = await fileOf(form)
+  const files = await filesOf(form)
   const payload = await getPayload({ config })
   const result = await commentCreate({
     payload,
@@ -160,7 +164,7 @@ export async function commentCreateAction(
     post,
     parent: num(form, 'parent'),
     body: text(form, 'body'),
-    files: file ? [file] : undefined,
+    files,
   })
   if (!result.ok) return err(result.error)
   await result.notify?.()
@@ -207,7 +211,7 @@ export async function fileAddAction(
   const post = num(form, 'post')
   const comment = num(form, 'comment')
   if (!post && !comment) return err('not-found')
-  const file = await fileOf(form)
+  const file = (await filesOf(form))[0]
   if (!file) return err('file-type')
   const payload = await getPayload({ config })
   const result = await fileAdd({
@@ -283,6 +287,7 @@ export async function stepMarkAction(
   const space = num(form, 'space')
   if (!space) return err('space')
   const step = text(form, 'step') as StepKey
+  if (!STEP_KEYS.includes(step)) return err('not-found')
   const payload = await getPayload({ config })
   const result = await stepMark({ payload, user, space, step, value: bool(form, 'value') ?? true })
   if (!result.ok) return err(result.error)
@@ -320,7 +325,7 @@ export async function spaceSettingsSetAction(
     user,
     space,
     posting: posting ? (posting as 'open' | 'members_comment' | 'fellows_only') : undefined,
-    reopened: reopen === null ? undefined : Boolean(reopen),
+    reopened: parseBool(reopen),
   })
   if (!result.ok) return err(result.error)
   await revalidate()

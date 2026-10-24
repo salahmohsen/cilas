@@ -1,6 +1,7 @@
 import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
+import { ENROLLED } from '@/lib/list-members'
 
 export type SpacePersonRow = {
   accountId: number | null
@@ -58,7 +59,7 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
       for (const f of course.fellows ?? []) ids.add(typeof f === 'object' ? f.id : f)
       const { docs: enrollments } = await payload.find({
         collection: 'enrollments',
-        where: { course: { equals: courseId } },
+        where: { and: [{ course: { equals: courseId } }, { status: { in: [...ENROLLED] } }] },
         depth: 0,
         overrideAccess: true,
         pagination: false,

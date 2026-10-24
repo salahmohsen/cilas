@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { sql } from '@payloadcms/db-postgres'
 import { getPayload, type Payload } from 'payload'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
@@ -11,13 +11,19 @@ import {
   postRemove,
   postModify,
   commentCreate,
+  commentEdit,
+  commentRemove,
   fileAdd,
+  spaceRoster,
+  stepMark,
+  visitRecord,
   reactionToggle,
   consentAccept,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
 
 let payload: Payload
+let modeBefore: 'off' | 'trial' | 'on' = 'off'
 let fellow: User
 let student: User
 let stranger: User
@@ -41,6 +47,12 @@ describe('spaces write', () => {
   let mkUser: (name: string) => Promise<User | undefined>
   beforeAll(async () => {
     payload = await getPayload({ config: await (config as never as Promise<typeof config>) })
+    modeBefore =
+      (
+        (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })) as {
+          spaces_mode?: 'off' | 'trial' | 'on'
+        }
+      ).spaces_mode ?? 'off'
     const mk = async (name: string) => {
       const p = await payload.create({
         collection: 'people',
@@ -206,7 +218,7 @@ describe('spaces write', () => {
   afterAll(async () => {
     await payload.updateGlobal({
       slug: 'site-settings',
-      data: { spaces_mode: 'off' },
+      data: { spaces_mode: modeBefore },
       overrideAccess: true,
     })
     await (
@@ -590,5 +602,230 @@ describe('spaces write', () => {
       })
       expect(result).toBe(false)
     }
+  })
+
+  const pdf = (name: string) => ({
+    data: Buffer.from('%PDF-1.4\n'),
+    mimetype: 'application/pdf',
+    name,
+    size: 9,
+  })
+
+  const newPost = async (user: User, space: Space, body: string) => {
+    const r = await postCreate({ payload, user, space: space.id, kind: 'discussion', body })
+    expect(r.ok).toBe(true)
+    if (!r.ok) throw new Error('post fixture failed')
+    track('space-posts', r.data.id)
+    return r.data.id
+  }
+
+  it('an archived course space refuses every content write, until reopened', async () => {
+    const postId = await newPost(student, courseSpace, 'Before the archive')
+    const c = await commentCreate({ payload, user: student, post: postId, body: 'Early comment' })
+    expect(c.ok).toBe(true)
+    if (!c.ok) return
+    track('space-comments', c.data.id)
+
+    const ago = new Date(Date.now() - 30 * 86_400_000).toISOString().slice(0, 10)
+    await payload.update({
+      collection: 'courses',
+      id: course.id,
+      data: {
+        sessions: [{ order: 1, dates: [{ date: ago, start_time: '18:00', end_time: '20:00' }] }],
+      },
+      overrideAccess: true,
+    })
+    const refused = async () => [
+      await postCreate({
+        payload,
+        user: student,
+        space: courseSpace.id,
+        kind: 'discussion',
+        body: 'Late',
+      }),
+      await commentCreate({ payload, user: student, post: postId, body: 'Late' }),
+      await postEdit({ payload, user: student, id: postId, body: 'Edited late' }),
+      await commentEdit({ payload, user: student, id: c.data.id, body: 'Edited late' }),
+      await fileAdd({ payload, user: student, post: postId, file: pdf('late.pdf') }),
+      await reactionToggle({ payload, user: student, post: postId, reaction: 'agree', on: true }),
+    ]
+    for (const r of await refused()) {
+      expect(r.ok).toBe(false)
+      if (!r.ok) expect(r.error).toBe('read-only')
+    }
+
+    await payload.update({
+      collection: 'spaces',
+      id: courseSpace.id,
+      data: { reopened: true },
+      overrideAccess: true,
+    })
+    const reopened = await postEdit({ payload, user: student, id: postId, body: 'Edited again' })
+    expect(reopened.ok).toBe(true)
+
+    await payload.update({
+      collection: 'spaces',
+      id: courseSpace.id,
+      data: { reopened: false },
+      overrideAccess: true,
+    })
+    await payload.update({
+      collection: 'courses',
+      id: course.id,
+      data: { sessions: [] },
+      overrideAccess: true,
+    })
+  })
+
+  it('space-visits and space-preferences refuse REST create', async () => {
+    const { SpaceVisits } = await import('@/collections/SpaceVisits')
+    const { SpacePreferences } = await import('@/collections/SpacePreferences')
+    for (const col of [SpaceVisits, SpacePreferences]) {
+      const create = col.access?.create as (a: { req: { user: User } }) => unknown
+      expect(create({ req: { user: student } })).toBe(false)
+    }
+  })
+
+  it('attachments are counted per post and per comment, then stored on the new row', async () => {
+    const tooMany = await postCreate({
+      payload,
+      user: student,
+      space: community.id,
+      kind: 'discussion',
+      body: 'Six files',
+      files: Array.from({ length: 6 }, (_, n) => pdf(`probe-f${n}.pdf`)),
+    })
+    expect(tooMany.ok).toBe(false)
+    if (!tooMany.ok) expect(tooMany.error).toBe('file-count')
+
+    const postId = await newPost(student, community, 'Comment files')
+    const twoOnComment = await commentCreate({
+      payload,
+      user: student,
+      post: postId,
+      body: 'Two files',
+      files: [pdf('probe-f1.pdf'), pdf('probe-f2.pdf')],
+    })
+    expect(twoOnComment.ok).toBe(false)
+    if (!twoOnComment.ok) expect(twoOnComment.error).toBe('file-count')
+
+    // Storage would write to the real bucket, so the space-files create is
+    // intercepted; the row it would get is what is under test.
+    const real = payload.create.bind(payload)
+    const spy = vi
+      .spyOn(payload, 'create')
+      .mockImplementation((async (args: { collection: string }) =>
+        args.collection === 'space-files' ? { id: -1 } : real(args as never)) as never)
+    try {
+      const withFiles = await postCreate({
+        payload,
+        user: student,
+        space: community.id,
+        kind: 'discussion',
+        body: 'Has two files',
+        files: [pdf('probe-f1.pdf'), pdf('probe-f2.pdf')],
+      })
+      expect(withFiles.ok).toBe(true)
+      if (!withFiles.ok) return
+      track('space-posts', withFiles.data.id)
+      const comment = await commentCreate({
+        payload,
+        user: student,
+        post: postId,
+        body: 'Has one file',
+        files: [pdf('probe-f3.pdf')],
+      })
+      expect(comment.ok).toBe(true)
+      if (!comment.ok) return
+      track('space-comments', comment.data.id)
+      const fileCalls = spy.mock.calls
+        .map(([a]) => a as unknown as { collection: string; data: Record<string, unknown> })
+        .filter((a) => a.collection === 'space-files')
+      expect(fileCalls.map((a) => [a.data.post, a.data.comment])).toEqual([
+        [withFiles.data.id, null],
+        [withFiles.data.id, null],
+        [null, comment.data.id],
+      ])
+    } finally {
+      spy.mockRestore()
+    }
+  })
+
+  it('commentCreate refuses a foreign or missing parent and a tombstoned post', async () => {
+    const a = await newPost(student, community, 'Post A')
+    const b = await newPost(student, community, 'Post B')
+    const onA = await commentCreate({ payload, user: student, post: a, body: 'On A' })
+    expect(onA.ok).toBe(true)
+    if (!onA.ok) return
+    track('space-comments', onA.data.id)
+
+    const foreign = await commentCreate({
+      payload,
+      user: student,
+      post: b,
+      parent: onA.data.id,
+      body: 'Wrong thread',
+    })
+    expect(foreign.ok).toBe(false)
+    if (!foreign.ok) expect(foreign.error).toBe('not-found')
+
+    const missing = await commentCreate({
+      payload,
+      user: student,
+      post: b,
+      parent: 999_999_999,
+      body: 'No such parent',
+    })
+    expect(missing.ok).toBe(false)
+    if (!missing.ok) expect(missing.error).toBe('not-found')
+
+    // Post A has a reply, so removing it leaves a tombstone.
+    expect((await postRemove({ payload, user: student, id: a })).ok).toBe(true)
+    const onTomb = await commentCreate({ payload, user: student, post: a, body: 'Late' })
+    expect(onTomb.ok).toBe(false)
+    if (!onTomb.ok) expect(onTomb.error).toBe('not-found')
+    const editTomb = await postEdit({ payload, user: student, id: a, body: 'Edit tomb' })
+    expect(editTomb.ok).toBe(false)
+  })
+
+  it('commentRemove tombstones a comment that has replies', async () => {
+    const postId = await newPost(student, community, 'Thread')
+    const top = await commentCreate({ payload, user: student, post: postId, body: 'Top' })
+    expect(top.ok).toBe(true)
+    if (!top.ok) return
+    track('space-comments', top.data.id)
+    const reply = await commentCreate({
+      payload,
+      user: fellow,
+      post: postId,
+      parent: top.data.id,
+      body: 'Reply',
+    })
+    expect(reply.ok).toBe(true)
+    if (reply.ok) track('space-comments', reply.data.id)
+    const removed = await commentRemove({ payload, user: student, id: top.data.id })
+    expect(removed.ok).toBe(true)
+    const row = (await payload.findByID({
+      collection: 'space-comments',
+      id: top.data.id,
+      overrideAccess: true,
+    })) as { deleted_at?: string | null; body: string }
+    expect(row.deleted_at).toBeTruthy()
+  })
+
+  it('roster, visits and checklist marks need membership; unknown steps are refused', async () => {
+    const roster = await spaceRoster({ payload, user: stranger, space: courseSpace.id })
+    expect(roster.ok).toBe(false)
+    if (!roster.ok) expect(roster.error).toBe('not-member')
+    const visit = await visitRecord({ payload, user: stranger, space: courseSpace.id })
+    expect(visit.ok).toBe(false)
+    const mark = await stepMark({
+      payload,
+      user: student,
+      space: community.id,
+      step: 'account' as never,
+      value: true,
+    })
+    expect(mark.ok).toBe(false)
   })
 })

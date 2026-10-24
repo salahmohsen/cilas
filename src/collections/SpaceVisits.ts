@@ -12,10 +12,9 @@ export const SpaceVisits: CollectionConfig = {
   // never leaves members' hands, so a flat id-own rule is enough.
   access: {
     read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
-    // Query constraints on create and a Where on update: no member touches
-    // another member's visit row (the REST surface matches the intent).
-    create: ({ req }) =>
-      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
+    // A Where is ignored on create, so REST could write rows for any account;
+    // spaces-write creates them with overrideAccess.
+    create: () => false,
     update: ({ req }) =>
       req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
     delete: () => false, // retention handled with the purge in step 3

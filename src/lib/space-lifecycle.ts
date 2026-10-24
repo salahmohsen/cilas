@@ -23,3 +23,13 @@ export const readOnly = (
   if (!lastMeeting) return false
   return (daysSinceLast ?? 0) >= 14
 }
+
+/** The archive state as of now, from the space row and its course row (null outside course spaces). */
+export const archivedNow = (
+  space: { kind: 'community' | 'cohort' | 'course'; reopened?: boolean | null },
+  course: { schedule?: unknown; sessions?: unknown } | null | undefined,
+): boolean => {
+  const last = course ? courseLastMeeting(course) : null
+  const days = last ? Math.floor((Date.now() - new Date(last).getTime()) / 86_400_000) : null
+  return readOnly(space, last, days)
+}

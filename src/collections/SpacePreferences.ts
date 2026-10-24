@@ -9,8 +9,9 @@ export const SpacePreferences: CollectionConfig = {
   labels: { singular: 'Preference', plural: 'Preferences' },
   access: {
     read: ({ req }) => ({ account: { equals: (req.user as { id?: number })?.id ?? null } }),
-    create: ({ req }) =>
-      req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
+    // A Where is ignored on create, so REST could write rows for any account;
+    // spaces-write creates them with overrideAccess.
+    create: () => false,
     update: ({ req }) =>
       req.user ? { account: { equals: (req.user as { id: number }).id } } : false,
     delete: () => false,
