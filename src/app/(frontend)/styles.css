@@ -162,6 +162,14 @@
   }
 }
 
+/* Spaces set every title in the text faces, Inter and IBM Plex Sans Arabic.
+   On :root, so dialogs and sheets portalled to <body> follow too. */
+:root:has([data-page='spaces']) {
+  --font-title: var(--font-text);
+  --font-heading: var(--font-text);
+  --font-display: var(--font-text);
+}
+
 /* Fix filter-toolbar empty state: chips container collapses with no in-flow flex children */
 .study-filters .frame > div:first-child {
   min-height: var(--control-height-sm);
