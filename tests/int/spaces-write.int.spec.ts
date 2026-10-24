@@ -21,6 +21,7 @@ import {
   consentAccept,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
+import { postView } from '@/lib/spaces-data'
 
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
@@ -827,5 +828,78 @@ describe('spaces write', () => {
       value: true,
     })
     expect(mark.ok).toBe(false)
+  })
+
+  it('postView: the thread for members, null for strangers and for another space', async () => {
+    const postId = await newPost(student, courseSpace, 'Thread for the post page')
+    const top = await commentCreate({ payload, user: student, post: postId, body: 'Top' })
+    expect(top.ok).toBe(true)
+    if (!top.ok) return
+    track('space-comments', top.data.id)
+    const reply = await commentCreate({
+      payload,
+      user: fellow,
+      post: postId,
+      parent: top.data.id,
+      body: `Thanks [@Probe Student](/people/${studentPerson})`,
+    })
+    expect(reply.ok).toBe(true)
+    if (!reply.ok) return
+    track('space-comments', reply.data.id)
+    const liked = await reactionToggle({
+      payload,
+      user: student,
+      comment: reply.data.id,
+      reaction: 'agree',
+      on: true,
+    })
+    expect(liked.ok).toBe(true)
+    const { docs: likes } = await payload.find({
+      collection: 'space-reactions',
+      where: { comment: { equals: reply.data.id } },
+      overrideAccess: true,
+    })
+    for (const r of likes) track('space-reactions', r.id)
+    await commentRemove({ payload, user: student, id: top.data.id })
+
+    const view = await postView(payload, student, courseSpace, postId)
+    expect(view?.row.post.body).toBe('Thread for the post page')
+    expect(view?.row.commentCount).toBe(1)
+    expect(view?.comments).toHaveLength(1)
+    expect(view?.comments[0]).toMatchObject({ deleted: true, body: '' })
+    expect(view?.comments[0].replies).toHaveLength(1)
+    expect(view?.comments[0].replies[0]).toMatchObject({
+      authorId: fellowPerson,
+      reactions: { counts: { agree: 1 }, mine: ['agree'] },
+    })
+
+    expect(await postView(payload, stranger, courseSpace, postId)).toBeNull()
+    expect(await postView(payload, student, community, postId)).toBeNull()
+    expect(await postView(payload, student, courseSpace, 999_999_999)).toBeNull()
+  })
+
+  it('fellows_only keeps members to reading; moderators still comment', async () => {
+    const postId = await newPost(fellow, courseSpace, 'Moderators only below')
+    await payload.update({
+      collection: 'spaces',
+      id: courseSpace.id,
+      data: { posting: 'fellows_only' },
+      overrideAccess: true,
+    })
+    try {
+      const member = await commentCreate({ payload, user: student, post: postId, body: 'Hi' })
+      expect(member.ok).toBe(false)
+      if (!member.ok) expect(member.error).toBe('posting-level')
+      const moderator = await commentCreate({ payload, user: fellow, post: postId, body: 'Hi' })
+      expect(moderator.ok).toBe(true)
+      if (moderator.ok) track('space-comments', moderator.data.id)
+    } finally {
+      await payload.update({
+        collection: 'spaces',
+        id: courseSpace.id,
+        data: { posting: 'open' },
+        overrideAccess: true,
+      })
+    }
   })
 })

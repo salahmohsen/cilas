@@ -3,7 +3,7 @@ import type { Payload } from 'payload'
 import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
 import { mentionSafelist, spacePeople } from '@/lib/space-members'
-import { spacesSettings, mode, spaceOpenOn, membership } from '@/lib/spaces'
+import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import type { SpaceLike, PostingLevel } from '@/lib/spaces'
@@ -456,6 +456,7 @@ export const commentCreate = async (
   const space = g.space
   const mem = await membership(payload, user, space)
   if (mem.role === 'none') return err('not-member')
+  if (!mayComment(mem, space.posting ?? 'open')) return err('posting-level')
   if (postData.deleted_at) return err('not-found')
   if (postData.locked) return err('locked')
 

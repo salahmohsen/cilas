@@ -884,14 +884,26 @@
     "copyLink": "انسخ الرابط",
     "readMore": "اقرأ المزيد",
     "showLess": "اعرض أقل",
-    "addComment": "علّق"
+    "addComment": "علّق",
+    "postLabel": "منشور",
+    "files": "الملفات",
+    "deletedNotice": "حُذف هذا المنشور. تبقى تعليقاته.",
+    "lockedNotice": "التعليقات مغلقة على هذا المنشور.",
+    "commentsModeratorsOnly": "التعليق في هذه المساحة للمشرفين فقط."
   },
   "SpaceComment": {
-    "write": "تعليق",
+    "write": "علِّق",
     "reply": "رد",
     "filesDrop": "أضف ملفاً",
     "maxFiles": "ملف واحد لكل تعليق",
-    "deleted": "حذفه كاتبه"
+    "deleted": "حُذف هذا التعليق.",
+    "placeholder": "اكتب تعليقًا",
+    "replyPlaceholder": "اكتب ردًا",
+    "sending": "جارٍ الإرسال",
+    "more": "إجراءات التعليق",
+    "edit": "تعديل التعليق",
+    "delete": "حذف التعليق",
+    "deletePrompt": "هل تحذف هذا التعليق؟"
   },
   "SpaceConsent": {
     "title": "المساحات وخصوصيتك",

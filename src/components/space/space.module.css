@@ -1,6 +1,5 @@
 .page {
   width: 100%;
-  max-width: 960px;
   margin-inline: auto;
   padding: var(--space-8) clamp(var(--space-4), 4vw, var(--space-8));
   display: grid;
@@ -201,7 +200,7 @@
 }
 
 .wide {
-  max-width: 1080px;
+  /* max-width: inherit; */
 }
 
 .rail {
@@ -338,4 +337,57 @@
   font-size: var(--text-sm);
   color: var(--text-secondary);
   margin: 0;
+}
+
+/* The post page's thread: comments in a list, replies indented one level. */
+.thread {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.replies {
+  list-style: none;
+  margin: 0;
+  padding-inline-start: var(--space-6);
+  border-inline-start: 1px solid var(--border-subtle);
+  display: grid;
+  gap: var(--space-4);
+}
+
+.comment {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+  margin: 0;
+  scroll-margin-top: var(--space-24);
+}
+
+.fileChip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  max-width: 100%;
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.fileChip:hover {
+  background: var(--surface-muted);
+}
+
+.files {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.narrow {
+  max-width: 760px;
 }

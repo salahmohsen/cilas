@@ -884,14 +884,26 @@
     "copyLink": "Copy link",
     "readMore": "Read more",
     "showLess": "Show less",
-    "addComment": "Comment"
+    "addComment": "Comment",
+    "postLabel": "Post",
+    "files": "Files",
+    "deletedNotice": "This post was deleted. Its comments stay.",
+    "lockedNotice": "Comments are locked on this post.",
+    "commentsModeratorsOnly": "Only moderators comment in this space."
   },
   "SpaceComment": {
     "write": "Comment",
     "reply": "Reply",
     "filesDrop": "Add a file",
     "maxFiles": "One file per comment",
-    "deleted": "Deleted by its author"
+    "deleted": "This comment was deleted.",
+    "placeholder": "Write a comment",
+    "replyPlaceholder": "Write a reply",
+    "sending": "Sending",
+    "more": "Comment actions",
+    "edit": "Edit comment",
+    "delete": "Delete comment",
+    "deletePrompt": "Delete this comment?"
   },
   "SpaceConsent": {
     "title": "Spaces and your privacy",

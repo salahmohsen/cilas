@@ -1,4 +1,4 @@
-import type { Payload } from 'payload'
+import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
 import type { ReactionCounts, ReactionKind } from '@/components/arc/reactions/reactions'
@@ -239,6 +239,61 @@ export const mySpaces = async (
   return { community, cohorts, courses }
 }
 
+/**
+ * A space's archive state (spec §11), from the rows as they stand now: a
+ * passed-in space row can carry a stale snapshot (reopened or the schedule
+ * may have changed since), so both are read fresh, through the membership
+ * layer's own override (the same one `factsFor` holds).
+ */
+const archiveState = async (payload: Payload, space: number | Space) => {
+  const row = (await payload.findByID({
+    collection: 'spaces',
+    id: typeof space === 'object' ? space.id : space,
+    depth: 0,
+    overrideAccess: true,
+  })) as Space
+  const courseRel = row.kind === 'course' ? relId(row.course) : null
+  const course =
+    courseRel != null
+      ? await payload.findByID({
+          collection: 'courses',
+          id: courseRel,
+          depth: 0,
+          draft: true,
+          overrideAccess: true,
+        })
+      : null
+  const lastMeeting = course ? courseLastMeeting(course) : null
+  const daysSince = lastMeeting
+    ? Math.floor((Date.now() - new Date(lastMeeting).getTime()) / 86_400_000)
+    : null
+  const archived = readOnly({ kind: row.kind, reopened: row.reopened }, lastMeeting, daysSince)
+  return { row, archived, lastMeeting, daysSince }
+}
+
+type Reactions = { counts: ReactionCounts; mine: ReactionKind[] }
+
+const NO_REACTIONS: Reactions = { counts: {}, mine: [] }
+
+/** Reaction rows grouped by their target, with the viewer's own marked. */
+const tally = <R extends { reaction: string; account?: number | { id: number } | null }>(
+  rows: R[],
+  targetOf: (row: R) => number | null,
+  viewer: null | User,
+): Map<number, Reactions> => {
+  const out = new Map<number, Reactions>()
+  for (const r of rows) {
+    const target = targetOf(r)
+    if (target == null) continue
+    const entry = out.get(target) ?? { counts: {}, mine: [] }
+    const kind = r.reaction as ReactionKind
+    entry.counts[kind] = (entry.counts[kind] ?? 0) + 1
+    if (viewer && relId(r.account) === viewer.id) entry.mine.push(kind)
+    out.set(target, entry)
+  }
+  return out
+}
+
 /** One row of the space feed (spec §7): the post with its roll-up counts. */
 export type FeedRow = {
   post: SpacePost
@@ -249,7 +304,7 @@ export type FeedRow = {
   commentCount: number
   /** The two newest comments, oldest first, for the card's preview */
   latestComments: { id: number; authorId: number | null; body: string; createdAt: string }[]
-  reactions: { counts: ReactionCounts; mine: ReactionKind[] }
+  reactions: Reactions
 }
 
 /**
@@ -267,37 +322,10 @@ export const spaceFeed = async (
   lastMeeting: string | null
   daysSince: number | null
 }> => {
-  const settings = await spacesSettings(payload)
-  // The space row is always read fresh: a passed-in space row can carry a
-  // stale snapshot (the page read it earlier; reopened/schedule may have
-  // changed since). One small read replaces staleness questions.
-  const spaceId = typeof space === 'object' ? space.id : space
-  const row = (await payload.findByID({
-    collection: 'spaces',
-    id: spaceId,
-    depth: 0,
-    overrideAccess: true,
-  })) as Space
-
-  // The course row is read fresh too — the archive state (spec §11) is
-  // computed from the schedule as it stands now, membership layer's own
-  // read (the same override `factsFor` holds).
-  const courseRel = row.kind === 'course' ? relId(row.course) : null
-  const course =
-    courseRel != null
-      ? await payload.findByID({
-          collection: 'courses',
-          id: courseRel,
-          depth: 0,
-          draft: true,
-          overrideAccess: true,
-        })
-      : null
-  const lastMeeting = course ? courseLastMeeting(course) : null
-  const daysSince = lastMeeting
-    ? Math.floor((Date.now() - new Date(lastMeeting).getTime()) / 86_400_000)
-    : null
-  const archived = readOnly({ kind: row.kind, reopened: row.reopened }, lastMeeting, daysSince)
+  const [settings, { row, archived, lastMeeting, daysSince }] = await Promise.all([
+    spacesSettings(payload),
+    archiveState(payload, space),
+  ])
 
   const { docs } = await payload.find({
     collection: 'space-posts',
@@ -314,8 +342,7 @@ export const spaceFeed = async (
   const postIds = docs.map((p) => p.id)
   const commentCountOf = new Map<number, number>()
   const latestOf = new Map<number, FeedRow['latestComments']>()
-  const countsOf = new Map<number, ReactionCounts>()
-  const mineOf = new Map<number, ReactionKind[]>()
+  let reactionsOf = new Map<number, Reactions>()
   if (postIds.length) {
     const { docs: comments } = await payload.find({
       collection: 'space-comments',
@@ -352,16 +379,7 @@ export const spaceFeed = async (
       select: { post: true, account: true, reaction: true },
       where: { post: { in: postIds } },
     })
-    for (const r of reactions) {
-      const pid = relId(r.post)
-      if (pid == null) continue
-      const counts = countsOf.get(pid) ?? {}
-      counts[r.reaction as ReactionKind] = (counts[r.reaction as ReactionKind] ?? 0) + 1
-      countsOf.set(pid, counts)
-      if (user && relId(r.account) === user.id) {
-        mineOf.set(pid, [...(mineOf.get(pid) ?? []), r.reaction as ReactionKind])
-      }
-    }
+    reactionsOf = tally(reactions, (r) => relId(r.post), user)
   }
 
   const rows: FeedRow[] = docs.map((p) => ({
@@ -370,9 +388,152 @@ export const spaceFeed = async (
     authorId: relId(p.author as never),
     commentCount: commentCountOf.get(p.id) ?? 0,
     latestComments: latestOf.get(p.id) ?? [],
-    reactions: { counts: countsOf.get(p.id) ?? {}, mine: mineOf.get(p.id) ?? [] },
+    reactions: reactionsOf.get(p.id) ?? NO_REACTIONS,
   }))
   return { rows, settings, archived, lastMeeting, daysSince }
+}
+
+/** A private file on a post or comment (ADR 0008), served through Payload's read rule. */
+export type SpaceFileRef = { id: number; url: string; name: string; size: number }
+
+/** One comment in a post's thread. A deleted comment with replies stays as a placeholder (spec §3). */
+export type ThreadComment = {
+  id: number
+  authorId: number | null
+  body: string
+  createdAt: string
+  edited: boolean
+  deleted: boolean
+  file: SpaceFileRef | null
+  reactions: Reactions
+}
+
+/** Replies go one level under a comment (spec §4: two levels in all). */
+export type TopComment = ThreadComment & { replies: ThreadComment[] }
+
+export type PostView = {
+  row: FeedRow
+  files: SpaceFileRef[]
+  comments: TopComment[]
+  /** Deleted with comments: the body is gone, the thread stays (spec §3) */
+  deleted: boolean
+  archived: boolean
+}
+
+/** The stored name is `<32 hex>-<safe original name>` (SpaceFiles' hook). */
+const fileRef = (f: {
+  id: number
+  url?: string | null
+  filename?: string | null
+  filesize?: number | null
+}): SpaceFileRef => ({
+  id: f.id,
+  url: f.url ?? '',
+  name: (f.filename ?? '').replace(/^[0-9a-f]{32}-/, ''),
+  size: f.filesize ?? 0,
+})
+
+/**
+ * One post with its whole thread (spec §4), read through the collections'
+ * rules. Null when the post is not in this space or the reader cannot see
+ * it, so the page renders "not found".
+ */
+export const postView = async (
+  payload: Payload,
+  user: null | User,
+  space: Space,
+  postId: number,
+): Promise<PostView | null> => {
+  const post = await payload
+    .findByID({
+      collection: 'space-posts',
+      id: postId,
+      user: user ?? undefined,
+      depth: 1,
+      overrideAccess: false,
+    })
+    .catch(() => null)
+  if (!post || relId(post.space as never) !== space.id) return null
+
+  const [{ archived }, { docs: comments }] = await Promise.all([
+    archiveState(payload, space),
+    payload.find({
+      collection: 'space-comments',
+      user: user ?? undefined,
+      depth: 0,
+      pagination: false,
+      overrideAccess: false,
+      sort: 'createdAt',
+      where: { post: { equals: post.id } },
+    }),
+  ])
+  const commentIds = comments.map((c) => c.id)
+  const onTargets: Where = {
+    or: [
+      { post: { equals: post.id } },
+      ...(commentIds.length ? [{ comment: { in: commentIds } }] : []),
+    ],
+  }
+  const [{ docs: reactions }, { docs: files }] = await Promise.all([
+    payload.find({
+      collection: 'space-reactions',
+      user: user ?? undefined,
+      depth: 0,
+      pagination: false,
+      overrideAccess: false,
+      select: { post: true, comment: true, account: true, reaction: true },
+      where: onTargets,
+    }),
+    payload.find({
+      collection: 'space-files',
+      user: user ?? undefined,
+      depth: 0,
+      pagination: false,
+      overrideAccess: false,
+      sort: 'createdAt',
+      where: onTargets,
+    }),
+  ])
+  const onPost = tally(reactions, (r) => (r.comment == null ? relId(r.post) : null), user)
+  const onComment = tally(reactions, (r) => relId(r.comment), user)
+  const fileOf = new Map(
+    files.filter((f) => f.comment != null).map((f) => [relId(f.comment as never)!, fileRef(f)]),
+  )
+
+  const node = (c: (typeof comments)[number]): ThreadComment => ({
+    id: c.id,
+    authorId: relId(c.author as never),
+    body: c.deleted_at ? '' : c.body,
+    createdAt: c.createdAt,
+    edited: !!c.edited_at,
+    deleted: !!c.deleted_at,
+    file: c.deleted_at ? null : (fileOf.get(c.id) ?? null),
+    reactions: onComment.get(c.id) ?? NO_REACTIONS,
+  })
+  const repliesOf = new Map<number, ThreadComment[]>()
+  for (const c of comments) {
+    const parent = relId(c.parent as never)
+    if (parent != null) repliesOf.set(parent, [...(repliesOf.get(parent) ?? []), node(c)])
+  }
+  const thread = comments
+    .filter((c) => c.parent == null)
+    .map((c) => ({ ...node(c), replies: repliesOf.get(c.id) ?? [] }))
+
+  const deleted = !!post.deleted_at
+  return {
+    row: {
+      post: deleted ? { ...post, body: '' } : post,
+      authorName: typeof post.author === 'object' && post.author ? post.author.name : null,
+      authorId: relId(post.author as never),
+      commentCount: comments.filter((c) => !c.deleted_at).length,
+      latestComments: [],
+      reactions: onPost.get(post.id) ?? NO_REACTIONS,
+    },
+    files: deleted ? [] : files.filter((f) => f.post != null).map(fileRef),
+    comments: thread,
+    deleted,
+    archived,
+  }
 }
 
 /**

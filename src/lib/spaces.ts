@@ -303,6 +303,10 @@ export const mayStart = (
   return { ok: true }
 }
 
+/** Whether this member may comment (spec §7): only `fellows_only` keeps members to reading. */
+export const mayComment = (membership: Membership, posting: PostingLevel = 'open'): boolean =>
+  membership.role === 'moderator' || (membership.role !== 'none' && posting !== 'fellows_only')
+
 /**
  * May this member write at all right now (consent and read-only live in the
  * write module — this is the collection access floor).
