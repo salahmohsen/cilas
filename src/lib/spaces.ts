@@ -12,6 +12,8 @@ import { ENROLLED } from '@/lib/list-members'
  */
 export type SpaceKind = 'community' | 'cohort' | 'course'
 export type PostingLevel = 'open' | 'members_comment' | 'fellows_only'
+/** Who may start an event post, on top of the posting level. */
+export type EventPosting = 'members' | 'moderators'
 
 export type SpacesSettings = {
   spaces_mode?: 'off' | 'trial' | 'on' | null

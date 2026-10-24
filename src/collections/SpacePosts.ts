@@ -4,8 +4,9 @@ import { isAdminUser } from '@/access'
 import { readableWhere } from '@/lib/spaces'
 
 /**
- * Discussion and announcement posts (spec §3). `question` sits in the enum
- * for step 2; no question UI ships yet. Bodies are Markdown, written once,
+ * Discussion, announcement, event and vote posts (spec §3). `question` sits
+ * in the enum for step 2; no question UI ships yet. An event adds where and
+ * when; a vote adds its options, fixed once the post exists. Bodies are Markdown, written once,
  * not translated.
  *
  * REST refusal (plan decision): members write through the server actions
@@ -51,10 +52,38 @@ export const SpacePosts: CollectionConfig = {
       type: 'select',
       required: true,
       defaultValue: 'discussion',
-      options: ['discussion', 'question', 'announcement'],
+      options: ['discussion', 'question', 'announcement', 'event', 'vote'],
       access: { update: () => false },
     },
     { name: 'body', type: 'textarea', required: true },
+    {
+      name: 'event_location',
+      type: 'text',
+      admin: { condition: (data) => (data as { kind?: string }).kind === 'event' },
+    },
+    {
+      name: 'event_starts_at',
+      type: 'date',
+      admin: {
+        condition: (data) => (data as { kind?: string }).kind === 'event',
+        date: { pickerAppearance: 'dayAndTime' },
+      },
+    },
+    {
+      name: 'vote_options',
+      type: 'array',
+      access: { update: () => false },
+      admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
+      fields: [{ name: 'label', type: 'text', required: true }],
+    },
+    {
+      name: 'vote_multiple',
+      label: 'Members may choose more than one option',
+      type: 'checkbox',
+      defaultValue: false,
+      access: { update: () => false },
+      admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
+    },
     { name: 'pinned', type: 'checkbox', defaultValue: false, index: true },
     { name: 'locked', type: 'checkbox', defaultValue: false },
     {

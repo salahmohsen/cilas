@@ -6,7 +6,7 @@ import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-membe
 import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
-import type { SpaceLike, PostingLevel } from '@/lib/spaces'
+import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
 import type { User } from '@/payload-types'
 
 export type WriteError =
@@ -26,6 +26,9 @@ export type WriteError =
   | 'duplicate'
   | 'space'
   | 'not-found'
+  | 'events'
+  | 'event'
+  | 'vote'
 
 export type WriteResult<T> =
   | { ok: true; data: T; notify?: (() => Promise<void>) | null }
@@ -213,13 +216,58 @@ const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> 
 
 // --- postCreate ---
 
+/** What an event or a vote adds to a post; the other kinds add nothing. */
+export type PostShape =
+  | { kind: 'discussion' | 'announcement' }
+  | { kind: 'event'; event: { location: string; startsAt: string } }
+  | { kind: 'vote'; vote: { options: string[]; multiple: boolean } }
+
+export const EVENT_LOCATION_MAX = 200
+export const VOTE_OPTIONS = { min: 2, max: 10, length: 120 } as const
+
+/**
+ * The extra columns an event or a vote stores, or null when they break a
+ * rule: an event needs a place and a start that has not passed; a vote needs
+ * two to ten distinct options.
+ */
+export const shapeData = (shape: PostShape, now = new Date()): Record<string, unknown> | null => {
+  switch (shape.kind) {
+    case 'discussion':
+    case 'announcement':
+      return {}
+    case 'event': {
+      const location = shape.event.location.trim()
+      const starts = new Date(shape.event.startsAt)
+      if (!location || location.length > EVENT_LOCATION_MAX) return null
+      if (Number.isNaN(starts.getTime()) || starts.getTime() < now.getTime()) return null
+      return { event_location: location, event_starts_at: starts.toISOString() }
+    }
+    case 'vote': {
+      const options = shape.vote.options.map((o) => o.trim()).filter(Boolean)
+      const distinct = new Set(options.map((o) => o.toLocaleLowerCase()))
+      if (distinct.size !== options.length) return null
+      if (options.length < VOTE_OPTIONS.min || options.length > VOTE_OPTIONS.max) return null
+      if (options.some((o) => o.length > VOTE_OPTIONS.length)) return null
+      return {
+        vote_options: options.map((label) => ({ label })),
+        vote_multiple: shape.vote.multiple,
+      }
+    }
+  }
+}
+
+/** Whether this member may start an event in this space (on top of the posting level). */
+export const eventsAllow = (events: EventPosting | null | undefined, role: string): boolean =>
+  (events ?? 'members') === 'members' || role === 'moderator'
+
 export const postCreate = async (
-  i: Input<{
-    space: number
-    kind: 'discussion' | 'announcement'
-    body: string
-    files?: PostFile[]
-  }>,
+  i: Input<
+    {
+      space: number
+      body: string
+      files?: PostFile[]
+    } & PostShape
+  >,
 ): Promise<WriteResult<{ id: number }>> => {
   const { payload, user, space: spaceId, kind, body, files } = i
   const g = await gate(payload, user, spaceId, { write: true })
@@ -231,6 +279,10 @@ export const postCreate = async (
   // the posting level's (spec §3) so the UI can say which door is closed.
   if (kind === 'announcement' && mem.role !== 'moderator') return err('announcement')
   if (!postingAllows(space.posting ?? 'open', mem.role, kind)) return err('posting-level')
+  if (kind === 'event' && !eventsAllow((space as { events?: EventPosting }).events, mem.role))
+    return err('events')
+  const extra = shapeData(i)
+  if (!extra) return err(kind === 'vote' ? 'vote' : 'event')
 
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
   if (mentioned.invalid.length > 0) return err('mention')
@@ -250,6 +302,7 @@ export const postCreate = async (
       author: personId,
       kind,
       body,
+      ...extra,
       last_activity_at: new Date().toISOString(),
       ...(kind === 'announcement' ? { pinned: true } : {}),
     } as never,
@@ -792,6 +845,59 @@ export const reactionToggle = async (
 
 // --- consentAccept ---
 
+/**
+ * Sets the member's whole choice on a vote (spec: events and votes): the
+ * options given replace the ones held, so a retry or a double tap lands on
+ * the same rows. An empty list withdraws the vote. A single-choice vote takes
+ * at most one option; every option must be the post's own.
+ */
+export const voteSet = async (
+  i: Input<{ post: number; options: string[] }>,
+): Promise<WriteResult<{ options: string[] }>> => {
+  const { payload, user, post: postId } = i
+  const post = (await payload
+    .findByID({ collection: 'space-posts', id: postId, depth: 0, overrideAccess: true })
+    .catch(() => null)) as {
+    space: number | { id: number }
+    kind?: string
+    locked?: boolean | null
+    deleted_at?: string | null
+    vote_multiple?: boolean | null
+    vote_options?: { id?: string | null }[] | null
+  } | null
+  if (!post || post.kind !== 'vote' || post.deleted_at) return err('not-found')
+  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const g = await gate(payload, user, spaceId, { write: true })
+  if (g.stop) return err((g as { error: WriteError }).error)
+  if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
+  if (post.locked) return err('locked')
+
+  const chosen = [...new Set(i.options)]
+  const valid = new Set((post.vote_options ?? []).map((o) => o.id).filter(Boolean))
+  if (chosen.some((o) => !valid.has(o))) return err('vote')
+  if (!post.vote_multiple && chosen.length > 1) return err('vote')
+
+  const { docs: held } = await payload.find({
+    collection: 'space-votes',
+    where: { and: [{ account: { equals: user.id } }, { post: { equals: postId } }] },
+    overrideAccess: true,
+    pagination: false,
+    depth: 0,
+  })
+  for (const row of held)
+    if (!chosen.includes(row.option))
+      await payload.delete({ collection: 'space-votes', id: row.id, overrideAccess: true })
+  const kept = new Set(held.map((row) => row.option))
+  for (const option of chosen)
+    if (!kept.has(option))
+      await payload.create({
+        collection: 'space-votes',
+        data: { space: spaceId, account: user.id, post: postId, option },
+        overrideAccess: true,
+      })
+  return { ok: true, data: { options: chosen } }
+}
+
 export const consentAccept = async (i: Input<object>): Promise<WriteResult<true>> => {
   const { payload, user } = i
   const { NOTICE_VERSION } = await import('@/lib/space-consent')
@@ -971,9 +1077,9 @@ export const preferenceSet = async (
 // --- spaceSettingsSet ---
 
 export const spaceSettingsSet = async (
-  i: Input<{ space: number; posting?: PostingLevel; reopened?: boolean }>,
+  i: Input<{ space: number; posting?: PostingLevel; events?: EventPosting; reopened?: boolean }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, space, posting, reopened } = i
+  const { payload, user, space, posting, events, reopened } = i
   const sp = (await payload.findByID({
     collection: 'spaces',
     id: space,
@@ -984,6 +1090,7 @@ export const spaceSettingsSet = async (
   if (mem.role !== 'moderator') return err('not-yours')
   const data: Record<string, unknown> = {}
   if (posting) data.posting = posting
+  if (events === 'members' || events === 'moderators') data.events = events
   if (typeof reopened === 'boolean') data.reopened = reopened
   await payload.update({
     collection: 'spaces',

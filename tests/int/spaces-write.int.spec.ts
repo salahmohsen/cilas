@@ -19,6 +19,8 @@ import {
   visitRecord,
   reactionToggle,
   consentAccept,
+  spaceSettingsSet,
+  voteSet,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
 import { postView } from '@/lib/spaces-data'
@@ -226,6 +228,7 @@ describe('spaces write', () => {
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
     ).drizzle.execute(sql`delete from space_files where filename like 'probe-f%.pdf'`)
     for (const collection of [
+      'space-votes',
       'space-reactions',
       'space-files',
       'space-preferences',
@@ -900,6 +903,178 @@ describe('spaces write', () => {
         data: { posting: 'open' },
         overrideAccess: true,
       })
+    }
+  })
+
+  it('an event needs a place and a start that has not passed; the space may keep events to moderators', async () => {
+    const soon = new Date(Date.now() + 86_400_000).toISOString()
+    const event = (location: string, startsAt: string, user = student) =>
+      postCreate({
+        payload,
+        user,
+        space: courseSpace.id,
+        kind: 'event',
+        body: 'Probe event',
+        event: { location, startsAt },
+      })
+    expect(await event('', soon)).toMatchObject({ ok: false, error: 'event' })
+    expect(await event('Room 2', '2020-01-01T10:00:00Z')).toMatchObject({
+      ok: false,
+      error: 'event',
+    })
+    expect(await event('Room 2', 'not a date')).toMatchObject({ ok: false, error: 'event' })
+
+    const made = await event('  Room 2  ', soon)
+    expect(made.ok).toBe(true)
+    if (!made.ok) return
+    track('space-posts', made.data.id)
+    const row = await payload.findByID({
+      collection: 'space-posts',
+      id: made.data.id,
+      overrideAccess: true,
+    })
+    expect(row.kind).toBe('event')
+    expect(row.event_location).toBe('Room 2')
+    expect(new Date(row.event_starts_at!).toISOString()).toBe(soon)
+
+    // Moderators only: the member is refused, the course's fellow is not.
+    expect(
+      (
+        await spaceSettingsSet({
+          payload,
+          user: student,
+          space: courseSpace.id,
+          events: 'moderators',
+        })
+      ).ok,
+    ).toBe(false)
+    expect(
+      (
+        await spaceSettingsSet({
+          payload,
+          user: fellow,
+          space: courseSpace.id,
+          events: 'moderators',
+        })
+      ).ok,
+    ).toBe(true)
+    expect(await event('Room 2', soon)).toMatchObject({ ok: false, error: 'events' })
+    const byFellow = await event('Room 3', soon, fellow)
+    expect(byFellow.ok).toBe(true)
+    if (byFellow.ok) track('space-posts', byFellow.data.id)
+    await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
+  })
+
+  it("a vote needs two to ten distinct options; voteSet replaces the member's whole choice", async () => {
+    const vote = (options: string[], multiple = false) =>
+      postCreate({
+        payload,
+        user: student,
+        space: courseSpace.id,
+        kind: 'vote',
+        body: 'Probe vote',
+        vote: { options, multiple },
+      })
+    expect(await vote(['Only one'])).toMatchObject({ ok: false, error: 'vote' })
+    expect(await vote(['Same', ' same '])).toMatchObject({ ok: false, error: 'vote' })
+    expect(await vote(Array.from({ length: 11 }, (_, i) => `Option ${i}`))).toMatchObject({
+      ok: false,
+      error: 'vote',
+    })
+
+    const single = await vote(['Tuesday', 'Thursday'])
+    expect(single.ok).toBe(true)
+    if (!single.ok) return
+    track('space-posts', single.data.id)
+    const post = await payload.findByID({
+      collection: 'space-posts',
+      id: single.data.id,
+      overrideAccess: true,
+    })
+    const [tue, thu] = (post.vote_options ?? []).map((o) => o.id!)
+    const held = async (user: User) =>
+      (
+        await payload.find({
+          collection: 'space-votes',
+          where: { and: [{ account: { equals: user.id } }, { post: { equals: single.data.id } }] },
+          overrideAccess: true,
+        })
+      ).docs.map((d) => d.option)
+
+    // One choice at a time; a second call moves the vote; a repeat changes nothing.
+    expect(
+      await voteSet({ payload, user: student, post: single.data.id, options: [tue!, thu!] }),
+    ).toMatchObject({ ok: false, error: 'vote' })
+    expect(
+      (await voteSet({ payload, user: student, post: single.data.id, options: [tue!] })).ok,
+    ).toBe(true)
+    expect(
+      (await voteSet({ payload, user: student, post: single.data.id, options: [thu!] })).ok,
+    ).toBe(true)
+    expect(
+      (await voteSet({ payload, user: student, post: single.data.id, options: [thu!] })).ok,
+    ).toBe(true)
+    expect(await held(student)).toEqual([thu])
+    expect(
+      await voteSet({ payload, user: student, post: single.data.id, options: ['nope'] }),
+    ).toMatchObject({ ok: false, error: 'vote' })
+    expect(
+      await voteSet({ payload, user: stranger, post: single.data.id, options: [tue!] }),
+    ).toMatchObject({ ok: false, error: 'not-member' })
+    // An empty choice withdraws the vote.
+    expect((await voteSet({ payload, user: student, post: single.data.id, options: [] })).ok).toBe(
+      true,
+    )
+    expect(await held(student)).toEqual([])
+
+    const multiple = await vote(['Tea', 'Coffee', 'Water'], true)
+    expect(multiple.ok).toBe(true)
+    if (!multiple.ok) return
+    track('space-posts', multiple.data.id)
+    const ids = (
+      (
+        await payload.findByID({
+          collection: 'space-posts',
+          id: multiple.data.id,
+          overrideAccess: true,
+        })
+      ).vote_options ?? []
+    ).map((o) => o.id!)
+    expect(
+      (
+        await voteSet({
+          payload,
+          user: fellow,
+          post: multiple.data.id,
+          options: [ids[0]!, ids[2]!],
+        })
+      ).ok,
+    ).toBe(true)
+    const rows = await payload.find({
+      collection: 'space-votes',
+      where: { post: { equals: multiple.data.id } },
+      overrideAccess: true,
+    })
+    for (const r of rows.docs) track('space-votes', r.id)
+    expect(rows.docs.map((r) => r.option).sort()).toEqual([ids[0], ids[2]].sort())
+
+    // A locked vote takes no more choices; a discussion is not a vote.
+    await postModify({ payload, user: fellow, id: multiple.data.id, locked: true })
+    expect(
+      await voteSet({ payload, user: fellow, post: multiple.data.id, options: [ids[1]!] }),
+    ).toMatchObject({ ok: false, error: 'locked' })
+    const plain = await postCreate({
+      payload,
+      user: student,
+      space: courseSpace.id,
+      kind: 'discussion',
+      body: 'Probe plain',
+    })
+    if (plain.ok) {
+      track('space-posts', plain.data.id)
+      expect(
+        await voteSet({ payload, user: student, post: plain.data.id, options: [] }),
+      ).toMatchObject({ ok: false, error: 'not-found' })
     }
   })
 })

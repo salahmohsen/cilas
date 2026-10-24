@@ -93,6 +93,7 @@ export interface Config {
     'space-consents': SpaceConsent;
     'space-visits': SpaceVisit;
     'space-preferences': SpacePreference;
+    'space-votes': SpaceVote;
     forms: Form;
     'form-submissions': FormSubmission;
     exports: Export;
@@ -148,6 +149,7 @@ export interface Config {
     'space-consents': SpaceConsentsSelect<false> | SpaceConsentsSelect<true>;
     'space-visits': SpaceVisitsSelect<false> | SpaceVisitsSelect<true>;
     'space-preferences': SpacePreferencesSelect<false> | SpacePreferencesSelect<true>;
+    'space-votes': SpaceVotesSelect<false> | SpaceVotesSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     exports: ExportsSelect<false> | ExportsSelect<true>;
@@ -2045,6 +2047,7 @@ export interface Space {
   course?: (number | null) | Course;
   programme?: (number | null) | Programme;
   posting?: ('open' | 'members_comment' | 'fellows_only') | null;
+  events?: ('members' | 'moderators') | null;
   /**
    * Reopens a course space archived 2 weeks after its last meeting.
    */
@@ -2064,8 +2067,17 @@ export interface SpacePost {
   id: number;
   space: number | Space;
   author?: (number | null) | Person;
-  kind: 'discussion' | 'question' | 'announcement';
+  kind: 'discussion' | 'question' | 'announcement' | 'event' | 'vote';
   body: string;
+  event_location?: string | null;
+  event_starts_at?: string | null;
+  vote_options?:
+    | {
+        label: string;
+        id?: string | null;
+      }[]
+    | null;
+  vote_multiple?: boolean | null;
   pinned?: boolean | null;
   locked?: boolean | null;
   announcement_email_sent?: boolean | null;
@@ -2165,6 +2177,19 @@ export interface SpacePreference {
   id: number;
   account: number | User;
   digest: 'daily' | 'weekly' | 'off';
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-votes".
+ */
+export interface SpaceVote {
+  id: number;
+  space: number | Space;
+  account: number | User;
+  post: number | SpacePost;
+  option: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -2547,6 +2572,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'space-preferences';
         value: number | SpacePreference;
+      } | null)
+    | ({
+        relationTo: 'space-votes';
+        value: number | SpaceVote;
       } | null)
     | ({
         relationTo: 'forms';
@@ -3550,6 +3579,7 @@ export interface SpacesSelect<T extends boolean = true> {
   course?: T;
   programme?: T;
   posting?: T;
+  events?: T;
   reopened?: T;
   introduction_post?: T;
   updatedAt?: T;
@@ -3564,6 +3594,15 @@ export interface SpacePostsSelect<T extends boolean = true> {
   author?: T;
   kind?: T;
   body?: T;
+  event_location?: T;
+  event_starts_at?: T;
+  vote_options?:
+    | T
+    | {
+        label?: T;
+        id?: T;
+      };
+  vote_multiple?: T;
   pinned?: T;
   locked?: T;
   announcement_email_sent?: T;
@@ -3657,6 +3696,18 @@ export interface SpaceVisitsSelect<T extends boolean = true> {
 export interface SpacePreferencesSelect<T extends boolean = true> {
   account?: T;
   digest?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "space-votes_select".
+ */
+export interface SpaceVotesSelect<T extends boolean = true> {
+  space?: T;
+  account?: T;
+  post?: T;
+  option?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -4346,6 +4397,7 @@ export interface TaskCreateCollectionExport {
       | 'space-consents'
       | 'space-visits'
       | 'space-preferences'
+      | 'space-votes'
       | 'forms'
       | 'form-submissions'
       | 'exports'

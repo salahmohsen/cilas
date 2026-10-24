@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
-import type { PostingLevel, SpaceKind } from '@/lib/spaces'
+import type { EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
 
 /**
  * One row per space (spec §1). Its settings live here; its members never do,
@@ -62,6 +62,16 @@ export const Spaces: CollectionConfig = {
         { label: 'Members comment — moderators start posts', value: 'members_comment' },
         { label: 'Moderators only', value: 'fellows_only' },
       ] satisfies { label: string; value: PostingLevel }[],
+    },
+    {
+      name: 'events',
+      label: 'Who may create events',
+      type: 'select',
+      defaultValue: 'members',
+      options: [
+        { label: 'Every member who may post', value: 'members' },
+        { label: 'Moderators only', value: 'moderators' },
+      ] satisfies { label: string; value: EventPosting }[],
     },
     {
       // Moderators and admins reopen a read-only course space (spec §11).
