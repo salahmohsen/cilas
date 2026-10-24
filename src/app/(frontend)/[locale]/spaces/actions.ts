@@ -4,6 +4,7 @@ import config from '@payload-config'
 import { revalidatePath } from 'next/cache'
 import { getPayload } from 'payload'
 
+import { personOf } from '@/access'
 import { routing } from '@/i18n/routing'
 import { currentReader } from '@/lib/reader'
 import {
@@ -330,4 +331,31 @@ export async function spaceSettingsSetAction(
   if (!result.ok) return err(result.error)
   await revalidate()
   return { status: 'ok' }
+}
+
+/**
+ * The freshness check (spec §Updates): how many posts by others arrived in a
+ * space since the page rendered. A read through the posts rule, so a space the
+ * caller cannot read counts zero.
+ */
+export async function spaceNewPostsAction(space: number, since: string): Promise<number> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users' || !Number.isFinite(space)) return 0
+  if (Number.isNaN(Date.parse(since))) return 0
+  const payload = await getPayload({ config })
+  const person = personOf(user)
+  const { totalDocs } = await payload.count({
+    collection: 'space-posts',
+    user,
+    overrideAccess: false,
+    where: {
+      and: [
+        { space: { equals: space } },
+        { createdAt: { greater_than: since } },
+        { deleted_at: { exists: false } },
+        ...(person === null ? [] : [{ author: { not_equals: person } }]),
+      ],
+    },
+  })
+  return totalDocs
 }

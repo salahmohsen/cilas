@@ -32,6 +32,53 @@ import type { Course, Programme, Space, SpacePost, User } from '@/payload-types'
 const relId = (v: number | { id: number } | null | undefined) =>
   v == null ? null : typeof v === 'object' ? v.id : v
 
+/** Markdown to one plain line for a preview: links keep their text, marks drop. */
+export const previewOf = (body: string | null | undefined, max = 120): string | null => {
+  if (!body?.trim()) return null
+  const plain = body
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/[#>*_~`]+/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
+  return plain.length > max ? `${plain.slice(0, max - 1).trimEnd()}…` : plain || null
+}
+
+/**
+ * The people who moderate a space (spec §7): the course's fellows, or the
+ * programme's residential fellows. Admins moderate too but are accounts,
+ * not people, so they carry no badge.
+ */
+export const moderatorPeople = async (payload: Payload, space: Space): Promise<Set<number>> => {
+  if (space.kind === 'course' && space.course != null) {
+    const course = await payload.findByID({
+      collection: 'courses',
+      id: relId(space.course)!,
+      depth: 0,
+      draft: true,
+      select: { fellows: true },
+      overrideAccess: true,
+    })
+    return new Set((course.fellows ?? []).map((f) => relId(f)!).filter((v) => v != null))
+  }
+  if (space.kind === 'cohort' && space.programme != null) {
+    const { docs } = await payload.find({
+      collection: 'memberships',
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+      select: { person: true },
+      where: {
+        and: [
+          { programme: { equals: relId(space.programme) } },
+          { role: { equals: 'residential_fellow' } },
+        ],
+      },
+    })
+    return new Set(docs.map((m) => relId(m.person as never)!).filter((v) => v != null))
+  }
+  return new Set()
+}
+
 /** The community space's fixed label (spec §2: it is the one kind with no document behind it). */
 export const COMMUNITY_LABEL = 'Community'
 
@@ -45,6 +92,8 @@ export type SpaceSummary = {
   lastActivity: string | null
   /** A course space past its 14 days (spec §11); always false for the other kinds */
   archived: boolean
+  /** The first words of the newest post, as plain text */
+  preview: string | null
 }
 
 /** My spaces for one signed-in member: the community, their cohorts and courses. */
@@ -134,7 +183,7 @@ export const mySpaces = async (
     depth: 0,
     pagination: false,
     overrideAccess: false,
-    select: { space: true, author: true, createdAt: true, last_activity_at: true },
+    select: { space: true, author: true, createdAt: true, last_activity_at: true, body: true },
     where: {
       and: [{ deleted_at: { exists: false } }, ...(ids === true ? [] : [{ space: { in: ids } }])],
     },
@@ -176,6 +225,12 @@ export const mySpaces = async (
       unread,
       lastActivity,
       archived: archivedNow(s, course),
+      preview: previewOf(
+        list.reduce<(typeof list)[number] | null>(
+          (acc, p) => (acc && acc.createdAt > p.createdAt ? acc : p),
+          null,
+        )?.body,
+      ),
     }
     if (s.kind === 'community') community = community ?? summary
     else if (s.kind === 'cohort') cohorts.push(summary)
@@ -189,7 +244,11 @@ export type FeedRow = {
   post: SpacePost
   /** null means the post has no author — the intro post reads as CILAS */
   authorName: string | null
+  /** The author's person id, for the photo and the moderator badge */
+  authorId: number | null
   commentCount: number
+  /** The two newest comments, oldest first, for the card's preview */
+  latestComments: { id: number; authorId: number | null; body: string; createdAt: string }[]
   reactions: { counts: ReactionCounts; mine: ReactionKind[] }
 }
 
@@ -254,6 +313,7 @@ export const spaceFeed = async (
 
   const postIds = docs.map((p) => p.id)
   const commentCountOf = new Map<number, number>()
+  const latestOf = new Map<number, FeedRow['latestComments']>()
   const countsOf = new Map<number, ReactionCounts>()
   const mineOf = new Map<number, ReactionKind[]>()
   if (postIds.length) {
@@ -263,14 +323,24 @@ export const spaceFeed = async (
       depth: 0,
       pagination: false,
       overrideAccess: false,
-      select: { post: true },
+      select: { post: true, author: true, body: true, createdAt: true },
+      sort: 'createdAt',
       where: {
         and: [{ post: { in: postIds } }, { deleted_at: { exists: false } }],
       },
     })
     for (const c of comments) {
       const pid = relId(c.post)
-      if (pid != null) commentCountOf.set(pid, (commentCountOf.get(pid) ?? 0) + 1)
+      if (pid == null) continue
+      commentCountOf.set(pid, (commentCountOf.get(pid) ?? 0) + 1)
+      const latest = latestOf.get(pid) ?? []
+      latest.push({
+        id: c.id,
+        authorId: relId(c.author as never),
+        body: c.body,
+        createdAt: c.createdAt,
+      })
+      latestOf.set(pid, latest.slice(-2))
     }
 
     const { docs: reactions } = await payload.find({
@@ -297,7 +367,9 @@ export const spaceFeed = async (
   const rows: FeedRow[] = docs.map((p) => ({
     post: p,
     authorName: typeof p.author === 'object' && p.author ? p.author.name : null,
+    authorId: relId(p.author as never),
     commentCount: commentCountOf.get(p.id) ?? 0,
+    latestComments: latestOf.get(p.id) ?? [],
     reactions: { counts: countsOf.get(p.id) ?? {}, mine: mineOf.get(p.id) ?? [] },
   }))
   return { rows, settings, archived, lastMeeting, daysSince }
@@ -484,17 +556,17 @@ export const participation = async (
 
 /** The member's own state in one space: the checklist marks, the consent stamp, the digest choice. */
 export type MemberState = {
-  steps:
-    | {
-        saw_privacy: boolean
-        introduced: boolean
-        read_pinned: boolean
-        checked_profile: boolean
-        chose_digest: boolean
-      }
-    | null
+  steps: {
+    saw_privacy: boolean
+    introduced: boolean
+    read_pinned: boolean
+    checked_profile: boolean
+    chose_digest: boolean
+  } | null
   consented: boolean
   digest: 'daily' | 'weekly' | 'off' | null
+  /** When the member last opened this space, before this visit stamps it; null on a first visit */
+  lastVisitedAt: string | null
 }
 
 /**
@@ -545,6 +617,7 @@ export const memberState = async (
           chose_digest: visit.chose_digest ?? false,
         }
       : null,
+    lastVisitedAt: visit?.last_visited_at ?? null,
     consented: consents.totalDocs > 0,
     digest: digest ?? null,
   }

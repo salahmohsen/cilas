@@ -7,6 +7,7 @@ import { getPayload } from 'payload'
 
 import { isFellowUser } from '@/access'
 import { Badge } from '@/components/arc/badge/badge'
+import { Card } from '@/components/arc/card/card'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { PageHeader } from '@/components/arc/page-header/page-header'
 import styles from '@/components/space/space.module.css'
@@ -51,40 +52,46 @@ export default async function MySpacesPage({ params }: Props) {
         <EmptyState title={t('title')} description={t('empty')} />
       ) : (
         sections.map((s) => (
-          <section key={s.id} aria-labelledby={`spaces-${s.id}`} className={styles.column}>
-            <h2 id={`spaces-${s.id}`} className={styles.sectionTitle}>
-              {s.label}
-            </h2>
-            <ul className={`${styles.group} ${styles.rows}`}>
+          <section
+            key={s.id}
+            aria-labelledby={s.id === 'community' ? undefined : `spaces-${s.id}`}
+            aria-label={s.id === 'community' ? s.label : undefined}
+            className={styles.column}
+          >
+            {s.id !== 'community' && (
+              <h2 id={`spaces-${s.id}`} className={styles.sectionTitle}>
+                {s.label}
+              </h2>
+            )}
+            <div className={styles.cards}>
               {s.rows.map((row) => (
-                <li key={row.space.id}>
-                  <Link href={row.href} className={`${styles.row} ${styles.rowLink}`}>
-                    <span className={styles.rowMain}>
-                      {row.unread > 0 && <span className={styles.dot} aria-hidden="true" />}
-                      <span className={styles.rowText}>
-                        <span className={styles.rowTitle}>
-                          {row.space.kind === 'community' ? t('community') : row.title}
-                        </span>
-                        {row.lastActivity && (
-                          <span className={styles.meta}>
-                            {format.relativeTime(new Date(row.lastActivity))}
-                          </span>
-                        )}
-                      </span>
-                    </span>
-                    <span className={styles.rowMain}>
-                      {row.archived && <Badge size="sm">{t('archived')}</Badge>}
-                      {row.unread > 0 && (
-                        <Badge size="sm" tone="info">
-                          <span className={styles.numeric}>{row.unread}</span>
-                          <span className="sr-only"> {t('unread')}</span>
-                        </Badge>
-                      )}
-                    </span>
-                  </Link>
-                </li>
+                <Card
+                  key={row.space.id}
+                  title={row.space.kind === 'community' ? t('community') : row.title}
+                  description={row.preview ?? t('noPostsYet')}
+                  meta={
+                    row.archived ? (
+                      <Badge size="sm">{t('archived')}</Badge>
+                    ) : row.unread > 0 ? (
+                      <Badge size="sm" tone="info">
+                        <span className={styles.numeric}>{row.unread}</span>
+                        <span className="sr-only"> {t('unread')}</span>
+                      </Badge>
+                    ) : undefined
+                  }
+                  status={
+                    row.lastActivity
+                      ? t('active', { time: format.relativeTime(new Date(row.lastActivity)) })
+                      : undefined
+                  }
+                  action={
+                    <Link href={row.href} className={styles.link}>
+                      {t('openSpace')}
+                    </Link>
+                  }
+                />
               ))}
-            </ul>
+            </div>
           </section>
         ))
       )}

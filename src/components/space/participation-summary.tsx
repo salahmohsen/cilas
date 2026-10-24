@@ -17,10 +17,7 @@ export async function ParticipationSummary({ rows }: { rows: ParticipationRow[] 
     lastVisit: r.lastVisit ? format.relativeTime(new Date(r.lastVisit)) : t('never'),
   }))
   return (
-    <section aria-labelledby="participation-title" className={styles.column}>
-      <h2 id="participation-title" className={styles.sectionTitle}>
-        {t('title')}
-      </h2>
+    <section className={styles.column}>
       <SortableDataTable
         rows={table}
         rowKey="id"

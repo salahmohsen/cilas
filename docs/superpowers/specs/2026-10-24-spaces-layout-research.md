@@ -1,6 +1,6 @@
 # Spaces layout: research and proposal
 
-Date: 2026-10-24. Input to the layout work before Task 14. Not yet decided; a throwaway prototype comes first.
+Date: 2026-10-24. Input to the layout work before Task 14. Decided and built on 2026-10-24: the side rail layout, with the UX rules below.
 
 ## What other products do
 
@@ -74,6 +74,46 @@ One divided list per section (community, cohorts, courses). Each row: title, a o
 - **About text**: course and programme summaries exist. The community uses its intro post. No new field.
 - **Latest post preview** for My spaces: `mySpaces` already loads the posts it counts.
 
-## Next step
+## UX best practices (second round)
 
-Build one throwaway HTML prototype of the desktop and phone layouts with real copy. Compare it against the current page, then decide. Only then change `space-page.tsx`.
+Read in full on 2026-10-24: NN/g on infinite scrolling, confirmation dialogs, progressive disclosure, empty states and bottom sheets; the W3C ARIA feed pattern; WCAG 4.1.3 and 2.2.2; W3C on `dir`. Other lines are search summaries or our own reasoning, marked.
+
+- **Load in batches.** "Load more" with a shown/total count, not endless scroll. It keeps the footer reachable and posts findable (https://www.nngroup.com/articles/infinite-scrolling-tips/).
+- **Never move the feed under the reader.** A periodic check updates a "N new posts" control; the reader loads them (https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html).
+- **Announce politely.** New posts and "Published" go to a `role="status"` region without moving focus (https://www.w3.org/WAI/WCAG22/Understanding/status-messages.html).
+- **Feed semantics.** `role="feed"`, each post an `article` named by its author and described by its body, with `aria-posinset` and `aria-setsize` (https://www.w3.org/WAI/ARIA/apg/patterns/feed/).
+- **Progressive disclosure.** A one-line composer; files and the post type appear on request, two levels at most (https://www.nngroup.com/articles/progressive-disclosure/).
+- **Confirm only what is serious, offer a way back.** Name the item and the outcome on the buttons (https://www.nngroup.com/articles/confirmation-dialog/).
+- **Empty states teach.** Say what will appear and how to start (https://www.nngroup.com/articles/empty-state-interface-design/).
+- **Bottom sheets for short tasks only,** with a visible close (https://www.nngroup.com/articles/bottom-sheet/).
+- **Bidirectional text.** `dir="auto"` on user text, `<bdi>` around names, logical CSS properties (https://www.w3.org/International/questions/qa-html-dir).
+- **Timestamps.** Relative for a week, then the date, with the exact time on hover (search: https://uxmovement.com/content/absolute-vs-relative-timestamps-when-to-use-which/).
+- **Checklists.** Five items or fewer, least effort first, each doing its step in place (Circle, above; the rest is our reasoning).
+
+## What was built
+
+| Rule | In the space page |
+| --- | --- |
+| Batches | 20 posts, then `LoadMore` with "N of M posts". |
+| Feed never moves | `FreshPosts` checks every 30 s while visible and shows "Show N new posts". |
+| Status region | The banner and "Published" are `role="status"`. |
+| Feed semantics | `role="feed"`, `article` with posinset, setsize, labelledby, describedby. |
+| Divider | "New since your last visit" above the first post older than the previous visit. |
+| Collapsed composer | One line with the member's avatar; inline on desktop, `bottom-sheet` on phones; files behind "Add files"; draft kept in local storage. |
+| Notice at the moment of need | "Write a post" opens the privacy notice in a `dialog` first; the checklist step accepts it too. |
+| Delete | `confirm-morph` in countdown mode: 3 seconds to cancel. An undo after the fact is impossible because delete does not keep the body (see open issues). |
+| Long text | `expandable-text` only on bodies that can pass the clamp, so short posts never flash "Read more". |
+| Roles | "Fellow" `badge` and `hover-card` profile; moderators from course fellows or residential fellows. |
+| Checklist | Arc `onboarding-checklist`, least effort first; hidden state in a cookie so the server renders it right. |
+| Rail | About with an `accordion` (posting, privacy, digest); Members with `avatar-group` and a `drawer`; moderators get a participation `drawer` with `metric-card`s and the table. |
+| Phone | Rail behind an "About" `bottom-sheet`; one column, no sideways scroll at 390px. |
+| Timestamps | `When`: relative for 7 days, then the date, `tooltip` with the exact time. |
+| Loading | `skeleton` in the final layout (`loading.tsx`). |
+| My spaces | Arc `card` per space with the latest post preview, unread `badge`, and last activity. |
+
+## Open issues found on the way
+
+- **Delete and the privacy notice disagree.** The notice promises 30-day restore. `postRemove` deletes a post without comments outright, and blanks the body of one with comments. Either keep deleted bodies until a purge (step 3), or change the notice text, which needs the legal check and a `NOTICE_VERSION` bump.
+- **The notice does not say moderators see participation numbers.** Same legal path.
+- **Arc `avatar-group` keys by name.** Two people with one name collide; the page passes unique names to it, and the drawer lists everyone.
+- **Arc `reactions` always shows zero counts.** Kept as Arc designs it.

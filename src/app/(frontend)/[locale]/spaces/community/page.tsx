@@ -8,7 +8,10 @@ import { SpacePage } from '@/components/space/space-page'
 import { currentReader } from '@/lib/reader'
 import { spaceLanding } from '@/lib/spaces-data'
 
-type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ tab?: string }> }
+type Props = {
+  params: Promise<{ locale: string }>
+  searchParams: Promise<{ tab?: string; shown?: string }>
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('Spaces')
@@ -17,7 +20,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** Spec §2: the community space has no document behind it, so no slug. */
 export default async function CommunityPage({ params, searchParams }: Props) {
-  const [{ locale }, { tab }] = await Promise.all([params, searchParams])
+  const [{ locale }, { tab, shown }] = await Promise.all([params, searchParams])
   const path = `/${locale}/spaces/community`
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(path)}`)
@@ -29,6 +32,7 @@ export default async function CommunityPage({ params, searchParams }: Props) {
       user={user}
       landing={landing}
       tab={tab === 'announcements' ? 'announcements' : 'all'}
+      shown={Math.min(Math.max(Number(shown) || 0, 0), 500)}
       path={path}
     />
   )

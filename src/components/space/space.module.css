@@ -188,3 +188,154 @@
   padding-top: var(--space-6);
   border-top: 1px solid var(--border-subtle);
 }
+
+/* Two columns from 1024px: the feed at a reading width, the rail beside it. */
+.layout {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.layout > * {
+  min-width: 0;
+}
+
+.wide {
+  max-width: 1080px;
+}
+
+.rail {
+  display: none;
+}
+
+.phoneOnly {
+  display: flex;
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: start;
+  }
+
+  .rail {
+    display: grid;
+    gap: var(--space-4);
+    position: sticky;
+    top: var(--space-24);
+  }
+
+  .phoneOnly {
+    display: none;
+  }
+}
+
+.feed {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 680px;
+  min-width: 0;
+}
+
+.feedBar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* The line where posts newer than the previous visit end. */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.fresh {
+  position: sticky;
+  top: var(--space-24);
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+}
+
+.prompt {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface);
+  color: var(--text-secondary);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+
+.prompt:hover {
+  background: var(--surface-muted);
+}
+
+.authorButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 500;
+  color: var(--foreground);
+  cursor: pointer;
+}
+
+.postActions {
+  margin-inline-start: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.memberList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+
+.memberRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.kpis {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.cards {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+.prose {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin: 0;
+}
