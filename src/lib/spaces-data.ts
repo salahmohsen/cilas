@@ -2,7 +2,8 @@ import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
 import type { ReactionCounts, ReactionKind } from '@/components/arc/reactions/reactions'
-import { courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
+import { archivedNow, courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
+import { NOTICE_VERSION } from '@/lib/space-consent'
 import {
   mode,
   readableSpaceIds,
@@ -42,6 +43,8 @@ export type SpaceSummary = {
   href: string
   unread: number
   lastActivity: string | null
+  /** A course space past its 14 days (spec §11); always false for the other kinds */
+  archived: boolean
 }
 
 /** My spaces for one signed-in member: the community, their cohorts and courses. */
@@ -87,18 +90,22 @@ export const mySpaces = async (
   // Titles and slugs read through the membership layer too: an enrolled
   // student may not read a tier-owner course, yet the tile still shows the
   // course's name (spec §2).
+  type Label = { id: number; title: string; slug: string; schedule?: unknown; sessions?: unknown }
   const labels = (collection: 'courses' | 'programmes', ready: number[]) =>
     ready.length
-      ? payload.find({
+      ? (payload.find({
           collection,
           depth: 0,
           draft: true,
           pagination: false,
           overrideAccess: true,
-          select: { title: true, slug: true },
+          select:
+            collection === 'courses'
+              ? { title: true, slug: true, schedule: true, sessions: true }
+              : { title: true, slug: true },
           where: { id: { in: ready } },
-        })
-      : Promise.resolve({ docs: [] as Array<{ id: number; title: string; slug: string }> })
+        }) as Promise<{ docs: Label[] }>)
+      : Promise.resolve({ docs: [] as Label[] })
   const [{ docs: courseDocs }, { docs: programmeDocs }] = await Promise.all([
     labels('courses', courseIds),
     labels('programmes', programmeIds),
@@ -168,6 +175,7 @@ export const mySpaces = async (
           : `/${locale}/spaces/${s.kind}/${course?.slug ?? programme?.slug ?? ''}`,
       unread,
       lastActivity,
+      archived: archivedNow(s, course),
     }
     if (s.kind === 'community') community = community ?? summary
     else if (s.kind === 'cohort') cohorts.push(summary)
@@ -472,4 +480,72 @@ export const participation = async (
       lastVisit: lastVisitOf.get(personId) ?? null,
     }))
     .sort((a, b) => a.name.localeCompare(b.name))
+}
+
+/** The member's own state in one space: the checklist marks, the consent stamp, the digest choice. */
+export type MemberState = {
+  steps:
+    | {
+        saw_privacy: boolean
+        introduced: boolean
+        read_pinned: boolean
+        checked_profile: boolean
+        chose_digest: boolean
+      }
+    | null
+  consented: boolean
+  digest: 'daily' | 'weekly' | 'off' | null
+}
+
+/**
+ * The page's own three reads, rule-gated as the content reads are (the
+ * collections' own-row rules are the gate). The steps live on this space's
+ * visit row; consent and the digest are account-wide.
+ */
+export const memberState = async (
+  payload: Payload,
+  user: User,
+  spaceId: number,
+): Promise<MemberState> => {
+  const [visits, consents, preferences] = await Promise.all([
+    payload.find({
+      collection: 'space-visits',
+      user,
+      depth: 0,
+      pagination: false,
+      limit: 1,
+      overrideAccess: false,
+      where: { and: [{ account: { equals: user.id } }, { space: { equals: spaceId } }] },
+    }),
+    payload.count({
+      collection: 'space-consents',
+      user,
+      overrideAccess: false,
+      where: { and: [{ account: { equals: user.id } }, { version: { equals: NOTICE_VERSION } }] },
+    }),
+    payload.find({
+      collection: 'space-preferences',
+      user,
+      depth: 0,
+      pagination: false,
+      limit: 1,
+      overrideAccess: false,
+      where: { account: { equals: user.id } },
+    }),
+  ])
+  const visit = visits.docs[0]
+  const digest = (preferences.docs[0] as { digest?: 'daily' | 'weekly' | 'off' | null })?.digest
+  return {
+    steps: visit
+      ? {
+          saw_privacy: visit.saw_privacy ?? false,
+          introduced: visit.introduced ?? false,
+          read_pinned: visit.read_pinned ?? false,
+          checked_profile: visit.checked_profile ?? false,
+          chose_digest: visit.chose_digest ?? false,
+        }
+      : null,
+    consented: consents.totalDocs > 0,
+    digest: digest ?? null,
+  }
 }

@@ -1,0 +1,36 @@
+.button { --swap-height: var(--control-height-md); --swap-pad: var(--space-5); position: relative; display: inline-flex; min-width: var(--swap-height); min-height: var(--swap-height); align-items: center; justify-content: center; padding: 0 calc(var(--swap-pad) + ((var(--swap-height) - 18px) / 2 - var(--swap-pad)) * var(--fold, 0)); border: 1px solid var(--foreground); border-radius: var(--radius-pill); background: var(--foreground); color: var(--background); font: inherit; font-size: var(--text-sm); font-weight: 500; line-height: var(--leading-body); overflow: clip; white-space: nowrap; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background-color var(--duration-standard) var(--ease-standard), border-color var(--duration-standard) var(--ease-standard), color var(--duration-standard) var(--ease-standard), opacity var(--duration-fast) var(--ease-standard); }
+.sm { --swap-height: var(--control-height-sm); --swap-pad: var(--space-4); }
+.md { --swap-height: var(--control-height-md); --swap-pad: var(--space-5); }
+.lg { --swap-height: var(--control-height-lg); --swap-pad: var(--space-6); }
+.button:disabled { cursor: default; opacity: .6; }
+.button[aria-busy="true"] { cursor: progress; }
+/* Filled tones carry the primary action; tinted tones confirm a result with most of the color on the icon. */
+.neutral { border-color: var(--foreground); background: var(--foreground); color: var(--background); }
+.accent { border-color: var(--accent); background: var(--accent); color: var(--accent-foreground); }
+.quiet { border-color: var(--border); background: var(--surface); color: var(--foreground); }
+.success { border-color: color-mix(in oklab, var(--success) 25%, var(--border)); background: color-mix(in oklab, var(--success) 10%, var(--surface)); color: var(--foreground); }
+.warning { border-color: color-mix(in oklab, var(--warning) 30%, var(--border)); background: color-mix(in oklab, var(--warning) 12%, var(--surface)); color: var(--foreground); }
+.danger { border-color: color-mix(in oklab, var(--danger) 25%, var(--border)); background: color-mix(in oklab, var(--danger) 10%, var(--surface)); color: var(--foreground); }
+@media (hover: hover) and (pointer: fine) {
+  .neutral:hover:not(:disabled, [aria-busy="true"]) { border-color: var(--text-secondary); background: var(--text-secondary); }
+  .accent:hover:not(:disabled, [aria-busy="true"]) { border-color: var(--accent-strong); background: var(--accent-strong); }
+  .quiet:hover:not(:disabled, [aria-busy="true"]) { border-color: var(--border-strong); background: var(--surface-muted); }
+  .success:hover:not(:disabled) { border-color: color-mix(in oklab, var(--success) 42%, var(--border)); }
+  .warning:hover:not(:disabled) { border-color: color-mix(in oklab, var(--warning) 48%, var(--border)); }
+  .danger:hover:not(:disabled) { border-color: color-mix(in oklab, var(--danger) 42%, var(--border)); }
+}
+.icon { position: relative; display: grid; height: 16px; flex: none; place-items: center; }
+.iconPhase { grid-area: 1 / 1; display: inline-flex; align-items: center; justify-content: center; }
+.iconPhase svg { flex: none; }
+.iconPhase[data-tone="success"] { color: var(--success); }
+.iconPhase[data-tone="warning"] { color: var(--warning); }
+.iconPhase[data-tone="danger"] { color: var(--danger); }
+/* A quiet ring: a faint full track with one bright arc turning around it. */
+.spinner { display: block; width: 14px; height: 14px; border: 1.5px solid color-mix(in oklab, currentColor 24%, transparent); border-top-color: currentColor; border-radius: 50%; animation: swap-spin .75s linear infinite; }
+@keyframes swap-spin { to { transform: rotate(360deg); } }
+.morph { display: inline-flex; min-width: 0; }
+.glyphs { position: relative; display: inline-flex; flex: none; white-space: pre; }
+.glyphs[data-gap] { padding-left: var(--space-2); }
+.glyph { display: inline-block; }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+@media (prefers-reduced-motion: reduce) { .button { transition: none; } .spinner { animation: none; } }

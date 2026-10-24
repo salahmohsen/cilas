@@ -9,6 +9,8 @@ import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
 
 const tracked = new Map<string, number[]>() // collection -> ids made here
+// A leaked row from a failed run never collides with the next run's fixtures.
+const run = Date.now().toString(36)
 
 const track = (collection: string, id: number) => {
   const list = tracked.get(collection) ?? []
@@ -18,6 +20,7 @@ const track = (collection: string, id: number) => {
 
 describe('spaces core', () => {
   let payload: Payload
+  let modeBefore: 'off' | 'trial' | 'on' = 'off'
   let fellow: User
   let student: User
   let stranger: User
@@ -29,19 +32,25 @@ describe('spaces core', () => {
 
   beforeAll(async () => {
     payload = await getPayload({ config: await config })
+    modeBefore =
+      (
+        (await payload.findGlobal({ slug: 'site-settings', overrideAccess: true })) as {
+          spaces_mode?: 'off' | 'trial' | 'on'
+        }
+      ).spaces_mode ?? 'off'
     // People and accounts: the fellow teaches, the student is enrolled,
     // the stranger is a member of nothing.
     const mk = async (name: string, person: Record<string, unknown>) => {
       const p = await payload.create({
         collection: 'people',
-        data: { name, slug: name.toLowerCase().replace(/\s+/g, '-'), ...person },
+        data: { name, slug: `${name.toLowerCase().replace(/\s+/g, '-')}-${run}`, ...person },
         overrideAccess: true,
       })
       track('people', p.id)
       const u = await payload.create({
         collection: 'users',
         data: {
-          email: `${name.toLowerCase().replace(/\s+/g, '-')}@probe.cilas`,
+          email: `${name.toLowerCase().replace(/\s+/g, '-')}-${run}@cilas.test`,
           password: 'probe-probe',
           roles: ['member'],
           person: p.id,
@@ -117,8 +126,19 @@ describe('spaces core', () => {
         data: data as never,
         overrideAccess: true,
       }) as Promise<Space>
-    community = await mkSpace({ kind: 'community' })
-    track('spaces', community.id)
+    // One community space per site: a seeded database already has it.
+    const existing = await payload.find({
+      collection: 'spaces',
+      where: { kind: { equals: 'community' } },
+      depth: 0,
+      limit: 1,
+      overrideAccess: true,
+    })
+    if (existing.docs[0]) community = existing.docs[0] as Space
+    else {
+      community = await mkSpace({ kind: 'community' })
+      track('spaces', community.id)
+    }
     const { docs: _courseSpaces } = await payload.find({
       collection: 'spaces',
       where: { course: { equals: (course as { id: number }).id } },
@@ -152,7 +172,7 @@ describe('spaces core', () => {
   afterAll(async () => {
     await payload.updateGlobal({
       slug: 'site-settings',
-      data: { spaces_mode: 'off' },
+      data: { spaces_mode: modeBefore },
       overrideAccess: true,
     })
     // Children delete before parents: Payload's required-relation FKs
@@ -575,5 +595,67 @@ describe('spaces core', () => {
     })
     const reopened = await spaceFeed(payload, student, courseSpace)
     expect(reopened.archived).toBe(false)
+  })
+
+  it('visitRecord upserts idempotently on account+space', async () => {
+    const { visitRecord } = await import('@/lib/spaces-write')
+    const spaceId = courseSpace.id as number
+    const account = (student as { id: number }).id
+
+    const first = await visitRecord({ payload, user: student, space: spaceId })
+    expect(first.ok).toBe(true)
+
+    const rows = await payload.find({
+      collection: 'space-visits',
+      where: { and: [{ account: { equals: account } }, { space: { equals: spaceId } }] },
+      overrideAccess: true,
+      pagination: false,
+    })
+    expect(rows.docs.length).toBe(1)
+    const id = rows.docs[0]!.id
+
+    // A second call stamps the same row, never duplicates.
+    const second = await visitRecord({ payload, user: student, space: spaceId })
+    expect(second.ok).toBe(true)
+
+    const again = await payload.find({
+      collection: 'space-visits',
+      where: { and: [{ account: { equals: account } }, { space: { equals: spaceId } }] },
+      overrideAccess: true,
+      pagination: false,
+    })
+    expect(again.docs.length).toBe(1)
+    expect(again.docs[0]!.id).toBe(id)
+  })
+
+  it('preferenceSet round-trips the digest choice on space-preferences', async () => {
+    const { preferenceSet } = await import('@/lib/spaces-write')
+    const account = (student as { id: number }).id
+
+    const made = await preferenceSet({ payload, user: student, digest: 'weekly' })
+    expect(made.ok).toBe(true)
+
+    const row = await payload.find({
+      collection: 'space-preferences',
+      where: { account: { equals: account } },
+      overrideAccess: true,
+      pagination: false,
+      limit: 1,
+    })
+    expect(row.docs.length).toBe(1)
+    expect((row.docs[0] as { digest?: string }).digest).toBe('weekly')
+
+    const changed = await preferenceSet({ payload, user: student, digest: 'off' })
+    expect(changed.ok).toBe(true)
+
+    const now = await payload.find({
+      collection: 'space-preferences',
+      where: { account: { equals: account } },
+      overrideAccess: true,
+      pagination: false,
+      limit: 1,
+    })
+    expect(now.docs.length).toBe(1)
+    expect((now.docs[0] as { digest?: string }).digest).toBe('off')
   })
 })
