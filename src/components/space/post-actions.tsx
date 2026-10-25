@@ -18,6 +18,7 @@ import {
 } from '@/app/(frontend)/[locale]/spaces/actions'
 
 import { saveErrorKey } from './composer'
+import { EventEditDialog, type EventEditInitial } from './event-edit'
 import styles from './space.module.css'
 
 type Post = { id: number; body: string; pinned: boolean; locked: boolean }
@@ -32,20 +33,27 @@ const run = async (
   if (result.status === 'error') throw new Error(result.error)
 }
 
+/** An event post's one edit: the author's words, and its schedule while it may still change. */
+export type EventEditMenu = { initial: EventEditInitial; schedule: boolean }
+
 /**
  * A post's own actions (spec §3): authors edit, moderators pin and lock,
- * both delete. Deleting counts down three seconds, so a slip can be cancelled.
+ * both delete. An event has one Edit for its words and its schedule, which a
+ * moderator may also change. Deleting counts down three seconds, so a slip
+ * can be cancelled.
  */
 export function PostActions({
   post,
   canEdit,
   canModerate,
   canDelete,
+  event,
 }: {
   post: Post
   canEdit: boolean
   canModerate: boolean
   canDelete: boolean
+  event?: EventEditMenu
 }) {
   const t = useTranslations('SpacePost')
   const router = useRouter()
@@ -59,9 +67,16 @@ export function PostActions({
     router.refresh()
   }
 
+  const editable = event ? canEdit || event.schedule : canEdit
   const items = [
-    ...(canEdit
-      ? [{ label: t('edit'), icon: <Pencil size={15} />, onSelect: () => setEditing(true) }]
+    ...(editable
+      ? [
+          {
+            label: event ? t('eventEdit') : t('edit'),
+            icon: <Pencil size={15} />,
+            onSelect: () => setEditing(true),
+          },
+        ]
       : []),
     ...(canModerate
       ? [
@@ -83,7 +98,7 @@ export function PostActions({
             label: t('delete'),
             icon: <Trash2 size={15} />,
             destructive: true,
-            separatorBefore: canEdit || canModerate,
+            separatorBefore: editable || canModerate,
             onSelect: () => setDeleting('confirming'),
           },
         ]
@@ -113,41 +128,52 @@ export function PostActions({
           onConfirm={() => run(postRemoveAction, { post: String(post.id) })}
         />
       )}
-      <Dialog open={editing} onOpenChange={setEditing}>
-        <DialogContent title={t('edit')}>
-          <div className={styles.column}>
-            <RichTextEditor
-              aria-label={t('edit')}
-              defaultMarkdown={post.body}
-              onChange={(v) => setDraft(v.markdown)}
-            />
-            {error && (
-              <p role="alert" className={styles.error}>
-                {error}
-              </p>
-            )}
-            <div>
-              <ActionButton
-                label={t('saveEdit')}
-                pendingLabel={t('saving')}
-                successLabel={t('saved')}
-                disabled={draft.trim() === ''}
-                onAction={async () => {
-                  setError(null)
-                  try {
-                    await run(postEditAction, { post: String(post.id), body: draft })
-                  } catch (e) {
-                    setError(t(saveErrorKey((e as Error).message)))
-                    throw e
-                  }
-                  router.refresh()
-                  setTimeout(() => setEditing(false), 900)
-                }}
+      {event ? (
+        <EventEditDialog
+          post={post.id}
+          initial={event.initial}
+          words={canEdit}
+          schedule={event.schedule}
+          open={editing}
+          onOpenChange={setEditing}
+        />
+      ) : (
+        <Dialog open={editing} onOpenChange={setEditing}>
+          <DialogContent title={t('edit')}>
+            <div className={styles.column}>
+              <RichTextEditor
+                aria-label={t('edit')}
+                defaultMarkdown={post.body}
+                onChange={(v) => setDraft(v.markdown)}
               />
+              {error && (
+                <p role="alert" className={styles.error}>
+                  {error}
+                </p>
+              )}
+              <div>
+                <ActionButton
+                  label={t('saveEdit')}
+                  pendingLabel={t('saving')}
+                  successLabel={t('saved')}
+                  disabled={draft.trim() === ''}
+                  onAction={async () => {
+                    setError(null)
+                    try {
+                      await run(postEditAction, { post: String(post.id), body: draft })
+                    } catch (e) {
+                      setError(t(saveErrorKey((e as Error).message)))
+                      throw e
+                    }
+                    router.refresh()
+                    setTimeout(() => setEditing(false), 900)
+                  }}
+                />
+              </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   )
 }

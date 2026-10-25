@@ -1,34 +1,48 @@
 'use client'
 
+import { useEffect, useId, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
+import { ImagePlus } from 'lucide-react'
 
+import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { DatePicker } from '@/components/arc/date-picker/date-picker'
 import { Input } from '@/components/arc/input/input'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
+import { COVER_TYPES } from '@/lib/event-cover'
+import { downscaleImage } from '@/lib/image-downscale'
 import { EVENT_LOCATION_MAX } from '@/lib/space-post-kinds'
 
 import styles from './space.module.css'
 
-/** An event's place and its Cairo day and times; `endTime` is null when the event has no end. */
+/**
+ * An event's place, its Cairo day and times, and its cover. `endTime` is null
+ * when the event has no end; the cover's `url` is the stored photo or the
+ * picked one's preview, null when there is none.
+ */
 export type EventValue = {
   location: string
   day: Date | undefined
   time: string
   endTime: string | null
+  cover: { file: File | null; url: string | null }
 }
+
+export const NO_COVER: EventValue['cover'] = { file: null, url: null }
 
 /** The day as the Cairo calendar names it, read from the picker's local midnight. */
 export const dayOf = (date: Date) =>
   `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 
-/** The form fields that the event actions read. */
-export const eventFormData = (value: EventValue, data: FormData) => {
+/** The form fields that the event actions read; `storedCover` is the cover the event had. */
+export const eventFormData = (value: EventValue, data: FormData, storedCover?: string | null) => {
   if (!value.day) return
   data.set('location', value.location)
   data.set('day', dayOf(value.day))
   data.set('time', value.time)
   if (value.endTime) data.set('end_time', value.endTime)
+  if (value.cover.file) data.set('cover', value.cover.file)
+  else if (storedCover && !value.cover.url) data.set('cover_remove', '1')
 }
 
 /** Where, which day, when it starts and, if wanted, when it ends: the composer and the edit dialog share it. */
@@ -95,6 +109,84 @@ export function EventFields({
           onCheckedChange={(on) => onChange({ endTime: on === true ? endAfter(value.time) : null })}
         />
       </div>
+      <CoverField value={value.cover} onChange={(cover) => onChange({ cover })} />
+    </div>
+  )
+}
+
+/**
+ * The optional cover: one photo, shrunk in the browser like the post's photos
+ * and again on the server. The preview is cut to the card's own ratio, so the
+ * member sees the crop the card will show.
+ */
+function CoverField({
+  value,
+  onChange,
+}: {
+  value: EventValue['cover']
+  onChange: (cover: EventValue['cover']) => void
+}) {
+  const t = useTranslations('SpacePost')
+  const picker = useRef<HTMLInputElement>(null)
+  const [busy, setBusy] = useState(false)
+  const preview = value.file ? value.url : null
+  useEffect(() => () => void (preview && URL.revokeObjectURL(preview)), [preview])
+  const hint = useId()
+  const label = useId()
+  return (
+    <div className={styles.coverField} role="group" aria-labelledby={label}>
+      <span id={label} className={styles.fieldLabel}>
+        {t('eventCover')}
+      </span>
+      <input
+        ref={picker}
+        type="file"
+        hidden
+        accept={COVER_TYPES.join(',')}
+        onChange={async (e) => {
+          const file = e.currentTarget.files?.[0]
+          e.currentTarget.value = ''
+          if (!file) return
+          setBusy(true)
+          const ready = await downscaleImage(file)
+          setBusy(false)
+          onChange({ file: ready, url: URL.createObjectURL(ready) })
+        }}
+      />
+      {value.url ? (
+        <div className={styles.coverPreview}>
+          {/* A local preview or the stored private file; next/image cannot read either. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={value.url} alt="" />
+          <div className={styles.coverActions}>
+            <Button
+              size="sm"
+              variant="secondary"
+              disabled={busy}
+              onClick={() => picker.current?.click()}
+            >
+              {t('eventCoverChange')}
+            </Button>
+            <Button size="sm" variant="secondary" onClick={() => onChange(NO_COVER)}>
+              {t('eventCoverRemove')}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className={styles.coverAdd}
+          aria-describedby={hint}
+          disabled={busy}
+          onClick={() => picker.current?.click()}
+        >
+          <ImagePlus size={18} aria-hidden="true" />
+          {t('eventCoverAdd')}
+        </button>
+      )}
+      <p id={hint} className={styles.meta}>
+        {t('eventCoverHint')}
+      </p>
     </div>
   )
 }

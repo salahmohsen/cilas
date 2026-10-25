@@ -1097,73 +1097,354 @@
   white-space: nowrap;
 }
 
-/* An event: a calendar leaf with the month over the day, then when and where, then the answers. */
+/*
+ * An event card. The name, when and where sit centred in one column, then the
+ * answers, then the calendar. Without a cover the card is a quiet tonal
+ * surface led by a calendar leaf. With one, the photo fills the top and
+ * dissolves into a field made from its own colour (--event-field, set per
+ * card), and the Arc tokens inside turn light-on-dark so every control reads
+ * on it. The gradient and blur are the members' explicit request for this
+ * card only.
+ */
 .event {
-  display: grid;
-  gap: var(--space-3);
-  padding: var(--space-3) var(--space-4);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-surface);
-  background: var(--surface-muted);
+  --event-radius: calc(var(--radius-surface) - var(--space-4));
+  --event-photo: 66.667cqi;
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  overflow: hidden;
   min-width: 0;
+  border-radius: var(--event-radius);
+  background: var(--surface-muted);
+  color: var(--foreground);
+}
+
+.eventBody {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-5);
+  padding: var(--space-3) var(--space-5) var(--space-5);
+  text-align: center;
+  min-width: 0;
+}
+
+.eventBody > * {
+  max-width: 100%;
+}
+
+.eventHead {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.eventTitle {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 500;
+  letter-spacing: var(--tracking-display);
+  line-height: 1.15;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+
+.eventTitleLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eventTitleLink:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.15em;
+  }
+}
+
+.eventFacts {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.eventWhen {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+}
+
+.eventDate {
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+
+.eventTime {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.eventZone {
+  color: var(--text-muted);
+}
+
+.eventWhere {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  margin: 0;
+  max-width: 100%;
+  font-size: var(--text-sm);
+}
+
+.eventWhere > svg {
+  flex-shrink: 0;
+  /* the pin sits on the first line of a name that may wrap */
+  margin-block-start: 0.1em;
+  color: var(--text-secondary);
+}
+
+.eventWhere > bdi,
+.eventWhere > a {
+  min-width: 0;
+  overflow-wrap: anywhere;
+  text-align: start;
+}
+
+.eventLink {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklch, currentColor 40%, transparent);
+  text-underline-offset: 3px;
+  transition: text-decoration-color var(--duration-fast) var(--ease-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .eventLink:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.eventNote {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+/* The event's own words under the answers: read as prose, so start-aligned at the reading size. */
+.eventDescription {
+  width: 100%;
+  max-width: 65ch;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+
+/* The calendar button in the top corner, over the photo or the tonal surface. */
+.eventCorner {
+  position: absolute;
+  inset-block-start: var(--space-4);
+  inset-inline-end: var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow-resting);
+}
+
+.eventCorner button {
+  border-radius: inherit;
+}
+
+/* Over a photo the button is glass: the few pixels behind it blur, so it reads on any picture. */
+.event[data-cover] .eventCorner {
+  background: oklch(0% 0 0 / 0.28);
+  box-shadow: 0 0 0 1px oklch(100% 0 0 / 0.14);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+}
+
+.event[data-cover] .eventCorner button {
+  color: var(--foreground);
+}
+
+/* No cover: the leaf leads the card where the photo would be. */
+.eventLeaf {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  margin: var(--space-6) auto 0;
+  overflow: hidden;
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  box-shadow:
+    0 0 0 1px var(--border),
+    var(--shadow-resting);
+  text-align: center;
+}
+
+.eventMonth {
+  width: 100%;
+  padding: 2px 0;
+  background: var(--danger);
+  color: oklch(100% 0 0);
+  font-size: var(--text-xs);
+  font-weight: 500;
+}
+
+.eventDay {
+  padding: var(--space-1) 0;
+  font-size: var(--text-xl);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .event[data-over] .eventLeaf {
   opacity: 0.6;
 }
 
-/* The leaf spans both rows, so the tools line up under the text at every width. */
-.eventMain {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: start;
-  gap: var(--space-2) var(--space-4);
-  min-width: 0;
+/* The cover: a light-on-dark island of the Arc tokens over the photo's field. */
+.event[data-cover] {
+  --foreground: oklch(100% 0 0);
+  --text-secondary: oklch(100% 0 0 / 0.84);
+  --text-muted: oklch(100% 0 0 / 0.76);
+  --surface: oklch(100% 0 0 / 0.2);
+  --surface-muted: oklch(100% 0 0 / 0.12);
+  --surface-raised: oklch(100% 0 0 / 0.2);
+  --border: oklch(100% 0 0 / 0.16);
+  --border-subtle: oklch(100% 0 0 / 0.1);
+  --border-strong: oklch(100% 0 0 / 0.3);
+  --accent: oklch(100% 0 0);
+  --accent-strong: oklch(100% 0 0);
+  --focus-outline: oklch(100% 0 0 / 0.9);
+  --shadow-resting: none;
+  color-scheme: dark;
+  background: var(--event-field);
 }
 
-.eventMain > .eventLeaf {
-  grid-row: 1 / span 2;
+.event[data-cover] .eventBody {
+  padding-block-start: calc(var(--event-photo) * 0.58);
 }
 
-.eventTools {
-  grid-column: 2;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-1) var(--space-2);
+.eventBackdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
 }
 
-.eventLink {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+/* One heavily blurred copy of the photo carries its colours down the card; the field dims it so light text stays readable. */
+.eventBlur {
+  position: absolute;
+  inset: -12%;
+  width: 124%;
+  height: 124%;
+  object-fit: cover;
+  filter: blur(40px) saturate(1.3);
+  opacity: 0.55;
+}
+
+/* The sharp photo fades out from its middle, so it seems to blur into the field below. */
+.eventPhoto {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  width: 100%;
+  height: var(--event-photo);
+  object-fit: cover;
+  /* faces and skylines sit high in most photos */
+  object-position: center 30%;
+  -webkit-mask-image: linear-gradient(to bottom, oklch(0% 0 0) 45%, transparent 92%);
+  mask-image: linear-gradient(to bottom, oklch(0% 0 0) 45%, transparent 92%);
+}
+
+.eventBackdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent calc(var(--event-photo) * 0.3),
+    color-mix(in oklch, var(--event-field) 72%, transparent) calc(var(--event-photo) * 0.62),
+    color-mix(in oklch, var(--event-field) 86%, transparent) calc(var(--event-photo) * 0.9)
+  );
+}
+
+.event[data-cover][data-over] .eventPhoto {
+  filter: saturate(0.4);
+}
+
+@container (min-width: 520px) {
+  .eventBody {
+    padding-inline: var(--space-8);
+  }
+  .eventTitle {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* A wide card shows the photo at 16:9, a phone's at 3:2. */
+@container (min-width: 520px) {
+  .eventBackdrop,
+  .eventBody {
+    --event-photo: 56.25cqi;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .eventBlur {
+    display: none;
+  }
+  .event[data-cover] .eventCorner {
+    background: var(--event-field);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .event[data-cover] {
+    --surface: color-mix(in oklch, var(--event-field), oklch(100% 0 0) 18%);
+    --surface-muted: color-mix(in oklch, var(--event-field), oklch(100% 0 0) 10%);
+  }
+  .eventBackdrop::after {
+    background: linear-gradient(
+      to bottom,
+      transparent calc(var(--event-photo) * 0.4),
+      var(--event-field) calc(var(--event-photo) * 0.8)
+    );
+  }
 }
 
 /* The answers: the choice (or the counts once it is over), then the faces of who is going. */
 .eventReply {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2) var(--space-4);
-  padding-block-start: var(--space-3);
-  border-block-start: 1px solid var(--border);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
   min-width: 0;
+  max-width: 100%;
 }
 
+/* The clear button sits under the choice, so the three answers keep the full width on a phone. */
 .rsvpChoose {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: var(--space-2);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
   min-width: 0;
   max-width: 100%;
 }
 
 .rsvpGoing {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  gap: var(--space-2);
+  gap: var(--space-2) var(--space-3);
   min-width: 0;
 }
 
@@ -1176,6 +1457,7 @@
 .rsvpCounts {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: var(--space-1) var(--space-4);
   margin: 0;
   padding: 0;
@@ -1197,109 +1479,18 @@
 
 .eventRows {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-4);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
 .eventRow {
-  display: grid;
-  gap: var(--space-2);
   min-width: 0;
 }
 
-.eventRowTitle {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--space-1) var(--space-2);
-  margin: 0;
-  font-size: var(--text-base);
-  font-weight: 500;
-}
-
-.eventRowLink {
-  color: var(--foreground);
-  text-decoration: none;
-  overflow-wrap: anywhere;
-}
-
-.eventRowLink:hover {
-  text-decoration: underline;
-}
-
-.eventLeaf {
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
-  width: 56px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-control);
-  background: var(--surface);
-  text-align: center;
-}
-
-.eventMonth {
-  width: 100%;
-  padding: 2px 0;
-  background: var(--danger);
-  color: oklch(100% 0 0);
-  font-size: var(--text-xs);
-  font-weight: 500;
-}
-
-.eventDay {
-  padding: var(--space-1) 0;
-  font-size: var(--text-xl);
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-
-.eventText {
-  display: grid;
-  gap: var(--space-1);
-  min-width: 0;
-}
-
-.eventWhen,
-.eventWhere {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  gap: var(--space-2);
-  margin: 0;
-  font-size: var(--text-sm);
-}
-
-.eventWhen > svg,
-.eventWhere > svg {
-  flex-shrink: 0;
-  /* the icon sits on the first line of text, which may wrap */
-  margin-block-start: 0.2em;
-}
-
-/* A long date or place wraps beside its icon instead of widening the card. */
-.eventWhenText,
-.eventWhere > bdi,
-.eventWhere > a {
-  flex: 1 1 0;
-  min-width: 0;
-  overflow-wrap: anywhere;
-}
-
-.eventWhenText > .meta,
-.eventWhenText > [class*='badge'] {
-  margin-inline-start: var(--space-2);
-}
-
-.eventWhen {
-  font-weight: 500;
-}
-
-.eventWhere {
-  color: var(--text-secondary);
+.eventRow > .event {
+  --event-radius: var(--radius-surface);
 }
 
 /* The composer's extra fields for an event or a vote. */
@@ -1318,6 +1509,95 @@
   grid-column: 1 / -1;
   /* Arc's checkbox row carries its own inset; pull it to the fields' edge */
   margin-inline-start: -0.8125rem;
+}
+
+/* The event's optional cover in the composer and the edit dialog, cut to the card's own ratio. */
+.coverField {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+/* A visible name for a field whose control names itself (the editor, the cover group). */
+.fieldLabel {
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* The label sits on its editor, not a whole field gap above it. */
+.fieldLabel + * {
+  margin-block-start: calc(var(--space-2) - var(--space-4));
+}
+
+.coverPreview {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-control);
+  background: var(--surface-muted);
+}
+
+.coverPreview > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+}
+
+.coverPreview::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.1);
+  pointer-events: none;
+}
+
+:global([data-theme='dark']) .coverPreview::after {
+  box-shadow: inset 0 0 0 1px oklch(100% 0 0 / 0.1);
+}
+
+.coverActions {
+  position: absolute;
+  z-index: 1;
+  inset-block-end: var(--space-3);
+  inset-inline-end: var(--space-3);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.coverAdd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--control-height-md);
+  padding: 0 var(--space-4);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-instant) var(--ease-standard),
+    color var(--duration-instant) var(--ease-standard);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .coverAdd:hover:not(:disabled) {
+    background: var(--surface-muted);
+    color: var(--foreground);
+  }
+}
+
+.coverAdd:disabled {
+  cursor: progress;
+  opacity: 0.6;
 }
 
 .voteFields {

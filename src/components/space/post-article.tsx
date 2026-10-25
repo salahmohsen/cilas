@@ -13,7 +13,7 @@ import { memberState, postView, type PostView } from '@/lib/spaces-data'
 
 import { Attachments } from './attachments'
 import { commentsOpen, PostHead, type FeedContext } from './feed-row'
-import { EventCard } from './event-card'
+import { EventCard, eventDescription } from './event-card'
 import { LinkPreviews } from './link-card'
 import { PostPhotos } from './photo-grid'
 import { PostBody } from './post-body'
@@ -99,24 +99,35 @@ export async function PostArticle({
   const photos = dialog ? view.files.filter((f) => f.isImage) : []
   const files = dialog ? view.files.filter((f) => !f.isImage) : view.files
   const links = deleted ? [] : outsideLinks(post.body)
+  const text = eventDescription(post)
 
   const article = (
     <article
       id={dialog ? undefined : id}
       className={dialog ? styles.dialogPost : styles.post}
       aria-labelledby={`${id}-author`}
-      aria-describedby={`${id}-body`}
+      aria-describedby={deleted || text || post.kind === 'event' ? `${id}-body` : undefined}
     >
       <PostHead row={row} context={context} deleted={deleted} />
-      <div id={`${id}-body`}>
-        {deleted ? (
-          <p className={styles.meta}>{t('deletedNotice')}</p>
-        ) : (
-          <PostBody body={post.body} people={context.people} titles={context.titles} />
-        )}
-      </div>
       {!deleted && post.kind === 'event' && (
-        <EventCard post={post} rsvp={row.rsvp} context={context} href={href} />
+        <EventCard
+          post={post}
+          rsvp={row.rsvp}
+          context={context}
+          href={href}
+          headingLevel={dialog ? 3 : 2}
+          descriptionId={`${id}-body`}
+          fold={false}
+        />
+      )}
+      {(deleted || text) && (
+        <div id={`${id}-body`}>
+          {deleted ? (
+            <p className={styles.meta}>{t('deletedNotice')}</p>
+          ) : (
+            <PostBody body={text} people={context.people} titles={context.titles} />
+          )}
+        </div>
       )}
       {!deleted && row.session && (
         <PostSession session={row.session} kind={post.kind} postHref={href} />

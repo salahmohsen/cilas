@@ -17,11 +17,11 @@ import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-edit
 import { Select } from '@/components/arc/select/select'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
-import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
-import { SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
+import { FILE_LIMITS, SPACE_FILE_ACCEPT, UPLOAD_TOTAL_MAX } from '@/lib/space-file-limits'
+import { EVENT_TITLE_MAX, SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 
 import { AttachmentTray } from './attachment-tray'
-import { EventFields, endsEarly, eventFormData, type EventValue } from './event-fields'
+import { EventFields, NO_COVER, endsEarly, eventFormData, type EventValue } from './event-fields'
 import { useAttachments } from './use-attachments'
 import { ConsentSheet } from './consent-sheet'
 import styles from './space.module.css'
@@ -33,6 +33,8 @@ export const saveErrorKey = (code: string) => `saveError_${code.replace(/-/g, '_
 export const COMPOSE_EVENT = 'space:compose'
 
 const PHONE = '(max-width: 1023px)'
+
+const MB = 1024 * 1024
 
 type Me = { name: string; photo: string | null }
 
@@ -145,16 +147,19 @@ export function Composer({
 
 /** An event's place and Cairo times; a vote's options and whether more than one may be chosen. */
 type Extra = EventValue & {
+  title: string
   options: string[]
   multiple: boolean
   anonymous: boolean
 }
 
 const EMPTY_EXTRA: Extra = {
+  title: '',
   location: '',
   day: undefined,
   time: '18:00',
   endTime: null,
+  cover: NO_COVER,
   options: ['', ''],
   multiple: false,
   anonymous: false,
@@ -194,13 +199,22 @@ function ComposerForm({
   const ready =
     !body.empty &&
     (kind !== 'event' ||
-      (extra.location.trim() !== '' && extra.day !== undefined && !endsEarly(extra))) &&
+      (extra.title.trim() !== '' &&
+        extra.location.trim() !== '' &&
+        extra.day !== undefined &&
+        !endsEarly(extra))) &&
     (kind !== 'vote' || options.length >= VOTE_OPTIONS.min)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
   const publish = async () => {
-    const tooLarge = attachments.problem()
+    const cover = kind === 'event' ? (extra.cover.file?.size ?? 0) : 0
+    const total = files.reduce((sum, f) => sum + f.size, cover)
+    const tooLarge =
+      attachments.problem() ??
+      (total > UPLOAD_TOTAL_MAX
+        ? tf('tooLarge', { size: Math.ceil(total / MB), max: UPLOAD_TOTAL_MAX / MB })
+        : null)
     if (tooLarge) {
       setError(tooLarge)
       throw new Error('files')
@@ -210,7 +224,10 @@ function ComposerForm({
     data.set('space', String(space))
     data.set('kind', kind)
     data.set('body', body.markdown)
-    if (kind === 'event') eventFormData(extra, data)
+    if (kind === 'event') {
+      eventFormData(extra, data)
+      data.set('title', extra.title)
+    }
     if (kind === 'vote') {
       for (const option of options) data.append('option', option)
       data.set('multiple', String(extra.multiple))
@@ -242,9 +259,22 @@ function ComposerForm({
             options={kinds.map((k) => ({ value: k, label: t(`kind_${k}`) }))}
           />
         )}
+        {kind === 'event' && (
+          <Input
+            label={t('eventTitle')}
+            value={extra.title}
+            maxLength={EVENT_TITLE_MAX}
+            onChange={(e) => set({ title: e.currentTarget.value })}
+          />
+        )}
+        {kind === 'event' && (
+          <span className={styles.fieldLabel} aria-hidden="true">
+            {t('eventDescription')}
+          </span>
+        )}
         <RichTextEditor
           autoFocus
-          aria-label={t('newPost')}
+          aria-label={kind === 'event' ? t('eventDescription') : t('newPost')}
           placeholder={t(`placeholder_${kind}`)}
           defaultMarkdown={initial}
           mentionSuggestions={mentions}

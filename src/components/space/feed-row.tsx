@@ -4,18 +4,21 @@ import { CalendarDays, Lock, Megaphone, Pin, Vote } from 'lucide-react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Badge } from '@/components/arc/badge/badge'
-import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
 import { outsideLinks } from '@/lib/link-preview'
 import { absoluteUrl } from '@/lib/schema'
 import type { NoticePart } from '@/lib/space-consent'
 import type { FeedRow as FeedRowData } from '@/lib/spaces-data'
+import type { SpacePost } from '@/payload-types'
+import { cairoDay, cairoTime } from '@/lib/cairo-day'
+import { eventOver, eventParts } from '@/lib/space-event'
 
-import { EventCard } from './event-card'
+import { EventCard, eventDescription } from './event-card'
+import { Folded } from './folded'
 import { VotePoll } from './vote-poll'
 import { LinkPreviews } from './link-card'
 import { PersonHover, type PersonCard } from './person-hover'
 import { Attachments } from './attachments'
-import { PostActions } from './post-actions'
+import { PostActions, type EventEditMenu } from './post-actions'
 import { PostBody } from './post-body'
 import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
@@ -24,32 +27,6 @@ import { PostSession } from './post-session'
 import type { ThreadViewer } from './space-thread'
 import styles from './space.module.css'
 import { When } from './when'
-
-/**
- * Arc's expandable text starts folded until it measures in the browser, so a
- * short body would flash a "Read more". Only a body that can pass the clamp
- * (about 90 characters a line, or one line per break) gets the fold.
- */
-const Folded = ({
-  body,
-  lines,
-  more,
-  less,
-  children,
-}: {
-  body: string
-  lines: number
-  more: string
-  less: string
-  children: React.ReactNode
-}) =>
-  body.length > lines * 90 || body.split('\n').length > lines ? (
-    <ExpandableText lines={lines} moreLabel={more} lessLabel={less}>
-      {children}
-    </ExpandableText>
-  ) : (
-    children
-  )
 
 /** What every card in one space shares: who reads, who is in it, and what they may do. */
 export type FeedContext = {
@@ -160,11 +137,34 @@ export async function PostHead({
             canEdit={mine && !archived}
             canModerate={viewer.moderator && !archived}
             canDelete={mine || viewer.moderator}
+            event={eventMenu(post, (mine || viewer.moderator) && !archived, context.now)}
           />
         )}
       </span>
     </header>
   )
+}
+
+/** What an event post's Edit opens with; `schedule` when this reader may still move it. */
+const eventMenu = (post: SpacePost, mayMove: boolean, now: string): EventEditMenu | undefined => {
+  if (post.kind !== 'event' || !post.event_starts_at) return undefined
+  const { title, description } = eventParts(post)
+  const startsAt = post.event_starts_at
+  const endsAt = post.event_ends_at ?? null
+  const sameDay = !endsAt || cairoDay(endsAt) === cairoDay(startsAt)
+  return {
+    schedule: mayMove && !post.locked && !eventOver(startsAt, endsAt, new Date(now)),
+    initial: {
+      title,
+      description,
+      location: post.event_location ?? '',
+      day: cairoDay(startsAt) ?? '',
+      time: cairoTime(startsAt) ?? '18:00',
+      endTime: endsAt && sameDay ? cairoTime(endsAt) : null,
+      cover:
+        typeof post.event_cover === 'object' && post.event_cover?.url ? post.event_cover.url : null,
+    },
+  }
 }
 
 /** Whether this member may comment on this post now. */
@@ -193,25 +193,34 @@ export async function FeedRow({
   const { post } = row
   const id = `post-${post.id}`
   const links = outsideLinks(post.body)
+  const text = eventDescription(post)
   return (
     <PostDialog href={postHref} postId={post.id} photos={row.files.some((f) => f.isImage)}>
       <article
         id={id}
         className={styles.post}
         aria-labelledby={`${id}-author`}
-        aria-describedby={`${id}-body`}
+        aria-describedby={text || post.kind === 'event' ? `${id}-body` : undefined}
         aria-posinset={position}
         aria-setsize={total}
         tabIndex={-1}
       >
         <PostHead row={row} context={context} postHref={postHref} />
-        <div id={`${id}-body`}>
-          <Folded body={post.body} lines={8} more={t('readMore')} less={t('showLess')}>
-            <PostBody body={post.body} people={context.people} titles={context.titles} />
-          </Folded>
-        </div>
         {post.kind === 'event' && (
-          <EventCard post={post} rsvp={row.rsvp} context={context} href={postHref} />
+          <EventCard
+            post={post}
+            rsvp={row.rsvp}
+            context={context}
+            href={postHref}
+            descriptionId={`${id}-body`}
+          />
+        )}
+        {text && (
+          <div id={`${id}-body`}>
+            <Folded body={text} lines={8} more={t('readMore')} less={t('showLess')}>
+              <PostBody body={text} people={context.people} titles={context.titles} />
+            </Folded>
+          </div>
         )}
         {row.session && <PostSession session={row.session} kind={post.kind} postHref={postHref} />}
         {row.vote && (

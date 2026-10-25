@@ -2,11 +2,10 @@ import { getTranslations } from 'next-intl/server'
 
 import { Accordion } from '@/components/arc/accordion/accordion'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
-import { eventTitle } from '@/lib/space-event'
 import type { SpaceEventItem } from '@/lib/spaces-data'
 
 import { EventCard } from './event-card'
-import { PublicEvent, PublicEventBadge } from './public-event'
+import { PublicEvent } from './public-event'
 import type { FeedContext } from './feed-row'
 import styles from './space.module.css'
 
@@ -28,27 +27,26 @@ async function EventRow({
     case 'post':
       return (
         <li className={styles.eventRow}>
-          <h3 className={styles.eventRowTitle}>
-            <a href={href} dir="auto" className={styles.eventRowLink}>
-              {eventTitle(item.post.body, t('eventLabel'))}
-            </a>
-            {item.authorName && (
-              <span className={styles.meta}>{t('eventBy', { name: item.authorName })}</span>
-            )}
-          </h3>
-          <EventCard post={item.post} rsvp={item.rsvp} context={context} href={href} />
+          <EventCard
+            post={item.post}
+            rsvp={item.rsvp}
+            context={context}
+            href={href}
+            titleHref={href}
+            note={
+              item.authorName && (
+                <p className={styles.eventNote}>
+                  <bdi>{t('eventBy', { name: item.authorName })}</bdi>
+                </p>
+              )
+            }
+          />
         </li>
       )
     case 'public':
       return (
         <li className={styles.eventRow}>
-          <h3 className={styles.eventRowTitle}>
-            <span dir="auto" className={styles.eventRowLink}>
-              {item.title}
-            </span>
-            <PublicEventBadge />
-          </h3>
-          <PublicEvent item={item} />
+          <PublicEvent item={item} now={context.now} />
         </li>
       )
   }
