@@ -167,6 +167,10 @@ export interface CommentThreadProps {
   labels?: CommentThreadLabels
   /** Shows Resolve in the header. Defaults to true. */
   resolvable?: boolean
+  /** Shows the header with the comment count. Defaults to true; a thread that shows only part of its comments can hide it. */
+  showHeader?: boolean
+  /** Content inside the thread, above the comments, such as a button that reveals earlier ones. */
+  listHeader?: ReactNode
   /** Shows the composer and Reply. False leaves the thread to read and react to. Defaults to true. */
   canReply?: boolean
   /** Who may edit or delete a comment. Defaults to its author. */
@@ -662,6 +666,8 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     nowLabel = 'Just now',
     labels,
     resolvable = true,
+    showHeader = true,
+    listHeader,
     canReply = true,
     canEdit,
     canDelete,
@@ -1207,24 +1213,27 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
             </motion.div>
           ) : (
             <motion.div key="thread" className={styles.thread} {...face}>
-              <header className={styles.header}>
-                <div className={styles.heading}>
-                  {title && <h3 className={styles.title}>{title}</h3>}
-                  <span className={styles.subtitle}>{t.commentCount(total)}</span>
-                </div>
-                {resolvable && (
-                  <button
-                    type="button"
-                    className={styles.resolve}
-                    data-resolve
-                    disabled={!total}
-                    onClick={() => setResolved(true)}
-                  >
-                    <Check size={15} strokeWidth={1.75} aria-hidden="true" />
-                    {t.resolve}
-                  </button>
-                )}
-              </header>
+              {showHeader && (
+                <header className={styles.header}>
+                  <div className={styles.heading}>
+                    {title && <h3 className={styles.title}>{title}</h3>}
+                    <span className={styles.subtitle}>{t.commentCount(total)}</span>
+                  </div>
+                  {resolvable && (
+                    <button
+                      type="button"
+                      className={styles.resolve}
+                      data-resolve
+                      disabled={!total}
+                      onClick={() => setResolved(true)}
+                    >
+                      <Check size={15} strokeWidth={1.75} aria-hidden="true" />
+                      {t.resolve}
+                    </button>
+                  )}
+                </header>
+              )}
+              {listHeader}
 
               {list.length > 0 ? (
                 <ul className={styles.list}>

@@ -192,17 +192,25 @@ export function SpaceThread({
 
   const hidden = expanded ? [] : tree.slice(0, Math.max(0, tree.length - PREVIEW))
   const shown = expanded ? tree : tree.slice(hidden.length)
+  // The real number of comments behind the button: replies count, a deleted placeholder does not.
+  const hiddenCount = hidden.reduce(
+    (sum, c) => sum + (c.deleted ? 0 : 1) + (c.replies?.filter((r) => !r.deleted).length ?? 0),
+    0,
+  )
   const mine = (c: ArcComment) => c.author.id === me.id && /^\d+$/.test(c.id)
 
   return (
     <div className={styles.threadWrap}>
-      {hidden.length > 0 && (
-        <button type="button" className={styles.earlier} onClick={() => setExpanded(true)}>
-          {t('showEarlier', { count: hidden.length })}
-        </button>
-      )}
       <CommentThread
         comments={shown}
+        showHeader={!preview}
+        listHeader={
+          hiddenCount > 0 ? (
+            <button type="button" className={styles.earlier} onClick={() => setExpanded(true)}>
+              {t('showEarlier', { count: hiddenCount })}
+            </button>
+          ) : undefined
+        }
         onCommentsChange={(next, event) => {
           setError(null)
           setTree([...hidden, ...next])

@@ -738,7 +738,7 @@
 
 .earlier {
   justify-self: start;
-  padding: var(--space-1) 0;
+  padding: var(--space-2) var(--space-4) var(--space-1);
   border: 0;
   background: none;
   font: inherit;
