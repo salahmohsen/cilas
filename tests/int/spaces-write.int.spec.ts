@@ -3,6 +3,8 @@ import { sql } from '@payloadcms/db-postgres'
 import { getPayload, type Payload } from 'payload'
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
+import sharp from 'sharp'
+
 import config from '@/payload.config'
 import type { Space, User } from '@/payload-types'
 import {
@@ -43,6 +45,12 @@ let programmeId: number
 let community: Space
 let courseSpace: Space
 let cohortSpace: Space
+
+// Saving an event reads its place name from the web; the tests stay offline.
+vi.mock('@/lib/link-preview', async (original) => ({
+  ...(await original<typeof import('@/lib/link-preview')>()),
+  placeName: vi.fn(async (url: string) => (url.includes('example.org') ? 'Example room' : null)),
+}))
 
 const tracked = new Map<string, number[]>()
 const track = (collection: string, id: number) => {
@@ -1397,6 +1405,95 @@ describe('spaces write', () => {
     expect(recipients.sort()).toEqual([fellow.id, watcher.id].sort())
     const stored = await payload.findByID({ collection: 'space-posts', id: post })
     expect(stored.event_location).toBe('Room 3')
+  })
+
+  it('an event keeps one cover photo apart from its files, and the place an address names', async () => {
+    const starts = new Date(Date.now() + 86_400_000).toISOString()
+    const photo = async (background: string) => {
+      const data = await sharp({ create: { width: 2400, height: 1600, channels: 3, background } })
+        .jpeg()
+        .toBuffer()
+      return { data, mimetype: 'image/jpeg', name: 'probe-f-cover.jpg', size: data.byteLength }
+    }
+    const pdf = {
+      data: Buffer.from('%PDF-1.4'),
+      mimetype: 'application/pdf',
+      name: 'probe-f-cover.pdf',
+      size: 8,
+    }
+    const make = (cover: Awaited<ReturnType<typeof photo>> | typeof pdf) =>
+      postCreate({
+        payload,
+        user: student,
+        space: community.id,
+        kind: 'event',
+        body: 'Probe cover event',
+        event: { location: 'https://example.org/room', startsAt: starts },
+        cover,
+      })
+    expect(await make(pdf)).toMatchObject({ ok: false, error: 'file-type' })
+    const made = await make(await photo('#c03020'))
+    expect(made.ok).toBe(true)
+    if (!made.ok) return
+    track('space-posts', made.data.id)
+    const post = made.data.id
+    const cover = async () => {
+      const row = await payload.findByID({ collection: 'space-posts', id: post, depth: 0 })
+      return { id: row.event_cover as number | null, tone: row.event_cover_tone, row }
+    }
+    const first = await cover()
+    expect(first.row.event_place).toBe('Example room')
+    expect(first.tone).toMatch(/^#[0-9a-f]{6}$/)
+    expect(first.id).toEqual(expect.any(Number))
+    track('space-files', first.id!)
+    const file = await payload.findByID({ collection: 'space-files', id: first.id! })
+    expect(file.post ?? null).toBeNull()
+    expect(file.mimeType).toBe('image/webp')
+    expect(file.width).toBeLessThanOrEqual(1600)
+
+    // A member reads the cover through the post; it is not one of the post's files.
+    const { rows } = await spaceFeed(payload, student, community.id)
+    const row = rows.find((r) => r.post.id === post)!
+    expect(row.files).toEqual([])
+    expect(row.post.event_cover).toMatchObject({ id: first.id, url: expect.any(String) })
+
+    // A new photo replaces the old file and tells nobody; null takes it away.
+    const edit = (extra: { cover?: Awaited<ReturnType<typeof photo>> | null }) =>
+      eventEdit({
+        payload,
+        user: student,
+        id: post,
+        location: 'https://example.org/room',
+        startsAt: starts,
+        ...extra,
+      })
+    expect(await edit({ cover: await photo('#20a040') })).toMatchObject({ ok: true })
+    const second = await cover()
+    track('space-files', second.id!)
+    expect(second.id).not.toBe(first.id)
+    expect(second.tone).not.toBe(first.tone)
+    expect(
+      (await payload.count({ collection: 'space-files', where: { id: { equals: first.id } } }))
+        .totalDocs,
+    ).toBe(0)
+    expect(await edit({})).toMatchObject({ ok: true })
+    expect((await cover()).id).toBe(second.id)
+    expect(await edit({ cover: null })).toMatchObject({ ok: true })
+    expect(await cover()).toMatchObject({ id: null, tone: null })
+    expect(
+      (await payload.count({ collection: 'space-files', where: { id: { equals: second.id } } }))
+        .totalDocs,
+    ).toBe(0)
+
+    // Removing the post removes its cover.
+    expect(await edit({ cover: await photo('#202020') })).toMatchObject({ ok: true })
+    const third = (await cover()).id!
+    track('space-files', third)
+    expect(await postRemove({ payload, user: student, id: post })).toMatchObject({ ok: true })
+    expect(
+      (await payload.count({ collection: 'space-files', where: { id: { equals: third } } }))
+        .totalDocs,
+    ).toBe(0)
   })
 
   it('a moderator attaches a session of the course to an announcement; readers see it through their access', async () => {

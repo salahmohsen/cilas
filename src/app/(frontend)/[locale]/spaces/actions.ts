@@ -81,6 +81,13 @@ const filesOf = async (form: FormData): Promise<PostFile[]> =>
       })),
   )
 
+/** The event cover the form sends, if any (one photo, field `cover`). */
+const coverOf = async (form: FormData): Promise<PostFile | null> => {
+  const f = form.get('cover')
+  if (!(f instanceof File) || f.size === 0) return null
+  return { data: Buffer.from(await f.arrayBuffer()), mimetype: f.type, name: f.name, size: f.size }
+}
+
 // Server actions cannot read the route locale, so both trees refresh.
 // 'layout' covers every page under /spaces, not only My spaces.
 const revalidate = async () => {
@@ -139,6 +146,7 @@ export async function postCreateAction(
   if (!space) return err('space')
   const shape = shapeOf(form)
   if (!shape) return err(text(form, 'kind') === 'vote' ? 'vote' : 'event')
+  if (shape.kind === 'event') shape.cover = await coverOf(form)
   const files = await filesOf(form)
   const payload = await getPayload({ config })
   const result = await postCreate({
@@ -364,7 +372,15 @@ export async function eventEditAction(
   const times = eventTimesOf(form)
   if (!times) return err('event')
   const payload = await getPayload({ config })
-  const result = await eventEdit({ payload, user, id, location: text(form, 'location'), ...times })
+  const cover = text(form, 'cover_remove') === '1' ? null : ((await coverOf(form)) ?? undefined)
+  const result = await eventEdit({
+    payload,
+    user,
+    id,
+    location: text(form, 'location'),
+    ...times,
+    cover,
+  })
   if (!result.ok) return err(result.error)
   await revalidate()
   await result.notify?.()

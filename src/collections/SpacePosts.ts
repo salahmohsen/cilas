@@ -79,6 +79,33 @@ export const SpacePosts: CollectionConfig = {
       },
     },
     {
+      // The place a web address names (a Maps place or a page title), read on
+      // save so the card needs no fetch; null shows the host.
+      name: 'event_place',
+      label: 'Place name',
+      type: 'text',
+      admin: {
+        condition: (data) => (data as { kind?: string }).kind === 'event',
+        readOnly: true,
+      },
+    },
+    {
+      // A space file with no post or comment of its own, so it is neither one
+      // of the post's attachments nor counted against them; postRemove and
+      // eventEdit delete it with the post or when it is replaced.
+      name: 'event_cover',
+      label: 'Cover',
+      type: 'relationship',
+      relationTo: 'space-files',
+      admin: { condition: (data) => (data as { kind?: string }).kind === 'event' },
+    },
+    {
+      // The cover's dominant colour (#rrggbb), for the field under the photo.
+      name: 'event_cover_tone',
+      type: 'text',
+      admin: { hidden: true },
+    },
+    {
       name: 'vote_options',
       type: 'array',
       access: { update: () => false },

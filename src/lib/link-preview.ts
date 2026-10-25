@@ -4,6 +4,7 @@ import { isIP } from 'node:net'
 
 import { Agent } from 'undici'
 
+import { mapsPlace, meetingService, titlePlace } from './event-place'
 import { titleKey } from './link-title'
 
 /** What a post shows for a link: the page's own title, summary and image. */
@@ -163,11 +164,19 @@ const assertPublic = async (url: URL) => {
   if (!addresses.length || !addresses.every(isPublicAddress)) throw new Error('private')
 }
 
-/** Fetches at most MAX_BYTES of HTML, following up to MAX_REDIRECTS, each hop checked again. */
-const fetchHead = async (start: string): Promise<{ html: string; url: string } | null> => {
+/**
+ * Fetches at most MAX_BYTES of HTML, following up to MAX_REDIRECTS, each hop
+ * checked again. `enough` ends the walk at an address that already says what
+ * is needed, before it is fetched (the html is then empty).
+ */
+const fetchHead = async (
+  start: string,
+  enough?: (url: URL) => boolean,
+): Promise<{ html: string; url: string } | null> => {
   let url = new URL(start)
   const signal = AbortSignal.timeout(TIMEOUT_MS)
   for (let hop = 0; hop <= MAX_REDIRECTS; hop++) {
+    if (enough?.(url)) return { html: '', url: url.href }
     await assertPublic(url)
     const res = await fetch(url, {
       redirect: 'manual',
@@ -289,4 +298,30 @@ export const linkTitles = async (
     if (title) out[titleKey(url)] = title
   })
   return out
+}
+
+/** Titles that name the site, not the place, so they are no better than the host. */
+const SITE_TITLES = new Set(['google maps', 'google'])
+
+/**
+ * The place an event's address names, read once when the event is saved: a
+ * Google Maps link's place (a share link is followed through the same checked
+ * fetch as a preview, and stops at the first address that names it), else the
+ * page's title. Null for a meeting service, which the card names itself, and
+ * for anything that names nothing; the card then shows the host. Never throws.
+ */
+export const placeName = async (raw: string): Promise<string | null> => {
+  if (meetingService(raw)) return null
+  const direct = mapsPlace(raw)
+  if (direct) return direct
+  try {
+    const page = await fetchHead(raw, (url) => mapsPlace(url.href) !== null)
+    if (!page) return null
+    const named = mapsPlace(page.url)
+    if (named) return named
+    const title = parseMeta(page.html, page.url)?.title
+    return title && !SITE_TITLES.has(title.trim().toLowerCase()) ? titlePlace(title) : null
+  } catch {
+    return null
+  }
 }

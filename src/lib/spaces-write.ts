@@ -16,6 +16,8 @@ import {
 } from '@/lib/space-event'
 import { EVENT_LOCATION_MAX, SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
+import { coverIssue, prepareCover } from '@/lib/event-cover-image'
+import { placeName } from '@/lib/link-preview'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
 import type { User } from '@/payload-types'
 
@@ -259,10 +261,54 @@ const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> 
 
 // --- postCreate ---
 
+/** The place name to store for an event's place: only an address has one to read. */
+const placeOf = async (location: string): Promise<string | null> => {
+  const url = locationUrl(location)
+  return url ? placeName(url) : null
+}
+
+type Cover = { data: Buffer; name: string; tone: string; size: number }
+
+/** A cover checked against the space file rules and prepared for storage, or the error to show. */
+const coverOf = async (file: PostFile): Promise<Cover | WriteError> => {
+  const issue = coverIssue(file, SPACE_FILE_LIMIT)
+  if (issue) return issue
+  const ready = await prepareCover(file.data, file.name)
+  return ready ? { ...ready, size: ready.data.byteLength } : 'file-type'
+}
+
+/** Stores a cover as a space file of its own (no post, no comment) and returns its id. */
+const storeCover = async (payload: Payload, spaceId: number, cover: Cover): Promise<number> => {
+  const created = await payload.create({
+    collection: 'space-files',
+    data: { space: spaceId, post: null, comment: null, filename: cover.name } as never,
+    file: {
+      data: cover.data,
+      mimetype: 'image/webp',
+      name: cover.name,
+      size: cover.size,
+    } as never,
+    overrideAccess: true,
+  })
+  return (created as { id: number }).id
+}
+
+const removeFile = async (payload: Payload, id: number | null) => {
+  if (id !== null)
+    await payload
+      .delete({ collection: 'space-files', id, overrideAccess: true })
+      .catch(() => undefined)
+}
+
 /** What an event or a vote adds to a post; the other kinds add nothing. */
 export type PostShape =
   | { kind: 'discussion' | 'announcement' }
-  | { kind: 'event'; event: { location: string; startsAt: string; endsAt?: string | null } }
+  | {
+      kind: 'event'
+      event: { location: string; startsAt: string; endsAt?: string | null }
+      /** One photo shown behind the event's details */
+      cover?: PostFile | null
+    }
   | { kind: 'vote'; vote: { options: string[]; multiple: boolean; anonymous?: boolean } }
 
 /**
@@ -391,6 +437,9 @@ export const postCreate = async (
 
   const fileIssue = files?.length ? fileError(files, 0, FILE_LIMITS.post) : null
   if (fileIssue) return err(fileIssue)
+  const cover = i.kind === 'event' && i.cover ? await coverOf(i.cover) : null
+  if (typeof cover === 'string') return err(cover)
+  if (i.kind === 'event') extra.event_place = await placeOf(String(extra.event_location))
 
   const personId = personOf(user)
   const post = await payload.create({
@@ -415,6 +464,23 @@ export const postCreate = async (
     !(await storeFilesOrRollback(payload, spaceId, 'space-posts', postId, files))
   )
     return err('upload')
+  if (cover) {
+    let coverId: number | null = null
+    try {
+      coverId = await storeCover(payload, spaceId, cover)
+      await payload.update({
+        collection: 'space-posts',
+        id: postId,
+        data: { event_cover: coverId, event_cover_tone: cover.tone } as never,
+        overrideAccess: true,
+      })
+    } catch (e) {
+      payload.logger.error({ err: e, msg: `The cover of space-posts ${postId} was not stored` })
+      await removeFile(payload, coverId)
+      await postRemove({ payload, user, id: postId })
+      return err('upload')
+    }
+  }
 
   const notifyFn = async () => {
     const { actorOf, notify } = await import('@/lib/notify')
@@ -521,7 +587,11 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
     id,
     depth: 0,
     overrideAccess: true,
-  })) as { space: number | { id: number }; author: number | { id: number } | null } | null
+  })) as {
+    space: number | { id: number }
+    author: number | { id: number } | null
+    event_cover?: number | { id: number } | null
+  } | null
   if (!post) return err('not-found')
   const spaceId = typeof post.space === 'object' ? post.space.id : post.space
   const g = await gate(payload, user, spaceId)
@@ -531,6 +601,7 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
     post.author !== null &&
     (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
   if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
+  const cover = post.event_cover != null ? idOf(post.event_cover) : null
 
   const { totalDocs: replyCount } = await payload.count({
     collection: 'space-comments',
@@ -543,9 +614,15 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
     await payload.update({
       collection: 'space-posts',
       id,
-      data: { deleted_at: new Date().toISOString(), body: TOMBSTONE_BODY } as never,
+      data: {
+        deleted_at: new Date().toISOString(),
+        body: TOMBSTONE_BODY,
+        event_cover: null,
+        event_cover_tone: null,
+      } as never,
       overrideAccess: true,
     })
+    await removeFile(payload, cover)
   } else {
     const { docs: files } = await payload.find({
       collection: 'space-files',
@@ -561,6 +638,7 @@ export const postRemove = async (i: Input<{ id: number }>): Promise<WriteResult<
         overrideAccess: true,
       })
     await payload.delete({ collection: 'space-posts', id, overrideAccess: true })
+    await removeFile(payload, cover)
   }
   return { ok: true, data: true }
 }
@@ -1080,7 +1158,14 @@ export const rsvpSet = async (
  * notification (returned as `notify`, run after the save like postCreate's).
  */
 export const eventEdit = async (
-  i: Input<{ id: number; location: string; startsAt: string; endsAt?: string | null }>,
+  i: Input<{
+    id: number
+    location: string
+    startsAt: string
+    endsAt?: string | null
+    /** A new cover; null takes the cover away; left out, the cover stays */
+    cover?: PostFile | null
+  }>,
   now = new Date(),
 ): Promise<WriteResult<true>> => {
   const { payload, user, id } = i
@@ -1096,6 +1181,7 @@ export const eventEdit = async (
     event_location?: string | null
     event_starts_at?: string | null
     event_ends_at?: string | null
+    event_cover?: number | { id: number } | null
   } | null
   if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
     return err('not-found')
@@ -1117,12 +1203,24 @@ export const eventEdit = async (
   if (!next) return err('event')
   const sameTime = (a: string | null | undefined, b: string | null) =>
     (a ? new Date(a).getTime() : null) === (b ? new Date(b).getTime() : null)
+  const moved = next.location !== (post.event_location ?? '')
   const changed =
-    next.location !== (post.event_location ?? '') ||
+    moved ||
     !sameTime(post.event_starts_at, next.startsAt) ||
     !sameTime(post.event_ends_at, next.endsAt)
-  if (!changed) return { ok: true, data: true }
+  const oldCover = post.event_cover != null ? idOf(post.event_cover) : null
+  const cover = i.cover ? await coverOf(i.cover) : null
+  if (typeof cover === 'string') return err(cover)
+  const recovered = i.cover !== undefined && (cover !== null || oldCover !== null)
+  if (!changed && !recovered) return { ok: true, data: true }
 
+  let coverId: number | null = null
+  try {
+    if (cover) coverId = await storeCover(payload, spaceId, cover)
+  } catch (e) {
+    payload.logger.error({ err: e, msg: `A cover for space-posts ${id} was not stored` })
+    return err('upload')
+  }
   await payload.update({
     collection: 'space-posts',
     id,
@@ -1130,9 +1228,14 @@ export const eventEdit = async (
       event_location: next.location,
       event_starts_at: next.startsAt,
       event_ends_at: next.endsAt,
+      ...(moved ? { event_place: await placeOf(next.location) } : {}),
+      ...(recovered ? { event_cover: coverId, event_cover_tone: cover?.tone ?? null } : {}),
     } as never,
     overrideAccess: true,
   })
+  if (recovered) await removeFile(payload, oldCover)
+  // A new photo alone tells nobody: only a new time or place changes plans.
+  if (!changed) return { ok: true, data: true }
 
   const notifyFn = async () => {
     const { docs: answers } = await payload.find({
