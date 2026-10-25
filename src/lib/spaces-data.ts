@@ -807,7 +807,8 @@ export const spaceLanding = async (
     // aware, published only), then the space read through the access rule.
     const { docs: rels } = await payload.find({
       collection: kind === 'course' ? 'courses' : 'programmes',
-      depth: 0,
+      // One level, so the cover arrives as a file and not as an id.
+      depth: 1,
       draft: true,
       pagination: false,
       limit: 1,

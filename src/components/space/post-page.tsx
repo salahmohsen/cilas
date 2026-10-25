@@ -58,7 +58,7 @@ export async function PostPage({
 
   return (
     <div className={`${styles.page} ${styles.narrow}`}>
-      <header className={styles.spaceHead}>
+      <header className={styles.plainHead}>
         <Breadcrumb
           items={[
             { label: ts('title'), href: `/${locale}/spaces` },

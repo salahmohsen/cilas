@@ -488,6 +488,13 @@
   max-width: 760px;
 }
 
+/* A page head with no cover: where it sits and its name. */
+.plainHead {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
 /* The space's own head: the cover under a flat tint of the page colour, so
    the title reads in both themes without a gradient. */
 .spaceHead {
@@ -515,15 +522,23 @@
 
 .headInner {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
-  padding: var(--space-4);
+  /* The corner is rounded by --radius-surface, so the content keeps well inside it. */
+  padding: var(--space-5);
   min-width: 0;
 }
 
 @media (min-width: 640px) {
   .headInner {
-    padding: var(--space-5) var(--space-6);
+    padding: var(--space-6) var(--space-8);
   }
+}
+
+.headInner nav li:last-child {
+  /* The course title is long: the last crumb wraps instead of running out of the head. */
+  white-space: normal;
+  min-width: 0;
 }
 
 .titleRow {
@@ -540,6 +555,7 @@
   font-weight: 500;
   line-height: var(--leading-tight, 1.2);
   text-wrap: balance;
+  overflow-wrap: anywhere;
   min-width: 0;
 }
 

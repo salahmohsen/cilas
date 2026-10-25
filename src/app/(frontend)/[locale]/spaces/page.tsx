@@ -107,7 +107,7 @@ export default async function MySpacesPage({ params }: Props) {
 
   return (
     <div className={styles.page}>
-      <header className={styles.spaceHead}>
+      <header className={styles.plainHead}>
         <Breadcrumb items={[{ label: t('home'), href: `/${locale}` }, { label: t('title') }]} />
         <h1 className={styles.spaceTitle}>{t('title')}</h1>
       </header>
