@@ -827,6 +827,74 @@
   overflow: hidden;
 }
 
+/* Several links: one bordered group, a one-line row for each. */
+.linkList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-surface);
+  background: var(--surface);
+}
+
+.linkList > li + li {
+  border-top: 1px solid var(--border-subtle);
+}
+
+.linkRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  color: var(--foreground);
+  text-decoration: none;
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.linkRow:hover {
+  background: var(--surface-muted);
+}
+
+.linkThumb,
+.linkInitial {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-control);
+  background: var(--surface-muted);
+}
+
+.linkThumb {
+  object-fit: cover;
+}
+
+.linkInitial {
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border-subtle);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.linkRowText {
+  display: grid;
+  min-width: 0;
+}
+
+.linkRowTitle {
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.linkRow .linkHost {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* An event: a calendar leaf with the month over the day, then when and where. */
 .event {
   display: flex;

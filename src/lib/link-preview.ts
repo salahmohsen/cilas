@@ -18,15 +18,28 @@ const HIT_MS = 24 * 3600_000
 const MISS_MS = 3600_000
 const MAX_ENTRIES = 500
 
-/** The first outside link in a post's Markdown; mentions (`/people/…`) are not links out. */
-export const firstLink = (markdown: string): string | null => {
+/**
+ * How many links of one post get a preview. Each is a server fetch of up to
+ * 4 seconds and 512 KB, run in parallel; five fills a card without letting one
+ * post fan out into a crawl. Later links stay plain links in the text.
+ */
+export const MAX_PREVIEWS = 5
+
+/** The distinct outside links in a post's Markdown, in reading order; mentions (`/people/…`) are not links out. */
+export const outsideLinks = (markdown: string, max = MAX_PREVIEWS): string[] => {
+  const seen = new Set<string>()
+  const out: string[] = []
   for (const m of markdown.matchAll(
     /\]\((https?:\/\/[^\s)]+)\)|(?<![(\w])(https?:\/\/[^\s)<>\]]+)/g,
   )) {
     const url = (m[1] ?? m[2] ?? '').replace(/[.,;:!?]+$/, '')
-    if (url) return url
+    const key = url.replace(/\/$/, '')
+    if (!url || seen.has(key)) continue
+    seen.add(key)
+    out.push(url)
+    if (out.length === max) break
   }
-  return null
+  return out
 }
 
 /** Whether an address is on the public internet: never loopback, private, link-local or reserved. */
@@ -86,8 +99,10 @@ export const parseMeta = (
   let image: string | null = null
   if (rawImage) {
     try {
-      const resolved = new URL(rawImage, pageUrl)
-      if (resolved.protocol === 'https:' || resolved.protocol === 'http:') image = resolved.href
+      const resolved = new URL(rawImage.trim(), pageUrl)
+      const web = resolved.protocol === 'https:' || resolved.protocol === 'http:'
+      if (web && !resolved.username && !resolved.password && resolved.href.length <= 2000)
+        image = resolved.href
     } catch {
       image = null
     }
@@ -157,6 +172,35 @@ const fetchHead = async (start: string): Promise<{ html: string; url: string } |
   return null
 }
 
+const IMAGE_MS = 2500
+
+/**
+ * Whether a preview's image is worth showing. Only a sure answer drops it: a
+ * private host, a 4xx, or a page that is not an image. A server that refuses
+ * HEAD, a redirect or a timeout keeps it, and the browser's own onError has the last word.
+ */
+export const imageUsable = async (raw: string): Promise<boolean> => {
+  try {
+    const url = new URL(raw)
+    await assertPublic(url)
+    const res = await fetch(url, {
+      method: 'HEAD',
+      redirect: 'manual',
+      signal: AbortSignal.timeout(IMAGE_MS),
+      headers: { 'user-agent': 'CILAS link preview', accept: 'image/*' },
+      cache: 'no-store',
+    })
+    if (res.status === 404 || res.status === 410) return false
+    if (res.ok) {
+      const type = res.headers.get('content-type')
+      return !type || type.toLowerCase().startsWith('image/')
+    }
+    return true
+  } catch (e) {
+    return !(e instanceof Error && (e.message === 'private' || e.message === 'protocol'))
+  }
+}
+
 const cache = new Map<string, { value: LinkPreview | null; until: number }>()
 
 /**
@@ -171,7 +215,10 @@ export const linkPreview = async (raw: string): Promise<LinkPreview | null> => {
   try {
     const page = await fetchHead(raw)
     const meta = page && parseMeta(page.html, page.url)
-    if (meta) value = { url: raw, host: new URL(page.url).hostname.replace(/^www\./, ''), ...meta }
+    if (meta) {
+      if (meta.image && !(await imageUsable(meta.image))) meta.image = null
+      value = { url: raw, host: new URL(page.url).hostname.replace(/^www\./, ''), ...meta }
+    }
   } catch {
     value = null
   }

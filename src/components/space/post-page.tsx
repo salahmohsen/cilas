@@ -8,7 +8,7 @@ import { personOf } from '@/access'
 import { Alert } from '@/components/arc/alert/alert'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import type { Course, Programme, Space, User } from '@/payload-types'
-import { firstLink } from '@/lib/link-preview'
+import { outsideLinks } from '@/lib/link-preview'
 import { absoluteUrl } from '@/lib/schema'
 import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
@@ -17,7 +17,7 @@ import { memberState, postView } from '@/lib/spaces-data'
 import { commentsOpen, FileChip, PostHead, type FeedContext } from './feed-row'
 import { EventDetails } from './event-details'
 import { VotePoll } from './vote-poll'
-import { LinkCard } from './link-card'
+import { LinkPreviews } from './link-card'
 import { PostBody } from './post-body'
 import { PostFoot } from './post-foot'
 import { spacePeopleCards } from './space-people'
@@ -124,9 +124,9 @@ export async function PostPage({
           {!deleted && row.vote && (
             <VotePoll post={post.id} vote={row.vote} disabled={archived || !!post.locked} />
           )}
-          {!deleted && firstLink(post.body) && (
+          {!deleted && outsideLinks(post.body).length > 0 && (
             <Suspense fallback={null}>
-              <LinkCard url={firstLink(post.body)!} />
+              <LinkPreviews urls={outsideLinks(post.body)} />
             </Suspense>
           )}
           {view.files.length > 0 && (

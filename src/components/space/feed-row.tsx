@@ -5,14 +5,14 @@ import { CalendarDays, Lock, Megaphone, Paperclip, Pin, Vote } from 'lucide-reac
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Badge } from '@/components/arc/badge/badge'
 import { ExpandableText } from '@/components/arc/expandable-text/expandable-text'
-import { firstLink } from '@/lib/link-preview'
+import { outsideLinks } from '@/lib/link-preview'
 import { absoluteUrl } from '@/lib/schema'
 import type { NoticePart } from '@/lib/space-consent'
 import type { FeedRow as FeedRowData, SpaceFileRef } from '@/lib/spaces-data'
 
 import { EventDetails } from './event-details'
 import { VotePoll } from './vote-poll'
-import { LinkCard } from './link-card'
+import { LinkPreviews } from './link-card'
 import { PersonHover, type PersonCard } from './person-hover'
 import { PostActions } from './post-actions'
 import { PostBody } from './post-body'
@@ -195,7 +195,7 @@ export async function FeedRow({
   const t = await getTranslations('SpacePost')
   const { post } = row
   const id = `post-${post.id}`
-  const link = firstLink(post.body)
+  const links = outsideLinks(post.body)
   return (
     <article
       id={id}
@@ -218,9 +218,9 @@ export async function FeedRow({
       {row.vote && (
         <VotePoll post={post.id} vote={row.vote} disabled={context.archived || !!post.locked} />
       )}
-      {link && (
+      {links.length > 0 && (
         <Suspense fallback={null}>
-          <LinkCard url={link} />
+          <LinkPreviews urls={links} />
         </Suspense>
       )}
       {row.files.length > 0 && (

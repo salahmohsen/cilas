@@ -945,7 +945,8 @@
     "voteVoters": "{count, plural, =0 {No votes yet} one {# member voted} other {# members voted}}",
     "voteSaved": "Your vote is saved.",
     "voteWithdrawn": "Your vote is withdrawn.",
-    "voteInvalid": "This choice is not possible in this vote."
+    "voteInvalid": "This choice is not possible in this vote.",
+    "links": "Links in this post"
   },
   "SpaceComment": {
     "write": "Comment",
