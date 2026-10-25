@@ -8,7 +8,15 @@ import {
   ExpandingButtonGroup,
   type ExpandingButtonGroupItem,
 } from '@/components/arc/expanding-button-group/expanding-button-group'
-import { aiLink, providers, type ProviderId } from '@/lib/ai-study'
+import { env } from '@/env'
+import {
+  aiLink,
+  fillPrompt,
+  providers,
+  studyFiles,
+  type ProviderId,
+  type StudyKind,
+} from '@/lib/ai-study'
 
 /** ChatGPT's mark. Simple Icons dropped OpenAI's on request; an old release still carried it. */
 const CHATGPT_PATH =
@@ -39,26 +47,72 @@ const iconOf: Record<ProviderId, React.ReactNode> = {
   chatgpt: <BrandMark paths={[CHATGPT_PATH]} viewBox="0 0 24 24" />,
 }
 
+/** The session a space post points at, for a prompt about that one session. */
+export type StudySession = { course: string; session: string; readings: string[] }
+
 /**
- * Studying this page with AI, beside the share bar: Claude, Gemini, Grok
- * and ChatGPT. Arc's expanding button group again — the same pill sharing uses, its
- * labels revealing as they're pointed at. An action opens the assistant in a
- * new tab, its prompt prefilled and asking it to fetch this page and take it
- * as the course's or the article's own material.
+ * Studying a page with AI: Claude, Gemini, Grok and ChatGPT, in Arc's
+ * expanding button group (the same pill sharing uses, its labels revealing as
+ * they're pointed at). An action opens the assistant in a new tab with the
+ * page's prompt prefilled, in the page's language, cut down to what that
+ * assistant's link can carry. With `session`, the prompt is about one
+ * session of the course at `path`.
  */
-export function StudyWithAI({ kind, path }: { kind: 'course' | 'article'; path: string }) {
+export function StudyWithAI({
+  kind,
+  path,
+  session,
+  label,
+  size = 'md',
+}: {
+  kind: 'course' | 'article'
+  path: string
+  session?: StudySession
+  label?: string
+  size?: 'sm' | 'md'
+}) {
   const t = useTranslations('Share')
+  const tp = useTranslations('StudyPrompt')
+  const own: StudyKind = session ? 'session' : kind
+
+  const prompts = (): string[] => {
+    const values = {
+      ...studyFiles(env.NEXT_PUBLIC_SERVER_URL, path),
+      course: session?.course ?? '',
+      session: session?.session ?? '',
+      readings: session?.readings.length
+        ? fillPrompt(tp.raw('readings') as string, { list: session.readings.join('; ') })
+        : '',
+    }
+    const fill = (key: string, more?: { readings: string }) =>
+      fillPrompt(tp.raw(key) as string, { ...values, ...more })
+    // When the link runs long each tier first drops the readings (the course
+    // file names them too), then gives way to the next: full, compact, short.
+    return [
+      ...['full', 'compact'].flatMap((tier) => [
+        fill(`${own}.${tier}`),
+        ...(values.readings ? [fill(`${own}.${tier}`, { readings: '' })] : []),
+      ]),
+      fill(`${own}.short`),
+      fill('minimal'),
+    ]
+  }
 
   const items: ExpandingButtonGroupItem[] = providers.map((p) => ({
     id: p.id,
     icon: iconOf[p.id],
     label: t(`providers.${p.id}`),
     onSelect: () => {
-      const url = `${window.location.origin}${path}`
-      window.open(aiLink(p.id, kind, url), '_blank', 'noopener,noreferrer')
+      window.open(aiLink(p.id, prompts()), '_blank', 'noopener,noreferrer')
       return true
     },
   }))
 
-  return <ExpandingButtonGroup items={items} label={t(kind === 'course' ? 'ai' : 'aiArticle')} size="md" />
+  return (
+    <ExpandingButtonGroup
+      items={items}
+      label={label ?? t(kind === 'course' ? 'ai' : 'aiArticle')}
+      size={size}
+    />
+  )
 }

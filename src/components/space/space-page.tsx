@@ -17,6 +17,7 @@ import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
 import { RichTextField } from '@/components/RichTextField'
+import { StudyWithAI } from '@/components/study-with-ai'
 import { numberingSystemOf } from '@/lib/digits'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
 import { COMMUNITY_COVER, coverOf, memberState, participation, spaceFeed } from '@/lib/spaces-data'
@@ -63,10 +64,11 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   const moderator = mem.role === 'moderator'
 
   const lang = locale === 'ar' ? 'ar' : 'en'
-  const [t, tp, feed, state, { cards, byId, moderators }, numbers, jar, custom] = await Promise.all(
-    [
+  const [t, tp, ts, feed, state, { cards, byId, moderators }, numbers, jar, custom] =
+    await Promise.all([
       getTranslations('Spaces'),
       getTranslations('SpacePost'),
+      getTranslations('Share'),
       spaceFeed(payload, user, space, lang),
       memberState(payload, user, space.id),
       spacePeopleCards(payload, user, space, locale),
@@ -86,8 +88,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
         })
         .then((row) => row.about ?? '')
         .catch(() => ''),
-    ],
-  )
+    ])
   const renderedAt = new Date().toISOString()
 
   const title =
@@ -223,32 +224,43 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
             </span>
           </div>
           <div className={styles.headActions}>
+            <div className={styles.headButtons}>
+              {course && (
+                <OpenCourseButton
+                  href={`/${locale}/study/${course.slug}`}
+                  label={t('coursePage')}
+                />
+              )}
+              <span className={styles.phoneOnly}>
+                <BottomSheet
+                  title={t('about')}
+                  detents={[0.6, 0.92]}
+                  trigger={
+                    <Button variant="secondary" size="sm">
+                      <Info size={16} aria-hidden="true" />
+                      {t('about')}
+                    </Button>
+                  }
+                >
+                  <div className={styles.column}>{rail}</div>
+                </BottomSheet>
+              </span>
+              {moderator && (
+                <SpaceSettings
+                  space={space.id}
+                  posting={space.posting ?? 'open'}
+                  events={space.events ?? 'members'}
+                  archived={feed.archived}
+                  about={custom}
+                  aboutDefault={defaultAbout}
+                />
+              )}
+            </div>
             {course && (
-              <OpenCourseButton href={`/${locale}/study/${course.slug}`} label={t('coursePage')} />
-            )}
-            <span className={styles.phoneOnly}>
-              <BottomSheet
-                title={t('about')}
-                detents={[0.6, 0.92]}
-                trigger={
-                  <Button variant="secondary" size="sm">
-                    <Info size={16} aria-hidden="true" />
-                    {t('about')}
-                  </Button>
-                }
-              >
-                <div className={styles.column}>{rail}</div>
-              </BottomSheet>
-            </span>
-            {moderator && (
-              <SpaceSettings
-                space={space.id}
-                posting={space.posting ?? 'open'}
-                events={space.events ?? 'members'}
-                archived={feed.archived}
-                about={custom}
-                aboutDefault={defaultAbout}
-              />
+              <div className={styles.headAi}>
+                <span>{ts('ai')}</span>
+                <StudyWithAI kind="course" path={`/${locale}/study/${course.slug}`} size="sm" />
+              </div>
             )}
           </div>
         </div>
