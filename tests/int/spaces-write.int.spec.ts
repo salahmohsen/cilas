@@ -1275,7 +1275,8 @@ describe('spaces write', () => {
     // One query through the reader's access: counts, who is going and the reader's own answer.
     await answer(student, 'going')
     const { upcoming } = await spaceEvents(payload, student, courseSpace.id)
-    const item = upcoming.find((e) => e.post.id === post)!
+    const item = upcoming.find((e) => e.type === 'post' && e.post.id === post)
+    if (item?.type !== 'post') throw new Error('the event post is missing from the tab')
     expect(item.rsvp.counts).toEqual({ going: 2, maybe: 0, not_going: 0 })
     expect(item.rsvp.mine).toBe('going')
     expect(item.rsvp.going).toHaveLength(2)
@@ -1291,8 +1292,8 @@ describe('spaces write', () => {
       error: 'event-over',
     })
     const afterwards = await spaceEvents(payload, student, courseSpace.id, 'en', later)
-    expect(afterwards.past.some((e) => e.post.id === post)).toBe(true)
-    expect(afterwards.upcoming.some((e) => e.post.id === post)).toBe(false)
+    expect(afterwards.past.some((e) => e.type === 'post' && e.post.id === post)).toBe(true)
+    expect(afterwards.upcoming.some((e) => e.type === 'post' && e.post.id === post)).toBe(false)
 
     await payload.update({
       collection: 'space-posts',
@@ -1606,6 +1607,62 @@ describe('spaces write', () => {
     expect(afterPublish.length).toBe(before + 3)
     track('space-posts', afterPublish.at(-1)!.id)
     await setCourse({ sessions: [] })
+  })
+
+  it("a course space's Events tab shows the course's public events with its own, by start time, and no others", async () => {
+    const mk = (data: Record<string, unknown>) =>
+      payload.create({
+        collection: 'events',
+        data: {
+          event_type: 'talk',
+          slug: `probe-${Math.random().toString(36).slice(2, 8)}`,
+          ...data,
+        } as never,
+        overrideAccess: true,
+      })
+    const schedule = (day: string) => ({
+      start_date: day,
+      start_precision: 'day',
+      weeks: 1,
+      slots: [{ weekday: 'sat', start_time: '18:00', end_time: '19:30' }],
+    })
+    const mine = await mk({
+      title: 'Probe public talk',
+      tier: 'public',
+      course: course.id,
+      schedule: schedule('2031-06-07'),
+    })
+    const members = await mk({
+      title: 'Probe members talk',
+      tier: 'community',
+      course: course.id,
+      schedule: schedule('2031-06-14'),
+    })
+    const other = await mk({
+      title: 'Probe other talk',
+      tier: 'public',
+      schedule: schedule('2031-06-21'),
+    })
+    for (const e of [mine, members, other]) track('events', e.id)
+
+    const { upcoming } = await spaceEvents(
+      payload,
+      student,
+      courseSpace,
+      'en',
+      new Date('2031-01-01'),
+    )
+    const titles = upcoming.flatMap((e) => (e.type === 'public' ? [e.title] : []))
+    expect(titles).toEqual(['Probe public talk'])
+    const row = upcoming.find((e) => e.type === 'public')!
+    expect(row.startsAt).toMatch(/^2031-06-07T1[56]:00:00/)
+    expect(row.endsAt).toMatch(/^2031-06-07T1[67]:30:00/)
+
+    // After its day it moves to the past group; the community space has none of them.
+    const later = await spaceEvents(payload, student, courseSpace, 'en', new Date('2031-07-01'))
+    expect(later.past.some((e) => e.type === 'public')).toBe(true)
+    const none = await spaceEvents(payload, student, community, 'en', new Date('2031-01-01'))
+    expect(none.upcoming.some((e) => e.type === 'public')).toBe(false)
   })
 
   it('a moderator sets the About text per language and resets it; a member cannot', async () => {

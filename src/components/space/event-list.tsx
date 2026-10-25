@@ -6,12 +6,13 @@ import { eventTitle } from '@/lib/space-event'
 import type { SpaceEventItem } from '@/lib/spaces-data'
 
 import { EventCard } from './event-card'
+import { PublicEvent, PublicEventBadge } from './public-event'
 import type { FeedContext } from './feed-row'
 import styles from './space.module.css'
 
 /**
- * The Events tab. Each row is one kind of event; `type` leaves room for a
- * second kind (the public events) to join the same list.
+ * The Events tab. Each row is one kind of event, the space's own posts or the
+ * course's public events, which have no page here to link to.
  */
 async function EventRow({
   item,
@@ -38,6 +39,18 @@ async function EventRow({
           <EventCard post={item.post} rsvp={item.rsvp} context={context} href={href} />
         </li>
       )
+    case 'public':
+      return (
+        <li className={styles.eventRow}>
+          <h3 className={styles.eventRowTitle}>
+            <span dir="auto" className={styles.eventRowLink}>
+              {item.title}
+            </span>
+            <PublicEventBadge />
+          </h3>
+          <PublicEvent item={item} />
+        </li>
+      )
   }
 }
 
@@ -60,10 +73,10 @@ export async function EventList({
     <ul className={styles.eventRows}>
       {items.map((item) => (
         <EventRow
-          key={`${item.type}-${item.post.id}`}
+          key={item.type === 'post' ? `post-${item.post.id}` : `public-${item.id}`}
           item={item}
           context={context}
-          href={`${path}/posts/${item.post.id}`}
+          href={item.type === 'post' ? `${path}/posts/${item.post.id}` : ''}
         />
       ))}
     </ul>

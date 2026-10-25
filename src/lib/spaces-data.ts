@@ -13,6 +13,8 @@ import {
   spacesSettings,
   type SpacesSettings,
 } from '@/lib/spaces'
+import { cairoInstant } from '@/lib/cairo-day'
+import { expandSchedule } from '@/lib/schedule'
 import type { Course, Programme, Space, SpacePost, User } from '@/payload-types'
 
 /**
@@ -1221,19 +1223,74 @@ export const memberState = async (
  * One row of a space's Events tab. A union so a second kind of row (the
  * public events) can join the list without changing the rows that exist.
  */
-export type SpaceEventItem = {
-  type: 'post'
-  post: SpacePost
-  startsAt: string
-  endsAt: string | null
-  authorName: string | null
-  rsvp: RsvpView
+export type SpaceEventItem =
+  | {
+      type: 'post'
+      post: SpacePost
+      startsAt: string
+      endsAt: string | null
+      authorName: string | null
+      rsvp: RsvpView
+    }
+  | {
+      /** A public event of the space's course: no answers, nothing to change here */
+      type: 'public'
+      id: number
+      title: string
+      startsAt: string
+      endsAt: string | null
+      place: string | null
+    }
+
+/**
+ * The course's public events as rows of the Events tab, in one read through
+ * the reader's access. An event with several meetings shows at its next
+ * meeting, or its last when they are all over.
+ */
+const courseEvents = async (
+  payload: Payload,
+  user: null | User,
+  courseId: number,
+  locale: 'en' | 'ar',
+  now: Date,
+): Promise<SpaceEventItem[]> => {
+  const { docs } = await payload.find({
+    collection: 'events',
+    user: user ?? undefined,
+    depth: 1,
+    pagination: false,
+    locale,
+    overrideAccess: false,
+    where: { and: [{ course: { equals: courseId } }, { tier: { equals: 'public' } }] },
+  })
+  return docs.flatMap((event): SpaceEventItem[] => {
+    const meetings = expandSchedule(event.schedule).flatMap((m) => {
+      const startsAt = cairoInstant(m.date, m.start_time)
+      const endsAt = cairoInstant(m.date, m.end_time)
+      return startsAt ? [{ startsAt, endsAt }] : []
+    })
+    const meeting =
+      meetings.find((m) => new Date(m.endsAt ?? m.startsAt).getTime() >= now.getTime()) ??
+      meetings.at(-1)
+    if (!meeting) return []
+    const place = typeof event.place === 'object' && event.place ? event.place.name : null
+    return [
+      {
+        type: 'public',
+        id: event.id,
+        title: event.title,
+        ...meeting,
+        place: place ?? event.external_venue?.name?.trim() ?? null,
+      },
+    ]
+  })
 }
 
 /**
  * Every event post of a space in one read through the reader's access, with
- * their answers in one more. Upcoming events come first, soonest first, then
- * the ones that are over, newest first.
+ * their answers in one more; a course space adds the course's public events
+ * in a third. Upcoming events come first, soonest first, then the ones that
+ * are over, newest first.
  */
 export const spaceEvents = async (
   payload: Payload,
@@ -1256,7 +1313,11 @@ export const spaceEvents = async (
       ],
     },
   })
-  const rsvps = await rsvpViews(payload, user, docs, locale)
+  const courseId = typeof space === 'object' && space.kind === 'course' ? relId(space.course) : null
+  const [rsvps, publicEvents] = await Promise.all([
+    rsvpViews(payload, user, docs, locale),
+    courseId != null ? courseEvents(payload, user, courseId, locale, now) : [],
+  ])
   const items = docs.flatMap((post): SpaceEventItem[] =>
     post.event_starts_at
       ? [
@@ -1271,6 +1332,7 @@ export const spaceEvents = async (
         ]
       : [],
   )
+  items.push(...publicEvents)
   const over = (item: SpaceEventItem) =>
     new Date(item.endsAt || item.startsAt).getTime() < now.getTime()
   const time = (item: SpaceEventItem) => new Date(item.startsAt).getTime()
