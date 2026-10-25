@@ -3,17 +3,8 @@
 import { useOptimistic, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import {
-  Heart,
-  Lightbulb,
-  MessageCircleQuestion,
-  PartyPopper,
-  Rocket,
-  ThumbsUp,
-  type LucideIcon,
-} from 'lucide-react'
-
 import { Reactions, type Reaction } from '@/components/arc/reactions/reactions'
+import { REACTION_ICON } from './reaction-icons'
 import { reactionToggleAction } from '@/app/(frontend)/[locale]/spaces/actions'
 import {
   REACTION_KINDS,
@@ -21,15 +12,6 @@ import {
   type ReactionCounts,
   type ReactionKind,
 } from '@/lib/space-reactions'
-
-const ICON: Record<ReactionKind, LucideIcon> = {
-  agree: ThumbsUp,
-  thank_you: Heart,
-  celebrate: PartyPopper,
-  insightful: Lightbulb,
-  same_question: MessageCircleQuestion,
-  rocket: Rocket,
-}
 
 type State = { counts: ReactionCounts; mine: ReactionKind[] }
 
@@ -66,7 +48,7 @@ export function FeedReactions({
     count: state.counts[k] ?? 0,
     reacted: state.mine.includes(k),
   }))
-  const options = REACTION_KINDS.map((k) => ({ id: k, label: t(k), icon: ICON[k] }))
+  const options = REACTION_KINDS.map((k) => ({ id: k, label: t(k), icon: REACTION_ICON[k] }))
   return (
     <Reactions
       options={options}

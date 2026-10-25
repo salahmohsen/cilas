@@ -188,6 +188,8 @@ export interface CommentThreadProps {
   title?: ReactNode
   /** Emoji offered by the reaction picker. */
   reactions?: string[]
+  /** Draws a reaction in the picker and under a comment. Defaults to the emoji itself. */
+  renderReaction?: (emoji: string) => ReactNode
   placeholder?: string
   /** Replies deeper than this attach to the deepest allowed parent. Defaults to 2. */
   maxDepth?: number
@@ -720,6 +722,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     onResolvedChange,
     title,
     reactions = DEFAULT_REACTIONS,
+    renderReaction,
     placeholder = 'Reply, or @mention someone',
     maxDepth = 2,
     nowLabel = 'Just now',
@@ -976,7 +979,11 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                                         reduced ? { duration: 0 } : motionTokens.spring.snappy
                                       }
                                     >
-                                      <span aria-hidden="true">{reaction.emoji}</span>
+                                      <span className={styles.reactionGlyph} aria-hidden="true">
+                                        {renderReaction
+                                          ? renderReaction(reaction.emoji)
+                                          : reaction.emoji}
+                                      </span>
                                       <Count value={reaction.users.length} reduced={reduced} />
                                     </motion.button>
                                   )
@@ -1065,6 +1072,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                                     className={styles.emoji}
                                     autoFocus={index === 0}
                                     aria-label={t.reactWith(emoji)}
+                                    title={renderReaction ? t.reactWith(emoji) : undefined}
                                     aria-pressed={
                                       !!comment.reactions
                                         ?.find((reaction) => reaction.emoji === emoji)
@@ -1082,7 +1090,9 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                                           }
                                     }
                                   >
-                                    {emoji}
+                                    <span className={styles.reactionGlyph} aria-hidden="true">
+                                      {renderReaction ? renderReaction(emoji) : emoji}
+                                    </span>
                                   </motion.button>
                                 ))}
                                 <button

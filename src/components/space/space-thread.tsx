@@ -24,6 +24,7 @@ import { REACTION_KINDS, type ReactionKind } from '@/lib/space-reactions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
 import type { SpaceFileRef, ThreadComment, TopComment } from '@/lib/spaces-data'
 
+import { REACTION_ICON } from './reaction-icons'
 import { AttachmentTray } from './attachment-tray'
 import { useAttachments } from './use-attachments'
 import { Attachments } from './attachments'
@@ -99,6 +100,7 @@ export function SpaceThread({
 }) {
   const t = useTranslations('SpaceThread')
   const tp = useTranslations('SpacePost')
+  const tr = useTranslations('SpaceReactions')
   const tf = useTranslations('SpacePhotos')
   const format = useFormatter()
   const router = useRouter()
@@ -270,6 +272,10 @@ export function SpaceThread({
         currentUser={me}
         people={authors}
         reactions={REACTION_KINDS.map((k) => EMOJI[k])}
+        renderReaction={(emoji) => {
+          const Icon = REACTION_ICON[KIND_OF.get(emoji) ?? 'agree']
+          return <Icon aria-hidden="true" />
+        }}
         maxDepth={1}
         resolvable={false}
         canReply={canComment}
@@ -360,10 +366,10 @@ export function SpaceThread({
           addReaction: t('addReaction'),
           closeReactions: t('closeReactions'),
           reactions: t('reactions'),
-          reactWith: (emoji) => tp(`reaction_${KIND_OF.get(emoji) ?? 'agree'}`),
+          reactWith: (emoji) => tr(KIND_OF.get(emoji) ?? 'agree'),
           reactionCount: (emoji, count, you) =>
             t('reactionCount', {
-              reaction: tp(`reaction_${KIND_OF.get(emoji) ?? 'agree'}`),
+              reaction: tr(KIND_OF.get(emoji) ?? 'agree'),
               count,
               you: String(you),
             }),

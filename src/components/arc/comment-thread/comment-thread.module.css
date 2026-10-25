@@ -228,6 +228,27 @@
 .reaction:active {
   transform: scale(0.94);
 }
+.reactionGlyph {
+  display: inline-grid;
+  place-items: center;
+}
+.reactionGlyph svg {
+  width: 14px;
+  height: 14px;
+}
+.emoji .reactionGlyph svg {
+  width: 16px;
+  height: 16px;
+  color: var(--text-secondary);
+}
+.reaction[aria-pressed='true'] .reactionGlyph svg {
+  color: var(--accent-strong);
+  fill: color-mix(in oklab, currentColor 22%, transparent);
+}
+.emoji[aria-pressed='true'] .reactionGlyph svg {
+  color: var(--accent-strong);
+  fill: color-mix(in oklab, currentColor 22%, transparent);
+}
 .count {
   position: relative;
   display: inline-grid;
