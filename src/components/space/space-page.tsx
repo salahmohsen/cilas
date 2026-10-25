@@ -3,7 +3,8 @@ import { getTranslations } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
-import { Info } from 'lucide-react'
+import { Info, Users } from 'lucide-react'
+import Image from 'next/image'
 
 import { personOf } from '@/access'
 import { Badge } from '@/components/arc/badge/badge'
@@ -14,7 +15,9 @@ import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import type { Course, Programme, Space, User } from '@/payload-types'
 import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
-import { memberState, participation, spaceFeed } from '@/lib/spaces-data'
+import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
+import { RichTextField } from '@/components/RichTextField'
+import { COMMUNITY_COVER, coverOf, memberState, participation, spaceFeed } from '@/lib/spaces-data'
 import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
 
 import { Composer, type PostKind } from './composer'
@@ -22,13 +25,14 @@ import { FeedFilter } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { LoadMore } from './load-more'
+import { OpenCourseButton } from './open-course-button'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
 import { spacePeopleCards } from './space-people'
 import { SpaceRail } from './space-rail'
 import { SpaceSettings } from './space-settings'
 import styles from './space.module.css'
 
-export type SpaceTab = 'all' | 'announcements'
+export type SpaceTab = 'all' | 'announcements' | 'syllabus'
 
 /** NN/g: "Load more" in batches, never an endless feed. */
 const BATCH = 20
@@ -88,9 +92,13 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
     landing.course?.title ??
     landing.programme?.title ??
     (space.kind === 'community' ? space.name?.trim() || t('community') : t(space.kind))
+  const description = landing.course?.description
+  // The course's own text, flattened for the settings placeholder.
+  const descriptionText = textOf(description).replace(/\s+/g, ' ').trim()
   const defaultAbout =
-    landing.course?.summary ??
-    landing.programme?.tagline ??
+    descriptionText ||
+    landing.course?.summary ||
+    landing.programme?.tagline ||
     (space.kind === 'community'
       ? t(
           space.audience === 'fellows'
@@ -100,7 +108,21 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
               : 'communityAbout',
         )
       : '')
-  const about = custom.trim() || defaultAbout
+  const customAbout = custom.trim()
+  // A moderator's text wins; without one a course shows its description, with links, bold, italic and lists only.
+  const about = customAbout ? (
+    <p dir="auto" className={`${styles.prose} ${styles.aboutText}`}>
+      {customAbout}
+    </p>
+  ) : descriptionText ? (
+    <div dir={directionOf(descriptionText)} className={`${styles.prose} ${styles.richAbout}`}>
+      <RichTextField plain data={description} className={styles.richAboutBody} />
+    </div>
+  ) : defaultAbout ? (
+    <p dir="auto" className={`${styles.prose} ${styles.aboutText}`}>
+      {defaultAbout}
+    </p>
+  ) : null
   const notice = NOTICE[locale === 'ar' ? 'ar' : 'en']
   const viewerPerson = personOf(user)
 
@@ -126,8 +148,11 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
     now: renderedAt,
   }
 
+  const course = landing.course
+  const cover = coverOf(course ?? landing.programme)
   const announcements = feed.rows.filter((r) => r.post.kind === 'announcement')
-  const listed = tab === 'announcements' ? announcements : feed.rows
+  const view = tab === 'syllabus' && !course ? 'all' : tab
+  const listed = view === 'announcements' ? announcements : feed.rows
   const pinned = listed.filter((r) => r.post.pinned)
   const rest = listed.filter((r) => !r.post.pinned)
   const visible = rest.slice(0, Math.max(BATCH, shown))
@@ -167,21 +192,40 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   return (
     <div className={`${styles.page}`}>
       <header className={styles.spaceHead}>
-        <Breadcrumb items={[{ label: t('title'), href: `/${locale}/spaces` }, { label: title }]} />
-        <div className={styles.titleRow}>
-          <h1 className={styles.spaceTitle}>
-            <bdi>{title}</bdi>
-          </h1>
-          <Badge tone={feed.archived ? 'neutral' : 'success'}>
-            {feed.archived ? t('archived') : t('open')}
-          </Badge>
-          <span className={styles.headActions}>
+        <Image
+          src={cover ?? COMMUNITY_COVER}
+          alt=""
+          fill
+          priority
+          sizes="(min-width: 1280px) 1200px, 100vw"
+          className={styles.headImage}
+        />
+        <div className={styles.headInner}>
+          <Breadcrumb
+            items={[{ label: t('title'), href: `/${locale}/spaces` }, { label: title }]}
+          />
+          <div className={styles.titleRow}>
+            <h1 className={styles.spaceTitle}>
+              <bdi>{title}</bdi>
+            </h1>
+            <Badge tone={feed.archived ? 'neutral' : 'success'}>
+              {feed.archived ? t('archived') : t('open')}
+            </Badge>
+            <span className={styles.headMeta}>
+              <Users size={16} aria-hidden="true" />
+              {t('membersCount', { count: cards.length })}
+            </span>
+          </div>
+          <div className={styles.headActions}>
+            {course && (
+              <OpenCourseButton href={`/${locale}/study/${course.slug}`} label={t('coursePage')} />
+            )}
             <span className={styles.phoneOnly}>
               <BottomSheet
                 title={t('about')}
                 detents={[0.6, 0.92]}
                 trigger={
-                  <Button variant="ghost" size="sm">
+                  <Button variant="secondary" size="sm">
                     <Info size={16} aria-hidden="true" />
                     {t('about')}
                   </Button>
@@ -200,7 +244,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
                 aboutDefault={defaultAbout}
               />
             )}
-          </span>
+          </div>
         </div>
       </header>
       <div className={styles.layout}>
@@ -218,61 +262,76 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
             profileHref={`/${locale}/profile`}
             hidden={jar.get(CHECKLIST_COOKIE)?.value === '1'}
           />
-          <Composer
-            space={space.id}
-            kinds={kinds}
-            archived={feed.archived}
-            me={me}
-            mentions={cards.map((c) => ({ id: c.id, name: c.name }))}
-            consented={state.consented}
-            notice={notice}
-          />
+          {view !== 'syllabus' && (
+            <Composer
+              space={space.id}
+              kinds={kinds}
+              archived={feed.archived}
+              me={me}
+              mentions={cards.map((c) => ({ id: c.id, name: c.name }))}
+              consented={state.consented}
+              notice={notice}
+            />
+          )}
           <div className={styles.feedBar}>
             <FeedFilter
               path={path}
-              value={tab}
+              value={view}
               label={t('filterLabel')}
               options={[
                 { value: 'all', label: t('all') },
                 { value: 'announcements', label: t('announcements') },
+                ...(course ? [{ value: 'syllabus', label: t('syllabus') }] : []),
               ]}
             />
           </div>
-          <FreshPosts space={space.id} since={renderedAt} />
-          {listed.length === 0 ? (
-            <EmptyState
-              title={tab === 'announcements' ? t('noAnnouncements') : tp('empty')}
-              description={tab === 'announcements' ? t('noAnnouncementsHint') : tp('emptyHint')}
-            />
+          {view === 'syllabus' && course ? (
+            course.sessions?.length ? (
+              <CourseSyllabus course={course} />
+            ) : (
+              <EmptyState title={t('noSyllabus')} description={t('noSyllabusHint')} />
+            )
           ) : (
-            <div role="feed" aria-label={title} aria-busy={false} className={styles.column}>
-              {pinned.map((r, i) => (
-                <div key={r.post.id}>{row(r, i + 1)}</div>
-              ))}
-              {visible.map((r, i) => (
-                <div key={r.post.id} className={styles.column}>
-                  {i === firstSeen && i > 0 && (
-                    <p className={styles.divider} role="separator">
-                      {t('newSince')}
-                    </p>
-                  )}
-                  {row(r, pinned.length + i + 1)}
+            <>
+              <FreshPosts space={space.id} since={renderedAt} />
+              {listed.length === 0 ? (
+                <EmptyState
+                  title={view === 'announcements' ? t('noAnnouncements') : tp('empty')}
+                  description={
+                    view === 'announcements' ? t('noAnnouncementsHint') : tp('emptyHint')
+                  }
+                />
+              ) : (
+                <div role="feed" aria-label={title} aria-busy={false} className={styles.column}>
+                  {pinned.map((r, i) => (
+                    <div key={r.post.id}>{row(r, i + 1)}</div>
+                  ))}
+                  {visible.map((r, i) => (
+                    <div key={r.post.id} className={styles.column}>
+                      {i === firstSeen && i > 0 && (
+                        <p className={styles.divider} role="separator">
+                          {t('newSince')}
+                        </p>
+                      )}
+                      {row(r, pinned.length + i + 1)}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          )}
-          {rest.length > visible.length && (
-            <LoadMore
-              href={`${path}?${new URLSearchParams({
-                ...(tab === 'announcements' ? { tab } : {}),
-                shown: String(visible.length + BATCH),
-              })}`}
-              label={t('loadMore')}
-              status={t('showing', {
-                shown: pinned.length + visible.length,
-                total: listed.length,
-              })}
-            />
+              )}
+              {rest.length > visible.length && (
+                <LoadMore
+                  href={`${path}?${new URLSearchParams({
+                    ...(view === 'announcements' ? { tab: view } : {}),
+                    shown: String(visible.length + BATCH),
+                  })}`}
+                  label={t('loadMore')}
+                  status={t('showing', {
+                    shown: pinned.length + visible.length,
+                    total: listed.length,
+                  })}
+                />
+              )}
+            </>
           )}
         </main>
         <aside className={styles.rail} aria-label={t('aboutSpace')}>

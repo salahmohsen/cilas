@@ -23,7 +23,7 @@ export function PostLabel({
   return (
     <Tooltip content={label}>
       <span role="img" aria-label={label} tabIndex={0} className={styles.postLabel}>
-        <Badge size="sm" tone={tone} icon={icon} />
+        <Badge size="md" tone={tone} icon={icon} className={styles.labelBadge} />
       </span>
     </Tooltip>
   )

@@ -148,15 +148,15 @@ export async function PostHead({
         }
       />
       <span className={styles.postLabels}>
-        {post.pinned && <PostLabel label={t('pinned')} icon={<Pin size={12} />} />}
+        {post.pinned && <PostLabel label={t('pinned')} icon={<Pin size={16} />} />}
         {post.kind === 'announcement' && (
-          <PostLabel label={t('announcement')} icon={<Megaphone size={12} />} tone="info" />
+          <PostLabel label={t('announcement')} icon={<Megaphone size={16} />} tone="info" />
         )}
         {post.kind === 'event' && (
-          <PostLabel label={t('kind_event')} icon={<CalendarDays size={12} />} />
+          <PostLabel label={t('kind_event')} icon={<CalendarDays size={16} />} />
         )}
-        {post.kind === 'vote' && <PostLabel label={t('kind_vote')} icon={<Vote size={12} />} />}
-        {post.locked && <PostLabel label={t('locked')} icon={<Lock size={12} />} tone="warning" />}
+        {post.kind === 'vote' && <PostLabel label={t('kind_vote')} icon={<Vote size={16} />} />}
+        {post.locked && <PostLabel label={t('locked')} icon={<Lock size={16} />} tone="warning" />}
         {!deleted && (
           <PostActions
             post={{ id: post.id, body: post.body, pinned: !!post.pinned, locked: !!post.locked }}

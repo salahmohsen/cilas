@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { getTranslations } from 'next-intl/server'
 
 import { Accordion } from '@/components/arc/accordion/accordion'
@@ -26,7 +27,7 @@ export async function SpaceRail({
   participation,
   now,
 }: {
-  about: string
+  about: ReactNode
   posting: string
   notice: NoticePart[]
   digest: 'daily' | 'weekly' | 'off' | null
@@ -45,11 +46,7 @@ export async function SpaceRail({
           <h2 className={styles.sectionTitle}>{t('aboutSpace')}</h2>
         </div>
         <div className={styles.groupBody}>
-          {about && (
-            <p dir="auto" className={`${styles.prose} ${styles.aboutText}`}>
-              {about}
-            </p>
-          )}
+          {about}
           <div className={styles.accordionFlush}>
             <Accordion
               defaultOpen={-1}

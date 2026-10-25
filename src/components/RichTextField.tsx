@@ -36,10 +36,24 @@ export const RichTextField: React.FC<{
   /** As `blocks`, for inline blocks other than footnotes (the article page's mentions). */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   inlineBlocks?: Record<string, (fields: any) => React.ReactNode>
-}> = ({ data, className, footnotes = [], footnoteLabel = 'Note', blocks = {}, inlineBlocks = {} }) => {
+  /**
+   * Only paragraphs, links, bold, italic, line breaks and lists. Headings and
+   * quotes read as plain paragraphs (a heading in bold); images, rules, tables
+   * and blocks are left out. For a short text shown in a small place.
+   */
+  plain?: boolean
+}> = ({
+  data,
+  className,
+  footnotes = [],
+  footnoteLabel = 'Note',
+  blocks = {},
+  inlineBlocks = {},
+  plain = false,
+}) => {
   if (!data) return null
 
-  const converters: JSXConvertersFunction = ({ defaultConverters }) => ({
+  const fullConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
     ...defaultConverters,
     // A quote whose last line starts with a dash ("— Pascal", written in the
     // editor as a line break then the source) gets that line as its citation.
@@ -48,11 +62,15 @@ export const RichTextField: React.FC<{
       let at = -1
       kids.forEach((k, i) => {
         const next = kids[i + 1] as { type?: string; text?: string } | undefined
-        if (k.type === 'linebreak' && next?.type === 'text' && SOURCE_LEAD.test(next.text ?? '')) at = i
+        if (k.type === 'linebreak' && next?.type === 'text' && SOURCE_LEAD.test(next.text ?? ''))
+          at = i
       })
       if (at === -1) return <blockquote>{nodesToJSX({ nodes: kids })}</blockquote>
       const first = kids[at + 1] as SerializedLexicalNode & { text: string }
-      const source = [{ ...first, text: first.text.replace(SOURCE_LEAD, '') }, ...kids.slice(at + 2)]
+      const source = [
+        { ...first, text: first.text.replace(SOURCE_LEAD, '') },
+        ...kids.slice(at + 2),
+      ]
       return (
         <blockquote className="quote-with-source">
           <p>{nodesToJSX({ nodes: kids.slice(0, at) })}</p>
@@ -82,10 +100,35 @@ export const RichTextField: React.FC<{
     },
   })
 
+  const plainConverters: JSXConvertersFunction = ({ defaultConverters }) => ({
+    ...defaultConverters,
+    heading: ({ node, nodesToJSX }) => (
+      <p>
+        <strong>
+          {nodesToJSX({ nodes: (node as { children: SerializedLexicalNode[] }).children })}
+        </strong>
+      </p>
+    ),
+    quote: ({ node, nodesToJSX }) => (
+      <p>{nodesToJSX({ nodes: (node as { children: SerializedLexicalNode[] }).children })}</p>
+    ),
+    text: ({ node }) => {
+      const { text, format } = node as { text: string; format: number }
+      // Lexical's text format bits: 1 bold, 2 italic.
+      const italic = format & 2 ? <em>{text}</em> : text
+      return format & 1 ? <strong>{italic}</strong> : italic
+    },
+    upload: () => null,
+    horizontalrule: () => null,
+    table: () => null,
+    blocks: {},
+    inlineBlocks: {},
+  })
+
   return (
     <RichText
       className={className ?? 'prose prose-neutral max-w-none dark:prose-invert'}
-      converters={converters}
+      converters={plain ? plainConverters : fullConverters}
       data={data}
     />
   )

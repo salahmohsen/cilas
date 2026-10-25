@@ -87,7 +87,10 @@ export type SpaceSummary = {
   cover: string | null
 }
 
-const coverOf = (label: { cover_image?: unknown; cover?: unknown } | undefined) => {
+/** The cover of a community space, which has no course or programme to lend one. */
+export const COMMUNITY_COVER = '/assets/images/pigeons-tower.jpg'
+
+export const coverOf = (label: { cover_image?: unknown; cover?: unknown } | undefined) => {
   const media = label?.cover_image ?? label?.cover
   return media && typeof media === 'object'
     ? ((media as { url?: string | null }).url ?? null)
@@ -808,6 +811,7 @@ export const spaceLanding = async (
       draft: true,
       pagination: false,
       limit: 1,
+      locale: locale === 'ar' ? 'ar' : 'en',
       overrideAccess: true,
       where: { slug: { equals: slug }, _status: { equals: 'published' } },
     })

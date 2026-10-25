@@ -23,10 +23,8 @@ import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
-import { mySpaces } from '@/lib/spaces-data'
+import { COMMUNITY_COVER, mySpaces } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
-
-const COMMUNITY_COVER = '/assets/images/pigeons-tower.jpg'
 
 type Props = { params: Promise<{ locale: string }> }
 
