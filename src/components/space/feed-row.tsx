@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
-import { Paperclip } from 'lucide-react'
+import { CalendarDays, Lock, Megaphone, Paperclip, Pin, Vote } from 'lucide-react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Badge } from '@/components/arc/badge/badge'
@@ -17,6 +17,7 @@ import { PersonHover, type PersonCard } from './person-hover'
 import { PostActions } from './post-actions'
 import { PostBody } from './post-body'
 import { PostFoot } from './post-foot'
+import { PostLabel } from './post-label'
 import type { ThreadViewer } from './space-thread'
 import styles from './space.module.css'
 import { When } from './when'
@@ -147,20 +148,15 @@ export async function PostHead({
         }
       />
       <span className={styles.postLabels}>
-        {post.pinned && <Badge size="sm">{t('pinned')}</Badge>}
+        {post.pinned && <PostLabel label={t('pinned')} icon={<Pin size={12} />} />}
         {post.kind === 'announcement' && (
-          <Badge size="sm" tone="info">
-            {t('announcement')}
-          </Badge>
+          <PostLabel label={t('announcement')} icon={<Megaphone size={12} />} tone="info" />
         )}
-        {(post.kind === 'event' || post.kind === 'vote') && (
-          <Badge size="sm">{t(`kind_${post.kind}`)}</Badge>
+        {post.kind === 'event' && (
+          <PostLabel label={t('kind_event')} icon={<CalendarDays size={12} />} />
         )}
-        {post.locked && (
-          <Badge size="sm" tone="warning">
-            {t('locked')}
-          </Badge>
-        )}
+        {post.kind === 'vote' && <PostLabel label={t('kind_vote')} icon={<Vote size={12} />} />}
+        {post.locked && <PostLabel label={t('locked')} icon={<Lock size={12} />} tone="warning" />}
         {!deleted && (
           <PostActions
             post={{ id: post.id, body: post.body, pinned: !!post.pinned, locked: !!post.locked }}

@@ -6,6 +6,7 @@ import { getPayload } from 'payload'
 import { Info } from 'lucide-react'
 
 import { personOf } from '@/access'
+import { Badge } from '@/components/arc/badge/badge'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
@@ -145,10 +146,9 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
           <h1 className={styles.spaceTitle}>
             <bdi>{title}</bdi>
           </h1>
-          <span className={styles.status} data-open={!feed.archived}>
-            <span className={styles.statusDot} aria-hidden="true" />
+          <Badge tone={feed.archived ? 'neutral' : 'success'}>
             {feed.archived ? t('archived') : t('open')}
-          </span>
+          </Badge>
           <span className={styles.headActions}>
             <span className={styles.phoneOnly}>
               <BottomSheet

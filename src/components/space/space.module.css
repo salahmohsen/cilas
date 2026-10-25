@@ -303,6 +303,11 @@
   cursor: pointer;
 }
 
+.postLabel {
+  display: inline-flex;
+  border-radius: var(--radius-pill);
+}
+
 .postLabels {
   margin-inline-start: auto;
   display: flex;
@@ -451,25 +456,6 @@
   line-height: var(--leading-tight, 1.2);
   text-wrap: balance;
   min-width: 0;
-}
-
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-}
-
-.statusDot {
-  width: 8px;
-  height: 8px;
-  border-radius: var(--radius-pill);
-  background: var(--danger);
-}
-
-.status[data-open='true'] .statusDot {
-  background: var(--success);
 }
 
 .headActions {
