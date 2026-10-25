@@ -20,10 +20,18 @@ import { RichTextField } from '@/components/RichTextField'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { numberingSystemOf } from '@/lib/digits'
 import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
-import { COMMUNITY_COVER, coverOf, memberState, participation, spaceFeed } from '@/lib/spaces-data'
+import {
+  COMMUNITY_COVER,
+  coverOf,
+  memberState,
+  participation,
+  spaceEvents,
+  spaceFeed,
+} from '@/lib/spaces-data'
 import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
 
 import { Composer, type PostKind } from './composer'
+import { EventList } from './event-list'
 import { FeedFilter } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
@@ -35,7 +43,7 @@ import { SpaceRail } from './space-rail'
 import { SpaceSettings } from './space-settings'
 import styles from './space.module.css'
 
-export type SpaceTab = 'all' | 'announcements' | 'syllabus'
+export type SpaceTab = 'all' | 'announcements' | 'syllabus' | 'events'
 
 /** NN/g: "Load more" in batches, never an endless feed. */
 const BATCH = 20
@@ -64,7 +72,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   const moderator = mem.role === 'moderator'
 
   const lang = locale === 'ar' ? 'ar' : 'en'
-  const [t, tp, ts, feed, state, { cards, byId, moderators }, numbers, jar, custom] =
+  const [t, tp, ts, feed, state, { cards, byId, moderators }, numbers, jar, custom, events] =
     await Promise.all([
       getTranslations('Spaces'),
       getTranslations('SpacePost'),
@@ -88,6 +96,9 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
         })
         .then((row) => row.about ?? '')
         .catch(() => ''),
+      tab === 'events'
+        ? spaceEvents(payload, user, space, lang)
+        : Promise.resolve({ upcoming: [], past: [] }),
     ])
   const renderedAt = new Date().toISOString()
 
@@ -301,6 +312,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
                 { value: 'all', label: t('all') },
                 { value: 'announcements', label: t('announcements') },
                 ...(course ? [{ value: 'syllabus', label: t('syllabus') }] : []),
+                { value: 'events', label: t('events') },
               ]}
             />
           </div>
@@ -310,6 +322,13 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
             ) : (
               <EmptyState title={t('noSyllabus')} description={t('noSyllabusHint')} />
             )
+          ) : view === 'events' ? (
+            <EventList
+              upcoming={events.upcoming}
+              past={events.past}
+              context={context}
+              path={path}
+            />
           ) : (
             <>
               <FreshPosts space={space.id} since={renderedAt} />

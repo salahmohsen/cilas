@@ -762,7 +762,8 @@
       "reply": "New reply",
       "announcement": "New announcement",
       "moderation": "Moderation issue",
-      "report": "New report"
+      "report": "New report",
+      "event_changed": "Event changed"
     }
   },
   "Spaces": {
@@ -836,7 +837,8 @@
     "syllabus": "Syllabus",
     "coursePage": "Course page",
     "noSyllabus": "No syllabus yet",
-    "noSyllabusHint": "The sessions appear here once the course has them."
+    "noSyllabusHint": "The sessions appear here once the course has them.",
+    "events": "Events"
   },
   "SpacePost": {
     "newPost": "New post",
@@ -932,7 +934,7 @@
     "voteMultiple": "Members may choose more than one option",
     "voteMultipleHint": "Off: each member picks one.",
     "saveError_events": "In this space, only moderators start events.",
-    "saveError_event": "An event needs a place, and a day and time that have not passed.",
+    "saveError_event": "An event needs a place, a day and time that have not passed, and an end after the start.",
     "saveError_vote": "A vote needs two to ten different options.",
     "eventDayPlaceholder": "Choose a day",
     "calendarToday": "Today",
@@ -972,7 +974,38 @@
     "sessionLabel": "Course session",
     "sessionGone": "This session is no longer in the course syllabus.",
     "sessionHidden": "This session is in a course you cannot open.",
-    "saveError_session": "Only a fellow's announcement can point at a session, and only at a session of this course."
+    "saveError_session": "Only a fellow's announcement can point at a session, and only at a session of this course.",
+    "eventEndAdd": "Add an end time",
+    "eventEnd": "Ends",
+    "eventEndLater": "The end must be after the start",
+    "eventUntil": "until {when}",
+    "eventEnded": "Ended",
+    "eventChange": "Change time or place",
+    "eventChangeHint": "Members who said going or maybe are told about the change.",
+    "eventBy": "by {name}",
+    "eventsEmpty": "No events yet",
+    "eventsEmptyHint": "Events that members and fellows start here show up with their date and who is going.",
+    "eventsNoUpcoming": "No upcoming events.",
+    "eventsPast": "{count, plural, one {Past event (#)} other {Past events (#)}}",
+    "calendarAdd": "Add to calendar",
+    "calendarGoogle": "Google Calendar",
+    "calendarIcs": "Download .ics",
+    "rsvpLabel": "Your answer",
+    "rsvp_going": "Going",
+    "rsvp_maybe": "Maybe",
+    "rsvp_not_going": "Not going",
+    "rsvpClear": "Clear my answer",
+    "rsvpYours": "Your answer",
+    "rsvpCounts": "Answers",
+    "rsvpGoingList": "Going",
+    "rsvpGoingCount": "{count, plural, one {# going} other {# going}}",
+    "rsvpSaved_going": "You are going.",
+    "rsvpSaved_maybe": "You might go.",
+    "rsvpSaved_not_going": "You are not going.",
+    "rsvpCleared": "Your answer is cleared.",
+    "rsvpInvalid": "Choose going, maybe or not going.",
+    "saveError_event_over": "This event is over.",
+    "saveError_rsvp": "Choose going, maybe or not going."
   },
   "SpaceComment": {
     "write": "Comment",

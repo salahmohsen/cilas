@@ -32,7 +32,7 @@ export default async function KindSlugPage({ params, searchParams }: Props) {
       locale={locale}
       user={user}
       landing={landing}
-      tab={tab === 'announcements' || tab === 'syllabus' ? tab : 'all'}
+      tab={tab === 'announcements' || tab === 'syllabus' || tab === 'events' ? tab : 'all'}
       shown={Math.min(Math.max(Number(shown) || 0, 0), 500)}
       path={path}
     />

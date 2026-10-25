@@ -10,7 +10,7 @@ import { absoluteUrl } from '@/lib/schema'
 import type { NoticePart } from '@/lib/space-consent'
 import type { FeedRow as FeedRowData } from '@/lib/spaces-data'
 
-import { EventDetails } from './event-details'
+import { EventCard } from './event-card'
 import { VotePoll } from './vote-poll'
 import { LinkPreviews } from './link-card'
 import { PersonHover, type PersonCard } from './person-hover'
@@ -208,8 +208,8 @@ export async function FeedRow({
             <PostBody body={post.body} people={context.people} />
           </Folded>
         </div>
-        {post.kind === 'event' && post.event_starts_at && (
-          <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
+        {post.kind === 'event' && (
+          <EventCard post={post} rsvp={row.rsvp} context={context} href={postHref} />
         )}
         {row.session && <PostSession session={row.session} />}
         {row.vote && (

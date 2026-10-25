@@ -80,3 +80,18 @@ export const cairoInstant = (day: string, time: string): string | null => {
   const first = wall - cairoOffset(wall) * 60_000
   return new Date(wall - cairoOffset(first) * 60_000).toISOString()
 }
+
+const cairoHours = new Intl.DateTimeFormat('en-US', {
+  timeZone: CAIRO,
+  hourCycle: 'h23',
+  hour: '2-digit',
+  minute: '2-digit',
+})
+
+/** The Cairo wall-clock time (`HH:MM`) of an instant, the inverse of `cairoInstant()`'s time. */
+export const cairoTime = (value: string | Date): string | null => {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return null
+  const part = (type: string) => cairoHours.formatToParts(date).find((p) => p.type === type)?.value
+  return `${part('hour')}:${part('minute')}`
+}

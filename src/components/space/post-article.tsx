@@ -12,7 +12,7 @@ import { memberState, postView, type PostView } from '@/lib/spaces-data'
 
 import { Attachments } from './attachments'
 import { commentsOpen, PostHead, type FeedContext } from './feed-row'
-import { EventDetails } from './event-details'
+import { EventCard } from './event-card'
 import { LinkPreviews } from './link-card'
 import { PostPhotos } from './photo-grid'
 import { PostBody } from './post-body'
@@ -112,8 +112,8 @@ export async function PostArticle({
           <PostBody body={post.body} people={context.people} />
         )}
       </div>
-      {!deleted && post.kind === 'event' && post.event_starts_at && (
-        <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
+      {!deleted && post.kind === 'event' && (
+        <EventCard post={post} rsvp={row.rsvp} context={context} href={href} />
       )}
       {!deleted && row.session && <PostSession session={row.session} />}
       {!deleted && row.vote && (

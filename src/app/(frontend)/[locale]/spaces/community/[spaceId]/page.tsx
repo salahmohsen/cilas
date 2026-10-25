@@ -38,7 +38,7 @@ export default async function CommunitySpacePage({ params, searchParams }: Props
       locale={locale}
       user={user}
       landing={landing}
-      tab={tab === 'announcements' ? 'announcements' : 'all'}
+      tab={tab === 'announcements' || tab === 'events' ? tab : 'all'}
       shown={Math.min(Math.max(Number(shown) || 0, 0), 500)}
       path={path}
     />

@@ -68,3 +68,13 @@ describe('calendar entries', () => {
     expect(ics.split('\r\n').every((l) => Buffer.byteLength(l) <= 75)).toBe(true)
   })
 })
+
+describe('cairoTime', () => {
+  it('is the Cairo wall-clock time of an instant, in winter and in summer', async () => {
+    const { cairoTime, cairoInstant } = await import('@/lib/cairo-day')
+    expect(cairoTime('2026-11-03T16:00:00.000Z')).toBe('18:00')
+    expect(cairoTime('2026-07-03T16:00:00.000Z')).toBe('19:00')
+    expect(cairoTime(cairoInstant('2026-11-03', '20:30')!)).toBe('20:30')
+    expect(cairoTime('nope')).toBeNull()
+  })
+})

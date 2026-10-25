@@ -72,8 +72,12 @@ async function LinkList({ urls }: { urls: string[] }) {
   )
 }
 
-/** The previews of a post's outside links: a card for one, a compact list for several. */
-export function LinkPreviews({ urls }: { urls: string[] }) {
+/**
+ * The previews of a post's outside links: a card for one, a compact list for
+ * several. `compact` keeps one link to the list's one-line row, for a card
+ * that already has more to show, such as an event.
+ */
+export function LinkPreviews({ urls, compact = false }: { urls: string[]; compact?: boolean }) {
   if (urls.length === 0) return null
-  return urls.length === 1 ? <LinkCard url={urls[0]!} /> : <LinkList urls={urls} />
+  return urls.length === 1 && !compact ? <LinkCard url={urls[0]!} /> : <LinkList urls={urls} />
 }

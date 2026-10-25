@@ -2,7 +2,7 @@
 
 import type { NoticePart } from '@/lib/space-consent'
 import { useEffect, useRef, useState } from 'react'
-import { useLocale, useTranslations } from 'next-intl'
+import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Check, Paperclip, Plus, Send, X } from 'lucide-react'
 
@@ -12,17 +12,16 @@ import { Avatar } from '@/components/arc/avatar/avatar'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
-import { DatePicker } from '@/components/arc/date-picker/date-picker'
 import { Input } from '@/components/arc/input/input'
 import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
 import { Select } from '@/components/arc/select/select'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
-import { TimePicker } from '@/components/arc/time-picker/time-picker'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
 import { SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 
 import { AttachmentTray } from './attachment-tray'
+import { EventFields, endsEarly, eventFormData, type EventValue } from './event-fields'
 import { useAttachments } from './use-attachments'
 import { ConsentSheet } from './consent-sheet'
 import styles from './space.module.css'
@@ -144,11 +143,8 @@ export function Composer({
   )
 }
 
-/** An event's place and Cairo day and time; a vote's options and whether more than one may be chosen. */
-type Extra = {
-  location: string
-  day: Date | undefined
-  time: string
+/** An event's place and Cairo times; a vote's options and whether more than one may be chosen. */
+type Extra = EventValue & {
   options: string[]
   multiple: boolean
   anonymous: boolean
@@ -158,14 +154,11 @@ const EMPTY_EXTRA: Extra = {
   location: '',
   day: undefined,
   time: '18:00',
+  endTime: null,
   options: ['', ''],
   multiple: false,
   anonymous: false,
 }
-
-/** The day as the Cairo calendar names it, read from the picker's local midnight. */
-const dayOf = (date: Date) =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
 
 function ComposerForm({
   space,
@@ -183,7 +176,6 @@ function ComposerForm({
   onPublished: () => void
 }) {
   const t = useTranslations('SpacePost')
-  const locale = useLocale()
   const router = useRouter()
   const draftKey = `space-draft-${space}`
   const [initial] = useState(() => localStorage.getItem(draftKey) ?? '')
@@ -201,7 +193,8 @@ function ComposerForm({
   const options = extra.options.map((o) => o.trim()).filter(Boolean)
   const ready =
     !body.empty &&
-    (kind !== 'event' || (extra.location.trim() !== '' && extra.day !== undefined)) &&
+    (kind !== 'event' ||
+      (extra.location.trim() !== '' && extra.day !== undefined && !endsEarly(extra))) &&
     (kind !== 'vote' || options.length >= VOTE_OPTIONS.min)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -217,11 +210,7 @@ function ComposerForm({
     data.set('space', String(space))
     data.set('kind', kind)
     data.set('body', body.markdown)
-    if (kind === 'event' && extra.day) {
-      data.set('location', extra.location)
-      data.set('day', dayOf(extra.day))
-      data.set('time', extra.time)
-    }
+    if (kind === 'event') eventFormData(extra, data)
     if (kind === 'vote') {
       for (const option of options) data.append('option', option)
       data.set('multiple', String(extra.multiple))
@@ -275,42 +264,7 @@ function ComposerForm({
             options={[{ value: NO_SESSION, label: t('sessionNone') }, ...sessions]}
           />
         )}
-        {kind === 'event' && (
-          <div className={styles.eventFields}>
-            <Input
-              label={t('eventLocation')}
-              placeholder={t('eventLocationHint')}
-              value={extra.location}
-              maxLength={200}
-              onChange={(e) => set({ location: e.currentTarget.value })}
-            />
-            <DatePicker
-              label={t('eventDay')}
-              placeholder={t('eventDayPlaceholder')}
-              value={extra.day}
-              onChange={(day) => set({ day })}
-              minDate={today}
-              locale={locale}
-              showToday
-              labels={{
-                today: t('calendarToday'),
-                previous: t('calendarPrevious'),
-                next: t('calendarNext'),
-                clear: t('calendarClear'),
-                choose: t('eventDayPlaceholder'),
-                selected: (date) => t('calendarSelected', { date }),
-              }}
-            />
-            <TimePicker
-              label={t('eventTime')}
-              description={t('eventTimeHint')}
-              value={extra.time}
-              onChange={(time) => set({ time })}
-              minuteStep={15}
-              format={locale === 'ar' ? '24h' : '12h'}
-            />
-          </div>
-        )}
+        {kind === 'event' && <EventFields value={extra} onChange={set} minDate={today} />}
         {kind === 'vote' && (
           <fieldset className={styles.voteFields}>
             <legend className={styles.fieldLegend}>{t('voteOptions')}</legend>
