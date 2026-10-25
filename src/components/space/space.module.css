@@ -1280,6 +1280,7 @@
   display: grid;
   gap: var(--space-4);
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  align-items: start;
 }
 
 .eventFields > :first-child {
@@ -1288,13 +1289,8 @@
 
 .eventEnd {
   grid-column: 1 / -1;
-  display: grid;
-  gap: var(--space-3);
-  justify-items: start;
-}
-
-.eventEnd > :last-child:not(:first-child) {
-  width: min(100%, 320px);
+  /* Arc's checkbox row carries its own inset; pull it to the fields' edge */
+  margin-inline-start: -0.8125rem;
 }
 
 .voteFields {

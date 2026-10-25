@@ -78,22 +78,22 @@ export function EventFields({
         minuteStep={15}
         format={format}
       />
+      {value.endTime !== null && (
+        <TimePicker
+          label={t('eventEnd')}
+          description={endsEarly(value) ? t('eventEndLater') : t('eventTimeHint')}
+          value={value.endTime}
+          onChange={(endTime) => onChange({ endTime })}
+          minuteStep={15}
+          format={format}
+        />
+      )}
       <div className={styles.eventEnd}>
         <Checkbox
           label={t('eventEndAdd')}
           checked={value.endTime !== null}
           onCheckedChange={(on) => onChange({ endTime: on === true ? endAfter(value.time) : null })}
         />
-        {value.endTime !== null && (
-          <TimePicker
-            label={t('eventEnd')}
-            description={endsEarly(value) ? t('eventEndLater') : t('eventTimeHint')}
-            value={value.endTime}
-            onChange={(endTime) => onChange({ endTime })}
-            minuteStep={15}
-            format={format}
-          />
-        )}
       </div>
     </div>
   )
