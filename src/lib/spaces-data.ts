@@ -505,7 +505,16 @@ export const spaceFeed = async (
 }
 
 /** A private file on a post or comment (ADR 0008), served through Payload's read rule. */
-export type SpaceFileRef = { id: number; url: string; name: string; size: number }
+export type SpaceFileRef = {
+  id: number
+  url: string
+  name: string
+  size: number
+  mime: string
+  isImage: boolean
+  width: number | null
+  height: number | null
+}
 
 /** One comment in a post's thread. A deleted comment with replies stays as a placeholder (spec §3). */
 export type ThreadComment = {
@@ -515,7 +524,7 @@ export type ThreadComment = {
   createdAt: string
   edited: boolean
   deleted: boolean
-  file: SpaceFileRef | null
+  files: SpaceFileRef[]
   reactions: Reactions
 }
 
@@ -537,11 +546,18 @@ const fileRef = (f: {
   url?: string | null
   filename?: string | null
   filesize?: number | null
+  mimeType?: string | null
+  width?: number | null
+  height?: number | null
 }): SpaceFileRef => ({
   id: f.id,
   url: f.url ?? '',
   name: (f.filename ?? '').replace(/^[0-9a-f]{32}-/, ''),
   size: f.filesize ?? 0,
+  mime: f.mimeType ?? '',
+  isImage: (f.mimeType ?? '').startsWith('image/'),
+  width: f.width ?? null,
+  height: f.height ?? null,
 })
 
 /**
@@ -583,12 +599,17 @@ export const postThreads = async (
           depth: 0,
           pagination: false,
           overrideAccess: false,
+          sort: 'createdAt',
           where: { comment: { in: commentIds } },
         }),
       ])
     : [{ docs: [] }, { docs: [] }]
   const onComment = tally(reactions, (r) => relId(r.comment), user)
-  const fileOf = new Map(files.map((f) => [relId(f.comment as never)!, fileRef(f)]))
+  const filesOf = new Map<number, SpaceFileRef[]>()
+  for (const f of files) {
+    const cid = relId(f.comment as never)
+    if (cid != null) filesOf.set(cid, [...(filesOf.get(cid) ?? []), fileRef(f)])
+  }
 
   const node = (c: (typeof comments)[number]): ThreadComment => ({
     id: c.id,
@@ -597,7 +618,7 @@ export const postThreads = async (
     createdAt: c.createdAt,
     edited: !!c.edited_at,
     deleted: !!c.deleted_at,
-    file: c.deleted_at ? null : (fileOf.get(c.id) ?? null),
+    files: c.deleted_at ? [] : (filesOf.get(c.id) ?? []),
     reactions: onComment.get(c.id) ?? NO_REACTIONS,
   })
   const repliesOf = new Map<number, ThreadComment[]>()

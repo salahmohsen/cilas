@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
-import { CalendarDays, Lock, Megaphone, Paperclip, Pin, Vote } from 'lucide-react'
+import { CalendarDays, Lock, Megaphone, Pin, Vote } from 'lucide-react'
 
 import { Avatar } from '@/components/arc/avatar/avatar'
 import { Badge } from '@/components/arc/badge/badge'
@@ -8,12 +8,13 @@ import { ExpandableText } from '@/components/arc/expandable-text/expandable-text
 import { outsideLinks } from '@/lib/link-preview'
 import { absoluteUrl } from '@/lib/schema'
 import type { NoticePart } from '@/lib/space-consent'
-import type { FeedRow as FeedRowData, SpaceFileRef } from '@/lib/spaces-data'
+import type { FeedRow as FeedRowData } from '@/lib/spaces-data'
 
 import { EventDetails } from './event-details'
 import { VotePoll } from './vote-poll'
 import { LinkPreviews } from './link-card'
 import { PersonHover, type PersonCard } from './person-hover'
+import { Attachments } from './attachments'
 import { PostActions } from './post-actions'
 import { PostBody } from './post-body'
 import { PostFoot } from './post-foot'
@@ -61,17 +62,6 @@ export type FeedContext = {
   notice: NoticePart[]
   /** When the page rendered, so client times match the server's */
   now: string
-}
-
-/** A private file on a post or comment, as a chip that downloads it. */
-export function FileChip({ file }: { file: SpaceFileRef }) {
-  return (
-    <a href={file.url} className={styles.fileChip} download={file.name}>
-      <Paperclip size={14} aria-hidden="true" />
-      <bdi>{file.name}</bdi>
-      <span className={styles.meta}>{Math.max(1, Math.round(file.size / 1024))} KB</span>
-    </a>
-  )
 }
 
 /** Who wrote a post: the photo, then the name (with its card) above when it was posted. */
@@ -228,13 +218,7 @@ export async function FeedRow({
           <LinkPreviews urls={links} />
         </Suspense>
       )}
-      {row.files.length > 0 && (
-        <div className={styles.files} aria-label={t('files')} role="group">
-          {row.files.map((f) => (
-            <FileChip key={f.id} file={f} />
-          ))}
-        </div>
-      )}
+      {row.files.length > 0 && <Attachments files={row.files} label={t('files')} />}
       <PostFoot
         post={post.id}
         link={absoluteUrl(postHref)}

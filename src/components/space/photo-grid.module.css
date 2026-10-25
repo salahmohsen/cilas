@@ -1,0 +1,229 @@
+/* One photo fills the width; two sit side by side; three put one large beside two; four make a square of four. */
+.grid {
+  display: grid;
+  gap: var(--space-1);
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+  border-radius: var(--radius-surface);
+}
+.grid[data-compact] {
+  max-width: 400px;
+}
+.grid[data-count='1'] {
+  max-height: 480px;
+}
+.grid[data-count='2'] {
+  grid-template-columns: 1fr 1fr;
+  aspect-ratio: 2 / 1;
+}
+.grid[data-count='3'] {
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  aspect-ratio: 3 / 2;
+}
+.grid[data-count='3'] .cell:first-child {
+  grid-row: span 2;
+}
+.grid[data-count='4'] {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  aspect-ratio: 4 / 3;
+}
+.cell {
+  min-width: 0;
+  min-height: 0;
+}
+.tile {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: var(--surface-muted);
+  cursor: zoom-in;
+}
+.tile:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.blurred {
+  filter: blur(6px) brightness(0.7);
+  transform: scale(1.1);
+}
+.more {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-size: var(--text-2xl);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The lightbox: Arc's dialog, wide, its title centred, the close button moved to the start. */
+.lightbox {
+  width: min(calc(100vw - var(--space-8)), 960px);
+}
+.lightbox > div:first-child {
+  justify-content: center;
+  padding-inline: calc(var(--space-6) + 48px);
+  text-align: center;
+  border-bottom: 0;
+}
+/* Arc's own close button sits at the end with a fixed English label; the back button below replaces it. */
+.lightbox > div:first-child > button {
+  display: none;
+}
+.back,
+.nav {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--surface-raised);
+  color: var(--foreground);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    transform var(--duration-spring) var(--ease-spring);
+}
+.back {
+  position: absolute;
+  inset-block-start: var(--space-5);
+  inset-inline-start: var(--space-5);
+}
+@media (hover: hover) and (pointer: fine) {
+  .back:hover,
+  .nav:hover {
+    background: var(--surface-muted);
+  }
+}
+.back:active,
+.nav:active {
+  transform: scale(0.96);
+  transition: transform var(--duration-instant) var(--ease-standard);
+}
+.stage {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-4);
+}
+.prev {
+  grid-column: 1;
+}
+.next {
+  grid-column: 3;
+}
+.frame {
+  grid-column: 2;
+  display: grid;
+  place-items: center;
+  height: min(62dvh, 600px);
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.full {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-surface);
+  user-select: none;
+  cursor: grab;
+}
+.strip {
+  display: flex;
+  gap: var(--space-1);
+  margin-top: var(--space-5);
+  padding: var(--space-1);
+  overflow-x: auto;
+  justify-content: safe center;
+  scrollbar-width: none;
+}
+.thumb {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 60px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 6px;
+  background: var(--surface-muted);
+  opacity: 0.5;
+  cursor: pointer;
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    width var(--duration-standard) var(--ease-standard);
+}
+.thumb[aria-current='true'] {
+  width: 52px;
+  opacity: 1;
+}
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.thumb:focus-visible,
+.back:focus-visible,
+.nav:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .stage {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .frame {
+    grid-column: 1;
+    grid-row: 1;
+    height: 56dvh;
+  }
+  /* On a phone the side buttons float over the photo's edges; swiping is the main way to move. */
+  .nav {
+    grid-row: 1;
+    grid-column: 1;
+    z-index: 1;
+    width: 36px;
+    height: 36px;
+    background: color-mix(in oklab, var(--surface-raised) 80%, transparent);
+  }
+  .prev {
+    justify-self: start;
+  }
+  .next {
+    justify-self: end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .back,
+  .nav,
+  .thumb,
+  .back:active,
+  .nav:active {
+    transition: none;
+  }
+  .back:active,
+  .nav:active {
+    transform: none;
+  }
+}

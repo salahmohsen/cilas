@@ -227,7 +227,7 @@ describe('spaces write', () => {
     })
     await (
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
-    ).drizzle.execute(sql`delete from space_files where filename like 'probe-f%.pdf'`)
+    ).drizzle.execute(sql`delete from space_files where filename like 'probe-f%'`)
     for (const collection of [
       'space-votes',
       'space-reactions',
@@ -748,15 +748,24 @@ describe('spaces write', () => {
     if (!tooMany.ok) expect(tooMany.error).toBe('file-count')
 
     const postId = await newPost(student, community, 'Comment files')
-    const twoOnComment = await commentCreate({
+    const elevenOnComment = await commentCreate({
       payload,
       user: student,
       post: postId,
-      body: 'Two files',
-      files: [pdf('probe-f1.pdf'), pdf('probe-f2.pdf')],
+      body: 'Eleven files',
+      files: Array.from({ length: 11 }, (_, n) => pdf(`probe-f${n}.pdf`)),
     })
-    expect(twoOnComment.ok).toBe(false)
-    if (!twoOnComment.ok) expect(twoOnComment.error).toBe('file-count')
+    expect(elevenOnComment.ok).toBe(false)
+    if (!elevenOnComment.ok) expect(elevenOnComment.error).toBe('file-count')
+    const videoOnComment = await commentCreate({
+      payload,
+      user: student,
+      post: postId,
+      body: 'A video',
+      files: [{ data: Buffer.from('x'), mimetype: 'video/mp4', name: 'probe-f.mp4', size: 1 }],
+    })
+    expect(videoOnComment.ok).toBe(false)
+    if (!videoOnComment.ok) expect(videoOnComment.error).toBe('file-type')
 
     // Storage would write to the real bucket, so the space-files create is
     // intercepted; the row it would get is what is under test.
@@ -781,8 +790,8 @@ describe('spaces write', () => {
         payload,
         user: student,
         post: postId,
-        body: 'Has one file',
-        files: [pdf('probe-f3.pdf')],
+        body: 'Has ten files',
+        files: Array.from({ length: 10 }, (_, n) => pdf(`probe-f${n}.pdf`)),
       })
       expect(comment.ok).toBe(true)
       if (!comment.ok) return
@@ -793,7 +802,7 @@ describe('spaces write', () => {
       expect(fileCalls.map((a) => [a.data.post, a.data.comment])).toEqual([
         [withFiles.data.id, null],
         [withFiles.data.id, null],
-        [null, comment.data.id],
+        ...Array.from({ length: 10 }, () => [null, comment.data.id]),
       ])
     } finally {
       spy.mockRestore()
@@ -876,6 +885,30 @@ describe('spaces write', () => {
       value: true,
     })
     expect(mark.ok).toBe(false)
+  })
+
+  it('a comment shows all its files in order, and says which are images', async () => {
+    const postId = await newPost(student, courseSpace, 'Photos in a comment')
+    const c = await commentCreate({ payload, user: student, post: postId, body: 'Three files' })
+    expect(c.ok).toBe(true)
+    if (!c.ok) return
+    track('space-comments', c.data.id)
+    // Rows straight into the table: storage would write to the real bucket.
+    await (
+      payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
+    ).drizzle.execute(
+      sql`insert into space_files (filename, space_id, comment_id, url, mime_type, filesize, width, height, created_at, updated_at) values
+        ('probe-f-a.png', ${courseSpace.id}, ${c.data.id}, '/probe/a.png', 'image/png', 5, 800, 600, now() - interval '2 seconds', now()),
+        ('probe-f-b.pdf', ${courseSpace.id}, ${c.data.id}, '/probe/b.pdf', 'application/pdf', 5, null, null, now() - interval '1 second', now()),
+        ('probe-f-c.webp', ${courseSpace.id}, ${c.data.id}, '/probe/c.webp', 'image/webp', 5, 300, 400, now(), now())`,
+    )
+    const view = await postView(payload, student, courseSpace, postId)
+    expect(view?.comments[0].files).toMatchObject([
+      { name: 'probe-f-a.png', isImage: true, mime: 'image/png', width: 800, height: 600 },
+      { name: 'probe-f-b.pdf', isImage: false, mime: 'application/pdf', width: null },
+      { name: 'probe-f-c.webp', isImage: true, width: 300, height: 400 },
+    ])
+    expect(await postView(payload, stranger, courseSpace, postId)).toBeNull()
   })
 
   it('postView: the thread for members, null for strangers and for another space', async () => {

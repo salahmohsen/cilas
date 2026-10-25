@@ -184,6 +184,8 @@ export interface CommentThreadProps {
   renderExtra?: (comment: ThreadComment) => ReactNode
   /** Extra content beside the composer's send button, such as an attach button. */
   composerExtra?: ReactNode
+  /** Content under the composer, such as previews of attached files. */
+  composerAttachments?: ReactNode
   /** Change it to move focus into the composer, such as from a Comment button outside the thread. */
   composerFocusKey?: number
   className?: string
@@ -436,6 +438,7 @@ interface ComposerProps {
   onCancel?: () => void
   leading?: ReactNode
   trailing?: ReactNode
+  below?: ReactNode
   compact?: boolean
   cancelLabel: string
   mentionsLabel: string
@@ -453,6 +456,7 @@ function Composer({
   onCancel,
   leading,
   trailing,
+  below,
   compact,
   cancelLabel,
   mentionsLabel,
@@ -638,6 +642,7 @@ function Composer({
           {submitLabel}
         </button>
       </div>
+      {below ? <div className={styles.composerBelow}>{below}</div> : null}
     </div>
   )
 }
@@ -675,6 +680,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     renderMention,
     renderExtra,
     composerExtra,
+    composerAttachments,
     composerFocusKey,
     className,
   },
@@ -1282,6 +1288,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                     onCancel={replyTo ? () => setReplyTo(null) : undefined}
                     leading={<Avatar author={currentUser} />}
                     trailing={composerExtra}
+                    below={composerAttachments}
                   />
                 </div>
               )}

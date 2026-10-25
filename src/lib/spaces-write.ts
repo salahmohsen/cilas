@@ -5,6 +5,7 @@ import { archivedNow } from '@/lib/space-lifecycle'
 import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
 import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
+import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
 import { EVENT_LOCATION_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
@@ -49,9 +50,6 @@ export const STEP_KEYS: readonly StepKey[] = [
   'checked_profile',
   'chose_digest',
 ]
-
-/** Spec §6: 5 files per post, 1 per comment. */
-const FILE_LIMITS = { post: 5, comment: 1 } as const
 
 /** What a tombstoned row keeps in its required body field. */
 const TOMBSTONE_BODY = ' '

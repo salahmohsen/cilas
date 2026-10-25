@@ -412,6 +412,10 @@
   align-items: center;
   gap: 4px;
 }
+.composerBelow {
+  grid-column: 2 / -1;
+  min-width: 0;
+}
 .composer[data-compact] .composerActions {
   justify-content: flex-end;
 }
@@ -559,6 +563,9 @@
   }
   .composer > .avatar {
     display: none;
+  }
+  .composerBelow {
+    grid-column: 1 / -1;
   }
   .replyingInner {
     padding-left: 2px;

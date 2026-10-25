@@ -1,7 +1,7 @@
 'use client'
 
 import type { NoticePart } from '@/lib/space-consent'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Check, Paperclip, Plus, Send, X } from 'lucide-react'
@@ -13,14 +13,15 @@ import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { DatePicker } from '@/components/arc/date-picker/date-picker'
-import { FileDropzone } from '@/components/arc/file-dropzone/file-dropzone'
 import { Input } from '@/components/arc/input/input'
 import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
 import { postCreateAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
 import { VOTE_OPTIONS } from '@/lib/space-post-kinds'
 
+import { AttachmentTray } from './attachment-tray'
 import { ConsentSheet } from './consent-sheet'
 import styles from './space.module.css'
 
@@ -176,8 +177,9 @@ function ComposerForm({
   const [body, setBody] = useState({ markdown: initial, empty: initial.trim() === '' })
   const [kind, setKind] = useState<PostKind>(kinds[0] ?? 'discussion')
   const [extra, setExtra] = useState<Extra>(EMPTY_EXTRA)
-  const [showFiles, setShowFiles] = useState(false)
   const [files, setFiles] = useState<File[]>([])
+  const picker = useRef<HTMLInputElement>(null)
+  const tf = useTranslations('SpacePhotos')
   const [error, setError] = useState<string | null>(null)
   const set = (patch: Partial<Extra>) => setExtra((current) => ({ ...current, ...patch }))
   const options = extra.options.map((o) => o.trim()).filter(Boolean)
@@ -328,9 +330,10 @@ function ComposerForm({
             />
           </fieldset>
         )}
-        {showFiles && (
-          <FileDropzone multiple maxFiles={5} label={t('filesDrop')} onFilesChange={setFiles} />
-        )}
+        <AttachmentTray
+          files={files}
+          onRemove={(file) => setFiles((current) => current.filter((f) => f !== file))}
+        />
         {error && (
           <p role="alert" className={styles.error}>
             {error}
@@ -339,12 +342,28 @@ function ComposerForm({
       </div>
       <div className={styles.groupFoot}>
         <span className={styles.rowMain}>
-          {!showFiles && (
-            <Button variant="ghost" size="sm" onClick={() => setShowFiles(true)}>
-              <Paperclip size={16} aria-hidden="true" />
-              {t('filesDrop')}
-            </Button>
-          )}
+          <input
+            ref={picker}
+            type="file"
+            multiple
+            hidden
+            accept={SPACE_FILE_ACCEPT}
+            onChange={(e) => {
+              const picked = [...(e.currentTarget.files ?? [])]
+              e.currentTarget.value = ''
+              setFiles((current) => [...current, ...picked].slice(0, FILE_LIMITS.post))
+            }}
+          />
+          <Button
+            variant="ghost"
+            size="sm"
+            title={tf('attachLimit', { count: FILE_LIMITS.post })}
+            disabled={files.length >= FILE_LIMITS.post}
+            onClick={() => picker.current?.click()}
+          >
+            <Paperclip size={16} aria-hidden="true" />
+            {t('filesDrop')}
+          </Button>
           <Button variant="ghost" size="sm" onClick={onCancel}>
             {t('cancel')}
           </Button>

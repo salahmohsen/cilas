@@ -1099,5 +1099,20 @@
     "showEarlier": "{count, plural, one {اعرض تعليقًا سابقًا} two {اعرض تعليقين سابقين} few {اعرض # تعليقات سابقة} many {اعرض # تعليقًا سابقًا} other {اعرض # تعليق سابق}}",
     "attach": "أرفق ملفًا",
     "removeFile": "أزل الملف"
+  },
+  "SpacePhotos": {
+    "photos": "الصور",
+    "open": "افتح {name}",
+    "more": "{count, plural, zero {لا صور أخرى} one {صورة أخرى} two {صورتان أخريان} few {# صور أخرى} many {# صورة أخرى} other {# صورة أخرى}}",
+    "position": "{index} من {total}",
+    "previous": "الصورة السابقة",
+    "next": "الصورة التالية",
+    "close": "أغلق الصور",
+    "strip": "كل الصور",
+    "show": "اعرض {name}",
+    "attachments": "الملفات المرفقة",
+    "remove": "أزل {name}",
+    "attach": "أرفق ملفات",
+    "attachLimit": "حتى {count, plural, one {ملف واحد} two {ملفين} few {# ملفات} many {# ملفًا} other {# ملف}}، بحجم 10 ميغابايت لكل ملف"
   }
 }

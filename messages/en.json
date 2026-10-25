@@ -1099,5 +1099,20 @@
     "showEarlier": "{count, plural, one {Show # earlier comment} other {Show # earlier comments}}",
     "attach": "Attach a file",
     "removeFile": "Remove the file"
+  },
+  "SpacePhotos": {
+    "photos": "Photos",
+    "open": "Open {name}",
+    "more": "{count, plural, one {# more photo} other {# more photos}}",
+    "position": "{index} of {total}",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "close": "Close photos",
+    "strip": "All photos",
+    "show": "Show {name}",
+    "attachments": "Attached files",
+    "remove": "Remove {name}",
+    "attach": "Attach files",
+    "attachLimit": "Up to {count} files, 10 MB each"
   }
 }

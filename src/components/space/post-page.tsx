@@ -14,7 +14,8 @@ import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
 import { memberState, postView } from '@/lib/spaces-data'
 
-import { commentsOpen, FileChip, PostHead, type FeedContext } from './feed-row'
+import { Attachments } from './attachments'
+import { commentsOpen, PostHead, type FeedContext } from './feed-row'
 import { EventDetails } from './event-details'
 import { VotePoll } from './vote-poll'
 import { LinkPreviews } from './link-card'
@@ -134,13 +135,7 @@ export async function PostPage({
               <LinkPreviews urls={outsideLinks(post.body)} />
             </Suspense>
           )}
-          {view.files.length > 0 && (
-            <div className={styles.files} aria-label={t('files')} role="group">
-              {view.files.map((f) => (
-                <FileChip key={f.id} file={f} />
-              ))}
-            </div>
-          )}
+          {view.files.length > 0 && <Attachments files={view.files} label={t('files')} />}
           {!deleted && (
             <PostFoot
               post={post.id}

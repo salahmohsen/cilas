@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState, useTransition } from 'react'
 import { useFormatter, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Paperclip, X } from 'lucide-react'
+import { Paperclip } from 'lucide-react'
 
 import {
   CommentThread,
@@ -19,7 +19,11 @@ import {
 } from '@/app/(frontend)/[locale]/spaces/actions'
 import type { NoticePart } from '@/lib/space-consent'
 import { REACTION_KINDS, type ReactionKind } from '@/lib/space-reactions'
+import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
 import type { SpaceFileRef, ThreadComment, TopComment } from '@/lib/spaces-data'
+
+import { AttachmentTray } from './attachment-tray'
+import { Attachments } from './attachments'
 
 import { saveErrorKey } from './composer'
 import { ConsentSheet } from './consent-sheet'
@@ -82,11 +86,12 @@ export function SpaceThread({
 }) {
   const t = useTranslations('SpaceThread')
   const tp = useTranslations('SpacePost')
+  const tf = useTranslations('SpacePhotos')
   const format = useFormatter()
   const router = useRouter()
   const [, start] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [file, setFile] = useState<File | null>(null)
+  const [files, setFiles] = useState<File[]>([])
   const [expanded, setExpanded] = useState(!preview)
   const [accepted, setAccepted] = useState(consented)
   const [asking, setAsking] = useState<CommentThreadEvent | null>(null)
@@ -104,9 +109,9 @@ export function SpaceThread({
     [people],
   )
 
-  const files = new Map<string, SpaceFileRef>()
+  const filesOf = new Map<string, SpaceFileRef[]>()
   const toArc = (c: ThreadComment, replies?: ThreadComment[]): ArcComment => {
-    if (c.file) files.set(String(c.id), c.file)
+    if (c.files.length) filesOf.set(String(c.id), c.files)
     const person = c.authorId != null ? byId.get(c.authorId) : undefined
     return {
       id: String(c.id),
@@ -159,7 +164,7 @@ export function SpaceThread({
         form.set('post', String(post))
         if (event.parentId) form.set('parent', event.parentId)
         form.set('body', toStored(event.comment.body))
-        if (file && !event.parentId) form.set('file', file)
+        for (const f of files) form.append('file', f)
         break
       case 'edit':
         action = commentEditAction
@@ -187,7 +192,7 @@ export function SpaceThread({
         setError(tp(saveErrorKey(result.error)))
         return
       }
-      if (event.type === 'reply' && !event.parentId) setFile(null)
+      if (event.type === 'reply') setFiles([])
       router.refresh()
     })
   }
@@ -257,45 +262,42 @@ export function SpaceThread({
           return <PersonHover person={person}>{chip}</PersonHover>
         }}
         renderExtra={(c) => {
-          const attached = files.get(c.id)
-          return attached ? (
-            <a href={attached.url} className={styles.fileChip} download={attached.name}>
-              <Paperclip size={14} aria-hidden="true" />
-              <bdi>{attached.name}</bdi>
-            </a>
-          ) : null
+          const attached = filesOf.get(c.id)
+          return attached ? <Attachments files={attached} label={tp('files')} compact /> : null
         }}
         composerExtra={
           <>
             <input
               ref={picker}
               type="file"
+              multiple
               hidden
-              onChange={(e) => setFile(e.currentTarget.files?.[0] ?? null)}
+              accept={SPACE_FILE_ACCEPT}
+              onChange={(e) => {
+                const picked = [...(e.currentTarget.files ?? [])]
+                e.currentTarget.value = ''
+                setFiles((current) => [...current, ...picked].slice(0, FILE_LIMITS.comment))
+              }}
             />
-            {file ? (
-              <span className={styles.fileChip}>
-                <bdi>{file.name}</bdi>
-                <button
-                  type="button"
-                  className={styles.chipClose}
-                  aria-label={t('removeFile')}
-                  onClick={() => setFile(null)}
-                >
-                  <X size={12} aria-hidden="true" />
-                </button>
-              </span>
-            ) : (
-              <button
-                type="button"
-                className={styles.attach}
-                aria-label={t('attach')}
-                onClick={() => picker.current?.click()}
-              >
-                <Paperclip size={15} aria-hidden="true" />
-              </button>
-            )}
+            <button
+              type="button"
+              className={styles.attach}
+              aria-label={tf('attach')}
+              title={tf('attachLimit', { count: FILE_LIMITS.comment })}
+              disabled={files.length >= FILE_LIMITS.comment}
+              onClick={() => picker.current?.click()}
+            >
+              <Paperclip size={15} aria-hidden="true" />
+            </button>
           </>
+        }
+        composerAttachments={
+          files.length ? (
+            <AttachmentTray
+              files={files}
+              onRemove={(file) => setFiles((current) => current.filter((f) => f !== file))}
+            />
+          ) : undefined
         }
         labels={{
           thread: t('thread'),
