@@ -23,7 +23,7 @@ import {
   voteSet,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
-import { postView } from '@/lib/spaces-data'
+import { postView, spaceFeed } from '@/lib/spaces-data'
 
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
@@ -622,6 +622,50 @@ describe('spaces write', () => {
     track('space-posts', r.data.id)
     return r.data.id
   }
+
+  it('the feed puts the post with the newest comment or reply first', async () => {
+    const pause = () => new Promise((r) => setTimeout(r, 15))
+    const older = await newPost(student, courseSpace, 'Feed order, oldest')
+    await pause()
+    const middle = await newPost(student, courseSpace, 'Feed order, middle')
+    await pause()
+    const newest = await newPost(student, courseSpace, 'Feed order, newest')
+    const order = async () =>
+      (await spaceFeed(payload, student, courseSpace)).rows
+        .map((r) => r.post.id)
+        .filter((id) => [older, middle, newest].includes(id))
+    expect(await order()).toEqual([newest, middle, older])
+
+    await pause()
+    const top = await commentCreate({ payload, user: fellow, post: older, body: 'Wakes it up' })
+    expect(top.ok).toBe(true)
+    if (!top.ok) return
+    track('space-comments', top.data.id)
+    expect(await order()).toEqual([older, newest, middle])
+
+    await pause()
+    const reply = await commentCreate({
+      payload,
+      user: fellow,
+      post: middle,
+      body: 'Reply to nobody yet',
+    })
+    expect(reply.ok).toBe(true)
+    if (!reply.ok) return
+    track('space-comments', reply.data.id)
+    await pause()
+    const nested = await commentCreate({
+      payload,
+      user: student,
+      post: older,
+      parent: top.data.id,
+      body: 'A reply moves it back',
+    })
+    expect(nested.ok).toBe(true)
+    if (!nested.ok) return
+    track('space-comments', nested.data.id)
+    expect(await order()).toEqual([older, middle, newest])
+  })
 
   it('an archived course space refuses every content write, until reopened', async () => {
     const postId = await newPost(student, courseSpace, 'Before the archive')
