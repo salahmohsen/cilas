@@ -1,5 +1,6 @@
 .group {
   --avatar-size: 36px;
+  --dir: 1;
   display: inline-flex;
   height: var(--avatar-size);
   align-items: center;
@@ -10,6 +11,10 @@
 }
 .group.lg {
   --avatar-size: 48px;
+}
+/* The fan and the neighbor ease follow the reading direction, so the stack grows from its start edge and never past it. */
+:global([dir='rtl']) .group {
+  --dir: -1;
 }
 /* Each slot is the avatar's visible width, so a slot that opens or closes moves the rest of the stack smoothly. */
 .slot {
@@ -28,7 +33,7 @@
   display: inline-flex;
   margin-left: -6px;
   border-radius: var(--radius-pill);
-  transform: translate(calc(var(--fan) + var(--aside)), var(--rise));
+  transform: translate(calc((var(--fan) + var(--aside)) * var(--dir)), var(--rise));
   transition:
     transform var(--duration-standard) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
@@ -89,10 +94,10 @@
     opacity var(--duration-fast) var(--ease-standard),
     transform var(--duration-fast) var(--ease-standard);
 }
-/* Pointing at the stack loosens its overlap from the center; the person under the pointer lifts with a crisp ring and names themselves, and their neighbors ease aside. */
+/* Pointing at the stack loosens its overlap from its start edge; the person under the pointer lifts with a crisp ring and names themselves, and their neighbors ease aside. */
 @media (hover: hover) and (pointer: fine) {
   .group:hover .lift {
-    --fan: calc((var(--index) - (var(--count) - 1) / 2) * 4px);
+    --fan: calc(var(--index) * 4px);
   }
   .slot:hover {
     z-index: 1;
