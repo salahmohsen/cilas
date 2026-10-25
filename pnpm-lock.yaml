@@ -177,6 +177,9 @@ importers:
       typesense-instantsearch-adapter:
         specifier: ^3.0.2
         version: 3.0.2(@babel/runtime@7.29.7)
+      undici:
+        specifier: 7.30.0
+        version: 7.30.0
       zod:
         specifier: ^4.6.5
         version: 4.6.5

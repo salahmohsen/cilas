@@ -7,7 +7,41 @@ import {
   linkPreview,
   outsideLinks,
   parseMeta,
+  publicOnlyLookup,
 } from '@/lib/link-preview'
+
+describe('the connection lookup', () => {
+  const answer = (...addresses: string[]) =>
+    publicOnlyLookup(async () => addresses.map((address) => ({ address, family: 4 })))
+  const run = (lookup: ReturnType<typeof publicOnlyLookup>, all = false) =>
+    new Promise<unknown>((resolve) =>
+      (lookup as unknown as (h: string, o: object, cb: (...a: unknown[]) => void) => void)(
+        'rebind.example',
+        { all },
+        (error: unknown, ...rest: unknown[]) => resolve(error ?? rest),
+      ),
+    )
+
+  it('answers a public address', async () => {
+    expect(await run(answer('93.184.216.34'))).toEqual(['93.184.216.34', 4])
+    expect(await run(answer('93.184.216.34'), true)).toEqual([
+      [{ address: '93.184.216.34', family: 4 }],
+    ])
+  })
+
+  it('refuses a private answer at connect time, even when another answer is public', async () => {
+    expect(await run(answer('10.0.0.5'))).toEqual(new Error('private'))
+    expect(await run(answer('93.184.216.34', '127.0.0.1'), true)).toEqual(new Error('private'))
+    expect(await run(answer())).toEqual(new Error('private'))
+  })
+
+  it('passes a failed lookup on', async () => {
+    const failing = publicOnlyLookup(async () => {
+      throw new Error('ENOTFOUND')
+    })
+    expect(await run(failing)).toEqual(new Error('ENOTFOUND'))
+  })
+})
 
 describe('link previews', () => {
   it('lists every distinct outside link in order, never a mention', () => {

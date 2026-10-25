@@ -1,5 +1,8 @@
+import { lookup as lookupCallback, type LookupAddress } from 'node:dns'
 import { lookup } from 'node:dns/promises'
 import { isIP } from 'node:net'
+
+import { Agent } from 'undici'
 
 /** What a post shows for a link: the page's own title, summary and image. */
 export type LinkPreview = {
@@ -120,6 +123,32 @@ export const parseMeta = (
   }
 }
 
+type Resolve = (hostname: string) => Promise<LookupAddress[]>
+
+/**
+ * A DNS lookup for a socket that only ever answers with public addresses.
+ * The check in assertPublic and the connection resolve the name separately, so
+ * a rebinding host could pass the first and reach a private address on the
+ * second. The socket connects to what this returns, so it cannot.
+ */
+export const publicOnlyLookup = (
+  resolve: Resolve = (hostname) => lookup(hostname, { all: true, verbatim: true }),
+): typeof lookupCallback =>
+  ((hostname: string, options: { all?: boolean }, callback: (...args: unknown[]) => void) => {
+    resolve(hostname).then(
+      (found) => {
+        if (!found.length || !found.every((a) => isPublicAddress(a.address)))
+          return callback(new Error('private'))
+        if (options?.all) return callback(null, found)
+        callback(null, found[0]!.address, found[0]!.family)
+      },
+      (error) => callback(error),
+    )
+  }) as typeof lookupCallback
+
+/** Every request goes through this agent, so the address it connects to is the one that was checked. */
+const agent = new Agent({ connect: { lookup: publicOnlyLookup() } })
+
 const assertPublic = async (url: URL) => {
   if (url.protocol !== 'https:' && url.protocol !== 'http:') throw new Error('protocol')
   if (url.username || url.password) throw new Error('credentials')
@@ -141,7 +170,8 @@ const fetchHead = async (start: string): Promise<{ html: string; url: string } |
       signal,
       headers: { 'user-agent': 'CILAS link preview', accept: 'text/html' },
       cache: 'no-store',
-    })
+      dispatcher: agent,
+    } as RequestInit)
     if (res.status >= 300 && res.status < 400) {
       const next = res.headers.get('location')
       await res.body?.cancel()
@@ -189,7 +219,8 @@ export const imageUsable = async (raw: string): Promise<boolean> => {
       signal: AbortSignal.timeout(IMAGE_MS),
       headers: { 'user-agent': 'CILAS link preview', accept: 'image/*' },
       cache: 'no-store',
-    })
+      dispatcher: agent,
+    } as RequestInit)
     if (res.status === 404 || res.status === 410) return false
     if (res.ok) {
       const type = res.headers.get('content-type')
@@ -197,7 +228,8 @@ export const imageUsable = async (raw: string): Promise<boolean> => {
     }
     return true
   } catch (e) {
-    return !(e instanceof Error && (e.message === 'private' || e.message === 'protocol'))
+    const why = e instanceof Error ? [e.message, (e.cause as Error | undefined)?.message] : []
+    return !why.some((m) => m === 'private' || m === 'protocol')
   }
 }
 
