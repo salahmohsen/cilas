@@ -1196,5 +1196,18 @@
     },
     "minimal": "Read {pageFile} and discuss it with me as a CILAS teaching fellow would: questions first, no lecture. Reply in the language of this message.",
     "readings": "Readings: {list}"
+  },
+  "ScheduleNotice": {
+    "title": "The schedule changed",
+    "session": "Session {number}",
+    "week": "Week {number}",
+    "cancelled": "{name} is cancelled. It was on {when}.",
+    "cancelledNoDate": "{name} is cancelled.",
+    "restored": "{name} is back on: {when}.",
+    "restoredNoDate": "{name} is back on.",
+    "moved": "{name} moved from {from} to {to}.",
+    "dated": "{name} now meets on {to}.",
+    "more": "{count, plural, one {And # more change. See the syllabus.} other {And # more changes. See the syllabus.}}",
+    "notification": "Schedule change in {space}"
   }
 }

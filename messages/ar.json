@@ -1196,5 +1196,18 @@
     },
     "minimal": "اقرأ {pageFile} وناقشه معي كما يفعل زميل تدريس في سيلاس: الأسئلة أولًا، بلا محاضرة. ردّ بلغة هذه الرسالة.",
     "readings": "القراءات: {list}"
+  },
+  "ScheduleNotice": {
+    "title": "تغيّر الجدول",
+    "session": "الجلسة {number}",
+    "week": "الأسبوع {number}",
+    "cancelled": "أُلغيت {name}. وكانت في {when}.",
+    "cancelledNoDate": "أُلغيت {name}.",
+    "restored": "عادت {name} إلى الجدول: {when}.",
+    "restoredNoDate": "عادت {name} إلى الجدول.",
+    "moved": "انتقلت {name} من {from} إلى {to}.",
+    "dated": "تلتقي {name} الآن في {to}.",
+    "more": "{count, plural, zero {} one {وتغيير آخر واحد. راجع المنهج.} two {وتغييران آخران. راجع المنهج.} few {و{count} تغييرات أخرى. راجع المنهج.} many {و{count} تغييرًا آخر. راجع المنهج.} other {و{count} تغيير آخر. راجع المنهج.}}",
+    "notification": "تغيّر في جدول {space}"
   }
 }

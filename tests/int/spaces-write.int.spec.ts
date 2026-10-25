@@ -1501,6 +1501,113 @@ describe('spaces write', () => {
     await setCourse({ sessions: [] })
   })
 
+  it('a schedule change posts one announcement from no author, once, and notifies the members', async () => {
+    const setCourse = (data: Record<string, unknown>) =>
+      payload.update({
+        collection: 'courses',
+        id: course.id,
+        data: { ...data, _status: 'published' } as never,
+        overrideAccess: true,
+      })
+    const notices = async () =>
+      (
+        await payload.find({
+          collection: 'space-posts',
+          where: {
+            and: [
+              { space: { equals: courseSpace.id } },
+              { kind: { equals: 'announcement' } },
+              { author: { exists: false } },
+              { body: { contains: 'The schedule changed' } },
+            ],
+          },
+          sort: 'createdAt',
+          depth: 0,
+          pagination: false,
+          overrideAccess: true,
+        })
+      ).docs
+    const before = (await notices()).length
+    const weeks = await setCourse({
+      schedule: {
+        start_date: '2031-03-03',
+        start_precision: 'day',
+        weeks: 3,
+        slots: [{ weekday: 'mon', start_time: '18:00', end_time: '20:30' }],
+      },
+      sessions: [{ session_title: 'Probe one' }, { session_title: 'Probe two' }],
+    })
+    // Adding the sessions and the schedule is not a change of a session that existed.
+    expect((await notices()).length).toBe(before)
+    const [one, two] = (weeks.sessions ?? []).map((s) => s.id!)
+    const rows = (weeks.sessions ?? []).map((s) => ({ id: s.id!, session_title: s.session_title }))
+
+    // Saving again with nothing different says nothing.
+    await setCourse({ sessions: rows })
+    expect((await notices()).length).toBe(before)
+
+    // One cancelled session: one announcement that names it, in both languages, tied to the session.
+    await setCourse({ sessions: [rows[0]!, { ...rows[1]!, cancelled: true }] })
+    const afterCancel = await notices()
+    expect(afterCancel.length).toBe(before + 1)
+    const cancelPost = afterCancel.at(-1)!
+    track('space-posts', cancelPost.id)
+    expect(cancelPost.body).toContain('Session 2 (Probe two) is cancelled')
+    expect(cancelPost.body).toContain('أُلغيت الجلسة ٢')
+    expect(cancelPost.course_session).toBe(two)
+    expect(cancelPost.author ?? null).toBeNull()
+    const note = await payload.find({
+      collection: 'notifications',
+      where: {
+        and: [
+          { recipient: { equals: fellow.id } },
+          { link: { contains: `/posts/${cancelPost.id}` } },
+        ],
+      },
+      depth: 0,
+      overrideAccess: true,
+    })
+    expect(note.totalDocs).toBe(1)
+    for (const row of note.docs) track('notifications', row.id)
+
+    // Bringing it back and moving the other in one save: one announcement for both.
+    await setCourse({
+      sessions: [
+        { ...rows[0]!, dates: [{ date: '2031-03-12', start_time: '17:00', end_time: '19:00' }] },
+        { ...rows[1]!, cancelled: false },
+      ],
+    })
+    const afterTwo = await notices()
+    expect(afterTwo.length).toBe(before + 2)
+    const both = afterTwo.at(-1)!
+    track('space-posts', both.id)
+    expect(both.body).toContain('Session 2 (Probe two) is back on')
+    expect(both.body).toContain('Session 1 (Probe one) moved from')
+    expect(both.body).toContain('17:00–19:00')
+    expect(both.course_session ?? null).toBeNull()
+
+    // An unpublished draft of the course never posts.
+    await payload.update({
+      collection: 'courses',
+      id: course.id,
+      draft: true,
+      data: { sessions: [rows[0]!, { ...rows[1]!, cancelled: true }] } as never,
+      overrideAccess: true,
+    })
+    expect((await notices()).length).toBe(before + 2)
+    // Publishing that draft is the save that changes the course, so it posts once.
+    await payload.update({
+      collection: 'courses',
+      id: course.id,
+      data: { _status: 'published' } as never,
+      overrideAccess: true,
+    })
+    const afterPublish = await notices()
+    expect(afterPublish.length).toBe(before + 3)
+    track('space-posts', afterPublish.at(-1)!.id)
+    await setCourse({ sessions: [] })
+  })
+
   it('a moderator sets the About text per language and resets it; a member cannot', async () => {
     const aboutOf = async (locale: 'en' | 'ar') =>
       (
