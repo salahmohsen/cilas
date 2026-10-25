@@ -5,6 +5,7 @@ import { archivedNow } from '@/lib/space-lifecycle'
 import { mentionSafelist, spacePeople, type PersonLink } from '@/lib/space-members'
 import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib/spaces'
 import { FILE_KINDS } from '@/lib/form-files'
+import { ABOUT_MAX } from '@/lib/space-about'
 import { EVENT_LOCATION_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
@@ -30,6 +31,7 @@ export type WriteError =
   | 'events'
   | 'event'
   | 'vote'
+  | 'about'
 
 export type WriteResult<T> =
   | { ok: true; data: T; notify?: (() => Promise<void>) | null }
@@ -221,7 +223,7 @@ const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> 
 export type PostShape =
   | { kind: 'discussion' | 'announcement' }
   | { kind: 'event'; event: { location: string; startsAt: string } }
-  | { kind: 'vote'; vote: { options: string[]; multiple: boolean } }
+  | { kind: 'vote'; vote: { options: string[]; multiple: boolean; anonymous?: boolean } }
 
 /**
  * The extra columns an event or a vote stores, or null when they break a
@@ -249,6 +251,7 @@ export const shapeData = (shape: PostShape, now = new Date()): Record<string, un
       return {
         vote_options: options.map((label) => ({ label })),
         vote_multiple: shape.vote.multiple,
+        vote_anonymous: shape.vote.anonymous === true,
       }
     }
   }
@@ -1075,9 +1078,17 @@ export const preferenceSet = async (
 // --- spaceSettingsSet ---
 
 export const spaceSettingsSet = async (
-  i: Input<{ space: number; posting?: PostingLevel; events?: EventPosting; reopened?: boolean }>,
+  i: Input<{
+    space: number
+    posting?: PostingLevel
+    events?: EventPosting
+    reopened?: boolean
+    /** The custom About text in `locale`; an empty string goes back to the default. */
+    about?: string
+    locale?: 'en' | 'ar'
+  }>,
 ): Promise<WriteResult<true>> => {
-  const { payload, user, space, posting, events, reopened } = i
+  const { payload, user, space, posting, events, reopened, about, locale } = i
   const sp = (await payload.findByID({
     collection: 'spaces',
     id: space,
@@ -1090,10 +1101,16 @@ export const spaceSettingsSet = async (
   if (posting) data.posting = posting
   if (events === 'members' || events === 'moderators') data.events = events
   if (typeof reopened === 'boolean') data.reopened = reopened
+  if (typeof about === 'string') {
+    const text = about.replace(/\r\n?/g, '\n').trim()
+    if (text.length > ABOUT_MAX) return err('about')
+    data.about = text
+  }
   await payload.update({
     collection: 'spaces',
     id: space,
     data: data as never,
+    locale,
     overrideAccess: true,
   })
   return { ok: true, data: true }

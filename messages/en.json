@@ -827,7 +827,10 @@
     "noMemberMatch": "No member has that name.",
     "eventsSetting": "Who may create events",
     "events_members": "Every member who may post",
-    "events_moderators": "Moderators only"
+    "events_moderators": "Moderators only",
+    "aboutField": "About this space",
+    "aboutFieldHint": "Shown to members in this language. Leave empty for the default text.",
+    "aboutReset": "Reset to default"
   },
   "SpacePost": {
     "newPost": "New post",
@@ -946,7 +949,12 @@
     "voteSaved": "Your vote is saved.",
     "voteWithdrawn": "Your vote is withdrawn.",
     "voteInvalid": "This choice is not possible in this vote.",
-    "links": "Links in this post"
+    "links": "Links in this post",
+    "saveError_about": "The About text is too long.",
+    "voteAnonymous": "Anonymous vote",
+    "voteAnonymousHint": "Nobody sees who chose what.",
+    "voteChosenBy": "Chose {option}",
+    "voteAnonymousShort": "Anonymous"
   },
   "SpaceComment": {
     "write": "Comment",
@@ -1051,13 +1059,15 @@
     "label": "Reactions",
     "add": "Add reaction",
     "picker": "Add a reaction",
-    "agree": "Agree",
+    "agree": "Like",
     "thank_you": "Thank you",
     "insightful": "Insightful",
     "same_question": "Same question",
     "pill": "{option}, {count, plural, one {# reaction} other {# reactions}}{own, select, true {, including yours} other {}}",
     "added": "Added {option}. {count, plural, one {# reaction} other {# reactions}}.",
-    "removed": "Removed {option}. {count, plural, =0 {} one {# reaction left.} other {# reactions left.}}"
+    "removed": "Removed {option}. {count, plural, =0 {} one {# reaction left.} other {# reactions left.}}",
+    "celebrate": "Celebrate",
+    "rocket": "Boost"
   },
   "SpaceThread": {
     "thread": "Comments",

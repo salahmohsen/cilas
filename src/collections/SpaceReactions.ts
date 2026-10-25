@@ -5,16 +5,19 @@ import { readableWhere } from '@/lib/spaces'
 
 /**
  * One row per account, target and reaction, unique on all three (spec §4).
- * The four: agree, thank_you, insightful, same_question. Targets polymorphic
+ * The six: agree (Like), thank_you, celebrate, insightful, same_question,
+ * rocket. Targets polymorphic
  * through two mutually-exclusive relationship fields; each (account, target,
  * reaction) triple is unique by its own index, so the Postgres NULL trick
  * (two rows matching when the other field is NULL) cannot double a reaction.
  */
 export const REACTIONS: Array<{ value: string; label: string }> = [
-  { label: 'Agree', value: 'agree' },
+  { label: 'Like', value: 'agree' },
   { label: 'Thank you', value: 'thank_you' },
+  { label: 'Celebrate', value: 'celebrate' },
   { label: 'Insightful', value: 'insightful' },
   { label: 'Same question', value: 'same_question' },
+  { label: 'Boost', value: 'rocket' },
 ]
 
 export const SpaceReactions: CollectionConfig = {

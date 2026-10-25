@@ -29,8 +29,10 @@ import styles from './space.module.css'
 const EMOJI: Record<ReactionKind, string> = {
   agree: '👍',
   thank_you: '❤️',
+  celebrate: '🎉',
   insightful: '💡',
-  same_question: '✋',
+  same_question: '❓',
+  rocket: '🚀',
 }
 const KIND_OF = new Map(REACTION_KINDS.map((k) => [EMOJI[k], k]))
 const STORED_MENTION = /\[@([^\]]*)\]\(\/people\/(\d+)\)/g

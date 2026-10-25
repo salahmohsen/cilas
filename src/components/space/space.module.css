@@ -185,6 +185,20 @@
   display: grid;
   gap: var(--space-4);
   width: min(320px, 80vw);
+  /* The About field makes the panel tall: scroll inside it on a short screen. */
+  max-height: calc(var(--radix-popover-content-available-height, 100dvh) - 40px);
+  overflow-y: auto;
+  padding: 2px;
+  margin: -2px;
+}
+
+.aboutField {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+}
+.aboutField > :first-child {
+  justify-self: stretch;
 }
 
 .footerLinks {
@@ -372,6 +386,9 @@
   font-size: var(--text-sm);
   color: var(--text-secondary);
   margin: 0;
+}
+.aboutText {
+  white-space: pre-line;
 }
 
 /* The post page's thread: comments in a list, replies indented one level. */

@@ -97,6 +97,7 @@ const shapeOf = (form: FormData): PostShape | null => {
         vote: {
           options: form.getAll('option').map((o) => String(o)),
           multiple: bool(form, 'multiple') ?? false,
+          anonymous: bool(form, 'anonymous') ?? false,
         },
       }
     default:
@@ -373,6 +374,8 @@ export async function spaceSettingsSetAction(
   const posting = text(form, 'posting') || undefined
   const events = text(form, 'events')
   const reopen = form.get('reopen')
+  const about = form.has('about') ? text(form, 'about') : undefined
+  const locale = text(form, 'locale') === 'ar' ? 'ar' : 'en'
   const payload = await getPayload({ config })
   const result = await spaceSettingsSet({
     payload,
@@ -381,6 +384,8 @@ export async function spaceSettingsSetAction(
     posting: posting ? (posting as 'open' | 'members_comment' | 'fellows_only') : undefined,
     events: events === 'members' || events === 'moderators' ? events : undefined,
     reopened: parseBool(reopen),
+    about,
+    locale,
   })
   if (!result.ok) return err(result.error)
   await revalidate()

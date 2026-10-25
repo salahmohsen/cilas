@@ -827,7 +827,10 @@
     "noMemberMatch": "لا يوجد عضو بهذا الاسم.",
     "eventsSetting": "من يمكنه إنشاء الفعاليات",
     "events_members": "كل عضو يمكنه النشر",
-    "events_moderators": "المشرفون فقط"
+    "events_moderators": "المشرفون فقط",
+    "aboutField": "عن هذه المساحة",
+    "aboutFieldHint": "يراه الأعضاء بهذه اللغة. اتركه فارغًا لإظهار النص الافتراضي.",
+    "aboutReset": "استعادة النص الافتراضي"
   },
   "SpacePost": {
     "newPost": "منشور جديد",
@@ -946,7 +949,12 @@
     "voteSaved": "حُفظ تصويتك.",
     "voteWithdrawn": "سُحب تصويتك.",
     "voteInvalid": "هذا الاختيار غير ممكن في هذا التصويت.",
-    "links": "الروابط في هذا المنشور"
+    "links": "الروابط في هذا المنشور",
+    "saveError_about": "نص «عن المساحة» أطول من الحد المسموح.",
+    "voteAnonymous": "تصويت مجهول",
+    "voteAnonymousHint": "لا أحد يرى من اختار ماذا.",
+    "voteChosenBy": "اختاروا: {option}",
+    "voteAnonymousShort": "مجهول"
   },
   "SpaceComment": {
     "write": "علِّق",
@@ -1051,13 +1059,15 @@
     "label": "التفاعلات",
     "add": "أضف تفاعلًا",
     "picker": "اختر تفاعلًا",
-    "agree": "أوافق",
+    "agree": "إعجاب",
     "thank_you": "شكرًا",
     "insightful": "مفيد",
     "same_question": "عندي السؤال نفسه",
     "pill": "{option}، {count, plural, one {تفاعل واحد} two {تفاعلان} few {# تفاعلات} many {# تفاعلًا} other {# تفاعل}}{own, select, true {، منها تفاعلك} other {}}",
     "added": "أضفت {option}. {count, plural, one {تفاعل واحد} two {تفاعلان} few {# تفاعلات} many {# تفاعلًا} other {# تفاعل}}.",
-    "removed": "أزلت {option}."
+    "removed": "أزلت {option}.",
+    "celebrate": "احتفال",
+    "rocket": "تعزيز"
   },
   "SpaceThread": {
     "thread": "التعليقات",

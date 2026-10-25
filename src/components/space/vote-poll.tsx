@@ -14,12 +14,14 @@ import { useRouter } from 'next/navigation'
 import { animate, motion, useReducedMotion } from 'motion/react'
 import { Check } from 'lucide-react'
 
+import { AvatarGroup } from '@/components/arc/avatar-group/avatar-group'
 import { Button } from '@/components/arc/button/button'
 import { motionTokens } from '@/components/arc/lib/motion-tokens'
 import { voteSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
 import type { VoteView } from '@/lib/spaces-data'
 
 import { saveErrorKey } from './composer'
+import { PersonHover, type PersonCard } from './person-hover'
 import styles from './vote-poll.module.css'
 
 /** The tally as it reads once the member's whole choice is replaced (voteSet's rule). */
@@ -71,15 +73,19 @@ type Mode = 'choose' | 'results'
  * A vote post's poll. Choosing reads like Arc's radio group (one highlight
  * travels for a single choice; check rows for several); results read like
  * a poll: a bar per option that fills to its share, the member's choice in
- * the accent, the leader's label emphasised. Voters stay anonymous.
+ * the accent, the leader's label emphasised. An open vote names who chose
+ * each option; an anonymous one never receives them.
  */
 export function VotePoll({
   post,
   vote,
   disabled,
+  people,
 }: {
   post: number
   vote: VoteView
+  /** The space's people, so a voter's face opens the same card as everywhere else */
+  people?: Map<number, PersonCard>
   /** Archived or locked: results only */
   disabled: boolean
 }) {
@@ -166,6 +172,37 @@ export function VotePoll({
                 )}
                 <span className={styles.resultCount}>{t('voteCount', { count: o.count })}</span>
                 <span className={styles.resultPercent}>{percent}%</span>
+                {o.voters.length > 0 && (
+                  <span className={styles.resultVoters}>
+                    <AvatarGroup
+                      size="sm"
+                      max={6}
+                      label={t('voteChosenBy', { option: o.label })}
+                      members={o.voters.map((v) => ({
+                        id: v.personId,
+                        name: v.name,
+                        src: v.photo ?? undefined,
+                      }))}
+                      wrap={(member, face) => (
+                        <PersonHover
+                          person={
+                            people?.get(Number(member.id)) ?? {
+                              id: Number(member.id),
+                              name: member.name,
+                              photo: member.src ?? null,
+                              role: '',
+                              bio: null,
+                              links: [],
+                              href: null,
+                            }
+                          }
+                        >
+                          {face}
+                        </PersonHover>
+                      )}
+                    />
+                  </span>
+                )}
               </li>
             )
           })}
@@ -177,7 +214,15 @@ export function VotePoll({
         </p>
       )}
       <div className={styles.foot}>
-        <p className={styles.voters}>{t('voteVoters', { count: view.voters })}</p>
+        <p className={styles.voters}>
+          {t('voteVoters', { count: view.voters })}
+          {view.anonymous && (
+            <>
+              {' · '}
+              <span>{t('voteAnonymousShort')}</span>
+            </>
+          )}
+        </p>
         {!disabled &&
           (showing === 'choose' ? (
             <div className={styles.actions}>

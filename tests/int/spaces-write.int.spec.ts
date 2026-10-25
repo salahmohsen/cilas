@@ -23,6 +23,7 @@ import {
   voteSet,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
+import { ABOUT_MAX } from '@/lib/space-about'
 import { postView, spaceFeed } from '@/lib/spaces-data'
 
 let payload: Payload
@@ -1009,15 +1010,60 @@ describe('spaces write', () => {
     await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
   })
 
+  it('a moderator sets the About text per language and resets it; a member cannot', async () => {
+    const aboutOf = async (locale: 'en' | 'ar') =>
+      (
+        await payload.findByID({
+          collection: 'spaces',
+          id: courseSpace.id,
+          locale,
+          fallbackLocale: false,
+          overrideAccess: true,
+        })
+      ).about ?? null
+    expect(
+      await spaceSettingsSet({ payload, user: student, space: courseSpace.id, about: 'Nope' }),
+    ).toMatchObject({ ok: false, error: 'not-yours' })
+    expect(
+      (
+        await spaceSettingsSet({
+          payload,
+          user: fellow,
+          space: courseSpace.id,
+          about: '  Probe about\nsecond line ',
+          locale: 'en',
+        })
+      ).ok,
+    ).toBe(true)
+    expect(await aboutOf('en')).toBe('Probe about\nsecond line')
+    expect(await aboutOf('ar')).toBeNull()
+    expect(
+      await spaceSettingsSet({
+        payload,
+        user: fellow,
+        space: courseSpace.id,
+        about: 'x'.repeat(ABOUT_MAX + 1),
+      }),
+    ).toMatchObject({ ok: false, error: 'about' })
+    await spaceSettingsSet({
+      payload,
+      user: fellow,
+      space: courseSpace.id,
+      about: '',
+      locale: 'en',
+    })
+    expect(await aboutOf('en')).toBe('')
+  })
+
   it("a vote needs two to ten distinct options; voteSet replaces the member's whole choice", async () => {
-    const vote = (options: string[], multiple = false) =>
+    const vote = (options: string[], multiple = false, anonymous = false) =>
       postCreate({
         payload,
         user: student,
         space: courseSpace.id,
         kind: 'vote',
         body: 'Probe vote',
-        vote: { options, multiple },
+        vote: { options, multiple, anonymous },
       })
     expect(await vote(['Only one'])).toMatchObject({ ok: false, error: 'vote' })
     expect(await vote(['Same', ' same '])).toMatchObject({ ok: false, error: 'vote' })
@@ -1112,16 +1158,74 @@ describe('spaces write', () => {
     ).docs)
       track('space-votes', r.id)
     const seen = await postView(payload, student, courseSpace, multiple.data.id)
+    const named = (personId: number) => ({
+      personId,
+      name: expect.any(String),
+      photo: null,
+    })
     expect(seen?.row.vote).toEqual({
       multiple: true,
+      anonymous: false,
       options: [
-        { id: ids[0], label: 'Tea', count: 2 },
-        { id: ids[1], label: 'Coffee', count: 0 },
-        { id: ids[2], label: 'Water', count: 1 },
+        {
+          id: ids[0],
+          label: 'Tea',
+          count: 2,
+          voters: expect.arrayContaining([named(fellowPerson), named(studentPerson)]),
+        },
+        { id: ids[1], label: 'Coffee', count: 0, voters: [] },
+        { id: ids[2], label: 'Water', count: 1, voters: [named(fellowPerson)] },
       ],
       voters: 2,
       mine: [ids[0]],
     })
+    expect(seen?.row.vote?.options[0]?.voters).toHaveLength(2)
+
+    // An anonymous vote keeps its counts and the reader's own choice, never a voter.
+    const secret = await vote(['Yes', 'No'], false, true)
+    expect(secret.ok).toBe(true)
+    if (secret.ok) {
+      track('space-posts', secret.data.id)
+      const yes = (
+        (
+          await payload.findByID({
+            collection: 'space-posts',
+            id: secret.data.id,
+            overrideAccess: true,
+          })
+        ).vote_options ?? []
+      ).map((o) => o.id!)
+      await voteSet({ payload, user: fellow, post: secret.data.id, options: [yes[0]!] })
+      await voteSet({ payload, user: student, post: secret.data.id, options: [yes[1]!] })
+      for (const r of (
+        await payload.find({
+          collection: 'space-votes',
+          where: { post: { equals: secret.data.id } },
+          overrideAccess: true,
+        })
+      ).docs)
+        track('space-votes', r.id)
+      const hidden = await postView(payload, student, courseSpace, secret.data.id)
+      expect(hidden?.row.vote).toEqual({
+        multiple: false,
+        anonymous: true,
+        options: [
+          { id: yes[0], label: 'Yes', count: 1, voters: [] },
+          { id: yes[1], label: 'No', count: 1, voters: [] },
+        ],
+        voters: 2,
+        mine: [yes[1]],
+      })
+      expect(JSON.stringify(hidden?.row.vote)).not.toContain(String(fellowPerson) + ',')
+      // The API read hides other people's rows too; each voter still sees their own.
+      const asStudent = await payload.find({
+        collection: 'space-votes',
+        user: student,
+        overrideAccess: false,
+        where: { post: { equals: secret.data.id } },
+      })
+      expect(asStudent.docs.map((r) => r.option)).toEqual([yes[1]])
+    }
 
     // A locked vote takes no more choices; a discussion is not a vote.
     await postModify({ payload, user: fellow, id: multiple.data.id, locked: true })

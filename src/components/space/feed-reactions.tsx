@@ -3,7 +3,15 @@
 import { useOptimistic, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { Hand, Heart, Lightbulb, ThumbsUp, type LucideIcon } from 'lucide-react'
+import {
+  Heart,
+  Lightbulb,
+  MessageCircleQuestion,
+  PartyPopper,
+  Rocket,
+  ThumbsUp,
+  type LucideIcon,
+} from 'lucide-react'
 
 import { Reactions, type Reaction } from '@/components/arc/reactions/reactions'
 import { reactionToggleAction } from '@/app/(frontend)/[locale]/spaces/actions'
@@ -17,8 +25,10 @@ import {
 const ICON: Record<ReactionKind, LucideIcon> = {
   agree: ThumbsUp,
   thank_you: Heart,
+  celebrate: PartyPopper,
   insightful: Lightbulb,
-  same_question: Hand,
+  same_question: MessageCircleQuestion,
+  rocket: Rocket,
 }
 
 type State = { counts: ReactionCounts; mine: ReactionKind[] }
@@ -32,7 +42,7 @@ const toggled = (state: State, change: { kind: ReactionKind; on: boolean }): Sta
 })
 
 /**
- * The four reactions on a post (spec §4), drawn by Arc's reaction bar. The tap
+ * The six reactions on a post, drawn by Arc's reaction bar. The tap
  * shows at once; when the action fails, the transition ends and the server's
  * counts come back.
  */

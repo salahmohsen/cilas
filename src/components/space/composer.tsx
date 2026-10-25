@@ -139,6 +139,7 @@ type Extra = {
   time: string
   options: string[]
   multiple: boolean
+  anonymous: boolean
 }
 
 const EMPTY_EXTRA: Extra = {
@@ -147,6 +148,7 @@ const EMPTY_EXTRA: Extra = {
   time: '18:00',
   options: ['', ''],
   multiple: false,
+  anonymous: false,
 }
 
 /** The day as the Cairo calendar names it, read from the picker's local midnight. */
@@ -200,6 +202,7 @@ function ComposerForm({
     if (kind === 'vote') {
       for (const option of options) data.append('option', option)
       data.set('multiple', String(extra.multiple))
+      data.set('anonymous', String(extra.anonymous === true))
     }
     for (const f of files) data.append('file', f)
     const result = await postCreateAction({ status: 'ok' }, data)
@@ -316,6 +319,12 @@ function ComposerForm({
               description={t('voteMultipleHint')}
               checked={extra.multiple}
               onCheckedChange={(v) => set({ multiple: v === true })}
+            />
+            <Checkbox
+              label={t('voteAnonymous')}
+              description={t('voteAnonymousHint')}
+              checked={extra.anonymous}
+              onCheckedChange={(v) => set({ anonymous: v === true })}
             />
           </fieldset>
         )}

@@ -1,5 +1,12 @@
-/** The four space reactions (spec §4), in the order the picker offers them. */
-export const REACTION_KINDS = ['agree', 'thank_you', 'insightful', 'same_question'] as const
+/** The six space reactions, in the order the picker offers them. `agree` reads "Like". */
+export const REACTION_KINDS = [
+  'agree',
+  'thank_you',
+  'celebrate',
+  'insightful',
+  'same_question',
+  'rocket',
+] as const
 
 export type ReactionKind = (typeof REACTION_KINDS)[number]
 

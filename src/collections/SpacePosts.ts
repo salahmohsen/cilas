@@ -84,6 +84,14 @@ export const SpacePosts: CollectionConfig = {
       access: { update: () => false },
       admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
     },
+    {
+      name: 'vote_anonymous',
+      label: 'Nobody sees who chose what',
+      type: 'checkbox',
+      defaultValue: false,
+      access: { update: () => false },
+      admin: { condition: (data) => (data as { kind?: string }).kind === 'vote' },
+    },
     { name: 'pinned', type: 'checkbox', defaultValue: false, index: true },
     { name: 'locked', type: 'checkbox', defaultValue: false },
     {

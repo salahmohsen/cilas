@@ -56,25 +56,43 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   if (mem.role === 'none') notFound()
   const moderator = mem.role === 'moderator'
 
-  const [t, tp, feed, state, { cards, byId, moderators }, numbers, jar] = await Promise.all([
-    getTranslations('Spaces'),
-    getTranslations('SpacePost'),
-    spaceFeed(payload, user, space),
-    memberState(payload, user, space.id),
-    spacePeopleCards(payload, user, space, locale),
-    moderator ? participation(payload, space) : Promise.resolve(null),
-    cookies(),
-  ])
+  const lang = locale === 'ar' ? 'ar' : 'en'
+  const [t, tp, feed, state, { cards, byId, moderators }, numbers, jar, custom] = await Promise.all(
+    [
+      getTranslations('Spaces'),
+      getTranslations('SpacePost'),
+      spaceFeed(payload, user, space, lang),
+      memberState(payload, user, space.id),
+      spacePeopleCards(payload, user, space, locale),
+      moderator ? participation(payload, space) : Promise.resolve(null),
+      cookies(),
+      // Each language keeps its own text, so an empty one shows the default, not the other language's.
+      payload
+        .findByID({
+          collection: 'spaces',
+          id: space.id,
+          user,
+          depth: 0,
+          locale: lang,
+          fallbackLocale: false,
+          overrideAccess: false,
+          select: { about: true },
+        })
+        .then((row) => row.about ?? '')
+        .catch(() => ''),
+    ],
+  )
   const renderedAt = new Date().toISOString()
 
   const title =
     landing.course?.title ??
     landing.programme?.title ??
     (space.kind === 'community' ? t('community') : t(space.kind))
-  const about =
+  const defaultAbout =
     landing.course?.summary ??
     landing.programme?.tagline ??
     (space.kind === 'community' ? t('communityAbout') : '')
+  const about = custom.trim() || defaultAbout
   const notice = NOTICE[locale === 'ar' ? 'ar' : 'en']
   const viewerPerson = personOf(user)
 
@@ -170,6 +188,8 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
                 posting={space.posting ?? 'open'}
                 events={space.events ?? 'members'}
                 archived={feed.archived}
+                about={custom}
+                aboutDefault={defaultAbout}
               />
             )}
           </span>

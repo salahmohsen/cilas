@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
+import { ABOUT_MAX } from '@/lib/space-about'
 import type { EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
 
 /**
@@ -72,6 +73,14 @@ export const Spaces: CollectionConfig = {
         { label: 'Every member who may post', value: 'members' },
         { label: 'Moderators only', value: 'moderators' },
       ] satisfies { label: string; value: EventPosting }[],
+    },
+    {
+      // Replaces the default "About this space" text; empty keeps the default.
+      name: 'about',
+      label: 'About this space',
+      type: 'textarea',
+      localized: true,
+      maxLength: ABOUT_MAX,
     },
     {
       // Moderators and admins reopen a read-only course space (spec §11).

@@ -216,7 +216,12 @@ export async function FeedRow({
         <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
       )}
       {row.vote && (
-        <VotePoll post={post.id} vote={row.vote} disabled={context.archived || !!post.locked} />
+        <VotePoll
+          post={post.id}
+          vote={row.vote}
+          disabled={context.archived || !!post.locked}
+          people={context.people}
+        />
       )}
       {links.length > 0 && (
         <Suspense fallback={null}>

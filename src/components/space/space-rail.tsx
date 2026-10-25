@@ -46,7 +46,7 @@ export async function SpaceRail({
         </div>
         <div className={styles.groupBody}>
           {about && (
-            <p dir="auto" className={styles.prose}>
+            <p dir="auto" className={`${styles.prose} ${styles.aboutText}`}>
               {about}
             </p>
           )}

@@ -49,7 +49,7 @@ export async function PostPage({
   const [t, ts, view, state, { cards, byId, moderators }] = await Promise.all([
     getTranslations('SpacePost'),
     getTranslations('Spaces'),
-    postView(payload, user, space, postId),
+    postView(payload, user, space, postId, locale === 'ar' ? 'ar' : 'en'),
     memberState(payload, user, space.id),
     spacePeopleCards(payload, user, space, locale),
   ])
@@ -122,7 +122,12 @@ export async function PostPage({
             <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
           )}
           {!deleted && row.vote && (
-            <VotePoll post={post.id} vote={row.vote} disabled={archived || !!post.locked} />
+            <VotePoll
+              post={post.id}
+              vote={row.vote}
+              disabled={archived || !!post.locked}
+              people={byId}
+            />
           )}
           {!deleted && outsideLinks(post.body).length > 0 && (
             <Suspense fallback={null}>

@@ -37,6 +37,7 @@ import * as migration_20261023_054735_spaces_small from './20261023_054735_space
 import * as migration_20261023_083500_notifications_recipient_cascade from './20261023_083500_notifications_recipient_cascade'
 import * as migration_20261023_112000_notifications_details from './20261023_112000_notifications_details'
 import * as migration_20261024_183304_space_events_votes from './20261024_183304_space_events_votes'
+import * as migration_20261025_002603_space_about_reactions_votes from './20261025_002603_space_about_reactions_votes'
 
 export const migrations = [
   {
@@ -233,5 +234,10 @@ export const migrations = [
     up: migration_20261024_183304_space_events_votes.up,
     down: migration_20261024_183304_space_events_votes.down,
     name: '20261024_183304_space_events_votes',
+  },
+  {
+    up: migration_20261025_002603_space_about_reactions_votes.up,
+    down: migration_20261025_002603_space_about_reactions_votes.down,
+    name: '20261025_002603_space_about_reactions_votes',
   },
 ]

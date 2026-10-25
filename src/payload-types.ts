@@ -2048,6 +2048,7 @@ export interface Space {
   programme?: (number | null) | Programme;
   posting?: ('open' | 'members_comment' | 'fellows_only') | null;
   events?: ('members' | 'moderators') | null;
+  about?: string | null;
   /**
    * Reopens a course space archived 2 weeks after its last meeting.
    */
@@ -2078,6 +2079,7 @@ export interface SpacePost {
       }[]
     | null;
   vote_multiple?: boolean | null;
+  vote_anonymous?: boolean | null;
   pinned?: boolean | null;
   locked?: boolean | null;
   announcement_email_sent?: boolean | null;
@@ -2136,7 +2138,7 @@ export interface SpaceReaction {
   account: number | User;
   post?: (number | null) | SpacePost;
   comment?: (number | null) | SpaceComment;
-  reaction: 'agree' | 'thank_you' | 'insightful' | 'same_question';
+  reaction: 'agree' | 'thank_you' | 'celebrate' | 'insightful' | 'same_question' | 'rocket';
   updatedAt: string;
   createdAt: string;
 }
@@ -3580,6 +3582,7 @@ export interface SpacesSelect<T extends boolean = true> {
   programme?: T;
   posting?: T;
   events?: T;
+  about?: T;
   reopened?: T;
   introduction_post?: T;
   updatedAt?: T;
@@ -3603,6 +3606,7 @@ export interface SpacePostsSelect<T extends boolean = true> {
         id?: T;
       };
   vote_multiple?: T;
+  vote_anonymous?: T;
   pinned?: T;
   locked?: T;
   announcement_email_sent?: T;

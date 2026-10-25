@@ -13,7 +13,21 @@ export const SpaceVotes: CollectionConfig = {
   slug: 'space-votes',
   labels: { singular: 'Vote', plural: 'Votes' },
   access: {
-    read: ({ req }) => readableWhere(req.payload, req.user, 'space'),
+    // An anonymous vote's rows stay hidden from everyone but their owner, so no
+    // read through the API names who chose what. The poll's tally reads them
+    // with the server's access (voteViews).
+    read: async ({ req }) => {
+      const where = await readableWhere(req.payload, req.user, 'space')
+      if (where === true && isAdminUser(req.user)) return true
+      if (!where) return false
+      const own = { account: { equals: (req.user as { id?: number })?.id ?? null } }
+      return {
+        and: [
+          ...(where === true ? [] : [where]),
+          { or: [{ 'post.vote_anonymous': { not_equals: true } }, own] },
+        ],
+      }
+    },
     create: ({ req }) => isAdminUser(req.user),
     update: () => false,
     delete: ({ req }) => {

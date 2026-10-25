@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 import { Settings } from 'lucide-react'
 
@@ -10,28 +10,37 @@ import { Button } from '@/components/arc/button/button'
 import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/arc/popover/popover'
 import { RadioGroup } from '@/components/arc/radio-group/radio-group'
+import { Textarea } from '@/components/arc/textarea/textarea'
+import { ABOUT_MAX } from '@/lib/space-about'
 import { spaceSettingsSetAction } from '@/app/(frontend)/[locale]/spaces/actions'
 
 import { saveErrorKey } from './composer'
 import styles from './space.module.css'
 
-/** Moderators only (spec §11): the posting level, who starts events, and reopening an archived course space. */
+/** Moderators only (spec §11): the posting level, who starts events, the About text, and reopening an archived course space. */
 export function SpaceSettings({
   space,
   posting,
   events,
   archived,
+  about,
+  aboutDefault,
 }: {
   space: number
   posting: string
   events: string
   archived: boolean
+  /** The custom About text in this language, empty when the default shows. */
+  about: string
+  aboutDefault: string
 }) {
   const t = useTranslations('Spaces')
   const tp = useTranslations('SpacePost')
   const router = useRouter()
+  const locale = useLocale()
   const [level, setLevel] = useState(posting)
   const [who, setWho] = useState(events)
+  const [text, setText] = useState(about)
   const [reopen, setReopen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   return (
@@ -63,6 +72,20 @@ export function SpaceSettings({
               { value: 'moderators', label: t('events_moderators') },
             ]}
           />
+          <div className={styles.aboutField}>
+            <Textarea
+              label={t('aboutField')}
+              description={t('aboutFieldHint')}
+              placeholder={aboutDefault}
+              rows={5}
+              maxLength={ABOUT_MAX}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+            />
+            <Button variant="ghost" size="sm" disabled={text === ''} onClick={() => setText('')}>
+              {t('aboutReset')}
+            </Button>
+          </div>
           {archived && (
             <Checkbox
               label={t('reopen')}
@@ -84,6 +107,8 @@ export function SpaceSettings({
               form.set('space', String(space))
               form.set('posting', level)
               form.set('events', who)
+              form.set('about', text)
+              form.set('locale', locale)
               if (archived && reopen) form.set('reopen', 'true')
               const result = await spaceSettingsSetAction({ status: 'ok' }, form)
               if (result.status === 'error') {

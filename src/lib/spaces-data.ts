@@ -295,43 +295,112 @@ const tally = <R extends { reaction: string; account?: number | { id: number } |
   return out
 }
 
-/** A vote post's options with their counts. Voters stay anonymous: only the reader's own choice is named. */
+export type Voter = { personId: number; name: string; photo: string | null }
+
+/**
+ * A vote post's options with their counts. Of the voters, only the reader's own
+ * choice is named, unless the vote is open: then each option lists who chose it.
+ * An anonymous vote never carries a voter's identity, so none reaches the client.
+ */
 export type VoteView = {
   multiple: boolean
-  options: { id: string; label: string; count: number }[]
+  anonymous: boolean
+  options: { id: string; label: string; count: number; voters: Voter[] }[]
   /** Distinct accounts with at least one choice */
   voters: number
   /** The reader's chosen option ids */
   mine: string[]
 }
 
-/** Every vote post's tally in one read, through the reader's access like reactions. */
+/** The people behind some accounts, keyed by account id, as a voter list shows them. */
+const voterCards = async (
+  payload: Payload,
+  accounts: (number | null)[],
+  locale: 'en' | 'ar',
+): Promise<Map<number, Voter>> => {
+  const out = new Map<number, Voter>()
+  const ids = [...new Set(accounts.filter((a): a is number => a != null))]
+  if (!ids.length) return out
+  const { docs: users } = await payload.find({
+    collection: 'users',
+    depth: 0,
+    pagination: false,
+    overrideAccess: true,
+    select: { person: true },
+    where: { id: { in: ids } },
+  })
+  const personOfAccount = new Map(users.map((u) => [u.id, relId(u.person as never)]))
+  const personIds = [
+    ...new Set([...personOfAccount.values()].filter((p): p is number => p != null)),
+  ]
+  if (!personIds.length) return out
+  const { docs: people } = await payload.find({
+    collection: 'people',
+    depth: 1,
+    locale,
+    pagination: false,
+    overrideAccess: true,
+    select: { name: true, photo: true },
+    where: { id: { in: personIds } },
+  })
+  const byPerson = new Map(people.map((p) => [p.id, p]))
+  for (const [account, personId] of personOfAccount) {
+    const person = personId != null ? byPerson.get(personId) : undefined
+    if (!person) continue
+    const photo = person.photo
+    out.set(account, {
+      personId: person.id,
+      name: person.name ?? '',
+      photo: photo && typeof photo === 'object' && photo.url ? photo.url : null,
+    })
+  }
+  return out
+}
+
+/** Every vote post's tally in one read; an anonymous vote's voters are never named. */
 const voteViews = async (
   payload: Payload,
   user: null | User,
   posts: SpacePost[],
+  locale: 'en' | 'ar',
 ): Promise<Map<number, VoteView>> => {
   const out = new Map<number, VoteView>()
   const polls = posts.filter((p) => p.kind === 'vote' && !p.deleted_at)
   if (!polls.length) return out
+  // The posts came through the reader's access, so the tally may read every row
+  // of them with the server's: the collection's own rule hides an anonymous
+  // vote's rows from the API, and only counts and the reader's own choice leave here.
   const { docs } = await payload.find({
     collection: 'space-votes',
-    user: user ?? undefined,
     depth: 0,
     pagination: false,
-    overrideAccess: false,
+    overrideAccess: true,
     select: { post: true, account: true, option: true },
     where: { post: { in: polls.map((p) => p.id) } },
   })
+  const open = new Set(polls.filter((p) => !p.vote_anonymous).map((p) => p.id))
+  const people = await voterCards(
+    payload,
+    docs.filter((v) => open.has(relId(v.post) ?? -1)).map((v) => relId(v.account)),
+    locale,
+  )
   for (const p of polls) {
     const rows = docs.filter((v) => relId(v.post) === p.id)
+    const anonymous = !!p.vote_anonymous
     out.set(p.id, {
       multiple: !!p.vote_multiple,
-      options: (p.vote_options ?? []).flatMap((o) =>
-        o.id
-          ? [{ id: o.id, label: o.label, count: rows.filter((v) => v.option === o.id).length }]
-          : [],
-      ),
+      anonymous,
+      options: (p.vote_options ?? []).flatMap((o) => {
+        if (!o.id) return []
+        const chosen = rows.filter((v) => v.option === o.id)
+        const voters = anonymous
+          ? []
+          : chosen.flatMap((v) => {
+              const voter = people.get(relId(v.account) ?? -1)
+              return voter ? [voter] : []
+            })
+        return [{ id: o.id, label: o.label, count: chosen.length, voters }]
+      }),
       voters: new Set(rows.map((v) => relId(v.account))).size,
       mine: user ? rows.filter((v) => relId(v.account) === user.id).map((v) => v.option) : [],
     })
@@ -363,6 +432,7 @@ export const spaceFeed = async (
   payload: Payload,
   user: null | User,
   space: number | Space,
+  locale: 'en' | 'ar' = 'en',
 ): Promise<{
   rows: FeedRow[]
   settings: SpacesSettings
@@ -390,7 +460,7 @@ export const spaceFeed = async (
   const postIds = docs.map((p) => p.id)
   const [threads, votes, { docs: reactions }, { docs: postFiles }] = await Promise.all([
     postThreads(payload, user, postIds),
-    voteViews(payload, user, docs),
+    voteViews(payload, user, docs, locale),
     postIds.length
       ? payload.find({
           collection: 'space-reactions',
@@ -560,6 +630,7 @@ export const postView = async (
   user: null | User,
   space: Space,
   postId: number,
+  locale: 'en' | 'ar' = 'en',
 ): Promise<PostView | null> => {
   const post = await payload
     .findByID({
@@ -575,7 +646,7 @@ export const postView = async (
   const [{ archived }, threads, votes, { docs: reactions }, { docs: files }] = await Promise.all([
     archiveState(payload, space),
     postThreads(payload, user, [post.id]),
-    voteViews(payload, user, [post]),
+    voteViews(payload, user, [post], locale),
     payload.find({
       collection: 'space-reactions',
       user: user ?? undefined,
