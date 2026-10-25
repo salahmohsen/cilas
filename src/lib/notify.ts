@@ -13,6 +13,7 @@ export type NotificationKind =
   | 'announcement'
   | 'moderation'
   | 'report'
+  | 'event_changed'
 
 /**
  * The short name of each event. The bells show this (translated by kind on the
@@ -33,6 +34,7 @@ export const EVENT_NAMES: Record<NotificationKind, string> = {
   announcement: 'New announcement',
   moderation: 'Moderation issue',
   report: 'New report',
+  event_changed: 'Event changed',
 }
 
 /**

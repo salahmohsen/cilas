@@ -7,6 +7,13 @@ import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib
 import { FILE_KINDS } from '@/lib/form-files'
 import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
+import {
+  locationUrl,
+  eventOver,
+  eventTitle,
+  isRsvpStatus,
+  type RsvpStatus,
+} from '@/lib/space-event'
 import { EVENT_LOCATION_MAX, SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
@@ -31,6 +38,8 @@ export type WriteError =
   | 'not-found'
   | 'events'
   | 'event'
+  | 'event-over'
+  | 'rsvp'
   | 'vote'
   | 'about'
   | 'upload'
@@ -253,12 +262,36 @@ const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> 
 /** What an event or a vote adds to a post; the other kinds add nothing. */
 export type PostShape =
   | { kind: 'discussion' | 'announcement' }
-  | { kind: 'event'; event: { location: string; startsAt: string } }
+  | { kind: 'event'; event: { location: string; startsAt: string; endsAt?: string | null } }
   | { kind: 'vote'; vote: { options: string[]; multiple: boolean; anonymous?: boolean } }
 
 /**
+ * An event's place and times once checked: a place within the limit (an
+ * address is stored as the full address), a real start that has not passed
+ * (when `fresh`), and an end, if any, after the start.
+ */
+const eventTimes = (
+  event: { location: string; startsAt: string; endsAt?: string | null },
+  now: Date,
+  fresh: boolean,
+): { location: string; startsAt: string; endsAt: string | null } | null => {
+  const text = event.location.trim()
+  const location = locationUrl(text) ?? text
+  const starts = new Date(event.startsAt)
+  if (!location || location.length > EVENT_LOCATION_MAX) return null
+  if (Number.isNaN(starts.getTime()) || (fresh && starts.getTime() < now.getTime())) return null
+  let endsAt: string | null = null
+  if (event.endsAt) {
+    const ends = new Date(event.endsAt)
+    if (Number.isNaN(ends.getTime()) || ends.getTime() <= starts.getTime()) return null
+    endsAt = ends.toISOString()
+  }
+  return { location, startsAt: starts.toISOString(), endsAt }
+}
+
+/**
  * The extra columns an event or a vote stores, or null when they break a
- * rule: an event needs a place and a start that has not passed; a vote needs
+ * rule: an event needs a place, a start that has not passed and, if given, a later end; a vote needs
  * two to ten distinct options.
  */
 export const shapeData = (shape: PostShape, now = new Date()): Record<string, unknown> | null => {
@@ -267,11 +300,13 @@ export const shapeData = (shape: PostShape, now = new Date()): Record<string, un
     case 'announcement':
       return {}
     case 'event': {
-      const location = shape.event.location.trim()
-      const starts = new Date(shape.event.startsAt)
-      if (!location || location.length > EVENT_LOCATION_MAX) return null
-      if (Number.isNaN(starts.getTime()) || starts.getTime() < now.getTime()) return null
-      return { event_location: location, event_starts_at: starts.toISOString() }
+      const times = eventTimes(shape.event, now, true)
+      if (!times) return null
+      return {
+        event_location: times.location,
+        event_starts_at: times.startsAt,
+        event_ends_at: times.endsAt,
+      }
     }
     case 'vote': {
       const options = shape.vote.options.map((o) => o.trim()).filter(Boolean)
@@ -970,6 +1005,155 @@ export const voteSet = async (
         overrideAccess: true,
       })
   return { ok: true, data: { options: chosen } }
+}
+
+// --- rsvpSet ---
+
+/**
+ * Sets the member's answer to an event (going, maybe or not going), or
+ * withdraws it with null. One row per member and event, so a retry or a
+ * double tap lands on the same row. Archived spaces, locked posts and events
+ * that are over refuse it.
+ */
+export const rsvpSet = async (
+  i: Input<{ post: number; status: RsvpStatus | null }>,
+  now = new Date(),
+): Promise<WriteResult<{ status: RsvpStatus | null }>> => {
+  const { payload, user, post: postId, status } = i
+  if (status !== null && !isRsvpStatus(status)) return err('rsvp')
+  const post = (await payload
+    .findByID({ collection: 'space-posts', id: postId, depth: 0, overrideAccess: true })
+    .catch(() => null)) as {
+    space: number | { id: number }
+    kind?: string
+    locked?: boolean | null
+    deleted_at?: string | null
+    event_starts_at?: string | null
+    event_ends_at?: string | null
+  } | null
+  if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
+    return err('not-found')
+  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const g = await gate(payload, user, spaceId, { write: true })
+  if (g.stop) return err((g as { error: WriteError }).error)
+  if ((await membership(payload, user, g.space)).role === 'none') return err('not-member')
+  if (post.locked) return err('locked')
+  if (eventOver(post.event_starts_at, post.event_ends_at, now)) return err('event-over')
+
+  const { docs: held } = await payload.find({
+    collection: 'space-rsvps',
+    where: { and: [{ account: { equals: user.id } }, { post: { equals: postId } }] },
+    overrideAccess: true,
+    pagination: false,
+    depth: 0,
+  })
+  const [row, ...extra] = held
+  for (const other of extra)
+    await payload.delete({ collection: 'space-rsvps', id: other.id, overrideAccess: true })
+  if (status === null) {
+    if (row) await payload.delete({ collection: 'space-rsvps', id: row.id, overrideAccess: true })
+  } else if (!row) {
+    await payload.create({
+      collection: 'space-rsvps',
+      data: { space: spaceId, account: user.id, post: postId, status },
+      overrideAccess: true,
+    })
+  } else if (row.status !== status) {
+    await payload.update({
+      collection: 'space-rsvps',
+      id: row.id,
+      data: { status },
+      overrideAccess: true,
+    })
+  }
+  return { ok: true, data: { status } }
+}
+
+// --- eventEdit ---
+
+/**
+ * Changes an event's place or times. The author and a moderator may; an event
+ * that is over, a locked post or an archived space refuse. When the place or
+ * the times really change, the members who answered going or maybe get a
+ * notification (returned as `notify`, run after the save like postCreate's).
+ */
+export const eventEdit = async (
+  i: Input<{ id: number; location: string; startsAt: string; endsAt?: string | null }>,
+  now = new Date(),
+): Promise<WriteResult<true>> => {
+  const { payload, user, id } = i
+  const post = (await payload
+    .findByID({ collection: 'space-posts', id, depth: 0, overrideAccess: true })
+    .catch(() => null)) as {
+    space: number | { id: number }
+    author: number | { id: number } | null
+    kind?: string
+    body?: string
+    locked?: boolean | null
+    deleted_at?: string | null
+    event_location?: string | null
+    event_starts_at?: string | null
+    event_ends_at?: string | null
+  } | null
+  if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
+    return err('not-found')
+  const spaceId = typeof post.space === 'object' ? post.space.id : post.space
+  const g = await gate(payload, user, spaceId, { write: true })
+  if (g.stop) return err((g as { error: WriteError }).error)
+  const space = g.space
+  const mem = await membership(payload, user, space)
+  if (mem.role === 'none') return err('not-member')
+  const isAuthor =
+    post.author !== null &&
+    (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
+  if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
+  if (post.locked) return err('locked')
+  if (eventOver(post.event_starts_at, post.event_ends_at, now)) return err('event-over')
+
+  const startChanged = new Date(i.startsAt).getTime() !== new Date(post.event_starts_at).getTime()
+  const next = eventTimes(i, now, startChanged)
+  if (!next) return err('event')
+  const sameTime = (a: string | null | undefined, b: string | null) =>
+    (a ? new Date(a).getTime() : null) === (b ? new Date(b).getTime() : null)
+  const changed =
+    next.location !== (post.event_location ?? '') ||
+    !sameTime(post.event_starts_at, next.startsAt) ||
+    !sameTime(post.event_ends_at, next.endsAt)
+  if (!changed) return { ok: true, data: true }
+
+  await payload.update({
+    collection: 'space-posts',
+    id,
+    data: {
+      event_location: next.location,
+      event_starts_at: next.startsAt,
+      event_ends_at: next.endsAt,
+    } as never,
+    overrideAccess: true,
+  })
+
+  const notifyFn = async () => {
+    const { docs: answers } = await payload.find({
+      collection: 'space-rsvps',
+      where: { and: [{ post: { equals: id } }, { status: { in: ['going', 'maybe'] } }] },
+      overrideAccess: true,
+      pagination: false,
+      depth: 0,
+      select: { account: true },
+    })
+    const accounts = answers
+      .map((a) => (typeof a.account === 'object' ? a.account.id : a.account))
+      .filter((account) => account !== user.id)
+    if (!accounts.length) return
+    const { actorOf, notify } = await import('@/lib/notify')
+    await notify(payload, accounts, {
+      kind: 'event_changed',
+      description: `“${eventTitle(post.body ?? '', 'An event')}” in ${await spaceNameOf(payload, space)} has a new time or place`,
+      link: await spaceLink(payload, space, id),
+      actor: await actorOf(payload, personOf(user)),
+    })
+  }
+  return { ok: true, data: true, notify: notifyFn }
 }
 
 export const consentAccept = async (i: Input<object>): Promise<WriteResult<true>> => {

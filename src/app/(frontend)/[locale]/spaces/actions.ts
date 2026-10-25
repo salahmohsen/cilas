@@ -11,12 +11,14 @@ import { routing } from '@/i18n/routing'
 import { cairoInstant } from '@/lib/cairo-day'
 import { PostArticle, loadPost } from '@/components/space/post-article'
 import { currentReader } from '@/lib/reader'
+import { isRsvpStatus } from '@/lib/space-event'
 import { postSpace } from '@/lib/spaces-data'
 import {
   commentCreate,
   commentEdit,
   commentRemove,
   consentAccept,
+  eventEdit,
   fileAdd,
   postCreate,
   postEdit,
@@ -24,6 +26,7 @@ import {
   postRemove,
   preferenceSet,
   reactionToggle,
+  rsvpSet,
   spaceSettingsSet,
   STEP_KEYS,
   stepMark,
@@ -85,6 +88,21 @@ const revalidate = async () => {
 }
 
 /**
+ * An event's start and optional end from the form's Cairo day and times, as
+ * instants; null when a field names no real moment. The end is on the start's
+ * day, and the write layer refuses one that is not after the start.
+ */
+const eventTimesOf = (form: FormData): { startsAt: string; endsAt: string | null } | null => {
+  const day = text(form, 'day')
+  const startsAt = cairoInstant(day, text(form, 'time'))
+  if (!startsAt) return null
+  const endTime = text(form, 'end_time')
+  if (!endTime) return { startsAt, endsAt: null }
+  const endsAt = cairoInstant(day, endTime)
+  return endsAt ? { startsAt, endsAt } : null
+}
+
+/**
  * The post's kind and what it adds, read from the composer's fields. An
  * event's day and time are Cairo wall-clock (ADR 0002); null when they do
  * not name a real moment. The rules themselves live in postCreate.
@@ -94,10 +112,8 @@ const shapeOf = (form: FormData): PostShape | null => {
     case 'announcement':
       return { kind: 'announcement' }
     case 'event': {
-      const startsAt = cairoInstant(text(form, 'day'), text(form, 'time'))
-      return startsAt
-        ? { kind: 'event', event: { location: text(form, 'location'), startsAt } }
-        : null
+      const times = eventTimesOf(form)
+      return times ? { kind: 'event', event: { location: text(form, 'location'), ...times } } : null
     }
     case 'vote':
       return {
@@ -317,6 +333,41 @@ export async function voteSetAction(
   })
   if (!result.ok) return err(result.error)
   await revalidate()
+  return { status: 'ok' }
+}
+
+export async function rsvpSetAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const post = num(form, 'post')
+  if (!post) return err('not-found')
+  const answer = text(form, 'status')
+  if (answer !== '' && !isRsvpStatus(answer)) return err('rsvp')
+  const payload = await getPayload({ config })
+  const result = await rsvpSet({ payload, user, post, status: answer === '' ? null : answer })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  return { status: 'ok' }
+}
+
+export async function eventEditAction(
+  _prev: SpacesWriteState,
+  form: FormData,
+): Promise<SpacesWriteState> {
+  const user = await currentReader()
+  if (!user || user.collection !== 'users') return err('auth')
+  const id = num(form, 'post')
+  if (!id) return err('not-found')
+  const times = eventTimesOf(form)
+  if (!times) return err('event')
+  const payload = await getPayload({ config })
+  const result = await eventEdit({ payload, user, id, location: text(form, 'location'), ...times })
+  if (!result.ok) return err(result.error)
+  await revalidate()
+  await result.notify?.()
   return { status: 'ok' }
 }
 

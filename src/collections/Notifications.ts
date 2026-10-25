@@ -57,6 +57,7 @@ export const Notifications: CollectionConfig = {
         'moderation',
         'report',
         'question',
+        'event_changed',
       ].map((value) => ({
         value,
         label: value.replace('_', ' '),

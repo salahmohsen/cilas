@@ -27,6 +27,7 @@ import { SpacePosts } from './collections/SpacePosts'
 import { SpaceComments } from './collections/SpaceComments'
 import { SpaceFiles } from './collections/SpaceFiles'
 import { SpaceReactions } from './collections/SpaceReactions'
+import { SpaceRsvps } from './collections/SpaceRsvps'
 import { SpaceVotes } from './collections/SpaceVotes'
 import { SpaceConsents } from './collections/SpaceConsents'
 import { SpaceVisits } from './collections/SpaceVisits'
@@ -178,6 +179,7 @@ export default buildConfig({
     SpaceVisits,
     SpacePreferences,
     SpaceVotes,
+    SpaceRsvps,
   ],
   globals: [SiteSettings, EmailSettings],
   localization: {

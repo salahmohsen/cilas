@@ -5,6 +5,7 @@ import type { ReactionCounts, ReactionKind } from '@/lib/space-reactions'
 import { archivedNow, courseLastMeeting, readOnly } from '@/lib/space-lifecycle'
 import { NOTICE_VERSION } from '@/lib/space-consent'
 import { spacePeople } from '@/lib/space-members'
+import { isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
 import {
   mode,
   readableSpaceIds,
@@ -432,6 +433,61 @@ const voteViews = async (
   return out
 }
 
+/** The answers to an event: how many gave each, who is going, and the reader's own. */
+export type RsvpView = {
+  counts: Record<RsvpStatus, number>
+  going: Voter[]
+  mine: RsvpStatus | null
+}
+
+const NO_COUNTS: Record<RsvpStatus, number> = { going: 0, maybe: 0, not_going: 0 }
+
+/**
+ * Every event post's answers in one read, through the reader's access: the
+ * rows follow the space's readers, so a post's card shows no more than the
+ * space would. Only the people going are named.
+ */
+const rsvpViews = async (
+  payload: Payload,
+  user: null | User,
+  posts: SpacePost[],
+  locale: 'en' | 'ar',
+): Promise<Map<number, RsvpView>> => {
+  const out = new Map<number, RsvpView>()
+  const events = posts.filter((p) => p.kind === 'event' && !p.deleted_at)
+  if (!events.length) return out
+  const { docs } = await payload.find({
+    collection: 'space-rsvps',
+    user: user ?? undefined,
+    depth: 0,
+    pagination: false,
+    overrideAccess: false,
+    sort: 'createdAt',
+    select: { post: true, account: true, status: true },
+    where: { post: { in: events.map((p) => p.id) } },
+  })
+  const cards = await voterCards(
+    payload,
+    docs.filter((r) => r.status === 'going').map((r) => relId(r.account)),
+    locale,
+  )
+  for (const p of events) {
+    const rows = docs.filter((r) => relId(r.post) === p.id && isRsvpStatus(r.status))
+    const counts = { ...NO_COUNTS }
+    for (const r of rows) counts[r.status as RsvpStatus] += 1
+    const mine = user ? rows.find((r) => relId(r.account) === user.id)?.status : undefined
+    out.set(p.id, {
+      counts,
+      going: rows.flatMap((r) => {
+        const card = r.status === 'going' ? cards.get(relId(r.account) ?? -1) : undefined
+        return card ? [card] : []
+      }),
+      mine: mine && isRsvpStatus(mine) ? mine : null,
+    })
+  }
+  return out
+}
+
 /** The parts of a course a session card reads: its sessions, their dates, and the text that sets its direction. */
 export type SessionCourse = Pick<
   Course,
@@ -527,6 +583,8 @@ export type FeedRow = {
   files: SpaceFileRef[]
   reactions: Reactions
   vote: VoteView | null
+  /** An event post's answers */
+  rsvp: RsvpView | null
   /** The course session the post points at, if any */
   session: SessionView | null
 }
@@ -565,33 +623,35 @@ export const spaceFeed = async (
   })
 
   const postIds = docs.map((p) => p.id)
-  const [threads, votes, sessions, { docs: reactions }, { docs: postFiles }] = await Promise.all([
-    postThreads(payload, user, postIds),
-    voteViews(payload, user, docs, locale),
-    sessionViews(payload, user, docs, row.kind === 'course' ? relId(row.course) : null, locale),
-    postIds.length
-      ? payload.find({
-          collection: 'space-reactions',
-          user: user ?? undefined,
-          depth: 0,
-          pagination: false,
-          overrideAccess: false,
-          select: { post: true, comment: true, account: true, reaction: true },
-          where: { and: [{ post: { in: postIds } }, { comment: { exists: false } }] },
-        })
-      : Promise.resolve({ docs: [] }),
-    postIds.length
-      ? payload.find({
-          collection: 'space-files',
-          user: user ?? undefined,
-          depth: 0,
-          pagination: false,
-          overrideAccess: false,
-          sort: 'createdAt',
-          where: { and: [{ post: { in: postIds } }, { comment: { exists: false } }] },
-        })
-      : Promise.resolve({ docs: [] }),
-  ])
+  const [threads, votes, rsvps, sessions, { docs: reactions }, { docs: postFiles }] =
+    await Promise.all([
+      postThreads(payload, user, postIds),
+      voteViews(payload, user, docs, locale),
+      rsvpViews(payload, user, docs, locale),
+      sessionViews(payload, user, docs, row.kind === 'course' ? relId(row.course) : null, locale),
+      postIds.length
+        ? payload.find({
+            collection: 'space-reactions',
+            user: user ?? undefined,
+            depth: 0,
+            pagination: false,
+            overrideAccess: false,
+            select: { post: true, comment: true, account: true, reaction: true },
+            where: { and: [{ post: { in: postIds } }, { comment: { exists: false } }] },
+          })
+        : Promise.resolve({ docs: [] }),
+      postIds.length
+        ? payload.find({
+            collection: 'space-files',
+            user: user ?? undefined,
+            depth: 0,
+            pagination: false,
+            overrideAccess: false,
+            sort: 'createdAt',
+            where: { and: [{ post: { in: postIds } }, { comment: { exists: false } }] },
+          })
+        : Promise.resolve({ docs: [] }),
+    ])
   const reactionsOf = tally(reactions, (r) => relId(r.post), user)
   const filesOf = new Map<number, SpaceFileRef[]>()
   for (const f of postFiles) {
@@ -608,6 +668,7 @@ export const spaceFeed = async (
     files: filesOf.get(p.id) ?? [],
     reactions: reactionsOf.get(p.id) ?? NO_REACTIONS,
     vote: votes.get(p.id) ?? null,
+    rsvp: rsvps.get(p.id) ?? null,
     session: sessions.get(p.id) ?? null,
   }))
   return { rows, settings, archived, lastMeeting, daysSince }
@@ -805,11 +866,12 @@ export const postView = async (
     .catch(() => null)
   if (!post || relId(post.space as never) !== space.id) return null
 
-  const [{ archived }, threads, votes, sessions, { docs: reactions }, { docs: files }] =
+  const [{ archived }, threads, votes, rsvps, sessions, { docs: reactions }, { docs: files }] =
     await Promise.all([
       archiveState(payload, space),
       postThreads(payload, user, [post.id]),
       voteViews(payload, user, [post], locale),
+      rsvpViews(payload, user, [post], locale),
       sessionViews(
         payload,
         user,
@@ -850,6 +912,7 @@ export const postView = async (
       files: [],
       reactions: onPost.get(post.id) ?? NO_REACTIONS,
       vote: votes.get(post.id) ?? null,
+      rsvp: rsvps.get(post.id) ?? null,
       session: sessions.get(post.id) ?? null,
     },
     files: deleted ? [] : files.filter((f) => f.comment == null).map(fileRef),
@@ -1151,5 +1214,68 @@ export const memberState = async (
     lastVisitedAt: visit?.last_visited_at ?? null,
     consented: consents.totalDocs > 0,
     digest: digest ?? null,
+  }
+}
+
+/**
+ * One row of a space's Events tab. A union so a second kind of row (the
+ * public events) can join the list without changing the rows that exist.
+ */
+export type SpaceEventItem = {
+  type: 'post'
+  post: SpacePost
+  startsAt: string
+  endsAt: string | null
+  authorName: string | null
+  rsvp: RsvpView
+}
+
+/**
+ * Every event post of a space in one read through the reader's access, with
+ * their answers in one more. Upcoming events come first, soonest first, then
+ * the ones that are over, newest first.
+ */
+export const spaceEvents = async (
+  payload: Payload,
+  user: null | User,
+  space: number | Space,
+  locale: 'en' | 'ar' = 'en',
+  now: Date = new Date(),
+): Promise<{ upcoming: SpaceEventItem[]; past: SpaceEventItem[] }> => {
+  const { docs } = await payload.find({
+    collection: 'space-posts',
+    user: user ?? undefined,
+    depth: 1,
+    pagination: false,
+    overrideAccess: false,
+    where: {
+      and: [
+        { space: { equals: typeof space === 'object' ? space.id : space } },
+        { kind: { equals: 'event' } },
+        { deleted_at: { exists: false } },
+      ],
+    },
+  })
+  const rsvps = await rsvpViews(payload, user, docs, locale)
+  const items = docs.flatMap((post): SpaceEventItem[] =>
+    post.event_starts_at
+      ? [
+          {
+            type: 'post',
+            post,
+            startsAt: post.event_starts_at,
+            endsAt: post.event_ends_at ?? null,
+            authorName: typeof post.author === 'object' && post.author ? post.author.name : null,
+            rsvp: rsvps.get(post.id) ?? { counts: { ...NO_COUNTS }, going: [], mine: null },
+          },
+        ]
+      : [],
+  )
+  const over = (item: SpaceEventItem) =>
+    new Date(item.endsAt || item.startsAt).getTime() < now.getTime()
+  const time = (item: SpaceEventItem) => new Date(item.startsAt).getTime()
+  return {
+    upcoming: items.filter((i) => !over(i)).sort((a, b) => time(a) - time(b)),
+    past: items.filter(over).sort((a, b) => time(b) - time(a)),
   }
 }

@@ -70,6 +70,15 @@ export const SpacePosts: CollectionConfig = {
       },
     },
     {
+      // Cairo wall-clock like the start; eventEdit and shapeData keep it after the start.
+      name: 'event_ends_at',
+      type: 'date',
+      admin: {
+        condition: (data) => (data as { kind?: string }).kind === 'event',
+        date: { pickerAppearance: 'dayAndTime' },
+      },
+    },
+    {
       name: 'vote_options',
       type: 'array',
       access: { update: () => false },

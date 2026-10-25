@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { formatDistanceToNow, isYesterday } from 'date-fns'
 import {
   AtSign,
+  CalendarClock,
   CircleCheck,
   CircleX,
   FileSearch,
@@ -51,6 +52,7 @@ const TONES: Record<NotificationKind, NotificationItem['tone']> = {
   announcement: 'info',
   moderation: 'warning',
   report: 'warning',
+  event_changed: 'info',
 }
 
 /** The glyph each event kind shows when no actor portrait exists. */
@@ -67,6 +69,7 @@ const ICONS: Record<NotificationKind, ReactNode> = {
   announcement: <Megaphone size={18} strokeWidth={1.7} />,
   moderation: <Shield size={18} strokeWidth={1.7} />,
   report: <Flag size={18} strokeWidth={1.7} />,
+  event_changed: <CalendarClock size={18} strokeWidth={1.7} />,
 }
 
 const call = (path: string, init?: RequestInit) =>

@@ -21,12 +21,14 @@ import {
   consentAccept,
   spaceSettingsSet,
   voteSet,
+  rsvpSet,
+  eventEdit,
   spaceLink,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
 import { ABOUT_MAX } from '@/lib/space-about'
 import { mentionSafelist } from '@/lib/space-members'
-import { mySpaces, postSpace, postView, spaceFeed } from '@/lib/spaces-data'
+import { mySpaces, postSpace, postView, spaceEvents, spaceFeed } from '@/lib/spaces-data'
 
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
@@ -232,6 +234,7 @@ describe('spaces write', () => {
       payload.db as unknown as { drizzle: { execute: (q: unknown) => Promise<unknown> } }
     ).drizzle.execute(sql`delete from space_files where filename like 'probe-f%'`)
     for (const collection of [
+      'space-rsvps',
       'space-votes',
       'space-reactions',
       'space-files',
@@ -1209,6 +1212,190 @@ describe('spaces write', () => {
     expect(byFellow.ok).toBe(true)
     if (byFellow.ok) track('space-posts', byFellow.data.id)
     await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
+  })
+
+  it('a member answers an event once, changes or withdraws it; archive, lock and a past event refuse', async () => {
+    const day = 86_400_000
+    const starts = new Date(Date.now() + day).toISOString()
+    const ends = new Date(Date.now() + day + 2 * 3_600_000).toISOString()
+    const make = (event: { location: string; startsAt: string; endsAt?: string | null }) =>
+      postCreate({
+        payload,
+        user: fellow,
+        space: courseSpace.id,
+        kind: 'event',
+        body: 'Probe rsvp event',
+        event,
+      })
+    expect(await make({ location: 'Room 2', startsAt: starts, endsAt: starts })).toMatchObject({
+      ok: false,
+      error: 'event',
+    })
+    const made = await make({
+      location: 'https://example.org/room',
+      startsAt: starts,
+      endsAt: ends,
+    })
+    expect(made.ok).toBe(true)
+    if (!made.ok) return
+    track('space-posts', made.data.id)
+    const post = made.data.id
+    const stored = await payload.findByID({ collection: 'space-posts', id: post })
+    expect(stored.event_location).toBe('https://example.org/room')
+    expect(new Date(stored.event_ends_at!).toISOString()).toBe(ends)
+
+    const answer = async (user: User, status: 'going' | 'maybe' | 'not_going' | null) => {
+      const result = await rsvpSet({ payload, user, post, status })
+      const { docs } = await payload.find({
+        collection: 'space-rsvps',
+        where: { post: { equals: post } },
+        overrideAccess: true,
+        pagination: false,
+      })
+      for (const r of docs) track('space-rsvps', r.id)
+      return { result, docs }
+    }
+    expect((await answer(student, 'going')).docs).toHaveLength(1)
+    // Changing the answer keeps one row; a second member adds another.
+    const changed = await answer(student, 'maybe')
+    expect(changed.docs).toHaveLength(1)
+    expect(changed.docs[0]?.status).toBe('maybe')
+    expect((await answer(fellow, 'going')).docs).toHaveLength(2)
+    expect((await answer(student, null)).docs).toHaveLength(1)
+    expect((await answer(student, null)).result.ok).toBe(true)
+    expect((await answer(stranger, 'going')).result).toMatchObject({
+      ok: false,
+      error: 'not-member',
+    })
+    expect((await answer(student, 'perhaps' as never)).result).toMatchObject({
+      ok: false,
+      error: 'rsvp',
+    })
+
+    // One query through the reader's access: counts, who is going and the reader's own answer.
+    await answer(student, 'going')
+    const { upcoming } = await spaceEvents(payload, student, courseSpace.id)
+    const item = upcoming.find((e) => e.post.id === post)!
+    expect(item.rsvp.counts).toEqual({ going: 2, maybe: 0, not_going: 0 })
+    expect(item.rsvp.mine).toBe('going')
+    expect(item.rsvp.going).toHaveLength(2)
+    const feed = await spaceFeed(payload, student, courseSpace.id)
+    expect(feed.rows.find((r) => r.post.id === post)?.rsvp?.counts.going).toBe(2)
+    const outsider = await spaceEvents(payload, stranger, courseSpace.id)
+    expect(outsider.upcoming.concat(outsider.past)).toHaveLength(0)
+
+    // Time passes: after the end, an answer is refused and the event moves to Past events.
+    const later = new Date(Date.now() + 2 * day)
+    expect((await rsvpSet({ payload, user: student, post, status: 'maybe' }, later)).ok).toBe(false)
+    expect(await rsvpSet({ payload, user: student, post, status: 'maybe' }, later)).toMatchObject({
+      error: 'event-over',
+    })
+    const afterwards = await spaceEvents(payload, student, courseSpace.id, 'en', later)
+    expect(afterwards.past.some((e) => e.post.id === post)).toBe(true)
+    expect(afterwards.upcoming.some((e) => e.post.id === post)).toBe(false)
+
+    await payload.update({
+      collection: 'space-posts',
+      id: post,
+      data: { locked: true },
+      overrideAccess: true,
+    })
+    expect(await rsvpSet({ payload, user: student, post, status: 'maybe' })).toMatchObject({
+      error: 'locked',
+    })
+    await payload.update({
+      collection: 'space-posts',
+      id: post,
+      data: { locked: false },
+      overrideAccess: true,
+    })
+  })
+
+  it('changing an event notifies those who said going or maybe; the author and moderators may change it', async () => {
+    const day = 86_400_000
+    const starts = new Date(Date.now() + day).toISOString()
+    const made = await postCreate({
+      payload,
+      user: student,
+      space: community.id,
+      kind: 'event',
+      body: 'Probe change event',
+      event: { location: 'Room 2', startsAt: starts },
+    })
+    expect(made.ok).toBe(true)
+    if (!made.ok) return
+    track('space-posts', made.data.id)
+    const post = made.data.id
+    const watcher = (await mkUser('Probe Watcher'))!
+    const skeptic = (await mkUser('Probe Skeptic'))!
+    for (const [user, status] of [
+      [fellow, 'going'],
+      [watcher, 'maybe'],
+      [skeptic, 'not_going'],
+    ] as const) {
+      await rsvpSet({ payload, user, post, status })
+    }
+    const { docs: rows } = await payload.find({
+      collection: 'space-rsvps',
+      where: { post: { equals: post } },
+      overrideAccess: true,
+      pagination: false,
+    })
+    for (const r of rows) track('space-rsvps', r.id)
+
+    const next = new Date(Date.now() + 2 * day).toISOString()
+    // A member who is neither the author nor a moderator is refused; an end before the start is refused.
+    expect(
+      await eventEdit({ payload, user: watcher, id: post, location: 'Room 3', startsAt: next }),
+    ).toMatchObject({ ok: false, error: 'not-yours' })
+    expect(
+      await eventEdit({
+        payload,
+        user: student,
+        id: post,
+        location: 'Room 2',
+        startsAt: next,
+        endsAt: starts,
+      }),
+    ).toMatchObject({ ok: false, error: 'event' })
+
+    // No change, no notification.
+    const same = await eventEdit({
+      payload,
+      user: student,
+      id: post,
+      location: 'Room 2',
+      startsAt: starts,
+    })
+    expect(same.ok && same.notify).toBeFalsy()
+
+    const edited = await eventEdit({
+      payload,
+      user: admin,
+      id: post,
+      location: 'Room 3',
+      startsAt: next,
+    })
+    expect(edited.ok).toBe(true)
+    if (!edited.ok) return
+    await edited.notify?.()
+    const { docs: notes } = await payload.find({
+      collection: 'notifications',
+      where: { kind: { equals: 'event_changed' } },
+      overrideAccess: true,
+      pagination: false,
+      sort: '-createdAt',
+      limit: 20,
+    })
+    for (const n of notes) track('notifications', n.id)
+    const mine = notes.filter((n) => n.link?.endsWith(`/posts/${post}`))
+    const recipients = mine.map((n) =>
+      typeof n.recipient === 'object' ? n.recipient.id : n.recipient,
+    )
+    // Going and maybe are told; the one who said no is not.
+    expect(recipients.sort()).toEqual([fellow.id, watcher.id].sort())
+    const stored = await payload.findByID({ collection: 'space-posts', id: post })
+    expect(stored.event_location).toBe('Room 3')
   })
 
   it('a moderator attaches a session of the course to an announcement; readers see it through their access', async () => {
