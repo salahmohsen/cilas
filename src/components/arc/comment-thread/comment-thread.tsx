@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  Fragment,
   forwardRef,
   useCallback,
   useEffect,
@@ -209,6 +210,8 @@ export interface CommentThreadProps {
   renderName?: (author: CommentAuthor) => ReactNode
   /** Renders a highlighted "@Full Name", such as a link. */
   renderMention?: (person: CommentAuthor, text: string) => ReactNode
+  /** Renders the plain text between mentions, such as turning an address into a link. */
+  renderText?: (text: string) => ReactNode
   /** Extra content under a comment's body, such as an attachment. */
   renderExtra?: (comment: ThreadComment) => ReactNode
   /** Extra content beside the composer's send button, such as an attach button. */
@@ -335,11 +338,13 @@ function Body({
   people,
   mentions,
   renderMention,
+  renderText,
 }: {
   text: string
   people: CommentAuthor[]
   mentions?: CommentAuthor[]
   renderMention?: (person: CommentAuthor, text: string) => ReactNode
+  renderText?: (text: string) => ReactNode
 }) {
   const parts = useMemo(() => {
     const found = matchMentions(text, mentions ?? [], people)
@@ -356,7 +361,11 @@ function Body({
     <p className={styles.body} dir="auto">
       {parts.map((part, index) =>
         typeof part === 'string' ? (
-          part
+          renderText ? (
+            <Fragment key={index}>{renderText(part)}</Fragment>
+          ) : (
+            part
+          )
         ) : (
           <span key={index} className={styles.mention}>
             {renderMention ? renderMention(part.person, part.text) : part.text}
@@ -723,6 +732,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     canDelete,
     renderName,
     renderMention,
+    renderText,
     renderExtra,
     composerExtra,
     composerAttachments,
@@ -934,6 +944,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                           mentions={comment.mentions}
                           people={mentionable}
                           renderMention={renderMention}
+                          renderText={renderText}
                         />
                         {renderExtra?.(comment)}
 

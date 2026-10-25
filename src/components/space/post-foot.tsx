@@ -31,6 +31,7 @@ export function PostFoot({
   consented,
   notice,
   now,
+  titles,
   preview,
   limit,
   step,
@@ -48,6 +49,7 @@ export function PostFoot({
   consented: boolean
   notice: NoticePart[]
   now: string
+  titles: Record<string, string>
   /** In the feed: the newest comments first, and the thread only once there is one or the member asks */
   preview: boolean
   /** Passed to the thread: how many comments show first, and how many each "Show more" adds */
@@ -98,6 +100,7 @@ export function PostFoot({
           consented={consented}
           notice={notice}
           now={now}
+          titles={titles}
           preview={preview}
           limit={limit}
           step={step}

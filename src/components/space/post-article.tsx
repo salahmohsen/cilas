@@ -4,7 +4,8 @@ import type { Payload } from 'payload'
 
 import { personOf } from '@/access'
 import type { Space, User } from '@/payload-types'
-import { outsideLinks } from '@/lib/link-preview'
+import { linkTitles, outsideLinks } from '@/lib/link-preview'
+import { pageAddresses, threadTexts } from '@/lib/link-title'
 import { absoluteUrl } from '@/lib/schema'
 import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
@@ -48,6 +49,7 @@ export async function loadPost(
   const personId = personOf(user)
   const me = (personId != null && byId.get(personId)) || { name: user.email, photo: null }
   const allowed = mayComment(mem, space.posting ?? 'open')
+  const titles = await linkTitles(pageAddresses(threadTexts([view.row.post.body], view.comments)))
   return {
     view,
     consented: state.consented,
@@ -66,6 +68,7 @@ export async function loadPost(
       consented: state.consented,
       notice: NOTICE[locale === 'ar' ? 'ar' : 'en'],
       now: new Date().toISOString(),
+      titles,
     },
   }
 }
@@ -109,7 +112,7 @@ export async function PostArticle({
         {deleted ? (
           <p className={styles.meta}>{t('deletedNotice')}</p>
         ) : (
-          <PostBody body={post.body} people={context.people} />
+          <PostBody body={post.body} people={context.people} titles={context.titles} />
         )}
       </div>
       {!deleted && post.kind === 'event' && (
@@ -146,6 +149,7 @@ export async function PostArticle({
           consented={context.consented}
           notice={context.notice}
           now={context.now}
+          titles={context.titles}
           preview={false}
           {...(dialog ? { limit: DIALOG_COMMENTS.limit, step: DIALOG_COMMENTS.step } : {})}
         />

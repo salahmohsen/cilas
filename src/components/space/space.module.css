@@ -836,6 +836,7 @@
 }
 
 .markdown > * {
+  min-width: 0;
   margin: 0;
 }
 
@@ -1580,4 +1581,17 @@
   text-decoration: underline;
   text-underline-offset: 4px;
   width: fit-content;
+}
+
+/* A bare address shown as a page title: one line with an ellipsis, so a long title never widens the column. */
+.titledLink {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
+  color: var(--accent-strong);
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
 }

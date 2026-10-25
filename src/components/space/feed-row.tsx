@@ -64,6 +64,8 @@ export type FeedContext = {
   notice: NoticePart[]
   /** When the page rendered, so client times match the server's */
   now: string
+  /** Page titles of the page's bare links, read in one batch */
+  titles: Record<string, string>
 }
 
 /** Who wrote a post: the photo, then the name (with its card) above when it was posted. */
@@ -205,7 +207,7 @@ export async function FeedRow({
         <PostHead row={row} context={context} postHref={postHref} />
         <div id={`${id}-body`}>
           <Folded body={post.body} lines={8} more={t('readMore')} less={t('showLess')}>
-            <PostBody body={post.body} people={context.people} />
+            <PostBody body={post.body} people={context.people} titles={context.titles} />
           </Folded>
         </div>
         {post.kind === 'event' && (
@@ -239,6 +241,7 @@ export async function FeedRow({
           consented={context.consented}
           notice={context.notice}
           now={context.now}
+          titles={context.titles}
           preview
         />
       </article>

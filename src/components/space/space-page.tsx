@@ -14,6 +14,8 @@ import { Button } from '@/components/arc/button/button'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import type { Course, Programme, Space, User } from '@/payload-types'
+import { linkTitles } from '@/lib/link-preview'
+import { pageAddresses, threadTexts } from '@/lib/link-title'
 import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
@@ -168,6 +170,9 @@ export async function SpacePage({
   // A member may point a discussion at one of the course's sessions (a
   // moderator an announcement too), named as the syllabus numbers and dates it.
   const sessionChoices = landing.course ? await sessionOptions(landing.course, locale) : []
+  const titles = await linkTitles(
+    pageAddresses(feed.rows.flatMap((r) => threadTexts([r.post.body], r.comments))),
+  )
   const context: FeedContext = {
     archived: feed.archived,
     viewer: { personId: viewerPerson, moderator, me: { name: me.name, photo: me.photo } },
@@ -178,6 +183,7 @@ export async function SpacePage({
     consented: state.consented,
     notice,
     now: renderedAt,
+    titles,
   }
 
   const course = landing.course

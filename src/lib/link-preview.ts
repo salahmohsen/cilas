@@ -4,6 +4,8 @@ import { isIP } from 'node:net'
 
 import { Agent } from 'undici'
 
+import { titleKey } from './link-title'
+
 /** What a post shows for a link: the page's own title, summary and image. */
 export type LinkPreview = {
   url: string
@@ -14,11 +16,13 @@ export type LinkPreview = {
   site: string | null
 }
 
-const TIMEOUT_MS = 4000
+const TIMEOUT_MS = 6000
 const MAX_BYTES = 512 * 1024
 const MAX_REDIRECTS = 3
 const HIT_MS = 24 * 3600_000
 const MISS_MS = 3600_000
+/** A timeout or a refused connection may pass, so it is tried again soon. */
+const RETRY_MS = 120_000
 const MAX_ENTRIES = 500
 
 /**
@@ -204,6 +208,9 @@ const fetchHead = async (start: string): Promise<{ html: string; url: string } |
 
 const IMAGE_MS = 2500
 
+/** How long a page render waits for titles before it shows the shortened addresses. */
+const TITLE_BUDGET_MS = 2500
+
 /**
  * Whether a preview's image is worth showing. Only a sure answer drops it: a
  * private host, a 4xx, or a page that is not an image. A server that refuses
@@ -244,6 +251,7 @@ export const linkPreview = async (raw: string): Promise<LinkPreview | null> => {
   const hit = cache.get(raw)
   if (hit && hit.until > Date.now()) return hit.value
   let value: LinkPreview | null = null
+  let retry = false
   try {
     const page = await fetchHead(raw)
     const meta = page && parseMeta(page.html, page.url)
@@ -251,10 +259,34 @@ export const linkPreview = async (raw: string): Promise<LinkPreview | null> => {
       if (meta.image && !(await imageUsable(meta.image))) meta.image = null
       value = { url: raw, host: new URL(page.url).hostname.replace(/^www\./, ''), ...meta }
     }
-  } catch {
+  } catch (e) {
     value = null
+    retry = e instanceof Error && (e.name === 'TimeoutError' || e.message === 'fetch failed')
   }
   if (cache.size >= MAX_ENTRIES) cache.delete(cache.keys().next().value!)
-  cache.set(raw, { value, until: Date.now() + (value ? HIT_MS : MISS_MS) })
+  cache.set(raw, { value, until: Date.now() + (value ? HIT_MS : retry ? RETRY_MS : MISS_MS) })
   return value
+}
+
+/**
+ * The page titles for a page's bare links, read in one batch through the
+ * preview cache (one fetch per distinct address, all at once). An address
+ * with no readable title is left out, and the reader shows it shortened. The
+ * page waits at most `budgetMs`; a slow fetch finishes in the background and
+ * the next render finds its title in the cache.
+ */
+export const linkTitles = async (
+  urls: string[],
+  budgetMs = TITLE_BUDGET_MS,
+): Promise<Record<string, string>> => {
+  const found = await Promise.race([
+    Promise.all(urls.map((url) => linkPreview(url))),
+    new Promise<null[]>((resolve) => setTimeout(() => resolve(urls.map(() => null)), budgetMs)),
+  ])
+  const out: Record<string, string> = {}
+  urls.forEach((url, i) => {
+    const title = found[i]?.title
+    if (title) out[titleKey(url)] = title
+  })
+  return out
 }

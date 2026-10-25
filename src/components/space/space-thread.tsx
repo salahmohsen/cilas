@@ -28,6 +28,7 @@ import { AttachmentTray } from './attachment-tray'
 import { useAttachments } from './use-attachments'
 import { Attachments } from './attachments'
 
+import { LinkedText } from './linked-text'
 import { saveErrorKey } from './composer'
 import { ConsentSheet } from './consent-sheet'
 import { PersonHover, type PersonCard } from './person-hover'
@@ -69,6 +70,7 @@ export function SpaceThread({
   consented,
   notice,
   now,
+  titles,
   preview = false,
   limit,
   step,
@@ -85,6 +87,8 @@ export function SpaceThread({
   notice: NoticePart[]
   /** When the page rendered, so times read the same on server and client */
   now: string
+  /** Page titles by address, for the bare links in comment text */
+  titles: Record<string, string>
   /** Opens on the newest comments, with a button for the rest */
   preview?: boolean
   /** How many top-level comments show first; defaults to 2 in a preview and all otherwise */
@@ -300,6 +304,7 @@ export function SpaceThread({
           )
           return <PersonHover person={person}>{chip}</PersonHover>
         }}
+        renderText={(text) => <LinkedText text={text} titles={titles} />}
         renderExtra={(c) => {
           const attached = filesOf.get(c.id)
           return attached ? <Attachments files={attached} label={tp('files')} compact /> : null

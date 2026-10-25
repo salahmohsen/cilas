@@ -1,6 +1,7 @@
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
+import { TitledLink } from './titled-link'
 import { PersonHover, type PersonCard } from './person-hover'
 import styles from './space.module.css'
 
@@ -34,9 +35,11 @@ export type PostBodyProps = {
   body: string
   /** The space's people by id: a mention shows the current name and opens the card. */
   people?: Map<number, PersonCard>
+  /** Page titles by address: a link whose text is its own address shows the title. */
+  titles?: Record<string, string>
 }
 
-export const PostBody = ({ body, people }: PostBodyProps) => (
+export const PostBody = ({ body, people, titles }: PostBodyProps) => (
   <div className={styles.markdown}>
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -68,6 +71,8 @@ export const PostBody = ({ body, people }: PostBodyProps) => (
               </PersonHover>
             )
           }
+          if (href && typeof children === 'string' && children === href)
+            return <TitledLink url={href} titles={titles} />
           return (
             <a href={href} target="_blank" rel="noopener noreferrer">
               {children}
