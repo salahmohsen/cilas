@@ -20,6 +20,8 @@ export interface ExpandableTextProps extends Omit<HTMLAttributes<HTMLDivElement>
   moreLabel?: string
   /** Toggle label while open. */
   lessLabel?: string
+  /** Shows the full text elsewhere, such as a dialog: the toggle calls this instead of opening the text in place. */
+  onMore?: () => void
 }
 
 const noop = () => () => {}
@@ -31,7 +33,11 @@ const closeDuration = (distance: number) => 0.4 + Math.min(distance / 2000, 0.05
 
 /** Reduced motion only counts after hydration, so the server and the first client render agree. */
 function useReduced() {
-  const hydrated = useSyncExternalStore(noop, () => true, () => false)
+  const hydrated = useSyncExternalStore(
+    noop,
+    () => true,
+    () => false,
+  )
   const reduced = useReducedMotion() ?? false
   return hydrated && reduced
 }
@@ -44,6 +50,7 @@ export function ExpandableText({
   onExpandedChange,
   moreLabel = 'Read more',
   lessLabel = 'Show less',
+  onMore,
   className,
   style,
   ...props
@@ -160,7 +167,14 @@ export function ExpandableText({
   // A link or button hidden below the clamp opens the text when it receives keyboard focus.
   const onFocusCapture = (event: FocusEvent<HTMLDivElement>) => {
     props.onFocusCapture?.(event)
-    if (expanded || !overflowing || event.target === content.current || !content.current?.contains(event.target)) return
+    if (
+      onMore ||
+      expanded ||
+      !overflowing ||
+      event.target === content.current ||
+      !content.current?.contains(event.target)
+    )
+      return
     const box = content.current?.getBoundingClientRect(),
       target = event.target.getBoundingClientRect()
     if (box && target.bottom > box.bottom + 1) setExpanded(true)
@@ -196,22 +210,33 @@ export function ExpandableText({
         <button
           type="button"
           className={styles.toggle}
-          aria-expanded={expanded}
-          aria-controls={contentId}
-          onClick={() => setExpanded(!expanded)}
+          aria-expanded={onMore ? undefined : expanded}
+          aria-controls={onMore ? undefined : contentId}
+          aria-haspopup={onMore ? 'dialog' : undefined}
+          onClick={() => (onMore ? onMore() : setExpanded(!expanded))}
         >
           {/* Both labels share one grid cell, so the button keeps the wider width and the chevron never jumps as they crossfade. */}
           <span className={styles.labels}>
-            <span className={styles.label} data-active={!expanded || undefined} aria-hidden={expanded || undefined}>
+            <span
+              className={styles.label}
+              data-active={!expanded || undefined}
+              aria-hidden={expanded || undefined}
+            >
               {moreLabel}
             </span>
-            <span className={styles.label} data-active={expanded || undefined} aria-hidden={!expanded || undefined}>
+            <span
+              className={styles.label}
+              data-active={expanded || undefined}
+              aria-hidden={!expanded || undefined}
+            >
               {lessLabel}
             </span>
           </span>
-          <motion.span className={styles.icon} aria-hidden="true" style={{ rotate }}>
-            <ChevronDown width={16} height={16} strokeWidth={1.75} />
-          </motion.span>
+          {!onMore && (
+            <motion.span className={styles.icon} aria-hidden="true" style={{ rotate }}>
+              <ChevronDown width={16} height={16} strokeWidth={1.75} />
+            </motion.span>
+          )}
         </button>
       )}
     </div>

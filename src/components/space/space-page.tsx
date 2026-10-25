@@ -35,6 +35,7 @@ import {
 } from '@/lib/spaces-data'
 import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
 
+import { AboutClamp } from './about-clamp'
 import { Composer, type PostKind } from './composer'
 import { EventList } from './event-list'
 import { FeedFilter } from './feed-filter'
@@ -141,7 +142,7 @@ export async function SpacePage({
       : '')
   const customAbout = custom.trim()
   // A moderator's text wins; without one a course shows its description, with links, bold, italic and lists only.
-  const about = customAbout ? (
+  const aboutBody = customAbout ? (
     <p dir="auto" className={`${styles.prose} ${styles.aboutText}`}>
       {customAbout}
     </p>
@@ -154,6 +155,8 @@ export async function SpacePage({
       {defaultAbout}
     </p>
   ) : null
+  const aboutText = customAbout || descriptionText || defaultAbout
+  const about = aboutBody && <AboutClamp text={aboutText}>{aboutBody}</AboutClamp>
   const notice = NOTICE[locale === 'ar' ? 'ar' : 'en']
   const viewerPerson = personOf(user)
 
