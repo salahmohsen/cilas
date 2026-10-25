@@ -31,18 +31,53 @@ export const eventOver = (
   now: Date = new Date(),
 ): boolean => new Date(endsAt || startsAt).getTime() < now.getTime()
 
+const plainLine = (line: string) =>
+  line
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^[#>\-*\s]+/, '')
+    .replace(/[*_`~]/g, '')
+    .trim()
+
+/**
+ * An event post read as its card shows it: the first line, as plain text, is
+ * the event's name, and the Markdown after it is the description.
+ */
+export const eventSplit = (body: string): { title: string; rest: string } => {
+  const lines = body.split('\n')
+  const index = lines.findIndex((l) => plainLine(l) !== '')
+  if (index === -1) return { title: '', rest: '' }
+  return {
+    title: plainLine(lines[index]!),
+    rest: lines
+      .slice(index + 1)
+      .join('\n')
+      .trim(),
+  }
+}
+
+type Named = { body?: string | null; event_title?: string | null }
+
+/**
+ * An event post's name and description. Its own name when it has one (the
+ * whole body is then the description); an event saved before names were kept
+ * reads its body's first line as the name and the rest as the description.
+ */
+export const eventParts = (post: Named): { title: string; description: string } => {
+  const named = post.event_title?.trim()
+  if (named) return { title: named, description: post.body ?? '' }
+  const { title, rest } = eventSplit(post.body ?? '')
+  return { title, description: rest }
+}
+
+/** An event's name for a calendar entry or a notice, at most 80 characters. */
+export const eventName = (post: Named, fallback: string): string => {
+  const { title } = eventParts(post)
+  return title ? (title.length > 80 ? `${title.slice(0, 79)}…` : title) : fallback
+}
+
 /** The first line of the post as plain text, for a calendar entry's title. */
 export const eventTitle = (body: string, fallback: string): string => {
-  const line = body
-    .split('\n')
-    .map((l) =>
-      l
-        .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
-        .replace(/^[#>\-*\s]+/, '')
-        .replace(/[*_`~]/g, '')
-        .trim(),
-    )
-    .find(Boolean)
+  const line = eventSplit(body).title
   return line ? (line.length > 80 ? `${line.slice(0, 79)}…` : line) : fallback
 }
 

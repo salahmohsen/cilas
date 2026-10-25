@@ -7,14 +7,13 @@ import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib
 import { FILE_KINDS } from '@/lib/form-files'
 import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
+import { locationUrl, eventOver, eventName, isRsvpStatus, type RsvpStatus } from '@/lib/space-event'
 import {
-  locationUrl,
-  eventOver,
-  eventTitle,
-  isRsvpStatus,
-  type RsvpStatus,
-} from '@/lib/space-event'
-import { EVENT_LOCATION_MAX, SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
+  EVENT_LOCATION_MAX,
+  EVENT_TITLE_MAX,
+  SESSION_KINDS,
+  VOTE_OPTIONS,
+} from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import { coverIssue, prepareCover } from '@/lib/event-cover-image'
 import { placeName } from '@/lib/link-preview'
@@ -305,7 +304,8 @@ export type PostShape =
   | { kind: 'discussion' | 'announcement' }
   | {
       kind: 'event'
-      event: { location: string; startsAt: string; endsAt?: string | null }
+      /** `title` is the name on the card; without one the card shows the body's first line */
+      event: { title?: string | null; location: string; startsAt: string; endsAt?: string | null }
       /** One photo shown behind the event's details */
       cover?: PostFile | null
     }
@@ -335,6 +335,13 @@ const eventTimes = (
   return { location, startsAt: starts.toISOString(), endsAt }
 }
 
+/** An event's name once checked: trimmed, null when empty, undefined when it is too long. */
+const titleOf = (title: string | null | undefined): string | null | undefined => {
+  const text = (title ?? '').replace(/\s+/g, ' ').trim()
+  if (!text) return null
+  return text.length > EVENT_TITLE_MAX ? undefined : text
+}
+
 /**
  * The extra columns an event or a vote stores, or null when they break a
  * rule: an event needs a place, a start that has not passed and, if given, a later end; a vote needs
@@ -347,8 +354,10 @@ export const shapeData = (shape: PostShape, now = new Date()): Record<string, un
       return {}
     case 'event': {
       const times = eventTimes(shape.event, now, true)
-      if (!times) return null
+      const title = titleOf(shape.event.title)
+      if (!times || title === undefined) return null
       return {
+        ...(title ? { event_title: title } : {}),
         event_location: times.location,
         event_starts_at: times.startsAt,
         event_ends_at: times.endsAt,
@@ -1152,10 +1161,12 @@ export const rsvpSet = async (
 // --- eventEdit ---
 
 /**
- * Changes an event's place or times. The author and a moderator may; an event
- * that is over, a locked post or an archived space refuse. When the place or
- * the times really change, the members who answered going or maybe get a
- * notification (returned as `notify`, run after the save like postCreate's).
+ * The one edit of an event post: its name and description (the author's
+ * only), its place, times and cover (the author's or a moderator's). A locked
+ * post or an archived space refuse; an event that is over takes new words
+ * only. When the place or the times really change, the members who answered
+ * going or maybe get a notification (returned as `notify`, run after the
+ * save like postCreate's).
  */
 export const eventEdit = async (
   i: Input<{
@@ -1165,6 +1176,9 @@ export const eventEdit = async (
     endsAt?: string | null
     /** A new cover; null takes the cover away; left out, the cover stays */
     cover?: PostFile | null
+    /** The name and the description are the author's words; left out, they stay */
+    title?: string | null
+    body?: string
   }>,
   now = new Date(),
 ): Promise<WriteResult<true>> => {
@@ -1181,6 +1195,8 @@ export const eventEdit = async (
     event_location?: string | null
     event_starts_at?: string | null
     event_ends_at?: string | null
+    event_title?: string | null
+    event_place?: string | null
     event_cover?: number | { id: number } | null
   } | null
   if (!post || post.kind !== 'event' || post.deleted_at || !post.event_starts_at)
@@ -1196,7 +1212,23 @@ export const eventEdit = async (
     (typeof post.author === 'object' ? post.author.id : post.author) === personOf(user)
   if (!isAuthor && mem.role !== 'moderator') return err('not-yours')
   if (post.locked) return err('locked')
-  if (eventOver(post.event_starts_at, post.event_ends_at, now)) return err('event-over')
+
+  // The author's words: a moderator may move someone's event, not reword it.
+  const words: Record<string, unknown> = {}
+  if (i.title !== undefined) {
+    const title = titleOf(i.title)
+    if (title === undefined) return err('event')
+    if (title !== (post.event_title ?? null)) words.event_title = title
+  }
+  if (i.body !== undefined && i.body !== post.body) {
+    if (i.body.trim() === '') return err('event')
+    const mentioned = validateMentions(i.body, await mentionSafelist(payload, spaceId))
+    if (mentioned.invalid.length > 0) return err('mention')
+    words.body = i.body
+  }
+  const reworded = Object.keys(words).length > 0
+  if (reworded && !isAuthor) return err('not-yours')
+  const over = eventOver(post.event_starts_at, post.event_ends_at, now)
 
   const startChanged = new Date(i.startsAt).getTime() !== new Date(post.event_starts_at).getTime()
   const next = eventTimes(i, now, startChanged)
@@ -1211,8 +1243,12 @@ export const eventEdit = async (
   const oldCover = post.event_cover != null ? idOf(post.event_cover) : null
   const cover = i.cover ? await coverOf(i.cover) : null
   if (typeof cover === 'string') return err(cover)
-  const recovered = i.cover !== undefined && (cover !== null || oldCover !== null)
-  if (!changed && !recovered) return { ok: true, data: true }
+  const coverChanges = i.cover !== undefined && (cover !== null || oldCover !== null)
+  // A place saved before names were kept is read on the next save.
+  const unnamed = post.event_place == null && locationUrl(next.location) !== null
+  // An event that is over keeps its time, place and cover; its words may still be fixed.
+  if (over && (changed || coverChanges)) return err('event-over')
+  if (!changed && !coverChanges && !(unnamed && !over) && !reworded) return { ok: true, data: true }
 
   let coverId: number | null = null
   try {
@@ -1228,12 +1264,14 @@ export const eventEdit = async (
       event_location: next.location,
       event_starts_at: next.startsAt,
       event_ends_at: next.endsAt,
-      ...(moved ? { event_place: await placeOf(next.location) } : {}),
-      ...(recovered ? { event_cover: coverId, event_cover_tone: cover?.tone ?? null } : {}),
+      ...(moved || (unnamed && !over) ? { event_place: await placeOf(next.location) } : {}),
+      ...words,
+      ...(reworded ? { edited_at: now.toISOString() } : {}),
+      ...(coverChanges ? { event_cover: coverId, event_cover_tone: cover?.tone ?? null } : {}),
     } as never,
     overrideAccess: true,
   })
-  if (recovered) await removeFile(payload, oldCover)
+  if (coverChanges) await removeFile(payload, oldCover)
   // A new photo alone tells nobody: only a new time or place changes plans.
   if (!changed) return { ok: true, data: true }
 
@@ -1253,7 +1291,7 @@ export const eventEdit = async (
     const { actorOf, notify } = await import('@/lib/notify')
     await notify(payload, accounts, {
       kind: 'event_changed',
-      description: `“${eventTitle(post.body ?? '', 'An event')}” in ${await spaceNameOf(payload, space)} has a new time or place`,
+      description: `“${eventName(post, 'An event')}” in ${await spaceNameOf(payload, space)} has a new time or place`,
       link: await spaceLink(payload, space, id),
       actor: await actorOf(payload, personOf(user)),
     })

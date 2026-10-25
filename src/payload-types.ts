@@ -2081,6 +2081,7 @@ export interface SpacePost {
   author?: (number | null) | Person;
   kind: 'discussion' | 'question' | 'announcement' | 'event' | 'vote';
   body: string;
+  event_title?: string | null;
   event_location?: string | null;
   event_starts_at?: string | null;
   event_ends_at?: string | null;
@@ -3632,6 +3633,7 @@ export interface SpacePostsSelect<T extends boolean = true> {
   author?: T;
   kind?: T;
   body?: T;
+  event_title?: T;
   event_location?: T;
   event_starts_at?: T;
   event_ends_at?: T;

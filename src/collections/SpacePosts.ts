@@ -57,6 +57,14 @@ export const SpacePosts: CollectionConfig = {
     },
     { name: 'body', type: 'textarea', required: true },
     {
+      // The event's name on its card; the body is its description. Older
+      // events have none and show the body's first line.
+      name: 'event_title',
+      label: 'Event name',
+      type: 'text',
+      admin: { condition: (data) => (data as { kind?: string }).kind === 'event' },
+    },
+    {
       name: 'event_location',
       type: 'text',
       admin: { condition: (data) => (data as { kind?: string }).kind === 'event' },

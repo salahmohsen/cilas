@@ -1,6 +1,15 @@
 import { describe, expect, it } from 'vitest'
 
-import { eventOver, eventTitle, googleCalendarUrl, icsFor, locationUrl } from '@/lib/space-event'
+import {
+  eventName,
+  eventOver,
+  eventParts,
+  eventSplit,
+  eventTitle,
+  googleCalendarUrl,
+  icsFor,
+  locationUrl,
+} from '@/lib/space-event'
 
 describe('locationUrl', () => {
   it('reads one http or https address, and nothing else, as a link', () => {
@@ -37,6 +46,30 @@ describe('calendar entries', () => {
   it('titles an event by the first line of the post, without markdown', () => {
     expect(eventTitle('## **Reading** circle\n\nmore', 'Event')).toBe('Reading circle')
     expect(eventTitle('   \n', 'Event')).toBe('Event')
+  })
+  it('splits a post into the name on its card and the description after it', () => {
+    expect(eventSplit('\n## Reading circle\n\nBring **the** text.\n')).toEqual({
+      title: 'Reading circle',
+      rest: 'Bring **the** text.',
+    })
+    expect(eventSplit('Only a name')).toEqual({ title: 'Only a name', rest: '' })
+    expect(eventSplit(' ')).toEqual({ title: '', rest: '' })
+    const long = 'a'.repeat(120)
+    expect(eventSplit(long).title).toBe(long)
+  })
+  it('uses the event its own name when it has one, and the whole body as its description', () => {
+    expect(
+      eventParts({ event_title: ' Reading circle ', body: 'Bring the text.\nTea after.' }),
+    ).toEqual({
+      title: 'Reading circle',
+      description: 'Bring the text.\nTea after.',
+    })
+    expect(eventParts({ event_title: null, body: 'Old circle\n\nBring it.' })).toEqual({
+      title: 'Old circle',
+      description: 'Bring it.',
+    })
+    expect(eventName({ event_title: 'x'.repeat(90), body: '' }, 'Event')).toHaveLength(80)
+    expect(eventName({ body: ' ' }, 'Event')).toBe('Event')
   })
   it('builds a prefilled Google Calendar link in UTC', () => {
     const url = new URL(googleCalendarUrl(event))

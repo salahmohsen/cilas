@@ -23356,6 +23356,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "event_title": {
+          "name": "event_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
         "event_location": {
           "name": "event_location",
           "type": "varchar",
@@ -23748,6 +23754,12 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true
+        },
+        "version_event_title": {
+          "name": "version_event_title",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
         },
         "version_event_location": {
           "name": "version_event_location",
@@ -34122,6 +34134,6 @@
     "tables": {},
     "columns": {}
   },
-  "id": "4f8068a6-d3d9-4ffe-aeef-73071c82034e",
+  "id": "9cf2b169-4fa5-4c95-833f-09a8f503a139",
   "prevId": "00000000-0000-0000-0000-000000000000"
 }

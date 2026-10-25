@@ -3,7 +3,7 @@ import { getPayload } from 'payload'
 
 import { currentReader } from '@/lib/reader'
 import { absoluteUrl } from '@/lib/schema'
-import { eventTitle, icsFor } from '@/lib/space-event'
+import { eventName, icsFor } from '@/lib/space-event'
 import { spaceLink } from '@/lib/spaces-write'
 
 /**
@@ -36,7 +36,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
   const link = absoluteUrl(`/${locale}${await spaceLink(payload, space, post.id)}`)
   const body = icsFor({
     uid: `space-post-${post.id}@cilas.org`,
-    title: eventTitle(post.body, 'CILAS event'),
+    title: eventName(post, 'CILAS event'),
     startsAt: post.event_starts_at,
     endsAt: post.event_ends_at,
     location: post.event_location ?? '',

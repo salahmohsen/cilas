@@ -1407,6 +1407,70 @@ describe('spaces write', () => {
     expect(stored.event_location).toBe('Room 3')
   })
 
+  it('an event has its own name; one edit changes the words, the time and place, or both', async () => {
+    const day = 86_400_000
+    const starts = new Date(Date.now() + day).toISOString()
+    const make = (title: string) =>
+      postCreate({
+        payload,
+        user: student,
+        space: community.id,
+        kind: 'event',
+        body: 'Probe what to bring',
+        event: { title, location: 'Room 2', startsAt: starts },
+      })
+    expect(await make('x'.repeat(101))).toMatchObject({ ok: false, error: 'event' })
+    const made = await make('  Probe   reading circle ')
+    expect(made.ok).toBe(true)
+    if (!made.ok) return
+    track('space-posts', made.data.id)
+    const post = made.data.id
+    const row = () => payload.findByID({ collection: 'space-posts', id: post, depth: 0 })
+    expect((await row()).event_title).toBe('Probe reading circle')
+
+    const edit = (
+      user: User,
+      extra: { title?: string; body?: string; location?: string },
+      now?: Date,
+    ) =>
+      eventEdit(
+        {
+          payload,
+          user,
+          id: post,
+          location: extra.location ?? 'Room 2',
+          startsAt: starts,
+          title: extra.title,
+          body: extra.body,
+        },
+        now,
+      )
+    // New words tell nobody and mark the post edited; a moderator may not reword it.
+    const reworded = await edit(student, { title: 'Probe circle', body: 'Probe bring the text' })
+    expect(reworded).toMatchObject({ ok: true })
+    expect(reworded.ok && reworded.notify).toBeFalsy()
+    const after = await row()
+    expect(after).toMatchObject({ event_title: 'Probe circle', body: 'Probe bring the text' })
+    expect(after.edited_at).toBeTruthy()
+    expect(await edit(admin, { title: 'Probe renamed by a moderator' })).toMatchObject({
+      ok: false,
+      error: 'not-yours',
+    })
+    expect(await edit(admin, { location: 'Room 4' })).toMatchObject({ ok: true })
+
+    // Once it is over, the words may still be fixed, the place may not move.
+    const later = new Date(Date.now() + 2 * day)
+    expect(
+      await edit(student, { location: 'Room 4', title: 'Probe circle, notes' }, later),
+    ).toMatchObject({
+      ok: true,
+    })
+    expect(await edit(student, { location: 'Room 5' }, later)).toMatchObject({
+      ok: false,
+      error: 'event-over',
+    })
+  })
+
   it('an event keeps one cover photo apart from its files, and the place an address names', async () => {
     const starts = new Date(Date.now() + 86_400_000).toISOString()
     const photo = async (background: string) => {

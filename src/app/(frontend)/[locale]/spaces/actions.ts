@@ -120,7 +120,12 @@ const shapeOf = (form: FormData): PostShape | null => {
       return { kind: 'announcement' }
     case 'event': {
       const times = eventTimesOf(form)
-      return times ? { kind: 'event', event: { location: text(form, 'location'), ...times } } : null
+      return times
+        ? {
+            kind: 'event',
+            event: { title: text(form, 'title'), location: text(form, 'location'), ...times },
+          }
+        : null
     }
     case 'vote':
       return {
@@ -380,6 +385,9 @@ export async function eventEditAction(
     location: text(form, 'location'),
     ...times,
     cover,
+    // Only the author's dialog sends the words.
+    title: form.has('title') ? text(form, 'title') : undefined,
+    body: form.has('body') ? String(form.get('body') ?? '') : undefined,
   })
   if (!result.ok) return err(result.error)
   await revalidate()
