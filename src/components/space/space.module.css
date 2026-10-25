@@ -1530,3 +1530,54 @@
     overflow-y: visible;
   }
 }
+
+.nextSession {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.nextSession h2 {
+  margin: 0;
+}
+
+.phoneBlock {
+  display: grid;
+}
+
+@media (min-width: 1024px) {
+  .phoneBlock {
+    display: none;
+  }
+}
+
+.railNotes {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.noteText {
+  display: block;
+  white-space: pre-line;
+}
+
+.placeName {
+  margin: 0;
+  font-weight: 500;
+}
+
+.placeAddress {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+
+.placeLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  width: fit-content;
+}

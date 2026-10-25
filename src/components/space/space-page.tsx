@@ -20,10 +20,12 @@ import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-
 import { RichTextField } from '@/components/RichTextField'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { numberingSystemOf } from '@/lib/digits'
-import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
+import { cairoDay } from '@/lib/cairo-day'
+import { expandSchedule, nextSession, sessionsInOrder } from '@/lib/schedule'
 import {
   COMMUNITY_COVER,
   coverOf,
+  coursePlace,
   memberState,
   participation,
   spaceEvents,
@@ -37,6 +39,7 @@ import { FeedFilter } from './feed-filter'
 import { FeedRow, type FeedContext } from './feed-row'
 import { FreshPosts } from './fresh-posts'
 import { LoadMore } from './load-more'
+import { NextSession } from './next-session'
 import { OpenCourseButton } from './open-course-button'
 import { CHECKLIST_COOKIE, OnboardingChecklist } from './onboarding-checklist'
 import { spacePeopleCards } from './space-people'
@@ -83,7 +86,7 @@ export async function SpacePage({
   const moderator = mem.role === 'moderator'
 
   const lang = locale === 'ar' ? 'ar' : 'en'
-  const [t, tp, ts, feed, state, { cards, byId, moderators }, numbers, jar, custom, events] =
+  const [t, tp, ts, feed, state, { cards, byId, moderators }, numbers, jar, custom, events, place] =
     await Promise.all([
       getTranslations('Spaces'),
       getTranslations('SpacePost'),
@@ -110,6 +113,7 @@ export async function SpacePage({
       tab === 'events'
         ? spaceEvents(payload, user, space, lang)
         : Promise.resolve({ upcoming: [], past: [] }),
+      landing.course ? coursePlace(payload, user, landing.course, lang) : Promise.resolve(null),
     ])
   const renderedAt = new Date().toISOString()
 
@@ -212,8 +216,23 @@ export async function SpacePage({
       viewerId={viewerPerson}
       now={renderedAt}
       participation={numbers}
+      warning={landing.course?.content_warning?.trim() || null}
+      facilitator={landing.course?.facilitator_note?.trim() || null}
+      place={place}
     />
   )
+  // After the last session there is none to show.
+  const next = course
+    ? nextSession(course.schedule, course.sessions, cairoDay(new Date()) ?? '')
+    : null
+  const nextCard =
+    course && next?.session.id ? (
+      <NextSession
+        course={course}
+        session={next.session.id}
+        tentative={Boolean(course.syllabus_tentative)}
+      />
+    ) : null
 
   const row = (r: (typeof listed)[number], position: number) => (
     <FeedRow
@@ -296,6 +315,7 @@ export async function SpacePage({
       </header>
       <div className={styles.layout}>
         <main className={styles.feed} aria-label={title}>
+          {nextCard && <div className={styles.phoneBlock}>{nextCard}</div>}
           <OnboardingChecklist
             space={space.id}
             steps={{
@@ -428,6 +448,7 @@ export async function SpacePage({
           )}
         </main>
         <aside className={styles.rail} aria-label={t('aboutSpace')}>
+          {nextCard}
           {rail}
         </aside>
       </div>

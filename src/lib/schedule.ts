@@ -124,3 +124,22 @@ export const scheduleEndDate = (
 /** Only schedules whose start day is known go on the calendar (ADR 0002). */
 export const isOnCalendar = (schedule: Schedule | null | undefined): boolean =>
   !!schedule && schedule.start_precision !== 'week' && expandSchedule(schedule).length > 0
+
+/**
+ * The session the course meets for next: the one with the earliest meeting on
+ * or after `today` (a Cairo day), skipping cancelled sessions. Null after the
+ * last session. `index` is the session's place in `sessionsInOrder`.
+ */
+export const nextSession = <T extends SessionDates>(
+  schedule: Schedule | null | undefined,
+  sessions: T[] | null | undefined,
+  today: string,
+): { session: T; index: number } | null => {
+  if (!sessions?.length) return null
+  const upcoming = expandSchedule(schedule, sessions).find(
+    (m) => m.session !== undefined && !m.cancelled && m.date >= today,
+  )
+  if (!upcoming?.session) return null
+  const index = upcoming.session - 1
+  return { session: sessionsInOrder(sessions)[index]!, index }
+}

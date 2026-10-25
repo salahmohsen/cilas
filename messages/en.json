@@ -842,7 +842,12 @@
     "sessionPostCount": "{count, plural, one {# post} other {# posts}}",
     "sessionPostsSee": "{count, plural, one {See the post about this session} other {See the # posts about this session}}",
     "sessionFilterTitle": "Posts about {name}",
-    "sessionFilterClear": "Show all posts"
+    "sessionFilterClear": "Show all posts",
+    "nextSession": "Next session",
+    "contentNote": "Content note",
+    "facilitatorNote": "Note from the facilitator",
+    "place": "Place",
+    "openInMaps": "Open in maps"
   },
   "SpacePost": {
     "newPost": "New post",
@@ -1011,7 +1016,9 @@
     "saveError_event_over": "This event is over.",
     "saveError_rsvp": "Choose going, maybe or not going.",
     "sessionChipLabel": "Posts about {name}",
-    "sessionPickHintOpen": "Shows a small tag under your post that opens the posts about the same session."
+    "sessionPickHintOpen": "Shows a small tag under your post that opens the posts about the same session.",
+    "publicEvent": "Public event",
+    "publicEventAria": "Public event: {title}"
   },
   "SpaceComment": {
     "write": "Comment",

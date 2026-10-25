@@ -1279,3 +1279,39 @@ export const spaceEvents = async (
     past: items.filter(over).sort((a, b) => time(b) - time(a)),
   }
 }
+
+/** A course's place for the space rail: the cycle's place, read through the reader's access. */
+export type CoursePlace = { name: string; address: string | null; mapUrl: string | null }
+
+/**
+ * The place an in-person course meets at, in one read. Nothing for a course
+ * that is online only, one without a place, or a place the reader may not read.
+ */
+export const coursePlace = async (
+  payload: Payload,
+  user: null | User,
+  course: Course,
+  locale: 'en' | 'ar' = 'en',
+): Promise<CoursePlace | null> => {
+  const modes = course.location ?? []
+  if (modes.length > 0 && !modes.includes('OFFLINE') && !modes.includes('HYBRID')) return null
+  const cycle = typeof course.cycle === 'object' ? course.cycle : null
+  const placeId = relId(cycle?.place as never)
+  if (placeId == null) return null
+  const place = await payload
+    .findByID({
+      collection: 'places',
+      id: placeId,
+      user: user ?? undefined,
+      depth: 0,
+      locale,
+      overrideAccess: false,
+    })
+    .catch(() => null)
+  if (!place) return null
+  return {
+    name: place.name,
+    address: place.address?.trim() || null,
+    mapUrl: place.map_url?.trim() || null,
+  }
+}

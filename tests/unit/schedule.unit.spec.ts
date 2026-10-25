@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   expandSchedule,
   isOnCalendar,
+  nextSession,
   scheduleEndDate,
   type Schedule,
   type SessionDates,
@@ -201,7 +202,9 @@ describe('expandSchedule edge cases', () => {
 
   it('gives just the override meetings when there is no pattern', () => {
     expect(
-      expandSchedule(null, [{ dates: [{ date: '2026-03-21', start_time: '10:00', end_time: '12:00' }] }]),
+      expandSchedule(null, [
+        { dates: [{ date: '2026-03-21', start_time: '10:00', end_time: '12:00' }] },
+      ]),
     ).toEqual([{ date: '2026-03-21', start_time: '10:00', end_time: '12:00', session: 1 }])
   })
 
@@ -246,5 +249,29 @@ describe('isOnCalendar', () => {
   it('keeps empty schedules off the calendar', () => {
     expect(isOnCalendar({ ...tueThu, start_date: null })).toBe(false)
     expect(isOnCalendar(null)).toBe(false)
+  })
+})
+
+describe('nextSession', () => {
+  const schedule: Schedule = {
+    start_date: '2026-03-02',
+    start_precision: 'day',
+    weeks: 3,
+    slots: [{ weekday: 'mon', start_time: '18:00', end_time: '20:00' }],
+  }
+  const sessions = [{ order: 1 }, { order: 2, cancelled: true }, { order: 3 }]
+
+  it('is the first session on or after today', () => {
+    expect(nextSession(schedule, sessions, '2026-03-01')?.index).toBe(0)
+    expect(nextSession(schedule, sessions, '2026-03-02')?.index).toBe(0)
+  })
+
+  it('skips a cancelled session', () => {
+    expect(nextSession(schedule, sessions, '2026-03-03')?.index).toBe(2)
+  })
+
+  it('is null after the last meeting, or without sessions', () => {
+    expect(nextSession(schedule, sessions, '2026-03-17')).toBeNull()
+    expect(nextSession(schedule, [], '2026-03-01')).toBeNull()
   })
 })

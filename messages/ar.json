@@ -842,7 +842,12 @@
     "sessionPostCount": "{count, plural, zero {لا منشورات} one {منشور واحد} two {منشوران} few {{count, number, digits} منشورات} many {{count, number, digits} منشورًا} other {{count, number, digits} منشور}}",
     "sessionPostsSee": "{count, plural, zero {لا منشورات عن هذه الجلسة} one {عرض المنشور عن هذه الجلسة} two {عرض المنشورين عن هذه الجلسة} few {عرض {count, number, digits} منشورات عن هذه الجلسة} many {عرض {count, number, digits} منشورًا عن هذه الجلسة} other {عرض {count, number, digits} منشور عن هذه الجلسة}}",
     "sessionFilterTitle": "منشورات عن {name}",
-    "sessionFilterClear": "عرض كل المنشورات"
+    "sessionFilterClear": "عرض كل المنشورات",
+    "nextSession": "الجلسة القادمة",
+    "contentNote": "تنبيه بشأن المحتوى",
+    "facilitatorNote": "ملاحظة من الميسّرة أو الميسّر",
+    "place": "المكان",
+    "openInMaps": "افتح في الخرائط"
   },
   "SpacePost": {
     "newPost": "منشور جديد",
@@ -1011,7 +1016,9 @@
     "saveError_event_over": "انتهت هذه الفعالية.",
     "saveError_rsvp": "اختر سأحضر أو ربما أو لن أحضر.",
     "sessionChipLabel": "منشورات عن {name}",
-    "sessionPickHintOpen": "يظهر وسمٌ صغير تحت منشورك يفتح المنشورات عن الجلسة نفسها."
+    "sessionPickHintOpen": "يظهر وسمٌ صغير تحت منشورك يفتح المنشورات عن الجلسة نفسها.",
+    "publicEvent": "فعالية عامة",
+    "publicEventAria": "فعالية عامة: {title}"
   },
   "SpaceComment": {
     "write": "علِّق",
