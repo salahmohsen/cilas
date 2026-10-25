@@ -28,6 +28,7 @@ import { Attachments } from './attachments'
 import { saveErrorKey } from './composer'
 import { ConsentSheet } from './consent-sheet'
 import { PersonHover, type PersonCard } from './person-hover'
+import { useRefreshPost } from './post-dialog-link'
 import styles from './space.module.css'
 
 const EMOJI: Record<ReactionKind, string> = {
@@ -67,6 +68,8 @@ export function SpaceThread({
   notice,
   now,
   preview = false,
+  limit,
+  step,
   focusKey,
 }: {
   post: number
@@ -82,6 +85,10 @@ export function SpaceThread({
   now: string
   /** Opens on the newest comments, with a button for the rest */
   preview?: boolean
+  /** How many top-level comments show first; defaults to 2 in a preview and all otherwise */
+  limit?: number
+  /** How many more each "Show more" adds; without it one press shows them all */
+  step?: number
   focusKey?: number
 }) {
   const t = useTranslations('SpaceThread')
@@ -89,10 +96,11 @@ export function SpaceThread({
   const tf = useTranslations('SpacePhotos')
   const format = useFormatter()
   const router = useRouter()
+  const refreshPost = useRefreshPost()
   const [, start] = useTransition()
   const [error, setError] = useState<string | null>(null)
   const [files, setFiles] = useState<File[]>([])
-  const [expanded, setExpanded] = useState(!preview)
+  const [visible, setVisible] = useState(limit ?? (preview ? PREVIEW : Infinity))
   const [accepted, setAccepted] = useState(consented)
   const [asking, setAsking] = useState<CommentThreadEvent | null>(null)
   const picker = useRef<HTMLInputElement>(null)
@@ -194,27 +202,37 @@ export function SpaceThread({
       }
       if (event.type === 'reply') setFiles([])
       router.refresh()
+      refreshPost?.()
     })
   }
 
-  const hidden = expanded ? [] : tree.slice(0, Math.max(0, tree.length - PREVIEW))
-  const shown = expanded ? tree : tree.slice(hidden.length)
+  const hidden = tree.slice(0, Math.max(0, tree.length - visible))
+  const shown = tree.slice(hidden.length)
   // The real number of comments behind the button: replies count, a deleted placeholder does not.
-  const hiddenCount = hidden.reduce(
-    (sum, c) => sum + (c.deleted ? 0 : 1) + (c.replies?.filter((r) => !r.deleted).length ?? 0),
-    0,
-  )
+  const countOf = (list: ArcComment[]) =>
+    list.reduce(
+      (sum, c) => sum + (c.deleted ? 0 : 1) + (c.replies?.filter((r) => !r.deleted).length ?? 0),
+      0,
+    )
+  const hiddenCount = countOf(hidden)
+  const nextCount = step ? countOf(hidden.slice(-step)) : hiddenCount
   const mine = (c: ArcComment) => c.author.id === me.id && /^\d+$/.test(c.id)
 
   return (
     <div className={styles.threadWrap}>
       <CommentThread
         comments={shown}
-        showHeader={!preview}
+        showHeader={!preview && limit == null}
         listHeader={
           hiddenCount > 0 ? (
-            <button type="button" className={styles.earlier} onClick={() => setExpanded(true)}>
-              {t('showEarlier', { count: hiddenCount })}
+            <button
+              type="button"
+              className={styles.earlier}
+              onClick={() => setVisible((n) => (step ? n + step : Infinity))}
+            >
+              {step
+                ? t('showMore', { count: nextCount })
+                : t('showEarlier', { count: hiddenCount })}
             </button>
           ) : undefined
         }

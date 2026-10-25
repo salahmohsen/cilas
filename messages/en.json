@@ -954,7 +954,10 @@
     "voteAnonymous": "Anonymous vote",
     "voteAnonymousHint": "Nobody sees who chose what.",
     "voteChosenBy": "Chose {option}",
-    "voteAnonymousShort": "Anonymous"
+    "voteAnonymousShort": "Anonymous",
+    "dialogTitle": "Post",
+    "dialogLoading": "Loading the post",
+    "dialogFailed": "The post could not be loaded. Open its page instead."
   },
   "SpaceComment": {
     "write": "Comment",
@@ -1098,7 +1101,8 @@
     "formerMember": "Former member",
     "showEarlier": "{count, plural, one {Show # earlier comment} other {Show # earlier comments}}",
     "attach": "Attach a file",
-    "removeFile": "Remove the file"
+    "removeFile": "Remove the file",
+    "showMore": "{count, plural, one {Show # more comment} other {Show # more comments}}"
   },
   "SpacePhotos": {
     "photos": "Photos",

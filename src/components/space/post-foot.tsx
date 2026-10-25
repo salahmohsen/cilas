@@ -32,6 +32,8 @@ export function PostFoot({
   notice,
   now,
   preview,
+  limit,
+  step,
 }: {
   post: number
   /** The post's own page, absolute, for Copy link */
@@ -48,6 +50,9 @@ export function PostFoot({
   now: string
   /** In the feed: the newest comments first, and the thread only once there is one or the member asks */
   preview: boolean
+  /** Passed to the thread: how many comments show first, and how many each "Show more" adds */
+  limit?: number
+  step?: number
 }) {
   const t = useTranslations('SpacePost')
   const [focus, setFocus] = useState(0)
@@ -94,6 +99,8 @@ export function PostFoot({
           notice={notice}
           now={now}
           preview={preview}
+          limit={limit}
+          step={step}
           focusKey={focus}
         />
       )}

@@ -954,7 +954,10 @@
     "voteAnonymous": "تصويت مجهول",
     "voteAnonymousHint": "لا أحد يرى من اختار ماذا.",
     "voteChosenBy": "اختاروا: {option}",
-    "voteAnonymousShort": "مجهول"
+    "voteAnonymousShort": "مجهول",
+    "dialogTitle": "المنشور",
+    "dialogLoading": "جارٍ تحميل المنشور",
+    "dialogFailed": "تعذّر تحميل المنشور. افتح صفحته بدلاً من ذلك."
   },
   "SpaceComment": {
     "write": "علِّق",
@@ -1098,7 +1101,8 @@
     "formerMember": "عضو سابق",
     "showEarlier": "{count, plural, one {اعرض تعليقًا سابقًا} two {اعرض تعليقين سابقين} few {اعرض # تعليقات سابقة} many {اعرض # تعليقًا سابقًا} other {اعرض # تعليق سابق}}",
     "attach": "أرفق ملفًا",
-    "removeFile": "أزل الملف"
+    "removeFile": "أزل الملف",
+    "showMore": "{count, plural, one {اعرض تعليقًا إضافيًا} two {اعرض تعليقين إضافيين} few {اعرض # تعليقات إضافية} many {اعرض # تعليقًا إضافيًا} other {اعرض # تعليق إضافي}}"
   },
   "SpacePhotos": {
     "photos": "الصور",

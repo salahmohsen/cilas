@@ -642,6 +642,38 @@ export const postThreads = async (
 }
 
 /**
+ * The space a post sits in, when the reader may read the post. Lets a dialog
+ * open a post knowing only its id; null for a missing post or a stranger.
+ */
+export const postSpace = async (
+  payload: Payload,
+  user: null | User,
+  postId: number,
+): Promise<Space | null> => {
+  const post = await payload
+    .findByID({
+      collection: 'space-posts',
+      id: postId,
+      user: user ?? undefined,
+      depth: 0,
+      overrideAccess: false,
+      select: { space: true },
+    })
+    .catch(() => null)
+  const spaceId = post ? relId(post.space as never) : null
+  if (spaceId == null) return null
+  return payload
+    .findByID({
+      collection: 'spaces',
+      id: spaceId,
+      user: user ?? undefined,
+      depth: 0,
+      overrideAccess: false,
+    })
+    .catch(() => null)
+}
+
+/**
  * One post with its whole thread (spec §4), read through the collections'
  * rules. Null when the post is not in this space or the reader cannot see
  * it, so the page renders "not found".

@@ -1097,3 +1097,75 @@
   display: grid;
   gap: var(--space-2);
 }
+
+/* The post date: a link that opens the post in a dialog; the text looks like the plain date until pointed at. */
+.dateLink {
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--radius-control);
+}
+
+.dateLink:hover {
+  color: var(--foreground);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.dateLink:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* The post dialog: one column, or the photos beside the post when it has any. */
+.postDialog.postDialog {
+  width: min(calc(100vw - var(--space-8)), 640px);
+}
+
+.postDialogWide.postDialogWide {
+  width: min(calc(100vw - var(--space-8)), 1120px);
+}
+
+.postDialog.postDialog,
+.postDialogWide.postDialogWide {
+  max-height: calc(100dvh - var(--space-8));
+}
+
+.dialogSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.dialogPhotos {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+}
+
+.dialogPost {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .postDialog.postDialog,
+  .postDialogWide.postDialogWide {
+    width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .dialogSplit {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-4);
+  }
+
+  .dialogPhotos {
+    position: static;
+  }
+}

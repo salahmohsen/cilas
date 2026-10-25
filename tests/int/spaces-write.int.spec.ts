@@ -24,7 +24,7 @@ import {
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
 import { ABOUT_MAX } from '@/lib/space-about'
-import { postView, spaceFeed } from '@/lib/spaces-data'
+import { postSpace, postView, spaceFeed } from '@/lib/spaces-data'
 
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
@@ -957,6 +957,14 @@ describe('spaces write', () => {
     expect(await postView(payload, stranger, courseSpace, postId)).toBeNull()
     expect(await postView(payload, student, community, postId)).toBeNull()
     expect(await postView(payload, student, courseSpace, 999_999_999)).toBeNull()
+  })
+
+  it('postSpace: a post id opens its space for a member, and nothing for a stranger or a missing post', async () => {
+    const postId = await newPost(student, courseSpace, 'Opened from its id')
+    expect((await postSpace(payload, student, postId))?.id).toBe(courseSpace.id)
+    expect(await postSpace(payload, stranger, postId)).toBeNull()
+    expect(await postSpace(payload, null, postId)).toBeNull()
+    expect(await postSpace(payload, student, 999_999_999)).toBeNull()
   })
 
   it('fellows_only keeps members to reading; moderators still comment', async () => {

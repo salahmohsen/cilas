@@ -7,14 +7,17 @@ import { numberingSystemOf } from '@/lib/digits'
 
 import { routing } from './routing'
 
+const fromRoute = async () => rootParams.locale()
+
 /**
  * Messages and formats per request. Arabic pages write the numbers the site
  * itself produces in Arabic-Indic digits, as Egyptian print does, so every
  * format takes the locale's numbering system; messages pass their numbers
  * through the `digits` format (`{count, number, digits}`).
  */
-export default getRequestConfig(async ({ locale: override }) => {
-  const requested = override ?? (await rootParams.locale())
+export default getRequestConfig(async ({ locale: override, requestLocale }) => {
+  // A server action has no route, so root params throw there; it sets the locale itself.
+  const requested = override ?? (await fromRoute().catch(() => requestLocale))
   if (!hasLocale(routing.locales, requested)) notFound()
   const locale = requested
   const numberingSystem = numberingSystemOf(locale)

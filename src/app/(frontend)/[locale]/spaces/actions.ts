@@ -2,12 +2,16 @@
 
 import config from '@payload-config'
 import { revalidatePath } from 'next/cache'
+import { setRequestLocale } from 'next-intl/server'
+import { createElement } from 'react'
 import { getPayload } from 'payload'
 
 import { personOf } from '@/access'
 import { routing } from '@/i18n/routing'
 import { cairoInstant } from '@/lib/cairo-day'
+import { PostArticle, loadPost } from '@/components/space/post-article'
 import { currentReader } from '@/lib/reader'
+import { postSpace } from '@/lib/spaces-data'
 import {
   commentCreate,
   commentEdit,
@@ -417,4 +421,27 @@ export async function spaceNewPostsAction(space: number, since: string): Promise
     },
   })
   return totalDocs
+}
+
+/**
+ * The post dialog's content (spec §4), read on demand through the reader's
+ * access instead of sitting in every feed card. Null when the post is gone
+ * or this reader may not read it. `href` is only the link Copy link offers.
+ */
+export async function postDialogAction(postId: number, href: string, locale: string) {
+  const user = await currentReader()
+  if (!user || !Number.isInteger(postId)) return null
+  const lang = routing.locales.find((l) => l === locale)
+  if (!lang || !href.startsWith(`/${lang}/spaces/`)) return null
+  setRequestLocale(lang)
+  const payload = await getPayload({ config })
+  const space = await postSpace(payload, user, postId)
+  const loaded = space && (await loadPost(payload, user, space, postId, lang))
+  if (!loaded) return null
+  return createElement(PostArticle, {
+    view: loaded.view,
+    context: loaded.context,
+    href,
+    dialog: true,
+  })
 }

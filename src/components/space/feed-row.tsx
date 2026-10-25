@@ -114,10 +114,13 @@ export async function PostHead({
   row,
   context,
   deleted = false,
+  postHref,
 }: {
   row: FeedRowData
   context: FeedContext
   deleted?: boolean
+  /** In the feed: the date opens the post in a dialog, and links here without scripts */
+  postHref?: string
 }) {
   const t = await getTranslations('SpacePost')
   const { post } = row
@@ -132,7 +135,14 @@ export async function PostHead({
         context={context}
         when={
           <>
-            <When iso={post.createdAt} />
+            <When
+              iso={post.createdAt}
+              post={
+                postHref
+                  ? { id: post.id, href: postHref, photos: row.files.some((f) => f.isImage) }
+                  : undefined
+              }
+            />
             {post.edited_at && ` · ${t('edited')}`}
           </>
         }
@@ -196,7 +206,7 @@ export async function FeedRow({
       aria-setsize={total}
       tabIndex={-1}
     >
-      <PostHead row={row} context={context} />
+      <PostHead row={row} context={context} postHref={postHref} />
       <div id={`${id}-body`}>
         <Folded body={post.body} lines={8} more={t('readMore')} less={t('showLess')}>
           <PostBody body={post.body} people={context.people} />

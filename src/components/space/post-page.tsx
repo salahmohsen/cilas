@@ -1,27 +1,13 @@
 import config from '@payload-config'
-import { Suspense } from 'react'
 import { getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { personOf } from '@/access'
 import { Alert } from '@/components/arc/alert/alert'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import type { Course, Programme, Space, User } from '@/payload-types'
-import { outsideLinks } from '@/lib/link-preview'
-import { absoluteUrl } from '@/lib/schema'
-import { NOTICE } from '@/lib/space-consent'
-import { mayComment, membership } from '@/lib/spaces'
-import { memberState, postView } from '@/lib/spaces-data'
 
-import { Attachments } from './attachments'
-import { commentsOpen, PostHead, type FeedContext } from './feed-row'
-import { EventDetails } from './event-details'
-import { VotePoll } from './vote-poll'
-import { LinkPreviews } from './link-card'
-import { PostBody } from './post-body'
-import { PostFoot } from './post-foot'
-import { spacePeopleCards } from './space-people'
+import { loadPost, PostArticle } from './post-article'
 import styles from './space.module.css'
 
 /**
@@ -44,38 +30,16 @@ export async function PostPage({
 }) {
   const { space } = landing
   const payload = await getPayload({ config })
-  const mem = await membership(payload, user, space)
-  if (mem.role === 'none') notFound()
-
-  const [t, ts, view, state, { cards, byId, moderators }] = await Promise.all([
+  const [t, ts, loaded] = await Promise.all([
     getTranslations('SpacePost'),
     getTranslations('Spaces'),
-    postView(payload, user, space, postId, locale === 'ar' ? 'ar' : 'en'),
-    memberState(payload, user, space.id),
-    spacePeopleCards(payload, user, space, locale),
+    loadPost(payload, user, space, postId, locale),
   ])
-  if (!view) notFound()
+  if (!loaded) notFound()
 
+  const { view, context, allowed } = loaded
   const { row, deleted, archived } = view
   const { post } = row
-  const personId = personOf(user)
-  const me = (personId != null && byId.get(personId)) || { name: user.email, photo: null }
-  const allowed = mayComment(mem, space.posting ?? 'open')
-  const context: FeedContext = {
-    archived,
-    viewer: {
-      personId,
-      moderator: mem.role === 'moderator',
-      me: { name: me.name, photo: me.photo },
-    },
-    moderators,
-    people: byId,
-    cards,
-    mayComment: allowed,
-    consented: state.consented,
-    notice: NOTICE[locale === 'ar' ? 'ar' : 'en'],
-    now: new Date().toISOString(),
-  }
   const why = archived
     ? ts('archivedWhy')
     : deleted
@@ -91,7 +55,6 @@ export async function PostPage({
     landing.programme?.title ??
     (space.kind === 'community' ? ts('community') : ts(space.kind))
   const href = `${spacePath}/posts/${post.id}`
-  const id = `post-${post.id}`
 
   return (
     <div className={`${styles.page} ${styles.narrow}`}>
@@ -104,56 +67,8 @@ export async function PostPage({
           ]}
         />
       </header>
-      <main className={styles.column} aria-labelledby={`${id}-author`}>
-        <article
-          id={id}
-          className={styles.post}
-          aria-labelledby={`${id}-author`}
-          aria-describedby={`${id}-body`}
-        >
-          <PostHead row={row} context={context} deleted={deleted} />
-          <div id={`${id}-body`}>
-            {deleted ? (
-              <p className={styles.meta}>{t('deletedNotice')}</p>
-            ) : (
-              <PostBody body={post.body} people={byId} />
-            )}
-          </div>
-          {!deleted && post.kind === 'event' && post.event_starts_at && (
-            <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
-          )}
-          {!deleted && row.vote && (
-            <VotePoll
-              post={post.id}
-              vote={row.vote}
-              disabled={archived || !!post.locked}
-              people={byId}
-            />
-          )}
-          {!deleted && outsideLinks(post.body).length > 0 && (
-            <Suspense fallback={null}>
-              <LinkPreviews urls={outsideLinks(post.body)} />
-            </Suspense>
-          )}
-          {view.files.length > 0 && <Attachments files={view.files} label={t('files')} />}
-          {!deleted && (
-            <PostFoot
-              post={post.id}
-              link={absoluteUrl(href)}
-              reactions={row.reactions}
-              comments={view.comments}
-              commentCount={row.commentCount}
-              people={cards}
-              viewer={context.viewer}
-              canComment={commentsOpen(row, context, deleted)}
-              archived={archived}
-              consented={state.consented}
-              notice={context.notice}
-              now={context.now}
-              preview={false}
-            />
-          )}
-        </article>
+      <main className={styles.column} aria-labelledby={`post-${post.id}-author`}>
+        <PostArticle view={view} context={context} href={href} />
         {why && <Alert tone="info" title={why} />}
       </main>
     </div>
