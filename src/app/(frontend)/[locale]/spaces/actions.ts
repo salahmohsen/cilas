@@ -39,9 +39,13 @@ import {
  * Errors come back as keys; the pages map them to next-intl strings.
  * `auth` means no signed-in account reached the action.
  */
-export type SpacesWriteState = { status: 'ok' } | { status: 'error'; error: WriteError | 'auth' }
+export type SpacesWriteState =
+  { status: 'ok' } | { status: 'error'; error: WriteError | 'auth' | 'failed' }
 
-const err = (error: WriteError | 'auth'): SpacesWriteState => ({ status: 'error', error })
+const err = (error: WriteError | 'auth' | 'failed'): SpacesWriteState => ({
+  status: 'error',
+  error,
+})
 
 const text = (form: FormData, key: string) => String(form.get(key) ?? '')
 
@@ -128,7 +132,11 @@ export async function postCreateAction(
     ...shape,
     body: text(form, 'body'),
     files,
+  }).catch((error) => {
+    payload.logger.error({ err: error, msg: 'postCreate threw' })
+    return null
   })
+  if (!result) return err('failed')
   if (!result.ok) return err(result.error)
   await result.notify?.()
   await revalidate()
@@ -203,7 +211,11 @@ export async function commentCreateAction(
     parent: num(form, 'parent'),
     body: text(form, 'body'),
     files,
+  }).catch((error) => {
+    payload.logger.error({ err: error, msg: 'commentCreate threw' })
+    return null
   })
+  if (!result) return err('failed')
   if (!result.ok) return err(result.error)
   await result.notify?.()
   await revalidate()

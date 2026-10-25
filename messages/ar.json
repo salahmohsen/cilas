@@ -843,7 +843,6 @@
     "readOnlyNotice": "هذه المساحة مؤرشفة للقراءة فقط.",
     "placeAnnouncementLabel": "إعلان",
     "filesDrop": "أضف ملفات",
-    "maxFiles": "حتى 5 ملفات لمنشور واحد",
     "saveError_mode": "المساحات مغلقة الآن.",
     "saveError_not_member": "الأعضاء فقط هم من ينشرون هنا.",
     "saveError_read_only": "هذه المساحة للقراءة فقط.",
@@ -957,7 +956,10 @@
     "voteAnonymousShort": "مجهول",
     "dialogTitle": "المنشور",
     "dialogLoading": "جارٍ تحميل المنشور",
-    "dialogFailed": "تعذّر تحميل المنشور. افتح صفحته بدلاً من ذلك."
+    "dialogFailed": "تعذّر تحميل المنشور. افتح صفحته بدلاً من ذلك.",
+    "voteResults": "نتائج التصويت",
+    "saveError_upload": "تعذّر حفظ الملفات. حاول مرة أخرى، أو أرفق ملفات أقل أو أصغر.",
+    "saveError_failed": "حدث خطأ ما. حاول مرة أخرى."
   },
   "SpaceComment": {
     "write": "علِّق",
@@ -1016,7 +1018,13 @@
     "show": "اعرض",
     "completed": "<count></count> مكتملة",
     "stepsToDo": "خطوات متبقية",
-    "completedSteps": "خطوات مكتملة"
+    "completedSteps": "خطوات مكتملة",
+    "progressLabel": "تقدّم الخطوات الأولى",
+    "progressText": "اكتملت {done} من {total, plural, one {خطوة} two {خطوتين} few {# خطوات} many {# خطوة} other {# خطوة}}",
+    "allDone": "اكتملت جميع الخطوات.",
+    "stepDone": "اكتملت الخطوة «{title}». {done} من {total} مكتملة.",
+    "stepUndone": "أُعيدت الخطوة «{title}» إلى غير مكتملة. {done} من {total} مكتملة.",
+    "failed": "تعذّر إتمام ذلك. حاول مرة أخرى."
   },
   "Participation": {
     "title": "المشاركة",
@@ -1100,8 +1108,6 @@
     "mentions": "الأعضاء",
     "formerMember": "عضو سابق",
     "showEarlier": "{count, plural, one {اعرض تعليقًا سابقًا} two {اعرض تعليقين سابقين} few {اعرض # تعليقات سابقة} many {اعرض # تعليقًا سابقًا} other {اعرض # تعليق سابق}}",
-    "attach": "أرفق ملفًا",
-    "removeFile": "أزل الملف",
     "showMore": "{count, plural, one {اعرض تعليقًا إضافيًا} two {اعرض تعليقين إضافيين} few {اعرض # تعليقات إضافية} many {اعرض # تعليقًا إضافيًا} other {اعرض # تعليق إضافي}}"
   },
   "SpacePhotos": {
@@ -1117,6 +1123,7 @@
     "attachments": "الملفات المرفقة",
     "remove": "أزل {name}",
     "attach": "أرفق ملفات",
-    "attachLimit": "حتى {count, plural, one {ملف واحد} two {ملفين} few {# ملفات} many {# ملفًا} other {# ملف}}، بحجم 10 ميغابايت لكل ملف"
+    "attachLimit": "حتى {count, plural, one {ملف واحد} two {ملفين} few {# ملفات} many {# ملفًا} other {# ملف}}، بحجم 10 ميغابايت لكل ملف",
+    "tooLarge": "حجم هذه الملفات معًا {size} ميغابايت، والحد الأقصى لمنشور أو تعليق واحد {max} ميغابايت. أزل بعض الملفات أو اختر ملفات أصغر."
   }
 }

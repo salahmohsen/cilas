@@ -10,12 +10,14 @@ import {
   type CommentAuthor,
   type CommentThreadEvent,
   type ThreadComment as ArcComment,
+  matchMentions,
 } from '@/components/arc/comment-thread/comment-thread'
 import {
   commentCreateAction,
   commentEditAction,
   commentRemoveAction,
   reactionToggleAction,
+  type SpacesWriteState,
 } from '@/app/(frontend)/[locale]/spaces/actions'
 import type { NoticePart } from '@/lib/space-consent'
 import { REACTION_KINDS, type ReactionKind } from '@/lib/space-reactions'
@@ -23,6 +25,7 @@ import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
 import type { SpaceFileRef, ThreadComment, TopComment } from '@/lib/spaces-data'
 
 import { AttachmentTray } from './attachment-tray'
+import { useAttachments } from './use-attachments'
 import { Attachments } from './attachments'
 
 import { saveErrorKey } from './composer'
@@ -41,7 +44,6 @@ const EMOJI: Record<ReactionKind, string> = {
 }
 const KIND_OF = new Map(REACTION_KINDS.map((k) => [EMOJI[k], k]))
 const STORED_MENTION = /\[@([^\]]*)\]\(\/people\/(\d+)\)/g
-const escape = (text: string) => text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
 /** In the feed, a long thread opens on its newest comments. */
 const PREVIEW = 2
@@ -99,14 +101,14 @@ export function SpaceThread({
   const refreshPost = useRefreshPost()
   const [, start] = useTransition()
   const [error, setError] = useState<string | null>(null)
-  const [files, setFiles] = useState<File[]>([])
   const [visible, setVisible] = useState(limit ?? (preview ? PREVIEW : Infinity))
   const [accepted, setAccepted] = useState(consented)
   const [asking, setAsking] = useState<CommentThreadEvent | null>(null)
   const picker = useRef<HTMLInputElement>(null)
+  const attachments = useAttachments(FILE_LIMITS.comment, setError)
+  const { files } = attachments
 
   const byId = useMemo(() => new Map(people.map((p) => [p.id, p])), [people])
-  const byName = useMemo(() => new Map(people.map((p) => [p.name, p])), [people])
   const me: CommentAuthor = {
     id: String(viewer.personId ?? 'me'),
     name: viewer.me.name,
@@ -128,11 +130,15 @@ export function SpaceThread({
         name: person?.name ?? t('formerMember'),
         avatar: person?.photo ?? undefined,
       },
-      // Stored mentions read as "@Name", with the person's current name.
+      // Stored mentions read as "@Name", with the person's current name; the ids stay beside the text.
       body: c.body.replace(
         STORED_MENTION,
         (_, name: string, id: string) => `@${byId.get(Number(id))?.name ?? name}`,
       ),
+      mentions: [...c.body.matchAll(STORED_MENTION)].map(([, name, id]) => {
+        const person = byId.get(Number(id))
+        return { id: id!, name: person?.name ?? name!, avatar: person?.photo ?? undefined }
+      }),
       createdAt: format.relativeTime(new Date(c.createdAt), new Date(now)),
       edited: c.edited,
       deleted: c.deleted,
@@ -154,30 +160,42 @@ export function SpaceThread({
     setTree(server)
   }
 
-  /** "@Name" of a member becomes the stored link again, longest names first. */
-  const toStored = (text: string) => {
-    const names = [...byName.keys()].sort((a, b) => b.length - a.length).map(escape)
-    if (!names.length) return text
-    return text.replace(new RegExp(`@(${names.join('|')})`, 'g'), (whole, name: string) => {
-      const person = byName.get(name)
-      return person ? `[@${name.replace(/[[\]]/g, '')}](/people/${person.id})` : whole
-    })
+  /**
+   * Each "@Name" becomes the stored link again, by the id picked in the
+   * composer. A name nobody picked links only when one member has it.
+   */
+  const toStored = (text: string, mentions: CommentAuthor[]) => {
+    let out = ''
+    let from = 0
+    for (const { start, end, person } of matchMentions(text, mentions, authors)) {
+      const sameName = authors.filter((a) => a.name === person.name).length
+      if (!mentions.includes(person) && sameName > 1) continue
+      out += `${text.slice(from, start)}[@${person.name.replace(/[[\]]/g, '')}](/people/${person.id})`
+      from = end
+    }
+    return out + text.slice(from)
   }
 
   const send = (event: CommentThreadEvent) => {
     const form = new FormData()
     let action = commentCreateAction
     switch (event.type) {
-      case 'reply':
+      case 'reply': {
+        const tooLarge = attachments.problem()
+        if (tooLarge) {
+          setTree(server)
+          return setError(tooLarge)
+        }
         form.set('post', String(post))
         if (event.parentId) form.set('parent', event.parentId)
-        form.set('body', toStored(event.comment.body))
+        form.set('body', toStored(event.comment.body, event.comment.mentions ?? []))
         for (const f of files) form.append('file', f)
         break
+      }
       case 'edit':
         action = commentEditAction
         form.set('comment', event.id)
-        form.set('body', toStored(event.body))
+        form.set('body', toStored(event.body, event.mentions))
         break
       case 'delete':
         action = commentRemoveAction
@@ -194,13 +212,16 @@ export function SpaceThread({
       }
     }
     start(async () => {
-      const result = await action({ status: 'ok' }, form)
+      const result = await action({ status: 'ok' }, form).catch((): SpacesWriteState => ({
+        status: 'error',
+        error: 'failed',
+      }))
       if (result.status === 'error') {
         setTree(server)
         setError(tp(saveErrorKey(result.error)))
         return
       }
-      if (event.type === 'reply') setFiles([])
+      if (event.type === 'reply') attachments.clear()
       router.refresh()
       refreshPost?.()
     })
@@ -294,7 +315,7 @@ export function SpaceThread({
               onChange={(e) => {
                 const picked = [...(e.currentTarget.files ?? [])]
                 e.currentTarget.value = ''
-                setFiles((current) => [...current, ...picked].slice(0, FILE_LIMITS.comment))
+                void attachments.add(picked)
               }}
             />
             <button
@@ -302,7 +323,7 @@ export function SpaceThread({
               className={styles.attach}
               aria-label={tf('attach')}
               title={tf('attachLimit', { count: FILE_LIMITS.comment })}
-              disabled={files.length >= FILE_LIMITS.comment}
+              disabled={files.length >= FILE_LIMITS.comment || attachments.busy}
               onClick={() => picker.current?.click()}
             >
               <Paperclip size={15} aria-hidden="true" />
@@ -310,12 +331,7 @@ export function SpaceThread({
           </>
         }
         composerAttachments={
-          files.length ? (
-            <AttachmentTray
-              files={files}
-              onRemove={(file) => setFiles((current) => current.filter((f) => f !== file))}
-            />
-          ) : undefined
+          files.length ? <AttachmentTray files={files} onRemove={attachments.remove} /> : undefined
         }
         labels={{
           thread: t('thread'),

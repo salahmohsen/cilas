@@ -44,12 +44,41 @@ export interface ThreadComment {
   deleted?: boolean
   reactions?: CommentReaction[]
   replies?: ThreadComment[]
+  /** The people behind the "@Name" mentions in `body`, in order, so two people with one name stay apart. */
+  mentions?: CommentAuthor[]
+}
+
+const escapeName = (name: string) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/**
+ * Finds every "@Name" of a known person in `text`. Each one takes the first
+ * unused person of `mentions` with that name (the order they were picked in),
+ * then the first person of `people` with that name.
+ */
+export function matchMentions(
+  text: string,
+  mentions: CommentAuthor[],
+  people: CommentAuthor[] = [],
+): { start: number; end: number; person: CommentAuthor }[] {
+  const names = [...new Set([...mentions, ...people].map((person) => person.name))]
+    .sort((a, b) => b.length - a.length)
+    .map(escapeName)
+  if (!names.length) return []
+  const unused = [...mentions]
+  const found: { start: number; end: number; person: CommentAuthor }[] = []
+  for (const match of text.matchAll(new RegExp(`@(${names.join('|')})`, 'g'))) {
+    const name = match[1]!
+    const at = unused.findIndex((person) => person.name === name)
+    const person = at >= 0 ? unused.splice(at, 1)[0] : people.find((p) => p.name === name)
+    if (person) found.push({ start: match.index, end: match.index + match[0].length, person })
+  }
+  return found
 }
 
 /** What changed, for syncing to a server. `comments` on `onCommentsChange` is always the full next tree. */
 export type CommentThreadEvent =
   | { type: 'reply'; comment: ThreadComment; parentId: string | null }
-  | { type: 'edit'; id: string; body: string }
+  | { type: 'edit'; id: string; body: string; mentions: CommentAuthor[] }
   | { type: 'delete'; id: string }
   | { type: 'react'; id: string; emoji: string; added: boolean }
 
@@ -304,34 +333,34 @@ function Avatar({ author, size = 28 }: { author: CommentAuthor; size?: number })
 function Body({
   text,
   people,
+  mentions,
   renderMention,
 }: {
   text: string
   people: CommentAuthor[]
+  mentions?: CommentAuthor[]
   renderMention?: (person: CommentAuthor, text: string) => ReactNode
 }) {
   const parts = useMemo(() => {
-    const names = people
-      .map((person) => person.name)
-      .sort((a, b) => b.length - a.length)
-      .map((name) => name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-    if (!names.length) return [text]
-    return text.split(new RegExp(`(@(?:${names.join('|')}))`, 'g'))
-  }, [people, text])
+    const found = matchMentions(text, mentions ?? [], people)
+    const out: (string | { person: CommentAuthor; text: string })[] = []
+    let from = 0
+    for (const { start, end, person } of found) {
+      out.push(text.slice(from, start), { person, text: text.slice(start, end) })
+      from = end
+    }
+    out.push(text.slice(from))
+    return out
+  }, [mentions, people, text])
   return (
     <p className={styles.body} dir="auto">
       {parts.map((part, index) =>
-        index % 2 ? (
-          <span key={index} className={styles.mention}>
-            {renderMention
-              ? renderMention(
-                  people.find((person) => `@${person.name}` === part)!,
-                  part,
-                )
-              : part}
-          </span>
-        ) : (
+        typeof part === 'string' ? (
           part
+        ) : (
+          <span key={index} className={styles.mention}>
+            {renderMention ? renderMention(part.person, part.text) : part.text}
+          </span>
         ),
       )}
     </p>
@@ -434,7 +463,9 @@ interface ComposerProps {
   submitLabel: string
   autoFocus?: boolean
   focusKey?: number
-  onSubmit: (body: string) => void
+  onSubmit: (body: string, mentions: CommentAuthor[]) => void
+  /** Mentions already in `initial`, in order. */
+  initialMentions?: CommentAuthor[]
   onCancel?: () => void
   leading?: ReactNode
   trailing?: ReactNode
@@ -445,9 +476,16 @@ interface ComposerProps {
 }
 
 /** A growing text field with @mention suggestions. ⌘ or Ctrl + Enter sends; Escape cancels. */
+/** The picks that still have their "@Name" in the text, in text order. */
+const matchedPicks = (text: string, picked: CommentAuthor[]) =>
+  matchMentions(text, picked)
+    .map((found) => found.person)
+    .filter((person) => picked.includes(person))
+
 function Composer({
   people,
   initial = '',
+  initialMentions,
   placeholder,
   submitLabel,
   autoFocus,
@@ -465,6 +503,8 @@ function Composer({
   const reduced = useReducedFlag()
   const field = useRef<HTMLTextAreaElement>(null)
   const [text, setText] = useState(initial)
+  // Picked people, kept in the order their "@Name" appears in the text.
+  const [picked, setPicked] = useState<CommentAuthor[]>(initialMentions ?? [])
   const [query, setQuery] = useState<{ start: number; term: string } | null>(null)
   const [active, setActive] = useState(0)
   const suggestions = useMemo(() => {
@@ -500,7 +540,11 @@ function Composer({
     const node = field.current
     if (!node || !query) return
     const caret = node.selectionStart ?? text.length
-    const next = `${text.slice(0, query.start)}@${person.name} ${text.slice(caret)}`
+    const before = text.slice(0, query.start)
+    const ahead = matchMentions(before, picked).length
+    const kept = matchedPicks(text, picked)
+    setPicked([...kept.slice(0, ahead), person, ...kept.slice(ahead)])
+    const next = `${before}@${person.name} ${text.slice(caret)}`
     const at = query.start + person.name.length + 2
     setText(next)
     setQuery(null)
@@ -513,8 +557,9 @@ function Composer({
   const send = () => {
     const body = text.trim()
     if (!body) return
-    onSubmit(body)
+    onSubmit(body, matchedPicks(body, picked))
     setText('')
+    setPicked([])
     setQuery(null)
   }
 
@@ -725,11 +770,12 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     )
   }
 
-  const addReply = (body: string) => {
+  const addReply = (body: string, mentions: CommentAuthor[]) => {
     const comment: ThreadComment = {
       id: newId(),
       author: currentUser,
       body,
+      mentions,
       createdAt: nowLabel,
       reactions: [],
     }
@@ -750,10 +796,10 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
     setReplyTo(null)
   }
 
-  const edit = (id: string, body: string) => {
+  const edit = (id: string, body: string, mentions: CommentAuthor[]) => {
     commit(
-      mapTree(list, id, (comment) => ({ ...comment, body, edited: true })),
-      { type: 'edit', id, body },
+      mapTree(list, id, (comment) => ({ ...comment, body, mentions, edited: true })),
+      { type: 'edit', id, body, mentions },
     )
     setUi((current) => ({ ...current, editing: null }))
   }
@@ -870,13 +916,14 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                         <Composer
                           people={mentionable}
                           initial={comment.body}
+                          initialMentions={comment.mentions}
                           placeholder={t.editComment}
                           submitLabel={t.save}
                           cancelLabel={t.cancel}
                           mentionsLabel={t.mentions}
                           autoFocus
                           compact
-                          onSubmit={(body) => edit(comment.id, body)}
+                          onSubmit={(body, mentions) => edit(comment.id, body, mentions)}
                           onCancel={() => setUi((current) => ({ ...current, editing: null }))}
                         />
                       </motion.div>
@@ -884,6 +931,7 @@ export const CommentThread = forwardRef<HTMLElement, CommentThreadProps>(functio
                       <motion.div key="view" {...swap}>
                         <Body
                           text={comment.body}
+                          mentions={comment.mentions}
                           people={mentionable}
                           renderMention={renderMention}
                         />

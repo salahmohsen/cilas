@@ -843,7 +843,6 @@
     "readOnlyNotice": "This space is archived and read-only.",
     "placeAnnouncementLabel": "Announcement",
     "filesDrop": "Add files",
-    "maxFiles": "Up to 5 files for a post",
     "saveError_mode": "Spaces are off right now.",
     "saveError_not_member": "Only members post here.",
     "saveError_read_only": "This space is read-only.",
@@ -957,7 +956,10 @@
     "voteAnonymousShort": "Anonymous",
     "dialogTitle": "Post",
     "dialogLoading": "Loading the post",
-    "dialogFailed": "The post could not be loaded. Open its page instead."
+    "dialogFailed": "The post could not be loaded. Open its page instead.",
+    "voteResults": "Vote results",
+    "saveError_upload": "The files could not be saved. Try again, or attach fewer or smaller files.",
+    "saveError_failed": "Something went wrong. Try again."
   },
   "SpaceComment": {
     "write": "Comment",
@@ -1016,7 +1018,13 @@
     "show": "Show",
     "completed": "<count></count> completed",
     "stepsToDo": "Steps to do",
-    "completedSteps": "Completed steps"
+    "completedSteps": "Completed steps",
+    "progressLabel": "First steps progress",
+    "progressText": "{done} of {total, plural, one {# step} other {# steps}} done",
+    "allDone": "All {total} steps done.",
+    "stepDone": "{title} done. {done} of {total} complete.",
+    "stepUndone": "{title} marked as not done. {done} of {total} complete.",
+    "failed": "That did not work. Try again."
   },
   "Participation": {
     "title": "Participation",
@@ -1100,8 +1108,6 @@
     "mentions": "Members",
     "formerMember": "Former member",
     "showEarlier": "{count, plural, one {Show # earlier comment} other {Show # earlier comments}}",
-    "attach": "Attach a file",
-    "removeFile": "Remove the file",
     "showMore": "{count, plural, one {Show # more comment} other {Show # more comments}}"
   },
   "SpacePhotos": {
@@ -1117,6 +1123,7 @@
     "attachments": "Attached files",
     "remove": "Remove {name}",
     "attach": "Attach files",
-    "attachLimit": "Up to {count} files, 10 MB each"
+    "attachLimit": "Up to {count} files, 10 MB each",
+    "tooLarge": "These files add up to {size} MB. One post or comment can carry {max} MB. Remove some files or choose smaller ones."
   }
 }

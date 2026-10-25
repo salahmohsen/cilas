@@ -32,7 +32,8 @@ const call = async (
   const form = new FormData()
   for (const [k, v] of Object.entries(fields)) form.set(k, v)
   const result = await action({ status: 'ok' }, form)
-  if (result.status === 'error') throw new Error(result.error)
+  // The message stays empty so the checklist announces its own translated one.
+  if (result.status === 'error') throw new Error('')
 }
 
 /**
@@ -154,6 +155,12 @@ export function OnboardingChecklist({
         completed: (count) => t.rich('completed', { count: () => count }),
         stepsToDo: t('stepsToDo'),
         completedSteps: t('completedSteps'),
+        progressLabel: t('progressLabel'),
+        progressText: (done, total) => t('progressText', { done, total }),
+        allDone: (total) => t('allDone', { total }),
+        stepDone: (title, done, total) => t('stepDone', { title, done, total }),
+        stepUndone: (title, done, total) => t('stepUndone', { title, done, total }),
+        failed: t('failed'),
       }}
       onHiddenChange={(next) => {
         document.cookie = `${CHECKLIST_COOKIE}=${next ? '1' : ''}; path=/; max-age=${next ? 31_536_000 : 0}; samesite=lax`

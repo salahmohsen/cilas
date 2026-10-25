@@ -963,10 +963,25 @@
 .eventWhere {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--space-2);
   margin: 0;
   font-size: var(--text-sm);
+}
+
+.eventWhen > svg,
+.eventWhere > svg {
+  flex-shrink: 0;
+  /* the icon sits on the first line of text, which may wrap */
+  margin-block-start: 0.2em;
+}
+
+/* A long date or place wraps beside its icon instead of widening the card. */
+.eventWhen > time,
+.eventWhere > bdi {
+  flex: 1 1 18ch;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .eventWhen {

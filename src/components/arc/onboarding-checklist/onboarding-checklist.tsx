@@ -31,6 +31,18 @@ export interface ChecklistLabels {
   completed: (count: ReactNode) => ReactNode
   stepsToDo: string
   completedSteps: string
+  /** Accessible name of the progress ring. */
+  progressLabel: string
+  /** Spoken value of the progress ring. */
+  progressText: (done: number, total: number) => string
+  /** Announced to screen readers when every step is done. */
+  allDone: (total: number) => string
+  /** Announced when a step is checked. */
+  stepDone: (title: string, done: number, total: number) => string
+  /** Announced when a step is marked as not done. */
+  stepUndone: (title: string, done: number, total: number) => string
+  /** Announced when a step fails without an error message of its own. */
+  failed: string
 }
 
 const ENGLISH_LABELS: ChecklistLabels = {
@@ -44,6 +56,12 @@ const ENGLISH_LABELS: ChecklistLabels = {
   completed: (count) => <>{count} completed</>,
   stepsToDo: 'Steps to do',
   completedSteps: 'Completed steps',
+  progressLabel: 'Setup progress',
+  progressText: (done, total) => `${done} of ${total} steps done`,
+  allDone: (total) => `All ${total} steps done.`,
+  stepDone: (title, done, total) => `${title} done. ${done} of ${total} complete.`,
+  stepUndone: (title, done, total) => `${title} marked as not done. ${done} of ${total} complete.`,
+  failed: 'That didn’t work. Try again.',
 }
 
 export interface OnboardingChecklistProps {
@@ -75,6 +93,7 @@ type Action =
       type: 'check' | 'uncheck' | 'settle' | 'expand' | 'start'
       id: string
       steps: OnboardingStep[]
+      labels: ChecklistLabels
     }
   | { type: 'fail'; id: string; message: string }
   | { type: 'group' | 'hide' }
@@ -135,8 +154,8 @@ function reducer(state: State, action: Action): State {
         errors: omit(state.errors, action.id),
         message:
           done.length === total
-            ? `All ${total} steps done.`
-            : `${titleOf(action.steps, action.id)} done. ${done.length} of ${total} complete.`,
+            ? action.labels.allDone(total)
+            : action.labels.stepDone(titleOf(action.steps, action.id), done.length, total),
       }
     }
     case 'uncheck': {
@@ -147,7 +166,11 @@ function reducer(state: State, action: Action): State {
         done,
         settled: without(state.settled, action.id),
         expanded: state.expanded ?? action.id,
-        message: `${titleOf(action.steps, action.id)} marked as not done. ${done.length} of ${action.steps.length} complete.`,
+        message: action.labels.stepUndone(
+          titleOf(action.steps, action.id),
+          done.length,
+          action.steps.length,
+        ),
       }
     }
     case 'settle': {
@@ -363,18 +386,30 @@ function RollingNumber({ value, reduced }: { value: number; reduced: boolean }) 
 }
 
 /** The arc fills on a spring as steps are checked; once every step is done a tick draws in its center. */
-function ProgressRing({ done, total, reduced }: { done: number; total: number; reduced: boolean }) {
+function ProgressRing({
+  done,
+  total,
+  reduced,
+  label,
+  text,
+}: {
+  done: number
+  total: number
+  reduced: boolean
+  label: string
+  text: string
+}) {
   const ratio = total ? done / total : 0
   const complete = total > 0 && done === total
   return (
     <span
       className={styles.ring}
       role="progressbar"
-      aria-label="Setup progress"
+      aria-label={label}
       aria-valuemin={0}
       aria-valuemax={total}
       aria-valuenow={done}
-      aria-valuetext={`${done} of ${total} steps done`}
+      aria-valuetext={text}
     >
       <svg className={styles.ringArc} viewBox="0 0 40 40" fill="none" aria-hidden="true">
         <circle className={styles.ringTrack} cx="20" cy="20" r="17" strokeWidth={3} />
@@ -728,7 +763,7 @@ export function OnboardingChecklist({
   })
 
   function check(id: string) {
-    dispatch({ type: 'check', id, steps })
+    dispatch({ type: 'check', id, steps, labels: l })
     if (timers.current.has(id)) return
     timers.current.set(
       id,
@@ -736,7 +771,7 @@ export function OnboardingChecklist({
         timers.current.delete(id)
         if (root.current?.querySelector(`[data-step="${id}"]`)?.contains(document.activeElement))
           focusRequest.current = 'next'
-        dispatch({ type: 'settle', id, steps })
+        dispatch({ type: 'settle', id, steps, labels: l })
       }, SETTLE_MS),
     )
   }
@@ -745,12 +780,12 @@ export function OnboardingChecklist({
     clearTimeout(timers.current.get(id))
     timers.current.delete(id)
     if (fromGroup) focusRequest.current = { id }
-    dispatch({ type: 'uncheck', id, steps })
+    dispatch({ type: 'uncheck', id, steps, labels: l })
   }
 
   async function run(step: OnboardingStep) {
     if (!step.onAction || state.pending.includes(step.id) || state.done.includes(step.id)) return
-    dispatch({ type: 'start', id: step.id, steps })
+    dispatch({ type: 'start', id: step.id, steps, labels: l })
     try {
       await step.onAction()
       check(step.id)
@@ -758,8 +793,7 @@ export function OnboardingChecklist({
       dispatch({
         type: 'fail',
         id: step.id,
-        message:
-          error instanceof Error && error.message ? error.message : 'That didn’t work. Try again.',
+        message: error instanceof Error && error.message ? error.message : l.failed,
       })
     }
   }
@@ -820,7 +854,13 @@ export function OnboardingChecklist({
       data-hidden={state.hidden || undefined}
     >
       <div className={styles.header}>
-        <ProgressRing done={doneCount} total={total} reduced={reduced} />
+        <ProgressRing
+          done={doneCount}
+          total={total}
+          reduced={reduced}
+          label={l.progressLabel}
+          text={l.progressText(doneCount, total)}
+        />
         <div className={styles.heading}>
           <h3 id={titleId} className={styles.title}>
             <span className={styles.srOnly}>{allDone ? doneTitle : title}</span>
@@ -891,7 +931,7 @@ export function OnboardingChecklist({
                   onToggle={() =>
                     state.done.includes(step.id) ? uncheck(step.id, false) : check(step.id)
                   }
-                  onExpand={() => dispatch({ type: 'expand', id: step.id, steps })}
+                  onExpand={() => dispatch({ type: 'expand', id: step.id, steps, labels: l })}
                   onRun={() => run(step)}
                 />
               ))}

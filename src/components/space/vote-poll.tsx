@@ -127,10 +127,16 @@ export function VotePoll({
   const same = draft.length === view.mine.length && draft.every((o) => view.mine.includes(o))
 
   return (
-    <section className={styles.poll} aria-labelledby={`${id}-label`}>
-      <p id={`${id}-label`} className={styles.hint}>
-        {t(view.multiple ? 'voteHintMultiple' : 'voteHintSingle')}
-      </p>
+    <section
+      className={styles.poll}
+      aria-labelledby={disabled ? undefined : `${id}-label`}
+      aria-label={disabled ? t('voteResults') : undefined}
+    >
+      {!disabled && (
+        <p id={`${id}-label`} className={styles.hint}>
+          {t(view.multiple ? 'voteHintMultiple' : 'voteHintSingle')}
+        </p>
+      )}
       {showing === 'choose' ? (
         <Choices
           name={id}

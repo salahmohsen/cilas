@@ -17,11 +17,12 @@ import { Input } from '@/components/arc/input/input'
 import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
-import { postCreateAction } from '@/app/(frontend)/[locale]/spaces/actions'
+import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
 import { VOTE_OPTIONS } from '@/lib/space-post-kinds'
 
 import { AttachmentTray } from './attachment-tray'
+import { useAttachments } from './use-attachments'
 import { ConsentSheet } from './consent-sheet'
 import styles from './space.module.css'
 
@@ -177,10 +178,11 @@ function ComposerForm({
   const [body, setBody] = useState({ markdown: initial, empty: initial.trim() === '' })
   const [kind, setKind] = useState<PostKind>(kinds[0] ?? 'discussion')
   const [extra, setExtra] = useState<Extra>(EMPTY_EXTRA)
-  const [files, setFiles] = useState<File[]>([])
   const picker = useRef<HTMLInputElement>(null)
   const tf = useTranslations('SpacePhotos')
   const [error, setError] = useState<string | null>(null)
+  const attachments = useAttachments(FILE_LIMITS.post, setError)
+  const { files } = attachments
   const set = (patch: Partial<Extra>) => setExtra((current) => ({ ...current, ...patch }))
   const options = extra.options.map((o) => o.trim()).filter(Boolean)
   const ready =
@@ -191,6 +193,11 @@ function ComposerForm({
   today.setHours(0, 0, 0, 0)
 
   const publish = async () => {
+    const tooLarge = attachments.problem()
+    if (tooLarge) {
+      setError(tooLarge)
+      throw new Error('files')
+    }
     setError(null)
     const data = new FormData()
     data.set('space', String(space))
@@ -207,7 +214,10 @@ function ComposerForm({
       data.set('anonymous', String(extra.anonymous === true))
     }
     for (const f of files) data.append('file', f)
-    const result = await postCreateAction({ status: 'ok' }, data)
+    const result = await postCreateAction({ status: 'ok' }, data).catch((): SpacesWriteState => ({
+      status: 'error',
+      error: 'failed',
+    }))
     if (result.status === 'error') {
       setError(t(saveErrorKey(result.error)))
       throw new Error(result.error)
@@ -330,10 +340,7 @@ function ComposerForm({
             />
           </fieldset>
         )}
-        <AttachmentTray
-          files={files}
-          onRemove={(file) => setFiles((current) => current.filter((f) => f !== file))}
-        />
+        <AttachmentTray files={files} onRemove={attachments.remove} />
         {error && (
           <p role="alert" className={styles.error}>
             {error}
@@ -351,14 +358,14 @@ function ComposerForm({
             onChange={(e) => {
               const picked = [...(e.currentTarget.files ?? [])]
               e.currentTarget.value = ''
-              setFiles((current) => [...current, ...picked].slice(0, FILE_LIMITS.post))
+              void attachments.add(picked)
             }}
           />
           <Button
             variant="ghost"
             size="sm"
             title={tf('attachLimit', { count: FILE_LIMITS.post })}
-            disabled={files.length >= FILE_LIMITS.post}
+            disabled={files.length >= FILE_LIMITS.post || attachments.busy}
             onClick={() => picker.current?.click()}
           >
             <Paperclip size={16} aria-hidden="true" />
@@ -369,7 +376,7 @@ function ComposerForm({
           </Button>
         </span>
         <ActionSwap
-          disabled={!ready}
+          disabled={!ready || attachments.busy}
           failureLabel={t('failed')}
           states={[
             { id: 'idle', label: t('publish'), icon: <Send size={16} />, tone: 'accent' },

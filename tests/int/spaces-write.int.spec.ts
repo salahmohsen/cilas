@@ -21,6 +21,7 @@ import {
   consentAccept,
   spaceSettingsSet,
   voteSet,
+  spaceLink,
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
 import { ABOUT_MAX } from '@/lib/space-about'
@@ -236,7 +237,7 @@ describe('spaces write', () => {
       'space-visits',
       'space-consents',
       'space-comments',
-      'space-posts',
+      'notifications',
       'space-posts',
       'spaces',
       'enrollments',
@@ -373,6 +374,101 @@ describe('spaces write', () => {
     })
     expect(result.ok).toBe(false)
     if (!result.ok) expect(result.error).toBe('mention')
+  })
+
+  it('a comment mentions the person by id, so two members with one name stay apart; notification links use the real space path', async () => {
+    const twin = async (email: string) => {
+      const person = await payload.create({
+        collection: 'people',
+        data: { name: 'Probe Twin', slug: `probe-twin-${email}` },
+        overrideAccess: true,
+      })
+      track('people', person.id)
+      const account = (await payload.create({
+        collection: 'users',
+        data: {
+          email: `probe-twin-${email}@probe.cilas`,
+          password: 'probe-probe',
+          roles: ['member'],
+          person: person.id,
+        },
+        overrideAccess: true,
+      })) as unknown as User
+      track('users', account.id)
+      return { person: person.id, account }
+    }
+    const a = await twin('a')
+    const b = await twin('b')
+    const enrol = async (person: number) => {
+      const row = await payload.create({
+        collection: 'enrollments',
+        data: { course: course.id, person, status: 'confirmed' } as never,
+        overrideAccess: true,
+      })
+      track('enrollments', row.id as number)
+    }
+    await enrol(a.person)
+    await enrol(b.person)
+
+    const post = await postCreate({
+      payload,
+      user: student,
+      space: courseSpace.id,
+      kind: 'discussion',
+      body: 'QA twins',
+    })
+    expect(post.ok).toBe(true)
+    if (!post.ok) return
+    track('space-posts', post.data.id)
+
+    const comment = await commentCreate({
+      payload,
+      user: student,
+      post: post.data.id,
+      body: `Hello [@Probe Twin](/people/${b.person})`,
+    })
+    expect(comment.ok).toBe(true)
+    if (!comment.ok) return
+    track('space-comments', comment.data.id)
+    await comment.notify?.()
+
+    const notesOf = async (account: User) =>
+      (
+        await payload.find({
+          collection: 'notifications',
+          where: { recipient: { equals: account.id }, kind: { equals: 'mention' } },
+          overrideAccess: true,
+          depth: 0,
+        })
+      ).docs
+    expect(await notesOf(a.account)).toHaveLength(0)
+    const forB = await notesOf(b.account)
+    expect(forB).toHaveLength(1)
+    expect(forB[0]!.link).toBe(`/spaces/course/probe-space-course/posts/${post.data.id}`)
+
+    const community_ = await postCreate({
+      payload,
+      user: student,
+      space: community.id,
+      kind: 'discussion',
+      body: 'QA community link',
+    })
+    expect(community_.ok).toBe(true)
+    if (!community_.ok) return
+    track('space-posts', community_.data.id)
+    expect(await spaceLink(payload, community, community_.data.id)).toBe(
+      `/spaces/community/posts/${community_.data.id}`,
+    )
+    expect(await spaceLink(payload, cohortSpace, 7)).toBe('/spaces/cohort/probe-bridge/posts/7')
+    for (const account of [a.account, b.account]) {
+      const rows = await payload.find({
+        collection: 'notifications',
+        where: { recipient: { equals: account.id } },
+        overrideAccess: true,
+        depth: 0,
+      })
+      for (const row of rows.docs) track('notifications', row.id)
+    }
   })
 
   it('reactionToggle twice returns duplicate', async () => {
@@ -623,6 +719,68 @@ describe('spaces write', () => {
     track('space-posts', r.data.id)
     return r.data.id
   }
+
+  it('a file that storage refuses gives the upload error and leaves no post, comment or file behind', async () => {
+    const postId = await newPost(student, community, 'Upload refused')
+    const real = payload.create.bind(payload)
+    const stored: number[] = []
+    const spy = vi.spyOn(payload, 'create').mockImplementation((async (args: {
+      collection: string
+    }) => {
+      if (args.collection !== 'space-files') return real(args as never)
+      if (stored.length === 1) throw new Error('storage refused the file')
+      stored.push(-1)
+      return { id: -1 }
+    }) as never)
+    try {
+      const comment = await commentCreate({
+        payload,
+        user: student,
+        post: postId,
+        body: 'QA two files, the second is refused',
+        files: [pdf('probe-f1.pdf'), pdf('probe-f2.pdf')],
+      })
+      expect(comment.ok).toBe(false)
+      if (!comment.ok) expect(comment.error).toBe('upload')
+    } finally {
+      spy.mockRestore()
+    }
+    const left = await payload.find({
+      collection: 'space-comments',
+      where: { post: { equals: postId } },
+      overrideAccess: true,
+      depth: 0,
+    })
+    expect(left.totalDocs).toBe(0)
+
+    const spy2 = vi.spyOn(payload, 'create').mockImplementation((async (args: {
+      collection: string
+    }) => {
+      if (args.collection === 'space-files') throw new Error('storage refused the file')
+      return real(args as never)
+    }) as never)
+    try {
+      const post = await postCreate({
+        payload,
+        user: student,
+        space: community.id,
+        kind: 'discussion',
+        body: 'QA post whose file is refused',
+        files: [pdf('probe-f1.pdf')],
+      })
+      expect(post.ok).toBe(false)
+      if (!post.ok) expect(post.error).toBe('upload')
+    } finally {
+      spy2.mockRestore()
+    }
+    const posts = await payload.find({
+      collection: 'space-posts',
+      where: { body: { equals: 'QA post whose file is refused' } },
+      overrideAccess: true,
+      depth: 0,
+    })
+    expect(posts.totalDocs).toBe(0)
+  })
 
   it('the feed puts the post with the newest comment or reply first', async () => {
     const pause = () => new Promise((r) => setTimeout(r, 15))

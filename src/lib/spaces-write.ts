@@ -33,6 +33,7 @@ export type WriteError =
   | 'event'
   | 'vote'
   | 'about'
+  | 'upload'
 
 export type WriteResult<T> =
   | { ok: true; data: T; notify?: (() => Promise<void>) | null }
@@ -171,14 +172,17 @@ const storeFile = async (
   return (created as { id: number }).id
 }
 
-/** Stores every file on a just-created row; a storage failure removes the row and its files. */
+/**
+ * Stores every file on a just-created row. When storage refuses one, the row
+ * and its files go and the member gets the 'upload' error, not a server error.
+ */
 const storeFilesOrRollback = async (
   payload: Payload,
   spaceId: number,
   collection: 'space-posts' | 'space-comments',
   rowId: number,
   files: PostFile[],
-) => {
+): Promise<boolean> => {
   const target = collection === 'space-posts' ? { post: rowId } : { comment: rowId }
   const stored: number[] = []
   try {
@@ -189,14 +193,37 @@ const storeFilesOrRollback = async (
         .delete({ collection: 'space-files', id, overrideAccess: true })
         .catch(() => undefined)
     await payload.delete({ collection, id: rowId, overrideAccess: true }).catch(() => undefined)
-    throw e
+    payload.logger.error({ err: e, msg: `A file for ${collection} ${rowId} was not stored` })
+    return false
   }
+  return true
 }
 
-const spaceLink = (locale: string, space: SpaceLike, postId: number): string => {
-  if (space.kind === 'community') return `/${locale}/spaces/community/posts/${postId}`
-  const slug = space.kind === 'course' ? idOf(space.course) : idOf(space.programme)
-  return `/${locale}/spaces/${space.kind}/${slug}/posts/${postId}`
+/**
+ * A post's page by the space's real path (course or programme slug). No
+ * language prefix: users and people store no language, so the bare path
+ * redirects to the reader's saved language (next-intl, localePrefix "always").
+ */
+export const spaceLink = async (
+  payload: Payload,
+  space: SpaceLike,
+  postId: number,
+): Promise<string> => {
+  if (space.kind === 'community') return `/spaces/community/posts/${postId}`
+  const target = space.kind === 'course' ? idOf(space.course) : idOf(space.programme)
+  const doc =
+    target === null
+      ? null
+      : ((await payload
+          .findByID({
+            collection: space.kind === 'course' ? 'courses' : 'programmes',
+            id: target,
+            depth: 0,
+            overrideAccess: true,
+            select: { slug: true },
+          })
+          .catch(() => null)) as { slug?: string } | null)
+  return `/spaces/${space.kind}/${doc?.slug ?? target}/posts/${postId}`
 }
 
 /** The space's display name, quoted, for notification detail text. */
@@ -308,7 +335,11 @@ export const postCreate = async (
     overrideAccess: true,
   })
   const postId = (post as { id: number }).id
-  if (files?.length) await storeFilesOrRollback(payload, spaceId, 'space-posts', postId, files)
+  if (
+    files?.length &&
+    !(await storeFilesOrRollback(payload, spaceId, 'space-posts', postId, files))
+  )
+    return err('upload')
 
   const notifyFn = async () => {
     const { actorOf, notify } = await import('@/lib/notify')
@@ -320,7 +351,7 @@ export const postCreate = async (
       await notify(payload, accountIds, {
         kind: 'announcement',
         description: `A new announcement in ${context}`,
-        link: spaceLink('en', space, postId),
+        link: await spaceLink(payload, space, postId),
         actor,
       })
     }
@@ -341,7 +372,7 @@ export const postCreate = async (
       await notify(payload, accountIds, {
         kind: 'mention',
         description: `${actor?.name ?? 'Someone'} mentioned you in ${context}`,
-        link: spaceLink('en', space, postId),
+        link: await spaceLink(payload, space, postId),
         actor,
       })
     }
@@ -539,7 +570,8 @@ export const commentCreate = async (
   })
   const commentId = (comment as { id: number }).id
   if (files?.length)
-    await storeFilesOrRollback(payload, spaceId, 'space-comments', commentId, files)
+    if (!(await storeFilesOrRollback(payload, spaceId, 'space-comments', commentId, files)))
+      return err('upload')
 
   await payload.update({
     collection: 'space-posts',
@@ -571,7 +603,7 @@ export const commentCreate = async (
       await notify(payload, commentTargets, {
         kind: 'comment',
         description: `${actor?.name ?? 'Someone'} commented on your post in ${context}`,
-        link: spaceLink('en', space, postId),
+        link: await spaceLink(payload, space, postId),
         actor,
       })
     }
@@ -599,7 +631,7 @@ export const commentCreate = async (
         await notify(payload, replyTargets, {
           kind: 'reply',
           description: `${actor?.name ?? 'Someone'} replied to your comment in ${context}`,
-          link: spaceLink('en', space, postId),
+          link: await spaceLink(payload, space, postId),
           actor,
         })
       }
@@ -619,7 +651,7 @@ export const commentCreate = async (
       await notify(payload, accountIds, {
         kind: 'mention',
         description: `${actor?.name ?? 'Someone'} mentioned you in ${context}`,
-        link: spaceLink('en', space, postId),
+        link: await spaceLink(payload, space, postId),
         actor,
       })
     }
@@ -769,13 +801,18 @@ export const fileAdd = async (
   const issue = fileError([file], totalDocs, isPost ? FILE_LIMITS.post : FILE_LIMITS.comment)
   if (issue) return err(issue)
 
-  const id = await storeFile(
-    payload,
-    spaceId,
-    isPost ? { post: targetId! } : { comment: targetId! },
-    file,
-  )
-  return { ok: true, data: { id } }
+  try {
+    const id = await storeFile(
+      payload,
+      spaceId,
+      isPost ? { post: targetId! } : { comment: targetId! },
+      file,
+    )
+    return { ok: true, data: { id } }
+  } catch (e) {
+    payload.logger.error({ err: e, msg: `A file for ${collection} ${targetId} was not stored` })
+    return err('upload')
+  }
 }
 
 // --- reactionToggle ---
