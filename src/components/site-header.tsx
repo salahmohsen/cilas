@@ -61,8 +61,8 @@ export function CILASSiteHeader({ nav = ALL_SHOWN }: { nav?: Navigation }) {
           if (!live || !user) return
           const name = typeof user.person === 'object' ? user.person?.name : undefined
           setAccount({ name: name || user.email, email: user.email })
-          // Spaces shows only to an account that can read one (see /api/spaces).
-          return fetch('/api/spaces', { credentials: 'include' })
+          // Spaces shows only to an account that can read one (see /api/spaces-nav).
+          return fetch('/api/spaces-nav', { credentials: 'include' })
             .then((res) => (res.ok ? res.json() : null))
             .then((entry: { spaces?: boolean } | null) => {
               if (live) setSpaces(entry?.spaces === true)
