@@ -1,6 +1,7 @@
 import config from '@payload-config'
 import type { Metadata } from 'next'
 import { getFormatter, getTranslations } from 'next-intl/server'
+import Image from 'next/image'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -24,6 +25,8 @@ import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
 import { mySpaces } from '@/lib/spaces-data'
 import type { User } from '@/payload-types'
+
+const COMMUNITY_COVER = '/assets/images/pigeons-tower.jpg'
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -124,7 +127,14 @@ export default async function MySpacesPage({ params }: Props) {
             <ul className={styles.cards}>
               {s.rows.map((row) => (
                 <li key={row.space.id} className={styles.tileItem}>
-                  <Link href={row.href} className={styles.tile}>
+                  <Link href={row.href} className={`${styles.tile} ${styles.spaceTile}`}>
+                    <Image
+                      src={row.cover ?? COMMUNITY_COVER}
+                      alt=""
+                      fill
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className={styles.tileImage}
+                    />
                     <span className={styles.tileTitle}>
                       <bdi>
                         {row.space.kind === 'community' && !row.space.name?.trim()
@@ -132,18 +142,13 @@ export default async function MySpacesPage({ params }: Props) {
                           : row.title}
                       </bdi>
                     </span>
-                    <span dir="auto" className={styles.tileText}>
-                      {row.preview ?? t('noPostsYet')}
-                    </span>
                     <span className={styles.tileMeta}>
-                      {row.archived ? (
-                        <Badge size="sm">{t('archived')}</Badge>
-                      ) : row.unread > 0 ? (
+                      {row.archived && <Badge size="sm">{t('archived')}</Badge>}
+                      {row.unread > 0 && (
                         <Badge size="sm" tone="info">
-                          <span className={styles.numeric}>{row.unread}</span>
-                          <span className="sr-only"> {t('unread')}</span>
+                          {t('unread')}
                         </Badge>
-                      ) : null}
+                      )}
                       {row.lastActivity && (
                         <span>
                           {t('active', { time: format.relativeTime(new Date(row.lastActivity)) })}

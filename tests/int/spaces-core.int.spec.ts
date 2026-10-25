@@ -420,6 +420,26 @@ describe('spaces core', () => {
     const after = await mySpaces(payload, student, 'en')
     expect(after.courses[0]?.unread).toBe(1)
     expect(after.courses[0]?.lastActivity).toBeTruthy()
+
+    // A comment by someone else since the visit is news too; one by the reader is not.
+    const replies = []
+    for (const [author, body] of [
+      [fellow, 'news reply'],
+      [student, 'own reply'],
+    ] as const) {
+      replies.push(
+        await payload.create({
+          collection: 'space-comments',
+          data: { space: courseSpace.id, post: older.id, author: personOf(author) as number, body },
+          overrideAccess: true,
+        }),
+      )
+    }
+    expect((await mySpaces(payload, student, 'en')).courses[0]?.unread).toBe(2)
+    // The later tests count comments exactly: leave none behind.
+    for (const r of replies) {
+      await payload.delete({ collection: 'space-comments', id: r.id, overrideAccess: true })
+    }
   })
 
   it('the feed sorts pinned first and rolls up comments and reactions', async () => {

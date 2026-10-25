@@ -598,6 +598,40 @@
     border-color var(--duration-fast) var(--ease-standard);
 }
 
+/* A space tile: its cover fills the card under a flat surface tint, so the
+   title reads in both themes without a gradient. */
+.spaceTile {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  align-content: center;
+  min-height: 176px;
+}
+
+.spaceTile > * {
+  position: relative;
+}
+
+.tileImage {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  object-fit: cover;
+}
+
+.spaceTile::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in oklab, var(--surface) 78%, transparent);
+  transition: background-color var(--duration-fast) var(--ease-standard);
+}
+
+.spaceTile:hover::before {
+  background: color-mix(in oklab, var(--surface) 68%, transparent);
+}
+
 .tile:hover {
   background: var(--surface-muted);
   border-color: var(--border-strong);

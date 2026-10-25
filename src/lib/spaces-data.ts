@@ -33,17 +33,6 @@ import type { Course, Programme, Space, SpacePost, User } from '@/payload-types'
 const relId = (v: number | { id: number } | null | undefined) =>
   v == null ? null : typeof v === 'object' ? v.id : v
 
-/** Markdown to one plain line for a preview: links keep their text, marks drop. */
-export const previewOf = (body: string | null | undefined, max = 120): string | null => {
-  if (!body?.trim()) return null
-  const plain = body
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/[#>*_~`]+/g, '')
-    .replace(/\s+/g, ' ')
-    .trim()
-  return plain.length > max ? `${plain.slice(0, max - 1).trimEnd()}…` : plain || null
-}
-
 /**
  * The people who moderate a space (spec §7): the course's fellows, or the
  * programme's residential fellows. Admins moderate too but are accounts,
@@ -89,12 +78,20 @@ export type SpaceSummary = {
   /** community: the fixed label; course: the course title; cohort: the programme title */
   title: string
   href: string
+  /** Posts and comments by others since the member's last visit */
   unread: number
   lastActivity: string | null
   /** A course space past its 14 days (spec §11); always false for the other kinds */
   archived: boolean
-  /** The first words of the newest post, as plain text */
-  preview: string | null
+  /** The cover image of the course or the programme; null for a community */
+  cover: string | null
+}
+
+const coverOf = (label: { cover_image?: unknown; cover?: unknown } | undefined) => {
+  const media = label?.cover_image ?? label?.cover
+  return media && typeof media === 'object'
+    ? ((media as { url?: string | null }).url ?? null)
+    : null
 }
 
 /** My spaces for one signed-in member: the community, their cohorts and courses. */
@@ -142,19 +139,27 @@ export const mySpaces = async (
   // Titles and slugs read through the membership layer too: an enrolled
   // student may not read a tier-owner course, yet the tile still shows the
   // course's name (spec §2).
-  type Label = { id: number; title: string; slug: string; schedule?: unknown; sessions?: unknown }
+  type Label = {
+    id: number
+    title: string
+    slug: string
+    schedule?: unknown
+    sessions?: unknown
+    cover_image?: number | { url?: string | null } | null
+    cover?: number | { url?: string | null } | null
+  }
   const labels = (collection: 'courses' | 'programmes', ready: number[]) =>
     ready.length
       ? (payload.find({
           collection,
-          depth: 0,
+          depth: 1,
           draft: true,
           pagination: false,
           overrideAccess: true,
           select:
             collection === 'courses'
-              ? { title: true, slug: true, schedule: true, sessions: true }
-              : { title: true, slug: true },
+              ? { title: true, slug: true, schedule: true, sessions: true, cover_image: true }
+              : { title: true, slug: true, cover: true },
           where: { id: { in: ready } },
         }) as Promise<{ docs: Label[] }>)
       : Promise.resolve({ docs: [] as Label[] })
@@ -186,7 +191,19 @@ export const mySpaces = async (
     depth: 0,
     pagination: false,
     overrideAccess: false,
-    select: { space: true, author: true, createdAt: true, last_activity_at: true, body: true },
+    select: { space: true, author: true, createdAt: true, last_activity_at: true },
+    where: {
+      and: [{ deleted_at: { exists: false } }, ...(ids === true ? [] : [{ space: { in: ids } }])],
+    },
+  })
+  // Comments in the same pass: a reply under an old post still counts as news.
+  const { docs: comments } = await payload.find({
+    collection: 'space-comments',
+    user,
+    depth: 0,
+    pagination: false,
+    overrideAccess: false,
+    select: { space: true, author: true, createdAt: true },
     where: {
       and: [{ deleted_at: { exists: false } }, ...(ids === true ? [] : [{ space: { in: ids } }])],
     },
@@ -195,6 +212,12 @@ export const mySpaces = async (
   for (const p of posts) {
     const sid = relId(p.space)
     if (sid != null) postsBySpace.set(sid, [...(postsBySpace.get(sid) ?? []), p])
+  }
+
+  const commentsBySpace = new Map<number, typeof comments>()
+  for (const c of comments) {
+    const sid = relId(c.space)
+    if (sid != null) commentsBySpace.set(sid, [...(commentsBySpace.get(sid) ?? []), c])
   }
 
   const person = personOf(user)
@@ -208,10 +231,11 @@ export const mySpaces = async (
     if (s.kind === 'course' && courseId == null) continue
     const list = postsBySpace.get(s.id) ?? []
     const visited = visitedAt.get(s.id)
-    const unread = list.filter(
-      (p) =>
-        (!visited || p.createdAt > visited) && !(person !== null && relId(p.author) === person),
-    ).length
+    const isNew = (x: { createdAt: string; author?: unknown }) =>
+      (!visited || x.createdAt > visited) &&
+      !(person !== null && relId(x.author as number | { id: number } | null) === person)
+    const unread =
+      list.filter(isNew).length + (commentsBySpace.get(s.id) ?? []).filter(isNew).length
     const lastActivity = list.reduce<string | null>((acc, p) => {
       const when = p.last_activity_at ?? p.createdAt
       return acc && acc > when ? acc : when
@@ -228,12 +252,7 @@ export const mySpaces = async (
       unread,
       lastActivity,
       archived: archivedNow(s, course),
-      preview: previewOf(
-        list.reduce<(typeof list)[number] | null>(
-          (acc, p) => (acc && acc.createdAt > p.createdAt ? acc : p),
-          null,
-        )?.body,
-      ),
+      cover: coverOf(course ?? programme),
     }
     if (s.kind === 'community') communities.push(summary)
     else if (s.kind === 'cohort') cohorts.push(summary)
