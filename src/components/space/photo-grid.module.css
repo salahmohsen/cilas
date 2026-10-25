@@ -119,11 +119,20 @@
   transform: scale(0.96);
   transition: transform var(--duration-instant) var(--ease-standard);
 }
+/* The viewer: the stage over the strip. The frame's height comes from where it sits: fixed in the lightbox, the column's height in the post dialog. */
+.viewer {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
 .stage {
+  flex: 1 1 auto;
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-rows: minmax(0, 1fr);
   align-items: center;
   gap: var(--space-4);
+  min-height: 0;
 }
 .prev {
   grid-column: 1;
@@ -131,15 +140,18 @@
 .next {
   grid-column: 3;
 }
+/* A track of a definite size, so the photo's max sizes resolve and it always fits whole. */
 .frame {
   grid-column: 2;
   display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
-  height: min(62dvh, 600px);
+  height: var(--photo-frame, min(62dvh, 600px));
   overflow: hidden;
   touch-action: pan-y;
 }
 .full {
+  grid-area: 1 / 1;
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
@@ -192,10 +204,12 @@
   .stage {
     grid-template-columns: minmax(0, 1fr);
   }
+  .lightbox {
+    --photo-frame: 56dvh;
+  }
   .frame {
     grid-column: 1;
     grid-row: 1;
-    height: 56dvh;
   }
   /* On a phone the side buttons float over the photo's edges; swiping is the main way to move. */
   .nav {
@@ -211,6 +225,35 @@
   }
   .next {
     justify-self: end;
+  }
+}
+
+/* In the post dialog the viewer fills its column; on a phone it is a first row above the post. */
+.postViewer {
+  --photo-frame: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  height: 100%;
+  min-height: 0;
+}
+.postViewer > .viewer {
+  flex: 1 1 auto;
+}
+.postViewer .strip {
+  margin-top: var(--space-3);
+}
+.position {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+@media (max-width: 720px) {
+  .postViewer {
+    --photo-frame: 48dvh;
+    height: auto;
   }
 }
 

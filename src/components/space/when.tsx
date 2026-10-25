@@ -10,12 +10,12 @@ const WEEK = 7 * 86_400_000
 export async function When({
   iso,
   className,
-  post,
+  postHref,
 }: {
   iso: string
   className?: string
-  /** The time becomes a link that opens this post in a dialog */
-  post?: { id: number; href: string; photos: boolean }
+  /** The time becomes a link to this post's page, which opens its dialog */
+  postHref?: string
 }) {
   const [format, now] = await Promise.all([getFormatter(), getNow()])
   const date = new Date(iso)
@@ -24,10 +24,10 @@ export async function When({
   const text = recent
     ? format.relativeTime(date, now)
     : format.dateTime(date, { dateStyle: 'medium' })
-  if (post)
+  if (postHref)
     return (
       <Tooltip content={exact}>
-        <PostDateLink href={post.href} postId={post.id} photos={post.photos}>
+        <PostDateLink href={postHref}>
           <time dateTime={iso} className={className}>
             {text}
           </time>

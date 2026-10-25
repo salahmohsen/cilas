@@ -14,8 +14,9 @@ import { Attachments } from './attachments'
 import { commentsOpen, PostHead, type FeedContext } from './feed-row'
 import { EventDetails } from './event-details'
 import { LinkPreviews } from './link-card'
-import { PhotoGrid } from './photo-grid'
+import { PostPhotos } from './photo-grid'
 import { PostBody } from './post-body'
+import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
 import { spacePeopleCards } from './space-people'
 import styles from './space.module.css'
@@ -70,9 +71,10 @@ export async function loadPost(
 
 /**
  * One post and its whole thread, as the post page and the post dialog show it.
- * In the dialog a post with photos puts them in their own column, which the
- * stylesheet turns into the left side (the right in Arabic) on a wide screen
- * and a first row on a phone.
+ * In the dialog a post with photos puts them in a viewer in their own column,
+ * which the stylesheet turns into the left side (the right in Arabic) on a
+ * wide screen and a first row on a phone. On the page a photo opens the
+ * dialog over it, at that photo.
  */
 export async function PostArticle({
   view,
@@ -125,7 +127,7 @@ export async function PostArticle({
           <LinkPreviews urls={links} />
         </Suspense>
       )}
-      {files.length > 0 && <Attachments files={files} label={t('files')} />}
+      {files.length > 0 && <Attachments files={files} label={t('files')} opensPost={!dialog} />}
       {!deleted && (
         <PostFoot
           post={post.id}
@@ -146,11 +148,17 @@ export async function PostArticle({
       )}
     </article>
   )
+  if (!dialog)
+    return (
+      <PostDialog href={href} postId={post.id} photos={view.files.some((f) => f.isImage)} page>
+        {article}
+      </PostDialog>
+    )
   if (!photos.length) return article
   return (
     <div className={styles.dialogSplit}>
       <div className={styles.dialogPhotos}>
-        <PhotoGrid photos={photos} />
+        <PostPhotos photos={photos} />
       </div>
       {article}
     </div>

@@ -17,6 +17,7 @@ import { PersonHover, type PersonCard } from './person-hover'
 import { Attachments } from './attachments'
 import { PostActions } from './post-actions'
 import { PostBody } from './post-body'
+import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
 import { PostLabel } from './post-label'
 import type { ThreadViewer } from './space-thread'
@@ -135,14 +136,7 @@ export async function PostHead({
         context={context}
         when={
           <>
-            <When
-              iso={post.createdAt}
-              post={
-                postHref
-                  ? { id: post.id, href: postHref, photos: row.files.some((f) => f.isImage) }
-                  : undefined
-              }
-            />
+            <When iso={post.createdAt} postHref={postHref} />
             {post.edited_at && ` · ${t('edited')}`}
           </>
         }
@@ -197,53 +191,55 @@ export async function FeedRow({
   const id = `post-${post.id}`
   const links = outsideLinks(post.body)
   return (
-    <article
-      id={id}
-      className={styles.post}
-      aria-labelledby={`${id}-author`}
-      aria-describedby={`${id}-body`}
-      aria-posinset={position}
-      aria-setsize={total}
-      tabIndex={-1}
-    >
-      <PostHead row={row} context={context} postHref={postHref} />
-      <div id={`${id}-body`}>
-        <Folded body={post.body} lines={8} more={t('readMore')} less={t('showLess')}>
-          <PostBody body={post.body} people={context.people} />
-        </Folded>
-      </div>
-      {post.kind === 'event' && post.event_starts_at && (
-        <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
-      )}
-      {row.vote && (
-        <VotePoll
+    <PostDialog href={postHref} postId={post.id} photos={row.files.some((f) => f.isImage)}>
+      <article
+        id={id}
+        className={styles.post}
+        aria-labelledby={`${id}-author`}
+        aria-describedby={`${id}-body`}
+        aria-posinset={position}
+        aria-setsize={total}
+        tabIndex={-1}
+      >
+        <PostHead row={row} context={context} postHref={postHref} />
+        <div id={`${id}-body`}>
+          <Folded body={post.body} lines={8} more={t('readMore')} less={t('showLess')}>
+            <PostBody body={post.body} people={context.people} />
+          </Folded>
+        </div>
+        {post.kind === 'event' && post.event_starts_at && (
+          <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
+        )}
+        {row.vote && (
+          <VotePoll
+            post={post.id}
+            vote={row.vote}
+            disabled={context.archived || !!post.locked}
+            people={context.people}
+          />
+        )}
+        {links.length > 0 && (
+          <Suspense fallback={null}>
+            <LinkPreviews urls={links} />
+          </Suspense>
+        )}
+        {row.files.length > 0 && <Attachments files={row.files} label={t('files')} opensPost />}
+        <PostFoot
           post={post.id}
-          vote={row.vote}
-          disabled={context.archived || !!post.locked}
-          people={context.people}
+          link={absoluteUrl(postHref)}
+          reactions={row.reactions}
+          comments={row.comments}
+          commentCount={row.commentCount}
+          people={context.cards}
+          viewer={context.viewer}
+          canComment={commentsOpen(row, context)}
+          archived={context.archived}
+          consented={context.consented}
+          notice={context.notice}
+          now={context.now}
+          preview
         />
-      )}
-      {links.length > 0 && (
-        <Suspense fallback={null}>
-          <LinkPreviews urls={links} />
-        </Suspense>
-      )}
-      {row.files.length > 0 && <Attachments files={row.files} label={t('files')} />}
-      <PostFoot
-        post={post.id}
-        link={absoluteUrl(postHref)}
-        reactions={row.reactions}
-        comments={row.comments}
-        commentCount={row.commentCount}
-        people={context.cards}
-        viewer={context.viewer}
-        canComment={commentsOpen(row, context)}
-        archived={context.archived}
-        consented={context.consented}
-        notice={context.notice}
-        now={context.now}
-        preview
-      />
-    </article>
+      </article>
+    </PostDialog>
   )
 }

@@ -21,16 +21,19 @@ export function Attachments({
   files,
   label,
   compact = false,
+  opensPost = false,
 }: {
   files: SpaceFileRef[]
   label: string
   compact?: boolean
+  /** A post's own files: a photo opens the post dialog at that photo */
+  opensPost?: boolean
 }) {
   const photos = files.filter((f) => f.isImage)
   const others = files.filter((f) => !f.isImage)
   return (
     <div className={styles.attachments}>
-      {photos.length > 0 && <PhotoGrid photos={photos} compact={compact} />}
+      {photos.length > 0 && <PhotoGrid photos={photos} compact={compact} opensPost={opensPost} />}
       {others.length > 0 && (
         <div className={styles.files} aria-label={label} role="group">
           {others.map((f) => (

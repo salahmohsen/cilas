@@ -882,7 +882,7 @@
 
 .earlier {
   justify-self: start;
-  padding: var(--space-2) var(--space-4) var(--space-1);
+  padding: var(--space-4) var(--space-4) var(--space-1);
   border: 0;
   background: none;
   font: inherit;
@@ -1258,13 +1258,24 @@
   outline-offset: 2px;
 }
 
-/* The post dialog: one column, or the photos beside the post when it has any. */
+/* The post dialog: one column, or, when the post has photos, a viewer beside the post that scrolls on its own. */
 .postDialog.postDialog {
   width: min(calc(100vw - var(--space-8)), 640px);
 }
 
 .postDialogWide.postDialogWide {
-  width: min(calc(100vw - var(--space-8)), 1120px);
+  display: flex;
+  flex-direction: column;
+  width: min(calc(100vw - var(--space-8)), 1200px);
+  height: calc(100dvh - var(--space-8));
+  overflow: hidden;
+}
+
+/* Arc's dialog body: it takes the height under the header. */
+.postDialogWide.postDialogWide > div:last-child {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
 }
 
 .postDialog.postDialog,
@@ -1272,17 +1283,35 @@
   max-height: calc(100dvh - var(--space-8));
 }
 
+/* While the post loads or fails: the line sits in the middle of the dialog's body. */
+.dialogStatus {
+  display: grid;
+  place-items: center;
+  min-height: max(100%, 160px);
+  text-align: center;
+}
+
+.dialogStatus > p {
+  margin: 0;
+}
+
 .dialogSplit {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
   gap: var(--space-6);
-  align-items: start;
+  height: 100%;
 }
 
 .dialogPhotos {
-  position: sticky;
-  top: 0;
   min-width: 0;
+  min-height: 0;
+}
+
+.dialogSplit > .dialogPost {
+  align-content: start;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .dialogPost {
@@ -1305,9 +1334,10 @@
   .dialogSplit {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
+    height: auto;
   }
 
-  .dialogPhotos {
-    position: static;
+  .dialogSplit > .dialogPost {
+    overflow-y: visible;
   }
 }
