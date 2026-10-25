@@ -7,6 +7,7 @@ import { Info, Users } from 'lucide-react'
 import Image from 'next/image'
 
 import { personOf } from '@/access'
+import { Alert } from '@/components/arc/alert/alert'
 import { Badge } from '@/components/arc/badge/badge'
 import { BottomSheet } from '@/components/arc/bottom-sheet/bottom-sheet'
 import { Button } from '@/components/arc/button/button'
@@ -57,6 +58,8 @@ type SpacePageProps = {
   shown: number
   /** The page's own route, so the filter and the post links build on it. */
   path: string
+  /** A course session's id: only the posts that point at it. */
+  session?: string | null
 }
 
 /**
@@ -64,7 +67,15 @@ type SpacePageProps = {
  * the visit stamp comes last and is awaited, so unread counts and the "new
  * since your last visit" line compare against the previous visit.
  */
-export async function SpacePage({ locale, user, landing, tab, shown, path }: SpacePageProps) {
+export async function SpacePage({
+  locale,
+  user,
+  landing,
+  tab,
+  shown,
+  path,
+  session = null,
+}: SpacePageProps) {
   const { space } = landing
   const payload = await getPayload({ config })
   const mem = await membership(payload, user, space)
@@ -150,10 +161,9 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
       postingAllows(space.posting ?? 'open', mem.role, k) &&
       (k !== 'event' || eventsAllow(space.events, mem.role)),
   )
-  // A moderator may point an announcement at one of the course's sessions,
-  // named as the syllabus numbers and dates it.
-  const sessionChoices =
-    moderator && landing.course ? await sessionOptions(landing.course, locale) : []
+  // A member may point a discussion at one of the course's sessions (a
+  // moderator an announcement too), named as the syllabus numbers and dates it.
+  const sessionChoices = landing.course ? await sessionOptions(landing.course, locale) : []
   const context: FeedContext = {
     archived: feed.archived,
     viewer: { personId: viewerPerson, moderator, me: { name: me.name, photo: me.photo } },
@@ -170,7 +180,15 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   const cover = coverOf(course ?? landing.programme)
   const announcements = feed.rows.filter((r) => r.post.kind === 'announcement')
   const view = tab === 'syllabus' && !course ? 'all' : tab
-  const listed = view === 'announcements' ? announcements : feed.rows
+  // How many posts point at each session, from the rows the feed already read.
+  const linked = new Map<string, number>()
+  for (const r of feed.rows)
+    if (r.post.course_session)
+      linked.set(r.post.course_session, (linked.get(r.post.course_session) ?? 0) + 1)
+  const bySession = course && session ? session : null
+  const listed = (view === 'announcements' ? announcements : feed.rows).filter(
+    (r) => !bySession || r.post.course_session === bySession,
+  )
   const pinned = listed.filter((r) => r.post.pinned)
   const rest = listed.filter((r) => !r.post.pinned)
   const visible = rest.slice(0, Math.max(BATCH, shown))
@@ -318,7 +336,31 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
           </div>
           {view === 'syllabus' && course ? (
             course.sessions?.length ? (
-              <CourseSyllabus course={course} />
+              <CourseSyllabus
+                course={course}
+                decorate={(entry) => {
+                  const count = linked.get(entry.id) ?? 0
+                  if (!count) return entry
+                  return {
+                    ...entry,
+                    meta: {
+                      ...entry.meta,
+                      extra: [...(entry.meta?.extra ?? []), t('sessionPostCount', { count })],
+                    },
+                    body: (
+                      <>
+                        {entry.body}
+                        <a
+                          className={styles.sessionPosts}
+                          href={`${path}?${new URLSearchParams({ session: entry.id })}`}
+                        >
+                          {t('sessionPostsSee', { count })}
+                        </a>
+                      </>
+                    ),
+                  }
+                }}
+              />
             ) : (
               <EmptyState title={t('noSyllabus')} description={t('noSyllabusHint')} />
             )
@@ -332,6 +374,18 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
           ) : (
             <>
               <FreshPosts space={space.id} since={renderedAt} />
+              {bySession && (
+                <Alert
+                  tone="info"
+                  title={t('sessionFilterTitle', {
+                    name: sessionChoices.find((c) => c.value === bySession)?.label ?? '',
+                  })}
+                >
+                  <a className={styles.sessionPosts} href={path}>
+                    {t('sessionFilterClear')}
+                  </a>
+                </Alert>
+              )}
               {listed.length === 0 ? (
                 <EmptyState
                   title={view === 'announcements' ? t('noAnnouncements') : tp('empty')}
@@ -360,6 +414,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
                 <LoadMore
                   href={`${path}?${new URLSearchParams({
                     ...(view === 'announcements' ? { tab: view } : {}),
+                    ...(bySession ? { session: bySession } : {}),
                     shown: String(visible.length + BATCH),
                   })}`}
                   label={t('loadMore')}

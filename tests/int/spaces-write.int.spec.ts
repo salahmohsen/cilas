@@ -1419,14 +1419,36 @@ describe('spaces write', () => {
       space = courseSpace.id,
     ) => postCreate({ payload, user, space, kind, body: 'QA probe session', session })
 
-    // A member writes no announcement at all; a member's discussion carries no session.
+    // A member writes no announcement at all, but may link a discussion to a session of this course.
     expect(await post(student, 'announcement', one!)).toMatchObject({
       ok: false,
       error: 'announcement',
     })
-    expect(await post(student, 'discussion', one!)).toMatchObject({ ok: false, error: 'session' })
-    // The fellow: only an announcement, only this course's session, only in its course space.
-    expect(await post(fellow, 'discussion', one!)).toMatchObject({ ok: false, error: 'session' })
+    const memberLinked = await post(student, 'discussion', one!)
+    expect(memberLinked.ok).toBe(true)
+    if (memberLinked.ok) {
+      track('space-posts', memberLinked.data.id)
+      const linked = await payload.findByID({
+        collection: 'space-posts',
+        id: memberLinked.data.id,
+        depth: 0,
+        overrideAccess: true,
+      })
+      expect(linked.course_session).toBe(one)
+    }
+    // Only this course's session, only in its course space, for every kind.
+    expect(await post(student, 'discussion', 'not-a-session')).toMatchObject({
+      ok: false,
+      error: 'session',
+    })
+    expect(await post(student, 'discussion', one!, community.id)).toMatchObject({
+      ok: false,
+      error: 'session',
+    })
+    expect(await post(fellow, 'discussion', 'not-a-session')).toMatchObject({
+      ok: false,
+      error: 'session',
+    })
     expect(await post(fellow, 'announcement', 'not-a-session')).toMatchObject({
       ok: false,
       error: 'session',

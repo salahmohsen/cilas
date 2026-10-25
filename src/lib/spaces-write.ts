@@ -324,8 +324,9 @@ export const shapeData = (shape: PostShape, now = new Date()): Record<string, un
 }
 
 /**
- * Whether a post may carry this course session: a moderator's post of a
- * session kind, in a course space, naming one row of that course's sessions.
+ * Whether a post may carry this course session: a post of a session kind in
+ * a course space, naming one row of that course's sessions. An announcement
+ * is the moderator's; any member may link a discussion.
  */
 export const sessionAllows = async (
   payload: Payload,
@@ -334,7 +335,8 @@ export const sessionAllows = async (
   kind: string,
   session: string,
 ): Promise<boolean> => {
-  if (role !== 'moderator' || !SESSION_KINDS.includes(kind)) return false
+  if (!SESSION_KINDS.includes(kind)) return false
+  if (kind === 'announcement' ? role !== 'moderator' : role === 'none') return false
   const courseId = space.kind === 'course' ? idOf(space.course) : null
   if (courseId === null) return false
   const course = (await payload

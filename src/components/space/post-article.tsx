@@ -115,7 +115,9 @@ export async function PostArticle({
       {!deleted && post.kind === 'event' && (
         <EventCard post={post} rsvp={row.rsvp} context={context} href={href} />
       )}
-      {!deleted && row.session && <PostSession session={row.session} />}
+      {!deleted && row.session && (
+        <PostSession session={row.session} kind={post.kind} postHref={href} />
+      )}
       {!deleted && row.vote && (
         <VotePoll
           post={post.id}

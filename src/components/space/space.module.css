@@ -593,6 +593,32 @@
   color: var(--text-secondary);
 }
 
+.sessionPosts {
+  display: inline-block;
+  margin-block-start: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.sessionPosts:hover {
+  color: var(--foreground);
+}
+
+.sessionChip {
+  display: inline-flex;
+  max-width: 100%;
+  text-decoration: none;
+}
+
+.sessionChip > * {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .postSession {
   display: grid;
   gap: var(--space-3);

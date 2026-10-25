@@ -838,7 +838,11 @@
     "coursePage": "Course page",
     "noSyllabus": "No syllabus yet",
     "noSyllabusHint": "The sessions appear here once the course has them.",
-    "events": "Events"
+    "events": "Events",
+    "sessionPostCount": "{count, plural, one {# post} other {# posts}}",
+    "sessionPostsSee": "{count, plural, one {See the post about this session} other {See the # posts about this session}}",
+    "sessionFilterTitle": "Posts about {name}",
+    "sessionFilterClear": "Show all posts"
   },
   "SpacePost": {
     "newPost": "New post",
@@ -1005,7 +1009,9 @@
     "rsvpCleared": "Your answer is cleared.",
     "rsvpInvalid": "Choose going, maybe or not going.",
     "saveError_event_over": "This event is over.",
-    "saveError_rsvp": "Choose going, maybe or not going."
+    "saveError_rsvp": "Choose going, maybe or not going.",
+    "sessionChipLabel": "Posts about {name}",
+    "sessionPickHintOpen": "Shows a small tag under your post that opens the posts about the same session."
   },
   "SpaceComment": {
     "write": "Comment",

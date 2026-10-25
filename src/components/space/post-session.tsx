@@ -1,9 +1,12 @@
 import { useLocale, useTranslations } from 'next-intl'
+import { MessagesSquare } from 'lucide-react'
 
 import { Alert } from '@/components/arc/alert/alert'
+import { Badge } from '@/components/arc/badge/badge'
 import { CourseSession } from '@/components/course/course-syllabus'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { sessionsInOrder } from '@/lib/schedule'
+import { SESSION_CARD_KINDS } from '@/lib/space-post-kinds'
 import type { SessionView } from '@/lib/spaces-data'
 
 import styles from './space.module.css'
@@ -13,7 +16,16 @@ import styles from './space.module.css'
  * course's live data, with a way to discuss it with AI. A session the course
  * dropped, or a course the reader may not read, says so instead.
  */
-export function PostSession({ session }: { session: SessionView }) {
+export function PostSession({
+  session,
+  kind,
+  postHref,
+}: {
+  session: SessionView
+  kind: string
+  /** The post's own route; the space page is the route above it */
+  postHref: string
+}) {
   const t = useTranslations('SpacePost')
   const tc = useTranslations('Course')
   const ts = useTranslations('Share')
@@ -26,6 +38,24 @@ export function PostSession({ session }: { session: SessionView }) {
   const at = sessions.findIndex((s) => s.id === session.session)
   const row = sessions[at]
   const unit = tc(course.session_unit === 'week' ? 'week' : 'session', { number: at + 1 })
+  const name = row?.session_title ? `${unit}: ${row.session_title}` : unit
+
+  // Only a moderator's announcement carries the whole session; a member's post, a small tag that opens the posts about it.
+  if (!SESSION_CARD_KINDS.includes(kind)) {
+    const space = postHref.replace(/\/posts\/\d+$/, '')
+    return (
+      <a
+        className={styles.sessionChip}
+        href={`${space}?${new URLSearchParams({ session: session.session })}`}
+        aria-label={t('sessionChipLabel', { name })}
+        dir="auto"
+      >
+        <Badge size="md" icon={<MessagesSquare size={14} aria-hidden="true" />}>
+          {name}
+        </Badge>
+      </a>
+    )
+  }
   const readings = (row?.bibliography ?? []).flatMap((m) =>
     m.title ? [m.note ? `${m.title} (${m.note})` : m.title] : [],
   )
@@ -42,7 +72,7 @@ export function PostSession({ session }: { session: SessionView }) {
           size="sm"
           session={{
             course: course.title,
-            session: row?.session_title ? `${unit}: ${row.session_title}` : unit,
+            session: name,
             readings,
           }}
         />

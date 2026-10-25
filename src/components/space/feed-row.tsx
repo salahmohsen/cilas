@@ -211,7 +211,7 @@ export async function FeedRow({
         {post.kind === 'event' && (
           <EventCard post={post} rsvp={row.rsvp} context={context} href={postHref} />
         )}
-        {row.session && <PostSession session={row.session} />}
+        {row.session && <PostSession session={row.session} kind={post.kind} postHref={postHref} />}
         {row.vote && (
           <VotePoll
             post={post.id}

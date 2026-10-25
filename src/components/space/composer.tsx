@@ -67,7 +67,7 @@ export function Composer({
   mentions: { id: number; name: string }[]
   consented: boolean
   notice: NoticePart[]
-  /** The course's sessions a moderator may point a post at; empty for everyone else */
+  /** The course's sessions a post may point at; empty outside a course space */
   sessions?: SessionChoice[]
 }) {
   const t = useTranslations('SpacePost')
@@ -258,7 +258,7 @@ function ComposerForm({
         {sessionShown && (
           <Select
             label={t('sessionPick')}
-            description={t('sessionPickHint')}
+            description={t(kind === 'announcement' ? 'sessionPickHint' : 'sessionPickHintOpen')}
             value={session}
             onValueChange={setSession}
             options={[{ value: NO_SESSION, label: t('sessionNone') }, ...sessions]}
