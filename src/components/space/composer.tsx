@@ -15,11 +15,12 @@ import { Checkbox } from '@/components/arc/checkbox/checkbox'
 import { DatePicker } from '@/components/arc/date-picker/date-picker'
 import { Input } from '@/components/arc/input/input'
 import { RichTextEditor } from '@/components/arc/rich-text-editor/rich-text-editor'
+import { Select } from '@/components/arc/select/select'
 import SegmentedControl from '@/components/arc/segmented-control/segmented-control'
 import { TimePicker } from '@/components/arc/time-picker/time-picker'
 import { postCreateAction, type SpacesWriteState } from '@/app/(frontend)/[locale]/spaces/actions'
 import { FILE_LIMITS, SPACE_FILE_ACCEPT } from '@/lib/space-file-limits'
-import { VOTE_OPTIONS } from '@/lib/space-post-kinds'
+import { SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 
 import { AttachmentTray } from './attachment-tray'
 import { useAttachments } from './use-attachments'
@@ -35,6 +36,11 @@ export const COMPOSE_EVENT = 'space:compose'
 const PHONE = '(max-width: 1023px)'
 
 type Me = { name: string; photo: string | null }
+
+export type SessionChoice = { value: string; label: string }
+
+/** The select's "no session" choice: Radix gives an empty value no item. */
+const NO_SESSION = 'none'
 
 /** The kinds this member may start here, in the order the type switch shows them. */
 export type PostKind = 'discussion' | 'event' | 'vote' | 'announcement'
@@ -52,6 +58,7 @@ export function Composer({
   mentions,
   consented,
   notice,
+  sessions = [],
 }: {
   space: number
   /** Empty when the posting level keeps this member to reading and commenting */
@@ -61,6 +68,8 @@ export function Composer({
   mentions: { id: number; name: string }[]
   consented: boolean
   notice: NoticePart[]
+  /** The course's sessions a moderator may point a post at; empty for everyone else */
+  sessions?: SessionChoice[]
 }) {
   const t = useTranslations('SpacePost')
   const ts = useTranslations('Spaces')
@@ -90,6 +99,7 @@ export function Composer({
       space={space}
       kinds={kinds}
       mentions={mentions}
+      sessions={sessions}
       onCancel={() => setOpen(null)}
       onPublished={() => {
         setOpen(null)
@@ -161,12 +171,14 @@ function ComposerForm({
   space,
   kinds,
   mentions,
+  sessions,
   onCancel,
   onPublished,
 }: {
   space: number
   kinds: PostKind[]
   mentions: { id: number; name: string }[]
+  sessions: SessionChoice[]
   onCancel: () => void
   onPublished: () => void
 }) {
@@ -178,6 +190,8 @@ function ComposerForm({
   const [body, setBody] = useState({ markdown: initial, empty: initial.trim() === '' })
   const [kind, setKind] = useState<PostKind>(kinds[0] ?? 'discussion')
   const [extra, setExtra] = useState<Extra>(EMPTY_EXTRA)
+  const [session, setSession] = useState(NO_SESSION)
+  const sessionShown = sessions.length > 0 && SESSION_KINDS.includes(kind)
   const picker = useRef<HTMLInputElement>(null)
   const tf = useTranslations('SpacePhotos')
   const [error, setError] = useState<string | null>(null)
@@ -213,6 +227,7 @@ function ComposerForm({
       data.set('multiple', String(extra.multiple))
       data.set('anonymous', String(extra.anonymous === true))
     }
+    if (sessionShown && session !== NO_SESSION) data.set('session', session)
     for (const f of files) data.append('file', f)
     const result = await postCreateAction({ status: 'ok' }, data).catch((): SpacesWriteState => ({
       status: 'error',
@@ -251,6 +266,15 @@ function ComposerForm({
           }}
         />
         {kind === 'announcement' && <p className={styles.meta}>{t('announcementHint')}</p>}
+        {sessionShown && (
+          <Select
+            label={t('sessionPick')}
+            description={t('sessionPickHint')}
+            value={session}
+            onValueChange={setSession}
+            options={[{ value: NO_SESSION, label: t('sessionNone') }, ...sessions]}
+          />
+        )}
         {kind === 'event' && (
           <div className={styles.eventFields}>
             <Input

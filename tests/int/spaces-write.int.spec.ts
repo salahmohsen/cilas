@@ -1211,6 +1211,87 @@ describe('spaces write', () => {
     await spaceSettingsSet({ payload, user: fellow, space: courseSpace.id, events: 'members' })
   })
 
+  it('a moderator attaches a session of the course to an announcement; readers see it through their access', async () => {
+    const setCourse = (data: Record<string, unknown>) =>
+      payload.update({
+        collection: 'courses',
+        id: course.id,
+        data: { ...data, _status: 'published' } as never,
+        overrideAccess: true,
+      })
+    const updated = await setCourse({
+      sessions: [{ session_title: 'Probe one' }, { session_title: 'Probe two' }],
+    })
+    const [one, two] = (updated.sessions ?? []).map((s) => s.id!)
+    expect(one && two).toBeTruthy()
+
+    const post = (
+      user: User,
+      kind: 'announcement' | 'discussion',
+      session: string,
+      space = courseSpace.id,
+    ) => postCreate({ payload, user, space, kind, body: 'QA probe session', session })
+
+    // A member writes no announcement at all; a member's discussion carries no session.
+    expect(await post(student, 'announcement', one!)).toMatchObject({
+      ok: false,
+      error: 'announcement',
+    })
+    expect(await post(student, 'discussion', one!)).toMatchObject({ ok: false, error: 'session' })
+    // The fellow: only an announcement, only this course's session, only in its course space.
+    expect(await post(fellow, 'discussion', one!)).toMatchObject({ ok: false, error: 'session' })
+    expect(await post(fellow, 'announcement', 'not-a-session')).toMatchObject({
+      ok: false,
+      error: 'session',
+    })
+    expect(await post(admin, 'announcement', one!, community.id)).toMatchObject({
+      ok: false,
+      error: 'session',
+    })
+
+    const made = await post(fellow, 'announcement', two!)
+    expect(made.ok).toBe(true)
+    if (!made.ok) return
+    track('space-posts', made.data.id)
+    const row = await payload.findByID({
+      collection: 'space-posts',
+      id: made.data.id,
+      depth: 0,
+      overrideAccess: true,
+    })
+    expect(row.course_session).toBe(two)
+
+    const sessionFor = async (user: User) =>
+      (await spaceFeed(payload, user, courseSpace.id)).rows.find((r) => r.post.id === made.data.id)
+        ?.session
+
+    // The course is owner-only: its fellow reads the session, the student may not.
+    const shown = await sessionFor(fellow)
+    expect(shown).toMatchObject({ state: 'shown', session: two })
+    if (shown?.state === 'shown')
+      expect(shown.course.sessions?.map((s) => s.session_title)).toEqual(['Probe one', 'Probe two'])
+    expect(await sessionFor(student)).toEqual({ state: 'hidden' })
+    expect((await postView(payload, student, courseSpace, made.data.id))?.row.session).toEqual({
+      state: 'hidden',
+    })
+
+    // Live data: a cancelled session shows cancelled; a removed one is gone.
+    await setCourse({
+      tier: 'community',
+      sessions: [
+        { id: one, session_title: 'Probe one' },
+        { id: two, session_title: 'Probe two', cancelled: true },
+      ],
+    })
+    const cancelled = await sessionFor(student)
+    expect(cancelled?.state).toBe('shown')
+    if (cancelled?.state === 'shown')
+      expect(cancelled.course.sessions?.find((s) => s.id === two)?.cancelled).toBe(true)
+    await setCourse({ tier: 'owner', sessions: [{ id: one, session_title: 'Probe one' }] })
+    expect(await sessionFor(fellow)).toEqual({ state: 'gone' })
+    await setCourse({ sessions: [] })
+  })
+
   it('a moderator sets the About text per language and resets it; a member cannot', async () => {
     const aboutOf = async (locale: 'en' | 'ar') =>
       (

@@ -1,6 +1,15 @@
 'use client'
 
-import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react'
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react'
 import {
   AnimatePresence,
   motion,
@@ -184,6 +193,83 @@ function Chip({
   )
 }
 
+/** A session's number and first date, then its kind, title and one line of meetings and counts. */
+function EntryHead({ entry }: { entry: SyllabusEntry }) {
+  const t = useTranslations('Course')
+  return (
+    <>
+      <span className={styles.meta}>
+        <span className={styles.number} {...entry.attrs?.no}>
+          {entry.no}
+        </span>
+        {entry.date ? (
+          <time dateTime={entry.date.iso} {...entry.attrs?.date}>
+            {entry.date.label}
+          </time>
+        ) : (
+          <span {...entry.attrs?.date} />
+        )}
+      </span>
+      <span className={styles.body}>
+        {(entry.cancelled || entry.activities.length > 0) && (
+          <span className={styles.kindLine}>
+            {entry.cancelled ? (
+              <span className={styles.kind} data-state="cancelled">
+                <i aria-hidden="true" />
+                {t('cancelled')}
+              </span>
+            ) : (
+              entry.activities.slice(0, 3).map((id) => (
+                <span className={styles.kind} key={id} data-kind={id}>
+                  <i aria-hidden="true" />
+                  {t(`activityKinds.${id}`)}
+                </span>
+              ))
+            )}
+          </span>
+        )}
+        <span className={styles.title} {...entry.attrs?.title} dir="auto">
+          {entry.title}
+        </span>
+        {entry.meta ? (
+          <span className={styles.summary} {...entry.attrs?.meta} dir="auto">
+            {(() => {
+              const segments: ReactNode[] = []
+              if (entry.meta!.unit)
+                segments.push(
+                  <span className={styles.unit} key="unit">
+                    {entry.meta!.unit}
+                  </span>,
+                )
+              for (const [i, meeting] of (entry.meta!.meetings ?? []).entries())
+                segments.push(
+                  <span key={`date${i}`} className={[styles.part, styles.date].join(' ')}>
+                    {meeting.date}
+                  </span>,
+                  <span key={`time${i}`} className={[styles.part, styles.clock].join(' ')}>
+                    {meeting.time}
+                  </span>,
+                )
+              for (const [i, line] of (entry.meta!.extra ?? []).entries())
+                segments.push(
+                  <span className={styles.unit} key={`extra${i}`}>
+                    {line}
+                  </span>,
+                )
+              return segments.map((segment, i) => (
+                <Fragment key={i * 2}>
+                  {i > 0 && <span aria-hidden="true" className={styles.seam} />}
+                  {segment}
+                </Fragment>
+              ))
+            })()}
+          </span>
+        ) : null}
+      </span>
+    </>
+  )
+}
+
 /** One session row: its date and number, then its text, materials and activities opening under it. */
 function EntryRow({
   entry,
@@ -198,7 +284,6 @@ function EntryRow({
   registerRow?: (element: HTMLButtonElement | null) => void
   reduce: boolean
 }) {
-  const t = useTranslations('Course')
   const panelId = useId()
   const layout: Transition = reduce ? instant : motionTokens.spring.smooth
 
@@ -238,74 +323,7 @@ function EntryRow({
         onClick={onToggle}
         ref={registerRow}
       >
-        <span className={styles.meta}>
-          <span className={styles.number} {...entry.attrs?.no}>
-            {entry.no}
-          </span>
-          {entry.date ? (
-            <time dateTime={entry.date.iso} {...entry.attrs?.date}>
-              {entry.date.label}
-            </time>
-          ) : (
-            <span {...entry.attrs?.date} />
-          )}
-        </span>
-        <span className={styles.body}>
-          {(entry.cancelled || entry.activities.length > 0) && (
-            <span className={styles.kindLine}>
-              {entry.cancelled ? (
-                <span className={styles.kind} data-state="cancelled">
-                  <i aria-hidden="true" />
-                  {t('cancelled')}
-                </span>
-              ) : (
-                entry.activities.slice(0, 3).map((id) => (
-                  <span className={styles.kind} key={id} data-kind={id}>
-                    <i aria-hidden="true" />
-                    {t(`activityKinds.${id}`)}
-                  </span>
-                ))
-              )}
-            </span>
-          )}
-          <span className={styles.title} {...entry.attrs?.title} dir="auto">
-            {entry.title}
-          </span>
-          {entry.meta ? (
-            <span className={styles.summary} {...entry.attrs?.meta} dir="auto">
-              {(() => {
-                const segments: ReactNode[] = []
-                if (entry.meta!.unit)
-                  segments.push(
-                    <span className={styles.unit} key="unit">
-                      {entry.meta!.unit}
-                    </span>,
-                  )
-                for (const [i, meeting] of (entry.meta!.meetings ?? []).entries())
-                  segments.push(
-                    <span key={`date${i}`} className={[styles.part, styles.date].join(' ')}>
-                      {meeting.date}
-                    </span>,
-                    <span key={`time${i}`} className={[styles.part, styles.clock].join(' ')}>
-                      {meeting.time}
-                    </span>,
-                  )
-                for (const [i, line] of (entry.meta!.extra ?? []).entries())
-                  segments.push(
-                    <span className={styles.unit} key={`extra${i}`}>
-                      {line}
-                    </span>,
-                  )
-                return segments.map((segment, i) => (
-                  <Fragment key={i * 2}>
-                    {i > 0 && <span aria-hidden="true" className={styles.seam} />}
-                    {segment}
-                  </Fragment>
-                ))
-              })()}
-            </span>
-          ) : null}
-        </span>
+        <EntryHead entry={entry} />
         <motion.span
           className={styles.chevron}
           aria-hidden="true"
@@ -327,7 +345,9 @@ function EntryRow({
         <motion.div
           className={styles.panelInner}
           initial={false}
-          animate={open ? { opacity: 1, y: 0, filter: none } : { opacity: 0, y: 8, filter: blurSoft }}
+          animate={
+            open ? { opacity: 1, y: 0, filter: none } : { opacity: 0, y: 8, filter: blurSoft }
+          }
           transition={
             reduce
               ? instant
@@ -344,6 +364,33 @@ function EntryRow({
         </motion.div>
       </motion.div>
     </motion.li>
+  )
+}
+
+/**
+ * One session on its own, open and still: the same head and panel as a row of
+ * the feed, for a session shown outside its syllabus.
+ */
+export function SyllabusSession({
+  entry,
+  label,
+  className,
+}: {
+  entry: SyllabusEntry
+  /** What the region is named for assistive tech */
+  label: string
+  className?: string
+}) {
+  return (
+    <section
+      className={[styles.feed, styles.single, className].filter(Boolean).join(' ')}
+      aria-label={label}
+    >
+      <div className={styles.singleRow}>
+        <EntryHead entry={entry} />
+      </div>
+      {entry.body && <div className={styles.singleBody}>{entry.body}</div>}
+    </section>
   )
 }
 
@@ -479,7 +526,9 @@ export function SyllabusFeed({
       const own = previous[facet.group]
       return {
         ...previous,
-        [facet.group]: own.includes(facet.id) ? own.filter((id) => id !== facet.id) : [...own, facet.id],
+        [facet.group]: own.includes(facet.id)
+          ? own.filter((id) => id !== facet.id)
+          : [...own, facet.id],
       }
     })
   }
@@ -516,7 +565,9 @@ export function SyllabusFeed({
     const element = groupRefs.current.get(key)
     if (!scroller || !element) return
     const top =
-      scroller.scrollTop + element.getBoundingClientRect().top - scroller.getBoundingClientRect().top
+      scroller.scrollTop +
+      element.getBoundingClientRect().top -
+      scroller.getBoundingClientRect().top
     scroller.scrollTo({ top: Math.max(0, top - 1), behavior: reduce ? 'auto' : 'smooth' })
   }
 
@@ -525,22 +576,22 @@ export function SyllabusFeed({
   const wordThis = (count: number) => t('feedWord', { count })
   const layout: Transition = reduce ? instant : motionTokens.spring.smooth
 
-  const shownLabel =
-    !anySelected
-      ? `${localDigits(shownCount, locale)} ${wordThis(shownCount)}`
-      : `${localDigits(shownCount, locale)} ${t('feedOf')} ${localDigits(total, locale)} ${wordThis(total)}`
+  const shownLabel = !anySelected
+    ? `${localDigits(shownCount, locale)} ${wordThis(shownCount)}`
+    : `${localDigits(shownCount, locale)} ${t('feedOf')} ${localDigits(total, locale)} ${wordThis(total)}`
 
   return (
-    <section className={[styles.feed, className].filter(Boolean).join(' ')} aria-labelledby={title ? `${uid}-title` : undefined}>
+    <section
+      className={[styles.feed, className].filter(Boolean).join(' ')}
+      aria-labelledby={title ? `${uid}-title` : undefined}
+    >
       {title && (
         <header className={styles.header}>
           <div className={styles.heading}>
             <h2 id={`${uid}-title`} {...headerAttrs?.title}>
               {title}
             </h2>
-            {subtitle && (
-              <p {...headerAttrs?.subtitle}>{subtitle}</p>
-            )}
+            {subtitle && <p {...headerAttrs?.subtitle}>{subtitle}</p>}
           </div>
         </header>
       )}

@@ -20,6 +20,7 @@ import { PostBody } from './post-body'
 import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
 import { PostLabel } from './post-label'
+import { PostSession } from './post-session'
 import type { ThreadViewer } from './space-thread'
 import styles from './space.module.css'
 import { When } from './when'
@@ -210,6 +211,7 @@ export async function FeedRow({
         {post.kind === 'event' && post.event_starts_at && (
           <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
         )}
+        {row.session && <PostSession session={row.session} />}
         {row.vote && (
           <VotePoll
             post={post.id}

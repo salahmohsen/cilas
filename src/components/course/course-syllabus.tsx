@@ -17,6 +17,7 @@ import React from 'react'
 
 import {
   SyllabusFeed,
+  SyllabusSession,
   type SyllabusEntry,
   type SyllabusGroup,
 } from '@/components/arc/blocks/syllabus-feed/syllabus-feed'
@@ -72,26 +73,22 @@ export const directionOf = (text: string): 'rtl' | 'ltr' => {
   return arabic >= latin ? 'rtl' : 'ltr'
 }
 
+/** The parts of a course its syllabus reads. */
+export type SyllabusCourse = Pick<
+  Course,
+  'title' | 'subtitle' | 'description' | 'sessions' | 'schedule' | 'session_unit'
+>
+
 /**
- * The course's flow, session by session: the one syllabus the course page and
- * the course space both show. Each session carries its first meeting, its
- * month, its facet kinds and its text, rendered here once; the visual
- * editor's marks travel as plain data into the client component.
- *
- * `decorate` lets a caller change an entry (a space adds counts to it) without
- * copying how the entries are built.
+ * Each session as a syllabus entry: its first meeting, its month, its facet
+ * kinds and its text, built once for the whole syllabus and for one session
+ * shown elsewhere (a post that points at it).
  */
-export function CourseSyllabus({
-  course,
-  editable = false,
-  decorate,
-  className,
-}: {
-  course: Course
-  editable?: boolean
-  decorate?: (entry: SyllabusEntry, index: number) => SyllabusEntry
-  className?: string
-}) {
+function useSyllabusEntries(
+  course: SyllabusCourse,
+  editable: boolean,
+  decorate?: (entry: SyllabusEntry, index: number) => SyllabusEntry,
+): SyllabusEntry[] {
   const pe = editableIn(editable)
   const t = useTranslations('Course')
   const format = useFormatter()
@@ -101,7 +98,6 @@ export function CourseSyllabus({
   const lang = dir === 'rtl' ? 'ar' : 'en'
   const sessions = sessionsInOrder(course.sessions ?? [])
   const meetings = expandSchedule(course.schedule, course.sessions)
-  if (!sessions.length) return null
 
   /** "Tue 3 Mar". Days are Cairo calendar days, so format them in UTC. */
   const dayLabel = (day: string): string =>
@@ -114,15 +110,8 @@ export function CourseSyllabus({
     })
   const unitLabel = (n: number) =>
     course.session_unit === 'week' ? t('week', { number: n }) : t('session', { number: n })
-  const monthName = (month: string, width: 'long' | 'short') =>
-    format.dateTime(new Date(`${month}-01T00:00:00Z`), {
-      month: width,
-      year: 'numeric',
-      timeZone: 'UTC',
-      numberingSystem: numberingSystemOf(locale),
-    })
 
-  const entries: SyllabusEntry[] = sessions.map((session, i) => {
+  return sessions.map((session, i) => {
     // Sessions show in their `order`; the editor needs their place in the data.
     const at = Math.max(
       0,
@@ -171,6 +160,41 @@ export function CourseSyllabus({
     }
     return decorate ? decorate(entry, i) : entry
   })
+}
+
+/**
+ * The course's flow, session by session: the one syllabus the course page and
+ * the course space both show. The visual editor's marks travel as plain data
+ * into the client component.
+ *
+ * `decorate` lets a caller change an entry (a space adds counts to it) without
+ * copying how the entries are built.
+ */
+export function CourseSyllabus({
+  course,
+  editable = false,
+  decorate,
+  className,
+}: {
+  course: Course
+  editable?: boolean
+  decorate?: (entry: SyllabusEntry, index: number) => SyllabusEntry
+  className?: string
+}) {
+  const pe = editableIn(editable)
+  const t = useTranslations('Course')
+  const format = useFormatter()
+  const locale = useLocale()
+  const entries = useSyllabusEntries(course, editable, decorate)
+  if (!entries.length) return null
+
+  const monthName = (month: string, width: 'long' | 'short') =>
+    format.dateTime(new Date(`${month}-01T00:00:00Z`), {
+      month: width,
+      year: 'numeric',
+      timeZone: 'UTC',
+      numberingSystem: numberingSystemOf(locale),
+    })
 
   // Months as the sessions first introduce them, closest to oldest.
   const monthKeys: string[] = []
@@ -194,6 +218,26 @@ export function CourseSyllabus({
       className={className}
     />
   )
+}
+
+/**
+ * One session of a course as its syllabus shows it, open: a post that points
+ * at the session renders it from the course's live data. Null when the
+ * course no longer has that session.
+ */
+export function CourseSession({
+  course,
+  session,
+  label,
+}: {
+  course: SyllabusCourse
+  /** The id of one row of the course's sessions */
+  session: string
+  /** What the card is named for assistive tech */
+  label: string
+}) {
+  const entry = useSyllabusEntries(course, false).find((e) => e.id === session)
+  return entry ? <SyllabusSession entry={entry} label={label} /> : null
 }
 
 /**

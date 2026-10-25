@@ -1,5 +1,5 @@
 import config from '@payload-config'
-import { getTranslations } from 'next-intl/server'
+import { getFormatter, getTranslations } from 'next-intl/server'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
@@ -17,6 +17,8 @@ import { NOTICE } from '@/lib/space-consent'
 import { mayComment, membership } from '@/lib/spaces'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
 import { RichTextField } from '@/components/RichTextField'
+import { numberingSystemOf } from '@/lib/digits'
+import { expandSchedule, sessionsInOrder } from '@/lib/schedule'
 import { COMMUNITY_COVER, coverOf, memberState, participation, spaceFeed } from '@/lib/spaces-data'
 import { eventsAllow, postingAllows, visitRecord } from '@/lib/spaces-write'
 
@@ -136,6 +138,10 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
       postingAllows(space.posting ?? 'open', mem.role, k) &&
       (k !== 'event' || eventsAllow(space.events, mem.role)),
   )
+  // A moderator may point an announcement at one of the course's sessions,
+  // named as the syllabus numbers and dates it.
+  const sessionChoices =
+    moderator && landing.course ? await sessionOptions(landing.course, locale) : []
   const context: FeedContext = {
     archived: feed.archived,
     viewer: { personId: viewerPerson, moderator, me: { name: me.name, photo: me.photo } },
@@ -271,6 +277,7 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
               mentions={cards.map((c) => ({ id: c.id, name: c.name }))}
               consented={state.consented}
               notice={notice}
+              sessions={sessionChoices}
             />
           )}
           <div className={styles.feedBar}>
@@ -340,4 +347,34 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
       </div>
     </div>
   )
+}
+
+/** "Session 2: Title · Mon 4 May": one choice per session, in the syllabus's order. */
+async function sessionOptions(
+  course: Course,
+  locale: string,
+): Promise<{ value: string; label: string }[]> {
+  const [t, format] = await Promise.all([getTranslations('Course'), getFormatter()])
+  const meetings = expandSchedule(course.schedule, course.sessions)
+  return sessionsInOrder(course.sessions ?? []).flatMap((session, i) => {
+    if (!session.id) return []
+    const n = i + 1
+    const unit =
+      course.session_unit === 'week' ? t('week', { number: n }) : t('session', { number: n })
+    const own = meetings.filter((m) => m.session === n)
+    const day = (own.find((m) => !m.cancelled) ?? own[0])?.date
+    const when = day
+      ? format.dateTime(new Date(`${day}T00:00:00Z`), {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          timeZone: 'UTC',
+          numberingSystem: numberingSystemOf(locale),
+        })
+      : null
+    const label = [session.session_title ? `${unit}: ${session.session_title}` : unit, when]
+      .filter(Boolean)
+      .join(' · ')
+    return [{ value: session.id, label }]
+  })
 }

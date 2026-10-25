@@ -432,6 +432,87 @@ const voteViews = async (
   return out
 }
 
+/** The parts of a course a session card reads: its sessions, their dates, and the text that sets its direction. */
+export type SessionCourse = Pick<
+  Course,
+  'id' | 'slug' | 'title' | 'subtitle' | 'description' | 'sessions' | 'schedule' | 'session_unit'
+>
+
+/**
+ * The course session a post points at, as the reader may see it: `shown`
+ * with the live course (a cancelled session shows as cancelled), `gone` when
+ * the course no longer has that session, `hidden` when the reader may not
+ * read the course.
+ */
+export type SessionView =
+  | { state: 'shown'; course: SessionCourse; session: string }
+  | { state: 'gone' }
+  | { state: 'hidden' }
+
+/**
+ * Every post's session in one read of the course, through the reader's
+ * access: a post shows no more of the course than its page would.
+ */
+const sessionViews = async (
+  payload: Payload,
+  user: null | User,
+  posts: SpacePost[],
+  courseId: number | null,
+  locale: 'en' | 'ar',
+): Promise<Map<number, SessionView>> => {
+  const out = new Map<number, SessionView>()
+  const linked = posts.filter((p) => p.course_session && !p.deleted_at)
+  if (!linked.length) return out
+  const { docs } =
+    courseId != null
+      ? await payload.find({
+          collection: 'courses',
+          user: user ?? undefined,
+          depth: 0,
+          limit: 1,
+          locale,
+          overrideAccess: false,
+          select: {
+            slug: true,
+            title: true,
+            subtitle: true,
+            description: true,
+            sessions: true,
+            schedule: true,
+            session_unit: true,
+          },
+          where: { id: { equals: courseId } },
+        })
+      : { docs: [] }
+  const course = docs[0] as SessionCourse | undefined
+  // Unread, the course is either deleted or not the reader's to read; only
+  // the server's count tells the two apart.
+  const unread: SessionView =
+    !course &&
+    courseId != null &&
+    (
+      await payload.count({
+        collection: 'courses',
+        overrideAccess: true,
+        where: { id: { equals: courseId } },
+      })
+    ).totalDocs > 0
+      ? { state: 'hidden' }
+      : { state: 'gone' }
+  for (const p of linked) {
+    const session = p.course_session!
+    out.set(
+      p.id,
+      !course
+        ? unread
+        : (course.sessions ?? []).some((s) => s.id === session)
+          ? { state: 'shown', course, session }
+          : { state: 'gone' },
+    )
+  }
+  return out
+}
+
 /** One row of the space feed (spec §7): the post with its roll-up counts. */
 export type FeedRow = {
   post: SpacePost
@@ -446,6 +527,8 @@ export type FeedRow = {
   files: SpaceFileRef[]
   reactions: Reactions
   vote: VoteView | null
+  /** The course session the post points at, if any */
+  session: SessionView | null
 }
 
 /**
@@ -482,9 +565,10 @@ export const spaceFeed = async (
   })
 
   const postIds = docs.map((p) => p.id)
-  const [threads, votes, { docs: reactions }, { docs: postFiles }] = await Promise.all([
+  const [threads, votes, sessions, { docs: reactions }, { docs: postFiles }] = await Promise.all([
     postThreads(payload, user, postIds),
     voteViews(payload, user, docs, locale),
+    sessionViews(payload, user, docs, row.kind === 'course' ? relId(row.course) : null, locale),
     postIds.length
       ? payload.find({
           collection: 'space-reactions',
@@ -524,6 +608,7 @@ export const spaceFeed = async (
     files: filesOf.get(p.id) ?? [],
     reactions: reactionsOf.get(p.id) ?? NO_REACTIONS,
     vote: votes.get(p.id) ?? null,
+    session: sessions.get(p.id) ?? null,
   }))
   return { rows, settings, archived, lastMeeting, daysSince }
 }
@@ -720,29 +805,37 @@ export const postView = async (
     .catch(() => null)
   if (!post || relId(post.space as never) !== space.id) return null
 
-  const [{ archived }, threads, votes, { docs: reactions }, { docs: files }] = await Promise.all([
-    archiveState(payload, space),
-    postThreads(payload, user, [post.id]),
-    voteViews(payload, user, [post], locale),
-    payload.find({
-      collection: 'space-reactions',
-      user: user ?? undefined,
-      depth: 0,
-      pagination: false,
-      overrideAccess: false,
-      select: { post: true, comment: true, account: true, reaction: true },
-      where: { and: [{ post: { equals: post.id } }, { comment: { exists: false } }] },
-    }),
-    payload.find({
-      collection: 'space-files',
-      user: user ?? undefined,
-      depth: 0,
-      pagination: false,
-      overrideAccess: false,
-      sort: 'createdAt',
-      where: { post: { equals: post.id } },
-    }),
-  ])
+  const [{ archived }, threads, votes, sessions, { docs: reactions }, { docs: files }] =
+    await Promise.all([
+      archiveState(payload, space),
+      postThreads(payload, user, [post.id]),
+      voteViews(payload, user, [post], locale),
+      sessionViews(
+        payload,
+        user,
+        [post],
+        space.kind === 'course' ? relId(space.course) : null,
+        locale,
+      ),
+      payload.find({
+        collection: 'space-reactions',
+        user: user ?? undefined,
+        depth: 0,
+        pagination: false,
+        overrideAccess: false,
+        select: { post: true, comment: true, account: true, reaction: true },
+        where: { and: [{ post: { equals: post.id } }, { comment: { exists: false } }] },
+      }),
+      payload.find({
+        collection: 'space-files',
+        user: user ?? undefined,
+        depth: 0,
+        pagination: false,
+        overrideAccess: false,
+        sort: 'createdAt',
+        where: { post: { equals: post.id } },
+      }),
+    ])
   const onPost = tally(reactions, (r) => relId(r.post), user)
   const thread = threads.get(post.id)
 
@@ -757,6 +850,7 @@ export const postView = async (
       files: [],
       reactions: onPost.get(post.id) ?? NO_REACTIONS,
       vote: votes.get(post.id) ?? null,
+      session: sessions.get(post.id) ?? null,
     },
     files: deleted ? [] : files.filter((f) => f.comment == null).map(fileRef),
     comments: thread?.comments ?? [],

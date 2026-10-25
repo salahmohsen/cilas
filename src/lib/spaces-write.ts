@@ -7,7 +7,7 @@ import { spacesSettings, mode, spaceOpenOn, membership, mayComment } from '@/lib
 import { FILE_KINDS } from '@/lib/form-files'
 import { FILE_LIMITS } from '@/lib/space-file-limits'
 import { ABOUT_MAX } from '@/lib/space-about'
-import { EVENT_LOCATION_MAX, VOTE_OPTIONS } from '@/lib/space-post-kinds'
+import { EVENT_LOCATION_MAX, SESSION_KINDS, VOTE_OPTIONS } from '@/lib/space-post-kinds'
 import { SPACE_FILE_LIMIT } from '@/collections/SpaceFiles'
 import type { EventPosting, SpaceLike, PostingLevel } from '@/lib/spaces'
 import type { User } from '@/payload-types'
@@ -34,6 +34,7 @@ export type WriteError =
   | 'vote'
   | 'about'
   | 'upload'
+  | 'session'
 
 export type WriteResult<T> =
   | { ok: true; data: T; notify?: (() => Promise<void>) | null }
@@ -287,6 +288,32 @@ export const shapeData = (shape: PostShape, now = new Date()): Record<string, un
   }
 }
 
+/**
+ * Whether a post may carry this course session: a moderator's post of a
+ * session kind, in a course space, naming one row of that course's sessions.
+ */
+export const sessionAllows = async (
+  payload: Payload,
+  space: SpaceLike,
+  role: string,
+  kind: string,
+  session: string,
+): Promise<boolean> => {
+  if (role !== 'moderator' || !SESSION_KINDS.includes(kind)) return false
+  const courseId = space.kind === 'course' ? idOf(space.course) : null
+  if (courseId === null) return false
+  const course = (await payload
+    .findByID({
+      collection: 'courses',
+      id: courseId,
+      depth: 0,
+      overrideAccess: true,
+      select: { sessions: true },
+    })
+    .catch(() => null)) as { sessions?: { id?: string | null }[] | null } | null
+  return (course?.sessions ?? []).some((s) => s.id === session)
+}
+
 /** Whether this member may start an event in this space (on top of the posting level). */
 export const eventsAllow = (events: EventPosting | null | undefined, role: string): boolean =>
   (events ?? 'members') === 'members' || role === 'moderator'
@@ -297,6 +324,8 @@ export const postCreate = async (
       space: number
       body: string
       files?: PostFile[]
+      /** One row id of the course's sessions */
+      session?: string | null
     } & PostShape
   >,
 ): Promise<WriteResult<{ id: number }>> => {
@@ -314,6 +343,9 @@ export const postCreate = async (
     return err('events')
   const extra = shapeData(i)
   if (!extra) return err(kind === 'vote' ? 'vote' : 'event')
+  const session = i.session?.trim() || null
+  if (session && !(await sessionAllows(payload, space, mem.role, kind, session)))
+    return err('session')
 
   const mentioned = validateMentions(body, await mentionSafelist(payload, spaceId))
   if (mentioned.invalid.length > 0) return err('mention')
@@ -334,6 +366,7 @@ export const postCreate = async (
       kind,
       body,
       ...extra,
+      ...(session ? { course_session: session } : {}),
       last_activity_at: new Date().toISOString(),
       ...(kind === 'announcement' ? { pinned: true } : {}),
     } as never,

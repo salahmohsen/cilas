@@ -132,6 +132,7 @@ export async function postCreateAction(
     ...shape,
     body: text(form, 'body'),
     files,
+    session: text(form, 'session') || null,
   }).catch((error) => {
     payload.logger.error({ err: error, msg: 'postCreate threw' })
     return null

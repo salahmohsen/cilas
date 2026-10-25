@@ -964,7 +964,14 @@
     "dialogFailed": "The post could not be loaded. Open its page instead.",
     "voteResults": "Vote results",
     "saveError_upload": "The files could not be saved. Try again, or attach fewer or smaller files.",
-    "saveError_failed": "Something went wrong. Try again."
+    "saveError_failed": "Something went wrong. Try again.",
+    "sessionPick": "Session",
+    "sessionPickHint": "Members see the session's materials and in-class prompt under the post.",
+    "sessionNone": "No session",
+    "sessionLabel": "Course session",
+    "sessionGone": "This session is no longer in the course syllabus.",
+    "sessionHidden": "This session is in a course you cannot open.",
+    "saveError_session": "Only a fellow's announcement can point at a session, and only at a session of this course."
   },
   "SpaceComment": {
     "write": "Comment",

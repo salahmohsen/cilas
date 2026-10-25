@@ -18,6 +18,7 @@ import { PostPhotos } from './photo-grid'
 import { PostBody } from './post-body'
 import { PostDialog } from './post-dialog-link'
 import { PostFoot } from './post-foot'
+import { PostSession } from './post-session'
 import { spacePeopleCards } from './space-people'
 import styles from './space.module.css'
 import { VotePoll } from './vote-poll'
@@ -114,6 +115,7 @@ export async function PostArticle({
       {!deleted && post.kind === 'event' && post.event_starts_at && (
         <EventDetails startsAt={post.event_starts_at} location={post.event_location ?? ''} />
       )}
+      {!deleted && row.session && <PostSession session={row.session} />}
       {!deleted && row.vote && (
         <VotePoll
           post={post.id}
