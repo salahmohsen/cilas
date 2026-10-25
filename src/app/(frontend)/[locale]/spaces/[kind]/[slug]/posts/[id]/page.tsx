@@ -23,7 +23,7 @@ export default async function KindSlugPostPage({ params }: Props) {
   const spacePath = `/${locale}/spaces/${kind}/${slug}`
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`${spacePath}/posts/${postId}`)}`)
-  const landing = await spaceLanding(await getPayload({ config }), user, kind, slug)
+  const landing = await spaceLanding(await getPayload({ config }), user, kind, slug, locale)
   if (!landing) notFound()
   return (
     <PostPage locale={locale} user={user} landing={landing} postId={postId} spacePath={spacePath} />

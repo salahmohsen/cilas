@@ -87,11 +87,19 @@ export async function SpacePage({ locale, user, landing, tab, shown, path }: Spa
   const title =
     landing.course?.title ??
     landing.programme?.title ??
-    (space.kind === 'community' ? t('community') : t(space.kind))
+    (space.kind === 'community' ? space.name?.trim() || t('community') : t(space.kind))
   const defaultAbout =
     landing.course?.summary ??
     landing.programme?.tagline ??
-    (space.kind === 'community' ? t('communityAbout') : '')
+    (space.kind === 'community'
+      ? t(
+          space.audience === 'fellows'
+            ? 'communityAboutFellows'
+            : space.audience === 'admins'
+              ? 'communityAboutAdmins'
+              : 'communityAbout',
+        )
+      : '')
   const about = custom.trim() || defaultAbout
   const notice = NOTICE[locale === 'ar' ? 'ar' : 'en']
   const viewerPerson = personOf(user)

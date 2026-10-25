@@ -25,7 +25,7 @@ export default async function KindSlugPage({ params, searchParams }: Props) {
   const path = `/${locale}/spaces/${kind}/${slug}`
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(path)}`)
-  const landing = await spaceLanding(await getPayload({ config }), user, kind, slug)
+  const landing = await spaceLanding(await getPayload({ config }), user, kind, slug, locale)
   if (!landing) notFound()
   return (
     <SpacePage

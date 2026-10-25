@@ -830,7 +830,9 @@
     "events_moderators": "Moderators only",
     "aboutField": "About this space",
     "aboutFieldHint": "Shown to members in this language. Leave empty for the default text.",
-    "aboutReset": "Reset to default"
+    "aboutReset": "Reset to default",
+    "communityAboutFellows": "A space for fellows. Share ideas, ask questions and plan together.",
+    "communityAboutAdmins": "A space for admins. Coordinate and share notes with the team."
   },
   "SpacePost": {
     "newPost": "New post",

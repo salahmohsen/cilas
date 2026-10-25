@@ -132,6 +132,7 @@ describe('spaces core', () => {
       where: { kind: { equals: 'community' } },
       depth: 0,
       limit: 1,
+      sort: 'id',
       overrideAccess: true,
     })
     if (existing.docs[0]) community = existing.docs[0] as Space
@@ -366,8 +367,9 @@ describe('spaces core', () => {
     expect(before.courses.map((s) => s.title)).toEqual(['Probe Course'])
     expect(before.courses[0]?.href).toBe('/en/spaces/course/probe-space-course')
     expect(before.courses[0]?.unread).toBe(1)
-    expect(before.community?.title).toBe('Community')
-    expect(before.community?.href).toBe('/en/spaces/community')
+    const listed = before.communities.find((c) => c.space.id === community.id)
+    expect(listed?.title).toBe('Community')
+    expect(listed?.href).toBe(`/en/spaces/community/${community.id}`)
 
     // The fellow posts an older row; the student posts their own; the visit
     // stamp lands; then a newer fellow row. Only the newer one is unread —
@@ -571,7 +573,7 @@ describe('spaces core', () => {
     })
     expect(await spaceLanding(payload, student, 'community', '')).toBeNull()
     expect(await mySpaces(payload, student, 'en')).toEqual({
-      community: null,
+      communities: [],
       cohorts: [],
       courses: [],
     })

@@ -88,14 +88,14 @@ export default async function MySpacesPage({ params }: Props) {
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`/${locale}/spaces`)}`)
 
-  const [t, ts, format, { community, cohorts, courses }] = await Promise.all([
+  const [t, ts, format, { communities, cohorts, courses }] = await Promise.all([
     getTranslations('Spaces'),
     getTranslations('SpaceShortcuts'),
     getFormatter(),
     mySpaces(await getPayload({ config }), user, locale),
   ])
   const sections = [
-    { id: 'community', label: t('community'), rows: community ? [community] : [] },
+    { id: 'community', label: t('community'), rows: communities },
     { id: 'cohorts', label: t('cohort'), rows: cohorts },
     {
       id: 'courses',
@@ -126,7 +126,11 @@ export default async function MySpacesPage({ params }: Props) {
                 <li key={row.space.id} className={styles.tileItem}>
                   <Link href={row.href} className={styles.tile}>
                     <span className={styles.tileTitle}>
-                      <bdi>{row.space.kind === 'community' ? t('community') : row.title}</bdi>
+                      <bdi>
+                        {row.space.kind === 'community' && !row.space.name?.trim()
+                          ? t('community')
+                          : row.title}
+                      </bdi>
                     </span>
                     <span dir="auto" className={styles.tileText}>
                       {row.preview ?? t('noPostsYet')}

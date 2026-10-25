@@ -103,14 +103,14 @@ export const mySpaces = async (
   user: null | User,
   locale: string,
 ): Promise<{
-  community: SpaceSummary | null
+  communities: SpaceSummary[]
   cohorts: SpaceSummary[]
   courses: SpaceSummary[]
 }> => {
   const settings = await spacesSettings(payload)
-  if (mode(settings) === 'off') return { community: null, cohorts: [], courses: [] }
+  if (mode(settings) === 'off') return { communities: [], cohorts: [], courses: [] }
   const ids = await readableSpaceIds(payload, user, settings)
-  if (!ids || !user) return { community: null, cohorts: [], courses: [] }
+  if (!ids || !user) return { communities: [], cohorts: [], courses: [] }
 
   // Spaces read internals of the membership layer (the ids are exactly
   // readableSpaceIds — the same override `factsFor` uses; the collection rule
@@ -120,6 +120,8 @@ export const mySpaces = async (
     depth: 0,
     pagination: false,
     overrideAccess: true,
+    locale: locale === 'ar' ? 'ar' : 'en',
+    sort: 'id',
     where: ids === true ? undefined : { id: { in: ids } },
   })
 
@@ -196,7 +198,7 @@ export const mySpaces = async (
   }
 
   const person = personOf(user)
-  let community: SpaceSummary | null = null
+  const communities: SpaceSummary[] = []
   const cohorts: SpaceSummary[] = []
   const courses: SpaceSummary[] = []
   for (const s of docs) {
@@ -218,10 +220,10 @@ export const mySpaces = async (
     const programme = s.kind === 'cohort' ? programmeOf.get(relId(s.programme) ?? -1) : undefined
     const summary: SpaceSummary = {
       space: s,
-      title: course?.title ?? programme?.title ?? COMMUNITY_LABEL,
+      title: course?.title ?? programme?.title ?? (s.name?.trim() || COMMUNITY_LABEL),
       href:
         s.kind === 'community'
-          ? `/${locale}/spaces/community`
+          ? `/${locale}/spaces/community/${s.id}`
           : `/${locale}/spaces/${s.kind}/${course?.slug ?? programme?.slug ?? ''}`,
       unread,
       lastActivity,
@@ -233,11 +235,11 @@ export const mySpaces = async (
         )?.body,
       ),
     }
-    if (s.kind === 'community') community = community ?? summary
+    if (s.kind === 'community') communities.push(summary)
     else if (s.kind === 'cohort') cohorts.push(summary)
     else courses.push(summary)
   }
-  return { community, cohorts, courses }
+  return { communities, cohorts, courses }
 }
 
 /**
@@ -752,6 +754,7 @@ export const spaceLanding = async (
   user: null | User,
   kind: Space['kind'],
   slug: string,
+  locale: string = 'en',
 ): Promise<{ space: Space; course?: Course; programme?: Programme } | null> => {
   const settings = await spacesSettings(payload)
   if (mode(settings) === 'off') return null
@@ -759,12 +762,22 @@ export const spaceLanding = async (
   let space: Space | null = null
   let extra: { course?: Course; programme?: Programme } = {}
   if (kind === 'community') {
+    // No slug: the first community space this reader may open (the old
+    // address). A number: that one space.
     const { docs } = await payload.find({
       collection: 'spaces',
       user: user ?? undefined,
       depth: 0,
+      limit: 1,
+      locale: locale === 'ar' ? 'ar' : 'en',
+      sort: 'id',
       overrideAccess: false,
-      where: { kind: { equals: 'community' } },
+      where: {
+        and: [
+          { kind: { equals: 'community' } },
+          ...(slug ? [{ id: { equals: Number(slug) } }] : []),
+        ],
+      },
     })
     space = docs[0] ?? null
   } else {

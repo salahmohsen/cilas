@@ -53,7 +53,7 @@ export async function PostPage({
   const spaceTitle =
     landing.course?.title ??
     landing.programme?.title ??
-    (space.kind === 'community' ? ts('community') : ts(space.kind))
+    (space.kind === 'community' ? space.name?.trim() || ts('community') : ts(space.kind))
   const href = `${spacePath}/posts/${post.id}`
 
   return (

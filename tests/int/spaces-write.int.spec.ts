@@ -25,7 +25,8 @@ import {
 } from '@/lib/spaces-write'
 import { personOf } from '@/access'
 import { ABOUT_MAX } from '@/lib/space-about'
-import { postSpace, postView, spaceFeed } from '@/lib/spaces-data'
+import { mentionSafelist } from '@/lib/space-members'
+import { mySpaces, postSpace, postView, spaceFeed } from '@/lib/spaces-data'
 
 let payload: Payload
 let modeBefore: 'off' | 'trial' | 'on' = 'off'
@@ -158,6 +159,7 @@ describe('spaces write', () => {
       where: { kind: { equals: 'community' } },
       overrideAccess: true,
       limit: 1,
+      sort: 'id',
     })
     if (spaces.length === 0) {
       const s = await payload.create({
@@ -457,7 +459,7 @@ describe('spaces write', () => {
     if (!community_.ok) return
     track('space-posts', community_.data.id)
     expect(await spaceLink(payload, community, community_.data.id)).toBe(
-      `/spaces/community/posts/${community_.data.id}`,
+      `/spaces/community/${community.id}/posts/${community_.data.id}`,
     )
     expect(await spaceLink(payload, cohortSpace, 7)).toBe('/spaces/cohort/probe-bridge/posts/7')
     for (const account of [a.account, b.account]) {
@@ -1444,5 +1446,87 @@ describe('spaces write', () => {
         await voteSet({ payload, user: student, post: plain.data.id, options: [] }),
       ).toMatchObject({ ok: false, error: 'not-found' })
     }
+  })
+  it('keeps a community space to its audience', async () => {
+    const make = async (audience: 'all' | 'fellows' | 'admins', name: string) => {
+      const row = (await payload.create({
+        collection: 'spaces',
+        data: { kind: 'community', audience, name },
+        overrideAccess: true,
+      })) as unknown as Space
+      track('spaces', row.id)
+      return row
+    }
+    const fellows = await make('fellows', 'Probe fellows hall')
+    const admins = await make('admins', 'Probe admin room')
+    const everyone = await make('all', 'Probe tech community')
+
+    const post = (user: User, space: Space) =>
+      postCreate({ payload, user, space: space.id, kind: 'discussion', body: 'Probe audience' })
+    const created: number[] = []
+    const note = (r: Awaited<ReturnType<typeof post>>) => {
+      if (r.ok) {
+        track('space-posts', r.data.id)
+        created.push(r.data.id)
+      }
+      return r
+    }
+
+    // Writing follows membership: fellows and admins in, a plain student out.
+    expect(note(await post(fellow, fellows)).ok).toBe(true)
+    expect(note(await post(admin, fellows)).ok).toBe(true)
+    expect(await post(student, fellows)).toMatchObject({ ok: false, error: 'not-member' })
+    expect(await post(stranger, fellows)).toMatchObject({ ok: false, error: 'not-member' })
+    expect(note(await post(admin, admins)).ok).toBe(true)
+    expect(await post(fellow, admins)).toMatchObject({ ok: false, error: 'not-member' })
+    expect(note(await post(student, everyone)).ok).toBe(true)
+
+    // Reading follows it too: the space row is hidden from outsiders.
+    const readable = async (user: User) =>
+      (
+        await payload.find({
+          collection: 'spaces',
+          user,
+          overrideAccess: false,
+          where: { kind: { equals: 'community' } },
+          pagination: false,
+        })
+      ).docs.map((d) => d.id)
+    expect(await readable(fellow)).toEqual(expect.arrayContaining([fellows.id, everyone.id]))
+    expect(await readable(fellow)).not.toContain(admins.id)
+    expect(await readable(student)).toContain(everyone.id)
+    expect(await readable(student)).not.toContain(fellows.id)
+    expect(await readable(student)).not.toContain(admins.id)
+    expect(await readable(admin)).toEqual(
+      expect.arrayContaining([fellows.id, admins.id, everyone.id]),
+    )
+
+    // My spaces lists only the spaces the reader may open, with the admin's name.
+    const mine = await mySpaces(payload, student, 'en')
+    expect(mine.communities.map((c) => c.title)).toContain('Probe tech community')
+    expect(mine.communities.map((c) => c.title)).not.toContain('Probe fellows hall')
+    const fellowMine = await mySpaces(payload, fellow, 'en')
+    expect(fellowMine.communities.find((c) => c.space.id === fellows.id)?.href).toBe(
+      `/en/spaces/community/${fellows.id}`,
+    )
+
+    // Mentions and notification recipients draw on the same audience.
+    const fellowSet = await mentionSafelist(payload, fellows.id)
+    expect(fellowSet.has(fellowPerson)).toBe(true)
+    expect(fellowSet.has(studentPerson)).toBe(false)
+    const adminSet = await mentionSafelist(payload, admins.id)
+    expect(adminSet.has(personOf(admin)!)).toBe(true)
+    expect(adminSet.has(fellowPerson)).toBe(false)
+    expect((await mentionSafelist(payload, everyone.id)).has(studentPerson)).toBe(true)
+
+    // A course space takes no custom name or audience.
+    const renamed = await payload.update({
+      collection: 'spaces',
+      id: courseSpace.id,
+      data: { name: 'Probe not allowed', audience: 'admins' },
+      overrideAccess: true,
+    })
+    expect(renamed.name).toBeFalsy()
+    expect(renamed.audience).toBe('all')
   })
 })

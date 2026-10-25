@@ -4,7 +4,6 @@ import { getTranslations } from 'next-intl/server'
 import { notFound, redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { SpacePage } from '@/components/space/space-page'
 import { currentReader } from '@/lib/reader'
 import { spaceLanding } from '@/lib/spaces-data'
 
@@ -18,22 +17,16 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('metaTitle'), robots: { index: false } }
 }
 
-/** Spec §2: the community space has no document behind it, so no slug. */
+/** The old address: sends the reader to the first community space they may open. */
 export default async function CommunityPage({ params, searchParams }: Props) {
   const [{ locale }, { tab, shown }] = await Promise.all([params, searchParams])
   const path = `/${locale}/spaces/community`
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(path)}`)
-  const landing = await spaceLanding(await getPayload({ config }), user, 'community', '')
+  const landing = await spaceLanding(await getPayload({ config }), user, 'community', '', locale)
   if (!landing) notFound()
-  return (
-    <SpacePage
-      locale={locale}
-      user={user}
-      landing={landing}
-      tab={tab === 'announcements' ? 'announcements' : 'all'}
-      shown={Math.min(Math.max(Number(shown) || 0, 0), 500)}
-      path={path}
-    />
-  )
+  const query = new URLSearchParams()
+  if (tab) query.set('tab', tab)
+  if (shown) query.set('shown', shown)
+  redirect(`${path}/${landing.space.id}${query.size ? `?${query}` : ''}`)
 }

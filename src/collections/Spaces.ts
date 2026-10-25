@@ -3,21 +3,21 @@ import type { CollectionConfig } from 'payload'
 import { isAdminUser } from '@/access'
 import { readSpaces } from '@/lib/spaces'
 import { ABOUT_MAX } from '@/lib/space-about'
-import type { EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
+import type { CommunityAudience, EventPosting, PostingLevel, SpaceKind } from '@/lib/spaces'
 
 /**
  * One row per space (spec §1). Its settings live here; its members never do,
  * they are worked out from the courses, enrollments, memberships and the
  * account's person (src/lib/spaces.ts). Created by hooks when a course or a
- * programme record is first published, and by the seed for the community
- * space — never by hand in the admin.
+ * programme record is first published. Community spaces are made by an admin
+ * in the admin panel (a name and an audience) and by the seed.
  */
 export const Spaces: CollectionConfig = {
   slug: 'spaces',
   labels: { singular: 'Space', plural: 'Spaces' },
   access: {
     read: readSpaces,
-    // Rows are made by hooks and the seed. An admin may fix a row by hand.
+    // Course and cohort rows are made by hooks, community rows by an admin.
     create: ({ req }) => isAdminUser(req.user),
     update: ({ req }) => isAdminUser(req.user),
     delete: ({ req }) => isAdminUser(req.user),
@@ -37,6 +37,34 @@ export const Spaces: CollectionConfig = {
         { label: 'Course', value: 'course' },
       ] satisfies { label: string; value: SpaceKind }[],
       access: { update: () => false }, // the kind never changes after the row exists
+    },
+    {
+      // Course and cohort spaces are named by their course or programme.
+      name: 'name',
+      label: 'Space name',
+      type: 'text',
+      localized: true,
+      maxLength: 80,
+      admin: {
+        description: 'For example “Tech community”. Empty shows “Community”.',
+        condition: (data) => (data as { kind?: string }).kind === 'community',
+      },
+    },
+    {
+      name: 'audience',
+      label: 'Who may join',
+      type: 'select',
+      required: true,
+      defaultValue: 'all',
+      options: [
+        { label: 'All members', value: 'all' },
+        { label: 'Fellows only', value: 'fellows' },
+        { label: 'Admins only', value: 'admins' },
+      ] satisfies { label: string; value: CommunityAudience }[],
+      admin: {
+        description: 'A fellow is listed on a course or holds a fellow role in a programme.',
+        condition: (data) => (data as { kind?: string }).kind === 'community',
+      },
     },
     {
       name: 'course',
@@ -100,6 +128,19 @@ export const Spaces: CollectionConfig = {
       },
     },
   ],
+  hooks: {
+    beforeChange: [
+      ({ data, originalDoc }) => {
+        // A custom name or audience means nothing outside a community space.
+        const kind = data.kind ?? originalDoc?.kind
+        if (kind && kind !== 'community') {
+          delete data.name
+          data.audience = 'all'
+        }
+        return data
+      },
+    ],
+  },
   indexes: [
     { fields: ['course'], unique: true },
     { fields: ['programme'], unique: true },

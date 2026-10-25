@@ -1,9 +1,10 @@
 import type { Payload } from 'payload'
 
-import { personOf } from '@/access'
+import { isAdminUser, personOf } from '@/access'
 import type { SOCIAL_PLATFORMS } from '@/fields/social'
 import { ENROLLED } from '@/lib/list-members'
 import { plainText } from '@/lib/plaintext'
+import { fellowPersonIds, type CommunityAudience } from '@/lib/spaces'
 
 /** Where to find a person: their website first, then each social profile. */
 export type PersonLink = { kind: 'website' | (typeof SOCIAL_PLATFORMS)[number]; url: string }
@@ -42,6 +43,7 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
     kind: 'community' | 'cohort' | 'course'
     course?: number | { id: number } | null
     programme?: number | { id: number } | null
+    audience?: CommunityAudience | null
   }
   const ids = new Set<number>()
 
@@ -53,9 +55,12 @@ export const mentionSafelist = async (payload: Payload, spaceId: number): Promis
       pagination: false,
       limit: 10000,
     })
+    // The same audience rule as membershipOf (src/lib/spaces.ts), as a list.
+    const fellows = space.audience === 'fellows' ? await fellowPersonIds(payload) : null
     for (const u of docs) {
+      if (space.audience === 'admins' && !isAdminUser(u)) continue
       const pid = personOf(u)
-      if (pid) ids.add(pid)
+      if (pid && (!fellows || fellows.has(pid))) ids.add(pid)
     }
     return ids
   }

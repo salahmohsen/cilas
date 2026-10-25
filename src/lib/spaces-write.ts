@@ -209,7 +209,7 @@ export const spaceLink = async (
   space: SpaceLike,
   postId: number,
 ): Promise<string> => {
-  if (space.kind === 'community') return `/spaces/community/posts/${postId}`
+  if (space.kind === 'community') return `/spaces/community/${space.id}/posts/${postId}`
   const target = space.kind === 'course' ? idOf(space.course) : idOf(space.programme)
   const doc =
     target === null
@@ -228,7 +228,12 @@ export const spaceLink = async (
 
 /** The space's display name, quoted, for notification detail text. */
 const spaceNameOf = async (payload: Payload, space: SpaceLike): Promise<string> => {
-  if (space.kind === 'community') return '“the community space”'
+  if (space.kind === 'community') {
+    const row = (await payload
+      .findByID({ collection: 'spaces', id: space.id, depth: 0, overrideAccess: true })
+      .catch(() => null)) as { name?: string | null } | null
+    return row?.name?.trim() ? `“${row.name.trim()}”` : '“the community space”'
+  }
   const slug = space.kind === 'course' ? idOf(space.course) : idOf(space.programme)
   if (slug === null) return '“the space”'
   const doc = (await payload

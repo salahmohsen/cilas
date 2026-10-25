@@ -14,6 +14,8 @@ export type SpaceKind = 'community' | 'cohort' | 'course'
 export type PostingLevel = 'open' | 'members_comment' | 'fellows_only'
 /** Who may start an event post, on top of the posting level. */
 export type EventPosting = 'members' | 'moderators'
+/** Who a community space is for. Course and cohort spaces ignore it. */
+export type CommunityAudience = 'all' | 'fellows' | 'admins'
 
 export type SpacesSettings = {
   spaces_mode?: 'off' | 'trial' | 'on' | null
@@ -29,6 +31,7 @@ export type SpaceLike = {
   programme?: number | { id: number } | null
   posting?: PostingLevel | null
   reopened?: boolean | null
+  audience?: CommunityAudience | null
 }
 
 export type SpaceFacts = {
@@ -42,6 +45,8 @@ export type SpaceFacts = {
   fellowProgrammes?: number[] | null
   /** whether the account has a linked person (community rule) */
   hasPerson?: boolean | null
+  /** whether the person is a fellow of any course or programme (audience `fellows`) */
+  isFellow?: boolean | null
 }
 
 const relIds = (v: Array<number | { id: number }> | null | undefined) =>
@@ -102,6 +107,9 @@ export const membershipOf = (
   if (isAdmin) return { role: 'moderator' }
   switch (space.kind) {
     case 'community':
+      // Admins already returned above, so `admins` lets nobody else in.
+      if (space.audience === 'admins') return { role: 'none' }
+      if (space.audience === 'fellows') return { role: facts.isFellow ? 'member' : 'none' }
       return { role: facts.hasPerson ? 'member' : 'none' }
     case 'course': {
       const cid = idOf(space.course)
@@ -118,6 +126,62 @@ export const membershipOf = (
   }
 }
 
+/** Roles in a programme that make a person a fellow. */
+const FELLOW_ROLES = ['residential_fellow', 'visiting_fellow']
+
+/** A fellow is listed on any course's fellows or holds a fellow role in any programme. */
+const isFellowPerson = async (payload: Payload, personId: number): Promise<boolean> => {
+  const [{ totalDocs: listed }, { totalDocs: held }] = await Promise.all([
+    payload.find({
+      collection: 'courses',
+      where: { fellows: { in: [personId] } },
+      select: { slug: true },
+      depth: 0,
+      draft: true,
+      limit: 1,
+      overrideAccess: true,
+    }),
+    payload.find({
+      collection: 'memberships',
+      where: { and: [{ person: { equals: personId } }, { role: { in: FELLOW_ROLES } }] },
+      select: { role: true },
+      depth: 0,
+      limit: 1,
+      overrideAccess: true,
+    }),
+  ])
+  return listed + held > 0
+}
+
+/** Every person who is a fellow somewhere (the member list of a `fellows` community space). */
+export const fellowPersonIds = async (payload: Payload): Promise<Set<number>> => {
+  const [courses, memberships] = await Promise.all([
+    payload.find({
+      collection: 'courses',
+      select: { fellows: true },
+      depth: 0,
+      draft: true,
+      pagination: false,
+      overrideAccess: true,
+    }),
+    payload.find({
+      collection: 'memberships',
+      where: { role: { in: FELLOW_ROLES } },
+      select: { person: true },
+      depth: 0,
+      pagination: false,
+      overrideAccess: true,
+    }),
+  ])
+  const ids = new Set<number>()
+  for (const c of courses.docs) for (const f of relIds(c.fellows as never)) ids.add(f)
+  for (const m of memberships.docs) {
+    const id = idOf(m.person as never)
+    if (id != null) ids.add(id)
+  }
+  return ids
+}
+
 /**
  * Gathers the facts for one person with as few queries as possible:
  * enrollments by person, programme memberships by person, and the courses
@@ -127,7 +191,7 @@ export const membershipOf = (
 export const factsFor = async (
   payload: Payload,
   personId: number | null,
-  spaces: Pick<SpaceLike, 'kind' | 'course' | 'programme'>[],
+  spaces: Pick<SpaceLike, 'kind' | 'course' | 'programme' | 'audience'>[],
 ): Promise<SpaceFacts> => {
   const facts: SpaceFacts = { hasPerson: personId !== null }
   const courseIds = new Set(
@@ -143,6 +207,9 @@ export const factsFor = async (
       .filter(Boolean),
   )
   if (personId !== null) {
+    if (spaces.some((s) => s.kind === 'community' && s.audience === 'fellows')) {
+      facts.isFellow = await isFellowPerson(payload, personId)
+    }
     if (courseIds.size) {
       const { docs } = await payload.find({
         collection: 'enrollments',
@@ -246,7 +313,7 @@ export const readableSpaceIds = cache(
       pagination: false,
       overrideAccess: true,
     })
-    const envelope: Pick<SpaceLike, 'kind' | 'course' | 'programme'>[] = docs
+    const envelope: Pick<SpaceLike, 'kind' | 'course' | 'programme' | 'audience'>[] = docs
     const facts = await factsFor(payload, person, envelope)
     const open = docs.filter((s) => spaceOpenOn(s as SpaceLike, stored))
     const readable: number[] = []

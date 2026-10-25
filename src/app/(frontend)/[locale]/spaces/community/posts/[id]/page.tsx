@@ -4,7 +4,6 @@ import { getTranslations } from 'next-intl/server'
 import { notFound, redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import { PostPage } from '@/components/space/post-page'
 import { currentReader } from '@/lib/reader'
 import { spaceLanding } from '@/lib/spaces-data'
 
@@ -15,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('metaTitle'), robots: { index: false } }
 }
 
-/** A post in the community space, which has no slug (spec §2). */
+/** The old address of a community post. */
 export default async function CommunityPostPage({ params }: Props) {
   const { id, locale } = await params
   const postId = Number(id)
@@ -23,9 +22,7 @@ export default async function CommunityPostPage({ params }: Props) {
   const spacePath = `/${locale}/spaces/community`
   const user = await currentReader()
   if (!user) redirect(`/${locale}/login?next=${encodeURIComponent(`${spacePath}/posts/${postId}`)}`)
-  const landing = await spaceLanding(await getPayload({ config }), user, 'community', '')
+  const landing = await spaceLanding(await getPayload({ config }), user, 'community', '', locale)
   if (!landing) notFound()
-  return (
-    <PostPage locale={locale} user={user} landing={landing} postId={postId} spacePath={spacePath} />
-  )
+  redirect(`${spacePath}/${landing.space.id}/posts/${postId}`)
 }
