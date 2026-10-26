@@ -700,17 +700,13 @@
   white-space: nowrap;
 }
 
-.postSession {
-  display: grid;
-  gap: var(--space-3);
-  min-width: 0;
-}
-
 .sessionAi {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-2) var(--space-3);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--border);
 }
 
 /* The accordion's own top rule meets the prose; its last rule would only double the card edge. */

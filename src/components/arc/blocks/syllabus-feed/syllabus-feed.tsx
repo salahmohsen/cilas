@@ -194,22 +194,25 @@ function Chip({
 }
 
 /** A session's number and first date, then its kind, title and one line of meetings and counts. */
-function EntryHead({ entry }: { entry: SyllabusEntry }) {
+/** `alone`: a session shown outside its list drops the number and date column; the summary line already names both. */
+function EntryHead({ entry, alone = false }: { entry: SyllabusEntry; alone?: boolean }) {
   const t = useTranslations('Course')
   return (
     <>
-      <span className={styles.meta}>
-        <span className={styles.number} {...entry.attrs?.no}>
-          {entry.no}
+      {!alone && (
+        <span className={styles.meta}>
+          <span className={styles.number} {...entry.attrs?.no}>
+            {entry.no}
+          </span>
+          {entry.date ? (
+            <time dateTime={entry.date.iso} {...entry.attrs?.date}>
+              {entry.date.label}
+            </time>
+          ) : (
+            <span {...entry.attrs?.date} />
+          )}
         </span>
-        {entry.date ? (
-          <time dateTime={entry.date.iso} {...entry.attrs?.date}>
-            {entry.date.label}
-          </time>
-        ) : (
-          <span {...entry.attrs?.date} />
-        )}
-      </span>
+      )}
       <span className={styles.body}>
         {(entry.cancelled || entry.activities.length > 0) && (
           <span className={styles.kindLine}>
@@ -387,7 +390,7 @@ export function SyllabusSession({
       aria-label={label}
     >
       <div className={styles.singleRow}>
-        <EntryHead entry={entry} />
+        <EntryHead entry={entry} alone />
       </div>
       {entry.body && <div className={styles.singleBody}>{entry.body}</div>}
     </section>

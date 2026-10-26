@@ -11,7 +11,10 @@ const sampleGroups: SyllabusGroup[] = [
   { key: '2026-11', label: 'November 2026', short: 'Nov' },
 ]
 
-const session = (partial: Omit<SyllabusEntry, 'materials' | 'activities'> & Partial<Pick<SyllabusEntry, 'materials' | 'activities'>>): SyllabusEntry => ({
+const session = (
+  partial: Omit<SyllabusEntry, 'materials' | 'activities'> &
+    Partial<Pick<SyllabusEntry, 'materials' | 'activities'>>,
+): SyllabusEntry => ({
   materials: ['reading'],
   activities: ['discussion'],
   ...partial,
@@ -33,8 +36,8 @@ const sampleEntries: SyllabusEntry[] = [
     materials: ['reading'],
     body: (
       <p>
-        We begin with the city as something written: street names, posters, shop signage.
-        A short reading accompanies the walk for next week.
+        We begin with the city as something written: street names, posters, shop signage. A short
+        reading accompanies the walk for next week.
       </p>
     ),
   }),

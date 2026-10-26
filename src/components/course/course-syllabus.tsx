@@ -13,7 +13,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useFormatter, useLocale, useTranslations } from 'next-intl'
-import React from 'react'
+import React, { type ReactNode } from 'react'
 
 import {
   SyllabusFeed,
@@ -229,15 +229,28 @@ export function CourseSession({
   course,
   session,
   label,
+  footer,
 }: {
   course: SyllabusCourse
   /** The id of one row of the course's sessions */
   session: string
   /** What the card is named for assistive tech */
   label: string
+  /** Closes the card's details, after the materials and activities */
+  footer?: ReactNode
 }) {
   const entry = useSyllabusEntries(course, false).find((e) => e.id === session)
-  return entry ? <SyllabusSession entry={entry} label={label} /> : null
+  if (!entry) return null
+  const body =
+    footer && !entry.cancelled ? (
+      <div className="grid gap-5">
+        {entry.body}
+        {footer}
+      </div>
+    ) : (
+      entry.body
+    )
+  return <SyllabusSession entry={{ ...entry, body }} label={label} />
 }
 
 /**

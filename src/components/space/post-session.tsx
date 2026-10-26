@@ -60,23 +60,29 @@ export function PostSession({
     m.title ? [m.note ? `${m.title} (${m.note})` : m.title] : [],
   )
 
-  return (
-    <div className={styles.postSession}>
-      <CourseSession course={course} session={session.session} label={t('sessionLabel')} />
-      <div className={styles.sessionAi}>
-        <span>{ts('aiSession')}</span>
-        <StudyWithAI
-          kind="course"
-          path={`/${locale}/study/${course.slug}`}
-          label={ts('aiSession')}
-          size="sm"
-          session={{
-            course: course.title,
-            session: name,
-            readings,
-          }}
-        />
-      </div>
+  const ai = (
+    <div className={styles.sessionAi}>
+      <span>{ts('aiSession')}</span>
+      <StudyWithAI
+        kind="course"
+        path={`/${locale}/study/${course.slug}`}
+        label={ts('aiSession')}
+        size="sm"
+        session={{
+          course: course.title,
+          session: name,
+          readings,
+        }}
+      />
     </div>
+  )
+
+  return (
+    <CourseSession
+      course={course}
+      session={session.session}
+      label={t('sessionLabel')}
+      footer={ai}
+    />
   )
 }
