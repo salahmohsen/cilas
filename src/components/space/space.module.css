@@ -1,6 +1,10 @@
 .page {
   /* Mentions and links in posts read in one link colour. */
   --mention: oklch(0.5 0.17 255);
+  /* The dark tint over a cover, the same in both themes, so white text on it always reads. */
+  --cover-scrim: oklch(12% 0 0 / 0.58);
+  --on-cover: oklch(98% 0 0);
+  --on-cover-secondary: oklch(98% 0 0 / 0.82);
   width: 100%;
   margin-inline: auto;
   padding: var(--space-4) clamp(var(--space-4), 4vw, var(--space-8)) var(--space-8);
@@ -607,7 +611,22 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: color-mix(in oklab, var(--background) 66%, transparent);
+  background: var(--cover-scrim);
+}
+
+/* Text set straight on the cover; the button groups keep their own surfaces. */
+.spaceHead .spaceTitle {
+  color: var(--on-cover);
+  text-shadow: 0 1px 2px oklch(0% 0 0 / 0.4);
+}
+
+.spaceHead .headBack a,
+.spaceHead .headAi {
+  color: var(--on-cover-secondary);
+}
+
+.spaceHead .headBack a:hover {
+  color: var(--on-cover);
 }
 
 .headInner {
@@ -864,7 +883,7 @@
   border: 1px solid var(--border);
   border-radius: var(--radius-panel);
   background: oklch(20% 0 0);
-  color: oklch(98% 0 0);
+  color: var(--on-cover);
   text-decoration: none;
   transition:
     transform var(--duration-spring) var(--ease-spring),
@@ -877,7 +896,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: oklch(12% 0 0 / 0.58);
+  background: var(--cover-scrim);
   transition: background-color var(--duration-standard) var(--ease-standard);
 }
 
@@ -928,7 +947,7 @@
   min-height: 3rem;
   padding: var(--space-3) var(--space-4);
   font-size: var(--text-xs);
-  color: oklch(98% 0 0 / 0.82);
+  color: var(--on-cover-secondary);
 }
 
 @media (prefers-reduced-motion: reduce) {
