@@ -243,7 +243,11 @@ export async function FeedRow({
     <PostDialog href={postHref} postId={post.id} photos={row.files.some((f) => f.isImage)}>
       <article
         id={id}
-        className={styles.post}
+        className={
+          post.pinned || post.kind === 'announcement'
+            ? `${styles.post} ${styles.pinnedPost}`
+            : styles.post
+        }
         aria-labelledby={`${id}-author`}
         aria-describedby={text || post.kind === 'event' ? `${id}-body` : undefined}
         aria-posinset={position}

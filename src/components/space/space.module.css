@@ -155,6 +155,12 @@
   scroll-margin-top: var(--space-24);
 }
 
+/* A pinned post (an announcement pins itself) stands apart in the feed: a faint warning tint. */
+.pinnedPost {
+  border-color: color-mix(in oklch, var(--warning) 10%, var(--border));
+  background: color-mix(in oklch, var(--warning) 2%, var(--surface));
+}
+
 .postHead {
   display: flex;
   flex-wrap: wrap;
