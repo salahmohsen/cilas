@@ -1158,7 +1158,7 @@
     "thread": "Comments",
     "count": "{count, plural, one {# comment} other {# comments}}",
     "empty": "No comments yet. Start the conversation below.",
-    "placeholder": "Write a comment, or @mention someone",
+    "placeholder": "Write a comment",
     "now": "Just now",
     "reply": "Reply",
     "edit": "Edit",
