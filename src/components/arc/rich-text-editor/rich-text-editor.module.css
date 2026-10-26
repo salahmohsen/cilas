@@ -143,12 +143,20 @@
   background: var(--border);
 }
 
-/* Placeholders: the whole document when empty, and a quiet hint on the empty line holding the caret. */
+/* Placeholders: the whole document when empty, and a quiet hint on the empty line holding the caret.
+   They keep the body type, so turning the line into a heading, list or quote leaves them as they were. */
 .editor[data-empty] > :first-child::before,
 .editor:focus [data-hint]::before {
-  float: left;
+  float: inline-start;
   height: 0;
   color: var(--text-muted);
+  font-family: inherit;
+  font-size: var(--text-base);
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.65;
+  text-decoration: none;
   pointer-events: none;
   content: var(--placeholder);
 }
@@ -339,6 +347,30 @@
   -webkit-tap-highlight-color: transparent;
   transition: color var(--duration-fast) var(--ease-standard);
 }
+.slashOption[data-stacked] {
+  height: auto;
+  min-height: 34px;
+  align-items: flex-start;
+  padding-block: 7px;
+}
+.slashOption[data-stacked] .slashIcon {
+  height: 20px;
+}
+.slashStack {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 2px;
+}
+.slashTitle {
+  display: -webkit-box;
+  overflow: hidden;
+  font-weight: 500;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
 .slashOption[aria-selected='true'] {
   color: var(--foreground);
 }
@@ -358,8 +390,6 @@
 }
 .slashNote {
   min-width: 0;
-  max-width: 40%;
-  flex: 0 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;

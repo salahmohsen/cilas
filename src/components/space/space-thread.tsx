@@ -36,7 +36,7 @@ import { saveErrorKey } from './composer'
 import { ConsentSheet } from './consent-sheet'
 import { PersonHover, type PersonCard } from './person-hover'
 import { useRefreshPost } from './post-dialog-link'
-import { SessionChip, type SessionLinks } from './session-chip'
+import { SessionChip, useSessionName, useSessionWhen, type SessionLinks } from './session-chip'
 import styles from './space.module.css'
 
 const EMOJI: Record<ReactionKind, string> = {
@@ -134,15 +134,14 @@ export function SpaceThread({
   )
 
   // Each session reads "#3 Title" in the text, by its current number and title.
-  const topics: CommentTopic[] = useMemo(
-    () =>
-      Object.entries(sessions?.facts ?? {}).map(([id, fact]) => ({
-        id,
-        name: `${fact.n}${fact.title ? ` ${fact.title}` : ''}`,
-      })),
-    [sessions],
-  )
-  const topicOf = useMemo(() => new Map(topics.map((topic) => [topic.id, topic])), [topics])
+  const { unitOf } = useSessionName()
+  const whenOf = useSessionWhen()
+  const topics: CommentTopic[] = Object.entries(sessions?.facts ?? {}).map(([id, fact]) => ({
+    id,
+    name: `${fact.n}${fact.title ? ` ${fact.title}` : ''}`,
+    hint: [unitOf(fact), whenOf(fact)].filter(Boolean).join(' · '),
+  }))
+  const topicOf = new Map(topics.map((topic) => [topic.id, topic]))
   /** A stored session reads as "#name"; one the course dropped says so, and an unread course keeps the stored words. */
   const toShown = (body: string) =>
     body.replace(

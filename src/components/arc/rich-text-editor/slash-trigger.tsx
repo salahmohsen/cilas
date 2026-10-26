@@ -127,6 +127,10 @@ export const SLASH_ITEMS: SlashItem[] = [
 
 const MARKERS = { slash: '/', mention: '@', session: '#' } as const
 
+/** Under a session's title: its number and date. A session with no title shows its number as the title. */
+const sessionMeta = ({ session, hint }: SlashItem) =>
+  (session?.title ? [session.unit, hint] : [hint]).filter(Boolean).join(' · ')
+
 /** `[@Name](/people/{id})` replaces the running `@query` token ending at `caret`; text with no trigger passes through. */
 /**
  * Replaces the "@query" before the caret with a link to the person that shows
@@ -531,6 +535,7 @@ export function SlashPanel({
               role="option"
               aria-selected={i === index}
               data-index={i}
+              data-stacked={item.session ? '' : undefined}
               className={styles.slashOption}
               onPointerMove={() => {
                 if (i !== index) setActive(i)
@@ -538,15 +543,28 @@ export function SlashPanel({
               onClick={() => choose(item)}
             >
               {item.icon && <span className={styles.slashIcon}>{item.icon}</span>}
-              <span className={styles.slashLabel}>
-                {item.person ? `@${item.label}` : item.label}
-              </span>
-              {item.hint &&
-                (item.session ? (
-                  <span className={styles.slashNote}>{item.hint}</span>
-                ) : (
-                  <kbd className={styles.slashHint}>{item.hint}</kbd>
-                ))}
+              {item.session ? (
+                // A long session title wraps to two lines over its number and date.
+                <span className={styles.slashStack}>
+                  <span
+                    className={styles.slashTitle}
+                    dir="auto"
+                    title={item.session.title || item.label}
+                  >
+                    {item.session.title || item.label}
+                  </span>
+                  {sessionMeta(item) && (
+                    <span className={styles.slashNote}>{sessionMeta(item)}</span>
+                  )}
+                </span>
+              ) : (
+                <>
+                  <span className={styles.slashLabel}>
+                    {item.person ? `@${item.label}` : item.label}
+                  </span>
+                  {item.hint && <kbd className={styles.slashHint}>{item.hint}</kbd>}
+                </>
+              )}
             </li>
           ))}
         </ul>

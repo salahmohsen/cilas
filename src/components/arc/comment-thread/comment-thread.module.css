@@ -557,15 +557,26 @@
 .suggestion[aria-selected='true'] {
   background: var(--surface-muted);
 }
-.topicName {
+/* A topic's name wraps to two lines over its hint, so a long session title stays readable. */
+.topic {
+  display: grid;
   min-width: 0;
   flex: 1;
+  gap: 2px;
+  padding-block: 6px;
+}
+.topicName {
+  display: -webkit-box;
+  overflow: hidden;
+  line-height: 1.35;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+.topicHint {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-.topicHint {
-  flex: none;
   color: var(--text-secondary);
   font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;

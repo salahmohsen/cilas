@@ -1035,7 +1035,7 @@
   font-weight: 500;
   line-height: 1.5;
   text-decoration: none;
-  vertical-align: baseline;
+  vertical-align: bottom;
 }
 
 .sessionMention svg {

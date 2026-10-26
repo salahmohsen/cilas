@@ -269,7 +269,7 @@ function ComposerForm({
           defaultMarkdown={initial}
           minHeading={2}
           mentionSuggestions={mentions}
-          description={sessions.length ? t('sessionHint') : undefined}
+          description={t(sessions.length ? 'composeHintCourse' : 'composeHint')}
           sessionSuggestions={sessions.length ? sessions : undefined}
           sessionLabels={{ list: t('sessionList'), blocks: t('sessionBlocks') }}
           onChange={(v) => {

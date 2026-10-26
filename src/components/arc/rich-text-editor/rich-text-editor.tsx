@@ -980,8 +980,18 @@ type Formats = {
   link: string | null
   block: string
 }
-/** A course session the editor may name or place: `mention` is the inline text, `label` the menu row and block. */
-export type SessionSuggestion = { id: string; label: string; mention: string; hint?: string }
+/**
+ * A course session the editor may name or place: `mention` is the inline text, `label` the block's text.
+ * In the menus `title` leads (wrapping to two lines) over `unit` and `hint`; without a title, `label` does.
+ */
+export type SessionSuggestion = {
+  id: string
+  label: string
+  mention: string
+  title?: string
+  unit?: string
+  hint?: string
+}
 
 export type Slash = {
   kind: 'slash' | 'mention' | 'session'

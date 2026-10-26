@@ -917,7 +917,7 @@
     "kind_event": "فعالية",
     "kind_vote": "تصويت",
     "kind_announcement": "إعلان",
-    "placeholder_discussion": "شارك شيئًا مع المساحة. اكتب @ للإشارة إلى أحد.",
+    "placeholder_discussion": "شارك شيئًا مع المساحة.",
     "placeholder_event": "صف الفعالية: ما هي، ولمن، وماذا يحضر الناس.",
     "placeholder_vote": "اكتب سؤالك وأعطِ السياق الذي يحتاجه الناس للاختيار.",
     "placeholder_announcement": "اكتب الإعلان. يصل إلى كل الأعضاء.",
@@ -1021,7 +1021,8 @@
     "sessionRemoved": "حُذفت الجلسة",
     "sessionList": "الجلسات",
     "sessionBlocks": "الكتل والجلسات",
-    "sessionHint": "اكتب # لتذكر جلسة داخل الجملة، أو / في أول السطر لتضع بطاقتها."
+    "composeHint": "اكتب @ لتذكر أحدًا.",
+    "composeHintCourse": "اكتب @ لتذكر أحدًا. تكتب عن جلسة؟ اذكرها بـ # ليبقى منشورك معها."
   },
   "SpaceComment": {
     "write": "علِّق",

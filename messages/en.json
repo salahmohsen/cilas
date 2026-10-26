@@ -917,7 +917,7 @@
     "kind_event": "Event",
     "kind_vote": "Vote",
     "kind_announcement": "Announcement",
-    "placeholder_discussion": "Share something with the space. Type @ to mention someone.",
+    "placeholder_discussion": "Share something with the space.",
     "placeholder_event": "Describe the event: what it is, who it is for, what to bring.",
     "placeholder_vote": "Ask your question and give the context people need to choose.",
     "placeholder_announcement": "Write the announcement. Every member gets it.",
@@ -1021,7 +1021,8 @@
     "sessionRemoved": "Session removed",
     "sessionList": "Sessions",
     "sessionBlocks": "Blocks and sessions",
-    "sessionHint": "Type # to name a session in a sentence, or / at the start of a line to place its card."
+    "composeHint": "Type @ to mention someone.",
+    "composeHintCourse": "Type @ to mention someone. Posting about a session? Tag it with # so it stays with that session."
   },
   "SpaceComment": {
     "write": "Comment",

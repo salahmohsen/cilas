@@ -25,6 +25,22 @@ export function useSessionName() {
   }
 }
 
+/** "Mon, Nov 2": the day of the session's first meeting, a Cairo day. */
+export function useSessionWhen() {
+  const format = useFormatter()
+  const locale = useLocale()
+  return (fact: SessionFact) =>
+    fact.date
+      ? format.dateTime(new Date(`${fact.date}T00:00:00Z`), {
+          weekday: 'short',
+          day: 'numeric',
+          month: 'short',
+          timeZone: 'UTC',
+          numberingSystem: numberingSystemOf(locale),
+        })
+      : null
+}
+
 /**
  * A session named with `#`, inline where it was written: a small chip that
  * opens the posts about the session, with its date in the name. A cancelled
@@ -42,22 +58,13 @@ export function SessionChip({
 }) {
   const t = useTranslations('SpacePost')
   const tc = useTranslations('Course')
-  const format = useFormatter()
-  const locale = useLocale()
   const { unitOf, nameOf } = useSessionName()
+  const whenOf = useSessionWhen()
   const fact = links?.facts[id]
   if (!links?.known) return <bdi>{label || t('sessionMention')}</bdi>
   if (!fact) return <span className={styles.sessionGoneText}>{t('sessionRemoved')}</span>
   const name = nameOf(fact)
-  const when = fact.date
-    ? format.dateTime(new Date(`${fact.date}T00:00:00Z`), {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-        timeZone: 'UTC',
-        numberingSystem: numberingSystemOf(locale),
-      })
-    : null
+  const when = whenOf(fact)
   const state = fact.cancelled ? `${name} (${tc('cancelled')})` : name
   const full = when ? `${state}, ${when}` : state
   return (

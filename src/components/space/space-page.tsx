@@ -485,6 +485,8 @@ async function sessionOptions(course: Course, locale: string): Promise<SessionCh
         id: session.id,
         label: name,
         mention: `#${n}${session.session_title ? ` ${session.session_title}` : ''}`,
+        title: session.session_title || undefined,
+        unit,
         hint: [when, session.cancelled ? t('cancelled') : null].filter(Boolean).join(' · '),
       },
     ]

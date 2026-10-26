@@ -792,10 +792,12 @@ function Composer({
                   onClick={() => insert(item)}
                 >
                   {'topic' in item ? (
-                    <>
-                      <span className={styles.topicName}>#{item.name}</span>
+                    <span className={styles.topic}>
+                      <span className={styles.topicName} dir="auto" title={`#${item.name}`}>
+                        #{item.name}
+                      </span>
                       {item.hint && <span className={styles.topicHint}>{item.hint}</span>}
-                    </>
+                    </span>
                   ) : (
                     <>
                       <Avatar author={item} size={20} />
