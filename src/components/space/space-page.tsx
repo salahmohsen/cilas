@@ -219,7 +219,8 @@ export async function SpacePage({
   const firstSeen = lastVisit
     ? visible.findIndex((r) => (r.post.last_activity_at ?? r.post.createdAt) <= lastVisit)
     : -1
-  const pinnedPost = feed.rows.find((r) => r.post.pinned)
+  // The intro post has its own step.
+  const pinnedPost = feed.rows.find((r) => r.post.pinned && r.post.id !== context.introPost)
 
   await visitRecord({ payload, user, space: space.id })
 
@@ -316,12 +317,18 @@ export async function SpacePage({
             space={space.id}
             steps={{
               saw_privacy: state.consented,
-              introduced: state.steps?.introduced ?? false,
+              // Behind the gate the step is the intro comment itself.
+              introduced:
+                context.introPost != null && !moderator
+                  ? gatedBy == null
+                  : (state.steps?.introduced ?? false),
               read_pinned: state.steps?.read_pinned ?? false,
               checked_profile: state.steps?.checked_profile ?? false,
               chose_digest: state.digest != null || (state.steps?.chose_digest ?? false),
             }}
             pinnedId={pinnedPost?.post.id ?? null}
+            introPost={context.introPost}
+            gated={gatedBy != null}
             profileHref={`/${locale}/profile`}
             hidden={jar.get(CHECKLIST_COOKIE)?.value === '1'}
           />

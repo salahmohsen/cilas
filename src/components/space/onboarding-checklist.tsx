@@ -13,6 +13,7 @@ import {
 } from '@/app/(frontend)/[locale]/spaces/actions'
 
 import { COMPOSE_EVENT } from './composer'
+import { openComments } from './intro-lock'
 
 export type Steps = {
   saw_privacy: boolean
@@ -44,12 +45,18 @@ export function OnboardingChecklist({
   space,
   steps,
   pinnedId,
+  introPost,
+  gated,
   profileHref,
   hidden,
 }: {
   space: number
   steps: Steps
   pinnedId: number | null
+  /** The space's intro post: introducing yourself is a comment on it */
+  introPost: number | null
+  /** The member reads nothing else until that comment lands, which also ticks the step */
+  gated: boolean
   profileHref: string
   hidden: boolean
 }) {
@@ -111,8 +118,9 @@ export function OnboardingChecklist({
       description: t('introduceHelp'),
       actionLabel: t('introduceAction'),
       onAction: async () => {
-        window.dispatchEvent(new Event(COMPOSE_EVENT))
-        await mark('introduced')
+        if (introPost == null) window.dispatchEvent(new Event(COMPOSE_EVENT))
+        else openComments(introPost)
+        if (!gated) await mark('introduced')
       },
     },
   ]
