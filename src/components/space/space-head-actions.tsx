@@ -17,8 +17,9 @@ type Panel = 'about' | 'participation' | 'settings'
 type SettingsProps = Omit<ComponentProps<typeof SpaceSettings>, 'open' | 'onOpenChange' | 'anchor'>
 
 /**
- * The space head's actions as one group: the course page, About (phones, where
- * the rail is not shown), and for moderators the participation numbers and the settings.
+ * The space head's actions: the course page on its own, then one group with About
+ * (phones, where the rail is not shown) and, for moderators, the participation
+ * numbers and the settings.
  */
 export function SpaceHeadActions({
   coursePage,
@@ -55,13 +56,6 @@ export function SpaceHeadActions({
 
   const items = (phone: boolean) => {
     const list: ButtonGroupItem[] = []
-    if (coursePage)
-      list.push({
-        id: 'course',
-        label: t('coursePage'),
-        icon: <BookOpen size={16} aria-hidden="true" />,
-        href: coursePage,
-      })
     if (phone)
       list.push({
         id: 'about',
@@ -92,9 +86,24 @@ export function SpaceHeadActions({
       <ButtonGroup items={list} label={t('spaceActions')} size="sm" collapseLabels />
     ) : null
   }
-  // Two groups, one per width, so the About segment is there only where the rail is not.
+  // The course page leads away, so it stands apart from the space's own panels.
+  // Two panel groups, one per width, so the About segment is there only where the rail is not.
   const groups = (
     <div ref={root} className={styles.headButtons}>
+      {coursePage && (
+        <ButtonGroup
+          items={[
+            {
+              id: 'course',
+              label: t('coursePage'),
+              icon: <BookOpen size={16} aria-hidden="true" />,
+              href: coursePage,
+            },
+          ]}
+          label={t('coursePage')}
+          size="sm"
+        />
+      )}
       <span className={styles.phoneOnly}>{group(true)}</span>
       <span className={styles.wideOnly}>{group(false)}</span>
     </div>

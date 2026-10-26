@@ -4,11 +4,12 @@ import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import Image from 'next/image'
+import Link from 'next/link'
+import { ChevronLeft } from 'lucide-react'
 
 import { personOf } from '@/access'
 import { Alert } from '@/components/arc/alert/alert'
 import { Badge } from '@/components/arc/badge/badge'
-import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/arc/tabs/tabs'
 import type { Course, Programme, Space, User } from '@/payload-types'
@@ -270,16 +271,22 @@ export async function SpacePage({
           className={styles.headImage}
         />
         <div className={styles.headInner}>
-          <Breadcrumb
-            items={[{ label: t('title'), href: `/${locale}/spaces` }, { label: title }]}
-          />
-          <div className={styles.titleRow}>
-            <h1 className={styles.spaceTitle}>
-              <bdi>{title}</bdi>
-            </h1>
-            <Badge tone={feed.archived ? 'neutral' : 'success'}>
-              {feed.archived ? t('archived') : t('open')}
-            </Badge>
+          {/* The title is the heading right below, so the trail names only where it leads back to. */}
+          <nav aria-label={t('breadcrumb')} className={styles.headBack}>
+            <Link href={`/${locale}/spaces`}>
+              <ChevronLeft size={16} aria-hidden="true" className={styles.headBackIcon} />
+              {t('title')}
+            </Link>
+          </nav>
+          <div className={styles.titleBlock}>
+            <div className={styles.titleRow}>
+              <h1 className={styles.spaceTitle}>
+                <bdi>{title}</bdi>
+              </h1>
+              <Badge tone={feed.archived ? 'neutral' : 'success'}>
+                {feed.archived ? t('archived') : t('open')}
+              </Badge>
+            </div>
             <MembersPanel members={cards} viewerId={viewerPerson} />
           </div>
           <div className={styles.headActions}>

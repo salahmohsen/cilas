@@ -607,7 +607,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: color-mix(in oklab, var(--background) 82%, transparent);
+  background: color-mix(in oklab, var(--background) 66%, transparent);
 }
 
 .headInner {
@@ -625,9 +625,34 @@
   }
 }
 
-.headInner nav li:last-child {
-  /* The course title is long: the last crumb wraps instead of running out of the head. */
-  white-space: normal;
+/* Back to My spaces: the title is the heading right below, so the trail stops at the parent. */
+.headBack a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-height: 24px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.headBack a:hover {
+  color: var(--foreground);
+}
+
+.headBackIcon {
+  margin-inline-start: -4px;
+}
+
+:global([dir='rtl']) .headBackIcon {
+  transform: scaleX(-1);
+}
+
+.titleBlock {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
   min-width: 0;
 }
 
@@ -657,26 +682,6 @@
   color: var(--text-secondary);
 }
 
-/* The count opens the full list too, since a small space has no "+N" face to press. */
-.membersCount {
-  padding: 0;
-  border: 0;
-  background: none;
-  color: inherit;
-  font: inherit;
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-color: transparent;
-  text-underline-offset: 4px;
-  transition-property: color, text-decoration-color;
-  transition-duration: 150ms;
-}
-
-.membersCount:hover {
-  color: var(--foreground);
-  text-decoration-color: currentColor;
-}
-
 /* The space's own buttons at the start, the AI group at the end; on a phone the group drops below
    and starts the next line, so both rows begin at the same edge. */
 .headActions {
@@ -685,6 +690,12 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3) var(--space-4);
+}
+
+/* A group never runs past the head: it may shrink, and its labels then fold to icons. */
+.headButtons > * {
+  min-width: 0;
+  max-width: 100%;
 }
 
 /* Buttons wrap and keep their gap, so a later button joins the row. */

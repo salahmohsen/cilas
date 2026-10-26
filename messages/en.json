@@ -499,7 +499,7 @@
     "telegram": "Telegram",
     "email": "Email",
     "aiHeading": "Take it with AI",
-    "ai": "Take this course with AI",
+    "ai": "Study with an AI partner",
     "aiArticle": "Read this article with AI",
     "aiSteps": [
       "Choose your preferred AI assistant.",
@@ -850,7 +850,8 @@
     "noActivity": "No posts yet",
     "cohortSpaces": "Cohort spaces",
     "courseSpaces": "Course spaces",
-    "team": "CILAS team"
+    "team": "CILAS team",
+    "breadcrumb": "Breadcrumb"
   },
   "SpacePost": {
     "newPost": "New post",

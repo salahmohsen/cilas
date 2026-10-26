@@ -47,9 +47,6 @@ export function MembersPanel({
           }}
           onOverflowClick={() => setOpen(true)}
         />
-        <button type="button" className={styles.membersCount} onClick={() => setOpen(true)}>
-          {t('membersCount', { count: members.length })}
-        </button>
       </div>
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerContent
