@@ -6,7 +6,9 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 import {
+  ArrowUpRight,
   BookOpen,
+  ChevronRight,
   FilePen,
   Files,
   Inbox,
@@ -20,6 +22,7 @@ import {
 import { isAdminUser, isFellowUser } from '@/access'
 import { Badge } from '@/components/arc/badge/badge'
 import { Breadcrumb } from '@/components/arc/breadcrumb/breadcrumb'
+import { Card } from '@/components/arc/card/card'
 import { EmptyState } from '@/components/arc/empty-state/empty-state'
 import styles from '@/components/space/space.module.css'
 import { currentReader } from '@/lib/reader'
@@ -97,10 +100,10 @@ export default async function MySpacesPage({ params }: Props) {
   ])
   const sections = [
     { id: 'community', label: t('community'), rows: communities },
-    { id: 'cohorts', label: t('cohort'), rows: cohorts },
+    { id: 'cohorts', label: t('cohortSpaces'), rows: cohorts },
     {
       id: 'courses',
-      label: t('course'),
+      label: t('courseSpaces'),
       rows: [...courses].sort((a, b) => Number(a.archived) - Number(b.archived)),
     },
   ].filter((s) => s.rows.length > 0)
@@ -125,35 +128,43 @@ export default async function MySpacesPage({ params }: Props) {
             <ul className={styles.cards}>
               {s.rows.map((row) => (
                 <li key={row.space.id} className={styles.tileItem}>
-                  <Link href={row.href} className={`${styles.tile} ${styles.spaceTile}`}>
-                    <Image
-                      src={row.cover ?? COMMUNITY_COVER}
-                      alt=""
-                      fill
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className={styles.tileImage}
-                    />
-                    <span className={styles.tileTitle}>
-                      <bdi>
-                        {row.space.kind === 'community' && !row.space.name?.trim()
-                          ? t('community')
-                          : row.title}
-                      </bdi>
-                    </span>
-                    <span className={styles.tileMeta}>
-                      {row.archived && <Badge size="sm">{t('archived')}</Badge>}
-                      {row.unread > 0 && (
-                        <Badge size="sm" tone="info">
-                          {t('unread')}
-                        </Badge>
-                      )}
-                      {row.lastActivity && (
-                        <span>
-                          {t('active', { time: format.relativeTime(new Date(row.lastActivity)) })}
+                  <Card
+                    className={styles.spaceCard}
+                    href={row.href}
+                    title={
+                      row.space.kind === 'community' && !row.space.name?.trim()
+                        ? t('community')
+                        : row.title
+                    }
+                    media={
+                      <span className={styles.spaceCardMedia}>
+                        <Image
+                          src={row.cover ?? COMMUNITY_COVER}
+                          alt=""
+                          fill
+                          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className={styles.tileImage}
+                        />
+                      </span>
+                    }
+                    meta={
+                      row.lastActivity
+                        ? t('active', { time: format.relativeTime(new Date(row.lastActivity)) })
+                        : t('noActivity')
+                    }
+                    action={
+                      row.archived || row.unread > 0 ? (
+                        <span className={styles.spaceCardBadges}>
+                          {row.archived && <Badge size="sm">{t('archived')}</Badge>}
+                          {row.unread > 0 && (
+                            <Badge size="sm" tone="info">
+                              {t('unread')}
+                            </Badge>
+                          )}
                         </span>
-                      )}
-                    </span>
-                  </Link>
+                      ) : undefined
+                    }
+                  />
                 </li>
               ))}
             </ul>
@@ -164,25 +175,34 @@ export default async function MySpacesPage({ params }: Props) {
         <h2 id="spaces-shortcuts" className={styles.sectionTitle}>
           {ts('title')}
         </h2>
-        <ul className={styles.cards}>
+        {/* Actions, not places: a list of rows reads faster than a second wall of cards. */}
+        <ul className={styles.shortcuts}>
           {shortcutsFor(user, locale).map(({ key, href, icon: Icon, external }) => {
             const body = (
               <>
-                <span className={styles.tileIcon} aria-hidden="true">
-                  <Icon size={20} />
+                <span className={styles.shortcutIcon} aria-hidden="true">
+                  <Icon size={18} />
                 </span>
-                <span className={styles.tileTitle}>{ts(key)}</span>
-                <span className={styles.tileText}>{ts(`${key}Hint`)}</span>
+                <span className={styles.rowText}>
+                  <span className={styles.shortcutTitle}>{ts(key)}</span>
+                  <span className={styles.shortcutHint}>{ts(`${key}Hint`)}</span>
+                </span>
+                {external ? (
+                  <ArrowUpRight size={16} className={styles.shortcutEnd} aria-hidden="true" />
+                ) : (
+                  <ChevronRight size={16} className={styles.shortcutEnd} aria-hidden="true" />
+                )}
               </>
             )
             return (
-              <li key={key} className={styles.tileItem}>
+              <li key={key}>
                 {external ? (
-                  <a href={href} className={styles.tile}>
+                  <a href={href} className={styles.shortcut}>
                     {body}
+                    <span className="sr-only">{ts('inDashboard')}</span>
                   </a>
                 ) : (
-                  <Link href={href} className={styles.tile}>
+                  <Link href={href} className={styles.shortcut}>
                     {body}
                   </Link>
                 )}

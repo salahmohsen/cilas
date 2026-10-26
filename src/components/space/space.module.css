@@ -836,99 +836,89 @@
   min-width: 0;
 }
 
-.tile {
-  display: grid;
-  justify-items: center;
-  align-content: start;
-  gap: var(--space-2);
-  min-height: 148px;
-  padding: var(--space-6) var(--space-5);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-surface);
-  background: var(--surface);
-  color: var(--foreground);
-  text-align: center;
-  text-decoration: none;
-  transition:
-    background-color var(--duration-fast) var(--ease-standard),
-    border-color var(--duration-fast) var(--ease-standard);
-}
-
-/* A space tile: its cover fills the card under a flat surface tint, so the
-   title reads in both themes without a gradient. */
-.spaceTile {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  align-content: center;
-  min-height: 176px;
-}
-
-.spaceTile > * {
-  position: relative;
-}
-
 .tileImage {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
   object-fit: cover;
 }
 
-.spaceTile::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: color-mix(in oklab, var(--surface) 78%, transparent);
+/* A space's card: its cover on top, the title and the latest activity under it. */
+.spaceCard {
+  height: 100%;
+}
+
+.spaceCardMedia {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.spaceCardBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Things you can do: actions, so a divided list of rows, two columns where there is room. */
+.shortcuts {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  gap: var(--space-2) var(--space-4);
+}
+
+.shortcut {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 3.5rem;
+  padding: var(--space-3);
+  border-radius: var(--radius-control);
+  color: var(--foreground);
+  text-decoration: none;
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
 
-.spaceTile:hover::before {
-  background: color-mix(in oklab, var(--surface) 68%, transparent);
+@media (hover: hover) and (pointer: fine) {
+  .shortcut:hover {
+    background: var(--surface-muted);
+  }
+  .shortcut:hover .shortcutEnd {
+    color: var(--foreground);
+  }
 }
 
-.tile:hover {
-  background: var(--surface-muted);
-  border-color: var(--border-strong);
-}
-
-.tileIcon {
+.shortcutIcon {
   display: inline-grid;
   place-items: center;
-  width: 40px;
-  height: 40px;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--border);
   border-radius: var(--radius-pill);
-  background: var(--surface-muted);
-  color: var(--foreground);
+  background: var(--surface);
+  color: var(--text-secondary);
 }
 
-.tileTitle {
-  font-size: var(--text-base);
+.shortcutTitle {
+  font-size: var(--text-sm);
   font-weight: 500;
-  text-wrap: balance;
 }
 
-.tileText {
+.shortcutHint {
   font-size: var(--text-sm);
   color: var(--text-secondary);
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
   text-wrap: pretty;
 }
 
-.tileMeta {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-2);
-  font-size: var(--text-xs);
-  color: var(--text-secondary);
+.shortcutEnd {
+  color: var(--text-muted);
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+:global([dir='rtl']) .shortcutEnd {
+  transform: scaleX(-1);
 }
 
 /* Markdown in a post: the editor's blocks, set in the space's text face. */

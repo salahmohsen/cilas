@@ -846,7 +846,10 @@
     "spaceActions": "Space actions",
     "introLockTitle": "The other posts open after you introduce yourself",
     "introLockHint": "Comment on the intro post below to read and join the rest of this space.",
-    "introLockAction": "Write your introduction"
+    "introLockAction": "Write your introduction",
+    "noActivity": "No posts yet",
+    "cohortSpaces": "Cohort spaces",
+    "courseSpaces": "Course spaces"
   },
   "SpacePost": {
     "newPost": "New post",
@@ -1132,7 +1135,8 @@
     "newsletter": "Write a newsletter",
     "newsletterHint": "Pick articles and send them to a mailing list.",
     "siteSettings": "Site settings",
-    "siteSettingsHint": "Navigation, spaces and the site's contact details."
+    "siteSettingsHint": "Navigation, spaces and the site's contact details.",
+    "inDashboard": "(opens the dashboard)"
   },
   "SpaceReactions": {
     "label": "Reactions",

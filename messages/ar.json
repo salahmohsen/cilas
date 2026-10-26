@@ -846,7 +846,10 @@
     "spaceActions": "إجراءات المساحة",
     "introLockTitle": "تُفتح بقية المنشورات بعد أن تعرّف بنفسك",
     "introLockHint": "علّق على منشور التعريف أدناه لتقرأ بقية هذه المساحة وتشارك فيها.",
-    "introLockAction": "اكتب تعريفك"
+    "introLockAction": "اكتب تعريفك",
+    "noActivity": "لا منشورات بعد",
+    "cohortSpaces": "مساحات الدفعات",
+    "courseSpaces": "مساحات المقررات"
   },
   "SpacePost": {
     "newPost": "منشور جديد",
@@ -1132,7 +1135,8 @@
     "newsletter": "اكتب نشرة بريدية",
     "newsletterHint": "اختر مقالات وأرسلها إلى قائمة بريدية.",
     "siteSettings": "إعدادات الموقع",
-    "siteSettingsHint": "التنقل والمساحات وبيانات الاتصال بالموقع."
+    "siteSettingsHint": "التنقل والمساحات وبيانات الاتصال بالموقع.",
+    "inDashboard": "(تفتح لوحة التحكم)"
   },
   "SpaceReactions": {
     "label": "التفاعلات",
