@@ -1,0 +1,87 @@
+.form {
+  display: grid;
+  gap: var(--space-6);
+  min-width: 0;
+}
+
+.note {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+/* The two names side by side where there is room for both. */
+.pair {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+}
+
+.links {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  margin-bottom: var(--space-3);
+  padding: 0;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}
+
+/* Platform, then the link taking the rest of the row, then its remove button; the button stays level with the fields. */
+.linkRow {
+  display: grid;
+  grid-template-columns: minmax(8rem, 11rem) minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-2);
+}
+
+.platform,
+.url {
+  min-width: 0;
+}
+
+.remove {
+  /* Level with the controls: below their labels. */
+  margin-top: calc(var(--text-sm) * 1.5 + var(--space-2));
+}
+
+@media (max-width: 479px) {
+  .linkRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .url {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .remove {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.saved,
+.lineError {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+
+.saved:empty {
+  display: none;
+}
+
+.lineError {
+  color: var(--danger);
+}

@@ -16,6 +16,9 @@ export const PROFILE_MESSAGE_KEYS = [
   'removeLink',
   'save',
   'saved',
+  'nameLong',
+  'linkEmpty',
+  'linkInvalid',
 ] as const
 
 /** Every error the server can name, so a missing one is a type error. */

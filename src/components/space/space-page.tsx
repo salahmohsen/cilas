@@ -18,6 +18,8 @@ import { pageAddresses, threadTexts } from '@/lib/link-title'
 import { introGates, mayComment, membership } from '@/lib/spaces'
 import { CourseSyllabus, directionOf, textOf } from '@/components/course/course-syllabus'
 import { RichTextField } from '@/components/RichTextField'
+import { profileMessages } from '@/components/profile/load-messages'
+import { readProfile } from '@/lib/profile'
 import { StudyWithAI } from '@/components/study-with-ai'
 import { numberingSystemOf } from '@/lib/digits'
 import { cairoDay } from '@/lib/cairo-day'
@@ -236,6 +238,18 @@ export async function SpacePage({
   // The intro post has its own step.
   const pinnedPost = feed.rows.find((r) => r.post.pinned && r.post.id !== context.introPost)
 
+  // The profile step edits in a drawer, so its form is read while the checklist shows; ticking
+  // the step must not take the open drawer away.
+  const profileView =
+    jar.get(CHECKLIST_COOKIE)?.value !== '1' ? await readProfile(payload, user) : null
+  const profileStep = profileView
+    ? {
+        view: profileView,
+        messages: await profileMessages(),
+        title: (await getTranslations('Profile'))('title'),
+      }
+    : null
+
   await visitRecord({ payload, user, space: space.id })
 
   const rail = (
@@ -352,6 +366,7 @@ export async function SpacePage({
             introPost={context.introPost}
             gated={gatedBy != null}
             profileHref={`/${locale}/profile`}
+            profile={profileStep}
             hidden={jar.get(CHECKLIST_COOKIE)?.value === '1'}
           />
           {view !== 'syllabus' && (

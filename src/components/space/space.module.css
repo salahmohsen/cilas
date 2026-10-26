@@ -2111,3 +2111,8 @@
   font-size: var(--text-base);
   line-height: var(--leading-body);
 }
+
+/* The profile form needs room for two names side by side. */
+.profileDrawer[role='dialog'] {
+  --drawer-size: min(38rem, calc(100vw - var(--space-4)));
+}

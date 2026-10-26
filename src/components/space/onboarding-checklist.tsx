@@ -1,10 +1,17 @@
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { useRouter } from 'next/navigation'
 
+import { Drawer, DrawerContent } from '@/components/arc/drawer/drawer'
 import { OnboardingChecklist as ArcChecklist } from '@/components/arc/onboarding-checklist/onboarding-checklist'
+import { ProfileForm, type ProfileMessages } from '@/components/profile/profile-form'
+import {
+  removeProfilePhotoAction,
+  saveProfileAction,
+} from '@/app/(frontend)/[locale]/profile/actions'
+import type { ProfileView } from '@/lib/profile'
 import {
   consentAcceptAction,
   preferenceSetAction,
@@ -14,6 +21,7 @@ import {
 
 import { COMPOSE_EVENT } from './composer'
 import { openComments } from './intro-lock'
+import styles from './space.module.css'
 
 export type Steps = {
   saw_privacy: boolean
@@ -48,6 +56,7 @@ export function OnboardingChecklist({
   introPost,
   gated,
   profileHref,
+  profile,
   hidden,
 }: {
   space: number
@@ -58,10 +67,13 @@ export function OnboardingChecklist({
   /** The member reads nothing else until that comment lands, which also ticks the step */
   gated: boolean
   profileHref: string
+  /** The member's own profile, edited in a drawer here; without one the step opens the profile page */
+  profile: { view: ProfileView; messages: ProfileMessages; title: string } | null
   hidden: boolean
 }) {
   const t = useTranslations('SpaceChecklist')
   const router = useRouter()
+  const [editing, setEditing] = useState(false)
   const mark = (step: keyof Steps, value = true) =>
     call(stepMarkAction, { space: String(space), step, value: String(value) })
 
@@ -93,7 +105,8 @@ export function OnboardingChecklist({
       actionLabel: t('profileAction'),
       onAction: async () => {
         await mark('checked_profile')
-        router.push(profileHref)
+        if (profile) setEditing(true)
+        else router.push(profileHref)
       },
     },
     ...(pinnedId != null
@@ -149,30 +162,48 @@ export function OnboardingChecklist({
   }
 
   return (
-    <ArcChecklist
-      title={t('title')}
-      doneTitle={t('doneTitle')}
-      steps={all}
-      defaultCompleted={done}
-      defaultHidden={hidden}
-      onCompletedChange={(completed) => void persist(completed)}
-      labels={{
-        progress: (n, total) => t.rich('progress', { total, done: () => n }),
-        hide: t('hide'),
-        show: t('show'),
-        completed: (count) => t.rich('completed', { count: () => count }),
-        stepsToDo: t('stepsToDo'),
-        completedSteps: t('completedSteps'),
-        progressLabel: t('progressLabel'),
-        progressText: (done, total) => t('progressText', { done, total }),
-        allDone: (total) => t('allDone', { total }),
-        stepDone: (title, done, total) => t('stepDone', { title, done, total }),
-        stepUndone: (title, done, total) => t('stepUndone', { title, done, total }),
-        failed: t('failed'),
-      }}
-      onHiddenChange={(next) => {
-        document.cookie = `${CHECKLIST_COOKIE}=${next ? '1' : ''}; path=/; max-age=${next ? 31_536_000 : 0}; samesite=lax`
-      }}
-    />
+    <>
+      {profile && (
+        <Drawer open={editing} onOpenChange={setEditing}>
+          <DrawerContent title={profile.title} className={styles.profileDrawer}>
+            <ProfileForm
+              profile={profile.view}
+              messages={profile.messages}
+              action={saveProfileAction}
+              removePhotoAction={removeProfilePhotoAction}
+              onSaved={() => {
+                router.refresh()
+                setTimeout(() => setEditing(false), 900)
+              }}
+            />
+          </DrawerContent>
+        </Drawer>
+      )}
+      <ArcChecklist
+        title={t('title')}
+        doneTitle={t('doneTitle')}
+        steps={all}
+        defaultCompleted={done}
+        defaultHidden={hidden}
+        onCompletedChange={(completed) => void persist(completed)}
+        labels={{
+          progress: (n, total) => t.rich('progress', { total, done: () => n }),
+          hide: t('hide'),
+          show: t('show'),
+          completed: (count) => t.rich('completed', { count: () => count }),
+          stepsToDo: t('stepsToDo'),
+          completedSteps: t('completedSteps'),
+          progressLabel: t('progressLabel'),
+          progressText: (done, total) => t('progressText', { done, total }),
+          allDone: (total) => t('allDone', { total }),
+          stepDone: (title, done, total) => t('stepDone', { title, done, total }),
+          stepUndone: (title, done, total) => t('stepUndone', { title, done, total }),
+          failed: t('failed'),
+        }}
+        onHiddenChange={(next) => {
+          document.cookie = `${CHECKLIST_COOKIE}=${next ? '1' : ''}; path=/; max-age=${next ? 31_536_000 : 0}; samesite=lax`
+        }}
+      />
+    </>
   )
 }

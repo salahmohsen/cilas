@@ -4,11 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 import { getPayload } from 'payload'
 
-import {
-  PROFILE_ERROR_KEYS,
-  PROFILE_MESSAGE_KEYS,
-  type ProfileMessages,
-} from '@/components/profile/messages'
+import { profileMessages } from '@/components/profile/load-messages'
 import { ProfileForm } from '@/components/profile/profile-form'
 import { readProfile } from '@/lib/profile'
 import { currentReader } from '@/lib/reader'
@@ -31,14 +27,7 @@ export default async function ProfilePage({ params }: Props) {
   const t = await getTranslations('Profile')
   const profile = await readProfile(await getPayload({ config }), user)
 
-  const pick = <K extends string>(keys: readonly K[], prefix = '') =>
-    Object.fromEntries(
-      keys.map((k) => [k, (t as (key: string) => string)(`${prefix}${k}`)]),
-    ) as Record<K, string>
-  const messages = {
-    ...pick(PROFILE_MESSAGE_KEYS),
-    errors: pick(PROFILE_ERROR_KEYS, 'errors.'),
-  } satisfies ProfileMessages
+  const messages = await profileMessages()
 
   return (
     <div className="mx-auto grid max-w-2xl gap-6 px-4 py-12">

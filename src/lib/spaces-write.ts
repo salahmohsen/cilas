@@ -1,4 +1,4 @@
-import type { Payload } from 'payload'
+import type { Payload, Where } from 'payload'
 
 import { personOf } from '@/access'
 import { archivedNow } from '@/lib/space-lifecycle'
@@ -1520,31 +1520,41 @@ const memberSpace = async (
 
 // --- visitRecord ---
 
+/**
+ * Stamps the member's visit: one row per member and space. Two renders of a
+ * first visit can both find no row; the second create then meets the unique
+ * index, and its stamp lands on the row the first one made.
+ */
 export const visitRecord = async (i: Input<{ space: number }>): Promise<WriteResult<true>> => {
   const { payload, user, space } = i
   const target = await memberSpace(payload, user, space)
   if (!target.ok) return err(target.error)
+  const stamp = { last_visited_at: new Date().toISOString() }
+  const mine: Where = { and: [{ account: { equals: user.id } }, { space: { equals: space } }] }
   const { docs } = await payload.find({
     collection: 'space-visits',
-    where: { and: [{ account: { equals: user.id } }, { space: { equals: space } }] },
+    where: mine,
     overrideAccess: true,
     pagination: false,
     limit: 1,
   })
-  if (docs.length > 0) {
-    await payload.update({
-      collection: 'space-visits',
-      id: (docs[0] as { id: number }).id,
-      data: { last_visited_at: new Date().toISOString() } as never,
-      overrideAccess: true,
-    })
-  } else {
-    await payload.create({
-      collection: 'space-visits',
-      data: { account: user.id, space, last_visited_at: new Date().toISOString() } as never,
-      overrideAccess: true,
-    })
+  if (docs.length === 0) {
+    const made = await payload
+      .create({
+        collection: 'space-visits',
+        data: { account: user.id, space, ...stamp } as never,
+        overrideAccess: true,
+      })
+      .then(() => true)
+      .catch(() => false)
+    if (made) return { ok: true, data: true }
   }
+  await payload.update({
+    collection: 'space-visits',
+    where: mine,
+    data: stamp as never,
+    overrideAccess: true,
+  })
   return { ok: true, data: true }
 }
 
